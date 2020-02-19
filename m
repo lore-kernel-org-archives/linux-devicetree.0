@@ -4,95 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD30C5ACC4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D18FC5ACC4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28EC206EF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCA024671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582150542;
-	bh=GwxcFFJ7y7KzLAilZlwPkqyFxa6M/tFzV4XjRElLpL0=;
+	s=default; t=1582150735;
+	bh=0i1ndzBN59fSht4S6INk+5rj3E8rhaA9bzXAqf/zrs0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ATYGBJiZ67uBQZlcLZxtd5Vv7NJq4pNLw90o8cEX4rvT+mtHlnVKMZ/qJXBdfke8R
-	 VqPgiYvSm2gfjzZCnnjlW1Mu/xRxrMP1ALkLkyec4E8y/VYp0GEJiqUFbqmYEtdcZR
-	 mFk1o3gVKy393Ha/DG3Utb+rK8pR+OPgCrurDBQg=
+	b=0tzHiFcJq32DAOJytuJRpHZAJXRtPYV2Z/AUgIgQN83DkgvQa6Wd4tyTlxCYM/ZPO
+	 feRioKI2lSwg6j28+aeAAzGjSvtkDwH2xYih8O4HXmwKzjScFWcenTWzcHEkYFH83t
+	 4zVdw6Oi7aZQQiLmFmA7PqqLNXRD15DFj7edFLTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgBSWPm (ORCPT
+        id S1727429AbgBSWSv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:15:42 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40831 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgBSWPm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:15:42 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i6so1744871otr.7;
-        Wed, 19 Feb 2020 14:15:41 -0800 (PST)
+        Wed, 19 Feb 2020 17:18:51 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38236 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgBSWSu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:18:50 -0500
+Received: by mail-oi1-f193.google.com with SMTP id r137so5911184oie.5;
+        Wed, 19 Feb 2020 14:18:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WzIeoOT3NhhISTBLIs8RivW4psLyHoVdfYsEuyb/QSI=;
-        b=RYPM00V61j7gc7brP17cjbixFi9BJJbhEVkK4SM6Lw1WYbXJ0u4XPkUecikGQA2BTe
-         kSZSYMeNYe7XdmkJXSrvLmCRW5BuyWt6MNeLJAMy4PMp86sxilsGR2SIfF8W41pFv/xk
-         RtAYsBbf+rMchcmRMS5k0/Cn8ficVQ86Ap6bhQiW8iQtNIu9z06bEtfoz58YML3r4zfX
-         kMdE200UL39XoLbnQq08bDyleaCbJv6WRFsnhJeVY2oQbGM3JqtV344mFZac2sKN/M8P
-         FFYrqgg7MgWcMcAPiwrXAev7ujB8LS2mu1bsILro94sPNMMZAOCVz8UvXXAlKpwVH6sU
-         5gKg==
-X-Gm-Message-State: APjAAAU8bofSI2s3SU1bUHNkqYkuk5SDQZn9dxbFaHtAWyEJUyeqk2Nh
-        ssmFIwNO2HWVHigORWQiKw==
-X-Google-Smtp-Source: APXvYqxIABp99XeWrJisGt+NiZfYzH1F7NT6JQ1/wtvvqdH4nXrtC5nk7FIFIY5KOBh1PfJ1It659A==
-X-Received: by 2002:a05:6830:1203:: with SMTP id r3mr21865059otp.230.1582150541357;
-        Wed, 19 Feb 2020 14:15:41 -0800 (PST)
+        bh=Lb8z6pmbJJ2LJeHbmRGrWhVRqC/aW6CAMpmAMz1gxTk=;
+        b=AcroxdroS4ZlXmUajS7qeyXYTCRnG7+hY5+1dY8e/J6X/cCxbkN/rC7rphrkRqukSq
+         ctjnP0TYiLUWfQ718+g8wowVBDowpiUOPwxdaHrA4q1RBoqwVFupwCnfpLyp7ynYB6wC
+         zV3ShcJFYYWYTHomfmYkqQitX6LZCiyJcXGYfTyFOO4JtknyI/xrzusE2imGYD5jl1Y0
+         E3rkHI/kM/3scO8lwuQfgj9xhSBq6BUgQ9kz/WJ+O+3UdixsoYi8RQdwVHtoxRSyRgY/
+         PfLZSvxQOUX63KYo1prWC3yqYKZAXZ26fRFiXIY3MEUovD7m5GSW7yjeM7zNk9DaGM5N
+         SdQw==
+X-Gm-Message-State: APjAAAXiKh1Bpx3cJd8DTjFxoDO/SR+LWl1czBHhR/m/JN5HbjwLi3mU
+        l63YWFUnnd8SkdcHeFL4mg==
+X-Google-Smtp-Source: APXvYqzHJyK1DAI0qeUN2NlIkEGccyceEGasZSdf75idALGhOVUFySZL04o4JBQ0SR/eiD5nh9G9cQ==
+X-Received: by 2002:a05:6808:3ae:: with SMTP id n14mr6210097oie.63.1582150729704;
+        Wed, 19 Feb 2020 14:18:49 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y13sm373699otk.40.2020.02.19.14.15.40
+        by smtp.gmail.com with ESMTPSA id p184sm428899oic.40.2020.02.19.14.18.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:15:40 -0800 (PST)
-Received: (nullmailer pid 2118 invoked by uid 1000);
-        Wed, 19 Feb 2020 22:15:40 -0000
-Date:   Wed, 19 Feb 2020 16:15:40 -0600
+        Wed, 19 Feb 2020 14:18:49 -0800 (PST)
+Received: (nullmailer pid 6936 invoked by uid 1000);
+        Wed, 19 Feb 2020 22:18:48 -0000
+Date:   Wed, 19 Feb 2020 16:18:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        sakari.ailus@linux.intel.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, mchehab+huawei@kernel.org,
-        linux-media@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH 2/2] dt-bindings: media: csi: Fix clocks description
-Message-ID: <20200219221540.GA2067@bogus>
-References: <20200210100417.78583-1-maxime@cerno.tech>
- <20200210100417.78583-2-maxime@cerno.tech>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anand Moon <linux.amoon@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH] dt-bindings: usb: exynos-usb: Document clock names for
+ DWC3 bindings
+Message-ID: <20200219221848.GA6855@bogus>
+References: <1581343456-18900-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210100417.78583-2-maxime@cerno.tech>
+In-Reply-To: <1581343456-18900-1-git-send-email-krzk@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 10 Feb 2020 11:04:17 +0100, Maxime Ripard wrote:
-> Commit 1de243b07666 ("media: dt-bindings: media: sun4i-csi: Add compatible
-> for CSI1 on A10/A20") introduced support for the CSI1 controller on A10 and
-> A20 that unlike CSI0 doesn't have an ISP and therefore only have two
-> clocks, the bus and module clocks.
+On Mon, 10 Feb 2020 15:04:16 +0100, Krzysztof Kozlowski wrote:
+> The Exynos DWC3 driver expects certain clock names, depending on used
+> compatible.  Document this explicitly in the bindings.
 > 
-> The clocks and clock-names properties have thus been modified to allow
-> either two or tree clocks. However, the current list has the ISP clock at
-> the second position, which means the bindings expects a list of either
-> bus and isp, or bus, isp and mod. The initial intent of the patch was
-> obviously to have bus and mod in the former case.
-> 
-> Let's fix the binding so that it validates properly.
-> 
-> Fixes: 1de243b07666 ("media: dt-bindings: media: sun4i-csi: Add compatible for CSI1 on A10/A20")
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  .../media/allwinner,sun4i-a10-csi.yaml        | 30 +++++++++++--------
->  1 file changed, 18 insertions(+), 12 deletions(-)
+>  Documentation/devicetree/bindings/usb/exynos-usb.txt | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
 
 Applied, thanks.
