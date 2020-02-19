@@ -2,92 +2,103 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FBDC34022
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E40C34022
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF7824656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582147540;
-	bh=mfv/pL3ZEiWQQphjN9TDvanaEn6a7BTYp2d1xLoX0TY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ks40+v/O7GHJ8WpyxyDeJTWcI1qU4jg3F3mLj5MHfr/OlBrCftVe7Pr9ZGbEyCVwL
-	 VvNfpiiw4Qiic0rcKqkwoqG6hUp2nsykBirRtz+ovwB1pKC0dOJLe2RFPaceewIpwW
-	 FrhRGXBq+6N0P0Au8ZTUdGfttMqIqMx3hm6fOscM=
+	by mail.kernel.org (Postfix) with ESMTP id ECF9524656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ME+SI2nb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgBSVZj (ORCPT
+        id S1727637AbgBSVdM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:25:39 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39612 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgBSVZj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 16:25:39 -0500
-Received: by mail-oi1-f196.google.com with SMTP id z2so25332469oih.6;
-        Wed, 19 Feb 2020 13:25:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WCxKuFuKrKCmX1uT5gLX0bEHo5oCkRKj0kBnIt2u63M=;
-        b=JOSVdHoDopCv2+s+Gwxv8k25oW01alnL8rsEPehJdZHCBrqL0N80WwQoaaz9AHW+PA
-         0KO2TGqatqGX+qWzWK6Ryz4+hjS8pXRITKD+XuOEU6Q/wSmM58ReEZ7HhUIVKhdjbjfx
-         FuUiEXFh+IqFPfDpDIaNqb6C66p1SgPCpsXMiiOMyauDQPeERoteJE/0aVMhva7pz9iH
-         RwG4OjpVgFouZIJqeF2tYe1WXq+ea0zvjQ4C86r+Z3aUwuyP1lBOU9fEZQ1TkvfiN5TU
-         lut4ClkW9EvFxUPED+XC/CoftERkR7TeESHQwef9KmSUVquSpgsO1x84UwYtub7saS5V
-         6mng==
-X-Gm-Message-State: APjAAAUP8xlDO0zPHh0Oi2WmQyv2rmCffSrQdLRqHiuBrPVa05zKin/1
-        ANnlRhTbjx4VDl2map+z0w==
-X-Google-Smtp-Source: APXvYqwDVCsW3U1t+AEF60kSVA4s4dd6NUwHx6X/WAXPqRa5l1ABP+U4U73fvsww73PFx1TuvezuaA==
-X-Received: by 2002:a05:6808:b13:: with SMTP id s19mr5717061oij.119.1582147538427;
-        Wed, 19 Feb 2020 13:25:38 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j5sm321464otl.71.2020.02.19.13.25.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 13:25:37 -0800 (PST)
-Received: (nullmailer pid 29494 invoked by uid 1000);
-        Wed, 19 Feb 2020 21:25:36 -0000
-Date:   Wed, 19 Feb 2020 15:25:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Daniel Junho <djunho@gmail.com>
-Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        michael.hennerich@analog.com, patrick.vasseur@c-s.fr,
-        alexandru.Ardelean@analog.com
-Subject: Re: [PATCH v2] dt-bindings: iio: adc: ad7923: Add binding
- documentation for AD7928
-Message-ID: <20200219212536.GA29435@bogus>
-References: <20200218110647.24758-1-djunho@padtec.com.br>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218110647.24758-1-djunho@padtec.com.br>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 19 Feb 2020 16:33:12 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49136 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726703AbgBSVdM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 16:33:12 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582147991; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=0JN/ehYDL0O2oEeVVUyuLdKga5FoJgnDhpfMUdo+78Q=; b=ME+SI2nbfb8VR96zLrBuX2C2hH+RAoLz3nTRg+AfYUO35aIcqSpXfkPoDZZzDLQNlgpfj+or
+ yYOybVccfJb4b2hduGzKXYZIYqpSxgx74W7SorYXSbuKHdl3ULtGiK5pDpU9kXrl8ipO0VR0
+ BdaYHC6QxTTOlmH1tVRjetiXbdE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4da990.7f0e10e61928-smtp-out-n03;
+ Wed, 19 Feb 2020 21:33:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 27E32C4479C; Wed, 19 Feb 2020 21:33:04 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC98DC43383;
+        Wed, 19 Feb 2020 21:33:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC98DC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v1 0/4] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
+Date:   Wed, 19 Feb 2020 14:32:54 -0700
+Message-Id: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Feb 2020 08:06:47 -0300, Daniel Junho wrote:
-> From: Daniel Junho <djunho@gmail.com>
-> 
-> This patch add device tree binding documentation for AD7923 adc in YAML
-> format.
-> 
-> Signed-off-by: Daniel Junho <djunho@gmail.com>
-> ---
-> Changes in v2:
-> - Fix the license header to "GPL-2.0-only OR BSD-2-Clause";
-> - Change the Michael Hennerich email.
-> 
->  .../bindings/iio/adc/adi,ad7923.yaml          | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-> 
+When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
+cache coherency issues because it is mapped as write-combine without clearing
+the cache after it was zeroed.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Rather than duplicate the hacky workaround we use in the GEM allocator for the
+same reason it turns out that we don't need to have a bespoke memory allocator
+for the GMU anyway. It uses a flat, global address space and there are only
+two relatively minor allocations anyway. In short, this is essentially what the
+DMA API was created for so replace a bunch of memory management code with two
+calls to allocate and free DMA memory and we're fine.
+
+The only wrinkle is that the memory allocations need to be in a very specific
+location in the GMU virtual address space so in order to get the iova allocator
+to do the right thing we need to specify the dma-ranges property in the device
+tree for the GMU node. Since we've not yet converted the GMU bindings over to
+YAML two patches quickly turn into four but at the end of it we have at least
+one bindings file converted to YAML and 99 less lines of code to worry about.
+
+Jordan Crouse (4):
+  dt-bindings: display: msm: Convert GMU bindings to YAML
+  dt-bindings: display: msm: Add required dma-range property
+  arm64: dts: sdm845: Set the virtual address range for GMU allocations
+  drm/msm/a6xx: Use the DMA API for GMU memory objects
+
+ .../devicetree/bindings/display/msm/gmu.txt        | 116 -----------------
+ .../devicetree/bindings/display/msm/gmu.yaml       | 140 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |   2 +
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 107 +---------------
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h              |   5 +-
+ 5 files changed, 149 insertions(+), 221 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
+ create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
+
+-- 
+2.7.4
