@@ -2,99 +2,154 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E11C11D10
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCD5C11D10
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66948206F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A561724670
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:07:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MBE6H7N6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEux0/ea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgBTRG4 (ORCPT
+        id S1728778AbgBTRHs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:06:56 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38379 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728090AbgBTRGt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:06:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582218408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3M6kLg4BjF+DuWA5DcTOS8t/8X/cJ0Opg0BqCTy4sKU=;
-        b=MBE6H7N6KAOUpDWGX3mzGHWn9ntHPYysErKiju0w1LpyWMl24rrXNppZVJHe7lhqAkDBbA
-        4r2ajqMbxV3US10zQ8LjCa5Wusg+ATN7uPap33nUJgVOXgSi8kSMn1h9mVTRlLoaef0Uor
-        VMJ+38u7lomJuWlEoJqS6ZEUagWgLtY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-Y7n3AiXIOXK816aJw8_wdQ-1; Thu, 20 Feb 2020 12:06:46 -0500
-X-MC-Unique: Y7n3AiXIOXK816aJw8_wdQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44F09100550E;
-        Thu, 20 Feb 2020 17:06:42 +0000 (UTC)
-Received: from redhatnow.users.ipa.redhat.com (ovpn-117-1.phx2.redhat.com [10.3.117.1])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D2E0419756;
-        Thu, 20 Feb 2020 17:06:32 +0000 (UTC)
-Subject: Re: [RFC PATCH 04/11] cpufreq: Remove Calxeda driver
-To:     Rob Herring <robh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
-        Matthias Brugger <mbrugger@suse.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thu, 20 Feb 2020 12:07:48 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37987 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbgBTRHr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 12:07:47 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a9so2881449wmj.3;
+        Thu, 20 Feb 2020 09:07:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=37niT//lDaILKiAgLmVPycHnKOoR/1yOuQ3A2inzDzc=;
+        b=QEux0/eakJEJPRRBSy1DQ6l5a06ZagxVBvGVuOCMSFWIsHeD2cwNQoGNgd9VlMx6op
+         zcAqKt4+NATcE1Hv2LynemAgW2pR/xcddfiX1iktQDIfEPXfXnp1NA0M597F0YSqwvx1
+         MYcBz/H7zS1i6a142ioxHZXZHHbTteEe5Rn3j2NCCML7NjCpr5MOZ6/ZeJo4/m2CzDzR
+         GS+qD7c8szn3Cd/+vDole5anHZrN5DFkK+fZtI4m/08LkJP4NQv7aUT1BxFFSBZbq1TO
+         /WaI4O1m2w98WleIHpxsPKarvZhlR1b0exnc1NTzmOo7wHy5spZMS49Vc8sj+VeprJwy
+         vfZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=37niT//lDaILKiAgLmVPycHnKOoR/1yOuQ3A2inzDzc=;
+        b=Hkqf20WOC2lfV4sdhDtlL6jT2jvlSmydpNCCY/5NQNcik6m5qtkpn8cvZHyiHAZaEr
+         /i/20eEiTZroGrVq6wHPGsjoAiJsbc3kKHPl/JY9BoGWULpwijkZhuvOgo9m7XRXXnMc
+         QOgHoyHV04UEydqrUpzrZOKDHPPlaG8crTVJSKqGIu39BbuFKbU4IlyAqS2Dt71pp7J8
+         LBVsfAjTdQk3NZ8/QAZhIUN0hUVLxtdUJhl5APq8dFIfcqY4P3HUssrjMe+duySORADa
+         WGQcqON+OP7oCF5CsUfWv2DVsMyozOMeiga84xhl9Zcf/MLIg0ZxZqGBlF27WTcBPXn9
+         3viQ==
+X-Gm-Message-State: APjAAAVW1ixWG8SvGHawDwYu9tdEfFlmCNNhqiXEp72FXaNoQLudPaFV
+        bSZ76f38/TvnZ2dPJSKXeek=
+X-Google-Smtp-Source: APXvYqwR7P069VhMerWiRTx40KIARgMf/C2Ty0f48VwkRBQcE79u5/YkJkbiR2A7GlGkhkjAqT+wAQ==
+X-Received: by 2002:a1c:cc11:: with SMTP id h17mr5446322wmb.19.1582218465545;
+        Thu, 20 Feb 2020 09:07:45 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id o77sm5817883wme.34.2020.02.20.09.07.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:07:45 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org,
-        James Morse <james.morse@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        kvm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Will Deacon <will@kernel.org>
-References: <20200218171321.30990-1-robh@kernel.org>
- <20200218171321.30990-5-robh@kernel.org>
-From:   Mark Langsdorf <mlangsdo@redhat.com>
-Message-ID: <16a38b0d-8609-653a-64e8-3a0d4f4b1a45@redhat.com>
-Date:   Thu, 20 Feb 2020 11:06:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] Documentation: devictree: Add ipq806x mdio bindings
+Date:   Thu, 20 Feb 2020 18:07:29 +0100
+Message-Id: <20200220170732.12741-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200220170732.12741-1-ansuelsmth@gmail.com>
+References: <20200220170732.12741-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200218171321.30990-5-robh@kernel.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/18/20 11:13 AM, Rob Herring wrote:
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+Add documentations for ipq806x mdio driver.
 
-Acked-by: Mark Langsdorf <mark.langsdorf@gmail.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ .../bindings/net/qcom,ipq8064-mdio.yaml       | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+new file mode 100644
+index 000000000000..c5a21c0b5325
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.txt
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x MDIO bus controller
++
++description: |+
++  The ipq806x soc have a MDIO dedicated controller that is
++  used to comunicate with the gmac phy conntected.
++  Child nodes of this MDIO bus controller node are standard
++  Ethernet PHY device nodes as described in
++  Documentation/devicetree/bindings/net/phy.txt
++
++allOf:
++  - $ref: "mdio.yaml#"
++
++properties:
++  compatible:
++    const: qcom,ipq8064-mdio
++  reg:
++    maxItems: 1
++    description: address and length of the register set for the device
++  clocks:
++    maxItems: 1
++    description: A reference to the clock supplying the MDIO bus controller
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    mdio@37000000 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        compatible = "qcom,ipq8064-mdio", "syscon";
++        reg = <0x37000000 0x200000>;
++        resets = <&gcc GMAC_CORE1_RESET>;
++        reset-names = "stmmaceth";
++        clocks = <&gcc GMAC_CORE1_CLK>;
++
++        switch@10 {
++            compatible = "qca,qca8337";
++            ...
++        }
++    };
+\ No newline at end of file
+-- 
+2.25.0
 
