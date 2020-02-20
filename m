@@ -2,194 +2,154 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACABC11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F006C11D0C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B7524673
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359462467A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="FSixFcAe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0nGLSUnV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qwmkCUco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgBTR5d (ORCPT
+        id S1728248AbgBTR7O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:57:33 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51049 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726959AbgBTR5d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:57:33 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 1A6C8A41;
-        Thu, 20 Feb 2020 12:57:32 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 20 Feb 2020 12:57:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=wXvR2MOzGGKMeex/rwCGSt8o0uR
-        MlmGZ+1htdhsNHVY=; b=FSixFcAeLhxoF0aMmTSsOSCcuHNvzK2b/uENeMaYkai
-        aTwkNC+U9KiGSozW1N7u1MImfDF6vueb+FnJ9v0i+FOXWRyqIa3beGiQQuUTb5wF
-        j+mA3nGrpNBKvhDr2dx1W9AKH36zVV82ZIS5NRwgNNWf7P+uokKWB3rJTiX+0TIS
-        2OUslNvZYKRu7LJdn0y3IF/CXxv/CeTYOs94VGGXXdy8MhUeDyf/Q/NsmdDc58Ra
-        c2s6msJhE9Z8z3pMMTv3W3LPwah7WpC5QzLSARoSJ3QKG/B1IOqtq2vI87Wm8ec5
-        EFk4tkrMDWAl/ixyqkZLI2bVBMEYo0NYqHdkOryenbA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wXvR2M
-        OzGGKMeex/rwCGSt8o0uRMlmGZ+1htdhsNHVY=; b=0nGLSUnVDW/VMUcgt2BawK
-        xswGcY8U5iAG/QBsP+afDXx1XYg70g3XSGK7BoF6AIrw2lOxqWdcdFCZ1ar0XEkh
-        9wH9zc7dVS62gKop1r9mjSLec0fjW4GeZZHpP2rI8i4E91uNmfJXa8+JwuG3l5Fx
-        IKzgsF4vJyD1mhrQyXC7RxHaol54YcRScX/ROfj3tLUmGTCYLRVFJPjxoSGfj7P+
-        nojvaxrIKnGY1/2b3pBOmitWda4qe20DSiAdLub8j682h671/Z5S07upvZ1A4hZa
-        8bFggf+Cz+iqWPBa6GQJlLLOnrocr88SiSlqt9fpgqR25TEubCBYxfJsNqWjxmug
-        ==
-X-ME-Sender: <xms:ishOXlXOEgfsMi6848XIHWWUltCnrx29K_fKr55njtnzc8K9kDWZew>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddutdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:ishOXkWdoSgqt2HIcRZQnZ60R1ygMg4IAL1JueheI8jXmC-kte1mRw>
-    <xmx:ishOXl_rN6h0hRN7zhFeYfvZnNtLPqJYIaaiAj7397by2QmGoWZ7kg>
-    <xmx:ishOXkaGvA8c7M7IFtuoZ1uOLcPRgUXf1jKan9xr9FXPtZcfPPIYkQ>
-    <xmx:jMhOXtESZmyQrq5gR0B_rWD0mb4JMGwh_lYgGqt-zMV3XO9XnvNuTg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F27E63060BD1;
-        Thu, 20 Feb 2020 12:57:29 -0500 (EST)
-Date:   Thu, 20 Feb 2020 18:57:28 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        Thu, 20 Feb 2020 12:59:14 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50318 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbgBTR7O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 12:59:14 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r67so1196720pjb.0
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 09:59:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b39p1eGP3nlw0aRiq/EeenwuRZud+ndWD/CEPqlUtnE=;
+        b=qwmkCUcoVIMXBx/AwEt9MPwRTrkz2uyhf0NcAxdivTQjwX1XtVFIVwvizt7PTnm2A4
+         +/uy0TnaN37yTB6RrkMkpdIbONbwniMinlv2RHduA2AOzqu5/QmYAR1BtJ9tf7xh07L3
+         f6pFWAHnngs5stFC70RIfUeyOOiWQ8YNY5qxr6NT9f5gqVxktjseLYAeD7rSXFVEOlfW
+         mtpwnIwTcI8XLpaD76ZhgOYOoumzeO3sUAZM8OyeoRSqeLi6YnCD0RGuMnIcTuQAcgrS
+         TdIzRXquWA8RjNDjLf8WwV8bug0AkUrm1r9xKRAlK9lVkIDp/yFSKRcmfE59ga8oXMbH
+         yZUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b39p1eGP3nlw0aRiq/EeenwuRZud+ndWD/CEPqlUtnE=;
+        b=WslPd2N8AXrPQ6xa+pjZWSXBdqR2sbW6CaVboMeYC0AH4A9R3vEINiaQwpvvpBBo2P
+         CBTan1QCcksab1HLOndA6PWSNR6viSkint8lOu2L0fNgmfp92XFH5B3IvTy75dxW9Ghy
+         lC1eM/hy6RyXFXBiyqbOPyRqcEDYVjCj5tXCegZK4hCWO335lUqN53ExbYYZi4FVjMK2
+         q8pq/XiXlSKpxSUx+LoRQNRSu6fHmuIWYHroXbrJFVqbr/0N9GYqX1Llaj9LIBsJErLA
+         KN8K9Wqh0GKB0Pza807jz2sMVtm/CD7Bjgs5RplxiawpqpnwnUtY8h6NywV33oDESea0
+         6OFw==
+X-Gm-Message-State: APjAAAUc8hgI7XcUC0Wl7g+v7U71Pqk4A2g5P33iGswZQUpAp8FHq7TN
+        E61t6Wx5nxkTdPZCdZ32qlN8yg==
+X-Google-Smtp-Source: APXvYqwD3zUPaAslcARdnI7JTUN/osi+pnuqbRLDxOFcEbVa3s64IJ6zWD8Jvh/qwLsyt7L2ySuVQQ==
+X-Received: by 2002:a17:90b:14a:: with SMTP id em10mr5009154pjb.4.1582221554028;
+        Thu, 20 Feb 2020 09:59:14 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id ev5sm112928pjb.4.2020.02.20.09.59.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:59:13 -0800 (PST)
+Date:   Thu, 20 Feb 2020 10:59:11 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/4] dt-bindings: panel: lvds: Add properties for clock
- and data polarities
-Message-ID: <20200220175728.6wuipezjp23coevq@gilmour.lan>
-References: <cover.b12a054012ce067fa2094894147f953ab816d8d0.1581682983.git-series.maxime@cerno.tech>
- <620a740cec4186177ce346b092d4ba451e1420dc.1581682983.git-series.maxime@cerno.tech>
- <20200214161156.GA18287@ravnborg.org>
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v3 1/8] dt-bindings: remoteproc: Add Qualcomm PIL info
+ binding
+Message-ID: <20200220175911.GA19352@xps15>
+References: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
+ <20200211005059.1377279-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jmue7eu7rmn5vtgj"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214161156.GA18287@ravnborg.org>
+In-Reply-To: <20200211005059.1377279-2-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Feb 10, 2020 at 04:50:52PM -0800, Bjorn Andersson wrote:
+> Add a devicetree binding for the Qualcomm periperal image loader
 
---jmue7eu7rmn5vtgj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+s/periperal/peripheral
 
-On Fri, Feb 14, 2020 at 05:11:56PM +0100, Sam Ravnborg wrote:
-> Hi Maxime.
->
-> On Fri, Feb 14, 2020 at 01:24:39PM +0100, Maxime Ripard wrote:
-> > Some LVDS encoders can support multiple polarities on the data and
-> > clock lanes, and similarly some panels require a given polarity on
-> > their inputs. Add a property on the panel to configure the encoder
-> > properly.
-> >
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
->
-> Not a fan of this binding...
-> In display-timing.txt we have a specification/description of
-> the panel-timing node.
->
-> The panel-timing node already include information such as:
-> - hsync-active:
-> - vsync-active:
-> - de-active:
-> - pixelclk-active:
-> - syncclk-active:
->
-> But clock-active-low and data-active-low refer to the bus
-> more than an individual timing.
-> So maybe OK not to have it in a panel-timing node.
-> But then it would IMO be better to include
-> this in the display-timing node - so we make
-> this available and standard for all users of the
-> display-timing node.
->
-> I will dig up my patchset to make proper bindings for panel-timing and
-> display-timing this weeked and resend them.
-> Then we can discuss if this goes on top or this is specific for the
-> lvds binding.
+> relocation info region found in the IMEM.
 
-That makes sense, I'll wait for them to be merged then :)
+s/info/information
 
->
-> > ---
-> >  Documentation/devicetree/bindings/display/panel/lvds.yaml | 10 ++++++++-
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/lvds.yaml b/Documentation/devicetree/bindings/display/panel/lvds.yaml
-> > index d0083301acbe..4a1111a1ab38 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/lvds.yaml
-> > +++ b/Documentation/devicetree/bindings/display/panel/lvds.yaml
-> > @@ -90,6 +90,16 @@ properties:
-> >        CTL2: Data Enable
-> >        CTL3: 0
-> >
-> > +  clock-active-low:
-> > +    type: boolean
-> > +    description: >
->
-> Should this be "|" and not ">"?
-> Did this pass dt_binding_check?
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - Replaced offset with reg to describe the region of IMEM used for the entries
+> 
+>  .../bindings/remoteproc/qcom,pil-info.yaml    | 42 +++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> new file mode 100644
+> index 000000000000..8386a4da6030
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> @@ -0,0 +1,42 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/qcom,pil-info.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm peripheral image loader relocation info binding
+> +
+> +maintainers:
+> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+> +
+> +description:
+> +  This document defines the binding for describing the Qualcomm peripheral
+> +  image loader relocation memory region, in IMEM, which is used for post mortem
+> +  debugging of remoteprocs.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,pil-reloc-info
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    imem@146bf000 {
+> +      compatible = "syscon", "simple-mfd";
+> +      reg = <0 0x146bf000 0 0x1000>;
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +
+> +      pil-reloc {
+> +        compatible ="qcom,pil-reloc-info";
 
-Yes. > means that this is a multi-line string that will drop the \n
-between each line, while | will keep it
+s/="/= "
 
-For a string like this, I believe it makes more sense to let whatever
-is using to handle the wrapping, but I don't really have a strong
-opinion :)
-
->
-> > +      If set, reverse the clock polarity on the clock lane.
-> This text could be a bit more specific. If this is set then
-> what?
-> And it seems strange that a clock is active low.
-> For a clock we often talk about raising or falling edge.
->
-> > +
-> > +  data-active-low:
-> > +    type: boolean
-> > +    description: >
-> Same comment with ">"
->
-> > +      If set, reverse the bit polarity on all data lanes.
-> Same comment about a more explicit description.
-
-I'll try to come up with something better. Thanks!
-Maxime
-
---jmue7eu7rmn5vtgj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXk7IiAAKCRDj7w1vZxhR
-xcZiAQDFmtyS5WHek/hmzjWFFwIPRkMeuRUG6dZvUn8HIDH6uQD9EvR2HxBQfUVQ
-a2jdAtufNDa8xmkO5CE+KyDuJBeH6wA=
-=puow
------END PGP SIGNATURE-----
-
---jmue7eu7rmn5vtgj--
+> +        reg = <0x94c 200>;
+> +      };
+> +    };
+> +...
+> -- 
+> 2.24.0
+> 
