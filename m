@@ -2,143 +2,141 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97991C11D14
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C609C11D0C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4B324673
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DD02467B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pbYRTskJ"
+	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20150623.gappssmtp.com header.i=@thegoodpenguin-co-uk.20150623.gappssmtp.com header.b="n1Zj7J6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgBTR3N (ORCPT
+        id S1728460AbgBTR33 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:29:13 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15099 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbgBTR3M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 12:29:12 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4ec1c60001>; Thu, 20 Feb 2020 09:28:38 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 09:29:11 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 20 Feb 2020 09:29:11 -0800
-Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
- 2020 17:29:11 +0000
-Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
- <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
- <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <9dc0a5a6-af2c-f84f-298f-2c16a9c2bb0c@nvidia.com>
-Date:   Thu, 20 Feb 2020 09:29:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 20 Feb 2020 12:29:29 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35466 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbgBTR33 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 12:29:29 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b17so2964897wmb.0
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 09:29:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q4qx3jqbEI2LXNLHh2qRlEwTiPf4rASGS8w/sDrnmwg=;
+        b=n1Zj7J6egyyu4XSEYNvVUsPUeC5N+ThU079hVverQJdLd2AnzZZi+nOVLVMiYmD/d1
+         VLNAtYvTyKBk2g3m4+c54bVWhSvP4hn2rZk81KnDZ4j7zlDNJUyzaJ9lkFsqbdyimamA
+         2azfNkSSpWMwnok41dG0eHUk6YUAWnKXAaRLBRBRBqBREaYrOcaPeOm9w3GFOKA+Lrjq
+         fX3CyMHoE0gmNRULIVXotRQX+QVtk9AglCEf0fXIUzZFIo7aYyu5o4X95BzxLSwYgFIF
+         o5TYPi1ofCdxQkjrz0/0aNtECIQOfrRXA3hou5A3EmDEPIzhbeXqiZ9bg8X4PUM9MQbD
+         NuTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q4qx3jqbEI2LXNLHh2qRlEwTiPf4rASGS8w/sDrnmwg=;
+        b=H+Rmb6Mg9kBtI7PJQmQgKi7n9a2i3JBF05r+nfocqyUCNheQg6aNVEW/a7MjRurnJC
+         8frK8o9J1GZNd0Lc9qaAo8FgMHNEvtwOT3e11Q0XaHmgobIho49ND/QQ6QmHPh6aT7R3
+         ev78PX8fYyfsFsqfp7AoQSkQKlbcxS0sB3HwlrtmN2Hku2Io5ZzoVpqHxJzyS7WXPzs1
+         XbcdYTzy8fUmqviQW0yPvbgclbiLhVaGbG/5gHnks0FzbM8O5FEoKJbgbqtPLAZT0wJP
+         69hak9l2axGYeYNGiuz5PdmAOLm0IJdZ3yiIRVdiqsaMv/WGaofM+nmfGCkDfVw814Yv
+         5gSA==
+X-Gm-Message-State: APjAAAX5zTMIAcPcmC+8PFWMParL8xu67slSgAaVGKybFgCXlQJbMk2O
+        SbSQzDrdD8bdfVgZXssqIHHc4Q==
+X-Google-Smtp-Source: APXvYqyuQKe1vF0yue4IgSN9scP6sj+6hjjPhnMRt+A7UulmjNFLWqQr6QTq4iwV57oNLCIAzEIlYw==
+X-Received: by 2002:a7b:ce8b:: with SMTP id q11mr5753542wmj.100.1582219767346;
+        Thu, 20 Feb 2020 09:29:27 -0800 (PST)
+Received: from big-machine ([2a00:23c5:dd80:8400:98d8:49e6:cdcc:25df])
+        by smtp.gmail.com with ESMTPSA id e1sm244147wrt.84.2020.02.20.09.29.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:29:26 -0800 (PST)
+Date:   Thu, 20 Feb 2020 17:29:24 +0000
+From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, robh+dt@kernel.org, andrew.murray@arm.com,
+        arnd@arndb.de, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in,
+        shawnguo@kernel.org, m.karthikeyan@mobiveil.co.in,
+        leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, Mingkai.Hu@nxp.com,
+        Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
+Subject: Re: [PATCHv10 08/13] PCI: mobiveil: Add 8-bit and 16-bit CSR
+ register accessors
+Message-ID: <20200220172924.GI19388@big-machine>
+References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
+ <20200213040644.45858-9-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582219718; bh=nx1Sr0EKixZLUgshUzVM6e0KzOAURHBiDUNPYMB5sPg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=pbYRTskJJUref7EGSEcJ5K6ZVOYBkfwD6fMc5PvkRHqFuwhLUgsJcn4GohE+n+0PA
-         XHZS+2g3WsaeWmYw+KZUtB27sSmKAyblJklinJ0xC8Vur8mhKHD4P77+2ISw7EctDC
-         hn6W0P/nW8JFbN0wD9QogBUUBFyd4yPPfQKsXCxZZmboKeQuL4IPaNj4JSnzhX5fkC
-         cTIIUgBSVlDzDyYB0DUaPwlFZthH76lova4BBZ9HOPzVA5mM4rI7XYnd/m6Xg4sIN7
-         OawXFq4rArM2BpbyzZwSUAjGScZCbKLudOx9B2j6kpwhjo+ntQNt9nKXZJkqYq2cmi
-         XFiYMN/H6QWdA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213040644.45858-9-Zhiqiang.Hou@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sure, Will update in v4.
+On Thu, Feb 13, 2020 at 12:06:39PM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> There are some 8-bit and 16-bit registers in PCIe configuration
+> space, so add these accessors accordingly.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 
-On 2/20/20 5:33 AM, Hans Verkuil wrote:
-> External email: Use caution opening links or attachments
->
->
-> (Replying to myself so I can explain this a bit more)
->
-> On 2/20/20 1:44 PM, Hans Verkuil wrote:
->>> +
->>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
->>> +{
->>> +    struct device_node *node = csi->dev->of_node;
->>> +    unsigned int port_num;
->>> +    int ret;
->>> +    struct tegra_csi_channel *item;
->>> +    unsigned int tpg_channels = csi->soc->csi_max_channels;
->>> +
->>> +    /* allocate CSI channel for each CSI x2 ports */
->>> +    for (port_num = 0; port_num < tpg_channels; port_num++) {
->>> +            item = devm_kzalloc(csi->dev, sizeof(*item), GFP_KERNEL);
->> Using devm_*alloc can be dangerous. If someone unbinds the driver, then
->> all memory allocated with devm_ is immediately freed. But if an application
->> still has a filehandle open, then when it closes it it might still reference
->> this already-freed memory.
->>
->> I recommend that you avoid using devm_*alloc for media drivers.
-> A good test is to unbind & bind the driver:
->
-> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
-> echo -n 54080000.vi >unbind
-> echo -n 54080000.vi >bind
->
-> First just do this without the driver being used. That already
-> gives me 'list_del corruption' kernel messages (list debugging
-> is turned on in my kernel).
->
-> Note that this first test is basically identical to a rmmod/modprobe
-> of the driver. But when I compiled the driver as a module it didn't
-> create any video device nodes! Nor did I see any errors in the kernel
-> log. I didn't pursue this, and perhaps I did something wrong, but it's
-> worth taking a look at.
->
-> The next step would be to have a video node open with:
->
-> v4l2-ctl --sleep 10
->
-> then while it is sleeping unbind the driver and see what happens
-> when v4l2-ctl exits.
->
-> Worst case is when you are streaming:
->
-> v4l2-ctl --stream-mmap
->
-> and then unbind.
->
-> In general, the best way to get this to work correctly is:
->
-> 1) don't use devm_*alloc
-> 2) set the release callback of struct v4l2_device and do all freeing there.
-> 3) in the platform remove() callback you call media_device_unregister()
->     and video_unregister_device().
->
-> It's worth getting this right in this early stage, rather than fixing it
-> in the future.
->
-> Regards,
->
->          Hans
+Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
+
+> ---
+> V10:
+>  - Changed the return types to reflect the size of the access.
+> 
+>  .../pci/controller/mobiveil/pcie-mobiveil.h   | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> index 623c5f0c4441..72c62b4d8f7b 100644
+> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> @@ -182,10 +182,33 @@ static inline u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
+>  	return mobiveil_csr_read(pcie, off, 0x4);
+>  }
+>  
+> +static inline u16 mobiveil_csr_readw(struct mobiveil_pcie *pcie, u32 off)
+> +{
+> +	return mobiveil_csr_read(pcie, off, 0x2);
+> +}
+> +
+> +static inline u8 mobiveil_csr_readb(struct mobiveil_pcie *pcie, u32 off)
+> +{
+> +	return mobiveil_csr_read(pcie, off, 0x1);
+> +}
+> +
+> +
+>  static inline void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val,
+>  				       u32 off)
+>  {
+>  	mobiveil_csr_write(pcie, val, off, 0x4);
+>  }
+>  
+> +static inline void mobiveil_csr_writew(struct mobiveil_pcie *pcie, u16 val,
+> +				       u32 off)
+> +{
+> +	mobiveil_csr_write(pcie, val, off, 0x2);
+> +}
+> +
+> +static inline void mobiveil_csr_writeb(struct mobiveil_pcie *pcie, u8 val,
+> +				       u32 off)
+> +{
+> +	mobiveil_csr_write(pcie, val, off, 0x1);
+> +}
+> +
+>  #endif /* _PCIE_MOBIVEIL_H */
+> -- 
+> 2.17.1
+> 
