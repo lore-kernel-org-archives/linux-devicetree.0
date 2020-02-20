@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773B8C11D19
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD64C11D1D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54ECA2467B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793D62467B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="c6kpalwz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JZGIfGvq"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="zrqAodOp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WgmsgJ/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgBTSPW (ORCPT
+        id S1728368AbgBTSP1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:15:22 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:46173 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728162AbgBTSPW (ORCPT
+        Thu, 20 Feb 2020 13:15:27 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:57041 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728173AbgBTSP0 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:15:22 -0500
+        Thu, 20 Feb 2020 13:15:26 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C512463C6;
-        Thu, 20 Feb 2020 13:15:21 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 20 Feb 2020 13:15:21 -0500
+        by mailout.nyi.internal (Postfix) with ESMTP id 585E221E5B;
+        Thu, 20 Feb 2020 13:15:26 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 20 Feb 2020 13:15:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=6SinJITdD/n69
-        eIlJpnmxjWDDOpwI1CwjSpv52GcRJQ=; b=c6kpalwzeA2Vi5zAy/Bxin8/SMH7H
-        yHKoqO+DHJ2tIq1qWAaea40qxAlPxndXD1s4i6jk9jgJoZKZSjp6x6E/jbRXybnW
-        El8+urLpmIiJej91r3cmiiQueIyaW9iXo5TPuB3izIgl+ZYg6OIKJ24G8EPGWGO5
-        NTaZ7D/F/OvmVMuAA3QJ2D7ABVshc4BZun33KqbykmlqJ/2CBdkeHJ6deiQJOsT7
-        anwfty/nfdRKXz9tifKknqMU3JDTClugpzSNcu/LRtVWKCq+8b06bdcNGqA3dr/9
-        TR7czPN2j8llaJb018m2UcqFcu9J3W4Ag29dMQsQYmGNlWC4rwTNdV1Fw==
+        :mime-version:content-transfer-encoding; s=fm2; bh=EO4iHaNxeieQg
+        LG+TqEp9sUs9WIn/s4CrJUTMJBjELo=; b=zrqAodOpNdj3RUp2IZomKJmh1InYg
+        DMIunaYe5pwFkSN/OH4Ai+zPqSZz1CAr3ifV+fLVrw+0mz+nuYaEe9cMdKp9tyo0
+        Yqxv0nUPkF3AdMZ0bFmMulwH+p0g/fr6KbTqSHnpU9m3v8d6yOurE4jXBkyT7ai+
+        vgfcEI1FccxP0gqit2UGJWpuvZnpD/hdBaxNxicsqQ7fNT56PwHScjNL/EcsMpxP
+        71prnuPNmeJMIN0oD5Ndj6y+PxnmXpowIWaWll52n8FKVA5AE5tGeIjwmZm+XXd2
+        PEOXxHtsdyDhbVPlGTHB4QTvt2pfxJ8go7AxsbopTLh+PP7UCRHK6I32g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=6SinJITdD/n69eIlJpnmxjWDDOpwI1CwjSpv52GcRJQ=; b=JZGIfGvq
-        bIj1g4UfTjIPXP39HHTXNAbRleEIKSjsuGOjRrhyjvTOq+ljQtDlxeLgaaG49hCs
-        jIquU0T+2UHBEcJXDj39MYkrzeHRbBNrCKt2Gv9ParG+/ty8ylDxdXPddJCp6cmv
-        mPlTC6QFGqIxTvXVPJXCkRCpb72XmBtR7zBZxQzAlKh1HJzgV2ohlajw0Ja7YUCS
-        RB+M7XNEUUhGVxJIXkRRt/Nod41BVYuoBsAYS+dGpS21qvmgQgU4YJtasQr9hy5m
-        OCuZhpCjjh+m4i9aJllByzNDqD3/IFVNWUfdaGBQwAMwUEf681y7yS0AGzr3m+Fm
-        uSbivbMi+oX7Tw==
-X-ME-Sender: <xms:ucxOXsZad0oVvWyM6zvihwsyzNajBTXVkc31oKVHkuYpWZDFwYJSyA>
+        fm2; bh=EO4iHaNxeieQgLG+TqEp9sUs9WIn/s4CrJUTMJBjELo=; b=WgmsgJ/Z
+        QiEtmM4Vhn7AFskFoNxWrwLynxpIGfDQuuU+eWufiFZyi8Kfj5cqYXmA887NYTwr
+        a7Qrp2FuT6DAzhG0DMcQVv7+HRHu7i91eQ5tC6InJ4t+WSayfYCbu/Lov8llIu9T
+        Qo/Qi0CJyo4OAyFgCfHf+aye/RAWAMOKa0wX2xQ16ptSeFgKFzoT/V7jp6DXWL3S
+        mHB8AJeAx9DYuQY2EvvThNE00u6Cauv/WDp3wbWOdME6LdkJ6zArJHfQF2o2OhxA
+        EGG+mubs5UWZBp8nMx16EFf65/UPyQJnmBvsJ3Tp4ZANt6C0H6ZX4CFwcOOR3USj
+        MiXwjlSCj7PvVQ==
+X-ME-Sender: <xms:vsxOXmD_DXlqg-MRJQ-TFjnTVARVW0sWdrzqvhrfeqDJadCwrD6BjQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgdduudefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    govehorghsthgrlhdqhfeguddvqddtvdculdduhedtmdenucfjughrpefhvffufffkofgj
-    fhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrg
-    igihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinhepuggvvhhitggvthhrvggv
-    rdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:ucxOXkzzp-aOUA5FC1ucqNOrwNoRPJ9MEcMA_M_mkGjEyBdyCydX4Q>
-    <xmx:ucxOXgfwmg6AnbM60G4kSd0eWc8au_BZJabCpiQYnByTEfiNDMAcUg>
-    <xmx:ucxOXh4_jU32SUTf35-jHQ_mCAXw_RBwsEOhtukUiIrsINiLDWARpQ>
-    <xmx:ucxOXuAXvzoUDH3-pjzqegpw6a_yrMr49X4n94ZRAeE7vhtre1Xo6g>
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:vsxOXtQlS2l-d4RUiFJYpaAyTw5fLRQ2WwP5b8Lv9GgymxKNoeruHA>
+    <xmx:vsxOXpJdjdhXq6XXMqODEBwTrehRQ-Wiky4s0_o3eY3Hekd1es2Vxw>
+    <xmx:vsxOXtZdPuhj9cGfKZHaV0HtBZDNtYaguuXcLD01keRny_wZDGAHpQ>
+    <xmx:vsxOXpYIOC4sgdyyG8UsVTT5drBHzNrjBvckfOMvapPA3Ilfz9oV3w>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6662F3060D1A;
-        Thu, 20 Feb 2020 13:15:21 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0BC893280060;
+        Thu, 20 Feb 2020 13:15:25 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <mripard@kernel.org>,
@@ -72,12 +71,10 @@ To:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/4] dt-bindings: iommu: Add Allwinner H6 IOMMU bindings
-Date:   Thu, 20 Feb 2020 19:15:13 +0100
-Message-Id: <7b1d8b083283915befc9b9be4a92631253011a8a.1582222496.git-series.maxime@cerno.tech>
+        iommu@lists.linux-foundation.org, Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH v2 4/4] drm/sun4i: mixer: Call of_dma_configure if there's an IOMMU
+Date:   Thu, 20 Feb 2020 19:15:16 +0100
+Message-Id: <5ebdf117248c6189e7e4a2631a6681cf9909bd66.1582222496.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.a31c229a83f1d92e6928ae2adb70887da0fd44b3.1582222496.git-series.maxime@cerno.tech>
 References: <cover.a31c229a83f1d92e6928ae2adb70887da0fd44b3.1582222496.git-series.maxime@cerno.tech>
@@ -88,82 +85,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Allwinner H6 has introduced an IOMMU. Let's add a device tree binding
-for it.
+The main DRM device is actually a virtual device so it doesn't have the
+iommus property, which is instead on the DMA masters, in this case the
+mixers.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Add a call to of_dma_configure with the mixers DT node but on the DRM
+virtual device to configure it in the same way than the mixers.
+
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml | 61 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml
+ drivers/gpu/drm/sun4i/sun8i_mixer.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml b/Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml
-new file mode 100644
-index 000000000000..5e125cf2a88b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iommu/allwinner,sun50i-h6-iommu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+index 7c24f8f832a5..85b8930e334c 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -372,6 +372,19 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
+ 	mixer->engine.ops = &sun8i_engine_ops;
+ 	mixer->engine.node = dev->of_node;
+ 
++	if (of_find_property(dev->of_node, "iommus", NULL)) {
++		/*
++		 * This assume we have the same DMA constraints for
++		 * all our the mixers in our pipeline. This sounds
++		 * bad, but it has always been the case for us, and
++		 * DRM doesn't do per-device allocation either, so we
++		 * would need to fix DRM first...
++		 */
++		ret = of_dma_configure(drm->dev, dev->of_node, true);
++		if (ret)
++			return ret;
++	}
 +
-+title: Allwinner H6 IOMMU Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+properties:
-+  "#iommu-cells":
-+    const: 1
-+    description:
-+      The content of the cell is the master ID.
-+
-+  compatible:
-+    const: allwinner,sun50i-h6-iommu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - "#iommu-cells"
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+      #include <dt-bindings/interrupt-controller/arm-gic.h>
-+      #include <dt-bindings/interrupt-controller/irq.h>
-+
-+      #include <dt-bindings/clock/sun50i-h6-ccu.h>
-+      #include <dt-bindings/reset/sun50i-h6-ccu.h>
-+
-+      iommu: iommu@30f0000 {
-+          compatible = "allwinner,sun50i-h6-iommu";
-+          reg = <0x030f0000 0x10000>;
-+          interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+          clocks = <&ccu CLK_BUS_IOMMU>;
-+          resets = <&ccu RST_BUS_IOMMU>;
-+          #iommu-cells = <1>;
-+      };
-+
-+...
+ 	/*
+ 	 * While this function can fail, we shouldn't do anything
+ 	 * if this happens. Some early DE2 DT entries don't provide
 -- 
 git-series 0.9.1
