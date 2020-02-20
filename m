@@ -2,146 +2,384 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51729C11D05
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 11:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7B0C11D05
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 11:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 282742071E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 11:22:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nc7wid8d"
+	by mail.kernel.org (Postfix) with ESMTP id F1AC5208C4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 11:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgBTLWY (ORCPT
+        id S1726952AbgBTLvE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 06:22:24 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:34382 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbgBTLWY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 06:22:24 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KBMKba084599;
-        Thu, 20 Feb 2020 05:22:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582197740;
-        bh=7sz7UwaYZhfjapq4XXvQj1Y6KtkYa1bY7xLS+tvWAGI=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=nc7wid8d9t08+Dan465M+ZZoUxq7lTo1+N4hTYNScWBMbsAwPhyi1dUwCzqbkYyTo
-         D1VqyqwHU7Q/DpAl8N87v2AF8RzW+3WJ8ypo57Wv4DKnPMWe0zvpoEzxmXKdTs0w9h
-         eRdFLNAeArVE7qO1SeWeaMSCUHEJ2FVO9N9YiZF8=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KBMKmm092249;
-        Thu, 20 Feb 2020 05:22:20 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
- Feb 2020 05:22:20 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 20 Feb 2020 05:22:20 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KBMHn7048242;
-        Thu, 20 Feb 2020 05:22:18 -0600
-Subject: Re: [PATCH 1/3] dt-bindings: mmc: sdhci-am654: Update Output tap
- delay binding
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <ulf.hansson@linaro.org>,
-        <adrian.hunter@intel.com>
-References: <20200108150920.14547-1-faiz_abbas@ti.com>
- <20200108150920.14547-2-faiz_abbas@ti.com> <20200115015037.GA26114@bogus>
- <a437675a-6a18-14bd-f316-77bdd2bc1efb@ti.com>
- <bff6f9d2-6713-e8c1-177e-f5d9ed5adbf1@ti.com>
- <24e6ac71-00c7-f140-86d8-fa5ec0dcaff0@ti.com>
-Message-ID: <76a0c96a-b83d-ac21-1e24-6d68e2b70c9c@ti.com>
-Date:   Thu, 20 Feb 2020 16:54:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <24e6ac71-00c7-f140-86d8-fa5ec0dcaff0@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 20 Feb 2020 06:51:04 -0500
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:61592 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726921AbgBTLvE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 06:51:04 -0500
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 20 Feb 2020 03:51:03 -0800
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 20 Feb 2020 03:51:00 -0800
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id F03FB214C7; Thu, 20 Feb 2020 17:20:58 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     sivaprak@codeaurora.org
+Subject: [PATCH V2] arm64: dts: ipq6018: Add a few device nodes
+Date:   Thu, 20 Feb 2020 17:20:46 +0530
+Message-Id: <1582199446-29890-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob,
+add i2c, spi, crypto, rng, watchdog, peripheral nodes, also add
+support for wcss Q6 remoteproc driver and enable hw mutex, smem,
+mailbox, smp2p and rpmsg drivers
 
-On 14/02/20 4:28 pm, Faiz Abbas wrote:
-> Rob,
-> 
-> On 07/02/20 3:07 pm, Faiz Abbas wrote:
->> Rob,
->>
->> On 20/01/20 11:00 am, Faiz Abbas wrote:
->>> Hi Rob,
->>>
->>> On 15/01/20 7:20 am, Rob Herring wrote:
->>>> On Wed, Jan 08, 2020 at 08:39:18PM +0530, Faiz Abbas wrote:
->>>>> According to latest AM65x Data Manual[1], a different output tap delay
->>>>> value is recommended for all speed modes. Therefore, replace the
->>>>> ti,otap-del-sel binding with one ti,otap-del-sel- for each MMC/SD speed
->>>>> mode.
->>>>>
->>>>> [1] http://www.ti.com/lit/gpn/am6526
->>>>>
->>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>>> ---
->>>>>  .../devicetree/bindings/mmc/sdhci-am654.txt   | 21 +++++++++++++++++--
->>>>>  1 file changed, 19 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-am654.txt b/Documentation/devicetree/bindings/mmc/sdhci-am654.txt
->>>>> index 50e87df47971..c6ccecb9ae5a 100644
->>>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-am654.txt
->>>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-am654.txt
->>>>> @@ -18,7 +18,20 @@ Required Properties:
->>>>>  	- clocks: Handles to the clock inputs.
->>>>>  	- clock-names: Tuple including "clk_xin" and "clk_ahb"
->>>>>  	- interrupts: Interrupt specifiers
->>>>> -	- ti,otap-del-sel: Output Tap Delay select
->>>>> +	Output tap delay for each speed mode:
->>>>> +	- ti,otap-del-sel-legacy
->>>>> +	- ti,otap-del-sel-mmc-hs
->>>>> +	- ti,otap-del-sel-sd-hs
->>>>> +	- ti,otap-del-sel-sdr12
->>>>> +	- ti,otap-del-sel-sdr25
->>>>> +	- ti,otap-del-sel-sdr50
->>>>> +	- ti,otap-del-sel-sdr104
->>>>> +	- ti,otap-del-sel-ddr50
->>>>> +	- ti,otap-del-sel-ddr52
->>>>> +	- ti,otap-del-sel-hs200
->>>>> +	- ti,otap-del-sel-hs400
->>>>> +	  These bindings must be provided otherwise the driver will disable the
->>>>> +	  corresponding speed mode (i.e. all nodes must provide at least -legacy)
->>>>
->>>> Why not just extend the existing property to be an array. We already 
->>>> have properties to enable/disable speed modes.
->>>>
->>>
->>> Its hard to keep track of which modes have values and which don't when
->>> you add an array. This scheme is just easier on anyone adding new values
->>> or updating old values.
->>>
->>> We already disable speed modes based on platform specific properties in
->>> other drivers. In sdhci-omap.c, the driver disables the corresponding
->>> speed mode if the corresponding pinmux and iodelay values are not populated.
->>>
->>
->> Do you agree on above?
->>
-> 
-> Gentle ping.
-> 
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+[V2] * Addressed review comments from Stephen
+This patch depends on Sricharan's ipq6018 dts patch
+https://patchwork.kernel.org/patch/11340681/
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  34 ++++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 226 +++++++++++++++++++++++++++
+ 2 files changed, 260 insertions(+)
 
-Ping.
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+index 897b4b2..b31117a 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
++++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+@@ -28,3 +28,37 @@
+ 	pinctrl-names = "default";
+ 	status = "ok";
+ };
++
++&i2c_1 {
++	pinctrl-0 = <&i2c_1_pins>;
++	pinctrl-names = "default";
++	status = "ok";
++};
++
++&spi_0 {
++	cs-select = <0>;
++	status = "ok";
++
++	m25p80@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0>;
++		compatible = "n25q128a11";
++		spi-max-frequency = <50000000>;
++	};
++};
++
++&tlmm {
++	i2c_1_pins: i2c-1-pins {
++		pins = "gpio42", "gpio43";
++		function = "blsp2_i2c";
++		drive-strength = <8>;
++	};
++
++	spi_0_pins: spi-0-pins {
++		pins = "gpio38", "gpio39", "gpio40", "gpio41";
++		function = "blsp0_spi";
++		drive-strength = <8>;
++		bias-pull-down;
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 0fb44e5..1aa8d85 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -7,6 +7,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
++#include <dt-bindings/reset/qcom,gcc-ipq6018.h>
+ 
+ / {
+ 	#address-cells = <2>;
+@@ -69,6 +70,18 @@
+ 		};
+ 	};
+ 
++	firmware {
++		scm {
++			compatible = "qcom,scm";
++		};
++	};
++
++	tcsr_mutex: hwlock {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x80>;
++		#hwlock-cells = <1>;
++	};
++
+ 	pmuv8: pmu {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
+@@ -89,6 +102,22 @@
+ 			reg = <0x0 0x48500000 0x0 0x00200000>;
+ 			no-map;
+ 		};
++
++		smem_region: memory@4aa00000 {
++			reg = <0x0 0x4aa00000 0x0 0x00100000>;
++			no-map;
++		};
++
++		q6_region: memory@4ab00000 {
++			reg = <0x0 0x4ab00000 0x0 0x02800000>;
++			no-map;
++		};
++	};
++
++	smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_region>;
++		hwlocks = <&tcsr_mutex 0>;
+ 	};
+ 
+ 	soc: soc {
+@@ -98,6 +127,36 @@
+ 		dma-ranges;
+ 		compatible = "simple-bus";
+ 
++		prng: qrng@e1000 {
++			compatible = "qcom,prng-ee";
++			reg = <0xe3000 0x1000>;
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "core";
++		};
++
++		cryptobam: dma@704000 {
++			compatible = "qcom,bam-v1.7.0";
++			reg = <0x00704000 0x20000>;
++			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_CRYPTO_AHB_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <1>;
++			qcom,controlled-remotely = <1>;
++			qcom,config-pipe-trust-reg = <0>;
++		};
++
++		crypto: crypto@73a000 {
++			compatible = "qcom,crypto-v5.1";
++			reg = <0x0073a000 0x6000>;
++			clocks = <&gcc GCC_CRYPTO_AHB_CLK>,
++				<&gcc GCC_CRYPTO_AXI_CLK>,
++				<&gcc GCC_CRYPTO_CLK>;
++			clock-names = "iface", "bus", "core";
++			dmas = <&cryptobam 2>, <&cryptobam 3>;
++			dma-names = "rx", "tx";
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq6018-pinctrl";
+ 			reg = <0x01000000 0x300000>;
+@@ -125,6 +184,26 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		tcsr_mutex_regs: syscon@1905000 {
++			compatible = "syscon";
++			reg = <0x01905000 0x8000>;
++		};
++
++		tcsr_q6: syscon@1945000 {
++			compatible = "syscon";
++			reg = <0x01945000 0xe000>;
++		};
++
++		blsp_dma: dma@7884000 {
++			compatible = "qcom,bam-v1.7.0";
++			reg = <0x07884000 0x2b000>;
++			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <0>;
++		};
++
+ 		blsp1_uart3: serial@78b1000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+ 			reg = <0x078b1000 0x200>;
+@@ -135,6 +214,66 @@
+ 			status = "disabled";
+ 		};
+ 
++		spi_0: spi@78b5000 {
++			compatible = "qcom,spi-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b5000 0x600>;
++			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++			spi-max-frequency = <50000000>;
++			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
++				<&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			dmas = <&blsp_dma 12>, <&blsp_dma 13>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
++		spi_1: spi@78b6000 {
++			compatible = "qcom,spi-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b6000 0x600>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			spi-max-frequency = <50000000>;
++			clocks = <&gcc GCC_BLSP1_QUP2_SPI_APPS_CLK>,
++				<&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			dmas = <&blsp_dma 14>, <&blsp_dma 15>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
++		i2c_0: i2c@78b6000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b6000 0x600>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
++				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
++			clock-names = "iface", "core";
++			clock-frequency  = <400000>;
++			dmas = <&blsp_dma 15>, <&blsp_dma 14>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
++		i2c_1: i2c@78b7000 { /* BLSP1 QUP2 */
++			compatible = "qcom,i2c-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b7000 0x600>;
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
++				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
++			clock-names = "iface", "core";
++			clock-frequency  = <400000>;
++			dmas = <&blsp_dma 17>, <&blsp_dma 16>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
+ 		intc: interrupt-controller@b000000 {
+ 			compatible = "qcom,msm-qgic2";
+ 			interrupt-controller;
+@@ -146,6 +285,21 @@
+ 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		watchdog@b017000 {
++			compatible = "qcom,kpss-wdt";
++			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
++			reg = <0x0b017000 0x40>;
++			clocks = <&sleep_clk>;
++			timeout-sec = <10>;
++		};
++
++		apcs_glb: mailbox@b111000 {
++			compatible = "qcom,ipq8074-apcs-apps-global";
++			reg = <0x0b111000 0xc>;
++
++			#mbox-cells = <1>;
++		};
++
+ 		timer {
+ 			compatible = "arm,armv8-timer";
+ 			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+@@ -213,5 +367,77 @@
+ 			};
+ 		};
+ 
++		q6v5_wcss: remoteproc@cd00000 {
++			compatible = "qcom,ipq8074-wcss-pil";
++			reg = <0x0cd00000 0x4040>,
++				<0x004ab000 0x20>;
++			reg-names = "qdsp6",
++				    "rmb";
++			interrupts-extended = <&intc GIC_SPI 325 IRQ_TYPE_EDGE_RISING>,
++					      <&wcss_smp2p_in 0 0>,
++					      <&wcss_smp2p_in 1 0>,
++					      <&wcss_smp2p_in 2 0>,
++					      <&wcss_smp2p_in 3 0>;
++			interrupt-names = "wdog",
++					  "fatal",
++					  "ready",
++					  "handover",
++					  "stop-ack";
++
++			resets = <&gcc GCC_WCSSAON_RESET>,
++				 <&gcc GCC_WCSS_BCR>,
++				 <&gcc GCC_WCSS_Q6_BCR>;
++
++			reset-names = "wcss_aon_reset",
++				      "wcss_reset",
++				      "wcss_q6_reset";
++
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "prng";
++
++			qcom,halt-regs = <&tcsr_q6 0xa000 0xd000 0x0>;
++
++			qcom,smem-states = <&wcss_smp2p_out 0>,
++					   <&wcss_smp2p_out 1>;
++			qcom,smem-state-names = "shutdown",
++						"stop";
++
++			memory-region = <&q6_region>;
++
++			glink-edge {
++				interrupts = <GIC_SPI 321 IRQ_TYPE_EDGE_RISING>;
++				qcom,remote-pid = <1>;
++				mboxes = <&apcs_glb 8>;
++
++				qrtr_requests {
++					qcom,glink-channels = "IPCRTR";
++				};
++			};
++		};
++
++	};
++
++	wcss: wcss-smp2p {
++		compatible = "qcom,smp2p";
++		qcom,smem = <435>, <428>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <GIC_SPI 322 IRQ_TYPE_EDGE_RISING>;
++
++		mboxes = <&apcs_glb 9>;
++
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <1>;
++
++		wcss_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		wcss_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
+ 	};
+ };
+-- 
+2.7.4
 
-Thanks,
-Faiz
