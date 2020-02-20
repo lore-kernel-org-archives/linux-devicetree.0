@@ -2,185 +2,316 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D282BC11D04
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 10:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B748CC11D04
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF102071E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 10:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A7A2467A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCKjmQ4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgBTKaz (ORCPT
+        id S1727681AbgBTKgx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:30:55 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45579 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgBTKaz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 05:30:55 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v19so27016872oic.12;
-        Thu, 20 Feb 2020 02:30:54 -0800 (PST)
+        Thu, 20 Feb 2020 05:36:53 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52046 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727686AbgBTKgw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 05:36:52 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t23so1433615wmi.1
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 02:36:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=c1ucrX6kDoqvuZrczpj1ygyv9b4mpN9HnFpGLVezX98=;
+        b=vCKjmQ4avuiQBvVA6v1AT5yPxgLjWilXAa3IbRPPoqQSGbbDHfykkYQPTrFbu56HLx
+         4toUN2RbU7MBOB98GLjqCAO/p9LXZSFr/IjZ9kCUzwASPIZ/GfzylD/kfmWocSS6haw0
+         XjERbolm52cqchB3EvtAZ1aJbzaK8FwcMmNckqYrt+LeMMZz/hIUyea22WTPpsOIoPKt
+         mPjODwb7mqsc5bjW72nf7XJdjQobxwJB8tJXrGevmtVRZUpLi0fA0C6YDPewhbSZsuLa
+         XxsH77CuRbdlr8AMV54/KN31JofLp/cyBvDSmgFm4P6h7cTQBZn5gYO4EH5W9S3EOOEP
+         HLcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LaRxy7mSTm2TUALpIGXjpz65a6FCoe/jI7xl5xTwPto=;
-        b=dg8r1ikTI1ZZyBUFISRbgw9825x7ZU7/j2y4g68FQho6dczEffo/LCNoC7KhGwksCu
-         a61e62SvqJ5bhNrQbJV1G2RAsNuXFRolPI3ccoITbf6O4SekxA5808H0PS+ULgNKDZS7
-         SjERN3VZN4N2o8aGIhGIYkuMiN+IbM0ksvQgROyVVqumGaPONWIWkIlQJ0n3OWXka7L7
-         Bo9IUXdu4i7SrraqxBHSo70UFByIDrn2LOSAIegPqkH+UA3V3oOCLfOSCLe38J+q3ZIk
-         TbhtTPXZ7Mak14oUwuO/34Pe4MwTRIDYlIxXH6c92Ne2qArIOzyIhOsq88FLjzJBCWJa
-         QZvw==
-X-Gm-Message-State: APjAAAWdkJdsb+0OrOLkm7X2j7M3QORAoobg1x6Nbia5BouJ8B4wW6PE
-        LLjgM0mqJeuAVyH6uWSCjTbJ34AZ6onqOJ/xutkG64HQ
-X-Google-Smtp-Source: APXvYqzyg5SeUJapHnGnohk1i8hiYxXjg3x2KCPKIyEqlh7N9USv+WlDEtilOjkYsCFxXxjfurKt3yb828JFZbfyqQw=
-X-Received: by 2002:aca:48cd:: with SMTP id v196mr1496275oia.102.1582194654310;
- Thu, 20 Feb 2020 02:30:54 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=c1ucrX6kDoqvuZrczpj1ygyv9b4mpN9HnFpGLVezX98=;
+        b=RXHNe213XUdkSiGKGTIHTt5R+sgKmeOGHyKC76OZOBwpgQp82YIvf64BCInQ0B3FeY
+         g0Qek1yvfkssk8ty1aOIFINPndabg6jyEG6YNUFRP+PvfwaOEFyierOTZbM2vBPtAP78
+         g2962B6fHGM3+hxRMzzRecdNtwJ2JyteZYIRJliHv/YGDCqrQnkPJFrzuUKSYG+2FCgg
+         UoxL4iyTOYm9SkB92u5DoYA1eHT5HPaYoFG0H443GERlhHiOZYKQsww8hV3EchYWBWj0
+         dDiqy3XJhcdtzb6TDLyotLWKLnwDEqs0Z3+BxnW+WgGFUH9ykRatJKZ5Ufye9CmEddwO
+         ZQGQ==
+X-Gm-Message-State: APjAAAWp0bQMcSHetHcFWjfwAU+wgPoehUxSVctmDA1jEI9f9JnzYkPf
+        j+mu/dxjSYIOwD8OBW9RvBbPxA==
+X-Google-Smtp-Source: APXvYqyhMe/4kMqii0zRl6GDawQWobGJyJ0OvQlM3cE7fc+wpSIzdtfNPunm+Sili4biQo/BAg/QwA==
+X-Received: by 2002:a1c:b486:: with SMTP id d128mr3753873wmf.69.1582195009938;
+        Thu, 20 Feb 2020 02:36:49 -0800 (PST)
+Received: from [192.168.0.41] (6.198.22.93.rev.sfr.net. [93.22.198.6])
+        by smtp.googlemail.com with ESMTPSA id x7sm3996843wrq.41.2020.02.20.02.36.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 02:36:49 -0800 (PST)
+Subject: Re: [PATCH v4 3/3] clocksource: Add Low Power STM32 timers driver
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, lee.jones@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        tglx@linutronix.de, fabrice.gasnier@st.com
+Cc:     devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Pascal Paillet <p.paillet@st.com>
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-4-benjamin.gaignard@st.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <687ab83c-6381-57aa-3bc1-3628e27644b5@linaro.org>
+Date:   Thu, 20 Feb 2020 11:36:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1582018657-5720-1-git-send-email-nbelin@baylibre.com> <1582018657-5720-3-git-send-email-nbelin@baylibre.com>
-In-Reply-To: <1582018657-5720-3-git-send-email-nbelin@baylibre.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 20 Feb 2020 11:30:43 +0100
-Message-ID: <CAMuHMdWPgUKOHyspV3bL_4YKsxgXvEgQqdOzoo-8s8gi_g3rVw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: leds: Shiji Lighting APA102C LED driver
-To:     Nicolas Belin <nbelin@baylibre.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200217134546.14562-4-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nicolas,
-
-CC devicetree, Lukas
-
-On Tue, Feb 18, 2020 at 10:39 AM Nicolas Belin <nbelin@baylibre.com> wrote:
-> Document Shiji Lighting APA102C LED driver device tree bindings.
->
-> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+On 17/02/2020 14:45, Benjamin Gaignard wrote:
+> From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> 
+> Implement clock event driver using low power STM32 timers.
+> Low power timer counters running even when CPUs are stopped.
+> It could be used as clock event broadcaster to wake up CPUs but not like
+> a clocksource because each it rise an interrupt the counter restart from 0.
+> 
+> Low power timers have a 16 bits counter and a prescaler which allow to
+> divide the clock per power of 2 to up 128 to target a 32KHz rate.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> Signed-off-by: Pascal Paillet <p.paillet@st.com>
 > ---
->  .../devicetree/bindings/leds/leds-apa102c.yaml     | 91 ++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-apa102c.yaml
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-apa102c.yaml b/Documentation/devicetree/bindings/leds/leds-apa102c.yaml
+> version 4:
+> - move defines in mfd/stm32-lptimer.h
+> - change compatiblename
+> - reword commit message
+> - make driver Kconfig depends of MFD_STM32_LPTIMER
+> - remove useless include
+> - remove rate and clk fields from the private structure
+> - to add comments about the registers sequence in stm32_clkevent_lp_set_timer
+> - rework probe function and use devm_request_irq()
+> - do not allow module to be removed
+> - make sure that wakeup interrupt is set
+> 
+>  drivers/clocksource/Kconfig          |   7 ++
+>  drivers/clocksource/Makefile         |   1 +
+>  drivers/clocksource/timer-stm32-lp.c | 213 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 221 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-stm32-lp.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index cc909e465823..9fc2b513db6f 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -292,6 +292,13 @@ config CLKSRC_STM32
+>  	select CLKSRC_MMIO
+>  	select TIMER_OF
+>  
+> +config CLKSRC_STM32_LP
+> +	bool "Low power clocksource for STM32 SoCs"
+> +	depends on MFD_STM32_LPTIMER || COMPILE_TEST
+> +	help
+> +	  This option enables support for STM32 low power clockevent available
+> +	  on STM32 SoCs
+> +
+>  config CLKSRC_MPS2
+>  	bool "Clocksource for MPS2 SoCs" if COMPILE_TEST
+>  	depends on GENERIC_SCHED_CLOCK
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 713686faa549..c00fffbd4769 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -44,6 +44,7 @@ obj-$(CONFIG_BCM_KONA_TIMER)	+= bcm_kona_timer.o
+>  obj-$(CONFIG_CADENCE_TTC_TIMER)	+= timer-cadence-ttc.o
+>  obj-$(CONFIG_CLKSRC_EFM32)	+= timer-efm32.o
+>  obj-$(CONFIG_CLKSRC_STM32)	+= timer-stm32.o
+> +obj-$(CONFIG_CLKSRC_STM32_LP)	+= timer-stm32-lp.o
+>  obj-$(CONFIG_CLKSRC_EXYNOS_MCT)	+= exynos_mct.o
+>  obj-$(CONFIG_CLKSRC_LPC32XX)	+= timer-lpc32xx.o
+>  obj-$(CONFIG_CLKSRC_MPS2)	+= mps2-timer.o
+> diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
 > new file mode 100644
-> index 000000000000..24bc2fc19fcb
+> index 000000000000..50eecdb88216
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-apa102c.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-apa102c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/drivers/clocksource/timer-stm32-lp.c
+> @@ -0,0 +1,213 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
+> + * Authors: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
+> + *	    Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
+> + */
 > +
-> +title: LED driver for Shiji Lighting - APA102C
+> +#include <linux/clk.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/stm32-lptimer.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_wakeirq.h>
 > +
-> +maintainers:
-> +  - Nicolas Belin <nbelin@baylibre.com>
+> +#define CFGR_PSC_OFFSET		9
+> +#define STM32_LP_RATING		400
+> +#define STM32_TARGET_CLKRATE	(32000 * HZ)
+> +#define STM32_LP_MAX_PSC	7
 > +
-> +description:
-> +  Each LED is represented as a sub-node of the leds-apa102c device.  Each LED
-> +  is a three color RGB LED with 32 levels brightness adjustment that can be
-> +  cascaded so that multiple LEDs can be set with a single command.
+> +struct stm32_lp_private {
+> +	struct regmap *reg;
+> +	struct clock_event_device clkevt;
+> +	unsigned long period;
+> +};
 > +
-> +properties:
-> +  compatible:
-> +    const: shiji,apa102c
+> +static struct stm32_lp_private*
+> +to_priv(struct clock_event_device *clkevt)
+> +{
+> +	return container_of(clkevt, struct stm32_lp_private, clkevt);
+> +}
 > +
-> +  reg:
-> +    maxItems: 1
+> +static int stm32_clkevent_lp_shutdown(struct clock_event_device *clkevt)
+> +{
+> +	struct stm32_lp_private *priv = to_priv(clkevt);
 > +
-> +  spi-max-frequency:
-> +    maximum: 1000000
+> +	regmap_write(priv->reg, STM32_LPTIM_CR, 0);
+> +	regmap_write(priv->reg, STM32_LPTIM_IER, 0);
+> +	/* clear pending flags */
+> +	regmap_write(priv->reg, STM32_LPTIM_ICR, STM32_LPTIM_ARRMCF);
 > +
-> +  "#address-cells":
-> +    const: 1
+> +	return 0;
+> +}
 > +
-> +  "#size-cells":
-> +    const: 0
+> +static int stm32_clkevent_lp_set_timer(unsigned long evt,
+> +				       struct clock_event_device *clkevt,
+> +				       int is_periodic)
+> +{
+> +	struct stm32_lp_private *priv = to_priv(clkevt);
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - spi-max-frequency
-> +  - '#address-cells'
-> +  - '#size-cells'
+> +	/* disable LPTIMER to be able to write into IER register*/
+> +	regmap_write(priv->reg, STM32_LPTIM_CR, 0);
+> +	/* enable ARR interrupt */
+> +	regmap_write(priv->reg, STM32_LPTIM_IER, STM32_LPTIM_ARRMIE);
+> +	/* enable LPTIMER to be able to write into ARR register */
+> +	regmap_write(priv->reg, STM32_LPTIM_CR, STM32_LPTIM_ENABLE);
+> +	/* set next event counter */
+> +	regmap_write(priv->reg, STM32_LPTIM_ARR, evt);
 > +
-> +patternProperties:
-> +  "^led@[0-9]+$":
-> +    type: object
-> +    description: |
-> +      Properties for an array of connected LEDs.
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          This property corresponds to the led index. It has to be between 0
-> +          and the number of managed leds minus 1
-> +        maxItems: 1
-> +
-> +      label:
-> +        description: |
-> +          This property corresponds to the name of the led. If not set,
-> +          the led index will be used to create the led name instead
-> +        maxItems: 1
-> +
-> +      linux,default-trigger: true
-> +
-> +    required:
-> +      - reg
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        led-controller@0 {
-> +            compatible = "shiji,apa102c";
-> +            reg = <0>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            spi-max-frequency = <1000000>;
-> +            led@0 {
-> +                reg = <0>;
-> +                label = "led1";
-> +            };
-> +
-> +            led@1 {
-> +                reg = <1>;
-> +                label = "led2";
-> +            };
-> +
-> +            led@2 {
-> +                reg = <2>;
-> +                label = "led3";
-> +            };
-> +        };
-> +    };
+> +	/* start counter */
+> +	if (is_periodic)
+> +		regmap_write(priv->reg, STM32_LPTIM_CR,
+> +			     STM32_LPTIM_CNTSTRT | STM32_LPTIM_ENABLE);
+> +	else
+> +		regmap_write(priv->reg, STM32_LPTIM_CR,
+> +			     STM32_LPTIM_SNGSTRT | STM32_LPTIM_ENABLE);
 
-Perhaps this should use "#daisy-chained-devices" instead of listing all LEDs
-explicitly?
-Or would that cause problems w.r.t. LED labeling?
+The regmap config in stm32-lptimer is not defined with the fast_io flag
+(on purpose or not?) that means we can potentially deadlock here as the
+lock is a mutex.
 
-Documentation/devicetree/bindings/common-properties.txt
+Isn't it detected with the lock validation scheme?
 
-Gr{oetje,eeting}s,
+> +	return 0;
+> +}
+> +static int stm32_clkevent_lp_remove(struct platform_device *pdev)
+> +{
+> +	return -EBUSY; /* cannot unregister clockevent */
+> +}
 
-                        Geert
+Won't be the mfd into an inconsistent state here? The other subsystems
+will be removed but this one will prevent to unload the module leading
+to a situation where the mfd is partially removed but still there
+without a possible recovery, no?
+
+> +static const struct of_device_id stm32_clkevent_lp_of_match[] = {
+> +	{ .compatible = "st,stm32-lptimer-timer", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, stm32_clkevent_lp_of_match);
+> +
+> +static struct platform_driver stm32_clkevent_lp_driver = {
+> +	.probe	= stm32_clkevent_lp_probe,
+> +	.remove = stm32_clkevent_lp_remove,
+> +	.driver	= {
+> +		.name = "stm32-lptimer-timer",
+> +		.of_match_table = of_match_ptr(stm32_clkevent_lp_of_match),
+> +	},
+> +};
+
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
