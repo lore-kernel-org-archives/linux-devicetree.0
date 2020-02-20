@@ -2,100 +2,176 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34207C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF19C11D0C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EBF3206F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BA7206E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582228289;
-	bh=BZllZP0S6mHq3M1d/mWw0S2QK7ydm/Mjik/9RGjRhL8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uU8ecHpV7DFOhVGi9l9VyJkcDhdCulax/gsVh1BZRHQutVsWX7KW2bqTJm0wov4f9
-	 j8PiREM2/bpDl0VjQkoVwc9dMVEcG431FSQzLS9FJ51znyM1h4mAoq2NEqdBYS8WJQ
-	 Gxkr6xLipr5+JUPP+jxE9iTu5aHfhQYMgbS0rWDw=
+	s=default; t=1582228452;
+	bh=G7F0PXamV8KjthSBpmnQYzM9wFyKJlEKoCMkaPi/V2A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sVnZ8QJUBJtJb4YwCU/KFcIPXgR9U7rRFDhGuypEA44+mdGd1yMvWJtkc82QZXasW
+	 gKuX9TvuI1RSkd0Mjuht+nuMnRhVcdGCt9SJZkXqEg68LXGK1QSxpJdch/JD3CxKWc
+	 L8Yty/jBEp31llCWlJnd+5ndJPQnd8ZF8Efhx+sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgBTTvZ (ORCPT
+        id S1728865AbgBTTyI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:51:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:50438 "EHLO foss.arm.com"
+        Thu, 20 Feb 2020 14:54:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbgBTTvZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:51:25 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D90DF30E;
-        Thu, 20 Feb 2020 11:51:24 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EF083F68F;
-        Thu, 20 Feb 2020 11:51:24 -0800 (PST)
-Date:   Thu, 20 Feb 2020 19:51:22 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org,
+        id S1728556AbgBTTyI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:54:08 -0500
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD217208E4;
+        Thu, 20 Feb 2020 19:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582228447;
+        bh=G7F0PXamV8KjthSBpmnQYzM9wFyKJlEKoCMkaPi/V2A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QBbz2JVlL4gMj+bS1andjj5ao4hXrn6mRCwkQXu+GYp+ytsMzxurmAj1uGfifTfvS
+         BIP92Y44BHzLEYC80V2kJn/hgSTB9+wMDxhTJr+PmCsioO0byrKdVWIb8eQmIsjfgw
+         XTeymf6neRgd1tabn0V11TyrknFmoCCjnP/e8oYw=
+Received: by mail-qk1-f180.google.com with SMTP id o28so4744342qkj.9;
+        Thu, 20 Feb 2020 11:54:07 -0800 (PST)
+X-Gm-Message-State: APjAAAXkezniAWzeyhGgM17YluTC3Nm9shk20G83yhGRX0ovJLySDXEC
+        uSeCrli5ObJX312ozF5P5+LPeCcIx+oC4TZIhQ==
+X-Google-Smtp-Source: APXvYqwUpbePX8rcwBZf0o9pMlMFzEH0M7fCorDHPbfwgZVsl3To5oa244R0QJ3sIPjUMWARlW8Y5KyDGO8NwfCeV64=
+X-Received: by 2002:a37:5347:: with SMTP id h68mr29237844qkb.393.1582228446784;
+ Thu, 20 Feb 2020 11:54:06 -0800 (PST)
+MIME-Version: 1.0
+References: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com> <20200220060001.25807-1-andreas@kemnade.info>
+In-Reply-To: <20200220060001.25807-1-andreas@kemnade.info>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 20 Feb 2020 13:53:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKTdpbLfPq_eGUf-w-0s8JMndbMrQ2BsMt+8y+eqQ-kZw@mail.gmail.com>
+Message-ID: <CAL_JsqKTdpbLfPq_eGUf-w-0s8JMndbMrQ2BsMt+8y+eqQ-kZw@mail.gmail.com>
+Subject: Re: [PATCH RFC] Bindings: nvmem: add bindings for JZ4780 efuse
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] rewrite mtk-quadspi spi-nor driver with spi-mem
-Message-ID: <20200220195122.GL3926@sirena.org.uk>
-References: <20200215065826.739102-1-gch981213@gmail.com>
- <20200218125557.GD4232@sirena.org.uk>
- <CAJsYDVL03KJv7eewGekBPCfpbOuTX0tJ6qZaydvJnBDzZ5vEwg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kaF1vgn83Aa7CiXN"
-Content-Disposition: inline
-In-Reply-To: <CAJsYDVL03KJv7eewGekBPCfpbOuTX0tJ6qZaydvJnBDzZ5vEwg@mail.gmail.com>
-X-Cookie: You are number 6!  Who is number one?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Feb 20, 2020 at 12:00 AM Andreas Kemnade <andreas@kemnade.info> wrote:
+>
+> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>
+> This patch brings support for the JZ4780 efuse. Currently it only expose
+> a read only access to the entire 8K bits efuse memory.
+>
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> [converted to yaml]
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> I will not update/maintain this, just have the impression that here some
+> more work is needed to make somebody comfortable with yaml than stick
+> to the usual pointing to documentation and I have not the ingredients
+> for doing
+> cat  Antihistamines >/dev/brain ;-)
+> and I do not want to see the other patches get lost.
 
---kaF1vgn83Aa7CiXN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Looks about right...
 
-On Thu, Feb 20, 2020 at 07:58:06AM +0800, Chuanhong Guo wrote:
-> On Tue, Feb 18, 2020 at 8:55 PM Mark Brown <broonie@kernel.org> wrote:
+>
+>  .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+> new file mode 100644
+> index 000000000000..ad56c17b0bd5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-> > This is an ABI break so you shouldn't be doing this, if the existing
-> > binding works it should continue to work.
+Dual license new bindings please:
 
-> The missing spi-max-frequency is the only part preventing old
-> device tree to work with this driver.
-> If the goal is to make existing dt binding work, I could patch dt using
-> of_add_property in v2. I saw similar device tree patching for legacy
-> bindings in pinctrl-single driver.
+(GPL-2.0-only OR BSD-2-Clause)
 
-That's fine I think, so long as old DTs continue to work.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Ingenic JZ EFUSE driver bindings
+> +
+> +maintainers:
+> +  - tbd <tbd@tbd>
+> +
+> +allOf:
+> +  - $ref: "nvmem.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ingenic,jz4780-efuse
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    # Handle for the ahb for the efuse.
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +   items:
+> +     - const:  bus_clk
 
---kaF1vgn83Aa7CiXN
-Content-Type: application/pgp-signature; name="signature.asc"
+My prior comment still applies.
 
------BEGIN PGP SIGNATURE-----
+Also, for a single clock, you don't really need a name.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5O4zkACgkQJNaLcl1U
-h9CnhQf/csTFVBvPtYuq5Xz1OdgQcpPuRzKFr7JAXvgpfAUv5qPV/34M4juJxze6
-ei2b2s9UlxK2Naa8GFKqAEKOK79jnk5HrI7QkELb2UpQPSJQKubjc8iHzDsQ8rgC
-V7Qf/2Lv2J/NW4R2XzC0ZXMeSnEMBQepx/pUCQnwXOqReWiy/l2X7pLEJsI4J4pR
-ba9BzEWWAXYoP4SYj/cVlqhWrBh807h6owmwTlV86VrwRRh2cxosTUZVMx6nRNq6
-MBFLZ/vayfFd9LF7BQ5r2isKv+BUrZZ8bd06Gt8vZrrLBoH4YiGhXDLL3CGWvFhk
-6M/bBGLDrkTKwSBb6zMaLOsygszigQ==
-=rZ8a
------END PGP SIGNATURE-----
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clock
 
---kaF1vgn83Aa7CiXN--
+'make dt_binding_check' would have pointed the error here for you:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.example.dt.yaml:
+efuse@134100d0: 'clock' is a required property
+
+> +  - clock-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4780-cgu.h>
+> +
+> +    efuse@134100d0 {
+> +        compatible = "ingenic,jz4780-efuse";
+> +        reg = <0x134100d0 0x2c>;
+> +
+> +        clocks = <&cgu JZ4780_CLK_AHB2>;
+> +        clock-names = "bus_clk";
+> +    };
+> +
+> +...
+> --
+> 2.20.1
+>
