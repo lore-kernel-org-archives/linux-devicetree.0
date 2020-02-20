@@ -2,133 +2,95 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35895C11D05
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 08:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F00C11D00
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 08:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3FF208C4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 08:24:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="e5zQOyPw"
+	by mail.kernel.org (Postfix) with ESMTP id 169DA208C4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 08:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgBTIYm (ORCPT
+        id S1726771AbgBTIek (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:24:42 -0500
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:37961 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726759AbgBTIYm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:24:42 -0500
-Received: from [192.168.2.10] ([46.9.235.248])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 4h8Gj9V8XyIme4h8JjiULX; Thu, 20 Feb 2020 09:24:40 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582187080; bh=zjCtsEIa08AGTyanHrsqF+rTfgRcOyOrIkiDIW9QfEQ=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=e5zQOyPw3QKs6KKOXVTapY7zvgPVaf4D1dmdNZhCpta6p9SVSXCqve5sn6z7mKif1
-         pb1AKVPkcwb4fHktMChS912Q+f4Vc3HYjoSFOUvEi7LeMcO/tnyA62EH99DFJJ+8my
-         bn3gTZk50O6lUT0Y6g6z0js3zzpDfERWGx4T2RJh/0v4AM01zd1Y7HR/ClEm4GKqqY
-         480FGhbOQIqCvF7AracdWIDQdLIxuejwv+DUezEiY/Va4oVC3ozHV24sRgbpq/OZkN
-         Eg4FJJoHNOsRzCDF6dTsFRm3WI4WGZpH+rZTsBEqSEtmuo2CCD+WybfrufQy1uK6sX
-         weAIEC8bT8uPw==
-Subject: Re: [PATCH v5 0/6] media: rockchip: Add the rkvdec driver
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-References: <20200219173750.26453-1-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <de59d088-ec08-c851-77f2-545053ca0cbb@xs4all.nl>
-Date:   Thu, 20 Feb 2020 09:24:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 03:34:40 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:54414 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgBTIek (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 03:34:40 -0500
+X-AuditID: c0a8fbf4-473ff70000004419-ff-5e4e449e3033
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id E2.55.17433.E944E4E5; Thu, 20 Feb 2020 09:34:38 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Thu, 20 Feb 2020 09:34:34 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>
+CC:     "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH v3 3/8] drivers: base: add linear ranges helpers
+Thread-Topic: [RFC PATCH v3 3/8] drivers: base: add linear ranges helpers
+Thread-Index: AQHV58BcZJpQgU8ZXUak5RlY2LGYvqgjo9cAgAANCYA=
+Date:   Thu, 20 Feb 2020 08:34:33 +0000
+Message-ID: <1eaaa72f167e370cc2875dfa43ee0198ec7d0cfc.camel@fi.rohmeurope.com>
+References: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+         <1f6cb9fb9dbc429dc48110f18ad3a8c0c40196c6.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+         <2f0755df-4bc6-c53d-edea-45bc99e6a47b@infradead.org>
+In-Reply-To: <2f0755df-4bc6-c53d-edea-45bc99e6a47b@infradead.org>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A415A209DAF1BE4E82B744B915D72122@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200219173750.26453-1-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfOyDD88T/3EMGCMjiQ/rzRGQ0jdIDCkWv1DdNKCpVI/4w5Cr6yo3Q06FVkJqXBj2A/AF8uNxU5N0ohwJP8ItCv7gMCAjZil9+L0i2TT/KIHkh6/LVTnF
- XuL4xyx0NyXmDJylYEagN76KqPIEX9fTqodrzPMm1aDY/cwtPw/ldGqJzhrN4AQywVZKOZS2h462t4NXwi8xtklkeZT8Au8Faeb+icbz88qGjHmppbgpegKM
- AekfK1/jSC+XrZiujG4aNcLxvSAWZqq29ysQT6UdV5bFz98We17THzekZ7D+VVPEf5mNt3rv5MU3D2YifcYsW1dTBEKEOxbRwPrv9zAr7RjCXbLl8+swBJy/
- YrCDEX81s+Ab26YRSSyoXXLq1X5rI2mRdS9J2L1djmkG7PX45PbCJOEPQmmezJ3FpB0xjoLhpYlPooEJVXrAz1G83arO8kyYPcLJ+M0llUrM1ceqpJZn7WKt
- Rwa8KWRZkl2MGivkPKkuX4nzA+M9DrmIvH2T8ylv8Q6AQkEHQa+yyY6W+4EpjKmA9SmGqptLhTuFftjjp4Upuc9N2YrkoXGJoarMjaEY4mvRlt/eDWlJp8FG
- gZTyHGPR3azbocsENwKFaMzbhdU/CpT2PDHW4UWLddsNyHAl5TBRTyvL7PvLvMql52RoFDH7JP0fRTsaMriakvN5mH4EqRLPTxK0RuEV3EZMlA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPJsWRmVeSWpSXmKPExsVyYMXvTbrzXPziDPausbSY+vAJm8X8I+dY
+        LZoXr2ez+Halg8ni8q45bBafe48wWiy9fpHJYs7SEywWc79MZbZ4e2c6i0Xr3iPsFqd3lzjw
+        eKyZt4bRY+esu+wem1doeWxa1cnmsX/uGnaPz5vkAtiiuG2SEkvKgjPT8/TtErgzPn1+yVRw
+        h7Ni8f+pLA2Mezi7GDk5JARMJNp3H2brYuTiEBK4yijRf/0eM4RzglFi+rS7TF2MHBxsAjYS
+        XTfZQRpEBHIkVk/qA2tgFnjEInF8Rg8bSEJYwENi74xXTBBFnhJb7sxmhbCtJM6+PQXWzCKg
+        KjF7bhuYzSvgJ/G4tRdq821GidYLnWDNnAKOEhsnTwJrZhSQlehseAcWZxYQl9j07DsrxNkC
+        Ekv2nGeGsEUlXj7+BxVXktj78yELyNHMApoS63fpQ5gOEg/Os0FMUZSY0v0Q6gRBiZMzn7BM
+        YBSbhWTBLITmWQjNs5A0z0LSvICRdRWjRG5iZk56YkmqoV5RaqleUX5GLpBKzs/dxAiJ8C87
+        GP8f8jzEyMTBeIhRkoNJSZR3hohfnBBfUn5KZUZicUZ8UWlOavEhRgkOZiURXjUeoBxvSmJl
+        VWpRPkxKmoNFSZxX/eHEWCEBkF3ZqakFqUUwWRkODiUJ3kRnoEbBotT01Iq0zJwShDQTByfI
+        cC4pkeLUvJTUosTSkox4UPKILwamD5AUD9De/w4ge4sLEnOBohCtpxi1OSa8nLuImePI3KWL
+        mIVY8vLzUqXEecucgEoFQEozSvPgFr1iFOdgVBLmXQ+S5QGmerg5r4BWMAGteC/sA7KiJBEh
+        JdXA6JBQ81nh5XP7AL+PMwLZF/FvPxTqGJH4c1fr/Mnz3eWiIhtnSTKsTZjJs2/FRKm9de1V
+        i4zr7v66vDagZLZPwIxk5l0pFrIZTY/n1dc3hcz8sPWAy7tjTdXnjC9+mrzefpareyaj6O4d
+        xq1PNUVb1u2tvCt0ecWqlLVbVvAlHFEx774Yu/SthRJLcUaioRZzUXEiAC5psxSyAwAA
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/19/20 6:37 PM, Ezequiel Garcia wrote:
-> Hello,
-> 
-> This is v5 of Boris' rkvdec driver.
-> 
-> This version corrects wrong copyright notices and then adds
-> a TODO file for the staging driver. The only reason to keep the
-> driver in staging are the staging uAPI controls.
-
-Can you post a follow-up patch that updates the MAINTAINERS file?
-That's missing in this series.
-
-Thanks!
-
-	Hans
-
-> 
-> Thanks,
-> Ezequiel
-> 
-> Boris Brezillon (5):
->   media: v4l2-core: Add helpers to build the H264 P/B0/B1 reflists
->   media: hantro: h264: Use the generic H264 reflist builder
->   media: dt-bindings: rockchip: Document RK3399 Video Decoder bindings
->   media: rkvdec: Add the rkvdec driver
->   arm64: dts: rockchip: rk3399: Define the rockchip Video Decoder node
-> 
-> Jonas Karlman (1):
->   media: uapi: h264: Add DPB entry field reference flags
-> 
->  .../bindings/media/rockchip,vdec.yaml         |   71 +
->  .../media/uapi/v4l/ext-ctrls-codec.rst        |   16 +
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi      |   14 +-
->  drivers/media/v4l2-core/Kconfig               |    4 +
->  drivers/media/v4l2-core/Makefile              |    1 +
->  drivers/media/v4l2-core/v4l2-h264.c           |  258 ++++
->  drivers/staging/media/Kconfig                 |    2 +
->  drivers/staging/media/Makefile                |    1 +
->  drivers/staging/media/hantro/Kconfig          |    1 +
->  drivers/staging/media/hantro/hantro_h264.c    |  237 +---
->  drivers/staging/media/rkvdec/Kconfig          |   15 +
->  drivers/staging/media/rkvdec/Makefile         |    3 +
->  drivers/staging/media/rkvdec/TODO             |   11 +
->  drivers/staging/media/rkvdec/rkvdec-h264.c    | 1154 +++++++++++++++++
->  drivers/staging/media/rkvdec/rkvdec-regs.h    |  223 ++++
->  drivers/staging/media/rkvdec/rkvdec.c         | 1134 ++++++++++++++++
->  drivers/staging/media/rkvdec/rkvdec.h         |  123 ++
->  include/media/h264-ctrls.h                    |    2 +
->  include/media/v4l2-h264.h                     |   86 ++
->  19 files changed, 3126 insertions(+), 230 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
->  create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
->  create mode 100644 drivers/staging/media/rkvdec/Kconfig
->  create mode 100644 drivers/staging/media/rkvdec/Makefile
->  create mode 100644 drivers/staging/media/rkvdec/TODO
->  create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264.c
->  create mode 100644 drivers/staging/media/rkvdec/rkvdec-regs.h
->  create mode 100644 drivers/staging/media/rkvdec/rkvdec.c
->  create mode 100644 drivers/staging/media/rkvdec/rkvdec.h
->  create mode 100644 include/media/v4l2-h264.h
-> 
-
+VGhhbmtzIGZvciB0YWtpbmcgYSBsb29rIGF0IHRoaXMgUmFuZHkgOikgSGlnaGx5IGFwcHJlY2lh
+dGVkLg0KDQpPbiBXZWQsIDIwMjAtMDItMTkgYXQgMjM6NDcgLTA4MDAsIFJhbmR5IER1bmxhcCB3
+cm90ZToNCj4gSGksDQo+IEhlcmUgYXJlIHNvbWUga2VybmVsLWRvYyBjb21tZW50cyBmb3IgeW91
+Og0KDQpJIGFncmVlZCB3aXRoIGFsbCB0aGUgY29tbWVudHMgLSBJJ2xsIGZpeCB0aGVtIGZvciBu
+ZXh0IHZlcnNpb24uDQoNCj4gT24gMi8xOS8yMCAxMTozNSBQTSwgTWF0dGkgVmFpdHRpbmVuIHdy
+b3RlOg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2Jhc2UvS2NvbmZpZyAgICAgICAgIHwgICAzICsN
+Cj4gPiAgZHJpdmVycy9iYXNlL01ha2VmaWxlICAgICAgICB8ICAgMSArDQo+ID4gIGRyaXZlcnMv
+YmFzZS9saW5lYXJfcmFuZ2VzLmMgfCAyNDYNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L2xpbmVhcl9yYW5nZS5oIHwgIDQ4ICsrKysr
+KysNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAyOTggaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9iYXNlL2xpbmVhcl9yYW5nZXMuYw0KPiA+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgaW5jbHVkZS9saW51eC9saW5lYXJfcmFuZ2UuaA0KPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2Jhc2UvbGluZWFyX3Jhbmdlcy5jDQo+ID4gYi9kcml2ZXJzL2Jhc2UvbGluZWFyX3Jh
+bmdlcy5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAu
+LjVmYTNiOTZiZjJiOA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2Jhc2Uv
+bGluZWFyX3Jhbmdlcy5jDQoNCg0KQmVzdCBSZWdhcmRzLA0KCU1hdHRpIFZhaXR0aW5lbg0K
