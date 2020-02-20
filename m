@@ -2,97 +2,160 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2975C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2587AC11D0C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B62208CD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFAD4206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582227539;
-	bh=IImhIpXQHLsVWHOTFfRjPqr3DNYlAfqdkTR10VY+v08=;
+	s=default; t=1582227663;
+	bh=0wre2PhbpSA1aEnoeMZ1bcwtIXAHkDXm1zKnDVREcMk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s1D00DAr1gamYNRM46rgzDxSJapQr3D+0B6er8pUMfhSu4HRjsFIL7qtSnSEHa3bU
-	 G/L/yUjSlA6t2gL/0tO4GzaEY5TSDue8VVyMa4ZROym3BiT00vtFnhAK45VwN8BYkU
-	 LGGAs68BJ0jI6LnhBM2CQ/o1YjIpYfcjNq3BtJDk=
+	b=yBKMDiZhgCNvy82gVhiE9z3arfDlmSSyN2qozI8PMtkCvWFQT9TK3+qk9kDbfO+jB
+	 TaZgTrBOpmUYDAwE9OPacpYmrx+Af5zpW/Vk16e1AipNUUTYPVU2aEiBKeEMS180FO
+	 nn1NKVU018SbTIvM04E4w31HtOPROEisFQazk19c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgBTTi7 (ORCPT
+        id S1728759AbgBTTlC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:38:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41538 "EHLO mail.kernel.org"
+        Thu, 20 Feb 2020 14:41:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbgBTTi7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:38:59 -0500
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        id S1728248AbgBTTlC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:41:02 -0500
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842402465D;
-        Thu, 20 Feb 2020 19:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69AC8206F4;
+        Thu, 20 Feb 2020 19:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582227538;
-        bh=IImhIpXQHLsVWHOTFfRjPqr3DNYlAfqdkTR10VY+v08=;
+        s=default; t=1582227661;
+        bh=0wre2PhbpSA1aEnoeMZ1bcwtIXAHkDXm1zKnDVREcMk=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yexM5yuUfCHrhwQCWxbacWrejBJwLeYpC4gbEYNXidG5m7O5gIJKHk/a8FLE+few2
-         IJJj3tBU5nRKpumEqIJi07lyB+1CpG9+0Kw18eAbxEszu9oZPMiEWFE2y9k6dyOMvN
-         teJJ4C0NuI1YBa0uuXycY7pnBO71LRHZFwhWHCgI=
-Received: by mail-qk1-f182.google.com with SMTP id b7so4712698qkl.7;
-        Thu, 20 Feb 2020 11:38:58 -0800 (PST)
-X-Gm-Message-State: APjAAAUBGsEi/rnoQbAzjL0vRJRYOAH2Hu3yIiaU5RF7Qi+EBWpBfrv+
-        chceQJK80NIUm/2lByCRHj+MrDYRIbtQu1197Q==
-X-Google-Smtp-Source: APXvYqxK31PuR/mC2GifOubTB/mAdkh3PZjv+HTIqg9smA3ua/7xRkdCEU8fN2lAdCqevLlUfHaorEEVN8o3jWhflzE=
-X-Received: by 2002:a37:9d47:: with SMTP id g68mr24107540qke.119.1582227537683;
- Thu, 20 Feb 2020 11:38:57 -0800 (PST)
+        b=onGUmZ4W5YgNq6a6cohwh4PcfU3bSROgWlTISRwk6Tu4qja+yGJdoTcfTIuItS4X0
+         6/noPkMXCG2AWjgYUOGkW9pJOBQCNtOmEfYnV9poABQ5qG7X3jEsN2ArrSIhZNy2U4
+         fDOntJCGfiV/LN5jbMQQCuHJNcVw1mjFRCTOtOpM=
+Received: by mail-qt1-f178.google.com with SMTP id t13so3761767qto.3;
+        Thu, 20 Feb 2020 11:41:01 -0800 (PST)
+X-Gm-Message-State: APjAAAU/a8+ebsvRPsXIsIQ8/vMtJYEadx2WXuwrthzMCQ/j91qIkw8j
+        W+zjOIFPQlu1AZ0cXJ/ms/mizOIeWLpdQmEg2g==
+X-Google-Smtp-Source: APXvYqzDn8h46fe/CUa7KJYYUBSmCXArXpHfC06sW0cJBJhvkkTyV8xOPINS5zIjiic0Sfqc+1Sca27kEmFwAHiwRwU=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr28142441qtp.224.1582227660541;
+ Thu, 20 Feb 2020 11:41:00 -0800 (PST)
 MIME-Version: 1.0
-References: <87blq1zr8n.wl-kuninori.morimoto.gx@renesas.com>
- <20200219155808.GA25095@bogus> <871rqqt0nj.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <871rqqt0nj.wl-kuninori.morimoto.gx@renesas.com>
+References: <20200219074314.22829-1-j-keerthy@ti.com> <20200219074314.22829-2-j-keerthy@ti.com>
+ <20200219145227.GA1317@bogus> <55b68963-b931-bf67-482e-146e42af4298@ti.com>
+In-Reply-To: <55b68963-b931-bf67-482e-146e42af4298@ti.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 20 Feb 2020 13:38:46 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJJMNr6BWiw=Sv-nN8zQ=C+TrwFua0zWrMYJdxoNoZ09Q@mail.gmail.com>
-Message-ID: <CAL_JsqJJMNr6BWiw=Sv-nN8zQ=C+TrwFua0zWrMYJdxoNoZ09Q@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: dt-bindings: simple-card: switch to yaml base Documentation
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 20 Feb 2020 13:40:49 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJAdCT-xpqxYxkZO+JBHCcewhzb2ebiNJvPzSUyCcmP9g@mail.gmail.com>
+Message-ID: <CAL_JsqJAdCT-xpqxYxkZO+JBHCcewhzb2ebiNJvPzSUyCcmP9g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: thermal: k3: Add VTM bindings documentation
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 9:09 PM Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
+On Wed, Feb 19, 2020 at 10:13 PM Keerthy <j-keerthy@ti.com> wrote:
 >
 >
-> Hi Rob
 >
-> > > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > >
-> > > This patch switches from .txt base to .yaml base Document.
-> > >
-> > > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > > ---
-> (snip)
-> > > +  dai:
-> > > +    type: object
-> > > +    properties:
-> > > +      sound-dai:
-> > > +        $ref: /schemas/types.yaml#/definitions/phandle-array
+> On 19/02/20 8:22 pm, Rob Herring wrote:
+> > On Wed, Feb 19, 2020 at 01:13:11PM +0530, Keerthy wrote:
+> >> Add VTM bindings documentation. In the Voltage Thermal
+> >> Management Module(VTM), K3 AM654 supplies a voltage
+> >> reference and a temperature sensor feature that are gathered in the band
+> >> gap voltage and temperature sensor (VBGAPTS) module. The band
+> >> gap provides current and voltage reference for its internal
+> >> circuits and other analog IP blocks. The analog-to-digital
+> >> converter (ADC) produces an output value that is proportional
+> >> to the silicon temperature.
+> >>
+> >> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> >> ---
+> >>
+> >> Changes in v3:
+> >>
+> >>    * Fixed errors seen with:
+> >>      dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> >>
+> >>   .../bindings/thermal/ti,am654-thermal.yaml    | 57 +++++++++++++++++++
+> >>   1 file changed, 57 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> >> new file mode 100644
+> >> index 000000000000..b6dc95c3acab
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> >> @@ -0,0 +1,57 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/thermal/ti,am654-thermal.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Texas Instruments AM654 VTM (DTS) binding
+> >> +
+> >> +maintainers:
+> >> +  - Keerthy <j-keerthy@ti.com>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: ti,am654-vtm
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  power-domains:
+> >> +    maxItems: 1
+> >> +    description: phandle to the associated power domain
 > >
-> > This should have a common definition elsewhere which I'd prefer be in
-> > the dtschema repo. You can just assume there is and do 'maxItems: 1'
-> > here assuming it's only 1.
+> > No need to redefine a standard property description.
 >
-> I think dai and/or sound-dai are not common definition.
-> These are very simple-card specific property.
+> Okay.
+>
+> >
+> >> +
+> >> +  "#thermal-sensor-cells":
+> >> +    const: 1
+> >> +
+> >> +required:
+> >> +  - "#thermal-sensor-cells"
+> >> +  - compatible
+> >> +  - reg
+> >> +  - power-domains
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> >> +    vtm: wkup_vtm0@42050000 {
+> >
+> > thermal-sensor@...
+> >
+> > Use generic node names and don't use '_' in node names
+>
+> vtm stands for voltage thermal manager and comprises of multiple
+> sensors. This is similar to omap bandgap. Should i replace vtm with more
+> generic name like thermal? as used in:
 
-Qcom platforms also use 'sound-dai' and they aren't simple-card.
+'vtm' is a label and source construct only (until you do overlays), so
+I don't care what you put really.
 
 Rob
