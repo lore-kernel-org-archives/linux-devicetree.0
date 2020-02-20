@@ -2,104 +2,194 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 718E8C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06865C11D24
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46BCB206EF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582231000;
-	bh=q+xU5bB1UGhpVmWLgVQhOQ3cg6LjDCdHAIrxmWLv7PQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mqsPIxLBqVhSr2aPtV3XvCvWR06Eid7Jh5CiHO44HwgMDlJdacWj5sw9akaKNZQLH
-	 CxnDlg8p3khzGv43XCM26p34M8M3v6v2bi8whf7vYtD6Tyy4BMhZGQB4i0Xt0nvkfF
-	 AZOSuIlIwzSNYK4F6uIzPeDIgpFwlZecffpqCyuQ=
+	by mail.kernel.org (Postfix) with ESMTP id CA6F6208CD
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:39:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JGkUCdur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgBTUgk (ORCPT
+        id S1728957AbgBTUjb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:36:40 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36738 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbgBTUgj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 15:36:39 -0500
-Received: by mail-oi1-f194.google.com with SMTP id c16so28956650oic.3;
-        Thu, 20 Feb 2020 12:36:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dTWnQ3lvBmB7ErgPURmWXOoQ/e5ybUtPY0ge36pNzVk=;
-        b=ObtDcSwNnPoxbsU2S/HdnbRZjp4ejrkGrPdcYNIfPj2ghI6Oqf99H8WSK0FWCEYvJD
-         x/g8CFsEEAccr0MF8eHrJXenKeKHOvSgsb3FilscNjmAhU0MsmwnaaIB8JrQwNZZn1Pn
-         rgCos8WjHmiivlRgXLpZxC4+aUTtdslctEMrBe9PumqMP/q+2jLfD5xtYXbAgALavpey
-         MVKTdpOQg+KkihgTffwYnL6Q21EflfEn9qem/t4S9m58eCw6SIKp11t+jDIXm6jQN+dR
-         DJVadjn0bcRhOrPlfu/CrHHn4yvdsxJ7AE4zS4DurutPYnByNzVe12qUR/mtxgu2skIq
-         w5Ww==
-X-Gm-Message-State: APjAAAWBll/5KuzMcZjF3pDws2LDnTbrQw9zLgD5EKQruKO6Zg/3aSkw
-        2QEvzr2uTlaQO+fspLBPNA==
-X-Google-Smtp-Source: APXvYqxq6Fef/uB5nvq/j1hNavakwK21btDjib4pkIuE15IOqq9rtqlxMlELf9zdDMgdlOB20Qhzew==
-X-Received: by 2002:aca:d502:: with SMTP id m2mr3358601oig.41.1582230999091;
-        Thu, 20 Feb 2020 12:36:39 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k18sm120714oiw.44.2020.02.20.12.36.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:36:38 -0800 (PST)
-Received: (nullmailer pid 17428 invoked by uid 1000);
-        Thu, 20 Feb 2020 20:36:37 -0000
-Date:   Thu, 20 Feb 2020 14:36:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] Documentation: devictree: Add ipq806x mdio
- bindings
-Message-ID: <20200220203637.GA16998@bogus>
-References: <20200220170732.12741-1-ansuelsmth@gmail.com>
- <20200220170732.12741-2-ansuelsmth@gmail.com>
+        Thu, 20 Feb 2020 15:39:31 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2750 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbgBTUjb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 15:39:31 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4eee740000>; Thu, 20 Feb 2020 12:39:16 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Feb 2020 12:39:30 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 12:39:30 -0800
+Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 20:39:28 +0000
+Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Frank Chen <frankc@nvidia.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
+ <20200218231503.GA19099@bogus>
+ <5948bf42-9be2-8cf0-1c28-80f69b708c65@nvidia.com>
+ <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <a41f3a6c-c6ed-4148-7af8-faf0cf36d67d@nvidia.com>
+Date:   Thu, 20 Feb 2020 12:39:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220170732.12741-2-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582231156; bh=x3FSVTVnhy0xB8qhuAdvyWzG3JHJZQd1kGDJjAzQz10=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=JGkUCdurxr3SkgI7EvyQXUJOStOj4UBsFhEsTLa+UzobiHEdc3aeqclPmBz/gvmw4
+         Po68btgzdIaJcFU+TLyh5wSyJMb1p9ZJz7uX6trq82O0ZZty0cxWxslWrkCLzn6NI5
+         xGh+cykLu5ZrNO5KykmA7iWfhcyYF70HswLrckY1mTkcprmMYK0096OdOyhDqfdVaj
+         32LFT1p4VyTEMIy6G5sF1cS2eGRISg9XhIw6nxx9uyUz/kA1xM7gHMlaCd1SHDTzt4
+         th8HnIaKVzDwjsGxuPILSGf34/lzeVrajG/+IHKkqXJCdrWvzbKq4xWmjAL//nJwgy
+         XBoH+5OqJ7wNA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Feb 2020 18:07:29 +0100, Ansuel Smith wrote:
-> Add documentations for ipq806x mdio driver.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/net/qcom,ipq8064-mdio.yaml       | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-> 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+On 2/20/20 11:45 AM, Rob Herring wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On Tue, Feb 18, 2020 at 9:28 PM Sowjanya Komatineni
+> <skomatineni@nvidia.com> wrote:
+>>
+>> On 2/18/20 3:15 PM, Rob Herring wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
+>>>> Tegra contains VI controller which can support up to 6 MIPI CSI
+>>>> camera sensors.
+>>>>
+>>>> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+>>>> VI channel and can capture from an external camera sensor or
+>>>> from built-in test pattern generator.
+>>>>
+>>>> This patch adds dt-bindings for Tegra VI and CSI.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>    .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
+>>>>    1 file changed, 47 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>>>> index 9999255ac5b6..3d0ed540a646 100644
+>>>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>>>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>>>> @@ -40,14 +40,24 @@ of the following host1x client modules:
+>>>>
+>>>>      Required properties:
+>>>>      - compatible: "nvidia,tegra<chip>-vi"
+>>>> -  - reg: Physical base address and length of the controller's registers.
+>>>> +  - reg: Physical base address and length of the controller registers.
+>>>>      - interrupts: The interrupt outputs from the controller.
+>>>> -  - clocks: Must contain one entry, for the module clock.
+>>>> +  - clocks: Must contain an entry for the module clock "vi"
+>>>>        See ../clocks/clock-bindings.txt for details.
+>>>>      - resets: Must contain an entry for each entry in reset-names.
+>>>>        See ../reset/reset.txt for details.
+>>>> -  - reset-names: Must include the following entries:
+>>>> -    - vi
+>>>> +  - reset-names: Must include the entry "vi"
+>>>> +
+>>>> +  Tegra210 has CSI part of VI sharing same host interface and register
+>>>> +  space. So, VI device node should have CSI child node.
+>>>> +
+>>>> +  - csi: mipi csi interface to vi
+>>>> +
+>>>> +    Required properties:
+>>>> +    - compatible: "nvidia,tegra<chip>-csi"
+>>>> +    - reg: Physical base address and length of the controller registers.
+>>>> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
+>>>> +      See ../clocks/clock-bindings.txt for details.
+>>>>
+>>>>    - epp: encoder pre-processor
+>>>>
+>>>> @@ -310,12 +320,41 @@ Example:
+>>>>                 };
+>>>>
+>>>>                 vi {
+>>>> -                     compatible = "nvidia,tegra20-vi";
+>>>> -                     reg = <0x54080000 0x00040000>;
+>>>> +                     compatible = "nvidia,tegra210-vi";
+>>>> +                     reg = <0x0 0x54080000 0x0 0x700>;
+>>>>                         interrupts = <0 69 0x04>;
+>>>> -                     clocks = <&tegra_car TEGRA20_CLK_VI>;
+>>>> -                     resets = <&tegra_car 100>;
+>>>> +                     assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
+>>>> +                     assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
+>>>> +                     clocks = <&tegra_car TEGRA210_CLK_VI>;
+>>>> +                     clock-names = "vi";
+>>>> +                     resets = <&tegra_car 20>;
+>>>>                         reset-names = "vi";
+>>>> +
+>>>> +                     #address-cells = <2>;
+>>>> +                     #size-cells = <2>;
+>>>> +
+>>>> +                     ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
+>>>> +
+>>>> +                     csi@0x54080838 {
+>>> Drop '0x'
+>> Will fix in v4
+>>>> +                             compatible = "nvidia,tegra210-csi";
+>>>> +                             reg = <0x0 0x54080838 0x0 0x2000>;
+>>> Kind of odd that this address and ranges address are not the same. And
+>>> also wrong that the size here exceeds the bounds of ranges.
+>>>
+>>> Also, best practice is to make the child address 0 or relative to the
+>>> parent.
+>> Actual CSI starts at offset 0x808 but we don't use couple of registers
+>> at offset 0x808.
+>>
+>> Will update ranges in v4 to start from 0x838 offset and will make child
+>> address relative to parent.
+> Seems odd, but okay. And you will never, ever need to use those
+> registers no matter what, and we can reject any DT change trying to
+> change it later?
+>
+> Rob
 
-warning: no schema found in file: Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml: ignoring, error in schema: $id
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml: $id: 'http://devicetree.org/schemas/net/qcom,ipq8064-mdio.txt' does not match 'http://devicetree.org/schemas/.*\\.yaml#'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml: 'maintainers' is a required property
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Yes not required to access them by driver.
 
-See https://patchwork.ozlabs.org/patch/1241574
-Please check and re-submit.
+On T210, CSI registers under VI starts from location 0x54080808
+
+SW don't need to access initial 3 registers at 0x54080808, 0x54080818, 
+0x54080828
+
+Actual CSI registers that are needed for SW starts from 0x54080838.
+
