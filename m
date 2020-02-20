@@ -2,115 +2,95 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81293C11D24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD3C11D20
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 21:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4EA20679
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3288208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 21:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="F2UN2Hn7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JsoqIRD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgBTU5U (ORCPT
+        id S1728996AbgBTVCo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:57:20 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34413 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728967AbgBTU5T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 15:57:19 -0500
-Received: by mail-wr1-f65.google.com with SMTP id n10so6219390wrm.1;
-        Thu, 20 Feb 2020 12:57:18 -0800 (PST)
+        Thu, 20 Feb 2020 16:02:44 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36597 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728936AbgBTVCo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 16:02:44 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d9so2539118pgu.3
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 13:02:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FXjFzy08xMuJRMEmwBB0yy8RCFRKvyZHt3R4Qv4p1O8=;
-        b=F2UN2Hn7nmxIi+cFd7snrG33JIJjswMBS3DsHUuvSbqqi8E8OVJdnLegKa+tC6gccQ
-         JKh/sbaLX1ZAeU+9UddHYLmfilbTGhARmYPRE7cSVKS26auV2A0KqWkdqV5tj9V0VYbQ
-         UDfyG6axD3KDMa/QyksF8EUy0zlROK63PctIj5HC8i1eqmDJv5aOjZZ7fyero/KPUuDq
-         wfOVVD/1bB99njYloSBusB4CVm9CWNj0SJE4q+N8v8QsGEqNz6UOdhXkNT/K4dzNfUVC
-         PD45Jx76l0Ml6UrUYOnaGDtRs2MmDO+DvUYM9Bn9bxHJr7ped37CZg95RVU2w6NlmZlo
-         d0eA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yCWhyMONDF7/2d7s+slz/xE4GsVXYJ+VIwzdQklkW/U=;
+        b=JsoqIRD4xomQetfHM7XtcK7FHq/ipSAEkJsVnBvyST4DrAaAZF6BueSVgo/A0us1yb
+         ELSgSfno5PgHnoJm/NzqbsG8qQ02kmK3xDxajwkASRuGLEPI5+BMdVoxVksurm9wJ1Hp
+         6IrSh0MG+2h1RvRA1zHGLa4KQ8N8MtjmIgGKw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FXjFzy08xMuJRMEmwBB0yy8RCFRKvyZHt3R4Qv4p1O8=;
-        b=VSOxU9gDsAv/qMF3KWWnoNHevPEPLi5t1JednUkXuL+TZJuO1bnoCYc+fYBolUh469
-         tKUKV2a0a5yI6hF5ynFgDh/D3EHbiFZjwFJYafvoK7cqJ2F8KEEjZdWGqUqU178eLi9j
-         CM3sa1fWkDEBith4VDGWexqDMWI3xcn5IOdUfAABqPt71nm9RluYKCpoQ28iVX0ztCVb
-         t3HCjCk9tUQ+4dTGyHxNQg+Iyi5O2yb2Wc4SVlsTzmw8B3di50gxwtvt8IWl50won/CH
-         uOD/vPU+5J3igpFQN/x7lQpZuE+qOJXsYFbLLng3/sRxD+OnPe8T0rDHFRjeB0YbyoiJ
-         nLRw==
-X-Gm-Message-State: APjAAAUDVJOPVpbjZFmanJxQRVgyx1c5bJSqXJbENQQD+46xRGT+/4VU
-        jMvdhlwEWXIobjPuIddxb5A=
-X-Google-Smtp-Source: APXvYqwTNBE8NHGbnW8Z3nYsC+iVU2OPITKzvQtdl8slWj3/kKZgD9q0JgDz86aIMPvz7Z2806fdUA==
-X-Received: by 2002:adf:f3d0:: with SMTP id g16mr45704445wrp.2.1582232237793;
-        Thu, 20 Feb 2020 12:57:17 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id a184sm695039wmf.29.2020.02.20.12.57.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:57:17 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     jbrunet@baylibre.com, broonie@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/3] ASoC: meson: aiu: add Meson8 SoC family support
-Date:   Thu, 20 Feb 2020 21:57:08 +0100
-Message-Id: <20200220205711.77953-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yCWhyMONDF7/2d7s+slz/xE4GsVXYJ+VIwzdQklkW/U=;
+        b=TQe/3wPqP6n6z7jmw/z4pYycpIyc5pyRnrsUEsujil6N3hQuHNONLnBVtCkJGKP6NB
+         y8p+hw108vacTHW7tWR+wXNjoC1hYw15x8zlV2N4pSBwx0ZpscDqrAul70pb10+KOIDN
+         zTdhTGgQ1CCyH8x+Q1XzL9VdsVIG9ghh/R4B6HQvgXzSAUSKGyoKGkQDrP3B1ThQ1XKa
+         +3WqQRbor8qb2UCUCjy0WYm/EgY/p+A40uMoAK8N68DzDSQ8C5/mtqPf7u4ZyFOagAYv
+         0iMAPURz0HLFqvgLhBoJvC1RWQHr2ONazLEtu4318Eo10jhg4c/utHT4+h2j3BFj9vyR
+         eQ1A==
+X-Gm-Message-State: APjAAAVxGq5KVwLpE+cgEyxCQymcVcGCIqoM7b6pFPpseJsne+5F8eCv
+        fjZOqV/vVkz/EdGmoHecusUV6Q==
+X-Google-Smtp-Source: APXvYqybBEIA4/pqHt8cShquf8H+vaT94NLFSfun4J2uEKy/wjt157bBu3t/D8co6V54Gr/xmMNoZQ==
+X-Received: by 2002:a63:565e:: with SMTP id g30mr3053334pgm.206.1582232563637;
+        Thu, 20 Feb 2020 13:02:43 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id o73sm341592pje.7.2020.02.20.13.02.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 13:02:43 -0800 (PST)
+Date:   Thu, 20 Feb 2020 13:02:42 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, dianders@chromium.org
+Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
+Message-ID: <20200220210242.GC24720@google.com>
+References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
+ <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series adds support for the AIU audio controller found on the
-32-bit Meson8 and Meson8b SoCs (both seem to use the same revision,
-but for safety reasons we add two compatible strings).
+On Thu, Feb 20, 2020 at 01:42:22PM +0530, Sharat Masetty wrote:
+> This patch adds a clock definition needed for powering on the GPU TBUs
+> and the GPU TCU.
+> 
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index 6515dbe..235c0df 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -28,6 +28,7 @@ properties:
+>            - enum:
+>                - qcom,msm8996-smmu-v2
+>                - qcom,msm8998-smmu-v2
+> +              - qcom,sc7180-smmu-v2
 
-The only known difference compared to the GX SoCs is the absence of
-the I2S divider in the AIU_CLK_CTRL_MORE register. Instead we have
-to use a less flexible divider.
-
-I2S testing was done on an Odroid-C1+ with a PCM5102A stereo DAC
-board connected (on the J7 header) like this:
-Odroid-C1+  | DAC
-------------------
-pin #1 GND  | GND
-pin #3 5V   | VIN
-pin #4 MCLK | SCK (optional, DAC can operate without this)
-pin #5 LRCK | LCK
-pin #5 SCK  | BCK
-pin #5 DATA | DIN
-
-In 3-wire I2S the MCLK <-> SCK connection can be omitted. For my tests
-I used mclk-fs = <64> in this case.
-In 4-wire I2S the MCLK <-> SCK connection is required. For my tests I
-used mclk-fs = <256> in this case.
-
-
-Martin Blumenstingl (3):
-  ASoC: meson: aiu: Document Meson8 and Meson8b support in the
-    dt-bindings
-  ASoC: meson: aiu: introduce a struct for platform specific information
-  ASoC: meson: aiu: add support for the Meson8 and Meson8b SoC families
-
- .../bindings/sound/amlogic,aiu.yaml           |  2 +
- sound/soc/meson/Kconfig                       |  2 +-
- sound/soc/meson/aiu-encoder-i2s.c             | 92 ++++++++++++++-----
- sound/soc/meson/aiu.c                         | 28 +++++-
- sound/soc/meson/aiu.h                         |  6 ++
- 5 files changed, 104 insertions(+), 26 deletions(-)
-
--- 
-2.25.1
-
+The addition of the compatible string isn't (directly) related with $subject,
+this should be done in a separate patch.
