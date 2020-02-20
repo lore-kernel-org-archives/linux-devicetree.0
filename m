@@ -2,215 +2,223 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A633C5ACC4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 01:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319A0C7619D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 01:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4622124670
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 01:36:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="APw4/xWa"
+	by mail.kernel.org (Postfix) with ESMTP id 0C27621D56
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 01:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbgBTBgN (ORCPT
+        id S1727476AbgBTBjW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 20:36:13 -0500
-Received: from mail-vi1eur05on2082.outbound.protection.outlook.com ([40.107.21.82]:1236
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726784AbgBTBgN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 20:36:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EpMq8G7ISPcvrb6LHrlp0phnoiIjj3H57QwZmmeNLCY+zERKg7IfEMqzJk9uJvIK2hNwA1Li/Mbh9Lgz9UEguj1bzYzGvaJ2lLOIYJHQ6rLLODuGTwwL5PUjTPaeA0c9KWXkDAbWg9UDuuC7RgukOAkZ1lya3SdHY0LYvHnJZZ/gifQhv9DOz4Rf5godJh/dX8bk/NxsOTCLjmU9lpDNfjTvUa1YR+MK0gBK1GhpdUH13CJc6OxJU37PsZQOJl1RnkW+g+RVr2RxS6WdGDtUIP6vZNyz68AtJW7FLHGJtQWSi3/fvD5VzSKAmEgy8FU6M2ABCMNWpw3CIigao339hA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d81qYE9zzKV1wCeMOjt64gzr6BVwufA9LzoTTfcT/Ww=;
- b=gSZ+eVSwy1YLQQ92QpRBbJVnHgPMCQCfmZG35TY5RVZP8kRR7EIyXdKMKLHqR2gU2fZCI4zLVxVBqnptvNJU0O7QNBluzbCUN6RIr5a7QoJI6QRPqtlp1BDocThP59qlRlSXqvNrSPGTsZr+HOxfhGjoNfNnswqNcxu3AHnQ8q0avjehZADT2xFmErom40sOlVv4MaD46+34Ywvw8TAxdM3khm2Fw9axmJn+iX43Mp3cXsXZuRESVXSZpC9XOiV0HO2U++9oMRJWiW4Ah9U4NE/LUT/6VLdJR0niaMUYP4s+EvZTanQL3ewVAO8VkUmVxZY5jKud66K+3yW6KyFNmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d81qYE9zzKV1wCeMOjt64gzr6BVwufA9LzoTTfcT/Ww=;
- b=APw4/xWaWPOPxGfuv6qdyizbw75gdSDWmFzkbc8Mx8Q2pzWJJDff6gr1dJjBwbehBCjKoPD3ABHGjqPRkoySRk/iP0n/pxkPm9SpoPlz86iMzDX5Iu1jyqZlaK4vMjY3chJvyMwY7Bt+hIT1rwnrkCxDfYE5RubQ3kkNlPxaphw=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB7105.eurprd04.prod.outlook.com (10.186.130.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Thu, 20 Feb 2020 01:36:08 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.032; Thu, 20 Feb 2020
- 01:36:08 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wed, 19 Feb 2020 20:39:22 -0500
+Received: from kernel.crashing.org ([76.164.61.194]:32932 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbgBTBjW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 20:39:22 -0500
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01K1cC0b028187
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 19 Feb 2020 19:38:15 -0600
+Message-ID: <86ab18e4ed01c6856ff47c859a3dda598dd94978.camel@kernel.crashing.org>
+Subject: Re: [PATCH 1/2] usb: gadget: aspeed: allow to customize vhub device
+ IDs/strings
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/9] remoteproc: imx_rproc: support i.MX8/8M/7ULP
-Thread-Topic: [PATCH 0/9] remoteproc: imx_rproc: support i.MX8/8M/7ULP
-Thread-Index: AQHV5vbmWntOo1W/0E+zZvFdhH2I6Kgi1bgAgAB3WRA=
-Date:   Thu, 20 Feb 2020 01:36:08 +0000
-Message-ID: <AM0PR04MB448114DF702180D0CF0553A688130@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
- <CANLsYkzeAyGhYqewGaHfd-myW5EzE83WUOwAbKwTP-34pbUR-w@mail.gmail.com>
-In-Reply-To: <CANLsYkzeAyGhYqewGaHfd-myW5EzE83WUOwAbKwTP-34pbUR-w@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dbd73047-1f8a-4862-41eb-08d7b5a54273
-x-ms-traffictypediagnostic: AM0PR04MB7105:|AM0PR04MB7105:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB71050B28F76D772BEFE73E7788130@AM0PR04MB7105.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 031996B7EF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(346002)(366004)(136003)(39860400002)(396003)(376002)(189003)(199004)(9686003)(186003)(66946007)(316002)(52536014)(76116006)(966005)(86362001)(44832011)(5660300002)(55016002)(33656002)(71200400001)(6506007)(8936002)(54906003)(2906002)(8676002)(81156014)(81166006)(64756008)(4326008)(26005)(6916009)(66446008)(7416002)(45080400002)(66476007)(66556008)(478600001)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB7105;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uV8N8pFAuxcSjz/a3+8/DTE6NE6FHgpPIzZfxoAHmM8ZGzgOTicnRWVvJAAKRDUrUxIloAMpwoj0feL8oMFqd/hc6dbf8ytpL5MDEx3UQSPyFpIKg6oVakc26Ww9iP2uRI2PARxCeWAbIQfGCELaWB/WhFzqON+3LGyHcgYJyIf9sK2NQgIlBhRNmVnOMtW1maGu1y4gs1plLya+oTDTJY66ui97yQbyTLrnw94Vo5MBpcOmFcO2Qkk8Q2b4vvYcOwjcQVk0phWRNjmQBRF10aRRyvINIC4+d2fe2jEIKFxMbMSuXlmVI5cQ5c02yE3fQtYtxK9cCqeNh0HZhecJKrl44uy3H5pHoH+L2bac0nFme4VohRle9FCOYBHuv+TOOE5mqaZEGiSGaqQ9ns2+CfhMfmludP2npaoWo81qBlSsca2KsZjb0AxCojBSTdqSef9zhk7Qm5whXXGMxhEa6OPcv8VvAvLozl7zCnG3Sgd+oB70UTLLuJgmIfcrMQk5/Pszi5rFiPCzgc4BYY0s5iAmMtqPqXLKd+J5+RJIqEnN46NDCSaTOWMQhMGVAqis3tI0yFM1fgjj4cJVGU8/GT4n18mzKlrYBkMVbY8JNIP7MpCBZuXd8/qWnWBqa8Qn
-x-ms-exchange-antispam-messagedata: fE9nh/imgTYaI3GmvN0ugpIDWiUp1hSdeYRUIdrazDb1cCG53w+jDL/zvujj3MQFdhpWd/BCZJMyjdLBsiZgsLWM+0R4JUskolrF0wwjRYqj2Oa3LmyB82JD9Df3Z2vcXyWkI3OcLY2X2RsMgAL1/Q==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbd73047-1f8a-4862-41eb-08d7b5a54273
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 01:36:08.4426
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yhgf2oThR0nCEOtqhzhkt/oa/J25ZaQBtUbgvWAotYRX3kEPsvtjRMHFFZk6Kq8brKhqpnpBw24AIl7Z32tBBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7105
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Date:   Thu, 20 Feb 2020 12:38:10 +1100
+In-Reply-To: <20200218235600.6763-2-rentao.bupt@gmail.com>
+References: <20200218235600.6763-1-rentao.bupt@gmail.com>
+         <20200218235600.6763-2-rentao.bupt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgTWF0aGlldSwNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAvOV0gcmVtb3RlcHJvYzogaW14
-X3Jwcm9jOiBzdXBwb3J0IGkuTVg4LzhNLzdVTFANCj4gDQo+IEhpIFBlbmcsDQo+IA0KPiBPbiBX
-ZWQsIDE5IEZlYiAyMDIwIGF0IDAwOjMzLCA8cGVuZy5mYW5AbnhwLmNvbT4gd3JvdGU6DQo+ID4N
-Cj4gPiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gPg0KPiA+IFRoaXMgcGF0
-Y2hzZXQgYWltIHRvIHJlcGxhY2UgTlhQIHZlbmRvciBpbXhfcnBtc2cuYyBkcml2ZXIuDQo+IA0K
-PiBZb3UgbWVhbiByZW1vdGVwcm9jL2lteF9ycHJvYy5jID8gIFVwc3RyZWFtIHJwbXNnL2lteF9y
-cG1zZy5jIGRvZXNuJ3QNCj4gZXhpc3QuDQoNCmlteF9ycG1zZy5jIG9ubHkgaW4gTlhQIHZlbmRv
-ciB0cmVlLiBUaGlzIHBhY2hzZXQgaXMgdG8gdXNlIGlteF9ycHJvYy5jIGZvcg0KcnBtc2cvdmly
-dGlvIGZ1bmN0aW9ucyBmb3IgaS5NWCBTb0MuDQoNCj4gDQo+ID4NCj4gPiBUaGlzIHBhdGNoc2V0
-IGlzIHRlc3RlZCB3aXRoIExvaWMgUEFMTEFSRFkncyBwYXRjaA0KPiA+ICJyZW1vdGVwcm9jOiBh
-ZGQgc3VwcG9ydCBmb3IgY28tcHJvY2Vzc29yIGxvYWRlZCBhbmQgYm9vdGVkIGJlZm9yZQ0KPiBr
-ZXJuZWwiDQo+ID4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNv
-bS8/dXJsPWh0dHBzJTNBJTJGJTJGcGF0Yw0KPiA+DQo+IGh3b3JrLmtlcm5lbC5vcmclMkZwYXRj
-aCUyRjExMjY1ODY5JTJGJmFtcDtkYXRhPTAyJTdDMDElN0NwZW5nLmYNCj4gYW4lNDBuDQo+ID4N
-Cj4geHAuY29tJTdDZTFjYjE5ZTUzNWExNGI2M2QwZGEwOGQ3YjU2OGZkNTYlN0M2ODZlYTFkM2Jj
-MmI0YzZmYTkNCj4gMmNkOTljNWMNCj4gPg0KPiAzMDE2MzUlN0MwJTdDMCU3QzYzNzE3NzMzNDgz
-OTQ5NzgzMiZhbXA7c2RhdGE9YUtRJTJCdWxjbzYzYmENCj4gWVQlMkJEWkRrMA0KPiA+IFZMdDFO
-cGtOdWhyWTNzc3hpUkNPY3JNJTNEJmFtcDtyZXNlcnZlZD0wLA0KPiA+IGFuZCBpbnNwcmllZCBm
-cm9tIHN0J3MgcmVtb3RlcHJvYyBlYXJseSBib290IHN1cHBvcnQuDQo+ID4gU2luY2UgTG9pYydz
-IHBhdGNoIGlzIHN0aWxsIHVuZGVyIHJldmlldywganVzdCBleHBlY3QgeW91ciBjb21tZW50cyA6
-KQ0KPiANCj4gRGlkIHlvdSBiYXNlIHlvdXIgd29yayBvbiB0b3Agb2YgTG9pYydzIGJlY2F1c2Ug
-eW91ciBNQ1UgZmlybXdhcmUgaXMgYWx3YXlzDQo+IGxvYWRlZCBieSB0aGUgYm9vdGxvYWRlcj8g
-DQoNCkkgb25seSB0b29rIExvaWMncyBlYXJseS1ib290IHBhdGNoIGFzIGJhc2UgYW5kIGFwcGx5
-IG15IHBhdGNoc2V0Lg0KDQpUaGUgbWN1IGZpcm13YXJlIGN1cnJlbnRseSBvbmx5IGxvYWRlZCBi
-eSBib290bG9hZGVyIG9yIHN5c3RlbSBjb250cm9sbGVyIGZpcm13YXJlLg0KTlhQIHJlbGVhc2Vk
-IG1jdSBmaXJtd2FyZSBub3Qgc3VwcG9ydCBiZWluZyBsb2FkZWQgYnkgTGludXggcmVtb3RlcHJv
-Yy4NCg0KIElmIG5vdCBwbGVhc2Ugc2VuZCBhbm90aGVyIHJldmlzaW9uIG9mIHlvdXIgd29yaw0K
-PiB3aXRob3V0IGVhcmx5IGJvb3Qgc3VwcG9ydC4gIFdoZW4gd2UgaGF2ZSBhIGNsZWFyIHZpZXcg
-b24gaG93IHRvIHByb2NlZWQNCj4gd2l0aCB0aGUgZWFybHkgYm9vdCBzdXBwb3J0IHlvdSBjYW4g
-c2VuZCBhbm90aGVyIHNldCB0byBlbmFibGUgdGhhdC4NCg0KSSdsbCB3YWl0IHlvdXIgbmV3IHBh
-dGNoIGZvciBlYXJseSBib290IGluIHJlbW90ZXByb2MtY29yZS4gVGhlbiBJJ2xsIHJlYmFzZQ0K
-YW5kIHNlbmQgYSBuZXcgdmVyc2lvbi4gU2luY2UgSSBpbnRyb2R1Y2UgYmlnIGNoYW5nZXMgdG8g
-aW14X3Jwcm9jLmMsIHNvDQpJJ2xsIHNlZSB3aGV0aGVyIGFueSBjb21tZW50cyB0aGVyZS4NCg0K
-VGhhbmtzLA0KUGVuZy4NCg0KPiANCj4gVGhhbmtzLA0KPiBNYXRoaWV1DQo+IA0KPiA+DQo+ID4g
-UGF0Y2ggWzEsMl0vOTogZHQtYmluZGluZ3MgY29udmVydCB0byBqc29uIGFuZCBuZXcgU29DIHN1
-cHBvcnQgUGF0Y2gNCj4gPiAzLzk6IHNraXAgZmlybXdhcmUgbG9hZCB3aGVuIHJlY292ZXJ5LiBU
-byBpLk1YOCwgZmlybXdhcmUgaXMgbm90DQo+ID4gICAgICAgICAgICBoYW5kbGVkIGJ5IExpbnV4
-Lg0KPiA+DQo+ID4gUGF0Y2ggWzQtOV0vOTogaS5NWCBzcGVjaWZpYyBwYXJ0IHRvIHN1cHBvcnQg
-cnBtc2cvdmlydGlvIHdpdGggbWJveC4NCj4gPiAgICAgICBiZWNhdXNlIE5YUCByZWxlYXNlIGlt
-YWdlIG5vdCBoYXZlIHJlc291cmUgdGFibGUsIHNvIGFkZCByZXNvdXJjZQ0KPiA+ICAgICAgIHRh
-YmxlIGluIGR0cw0KPiA+DQo+ID4gTXkgdGVzdCBkdHMgZGlmZiBmb3IgaS5NWDhRWFAgTUVLLCBi
-dXQgSSBoYXZlIHRlc3RlZCB0aGlzIHBhdGNoc2V0IGZvcg0KPiA+IGkuTVg4UVhQIE1FSywgaS5N
-WDhNTSBFVkssIGkuTVg3VUxQIEVWSzoNCj4gPg0KPiA+ICsNCj4gPiArICAgICAgIGlteDh4LWNt
-NCB7DQo+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDhxeHAtY200IjsN
-Cj4gPiArICAgICAgICAgICAgICAgcnNyYy10YWJsZSA9IDwNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAweDEgMHgyIDB4MCAweDAgMHgxOCAweDVjDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgMw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIC8qZndfcnNjX3ZkZXYqLw0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIDcgMCAxIDAgMCAweDIwMA0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIC8qZndfcnNjX3ZkZXZfdnJpbmcqLw0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIDB4OTAwMDAwMDAgNDA5NiAyNTYgMSAwDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgMHg5MDAwODAwMCA0MDk2IDI1NiAyIDANCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAz
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgLypmd19yc2NfdmRldiovDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgNyAxIDEgMCAwIDB4MjAwDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgLypmd19yc2NfdmRldl92cmluZyovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-MHg5MDAxMDAwMCA0MDk2IDI1NiAxIDANCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAweDkw
-MDE4MDAwIDQwOTYgMjU2IDIgMA0KPiA+ICsgICAgICAgICAgICAgICA+Ow0KPiA+ICsgICAgICAg
-ICAgICAgICBlYXJseS1ib290ZWQ7DQo+ID4gKyAgICAgICAgICAgICAgIG1ib3gtbmFtZXMgPSAi
-dHgiLCAicngiLCAicnhkYiI7DQo+ID4gKyAgICAgICAgICAgICAgIG1ib3hlcyA9IDwmbHNpb19t
-dTUgMCAxDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAmbHNpb19tdTUgMSAxDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAmbHNpb19tdTUgMyAxPjsNCj4gPiArICAgICAgICAg
-ICAgICAgbXViLXBhcnRpdGlvbiA9IDwzPjsNCj4gPiArICAgICAgICAgICAgICAgbWVtb3J5LXJl
-Z2lvbiA9IDwmdmRldjB2cmluZzA+LCA8JnZkZXYwdnJpbmcxPiwNCj4gPCZ2ZGV2MGJ1ZmZlcj4s
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JnZkZXYxdnJpbmcwPiwgPCZ2
-ZGV2MXZyaW5nMT4sDQo+IDwmdmRldjBidWZmZXI+Ow0KPiA+ICsgICAgICAgfTsNCj4gPiArDQo+
-ID4gKyAgICAgICByZXNlcnZlZC1tZW1vcnkgew0KPiA+ICsgICAgICAgICAgICAgICAjYWRkcmVz
-cy1jZWxscyA9IDwyPjsNCj4gPiArICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+
-ID4gKyAgICAgICAgICAgICAgIHJhbmdlczsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHZk
-ZXYwdnJpbmcwOiB2ZGV2MHZyaW5nMEA5MDAwMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgY29tcGF0aWJsZSA9ICJzaGFyZWQtZG1hLXBvb2wiOw0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHJlZyA9IDwwIDB4OTAwMDAwMDAgMCAweDgwMDA+Ow0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIG5vLW1hcDsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4g
-KyAgICAgICAgICAgICAgIHZkZXYwdnJpbmcxOiB2ZGV2MHZyaW5nMUA5MDAwODAwMCB7DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzaGFyZWQtZG1hLXBvb2wiOw0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4OTAwMDgwMDAgMCAweDgwMDA+
-Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIG5vLW1hcDsNCj4gPiArICAgICAgICAgICAg
-ICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHZkZXYxdnJpbmcwOiB2ZGV2MXZyaW5n
-MEA5MDAxMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJz
-aGFyZWQtZG1hLXBvb2wiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4
-OTAwMTAwMDAgMCAweDgwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIG5vLW1hcDsN
-Cj4gPiArICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHZkZXYx
-dnJpbmcxOiB2ZGV2MXZyaW5nMUA5MDAxODAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgY29tcGF0aWJsZSA9ICJzaGFyZWQtZG1hLXBvb2wiOw0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIHJlZyA9IDwwIDB4OTAwMTgwMDAgMCAweDgwMDA+Ow0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIG5vLW1hcDsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAg
-ICAgICAgICAgICAgIHZkZXYwYnVmZmVyOiB2ZGV2MGJ1ZmZlciB7DQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzaGFyZWQtZG1hLXBvb2wiOw0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4OTA0MDAwMDAgMCAweDEwMDAwMD47DQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgbm8tbWFwOw0KPiA+ICsgICAgICAgICAgICAgICB9Ow0KPiA+
-ICsgICAgICAgfTsNCj4gPiArDQo+ID4NCj4gPiBQZW5nIEZhbiAoOSk6DQo+ID4gICBkdC1iaW5k
-aW5nczogcmVtb3RlcHJvYzogQ29udmVydCBpbXgtcnByb2MgdG8ganNvbi1zY2hlbWENCj4gPiAg
-IGR0LWJpbmRpbmdzOiByZW1vdGVwcm9jOiBpbXgtcnByb2M6IHN1cHBvcnQgaS5NWFs4LDhNLDdV
-TFBdDQo+ID4gICByZW1vdGVwcm9jOiBhZGQgc3VwcG9ydCB0byBza2lwIGZpcm13YXJlIGxvYWQg
-d2hlbiByZWNvdmVyeQ0KPiA+ICAgcmVtb3RlcHJvYzogaW14X3Jwcm9jOiBzdXJwb3J0IGVhcmx5
-IGJvb3RlZCByZW1vdGUgcHJvY2Vzc29yDQo+ID4gICByZW1vdGVwcm9jOiBpbXhfcnByb2M6IHBh
-cnNlIGVhcmx5LWJvb3RlZCBwcm9wZXJ0eQ0KPiA+ICAgcmVtb3RlcHJvYzogaW14X3Byb2M6IGVu
-YWJsZSB2aXJ0aW8vbWFpbGJveA0KPiA+ICAgcmVtb3RlcHJvYzogaW14X3Jwcm9jOiBhZGQgaS5N
-WDhRTS9RWFANCj4gPiAgIHJlbW90ZXByb2M6IGlteF9ycHJvYzogc3VwcG9ydCBpLk1YN1VMUA0K
-PiA+ICAgcmVtb3RlcHJvYzogaW14X3Jwcm9jOiBhZGQgaS5NWDhNTSBzdXBwb3J0DQo+ID4NCj4g
-PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcmVtb3RlcHJvYy9pbXgtcnByb2MudHh0ICAgfCAg
-MzMgLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcmVtb3RlcHJvYy9pbXgtcnByb2Mu
-eWFtbCAgfCAgOTUgKysrKysNCj4gPiAgZHJpdmVycy9yZW1vdGVwcm9jL2lteF9ycHJvYy5jICAg
-ICAgICAgICAgICAgICAgICAgfCA0NTUNCj4gKysrKysrKysrKysrKysrKysrKy0tDQo+ID4gIGRy
-aXZlcnMvcmVtb3RlcHJvYy9yZW1vdGVwcm9jX2NvcmUuYyAgICAgICAgICAgICAgIHwgIDE5ICst
-DQo+ID4gIGluY2x1ZGUvbGludXgvcmVtb3RlcHJvYy5oICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgICAxICsNCj4gPiAgNSBmaWxlcyBjaGFuZ2VkLCA1MzEgaW5zZXJ0aW9ucygrKSwgNzIgZGVs
-ZXRpb25zKC0pICBkZWxldGUgbW9kZQ0KPiA+IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcmVtb3RlcHJvYy9pbXgtcnByb2MudHh0DQo+ID4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZW1vdGVwcm9jL2lt
-eC1ycHJvYy55YW1sDQo+ID4NCj4gPiAtLQ0KPiA+IDIuMTYuNA0KPiA+DQo=
+On Tue, 2020-02-18 at 15:55 -0800, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> This patch allows people to customize vendor/product/device IDs and
+> manufacture/product/serial strings in vhub's device descriptor through
+> device tree properties.
+
+You should probably add a binding file to Documentation/devicetree/bindings/usb/*
+
+We got away without one bcs there was no funky properties there but
+now that we are adding some, we need to document them.
+
+Also...
+
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> ---
+>  drivers/usb/gadget/udc/aspeed-vhub/hub.c | 73 +++++++++++++++++++-----
+>  1 file changed, 59 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/hub.c b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
+> index 9c7e57fbd8ef..4e3ef83283a6 100644
+> --- a/drivers/usb/gadget/udc/aspeed-vhub/hub.c
+> +++ b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
+> @@ -43,19 +43,23 @@
+>   *    - We may need to indicate TT support
+>   *    - We may need a device qualifier descriptor
+>   *	as devices can pretend to be usb1 or 2
+> - *    - Make vid/did overridable
+>   *    - make it look like usb1 if usb1 mode forced
+>   */
+>  #define KERNEL_REL	bin2bcd(((LINUX_VERSION_CODE >> 16) & 0x0ff))
+>  #define KERNEL_VER	bin2bcd(((LINUX_VERSION_CODE >> 8) & 0x0ff))
+>  
+>  enum {
+> +	AST_VHUB_STR_INDEX_MAX = 4,
+>  	AST_VHUB_STR_MANUF = 3,
+>  	AST_VHUB_STR_PRODUCT = 2,
+>  	AST_VHUB_STR_SERIAL = 1,
+>  };
+>  
+> -static const struct usb_device_descriptor ast_vhub_dev_desc = {
+> +/*
+> + * Below is the default Device Descriptor of the vhub device. Some fields
+> + * may be updated in "ast_vhub_fixup_dev_desc" function.
+> + */
+> +static struct usb_device_descriptor ast_vhub_dev_desc = {
+>  	.bLength		= USB_DT_DEVICE_SIZE,
+>  	.bDescriptorType	= USB_DT_DEVICE,
+>  	.bcdUSB			= cpu_to_le16(0x0200),
+> @@ -148,10 +152,14 @@ static struct usb_hub_descriptor ast_vhub_hub_desc = {
+>  };
+>  
+>  /*
+> - * These strings converted to UTF-16 must be smaller than
+> - * our EP0 buffer.
+> + * Below tables define the default Language ID and String Descriptors of
+> + * the vhub. Language ID and strings may be overridden if according device
+> + * tree properties are defined. Refer to "ast_vhub_fixup_dev_desc" function
+> + * for details.
+> + * Note: these strings converted to UTF-16 must be smaller than vhub EP0
+> + * buffer size.
+>   */
+> -static const struct usb_string ast_vhub_str_array[] = {
+> +static struct usb_string ast_vhub_str_array[] = {
+>  	{
+>  		.id = AST_VHUB_STR_SERIAL,
+>  		.s = "00000000"
+> @@ -167,7 +175,7 @@ static const struct usb_string ast_vhub_str_array[] = {
+>  	{ }
+>  };
+
+I dislike this. The array should remain static and contain the
+defaults. The properties shouldn't modify the global array, there could
+be a future chip with multiple vhubs and that would make them stomp on
+each other.
+
+Instead, duplicate the properties into the per-vhub instance data and
+update the content there.
+
+You could also skip using usb_gadget_get_string() and expose the low
+level conversion function directly though that's trickier.
+
+Also have you thought about supporting a list of strings along with an
+array of language IDs ? Vendors might want to provide multiple
+languages...
+
+> -static const struct usb_gadget_strings ast_vhub_strings = {
+> +static struct usb_gadget_strings ast_vhub_strings = {
+>  	.language = 0x0409,
+>  	.strings = (struct usb_string *)ast_vhub_str_array
+>  };
+> @@ -320,18 +328,15 @@ static int ast_vhub_rep_string(struct ast_vhub_ep *ep,
+>  			       u8 string_id, u16 lang_id,
+>  			       u16 len)
+>  {
+> -	int rc = usb_gadget_get_string (&ast_vhub_strings, string_id, ep->buf);
+> -
+> -	/*
+> -	 * This should never happen unless we put too big strings in
+> -	 * the array above
+> -	 */
+> -	BUG_ON(rc >= AST_VHUB_EP0_MAX_PACKET);
+> +	int rc;
+> +	u8 buf[256]; /* buffer size required by usb_gadget_get_string */
+>  
+> -	if (rc < 0)
+> +	rc = usb_gadget_get_string(&ast_vhub_strings, string_id, buf);
+> +	if (rc < 0 || rc >= AST_VHUB_EP0_MAX_PACKET)
+>  		return std_req_stall;
+>  
+>  	/* Shoot it from the EP buffer */
+> +	memcpy(ep->buf, buf, rc);
+>  	return ast_vhub_reply(ep, NULL, min_t(u16, rc, len));
+>  }
+>  
+> @@ -837,11 +842,51 @@ void ast_vhub_hub_reset(struct ast_vhub *vhub)
+>  	writel(0, vhub->regs + AST_VHUB_EP1_STS_CHG);
+>  }
+>  
+> +static void ast_vhub_fixup_dev_desc(struct ast_vhub *vhub)
+> +{
+> +	int i;
+> +	u8 id;
+> +	u16 of_id;
+> +	const char *of_str[AST_VHUB_STR_INDEX_MAX] = {NULL};
+> +	struct device_node *np = vhub->pdev->dev.of_node;
+> +
+> +	/*
+> +	 * Update IDs in device descriptor if according properties are
+> +	 * defined in device tree.
+> +	 */
+> +	if (!of_property_read_u16(np, "vendor-id", &of_id))
+> +		ast_vhub_dev_desc.idVendor = cpu_to_le16(of_id);
+> +	if (!of_property_read_u16(np, "product-id", &of_id))
+> +		ast_vhub_dev_desc.idProduct = cpu_to_le16(of_id);
+> +	if (!of_property_read_u16(np, "device-id", &of_id))
+> +		ast_vhub_dev_desc.bcdDevice = cpu_to_le16(of_id);
+> +
+> +	/*
+> +	 * Update string descriptors if according properties are defined
+> +	 * in device tree.
+> +	 */
+> +	if (!of_property_read_u16(np, "language-id", &of_id))
+> +		ast_vhub_strings.language = of_id;
+> +
+> +	of_str[AST_VHUB_STR_MANUF] = of_get_property(np, "manufacturer", NULL);
+> +	of_str[AST_VHUB_STR_PRODUCT] = of_get_property(np, "product", NULL);
+> +	of_str[AST_VHUB_STR_SERIAL] = of_get_property(np, "serial-number",
+> +						      NULL);
+> +
+> +	for (i = 0; ast_vhub_str_array[i].s != NULL; i++) {
+> +		id = ast_vhub_str_array[i].id;
+> +		if (of_str[id])
+> +			ast_vhub_str_array[i].s = of_str[id];
+> +	}
+> +}
+> +
+>  void ast_vhub_init_hub(struct ast_vhub *vhub)
+>  {
+>  	vhub->speed = USB_SPEED_UNKNOWN;
+>  	INIT_WORK(&vhub->wake_work, ast_vhub_wake_work);
+>  
+> +	ast_vhub_fixup_dev_desc(vhub);
+> +
+>  	/*
+>  	 * Fixup number of ports in hub descriptor.
+>  	 */
+
