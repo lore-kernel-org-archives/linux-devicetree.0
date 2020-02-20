@@ -2,93 +2,135 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7A3C11D05
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 15:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA006C11D0C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 15:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2B12071E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 15:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0CC2071E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 15:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWh6C6VJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDcgv1u/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgBTPi5 (ORCPT
+        id S1728305AbgBTPnO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:38:57 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36406 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbgBTPi5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 10:38:57 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f24so3472503lfh.3;
-        Thu, 20 Feb 2020 07:38:55 -0800 (PST)
+        Thu, 20 Feb 2020 10:43:14 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45755 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728236AbgBTPnO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 10:43:14 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 2so2092248pfg.12;
+        Thu, 20 Feb 2020 07:43:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LTSTcBgb9GGJQllk/olrBiwlUBbpPRVx+sqTluRMzLs=;
-        b=SWh6C6VJobFRpWMlRyr9Ir9oQp9/szZB1jyFZRDk+ZrhKC2bkfTXQMYeQIARVZpm0r
-         TOWj0G3U9aDhmnR+8o4jlbZcdL2sRDk4+lj+C5B+MRk9b8tnmMTQMtV1PxQJNzAw2pwT
-         Tx8mSXkH5ETJp6KyFGAEpyirq/WzJa9B84AWRBKl4vLKKx2nbH+eLeA4m0mCJrZlAQsl
-         1IQv8vu92Opd0LdrF68FanQmRXzvMFodiA3UufFAGiByXZEEJaZxOuPcMycNhsYyCumo
-         SW2QQK8xcNAmu6vt4hwdcJcab+Dh+uqtqPa22KHYu/HBc7gGoyLNhnrKnFbGvgTvOxuj
-         SM2g==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1DIMRV6Iqi1rLe5wMgz5eqoASoBEhZAuJOJhLs9EWXg=;
+        b=SDcgv1u/KxtAEvGdFod3asgbcGb/ypcbFpJI7L5wvrxLVXG1G1OG4sNftp87QbjuaC
+         9btXUMC6BSz/MvATW7U0uLF796Pv6wbNHLRCnzQfpAzngStKBcreMdIjAqyNPgAK5O4Q
+         dSdHoLLGdEuyf2kPK+06V6aHgQcbCxM2V5f73DfwvE+OwAfGcoKwat+U4zRHFQury1qi
+         o4NtU3HAcF6o9aR6mxYkzvNkvZJMS0/bHZYsVPhyaMxi8NH//AFvGjFRchAyBRWWSrwf
+         0pBi8Wg4pcJeKyQFOCSeYp4/bqB+Ywvwx0woG7UYS4r7PlZoChbDJTAxMMnLEXikqugP
+         TJ3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LTSTcBgb9GGJQllk/olrBiwlUBbpPRVx+sqTluRMzLs=;
-        b=cA15KiwvgcNJodkwAqXq3jmpYs4mXY7x2Q7aBh2LOFx3Hg3/Ojnn5hFwvsKnr3rCJn
-         VaZUiztHrBS91R415hba7Qd5uRvsxdyuLjqGQKOrX+Bl/XpS7Yyd8Aw0+uF9Pt2aMLnP
-         w5f3JlI52538ukvOIjsTWzvewyd2NixWl0+2oMPOEDc/lKHrkCqRHUqCeAom7mRrPMuS
-         y5m/g5NVxum7qaaf8lvpczyWjAj61HUAkLwMkpKkAuIhdmYxb6LNkjDkMhz8BvTCCWUg
-         074pfDPzLKvBaHme5fBnSBNZeRBL4G1ns/eL9aQeRUUAKhZ02Re08d7CkHr4g4dZZqpM
-         CLkw==
-X-Gm-Message-State: APjAAAUX8UfF9qbBeu+T8ocqbfqaCF7gnwshdO98DhG1wbTcJhzlmuHX
-        wk4PjkcgOjuuwpoCzgqLF30=
-X-Google-Smtp-Source: APXvYqyxn2s0jyOgdFy3o8g+SEhzmAWcmuIT+Q8DAV3EzVkzptKp/H9zuaGay43R3j85QjPRMaUAeQ==
-X-Received: by 2002:a05:6512:6cb:: with SMTP id u11mr7885481lff.69.1582213135029;
-        Thu, 20 Feb 2020 07:38:55 -0800 (PST)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id f26sm2000083ljn.104.2020.02.20.07.38.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 20 Feb 2020 07:38:54 -0800 (PST)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1DIMRV6Iqi1rLe5wMgz5eqoASoBEhZAuJOJhLs9EWXg=;
+        b=tRQ9gho07qWIj05MjlXHT0MMvtopu537UAjHLGWck4DRg7NJ0sMcz9qrSVby9MiJ27
+         fjcBAYiJzZeLFRZB9vQI1Gaaswdr6UuE1lwnX7TDpOzvldAlAOtgUFDgoZm9iGTBC6Zv
+         bu2S5VPBf9RgK3dM5gtLi15Dec3pIsG8/P1oeB6JzqdtdLWSSepuQjIptqvSOGrZfxFc
+         vsFGCdtZwUaxQYF5hxqdWRo7G9rD3X7+IgV7ZOQ3qD6G4pbwEMzGWddhoPkrtbKFIPtS
+         YahkrYr+8FMHkLVMtfloCQ7fa7DRaj1Ql6WcpPMHV1WMEHn+Y6loCRrelySvpvkLIjeK
+         j5Sg==
+X-Gm-Message-State: APjAAAVE3SM2sM3FdL3ZgdVFXcuoRTKLbKM+nsm5NDzAxl7WBYJfY8mC
+        I9R500f/IuZfaa53G9mn81Q=
+X-Google-Smtp-Source: APXvYqwO3lW26bxqaJCMoOlpFAJtB3c1MIjoPwgFw5WTaUDCxMX3q2sVzXJyUPW4sVxi/vPZ2XA3Gg==
+X-Received: by 2002:a62:6409:: with SMTP id y9mr32901598pfb.30.1582213393847;
+        Thu, 20 Feb 2020 07:43:13 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x28sm4161696pgc.83.2020.02.20.07.43.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Feb 2020 07:43:12 -0800 (PST)
+Date:   Thu, 20 Feb 2020 07:43:11 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Evan Benn <evanbenn@chromium.org>
+Cc:     xingyu.chen@amlogic.com, Julius Werner <jwerner@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson-gxbb-odroid-c2: add rc-odroid ir keymap
-Date:   Thu, 20 Feb 2020 19:38:05 +0400
-Message-Id: <1582213085-11656-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+Message-ID: <20200220154311.GA29658@roeck-us.net>
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus>
+ <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net>
+ <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the rc-odroid keymap to the Odroid C2 device-tree.
+On Thu, Feb 20, 2020 at 05:41:09PM +1100, Evan Benn wrote:
+> Dear Xingyu,
+> 
+> Could this driver also cover your usecase? I am not familiar with
+> meson, but it seems like the meson calls could
+> be replaced with arm_smccc calls. Then this driver will cover both
+> chips. I am not sure if your firmware is upstream
+> somewhere, but this might be adapted;
+> https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
+> 
+FWIW, the Meson driver has more functionality.
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 +
- 1 file changed, 1 insertion(+)
+Guenter
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 6ded279..b46ef98 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -248,6 +248,7 @@
- 	status = "okay";
- 	pinctrl-0 = <&remote_input_ao_pins>;
- 	pinctrl-names = "default";
-+	linux,rc-map-name = "rc-odroid";
- };
- 
- &gpio_ao {
--- 
-2.7.4
-
+> Thanks
+> 
+> 
+> On Thu, Feb 20, 2020 at 10:20 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> >
+> > On Wed, Feb 19, 2020 at 03:04:54PM -0800, Julius Werner wrote:
+> > > > You are not the first 'watchdog in firmware accessed via an SMC call'.
+> > > > Is there some more detail about what implementation this is? Part of
+> > > > TF-A? Defined by some spec (I can dream)?
+> > >
+> > > This is just some random implementation written by me because we
+> > > needed one. I would like it to be the new generic implementation, but
+> > > it sounds like people here prefer the naming to be MediaTek specific
+> > > (at least for now). The other SMC watchdog we're aware of is
+> > > imx_sc_wdt but unfortunately that seems to hardcode platform-specific
+> >
+> > There is one more pending, for Meson SMC.
+> >
+> > https://patchwork.kernel.org/project/linux-watchdog/list/?series=227733
+> >
+> > Unfortunately it uses Meson firmware API functions, though it has pretty
+> > much the same functionality since those ultimately end up calling
+> > arm_smccc_smc().
+> >
+> > Guenter
+> >
+> > > details in the interface (at least in the pretimeout SMC) so we can't
+> > > just expand that. With this driver I tried to directly wrap the kernel
+> > > watchdog interface so it should be platform-agnostic and possible to
+> > > expand this driver to other platforms later if desired. The SMC
+> > > function ID would still always have to be platform-specific,
+> > > unfortunately (but we could pass it in through the device tree), since
+> > > the Arm SMC spec doesn't really leave any room for OS-generic SMCs
+> > > like this.
