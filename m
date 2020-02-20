@@ -2,325 +2,146 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66255C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457B3C11D1B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35EB92467A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217A12465D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T7e3KiNH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lwip480+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgBTTBh (ORCPT
+        id S1728336AbgBTTLo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:01:37 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33516 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728334AbgBTTBh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 14:01:37 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so2405083pgk.0
-        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 11:01:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8fVLwwPydfLuZNvYlHuH3T0ZHb/N6Ix0LIzIYC7dn20=;
-        b=T7e3KiNH986vMnDCiy0wyC/ghFGg2en/LWJYiahcTKMszCaf755LxaqdPFZjGxeWYU
-         BkfeMHu3J8vKosFTT/ORpiXxIGyuDeJhjXD+excqbQBwgye4AipYoGhPKLu9hhQaO1e0
-         +d0qEgRbdPtnJZ7gkqCAOPoOxLgs4+BoFJG1LzkRP4BQ7gRVvkfPHnqIDXR30PoLUagh
-         tLqjm133olDpXREX+3hmhlYuNdgqS7PTykMP+K6zliNZGq5Wno06bT6H15zQq2uMc/vr
-         aRQzZZ+1qYur1IFpQrKpBPs3Vma8tR510W7WZHEaZQQvVOqYtIwyonvL6KOsXRz/iNZK
-         xeLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8fVLwwPydfLuZNvYlHuH3T0ZHb/N6Ix0LIzIYC7dn20=;
-        b=BJWX8YqZ/O0+TqdBjSA3Nl1tYRvFYKc8f58IHp4Btne/eRzvsNutoh9zV0ZnHxs8Oi
-         nYamh7BOJGtbQ+EHEpsfksrpA24438ssc5g2S1JHIzTKW+Ay9Y8G6QNQOaJkfC1J8dkj
-         DZvctZH9xJJ8UfFjmo3n+X7Qm6ChDkuOeRchUn14+UotkqFhDL9xjGBzWboh1xBg/Zii
-         9SP5MEMVAvmC5hmvQ3s5sZrv5Xfi9IyNub0CgeK1FnHumJ5J36Np61YOtGBLSLnOO77+
-         +pWxo+L0HLXHas5l07shq0tEA6TKhOHFfOkKauwHZFpwsWhzY3llrf7WJBd50t6BtfR/
-         3dUA==
-X-Gm-Message-State: APjAAAUo9UGIL5w3lkhWhI9V6iaen2cC1vO3x7YhPK+68fVwCsnGdXau
-        cmsymru8gdqi8/fg8WGZJxkEoA==
-X-Google-Smtp-Source: APXvYqyLk4G4jwAFo2dw2ASIhOPGlFR06o9tgoOZEnRVjy3/weBLCZ2myICde4Qr6edvAP4itsFb8A==
-X-Received: by 2002:a63:9257:: with SMTP id s23mr35631559pgn.0.1582225296766;
-        Thu, 20 Feb 2020 11:01:36 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id 23sm349623pfh.28.2020.02.20.11.01.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 11:01:36 -0800 (PST)
-Date:   Thu, 20 Feb 2020 12:01:34 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: Re: [PATCH v3 2/8] remoteproc: qcom: Introduce driver to store pil
- info in IMEM
-Message-ID: <20200220190134.GB19352@xps15>
-References: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
- <20200211005059.1377279-3-bjorn.andersson@linaro.org>
+        Thu, 20 Feb 2020 14:11:44 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2123 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728111AbgBTTLo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 14:11:44 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4ed9a70000>; Thu, 20 Feb 2020 11:10:31 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 20 Feb 2020 11:11:43 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 20 Feb 2020 11:11:43 -0800
+Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 19:11:42 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+Date:   Thu, 20 Feb 2020 11:11:51 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211005059.1377279-3-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582225831; bh=heGfCD1XOLpMxJxA4HNefg5duZSK5mV5RMUR+iVA1L8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=lwip480+6jSOA6Li0cjyn37svqwAVWkRifwsZL3qphkMWbEa9Eai7Gb4N63teRGCF
+         dalP/2lfjPUeLWOacg1RW2PzPGQSKZTEa0xdPBk0cYEjki/3guB9cGhywQoF1bd5MF
+         RsDsMX7y9ZHfsjdiXomO8iurvuGuh/3XukmWJB/KNrHDhDCkWklTYNEv0yE+u7OEU8
+         D9hygg5Ujtm1CDQERG0fjfinHhdDk5zPeYIJB0HsQPLvMmhvWAglWQYUFsKNoRMVPW
+         3NQh+XpBhvjdcNwUa9mtwmRb9GkXAwGzp0XUbe/mOabrq/LL9HsbWixuMvMNbVQiqP
+         iCKn80t/DrJvw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:50:53PM -0800, Bjorn Andersson wrote:
-> A region in IMEM is used to communicate load addresses of remoteproc to
-> post mortem debug tools. Implement a driver that can be used to store
-> this information in order to enable these tools to process collected
-> ramdumps.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v2:
-> - Sorted includes
-> - Replace use of stracpy (still not landed upstream)
-> - Fixed error handling in probe
-> - Return error from store, to allow clients to decide action
-> - Replace hard coded size with value read from reg property
-> 
->  drivers/remoteproc/Kconfig         |   3 +
->  drivers/remoteproc/Makefile        |   1 +
->  drivers/remoteproc/qcom_pil_info.c | 168 +++++++++++++++++++++++++++++
->  drivers/remoteproc/qcom_pil_info.h |   8 ++
->  4 files changed, 180 insertions(+)
->  create mode 100644 drivers/remoteproc/qcom_pil_info.c
->  create mode 100644 drivers/remoteproc/qcom_pil_info.h
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index de3862c15fcc..20c8194e610e 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -95,6 +95,9 @@ config KEYSTONE_REMOTEPROC
->  	  It's safe to say N here if you're not interested in the Keystone
->  	  DSPs or just want to use a bare minimum kernel.
->  
-> +config QCOM_PIL_INFO
-> +	tristate
-> +
->  config QCOM_RPROC_COMMON
->  	tristate
->  
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index e30a1b15fbac..2ab32bd41b44 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
->  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
->  obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
-> +obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
->  obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
->  obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
->  obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
-> diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
-> new file mode 100644
-> index 000000000000..398aeb957f3c
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_pil_info.c
-> @@ -0,0 +1,168 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2019-2020 Linaro Ltd.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define PIL_RELOC_NAME_LEN	8
-> +
-> +struct pil_reloc_entry {
-> +	char name[PIL_RELOC_NAME_LEN];
-> +	__le64 base;
-> +	__le32 size;
-> +} __packed;
-> +
-> +struct pil_reloc {
-> +	struct device *dev;
-> +	struct regmap *map;
-> +	size_t offset;
-> +	size_t num_entries;
-> +	int val_bytes;
-> +
-> +	struct pil_reloc_entry entries[];
-> +};
-> +
-> +static struct pil_reloc *_reloc;
-> +static DEFINE_MUTEX(reloc_mutex);
-> +
-> +/**
-> + * qcom_pil_info_store() - store PIL information of image in IMEM
-> + * @image:	name of the image
-> + * @base:	base address of the loaded image
-> + * @size:	size of the loaded image
-> + *
-> + * Return: 0 on success, negative errno on failure
-> + */
-> +int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
-> +{
-> +	struct pil_reloc_entry *entry;
-> +	int idx = -1;
-> +	int ret;
-> +	int i;
-> +
-> +	mutex_lock(&reloc_mutex);
-> +	for (i = 0; i < _reloc->num_entries; i++) {
-> +		if (!_reloc->entries[i].name[0]) {
-> +			if (idx == -1)
-> +				idx = i;
-> +			continue;
-> +		}
-> +
-> +		if (!strncmp(_reloc->entries[i].name, image, 8)) {
 
-s/8/PIL_RELOC_NAME_LEN
+On 2/20/20 5:33 AM, Hans Verkuil wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> (Replying to myself so I can explain this a bit more)
+>
+> On 2/20/20 1:44 PM, Hans Verkuil wrote:
+>>> +
+>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
+>>> +{
+>>> +    struct device_node *node = csi->dev->of_node;
+>>> +    unsigned int port_num;
+>>> +    int ret;
+>>> +    struct tegra_csi_channel *item;
+>>> +    unsigned int tpg_channels = csi->soc->csi_max_channels;
+>>> +
+>>> +    /* allocate CSI channel for each CSI x2 ports */
+>>> +    for (port_num = 0; port_num < tpg_channels; port_num++) {
+>>> +            item = devm_kzalloc(csi->dev, sizeof(*item), GFP_KERNEL);
+>> Using devm_*alloc can be dangerous. If someone unbinds the driver, then
+>> all memory allocated with devm_ is immediately freed. But if an application
+>> still has a filehandle open, then when it closes it it might still reference
+>> this already-freed memory.
+>>
+>> I recommend that you avoid using devm_*alloc for media drivers.
+> A good test is to unbind & bind the driver:
+>
+> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
+> echo -n 54080000.vi >unbind
+> echo -n 54080000.vi >bind
+>
+> First just do this without the driver being used. That already
+> gives me 'list_del corruption' kernel messages (list debugging
+> is turned on in my kernel).
+>
+> Note that this first test is basically identical to a rmmod/modprobe
+> of the driver. But when I compiled the driver as a module it didn't
+> create any video device nodes! Nor did I see any errors in the kernel
+> log. I didn't pursue this, and perhaps I did something wrong, but it's
+> worth taking a look at.
+>
+> The next step would be to have a video node open with:
+>
+> v4l2-ctl --sleep 10
+>
+> then while it is sleeping unbind the driver and see what happens
+> when v4l2-ctl exits.
+>
+> Worst case is when you are streaming:
+>
+> v4l2-ctl --stream-mmap
+>
+> and then unbind.
+>
+> In general, the best way to get this to work correctly is:
+>
+> 1) don't use devm_*alloc
+> 2) set the release callback of struct v4l2_device and do all freeing there.
+> 3) in the platform remove() callback you call media_device_unregister()
+>     and video_unregister_device().
+Reg 3, in current patch, media_device_unregister is called in 
+host1x_video_remove
+video_unregister_device happens during host1x_video_remove -> 
+host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
 
-> +			idx = i;
-> +			goto found;
-> +		}
-> +	}
-> +
-> +	if (idx == -1) {
-> +		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
-> +		ret = -ENOMEM;
-> +		goto unlock;
-> +	}
-> +
-> +found:
-> +	entry = &_reloc->entries[idx];
-> +	strscpy(entry->name, image, ARRAY_SIZE(entry->name));
-> +	entry->base = base;
-> +	entry->size = size;
-> +
-> +	ret = regmap_bulk_write(_reloc->map,
-> +				_reloc->offset + idx * sizeof(*entry),
-> +				entry, sizeof(*entry) / _reloc->val_bytes);
-> +unlock:
-> +	mutex_unlock(&reloc_mutex);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
-> +
-> +/**
-> + * qcom_pil_info_available() - query if the pil info is probed
-> + *
-> + * Return: boolean indicating if the pil info device is probed
-> + */
-> +bool qcom_pil_info_available(void)
-> +{
-> +	return !!_reloc;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_pil_info_available);
-> +
-> +static int pil_reloc_probe(struct platform_device *pdev)
-> +{
-> +	unsigned int num_entries;
-> +	struct pil_reloc *reloc;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -EINVAL;
-> +
-> +	num_entries = resource_size(res) / sizeof(struct pil_reloc_entry);
-> +
-> +	reloc = devm_kzalloc(&pdev->dev,
-> +			     struct_size(reloc, entries, num_entries),
-> +			     GFP_KERNEL);
-> +	if (!reloc)
-> +		return -ENOMEM;
-> +
-> +	reloc->dev = &pdev->dev;
-> +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-> +	if (IS_ERR(reloc->map))
-> +		return PTR_ERR(reloc->map);
-> +
-> +	reloc->offset = res->start;
-> +	reloc->num_entries = num_entries;
-> +
-> +	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
-> +	if (reloc->val_bytes < 0)
-> +		return -EINVAL;
-> +
-> +	ret = regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
-> +				reloc->num_entries *
-> +				sizeof(struct pil_reloc_entry) /
-> +				reloc->val_bytes);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	mutex_lock(&reloc_mutex);
-> +	_reloc = reloc;
-> +	mutex_unlock(&reloc_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pil_reloc_remove(struct platform_device *pdev)
-> +{
-> +	mutex_lock(&reloc_mutex);
-> +	_reloc = NULL;
-> +	mutex_unlock(&reloc_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id pil_reloc_of_match[] = {
-> +	{ .compatible = "qcom,pil-reloc-info" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
-> +
-> +static struct platform_driver pil_reloc_driver = {
-> +	.probe = pil_reloc_probe,
-> +	.remove = pil_reloc_remove,
-> +	.driver = {
-> +		.name = "qcom-pil-reloc-info",
-> +		.of_match_table = pil_reloc_of_match,
-> +	},
-> +};
-> +module_platform_driver(pil_reloc_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm PIL relocation info");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
-> new file mode 100644
-> index 000000000000..93aaaca8aed2
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_pil_info.h
-> @@ -0,0 +1,8 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __QCOM_PIL_INFO_H__
-> +#define __QCOM_PIL_INFO_H__
-> +
-> +int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
-> +bool qcom_pil_info_available(void);
-> +
-> +#endif
-> -- 
-> 2.24.0
-> 
+> It's worth getting this right in this early stage, rather than fixing it
+> in the future.
+>
+> Regards,
+>
+>          Hans
