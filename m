@@ -2,107 +2,90 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5AEC11D19
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F72C11D1B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D992208E4
+	by mail.kernel.org (Postfix) with ESMTP id CA7E22467A
 	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:27:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B5gAuWVd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DpfiOBbc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgBTS1J (ORCPT
+        id S1728639AbgBTS1J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 20 Feb 2020 13:27:09 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49188 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728404AbgBTS1I (ORCPT
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58217 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728534AbgBTS1I (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
         Thu, 20 Feb 2020 13:27:08 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582223228; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=1b9L0w3z5bVHdWtnw5ZOrRJfst0EtjPxWLBYnnXzM2M=; b=B5gAuWVd+e029Ee+LarBHU2hJyv7BnLV24I3EjxUU8k5vVsh3YR9ywTZIq0FKA+y4VszCnRL
- XsXNm0MBnIeVsbRwRDvGpEOPYlqh+abPtt39YlfUxUMcVHEMvorHjxtbcGrYzPI7Ze2BK369
- QuB59ruCiq1vZhQGIZvZqelhwNw=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ s=smtp; t=1582223228; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=FNc3ciCRQ3MW3zYHSCJZEO99ElwwHxEZQHD1BF08YYw=; b=DpfiOBbc6uG3dyIQM4A2UX/dSTCNtbo9PJNgk69nwDsoWMS/LxNhMekOkZemh3PNYtlJHA6e
+ Gc0Km4hLRnQ6RH/6n8zc9GHTcgPQC2ZBBiaGIK6kEoqc1t3wAi2cc55pQW7QoQq0arugRBGp
+ SVhhEoEkldjKYWqw+rWvDgGwK9Y=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4ecf76.7f59f77e0688-smtp-out-n02;
- Thu, 20 Feb 2020 18:27:02 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e4ecf7a.7fd11088e1f0-smtp-out-n03;
+ Thu, 20 Feb 2020 18:27:06 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9D3A7C447A6; Thu, 20 Feb 2020 18:27:02 +0000 (UTC)
+        id 1B4AAC447A4; Thu, 20 Feb 2020 18:27:06 +0000 (UTC)
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97EF5C43383;
-        Thu, 20 Feb 2020 18:27:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 97EF5C43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E049BC43383;
+        Thu, 20 Feb 2020 18:27:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E049BC43383
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     smasetty@codeaurora.org, John Stultz <john.stultz@linaro.org>,
+        devicetree@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v2 0/4] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
-Date:   Thu, 20 Feb 2020 11:26:52 -0700
-Message-Id: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2 3/4] arm64: dts: sdm845: Set the virtual address range for GMU allocations
+Date:   Thu, 20 Feb 2020 11:26:55 -0700
+Message-Id: <1582223216-23459-4-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
+References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+GMU DMA allocations need to be mapped between 0x60000000 and 0x80000000 in
+the GMU virtual address space. Specify the dma-range so the iova allocator
+does the right thing.
 
-When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
-cache coherency issues because it is mapped as write-combine without clearing
-the cache after it was zeroed.
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-Rather than duplicate the hacky workaround we use in the GEM allocator for the
-same reason it turns out that we don't need to have a bespoke memory allocator
-for the GMU anyway. It uses a flat, global address space and there are only
-two relatively minor allocations anyway. In short, this is essentially what the
-DMA API was created for so replace a bunch of memory management code with two
-calls to allocate and free DMA memory and we're fine.
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The only wrinkle is that the memory allocations need to be in a very specific
-location in the GMU virtual address space so in order to get the iova allocator
-to do the right thing we need to specify the dma-ranges property in the device
-tree for the GMU node. Since we've not yet converted the GMU bindings over to
-YAML two patches quickly turn into four but at the end of it we have at least
-one bindings file converted to YAML and 99 less lines of code to worry about.
-
-v2: Fix the example bindings for dma-ranges - the third item is the size
-Pass false to of_dma_configure so that it fails probe if the DMA region is not
-set up.
-
-Jordan Crouse (4):
-  dt-bindings: display: msm: Convert GMU bindings to YAML
-  dt-bindings: display: msm: Add required dma-range property
-  arm64: dts: sdm845: Set the virtual address range for GMU allocations
-  drm/msm/a6xx: Use the DMA API for GMU memory objects
-
- .../devicetree/bindings/display/msm/gmu.txt        | 116 -----------------
- .../devicetree/bindings/display/msm/gmu.yaml       | 140 +++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi               |   2 +
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 112 ++---------------
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h              |   5 +-
- 5 files changed, 153 insertions(+), 222 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
- create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index d42302b..3c766423 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2911,6 +2911,8 @@
+ 					<&gpucc GPU_GX_GDSC>;
+ 			power-domain-names = "cx", "gx";
+ 
++			dma-ranges = <0 0x60000000 0 0x60000000 0 0x20000000>;
++
+ 			iommus = <&adreno_smmu 5>;
+ 
+ 			operating-points-v2 = <&gmu_opp_table>;
 -- 
 2.7.4
