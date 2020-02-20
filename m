@@ -2,192 +2,108 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE07CC11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 16:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717D4C11D0F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 16:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D149924681
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 16:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48303206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 16:26:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KN4+M85M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgBTQZy (ORCPT
+        id S1728692AbgBTQZy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 20 Feb 2020 11:25:54 -0500
-Received: from out28-4.mail.aliyun.com ([115.124.28.4]:48411 "EHLO
-        out28-4.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbgBTQZj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 11:25:39 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07648442|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.498548-0.0165261-0.484926;DS=CONTINUE|ham_regular_dialog|0.0122992-0.000497969-0.987203;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03296;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GqC0FCl_1582215911;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GqC0FCl_1582215911)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Fri, 21 Feb 2020 00:25:29 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, tglx@linutronix.de,
-        ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, sboyd@kernel.org,
-        mturquette@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        daniel.lezcano@linaro.org, paul@crapouillou.net,
-        geert+renesas@glider.be, krzk@kernel.org, ebiederm@xmission.com,
-        miquel.raynal@bootlin.com, keescook@chromium.org,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        dongsheng.qiu@ingenic.com
-Subject: [PATCH v6 5/7] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Date:   Fri, 21 Feb 2020 00:24:47 +0800
-Message-Id: <1582215889-113034-7-git-send-email-zhouyanjie@wanyeetech.com>
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46460 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728685AbgBTQZx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 11:25:53 -0500
+Received: by mail-lj1-f196.google.com with SMTP id x14so4815690ljd.13;
+        Thu, 20 Feb 2020 08:25:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kLCeh2hYjGPl6+22S9skiaS6Lwi7X9cC+fUScfOkfNs=;
+        b=KN4+M85MvqR5gFb7czqWImi4xpcDKLXmqdj8vJd13/UVhbm+Ehz8HjJ45PCdv9t5hr
+         EMiY0KvpZQfVFhJsYFB9ydYiaae3jiLf9CHCXv2yXKpHOBH0+QGl+/notDZh2iWObg4t
+         niwC1nF9zN8OoE2gcR38Hqv2yu1jtyT3rVENUGhTKctAL/JQo0un1O3sTope2C/JCe3J
+         9gPtSyu2s3GJ7wXuFTx/MpR8+K/A04Vh1ylVtqS0smwGUcHMC3+tir5AgZUl8V4KQD//
+         hHPWYv06Drm2IxW8GGSZ41Aj7lekNPbGqULcbtgoyvYMn6gXNG5ytM+omknRtTv8sAzJ
+         uNjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kLCeh2hYjGPl6+22S9skiaS6Lwi7X9cC+fUScfOkfNs=;
+        b=qemP5QpWVL9H4+ZYfo/7pkzOIFr3Uj2fmBKgUq66h5Mb5PlUvrhmj7T0O7IyGwjtlH
+         4ysx6cwTHC37T5j2LHb2UKlMz+64Y4WnuoyAjMBETO1dfwr9OUnKtvd/EkvSoV8cSn9X
+         rFse6eAIS98wbrw7PVq2RE15XjxV9CRYyLLjoQR93yZxd3iV/hhnna7rC9ZPOP6HJHz5
+         Ff4lhpuzl8RTDBX6+mvXwu1zejEp1WXqnN2ETHDqfdnxmZNv5icnWiM4luIhB5GZv6Th
+         QwGV82saf3GtXf+b/Sh8S9A8shJWOMMJN3CyzaWUlHewSFs08bcHnPOjgCNAeeysIxmz
+         7/MA==
+X-Gm-Message-State: APjAAAWVqEr80G3LDLAHzlaZHkc9AKluM88oChmSjC/jp6jjXoW5vKUC
+        1JNNN6aN6I3JnlYG20gey3w=
+X-Google-Smtp-Source: APXvYqzbjfJc19VrvFIqTzezHsniNvpL9Nn/rt4Xov1EelOo+z+JciRkBvpVmCJuqeULxMU6fKE13w==
+X-Received: by 2002:a2e:868c:: with SMTP id l12mr19455557lji.194.1582215951463;
+        Thu, 20 Feb 2020 08:25:51 -0800 (PST)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id b13sm2217956lfi.77.2020.02.20.08.25.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 20 Feb 2020 08:25:50 -0800 (PST)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Oleg Ivanov <balbes-150@yandex.ru>
+Subject: [PATCH] arm64: dts: meson-gxbb-vega-s95: fix bindings and bluetooth node
+Date:   Thu, 20 Feb 2020 20:25:00 +0400
+Message-Id: <1582215900-12716-1-git-send-email-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the available properties for the SoC root node and the
-CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+This adds missing bindings and fixes BT output.
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: Paul Boddie <paul@boddie.org.uk>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Fixes: b07a11dbdfeb ("arm64: dts: meson-gxbb-vega-s95: fix WiFi/BT module support")
+
+Suggested-by: Oleg Ivanov <balbes-150@yandex.ru>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Notes:
-    v1->v2:
-    Change the two Document from txt to yaml.
-    
-    v2->v3:
-    Fix formatting errors.
-    
-    v3->v4:
-    Fix bugs in the two yaml files.
-    
-    v4->v5:
-    No change.
-    
-    v5->v6:
-    Rewrite the two yaml files.
-
- .../bindings/mips/ingenic/ingenic,cpu.yaml         | 61 ++++++++++++++++++++++
- .../bindings/mips/ingenic/ingenic,soc.yaml         | 34 ++++++++++++
- 2 files changed, 95 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
-
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-new file mode 100644
-index 00000000..ad1fd86
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Ingenic XBurst family CPUs
-+
-+maintainers:
-+  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+description: |
-+  Ingenic XBurst family CPUs shall have the following properties.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+
-+      - description: Ingenic XBurst®1 CPU Core
-+        items:
-+          - const: ingenic,xburst
-+
-+      - description: Ingenic XBurst®2 CPU Core
-+        items:
-+          - const: ingenic,xburst2
-+
-+  reg:
-+    description: |
-+      The number of the CPU.
-+
-+required:
-+  - device_type
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4780-cgu.h>
-+
-+    cpus {
-+    	#address-cells = <1>;
-+    	#size-cells = <0>;
-+
-+    	cpu0: cpu@0 {
-+    		device_type = "cpu";
-+    		compatible = "ingenic,xburst";
-+    		reg = <0>;
-+
-+    		clocks = <&cgu JZ4780_CLK_CPU>;
-+    		clock-names = "cpu";
-+    	};
-+
-+    	cpu1: cpu@1 {
-+    		device_type = "cpu";
-+    		compatible = "ingenic,xburst";
-+    		reg = <1>;
-+
-+    		clocks = <&cgu JZ4780_CLK_CORE1>;
-+    		clock-names = "cpu";
-+    	};
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
-new file mode 100644
-index 00000000..8943e73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
-@@ -0,0 +1,34 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Ingenic SoCs with XBurst CPU inside.
-+
-+maintainers:
-+  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+description: |
-+  Ingenic SoCs with XBurst CPU inside shall have the following properties.
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+
-+      - description: Ingenic JZ47 Series Mobile Application Processor
-+        items:
-+          - const: ingenic,jz4740
-+          - const: ingenic,jz4725b
-+          - const: ingenic,jz4760
-+          - const: ingenic,jz4760b
-+          - const: ingenic,jz4770
-+          - const: ingenic,jz4780
-+
-+      - description: Ingenic X Series IoT Application Processor
-+        items:
-+          - const: ingenic,x1000
-+          - const: ingenic,x1000e
-+          - const: ingenic,x1500
-+...
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index 5eab3df..0012779 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -4,6 +4,8 @@
+  */
+ 
+ #include "meson-gxbb.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	compatible = "tronsmart,vega-s95", "amlogic,meson-gxbb";
+@@ -245,6 +247,9 @@
+ 	bluetooth {
+ 		compatible = "brcm,bcm43438-bt";
+ 		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
++		max-speed = <2000000>;
++		clocks = <&wifi32k>;
++		clock-names = "lpo";
+ 	};
+ };
+ 
 -- 
 2.7.4
 
