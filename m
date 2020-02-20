@@ -2,75 +2,86 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD82C11D00
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 21:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACE0C11D00
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 22:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E588207FD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 21:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925E0208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 22:06:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t2Zumk2L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lw4u+qOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbgBTV7k (ORCPT
+        id S1727786AbgBTWGe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 16:59:40 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41920 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgBTV7j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 16:59:39 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so6299129wrw.8;
-        Thu, 20 Feb 2020 13:59:37 -0800 (PST)
+        Thu, 20 Feb 2020 17:06:34 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38757 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbgBTWGd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 17:06:33 -0500
+Received: by mail-wr1-f68.google.com with SMTP id e8so6355853wrm.5;
+        Thu, 20 Feb 2020 14:06:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BjqISWsyGNt/OrpyI0FBvIS4xHBzRF9POC4AcIoX3w8=;
-        b=t2Zumk2Lxqbndlbs5st73rxGE1YmqwLg/3EINY/+VeKiwFK0htcQdLzIxltyI4bu9b
-         GEVEQ6N0eF9GMHwHWCjG5lUXXzaFMxxKMf5h6YWSko2Kue+KyuVrlFBrl6aYxgwt27z+
-         Gq+guScegqrrVLGZ6/0r3ddnc4t/PFDBo+UOaHtXshDEdRXML9WbK7n/FXo3yoYkEPc1
-         cI2AFKDtAGTqx9zxD2ZYj7Frgor7QX28pAD4yf1vA0KBcNmk/Fq+9HnyZy03Ey6BqZjG
-         1SbtrPjRarQQgEKaeJcco2lo8BOosPgNXhdDvOgVkDzCJQRyS7kEjv95X176SV9QyY8Z
-         XX7w==
+        bh=gFZYtwWsOJiAfSxxUlqRa+9DDsc5/g3T59cg2TasU4Y=;
+        b=Lw4u+qOmOnz/QyLfekH1agNEhJQe2x+O13swKNEmvu3HA9spp0lh444i0SeGJVf6uT
+         4btriFh/O9bm6Hecp1jf+rxZ7UxSfjesYieLvUWY5nv080Al6xddIPmi79f9J95UZjKW
+         W3+tfGnmWAmWPR+QBBEott21JaqRkyDse9inREGkyllf3JohjVhu2VhZgj86UwQzrOrj
+         mZnwUMJz9goLXt7NOrg/vQGYeqV7o1vl8Dh5VLbVA4edgAs6WWXuZFa17H6oIIXob5zI
+         rvSpIz+fQVupRkkXHYPhHL1gkcq6vkVQmj0TDH/UFPc0aX3HB9ZJQA5cJCdLvU2QCF2d
+         jTjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=BjqISWsyGNt/OrpyI0FBvIS4xHBzRF9POC4AcIoX3w8=;
-        b=TUWaXj2xS98wjXmW/VhdhXhNhfCYb2f92Tg13VRI3Z7yVozT5kxjjpWqDP+dUa4uT9
-         2VQGwECLRA9q3UGSwe2mmahcsEbUw6CrP8pmDVkm/bO9Epu7Is7RyQMjD9pU/YV5JLak
-         Gf1r4/MJ4Yw81DHIuUGW4qxOLqelH0s8j/xeXBk+go9qufGfU1x6z2OR/I/ROBWjnpgS
-         xD0NswWRpl/IV/F/xrVmV/wZMphf54rMX3bD6xNyDpX4vkKlS6ObMs7pybmtv0/VbIAc
-         FsJKXqieOqcYTuxWTmsrPAhttolMg123/JExBQmrcE06hmPBStBKVk/ES8wtue6VY+Sm
-         L45w==
-X-Gm-Message-State: APjAAAXFdQH9blfZoZAkCbFFUWAGdNgMFUMukrM7c1+iG6K3iY1abc/H
-        NvvDc8iit2f3GzW+SE+vzgU=
-X-Google-Smtp-Source: APXvYqzcpDacHycw0Grq1vpWdaPG5q7F4YE9fUeHL6FSrlzn3vN1Ng7nwGZalsOW6p3lVxlIbK3sdg==
-X-Received: by 2002:adf:f14b:: with SMTP id y11mr21718686wro.90.1582235976319;
-        Thu, 20 Feb 2020 13:59:36 -0800 (PST)
+        bh=gFZYtwWsOJiAfSxxUlqRa+9DDsc5/g3T59cg2TasU4Y=;
+        b=IbL4vabpkt0eyXIawW9kwpTvw/6VflmOKqDN2vxmxGo2bwyYqCWP72fdrKD+GzbWS5
+         BOGJEyhE1dpMxFsyp/yLoKdSl6G5a1xAX3Drzflk7XGPtW3JocWkGJqiyp2dQCquXQk9
+         seJ2/W6/h1fLEpCZ7KsRi/xc93nRdhOekT4yGII5yrL5lMpmY587hSPnW5rTvZLSJRGp
+         kXWDVyU0POZXAcevXQgvoRDGGmLz9GOgTFo5nrqb3R9uil0yP8h7GlXXC0qos3FBp9ul
+         EF6h4fN/UGtY/2yz1ickJqovdk8zjv1783//304ZidCv+a2POq/6pJ/+lnbcx2UMgfkS
+         /Cng==
+X-Gm-Message-State: APjAAAWJtuc2eA0cx3QgTGJntveVVQWAxK46ORpsN3sacSogP/fX78rZ
+        8YH/q62uh7K7xlALvQzwihU=
+X-Google-Smtp-Source: APXvYqzQsk2HWs8t9gFw6i8Bv/TRvSwDsY+48IdxNFD9s74DUxr4m8NiV07+d3FEcJ5scDbwWy7Gvw==
+X-Received: by 2002:adf:ea48:: with SMTP id j8mr46871194wrn.363.1582236390473;
+        Thu, 20 Feb 2020 14:06:30 -0800 (PST)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id 18sm931043wmf.1.2020.02.20.13.59.34
+        by smtp.gmail.com with ESMTPSA id h13sm1215039wrw.54.2020.02.20.14.06.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 13:59:35 -0800 (PST)
-Subject: Re: [PATCH v3,3/8] arm64: dts: mt8183: Add #cooling-cells to CPU
- nodes
-To:     Michael Kao <michael.kao@mediatek.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20200103064407.19861-1-michael.kao@mediatek.com>
- <20200103064407.19861-4-michael.kao@mediatek.com>
+        Thu, 20 Feb 2020 14:06:29 -0800 (PST)
+Subject: Re: [PATCH v3 4/4] dt-bindings: mmc: mediatek: Add document for
+ mt6779
+To:     Rob Herring <robh@kernel.org>,
+        Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
+        linux-arm-kernel@lists.infradead.org
+References: <1581922564-24914-1-git-send-email-chun-hung.wu@mediatek.com>
+ <1581922564-24914-5-git-send-email-chun-hung.wu@mediatek.com>
+ <20200219030225.GA14824@bogus>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -146,12 +157,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <6e37f3e5-d56b-980e-f269-15b15f70d91b@gmail.com>
-Date:   Thu, 20 Feb 2020 22:59:33 +0100
+Message-ID: <96e4df17-999e-2356-f203-4cef26a8d66d@gmail.com>
+Date:   Thu, 20 Feb 2020 23:06:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200103064407.19861-4-michael.kao@mediatek.com>
+In-Reply-To: <20200219030225.GA14824@bogus>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -162,96 +173,21 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 03/01/2020 07:44, Michael Kao wrote:
-> From: "michael.kao" <michael.kao@mediatek.com>
+On 19/02/2020 04:02, Rob Herring wrote:
+> On Mon, 17 Feb 2020 14:56:04 +0800, Chun-Hung Wu wrote:
+>> Add compatible node for mt6779 mmc
+>>
+>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
 > 
-> The #cooling-cells property needs to be specified to allow a CPU
-> to be used as cooling device.
+> Acked-by: Rob Herring <robh@kernel.org>
 > 
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
 
-Applied to v5.6-next/dts64
+With the commit from patch 3/4 the compatible should be:
+"mediatek,mt6779-mmc", "mediatek,mt8183-mmc": for mmc host ip compatible with mt6779
 
-Thanks
-
-> ---
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index cfb74af260e0..63378ae14a16 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -9,6 +9,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include "mt8183-pinfunc.h"
-> +#include <dt-bindings/thermal/thermal.h>
->  
->  / {
->  	compatible = "mediatek,mt8183";
-> @@ -74,6 +75,7 @@
->  			enable-method = "psci";
->  			capacity-dmips-mhz = <741>;
->  			dynamic-power-coefficient = <84>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -83,6 +85,7 @@
->  			enable-method = "psci";
->  			capacity-dmips-mhz = <741>;
->  			dynamic-power-coefficient = <84>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu2: cpu@2 {
-> @@ -92,6 +95,7 @@
->  			enable-method = "psci";
->  			capacity-dmips-mhz = <741>;
->  			dynamic-power-coefficient = <84>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu3: cpu@3 {
-> @@ -101,6 +105,7 @@
->  			enable-method = "psci";
->  			capacity-dmips-mhz = <741>;
->  			dynamic-power-coefficient = <84>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu4: cpu@100 {
-> @@ -110,6 +115,7 @@
->  			enable-method = "psci";
->  			capacity-dmips-mhz = <1024>;
->  			dynamic-power-coefficient = <211>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu5: cpu@101 {
-> @@ -119,6 +125,7 @@
->  			enable-method = "psci";
->  			capacity-dmips-mhz = <1024>;
->  			dynamic-power-coefficient = <211>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu6: cpu@102 {
-> @@ -128,6 +135,7 @@
->  			enable-method = "psci";
->  			capacity-dmips-mhz = <1024>;
->  			dynamic-power-coefficient = <211>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu7: cpu@103 {
-> @@ -137,6 +145,7 @@
->  			enable-method = "psci";
->  			capacity-dmips-mhz = <1024>;
->  			dynamic-power-coefficient = <211>;
-> +			#cooling-cells = <2>;
->  		};
->  	};
->  
-> 
+Regards,
+Matthias
