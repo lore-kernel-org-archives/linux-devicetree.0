@@ -7,360 +7,179 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DEDC11D04
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 09:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39309C11D04
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 09:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 816722465D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 09:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039E224656
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 09:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="qfW0oX06"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDOc3Zzh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgBTJf2 (ORCPT
+        id S1726839AbgBTJiE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:35:28 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7404 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726637AbgBTJf1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:35:27 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01K9U0mB029558;
-        Thu, 20 Feb 2020 10:35:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=3jdW5PZJwk6QMyC1Ny5sW7d40wmzJPgi/QtFD80zun8=;
- b=qfW0oX06Ud0LG7ZE5pK44o5fLorDKBDfF6gjoWw5YacIzCZFe6mF31xK7D5pl6KcOXbi
- PVmNjEY6tORLs2CfIZHzxK93QpqLHz2NmxlwNeueg1LrfN1UoOWukKEk4g7S9Et1K9WL
- gEhy9nbiik3Vk5hkZbY1ORN5xdEGAR/IENWRhjj156WGXlFlmFTI3nuZFva5iubxr8Qq
- a2Mn7xu1d2XG/3ElVBV3zeOR25HvWee/zrjHuwTwm+1dnxnTOCgs7kmtQfLudXCVRXWg
- D3eljFIAFraUwra22kr3f2BfGM72q1zc7wAh7wVoPTkx6cupTGcssOie/uuW/9WcRQ0Q 7g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8ub1g0dt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Feb 2020 10:35:15 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EC00410003A;
-        Thu, 20 Feb 2020 10:35:10 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D06B72A5D10;
-        Thu, 20 Feb 2020 10:35:10 +0100 (CET)
-Received: from lmecxl0889.lme.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
- 2020 10:35:10 +0100
-Subject: Re: [PATCH v5 1/3] remoteproc: add support for co-processor loaded
- and booted before kernel
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
- <20200211174205.22247-2-arnaud.pouliquen@st.com>
- <20200213200813.GA14415@xps15> <24947b31-bef6-cfb3-686e-80bef6f974e3@st.com>
- <CANLsYkxhWWgVFVe3=5WOYkYGQgV7g+3FvDKRDKi7y9kuk4_G8w@mail.gmail.com>
- <d6e09b93-f287-78a0-a6d9-3d9ea0a5f3d7@st.com>
- <CANLsYkzQz5yyu+KViEL8GwWtp7cfBotS8Fuvs1MJzvYq4LxOig@mail.gmail.com>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <07d5bea4-1585-db55-4ca0-ae28dcf81d41@st.com>
-Date:   Thu, 20 Feb 2020 10:35:09 +0100
+        Thu, 20 Feb 2020 04:38:04 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39825 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgBTJiE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 04:38:04 -0500
+Received: by mail-wm1-f65.google.com with SMTP id c84so1237673wme.4
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 01:38:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=91hJOg6mkO0g2GWClGuxRVigkpNiaYP+nKzj4TFaDHY=;
+        b=tDOc3ZzhHCw3tQK9vmGLOg1WdfVWzGtbuuzsRJx/BgZ4qvQJdyNACmmIvCTjmpCd09
+         lNXL2rbbLhR8eksjg4eCL28QEjCo6L9SPVxihR/YS9Uv1M4Ck9Qs/PjF0aBCzYViwZ4c
+         7lqectiY9wU/r7O0Fs7elIkRanR4z9ZLunF6xIZQwKiXgEItBDf36uZLH8iznutginQz
+         5tfUIcBQjA1CyfsuZUTtMtf1ACtjYbdfqOaYsnWaePSPGU55A/4cCwLIZ65JSLjkEN1o
+         epYoZq365UnpMLy8qi1aWvE5MRJEQ93Le+SZKsSKSa2Fu/BHxACCBir43JeMtHIpPt8A
+         ED8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=91hJOg6mkO0g2GWClGuxRVigkpNiaYP+nKzj4TFaDHY=;
+        b=AVQXBpYv3t/Hv26/shQ72GeuDg6KWshGpN2qp/VdwQg4ckkQSQHbuuHdpyrSkdsFvT
+         2qmgZ17NYgRGaPuCM6oxN7AUk5MODNdnH4pvQbl2YVZqWTII8ONv6sL6BdfCyH5r1qfT
+         /rEfpkwTVfWg+jNyKN34MtBSYSvOBaM2Lg9qWrO6Qomx54SHslmqnLcusBweZOrRYHyk
+         3jrS1V/Q6tKjqTHIxDe30JxWH4REZbOpPxQALfMz59GRYEtk1xD+/xswcsu6Z2+nKaKY
+         gQcifLytwvi8NPWGDUIChel6r6HDgY+lq0dz6vyUQFc4NO427bO7zK+vyHKOwitxM0Ej
+         I5PQ==
+X-Gm-Message-State: APjAAAX5+QtejbtyIJ+O2bVr14lkJbqajod72NyzycBtvEDRk9cZbiNU
+        FdPS0h1GH6MoqupqvWX8MRRdiA==
+X-Google-Smtp-Source: APXvYqzoG3nBri3g1BPDtmvxxv+KOfrysBzEib4/n1Zp8hr2ySi6LK5uYqHVZcun9F260Utu4C6kIQ==
+X-Received: by 2002:a1c:bdc6:: with SMTP id n189mr3482954wmf.102.1582191481981;
+        Thu, 20 Feb 2020 01:38:01 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:1d8d:74ba:7173:f47f? ([2a01:e34:ed2f:f020:1d8d:74ba:7173:f47f])
+        by smtp.googlemail.com with ESMTPSA id q124sm3745544wme.2.2020.02.20.01.38.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 01:38:01 -0800 (PST)
+Subject: Re: [PATCH v4 2/3] mfd: stm32: Add defines to be used for clkevent
+ purpose
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, lee.jones@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        tglx@linutronix.de, fabrice.gasnier@st.com
+Cc:     devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-3-benjamin.gaignard@st.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
+Date:   Thu, 20 Feb 2020 10:38:00 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CANLsYkzQz5yyu+KViEL8GwWtp7cfBotS8Fuvs1MJzvYq4LxOig@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200217134546.14562-3-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_02:2020-02-19,2020-02-20 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+Hi Lee,
 
-On 2/19/20 9:56 PM, Mathieu Poirier wrote:
-> Hey Arnaud,
+On 17/02/2020 14:45, Benjamin Gaignard wrote:
+> Add defines to be able to enable/clear irq and configure one shot mode.
 > 
-> On Tue, 18 Feb 2020 at 10:31, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
->>
->> Hi Mathieu, Bjorn,
->>
->> On 2/17/20 7:40 PM, Mathieu Poirier wrote:
->>> On Fri, 14 Feb 2020 at 09:33, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
->>>>
->>>> Hi Mathieu,
->>>>
->>>> On 2/13/20 9:08 PM, Mathieu Poirier wrote:
->>>>> Good day,
->>>>>
->>>>> On Tue, Feb 11, 2020 at 06:42:03PM +0100, Arnaud Pouliquen wrote:
->>>>>> From: Loic Pallardy <loic.pallardy@st.com>
->>>>>>
->>>>>> Remote processor could boot independently or be loaded/started before
->>>>>> Linux kernel by bootloader or any firmware.
->>>>>> This patch introduces a new property in rproc core, named skip_fw_load,
->>>>>> to be able to allocate resources and sub-devices like vdev and to
->>>>>> synchronize with current state without loading firmware from file system.
->>>>>> It is platform driver responsibility to implement the right firmware
->>>>>> load ops according to HW specificities.
->>>>>>
->>>>>> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
->>>>>> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>>>>> ---
->>>>>>  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++------
->>>>>>  include/linux/remoteproc.h           |  2 +
->>>>>>  2 files changed, 55 insertions(+), 14 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->>>>>> index 097f33e4f1f3..876b5420a32b 100644
->>>>>> --- a/drivers/remoteproc/remoteproc_core.c
->>>>>> +++ b/drivers/remoteproc/remoteproc_core.c
->>>>>> @@ -1358,8 +1358,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
->>>>>>      return ret;
->>>>>>  }
->>>>>>
->>>>>> -/*
->>>>>> - * take a firmware and boot a remote processor with it.
->>>>>> +/**
->>>>>> + * rproc_fw_boot() - boot specified remote processor according to specified
->>>>>> + * firmware
->>>>>> + * @rproc: handle of a remote processor
->>>>>> + * @fw: pointer on firmware to handle
->>>>>> + *
->>>>>> + * Handle resources defined in resource table, load firmware and
->>>>>> + * start remote processor.
->>>>>> + *
->>>>>> + * If firmware pointer fw is NULL, firmware is not handled by remoteproc
->>>>>> + * core, but under the responsibility of platform driver.
->>>>>> + *
->>>>>> + * Returns 0 on success, and an appropriate error value otherwise.
->>>>>>   */
->>>>>>  static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->>>>>>  {
->>>>>> @@ -1371,7 +1382,11 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->>>>>>      if (ret)
->>>>>>              return ret;
->>>>>>
->>>>>> -    dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
->>>>>> +    if (fw)
->>>>>> +            dev_info(dev, "Booting fw image %s, size %zd\n", name,
->>>>>> +                     fw->size);
->>>>>> +    else
->>>>>> +            dev_info(dev, "Synchronizing with preloaded co-processor\n");
->>>>>>
->>>>>>      /*
->>>>>>       * if enabling an IOMMU isn't relevant for this rproc, this is
->>>>>> @@ -1718,16 +1733,22 @@ static void rproc_crash_handler_work(struct work_struct *work)
->>>>>>   * rproc_boot() - boot a remote processor
->>>>>>   * @rproc: handle of a remote processor
->>>>>>   *
->>>>>> - * Boot a remote processor (i.e. load its firmware, power it on, ...).
->>>>>> + * Boot a remote processor (i.e. load its firmware, power it on, ...) from
->>>>>> + * different contexts:
->>>>>> + * - power off
->>>>>> + * - preloaded firmware
->>>>>> + * - started before kernel execution
->>>>>> + * The different operations are selected thanks to properties defined by
->>>>>> + * platform driver.
->>>>>>   *
->>>>>> - * If the remote processor is already powered on, this function immediately
->>>>>> - * returns (successfully).
->>>>>> + * If the remote processor is already powered on at rproc level, this function
->>>>>> + * immediately returns (successfully).
->>>>>>   *
->>>>>>   * Returns 0 on success, and an appropriate error value otherwise.
->>>>>>   */
->>>>>>  int rproc_boot(struct rproc *rproc)
->>>>>>  {
->>>>>> -    const struct firmware *firmware_p;
->>>>>> +    const struct firmware *firmware_p = NULL;
->>>>>>      struct device *dev;
->>>>>>      int ret;
->>>>>>
->>>>>> @@ -1758,11 +1779,20 @@ int rproc_boot(struct rproc *rproc)
->>>>>>
->>>>>>      dev_info(dev, "powering up %s\n", rproc->name);
->>>>>>
->>>>>> -    /* load firmware */
->>>>>> -    ret = request_firmware(&firmware_p, rproc->firmware, dev);
->>>>>> -    if (ret < 0) {
->>>>>> -            dev_err(dev, "request_firmware failed: %d\n", ret);
->>>>>> -            goto downref_rproc;
->>>>>> +    if (!rproc->skip_fw_load) {
->>>>>> +            /* load firmware */
->>>>>> +            ret = request_firmware(&firmware_p, rproc->firmware, dev);
->>>>>> +            if (ret < 0) {
->>>>>> +                    dev_err(dev, "request_firmware failed: %d\n", ret);
->>>>>> +                    goto downref_rproc;
->>>>>> +            }
->>>>>> +    } else {
->>>>>> +            /*
->>>>>> +             * Set firmware name pointer to null as remoteproc core is not
->>>>>> +             * in charge of firmware loading
->>>>>> +             */
->>>>>> +            kfree(rproc->firmware);
->>>>>> +            rproc->firmware = NULL;
->>>>>
->>>>> If the MCU with pre-loaded FW crashes request_firmware() in
->>>>> rproc_trigger_recovery() will return an error and rproc_start()
->>>>> never called.
->>>>
->>>> Right, something is missing in the recovery function to prevent request_firmware call if skip_fw_load is set
->>>>
->>>> We also identify an issue if recovery fails:
->>>> In case of recovery issue the rproc state is RPROC_CRASHED, so that it is no more possible to load a new firmware from
->>>> user space.
->>>> This issue is not linked to this patchset. We have patches on our shelves for this.
->>>>
->>>>>>      }
->>>>>>
->>>>>>      ret = rproc_fw_boot(rproc, firmware_p);
->>>>>> @@ -1916,8 +1946,17 @@ int rproc_add(struct rproc *rproc)
->>>>>>      /* create debugfs entries */
->>>>>>      rproc_create_debug_dir(rproc);
->>>>>>
->>>>>> -    /* if rproc is marked always-on, request it to boot */
->>>>>> -    if (rproc->auto_boot) {
->>>>>> +    if (rproc->skip_fw_load) {
->>>>>> +            /*
->>>>>> +             * If rproc is marked already booted, no need to wait
->>>>>> +             * for firmware.
->>>>>> +             * Just handle associated resources and start sub devices
->>>>>> +             */
->>>>>> +            ret = rproc_boot(rproc);
->>>>>> +            if (ret < 0)
->>>>>> +                    return ret;
->>>>>> +    } else if (rproc->auto_boot) {
->>>>>> +            /* if rproc is marked always-on, request it to boot */
->>>>>
->>>>> I spent way too much time staring at this modification...  I can't decide if a
->>>>> system where the FW has been pre-loaded should be considered "auto_boot".
->>>>> Indeed the result is the same, i.e the MCU is started at boot time without user
->>>>> intervention.
->>>>
->>>> The main difference is that the firmware is loaded by the Linux remote proc in case of auto-boot.
->>>> In auto-boot mode the remoteproc loads a firmware, on probe, with a specified name without any request from user space.
->>>> One constraint of this mode is that the file system has to be accessible before the rproc probe.
->>>
->>> Indeed, but in both cases the MCU is booted automatically.  In one
->>> case the FW is loaded by the framework and in the other it is not.  As
->>> such both scenarios are "auto_boot", they simply have different
->>> flavours.
->> Regarding your concerns i would like to propose an alternative that will answer to following use cases:
->>
->> In term of use cases we can start the remote proc firmware in following modes:
->> - auto boot with FW loading, resource table parsing and FW start/stop
->> - auto boot without FW loading, with FW resource table parsing and FW start/stop
->> - auto boot with FW attachment and  resource table parsing
->> - boot on userspace request with FW loading, resource table parsing and FW start/stop
->> - boot on userspace request without FW loading, with FW resource table parsing and FW start/stop
->> - boot on userspace request with FW attachment and  resource table parsing
->>
->> I considered the recovery covered by these use cases...
->>
->> I tried to concatenate all use case to determine the behavior of the core and platform driver:
->> - "auto-boot" used to decide if boot is from driver or user space request (independently from fw loading and live cycle management)
->> - "skip_fw_load" allows to determine if a firmware has to be loaded or not.
->> - remote Firmware live cycle (start,stop,...) are managed by the platform driver, it would have to determine the manage the remote proc depending on the mode detected.
->>
->> If i apply this for stm32mp1 driver:
->> normal boot( FW started on user space request):
->>   - auto-boot = 0
->>   - skip_fw_load = 0
->> FW loaded and started by the bootloader
->>   - auto-boot = 1
->>   - skip_firmware = 1;
->>
->> => on a stop: the "auto-boot" and "skip_firmware flag will be reset by the stm32rproc driver, to allow user space to load a new firmware or reste the system.
->> this is considered as a ack by Bjorn today, if you have an alternative please share.
-> 
-> I wonder if we can achieve the same results without needing
-> rproc::skip_fw_load...  For cases where the FW would have been loaded
-> and the MCU started by another entity we could simply set rproc->state
-> = RPROC_RUNNING in the platform driver.  That way when the MCU is
-> stopped or crashes, there is no flag to reset, rproc->state is simply
-> set correctly by the current code.
-> 
-> I would also set auto_boot =1 in order to start the AP synchronisation
-> as quickly as possible and add a check in rproc_trigger_auto_boot() to
-> see if rproc->state == RPROC_RUNNING.  If so simply call rproc_boot()
-> where platform specific rproc_ops would be tailored to handle a
-> running processor.
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-Your proposal is interesting, what concerns me is that seems to work only
-for a first start. And calling rproc_boot, while state is RPROC_RUNNING seems
-pretty strange for me.
-Also, as Peng mentions in https://patchwork.kernel.org/patch/11390485/,
-the need also exists to skip the load of the firmware on recovery.
-How to manage ROM/XIP Firmwares, no handling of the FW code only management
-of the live cycle (using sysfs, crash management ....)?
+Are you fine if I pick this patch with the series?
 
+> ---
+> version 4:
+> - move defines in mfd/stm32-lptimer.h
 > 
-> In my opinion the above would represent the state of the MCU rather
-> than the state of the FW used by the MCU.  It would also provide an
-> opening for supporting systems where the MCU is not the life cycle
-> manager.
-Not sure to catch your point here. By "above" you mention your proposal or mine?
-In my opinion, rproc->state already represents the MCU state
-what seems missing is the FW state
-Could you clarify what you mean by "systems where the MCU is not the life cycle
-manager" MCU = rproc framework?
+>  include/linux/mfd/stm32-lptimer.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/include/linux/mfd/stm32-lptimer.h b/include/linux/mfd/stm32-lptimer.h
+> index 605f62264825..90b20550c1c8 100644
+> --- a/include/linux/mfd/stm32-lptimer.h
+> +++ b/include/linux/mfd/stm32-lptimer.h
+> @@ -27,10 +27,15 @@
+>  #define STM32_LPTIM_CMPOK		BIT(3)
+>  
+>  /* STM32_LPTIM_ICR - bit fields */
+> +#define STM32_LPTIM_ARRMCF		BIT(1)
+>  #define STM32_LPTIM_CMPOKCF_ARROKCF	GENMASK(4, 3)
+>  
+> +/* STM32_LPTIM_IER - bit flieds */
+> +#define STM32_LPTIM_ARRMIE	BIT(1)
+> +
+>  /* STM32_LPTIM_CR - bit fields */
+>  #define STM32_LPTIM_CNTSTRT	BIT(2)
+> +#define STM32_LPTIM_SNGSTRT	BIT(1)
+>  #define STM32_LPTIM_ENABLE	BIT(0)
+>  
+>  /* STM32_LPTIM_CFGR - bit fields */
+> 
 
-Regards
-Arnaud
 
-> 
-> Let me know what you think...
-> 
->>
->> I need to rework the patchset in consequence but i would appreciate your feedback on this proposal before, to be sure that i well interpreted your concerns...
->>
->> Regards,
->> Arnaud
->>
->>>
->>>> This is not necessary the case, even if EPROBE_DEFER is used. In this case the driver has to be build as kernel module.
->>>>
->>>> Thanks,
->>>> Arnaud
->>>>>
->>>>> I'd welcome other people's opinion on this.
->>>>>
->>>>>>              ret = rproc_trigger_auto_boot(rproc);
->>>>>>              if (ret < 0)
->>>>>>                      return ret;
->>>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->>>>>> index 16ad66683ad0..4fd5bedab4fa 100644
->>>>>> --- a/include/linux/remoteproc.h
->>>>>> +++ b/include/linux/remoteproc.h
->>>>>> @@ -479,6 +479,7 @@ struct rproc_dump_segment {
->>>>>>   * @table_sz: size of @cached_table
->>>>>>   * @has_iommu: flag to indicate if remote processor is behind an MMU
->>>>>>   * @auto_boot: flag to indicate if remote processor should be auto-started
->>>>>> + * @skip_fw_load: remote processor has been preloaded before start sequence
->>>>>>   * @dump_segments: list of segments in the firmware
->>>>>>   * @nb_vdev: number of vdev currently handled by rproc
->>>>>>   */
->>>>>> @@ -512,6 +513,7 @@ struct rproc {
->>>>>>      size_t table_sz;
->>>>>>      bool has_iommu;
->>>>>>      bool auto_boot;
->>>>>> +    bool skip_fw_load;
->>>>>>      struct list_head dump_segments;
->>>>>>      int nb_vdev;
->>>>>>  };
->>>>>> --
->>>>>> 2.17.1
->>>>>>
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
