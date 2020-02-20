@@ -2,163 +2,497 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE64C761A6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 07:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52528C761A1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 07:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7988720801
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 07:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E8324676
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 07:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nDmrtEDs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SgC3LNTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgBTHDk (ORCPT
+        id S1725942AbgBTHGU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 02:03:40 -0500
-Received: from mail-ot1-f48.google.com ([209.85.210.48]:33009 "EHLO
-        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbgBTHDk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 02:03:40 -0500
-Received: by mail-ot1-f48.google.com with SMTP id w6so2749577otk.0
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 23:03:38 -0800 (PST)
+        Thu, 20 Feb 2020 02:06:20 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38196 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgBTHGU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 02:06:20 -0500
+Received: by mail-pg1-f195.google.com with SMTP id d6so1457555pgn.5
+        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 23:06:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h5E2ab5bQfBEgY4U6KD2KRUgY16A0wGI5TupMQRDmn4=;
-        b=nDmrtEDs9AWEGU6QOOeO1Pq0SISrC6XvGGGjJN6ubYHZ/pmgcmuDIeMFN35fghE5wl
-         YrfGs+qfqFBTyfUjVMRMR184DSzmzTP6fPQc1yQgZ61pRem9TevWRsyTj4HE2W3Rk9km
-         QCANrnmQgQ0TZFJlgIfxGYuFbjSJ76lLFbplEhE3PG/OeXjoS64xg2bIR2sEmclTLMG6
-         DOUPMmHCn6D4ALa78bgrhj9F4esIvn2Xm7kV3tOImV4Jl/rRdrzWk67T6TYUpmUJVo04
-         x31xSOKZR/Vealwahr44Ye0gcXJldAdN86zWM2HXoWNX/ZK8QcqVVC6p5MC2OyOLqEKn
-         jX4w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CO2SRXuJi6TRER/vPdV2Su2zqyTZXsjgtSkLNjMCOEI=;
+        b=SgC3LNTZYoJvpgnIaZa+ijv3f9/Vqyoa20yDkptEvzsmGBxdX0w1W+3IaGfYbzsY6F
+         7paXw6du+QZ4riPi7Zlp5rtV5KmwWIniL6CSJuKMUUkRMTIkCr24rzuwbGaHv6IY0k7I
+         Rntd/3iwCN5ux1snHddBo6JiLaBIRrqsnIlhvyB9XVIMAyDSWj/x7fTYx+LjvFKssq4N
+         PqaqsdaV17v/I+9zmKXnUcNcIkk0snVY/pl9YZrKfL/FC3bjIdBzXyzi18VLhAEUcKUb
+         h7Ep7ZWtGfNxQOoOsbqZ2ll5RMHLqyAyvnJtSsn8yMhyoN0xiWRkFKB5tS2zKjYRgq/2
+         fF+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h5E2ab5bQfBEgY4U6KD2KRUgY16A0wGI5TupMQRDmn4=;
-        b=ks5s5N0dUm80QcB3LbYtjGkaucLASuLEtBRVd9d25vz/lyFCWKm5SKymZYPXzOepp0
-         GWT5mq3G56OUDIfcBUJ1qvkagHPgWWgt4TByXnoHxg887rLfR8FOM+/CIAy6/rjJ56JZ
-         ju5F2QuM6NddxVXeugWnJ5mDkuco9O3x3z3uezCkBXPmOHDKftFfd6DkIzO/CKP2Tftv
-         A2XC6ZemkYpsJjlbfePnJLYRKjUHama31+6z97taGuv6CYz+mvlobsyaPdkTg8P98hgd
-         WTt7J9Z8Lx3fTEo6O+s6QnwszrCtlp6S0EB2+gS0Pckg0IyKNIzQux8il/hWMuCAhfT0
-         9tFw==
-X-Gm-Message-State: APjAAAWiidri8iqJZgAEAt4rTJIYS5BHEkVKaMM5XyTivMG3MuIDbbXx
-        YduMCej1ntTCi95qV/NCRx7RhTa4/xEgWVhHjxpMpA==
-X-Google-Smtp-Source: APXvYqxZbcuG9HhmeNcK+8F7WgI3qxbSgTDunjRomLDiasX0m/M5ym7HAQ+BurTnx668TxcJS0mr+atsf8jiWqrJNCc=
-X-Received: by 2002:a9d:6a85:: with SMTP id l5mr23603776otq.231.1582182217622;
- Wed, 19 Feb 2020 23:03:37 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CO2SRXuJi6TRER/vPdV2Su2zqyTZXsjgtSkLNjMCOEI=;
+        b=WhXMUh9qZQnJYXPvJHbVOh02qPGQhs2iki3dQUKbfkQnLYjE1GuWdmWOVWpFzf+MZw
+         tEDAIoADWJCwAagsjqaKoeamh7r/UQYdA08ZV1UPV2peVDeDYNZq/TqgdGkLmOQiKfuz
+         1lIuCiiNddogn7MicRn1vFQ8oFVaYeXwo6WK1KF0R+vnYmO4bYZUdwvaawrtMqxRq3QU
+         3PMJ1Bf9pcD7hxK2xS3Q8iO2YRsZRzJJF9FyfRKwvLfS6xsm+cno2JJor8VoqUf9ltXS
+         F+GoUjR0WD+GO3eh9LRFDWLE/mFhKpcmdEx3ozJ7MAyUvdjIQPTdPqyGy0ELij0oNFpg
+         pcxg==
+X-Gm-Message-State: APjAAAWcx8GduYnVkxT9q5Ad/JPm9OMKMeYlTa921kJAxqCv2axbyV1t
+        QPVYxRP8Y+Tps5Rbejb6fEpbgg==
+X-Google-Smtp-Source: APXvYqzLQ810Qo9mVw0Ebje7H6ADDzNMNYfmRw3ylc6E2I7mkN8Ku38MgyeyHx6e+Zo7u8CuOi1muA==
+X-Received: by 2002:a63:d207:: with SMTP id a7mr31972697pgg.225.1582182379501;
+        Wed, 19 Feb 2020 23:06:19 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l15sm2016483pgi.31.2020.02.19.23.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 23:06:18 -0800 (PST)
+Date:   Wed, 19 Feb 2020 23:06:16 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Alexey Minnekhanov <alexey.min@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Craig Tatlor <ctatlor97@gmail.com>
+Subject: Re: [PATCH 4/5] arm64: dts: qcom: Add SDM660 SoC support
+Message-ID: <20200220070616.GF99370@yoga>
+References: <20200212170916.7494-1-alexey.min@gmail.com>
+ <20200212170916.7494-5-alexey.min@gmail.com>
 MIME-Version: 1.0
-References: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
- <CAL_JsqKWcGSzCF_ZyEo6bbuayoYks51A-JAMp_oLR1RyTUzNUA@mail.gmail.com>
- <CAGETcx_RL4hHHA2MFTVyV1ivgghaBZePROXpnC-UUJ7tcH4kSQ@mail.gmail.com>
- <CAL_JsqJB+41Sjxi-udYzw8sAq0myrcnxjSyzrxeEsoctZX6pbw@mail.gmail.com>
- <CAGETcx9T_3GKgAj=3jANb=JAa5b5hP+r4CLVm9a2LYf2CQiH9Q@mail.gmail.com> <CAGETcx-_Mewt-ZND1WkjtdvLZ9iXTZBEdSPU6kO3G_L28mCHdQ@mail.gmail.com>
-In-Reply-To: <CAGETcx-_Mewt-ZND1WkjtdvLZ9iXTZBEdSPU6kO3G_L28mCHdQ@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 19 Feb 2020 23:03:01 -0800
-Message-ID: <CAGETcx_2vdjSWc3BBN-N2WrtJP90ZnH-2vE=2iVuHuaE1YmMWQ@mail.gmail.com>
-Subject: Re: Adding depends-on DT binding to break cyclic dependencies
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212170916.7494-5-alexey.min@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 10:01 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> So we can take our time trying to solve this in a generic fashion (new
-> DT property/binding, edit_links(), letting devices probe, etc). In the
-> meantime, maybe we'll run into more cycle issues that'll give us a
-> better idea of which solution would be better as a generic solution.
+On Wed 12 Feb 09:09 PST 2020, Alexey Minnekhanov wrote:
 
-Mainly reviving an old thread to say this to Rob and Frank: Thanks for
-pushing back on "depends-on" and asking me to use the existing
-bindings instead. Saved a whole bunch of time when I actually tried to
-use of_devlink. Didn't have to add stupid "depends-on" for all the
-existing dependencies.
+> Initial device tree support for Qualcomm SDM660 SoC.
+> 
+> SDM660 is based off MSM8998 and uses some of its drivers.
+> SDM630/636 are based off SDM660 SoC and they are pin
+> and software compatible.
+> 
+> The device tree is based on the CAF 4.4 kernel tree.
+> 
+> Features:
+>  * CPU nodes
+>  * Timer nodes
+>  * Interrupt controller
+>  * Global Clock Controller
+>  * Top Level Mode Multiplexer (pin controller)
+>  * UART node
+> 
+> This is inspired by and based on the work of Craig Tatlor in
+> https://patchwork.kernel.org/patch/10563667/
+> 
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> Signed-off-by: Alexey Minnekhanov <alexey.min@gmail.com>
 
-But then I've also been meaning to send an RFC for this following, so
-rolling it into the same email.
+The content of the patch looks good, but with the S-o-b like this (which
+looks correct) the author of the patch should be Craig - which
+would/should be noted by a From: Craig at the beginning of the body.
 
-Thanks for also pushing back on all the earlier "meh" solutions for
-solving the cyclic dependency issue. I think I have a pretty good
-proposal now.
+Can you please update this patch accordingly and resend the two dts
+patches?
 
-While trying to solve the "dependencies of child nodes need to be
-proxied by the parents till the child devices are created" problem, I
-ended up having to add a "SYNC_STATE_ONLY" device link flag that
-treats those dependencies as "optional for probing". It also allows
-cycles (because it only affects sync state behavior). Also,
-dependencies of child nodes (whether they are actually devices or not)
-are always treated as "optional for probe" dependencies by of_devlink.
+Regards,
+Bjorn
 
-So, how does this affect cyclic dependencies? Obviously, when two
-devices have cyclic dependencies, they don't have cyclic probe
-dependencies. Then they'd never probe even if of_devlink is not in the
-picture. At least one of the dependencies is only relevant for some
-"post-probe" functionality.
-
-So let's take a simple example:
-
-dev_a: device-a@xxxx {
-   compatible = "fizzbuzz";
-}
-
-dev_b: device-b@yyyy {
-   compatible = "fizzbazz";
-   supplier-property-1 = <&dev_a>;
-   supplier-property-2 = <&dev_c>;
-}
-
-dev_c: device-c@zzzz {
-   compatible = "fizzfizz";
-   supplier-property-1 = <&dev_a>;
-   supplier-property-3 = <&dev_b>;
-}
-
-Let's say dev_c only doesn't depend on dev_b for probing but needs it
-only for some functionality "foo" (Eg: thermal management, secure
-video playback, etc. Nothing OS specific). If the DT nodes are written
-as above, then there'll be a cycle with of_devlink and neither dev_b
-or dev_c will probe.
-
-However, if we can write dev_c DT as:
-
-dev_c: device-c@zzzz {
-   compatible = "fizzfizz";
-   supplier-property-1 = <&dev_a>;
-   foo {
-      /* No compatible property */
-      supplier-property-2 = <&dev_b>;
-   }
-}
-
-Then of_devlink will automatically treat dev_b as an optional
-requirement for dev_c. I think this is also nice from a DT perspective
-because it gives a clear representation of the dependency without
-really breaking or adding any DT rules. If you need some DT bindings
-only for a subset functionality, just list them under a child node
-with a meaningful name for that functionality.
-
-For this to work, the framework that supports "supplier-property-2"
-will have to add APIs to "get" the supplier by passing a DT node
-(instead of just struct device), but:
-1) That is already supported by quite a few frameworks.
-2) That shouldn't be too hard to add where necessary.
-
-And the driver needs to handle the child node explicitly (kinda obvious).
-
-Thoughts? Like the proposal?
-
--Saravana
+> ---
+>  arch/arm64/boot/dts/qcom/sdm660.dtsi | 373 +++++++++++++++++++++++++++
+>  1 file changed, 373 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm660.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm660.dtsi b/arch/arm64/boot/dts/qcom/sdm660.dtsi
+> new file mode 100644
+> index 000000000000..1187f2f98bd0
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm660.dtsi
+> @@ -0,0 +1,373 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2018, Craig Tatlor.
+> + * Copyright (c) 2020, Alexey Minnekhanov <alexey.min@gmail.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/qcom,gcc-sdm660.h>
+> +
+> +/ {
+> +	interrupt-parent = <&intc>;
+> +
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	chosen { };
+> +
+> +	clocks {
+> +		xo_board: xo_board {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <19200000>;
+> +			clock-output-names = "xo_board";
+> +		};
+> +
+> +		sleep_clk: sleep_clk {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <32764>;
+> +			clock-output-names = "sleep_clk";
+> +		};
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		CPU0: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+> +			next-level-cache = <&L2_1>;
+> +			L2_1: l2-cache {
+> +				compatible = "cache";
+> +				cache-level = <2>;
+> +			};
+> +			L1_I_100: l1-icache {
+> +				compatible = "cache";
+> +			};
+> +			L1_D_100: l1-dcache {
+> +				compatible = "cache";
+> +			};
+> +		};
+> +
+> +		CPU1: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x101>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+> +			next-level-cache = <&L2_1>;
+> +			L1_I_101: l1-icache {
+> +				compatible = "cache";
+> +			};
+> +			L1_D_101: l1-dcache {
+> +				compatible = "cache";
+> +			};
+> +		};
+> +
+> +		CPU2: cpu@102 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x102>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+> +			next-level-cache = <&L2_1>;
+> +			L1_I_102: l1-icache {
+> +				compatible = "cache";
+> +			};
+> +			L1_D_102: l1-dcache {
+> +				compatible = "cache";
+> +			};
+> +		};
+> +
+> +		CPU3: cpu@103 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x103>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+> +			next-level-cache = <&L2_1>;
+> +			L1_I_103: l1-icache {
+> +				compatible = "cache";
+> +			};
+> +			L1_D_103: l1-dcache {
+> +				compatible = "cache";
+> +			};
+> +		};
+> +
+> +		CPU4: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <640>;
+> +			next-level-cache = <&L2_0>;
+> +			L2_0: l2-cache {
+> +				compatible = "cache";
+> +				cache-level = <2>;
+> +			};
+> +			L1_I_0: l1-icache {
+> +				compatible = "cache";
+> +			};
+> +			L1_D_0: l1-dcache {
+> +				compatible = "cache";
+> +			};
+> +		};
+> +
+> +		CPU5: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x1>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <640>;
+> +			next-level-cache = <&L2_0>;
+> +			L1_I_1: l1-icache {
+> +				compatible = "cache";
+> +			};
+> +			L1_D_1: l1-dcache {
+> +				compatible = "cache";
+> +			};
+> +		};
+> +
+> +		CPU6: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x2>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <640>;
+> +			next-level-cache = <&L2_0>;
+> +			L1_I_2: l1-icache {
+> +				compatible = "cache";
+> +			};
+> +			L1_D_2: l1-dcache {
+> +				compatible = "cache";
+> +			};
+> +		};
+> +
+> +		CPU7: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x3>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <640>;
+> +			next-level-cache = <&L2_0>;
+> +			L1_I_3: l1-icache {
+> +				compatible = "cache";
+> +			};
+> +			L1_D_3: l1-dcache {
+> +				compatible = "cache";
+> +			};
+> +		};
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&CPU4>;
+> +				};
+> +
+> +				core1 {
+> +					cpu = <&CPU5>;
+> +				};
+> +
+> +				core2 {
+> +					cpu = <&CPU6>;
+> +				};
+> +
+> +				core3 {
+> +					cpu = <&CPU7>;
+> +				};
+> +			};
+> +
+> +			cluster1 {
+> +				core0 {
+> +					cpu = <&CPU0>;
+> +				};
+> +
+> +				core1 {
+> +					cpu = <&CPU1>;
+> +				};
+> +
+> +				core2 {
+> +					cpu = <&CPU2>;
+> +				};
+> +
+> +				core3 {
+> +					cpu = <&CPU3>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	firmware {
+> +		scm {
+> +			compatible = "qcom,scm";
+> +		};
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		/* We expect the bootloader to fill in the reg */
+> +		reg = <0 0 0 0>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	soc: soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0 0xffffffff>;
+> +		compatible = "simple-bus";
+> +
+> +		gcc: clock-controller@100000 {
+> +			compatible = "qcom,gcc-sdm660";
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +			#power-domain-cells = <1>;
+> +			reg = <0x00100000 0x94000>;
+> +		};
+> +
+> +		tlmm: pinctrl@3100000 {
+> +			compatible = "qcom,sdm660-pinctrl";
+> +			reg = <0x03100000 0x400000>,
+> +			      <0x03500000 0x400000>,
+> +			      <0x03900000 0x400000>;
+> +			reg-names = "south", "center", "north";
+> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			gpio-ranges = <&tlmm 0 0 114>;
+> +			gpio-reserved-ranges = <8 4>;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +
+> +			uart_console_active: uart_console_active {
+> +				pinmux {
+> +					pins = "gpio4", "gpio5";
+> +					function = "blsp_uart2";
+> +				};
+> +
+> +				pinconf {
+> +					pins = "gpio4", "gpio5";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +			};
+> +		};
+> +
+> +		spmi_bus: spmi@800f000 {
+> +			compatible = "qcom,spmi-pmic-arb";
+> +			reg = <0x0800f000 0x1000>,
+> +			      <0x08400000 0x1000000>,
+> +			      <0x09400000 0x1000000>,
+> +			      <0x0a400000 0x220000>,
+> +			      <0x0800a000 0x3000>;
+> +			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
+> +			interrupt-names = "periph_irq";
+> +			interrupts = <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>;
+> +			qcom,ee = <0>;
+> +			qcom,channel = <0>;
+> +			#address-cells = <2>;
+> +			#size-cells = <0>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <4>;
+> +			cell-index = <0>;
+> +		};
+> +
+> +		blsp1_uart2: serial@c170000 {
+> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+> +			reg = <0x0c170000 0x1000>;
+> +			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
+> +				 <&gcc GCC_BLSP1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +			status = "disabled";
+> +		};
+> +
+> +		timer@17920000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			compatible = "arm,armv7-timer-mem";
+> +			reg = <0x17920000 0x1000>;
+> +
+> +			frame@17921000 {
+> +				frame-number = <0>;
+> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17921000 0x1000>,
+> +				      <0x17922000 0x1000>;
+> +			};
+> +
+> +			frame@17923000 {
+> +				frame-number = <1>;
+> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17923000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17924000 {
+> +				frame-number = <2>;
+> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17924000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17925000 {
+> +				frame-number = <3>;
+> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17925000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17926000 {
+> +				frame-number = <4>;
+> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17926000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17927000 {
+> +				frame-number = <5>;
+> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17927000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17928000 {
+> +				frame-number = <6>;
+> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17928000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		intc: interrupt-controller@17a00000 {
+> +			compatible = "arm,gic-v3";
+> +			reg = <0x17a00000 0x10000>,
+> +			      <0x17b00000 0x100000>;
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			interrupt-controller;
+> +			#redistributor-regions = <1>;
+> +			redistributor-stride = <0x0 0x20000>;
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.20.1
+> 
