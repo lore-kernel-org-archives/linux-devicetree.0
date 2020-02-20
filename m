@@ -2,147 +2,139 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF08C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B39CC11D15
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5E124673
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="xROZRlrv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JhT8mtKH"
+	by mail.kernel.org (Postfix) with ESMTP id 093622467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582221649;
+	bh=mWtgtFWAoWaJEiv18O1INel2Oq4nWzK1Yo0KUp9+Xok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VBABfyuopfp8fEffUKv9VSPpvWcjXSwCx0P8gHEakinCjIRqjY9bjJ6lwOYjkftB+
+	 XCi+f+S+fZDpyN8zRRqTBLJu3ffwlVpdJ6Hk+iig48sVXGQbG+5mYCkiN38WLNnLPQ
+	 lmI7gODD+ZIy30X2fbNQu2u5lL3vll4jsIgnFqaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgBTSAP (ORCPT
+        id S1728463AbgBTSAs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:00:15 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:41075 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727298AbgBTSAP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:00:15 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id B66DD56C7;
-        Thu, 20 Feb 2020 13:00:13 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 20 Feb 2020 13:00:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=3iVZpI1OxXxQS2+5cTW4IrNcV5c
-        F9OxDP+rQ8UJEwO8=; b=xROZRlrvRLpbuKTf7VVAF515Y3a3vu7WPZ7jx0QgY6F
-        tvZAHye/3hKTvCHKfHoz6SDsGab9+J4J6C4dmLzEdqFW5XT1YyONXJQb0SrI5myB
-        pMJOn6wCcO8pnyDEGyPwLa1zEN0osN1ECGqUa+Hf5AJNxYgyP3PNGW4yU8JOSrIb
-        WgCvL02SkA0ZukAYD4YbQjxzRCDmQILIhJ2ZnWeVZZ7ZkH2utSZ7+kOGelXV+rqD
-        kMzAx3cZ2sKybmJaji6baVN3//M8HQy27x0nyAM/x3aKPXgTubCmXzFqvY1C8Bgi
-        ++fAJoBKlIy6uFRAryEIHTHkmvS+mfflUJIL4mLA1UQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3iVZpI
-        1OxXxQS2+5cTW4IrNcV5cF9OxDP+rQ8UJEwO8=; b=JhT8mtKHS1kel2Jve1v6Cm
-        tzEFJQmKFJLY2lXkDtCG5h8CIYx48fcHj9gfzYyyNzIFfQZmqH0sdAERvmQsTyl2
-        Q3BtlHbbGV8dT21vB9nGQcHKmopPktYTeGsNEWCfmzFRiAdK3xL8RM/DkpPYOI0N
-        VYv+0la9bb4e7vgljOAdrrMf6pjWH9drLsFrHOvvcJhvICkdISEt5eWEtw5KmOOO
-        te2GMzaTzNqNu6XdLrPblyrW3w//ReNcdWATBsBodhkt/j7gnB9lCXbwW3fPiv08
-        x4AoYMIiJHShR9XIoLAxzZnCaGnNuE6+FL7BpSmZMryzE11IkG+WD+eyTmqEOUOQ
-        ==
-X-ME-Sender: <xms:KclOXglDO_oxqApfDRUGzu17fuwLMsP6-OANHX6HAg7BeUDIYBttuQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgdduuddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:KclOXnSYkxXSwxoSDl7CV6KgxF34YCtKGpbSXUkQaJtRori60SgNkw>
-    <xmx:KclOXsApPiLw8ZwHDPH49U7BUCGT8NsqBUrhvj1Cr4Kcq_4Nkgk-hA>
-    <xmx:KclOXmTKxFPmLQeR09YROPaScynFunYEZgqLKM5L0yaesI-J4erFPw>
-    <xmx:LclOXrHApIyF1i4BfvXVZ7k3EqIpb0XQ3AubpxKTGEe90K3CWTlgUg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 92F9A3060D1A;
-        Thu, 20 Feb 2020 13:00:09 -0500 (EST)
-Date:   Thu, 20 Feb 2020 19:00:08 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/4] drm/connector: Add data polarity flags
-Message-ID: <20200220180008.mfl2pfcea6rafmt5@gilmour.lan>
-References: <cover.b12a054012ce067fa2094894147f953ab816d8d0.1581682983.git-series.maxime@cerno.tech>
- <b541006fa0a1c34ac5f668dc561aa1598f8fd86c.1581682983.git-series.maxime@cerno.tech>
- <20200214161359.GB18287@ravnborg.org>
+        Thu, 20 Feb 2020 13:00:48 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37413 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728354AbgBTSAs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 13:00:48 -0500
+Received: by mail-ed1-f67.google.com with SMTP id t7so23155375edr.4;
+        Thu, 20 Feb 2020 10:00:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JuWavBe6OXyRFy5qql3DEFdCwPYGMywA79SDbY508v4=;
+        b=ZAdsux1lXeRKDT//oS/PZRqYIHiJBgSn720SlCyHD31cakfxNNnwcbjAnmt8DLPe98
+         FVZy7RaYvo+l1arPYoZlddPxxsz1WK5LKUN2zDkJNIHV5rxePheJYa1Cc5ByyfK7JuCJ
+         4P/xqSYQt69fjd4gxXflBBtRlXGEYBcs55Tx0Low7nZG9alOXHxsvmS6MwIdeVM1LRbV
+         4/pGqOhBOT3PtEYtR1UPSHqZ3WW2LF+MFhP+O7U/cFrjNZoCIbALdSzeyj/zHah7Yhf4
+         8CTCaW5qVrbM/ARBCR5WB9j8Mn07QkE8LqNFqpzkYAZvP9vD1/lITos88bggs3ZgVNgt
+         Huew==
+X-Gm-Message-State: APjAAAXGja9/sJJlc4zfEyN/mysWkzReY4K1FTiiDomhFpXTw1WetHui
+        liyAhRf2Fg18ucACDyWwGNo=
+X-Google-Smtp-Source: APXvYqwN5Yx4Jc42BqpycwqSM0vNnKWMTJp0qMmgsdSQ1M3eTaby6XleOAjAIb1VUKWVgqrdjO6gCg==
+X-Received: by 2002:a17:906:19c8:: with SMTP id h8mr31704573ejd.250.1582221644629;
+        Thu, 20 Feb 2020 10:00:44 -0800 (PST)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id yh21sm14798ejb.62.2020.02.20.10.00.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Feb 2020 10:00:43 -0800 (PST)
+Date:   Thu, 20 Feb 2020 19:00:40 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, cw00.choi@samsung.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
+        dietmar.eggemann@arm.com
+Subject: Re: [RESEND PATCH v2 0/2] Enable Odroid-XU3/4 to use Energy Model
+ and Energy Aware Scheduler
+Message-ID: <20200220180040.GA8338@kozik-lap>
+References: <20200220095636.29469-1-lukasz.luba@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="djjcychys4abfub2"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200214161359.GB18287@ravnborg.org>
+In-Reply-To: <20200220095636.29469-1-lukasz.luba@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Feb 20, 2020 at 09:56:34AM +0000, Lukasz Luba wrote:
+> Hi all,
+> 
+> This is just a resend, now with proper v2 in the patches subject.
+> 
+> The Odroid-XU4/3 is a decent and easy accessible ARM big.LITTLE platform,
+> which might be used for research and development.
+> 
+> This small patch set provides possibility to run Energy Aware Scheduler (EAS)
+> on Odroid-XU4/3 and experiment with it. 
+> 
+> The patch 1/2 provides 'dynamic-power-coefficient' in CPU DT nodes, which is
+> then used by the Energy Model (EM).
+> The patch 2/2 enables SCHED_MC (which adds another level in scheduling domains)
+> and enables EM making EAS possible to run (when schedutil is set as a CPUFreq
+> governor).
+> 
+> 1. Test results
+> 
+> Two types of different tests have been executed. The first is energy test
+> case showing impact on energy consumption of this patch set. It is using a
+> synthetic set of tasks (rt-app based). The second is the performance test
+> case which is using hackbench (less time to complete is better).
+> In both tests schedutil has been used as cpufreq governor. In all tests
+> PROVE_LOCKING has not been compiled into the kernels.
+> 
+> 1.1 Energy test case
+> 
+> 10 iterations of 24 periodic rt-app tasks (16ms period, 10% duty-cycle)
+> with energy measurement. The cpufreq governor - schedutil. Unit is Joules.
+> The energy is calculated based on hwmon0 and hwmon3 power1_input.
+> The goal is to save energy, lower is better.
+> 
+> +-----------+-----------------+------------------------+
+> |           | Without patches | With patches           |
+> +-----------+--------+--------+----------------+-------+
+> | benchmark |  Mean  | RSD*   | Mean           | RSD*  |
+> +-----------+--------+--------+----------------+-------+
+> | 24 rt-app |  21.56 |  1.37% |  19.85 (-9.2%) | 0.92% |
+> |    tasks  |        |        |                |       |
+> +-----------+--------+--------+----------------+-------+
+> 
+> 1.2 Performance test case
+> 
+> 10 consecutive iterations of hackbench (hackbench -l 500 -s 4096),
+> no delay between two successive executions.
+> The cpufreq governor - schedutil. Units in seconds.
+> The goal is to see not regression, lower completion time is better.
+> 
+> +-----------+-----------------+------------------------+
+> |           | Without patches | With patches           |
+> +-----------+--------+--------+----------------+-------+
+> | benchmark | Mean   | RSD*   | Mean           | RSD*  |
+> +-----------+--------+--------+----------------+-------+
+> | hackbench |  8.15  | 2.86%  |  7.95 (-2.5%)  | 0.60% |
+> +-----------+--------+--------+----------------+-------+
+> 
+> *RSD: Relative Standard Deviation (std dev / mean)
 
---djjcychys4abfub2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Nice measurements!
 
-On Fri, Feb 14, 2020 at 05:13:59PM +0100, Sam Ravnborg wrote:
-> Hi Maxime.
->
-> On Fri, Feb 14, 2020 at 01:24:38PM +0100, Maxime Ripard wrote:
-> > Some LVDS encoders can change the polarity of the data signals being
-> > sent. Add a DRM bus flag to reflect this.
-> >
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > ---
-> >  include/drm/drm_connector.h | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> > index 221910948b37..9a08fe6ab7c2 100644
-> > --- a/include/drm/drm_connector.h
-> > +++ b/include/drm/drm_connector.h
-> > @@ -330,6 +330,8 @@ enum drm_panel_orientation {
-> >   *					edge of the pixel clock
-> >   * @DRM_BUS_FLAG_SHARP_SIGNALS:		Set if the Sharp-specific signals
-> >   *					(SPL, CLS, PS, REV) must be used
-> > + * @DRM_BUS_FLAG_DATA_LOW:		The Data signals are active low
-> > + * @DRM_BUS_FLAG_DATA_HIGH:		The Data signals are active high
-> Reading the description of these falgs always confuses me.
-> In this case if neither bit 9 nor bit 10 is set then the data signals
-> are netiher active low nor active high.
-> So what can I then expect?
->
-> We have the same logic loophole for DRM_BUS_FLAG_SYNC_SAMPLE_POSEDGE
-> and DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE.
-> So it is not new, but can we do better here?
+Applied both, thank you.
 
-Honestly, I don't really get it either. I *think* this is to handle
-the sampling / output inversion properly which wouldn't be possible if
-this was only a bit set or not.
+Best regards,
+Krzysztof
 
-Maxime
-
---djjcychys4abfub2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXk7JKAAKCRDj7w1vZxhR
-xQxeAPwLFn41l30eKqukNP84sFPMXbLHQVADj+Faro+XxhjBGQEA4Y58gz6z1NXr
-ic+uREN12TeqDmmfkPeNrnAd17ffFQ8=
-=EVQZ
------END PGP SIGNATURE-----
-
---djjcychys4abfub2--
