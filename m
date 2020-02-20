@@ -2,197 +2,121 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A942C11D03
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 01:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E2AC7619D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 01:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09A024672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 01:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F86C24670
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 01:31:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YnmfKpLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbgBTBQ5 (ORCPT
+        id S1727662AbgBTBbQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 20:16:57 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:55556 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbgBTBQ5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 20:16:57 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 22C42204C8E;
-        Thu, 20 Feb 2020 02:16:54 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 79D892013D3;
-        Thu, 20 Feb 2020 02:16:38 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 028CA402A0;
-        Thu, 20 Feb 2020 09:16:12 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        aisheng.dong@nxp.com, linux@roeck-us.net,
-        srinivas.kandagatla@linaro.org, krzk@kernel.org,
-        fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com,
-        bjorn.andersson@linaro.org, olof@lixom.net, dinguyen@kernel.org,
-        leonard.crestez@nxp.com, marcin.juszkiewicz@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V15 RESEND 2/5] thermal: of-thermal: add API for getting sensor ID from DT
-Date:   Thu, 20 Feb 2020 09:10:25 +0800
-Message-Id: <1582161028-2844-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
-References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 19 Feb 2020 20:31:16 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39040 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgBTBbP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 20:31:15 -0500
+Received: by mail-pj1-f66.google.com with SMTP id e9so170006pjr.4;
+        Wed, 19 Feb 2020 17:31:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=szYg2AQsd4vPQUXlNOTQeaWlhRWbCJD6D1ASNIe6NPQ=;
+        b=YnmfKpLlHDFp/4r9dbH9mYpcYtDzQkvfjIBwgZOS2FTAVbZEvFLZJV5cYEjVMHryDD
+         ZinziWcgxAtkfqZWej/jlk7ErptUcF9zL/uzSUXVV0X8Y/ituH3Puhd62Y94Aby9OSkG
+         3UbWxTFpyekwXSZdOygXreubDyUmc65byNxSAW4/uIxvOjBoGj1tmYLH0V8Xds/Gg/TB
+         wiCCGBqvOvG9wBmmK/W8WPoO9RMwtjz/i6JLUr2rGsuV4PSe0tqMxW13nlDTwF5PGwPY
+         melwQyeC74boGcoqQU9vlVMFYWCOnAYj9pFLH6QPl1xq/lpWe0zHUKeugY3TkPMfI2ps
+         bZng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=szYg2AQsd4vPQUXlNOTQeaWlhRWbCJD6D1ASNIe6NPQ=;
+        b=e1AKUOUZx1wX7n0+5hRqARI9gKqpzdiJYqLZJxkyf6ssdXZOpvJVdzPLwxvo38p4Yr
+         Om0ZuVBlKaRi+z3DSUjgr2f5bzXbqkJzONEWIGxJHngrCWv1ofZrkGG86GPQYAOBTmyn
+         c0Mp9aI28rf8NveDkN7xB61Irjxg/EPdD2iKkpAltdWSXfJnMlLH9PqyNIGXCB70bWnK
+         sw7LJ0HUIFwopgfft53j8yfu6Qo7tukcQGubhe3W5yko+d7QQC8Ci1JnPu0Y0RI5Ix+R
+         ICWNUDoy8ZUkUFGILYQ2bvEzTRb1cRNChp1nXUKYeeVhFXTKXw6506x8QZRwaUyw6pxA
+         GSNw==
+X-Gm-Message-State: APjAAAUDBcEFPQgFi2TNL5aARp7qYr3d2184atYrgvRqGW6Jaq0cL6vB
+        VhZeRRD9Bide4+tK6dCInLI=
+X-Google-Smtp-Source: APXvYqyzmgvxyBGFHEKtfmbVHh4nsUmpCnOiJOLklUkLLXD00WNKvL2PU2ls8e+TkkBLFHlsbUTTpw==
+X-Received: by 2002:a17:90a:b318:: with SMTP id d24mr687568pjr.142.1582162274835;
+        Wed, 19 Feb 2020 17:31:14 -0800 (PST)
+Received: from taoren-ubuntuvm (c-24-4-25-55.hsd1.ca.comcast.net. [24.4.25.55])
+        by smtp.gmail.com with ESMTPSA id u13sm957679pjn.29.2020.02.19.17.31.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Feb 2020 17:31:14 -0800 (PST)
+Date:   Wed, 19 Feb 2020 17:31:04 -0800
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        Tao Ren <taoren@fb.com>
+Subject: Re: [PATCH v3 0/5] aspeed-g6: enable usb support
+Message-ID: <20200220013103.GA4830@taoren-ubuntuvm>
+References: <20200218031315.562-1-rentao.bupt@gmail.com>
+ <5d295199-d0d7-4d58-be29-4621738d7f28@www.fastmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d295199-d0d7-4d58-be29-4621738d7f28@www.fastmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds new API thermal_zone_of_get_sensor_id() to
-provide the feature of getting sensor ID from DT thermal
-zone's node. It's useful for thermal driver to register the
-specific thermal zone devices from DT in a common way.
+On Thu, Feb 20, 2020 at 10:55:10AM +1030, Andrew Jeffery wrote:
+> 
+> 
+> On Tue, 18 Feb 2020, at 13:43, rentao.bupt@gmail.com wrote:
+> > From: Tao Ren <rentao.bupt@gmail.com>
+> > 
+> > The patch series aims at enabling USB Host and Gadget support on AST2600
+> > platforms.
+> > 
+> > Patch #1 replaces hardcoded vhub port/endpoint number with device tree
+> > properties, so that it's more convenient to add support for ast2600-vhub
+> > which provides more downstream ports and endpoints.
+> 
+> Ah, something I should have mentioned on the previous series is you'll need
+> to update the binding documentation with the new properties.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-Changes since V14:
-	- improve the commit message and comment, no code change.
----
- drivers/thermal/of-thermal.c | 65 +++++++++++++++++++++++++++++++++-----------
- include/linux/thermal.h      | 10 +++++++
- 2 files changed, 59 insertions(+), 16 deletions(-)
+Looks like we don't have dt binding documentation for this driver. I will add
+the document in my 2nd patch set "allow to customize vhub device IDs/strings"
+so all the new dt properties are included in the doc.
 
-diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-index ef0baa9..0f57108 100644
---- a/drivers/thermal/of-thermal.c
-+++ b/drivers/thermal/of-thermal.c
-@@ -449,6 +449,53 @@ thermal_zone_of_add_sensor(struct device_node *zone,
- }
- 
- /**
-+ * thermal_zone_of_get_sensor_id - get sensor ID from a DT thermal zone
-+ * @tz_np: a valid thermal zone device node.
-+ * @sensor_np: a sensor node of a valid sensor device.
-+ * @id: the sensor ID returned if success.
-+ *
-+ * This function will get sensor ID from a given thermal zone node and
-+ * the sensor node must match the temperature provider @sensor_np.
-+ *
-+ * Return: 0 on success, proper error code otherwise.
-+ */
-+
-+int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
-+				  struct device_node *sensor_np,
-+				  u32 *id)
-+{
-+	struct of_phandle_args sensor_specs;
-+	int ret;
-+
-+	ret = of_parse_phandle_with_args(tz_np,
-+					 "thermal-sensors",
-+					 "#thermal-sensor-cells",
-+					 0,
-+					 &sensor_specs);
-+	if (ret)
-+		return ret;
-+
-+	if (sensor_specs.np != sensor_np) {
-+		of_node_put(sensor_specs.np);
-+		return -ENODEV;
-+	}
-+
-+	if (sensor_specs.args_count >= 1) {
-+		*id = sensor_specs.args[0];
-+		WARN(sensor_specs.args_count > 1,
-+		     "%pOFn: too many cells in sensor specifier %d\n",
-+		     sensor_specs.np, sensor_specs.args_count);
-+	} else {
-+		*id = 0;
-+	}
-+
-+	of_node_put(sensor_specs.np);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(thermal_zone_of_get_sensor_id);
-+
-+/**
-  * thermal_zone_of_sensor_register - registers a sensor to a DT thermal zone
-  * @dev: a valid struct device pointer of a sensor device. Must contain
-  *       a valid .of_node, for the sensor node.
-@@ -499,36 +546,22 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
- 	sensor_np = of_node_get(dev->of_node);
- 
- 	for_each_available_child_of_node(np, child) {
--		struct of_phandle_args sensor_specs;
- 		int ret, id;
- 
- 		/* For now, thermal framework supports only 1 sensor per zone */
--		ret = of_parse_phandle_with_args(child, "thermal-sensors",
--						 "#thermal-sensor-cells",
--						 0, &sensor_specs);
-+		ret = thermal_zone_of_get_sensor_id(child, sensor_np, &id);
- 		if (ret)
- 			continue;
- 
--		if (sensor_specs.args_count >= 1) {
--			id = sensor_specs.args[0];
--			WARN(sensor_specs.args_count > 1,
--			     "%pOFn: too many cells in sensor specifier %d\n",
--			     sensor_specs.np, sensor_specs.args_count);
--		} else {
--			id = 0;
--		}
--
--		if (sensor_specs.np == sensor_np && id == sensor_id) {
-+		if (id == sensor_id) {
- 			tzd = thermal_zone_of_add_sensor(child, sensor_np,
- 							 data, ops);
- 			if (!IS_ERR(tzd))
- 				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
- 
--			of_node_put(sensor_specs.np);
- 			of_node_put(child);
- 			goto exit;
- 		}
--		of_node_put(sensor_specs.np);
- 	}
- exit:
- 	of_node_put(sensor_np);
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 126913c6..53e6f67 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -364,6 +364,9 @@ struct thermal_trip {
- 
- /* Function declarations */
- #ifdef CONFIG_THERMAL_OF
-+int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
-+				  struct device_node *sensor_np,
-+				  u32 *id);
- struct thermal_zone_device *
- thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
- 				const struct thermal_zone_of_device_ops *ops);
-@@ -375,6 +378,13 @@ struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
- void devm_thermal_zone_of_sensor_unregister(struct device *dev,
- 					    struct thermal_zone_device *tz);
- #else
-+
-+static int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
-+					 struct device_node *sensor_np,
-+					 u32 *id)
-+{
-+	return -ENOENT;
-+}
- static inline struct thermal_zone_device *
- thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
- 				const struct thermal_zone_of_device_ops *ops)
--- 
-2.7.4
+> > 
+> > Patch #2 enables ast2600 support in aspeed-vhub usb gadget driver.
+> 
+> Also need to add the 2600 support to the dt binding document.
+> 
+> Looks good to me otherwise.
+> 
+> Andrew
 
+Thanks again for the quick review, Andrew.
+
+
+Cheers,
+
+Tao
