@@ -2,103 +2,107 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1266CC11D05
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 13:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAABC11D05
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 14:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA53920658
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 13:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517F3206E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 14:13:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qRt7DBLZ"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="NNkK0Bjf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgBTNhQ (ORCPT
+        id S1727943AbgBTONz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:37:16 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40591 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbgBTNhQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 08:37:16 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so2065453wmi.5
-        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 05:37:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=B4PLo7ULnoL8yyxNbBuvmhizTKdxVbJiDyyciEc36Lc=;
-        b=qRt7DBLZBTVQjM1tmi4ELDLZ8ufVlBTbCqFqtzgJ9BHN030AEdAoh3uAIzOzj+XaUd
-         qGcHTGaeJ7u4Pl392ptxOLZvSLUN/rNczq8f87EnApfyE1oEpsNf6NjIsXHqF5fGolJt
-         QkIOU219N8LG8XCiKD7oZMb9rtkxOVG3H8u73O9Su5KwaQHYtYxU+uwx5d1PfHUk9kc5
-         dy02FIlFosCGGi/uUmJmptrHNTYXjJqRw/xpzmM/yU0dNMmX7r9ys4t1FYLo2qQGTxo7
-         lvREku+RWOMk7LtwEikUgSNvEUKxKzpKZdJ6jhDJXqKFqIdOkdeDSou4B6vHcWhVnOf8
-         9tPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=B4PLo7ULnoL8yyxNbBuvmhizTKdxVbJiDyyciEc36Lc=;
-        b=ZgmBDk5919Af6sfIe684OOeFk+gxEuJn91DGIq46UGlcRBRRs4aKTlk7c6aZgQTCmY
-         kwUXsqQYapzDrl68Z3+Ktmh6k8FwfSOaCwPUnXu2UCOt6wbpxtj8vCOUh4LhtaLskS+F
-         N63TEDjKbI4aWltyfezLzm6kxU9LeuB4PuH7xkF0GOwD08h2xwuWHjMPX/G9ygU4XMa5
-         m2fSuHlQvbFtjAA/fZ9y+ECPZ9qquvPz4MZsHagK7epEpFJkVeNL5JPxlCk3wZf+6+F5
-         o1hBU5/bSy5+CyW5JQdlXtlFuN3nCxqAxQmD3+0sgiFxp6dWAfWUaundQkTZqvp/bkYR
-         2Ogw==
-X-Gm-Message-State: APjAAAUPHfA4oJlMOuPDAoSk2U/2I0Z+ELxcxapz2PjjKyelwgeRrKe4
-        VifV2dzErYqLAWpeqpBvGFGvig==
-X-Google-Smtp-Source: APXvYqxeEECe1zPsmH3M53hHGcqRTpW593ckp3/6EuRcU0KckGtsaWYA5KUQiu8gYOO5hhf+lwdcPg==
-X-Received: by 2002:a05:600c:2c44:: with SMTP id r4mr4567137wmg.140.1582205833995;
-        Thu, 20 Feb 2020 05:37:13 -0800 (PST)
-Received: from dell (89-145-231-170.xdsl.murphx.net. [89.145.231.170])
-        by smtp.gmail.com with ESMTPSA id u14sm4551648wrm.51.2020.02.20.05.37.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 05:37:13 -0800 (PST)
-Date:   Thu, 20 Feb 2020 13:37:39 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, tglx@linutronix.de,
-        fabrice.gasnier@st.com, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] mfd: stm32: Add defines to be used for clkevent
- purpose
-Message-ID: <20200220133739.GG3494@dell>
-References: <20200217134546.14562-1-benjamin.gaignard@st.com>
- <20200217134546.14562-3-benjamin.gaignard@st.com>
- <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
+        Thu, 20 Feb 2020 09:13:55 -0500
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17858 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727761AbgBTONz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 09:13:55 -0500
+X-Greylist: delayed 919 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Feb 2020 09:13:54 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582207017;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=7yL9Udn53NkbbgUNkqIPdZQE2bNWaYqwiXCqgYxMS5Y=;
+        b=NNkK0BjfSIAsfOgAsMzTkc55olp44bNnAHJOPTOovKNX/ufBvPqYla7q3fYpkKSG
+        3BnepCcG8wGsfC3D4rIF9/DyZN//NIrL8K+M5GhB61KA7ZhYJky5aMdq/cTQdBxSr/7
+        I2bMmzxm/KpElJgRlcQUYZ2+xr3zTuWx0tgTMdSE=
+Received: from mail.baihui.com by mx.zoho.com.cn
+        with SMTP id 158220701284843.8168629100137; Thu, 20 Feb 2020 21:56:52 +0800 (CST)
+Date:   Thu, 20 Feb 2020 21:56:52 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     "PrasannaKumar Muralidharan" <prasannatsmkumar@gmail.com>,
+        "Paul Cercueil" <paul@crapouillou.net>,
+        "Mathieu Malaterre" <malat@debian.org>,
+        "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-mips" <linux-mips@vger.kernel.org>,
+        "Discussions about the Letux Kernel" <letux-kernel@openphoenux.org>
+Message-ID: <17062e30fec.12ef478cf6311.3456058528169872039@flygoat.com>
+In-Reply-To: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
+References: <cover.1581958529.git.hns@goldelico.com> <86b78db4d607e0bdda6def018bc7f73207ce82e8.1581958529.git.hns@goldelico.com> <20200218212609.GA30081@bogus> <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
+Subject: Re: [RFC v4 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Priority: Medium
+User-Agent: ZohoCN Mail
+X-Mailer: ZohoCN Mail
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Feb 2020, Daniel Lezcano wrote:
 
-> 
-> Hi Lee,
-> 
-> On 17/02/2020 14:45, Benjamin Gaignard wrote:
-> > Add defines to be able to enable/clear irq and configure one shot mode.
-> > 
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> 
-> Are you fine if I pick this patch with the series?
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+--
+Jiaxun Yang
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+ ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E4=B8=89, 2020-02-19 13:48:56 H. Nikolau=
+s Schaller <hns@goldelico.com> =E6=92=B0=E5=86=99 ----
+ >=20
+ > > Am 18.02.2020 um 22:26 schrieb Rob Herring <robh@kernel.org>:
+ > >=20
+ > > On Mon, Feb 17, 2020 at 05:55:26PM +0100, H. Nikolaus Schaller wrote:
+ > >> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+ > >>=20
+ > >> This patch brings support for the JZ4780 efuse. Currently it only exp=
+ose
+ > >> a read only access to the entire 8K bits efuse memory.
+ > >>=20
+ > >> Tested-by: Mathieu Malaterre <malat@debian.org>
+ > >> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com=
+>
+ > >> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+ > >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+ > >> ---
+ > >> .../bindings/nvmem/ingenic,jz4780-efuse.txt     | 17 ++++++++++++++++=
++
+ > >> 1 file changed, 17 insertions(+)
+ > >> create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz=
+4780-efuse.txt
+ > >=20
+ > > Please convert to a DT schema.
+ >=20
+ > Is there someone of you who can help to do that?
+ >=20
+ > DT schemas are still like a Chinese dialect for me (i.e. I can decipher =
+with help but neither speak nor write).
+
+I just had a try.
+
+https://paste.ubuntu.com/p/xgDdmwnGsz/
+
+Not sure if it's correct.
+
+Thanks.
+
+ --
+Jiaxun Yang
+
