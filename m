@@ -2,497 +2,95 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52528C761A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 07:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C48FC761A6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 07:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E8324676
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 07:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6596A24654
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 07:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SgC3LNTZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MHF3l+le"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725942AbgBTHGU (ORCPT
+        id S1726779AbgBTHbJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 02:06:20 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38196 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgBTHGU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 02:06:20 -0500
-Received: by mail-pg1-f195.google.com with SMTP id d6so1457555pgn.5
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 23:06:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CO2SRXuJi6TRER/vPdV2Su2zqyTZXsjgtSkLNjMCOEI=;
-        b=SgC3LNTZYoJvpgnIaZa+ijv3f9/Vqyoa20yDkptEvzsmGBxdX0w1W+3IaGfYbzsY6F
-         7paXw6du+QZ4riPi7Zlp5rtV5KmwWIniL6CSJuKMUUkRMTIkCr24rzuwbGaHv6IY0k7I
-         Rntd/3iwCN5ux1snHddBo6JiLaBIRrqsnIlhvyB9XVIMAyDSWj/x7fTYx+LjvFKssq4N
-         PqaqsdaV17v/I+9zmKXnUcNcIkk0snVY/pl9YZrKfL/FC3bjIdBzXyzi18VLhAEUcKUb
-         h7Ep7ZWtGfNxQOoOsbqZ2ll5RMHLqyAyvnJtSsn8yMhyoN0xiWRkFKB5tS2zKjYRgq/2
-         fF+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CO2SRXuJi6TRER/vPdV2Su2zqyTZXsjgtSkLNjMCOEI=;
-        b=WhXMUh9qZQnJYXPvJHbVOh02qPGQhs2iki3dQUKbfkQnLYjE1GuWdmWOVWpFzf+MZw
-         tEDAIoADWJCwAagsjqaKoeamh7r/UQYdA08ZV1UPV2peVDeDYNZq/TqgdGkLmOQiKfuz
-         1lIuCiiNddogn7MicRn1vFQ8oFVaYeXwo6WK1KF0R+vnYmO4bYZUdwvaawrtMqxRq3QU
-         3PMJ1Bf9pcD7hxK2xS3Q8iO2YRsZRzJJF9FyfRKwvLfS6xsm+cno2JJor8VoqUf9ltXS
-         F+GoUjR0WD+GO3eh9LRFDWLE/mFhKpcmdEx3ozJ7MAyUvdjIQPTdPqyGy0ELij0oNFpg
-         pcxg==
-X-Gm-Message-State: APjAAAWcx8GduYnVkxT9q5Ad/JPm9OMKMeYlTa921kJAxqCv2axbyV1t
-        QPVYxRP8Y+Tps5Rbejb6fEpbgg==
-X-Google-Smtp-Source: APXvYqzLQ810Qo9mVw0Ebje7H6ADDzNMNYfmRw3ylc6E2I7mkN8Ku38MgyeyHx6e+Zo7u8CuOi1muA==
-X-Received: by 2002:a63:d207:: with SMTP id a7mr31972697pgg.225.1582182379501;
-        Wed, 19 Feb 2020 23:06:19 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l15sm2016483pgi.31.2020.02.19.23.06.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 23:06:18 -0800 (PST)
-Date:   Wed, 19 Feb 2020 23:06:16 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Alexey Minnekhanov <alexey.min@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Craig Tatlor <ctatlor97@gmail.com>
-Subject: Re: [PATCH 4/5] arm64: dts: qcom: Add SDM660 SoC support
-Message-ID: <20200220070616.GF99370@yoga>
-References: <20200212170916.7494-1-alexey.min@gmail.com>
- <20200212170916.7494-5-alexey.min@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212170916.7494-5-alexey.min@gmail.com>
+        Thu, 20 Feb 2020 02:31:09 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:40486 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726443AbgBTHbJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 02:31:09 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582183868; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=zxu+g1RYguhrLklxI8OEVw/IzD4sIA+/4uSorGlT5ts=; b=MHF3l+lesk4Yf6/MLNtL5UQmdqBJHHbiEmfp44uo2GFfCJaW/VYBDlfTIcCD9merTH31FLuc
+ 83qnqrg7f8dlfD/mXife6fU1xxPvWoHeIf2sxRssxK+h8K8mFQJhQws7mPkfSbf5Oe8Sv8bA
+ Z6bFjgDdRw54tYrgLwadPprgnMQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4e35bc.7f951b3f9bc8-smtp-out-n01;
+ Thu, 20 Feb 2020 07:31:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 15589C447A0; Thu, 20 Feb 2020 07:31:07 +0000 (UTC)
+Received: from isaacm-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: isaacm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D72AC43383;
+        Thu, 20 Feb 2020 07:31:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1D72AC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=isaacm@codeaurora.org
+From:   "Isaac J. Manjarres" <isaacm@codeaurora.org>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Patrick Daly <pdaly@codeaurora.org>, robh+dt@kernel.org,
+        frowand.list@gmail.com, pratikp@codeaurora.org,
+        lmark@codeaurora.org, kernel-team@android.com,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>
+Subject: [RFC PATCH] of: of_reserved_mem: Increase limit on number of reserved regions
+Date:   Wed, 19 Feb 2020 23:30:59 -0800
+Message-Id: <1582183859-26612-1-git-send-email-isaacm@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 12 Feb 09:09 PST 2020, Alexey Minnekhanov wrote:
+From: Patrick Daly <pdaly@codeaurora.org>
 
-> Initial device tree support for Qualcomm SDM660 SoC.
-> 
-> SDM660 is based off MSM8998 and uses some of its drivers.
-> SDM630/636 are based off SDM660 SoC and they are pin
-> and software compatible.
-> 
-> The device tree is based on the CAF 4.4 kernel tree.
-> 
-> Features:
->  * CPU nodes
->  * Timer nodes
->  * Interrupt controller
->  * Global Clock Controller
->  * Top Level Mode Multiplexer (pin controller)
->  * UART node
-> 
-> This is inspired by and based on the work of Craig Tatlor in
-> https://patchwork.kernel.org/patch/10563667/
-> 
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-> Signed-off-by: Alexey Minnekhanov <alexey.min@gmail.com>
+Certain SoCs need to support a large amount of reserved memory
+regions. For example, Qualcomm's SM8150 SoC requires that 20
+regions of memory be reserved for a variety of reasons (e.g.
+loading a peripheral subsystem's firmware image into a
+particular space).
 
-The content of the patch looks good, but with the S-o-b like this (which
-looks correct) the author of the patch should be Craig - which
-would/should be noted by a From: Craig at the beginning of the body.
+When adding more reserved memory regions to cater to different
+usecases, the remaining number of reserved memory regions--12
+to be exact--becomes too small. Thus, double the existing
+limit of reserved memory regions.
 
-Can you please update this patch accordingly and resend the two dts
-patches?
+Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
+Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+---
+ drivers/of/of_reserved_mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Bjorn
-
-> ---
->  arch/arm64/boot/dts/qcom/sdm660.dtsi | 373 +++++++++++++++++++++++++++
->  1 file changed, 373 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm660.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm660.dtsi b/arch/arm64/boot/dts/qcom/sdm660.dtsi
-> new file mode 100644
-> index 000000000000..1187f2f98bd0
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm660.dtsi
-> @@ -0,0 +1,373 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2018, Craig Tatlor.
-> + * Copyright (c) 2020, Alexey Minnekhanov <alexey.min@gmail.com>
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/qcom,gcc-sdm660.h>
-> +
-> +/ {
-> +	interrupt-parent = <&intc>;
-> +
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	chosen { };
-> +
-> +	clocks {
-> +		xo_board: xo_board {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <19200000>;
-> +			clock-output-names = "xo_board";
-> +		};
-> +
-> +		sleep_clk: sleep_clk {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <32764>;
-> +			clock-output-names = "sleep_clk";
-> +		};
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		CPU0: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo260";
-> +			reg = <0x0 0x100>;
-> +			enable-method = "psci";
-> +			capacity-dmips-mhz = <1024>;
-> +			next-level-cache = <&L2_1>;
-> +			L2_1: l2-cache {
-> +				compatible = "cache";
-> +				cache-level = <2>;
-> +			};
-> +			L1_I_100: l1-icache {
-> +				compatible = "cache";
-> +			};
-> +			L1_D_100: l1-dcache {
-> +				compatible = "cache";
-> +			};
-> +		};
-> +
-> +		CPU1: cpu@101 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo260";
-> +			reg = <0x0 0x101>;
-> +			enable-method = "psci";
-> +			capacity-dmips-mhz = <1024>;
-> +			next-level-cache = <&L2_1>;
-> +			L1_I_101: l1-icache {
-> +				compatible = "cache";
-> +			};
-> +			L1_D_101: l1-dcache {
-> +				compatible = "cache";
-> +			};
-> +		};
-> +
-> +		CPU2: cpu@102 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo260";
-> +			reg = <0x0 0x102>;
-> +			enable-method = "psci";
-> +			capacity-dmips-mhz = <1024>;
-> +			next-level-cache = <&L2_1>;
-> +			L1_I_102: l1-icache {
-> +				compatible = "cache";
-> +			};
-> +			L1_D_102: l1-dcache {
-> +				compatible = "cache";
-> +			};
-> +		};
-> +
-> +		CPU3: cpu@103 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo260";
-> +			reg = <0x0 0x103>;
-> +			enable-method = "psci";
-> +			capacity-dmips-mhz = <1024>;
-> +			next-level-cache = <&L2_1>;
-> +			L1_I_103: l1-icache {
-> +				compatible = "cache";
-> +			};
-> +			L1_D_103: l1-dcache {
-> +				compatible = "cache";
-> +			};
-> +		};
-> +
-> +		CPU4: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo260";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			capacity-dmips-mhz = <640>;
-> +			next-level-cache = <&L2_0>;
-> +			L2_0: l2-cache {
-> +				compatible = "cache";
-> +				cache-level = <2>;
-> +			};
-> +			L1_I_0: l1-icache {
-> +				compatible = "cache";
-> +			};
-> +			L1_D_0: l1-dcache {
-> +				compatible = "cache";
-> +			};
-> +		};
-> +
-> +		CPU5: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo260";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "psci";
-> +			capacity-dmips-mhz = <640>;
-> +			next-level-cache = <&L2_0>;
-> +			L1_I_1: l1-icache {
-> +				compatible = "cache";
-> +			};
-> +			L1_D_1: l1-dcache {
-> +				compatible = "cache";
-> +			};
-> +		};
-> +
-> +		CPU6: cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo260";
-> +			reg = <0x0 0x2>;
-> +			enable-method = "psci";
-> +			capacity-dmips-mhz = <640>;
-> +			next-level-cache = <&L2_0>;
-> +			L1_I_2: l1-icache {
-> +				compatible = "cache";
-> +			};
-> +			L1_D_2: l1-dcache {
-> +				compatible = "cache";
-> +			};
-> +		};
-> +
-> +		CPU7: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo260";
-> +			reg = <0x0 0x3>;
-> +			enable-method = "psci";
-> +			capacity-dmips-mhz = <640>;
-> +			next-level-cache = <&L2_0>;
-> +			L1_I_3: l1-icache {
-> +				compatible = "cache";
-> +			};
-> +			L1_D_3: l1-dcache {
-> +				compatible = "cache";
-> +			};
-> +		};
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&CPU4>;
-> +				};
-> +
-> +				core1 {
-> +					cpu = <&CPU5>;
-> +				};
-> +
-> +				core2 {
-> +					cpu = <&CPU6>;
-> +				};
-> +
-> +				core3 {
-> +					cpu = <&CPU7>;
-> +				};
-> +			};
-> +
-> +			cluster1 {
-> +				core0 {
-> +					cpu = <&CPU0>;
-> +				};
-> +
-> +				core1 {
-> +					cpu = <&CPU1>;
-> +				};
-> +
-> +				core2 {
-> +					cpu = <&CPU2>;
-> +				};
-> +
-> +				core3 {
-> +					cpu = <&CPU3>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	firmware {
-> +		scm {
-> +			compatible = "qcom,scm";
-> +		};
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		/* We expect the bootloader to fill in the reg */
-> +		reg = <0 0 0 0>;
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	soc: soc {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0 0xffffffff>;
-> +		compatible = "simple-bus";
-> +
-> +		gcc: clock-controller@100000 {
-> +			compatible = "qcom,gcc-sdm660";
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +			#power-domain-cells = <1>;
-> +			reg = <0x00100000 0x94000>;
-> +		};
-> +
-> +		tlmm: pinctrl@3100000 {
-> +			compatible = "qcom,sdm660-pinctrl";
-> +			reg = <0x03100000 0x400000>,
-> +			      <0x03500000 0x400000>,
-> +			      <0x03900000 0x400000>;
-> +			reg-names = "south", "center", "north";
-> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			gpio-ranges = <&tlmm 0 0 114>;
-> +			gpio-reserved-ranges = <8 4>;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +
-> +			uart_console_active: uart_console_active {
-> +				pinmux {
-> +					pins = "gpio4", "gpio5";
-> +					function = "blsp_uart2";
-> +				};
-> +
-> +				pinconf {
-> +					pins = "gpio4", "gpio5";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +			};
-> +		};
-> +
-> +		spmi_bus: spmi@800f000 {
-> +			compatible = "qcom,spmi-pmic-arb";
-> +			reg = <0x0800f000 0x1000>,
-> +			      <0x08400000 0x1000000>,
-> +			      <0x09400000 0x1000000>,
-> +			      <0x0a400000 0x220000>,
-> +			      <0x0800a000 0x3000>;
-> +			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-> +			interrupt-names = "periph_irq";
-> +			interrupts = <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>;
-> +			qcom,ee = <0>;
-> +			qcom,channel = <0>;
-> +			#address-cells = <2>;
-> +			#size-cells = <0>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <4>;
-> +			cell-index = <0>;
-> +		};
-> +
-> +		blsp1_uart2: serial@c170000 {
-> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-> +			reg = <0x0c170000 0x1000>;
-> +			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
-> +				 <&gcc GCC_BLSP1_AHB_CLK>;
-> +			clock-names = "core", "iface";
-> +			status = "disabled";
-> +		};
-> +
-> +		timer@17920000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			compatible = "arm,armv7-timer-mem";
-> +			reg = <0x17920000 0x1000>;
-> +
-> +			frame@17921000 {
-> +				frame-number = <0>;
-> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17921000 0x1000>,
-> +				      <0x17922000 0x1000>;
-> +			};
-> +
-> +			frame@17923000 {
-> +				frame-number = <1>;
-> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17923000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17924000 {
-> +				frame-number = <2>;
-> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17924000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17925000 {
-> +				frame-number = <3>;
-> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17925000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17926000 {
-> +				frame-number = <4>;
-> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17926000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17927000 {
-> +				frame-number = <5>;
-> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17927000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17928000 {
-> +				frame-number = <6>;
-> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17928000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		intc: interrupt-controller@17a00000 {
-> +			compatible = "arm,gic-v3";
-> +			reg = <0x17a00000 0x10000>,
-> +			      <0x17b00000 0x100000>;
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			interrupt-controller;
-> +			#redistributor-regions = <1>;
-> +			redistributor-stride = <0x0 0x20000>;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.20.1
-> 
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 6bd610e..1a84bc0 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -22,7 +22,7 @@
+ #include <linux/slab.h>
+ #include <linux/memblock.h>
+ 
+-#define MAX_RESERVED_REGIONS	32
++#define MAX_RESERVED_REGIONS	64
+ static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+ static int reserved_mem_count;
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
