@@ -2,405 +2,133 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D0DC11D1C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6567DC11D0C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32762208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4099724673
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="EBtPW47J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jB7Kf9eA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgBTSd3 (ORCPT
+        id S1728237AbgBTSlp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:33:29 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:43970 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTSd3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 13:33:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582223606; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+QCaP4eRw7Wm0jz0Gb7txDdWwktRYZfcHIYjEbdwCHA=;
-        b=EBtPW47JvELJNe1b30hNYJu+ngAM6b3D+s9f1YdkrY3lRYFpsMbLEiU2z5SYab45GdiMxv
-        sjkRNjL5ZhnIHd1SwHeeVO3Yt9FR7wa8KwW3MAc24apmu6nqHEsFYCd2LqNMb2ewe6L7rH
-        /v2kja1yYfxKRbPi4QS1uz32G20EXzw=
-Date:   Thu, 20 Feb 2020 15:33:04 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v6 4/7] clocksource: Ingenic: Add high resolution timer
- support for SMP.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, sboyd@kernel.org,
-        mturquette@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        daniel.lezcano@linaro.org, geert+renesas@glider.be,
-        krzk@kernel.org, ebiederm@xmission.com, miquel.raynal@bootlin.com,
-        keescook@chromium.org, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, dongsheng.qiu@ingenic.com
-Message-Id: <1582223584.3.2@crapouillou.net>
-In-Reply-To: <1582215889-113034-6-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1582215889-113034-6-git-send-email-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Thu, 20 Feb 2020 13:41:45 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:43145 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728162AbgBTSlp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 13:41:45 -0500
+Received: by mail-yb1-f193.google.com with SMTP id b141so2624513ybg.10;
+        Thu, 20 Feb 2020 10:41:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q6NpLVKYuYi5r+jdGs6JgcjNvxF5K/nCtRTkokndCLM=;
+        b=jB7Kf9eATRokx4yVa67z5alKyMt7TcXh+Qfrk2lfkX+mrEoh7O5Hw2+J9XECgbHVmP
+         GodIvDCRYdyNpwvKSX/ftWtPZSHO7NSIQMyCKy7vyrNaz159hFqqrtlaVV57LQE4BeWF
+         ksTrlocT/Q+2Jygm8iGzH3d5aQYYKx/eIwNjebErDAn/4SFz7/grcb3UslDDh6bpffa5
+         NqsoRIuUGqVnqkObnG1nCYSfEGjTV7nyXJ8qu4hE8+R1+mMjmvvl0QsNt85Cc6ZK8c8S
+         q93eO1mzUoBN8mlOkuRwXEpPjI9QxmAMSoJM6E7v9vmx0ZE1I8PWUiaWQfv+R/HAwGLg
+         9uJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q6NpLVKYuYi5r+jdGs6JgcjNvxF5K/nCtRTkokndCLM=;
+        b=QTY64saCPcqhcNaCz7mkCPjUmt1KpTykr3hsBD7Xiqh6XWlqrrWCZ39GgEUBp4zCk2
+         yaZDiAT9KhdDnA1hKcbcxTvn1nlAG4pdoMxWaYf9PbgQwOKCHwa78NQprglzmTqznffY
+         wAGxq+QFmlDUSdZB8CFW8ajuStimXRBoC5MqFBHaQFUHRqIUAMfbrp6tqEVCfhdJnHcp
+         dZvhCGUyoHB+5Qu5wAZeRoqK7MRlvxL/NYpHNwhec+bCni4m2S1ZMWhj3q7lMd5MEHt7
+         P9K2f0pTtZkXzSUEBpHZBPB4sWMrEGus4W57O3EiBZmV21vCRIRurFWp7ekBhu6DPkN8
+         s6Jg==
+X-Gm-Message-State: APjAAAWS/AbI/BTRkgUzJGj8Juatz078Y61vSa6kI9xL/0O0rcuTjj9x
+        xWcXmBXqp+McBakf1oEu/TAIev5p
+X-Google-Smtp-Source: APXvYqx3CwEaEHhpxLKjKq3vFV9xCWLqBYVre652RPmvaoc3Nx9spul/8rcTt+y/1Ia9/Abrc1MUEQ==
+X-Received: by 2002:a25:68cf:: with SMTP id d198mr27744979ybc.502.1582224104695;
+        Thu, 20 Feb 2020 10:41:44 -0800 (PST)
+Received: from localhost.localdomain (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a74sm206875ywe.42.2020.02.20.10.41.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 20 Feb 2020 10:41:44 -0800 (PST)
+From:   frowand.list@gmail.com
+To:     Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        pantelis.antoniou@konsulko.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alan Tull <atull@kernel.org>
+Subject: [PATCH v2 0/2] of: unittest: add overlay gpio test to catch gpio hog problem
+Date:   Thu, 20 Feb 2020 12:40:19 -0600
+Message-Id: <1582224021-12827-1-git-send-email-frowand.list@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
+From: Frank Rowand <frank.rowand@sony.com>
+
+Geert reports that gpio hog nodes are not properly processed when
+the gpio hog node is added via an overlay reply and provides an
+patch to fix the problem [1].
+
+Add a unittest that shows the problem.  Unittest will report "1 failed"
+test before applying Geert's patch and "0 failed" after applying
+Geert's patch.
+
+I did not have a development system for which it would be easy to
+experiment with applying an overlay containing a gpio hog, so I
+instead created this unittest that uses a fake gpio node.
+
+Some tests in the devicetree unittests result in printk messages
+from the code being tested.  It can be difficult to determine
+whether the messages are the result of unittest or are potentially
+reporting bugs that should be fixed.  The most recent example of
+a person asking whether to be concerned about these messages is [2].
+
+Patch 2 adds annotations for all messages triggered by unittests,
+except KERN_DEBUG messages.  (KERN_DEBUG is a special case due to the
+possible interaction of CONFIG_DYNAMIC_DEBUG.)
+
+The annotations added in patch 2/2 add a small amount of verbosity
+to the console output.  I have created a proof of concept tool to
+explore (1) how test harnesses could use the annotations and
+(2) how to make the resulting console output easier to read and
+understand as a human being.  The tool 'of_unittest_expect' is
+available at https://github.com/frowand/dt_tools
+
+The format of the annotations is expected to change when unittests
+are converted to use the kunit infrastructure when the broader
+testing community has an opportunity to discuss the implementation
+of annotations of test triggered messages.
+
+[1] https://lore.kernel.org/r/20200220130149.26283-1-geert+renesas@glider.be
+[2] https://lore.kernel.org/r/6021ac63-b5e0-ed3d-f964-7c6ef579cd68@huawei.com
 
 
-Le ven., f=C3=A9vr. 21, 2020 at 00:24, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Ya=
-njie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Enable clock event handling on per CPU core basis.
-> Make sure that interrupts raised on the first core execute
-> event handlers on the correct CPU core.
->=20
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v1->v2:
->     1.Adjust function naming to make it more reasonable.
->     2.Replace function smp_call_function_single() with
->       smp_call_function_single_async() in order to resolve
->       the warning below:
->=20
->     [    0.350942] smp: Brought up 1 node, 2 CPUs
->     [    0.365497] ------------[ cut here ]------------
->     [    0.365522] WARNING: CPU: 0 PID: 1 at kernel/smp.c:300=20
-> smp_call_function_single+0x110/0x200
->     [    0.365533] CPU: 0 PID: 1 Comm: swapper/0 Not tainted=20
-> 5.5.0-rc1+ #5
->     [    0.365537] Stack : 00000000 59c73bcd 00000037 80074e80=20
-> 80000000 80670000 805a0000 80620590
->     [    0.365557]         8065ce38 8fc0dc8c 806d0000 00000000=20
-> 80670000 00000001 8fc0dc20 59c73bcd
->     [    0.365574]         00000000 00000000 806f0000 80670000=20
-> 00000000 806dab00 00000000 2d302e35
->     [    0.365591]         203a6d6d 806e0000 806e0000 70617773=20
-> 80670000 00000000 00000000 00000009
->     [    0.365610]         00000000 8fc94e20 8fc0de30 80690000=20
-> 00000018 803592dc 00000000 806d0000
->     [    0.365627]         ...
->     [    0.365634] Call Trace:
->     [    0.365647] [<8001b9a0>] show_stack+0x6c/0x12c
->     [    0.365663] [<804aed20>] dump_stack+0x98/0xc8
->     [    0.365673] [<8003044c>] __warn+0xc4/0xe8
->     [    0.365682] [<800304f4>] warn_slowpath_fmt+0x84/0xb8
->     [    0.365690] [<800a886c>] smp_call_function_single+0x110/0x200
->     [    0.365703] ---[ end trace 5785856ca39c79d5 ]---
->     [    0.365557]         8065ce38 8fc0dc8c 806d0000 00000000=20
-> 80670000 00000001 8fc0dc20 59c73bcd
->     [    0.365574]         00000000 00000000 806f0000 80670000=20
-> 00000000 806dab00 00000000 2d302e35
->     [    0.365591]         203a6d6d 806e0000 806e0000 70617773=20
-> 80670000 00000000 00000000 00000009
->     [    0.365610]         00000000 8fc94e20 8fc0de30 80690000=20
-> 00000018 803592dc 00000000 806d0000
->     [    0.365627]         ...
->     [    0.365634] Call Trace:
->     [    0.365647] [<8001b9a0>] show_stack+0x6c/0x12c
->     [    0.365663] [<804aed20>] dump_stack+0x98/0xc8
->     [    0.365673] [<8003044c>] __warn+0xc4/0xe8
->     [    0.365682] [<800304f4>] warn_slowpath_fmt+0x84/0xb8
->     [    0.365690] [<800a886c>] smp_call_function_single+0x110/0x200
->     [    0.365703] ---[ end trace 5785856ca39c79d5 ]---
->=20
->     v2->v3:
->     No Change.
->=20
->     v3->v4:
->     Rebase on top of kernel 5.6-rc1.
->=20
->     v4->v5:
->     Move the check for (evt->event_handler) from=20
-> "ingenic_per_cpu_event_handler"
->     to "ingenic_tcu_cevt_cb".
->=20
->     v5->v6:
->     No change.
->=20
->  drivers/clocksource/ingenic-timer.c | 113=20
-> +++++++++++++++++++++++++++++-------
->  1 file changed, 91 insertions(+), 22 deletions(-)
->=20
-> diff --git a/drivers/clocksource/ingenic-timer.c=20
-> b/drivers/clocksource/ingenic-timer.c
-> index 4bbdb3d..e396326 100644
-> --- a/drivers/clocksource/ingenic-timer.c
-> +++ b/drivers/clocksource/ingenic-timer.c
-> @@ -1,7 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * JZ47xx SoCs TCU IRQ driver
-> + * XBurst SoCs TCU IRQ driver
->   * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
-> + * Copyright (C) 2020 =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=20
-> <zhouyanjie@wanyeetech.com>
->   */
->=20
->  #include <linux/bitops.h>
-> @@ -21,18 +22,23 @@
->=20
->  #include <dt-bindings/clock/ingenic,tcu.h>
->=20
-> +static DEFINE_PER_CPU(call_single_data_t, ingenic_cevt_csd);
-> +
->  struct ingenic_soc_info {
->  	unsigned int num_channels;
->  };
->=20
->  struct ingenic_tcu {
->  	struct regmap *map;
-> +	struct device_node *np;
->  	struct clk *timer_clk, *cs_clk;
-> +	unsigned int timer_local[NR_CPUS];
->  	unsigned int timer_channel, cs_channel;
->  	struct clock_event_device cevt;
->  	struct clocksource cs;
-> -	char name[4];
-> +	char name[8];
->  	unsigned long pwm_channels_mask;
-> +	int cpu;
->  };
->=20
->  static struct ingenic_tcu *ingenic_tcu;
-> @@ -81,6 +87,24 @@ static int ingenic_tcu_cevt_set_next(unsigned long=20
-> next,
->  	return 0;
->  }
->=20
-> +static void ingenic_per_cpu_event_handler(void *info)
-> +{
-> +	struct clock_event_device *cevt =3D (struct clock_event_device *)=20
-> info;
-> +
-> +	cevt->event_handler(cevt);
-> +}
-> +
-> +static void ingenic_tcu_per_cpu_cb(struct clock_event_device *evt)
-> +{
-> +	struct ingenic_tcu *tcu =3D to_ingenic_tcu(evt);
-> +	call_single_data_t *csd;
-> +
-> +	csd =3D &per_cpu(ingenic_cevt_csd, tcu->cpu);
-> +	csd->info =3D (void *) evt;
-> +	csd->func =3D ingenic_per_cpu_event_handler;
-> +	smp_call_function_single_async(tcu->cpu, csd);
-> +}
-> +
->  static irqreturn_t ingenic_tcu_cevt_cb(int irq, void *dev_id)
->  {
->  	struct clock_event_device *evt =3D dev_id;
-> @@ -89,7 +113,7 @@ static irqreturn_t ingenic_tcu_cevt_cb(int irq,=20
-> void *dev_id)
->  	regmap_write(tcu->map, TCU_REG_TECR, BIT(tcu->timer_channel));
->=20
->  	if (evt->event_handler)
-> -		evt->event_handler(evt);
-> +		ingenic_tcu_per_cpu_cb(evt);
->=20
->  	return IRQ_HANDLED;
->  }
-> @@ -105,14 +129,21 @@ static struct clk * __init=20
-> ingenic_tcu_get_clock(struct device_node *np, int id)
->  	return of_clk_get_from_provider(&args);
->  }
->=20
-> -static int __init ingenic_tcu_timer_init(struct device_node *np,
-> -					 struct ingenic_tcu *tcu)
-> +static int ingenic_tcu_setup_per_cpu_cevt(struct device_node *np,
-> +				     unsigned int channel)
->  {
-> -	unsigned int timer_virq, channel =3D tcu->timer_channel;
-> +	unsigned int timer_virq;
->  	struct irq_domain *domain;
-> +	struct ingenic_tcu *tcu;
->  	unsigned long rate;
->  	int err;
->=20
-> +	tcu =3D kzalloc(sizeof(*tcu), GFP_KERNEL);
-> +	if (!tcu)
-> +		return -ENOMEM;
-> +
-> +	tcu->map =3D ingenic_tcu->map;
-> +
->  	tcu->timer_clk =3D ingenic_tcu_get_clock(np, channel);
->  	if (IS_ERR(tcu->timer_clk))
->  		return PTR_ERR(tcu->timer_clk);
-> @@ -139,13 +170,15 @@ static int __init ingenic_tcu_timer_init(struct=20
-> device_node *np,
->  		goto err_clk_disable;
->  	}
->=20
-> -	snprintf(tcu->name, sizeof(tcu->name), "TCU");
-> +	snprintf(tcu->name, sizeof(tcu->name), "TCU%u", channel);
->=20
->  	err =3D request_irq(timer_virq, ingenic_tcu_cevt_cb, IRQF_TIMER,
->  			  tcu->name, &tcu->cevt);
->  	if (err)
->  		goto err_irq_dispose_mapping;
->=20
-> +	tcu->cpu =3D smp_processor_id();
-> +	tcu->timer_channel =3D channel;
->  	tcu->cevt.cpumask =3D cpumask_of(smp_processor_id());
->  	tcu->cevt.features =3D CLOCK_EVT_FEAT_ONESHOT;
->  	tcu->cevt.name =3D tcu->name;
-> @@ -166,6 +199,25 @@ static int __init ingenic_tcu_timer_init(struct=20
-> device_node *np,
->  	return err;
->  }
->=20
-> +static int ingenic_tcu_setup_cevt(unsigned int cpu)
-> +{
-> +	int ret;
-> +
-> +	ret =3D ingenic_tcu_setup_per_cpu_cevt(ingenic_tcu->np,
-> +						ingenic_tcu->timer_local[cpu]);
-> +	if (ret)
-> +		goto err_tcu_clocksource_cleanup;
-> +
-> +	return 0;
-> +
-> +err_tcu_clocksource_cleanup:
-> +	clocksource_unregister(&ingenic_tcu->cs);
-> +	clk_disable_unprepare(ingenic_tcu->cs_clk);
-> +	clk_put(ingenic_tcu->cs_clk);
-> +	kfree(ingenic_tcu);
-> +	return ret;
-> +}
-> +
->  static int __init ingenic_tcu_clocksource_init(struct device_node=20
-> *np,
->  					       struct ingenic_tcu *tcu)
->  {
-> @@ -239,6 +291,7 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->  	const struct ingenic_soc_info *soc_info =3D id->data;
->  	struct ingenic_tcu *tcu;
->  	struct regmap *map;
-> +	unsigned cpu =3D 0;
->  	long rate;
->  	int ret;
->=20
-> @@ -252,13 +305,18 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->  	if (!tcu)
->  		return -ENOMEM;
->=20
-> -	/* Enable all TCU channels for PWM use by default except channels=20
-> 0/1 */
-> -	tcu->pwm_channels_mask =3D GENMASK(soc_info->num_channels - 1, 2);
-> +	/*
-> +	 * Enable all TCU channels for PWM use by default except channels=20
-> 0/1,
-> +	 * and channel 2 if target CPU is JZ4780 and SMP is selected.
-> +	 */
-> +	tcu->pwm_channels_mask =3D GENMASK(soc_info->num_channels - 1,
-> +								NR_CPUS + 1);
->  	of_property_read_u32(np, "ingenic,pwm-channels-mask",
->  			     (u32 *)&tcu->pwm_channels_mask);
->=20
-> -	/* Verify that we have at least two free channels */
-> -	if (hweight8(tcu->pwm_channels_mask) > soc_info->num_channels - 2) {
-> +	/* Verify that we have at least NR_CPUS + 1 free channels */
-> +	if (hweight8(tcu->pwm_channels_mask) >
-> +			soc_info->num_channels - NR_CPUS + 1) {
+Frank Rowand (2):
+  of: unittest: add overlay gpio test to catch gpio hog problem
+  of: unittest: annotate warnings triggered by unittest
 
-NR_CPUS can be up to 256. You want to use num_online_cpus() here, I=20
-believe.
+ drivers/of/unittest-data/Makefile             |   8 +-
+ drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +
+ drivers/of/unittest-data/overlay_gpio_02a.dts |  16 +
+ drivers/of/unittest-data/overlay_gpio_02b.dts |  16 +
+ drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +
+ drivers/of/unittest-data/overlay_gpio_04a.dts |  16 +
+ drivers/of/unittest-data/overlay_gpio_04b.dts |  16 +
+ drivers/of/unittest.c                         | 628 ++++++++++++++++++++++++--
+ 8 files changed, 715 insertions(+), 31 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
 
->  		pr_crit("%s: Invalid PWM channel mask: 0x%02lx\n", __func__,
->  			tcu->pwm_channels_mask);
->  		ret =3D -EINVAL;
-> @@ -266,13 +324,27 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->  	}
->=20
->  	tcu->map =3D map;
-> +	tcu->np =3D np;
->  	ingenic_tcu =3D tcu;
->=20
-> -	tcu->timer_channel =3D find_first_zero_bit(&tcu->pwm_channels_mask,
-> +	tcu->timer_local[cpu] =3D find_first_zero_bit(&tcu->pwm_channels_mask,
->  						 soc_info->num_channels);
-> -	tcu->cs_channel =3D find_next_zero_bit(&tcu->pwm_channels_mask,
-> -					     soc_info->num_channels,
-> -					     tcu->timer_channel + 1);
-> +
-> +	if (NR_CPUS > 1) {
-> +		for (cpu =3D 1; cpu < NR_CPUS; cpu++)
-> +			tcu->timer_local[cpu] =3D find_next_zero_bit(
-> +						&tcu->pwm_channels_mask,
-> +						soc_info->num_channels,
-> +						tcu->timer_local[cpu - 1] + 1);
-> +
-> +		tcu->cs_channel =3D find_next_zero_bit(&tcu->pwm_channels_mask,
-> +					soc_info->num_channels,
-> +					tcu->timer_local[cpu-1] + 1);
-> +	} else {
-> +		tcu->cs_channel =3D find_next_zero_bit(&tcu->pwm_channels_mask,
-> +					soc_info->num_channels,
-> +					tcu->timer_local[cpu] + 1);
-> +	}
-
-I believe you can factorize the code a bit here - don't check for=20
-NR_CPUS > 1, and have a for (cpu =3D 0; cpu < num_online_cpus(); cpu++)=20
-loop. You could use a temporary variable to store the 'next bit' value.
-
--Paul
-
->=20
->  	ret =3D ingenic_tcu_clocksource_init(np, tcu);
->  	if (ret) {
-> @@ -280,9 +352,10 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->  		goto err_free_ingenic_tcu;
->  	}
->=20
-> -	ret =3D ingenic_tcu_timer_init(np, tcu);
-> -	if (ret)
-> -		goto err_tcu_clocksource_cleanup;
-> +	/* Setup clock events on each CPU core */
-> +	ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "Ingenic XBurst:=20
-> online",
-> +				ingenic_tcu_setup_cevt, NULL);
-> +	WARN_ON(ret < 0);
->=20
->  	/* Register the sched_clock at the end as there's no way to undo it=20
-> */
->  	rate =3D clk_get_rate(tcu->cs_clk);
-> @@ -290,10 +363,6 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->=20
->  	return 0;
->=20
-> -err_tcu_clocksource_cleanup:
-> -	clocksource_unregister(&tcu->cs);
-> -	clk_disable_unprepare(tcu->cs_clk);
-> -	clk_put(tcu->cs_clk);
->  err_free_ingenic_tcu:
->  	kfree(tcu);
->  	return ret;
-> --
-> 2.7.4
->=20
-
-=
+-- 
+Frank Rowand <frank.rowand@sony.com>
 
