@@ -6,53 +6,57 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F933C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34207C11D0C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19E5F208CD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EBF3206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582227984;
-	bh=UmTOehUYik3GEC/kCFIcKCrKniVLy5goVYP5EfoTz5c=;
+	s=default; t=1582228289;
+	bh=BZllZP0S6mHq3M1d/mWw0S2QK7ydm/Mjik/9RGjRhL8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fi272+VTyQ+DXqW53GQI7MmKb1CzMSHm+g8q6CZBOp/CaegxHujjRGTFZSFdgjUjb
-	 4tFLFPX4SdQPq27oZPUNyu1nYPD0pg4q8W0sIzClaqTntFcnWyIfZVM4vYQwmsvHu5
-	 lyfT18naZ0OtBcDBxNW1XjkQjdv8v3allTLyRw1c=
+	b=uU8ecHpV7DFOhVGi9l9VyJkcDhdCulax/gsVh1BZRHQutVsWX7KW2bqTJm0wov4f9
+	 j8PiREM2/bpDl0VjQkoVwc9dMVEcG431FSQzLS9FJ51znyM1h4mAoq2NEqdBYS8WJQ
+	 Gxkr6xLipr5+JUPP+jxE9iTu5aHfhQYMgbS0rWDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgBTTqX (ORCPT
+        id S1728966AbgBTTvZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:46:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:50368 "EHLO foss.arm.com"
+        Thu, 20 Feb 2020 14:51:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:50438 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbgBTTqX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:46:23 -0500
+        id S1728514AbgBTTvZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:51:25 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22FF830E;
-        Thu, 20 Feb 2020 11:46:23 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D90DF30E;
+        Thu, 20 Feb 2020 11:51:24 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E3C23F68F;
-        Thu, 20 Feb 2020 11:46:22 -0800 (PST)
-Date:   Thu, 20 Feb 2020 19:46:20 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EF083F68F;
+        Thu, 20 Feb 2020 11:51:24 -0800 (PST)
+Date:   Thu, 20 Feb 2020 19:51:22 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ASoC: dt-bindings: renesas,rsnd: switch to yaml base
- Documentation
-Message-ID: <20200220194620.GK3926@sirena.org.uk>
-References: <87d0ahzr9d.wl-kuninori.morimoto.gx@renesas.com>
- <20200219161732.GB25095@bogus>
- <874kvmt355.wl-kuninori.morimoto.gx@renesas.com>
- <CAL_Jsq+VEQj9Nkyo_85RM3Ku1-D73_ot5BTAjidnJzJv7r1_Sw@mail.gmail.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] rewrite mtk-quadspi spi-nor driver with spi-mem
+Message-ID: <20200220195122.GL3926@sirena.org.uk>
+References: <20200215065826.739102-1-gch981213@gmail.com>
+ <20200218125557.GD4232@sirena.org.uk>
+ <CAJsYDVL03KJv7eewGekBPCfpbOuTX0tJ6qZaydvJnBDzZ5vEwg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YZQs1kEQY307C4ut"
+        protocol="application/pgp-signature"; boundary="kaF1vgn83Aa7CiXN"
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+VEQj9Nkyo_85RM3Ku1-D73_ot5BTAjidnJzJv7r1_Sw@mail.gmail.com>
+In-Reply-To: <CAJsYDVL03KJv7eewGekBPCfpbOuTX0tJ6qZaydvJnBDzZ5vEwg@mail.gmail.com>
 X-Cookie: You are number 6!  Who is number one?
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -61,46 +65,37 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---YZQs1kEQY307C4ut
+--kaF1vgn83Aa7CiXN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Feb 20, 2020 at 01:33:56PM -0600, Rob Herring wrote:
-> On Wed, Feb 19, 2020 at 8:16 PM Kuninori Morimoto
+On Thu, Feb 20, 2020 at 07:58:06AM +0800, Chuanhong Guo wrote:
+> On Tue, Feb 18, 2020 at 8:55 PM Mark Brown <broonie@kernel.org> wrote:
 
-> > > > +  clock-frequency:
-> > > > +    description: for audio_clkout0/1/2/3
-> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > This is an ABI break so you shouldn't be doing this, if the existing
+> > binding works it should continue to work.
 
-> > > This already has a common definition and this conflicts with that.
-> > > 'clock-frequency' is a single uint32 or uint64.
+> The missing spi-max-frequency is the only part preventing old
+> device tree to work with this driver.
+> If the goal is to make existing dt binding work, I could patch dt using
+> of_add_property in v2. I saw similar device tree patching for legacy
+> bindings in pinctrl-single driver.
 
-> > This needs clock array. Like this
+That's fine I think, so long as old DTs continue to work.
 
-> >         clock-frequency = <12288000 11289600>;
-
-> Sorry, but the type is already defined in the spec. You'll still get
-> warnings from the common schema and you can't override that here.
-
-> Not sure what to suggest. Leave it with a fixme or move to
-> assigned-clocks-rates instead?
-
-Given that this is an existing schema we should really try to keep
-compatibility :/
-
---YZQs1kEQY307C4ut
+--kaF1vgn83Aa7CiXN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5O4gwACgkQJNaLcl1U
-h9DpNgf/T3NsUyExFf1KBDaf9LwB98JuIJZnPVN3szC+niqpV7pWTCL40vzSBGiV
-SSlCDGxnMV1mmFT1H6Mv+NWj/E9qf5ech4MVE/LdO6oeRfJ6vlJOhtRVGw9gZz9l
-0Jr+r4FrM/F4s+SiCJRpB9bpdBra89Rqy6hMftuOTYORGm4+F+gLM2wMiO0qS7Ro
-zVUinC0Toc+WXk2AVK8G2UrErAI9FdZRMXZYXyAYrWk/5cDQXVkWaifVwelDTyy8
-INeT1Y0DBOZ1t1In/sJAiw2OL/C+PDxoUE4znyjw53rNB48C0NSVt1XQOyjcXX0o
-d5yXeMAnmkXID2NzRS4q3H3OmyN3/w==
-=dMJr
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5O4zkACgkQJNaLcl1U
+h9CnhQf/csTFVBvPtYuq5Xz1OdgQcpPuRzKFr7JAXvgpfAUv5qPV/34M4juJxze6
+ei2b2s9UlxK2Naa8GFKqAEKOK79jnk5HrI7QkELb2UpQPSJQKubjc8iHzDsQ8rgC
+V7Qf/2Lv2J/NW4R2XzC0ZXMeSnEMBQepx/pUCQnwXOqReWiy/l2X7pLEJsI4J4pR
+ba9BzEWWAXYoP4SYj/cVlqhWrBh807h6owmwTlV86VrwRRh2cxosTUZVMx6nRNq6
+MBFLZ/vayfFd9LF7BQ5r2isKv+BUrZZ8bd06Gt8vZrrLBoH4YiGhXDLL3CGWvFhk
+6M/bBGLDrkTKwSBb6zMaLOsygszigQ==
+=rZ8a
 -----END PGP SIGNATURE-----
 
---YZQs1kEQY307C4ut--
+--kaF1vgn83Aa7CiXN--
