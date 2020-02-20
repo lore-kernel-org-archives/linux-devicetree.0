@@ -2,257 +2,325 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB474C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66255C11D0C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B85C2467A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35EB92467A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 19:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZXqajBT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T7e3KiNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgBTSxd (ORCPT
+        id S1728383AbgBTTBh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:53:33 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:35466 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgBTSxc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 13:53:32 -0500
-Received: by mail-yb1-f195.google.com with SMTP id p123so2660405ybp.2;
-        Thu, 20 Feb 2020 10:53:32 -0800 (PST)
+        Thu, 20 Feb 2020 14:01:37 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33516 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728334AbgBTTBh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 14:01:37 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so2405083pgk.0
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 11:01:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HsXunpyBpiSFIoL7NA23zoMrEqZcM3F0YyJJ7Ci+jAY=;
-        b=uZXqajBTFHG8bFgqUP9xTcYw8kD2CrdOEic0MgprzKU8FYIvEGNUyytdCIQxuK5emL
-         WXD9/5czzKleRSFVqlj5pjZ4VlOflOZPqSkOoYUR3FeRwNPPX2RbtRnfggZUr72Zta3d
-         RWL0MesbLth8u8DnEAs1h6KmSRFmByEYqhaQC+B1mMEPPDO2bSL9M3JH3b0jGGLATEyB
-         75tbRFyORLHQ8dKDUYX8tIVlbh3eLLXNx9SP/FoU7KAzULsomPfpRicubsGi2hWO+RtZ
-         uOsyf9ohlsOCEuEj1/QAWgyTOhmIEan1jTLbWJaxsQiH0zBVCYTOTdoY9+Vor4+9clk0
-         /0Sw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8fVLwwPydfLuZNvYlHuH3T0ZHb/N6Ix0LIzIYC7dn20=;
+        b=T7e3KiNH986vMnDCiy0wyC/ghFGg2en/LWJYiahcTKMszCaf755LxaqdPFZjGxeWYU
+         BkfeMHu3J8vKosFTT/ORpiXxIGyuDeJhjXD+excqbQBwgye4AipYoGhPKLu9hhQaO1e0
+         +d0qEgRbdPtnJZ7gkqCAOPoOxLgs4+BoFJG1LzkRP4BQ7gRVvkfPHnqIDXR30PoLUagh
+         tLqjm133olDpXREX+3hmhlYuNdgqS7PTykMP+K6zliNZGq5Wno06bT6H15zQq2uMc/vr
+         aRQzZZ+1qYur1IFpQrKpBPs3Vma8tR510W7WZHEaZQQvVOqYtIwyonvL6KOsXRz/iNZK
+         xeLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HsXunpyBpiSFIoL7NA23zoMrEqZcM3F0YyJJ7Ci+jAY=;
-        b=OhEOtQXjTNLxUQob87nYzQrhKXSkX0PIoDttObVG2HM6dHHnDkwjHsENk+PgD6cqSL
-         bBO/HGY4EezA4MY7Xw+zzQsNIbY3SDy5kTTP9KHNPXoI5K/X8es2nCs01nyN5QabyNu4
-         pQQ+wJ/rfGFZp3g8uWdKBZbDrr1YBlb+mcRqUfDgbxm4xCeP57e0sRTT/BX0p7HVJygV
-         I5Pd0EkkZVIR/zob0481lwfbCUM/YOnQZMUUeufH9Zw34vT/tRTiHKAPx/fUvBC+SfpJ
-         7MI6ymYh/ks7hZhK1nLO4zgyIILnSXE7Iqlsohjz0LQXrvbeQTsEDqJzFhpb9MUCNUK7
-         zGTA==
-X-Gm-Message-State: APjAAAVhejyr45dqxWt3zBvSlU+kP9bf/sS/QxK5oT1haUT2mlfFjRio
-        tzYtKAMqT9PLa4o8dJ3kjOpt4M1M
-X-Google-Smtp-Source: APXvYqx5Ysz2cTDlOoPghqRmH24vM2IVLphr1iroe9vM7nWdOic0SKSO2hbrIYzZuVWyBEh/+C/jhg==
-X-Received: by 2002:a25:d815:: with SMTP id p21mr32658771ybg.234.1582224811713;
-        Thu, 20 Feb 2020 10:53:31 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id z14sm243164ywc.53.2020.02.20.10.53.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Feb 2020 10:53:31 -0800 (PST)
-Subject: Re: [PATCH 1/2] of: unittest: add overlay gpio test to catch gpio hog
- problem
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alan Tull <atull@kernel.org>
-References: <1580276765-29458-1-git-send-email-frowand.list@gmail.com>
- <1580276765-29458-2-git-send-email-frowand.list@gmail.com>
- <20200219215656.GA15842@bogus>
- <ff65f982-f71e-5bef-1811-fdb94fd7da2f@gmail.com>
-Message-ID: <aa62a42e-c06a-aa32-955e-dfc26f688eff@gmail.com>
-Date:   Thu, 20 Feb 2020 12:53:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8fVLwwPydfLuZNvYlHuH3T0ZHb/N6Ix0LIzIYC7dn20=;
+        b=BJWX8YqZ/O0+TqdBjSA3Nl1tYRvFYKc8f58IHp4Btne/eRzvsNutoh9zV0ZnHxs8Oi
+         nYamh7BOJGtbQ+EHEpsfksrpA24438ssc5g2S1JHIzTKW+Ay9Y8G6QNQOaJkfC1J8dkj
+         DZvctZH9xJJ8UfFjmo3n+X7Qm6ChDkuOeRchUn14+UotkqFhDL9xjGBzWboh1xBg/Zii
+         9SP5MEMVAvmC5hmvQ3s5sZrv5Xfi9IyNub0CgeK1FnHumJ5J36Np61YOtGBLSLnOO77+
+         +pWxo+L0HLXHas5l07shq0tEA6TKhOHFfOkKauwHZFpwsWhzY3llrf7WJBd50t6BtfR/
+         3dUA==
+X-Gm-Message-State: APjAAAUo9UGIL5w3lkhWhI9V6iaen2cC1vO3x7YhPK+68fVwCsnGdXau
+        cmsymru8gdqi8/fg8WGZJxkEoA==
+X-Google-Smtp-Source: APXvYqyLk4G4jwAFo2dw2ASIhOPGlFR06o9tgoOZEnRVjy3/weBLCZ2myICde4Qr6edvAP4itsFb8A==
+X-Received: by 2002:a63:9257:: with SMTP id s23mr35631559pgn.0.1582225296766;
+        Thu, 20 Feb 2020 11:01:36 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 23sm349623pfh.28.2020.02.20.11.01.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 11:01:36 -0800 (PST)
+Date:   Thu, 20 Feb 2020 12:01:34 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v3 2/8] remoteproc: qcom: Introduce driver to store pil
+ info in IMEM
+Message-ID: <20200220190134.GB19352@xps15>
+References: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
+ <20200211005059.1377279-3-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <ff65f982-f71e-5bef-1811-fdb94fd7da2f@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211005059.1377279-3-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/19/20 5:37 PM, Frank Rowand wrote:
-> On 2/19/20 3:56 PM, Rob Herring wrote:
->> On Tue, Jan 28, 2020 at 11:46:04PM -0600, frowand.list@gmail.com wrote:
->>> From: Frank Rowand <frank.rowand@sony.com>
->>>
->>> Geert reports that gpio hog nodes are not properly processed when
->>> the gpio hog node is added via an overlay reply and provides an
->>> RFC patch to fix the problem [1].
->>>
->>> Add a unittest that shows the problem.  Unittest will report "1 failed"
->>> test before applying Geert's RFC patch and "0 failed" after applying
->>> Geert's RFC patch.
->>
->> What's the status of that? I don't want to leave the tests failing at 
->> least outside of a kernel release.
+On Mon, Feb 10, 2020 at 04:50:53PM -0800, Bjorn Andersson wrote:
+> A region in IMEM is used to communicate load addresses of remoteproc to
+> post mortem debug tools. Implement a driver that can be used to store
+> this information in order to enable these tools to process collected
+> ramdumps.
 > 
-> I agree.  I would like to see my patches applied, showing the test fail,
-> immediately followed by Geert's fix.  So my series should not go in
-> until Geert's patch is ready.
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - Sorted includes
+> - Replace use of stracpy (still not landed upstream)
+> - Fixed error handling in probe
+> - Return error from store, to allow clients to decide action
+> - Replace hard coded size with value read from reg property
+> 
+>  drivers/remoteproc/Kconfig         |   3 +
+>  drivers/remoteproc/Makefile        |   1 +
+>  drivers/remoteproc/qcom_pil_info.c | 168 +++++++++++++++++++++++++++++
+>  drivers/remoteproc/qcom_pil_info.h |   8 ++
+>  4 files changed, 180 insertions(+)
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.c
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.h
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index de3862c15fcc..20c8194e610e 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -95,6 +95,9 @@ config KEYSTONE_REMOTEPROC
+>  	  It's safe to say N here if you're not interested in the Keystone
+>  	  DSPs or just want to use a bare minimum kernel.
+>  
+> +config QCOM_PIL_INFO
+> +	tristate
+> +
+>  config QCOM_RPROC_COMMON
+>  	tristate
+>  
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index e30a1b15fbac..2ab32bd41b44 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+>  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+>  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+>  obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
+> +obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
+>  obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
+>  obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
+>  obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
+> diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
+> new file mode 100644
+> index 000000000000..398aeb957f3c
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.c
+> @@ -0,0 +1,168 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019-2020 Linaro Ltd.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +#define PIL_RELOC_NAME_LEN	8
+> +
+> +struct pil_reloc_entry {
+> +	char name[PIL_RELOC_NAME_LEN];
+> +	__le64 base;
+> +	__le32 size;
+> +} __packed;
+> +
+> +struct pil_reloc {
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	size_t offset;
+> +	size_t num_entries;
+> +	int val_bytes;
+> +
+> +	struct pil_reloc_entry entries[];
+> +};
+> +
+> +static struct pil_reloc *_reloc;
+> +static DEFINE_MUTEX(reloc_mutex);
+> +
+> +/**
+> + * qcom_pil_info_store() - store PIL information of image in IMEM
+> + * @image:	name of the image
+> + * @base:	base address of the loaded image
+> + * @size:	size of the loaded image
+> + *
+> + * Return: 0 on success, negative errno on failure
+> + */
+> +int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
+> +{
+> +	struct pil_reloc_entry *entry;
+> +	int idx = -1;
+> +	int ret;
+> +	int i;
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	for (i = 0; i < _reloc->num_entries; i++) {
+> +		if (!_reloc->entries[i].name[0]) {
+> +			if (idx == -1)
+> +				idx = i;
+> +			continue;
+> +		}
+> +
+> +		if (!strncmp(_reloc->entries[i].name, image, 8)) {
 
-Geert has sent a v2 patch series.
+s/8/PIL_RELOC_NAME_LEN
 
-I have sent a v2 of this patch, tested with v2 of Geert's patch series.
-
--Frank
-
+> +			idx = i;
+> +			goto found;
+> +		}
+> +	}
+> +
+> +	if (idx == -1) {
+> +		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
+> +		ret = -ENOMEM;
+> +		goto unlock;
+> +	}
+> +
+> +found:
+> +	entry = &_reloc->entries[idx];
+> +	strscpy(entry->name, image, ARRAY_SIZE(entry->name));
+> +	entry->base = base;
+> +	entry->size = size;
+> +
+> +	ret = regmap_bulk_write(_reloc->map,
+> +				_reloc->offset + idx * sizeof(*entry),
+> +				entry, sizeof(*entry) / _reloc->val_bytes);
+> +unlock:
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
+> +
+> +/**
+> + * qcom_pil_info_available() - query if the pil info is probed
+> + *
+> + * Return: boolean indicating if the pil info device is probed
+> + */
+> +bool qcom_pil_info_available(void)
+> +{
+> +	return !!_reloc;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pil_info_available);
+> +
+> +static int pil_reloc_probe(struct platform_device *pdev)
+> +{
+> +	unsigned int num_entries;
+> +	struct pil_reloc *reloc;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	num_entries = resource_size(res) / sizeof(struct pil_reloc_entry);
+> +
+> +	reloc = devm_kzalloc(&pdev->dev,
+> +			     struct_size(reloc, entries, num_entries),
+> +			     GFP_KERNEL);
+> +	if (!reloc)
+> +		return -ENOMEM;
+> +
+> +	reloc->dev = &pdev->dev;
+> +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> +	if (IS_ERR(reloc->map))
+> +		return PTR_ERR(reloc->map);
+> +
+> +	reloc->offset = res->start;
+> +	reloc->num_entries = num_entries;
+> +
+> +	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
+> +	if (reloc->val_bytes < 0)
+> +		return -EINVAL;
+> +
+> +	ret = regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
+> +				reloc->num_entries *
+> +				sizeof(struct pil_reloc_entry) /
+> +				reloc->val_bytes);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = reloc;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pil_reloc_remove(struct platform_device *pdev)
+> +{
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = NULL;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id pil_reloc_of_match[] = {
+> +	{ .compatible = "qcom,pil-reloc-info" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
+> +
+> +static struct platform_driver pil_reloc_driver = {
+> +	.probe = pil_reloc_probe,
+> +	.remove = pil_reloc_remove,
+> +	.driver = {
+> +		.name = "qcom-pil-reloc-info",
+> +		.of_match_table = pil_reloc_of_match,
+> +	},
+> +};
+> +module_platform_driver(pil_reloc_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm PIL relocation info");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
+> new file mode 100644
+> index 000000000000..93aaaca8aed2
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __QCOM_PIL_INFO_H__
+> +#define __QCOM_PIL_INFO_H__
+> +
+> +int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
+> +bool qcom_pil_info_available(void);
+> +
+> +#endif
+> -- 
+> 2.24.0
 > 
->>
->>>
->>> [1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
->>>
->>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->>> ---
->>>
->>> There are checkpatch warnings.
->>>   - New files are in a directory already covered by MAINTAINERS
->>>   - The undocumented compatibles are restricted to use by unittest
->>>     and should not be documented under Documentation
->>>   - The printk() KERN_<LEVEL> warnings are false positives.  The level
->>>     is supplied by a define parameter instead of a hard coded constant
->>>   - The lines over 80 characters are consistent with unittest.c style
->>>
->>> This unittest was also valuable in that it allowed me to explore
->>> possible issues related to the proposed solution to the gpio hog
->>> problem.
->>>
->>> changes since RFC:
->>>   - fixed node names in overlays
->>>   - removed unused fields from struct unittest_gpio_dev
->>>   - of_unittest_overlay_gpio() cleaned up comments
->>>   - of_unittest_overlay_gpio() moved saving global values into
->>>     probe_pass_count and chip_request_count more tightly around
->>>     test code expected to trigger changes in the global values
->>>
->>>  drivers/of/unittest-data/Makefile             |   8 +-
->>>  drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +++
->>>  drivers/of/unittest-data/overlay_gpio_02a.dts |  16 ++
->>>  drivers/of/unittest-data/overlay_gpio_02b.dts |  16 ++
->>>  drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +++
->>>  drivers/of/unittest-data/overlay_gpio_04a.dts |  16 ++
->>>  drivers/of/unittest-data/overlay_gpio_04b.dts |  16 ++
->>>  drivers/of/unittest.c                         | 255 ++++++++++++++++++++++++++
->>>  8 files changed, 372 insertions(+), 1 deletion(-)
->>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
->>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
->>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
->>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
->>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
->>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
->>>
->>> diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
->>> index 9b6807065827..009f4045c8e4 100644
->>> --- a/drivers/of/unittest-data/Makefile
->>> +++ b/drivers/of/unittest-data/Makefile
->>> @@ -21,7 +21,13 @@ obj-$(CONFIG_OF_OVERLAY) += overlay.dtb.o \
->>>  			    overlay_bad_add_dup_prop.dtb.o \
->>>  			    overlay_bad_phandle.dtb.o \
->>>  			    overlay_bad_symbol.dtb.o \
->>> -			    overlay_base.dtb.o
->>> +			    overlay_base.dtb.o \
->>> +			    overlay_gpio_01.dtb.o \
->>> +			    overlay_gpio_02a.dtb.o \
->>> +			    overlay_gpio_02b.dtb.o \
->>> +			    overlay_gpio_03.dtb.o \
->>> +			    overlay_gpio_04a.dtb.o \
->>> +			    overlay_gpio_04b.dtb.o
->>>  
->>>  # enable creation of __symbols__ node
->>>  DTC_FLAGS_overlay += -@
->>> diff --git a/drivers/of/unittest-data/overlay_gpio_01.dts b/drivers/of/unittest-data/overlay_gpio_01.dts
->>> new file mode 100644
->>> index 000000000000..f039e8bce3b6
->>> --- /dev/null
->>> +++ b/drivers/of/unittest-data/overlay_gpio_01.dts
->>> @@ -0,0 +1,23 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/dts-v1/;
->>> +/plugin/;
->>> +
->>> +&unittest_test_bus {
->>> +	#address-cells = <1>;
->>> +	#size-cells = <0>;
->>> +	gpio_01 {
->>
->> Missing unit address:
->>
->> gpio@0
-> 
-> But my changelog claimed that I fixed that, isn't that
-> good enough?  :-)
-> 
-> /me pulls big brown paper bag over head.
-> 
-> And the same for all the issues you point out below, for the
-> second patch version in a row.
-> 
-> I'll re-spin on 5.6-rc1 and truly include the fixes.
-> 
-> -Frank
-> 
-> 
->>
->>
->>> +		compatible = "unittest-gpio";
->>> +		reg = <0>;
->>> +		gpio-controller;
->>> +		#gpio-cells = <2>;
->>> +		ngpios = <2>;
->>> +		gpio-line-names = "line-A", "line-B";
->>> +
->>> +		line_b {
->>
->> Don't use '_'.
->>
->> line-b
->>
->>> +			gpio-hog;
->>> +			gpios = <2 0>;
->>> +			input;
->>> +			line-name = "line-B-input";
->>> +		};
->>> +	};
->>> +};
->>> diff --git a/drivers/of/unittest-data/overlay_gpio_02a.dts b/drivers/of/unittest-data/overlay_gpio_02a.dts
->>> new file mode 100644
->>> index 000000000000..cdafab604793
->>> --- /dev/null
->>> +++ b/drivers/of/unittest-data/overlay_gpio_02a.dts
->>> @@ -0,0 +1,16 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/dts-v1/;
->>> +/plugin/;
->>> +
->>> +&unittest_test_bus {
->>> +	#address-cells = <1>;
->>> +	#size-cells = <0>;
->>> +	gpio_02 {
->>
->> gpio@1
->>
->> ...and a few more.
->>
->>> +		compatible = "unittest-gpio";
->>> +		reg = <1>;
->>> +		gpio-controller;
->>> +		#gpio-cells = <2>;
->>> +		ngpios = <2>;
->>> +		gpio-line-names = "line-A", "line-B";
->>> +	};
->>> +};
->>
-> 
-> 
-
