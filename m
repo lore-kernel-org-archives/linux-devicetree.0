@@ -2,184 +2,139 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39309C11D04
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 09:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE921C11D04
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 09:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039E224656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 09:38:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDOc3Zzh"
+	by mail.kernel.org (Postfix) with ESMTP id CB0A52465D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 09:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgBTJiE (ORCPT
+        id S1726837AbgBTJ44 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:38:04 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39825 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgBTJiE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 04:38:04 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c84so1237673wme.4
-        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 01:38:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=91hJOg6mkO0g2GWClGuxRVigkpNiaYP+nKzj4TFaDHY=;
-        b=tDOc3ZzhHCw3tQK9vmGLOg1WdfVWzGtbuuzsRJx/BgZ4qvQJdyNACmmIvCTjmpCd09
-         lNXL2rbbLhR8eksjg4eCL28QEjCo6L9SPVxihR/YS9Uv1M4Ck9Qs/PjF0aBCzYViwZ4c
-         7lqectiY9wU/r7O0Fs7elIkRanR4z9ZLunF6xIZQwKiXgEItBDf36uZLH8iznutginQz
-         5tfUIcBQjA1CyfsuZUTtMtf1ACtjYbdfqOaYsnWaePSPGU55A/4cCwLIZ65JSLjkEN1o
-         epYoZq365UnpMLy8qi1aWvE5MRJEQ93Le+SZKsSKSa2Fu/BHxACCBir43JeMtHIpPt8A
-         ED8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=91hJOg6mkO0g2GWClGuxRVigkpNiaYP+nKzj4TFaDHY=;
-        b=AVQXBpYv3t/Hv26/shQ72GeuDg6KWshGpN2qp/VdwQg4ckkQSQHbuuHdpyrSkdsFvT
-         2qmgZ17NYgRGaPuCM6oxN7AUk5MODNdnH4pvQbl2YVZqWTII8ONv6sL6BdfCyH5r1qfT
-         /rEfpkwTVfWg+jNyKN34MtBSYSvOBaM2Lg9qWrO6Qomx54SHslmqnLcusBweZOrRYHyk
-         3jrS1V/Q6tKjqTHIxDe30JxWH4REZbOpPxQALfMz59GRYEtk1xD+/xswcsu6Z2+nKaKY
-         gQcifLytwvi8NPWGDUIChel6r6HDgY+lq0dz6vyUQFc4NO427bO7zK+vyHKOwitxM0Ej
-         I5PQ==
-X-Gm-Message-State: APjAAAX5+QtejbtyIJ+O2bVr14lkJbqajod72NyzycBtvEDRk9cZbiNU
-        FdPS0h1GH6MoqupqvWX8MRRdiA==
-X-Google-Smtp-Source: APXvYqzoG3nBri3g1BPDtmvxxv+KOfrysBzEib4/n1Zp8hr2ySi6LK5uYqHVZcun9F260Utu4C6kIQ==
-X-Received: by 2002:a1c:bdc6:: with SMTP id n189mr3482954wmf.102.1582191481981;
-        Thu, 20 Feb 2020 01:38:01 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:1d8d:74ba:7173:f47f? ([2a01:e34:ed2f:f020:1d8d:74ba:7173:f47f])
-        by smtp.googlemail.com with ESMTPSA id q124sm3745544wme.2.2020.02.20.01.38.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 01:38:01 -0800 (PST)
-Subject: Re: [PATCH v4 2/3] mfd: stm32: Add defines to be used for clkevent
- purpose
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>, lee.jones@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        tglx@linutronix.de, fabrice.gasnier@st.com
-Cc:     devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200217134546.14562-1-benjamin.gaignard@st.com>
- <20200217134546.14562-3-benjamin.gaignard@st.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
-Date:   Thu, 20 Feb 2020 10:38:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200217134546.14562-3-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 20 Feb 2020 04:56:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:39210 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726771AbgBTJ4z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 04:56:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D16A530E;
+        Thu, 20 Feb 2020 01:56:54 -0800 (PST)
+Received: from e123648.arm.com (unknown [10.37.12.146])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 624A33F703;
+        Thu, 20 Feb 2020 01:56:51 -0800 (PST)
+From:   Lukasz Luba <lukasz.luba@arm.com>
+To:     linux-kernel@vger.kernel.org, kgene@kernel.org, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        b.zolnierkie@samsung.com, lukasz.luba@arm.com,
+        dietmar.eggemann@arm.com
+Subject: [RESEND PATCH v2 0/2] Enable Odroid-XU3/4 to use Energy Model and Energy Aware Scheduler 
+Date:   Thu, 20 Feb 2020 09:56:34 +0000
+Message-Id: <20200220095636.29469-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi all,
 
-Hi Lee,
+This is just a resend, now with proper v2 in the patches subject.
 
-On 17/02/2020 14:45, Benjamin Gaignard wrote:
-> Add defines to be able to enable/clear irq and configure one shot mode.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+The Odroid-XU4/3 is a decent and easy accessible ARM big.LITTLE platform,
+which might be used for research and development.
 
-Are you fine if I pick this patch with the series?
+This small patch set provides possibility to run Energy Aware Scheduler (EAS)
+on Odroid-XU4/3 and experiment with it. 
 
-> ---
-> version 4:
-> - move defines in mfd/stm32-lptimer.h
-> 
->  include/linux/mfd/stm32-lptimer.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/linux/mfd/stm32-lptimer.h b/include/linux/mfd/stm32-lptimer.h
-> index 605f62264825..90b20550c1c8 100644
-> --- a/include/linux/mfd/stm32-lptimer.h
-> +++ b/include/linux/mfd/stm32-lptimer.h
-> @@ -27,10 +27,15 @@
->  #define STM32_LPTIM_CMPOK		BIT(3)
->  
->  /* STM32_LPTIM_ICR - bit fields */
-> +#define STM32_LPTIM_ARRMCF		BIT(1)
->  #define STM32_LPTIM_CMPOKCF_ARROKCF	GENMASK(4, 3)
->  
-> +/* STM32_LPTIM_IER - bit flieds */
-> +#define STM32_LPTIM_ARRMIE	BIT(1)
-> +
->  /* STM32_LPTIM_CR - bit fields */
->  #define STM32_LPTIM_CNTSTRT	BIT(2)
-> +#define STM32_LPTIM_SNGSTRT	BIT(1)
->  #define STM32_LPTIM_ENABLE	BIT(0)
->  
->  /* STM32_LPTIM_CFGR - bit fields */
-> 
+The patch 1/2 provides 'dynamic-power-coefficient' in CPU DT nodes, which is
+then used by the Energy Model (EM).
+The patch 2/2 enables SCHED_MC (which adds another level in scheduling domains)
+and enables EM making EAS possible to run (when schedutil is set as a CPUFreq
+governor).
 
+1. Test results
+
+Two types of different tests have been executed. The first is energy test
+case showing impact on energy consumption of this patch set. It is using a
+synthetic set of tasks (rt-app based). The second is the performance test
+case which is using hackbench (less time to complete is better).
+In both tests schedutil has been used as cpufreq governor. In all tests
+PROVE_LOCKING has not been compiled into the kernels.
+
+1.1 Energy test case
+
+10 iterations of 24 periodic rt-app tasks (16ms period, 10% duty-cycle)
+with energy measurement. The cpufreq governor - schedutil. Unit is Joules.
+The energy is calculated based on hwmon0 and hwmon3 power1_input.
+The goal is to save energy, lower is better.
+
++-----------+-----------------+------------------------+
+|           | Without patches | With patches           |
++-----------+--------+--------+----------------+-------+
+| benchmark |  Mean  | RSD*   | Mean           | RSD*  |
++-----------+--------+--------+----------------+-------+
+| 24 rt-app |  21.56 |  1.37% |  19.85 (-9.2%) | 0.92% |
+|    tasks  |        |        |                |       |
++-----------+--------+--------+----------------+-------+
+
+1.2 Performance test case
+
+10 consecutive iterations of hackbench (hackbench -l 500 -s 4096),
+no delay between two successive executions.
+The cpufreq governor - schedutil. Units in seconds.
+The goal is to see not regression, lower completion time is better.
+
++-----------+-----------------+------------------------+
+|           | Without patches | With patches           |
++-----------+--------+--------+----------------+-------+
+| benchmark | Mean   | RSD*   | Mean           | RSD*  |
++-----------+--------+--------+----------------+-------+
+| hackbench |  8.15  | 2.86%  |  7.95 (-2.5%)  | 0.60% |
++-----------+--------+--------+----------------+-------+
+
+*RSD: Relative Standard Deviation (std dev / mean)
+
+Changes:
+v2:
+- changed dynamic power coeffcient to 90 for A7, which prevents odd
+  behaviour for some low utilisation and at low OPPs;
+  now, the power ratio is ~3x between big an LITTLE core;
+  it's better aligned with [1]; probably due to measurement noise
+  at lower OPPs the values obtained from hwmon0|3 were different
+  from reality; some synthetic workloads showed this differences
+- cleaned commit messages (no measurements in commit message)
+- merged configs into one patch and re-ordered patches
+- provided energy measurmements in the cover letter
+- measurements focused on comparing similar setup - with schedutil governor,
+  to compare apples with apples
+
+The v1 can be found in [2].
+The patch set is on top of Krzysztof's tree, branch 'next/dt' [3] and has 
+been tested on Odroid-XU3 rev0.2 20140529.
+
+Regards,
+Lukasz Luba
+
+[1] https://www.cl.cam.ac.uk/~rdm34/big.LITTLE.pdf
+[2] https://lore.kernel.org/linux-arm-kernel/20200127215453.15144-1-lukasz.luba@arm.com/T/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git/log/?h=next/dt
+
+
+Lukasz Luba (2):
+  ARM: dts: exynos: Add dynamic-power-coefficient to Exynos5422 CPUs
+  ARM: exynos_defconfig: Enable SCHED_MC and ENERGY_MODEL
+
+ arch/arm/boot/dts/exynos5422-cpus.dtsi | 8 ++++++++
+ arch/arm/configs/exynos_defconfig      | 2 ++
+ 2 files changed, 10 insertions(+)
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.17.1
 
