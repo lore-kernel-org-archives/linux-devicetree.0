@@ -2,100 +2,147 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F345C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B031C11D0C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04279208CD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA412206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582230584;
-	bh=fNNsB5ino+La+/VeE+Cq/VqWJOnIIE5Z8PRYl3wsYkE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ex6YlW3Bhqgrb+RdsF6wItrLqOT6CxLH3z6/GJlVzWFkxjmfe9KnHGOYAHReqO9n0
-	 NEP0Bn4asm7tQUlqIAbSC+L1ZagEcTvTqltRaaRIVcE/TiXL4w1UEFNfhJfZ9x7UVa
-	 gGH8NwyGfQ9XqIxdxlQI41x1d3yZ7QEv0Qn3Qiuk=
+	s=default; t=1582230846;
+	bh=F9tVkLvbTtnyCTkxjsPTjMJF2s7fBBIXy1nkIivydXQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MMIluOIKOckU+t65Hr/ZTIDLFmfcBJgstMdg2vWaPL2ScKUaEE1Q2UNX48Nn1n1qQ
+	 iFCM0zAOQgI7Cea6TP7vhMd1KI0YatglInl9I3/ZIHOREZS7hefG1Gm6jydGnq+ArM
+	 WLrHqNRo0Ver3iolivvBctK1sWzD6kiEzYpnDa1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgBTU3n (ORCPT
+        id S1728582AbgBTUeG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:29:43 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40309 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgBTU3n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 15:29:43 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i6so4934810otr.7;
-        Thu, 20 Feb 2020 12:29:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4y11Rw9Quj6ChkrwsaKBH1Q0T5iRPrjR3ZQy3ZsS7xA=;
-        b=FbWe4zUQWBCMiYMQk4Aq7wIpvwLessLCQtKFGEPG0mDAsiB9+V4L+koSYw0YOxcFwz
-         +kIHgw8RmN9eYNsvN3EDYdnwoq5MCfkr3+l9Xhrhh4d58h3jE2J1topti8d/DUZRXz7I
-         tJ6qWdLBbYHJD30VM88Rj8TyVieowdBM4jcIT6SK2RNFBNSJ8EzCSGIcyJVB2Qx/HjhD
-         4LZWxjDeT5w1NDlzBSTu4Df/uz8eGK9t470106G3BoUFq+vfo4rCJ6+xWqNHL1RSpyit
-         nkZ+EJrcS23jdQD1Me28oZbzz7o481t+QRSI/AES1A2UFEk2zg1m7d2FCVZ3mn0wUVAg
-         E76Q==
-X-Gm-Message-State: APjAAAUPaMTgebIYSJKt0fU5MDGb3u2RzxWkt8fvZD7Ql0XUu9mCIYcR
-        mY+tFHiJ4kwj4viMwaQJrA==
-X-Google-Smtp-Source: APXvYqxqNmvtY+8v4lmPFwBx32CjiYTpN6LA3c1fXpwH+kIAQ9BKjTQ21m1UkbGpGxeL1RGLpLDftw==
-X-Received: by 2002:a05:6830:1d7b:: with SMTP id l27mr23581373oti.251.1582230581148;
-        Thu, 20 Feb 2020 12:29:41 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l207sm128716oih.25.2020.02.20.12.29.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:29:40 -0800 (PST)
-Received: (nullmailer pid 7275 invoked by uid 1000);
-        Thu, 20 Feb 2020 20:29:39 -0000
-Date:   Thu, 20 Feb 2020 14:29:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alexandre.torgue@st.com, robh@kernel.org,
-        mark.rutland@arm.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Subject: Re: [PATCH v3] ASoC: dt-bindings: stm32: convert sai to json-schema
-Message-ID: <20200220202939.GA6480@bogus>
-References: <20200219161733.9317-1-olivier.moysan@st.com>
+        Thu, 20 Feb 2020 15:34:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728400AbgBTUeG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:34:06 -0500
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74D1C206F4;
+        Thu, 20 Feb 2020 20:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582230845;
+        bh=F9tVkLvbTtnyCTkxjsPTjMJF2s7fBBIXy1nkIivydXQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Fzojo25+IjDEp2m6iOVojDJPHo1QvMn9XtQv6ZtEtVPZLqeqdjjzoSAD8FkGHAyiX
+         yDkB5RlnIycJb61BjYKdmDrtqZ7RzYGm9stKn5EdX7cdiZmQI808A89TXfm+LXKyHr
+         M8/7HAVdNgbGyMGxU6dZrA8Zun5Q4883PBPRq8so=
+Received: by mail-qv1-f43.google.com with SMTP id ff2so25860qvb.3;
+        Thu, 20 Feb 2020 12:34:05 -0800 (PST)
+X-Gm-Message-State: APjAAAV5+BXWy/nZNO9dqpOksAkjRBzsxxA3M57Ke/KWF9NncR9YiJYK
+        JHaM4YlqP6D8CW4DPPLZCufEhOIcBe6X7hvBIw==
+X-Google-Smtp-Source: APXvYqx+4CwZ75s6qSDd9JgmGRmqpP0rAn6pOTGXJvGi2Vh8/vYAfFs5IK72nq6EJz3ucmI1RAlM48zsSDdlraHZ1YI=
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr27585073qvv.85.1582230844675;
+ Thu, 20 Feb 2020 12:34:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219161733.9317-1-olivier.moysan@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1582149375-25168-1-git-send-email-min.li.xe@renesas.com>
+In-Reply-To: <1582149375-25168-1-git-send-email-min.li.xe@renesas.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 20 Feb 2020 14:33:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKpXRoN6Nn7B4gRyrVwrF-J63dSjBrtDYMgmZ4wXmEnNg@mail.gmail.com>
+Message-ID: <CAL_JsqKpXRoN6Nn7B4gRyrVwrF-J63dSjBrtDYMgmZ4wXmEnNg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: ptp: Add device tree binding for IDT
+ 82P33 based PTP clock
+To:     min.li.xe@renesas.com
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2020 17:17:33 +0100, Olivier Moysan wrote:
-> Convert the STM32 SAI bindings to DT schema format using json-schema.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+On Wed, Feb 19, 2020 at 3:56 PM <min.li.xe@renesas.com> wrote:
+>
+> From: Min Li <min.li.xe@renesas.com>
+>
+> Add device tree binding doc for the PTP clock based on IDT 82P33
+> Synchronization Management Unit (SMU).
+>
+> Changes since v1:
+>  - As suggested by Rob Herring:
+>    1. Drop reg description for i2c
+>    2. Replace i2c@1 with i2c
+>    3. Add addtionalProperties: false
+
+You copied my typo. Should be 'additionalProperties'
+
+'make dt_binding_check' would have caught this for you. Please run it.
+
+With that fixed,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+>
+> Signed-off-by: Min Li <min.li.xe@renesas.com>
 > ---
-> Changes in v2:
-> - use pattern for compatible of child nodes
-> - rework dmas and clocks properties
-> - add "additionalProperties"
-> 
-> Changes in v3:
-> - move clocks properties for st,stm32h7-sai compatible, to 'else' clause
-> ---
->  .../bindings/sound/st,stm32-sai.txt           | 107 ----------
->  .../bindings/sound/st,stm32-sai.yaml          | 193 ++++++++++++++++++
->  2 files changed, 193 insertions(+), 107 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
-> 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/st,stm32-sai.example.dt.yaml: sai@4400a000: 'clock-names', 'clocks' do not match any of the regexes: '^audio-controller@[0-9a-f]+$', 'pinctrl-[0-9]+'
-
-See https://patchwork.ozlabs.org/patch/1240792
-Please check and re-submit.
+>  .../devicetree/bindings/ptp/ptp-idt82p33.yaml      | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml b/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
+> new file mode 100644
+> index 0000000..25806de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/ptp/ptp-idt82p33.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: IDT 82P33 PTP Clock Device Tree Bindings
+> +
+> +description: |
+> +  IDT 82P33XXX Synchronization Management Unit (SMU) based PTP clock
+> +
+> +maintainers:
+> +  - Min Li <min.li.xe@renesas.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - idt,82p33810
+> +      - idt,82p33813
+> +      - idt,82p33814
+> +      - idt,82p33831
+> +      - idt,82p33910
+> +      - idt,82p33913
+> +      - idt,82p33914
+> +      - idt,82p33931
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +addtionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        phc@51 {
+> +            compatible = "idt,82p33810";
+> +            reg = <0x51>;
+> +        };
+> +    };
+> --
+> 2.7.4
+>
