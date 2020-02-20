@@ -2,99 +2,197 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D091C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D65C11D14
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7595324672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC0324673
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpD+X4Qo"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SW1Wt5DP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w8pJuTV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgBTRo4 (ORCPT
+        id S1727233AbgBTRry (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:44:56 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45093 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbgBTRoz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 12:44:55 -0500
-Received: by mail-lj1-f193.google.com with SMTP id e18so5079478ljn.12;
-        Thu, 20 Feb 2020 09:44:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rV1XEtpZtytxn3w6ko1TLTaLmkmnSDIr9qXrTQZTYWE=;
-        b=BpD+X4QoLKjyH6kvt/7+xt+hQM+Ik/EsvrfGiMB2TLbJwOalDuNR5oRZFE+j+0ZbA2
-         Ul1QzmJldYkEI2kww6ZJJjN4xHRpQHpfHZ/fPHAAsoDGfwXn8+AE1Rg+8Sc6gXudomGU
-         n9brCHReIYWA4PgsgfqflEVuZ4GJ6lWaF052D2aNHg/q0u28XvUgp2wdvdojQoPPl1Z9
-         BH/Vw66ZTsAqQBX6bVdWAdXvL+dQA7tIormQDbudqqY8Bi4AXJB1IZshFyY/N7xJNvQs
-         f9BFgyJKpYJxdLacpwYj1tI9DJa7n3YJ6Vnk/y2gAygvGdvJQtunhVU6JRTITS2gpMMG
-         XidQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rV1XEtpZtytxn3w6ko1TLTaLmkmnSDIr9qXrTQZTYWE=;
-        b=r0/nKeTqLnD5ijKZEPov4Xrd5bGeo7JmhUwYdwq/klG30a7GzVYCxhh9t+4voT5b9M
-         vsVCSgCFBj0zciWLCKfL4sABN7CakYTwDfIzHvAZ7HA8vqsSTITm+dZAWTgSnbbL2YBX
-         pdxRFA4RX2vcqCyHeStt4FSi+i9fTl8YwsHjY7rS3N7aryvk/+b2ZcDsY40InHg+kvt+
-         xV1uO+xlhaRjKec8DnpwTYgCOwEOyNYc+TNnB+wV9ETfTTtyVstOPdde8QcJwL0XWP8C
-         +ETbtw/7AtR7mMCFXoryJOEAY1v4W6r97Jn7Y9GdKvLBafXDn0dwvFXDfgBE8o08a4xr
-         KLig==
-X-Gm-Message-State: APjAAAX/e35XaUa/vBwbtRVoCd5SReDxk5zr17mbrnk6SbU1hxprlT77
-        gNidEw5diEZ+VxzaPBKRhKM=
-X-Google-Smtp-Source: APXvYqw/tdEvgcTCzHUJeaGUS3Ai//UQlxfJJSIRykk/sUvdVtE3Xu/NJzzTIgnkC6/5Y8gKf4u+jw==
-X-Received: by 2002:a2e:b044:: with SMTP id d4mr18994708ljl.159.1582220693627;
-        Thu, 20 Feb 2020 09:44:53 -0800 (PST)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id v26sm74501ljh.90.2020.02.20.09.44.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 20 Feb 2020 09:44:52 -0800 (PST)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
-        Oleg Ivanov <balbes-150@yandex.ru>
-Subject: [PATCH v2] arm64: dts: meson-gxbb-vega-s95: fix bluetooth node
-Date:   Thu, 20 Feb 2020 21:44:02 +0400
-Message-Id: <1582220642-14133-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 20 Feb 2020 12:47:54 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:49071 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726959AbgBTRry (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:47:54 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 29CCD21B82;
+        Thu, 20 Feb 2020 12:47:53 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 20 Feb 2020 12:47:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=OzZ5s0/+nPTILqp5qR3suIDlHla
+        J5VfGwJdDzxiCG14=; b=SW1Wt5DPZub7FFigeTeXlQpSM8LZ6gVC61HOI9/kv1d
+        OpiZc95TH2v3BcTOXKnHryH58+qEPeJJXAi4wi6CPiG78w7BiAELymaNs7f44xrp
+        R74/kQwSh3Zlj4e3m8A03b1z3KAbWAX7mFXXKSA3PtHoFjaev/rCcHsfFgf3R/iM
+        jiXTX9y+Xl8oEJas6DXUse6MbdYUpals/GUrAydIEriJfowz20tAEyytMk/GMKa0
+        Te5ripKwZnUrU1xPxz0xrytRqdsMtVQxdKnd+TLXkIlT51/19NEV5nr7YW2smuCx
+        BoD41TLhg5v07UzrCjcDipofT/gzQdn9urEO0GrKuxA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=OzZ5s0
+        /+nPTILqp5qR3suIDlHlaJ5VfGwJdDzxiCG14=; b=w8pJuTV132EgFBMoe2QE65
+        GESqRBWBAlWW4Foj4E3n9InYMPM89MlLcWdK4yLZhOXIJA+jDXYsCUnqLTh8DPU4
+        1QrRCcWhxIi8IHaA14peWCIh1GMgHWiGE3SaCMNSGcodK6sslyUBYq6ynlCdK01V
+        4KyZfW2y8Et1YIYppwvI3Rt6lV3kxg7P+lFb0szFIROkkzkbmBrk2xT8IXff3Sjp
+        vFNM9bTL50KyY39C9l5UEMPh7rOpfELFb7fn5ogPOFGJuR5wASFugDT2bJ7TNCl2
+        vjtKLi1TsLXE/W6glbtOlGA7TEiMG7csuys2yemPhrA5AV685MH5TNLxvohBWsug
+        ==
+X-ME-Sender: <xms:R8ZOXuTRwC9E3WP6cRy9axgkTnlp3ZOD0x0M5lMqyMVUwvv5e4Ve4A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddutdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepfffhvffukfhfgggtuggj
+    sehgtderredttdejnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimh
+    gvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpehigidrihhonecukfhppeeltddr
+    keelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:R8ZOXtFQZvJPU359f3JzCx8yJ0rxAANuubZGxec8WsTLgaFACDKGPw>
+    <xmx:R8ZOXoPuHeGQ0xiCv0zWqfUn406LPPunfI7firkigt6mtM_-ukia_g>
+    <xmx:R8ZOXhlglNRMFqx8QNA--N3h1kPm1O0LAERLbCxP0Jcl8uOo630rgA>
+    <xmx:ScZOXh8wSbiGXZfzswMdCmKY7XJc6tB5KYkH2OpAg6YSIbzHoLkrlA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 550143280060;
+        Thu, 20 Feb 2020 12:47:51 -0500 (EST)
+Date:   Thu, 20 Feb 2020 18:47:49 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 1/2] rtc: sun6i: Make external 32k oscillator optional
+Message-ID: <20200220174749.ih3pcj3oxiwvuurz@gilmour.lan>
+References: <20200213211427.33004-1-jernej.skrabec@siol.net>
+ <20200213211427.33004-2-jernej.skrabec@siol.net>
+ <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
+ <5326350.DvuYhMxLoT@jernej-laptop>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qx7cvp6xg6zw344o"
+Content-Disposition: inline
+In-Reply-To: <5326350.DvuYhMxLoT@jernej-laptop>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This was missed from the previous fix.
 
-Fixes: b07a11dbdfeb ("arm64: dts: meson-gxbb-vega-s95: fix WiFi/BT module support")
+--qx7cvp6xg6zw344o
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Suggested-by: Oleg Ivanov <balbes-150@yandex.ru>
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+On Fri, Feb 14, 2020 at 05:42:13PM +0100, Jernej =C5=A0krabec wrote:
+> Hi Maxime,
+>
+> Dne petek, 14. februar 2020 ob 09:14:43 CET je Maxime Ripard napisal(a):
+> > Hi Jernej,
+> >
+> > Thanks for taking care of this
+> >
+> > On Thu, Feb 13, 2020 at 10:14:26PM +0100, Jernej Skrabec wrote:
+> > > Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix =
+TX6
+> > > (H6) don't have external 32kHz oscillator. Till H6, it didn't really
+> > > matter if external oscillator was enabled because HW detected error a=
+nd
+> > > fall back to internal one. H6 has same functionality but it's the fir=
+st
+> > > SoC which have "auto switch bypass" bit documented and always enabled=
+ in
+> > > driver. This prevents RTC to work correctly if external crystal is not
+> > > present on board. There are other side effects - all peripherals which
+> > > depends on this clock also don't work (HDMI CEC for example).
+> > >
+> > > Make clocks property optional. If it is present, select external
+> > > oscillator. If not, stay on internal.
+> > >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > >
+> > >  drivers/rtc/rtc-sun6i.c | 14 ++++++--------
+> > >  1 file changed, 6 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> > > index 852f5f3b3592..538cf7e19034 100644
+> > > --- a/drivers/rtc/rtc-sun6i.c
+> > > +++ b/drivers/rtc/rtc-sun6i.c
+> > > @@ -250,19 +250,17 @@ static void __init sun6i_rtc_clk_init(struct
+> > > device_node *node,>
+> > >  		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> > >
+> > >  	}
+> > >
+> > > -	/* Switch to the external, more precise, oscillator */
+> > > -	reg |=3D SUN6I_LOSC_CTRL_EXT_OSC;
+> > > -	if (rtc->data->has_losc_en)
+> > > -		reg |=3D SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> > > +	/* Switch to the external, more precise, oscillator, if present */
+> > > +	if (of_get_property(node, "clocks", NULL)) {
+> > > +		reg |=3D SUN6I_LOSC_CTRL_EXT_OSC;
+> > > +		if (rtc->data->has_losc_en)
+> > > +			reg |=3D SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> > > +	}
+> > >
+> > >  	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> > >
+> > >  	/* Yes, I know, this is ugly. */
+> > >  	sun6i_rtc =3D rtc;
+> > >
+> > > -	/* Deal with old DTs */
+> > > -	if (!of_get_property(node, "clocks", NULL))
+> > > -		goto err;
+> > > -
+> >
+> > Doesn't that prevent the parents to be properly set if there's an
+> > external crystal?
+>
+> No, why?
+>
+> Check these two clk_summary:
+> http://ix.io/2bHY Tanix TX6 (no external crystal)
+> http://ix.io/2bI2 OrangePi 3 (external crystal present)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 5eab3df..45cb836 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -245,6 +245,9 @@
- 	bluetooth {
- 		compatible = "brcm,bcm43438-bt";
- 		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
-+		clocks = <&wifi32k>;
-+		clock-names = "lpo";
- 	};
- };
- 
--- 
-2.7.4
+I was concerned about the "other" parent. In the case where you don't
+have a clocks property (so the check that you are removing), the code
+then registers a clock with two parents: the one that we create (the
+internal oscillator) and the one coming from the clocks property.
 
+clk_summary only shows the current parent, which is going to be right
+with your patch, but in the case where you have no clocks property,
+you still (attempts to) register two parents, the second one being
+non-functional.
+
+Further looking at it, we might be good because we allocate an array
+of two clocks, but only register of_clk_get_parent_count(node) + 1
+clocks, so 1 if clocks is missing.
+
+Still, I think this should be more obvious, through a comment or
+shuffling a bit the parent registration maybe?
+
+Maxime
+
+--qx7cvp6xg6zw344o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXk7GRQAKCRDj7w1vZxhR
+xQesAQC0dLTkjQRPv7nN8RoGvwkfQKD3MlJW0DS82ULs76MWzQD/XsYEwCgNWukt
+Jfxdu03CMK7a7R+nH2HNRolTJSWwpgQ=
+=5PFt
+-----END PGP SIGNATURE-----
+
+--qx7cvp6xg6zw344o--
