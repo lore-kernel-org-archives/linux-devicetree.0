@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAEFC11D19
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D0DC11D1C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C78208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32762208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="uPKMxgVs"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="EBtPW47J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgBTS2D (ORCPT
+        id S1728400AbgBTSd3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:28:03 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:38840 "EHLO
+        Thu, 20 Feb 2020 13:33:29 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:43970 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbgBTS2D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 13:28:03 -0500
+        with ESMTP id S1726959AbgBTSd3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 13:33:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582223280; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1582223606; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qS+C2RRxc94REY8Frsza+FKQ4h+JmTy5BStexGqo8Yg=;
-        b=uPKMxgVss3t86TCKsvDMgLko4tvwsWaK/LxQc7CuzlTDnWwKsiH6z6k9nMpW9pMdpDharu
-        p15+IRZm/5OieagBJVzLswVcXvTj64/MfxsolDMl7tCLyCIWUU18HBc7lN6fG1mtnCNBRV
-        hlWhFe02jsmCBmoTpQ5ZNxLgIMUMeYY=
-Date:   Thu, 20 Feb 2020 15:27:35 -0300
+        bh=+QCaP4eRw7Wm0jz0Gb7txDdWwktRYZfcHIYjEbdwCHA=;
+        b=EBtPW47JvELJNe1b30hNYJu+ngAM6b3D+s9f1YdkrY3lRYFpsMbLEiU2z5SYab45GdiMxv
+        sjkRNjL5ZhnIHd1SwHeeVO3Yt9FR7wa8KwW3MAc24apmu6nqHEsFYCd2LqNMb2ewe6L7rH
+        /v2kja1yYfxKRbPi4QS1uz32G20EXzw=
+Date:   Thu, 20 Feb 2020 15:33:04 -0300
 From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v6 2/7] MIPS: JZ4780: Introduce SMP support.
+Subject: Re: [PATCH v6 4/7] clocksource: Ingenic: Add high resolution timer
+ support for SMP.
 To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
         <zhouyanjie@wanyeetech.com>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -45,10 +46,10 @@ Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         krzk@kernel.org, ebiederm@xmission.com, miquel.raynal@bootlin.com,
         keescook@chromium.org, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com, dongsheng.qiu@ingenic.com
-Message-Id: <1582223255.3.1@crapouillou.net>
-In-Reply-To: <1582215889-113034-4-git-send-email-zhouyanjie@wanyeetech.com>
+Message-Id: <1582223584.3.2@crapouillou.net>
+In-Reply-To: <1582215889-113034-6-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1582215889-113034-4-git-send-email-zhouyanjie@wanyeetech.com>
+        <1582215889-113034-6-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
@@ -63,627 +64,340 @@ Hi Zhou,
 Le ven., f=C3=A9vr. 21, 2020 at 00:24, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Ya=
 njie)=20
 <zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Forward port smp support from kernel 3.18.3 of CI20_linux
-> to upstream kernel 5.6.
+> Enable clock event handling on per CPU core basis.
+> Make sure that interrupts raised on the first core execute
+> event handlers on the correct CPU core.
 >=20
 > Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
 > Tested-by: Paul Boddie <paul@boddie.org.uk>
 > Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
 eetech.com>
-> Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
 >=20
 > Notes:
 >     v1->v2:
->     1.Remove unnecessary "plat_irq_dispatch(void)" in irq-ingenic.c.
->     2.Add a timeout check for "jz4780_boot_secondary()" to avoid a=20
-> dead loop.
->     3.Replace hard code in smp.c with macro.
+>     1.Adjust function naming to make it more reasonable.
+>     2.Replace function smp_call_function_single() with
+>       smp_call_function_single_async() in order to resolve
+>       the warning below:
+>=20
+>     [    0.350942] smp: Brought up 1 node, 2 CPUs
+>     [    0.365497] ------------[ cut here ]------------
+>     [    0.365522] WARNING: CPU: 0 PID: 1 at kernel/smp.c:300=20
+> smp_call_function_single+0x110/0x200
+>     [    0.365533] CPU: 0 PID: 1 Comm: swapper/0 Not tainted=20
+> 5.5.0-rc1+ #5
+>     [    0.365537] Stack : 00000000 59c73bcd 00000037 80074e80=20
+> 80000000 80670000 805a0000 80620590
+>     [    0.365557]         8065ce38 8fc0dc8c 806d0000 00000000=20
+> 80670000 00000001 8fc0dc20 59c73bcd
+>     [    0.365574]         00000000 00000000 806f0000 80670000=20
+> 00000000 806dab00 00000000 2d302e35
+>     [    0.365591]         203a6d6d 806e0000 806e0000 70617773=20
+> 80670000 00000000 00000000 00000009
+>     [    0.365610]         00000000 8fc94e20 8fc0de30 80690000=20
+> 00000018 803592dc 00000000 806d0000
+>     [    0.365627]         ...
+>     [    0.365634] Call Trace:
+>     [    0.365647] [<8001b9a0>] show_stack+0x6c/0x12c
+>     [    0.365663] [<804aed20>] dump_stack+0x98/0xc8
+>     [    0.365673] [<8003044c>] __warn+0xc4/0xe8
+>     [    0.365682] [<800304f4>] warn_slowpath_fmt+0x84/0xb8
+>     [    0.365690] [<800a886c>] smp_call_function_single+0x110/0x200
+>     [    0.365703] ---[ end trace 5785856ca39c79d5 ]---
+>     [    0.365557]         8065ce38 8fc0dc8c 806d0000 00000000=20
+> 80670000 00000001 8fc0dc20 59c73bcd
+>     [    0.365574]         00000000 00000000 806f0000 80670000=20
+> 00000000 806dab00 00000000 2d302e35
+>     [    0.365591]         203a6d6d 806e0000 806e0000 70617773=20
+> 80670000 00000000 00000000 00000009
+>     [    0.365610]         00000000 8fc94e20 8fc0de30 80690000=20
+> 00000018 803592dc 00000000 806d0000
+>     [    0.365627]         ...
+>     [    0.365634] Call Trace:
+>     [    0.365647] [<8001b9a0>] show_stack+0x6c/0x12c
+>     [    0.365663] [<804aed20>] dump_stack+0x98/0xc8
+>     [    0.365673] [<8003044c>] __warn+0xc4/0xe8
+>     [    0.365682] [<800304f4>] warn_slowpath_fmt+0x84/0xb8
+>     [    0.365690] [<800a886c>] smp_call_function_single+0x110/0x200
+>     [    0.365703] ---[ end trace 5785856ca39c79d5 ]---
 >=20
 >     v2->v3:
->     1.Remove unnecessary "extern void (*r4k_blast_dcache)(void)" in=20
-> smp.c.
->     2.Use "for_each_of_cpu_node" instead "for_each_compatible_node"=20
-> in smp.c.
->     3.Use "of_cpu_node_to_id" instead "of_property_read_u32_index" in=20
-> smp.c.
->     4.Move LCR related operations to jz4780-cgu.c.
+>     No Change.
 >=20
 >     v3->v4:
 >     Rebase on top of kernel 5.6-rc1.
 >=20
 >     v4->v5:
->     1.Splitting changes involving "jz4780-cgu.c" into separate commit.
->     2.Use "request_irq()" replace "setup_irq()".
+>     Move the check for (evt->event_handler) from=20
+> "ingenic_per_cpu_event_handler"
+>     to "ingenic_tcu_cevt_cb".
 >=20
 >     v5->v6:
->     In order to have a kernel that works on multiple SoCs at the same
->     time, use "IS_ENABLED()" replace "#ifdef".
+>     No change.
 >=20
->  arch/mips/include/asm/mach-jz4740/smp.h |  81 ++++++++++
->  arch/mips/jz4740/Kconfig                |   3 +
->  arch/mips/jz4740/Makefile               |   5 +
->  arch/mips/jz4740/prom.c                 |   4 +
->  arch/mips/jz4740/smp-entry.S            |  57 +++++++
->  arch/mips/jz4740/smp.c                  | 254=20
-> ++++++++++++++++++++++++++++++++
->  arch/mips/kernel/idle.c                 |  36 ++++-
->  7 files changed, 439 insertions(+), 1 deletion(-)
->  create mode 100644 arch/mips/include/asm/mach-jz4740/smp.h
->  create mode 100644 arch/mips/jz4740/smp-entry.S
->  create mode 100644 arch/mips/jz4740/smp.c
+>  drivers/clocksource/ingenic-timer.c | 113=20
+> +++++++++++++++++++++++++++++-------
+>  1 file changed, 91 insertions(+), 22 deletions(-)
 >=20
-> diff --git a/arch/mips/include/asm/mach-jz4740/smp.h=20
-> b/arch/mips/include/asm/mach-jz4740/smp.h
-> new file mode 100644
-> index 00000000..af3c21b
-> --- /dev/null
-> +++ b/arch/mips/include/asm/mach-jz4740/smp.h
-> @@ -0,0 +1,81 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + *  Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
-> + *  JZ4780 SMP definitions
-> + */
-> +
-> +#ifndef __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
-> +#define __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
-> +
-> +#define read_c0_corectrl()		__read_32bit_c0_register($12, 2)
-> +#define write_c0_corectrl(val)		__write_32bit_c0_register($12, 2,=20
-> val)
-> +
-> +#define read_c0_corestatus()		__read_32bit_c0_register($12, 3)
-> +#define write_c0_corestatus(val)	__write_32bit_c0_register($12, 3,=20
-> val)
-> +
-> +#define read_c0_reim()			__read_32bit_c0_register($12, 4)
-> +#define write_c0_reim(val)		__write_32bit_c0_register($12, 4, val)
-> +
-> +#define read_c0_mailbox0()		__read_32bit_c0_register($20, 0)
-> +#define write_c0_mailbox0(val)		__write_32bit_c0_register($20, 0,=20
-> val)
-> +
-> +#define read_c0_mailbox1()		__read_32bit_c0_register($20, 1)
-> +#define write_c0_mailbox1(val)		__write_32bit_c0_register($20, 1,=20
-> val)
-> +
-> +#define smp_clr_pending(mask) do {		\
-> +		unsigned int stat;		\
-> +		stat =3D read_c0_corestatus();	\
-> +		stat &=3D ~((mask) & 0xff);	\
-> +		write_c0_corestatus(stat);	\
-> +	} while (0)
-> +
-> +/*
-> + * Core Control register
-> + */
-> +#define CORECTRL_SLEEP1M_SHIFT	17
-> +#define CORECTRL_SLEEP1M	(_ULCAST_(0x1) << CORECTRL_SLEEP1M_SHIFT)
-> +#define CORECTRL_SLEEP0M_SHIFT	16
-> +#define CORECTRL_SLEEP0M	(_ULCAST_(0x1) << CORECTRL_SLEEP0M_SHIFT)
-> +#define CORECTRL_RPC1_SHIFT	9
-> +#define CORECTRL_RPC1		(_ULCAST_(0x1) << CORECTRL_RPC1_SHIFT)
-> +#define CORECTRL_RPC0_SHIFT	8
-> +#define CORECTRL_RPC0		(_ULCAST_(0x1) << CORECTRL_RPC0_SHIFT)
-> +#define CORECTRL_SWRST1_SHIFT	1
-> +#define CORECTRL_SWRST1		(_ULCAST_(0x1) << CORECTRL_SWRST1_SHIFT)
-> +#define CORECTRL_SWRST0_SHIFT	0
-> +#define CORECTRL_SWRST0		(_ULCAST_(0x1) << CORECTRL_SWRST0_SHIFT)
-> +
-> +/*
-> + * Core Status register
-> + */
-> +#define CORESTATUS_SLEEP1_SHIFT	17
-> +#define CORESTATUS_SLEEP1	(_ULCAST_(0x1) << CORESTATUS_SLEEP1_SHIFT)
-> +#define CORESTATUS_SLEEP0_SHIFT	16
-> +#define CORESTATUS_SLEEP0	(_ULCAST_(0x1) << CORESTATUS_SLEEP0_SHIFT)
-> +#define CORESTATUS_IRQ1P_SHIFT	9
-> +#define CORESTATUS_IRQ1P	(_ULCAST_(0x1) << CORESTATUS_IRQ1P_SHIFT)
-> +#define CORESTATUS_IRQ0P_SHIFT	8
-> +#define CORESTATUS_IRQ0P	(_ULCAST_(0x1) << CORESTATUS_IRQ8P_SHIFT)
-> +#define CORESTATUS_MIRQ1P_SHIFT	1
-> +#define CORESTATUS_MIRQ1P	(_ULCAST_(0x1) << CORESTATUS_MIRQ1P_SHIFT)
-> +#define CORESTATUS_MIRQ0P_SHIFT	0
-> +#define CORESTATUS_MIRQ0P	(_ULCAST_(0x1) << CORESTATUS_MIRQ0P_SHIFT)
-> +
-> +/*
-> + * Reset Entry & IRQ Mask register
-> + */
-> +#define REIM_ENTRY_SHIFT	16
-> +#define REIM_ENTRY		(_ULCAST_(0xffff) << REIM_ENTRY_SHIFT)
-> +#define REIM_IRQ1M_SHIFT	9
-> +#define REIM_IRQ1M		(_ULCAST_(0x1) << REIM_IRQ1M_SHIFT)
-> +#define REIM_IRQ0M_SHIFT	8
-> +#define REIM_IRQ0M		(_ULCAST_(0x1) << REIM_IRQ0M_SHIFT)
-> +#define REIM_MBOXIRQ1M_SHIFT	1
-> +#define REIM_MBOXIRQ1M		(_ULCAST_(0x1) << REIM_MBOXIRQ1M_SHIFT)
-> +#define REIM_MBOXIRQ0M_SHIFT	0
-> +#define REIM_MBOXIRQ0M		(_ULCAST_(0x1) << REIM_MBOXIRQ0M_SHIFT)
-> +
-> +extern void jz4780_smp_init(void);
-> +extern void jz4780_secondary_cpu_entry(void);
-> +
-> +#endif /* __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__ */
-> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-> index 412d2fa..0239597 100644
-> --- a/arch/mips/jz4740/Kconfig
-> +++ b/arch/mips/jz4740/Kconfig
-> @@ -34,9 +34,12 @@ config MACH_JZ4770
+> diff --git a/drivers/clocksource/ingenic-timer.c=20
+> b/drivers/clocksource/ingenic-timer.c
+> index 4bbdb3d..e396326 100644
+> --- a/drivers/clocksource/ingenic-timer.c
+> +++ b/drivers/clocksource/ingenic-timer.c
+> @@ -1,7 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * JZ47xx SoCs TCU IRQ driver
+> + * XBurst SoCs TCU IRQ driver
+>   * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
+> + * Copyright (C) 2020 =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=20
+> <zhouyanjie@wanyeetech.com>
+>   */
 >=20
->  config MACH_JZ4780
->  	bool
-> +	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
->  	select MIPS_CPU_SCACHE
-> +	select NR_CPUS_DEFAULT_2
->  	select SYS_HAS_CPU_MIPS32_R2
->  	select SYS_SUPPORTS_HIGHMEM
-> +	select SYS_SUPPORTS_SMP
+>  #include <linux/bitops.h>
+> @@ -21,18 +22,23 @@
 >=20
->  config MACH_X1000
->  	bool
-> diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
-> index 6de14c0..0a0f024 100644
-> --- a/arch/mips/jz4740/Makefile
-> +++ b/arch/mips/jz4740/Makefile
-> @@ -12,3 +12,8 @@ CFLAGS_setup.o =3D=20
-> -I$(src)/../../../scripts/dtc/libfdt
->  # PM support
+>  #include <dt-bindings/clock/ingenic,tcu.h>
 >=20
->  obj-$(CONFIG_PM) +=3D pm.o
+> +static DEFINE_PER_CPU(call_single_data_t, ingenic_cevt_csd);
 > +
-> +# SMP support
-> +
-> +obj-$(CONFIG_SMP) +=3D smp.o
-> +obj-$(CONFIG_SMP) +=3D smp-entry.o
-> diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
-> index ff4555c..026259e 100644
-> --- a/arch/mips/jz4740/prom.c
-> +++ b/arch/mips/jz4740/prom.c
-> @@ -8,10 +8,14 @@
+>  struct ingenic_soc_info {
+>  	unsigned int num_channels;
+>  };
 >=20
->  #include <asm/bootinfo.h>
->  #include <asm/fw/fw.h>
-> +#include <asm/mach-jz4740/smp.h>
+>  struct ingenic_tcu {
+>  	struct regmap *map;
+> +	struct device_node *np;
+>  	struct clk *timer_clk, *cs_clk;
+> +	unsigned int timer_local[NR_CPUS];
+>  	unsigned int timer_channel, cs_channel;
+>  	struct clock_event_device cevt;
+>  	struct clocksource cs;
+> -	char name[4];
+> +	char name[8];
+>  	unsigned long pwm_channels_mask;
+> +	int cpu;
+>  };
 >=20
->  void __init prom_init(void)
->  {
->  	fw_init_cmdline();
-> +
-> +	if (IS_ENABLED(CONFIG_MACH_JZ4780) && IS_ENABLED(CONFIG_SMP))
-> +		jz4780_smp_init();
-
-I guess it's OK for a first version, but SMP should really be decoupled=20
-from the SoC version. A SMP-enabled kernel should be able to also=20
-support non-SMP SoCs.
-
-
+>  static struct ingenic_tcu *ingenic_tcu;
+> @@ -81,6 +87,24 @@ static int ingenic_tcu_cevt_set_next(unsigned long=20
+> next,
+>  	return 0;
 >  }
 >=20
->  void __init prom_free_prom_memory(void)
-> diff --git a/arch/mips/jz4740/smp-entry.S=20
-> b/arch/mips/jz4740/smp-entry.S
-> new file mode 100644
-> index 00000000..20049a3
-> --- /dev/null
-> +++ b/arch/mips/jz4740/smp-entry.S
-> @@ -0,0 +1,57 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + *  Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
-> + *  JZ4780 SMP entry point
-> + */
-> +
-> +#include <asm/addrspace.h>
-> +#include <asm/asm.h>
-> +#include <asm/asmmacro.h>
-> +#include <asm/cacheops.h>
-> +#include <asm/mipsregs.h>
-> +
-> +#define CACHE_SIZE (32 * 1024)
-> +#define CACHE_LINESIZE 32
-> +
-> +.extern jz4780_cpu_entry_sp
-> +.extern jz4780_cpu_entry_gp
-> +
-> +.section .text.smp-entry
-> +.balign 0x10000
-> +.set noreorder
-> +LEAF(jz4780_secondary_cpu_entry)
-> +	mtc0	zero, CP0_CAUSE
-> +
-> +	li	t0, ST0_CU0
-> +	mtc0	t0, CP0_STATUS
-> +
-> +	/* cache setup */
-> +	li	t0, KSEG0
-> +	ori	t1, t0, CACHE_SIZE
-> +	mtc0	zero, CP0_TAGLO, 0
-> +1:	cache	Index_Store_Tag_I, 0(t0)
-> +	cache	Index_Store_Tag_D, 0(t0)
-> +	bne	t0, t1, 1b
-> +	 addiu	t0, t0, CACHE_LINESIZE
-> +
-> +	/* kseg0 cache attribute */
-> +	mfc0	t0, CP0_CONFIG, 0
-> +	ori	t0, t0, CONF_CM_CACHABLE_NONCOHERENT
-> +	mtc0	t0, CP0_CONFIG, 0
-> +
-> +	/* pagemask */
-> +	mtc0	zero, CP0_PAGEMASK, 0
-> +
-> +	/* retrieve sp */
-> +	la	t0, jz4780_cpu_entry_sp
-> +	lw	sp, 0(t0)
-> +
-> +	/* retrieve gp */
-> +	la	t0, jz4780_cpu_entry_gp
-> +	lw	gp, 0(t0)
-> +
-> +	/* jump to the kernel in kseg0 */
-> +	la	t0, smp_bootstrap
-> +	jr	t0
-> +	 nop
-> +	END(jz4780_secondary_cpu_entry)
-> diff --git a/arch/mips/jz4740/smp.c b/arch/mips/jz4740/smp.c
-> new file mode 100644
-> index 00000000..5fe0cf3
-> --- /dev/null
-> +++ b/arch/mips/jz4740/smp.c
-> @@ -0,0 +1,254 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
-> + *  JZ4780 SMP
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of.h>
-> +#include <linux/sched.h>
-> +#include <linux/sched/task_stack.h>
-> +#include <linux/smp.h>
-> +#include <linux/tick.h>
-> +#include <asm/mach-jz4740/smp.h>
-> +#include <asm/smp-ops.h>
-> +
-> +static struct clk *cpu_clock_gates[CONFIG_NR_CPUS] =3D { NULL };
-> +
-> +u32 jz4780_cpu_entry_sp;
-> +u32 jz4780_cpu_entry_gp;
-> +
-> +static struct cpumask cpu_running;
-
-This is not used anywhere, is it?
-
-> +
-> +static DEFINE_SPINLOCK(smp_lock);
-> +
-> +static irqreturn_t mbox_handler(int irq, void *dev_id)
+> +static void ingenic_per_cpu_event_handler(void *info)
 > +{
-> +	int cpu =3D smp_processor_id();
-> +	u32 action, status;
+> +	struct clock_event_device *cevt =3D (struct clock_event_device *)=20
+> info;
 > +
-> +	spin_lock(&smp_lock);
-> +
-> +	switch (cpu) {
-> +	case 0:
-> +		action =3D read_c0_mailbox0();
-> +		write_c0_mailbox0(0);
-> +		break;
-> +	case 1:
-> +		action =3D read_c0_mailbox1();
-> +		write_c0_mailbox1(0);
-> +		break;
-> +	default:
-> +		panic("unhandled cpu %d!", cpu);
-
-XBurst has 4 mailboxes, maybe add them here?
-
-> +	}
-> +
-> +	/* clear pending mailbox interrupt */
-> +	status =3D read_c0_corestatus();
-> +	status &=3D ~(CORESTATUS_MIRQ0P << cpu);
-> +	write_c0_corestatus(status);
-> +
-> +	spin_unlock(&smp_lock);
-> +
-> +	if (action & SMP_RESCHEDULE_YOURSELF)
-> +		scheduler_ipi();
-> +	if (action & SMP_CALL_FUNCTION)
-> +		generic_smp_call_function_interrupt();
-> +
-> +	return IRQ_HANDLED;
+> +	cevt->event_handler(cevt);
 > +}
 > +
-> +static void jz4780_smp_setup(void)
+> +static void ingenic_tcu_per_cpu_cb(struct clock_event_device *evt)
 > +{
-> +	u32 addr, reim;
-> +	int cpu;
+> +	struct ingenic_tcu *tcu =3D to_ingenic_tcu(evt);
+> +	call_single_data_t *csd;
 > +
-> +	reim =3D read_c0_reim();
-> +
-> +	for (cpu =3D 0; cpu < NR_CPUS; cpu++) {
-> +		__cpu_number_map[cpu] =3D cpu;
-> +		__cpu_logical_map[cpu] =3D cpu;
-> +		set_cpu_possible(cpu, true);
-> +	}
-> +
-> +	/* mask mailbox interrupts for this core */
-> +	reim &=3D ~REIM_MBOXIRQ0M;
-> +	write_c0_reim(reim);
-> +
-> +	/* clear mailboxes & pending mailbox IRQs */
-> +	write_c0_mailbox0(0);
-> +	write_c0_mailbox1(0);
-> +	write_c0_corestatus(0);
-> +
-> +	/* set reset entry point */
-> +	addr =3D KSEG1ADDR((u32)&jz4780_secondary_cpu_entry);
-> +	WARN_ON(addr & ~REIM_ENTRY);
-> +	reim &=3D ~REIM_ENTRY;
-> +	reim |=3D addr & REIM_ENTRY;
-> +
-> +	/* unmask mailbox interrupts for this core */
-> +	reim |=3D REIM_MBOXIRQ0M;
-> +	write_c0_reim(reim);
-> +	set_c0_status(STATUSF_IP3);
-> +	irq_enable_hazard();
-> +
-> +	cpumask_set_cpu(cpu, &cpu_running);
+> +	csd =3D &per_cpu(ingenic_cevt_csd, tcu->cpu);
+> +	csd->info =3D (void *) evt;
+> +	csd->func =3D ingenic_per_cpu_event_handler;
+> +	smp_call_function_single_async(tcu->cpu, csd);
 > +}
 > +
-> +static void jz4780_smp_prepare_cpus(unsigned int max_cpus)
+>  static irqreturn_t ingenic_tcu_cevt_cb(int irq, void *dev_id)
+>  {
+>  	struct clock_event_device *evt =3D dev_id;
+> @@ -89,7 +113,7 @@ static irqreturn_t ingenic_tcu_cevt_cb(int irq,=20
+> void *dev_id)
+>  	regmap_write(tcu->map, TCU_REG_TECR, BIT(tcu->timer_channel));
+>=20
+>  	if (evt->event_handler)
+> -		evt->event_handler(evt);
+> +		ingenic_tcu_per_cpu_cb(evt);
+>=20
+>  	return IRQ_HANDLED;
+>  }
+> @@ -105,14 +129,21 @@ static struct clk * __init=20
+> ingenic_tcu_get_clock(struct device_node *np, int id)
+>  	return of_clk_get_from_provider(&args);
+>  }
+>=20
+> -static int __init ingenic_tcu_timer_init(struct device_node *np,
+> -					 struct ingenic_tcu *tcu)
+> +static int ingenic_tcu_setup_per_cpu_cevt(struct device_node *np,
+> +				     unsigned int channel)
+>  {
+> -	unsigned int timer_virq, channel =3D tcu->timer_channel;
+> +	unsigned int timer_virq;
+>  	struct irq_domain *domain;
+> +	struct ingenic_tcu *tcu;
+>  	unsigned long rate;
+>  	int err;
+>=20
+> +	tcu =3D kzalloc(sizeof(*tcu), GFP_KERNEL);
+> +	if (!tcu)
+> +		return -ENOMEM;
+> +
+> +	tcu->map =3D ingenic_tcu->map;
+> +
+>  	tcu->timer_clk =3D ingenic_tcu_get_clock(np, channel);
+>  	if (IS_ERR(tcu->timer_clk))
+>  		return PTR_ERR(tcu->timer_clk);
+> @@ -139,13 +170,15 @@ static int __init ingenic_tcu_timer_init(struct=20
+> device_node *np,
+>  		goto err_clk_disable;
+>  	}
+>=20
+> -	snprintf(tcu->name, sizeof(tcu->name), "TCU");
+> +	snprintf(tcu->name, sizeof(tcu->name), "TCU%u", channel);
+>=20
+>  	err =3D request_irq(timer_virq, ingenic_tcu_cevt_cb, IRQF_TIMER,
+>  			  tcu->name, &tcu->cevt);
+>  	if (err)
+>  		goto err_irq_dispose_mapping;
+>=20
+> +	tcu->cpu =3D smp_processor_id();
+> +	tcu->timer_channel =3D channel;
+>  	tcu->cevt.cpumask =3D cpumask_of(smp_processor_id());
+>  	tcu->cevt.features =3D CLOCK_EVT_FEAT_ONESHOT;
+>  	tcu->cevt.name =3D tcu->name;
+> @@ -166,6 +199,25 @@ static int __init ingenic_tcu_timer_init(struct=20
+> device_node *np,
+>  	return err;
+>  }
+>=20
+> +static int ingenic_tcu_setup_cevt(unsigned int cpu)
 > +{
-> +	struct device_node *cpu_node;
-> +	unsigned cpu, ctrl;
-> +	int err;
+> +	int ret;
 > +
-> +	/* setup the mailbox IRQ */
-> +	err =3D request_irq(MIPS_CPU_IRQ_BASE + 3, mbox_handler,
-> +			IRQF_PERCPU | IRQF_NO_THREAD, "core mailbox", NULL);
-> +	if (err)
-> +		pr_err("request_irq() on core mailbox failed\n");
-> +
-> +	init_cpu_present(cpu_possible_mask);
-
-jz4780_smp_setup() marks CPUs 0..NR_CPUS as possible, NR_CPUS being a=20
-config option that can be anywhere between 2 and 256. This basically=20
-says that up to 256 CPUs are actually present.
-
-> +
-> +	ctrl =3D read_c0_corectrl();
-> +
-> +	for (cpu =3D 0; cpu < max_cpus; cpu++) {
-> +		/* use reset entry point from REIM register */
-> +		ctrl |=3D CORECTRL_RPC0 << cpu;
-
-max_cpus is just NR_CPUS, so this does not work. You should move this=20
-in the "for_each_of_cpu_node" below.
-
-> +	}
-> +
-> +	for_each_of_cpu_node(cpu_node) {
-> +		cpu =3D of_cpu_node_to_id(cpu_node);
-> +		if (cpu < 0) {
-> +			pr_err("Failed to read index of %s\n",
-> +			       cpu_node->full_name);
-> +			continue;
-> +		}
-> +
-> +		cpu_clock_gates[cpu] =3D of_clk_get(cpu_node, 0);
-> +		if (IS_ERR(cpu_clock_gates[cpu])) {
-> +			cpu_clock_gates[cpu] =3D NULL;
-> +			continue;
-> +		}
-> +
-> +		err =3D clk_prepare(cpu_clock_gates[cpu]);
-> +		if (err)
-> +			pr_err("Failed to prepare CPU clock gate\n");
-> +	}
-> +
-> +	write_c0_corectrl(ctrl);
-> +}
-> +
-> +static int jz4780_boot_secondary(int cpu, struct task_struct *idle)
-> +{
-> +	unsigned long flags;
-> +	u32 ctrl;
-> +
-> +	spin_lock_irqsave(&smp_lock, flags);
-> +
-> +	/* ensure the core is in reset */
-> +	ctrl =3D read_c0_corectrl();
-> +	ctrl |=3D CORECTRL_SWRST0 << cpu;
-> +	write_c0_corectrl(ctrl);
-> +
-> +	/* ungate core clock */
-> +	if (cpu_clock_gates[cpu])
-> +		clk_enable(cpu_clock_gates[cpu]);
-> +
-> +	/* set entry sp/gp register values */
-> +	jz4780_cpu_entry_sp =3D __KSTK_TOS(idle);
-> +	jz4780_cpu_entry_gp =3D (u32)task_thread_info(idle);
-> +	smp_wmb();
-> +
-> +	/* take the core out of reset */
-> +	ctrl &=3D ~(CORECTRL_SWRST0 << cpu);
-> +	write_c0_corectrl(ctrl);
-> +
-> +	cpumask_set_cpu(cpu, &cpu_running);
-> +
-> +	spin_unlock_irqrestore(&smp_lock, flags);
+> +	ret =3D ingenic_tcu_setup_per_cpu_cevt(ingenic_tcu->np,
+> +						ingenic_tcu->timer_local[cpu]);
+> +	if (ret)
+> +		goto err_tcu_clocksource_cleanup;
 > +
 > +	return 0;
+> +
+> +err_tcu_clocksource_cleanup:
+> +	clocksource_unregister(&ingenic_tcu->cs);
+> +	clk_disable_unprepare(ingenic_tcu->cs_clk);
+> +	clk_put(ingenic_tcu->cs_clk);
+> +	kfree(ingenic_tcu);
+> +	return ret;
 > +}
 > +
-> +static void jz4780_init_secondary(void)
-> +{
-> +}
-> +
-> +static void jz4780_smp_finish(void)
-> +{
-> +	u32 reim;
-> +
-> +	spin_lock(&smp_lock);
-> +
-> +	/* unmask mailbox interrupts for this core */
-> +	reim =3D read_c0_reim();
-> +	reim |=3D REIM_MBOXIRQ0M << smp_processor_id();
-> +	write_c0_reim(reim);
-> +
-> +	spin_unlock(&smp_lock);
-> +
-> +	/* unmask interrupts for this core */
-> +	change_c0_status(ST0_IM, STATUSF_IP3 | STATUSF_IP2 |
-> +			 STATUSF_IP1 | STATUSF_IP0);
-> +	irq_enable_hazard();
-> +
-> +	/* force broadcast timer */
-> +	tick_broadcast_force();
-> +}
-> +
-> +static void jz4780_send_ipi_single_locked(int cpu, unsigned int=20
-> action)
-> +{
-> +	u32 mbox;
-> +
-> +	switch (cpu) {
-> +	case 0:
-> +		mbox =3D read_c0_mailbox0();
-> +		write_c0_mailbox0(mbox | action);
-> +		break;
-> +	case 1:
-> +		mbox =3D read_c0_mailbox1();
-> +		write_c0_mailbox1(mbox | action);
-> +		break;
-
-Same as above - there are 4 mailboxes.
-
-> +	default:
-> +		panic("unhandled cpu %d!", cpu);
-> +	}
-> +}
-> +
-> +static void jz4780_send_ipi_single(int cpu, unsigned int action)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&smp_lock, flags);
-> +	jz4780_send_ipi_single_locked(cpu, action);
-> +	spin_unlock_irqrestore(&smp_lock, flags);
-> +}
-> +
-> +static void jz4780_send_ipi_mask(const struct cpumask *mask,
-> +				 unsigned int action)
-> +{
-> +	unsigned long flags;
-> +	int cpu;
-> +
-> +	spin_lock_irqsave(&smp_lock, flags);
-> +
-> +	for_each_cpu(cpu, mask)
-> +		jz4780_send_ipi_single_locked(cpu, action);
-> +
-> +	spin_unlock_irqrestore(&smp_lock, flags);
-> +}
-> +
-> +static struct plat_smp_ops jz4780_smp_ops =3D {
-> +	.send_ipi_single =3D jz4780_send_ipi_single,
-> +	.send_ipi_mask =3D jz4780_send_ipi_mask,
-> +	.init_secondary =3D jz4780_init_secondary,
-> +	.smp_finish =3D jz4780_smp_finish,
-> +	.boot_secondary =3D jz4780_boot_secondary,
-> +	.smp_setup =3D jz4780_smp_setup,
-> +	.prepare_cpus =3D jz4780_smp_prepare_cpus,
-> +};
-> +
-> +void jz4780_smp_init(void)
-
-This one can be marked __init.
-
-> +{
-> +	register_smp_ops(&jz4780_smp_ops);
-> +}
-> diff --git a/arch/mips/kernel/idle.c b/arch/mips/kernel/idle.c
-> index 37f8e78..a3afd98 100644
-> --- a/arch/mips/kernel/idle.c
-> +++ b/arch/mips/kernel/idle.c
-> @@ -18,6 +18,7 @@
->  #include <asm/cpu-type.h>
->  #include <asm/idle.h>
->  #include <asm/mipsregs.h>
-> +#include <asm/r4kcache.h>
+>  static int __init ingenic_tcu_clocksource_init(struct device_node=20
+> *np,
+>  					       struct ingenic_tcu *tcu)
+>  {
+> @@ -239,6 +291,7 @@ static int __init ingenic_tcu_init(struct=20
+> device_node *np)
+>  	const struct ingenic_soc_info *soc_info =3D id->data;
+>  	struct ingenic_tcu *tcu;
+>  	struct regmap *map;
+> +	unsigned cpu =3D 0;
+>  	long rate;
+>  	int ret;
 >=20
->  /*
->   * Not all of the MIPS CPUs have the "wait" instruction available.=20
-> Moreover,
-> @@ -88,6 +89,34 @@ static void __cpuidle rm7k_wait_irqoff(void)
->  }
+> @@ -252,13 +305,18 @@ static int __init ingenic_tcu_init(struct=20
+> device_node *np)
+>  	if (!tcu)
+>  		return -ENOMEM;
 >=20
->  /*
-> + * The Ingenic jz4780 SMP variant has to write back dirty cache=20
-> lines before
-> + * executing wait. The CPU & cache clock will be gated until we=20
-> return from
-> + * the wait, and if another core attempts to access data from our=20
-> data cache
-> + * during this time then it will lock up.
-> + */
-> +void jz4780_smp_wait_irqoff(void)
-> +{
-> +	unsigned long pending =3D read_c0_cause() & read_c0_status() &=20
-> CAUSEF_IP;
-> +
+> -	/* Enable all TCU channels for PWM use by default except channels=20
+> 0/1 */
+> -	tcu->pwm_channels_mask =3D GENMASK(soc_info->num_channels - 1, 2);
 > +	/*
-> +	 * Going to idle has a significant overhead due to the cache flush=20
-> so
-> +	 * try to avoid it if we'll immediately be woken again due to an=20
-> IRQ.
+> +	 * Enable all TCU channels for PWM use by default except channels=20
+> 0/1,
+> +	 * and channel 2 if target CPU is JZ4780 and SMP is selected.
 > +	 */
-> +	if (!need_resched() && !pending) {
-> +		r4k_blast_dcache();
-> +
-> +		__asm__(
-> +		"	.set push	\n"
-> +		"	.set mips3	\n"
-> +		"	sync		\n"
-> +		"	wait		\n"
-> +		"	.set pop	\n");
-> +	}
-> +
-> +	local_irq_enable();
-> +}
-> +
-> +/*
->   * Au1 'wait' is only useful when the 32kHz counter is used as timer,
->   * since coreclock (and the cp0 counter) stops upon executing it.=20
-> Only an
->   * interrupt can wake it, so they must be enabled before entering=20
-> idle modes.
-> @@ -172,7 +201,6 @@ void __init check_wait(void)
->  	case CPU_CAVIUM_OCTEON_PLUS:
->  	case CPU_CAVIUM_OCTEON2:
->  	case CPU_CAVIUM_OCTEON3:
-> -	case CPU_XBURST:
->  	case CPU_LOONGSON32:
->  	case CPU_XLR:
->  	case CPU_XLP:
-> @@ -246,6 +274,12 @@ void __init check_wait(void)
->  		   cpu_wait =3D r4k_wait;
->  		 */
->  		break;
-> +	case CPU_XBURST:
-> +		if (IS_ENABLED(CONFIG_MACH_JZ4780) &&
-> +				IS_ENABLED(CONFIG_SMP) && (NR_CPUS > 1))
-> +			cpu_wait =3D jz4780_smp_wait_irqoff;
-> +		else
-> +			cpu_wait =3D r4k_wait;
->  	default:
->  		break;
+> +	tcu->pwm_channels_mask =3D GENMASK(soc_info->num_channels - 1,
+> +								NR_CPUS + 1);
+>  	of_property_read_u32(np, "ingenic,pwm-channels-mask",
+>  			     (u32 *)&tcu->pwm_channels_mask);
+>=20
+> -	/* Verify that we have at least two free channels */
+> -	if (hweight8(tcu->pwm_channels_mask) > soc_info->num_channels - 2) {
+> +	/* Verify that we have at least NR_CPUS + 1 free channels */
+> +	if (hweight8(tcu->pwm_channels_mask) >
+> +			soc_info->num_channels - NR_CPUS + 1) {
+
+NR_CPUS can be up to 256. You want to use num_online_cpus() here, I=20
+believe.
+
+>  		pr_crit("%s: Invalid PWM channel mask: 0x%02lx\n", __func__,
+>  			tcu->pwm_channels_mask);
+>  		ret =3D -EINVAL;
+> @@ -266,13 +324,27 @@ static int __init ingenic_tcu_init(struct=20
+> device_node *np)
 >  	}
+>=20
+>  	tcu->map =3D map;
+> +	tcu->np =3D np;
+>  	ingenic_tcu =3D tcu;
+>=20
+> -	tcu->timer_channel =3D find_first_zero_bit(&tcu->pwm_channels_mask,
+> +	tcu->timer_local[cpu] =3D find_first_zero_bit(&tcu->pwm_channels_mask,
+>  						 soc_info->num_channels);
+> -	tcu->cs_channel =3D find_next_zero_bit(&tcu->pwm_channels_mask,
+> -					     soc_info->num_channels,
+> -					     tcu->timer_channel + 1);
+> +
+> +	if (NR_CPUS > 1) {
+> +		for (cpu =3D 1; cpu < NR_CPUS; cpu++)
+> +			tcu->timer_local[cpu] =3D find_next_zero_bit(
+> +						&tcu->pwm_channels_mask,
+> +						soc_info->num_channels,
+> +						tcu->timer_local[cpu - 1] + 1);
+> +
+> +		tcu->cs_channel =3D find_next_zero_bit(&tcu->pwm_channels_mask,
+> +					soc_info->num_channels,
+> +					tcu->timer_local[cpu-1] + 1);
+> +	} else {
+> +		tcu->cs_channel =3D find_next_zero_bit(&tcu->pwm_channels_mask,
+> +					soc_info->num_channels,
+> +					tcu->timer_local[cpu] + 1);
+> +	}
+
+I believe you can factorize the code a bit here - don't check for=20
+NR_CPUS > 1, and have a for (cpu =3D 0; cpu < num_online_cpus(); cpu++)=20
+loop. You could use a temporary variable to store the 'next bit' value.
+
+-Paul
+
+>=20
+>  	ret =3D ingenic_tcu_clocksource_init(np, tcu);
+>  	if (ret) {
+> @@ -280,9 +352,10 @@ static int __init ingenic_tcu_init(struct=20
+> device_node *np)
+>  		goto err_free_ingenic_tcu;
+>  	}
+>=20
+> -	ret =3D ingenic_tcu_timer_init(np, tcu);
+> -	if (ret)
+> -		goto err_tcu_clocksource_cleanup;
+> +	/* Setup clock events on each CPU core */
+> +	ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "Ingenic XBurst:=20
+> online",
+> +				ingenic_tcu_setup_cevt, NULL);
+> +	WARN_ON(ret < 0);
+>=20
+>  	/* Register the sched_clock at the end as there's no way to undo it=20
+> */
+>  	rate =3D clk_get_rate(tcu->cs_clk);
+> @@ -290,10 +363,6 @@ static int __init ingenic_tcu_init(struct=20
+> device_node *np)
+>=20
+>  	return 0;
+>=20
+> -err_tcu_clocksource_cleanup:
+> -	clocksource_unregister(&tcu->cs);
+> -	clk_disable_unprepare(tcu->cs_clk);
+> -	clk_put(tcu->cs_clk);
+>  err_free_ingenic_tcu:
+>  	kfree(tcu);
+>  	return ret;
 > --
 > 2.7.4
 >=20
