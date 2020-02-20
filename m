@@ -2,130 +2,134 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B686CC11D41
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 06:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E88C11D02
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 06:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC6124673
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 06:41:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k5J7L+u1"
+	by mail.kernel.org (Postfix) with ESMTP id CA40624673
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 06:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgBTGlk (ORCPT
+        id S1726205AbgBTGqQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:41:40 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:39554 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgBTGlk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 01:41:40 -0500
-Received: by mail-vk1-f195.google.com with SMTP id t129so892847vkg.6
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 22:41:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9FII6SdDOT5LM0XD58UCmM9UhU3FnY2YeLrE2lk53Is=;
-        b=k5J7L+u1jOqu5YUkSY9+Wm+SZ9fEd0plNX6vVCCQMNxtJ17xPFpHlzurSPf923XUx5
-         fGd8FKC/yCneBjJp84L4iNCbiXagGjaBqqevwWiGJTr6ZgEhG51rY5aoA+f0Upr+DuoI
-         aK9EFDfSdNNI3IUdXgtYEmwjegBCvffppiAHQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9FII6SdDOT5LM0XD58UCmM9UhU3FnY2YeLrE2lk53Is=;
-        b=cTpoI9J2SWNtVAhNFQcf31WBUdFoXc8hy8oVivdNX01f4NffqW90nW+REwGqHv7G0d
-         pRQjhj+jHfaolUl4/HwDB4U9i5XkoPWPuZqwiKWCLa6oh6kPO4s847jOGsgdBHCTvKXW
-         Zb2PARIRp+4q/fyPSJYbGQqSk+GMX2036cG2CdLWo2Qz+sz0Zoc5KKelpYBJ8VqHHGfZ
-         pn92VQs99+RUCp7X3VInJagPUL6UUijX+bJTW7Z7dkcuuLcKFgexXEoU2dggogCKtITV
-         ZS8mrSmJqKjB0K6uvsMHTQ1I7StnOQYS0kEK+dvo5bwTDA3pUu0U4IVRlz84ejn1836D
-         +hrQ==
-X-Gm-Message-State: APjAAAURwBcTkB5Dr2eJ+ylttBR+aZVgE4SggqkDwdoaPZ7gECE8EGRC
-        6XRRd7LuRKhGJqwPCkH8Gc0P7DiR224=
-X-Google-Smtp-Source: APXvYqw5uyeiT4yoXan5ofW8LIWXBtV5Fx/vk/mosdxfCdR+iV3TCsi7eNoCGBngVAtcm43/VrhIQg==
-X-Received: by 2002:a1f:5fc1:: with SMTP id t184mr13123345vkb.57.1582180897917;
-        Wed, 19 Feb 2020 22:41:37 -0800 (PST)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id h67sm553387vka.25.2020.02.19.22.41.36
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 22:41:36 -0800 (PST)
-Received: by mail-vs1-f43.google.com with SMTP id t12so1979526vso.13
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 22:41:36 -0800 (PST)
-X-Received: by 2002:a67:f541:: with SMTP id z1mr15813130vsn.70.1582180895674;
- Wed, 19 Feb 2020 22:41:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <20200219223046.GA16537@bogus> <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
- <20200219232005.GA9737@roeck-us.net>
-In-Reply-To: <20200219232005.GA9737@roeck-us.net>
-From:   Evan Benn <evanbenn@chromium.org>
-Date:   Thu, 20 Feb 2020 17:41:09 +1100
-X-Gmail-Original-Message-ID: <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
-Message-ID: <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
- arm,smc-wdt compatible
-To:     xingyu.chen@amlogic.com
-Cc:     Julius Werner <jwerner@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 20 Feb 2020 01:46:16 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:38743 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725962AbgBTGqQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 01:46:16 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Feb 2020 12:15:40 +0530
+Received: from c-sbhanu-linux.qualcomm.com ([10.242.50.201])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 20 Feb 2020 12:15:06 +0530
+Received: by c-sbhanu-linux.qualcomm.com (Postfix, from userid 2344807)
+        id 7406E3B58; Thu, 20 Feb 2020 12:15:05 +0530 (IST)
+From:   Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mka@chromium.org
+Cc:     asutoshd@codeaurora.org, swboyd@chromium.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        cang@codeaurora.org, vbadigan@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org,
+        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+Subject: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks of sdhci-msm platform driver
+Date:   Thu, 20 Feb 2020 12:15:00 +0530
+Message-Id: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dear Xingyu,
+The existing suspend/resume callbacks of sdhci-msm driver are just
+gating/un-gating the clocks. During suspend cycle more can be done
+like disabling controller, disabling card detection, enabling wake-up events.
 
-Could this driver also cover your usecase? I am not familiar with
-meson, but it seems like the meson calls could
-be replaced with arm_smccc calls. Then this driver will cover both
-chips. I am not sure if your firmware is upstream
-somewhere, but this might be adapted;
-https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
+So updating the system pm callbacks for performing these extra
+actions besides controlling the clocks.
 
-Thanks
+Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
+Changes since V3:
+    Invoking sdhci & cqhci resume if sdhci_host_suspend fails.
+    Removed condition check before invoking cqhci_resume since its a dummy function.
 
+Changes since V2:
+    Removed disabling/enabling pwr-irq from system pm ops.
 
-On Thu, Feb 20, 2020 at 10:20 AM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Wed, Feb 19, 2020 at 03:04:54PM -0800, Julius Werner wrote:
-> > > You are not the first 'watchdog in firmware accessed via an SMC call'.
-> > > Is there some more detail about what implementation this is? Part of
-> > > TF-A? Defined by some spec (I can dream)?
-> >
-> > This is just some random implementation written by me because we
-> > needed one. I would like it to be the new generic implementation, but
-> > it sounds like people here prefer the naming to be MediaTek specific
-> > (at least for now). The other SMC watchdog we're aware of is
-> > imx_sc_wdt but unfortunately that seems to hardcode platform-specific
->
-> There is one more pending, for Meson SMC.
->
-> https://patchwork.kernel.org/project/linux-watchdog/list/?series=227733
->
-> Unfortunately it uses Meson firmware API functions, though it has pretty
-> much the same functionality since those ultimately end up calling
-> arm_smccc_smc().
->
-> Guenter
->
-> > details in the interface (at least in the pretimeout SMC) so we can't
-> > just expand that. With this driver I tried to directly wrap the kernel
-> > watchdog interface so it should be platform-agnostic and possible to
-> > expand this driver to other platforms later if desired. The SMC
-> > function ID would still always have to be platform-specific,
-> > unfortunately (but we could pass it in through the device tree), since
-> > the Arm SMC spec doesn't really leave any room for OS-generic SMCs
-> > like this.
+Changes since V1:
+    Invoking pm_runtime_force_suspend/resume instead of
+    sdhci_msm_runtime_suepend/resume.
+---
+ drivers/mmc/host/sdhci-msm.c | 47 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 45 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 3955fa5d..3559b50 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -2159,9 +2159,52 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+ 	return 0;
+ }
+ 
++static int sdhci_msm_suspend(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	int ret;
++
++	if (host->mmc->caps2 & MMC_CAP2_CQE) {
++		ret = cqhci_suspend(host->mmc);
++		if (ret)
++			return ret;
++	}
++
++	ret = sdhci_suspend_host(host);
++	if (ret)
++		goto resume_cqhci;
++
++	ret = pm_runtime_force_suspend(dev);
++	if (!ret)
++		return ret;
++
++	sdhci_resume_host(host);
++
++resume_cqhci:
++	cqhci_resume(host->mmc);
++	return ret;
++}
++
++static int sdhci_msm_resume(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	int ret;
++
++	ret = pm_runtime_force_resume(dev);
++	if (ret)
++		return ret;
++
++	ret = sdhci_resume_host(host);
++	if (ret < 0)
++		return ret;
++
++	ret = cqhci_resume(host->mmc);
++	return ret;
++}
++
+ static const struct dev_pm_ops sdhci_msm_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+-				pm_runtime_force_resume)
++	SET_SYSTEM_SLEEP_PM_OPS(sdhci_msm_suspend,
++				sdhci_msm_resume)
+ 	SET_RUNTIME_PM_OPS(sdhci_msm_runtime_suspend,
+ 			   sdhci_msm_runtime_resume,
+ 			   NULL)
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
