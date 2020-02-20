@@ -2,194 +2,327 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06865C11D24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA58C11D20
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6F6208CD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896F9206EF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 20:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JGkUCdur"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lbUe/2Zy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgBTUjb (ORCPT
+        id S1729045AbgBTUmz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:39:31 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2750 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbgBTUjb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 15:39:31 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4eee740000>; Thu, 20 Feb 2020 12:39:16 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 12:39:30 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 12:39:30 -0800
-Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
- 2020 20:39:28 +0000
-Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Frank Chen <frankc@nvidia.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
- <20200218231503.GA19099@bogus>
- <5948bf42-9be2-8cf0-1c28-80f69b708c65@nvidia.com>
- <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <a41f3a6c-c6ed-4148-7af8-faf0cf36d67d@nvidia.com>
-Date:   Thu, 20 Feb 2020 12:39:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 20 Feb 2020 15:42:55 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44938 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728993AbgBTUmy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 15:42:54 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d9so1993852plo.11
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 12:42:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PDtNBGn5hx18x2dkzKzJHEubbXjMG7kHjGY1ZC79Uds=;
+        b=lbUe/2ZywKBgGN8jnU/EZ/oyKOjDJCuN4jyrgZ3tDisVLFyIDzUtM407qU17P/yZ56
+         BRqoOfOO/XAS39LOlvclOBsa9rpHonYaZDjQSHXmc0FY0kV0ZBpFM0lmJiSA1HVDHB1r
+         gQVrVLosH0dU8eXFT9+jp1kIiihe5Ep9l/10yZioTHNg/mQ07XQc/TzwLbYk/FtC/VS1
+         Lo2zqe8Fl5MpIBQa+1R0oCN2OkFtJrM4WgDu+dX+9pcUUqttIWuqZFBVELCPdLwSbx1X
+         3AOkO2K4r1RkZBJMOsBu4hZCUQtZCKpaJ4gA4zGWwC5vZSsugrQcdpmXc7eCwDT2whii
+         cOLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PDtNBGn5hx18x2dkzKzJHEubbXjMG7kHjGY1ZC79Uds=;
+        b=QCH1txCDWFCpocTILuXSSukqm36ne9NiMvGIYitBZuubCLi0d5pZqdgbY246KDiMWR
+         EgElQVgsGtD0ga8WJNOyQ3zVxiaQUvBRj9Q6/ysYwsuGiOCUM2zbQocfV6erdyq1iIT6
+         dUiN+REU1dHUqR0tYTmMrf4OsVRTci6lCWsPGHx5PK/Ke102kxgB6n4dhs9pOfyV6YnF
+         WwHO8T/y2xcRWdw7tYf6FlIXV0wn0GRLwwpzWwvUNFqarSNDtxspv9ZLZWV4D/eB745F
+         6wVVpNApk1JKYM1B/75N6pY6YqZqILFigI98zLDkf3wlhhoVt8XJxa5m9JZGtm5Q7BzC
+         p/ig==
+X-Gm-Message-State: APjAAAXy9+ppJle4VyHtyaKWDlCkrb5EAcf1V0z3uA6xPmZ/bjBbBK2i
+        14R1qfskJ025/RDthL4xn6+ucA==
+X-Google-Smtp-Source: APXvYqxtDAID6c3DA3ie2ZLHO/5QZVGGekXMiKmiTqBfAJoy5ILvQL0kyAjDiOUwpIPX1MhbRJqD5w==
+X-Received: by 2002:a17:902:7591:: with SMTP id j17mr32363126pll.163.1582231374096;
+        Thu, 20 Feb 2020 12:42:54 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id p21sm452489pfn.103.2020.02.20.12.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 12:42:53 -0800 (PST)
+Date:   Thu, 20 Feb 2020 13:42:51 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v3 3/8] remoteproc: qcom: Update IMEM PIL info on load
+Message-ID: <20200220204251.GC19352@xps15>
+References: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
+ <20200211005059.1377279-4-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582231156; bh=x3FSVTVnhy0xB8qhuAdvyWzG3JHJZQd1kGDJjAzQz10=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=JGkUCdurxr3SkgI7EvyQXUJOStOj4UBsFhEsTLa+UzobiHEdc3aeqclPmBz/gvmw4
-         Po68btgzdIaJcFU+TLyh5wSyJMb1p9ZJz7uX6trq82O0ZZty0cxWxslWrkCLzn6NI5
-         xGh+cykLu5ZrNO5KykmA7iWfhcyYF70HswLrckY1mTkcprmMYK0096OdOyhDqfdVaj
-         32LFT1p4VyTEMIy6G5sF1cS2eGRISg9XhIw6nxx9uyUz/kA1xM7gHMlaCd1SHDTzt4
-         th8HnIaKVzDwjsGxuPILSGf34/lzeVrajG/+IHKkqXJCdrWvzbKq4xWmjAL//nJwgy
-         XBoH+5OqJ7wNA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211005059.1377279-4-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Feb 10, 2020 at 04:50:54PM -0800, Bjorn Andersson wrote:
+> Update the PIL info region structure in IMEM with information about
+> where the firmware for various remoteprocs are loaded.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - Wrapped a long line
+> 
+>  drivers/remoteproc/Kconfig          |  3 +++
+>  drivers/remoteproc/qcom_q6v5_adsp.c | 19 ++++++++++++++++---
+>  drivers/remoteproc/qcom_q6v5_mss.c  |  6 ++++++
+>  drivers/remoteproc/qcom_q6v5_pas.c  | 18 +++++++++++++++---
+>  drivers/remoteproc/qcom_wcnss.c     | 17 ++++++++++++++---
+>  5 files changed, 54 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index 20c8194e610e..7f4834ab06c2 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -129,6 +129,7 @@ config QCOM_Q6V5_MSS
+>  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+>  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+>  	select MFD_SYSCON
+> +	select QCOM_PIL_INFO
+>  	select QCOM_MDT_LOADER
+>  	select QCOM_Q6V5_COMMON
+>  	select QCOM_RPROC_COMMON
+> @@ -145,6 +146,7 @@ config QCOM_Q6V5_PAS
+>  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+>  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+>  	select MFD_SYSCON
+> +	select QCOM_PIL_INFO
+>  	select QCOM_MDT_LOADER
+>  	select QCOM_Q6V5_COMMON
+>  	select QCOM_RPROC_COMMON
+> @@ -193,6 +195,7 @@ config QCOM_WCNSS_PIL
+>  	depends on QCOM_SMEM
+>  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+>  	select QCOM_MDT_LOADER
+> +	select QCOM_PIL_INFO
+>  	select QCOM_RPROC_COMMON
+>  	select QCOM_SCM
+>  	help
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+> index e953886b2eb7..19f784adf91c 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/soc/qcom/smem_state.h>
+>  
+>  #include "qcom_common.h"
+> +#include "qcom_pil_info.h"
+>  #include "qcom_q6v5.h"
+>  #include "remoteproc_internal.h"
+>  
+> @@ -82,6 +83,7 @@ struct qcom_adsp {
+>  	unsigned int halt_lpass;
+>  
+>  	int crash_reason_smem;
+> +	const char *info_name;
+>  
+>  	struct completion start_done;
+>  	struct completion stop_done;
+> @@ -164,10 +166,17 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
+>  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+>  {
+>  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+> +	int ret;
+> +
+> +	ret = qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
+> +				    adsp->mem_region, adsp->mem_phys,
+> +				    adsp->mem_size, &adsp->mem_reloc);
+> +	if (ret)
+> +		return ret;
+>  
+> -	return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
+> -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> -			     &adsp->mem_reloc);
+> +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, adsp->mem_size);
 
-On 2/20/20 11:45 AM, Rob Herring wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Tue, Feb 18, 2020 at 9:28 PM Sowjanya Komatineni
-> <skomatineni@nvidia.com> wrote:
->>
->> On 2/18/20 3:15 PM, Rob Herring wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
->>>> Tegra contains VI controller which can support up to 6 MIPI CSI
->>>> camera sensors.
->>>>
->>>> Each Tegra CSI port from CSI unit can be one-to-one mapper to
->>>> VI channel and can capture from an external camera sensor or
->>>> from built-in test pattern generator.
->>>>
->>>> This patch adds dt-bindings for Tegra VI and CSI.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>    .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
->>>>    1 file changed, 47 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>>> index 9999255ac5b6..3d0ed540a646 100644
->>>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>>> @@ -40,14 +40,24 @@ of the following host1x client modules:
->>>>
->>>>      Required properties:
->>>>      - compatible: "nvidia,tegra<chip>-vi"
->>>> -  - reg: Physical base address and length of the controller's registers.
->>>> +  - reg: Physical base address and length of the controller registers.
->>>>      - interrupts: The interrupt outputs from the controller.
->>>> -  - clocks: Must contain one entry, for the module clock.
->>>> +  - clocks: Must contain an entry for the module clock "vi"
->>>>        See ../clocks/clock-bindings.txt for details.
->>>>      - resets: Must contain an entry for each entry in reset-names.
->>>>        See ../reset/reset.txt for details.
->>>> -  - reset-names: Must include the following entries:
->>>> -    - vi
->>>> +  - reset-names: Must include the entry "vi"
->>>> +
->>>> +  Tegra210 has CSI part of VI sharing same host interface and register
->>>> +  space. So, VI device node should have CSI child node.
->>>> +
->>>> +  - csi: mipi csi interface to vi
->>>> +
->>>> +    Required properties:
->>>> +    - compatible: "nvidia,tegra<chip>-csi"
->>>> +    - reg: Physical base address and length of the controller registers.
->>>> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
->>>> +      See ../clocks/clock-bindings.txt for details.
->>>>
->>>>    - epp: encoder pre-processor
->>>>
->>>> @@ -310,12 +320,41 @@ Example:
->>>>                 };
->>>>
->>>>                 vi {
->>>> -                     compatible = "nvidia,tegra20-vi";
->>>> -                     reg = <0x54080000 0x00040000>;
->>>> +                     compatible = "nvidia,tegra210-vi";
->>>> +                     reg = <0x0 0x54080000 0x0 0x700>;
->>>>                         interrupts = <0 69 0x04>;
->>>> -                     clocks = <&tegra_car TEGRA20_CLK_VI>;
->>>> -                     resets = <&tegra_car 100>;
->>>> +                     assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
->>>> +                     assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
->>>> +                     clocks = <&tegra_car TEGRA210_CLK_VI>;
->>>> +                     clock-names = "vi";
->>>> +                     resets = <&tegra_car 20>;
->>>>                         reset-names = "vi";
->>>> +
->>>> +                     #address-cells = <2>;
->>>> +                     #size-cells = <2>;
->>>> +
->>>> +                     ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
->>>> +
->>>> +                     csi@0x54080838 {
->>> Drop '0x'
->> Will fix in v4
->>>> +                             compatible = "nvidia,tegra210-csi";
->>>> +                             reg = <0x0 0x54080838 0x0 0x2000>;
->>> Kind of odd that this address and ranges address are not the same. And
->>> also wrong that the size here exceeds the bounds of ranges.
->>>
->>> Also, best practice is to make the child address 0 or relative to the
->>> parent.
->> Actual CSI starts at offset 0x808 but we don't use couple of registers
->> at offset 0x808.
->>
->> Will update ranges in v4 to start from 0x838 offset and will make child
->> address relative to parent.
-> Seems odd, but okay. And you will never, ever need to use those
-> registers no matter what, and we can reject any DT change trying to
-> change it later?
->
-> Rob
+It is entirely up to you to decide to add a comment that explains why you
+opted not to handle the return.  But can already see patches piling
+up on the mailing list to "fix" the problem.
 
-Yes not required to access them by driver.
+The same applies to the other hunks.
 
-On T210, CSI registers under VI starts from location 0x54080808
-
-SW don't need to access initial 3 registers at 0x54080808, 0x54080818, 
-0x54080828
-
-Actual CSI registers that are needed for SW starts from 0x54080838.
-
+> +
+> +	return 0;
+>  }
+>  
+>  static int adsp_start(struct rproc *rproc)
+> @@ -413,6 +422,9 @@ static int adsp_probe(struct platform_device *pdev)
+>  	struct rproc *rproc;
+>  	int ret;
+>  
+> +	if (!qcom_pil_info_available())
+> +		return -EPROBE_DEFER;
+> +
+>  	desc = of_device_get_match_data(&pdev->dev);
+>  	if (!desc)
+>  		return -EINVAL;
+> @@ -427,6 +439,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	adsp = (struct qcom_adsp *)rproc->priv;
+>  	adsp->dev = &pdev->dev;
+>  	adsp->rproc = rproc;
+> +	adsp->info_name = desc->sysmon_name;
+>  	platform_set_drvdata(pdev, adsp);
+>  
+>  	ret = adsp_alloc_memory_region(adsp);
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> index a1cc9cbe038f..66ed4600db78 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -28,6 +28,7 @@
+>  
+>  #include "remoteproc_internal.h"
+>  #include "qcom_common.h"
+> +#include "qcom_pil_info.h"
+>  #include "qcom_q6v5.h"
+>  
+>  #include <linux/qcom_scm.h>
+> @@ -1166,6 +1167,8 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+>  	else if (ret < 0)
+>  		dev_err(qproc->dev, "MPSS authentication failed: %d\n", ret);
+>  
+> +	qcom_pil_info_store("modem", mpss_reloc, qproc->mpss_size);
+> +
+>  release_firmware:
+>  	release_firmware(fw);
+>  out:
+> @@ -1555,6 +1558,9 @@ static int q6v5_probe(struct platform_device *pdev)
+>  	if (desc->need_mem_protection && !qcom_scm_is_available())
+>  		return -EPROBE_DEFER;
+>  
+> +	if (!qcom_pil_info_available())
+> +		return -EPROBE_DEFER;
+> +
+>  	mba_image = desc->hexagon_mba_image;
+>  	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
+>  					    0, &mba_image);
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index edf9d0e1a235..d20ce3c62256 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/soc/qcom/smem_state.h>
+>  
+>  #include "qcom_common.h"
+> +#include "qcom_pil_info.h"
+>  #include "qcom_q6v5.h"
+>  #include "remoteproc_internal.h"
+>  
+> @@ -64,6 +65,7 @@ struct qcom_adsp {
+>  	int pas_id;
+>  	int crash_reason_smem;
+>  	bool has_aggre2_clk;
+> +	const char *info_name;
+>  
+>  	struct completion start_done;
+>  	struct completion stop_done;
+> @@ -117,11 +119,17 @@ static void adsp_pds_disable(struct qcom_adsp *adsp, struct device **pds,
+>  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+>  {
+>  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+> +	int ret;
+> +
+> +	ret = qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
+> +			    adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> +			    &adsp->mem_reloc);
+> +	if (ret)
+> +		return ret;
+>  
+> -	return qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
+> -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> -			     &adsp->mem_reloc);
+> +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, adsp->mem_size);
+>  
+> +	return 0;
+>  }
+>  
+>  static int adsp_start(struct rproc *rproc)
+> @@ -376,6 +384,9 @@ static int adsp_probe(struct platform_device *pdev)
+>  	if (!qcom_scm_is_available())
+>  		return -EPROBE_DEFER;
+>  
+> +	if (!qcom_pil_info_available())
+> +		return -EPROBE_DEFER;
+> +
+>  	fw_name = desc->firmware_name;
+>  	ret = of_property_read_string(pdev->dev.of_node, "firmware-name",
+>  				      &fw_name);
+> @@ -396,6 +407,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	adsp->rproc = rproc;
+>  	adsp->pas_id = desc->pas_id;
+>  	adsp->has_aggre2_clk = desc->has_aggre2_clk;
+> +	adsp->info_name = desc->sysmon_name;
+>  	platform_set_drvdata(pdev, adsp);
+>  
+>  	ret = adsp_alloc_memory_region(adsp);
+> diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
+> index dc135754bb9c..2c1cefeacf97 100644
+> --- a/drivers/remoteproc/qcom_wcnss.c
+> +++ b/drivers/remoteproc/qcom_wcnss.c
+> @@ -27,6 +27,7 @@
+>  
+>  #include "qcom_common.h"
+>  #include "remoteproc_internal.h"
+> +#include "qcom_pil_info.h"
+>  #include "qcom_wcnss.h"
+>  
+>  #define WCNSS_CRASH_REASON_SMEM		422
+> @@ -145,10 +146,17 @@ void qcom_wcnss_assign_iris(struct qcom_wcnss *wcnss,
+>  static int wcnss_load(struct rproc *rproc, const struct firmware *fw)
+>  {
+>  	struct qcom_wcnss *wcnss = (struct qcom_wcnss *)rproc->priv;
+> +	int ret;
+> +
+> +	ret = qcom_mdt_load(wcnss->dev, fw, rproc->firmware, WCNSS_PAS_ID,
+> +			    wcnss->mem_region, wcnss->mem_phys,
+> +			    wcnss->mem_size, &wcnss->mem_reloc);
+> +	if (ret)
+> +		return ret;
+>  
+> -	return qcom_mdt_load(wcnss->dev, fw, rproc->firmware, WCNSS_PAS_ID,
+> -			     wcnss->mem_region, wcnss->mem_phys,
+> -			     wcnss->mem_size, &wcnss->mem_reloc);
+> +	qcom_pil_info_store("wcnss", wcnss->mem_reloc, wcnss->mem_size);
+> +
+> +	return 0;
+>  }
+>  
+>  static void wcnss_indicate_nv_download(struct qcom_wcnss *wcnss)
+> @@ -469,6 +477,9 @@ static int wcnss_probe(struct platform_device *pdev)
+>  	if (!qcom_scm_is_available())
+>  		return -EPROBE_DEFER;
+>  
+> +	if (!qcom_pil_info_available())
+> +		return -EPROBE_DEFER;
+> +
+>  	if (!qcom_scm_pas_supported(WCNSS_PAS_ID)) {
+>  		dev_err(&pdev->dev, "PAS is not available for WCNSS\n");
+>  		return -ENXIO;
+> -- 
+> 2.24.0
+> 
