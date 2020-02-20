@@ -2,114 +2,123 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7E4C761A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 05:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E2CC11D01
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 05:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6528424672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 05:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55532465D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 05:53:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dj/PTuGc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dbj0y4eV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgBTFsr (ORCPT
+        id S1726393AbgBTFxD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:48:47 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44080 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgBTFsq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 00:48:46 -0500
-Received: by mail-ot1-f65.google.com with SMTP id h9so2549297otj.11
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 21:48:46 -0800 (PST)
+        Thu, 20 Feb 2020 00:53:03 -0500
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:47937 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgBTFxD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 00:53:03 -0500
+Received: by mail-pl1-f202.google.com with SMTP id h3so1597671plt.14
+        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 21:53:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b0F6mdIbbyqJ8pmrP/z43Dyul8vyOpgKKbRJlBxceSI=;
-        b=Dj/PTuGcX5bvKKNndi7kNoL5fDDrnj8sA5ecSWCgXS5spldvi9f+HfbQiZk1BZ4Q27
-         BqVHTzq3Jf/QSqAp8/o6T1qrNhMFBsPsukftmAY6VAtLwds2AtYb1zdRi6JHsHzMHyPP
-         pUeCmkvyJt0aPlrTsOCCPfW0xGxsF4RZiM+L5AoVWG7xz6Ool8zSOAEy72MrFFrFIr8J
-         /9s8GKi1Vt8QkHBdpOr3i0EPmG2GCBqdRJDwC0d/9CboaJyQi3o230tDWy1i3vTVABT7
-         gZBTcuyBl/po1AuNmHZazbR6K82R+/fFvOvgzIIUHoJyr4xEwtTxTQAY2J2XDOKzxFfx
-         qP+w==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=nl3RPJB2d6ViIOhoDwVm0BTw7tW7NUBEzufzTKYpnXc=;
+        b=Dbj0y4eVYaiMi34+H/DpZxxNGq3yaaZJnS0Yq38l9gcRHiVda9a5WsXKFIKSQjqoQu
+         THNdBOaNyf+oQj9+WbX2eh4yQOPDxIndKfq1KX4pGr8JttKX4CtblHcI8vRdgdkE3wsF
+         Y2Ns2Vt/6F5SN21lS4s7z7wM/3+tMVKXUkmHjJ8nIEXuIU0ZxjuCzQuxmePzf8RnSmNS
+         qLPkgdrirOLrfY8tLQTdWApEjXhajKSAJWWYawLSkHKdtC+Um0ncRZW/OZ311rkctLLV
+         Xr0yqw8sjObC5sqJYI4As8eA+qGJA5wmDTxQJKuLXmzG2V1kdTzjGL2jbtAr/0nhWf6A
+         1iyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b0F6mdIbbyqJ8pmrP/z43Dyul8vyOpgKKbRJlBxceSI=;
-        b=t0F6yONjMp7ggqizNiQ0OK6UHLfRQH7iQcqb7H47pLlmrOXnuVjSFW2u5dsrJNNJX6
-         PDO0fl8T0ZHZE8znSsTKmjzDO0EwyKMhLcVQ6X6vpMeGnUONHYJ26qLg2Tsypv8TLFpx
-         d+t/p602E/T4QMTT+XN/AAAfNLlE0hMtATL9OGgeGceJ7E/JK86PDTkj+2vsihnPRZOI
-         CsIRyL3cwig05dndBNKHwr4w809vdTQWF4s8RUsC4kMP2ekZxLLm2vXYbprQFqbDODGP
-         06nQOt0Z5RhnHhUM8aHyw0HRjraY7roTvt42KxEdkPe1uB5klaHL/D0mYHFp8h7nuiiX
-         gnlA==
-X-Gm-Message-State: APjAAAW0KKjfhd7Gc+i/VEemyPnjZBPYMiZiKaYraalenSdx77t2BTFd
-        BqpAvLk/2kLjwIwLpyQMej4Lcxvm68/S9rg8n3ee/Q==
-X-Google-Smtp-Source: APXvYqzKncDhV3hzHRxI4jFA2zFrFbfgTQzje+xro87W+aJ9SnJ1h1RBfXJLiqq06+0n0Lm5UwlHJjEcfTJS0vOnrPs=
-X-Received: by 2002:a9d:7d93:: with SMTP id j19mr23329830otn.102.1582177725955;
- Wed, 19 Feb 2020 21:48:45 -0800 (PST)
-MIME-Version: 1.0
-References: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
-In-Reply-To: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 19 Feb 2020 21:48:34 -0800
-Message-ID: <CALAqxLUzCN=xuF1Kx0Op_E0zMXK7PbHqynPu6TDozTMRrAuxkw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=nl3RPJB2d6ViIOhoDwVm0BTw7tW7NUBEzufzTKYpnXc=;
+        b=H/XWqUdSuyM5754Qm1bWSwM7JkW9aUnDRmok1CTosUKsDGyTEHLHPGtzUAIgnrAIIO
+         to5kra9lmLbtrVjJ/bnQLURkXeDaJ7ZnxdPuRoT39Xv0z/5WJ88cWXHhJFcKHpPGCntn
+         F1oKixP4v4P2wGztqwT7XGD1dGMKnxn7eW/4unZo7W1g6QJkUxNV+ZlS3LNnHyNiyOVc
+         Nuk2urMdLL6CYfwlT9e9kpRPJ22taTvI1rMyuqz+pWbItSApDjPilH3MmPEYbfHTtVZc
+         qly7qtPuWMbP4vFhxzAurjJ56NDSNZIZdYYK8gYu3v187O4flcexFklkZG4oP8+x4xAy
+         IxOg==
+X-Gm-Message-State: APjAAAXNENIoMPSCCqs0v2ulhBH95MopeiwcGOzmGbUFIhs40Dhmkv7d
+        ft0ujVfH6tz2iYlr+XEYUDoND+rRXWXLox4=
+X-Google-Smtp-Source: APXvYqy4SHuUt+Wdi7Jk03QlHFri6nCdgrgM+tkdNH0KM2noC47Abc/IxlGKmTwrmbII4aBmMk0Ll+EJgyEH8o4=
+X-Received: by 2002:a63:3c4b:: with SMTP id i11mr32426363pgn.123.1582177980998;
+ Wed, 19 Feb 2020 21:53:00 -0800 (PST)
+Date:   Wed, 19 Feb 2020 21:52:50 -0800
+Message-Id: <20200220055250.196456-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v1] of: property: Add device link support for power-domains
+ and hwlocks
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 1:33 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
-> cache coherency issues because it is mapped as write-combine without clearing
-> the cache after it was zeroed.
->
-> Rather than duplicate the hacky workaround we use in the GEM allocator for the
-> same reason it turns out that we don't need to have a bespoke memory allocator
-> for the GMU anyway. It uses a flat, global address space and there are only
-> two relatively minor allocations anyway. In short, this is essentially what the
-> DMA API was created for so replace a bunch of memory management code with two
-> calls to allocate and free DMA memory and we're fine.
->
-> The only wrinkle is that the memory allocations need to be in a very specific
-> location in the GMU virtual address space so in order to get the iova allocator
-> to do the right thing we need to specify the dma-ranges property in the device
-> tree for the GMU node. Since we've not yet converted the GMU bindings over to
-> YAML two patches quickly turn into four but at the end of it we have at least
-> one bindings file converted to YAML and 99 less lines of code to worry about.
->
-> Jordan Crouse (4):
->   dt-bindings: display: msm: Convert GMU bindings to YAML
->   dt-bindings: display: msm: Add required dma-range property
->   arm64: dts: sdm845: Set the virtual address range for GMU allocations
->   drm/msm/a6xx: Use the DMA API for GMU memory objects
+Add support for creating device links out of more DT properties.
 
-Awesome! Thanks so much for the quick turnaround on this! This set
-resolves the crashes I was seeing with
-CONFIG_INIT_ON_ALLOC_DEFAULT_ON.
+To: lkml <linux-kernel@vger.kernel.org>
+To: John Stultz <john.stultz@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Kevin Hilman <khilman@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/of/property.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Tested-by: John Stultz <john.stultz@linaro.org>
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index e851c57a15b0..d977c11decda 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1204,6 +1204,8 @@ DEFINE_SIMPLE_PROP(mboxes, "mboxes", "#mbox-cells")
+ DEFINE_SIMPLE_PROP(io_channels, "io-channel", "#io-channel-cells")
+ DEFINE_SIMPLE_PROP(interrupt_parent, "interrupt-parent", NULL)
+ DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-cells")
++DEFINE_SIMPLE_PROP(power_domains, "power-domains", "#power-domain-cells")
++DEFINE_SIMPLE_PROP(hwlocks, "hwlocks", "#hwlock-cells")
+ DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
+ DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
+ DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
+@@ -1226,6 +1228,8 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{ .parse_prop = parse_io_channels, },
+ 	{ .parse_prop = parse_interrupt_parent, },
+ 	{ .parse_prop = parse_dmas, },
++	{ .parse_prop = parse_power_domains, },
++	{ .parse_prop = parse_hwlocks, },
+ 	{ .parse_prop = parse_regulators, },
+ 	{ .parse_prop = parse_gpio, },
+ 	{ .parse_prop = parse_gpios, },
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
-thanks again!
--john
