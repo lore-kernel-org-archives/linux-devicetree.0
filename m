@@ -2,139 +2,119 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B39CC11D15
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D084C11D15
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093622467E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FF724673
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 18:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582221649;
-	bh=mWtgtFWAoWaJEiv18O1INel2Oq4nWzK1Yo0KUp9+Xok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VBABfyuopfp8fEffUKv9VSPpvWcjXSwCx0P8gHEakinCjIRqjY9bjJ6lwOYjkftB+
-	 XCi+f+S+fZDpyN8zRRqTBLJu3ffwlVpdJ6Hk+iig48sVXGQbG+5mYCkiN38WLNnLPQ
-	 lmI7gODD+ZIy30X2fbNQu2u5lL3vll4jsIgnFqaU=
+	s=default; t=1582221777;
+	bh=37+6kRfe020nr3eTo55dbdOiwQoX7FUjUISiaAj1H6w=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=xeOs52QHqawemmQ4C/6j/bmsjUzcXe242a11FDGm9BFgZLoQexbWXEXExnLelxUoN
+	 DBxQahAgWAf7NVP7rNeSpoZflo9jfGNGL/t2guqUc2x5t9Zt19os2bCLyHDj6noUim
+	 y9S1DrzppneQEthfAXxhsgGop3uG+1sdPV7jOFfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgBTSAs (ORCPT
+        id S1728576AbgBTSCx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:00:48 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37413 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728354AbgBTSAs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 13:00:48 -0500
-Received: by mail-ed1-f67.google.com with SMTP id t7so23155375edr.4;
-        Thu, 20 Feb 2020 10:00:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JuWavBe6OXyRFy5qql3DEFdCwPYGMywA79SDbY508v4=;
-        b=ZAdsux1lXeRKDT//oS/PZRqYIHiJBgSn720SlCyHD31cakfxNNnwcbjAnmt8DLPe98
-         FVZy7RaYvo+l1arPYoZlddPxxsz1WK5LKUN2zDkJNIHV5rxePheJYa1Cc5ByyfK7JuCJ
-         4P/xqSYQt69fjd4gxXflBBtRlXGEYBcs55Tx0Low7nZG9alOXHxsvmS6MwIdeVM1LRbV
-         4/pGqOhBOT3PtEYtR1UPSHqZ3WW2LF+MFhP+O7U/cFrjNZoCIbALdSzeyj/zHah7Yhf4
-         8CTCaW5qVrbM/ARBCR5WB9j8Mn07QkE8LqNFqpzkYAZvP9vD1/lITos88bggs3ZgVNgt
-         Huew==
-X-Gm-Message-State: APjAAAXGja9/sJJlc4zfEyN/mysWkzReY4K1FTiiDomhFpXTw1WetHui
-        liyAhRf2Fg18ucACDyWwGNo=
-X-Google-Smtp-Source: APXvYqwN5Yx4Jc42BqpycwqSM0vNnKWMTJp0qMmgsdSQ1M3eTaby6XleOAjAIb1VUKWVgqrdjO6gCg==
-X-Received: by 2002:a17:906:19c8:: with SMTP id h8mr31704573ejd.250.1582221644629;
-        Thu, 20 Feb 2020 10:00:44 -0800 (PST)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id yh21sm14798ejb.62.2020.02.20.10.00.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Feb 2020 10:00:43 -0800 (PST)
-Date:   Thu, 20 Feb 2020 19:00:40 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, kgene@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, cw00.choi@samsung.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
-        dietmar.eggemann@arm.com
-Subject: Re: [RESEND PATCH v2 0/2] Enable Odroid-XU3/4 to use Energy Model
- and Energy Aware Scheduler
-Message-ID: <20200220180040.GA8338@kozik-lap>
-References: <20200220095636.29469-1-lukasz.luba@arm.com>
+        Thu, 20 Feb 2020 13:02:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727298AbgBTSCw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:02:52 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE1624673;
+        Thu, 20 Feb 2020 18:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582221771;
+        bh=37+6kRfe020nr3eTo55dbdOiwQoX7FUjUISiaAj1H6w=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=m9xMxs8WLpZ1tJSTx12u4kJ78qow2BN0C/TsjYyITx052s7EDMb/8bu27UZaEaKQC
+         H7QOJcDNsK/KnboXjYJA7tTRsrQRUXUYO9KooPvCYVrO6GtCB9OR6Ad8q7QChfs8qv
+         gReuLai284/7HyoFHLCd3CtiEsSTtgxNdxqidEew=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200220095636.29469-1-lukasz.luba@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
+References: <1582190446-4778-1-git-send-email-sayalil@codeaurora.org> <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
+Subject: Re: [PATCH RFC] mmc: sdhci-msm: Toggle fifo write clk after ungating sdcc clk
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
+        Sayali Lokhande <sayalil@codeaurora.org>
+To:     Sayali Lokhande <sayalil@codeaurora.org>, adrian.hunter@intel.com,
+        asutoshd@codeaurora.org, bjorn.andersson@linaro.org,
+        georgi.djakov@linaro.org, mka@chromium.org, ppvk@codeaurora.org,
+        rampraka@codeaurora.org, robh+dt@kernel.org,
+        stummala@codeaurora.org, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org
+Date:   Thu, 20 Feb 2020 10:02:50 -0800
+Message-ID: <158222177078.184098.4974715009961694108@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 09:56:34AM +0000, Lukasz Luba wrote:
-> Hi all,
-> 
-> This is just a resend, now with proper v2 in the patches subject.
-> 
-> The Odroid-XU4/3 is a decent and easy accessible ARM big.LITTLE platform,
-> which might be used for research and development.
-> 
-> This small patch set provides possibility to run Energy Aware Scheduler (EAS)
-> on Odroid-XU4/3 and experiment with it. 
-> 
-> The patch 1/2 provides 'dynamic-power-coefficient' in CPU DT nodes, which is
-> then used by the Energy Model (EM).
-> The patch 2/2 enables SCHED_MC (which adds another level in scheduling domains)
-> and enables EM making EAS possible to run (when schedutil is set as a CPUFreq
-> governor).
-> 
-> 1. Test results
-> 
-> Two types of different tests have been executed. The first is energy test
-> case showing impact on energy consumption of this patch set. It is using a
-> synthetic set of tasks (rt-app based). The second is the performance test
-> case which is using hackbench (less time to complete is better).
-> In both tests schedutil has been used as cpufreq governor. In all tests
-> PROVE_LOCKING has not been compiled into the kernels.
-> 
-> 1.1 Energy test case
-> 
-> 10 iterations of 24 periodic rt-app tasks (16ms period, 10% duty-cycle)
-> with energy measurement. The cpufreq governor - schedutil. Unit is Joules.
-> The energy is calculated based on hwmon0 and hwmon3 power1_input.
-> The goal is to save energy, lower is better.
-> 
-> +-----------+-----------------+------------------------+
-> |           | Without patches | With patches           |
-> +-----------+--------+--------+----------------+-------+
-> | benchmark |  Mean  | RSD*   | Mean           | RSD*  |
-> +-----------+--------+--------+----------------+-------+
-> | 24 rt-app |  21.56 |  1.37% |  19.85 (-9.2%) | 0.92% |
-> |    tasks  |        |        |                |       |
-> +-----------+--------+--------+----------------+-------+
-> 
-> 1.2 Performance test case
-> 
-> 10 consecutive iterations of hackbench (hackbench -l 500 -s 4096),
-> no delay between two successive executions.
-> The cpufreq governor - schedutil. Units in seconds.
-> The goal is to see not regression, lower completion time is better.
-> 
-> +-----------+-----------------+------------------------+
-> |           | Without patches | With patches           |
-> +-----------+--------+--------+----------------+-------+
-> | benchmark | Mean   | RSD*   | Mean           | RSD*  |
-> +-----------+--------+--------+----------------+-------+
-> | hackbench |  8.15  | 2.86%  |  7.95 (-2.5%)  | 0.60% |
-> +-----------+--------+--------+----------------+-------+
-> 
-> *RSD: Relative Standard Deviation (std dev / mean)
+Quoting Sayali Lokhande (2020-02-20 01:20:46)
+> From: Ram Prakash Gupta <rampraka@codeaurora.org>
+>=20
+> During GCC level clock gating of MCLK, the async FIFO
 
-Nice measurements!
+Is this automatic hardware clock gating?
 
-Applied both, thank you.
+> gets into some hang condition, such that for the next
+> transfer after MCLK ungating, first bit of CMD response
+> doesn't get written in to the FIFO. This cause the CPSM
+> to hang eventually leading to SW timeout.
+>=20
+> To fix the issue, toggle the FIFO write clock after
+> MCLK ungated to get the FIFO pointers and flags to
+> valid states.
+>=20
+> Change-Id: Ibef2d1d283ac0b6983c609a4abc98bc574d31fa6
+> Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
+> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 43 ++++++++++++++++++++++++++++++++++++++=
++++++
+>  1 file changed, 43 insertions(+)
+>=20
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index c3a160c..eaa3e95 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -1554,6 +1556,43 @@ static void __sdhci_msm_set_clock(struct sdhci_hos=
+t *host, unsigned int clock)
+>         sdhci_enable_clk(host, clk);
+>  }
+> =20
+> +/*
+> + * After MCLK ugating, toggle the FIFO write clock to get
 
-Best regards,
-Krzysztof
+What is ugating?
 
+> + * the FIFO pointers and flags to valid state.
+> + */
+> +static void sdhci_msm_toggle_fifo_write_clk(struct sdhci_host *host)
+> +{
+> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> +       struct sdhci_msm_host *msm_host =3D sdhci_pltfm_priv(pltfm_host);
+> +       const struct sdhci_msm_offset *msm_offset =3D
+> +                                       msm_host->offset;
+> +       struct mmc_card *card =3D host->mmc->card;
+> +
+> +       if (msm_host->tuning_done ||
+> +                       (card && card->ext_csd.strobe_support &&
+> +                       card->host->ios.enhanced_strobe)) {
+> +               /*
+> +                * set HC_REG_DLL_CONFIG_3[1] to select MCLK as
+> +                * DLL input clock
+> +                */
