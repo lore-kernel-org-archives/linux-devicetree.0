@@ -2,134 +2,103 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F70C11D04
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 13:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1266CC11D05
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 13:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6547208C4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 13:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA53920658
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 13:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="VQiME1kh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qRt7DBLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgBTNdy (ORCPT
+        id S1728066AbgBTNhQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:33:54 -0500
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:35771 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728051AbgBTNdx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:33:53 -0500
-Received: from [IPv6:2001:420:44c1:2577:ac15:94e:5ea0:8199]
- ([IPv6:2001:420:44c1:2577:ac15:94e:5ea0:8199])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 4lxbjYOH4jmHT4lxejJjq8; Thu, 20 Feb 2020 14:33:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582205631; bh=W5ASoqeOAh17Qps81aLKTtl0jMkVCmNhhVWeB98kIlg=;
-        h=Subject:From:To:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=VQiME1kharihSlvLOG/fRjPvR5bBNO2M9q/euOR+rf8Xi5ZdL6Ob5tvwHCv/CX0wH
-         FvoeGv4APr2WlyboDCvvqBhsOzz2gjJkhUMwIR7VC9imGsFLeobf5wWAaV3RjQdYRc
-         8S4c3ihDqmz8tE/UWmAAMgkJeXhm7q/Rvcm4GTGLTCI0BaV8hqpjBtBOo2bzV8DLp2
-         X0frPcCFsjpYE36xE/fMBOUMoXBqbRR3/Lp2uLuCDTVqYc71VRU4IRbEI7ypbVmNZG
-         41xcH45Kp4Z4MHRX2CFpbwZK33STOtqLjSU9s8mfMsMZ5bwGbtodUyurOzNrxGEpJW
-         5l/gGtYyHwOmA==
-Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com, sboyd@kernel.org
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
- <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
-Message-ID: <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
-Date:   Thu, 20 Feb 2020 14:33:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 20 Feb 2020 08:37:16 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40591 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728056AbgBTNhQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 08:37:16 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so2065453wmi.5
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 05:37:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=B4PLo7ULnoL8yyxNbBuvmhizTKdxVbJiDyyciEc36Lc=;
+        b=qRt7DBLZBTVQjM1tmi4ELDLZ8ufVlBTbCqFqtzgJ9BHN030AEdAoh3uAIzOzj+XaUd
+         qGcHTGaeJ7u4Pl392ptxOLZvSLUN/rNczq8f87EnApfyE1oEpsNf6NjIsXHqF5fGolJt
+         QkIOU219N8LG8XCiKD7oZMb9rtkxOVG3H8u73O9Su5KwaQHYtYxU+uwx5d1PfHUk9kc5
+         dy02FIlFosCGGi/uUmJmptrHNTYXjJqRw/xpzmM/yU0dNMmX7r9ys4t1FYLo2qQGTxo7
+         lvREku+RWOMk7LtwEikUgSNvEUKxKzpKZdJ6jhDJXqKFqIdOkdeDSou4B6vHcWhVnOf8
+         9tPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=B4PLo7ULnoL8yyxNbBuvmhizTKdxVbJiDyyciEc36Lc=;
+        b=ZgmBDk5919Af6sfIe684OOeFk+gxEuJn91DGIq46UGlcRBRRs4aKTlk7c6aZgQTCmY
+         kwUXsqQYapzDrl68Z3+Ktmh6k8FwfSOaCwPUnXu2UCOt6wbpxtj8vCOUh4LhtaLskS+F
+         N63TEDjKbI4aWltyfezLzm6kxU9LeuB4PuH7xkF0GOwD08h2xwuWHjMPX/G9ygU4XMa5
+         m2fSuHlQvbFtjAA/fZ9y+ECPZ9qquvPz4MZsHagK7epEpFJkVeNL5JPxlCk3wZf+6+F5
+         o1hBU5/bSy5+CyW5JQdlXtlFuN3nCxqAxQmD3+0sgiFxp6dWAfWUaundQkTZqvp/bkYR
+         2Ogw==
+X-Gm-Message-State: APjAAAUPHfA4oJlMOuPDAoSk2U/2I0Z+ELxcxapz2PjjKyelwgeRrKe4
+        VifV2dzErYqLAWpeqpBvGFGvig==
+X-Google-Smtp-Source: APXvYqxeEECe1zPsmH3M53hHGcqRTpW593ckp3/6EuRcU0KckGtsaWYA5KUQiu8gYOO5hhf+lwdcPg==
+X-Received: by 2002:a05:600c:2c44:: with SMTP id r4mr4567137wmg.140.1582205833995;
+        Thu, 20 Feb 2020 05:37:13 -0800 (PST)
+Received: from dell (89-145-231-170.xdsl.murphx.net. [89.145.231.170])
+        by smtp.gmail.com with ESMTPSA id u14sm4551648wrm.51.2020.02.20.05.37.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 05:37:13 -0800 (PST)
+Date:   Thu, 20 Feb 2020 13:37:39 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, tglx@linutronix.de,
+        fabrice.gasnier@st.com, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] mfd: stm32: Add defines to be used for clkevent
+ purpose
+Message-ID: <20200220133739.GG3494@dell>
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-3-benjamin.gaignard@st.com>
+ <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfIgbYI0jRMjFLIONkK7nMG/If2b+W2ijCTNCxtI5OT0b9Eo+Ml//odnii0LSDRn39gUvWvWon0ewb/nWgysr/BO9vTlDJPK4JXbfCSlwVVTfOtjdsYfW
- m9giEi3+XdgysUXMIC9ajCfu9dgDEgvrRgjR1VvOFG3k4e19UEIkcuuZIW5Lh68eAFOpKZO8g0kooxbhkAF6qqIqkQp/Twf5BycKYvWJ7ohThBbKlvJZ7kOH
- JdS6ByS8WPWZfHwQjbyrPeP/B5tFhZtXOUaB0dH6xXSPCgngNRnWoIX3Wus+/UYR3qVtR1HDkKyahdq4bmMwH6L/4Cy7QjH8NTJ5AwWAx8SOzKVfgLwar1Rc
- TWRd56Srn8dLbwuWENLRgcriaZ9Ty9oT78bsYUFd93F7P2WAY65VGQyy9NAuul+U1SfN9wHytaU2UWKAz4VwYggCZi0Ex4uUKZfZSgE/eA6L+DB3rXbft12Z
- c1BGU0ckKhnCPe+/59It5KQ4toYMh9nXXmJDZsr0yFSdurZOVD0pxBx69bqZEyUoeQdBCujRssygWu2A7Iq0jnyUu7C+QbKVrJGPAPogcL1tEylb1uKGfhNZ
- 7BqVPh9twuBWOw7g2L0GlFZvWqaaJSjIrm2u29klYLjUlmMn2WUNrEI030FNyiGOh2c=
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-(Replying to myself so I can explain this a bit more)
+On Thu, 20 Feb 2020, Daniel Lezcano wrote:
 
-On 2/20/20 1:44 PM, Hans Verkuil wrote:
->> +
->> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
->> +{
->> +	struct device_node *node = csi->dev->of_node;
->> +	unsigned int port_num;
->> +	int ret;
->> +	struct tegra_csi_channel *item;
->> +	unsigned int tpg_channels = csi->soc->csi_max_channels;
->> +
->> +	/* allocate CSI channel for each CSI x2 ports */
->> +	for (port_num = 0; port_num < tpg_channels; port_num++) {
->> +		item = devm_kzalloc(csi->dev, sizeof(*item), GFP_KERNEL);
 > 
-> Using devm_*alloc can be dangerous. If someone unbinds the driver, then
-> all memory allocated with devm_ is immediately freed. But if an application
-> still has a filehandle open, then when it closes it it might still reference
-> this already-freed memory.
+> Hi Lee,
 > 
-> I recommend that you avoid using devm_*alloc for media drivers.
+> On 17/02/2020 14:45, Benjamin Gaignard wrote:
+> > Add defines to be able to enable/clear irq and configure one shot mode.
+> > 
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> 
+> Are you fine if I pick this patch with the series?
 
-A good test is to unbind & bind the driver:
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
-echo -n 54080000.vi >unbind
-echo -n 54080000.vi >bind
-
-First just do this without the driver being used. That already
-gives me 'list_del corruption' kernel messages (list debugging
-is turned on in my kernel).
-
-Note that this first test is basically identical to a rmmod/modprobe
-of the driver. But when I compiled the driver as a module it didn't
-create any video device nodes! Nor did I see any errors in the kernel
-log. I didn't pursue this, and perhaps I did something wrong, but it's
-worth taking a look at.
-
-The next step would be to have a video node open with:
-
-v4l2-ctl --sleep 10
-
-then while it is sleeping unbind the driver and see what happens
-when v4l2-ctl exits.
-
-Worst case is when you are streaming:
-
-v4l2-ctl --stream-mmap
-
-and then unbind.
-
-In general, the best way to get this to work correctly is:
-
-1) don't use devm_*alloc
-2) set the release callback of struct v4l2_device and do all freeing there.
-3) in the platform remove() callback you call media_device_unregister()
-   and video_unregister_device().
-
-It's worth getting this right in this early stage, rather than fixing it
-in the future.
-
-Regards,
-
-	Hans
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
