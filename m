@@ -8,106 +8,87 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A9CC11D05
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 15:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7A3C11D05
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 15:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6F424656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 15:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2B12071E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 15:38:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsI+M80q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWh6C6VJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgBTPeC (ORCPT
+        id S1728390AbgBTPi5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:34:02 -0500
-Received: from mail-lj1-f176.google.com ([209.85.208.176]:38793 "EHLO
-        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728305AbgBTPeC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 10:34:02 -0500
-Received: by mail-lj1-f176.google.com with SMTP id w1so4685926ljh.5;
-        Thu, 20 Feb 2020 07:34:01 -0800 (PST)
+        Thu, 20 Feb 2020 10:38:57 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36406 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbgBTPi5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 10:38:57 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f24so3472503lfh.3;
+        Thu, 20 Feb 2020 07:38:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=5019G7yq0avtfjWMAOLceayBMfSqRFTAMAXEQqHSZug=;
-        b=PsI+M80qxN2gYjTcQsbtfNJtVJnILU6F6Pv0qT2SjfyhK7SbCDRjMkVsmi0o58N92h
-         jo1mk5IJLbW1Sk6MFhu5ArFVWD8JLaSvfqyMXdkjA4LpSPjO3bML7zdrgMZSzLXpCZRp
-         8iycMu+EvI+4tGPi/zOrMKWYEQV6JJ52eBc36UdfycUYYNtzG4qAYMCLxmgNHL+J2dzQ
-         nIMCbMTBfJL4irXeigijEE8IoCits1/LDSTG3cC8hRebJB11KN/PN9LKSCySNQX9hxAq
-         txCc9nafhCKlncTgwzei8TsKc1XsE1RrwlCyMERKM8EtDl/N/oaV9svC/1PI0UvfO0v7
-         G49Q==
+        bh=LTSTcBgb9GGJQllk/olrBiwlUBbpPRVx+sqTluRMzLs=;
+        b=SWh6C6VJobFRpWMlRyr9Ir9oQp9/szZB1jyFZRDk+ZrhKC2bkfTXQMYeQIARVZpm0r
+         TOWj0G3U9aDhmnR+8o4jlbZcdL2sRDk4+lj+C5B+MRk9b8tnmMTQMtV1PxQJNzAw2pwT
+         Tx8mSXkH5ETJp6KyFGAEpyirq/WzJa9B84AWRBKl4vLKKx2nbH+eLeA4m0mCJrZlAQsl
+         1IQv8vu92Opd0LdrF68FanQmRXzvMFodiA3UufFAGiByXZEEJaZxOuPcMycNhsYyCumo
+         SW2QQK8xcNAmu6vt4hwdcJcab+Dh+uqtqPa22KHYu/HBc7gGoyLNhnrKnFbGvgTvOxuj
+         SM2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5019G7yq0avtfjWMAOLceayBMfSqRFTAMAXEQqHSZug=;
-        b=YyVD1nwwGwPNnJVbrBuscAcy9hvtIeOxiYo2zfD81/r/SojzVYC/WYwnOCMurr+g8v
-         t/1LucPSWgKY9rgMAxkUa1LZGNI0Xqaduh8YghDPWOPKCInp/z5U9QmwaCt29JWRpKge
-         gZdHuIQiGZhzPEcvmOsnzkppy3cDuQnlu5PKVok7Sb6dOxOuyw/rax7g5xR3DgJZZB6/
-         gvhS+ksCpkmhPwfWE+3PN5reJVyoh7nHt8w6QcwUq1dYMUkJnjuA3j/c+gGCB3qWo/zg
-         1WnaB5DqYY2emJklRBHqUt66IVd9OcSVhCvN1GhfhLZzIMwgNRGzcpDcq/ZePlqHx/Fm
-         1mEw==
-X-Gm-Message-State: APjAAAVgiy+bek9c3lm7C3frZBRkyCBgk7JVUNUxmVk4MdQcc3bHVlhS
-        23VDunAIQz0E+P6vpj2VD1c=
-X-Google-Smtp-Source: APXvYqxaGUst+wKhSuMt86KQ7TYw1ssovVjk09fGgxif+X+Hf39ciAP//EaX7mfFGKuhhUseY3kzUg==
-X-Received: by 2002:a2e:8698:: with SMTP id l24mr19404158lji.94.1582212840413;
-        Thu, 20 Feb 2020 07:34:00 -0800 (PST)
+        bh=LTSTcBgb9GGJQllk/olrBiwlUBbpPRVx+sqTluRMzLs=;
+        b=cA15KiwvgcNJodkwAqXq3jmpYs4mXY7x2Q7aBh2LOFx3Hg3/Ojnn5hFwvsKnr3rCJn
+         VaZUiztHrBS91R415hba7Qd5uRvsxdyuLjqGQKOrX+Bl/XpS7Yyd8Aw0+uF9Pt2aMLnP
+         w5f3JlI52538ukvOIjsTWzvewyd2NixWl0+2oMPOEDc/lKHrkCqRHUqCeAom7mRrPMuS
+         y5m/g5NVxum7qaaf8lvpczyWjAj61HUAkLwMkpKkAuIhdmYxb6LNkjDkMhz8BvTCCWUg
+         074pfDPzLKvBaHme5fBnSBNZeRBL4G1ns/eL9aQeRUUAKhZ02Re08d7CkHr4g4dZZqpM
+         CLkw==
+X-Gm-Message-State: APjAAAUX8UfF9qbBeu+T8ocqbfqaCF7gnwshdO98DhG1wbTcJhzlmuHX
+        wk4PjkcgOjuuwpoCzgqLF30=
+X-Google-Smtp-Source: APXvYqyxn2s0jyOgdFy3o8g+SEhzmAWcmuIT+Q8DAV3EzVkzptKp/H9zuaGay43R3j85QjPRMaUAeQ==
+X-Received: by 2002:a05:6512:6cb:: with SMTP id u11mr7885481lff.69.1582213135029;
+        Thu, 20 Feb 2020 07:38:55 -0800 (PST)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id u13sm2162285lfq.19.2020.02.20.07.33.57
+        by smtp.gmail.com with ESMTPSA id f26sm2000083ljn.104.2020.02.20.07.38.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 20 Feb 2020 07:33:59 -0800 (PST)
+        Thu, 20 Feb 2020 07:38:54 -0800 (PST)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Kevin Hilman <khilman@baylibre.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
-        Art Nikpal <email2tema@gmail.com>
-Subject: [PATCH] arm64: dts: meson: fix gxm-khadas-vim2 wifi
-Date:   Thu, 20 Feb 2020 19:33:10 +0400
-Message-Id: <1582212790-11402-1-git-send-email-christianshewitt@gmail.com>
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] arm64: dts: meson-gxbb-odroid-c2: add rc-odroid ir keymap
+Date:   Thu, 20 Feb 2020 19:38:05 +0400
+Message-Id: <1582213085-11656-1-git-send-email-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fixes: adc52bf7ef16 ("arm64: dts: meson: fix mmc v2 chips max frequencies")
+Add the rc-odroid keymap to the Odroid C2 device-tree.
 
-before
-
-[6.418252] brcmfmac: F1 signature read @0x18000000=0x17224356
-[6.435663] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
-[6.551259] brcmfmac: brcmf_sdiod_ramrw: membytes transfer failed
-[6.551275] brcmfmac: brcmf_sdio_verifymemory: error -84 on reading 2048 membytes at 0x00184000
-[6.551352] brcmfmac: brcmf_sdio_download_firmware: dongle image file download failed
-
-after
-
-[6.657165] brcmfmac: F1 signature read @0x18000000=0x17224356
-[6.660807] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
-[6.918643] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
-[6.918734] brcmfmac: brcmf_c_process_clm_blob: no clm_blob available (err=-2), device may have limited channels available
-[6.922724] brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4356/2 wl0: Jun 16 2015 14:25:06 version 7.35.184.r1 (TOB) (r559293) FWID 01-b22ae69c
-
-Suggested-by: Art Nikpal <email2tema@gmail.com>
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-index f82f25c..d5dc128 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-@@ -327,7 +327,7 @@
- 	#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 6ded279..b46ef98 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -248,6 +248,7 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&remote_input_ao_pins>;
+ 	pinctrl-names = "default";
++	linux,rc-map-name = "rc-odroid";
+ };
  
- 	bus-width = <4>;
--	max-frequency = <50000000>;
-+	max-frequency = <60000000>;
- 
- 	non-removable;
- 	disable-wp;
+ &gpio_ao {
 -- 
 2.7.4
 
