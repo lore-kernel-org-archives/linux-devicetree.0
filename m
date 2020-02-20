@@ -2,211 +2,127 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785EBC35643
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77D2C35640
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 06:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD9724650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA6620722
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 06:50:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzXfMrb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbgBUGrU (ORCPT
+        id S1726224AbgBUGuP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:47:20 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:41458 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbgBUGrT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 01:47:19 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B69FE1A6D88;
-        Fri, 21 Feb 2020 07:47:16 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8931A1A6D82;
-        Fri, 21 Feb 2020 07:47:08 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C85EB4043C;
-        Fri, 21 Feb 2020 14:46:10 +0800 (SGT)
-From:   sherry sun <sherry.sun@nxp.com>
-To:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        james.morse@arm.com, rrichter@marvell.com, michal.simek@xilinx.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, frank.li@nxp.com
-Subject: [PATCH 3/3] EDAC: synopsys: Add edac driver support for i.MX8MP
-Date:   Fri, 21 Feb 2020 14:39:16 +0800
-Message-Id: <1582267156-20189-4-git-send-email-sherry.sun@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582267156-20189-1-git-send-email-sherry.sun@nxp.com>
-References: <1582267156-20189-1-git-send-email-sherry.sun@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 21 Feb 2020 01:50:15 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33342 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbgBUGuO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 01:50:14 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m10so4443755wmc.0
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 22:50:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=q61/N6jKzSDGt/dt2Ij4V86BCpsgubUQTNr9KPnbsfA=;
+        b=VzXfMrb9VSxxxrTJ5DDpS1xdw0dsZ3h+H5ZwFs9uigBL9YpFt0PFhdr3SG3lZ+hF7Q
+         Gm/KInKtrOYR51jFwrjfeMxvPtSXPOVGtYZGXsxTAJoT3fhttjsQdAJNkWjBFqJuqzhk
+         7odQ6VLtaVDtHK5Zqt45oi8BKD0XLZoXyON7wer0RfUMNVXnJjx/DHDGjMach0Ar6nBP
+         qeapLe03hmprJaKD4rfHRQIQRlx1a1es69I4nvOSgqGGNObe6LZ83WBcbd2EA5q9j/0h
+         rs/XY11RvXFxQwhdws8EjTVo0BDLdjtC8kPB3iG28X8ILnPe4HeYCf3cm+bwcJNm6IAh
+         9fpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=q61/N6jKzSDGt/dt2Ij4V86BCpsgubUQTNr9KPnbsfA=;
+        b=toPSgRhwDGeKRdRox5NDsvXSsiKmUJm9ToqWYdkrzpCOwVnBBsi89o369OIkfpYe52
+         ZoPvhr/xcLDKIlM7U4prN7bANvvxuaDuuCHga0Ec76xy7fHJmSoOkDVvuN4nUWAt+531
+         6jOw/+Vu51svT+Fw4b/gVBIvFqB9wI18eKvfLkhZ6JvPA4RUcemLLT+h1lKeIlXCWbEf
+         882EqoZL3JtQsU5UnW2btMjec99waME6LU0i2obNxigf//JaCAuptwBOzEeY9CoZwDHj
+         uMaaIM1fmSI4YTAFMibxS8x5p3oS/EKGlCP38GMIoR68JHiWJRUaxK0MKQE5fZrjMS7u
+         +MXA==
+X-Gm-Message-State: APjAAAXX1OjwVLV97Ttcwq2LVA2BqTmDW+/9/xbECS8tEBjBwE5rYXvV
+        LF5HgjZSO5Rr/hh3KhPFn0s=
+X-Google-Smtp-Source: APXvYqzEZJwZsv9NAveAC2FjcWcHpl771MrGsbDrYjQQgJbqUJeWLRf2jv4lld17Hkk9bm6M9EG3Ag==
+X-Received: by 2002:a7b:c152:: with SMTP id z18mr1742573wmi.70.1582267812932;
+        Thu, 20 Feb 2020 22:50:12 -0800 (PST)
+Received: from localhost ([193.47.161.132])
+        by smtp.gmail.com with ESMTPSA id h205sm2551959wmf.25.2020.02.20.22.50.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Feb 2020 22:50:12 -0800 (PST)
+Date:   Thu, 20 Feb 2020 17:04:41 +0100
+From:   Oliver Graute <oliver.graute@gmail.com>
+To:     aisheng.dong@nxp.com
+Cc:     peng.fan@nxp.com, festevam@gmail.com, devicetree@vger.kernel.org,
+        linux-imx@nxp.com, Anson.Huang@nxp.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: RFC: imx8: imx8qm with LCD Panel on lpspi
+Message-ID: <20200220160441.GC31464@optiplex>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Sherry Sun <sherry.sun@nxp.com>
+Hello Aisheng,
 
-Since i.MX8MP use synopsys ddr controller IP, so add edac support
-for i.MX8MP based on synopsys edac driver. i.MX8MP use LPDDR4 and
-support interrupts for corrected and uncorrected errors. The main
-difference between ZynqMP and i.MX8MP ddr controller is the interrupt
-registers. So add another interrupt handler function, enable/disable
-interrupt function to distinguish with ZynqMP.
+I try to get a LCD Panel working with the imx8qm. The Panel is connected
+to lpspi. But I'am not sure if I handle the imx8qm clocking the right
+way. Should I use the imx7ul compatible or the imx8qxp compatible? Which
+clock defines should I use for the SPI1 Clk?
 
-Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
----
- drivers/edac/synopsys_edac.c | 77 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 1 deletion(-)
+Best Regards,
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 2d263382d797..66c801502212 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -101,6 +101,7 @@
- /* DDR ECC Quirks */
- #define DDR_ECC_INTR_SUPPORT		BIT(0)
- #define DDR_ECC_DATA_POISON_SUPPORT	BIT(1)
-+#define DDR_ECC_IMX8MP			BIT(2)
- 
- /* ZynqMP Enhanced DDR memory controller registers that are relevant to ECC */
- /* ECC Configuration Registers */
-@@ -266,6 +267,11 @@
- 
- #define RANK_B0_BASE			6
- 
-+/* ECCCTL UE/CE Interrupt enable/disable for IMX8MP*/
-+#define DDR_CE_INTR_EN_MASK			0x100
-+#define DDR_UE_INTR_EN_MASK			0x200
-+#define ECC_INTR_MASK				0x10100
-+
- /**
-  * struct ecc_error_info - ECC error log information.
-  * @row:	Row number.
-@@ -524,6 +530,54 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- 	memset(p, 0, sizeof(*p));
- }
- 
-+static void enable_intr_imx8mp(struct synps_edac_priv *priv)
-+{
-+	int regval;
-+
-+	regval = readl(priv->baseaddr + ECC_CLR_OFST);
-+	regval |= (DDR_CE_INTR_EN_MASK | DDR_UE_INTR_EN_MASK);
-+	writel(regval, priv->baseaddr + ECC_CLR_OFST);
-+}
-+
-+static void disable_intr_imx8mp(struct synps_edac_priv *priv)
-+{
-+	int regval;
-+
-+	regval = readl(priv->baseaddr + ECC_CLR_OFST);
-+	regval &= ~(DDR_CE_INTR_EN_MASK | DDR_UE_INTR_EN_MASK);
-+	writel(regval, priv->baseaddr + ECC_CLR_OFST);
-+}
-+
-+/* Interrupt Handler for ECC interrupts on imx8mp platform. */
-+static irqreturn_t intr_handler_imx8mp(int irq, void *dev_id)
-+{
-+	const struct synps_platform_data *p_data;
-+	struct mem_ctl_info *mci = dev_id;
-+	struct synps_edac_priv *priv;
-+	int status, regval;
-+
-+	priv = mci->pvt_info;
-+	p_data = priv->p_data;
-+
-+	regval = readl(priv->baseaddr + ECC_STAT_OFST);
-+	if (!(regval & ECC_INTR_MASK))
-+		return IRQ_NONE;
-+
-+	status = p_data->get_error_info(priv);
-+	if (status)
-+		return IRQ_NONE;
-+
-+	priv->ce_cnt += priv->stat.ce_cnt;
-+	priv->ue_cnt += priv->stat.ue_cnt;
-+	handle_error(mci, &priv->stat);
-+
-+	edac_dbg(3, "Total error count CE %d UE %d\n",
-+		 priv->ce_cnt, priv->ue_cnt);
-+	enable_intr_imx8mp(priv);
-+
-+	return IRQ_HANDLED;
-+}
-+
- /**
-  * intr_handler - Interrupt Handler for ECC interrupts.
-  * @irq:        IRQ number.
-@@ -541,6 +595,9 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
- 	priv = mci->pvt_info;
- 	p_data = priv->p_data;
- 
-+	if (p_data->quirks & DDR_ECC_IMX8MP)
-+		return intr_handler_imx8mp(irq, dev_id);
-+
- 	regval = readl(priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
- 	regval &= (DDR_QOSCE_MASK | DDR_QOSUE_MASK);
- 	if (!(regval & ECC_CE_UE_INTR_MASK))
-@@ -817,7 +874,7 @@ static void mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
- 	platform_set_drvdata(pdev, mci);
- 
- 	/* Initialize controller capabilities and configuration */
--	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
-+	mci->mtype_cap = MEM_FLAG_LRDDR4 | MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
- 	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
- 	mci->scrub_cap = SCRUB_HW_SRC;
- 	mci->scrub_mode = SCRUB_NONE;
-@@ -842,6 +899,9 @@ static void mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
- static void enable_intr(struct synps_edac_priv *priv)
- {
- 	/* Enable UE/CE Interrupts */
-+	if (priv->p_data->quirks & DDR_ECC_IMX8MP)
-+		return enable_intr_imx8mp(priv);
-+
- 	writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
- 			priv->baseaddr + DDR_QOS_IRQ_EN_OFST);
- }
-@@ -849,6 +909,9 @@ static void enable_intr(struct synps_edac_priv *priv)
- static void disable_intr(struct synps_edac_priv *priv)
- {
- 	/* Disable UE/CE Interrupts */
-+	if (priv->p_data->quirks & DDR_ECC_IMX8MP)
-+		return disable_intr_imx8mp(priv);
-+
- 	writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
- 			priv->baseaddr + DDR_QOS_IRQ_DB_OFST);
- }
-@@ -898,6 +961,14 @@ static const struct synps_platform_data zynqmp_edac_def = {
- 			  ),
- };
- 
-+static const struct synps_platform_data imx8mp_edac_def = {
-+	.get_error_info	= zynqmp_get_error_info,
-+	.get_mtype	= zynqmp_get_mtype,
-+	.get_dtype	= zynqmp_get_dtype,
-+	.get_ecc_state	= zynqmp_get_ecc_state,
-+	.quirks         = (DDR_ECC_INTR_SUPPORT | DDR_ECC_IMX8MP),
-+};
-+
- static const struct of_device_id synps_edac_match[] = {
- 	{
- 		.compatible = "xlnx,zynq-ddrc-a05",
-@@ -907,6 +978,10 @@ static const struct of_device_id synps_edac_match[] = {
- 		.compatible = "xlnx,zynqmp-ddrc-2.40a",
- 		.data = (void *)&zynqmp_edac_def
- 	},
-+	{
-+		.compatible = "fsl,imx8mp-ddrc",
-+		.data = (void *)&imx8mp_edac_def
-+	},
- 	{
- 		/* end of table */
- 	}
--- 
-2.17.1
+Oliver
 
+
+	lpspi1: lpspi@5a010000 {
+		compatible = "fsl,imx7ulp-spi";
+		/* compatible = "fsl,imx8qxp-spi"; */
+		reg = <0x0 0x5a010000 0x0 0x10000>;
+		interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-parent = <&gic>;
+		clocks = <&clk IMX_ADMA_SPI1_CLK>,
+		         <&clk IMX_IMG_IPG_CLK>;
+		clock-names = "per", "ipg";
+		assigned-clocks = <&clk IMX_ADMA_SPI1_CLK>;
+		assigned-clock-rates = <20000000>;
+		status = "disabled";
+	};
+
+&lpspi1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	fsl,spi-num-chipselects = <1>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_lpspi1 &pinctrl_lpspi1_cs>;
+	cs-gpios = <&lsio_gpio3 24 GPIO_ACTIVE_LOW>;
+	status = "okay";
+
+	panel@0 {
+		compatible = "sitronix,st7789v";
+		reg = <0>;
+
+		/* reset-gpios = <&lsio_gpio3 11 GPIO_ACTIVE_LOW>; */
+
+		backlight = <&lvds_backlight1>;
+		spi-max-frequency = <30000000>;
+		spi-cpol;
+		spi-cpha;
+
+		port {
+			panel_input: endpoint {
+				remote-endpoint = <&tcon0_out_panel>;
+			};
+		};
+
+	};
+};
