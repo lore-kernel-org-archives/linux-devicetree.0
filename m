@@ -2,173 +2,216 @@ Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F145C11D0C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FF7C11D10
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0248224672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5400207FD
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 17:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20150623.gappssmtp.com header.i=@thegoodpenguin-co-uk.20150623.gappssmtp.com header.b="R78Qigu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgBTRWA (ORCPT
+        id S1728715AbgBTRXy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:22:00 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48646 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTRWA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 12:22:00 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id CCF2F29527F
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>, rdunlap@infradead.org,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Fabien Parent <fparent@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Owen Chen <owen.chen@mediatek.com>
-Subject: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
-Date:   Thu, 20 Feb 2020 18:21:41 +0100
-Message-Id: <20200220172147.919996-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.0
+        Thu, 20 Feb 2020 12:23:54 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:32833 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728237AbgBTRXy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 12:23:54 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m10so3294223wmc.0
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 09:23:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DP+WeV+eCsLNcM+0j7VvT82QxXGphPuPG6yUJrTyu2U=;
+        b=R78Qigu18fQdSDHxyFt+gW5wubpXXtRHLj65ytZxFXLLy3m/Co+0ptUws9rqJFpJTg
+         5+KMf7B15USerdDLnaoM9irKTCXrd4+J95sO5zPCYQiTRs1Gx8H+H+x3G2CiCAvuyJu5
+         /U/9vm5hgp+xuWqrMkrMZg0yyxMQOx5fXOOBCnAmpu0LyPxTUnE7Woy2rl4jTb9Ms9hr
+         BzKxrwajcq3cp0lXRn35Sj3uf/H+DPPJh2HtZNdDHWmp+kfRaedRNapGWL/oRqlgLd9B
+         vgTlVOzYwGfyHr6qIwYaKx8aSkCjt4Qex3WgH9VjUUnUTQGJ47QI/fkm1+Agh9LLL/qK
+         l0SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DP+WeV+eCsLNcM+0j7VvT82QxXGphPuPG6yUJrTyu2U=;
+        b=Ayg4qbz1jyRvAxrMp7Pl0A0Z4w5NUWrt6Kjvfq9w3bcmbgKJcZG/58UMNuzDBxvYkM
+         mwTjTWxl2ATVi3tWI415IHAq9Oiz6Un0kCEYTdo2EeMQ2B9bekWMhsYwgfPlbAthwpDa
+         C7RlkANsGwypNvDt2Z2aB+OROPxazGA6FSbloOAc7o25CKQwg7reeBJL83nM6IrAPycW
+         RoSw/dF5QPo7t1WqzT7hk21BZqtZSxesNEJRxm5JFcBp3aAZe9QnWechQlgDY8ic6rTm
+         DydJh3xjK7yQR+kp2fy/OpRahfB2RhoJJJpadbzeqh4ALBt5zHveiECuTV+4M3tGdp0B
+         EhiA==
+X-Gm-Message-State: APjAAAVyPHGcdGRdvix6uw4Sp90Eip+jBp9thDf9rO1d+eIssB3gkVk7
+        px2E3m28B18zvOF7iTFf8vMm6w==
+X-Google-Smtp-Source: APXvYqwoOtD3d5ksvVjxWcwZ0/DxwY7u+cyjGgOanzGPTjCQXXfMerwF375wbaNtGgrElDDsrXncyg==
+X-Received: by 2002:a1c:b789:: with SMTP id h131mr5560317wmf.148.1582219430876;
+        Thu, 20 Feb 2020 09:23:50 -0800 (PST)
+Received: from big-machine ([2a00:23c5:dd80:8400:98d8:49e6:cdcc:25df])
+        by smtp.gmail.com with ESMTPSA id c77sm5261153wmd.12.2020.02.20.09.23.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:23:50 -0800 (PST)
+Date:   Thu, 20 Feb 2020 17:23:48 +0000
+From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, robh+dt@kernel.org, andrew.murray@arm.com,
+        arnd@arndb.de, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in,
+        shawnguo@kernel.org, m.karthikeyan@mobiveil.co.in,
+        leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, Mingkai.Hu@nxp.com,
+        Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
+Subject: Re: [PATCHv10 03/13] PCI: mobiveil: Collect the interrupt related
+ operations into a function
+Message-ID: <20200220172348.GF19388@big-machine>
+References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
+ <20200213040644.45858-4-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213040644.45858-4-Zhiqiang.Hou@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dear all,
+On Thu, Feb 13, 2020 at 12:06:34PM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> Collect the interrupt initialization related operations into
+> a new function such that it is more readable.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Those patches are intended to solve an old standing issue on some
-Mediatek devices (mt8173, mt2701 and mt2712) in a slightly different way
-to the precedent series.
+Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
 
-Up to now both drivers, clock and drm are probed with the same device tree
-compatible. But only the first driver get probed, which in effect breaks
-graphics on those devices.
-
-The version eight of the series tries to solve the problem with a
-different approach than the previous series but similar to how is solved
-on other Mediatek devices.
-
-The MMSYS (Multimedia subsystem) in Mediatek SoCs has some registers to
-control clock gates (which is used in the clk driver) and some registers
-to set the routing and enable the differnet blocks of the display
-and MDP (Media Data Path) subsystem. On this series the clk driver is
-not a pure clock controller but a system controller that can provide
-access to the shared registers between the different drivers that need
-it (mediatek-drm and mediatek-mdp). And the biggest change is, that in
-this version, clk driver is the entry point (parent) which will trigger
-the probe of the corresponding mediatek-drm driver and pass its MMSYS
-platform data for display configuration.
-
-All this series was tested on the Acer R13 Chromebook only.
-
-For reference, here are the links to the old discussions:
-
-* v7: https://patchwork.kernel.org/project/linux-mediatek/list/?series=241217
-* v6: https://patchwork.kernel.org/project/linux-mediatek/list/?series=213219
-* v5: https://patchwork.kernel.org/project/linux-mediatek/list/?series=44063
-* v4:
-  * https://patchwork.kernel.org/patch/10530871/
-  * https://patchwork.kernel.org/patch/10530883/
-  * https://patchwork.kernel.org/patch/10530885/
-  * https://patchwork.kernel.org/patch/10530911/
-  * https://patchwork.kernel.org/patch/10530913/
-* v3:
-  * https://patchwork.kernel.org/patch/10367857/
-  * https://patchwork.kernel.org/patch/10367861/
-  * https://patchwork.kernel.org/patch/10367877/
-  * https://patchwork.kernel.org/patch/10367875/
-  * https://patchwork.kernel.org/patch/10367885/
-  * https://patchwork.kernel.org/patch/10367883/
-  * https://patchwork.kernel.org/patch/10367889/
-  * https://patchwork.kernel.org/patch/10367907/
-  * https://patchwork.kernel.org/patch/10367909/
-  * https://patchwork.kernel.org/patch/10367905/
-* v2: No relevant discussion, see v3
-* v1:
-  * https://patchwork.kernel.org/patch/10016497/
-  * https://patchwork.kernel.org/patch/10016499/
-  * https://patchwork.kernel.org/patch/10016505/
-  * https://patchwork.kernel.org/patch/10016507/
-
-Best regards,
- Enric
-
-Changes in v8:
-- Be a builtin_platform_driver like other mediatek mmsys drivers.
-- New patches introduced in this series.
-
-Changes in v7:
-- Add R-by from CK
-- Add R-by from CK
-- Fix check of return value of of_clk_get
-- Fix identation
-- Free clk_data->clks as well
-- Get rid of private data structure
-
-Enric Balletbo i Serra (2):
-  drm/mediatek: Move MMSYS configuration to include/linux/platform_data
-  clk/drm: mediatek: Fix mediatek-drm device probing
-
-Matthias Brugger (4):
-  drm/mediatek: Use regmap for register access
-  drm/mediatek: Omit warning on probe defers
-  media: mtk-mdp: Check return value of of_clk_get
-  clk: mediatek: mt8173: Switch MMSYS to platform driver
-
- drivers/clk/mediatek/Kconfig                  |   6 +
- drivers/clk/mediatek/Makefile                 |   1 +
- drivers/clk/mediatek/clk-mt2701-mm.c          |  30 +++
- drivers/clk/mediatek/clk-mt2712-mm.c          |  44 +++++
- drivers/clk/mediatek/clk-mt8173-mm.c          | 172 ++++++++++++++++++
- drivers/clk/mediatek/clk-mt8173.c             | 104 -----------
- drivers/gpu/drm/mediatek/mtk_disp_color.c     |   5 +-
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |   5 +-
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |   5 +-
- drivers/gpu/drm/mediatek/mtk_dpi.c            |  12 +-
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |   4 +-
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c        |  53 +++---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |   4 +-
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  56 +-----
- drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 113 +-----------
- drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  13 +-
- drivers/gpu/drm/mediatek/mtk_dsi.c            |   8 +-
- drivers/gpu/drm/mediatek/mtk_hdmi.c           |   4 +-
- drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |   6 +
- include/linux/platform_data/mtk_mmsys.h       |  73 ++++++++
- 20 files changed, 401 insertions(+), 317 deletions(-)
- create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
- create mode 100644 include/linux/platform_data/mtk_mmsys.h
-
--- 
-2.25.0
-
+> ---
+> V10:
+>  - Refined the subject and change log.
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 65 +++++++++++++++++---------
+>  1 file changed, 42 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index 01df04ea5b48..9449528bb14f 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -454,12 +454,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  		return PTR_ERR(pcie->csr_axi_slave_base);
+>  	pcie->pcie_reg_base = res->start;
+>  
+> -	/* map MSI config resource */
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb_csr");
+> -	pcie->apb_csr_base = devm_pci_remap_cfg_resource(dev, res);
+> -	if (IS_ERR(pcie->apb_csr_base))
+> -		return PTR_ERR(pcie->apb_csr_base);
+> -
+>  	/* read the number of windows requested */
+>  	if (of_property_read_u32(node, "apio-wins", &pcie->apio_wins))
+>  		pcie->apio_wins = MAX_PIO_WINDOWS;
+> @@ -467,12 +461,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  	if (of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins))
+>  		pcie->ppio_wins = MAX_PIO_WINDOWS;
+>  
+> -	rp->irq = platform_get_irq(pdev, 0);
+> -	if (rp->irq <= 0) {
+> -		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
+> -		return -ENODEV;
+> -	}
+> -
+>  	return 0;
+>  }
+>  
+> @@ -618,9 +606,6 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
+>  	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
+>  
+> -	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+> -			    PAB_INTP_AMBA_MISC_ENB);
+> -
+>  	/*
+>  	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+>  	 * PAB_AXI_PIO_CTRL Register
+> @@ -670,9 +655,6 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	value |= (PCI_CLASS_BRIDGE_PCI << 16);
+>  	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+>  
+> -	/* setup MSI hardware registers */
+> -	mobiveil_pcie_enable_msi(pcie);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -873,6 +855,46 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> +static int mobiveil_pcie_interrupt_init(struct mobiveil_pcie *pcie)
+> +{
+> +	struct platform_device *pdev = pcie->pdev;
+> +	struct device *dev = &pdev->dev;
+> +	struct mobiveil_root_port *rp = &pcie->rp;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	/* map MSI config resource */
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb_csr");
+> +	pcie->apb_csr_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(pcie->apb_csr_base))
+> +		return PTR_ERR(pcie->apb_csr_base);
+> +
+> +	/* setup MSI hardware registers */
+> +	mobiveil_pcie_enable_msi(pcie);
+> +
+> +	rp->irq = platform_get_irq(pdev, 0);
+> +	if (rp->irq <= 0) {
+> +		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* initialize the IRQ domains */
+> +	ret = mobiveil_pcie_init_irq_domain(pcie);
+> +	if (ret) {
+> +		dev_err(dev, "Failed creating IRQ Domain\n");
+> +		return ret;
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
+> +
+> +	/* Enable interrupts */
+> +	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+> +			    PAB_INTP_AMBA_MISC_ENB);
+> +
+> +
+> +	return 0;
+> +}
+> +
+>  static int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>  {
+>  	struct mobiveil_root_port *rp = &pcie->rp;
+> @@ -906,15 +928,12 @@ static int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>  		return ret;
+>  	}
+>  
+> -	/* initialize the IRQ domains */
+> -	ret = mobiveil_pcie_init_irq_domain(pcie);
+> +	ret = mobiveil_pcie_interrupt_init(pcie);
+>  	if (ret) {
+> -		dev_err(dev, "Failed creating IRQ Domain\n");
+> +		dev_err(dev, "Interrupt init failed\n");
+>  		return ret;
+>  	}
+>  
+> -	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
+> -
+>  	/* Initialize bridge */
+>  	bridge->dev.parent = dev;
+>  	bridge->sysdata = pcie;
+> -- 
+> 2.17.1
+> 
