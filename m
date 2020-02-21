@@ -2,137 +2,217 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB8AC35640
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C7BC35644
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5247224650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D920D24650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgBUIwh (ORCPT
+        id S1727668AbgBUI5F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:52:37 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:61440 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgBUIwg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 03:52:36 -0500
-X-AuditID: c0a8fbf4-473ff70000004419-f9-5e4f9a52c61a
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id B6.69.17433.25A9F4E5; Fri, 21 Feb 2020 09:52:34 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Fri, 21 Feb 2020 09:52:30 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 2/5] dt_bindings: ROHM BD99954 Charger
-Thread-Topic: [RFC PATCH v2 2/5] dt_bindings: ROHM BD99954 Charger
-Thread-Index: AQHV4wmFTXdRcLHQD0CUbuLOwEiFn6ghWyIAgADEoQCAAl8sgIAA0r4A
-Date:   Fri, 21 Feb 2020 08:52:29 +0000
-Message-ID: <caa199d4ba76b210d7d0f0b6881d9a32cf2ca3a9.camel@fi.rohmeurope.com>
-References: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-         <104b5ef63c2ad4771503d9e6618bf427721042c3.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200218202122.GA599@bogus>
-         <1da3415507c216d09eb72c30ad915bc139d2ff3d.camel@fi.rohmeurope.com>
-         <CAL_Jsq+x+5RCT0L5HGocdSOuve2qm5JvqSYXAwDbJ4qP9wr9TA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+x+5RCT0L5HGocdSOuve2qm5JvqSYXAwDbJ4qP9wr9TA@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1759D1CBF27F5942AB15CF08CA71111D@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 21 Feb 2020 03:57:05 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55442 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbgBUI5F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 03:57:05 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 986C728CC36
+Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
+To:     CK Hu <ck.hu@mediatek.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        airlied@linux.ie, mturquette@baylibre.com, sboyd@kernel.org,
+        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        rdunlap@infradead.org, dri-devel@lists.freedesktop.org,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        linux-clk@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        sean.wang@mediatek.com, frank-w@public-files.de,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Fabien Parent <fparent@baylibre.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Owen Chen <owen.chen@mediatek.com>
+References: <20200220172147.919996-1-enric.balletbo@collabora.com>
+ <1582259996.1846.7.camel@mtksdaap41>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <7a87b486-1622-7f27-f5af-427b94a14c00@collabora.com>
+Date:   Fri, 21 Feb 2020 09:56:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCJsWRmVeSWpSXmKPExsVyYMXvTbpBs/zjDK71mlpMffiEzWL+kXOs
-        FlP+LGeyuLxrDpvF594jjBZLr19kspiz9ASLxf89O9gtTu8uceD0WDNvDaPHzll32T02repk
-        87hzbQ+bx+dNcgGsUdw2SYklZcGZ6Xn6dgncGb9P7WYsOKVccWDCT+YGxitKXYycHBICJhJL
-        Fr1g7GLk4hASuMoo0bZxOjuEc4JRYv2B90AOBwebgI1E1012kAYRAXWJhasfMoPUMAtMYpH4
-        /OkuI0hCWMBRou16PytEkZPErkuXoGw3iV9vjoPZLAKqEpfWnwMbxCvgJ3F9yi1WiGUXmSTO
-        /r/EBJLgFAiUmPblHhuIzSggK9HZ8A4sziwgLrHp2XdWiLMFJJbsOc8MYYtKvHz8DyquJLH3
-        50MWkKOZBTQl1u/Sh2h1kDi6/yQbhK0oMaX7IdQNghInZz5hmcAoNgvJhlkI3bOQdM9C0j0L
-        SfcCRtZVjBK5iZk56YklqYZ6RamlekX5GblAKjk/dxMjJH6/7GD8f8jzECMTB+MhRkkOJiVR
-        XsU+/zghvqT8lMqMxOKM+KLSnNTiQ4wSHMxKIrxqPH5xQrwpiZVVqUX5MClpDhYlcV71hxNj
-        hQRAdmWnphakFsFkZTg4lCR4i2cCDRUsSk1PrUjLzClBSDNxcIIM55ISKU7NS0ktSiwtyYgH
-        JZD4YmAKAUnxAO09MQOonbe4IDEXKArReorRkGPCy7mLmDk2z10KJI+ASCGWvPy8VClx3gCQ
-        fQIgDRmleXDrXjGKczAqCfPOBBnHA0zqcNNeAS1iAlr0XtgHZFFJIkJKqoExQd6W42tu7LWo
-        LA3jqY9OtUbYlO3/53lzp4CCkeH1r8xbZzHfqbO5UjZzTXEjz6kkO9f/BWZblogtmlTqlzn5
-        NN/covshq2VPXVra5sfN6XE7uNVV1OrMA4a02aKCM1qqpiy7pXL4a3FMSGyXSfvEfs3Jh1h3
-        dz/UKEvY9bVi4dyLz/jk1moosRRnJBpqMRcVJwIAZdjgcqcDAAA=
+In-Reply-To: <1582259996.1846.7.camel@mtksdaap41>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TW9ybmluZyBhZ2FpbiBSb2IsDQoNCk9uIFRodSwgMjAyMC0wMi0yMCBhdCAxNDoxOCAtMDYwMCwg
-Um9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFdlZCwgRmViIDE5LCAyMDIwIGF0IDI6MDUgQU0gVmFp
-dHRpbmVuLCBNYXR0aQ0KPiA8TWF0dGkuVmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPiB3cm90
-ZToNCj4gPiBNb3JuaW5nIFJvYiwNCj4gPiANCj4gPiBPbiBUdWUsIDIwMjAtMDItMTggYXQgMTQ6
-MjEgLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+ID4gT24gRnJpLCAxNCBGZWIgMjAyMCAw
-OTozNjo0NyArMDIwMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiA+ID4gPiBUaGUgUk9ITSBC
-RDk5OTU0IGlzIGEgQmF0dGVyeSBNYW5hZ2VtZW50IExTSSBmb3IgMS00IGNlbGwNCj4gPiA+ID4g
-TGl0aGl1bS0NCj4gPiA+ID4gSW9uDQo+ID4gPiA+IHNlY29uZGFyeSBiYXR0ZXJ5LiBJbnRlbmRl
-ZCB0byBiZSB1c2VkIGluIHNwYWNlLWNvbnN0cmFpbnQNCj4gPiA+ID4gZXF1aXBtZW50IHN1Y2gN
-Cj4gPiA+ID4gYXMgTG93IHByb2ZpbGUgTm90ZWJvb2sgUEMsIFRhYmxldHMgYW5kIG90aGVyIGFw
-cGxpY2F0aW9ucy4NCj4gPiA+ID4gQkQ5OTk1NA0KPiA+ID4gPiBwcm92aWRlcyBhIER1YWwtc291
-cmNlIEJhdHRlcnkgQ2hhcmdlciwgdHdvIHBvcnQgQkMxLjINCj4gPiA+ID4gZGV0ZWN0aW9uDQo+
-ID4gPiA+IGFuZCBhDQo+ID4gPiA+IEJhdHRlcnkgTW9uaXRvci4NCj4gPiA+ID4gDQo+ID4gPiA+
-IERvY3VtZW50IHRoZSBEVCBiaW5kaW5ncyBmb3IgQkQ5OTk1NA0KPiA+ID4gPiANCj4gPiA+ID4g
-U2lnbmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVuIDwNCj4gPiA+ID4gbWF0dGkudmFpdHRpbmVu
-QGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gDQo+ID4gSXQgYWxzbyBs
-b29rcyBsaWtlIHRoZSAnY29yZSBiaW5kaW5ncycgbGlrZSByZWd1bGF0b3JzIHVzZQ0KPiA+IHNp
-bmd1bGFyLg0KPiA+IEhlbmNlIEknbGwgbGVhdmUgdGhpcyB0byBzaW5ndWxhciBmb3IgdjMgZXZl
-biB0aG91Z2ggaXQgZmFpbHMgdGhlDQo+ID4gdmFsaWRhdGlvbiAtIHBsZWFzZSBsZXQgbWUga25v
-dyBpZiB0aGlzIHdhcyB3cm9uZyBjaG9pY2Ugb3IgaWYgeW91DQo+ID4gc3BvdA0KPiA+IGFueSBv
-dGhlciBvZGRpdGllcyB0aGVyZS4gSSBjYW4ndCBzZWUgd2hhdCBlbHNlIGl0IGNvdWxkIGJlIGJ1
-dCBmb3INCj4gPiBzb21lIHJlYXNvbiBJIHN0aWxsIGZpbmQgdGhpcyB5YW1sIHRlcnJpYmx5IGhh
-cmQgOigNCj4gPiANCj4gPiBIbW0uLiBJIHdvbmRlciBpZiBJIGhhdmUgc29tZSBvbGQgY2hlY2tl
-ciB0b29scyBpbnN0YWxsZWQgYW5kIHVzZWQNCj4gPiBvbg0KPiA+IG15IFBDPyBJIGFsc28gZ2V0
-IHZhbGlkYXRpb24gZmFpbHVyZXMgZm9yIHRoZSBleGFtcGxlIHNjaGVtYXMgOi8NCj4gDQo+IFlv
-dSBkbyBoYXZlIHRvIHN0YXkgdXAgdG8gZGF0ZS4NCg0KVWguIFNvIGl0IHNlZW1zLg0KSSB1cGRh
-dGVkIHRoZSBtdWx0aXBsZU9mIHdhcyByZWNvZ25pemVkIG5vdy4gSSBhbHNvIGdvdCBuaWNlIHdh
-cm5pbmcNCmFib3V0IG1pc3NpbmcgI3NpemUtY2VsbHMgYW5kICNhZGRyZXNzLWNlbGxzIGZvciB0
-aGUgaTJjIGJ1cy4gSXQga2luZA0Kb2YgaXMgb3V0IG9mIHRoZSBzY29wZSBvZiB0aGUgY2hhcmdl
-ciBiaW5kaW5nICh3aGljaCBzaG91bGQganVzdCBzaXQgaW4NCnRoZSBidXMpIGJ1dCB0aGUgd2Fy
-bmluZyB3YXMgY2xlYXIgZW5vdWdoIHNvIEkgdW5kZXJzdG9vZCB3aGF0IGl0IHdhcw0KYWJvdXQu
-IE5pY2Ugam9iLCB0aGFua3MuDQoNCkkganVzdCB3b25kZXIgaWYgaXQgd291bGQgYmUgYmlnIHRh
-c2sgdG8gYWRkIHZlcnNpb24gcXVlcnkgKGxpa2UgZHQtDQpkb2MtdmFsaWRhdGUgLS12ZXJzaW9u
-KSB0byB0aGUgdG9vbGluZ3MgYW5kIGluY2x1ZGUgInJlcXVpcmVkIHZlcnNpb24iDQppbiBrZXJu
-ZWwgbWFrZWZpbGVzIHNvIHRoYXQgdGhlICdkdF9iaW5kaW5nX2NoZWNrJyBtYWtlIHRhcmdldCBj
-b3VsZA0Kd2FybiBpZiBvbmUgdXNlcyB0b28gb2xkIHZlcnNpb24/IChJZ25vcmFudCBjLWNvZGVy
-cyBsaWtlIG1lIG1heSBub3QNCmtub3cgdGhlIGR0LXNjaGVtYSB0b29saW5nIGlzIG5vdCBpbmNs
-dWRlZCBpbiBrZXJuZWwgc2NyaXB0cyBhbmQgbmVlZHMNCnRvIGJlIHVwZGF0ZWQgb24gaG9zdCBQ
-Qy4pIEp1c3QgYSBzdWdnZXN0aW9uIHdoaWNoIG1pZ2h0IHJlZHVjZSBlcnJvcnMNCmJlZm9yZSBw
-YXRjaCBzdWJtaXNzaW9ucy4NCg0KPiA+ID4gd2FybmluZzogbm8gc2NoZW1hIGZvdW5kIGluIGZp
-bGU6DQo+ID4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvc3VwcGx5
-L3JvaG0sYmQ5OTk1eC55YW1sDQo+ID4gPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtDQo+
-ID4gPiByZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3N1cHBs
-eS9yb2htLGJkOTk5NQ0KPiA+ID4geC55YQ0KPiA+ID4gbWw6IGlnbm9yaW5nLCBlcnJvciBwYXJz
-aW5nIGZpbGUNCj4gPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3NpbXBsZS0NCj4gPiA+IGZyYW1lYnVmZmVyLmV4YW1wbGUuZHRzOjIxLjE2LTM3LjExOiBXYXJu
-aW5nDQo+ID4gPiAoY2hvc2VuX25vZGVfaXNfcm9vdCk6DQo+ID4gPiAvZXhhbXBsZS0wL2Nob3Nl
-bjogY2hvc2VuIG5vZGUgbXVzdCBiZSBhdCByb290IG5vZGUNCj4gPiA+IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9zdXBwbHkvcm9obSxiZDk5OTV4LnlhbWw6DQo+ID4g
-PiAgIHdoDQo+ID4gPiBpbGUgc2Nhbm5pbmcgYSBzaW1wbGUga2V5DQo+ID4gPiAgIGluICI8dW5p
-Y29kZSBzdHJpbmc+IiwgbGluZSAyOSwgY29sdW1uIDMNCj4gPiA+IGNvdWxkIG5vdCBmaW5kIGV4
-cGVjdGVkICc6Jw0KPiA+ID4gICBpbiAiPHVuaWNvZGUgc3RyaW5nPiIsIGxpbmUgMzAsIGNvbHVt
-biAxDQo+IA0KPiBUaG91Z2ggdGhpcyBpcyBqdXN0IGluY29ycmVjdCBZQU1MIGFuZCB0aGUgdG9v
-bCB2ZXJzaW9uIHNob3VsZG4ndA0KPiBtYXR0ZXIuDQoNClllcy4gVGhhdCBzaG91bGQgYmUgZml4
-ZWQgbm93LiBBbmQgdjQgd2lsbCBhbHNvIGhhdmUgdGhlIG11bHRpcGxlT2YNCnVuY29tbWVudGVk
-IGFuZCAjc2l6ZS1jZWxscyBhbmQgI2FkZHJlc3MtY2VsbHMgZm9yIHRoZSBpMmMgYnVzIGFkZGVk
-Lg0KSSdsbCB3YWl0IGZvciBhIHdoaWxlIGZvciBvdGhlcnMgdG8gZ2l2ZSBmZWVkYmFjayBmcm9t
-IHRoZSBzZXJpZXMNCmJlZm9yZSBzZW5kaW5nIGl0IG91dCB0aG91Z2guIFRoYW5rcyBmb3IgdGhl
-IGhlbHAhDQoNCi0tTWF0dGkNCg0K
+Hi CK,
+
+Thanks for your quick answer.
+
+On 21/2/20 5:39, CK Hu wrote:
+> Hi, Enric:
+> 
+> On Thu, 2020-02-20 at 18:21 +0100, Enric Balletbo i Serra wrote:
+>> Dear all,
+>>
+>> Those patches are intended to solve an old standing issue on some
+>> Mediatek devices (mt8173, mt2701 and mt2712) in a slightly different way
+>> to the precedent series.
+>>
+>> Up to now both drivers, clock and drm are probed with the same device tree
+>> compatible. But only the first driver get probed, which in effect breaks
+>> graphics on those devices.
+>>
+>> The version eight of the series tries to solve the problem with a
+>> different approach than the previous series but similar to how is solved
+>> on other Mediatek devices.
+>>
+>> The MMSYS (Multimedia subsystem) in Mediatek SoCs has some registers to
+>> control clock gates (which is used in the clk driver) and some registers
+>> to set the routing and enable the differnet blocks of the display
+>> and MDP (Media Data Path) subsystem. On this series the clk driver is
+>> not a pure clock controller but a system controller that can provide
+>> access to the shared registers between the different drivers that need
+>> it (mediatek-drm and mediatek-mdp). And the biggest change is, that in
+>> this version, clk driver is the entry point (parent) which will trigger
+>> the probe of the corresponding mediatek-drm driver and pass its MMSYS
+>> platform data for display configuration.
+> 
+> When mmsys is a system controller, I prefer to place mmsys in
+> drivers/soc/mediatek, and it share registers for clock, display, and mdp
+> driver. This means the probe function is placed in
+> drivers/soc/mediatek ,its display clock function, mdp clock function are
+> placed in drivers/clk, display routing are placed in drivers/gpu/drm,
+> and mdp routing are placed in dirvers/video.
+> 
+
+I understand what you mean but I am not sure this makes the code clearer and
+useful. The driver in drivers/soc/mediatek will be a simple dummy implementation
+of a "simple-mfd" device (a driver that simply matches with
+"mediatek,mt8173-mmsys" and instantiates the "clk-mt8173-mm" and the
+"mediatek-drm" driver (note that mediatek-mdp" is already instantiated via
+device-tree).
+
+It'd be nice had a proper device-tree with a "simple-mfd" for mmsys from the
+beginning representing how really hardwware is, but I think that, change this
+now, will break backward compatibility.
+
+IMHO I think that considering the clk driver as entry point is fine, but this is
+something that the clock maintainers should decide.
+
+Also note that this is not only a MT8173 problem I am seeing the same problem on
+all other Mediatek SoCs.
+
+Thanks.
+
+> Regards,
+> CK
+> 
+>>
+>> All this series was tested on the Acer R13 Chromebook only.
+>>
+>> For reference, here are the links to the old discussions:
+>>
+>> * v7: https://patchwork.kernel.org/project/linux-mediatek/list/?series=241217
+>> * v6: https://patchwork.kernel.org/project/linux-mediatek/list/?series=213219
+>> * v5: https://patchwork.kernel.org/project/linux-mediatek/list/?series=44063
+>> * v4:
+>>   * https://patchwork.kernel.org/patch/10530871/
+>>   * https://patchwork.kernel.org/patch/10530883/
+>>   * https://patchwork.kernel.org/patch/10530885/
+>>   * https://patchwork.kernel.org/patch/10530911/
+>>   * https://patchwork.kernel.org/patch/10530913/
+>> * v3:
+>>   * https://patchwork.kernel.org/patch/10367857/
+>>   * https://patchwork.kernel.org/patch/10367861/
+>>   * https://patchwork.kernel.org/patch/10367877/
+>>   * https://patchwork.kernel.org/patch/10367875/
+>>   * https://patchwork.kernel.org/patch/10367885/
+>>   * https://patchwork.kernel.org/patch/10367883/
+>>   * https://patchwork.kernel.org/patch/10367889/
+>>   * https://patchwork.kernel.org/patch/10367907/
+>>   * https://patchwork.kernel.org/patch/10367909/
+>>   * https://patchwork.kernel.org/patch/10367905/
+>> * v2: No relevant discussion, see v3
+>> * v1:
+>>   * https://patchwork.kernel.org/patch/10016497/
+>>   * https://patchwork.kernel.org/patch/10016499/
+>>   * https://patchwork.kernel.org/patch/10016505/
+>>   * https://patchwork.kernel.org/patch/10016507/
+>>
+>> Best regards,
+>>  Enric
+>>
+>> Changes in v8:
+>> - Be a builtin_platform_driver like other mediatek mmsys drivers.
+>> - New patches introduced in this series.
+>>
+>> Changes in v7:
+>> - Add R-by from CK
+>> - Add R-by from CK
+>> - Fix check of return value of of_clk_get
+>> - Fix identation
+>> - Free clk_data->clks as well
+>> - Get rid of private data structure
+>>
+>> Enric Balletbo i Serra (2):
+>>   drm/mediatek: Move MMSYS configuration to include/linux/platform_data
+>>   clk/drm: mediatek: Fix mediatek-drm device probing
+>>
+>> Matthias Brugger (4):
+>>   drm/mediatek: Use regmap for register access
+>>   drm/mediatek: Omit warning on probe defers
+>>   media: mtk-mdp: Check return value of of_clk_get
+>>   clk: mediatek: mt8173: Switch MMSYS to platform driver
+>>
+>>  drivers/clk/mediatek/Kconfig                  |   6 +
+>>  drivers/clk/mediatek/Makefile                 |   1 +
+>>  drivers/clk/mediatek/clk-mt2701-mm.c          |  30 +++
+>>  drivers/clk/mediatek/clk-mt2712-mm.c          |  44 +++++
+>>  drivers/clk/mediatek/clk-mt8173-mm.c          | 172 ++++++++++++++++++
+>>  drivers/clk/mediatek/clk-mt8173.c             | 104 -----------
+>>  drivers/gpu/drm/mediatek/mtk_disp_color.c     |   5 +-
+>>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |   5 +-
+>>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |   5 +-
+>>  drivers/gpu/drm/mediatek/mtk_dpi.c            |  12 +-
+>>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |   4 +-
+>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c        |  53 +++---
+>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |   4 +-
+>>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  56 +-----
+>>  drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 113 +-----------
+>>  drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  13 +-
+>>  drivers/gpu/drm/mediatek/mtk_dsi.c            |   8 +-
+>>  drivers/gpu/drm/mediatek/mtk_hdmi.c           |   4 +-
+>>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |   6 +
+>>  include/linux/platform_data/mtk_mmsys.h       |  73 ++++++++
+>>  20 files changed, 401 insertions(+), 317 deletions(-)
+>>  create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
+>>  create mode 100644 include/linux/platform_data/mtk_mmsys.h
+>>
+> 
