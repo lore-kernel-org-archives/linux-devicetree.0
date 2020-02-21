@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FC1C35656
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197CBC35646
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960792067D
+	by mail.kernel.org (Postfix) with ESMTP id E00532067D
 	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgBUQFG (ORCPT
+        id S1729169AbgBUQFF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:05:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:42548 "EHLO foss.arm.com"
+        Fri, 21 Feb 2020 11:05:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:42538 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729196AbgBUQFF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1729050AbgBUQFF (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Fri, 21 Feb 2020 11:05:05 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76A5F30E;
-        Fri, 21 Feb 2020 08:05:05 -0800 (PST)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AA0933F68F;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75189FEC;
         Fri, 21 Feb 2020 08:05:04 -0800 (PST)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A05FA3F68F;
+        Fri, 21 Feb 2020 08:05:03 -0800 (PST)
 From:   Robin Murphy <robin.murphy@arm.com>
 To:     will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] arm64: perf: Support new DT compatibles
-Date:   Fri, 21 Feb 2020 16:04:58 +0000
-Message-Id: <6dbd695863346bda1e5d2133643ffade6227bd9a.1582300927.git.robin.murphy@arm.com>
+Subject: [PATCH 2/3] dt-bindings: ARM: Add recent Cortex/Neoverse PMUs
+Date:   Fri, 21 Feb 2020 16:04:57 +0000
+Message-Id: <3954ca0b86641e5e6a1935886df6658b9305ec4a.1582300927.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.23.0.dirty
 In-Reply-To: <cover.1582300927.git.robin.murphy@arm.com>
 References: <cover.1582300927.git.robin.murphy@arm.com>
@@ -41,41 +41,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for matching the new PMUs. For now, this just wires them up
-as generic PMUv3 such that people writing DTs for new SoCs can do the
-right thing, and at least have architectural and raw events be usable.
-We can come back and fill in event maps for sysfs and/or perf tools at
-a later date.
+Add new PMU definitions to correspond with the CPU bindings.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- arch/arm64/kernel/perf_event.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/arm/pmu.yaml | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index e40b65645c86..28ce582e049e 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -1105,11 +1105,19 @@ static int armv8_vulcan_pmu_init(struct arm_pmu *cpu_pmu)
- 
- static const struct of_device_id armv8_pmu_of_device_ids[] = {
- 	{.compatible = "arm,armv8-pmuv3",	.data = armv8_pmuv3_init},
-+	{.compatible = "arm,cortex-a34-pmu",	.data = armv8_pmuv3_init},
- 	{.compatible = "arm,cortex-a35-pmu",	.data = armv8_a35_pmu_init},
- 	{.compatible = "arm,cortex-a53-pmu",	.data = armv8_a53_pmu_init},
-+	{.compatible = "arm,cortex-a55-pmu",	.data = armv8_pmuv3_init},
- 	{.compatible = "arm,cortex-a57-pmu",	.data = armv8_a57_pmu_init},
-+	{.compatible = "arm,cortex-a65-pmu",	.data = armv8_pmuv3_init},
- 	{.compatible = "arm,cortex-a72-pmu",	.data = armv8_a72_pmu_init},
- 	{.compatible = "arm,cortex-a73-pmu",	.data = armv8_a73_pmu_init},
-+	{.compatible = "arm,cortex-a75-pmu",	.data = armv8_pmuv3_init},
-+	{.compatible = "arm,cortex-a76-pmu",	.data = armv8_pmuv3_init},
-+	{.compatible = "arm,cortex-a77-pmu",	.data = armv8_pmuv3_init},
-+	{.compatible = "arm,neoverse-e1-pmu",	.data = armv8_pmuv3_init},
-+	{.compatible = "arm,neoverse-n1-pmu",	.data = armv8_pmuv3_init},
- 	{.compatible = "cavium,thunder-pmu",	.data = armv8_thunder_pmu_init},
- 	{.compatible = "brcm,vulcan-pmu",	.data = armv8_vulcan_pmu_init},
- 	{},
+diff --git a/Documentation/devicetree/bindings/arm/pmu.yaml b/Documentation/devicetree/bindings/arm/pmu.yaml
+index 52ae094ce330..cc52195d0e9e 100644
+--- a/Documentation/devicetree/bindings/arm/pmu.yaml
++++ b/Documentation/devicetree/bindings/arm/pmu.yaml
+@@ -21,11 +21,20 @@ properties:
+       - enum:
+           - apm,potenza-pmu
+           - arm,armv8-pmuv3
++          - arm,neoverse-n1-pmu
++          - arm,neoverse-e1-pmu
++          - arm,cortex-a77-pmu
++          - arm,cortex-a76-pmu
++          - arm,cortex-a75-pmu
+           - arm,cortex-a73-pmu
+           - arm,cortex-a72-pmu
++          - arm,cortex-a65-pmu
+           - arm,cortex-a57-pmu
++          - arm,cortex-a55-pmu
+           - arm,cortex-a53-pmu
+           - arm,cortex-a35-pmu
++          - arm,cortex-a34-pmu
++          - arm,cortex-a32-pmu
+           - arm,cortex-a17-pmu
+           - arm,cortex-a15-pmu
+           - arm,cortex-a12-pmu
 -- 
 2.23.0.dirty
 
