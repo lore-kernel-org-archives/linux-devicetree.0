@@ -2,183 +2,458 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEFDC11D27
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 04:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC10C11D28
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 05:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B38222C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 04:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD91424656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 05:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rATm3auc"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="byvXi1+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgBUEkH (ORCPT
+        id S1726160AbgBUFMx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 23:40:07 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:54134 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729229AbgBUEkH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 23:40:07 -0500
-X-UUID: e13c9e81f83840d8976ee203bb4026c7-20200221
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=c6LxKOrtf7zqmWMQ6HOJ1i4yDenxu3IQklK++RZdHNY=;
-        b=rATm3auciYfKwqBo300ayxZ+epaBIPidFLEOlYR9R+lDw3Sp+wVUGJfQ/SnMCJj2IlLlRrnfPhygOlPO76AN/7FP6irXcAVyfhVWuWJj5+EoGJyr4O+QUJUqF41kXVEViY6blmVtLf130JmWPN0aA6yAcj65lUJZjI08MHLM4xs=;
-X-UUID: e13c9e81f83840d8976ee203bb4026c7-20200221
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1525354134; Fri, 21 Feb 2020 12:39:57 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 21 Feb 2020 12:39:09 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 21 Feb 2020 12:40:26 +0800
-Message-ID: <1582259996.1846.7.camel@mtksdaap41>
-Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        <rdunlap@infradead.org>, <dri-devel@lists.freedesktop.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        "Seiya Wang" <seiya.wang@mediatek.com>,
-        <linux-clk@vger.kernel.org>,
-        "Collabora Kernel ML" <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
+        Fri, 21 Feb 2020 00:12:53 -0500
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17826 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725973AbgBUFMx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 00:12:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582261895;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=HICXcoLAntejme88fw+g+f7cdOyeLuzwcz8Pyf3Sw38=;
+        b=byvXi1+upj8cKespzms3+Pkw+1ay322f4dABemHp9uSzxSwrPPxYxGMtjlEUopK7
+        UUHx1tjMym6/bTzc+h4IGTCs2iWnC68iNr8CE8NSXOX3A8rBGwhiza8SVXgLZDd0CRj
+        SXUpBcp/PVfpOeGJAygdz3fNBvYK1UR2GqYvHviQ=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 1582261894263984.0477111080212; Fri, 21 Feb 2020 13:11:34 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, <wens@csie.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sean.wang@mediatek.com>, <frank-w@public-files.de>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, <hsinyi@chromium.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <matthias.bgg@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Fabien Parent <fparent@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        Owen Chen <owen.chen@mediatek.com>
-Date:   Fri, 21 Feb 2020 12:39:56 +0800
-In-Reply-To: <20200220172147.919996-1-enric.balletbo@collabora.com>
-References: <20200220172147.919996-1-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Message-ID: <20200221050942.507775-2-jiaxun.yang@flygoat.com>
+Subject: [PATCH v4 01/10] irqchip: Add driver for Loongson I/O Local Interrupt Controller
+Date:   Fri, 21 Feb 2020 13:09:16 +0800
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
+References: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIEVucmljOg0KDQpPbiBUaHUsIDIwMjAtMDItMjAgYXQgMTg6MjEgKzAxMDAsIEVucmljIEJh
-bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IERlYXIgYWxsLA0KPiANCj4gVGhvc2UgcGF0Y2hlcyBh
-cmUgaW50ZW5kZWQgdG8gc29sdmUgYW4gb2xkIHN0YW5kaW5nIGlzc3VlIG9uIHNvbWUNCj4gTWVk
-aWF0ZWsgZGV2aWNlcyAobXQ4MTczLCBtdDI3MDEgYW5kIG10MjcxMikgaW4gYSBzbGlnaHRseSBk
-aWZmZXJlbnQgd2F5DQo+IHRvIHRoZSBwcmVjZWRlbnQgc2VyaWVzLg0KPiANCj4gVXAgdG8gbm93
-IGJvdGggZHJpdmVycywgY2xvY2sgYW5kIGRybSBhcmUgcHJvYmVkIHdpdGggdGhlIHNhbWUgZGV2
-aWNlIHRyZWUNCj4gY29tcGF0aWJsZS4gQnV0IG9ubHkgdGhlIGZpcnN0IGRyaXZlciBnZXQgcHJv
-YmVkLCB3aGljaCBpbiBlZmZlY3QgYnJlYWtzDQo+IGdyYXBoaWNzIG9uIHRob3NlIGRldmljZXMu
-DQo+IA0KPiBUaGUgdmVyc2lvbiBlaWdodCBvZiB0aGUgc2VyaWVzIHRyaWVzIHRvIHNvbHZlIHRo
-ZSBwcm9ibGVtIHdpdGggYQ0KPiBkaWZmZXJlbnQgYXBwcm9hY2ggdGhhbiB0aGUgcHJldmlvdXMg
-c2VyaWVzIGJ1dCBzaW1pbGFyIHRvIGhvdyBpcyBzb2x2ZWQNCj4gb24gb3RoZXIgTWVkaWF0ZWsg
-ZGV2aWNlcy4NCj4gDQo+IFRoZSBNTVNZUyAoTXVsdGltZWRpYSBzdWJzeXN0ZW0pIGluIE1lZGlh
-dGVrIFNvQ3MgaGFzIHNvbWUgcmVnaXN0ZXJzIHRvDQo+IGNvbnRyb2wgY2xvY2sgZ2F0ZXMgKHdo
-aWNoIGlzIHVzZWQgaW4gdGhlIGNsayBkcml2ZXIpIGFuZCBzb21lIHJlZ2lzdGVycw0KPiB0byBz
-ZXQgdGhlIHJvdXRpbmcgYW5kIGVuYWJsZSB0aGUgZGlmZmVybmV0IGJsb2NrcyBvZiB0aGUgZGlz
-cGxheQ0KPiBhbmQgTURQIChNZWRpYSBEYXRhIFBhdGgpIHN1YnN5c3RlbS4gT24gdGhpcyBzZXJp
-ZXMgdGhlIGNsayBkcml2ZXIgaXMNCj4gbm90IGEgcHVyZSBjbG9jayBjb250cm9sbGVyIGJ1dCBh
-IHN5c3RlbSBjb250cm9sbGVyIHRoYXQgY2FuIHByb3ZpZGUNCj4gYWNjZXNzIHRvIHRoZSBzaGFy
-ZWQgcmVnaXN0ZXJzIGJldHdlZW4gdGhlIGRpZmZlcmVudCBkcml2ZXJzIHRoYXQgbmVlZA0KPiBp
-dCAobWVkaWF0ZWstZHJtIGFuZCBtZWRpYXRlay1tZHApLiBBbmQgdGhlIGJpZ2dlc3QgY2hhbmdl
-IGlzLCB0aGF0IGluDQo+IHRoaXMgdmVyc2lvbiwgY2xrIGRyaXZlciBpcyB0aGUgZW50cnkgcG9p
-bnQgKHBhcmVudCkgd2hpY2ggd2lsbCB0cmlnZ2VyDQo+IHRoZSBwcm9iZSBvZiB0aGUgY29ycmVz
-cG9uZGluZyBtZWRpYXRlay1kcm0gZHJpdmVyIGFuZCBwYXNzIGl0cyBNTVNZUw0KPiBwbGF0Zm9y
-bSBkYXRhIGZvciBkaXNwbGF5IGNvbmZpZ3VyYXRpb24uDQoNCldoZW4gbW1zeXMgaXMgYSBzeXN0
-ZW0gY29udHJvbGxlciwgSSBwcmVmZXIgdG8gcGxhY2UgbW1zeXMgaW4NCmRyaXZlcnMvc29jL21l
-ZGlhdGVrLCBhbmQgaXQgc2hhcmUgcmVnaXN0ZXJzIGZvciBjbG9jaywgZGlzcGxheSwgYW5kIG1k
-cA0KZHJpdmVyLiBUaGlzIG1lYW5zIHRoZSBwcm9iZSBmdW5jdGlvbiBpcyBwbGFjZWQgaW4NCmRy
-aXZlcnMvc29jL21lZGlhdGVrICxpdHMgZGlzcGxheSBjbG9jayBmdW5jdGlvbiwgbWRwIGNsb2Nr
-IGZ1bmN0aW9uIGFyZQ0KcGxhY2VkIGluIGRyaXZlcnMvY2xrLCBkaXNwbGF5IHJvdXRpbmcgYXJl
-IHBsYWNlZCBpbiBkcml2ZXJzL2dwdS9kcm0sDQphbmQgbWRwIHJvdXRpbmcgYXJlIHBsYWNlZCBp
-biBkaXJ2ZXJzL3ZpZGVvLg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiANCj4gQWxsIHRoaXMgc2VyaWVz
-IHdhcyB0ZXN0ZWQgb24gdGhlIEFjZXIgUjEzIENocm9tZWJvb2sgb25seS4NCj4gDQo+IEZvciBy
-ZWZlcmVuY2UsIGhlcmUgYXJlIHRoZSBsaW5rcyB0byB0aGUgb2xkIGRpc2N1c3Npb25zOg0KPiAN
-Cj4gKiB2NzogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LW1lZGlh
-dGVrL2xpc3QvP3Nlcmllcz0yNDEyMTcNCj4gKiB2NjogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
-Lm9yZy9wcm9qZWN0L2xpbnV4LW1lZGlhdGVrL2xpc3QvP3Nlcmllcz0yMTMyMTkNCj4gKiB2NTog
-aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LW1lZGlhdGVrL2xpc3Qv
-P3Nlcmllcz00NDA2Mw0KPiAqIHY0Og0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
-Zy9wYXRjaC8xMDUzMDg3MS8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
-Y2gvMTA1MzA4ODMvDQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEw
-NTMwODg1Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDUzMDkx
-MS8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA1MzA5MTMvDQo+
-ICogdjM6DQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODU3
-Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDM2Nzg2MS8NCj4g
-ICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAzNjc4NzcvDQo+ICAgKiBo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODc1Lw0KPiAgICogaHR0cHM6
-Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDM2Nzg4NS8NCj4gICAqIGh0dHBzOi8vcGF0
-Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAzNjc4ODMvDQo+ICAgKiBodHRwczovL3BhdGNod29y
-ay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODg5Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
-bmVsLm9yZy9wYXRjaC8xMDM2NzkwNy8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
-cmcvcGF0Y2gvMTAzNjc5MDkvDQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
-dGNoLzEwMzY3OTA1Lw0KPiAqIHYyOiBObyByZWxldmFudCBkaXNjdXNzaW9uLCBzZWUgdjMNCj4g
-KiB2MToNCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAwMTY0OTcv
-DQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMDE2NDk5Lw0KPiAg
-ICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDAxNjUwNS8NCj4gICAqIGh0
-dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAwMTY1MDcvDQo+IA0KPiBCZXN0IHJl
-Z2FyZHMsDQo+ICBFbnJpYw0KPiANCj4gQ2hhbmdlcyBpbiB2ODoNCj4gLSBCZSBhIGJ1aWx0aW5f
-cGxhdGZvcm1fZHJpdmVyIGxpa2Ugb3RoZXIgbWVkaWF0ZWsgbW1zeXMgZHJpdmVycy4NCj4gLSBO
-ZXcgcGF0Y2hlcyBpbnRyb2R1Y2VkIGluIHRoaXMgc2VyaWVzLg0KPiANCj4gQ2hhbmdlcyBpbiB2
-NzoNCj4gLSBBZGQgUi1ieSBmcm9tIENLDQo+IC0gQWRkIFItYnkgZnJvbSBDSw0KPiAtIEZpeCBj
-aGVjayBvZiByZXR1cm4gdmFsdWUgb2Ygb2ZfY2xrX2dldA0KPiAtIEZpeCBpZGVudGF0aW9uDQo+
-IC0gRnJlZSBjbGtfZGF0YS0+Y2xrcyBhcyB3ZWxsDQo+IC0gR2V0IHJpZCBvZiBwcml2YXRlIGRh
-dGEgc3RydWN0dXJlDQo+IA0KPiBFbnJpYyBCYWxsZXRibyBpIFNlcnJhICgyKToNCj4gICBkcm0v
-bWVkaWF0ZWs6IE1vdmUgTU1TWVMgY29uZmlndXJhdGlvbiB0byBpbmNsdWRlL2xpbnV4L3BsYXRm
-b3JtX2RhdGENCj4gICBjbGsvZHJtOiBtZWRpYXRlazogRml4IG1lZGlhdGVrLWRybSBkZXZpY2Ug
-cHJvYmluZw0KPiANCj4gTWF0dGhpYXMgQnJ1Z2dlciAoNCk6DQo+ICAgZHJtL21lZGlhdGVrOiBV
-c2UgcmVnbWFwIGZvciByZWdpc3RlciBhY2Nlc3MNCj4gICBkcm0vbWVkaWF0ZWs6IE9taXQgd2Fy
-bmluZyBvbiBwcm9iZSBkZWZlcnMNCj4gICBtZWRpYTogbXRrLW1kcDogQ2hlY2sgcmV0dXJuIHZh
-bHVlIG9mIG9mX2Nsa19nZXQNCj4gICBjbGs6IG1lZGlhdGVrOiBtdDgxNzM6IFN3aXRjaCBNTVNZ
-UyB0byBwbGF0Zm9ybSBkcml2ZXINCj4gDQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9LY29uZmln
-ICAgICAgICAgICAgICAgICAgfCAgIDYgKw0KPiAgZHJpdmVycy9jbGsvbWVkaWF0ZWsvTWFrZWZp
-bGUgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1t
-dDI3MDEtbW0uYyAgICAgICAgICB8ICAzMCArKysNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Ns
-ay1tdDI3MTItbW0uYyAgICAgICAgICB8ICA0NCArKysrKw0KPiAgZHJpdmVycy9jbGsvbWVkaWF0
-ZWsvY2xrLW10ODE3My1tbS5jICAgICAgICAgIHwgMTcyICsrKysrKysrKysrKysrKysrKw0KPiAg
-ZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3My5jICAgICAgICAgICAgIHwgMTA0IC0tLS0t
-LS0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfY29sb3IuYyAgICAg
-fCAgIDUgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAg
-ICB8ICAgNSArLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYyAg
-ICAgIHwgICA1ICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jICAgICAg
-ICAgICAgfCAgMTIgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMu
-YyAgICAgICB8ICAgNCArLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
-LmMgICAgICAgIHwgIDUzICsrKy0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwLmggICAgICAgIHwgICA0ICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHBfY29tcC5oICAgfCAgNTYgKy0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9kcnYuYyAgICAgICAgfCAxMTMgKy0tLS0tLS0tLS0tDQo+ICBkcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCAgICAgICAgfCAgMTMgKy0NCj4gIGRyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgICAgICAgICAgICB8ICAgOCArLQ0KPiAgZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pLmMgICAgICAgICAgIHwgICA0ICstDQo+ICBkcml2
-ZXJzL21lZGlhL3BsYXRmb3JtL210ay1tZHAvbXRrX21kcF9jb21wLmMgfCAgIDYgKw0KPiAgaW5j
-bHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL210a19tbXN5cy5oICAgICAgIHwgIDczICsrKysrKysr
-DQo+ICAyMCBmaWxlcyBjaGFuZ2VkLCA0MDEgaW5zZXJ0aW9ucygrKSwgMzE3IGRlbGV0aW9ucygt
-KQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDgxNzMt
-bW0uYw0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9t
-dGtfbW1zeXMuaA0KPiANCg0K
+This controller appeared on Loongson family of chips as the primary
+package interrupt source.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ drivers/irqchip/Kconfig                |   9 +
+ drivers/irqchip/Makefile               |   1 +
+ drivers/irqchip/irq-loongson-liointc.c | 338 +++++++++++++++++++++++++
+ 3 files changed, 348 insertions(+)
+ create mode 100644 drivers/irqchip/irq-loongson-liointc.c
+
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 6d397732138d..c609eaa319d2 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -513,4 +513,13 @@ config EXYNOS_IRQ_COMBINER
+ =09  Say yes here to add support for the IRQ combiner devices embedded
+ =09  in Samsung Exynos chips.
+=20
++config LOONGSON_LIOINTC
++=09bool "Loongson Local I/O Interrupt Controller"
++=09depends on MACH_LOONGSON64
++=09default y
++=09select IRQ_DOMAIN
++=09select GENERIC_IRQ_CHIP
++=09help
++=09  Support for the Loongson Local I/O Interrupt Controller.
++
+ endmenu
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index eae0d78cbf22..5e7678efdfe6 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -105,3 +105,4 @@ obj-$(CONFIG_MADERA_IRQ)=09=09+=3D irq-madera.o
+ obj-$(CONFIG_LS1X_IRQ)=09=09=09+=3D irq-ls1x.o
+ obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)=09+=3D irq-ti-sci-intr.o
+ obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)=09+=3D irq-ti-sci-inta.o
++obj-$(CONFIG_LOONGSON_LIOINTC)=09=09+=3D irq-loongson-liointc.o
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-l=
+oongson-liointc.c
+new file mode 100644
+index 000000000000..d7efab9f4ee7
+--- /dev/null
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -0,0 +1,338 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
++ *  Loongson Local IO Interrupt Controller support
++ */
++
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <linux/interrupt.h>
++#include <linux/ioport.h>
++#include <linux/irqchip.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/io.h>
++#include <linux/smp.h>
++#include <linux/irqchip/chained_irq.h>
++
++#include <boot_param.h>
++
++#define LIOINTC_CHIP_IRQ=0932
++#define LIOINTC_NUM_PARENT 4
++
++#define LIOINTC_REG_INTx_MAP(x)=09(x * 0x1)
++#define LIOINTC_INTC_CHIP_START=090x20
++
++#define LIOINTC_REG_INTC_STATUS=09(LIOINTC_INTC_CHIP_START + 0x20)
++#define LIOINTC_REG_INTC_EN_STATUS=09(LIOINTC_INTC_CHIP_START + 0x04)
++#define LIOINTC_REG_INTC_ENABLE=09(LIOINTC_INTC_CHIP_START + 0x08)
++#define LIOINTC_REG_INTC_DISABLE=09(LIOINTC_INTC_CHIP_START + 0x0c)
++#define LIOINTC_REG_INTC_POL=09(LIOINTC_INTC_CHIP_START + 0x10)
++#define LIOINTC_REG_INTC_EDGE=09(LIOINTC_INTC_CHIP_START + 0x14)
++
++#define BUGGY_LPC_IRQ=0910
++
++#define LIOINTC_SHIFT_INTx=094
++
++struct liointc_handler_data {
++=09struct liointc_priv *priv;
++=09u32 parent_int_map;
++};
++
++struct liointc_priv {
++=09void __iomem *base;
++=09struct irq_chip_generic *gc;
++=09u8 map_cache[LIOINTC_CHIP_IRQ];
++=09struct liointc_handler_data handler[LIOINTC_NUM_PARENT];
++=09u8 possible_parent_mask;
++=09bool have_lpc_irq_bug;
++};
++
++static void liointc_chained_handle_irq(struct irq_desc *desc)
++{
++=09struct liointc_handler_data *handler =3D irq_desc_get_handler_data(desc=
+);
++=09struct irq_chip *chip =3D irq_desc_get_chip(desc);
++=09struct irq_chip_generic *gc =3D handler->priv->gc;
++=09u32 pending;
++
++=09chained_irq_enter(chip, desc);
++
++=09pending =3D readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
++
++=09if (!pending) {
++=09=09/* Always blame LPC IRQ if we have that Bug with LPC interrupt enabl=
+ed */
++=09=09if (handler->priv->have_lpc_irq_bug &&
++=09=09=09(handler->parent_int_map & ~gc->mask_cache & BIT(BUGGY_LPC_IRQ)))
++=09=09=09generic_handle_irq(irq_find_mapping(gc->domain, BUGGY_LPC_IRQ));
++=09=09else
++=09=09=09spurious_interrupt();
++=09}
++
++=09while (pending) {
++=09=09int bit =3D __ffs(pending);
++
++=09=09generic_handle_irq(irq_find_mapping(gc->domain, bit));
++=09=09pending &=3D ~BIT(bit);
++=09}
++
++=09chained_irq_exit(chip, desc);
++}
++
++static void map_cache_set_core(struct liointc_priv *priv, int irq, int cor=
+e)
++{
++=09priv->map_cache[irq] &=3D ~GENMASK(3, 0);
++=09priv->map_cache[irq] |=3D BIT(core);
++}
++
++static void write_map_cache(struct liointc_priv *priv, int irq)
++{
++=09writeb(priv->map_cache[irq],
++=09=09priv->base + LIOINTC_REG_INTx_MAP(irq));
++}
++
++static void liointc_set_bit(struct irq_chip_generic *gc,
++=09=09=09=09unsigned int offset,
++=09=09=09=09u32 mask, bool set)
++{
++=09if (set)
++=09=09writel(readl(gc->reg_base + offset) | mask,
++=09=09=09=09gc->reg_base + offset);
++=09else
++=09=09writel(readl(gc->reg_base + offset) & ~mask,
++=09=09=09=09gc->reg_base + offset);
++}
++
++static int liointc_set_type(struct irq_data *data, unsigned int type)
++{
++=09struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(data);
++=09u32 mask =3D data->mask;
++=09unsigned long flags;
++
++=09irq_gc_lock_irqsave(gc, flags);
++=09switch (type) {
++=09case IRQ_TYPE_LEVEL_HIGH:
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
++=09=09break;
++=09case IRQ_TYPE_LEVEL_LOW:
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
++=09=09break;
++=09case IRQ_TYPE_EDGE_RISING:
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
++=09=09break;
++=09case IRQ_TYPE_EDGE_FALLING:
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
++=09=09break;
++=09default:
++=09=09return -EINVAL;
++=09}
++=09irq_gc_unlock_irqrestore(gc, flags);
++
++=09irqd_set_trigger_type(data, type);
++=09return 0;
++}
++
++static int liointc_set_affinity(struct irq_data *idata,
++=09=09=09=09const cpumask_t *cpu_mask, bool force)
++{
++=09return -ENAVAIL;
++}
++
++static void liointc_resume(struct irq_chip_generic *gc)
++{
++=09struct liointc_priv *priv =3D gc->private;
++=09unsigned long flags;
++=09int i;
++
++=09irq_gc_lock_irqsave(gc, flags);
++=09/* Revert map cache */
++=09for (i =3D 0; i < LIOINTC_CHIP_IRQ; i++)
++=09=09write_map_cache(priv, i);
++
++=09/* Revert mask cache again */
++=09writel(gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_DISABLE);
++=09writel(~gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
++=09irq_gc_unlock_irqrestore(gc, flags);
++}
++
++static void validate_parent_mask(struct liointc_priv *priv, u32 of_parent_=
+int_map[])
++{
++=09u32 proceed_mask =3D 0x0, duplicated_mask =3D 0x0;
++=09int i;
++=09int fallback_parent =3D __ffs(priv->possible_parent_mask);
++
++=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
++=09=09/* Try if the parent is avilable */
++=09=09if (!(priv->possible_parent_mask & BIT(i)))
++=09=09=09continue;
++
++=09=09priv->handler[i].parent_int_map =3D of_parent_int_map[i];
++
++=09=09/* Detect if the IRQ have previously proceed */
++=09=09duplicated_mask |=3D (priv->handler[i].parent_int_map & proceed_mask=
+);
++=09=09proceed_mask |=3D priv->handler[i].parent_int_map;
++=09}
++
++=09/* Fallback IRQs with no map bit set */
++=09while (~proceed_mask) {
++=09=09int bit =3D __ffs(~proceed_mask);
++
++=09=09pr_warn("loongson-liointc: Found homeless IRQ %d, map to INT%d\n",
++=09=09=09bit, fallback_parent);
++=09=09priv->handler[fallback_parent].parent_int_map |=3D BIT(bit);
++=09=09proceed_mask |=3D BIT(bit);
++=09}
++
++=09/* Fallback IRQs with multiple map bit set */
++=09while (duplicated_mask) {
++=09=09int bit =3D __ffs(duplicated_mask);
++
++=09=09pr_warn("loongson-liointc: IRQ %d have multiple parents, map to INT%=
+d\n",
++=09=09=09bit, fallback_parent);
++=09=09/* Clear the bit in all parent bits */
++=09=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++)
++=09=09=09priv->handler[i].parent_int_map &=3D ~BIT(bit);
++
++=09=09priv->handler[fallback_parent].parent_int_map |=3D BIT(bit);
++=09=09duplicated_mask &=3D ~BIT(bit);
++=09}
++
++=09/* Generate parent INT part of map Cache */
++=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
++=09=09u32 pending =3D priv->handler[i].parent_int_map;
++
++=09=09while (pending) {
++=09=09=09int bit =3D __ffs(pending);
++
++=09=09=09priv->map_cache[bit] =3D BIT(i) << LIOINTC_SHIFT_INTx;
++=09=09=09pending &=3D ~BIT(bit);
++=09=09}
++=09}
++}
++
++static const char *parent_names[] =3D {"int0", "int1", "int2", "int3"};
++
++int __init liointc_of_init(struct device_node *node,
++=09=09=09=09struct device_node *parent)
++{
++=09struct irq_chip_generic *gc;
++=09struct irq_domain *domain;
++=09struct irq_chip_type *ct;
++=09struct liointc_priv *priv;
++=09u32 of_parent_int_map[LIOINTC_NUM_PARENT];
++=09int parent_irq[LIOINTC_NUM_PARENT];
++=09int core =3D loongson_sysconf.boot_cpu_id;
++=09int i, err =3D 0;
++=09int sz;
++
++=09priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
++=09if (!priv)
++=09=09return -ENOMEM;
++
++=09priv->base =3D of_iomap(node, 0);
++=09if (!priv->base) {
++=09=09err =3D -ENODEV;
++=09=09goto out_free_priv;
++=09}
++
++=09if (of_device_is_compatible(node, "loongson,liointc-1.0"))
++=09=09priv->have_lpc_irq_bug =3D true;
++
++=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
++=09=09parent_irq[i] =3D of_irq_get_byname(node, parent_names[i]);
++=09=09if (parent_irq[i] >=3D 0)
++=09=09=09priv->possible_parent_mask |=3D BIT(i);
++=09}
++
++
++=09if (!priv->possible_parent_mask) {
++=09=09pr_err("loongson-liointc: No parent\n");
++=09=09err =3D -ENOMEM;
++=09=09goto out_iounmap;
++=09}
++
++=09sz =3D of_property_read_variable_u32_array(node, "loongson,parent_int_m=
+ap",
++=09=09=09=09=09=09&of_parent_int_map[0], LIOINTC_NUM_PARENT,
++=09=09=09=09=09=09LIOINTC_NUM_PARENT);
++=09if (sz < 4) {
++=09=09pr_err("loongson-liointc: No parent_int_map\n");
++=09=09err =3D -ENODEV;
++=09=09goto out_iounmap;
++=09}
++
++=09/* Setup IRQ domain */
++=09domain =3D irq_domain_add_linear(node, 32,
++=09=09=09=09=09&irq_generic_chip_ops, priv);
++=09if (!domain) {
++=09=09pr_err("loongson-liointc: cannot add IRQ domain\n");
++=09=09err =3D -ENOMEM;
++=09=09goto out_iounmap;
++=09}
++
++=09err =3D irq_alloc_domain_generic_chips(domain, 32, 1,
++=09=09=09=09=09node->full_name, handle_level_irq,
++=09=09=09=09=09IRQ_NOPROBE, 0, 0);
++=09if (err) {
++=09=09pr_err("loongson-liointc: unable to register IRQ domain\n");
++=09=09err =3D -ENOMEM;
++=09=09goto out_free_domain;
++=09}
++
++
++=09/* Disable all IRQs */
++=09writel(0xffffffff, priv->base + LIOINTC_REG_INTC_DISABLE);
++=09/* Set to level triggered */
++=09writel(0x0, priv->base + LIOINTC_REG_INTC_EDGE);
++
++=09validate_parent_mask(priv, &of_parent_int_map[0]);
++
++=09for (i =3D 0; i < LIOINTC_CHIP_IRQ; i++) {
++=09=09map_cache_set_core(priv, i, core);
++=09=09write_map_cache(priv, i);
++=09}
++
++=09gc =3D irq_get_domain_generic_chip(domain, 0);
++=09gc->private =3D priv;
++=09gc->reg_base =3D priv->base;
++=09gc->domain =3D domain;
++=09gc->resume =3D liointc_resume;
++
++=09ct =3D gc->chip_types;
++=09ct->regs.enable =3D LIOINTC_REG_INTC_ENABLE;
++=09ct->regs.disable =3D LIOINTC_REG_INTC_DISABLE;
++=09ct->chip.irq_unmask =3D irq_gc_unmask_enable_reg;
++=09ct->chip.irq_mask =3D irq_gc_mask_disable_reg;
++=09ct->chip.irq_mask_ack =3D irq_gc_mask_disable_reg;
++=09ct->chip.irq_set_type =3D liointc_set_type;
++=09ct->chip.irq_set_affinity =3D liointc_set_affinity;
++
++=09gc->mask_cache =3D 0xffffffff;
++=09priv->gc =3D gc;
++
++=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
++=09=09if (parent_irq[i] < 0)
++=09=09=09continue;
++
++=09=09priv->handler[i].priv =3D priv;
++=09=09irq_set_chained_handler_and_data(parent_irq[i],
++=09=09=09=09liointc_chained_handle_irq, &priv->handler[i]);
++=09}
++
++=09return 0;
++
++out_free_domain:
++=09irq_domain_remove(domain);
++out_iounmap:
++=09iounmap(priv->base);
++out_free_priv:
++=09kfree(priv);
++
++=09return err;
++}
++
++IRQCHIP_DECLARE(loongson_liointc_1_0, "loongson,liointc-1.0", liointc_of_i=
+nit);
++IRQCHIP_DECLARE(loongson_liointc_1_0a, "loongson,liointc-1.0a", liointc_of=
+_init);
+--=20
+2.25.0
+
 
