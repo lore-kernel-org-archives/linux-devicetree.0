@@ -2,139 +2,118 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBAAC35657
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88DCC35657
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F4F24650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582299139;
-	bh=LtQtdYpi0xdtEi4kNUUpmNMz7z7vsWWRX5Zunzwdmhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UXWxcKLW/bXCUn3TMwXRBROcM11i94y31ASU4ljs7Cr8gGLiWCW0O0T8WssBBDTgE
-	 zUBzb3k57yZwhFO2SAyS0Rm/VJMEYaWL8jMu3hj0YExLAq79b6/m3TQIAqqbK3NPWV
-	 C6zxlpceQmQ2Tmfz+Xw9vgixUgIxb9/rFLKUyj/k=
+	by mail.kernel.org (Postfix) with ESMTP id A4AD82064C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgBUPcS (ORCPT
+        id S1728648AbgBUPfo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:32:18 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39774 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgBUPcS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 10:32:18 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 77so2327196oty.6;
-        Fri, 21 Feb 2020 07:32:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5jRzIkWfQ+0gox1TYbOKZYWDKTNe51R7eEKfAaND2e8=;
-        b=EwglTzWDYHi5zUI0G73egd4M8WlMq3bTf6ltjxwAhfwj0yGP2OQra9rJ/T28QVtQcF
-         VuLxYSannvQna2hi5P14PtkBHxph2sznltyrZqcAMS+swFY02tYpZEq9ezMzZQxQBaLz
-         YhBGldvZtk1mLwRrKnd+D2Td72Jr6D5lG+eDMv0Iv3me1ck5dWhwtmD8dZgjcZlRqrut
-         7cm3y91tdzTj9/WoxYLlHTkGjsf/PUxmuURJ60K3P30u7PabB5oKSBj/Q6wBWaD8j7Lj
-         tV+h3B6dwD1O9NLdi0uFieY4rOd2m6IYzW1m6bKd7vh0Kf2G58B2vPnJ/tDV+5yc7MdL
-         sLfQ==
-X-Gm-Message-State: APjAAAWGJ6+FxRtS2tsO1TB6zAaQy7MvqN6sBg4MFYZmAhqqy+zm088S
-        w77myMc3OGIYntQLqKV56w==
-X-Google-Smtp-Source: APXvYqyIi7otPk4YqJ66riR/MI9UiSp8vpqQOhiJlly3+GQnLyt8fa9IB1l62IViMdRSA1KiKTCn5w==
-X-Received: by 2002:a9d:6f0a:: with SMTP id n10mr29655564otq.54.1582299137818;
-        Fri, 21 Feb 2020 07:32:17 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t9sm1108521otm.76.2020.02.21.07.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:32:16 -0800 (PST)
-Received: (nullmailer pid 14335 invoked by uid 1000);
-        Fri, 21 Feb 2020 15:32:15 -0000
-Date:   Fri, 21 Feb 2020 09:32:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Fri, 21 Feb 2020 10:35:44 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:26487 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgBUPfn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 10:35:43 -0500
+Received: from [10.28.90.153] (10.28.90.153) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 21 Feb 2020
+ 23:36:03 +0800
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+To:     Evan Benn <evanbenn@chromium.org>
+CC:     Julius Werner <jwerner@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to
- json-schema
-Message-ID: <20200221153215.GA9815@bogus>
-References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
- <20200221021002.18795-2-yamada.masahiro@socionext.com>
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus>
+ <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net>
+ <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com>
+Date:   Fri, 21 Feb 2020 23:36:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221021002.18795-2-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Originating-IP: [10.28.90.153]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier GPIO controller binding to DT schema format.
-> 
-> I omitted the 'gpio-ranges' property because it is defined in the
-> dt-schema project (/schemas/gpio/gpio.yaml).
-> 
-> As of writing, the 'gpio-ranges-group-names' is not defined in that
-> file despite it is a common property described in
-> Documentation/devicetree/bindings/gpio/gpio.txt
-> So, I defined it in this schema.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> I have a question about the range about 'ngpio'.
-> 
->   ngpios:
->     minimum: 0
->     maximum: 512
-> 
-> The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
-> https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
-> 
-> 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
-> 
-> I cannot omit the minimum because minimum and maximum depend on each other.
-> I just put a sensible number, 512, in maximum.
-> 
-> If this range is entirely unneeded, I will delete it.
+Hi, Evan
 
-This property is generally for when you can have some number less 
-than a maximum number implied by the compatible string. 
+Because the ATF does not define standard wdt index, each vendor defines 
+its own index.
+So I don't think that the current driver[0] can fully cover my usecases. 
+As discussed in your
+previous email, the meson wdt driver [1] can use the arm_smccc instead 
+of meson_sm_call.
 
-If there is really no max (e.g. 2^32 - 1 is valid), then just do 
-'ngpios: true'
+[0]: https://patchwork.kernel.org/patch/11395579/
+[1]: https://patchwork.kernel.org/patch/11331271/
 
-> 
-> 
->  .../bindings/gpio/gpio-uniphier.txt           | 51 -----------
->  .../gpio/socionext,uniphier-gpio.yaml         | 89 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 90 insertions(+), 52 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> 
+Best Regards
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Error: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dts:38.34-35 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1241747
-Please check and re-submit.
+On 2020/2/20 14:41, Evan Benn wrote:
+> Dear Xingyu,
+>
+> Could this driver also cover your usecase? I am not familiar with
+> meson, but it seems like the meson calls could
+> be replaced with arm_smccc calls. Then this driver will cover both
+> chips. I am not sure if your firmware is upstream
+> somewhere, but this might be adapted;
+> https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
+>
+> Thanks
+>
+>
+> On Thu, Feb 20, 2020 at 10:20 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>> On Wed, Feb 19, 2020 at 03:04:54PM -0800, Julius Werner wrote:
+>>>> You are not the first 'watchdog in firmware accessed via an SMC call'.
+>>>> Is there some more detail about what implementation this is? Part of
+>>>> TF-A? Defined by some spec (I can dream)?
+>>> This is just some random implementation written by me because we
+>>> needed one. I would like it to be the new generic implementation, but
+>>> it sounds like people here prefer the naming to be MediaTek specific
+>>> (at least for now). The other SMC watchdog we're aware of is
+>>> imx_sc_wdt but unfortunately that seems to hardcode platform-specific
+>> There is one more pending, for Meson SMC.
+>>
+>> https://patchwork.kernel.org/project/linux-watchdog/list/?series=227733
+>>
+>> Unfortunately it uses Meson firmware API functions, though it has pretty
+>> much the same functionality since those ultimately end up calling
+>> arm_smccc_smc().
+>>
+>> Guenter
+>>
+>>> details in the interface (at least in the pretimeout SMC) so we can't
+>>> just expand that. With this driver I tried to directly wrap the kernel
+>>> watchdog interface so it should be platform-agnostic and possible to
+>>> expand this driver to other platforms later if desired. The SMC
+>>> function ID would still always have to be platform-specific,
+>>> unfortunately (but we could pass it in through the device tree), since
+>>> the Arm SMC spec doesn't really leave any room for OS-generic SMCs
+>>> like this.
+> .
