@@ -2,331 +2,125 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B69C35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55130C35656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEC620578
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="SzdrmBSh"
+	by mail.kernel.org (Postfix) with ESMTP id 2ABD0206EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582294874;
+	bh=NObKApBSCoVwX7bYn9XZKlfO+0MBCetTBbmkMY3XzRs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=tf1w/Ot0pQ20HtxPVPVqcFBtIOCdXn/hSxAo9NLV2Q9R8mEBI3enkh1/ov7gJDOVi
+	 bEjpabLPfkkH2v5DCws7gkdvUjbz8v/HuDa0LgibeMtdThSx7JLVAhBweZNb2GDU12
+	 G9MsKpN4Dg3cXwFrb0f0DX5MnlSphyG/Ipu07cTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgBUOAT (ORCPT
+        id S1728842AbgBUOVK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:00:19 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:49332 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbgBUOAT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 09:00:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DUS+EmWp3BnEtQcaCSSQ3GT2kvfjvXg5CBdYcOkRXJ4=; b=SzdrmBSh747A00kZn0SoQnsCg
-        1R0sWdSJAc4IKmCv0Dg9MDnDvejDJBsy+Eqj0mGf2WaWYROn7Y1YKCG7ZSsRSZMxkcTcRU021fEDm
-        brKqHTfHxyYGc2KYgEC+1gXIk6UTNZrwedg8jPq2WskGgPkaztFu1vGgMHghGwqMmMJw6GQV9iwOt
-        YUDvcMleuTFUgF4WeG121PwWVSrPNBIM9VGsNNzaPKvCcpGDJr8wNjZZuY1BJcV0A2eTVkfXewk8T
-        XiVNvIrOlQrwGrNZ8PCF66s8NreCLKPMN2xCi9T/Q85izXb7iLh3b5tXKVLTHN4r9X/02ARDj/oHs
-        KQcr3Z5CQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:50856)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j58qd-0001bd-V5; Fri, 21 Feb 2020 14:00:08 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j58qc-0003YR-Rl; Fri, 21 Feb 2020 14:00:06 +0000
-Date:   Fri, 21 Feb 2020 14:00:06 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     ansuelsmth@gmail.com
-Cc:     'Andy Gross' <agross@kernel.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Andrew Lunn' <andrew@lunn.ch>,
-        'Florian Fainelli' <f.fainelli@gmail.com>,
-        'Heiner Kallweit' <hkallweit1@gmail.com>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: R: [PATCH v4 1/2] net: mdio: add ipq8064 mdio driver
-Message-ID: <20200221140006.GJ25745@shell.armlinux.org.uk>
-References: <20200221132834.20719-1-ansuelsmth@gmail.com>
- <20200221135325.GI25745@shell.armlinux.org.uk>
- <006d01d5e8bf$0f02ffb0$2d08ff10$@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <006d01d5e8bf$0f02ffb0$2d08ff10$@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 21 Feb 2020 09:21:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:40420 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727851AbgBUOVJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:21:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BD8130E;
+        Fri, 21 Feb 2020 06:21:09 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6AD83F703;
+        Fri, 21 Feb 2020 06:21:08 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:21:07 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     alsa-devel@alsa-project.org, Chen-Yu Tsai <wens@csie.org>,
+        devicetree@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        =?UTF-8?q?Myl=C3=A8ne=20Josserand?= 
+        <mylene.josserand@free-electrons.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Applied "ASoC: sun8i-codec: Remove unused dev from codec struct" to the asoc tree
+In-Reply-To: <20200217064250.15516-5-samuel@sholland.org>
+Message-Id: <applied-20200217064250.15516-5-samuel@sholland.org>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 02:58:55PM +0100, ansuelsmth@gmail.com wrote:
-> > On Fri, Feb 21, 2020 at 02:28:31PM +0100, Ansuel Smith wrote:
-> > > Currently ipq806x soc use generi bitbang driver to
-> > > comunicate with the gmac ethernet interface.
-> > > Add a dedicated driver created by chunkeey to fix this.
-> > >
-> > > Christian Lamparter <chunkeey@gmail.com>
-> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > ---
-> > >  drivers/net/phy/Kconfig        |   8 ++
-> > >  drivers/net/phy/Makefile       |   1 +
-> > >  drivers/net/phy/mdio-ipq8064.c | 166
-> > +++++++++++++++++++++++++++++++++
-> > >  3 files changed, 175 insertions(+)
-> > >  create mode 100644 drivers/net/phy/mdio-ipq8064.c
-> > >
-> > > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> > > index 9dabe03a668c..ec2a5493a7e8 100644
-> > > --- a/drivers/net/phy/Kconfig
-> > > +++ b/drivers/net/phy/Kconfig
-> > > @@ -157,6 +157,14 @@ config MDIO_I2C
-> > >
-> > >  	  This is library mode.
-> > >
-> > > +config MDIO_IPQ8064
-> > > +	tristate "Qualcomm IPQ8064 MDIO interface support"
-> > > +	depends on HAS_IOMEM && OF_MDIO
-> > > +	depends on MFD_SYSCON
-> > > +	help
-> > > +	  This driver supports the MDIO interface found in the network
-> > > +	  interface units of the IPQ8064 SoC
-> > > +
-> > >  config MDIO_MOXART
-> > >  	tristate "MOXA ART MDIO interface support"
-> > >  	depends on ARCH_MOXART || COMPILE_TEST
-> > > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> > > index fe5badf13b65..8f02bd2089f3 100644
-> > > --- a/drivers/net/phy/Makefile
-> > > +++ b/drivers/net/phy/Makefile
-> > > @@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-
-> > cavium.o
-> > >  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
-> > >  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
-> > >  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
-> > > +obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
-> > >  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
-> > >  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
-> > >  obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
-> > > diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-
-> > ipq8064.c
-> > > new file mode 100644
-> > > index 000000000000..fd856b798194
-> > > --- /dev/null
-> > > +++ b/drivers/net/phy/mdio-ipq8064.c
-> > > @@ -0,0 +1,166 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +//
-> > > +// Qualcomm IPQ8064 MDIO interface driver
-> > > +//
-> > > +// Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
-> > > +
-> > > +#include <linux/delay.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/of_mdio.h>
-> > > +#include <linux/phy.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/mfd/syscon.h>
-> > > +
-> > > +/* MII address register definitions */
-> > > +#define MII_ADDR_REG_ADDR                       0x10
-> > > +#define MII_BUSY                                BIT(0)
-> > > +#define MII_WRITE                               BIT(1)
-> > > +#define MII_CLKRANGE_60_100M                    (0 << 2)
-> > > +#define MII_CLKRANGE_100_150M                   (1 << 2)
-> > > +#define MII_CLKRANGE_20_35M                     (2 << 2)
-> > > +#define MII_CLKRANGE_35_60M                     (3 << 2)
-> > > +#define MII_CLKRANGE_150_250M                   (4 << 2)
-> > > +#define MII_CLKRANGE_250_300M                   (5 << 2)
-> > > +#define MII_CLKRANGE_MASK			GENMASK(4, 2)
-> > > +#define MII_REG_SHIFT				6
-> > > +#define MII_REG_MASK				GENMASK(10, 6)
-> > > +#define MII_ADDR_SHIFT				11
-> > > +#define MII_ADDR_MASK				GENMASK(15, 11)
-> > > +
-> > > +#define MII_DATA_REG_ADDR                       0x14
-> > > +
-> > > +#define MII_MDIO_DELAY                          (1000)
-> > > +#define MII_MDIO_RETRY                          (10)
-> > 
-> > You've missed my comments on these.
+The patch
 
-And did you miss this again?
+   ASoC: sun8i-codec: Remove unused dev from codec struct
 
-> > 
-> > > +
-> > > +struct ipq8064_mdio {
-> > > +	struct regmap *base; /* NSS_GMAC0_BASE */
-> > > +};
-> > > +
-> > > +static int
-> > > +ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
-> > > +{
-> > > +	u32 busy;
-> > > +
-> > > +	return regmap_read_poll_timeout(priv->base,
-> > MII_ADDR_REG_ADDR, busy,
-> > > +				   !(busy & MII_BUSY), MII_MDIO_DELAY,
-> > > +				   MII_MDIO_RETRY * USEC_PER_MSEC);
-> > > +}
-> > > +
-> > > +static int
-> > > +ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
-> > > +{
-> > > +	struct ipq8064_mdio *priv = bus->priv;
-> > > +	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
-> > > +	u32 ret_val;
-> > > +	int err;
-> > > +
-> > > +	/* Reject clause 45 */
-> > > +	if (reg_offset & MII_ADDR_C45)
-> > > +		return -EOPNOTSUPP;
-> > > +
-> > > +	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-> > > +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-> > > +
-> > > +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-> > > +	usleep_range(10, 20);
-> > > +
-> > > +	err = ipq8064_mdio_wait_busy(priv);
-> > > +	if (err)
-> > > +		return err;
-> > > +
-> > > +	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
-> > > +	return (int)ret_val;
-> > > +}
-> > > +
-> > > +static int
-> > > +ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset,
-> > u16 data)
-> > > +{
-> > > +	struct ipq8064_mdio *priv = bus->priv;
-> > > +	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
-> > > +
-> > > +	/* Reject clause 45 */
-> > > +	if (reg_offset & MII_ADDR_C45)
-> > > +		return -EOPNOTSUPP;
-> > > +
-> > > +	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
-> > > +
-> > > +	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-> > > +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-> > > +
-> > > +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-> > > +	usleep_range(10, 20);
-> > > +
-> > > +	return ipq8064_mdio_wait_busy(priv);
-> > > +}
-> > > +
-> > > +static int
-> > > +ipq8064_mdio_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct device_node *np = pdev->dev.of_node;
-> > > +	struct ipq8064_mdio *priv;
-> > > +	struct mii_bus *bus;
-> > > +	int ret;
-> > > +
-> > > +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
-> > > +	if (!bus)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	bus->name = "ipq8064_mdio_bus";
-> > > +	bus->read = ipq8064_mdio_read;
-> > > +	bus->write = ipq8064_mdio_write;
-> > > +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev-
-> > >dev));
-> > > +	bus->parent = &pdev->dev;
-> > > +
-> > > +	priv = bus->priv;
-> > > +	priv->base = syscon_node_to_regmap(np);
-> > > +	if (IS_ERR(priv->base) && priv->base != ERR_PTR(-EPROBE_DEFER))
-> > > +		priv->base = syscon_regmap_lookup_by_phandle(np,
-> > "master");
-> > > +
-> > > +	if (priv->base == ERR_PTR(-EPROBE_DEFER)) {
-> > > +		return -EPROBE_DEFER;
-> > > +	} else if (IS_ERR(priv->base)) {
-> > > +		dev_err(&pdev->dev, "error getting syscon regmap,
-> > error=%ld\n",
-> > > +			PTR_ERR(priv->base));
-> > 
-> > Why not %pe as I suggested, which is documented in printk-formats to
-> > optionally give a symbolic error string.
-> > 
-> I thought that print the error code was better than error=(ptrval)
-> If I need to follow the documentation then sorry, I will restore %pe
-> > > +		return PTR_ERR(priv->base);
-> > > +	}
-> > 
-> > And have you even tested the above - you haven't said whether you have
-> > or not...
-> > 
-> Yes I tested the changes, it does errors correctly.
-> > > +
-> > > +	ret = of_mdiobus_register(bus, np);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	platform_set_drvdata(pdev, bus);
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int
-> > > +ipq8064_mdio_remove(struct platform_device *pdev)
-> > > +{
-> > > +	struct mii_bus *bus = platform_get_drvdata(pdev);
-> > > +
-> > > +	mdiobus_unregister(bus);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct of_device_id ipq8064_mdio_dt_ids[] = {
-> > > +	{ .compatible = "qcom,ipq8064-mdio" },
-> > > +	{ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
-> > > +
-> > > +static struct platform_driver ipq8064_mdio_driver = {
-> > > +	.probe = ipq8064_mdio_probe,
-> > > +	.remove = ipq8064_mdio_remove,
-> > > +	.driver = {
-> > > +		.name = "ipq8064-mdio",
-> > > +		.of_match_table = ipq8064_mdio_dt_ids,
-> > > +	},
-> > > +};
-> > > +
-> > > +module_platform_driver(ipq8064_mdio_driver);
-> > > +
-> > > +MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
-> > > +MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
-> > > +MODULE_LICENSE("GPL");
-> > > --
-> > > 2.25.0
-> > >
-> > >
-> > 
-> > --
-> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> > FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down
-> > 622kbps up
-> > According to speedtest.net: 11.9Mbps down 500kbps up
-> 
-> 
+has been applied to the asoc tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 150cbf8e66ec86966c13fd7a0e3de8813bca03d8 Mon Sep 17 00:00:00 2001
+From: Samuel Holland <samuel@sholland.org>
+Date: Mon, 17 Feb 2020 00:42:20 -0600
+Subject: [PATCH] ASoC: sun8i-codec: Remove unused dev from codec struct
+
+This field is not used anywhere in the driver, so remove it.
+
+Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Link: https://lore.kernel.org/r/20200217064250.15516-5-samuel@sholland.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/sunxi/sun8i-codec.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
+index 55798bc8eae2..41471bd01042 100644
+--- a/sound/soc/sunxi/sun8i-codec.c
++++ b/sound/soc/sunxi/sun8i-codec.c
+@@ -85,7 +85,6 @@
+ #define SUN8I_AIF1CLK_CTRL_AIF1_BCLK_DIV_MASK	GENMASK(12, 9)
+ 
+ struct sun8i_codec {
+-	struct device	*dev;
+ 	struct regmap	*regmap;
+ 	struct clk	*clk_module;
+ 	struct clk	*clk_bus;
+@@ -541,8 +540,6 @@ static int sun8i_codec_probe(struct platform_device *pdev)
+ 	if (!scodec)
+ 		return -ENOMEM;
+ 
+-	scodec->dev = &pdev->dev;
+-
+ 	scodec->clk_module = devm_clk_get(&pdev->dev, "mod");
+ 	if (IS_ERR(scodec->clk_module)) {
+ 		dev_err(&pdev->dev, "Failed to get the module clock\n");
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.20.1
+
