@@ -2,74 +2,137 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02713C3565D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 18:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5614C3565B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 18:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCCDE24672
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 18:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582310966;
-	bh=Ls0R4Qe/IcctCXvAuXMBeYsY+8SGJkuitM+5W+PueKg=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=JvvA9l3Nmzv+GPsWcM0wVt/OhFAFKSLL+uQQQ/wjPEAeMW3BPVYXrH3Yv0lFJjc5o
-	 i3cR+Y8yRZ6E11FCxW7Cleuxi3MnSNZrgjzokOydCQc9sMxVq7kJsGVr8BduxLqvtm
-	 J5FSfTj+62+eZgkGikgZ4Hxa8LC2SrnDS8UspYMc=
+	by mail.kernel.org (Postfix) with ESMTP id 722BC24673
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 18:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xi5iYhOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgBUSt0 (ORCPT
+        id S1729648AbgBUSzD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:49:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgBUSt0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:49:26 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80902208E4;
-        Fri, 21 Feb 2020 18:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582310965;
-        bh=Ls0R4Qe/IcctCXvAuXMBeYsY+8SGJkuitM+5W+PueKg=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=zG1EL/XfqmIsZXNzNzh/uxnJRX8DmMaUbAxsIUMpG6QXlGvZ/472Z//ta/RKq+PPE
-         /+SBlCLPajAxdEoo5f1eSfdMrzrUI4vtiS279H3BQp6xZe5v362h7GLOF0/89QGCEE
-         4bHxYm4WQ4jA3ag5hfTk7dXJxr/tiYtom38sqncM=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 21 Feb 2020 13:55:03 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43229 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgBUSzD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 13:55:03 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p11so1224945plq.10
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 10:55:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3+q3lISbQqmoylcBRX0ljpGoH0evC7W0clNtAhnO7FQ=;
+        b=Xi5iYhOPTrQ6EU9L943ymywszhoCRb8ARJiJLMdagjqcqJTyajoSGSJRg5QxNFBIwy
+         3NDfb/GUW55SOwFqspg5Umn0kSorcmpey7vBTP4INB2fRATLO6GmkH1CymdJbBE4s6tg
+         stDsf1azXbWaeyqf53yxNu2CMLudRWlmFST+k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3+q3lISbQqmoylcBRX0ljpGoH0evC7W0clNtAhnO7FQ=;
+        b=Hg4AnSM3AhCUs9LnzHbbrHtYDuBfLOdhkn1NjjP5HiyzpLVplfDCsIjc4/yd0eoa9z
+         SyuieBEycncbYAWVjlTza3vCUUh3WGXRjSMH5fDX+s3Sd6N3frTx6Wa26uT8k7cLOvMq
+         bgztotDvM2zc056q181SzFca5+2S6iRewD1hzRMon5Pa8fRZdWOxLd7uxc8VBfcn9XkG
+         En8bxBC+5Eipl1oM+QY30Bv64NWPav/3nlrmVMEG86gUX+QAjJhW4U6fHZcFWyDwiNma
+         PLr57JxIXkoouEVpmLMKs5me/giUIltR2bLSKEH6PuIWCnSyTQffj3amL3Ae924xt3FV
+         x0aw==
+X-Gm-Message-State: APjAAAWGxIVGpCMxFSeYsYdHd8WGTlIHRhyzUpTXr35d01QSsxDqTEwZ
+        IX068GDJpsexH+OPw15M5rFbkA==
+X-Google-Smtp-Source: APXvYqyv82hKSXxUsomJM1cmTiw8XflthqfyydrvvXesPzmnC85d6kZ2ovwi5gzQL5Xq2CwIatIObw==
+X-Received: by 2002:a17:902:401:: with SMTP id 1mr36917442ple.177.1582311302745;
+        Fri, 21 Feb 2020 10:55:02 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id h13sm3367390pjc.9.2020.02.21.10.55.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 10:55:01 -0800 (PST)
+Date:   Fri, 21 Feb 2020 10:55:00 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org
+Subject: Re: [PATCH 4/6] spi: spi-geni-qcom: Add interconnect support
+Message-ID: <20200221185500.GE24720@google.com>
+References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
+ <1581946205-27189-5-git-send-email-akashast@codeaurora.org>
+ <20200219180950.GA24720@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200221171030.39326-1-tony@atomide.com>
-References: <20200221171030.39326-1-tony@atomide.com>
-Subject: Re: [PATCH] clk: ti: am43xx: Fix clock parent for RTC clock
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-omap@vger.kernel.org
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
-Date:   Fri, 21 Feb 2020 10:49:24 -0800
-Message-ID: <158231096467.258574.11716255621346536160@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200219180950.GA24720@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Tony Lindgren (2020-02-21 09:10:30)
-> Currently enabling clkctrl clock on am4 can fail for RTC as the clock
-> parent is wrong for RTC.
->=20
-> Fixes: 76a1049b84dd ("clk: ti: am43xx: add new clkctrl data for am43xx")
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->=20
-> It is unclear if we can end up with RTC hung with the current mainline
-> kernel in some cases. Probing RTC with device tree data only seems to
-> trigger this every time.
+On Wed, Feb 19, 2020 at 10:09:50AM -0800, Matthias Kaehlcke wrote:
+> On Mon, Feb 17, 2020 at 07:00:03PM +0530, Akash Asthana wrote:
+> > Get the interconnect paths for SPI based Serial Engine device
+> > and vote according to the current bus speed of the driver.
+> > 
+> > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> > ---
+> >  drivers/spi/spi-geni-qcom.c | 65 ++++++++++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 62 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> > index c397242..a066ef26 100644
+> > --- a/drivers/spi/spi-geni-qcom.c
+> > +++ b/drivers/spi/spi-geni-qcom.c
+> > @@ -608,16 +653,25 @@ static int spi_geni_remove(struct platform_device *pdev)
+> >  	spi_unregister_master(spi);
+> >  
+> >  	free_irq(mas->irq, spi);
+> > +	geni_spi_icc_put(&mas->se);
+> >  	pm_runtime_disable(&pdev->dev);
+> >  	return 0;
+> >  }
+> >  
+> >  static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
+> >  {
+> > +	int ret;
+> >  	struct spi_master *spi = dev_get_drvdata(dev);
+> >  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+> >  
+> > -	return geni_se_resources_off(&mas->se);
+> > +	ret = geni_se_resources_off(&mas->se);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	icc_set_bw(mas->se.icc_path[GENI_TO_CORE], 0, 0);
+> 
+> This causes my SC7180 system to reset at boot time:
+> 
+> [    3.509652] qcom-qmp-phy 88e9000.phy-wrapper: Registered Qcom-QMP phy
+> [    3.516956] qcom-qusb2-phy 88e3000.phy: Registered Qcom-QUSB2 phy
+> [    3.524450] geni_se_qup 8c0000.geniqup: Adding to iommu group 4
+> [    3.533896] spi_master spi0: will run message pump with realtime priority
+> <reset>
+> 
+> The system does not reset when passing 'Bps_to_icc(1000)' (=> 1) instead of 0.
 
-It's small enough and if it's annoying enough we can probably put it
-into clk-fixes to get it fixed for this release instead of waiting. Can
-Tero ack it?
+I found this is related with the use of 'earlycon'.
+
+There is a short window where the early console and the 'real' console coexist:
+
+[    3.858122] printk: console [ttyMSM0] enabled
+[    3.875692] printk: bootconsole [qcom_geni0] disabled
+
+The reset probably occurs when the early console tries to write, but the ICC is
+effectively disabled because ttyMSM0 and the other geni ports are runtime
+suspended.
+
+In any case that's not an issue of the SPI driver, but needs to be addressed
+somewhere in the console/UART code.
