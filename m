@@ -2,104 +2,153 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D79C35640
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB40C35641
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825CF20578
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hI/LwG2K"
+	by mail.kernel.org (Postfix) with ESMTP id 735B22067D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:34:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387554AbgBUIdY (ORCPT
+        id S1732386AbgBUIJn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:33:24 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58058 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732609AbgBUIdX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 03:33:23 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01L8XJsc015920;
-        Fri, 21 Feb 2020 02:33:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582273999;
-        bh=HS1Md6M0KSfcAvB5AaAuTKyUy/n3WhhTB/+q8IGl1yc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hI/LwG2KS7nyGndqeFXCyRBVuIBvFnzyPcYsynXqpEpEBLfYP470xHU+CssX/b9S4
-         IXB4EXF5EMHAfKgC7b1aPySMu1193wD5DoTydMdcE4bO38Q03kFFwBVHs22v8zx9/D
-         HaAru45OYb/JFKjjXUibT0CpAxiEgHnWbwuScXCg=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01L8XJNN072114
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Feb 2020 02:33:19 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
- Feb 2020 02:33:18 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 21 Feb 2020 02:33:18 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01L8XGLE004067;
-        Fri, 21 Feb 2020 02:33:17 -0600
-Subject: Re: [PATCH v4 0/3] phy: qcom-qmp: Add SDM845 QMP and QHP PHYs
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200106081821.3192922-1-bjorn.andersson@linaro.org>
- <20200220063837.GX1908628@ripper>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <ec401b79-b0af-78b3-ba8a-03aee5ba3584@ti.com>
-Date:   Fri, 21 Feb 2020 14:06:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 21 Feb 2020 03:09:43 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52697 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732395AbgBUIJl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 03:09:41 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1j53NH-0003OX-CY; Fri, 21 Feb 2020 09:09:27 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad] (unknown [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id C89614BCCA9;
+        Fri, 21 Feb 2020 08:09:24 +0000 (UTC)
+Subject: Re: [PATCH v2 2/3] can: m_can: m_can_platform: Add support for
+ enabling transceiver
+To:     Faiz Abbas <faiz_abbas@ti.com>, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-can@vger.kernel.org
+Cc:     broonie@kernel.org, lgirdwood@gmail.com, catalin.marinas@arm.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, wg@grandegger.com,
+        sriram.dash@samsung.com
+References: <20200217142836.23702-1-faiz_abbas@ti.com>
+ <20200217142836.23702-3-faiz_abbas@ti.com>
+ <250f905a-33c3-dd17-15c9-e282299dd742@ti.com>
+ <8885c00b-7b73-0448-7e9d-ecb19fe84adf@ti.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <8a001afe-dc97-fa1e-4e80-20da89eb2105@pengutronix.de>
+Date:   Fri, 21 Feb 2020 09:09:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200220063837.GX1908628@ripper>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <8885c00b-7b73-0448-7e9d-ecb19fe84adf@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 20/02/20 12:08 pm, Bjorn Andersson wrote:
-> On Mon 06 Jan 00:18 PST 2020, Bjorn Andersson wrote:
+On 2/21/20 8:54 AM, Faiz Abbas wrote:
+> Hi Dan,
 > 
->> Add support for the two PCIe PHYs found in Qualcomm SDM845
+> On 17/02/20 8:40 pm, Dan Murphy wrote:
+>> Faiz
 >>
+>> On 2/17/20 8:28 AM, Faiz Abbas wrote:
+>>> CAN transceivers on some boards have a standby line which can be
+>>> toggled to enable/disable the transceiver. Model this as an optional
+>>> fixed xceiver regulator.
+>>>
+>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>> Acked-by: Sriram Dash <sriram.dash@samsung.com>
+>>> ---
+>>>   drivers/net/can/m_can/m_can_platform.c | 6 ++++++
+>>>   1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/drivers/net/can/m_can/m_can_platform.c
+>>> b/drivers/net/can/m_can/m_can_platform.c
+>>> index 38ea5e600fb8..719468fab507 100644
+>>> --- a/drivers/net/can/m_can/m_can_platform.c
+>>> +++ b/drivers/net/can/m_can/m_can_platform.c
+>>> @@ -6,6 +6,7 @@
+>>>   // Copyright (C) 2018-19 Texas Instruments Incorporated -
+>>> http://www.ti.com/
+>>>     #include <linux/platform_device.h>
+>>> +#include <linux/regulator/consumer.h>
+>>>     #include "m_can.h"
+>>>   @@ -57,6 +58,7 @@ static int m_can_plat_probe(struct platform_device
+>>> *pdev)
+>>>   {
+>>>       struct m_can_classdev *mcan_class;
+>>>       struct m_can_plat_priv *priv;
+>>> +    struct regulator *reg_xceiver;
+>>>       struct resource *res;
+>>>       void __iomem *addr;
+>>>       void __iomem *mram_addr;
+>>> @@ -111,6 +113,10 @@ static int m_can_plat_probe(struct
+>>> platform_device *pdev)
+>>>         m_can_init_ram(mcan_class);
+>>>   +    reg_xceiver = devm_regulator_get_optional(&pdev->dev, "xceiver");
+>>> +    if (PTR_ERR(reg_xceiver) == -EPROBE_DEFER)
+>>> +        return -EPROBE_DEFER;
+>>> +
+>>
+>> Where is this regulator enabled?
 > 
-> Kishon, these patches still applies cleanly, could you please pick them
-> up?
+> I have set regulator-boot-on flag in the dt so this didn't require an
+> enable.
 
-merged now, thanks!
+Please don't do this, please handle it properly.
 
--Kishon
+>> Shouldn't the regulator be managed by runtime PM as well?
 
-> 
-> Regards,
-> Bjorn
-> 
->> Bjorn Andersson (3):
->>   dt-bindings: phy-qcom-qmp: Add SDM845 PCIe to binding
->>   phy: qcom: qmp: Add SDM845 PCIe QMP PHY support
->>   phy: qcom: qmp: Add SDM845 QHP PCIe PHY
->>
->>  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |  10 +
->>  drivers/phy/qualcomm/phy-qcom-qmp.c           | 313 ++++++++++++++++++
->>  drivers/phy/qualcomm/phy-qcom-qmp.h           | 114 +++++++
->>  3 files changed, 437 insertions(+)
->>
->> -- 
->> 2.24.0
->>
+If so, then make the runtime pm kconfig option mandatory.
+
+Marc
+
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
