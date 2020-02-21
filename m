@@ -1,78 +1,50 @@
-Return-Path: <SRS0=21hy=4I=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7725C11D00
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 23:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9459C11D24
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 00:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7819208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Feb 2020 23:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DBC8QHhV"
+	by mail.kernel.org (Postfix) with ESMTP id 9B71A2071E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 00:15:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgBTXsV (ORCPT
+        id S1729412AbgBUAPy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:48:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53870 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbgBTXsV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 18:48:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=B9aSlxx7wx7w6JgLrqupsTcq3VAPuxTbkmWcCtYGRVU=; b=DBC8QHhVOjtp6ibn9AOlSwONWa
-        KS+1mQxLjWZ1bi5hyXU/HxnJJwr3OJQUSwQCDAtI7+eoLSgn4iNjY2MhDzDP5n8GYn0FvCNJCttJQ
-        rzKiBZcNL/0HJ8S7fG5sVQlps4VT5UOhSQScg+usFQZfMgH4c+qokRCncDFOblytGeiad8VvhuHWM
-        m5TZoAk/xEjg7RR957H7+0JnmNmSWKZnToH/oDiHO4hUdf+EJ8swHkdE81GLLywKdWUgeyOqJaYBb
-        WZ8O4Njk0F3VrCdwmLZyr23M+MYDcHnvxj+3k5AemtVQ0OK2yhmdgHvB0lOfiIhILLv0qlqtwe5Kl
-        BHd46h3w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4vYF-0007k0-KU; Thu, 20 Feb 2020 23:48:15 +0000
-Subject: Re: [PATCH v8 1/6] drm/mediatek: Use regmap for register access
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20200220172147.919996-1-enric.balletbo@collabora.com>
- <20200220172147.919996-2-enric.balletbo@collabora.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0b2046b9-90de-c894-7502-993b5df12e7a@infradead.org>
-Date:   Thu, 20 Feb 2020 15:48:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 19:15:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:54118 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729410AbgBUAPx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:15:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC99531B;
+        Thu, 20 Feb 2020 16:15:52 -0800 (PST)
+Received: from [10.37.12.72] (unknown [10.37.12.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27B4B3F6CF;
+        Thu, 20 Feb 2020 16:15:49 -0800 (PST)
+Subject: Re: [PATCH v9 08/15] coresight: cti: Enable CTI associated with
+ devices.
+To:     mike.leach@linaro.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, coresight@lists.linaro.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
+        robh+dt@kernel.org, maxime@cerno.tech, liviu.dudau@arm.com,
+        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, agross@kernel.org,
+        corbet@lwn.net
+References: <20200210213924.20037-1-mike.leach@linaro.org>
+ <20200210213924.20037-9-mike.leach@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <04b739fd-7bb3-bd28-8013-918e7d4dfcb7@arm.com>
+Date:   Fri, 21 Feb 2020 00:20:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200220172147.919996-2-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200210213924.20037-9-mike.leach@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
@@ -80,35 +52,73 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/20/20 9:21 AM, Enric Balletbo i Serra wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
+Hi Mike
+
+Sorry for the delay. one minor comment below.
+
+On 02/10/2020 09:39 PM, Mike Leach wrote:
+> The CoreSight subsystem enables a path of devices from source to sink.
+> Any CTI devices associated with the path devices must be enabled at the
+> same time.
 > 
-> The mmsys memory space is shared between the drm and the
-> clk driver. Use regmap to access it.
+> This patch adds an associated coresight_device element to the main
+> coresight device structure, and uses this to create associations between
+> the CTI and other devices based on the device tree data. The associated
+> device element is used to enable CTI in conjunction with the path elements.
 > 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> CTI devices are reference counted so where a single CTI is associated with
+> multiple elements on the path, it will be enabled on the first associated
+> device enable, and disabled with the last associated device disable.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > ---
+>   drivers/hwtracing/coresight/coresight-cti.c  | 129 +++++++++++++++++++
+>   drivers/hwtracing/coresight/coresight-cti.h  |   1 +
+>   drivers/hwtracing/coresight/coresight-priv.h |  12 ++
+>   drivers/hwtracing/coresight/coresight.c      |  71 +++++++++-
+>   include/linux/coresight.h                    |   4 +
+>   5 files changed, 212 insertions(+), 5 deletions(-)
 > 
-> Changes in v8: None
-> Changes in v7:
-> - Add R-by from CK
-> 
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  4 +-
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 50 +++++++++++--------------
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |  4 +-
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 13 ++-----
->  drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  2 +-
->  5 files changed, 30 insertions(+), 43 deletions(-)
+> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
+> index 77c2af247917..c4494923d030 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti.c
+> @@ -4,6 +4,7 @@
+>    * Author: Mike Leach <mike.leach@linaro.org>
+>    */
+>   
+> +#include <linux/property.h>
+>   #include "coresight-cti.h"
+>   
+>   /**
+> @@ -440,6 +441,131 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
+>   	return err;
+>   }
+>   
+> +/*
+> + * Look for a matching connection device name in the list of connections.
+> + * If found then swap in the csdev name, set trig con association pointer
+> + * and return found.
+> + */
+> +static bool
+> +cti_match_fixup_csdev(struct cti_device *ctidev, const char *node_name,
+> +		      struct coresight_device *csdev)
+> +{
+> +	struct cti_trig_con *tc;
+> +	const char *csdev_name;
+> +
+> +	list_for_each_entry(tc, &ctidev->trig_cons, node) {
+> +		if (tc->con_dev_name) {
+> +			if (!strcmp(node_name, tc->con_dev_name)) {
+> +				/* match: so swap in csdev name & dev */
+> +				csdev_name = dev_name(&csdev->dev);
+> +				tc->con_dev_name =
+> +					devm_kstrdup(&csdev->dev, csdev_name,
+> +						     GFP_KERNEL);
 
-Hi. Just a quick question:
+In the extreme rare case of an allocation failure, we may want to
+check if the allocation was successful or not, rather than silently
+ignoring it. With that fixed,
 
-Do you need to select REGMAP or one of its derivatives to make sure
-that the proper interfaces are available for this driver?
-
-thanks.
--- 
-~Randy
-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
