@@ -2,153 +2,139 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA6DC35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748FCC35646
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F097D2073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:12:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eib3Jfwy"
+	by mail.kernel.org (Postfix) with ESMTP id 49C6E24672
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582291295;
+	bh=7jBCZFzRAMGvkjduzvrnNgKG2uWZV8YyKE222d9XAbk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PGtv3woG3YquGG20RPn6Esw5MBz6Xivlmusp+fpbSx5Y+0PbkePg+D0qV+tcVFcgQ
+	 aogy50qAASKYVWOSimDFgKgMcTGDDWglK2ranv8XZn0bLqkIDeV0VstDyJknOUxq7X
+	 6ijlQ9Eqh4+g7STS8qm+J7Je7Oa3BzvEaGw3COWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgBUNMd (ORCPT
+        id S1728645AbgBUNVb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:12:33 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38256 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgBUNMd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 08:12:33 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a9so1796553wmj.3
-        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 05:12:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=a/KavHLvvULXfL2VP34j+gxXqKWZ5d3n9oQaqLdPQv4=;
-        b=eib3Jfwyj+tZtw0Vz5eRWnOQiMb9kRoD6q2gN2p55T9aS3rgoCUuv4jkOzgSy6JAgQ
-         LEjM/7bJFu5XAMFaMvFkgF8XI6h8ICSPxck1TJrj6R8L0TLPzxasmiTqaRBEuJSE492o
-         xUPyAD7jB/fuLzt6Z6u8a/djHUo7qip9vuLowvh5OaxbICooz75RPYWXY584WFX80Hsq
-         UecpvDo6HfzMYfFJjPppbxEhywhbLPSsEWUgzWENhmVwerLyCsfebJ75YhAi0BV6oT34
-         gcEUPT4zy5xBisJiKhATgcWrOM/bv0x40XtU3oXOP8d4vAUNTTge4+2/pCIL965PidD5
-         SzyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=a/KavHLvvULXfL2VP34j+gxXqKWZ5d3n9oQaqLdPQv4=;
-        b=Ir5nwWWpkGiMXbxep9Lz62/bU/4oP9s+CC2cf/N4BoU2JTDjXWvLRjvszbZKAZcesJ
-         3wGjN3BteYun7TcXju1sttwi0Z1CdBxVey3fv2wxqCRvlGlta23pMc4n58eu83CkS6I6
-         7F0HSNVXP1COzLGhwg1ddU2DsMKAKljuShkCYNsUbd1nm3GeBKibrwDqysXHL7r2dHn5
-         JglcOBn+D6mjWPAQXOQEbIUQBKf7T0EDOWHk8mvn0ZKRZC4WyDVISexFfOs+hzDd2UnM
-         4WzLkhn/5/N6o/OOT0grL64gpqkvsGdQxvK8mscgswpNpZESVir3RJhZZG+aRClDLUDF
-         0GGw==
-X-Gm-Message-State: APjAAAUAcfK8WjAFLu8MRzcb/TPCxJENqwXofY8xOXF7t49sxYZXfmYu
-        1ePoCPcsLpEAi3cKM5eyHXd0QA==
-X-Google-Smtp-Source: APXvYqx5emu1fdVAd6Tj3p81RSkBc6Mf5Yyr0nrkLGXMlG0khLLYOloIT2vAb1bEk0+GwUGFpzZSvQ==
-X-Received: by 2002:a1c:4e02:: with SMTP id g2mr3929356wmh.131.1582290750388;
-        Fri, 21 Feb 2020 05:12:30 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
-        by smtp.gmail.com with ESMTPSA id c15sm3881537wrt.1.2020.02.21.05.12.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 05:12:29 -0800 (PST)
-Date:   Fri, 21 Feb 2020 14:12:26 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V15 RESEND 2/5] thermal: of-thermal: add API for getting
- sensor ID from DT
-Message-ID: <20200221131226.GE10516@linaro.org>
-References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
- <1582161028-2844-2-git-send-email-Anson.Huang@nxp.com>
- <20200221091112.GA10516@linaro.org>
- <DB3PR0402MB39161BB726FE5413F30F0263F5120@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Fri, 21 Feb 2020 08:21:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:39206 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728605AbgBUNVb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 08:21:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CD1630E;
+        Fri, 21 Feb 2020 05:21:30 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D526C3F703;
+        Fri, 21 Feb 2020 05:21:29 -0800 (PST)
+Date:   Fri, 21 Feb 2020 13:21:28 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, digetx@gmail.com,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
+        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
+Subject: Re: [PATCH v3 04/10] ASoC: tegra: add Tegra210 based I2S driver
+Message-ID: <20200221132128.GE5546@sirena.org.uk>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-5-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FEz7ebHBGB6b2e8X"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB3PR0402MB39161BB726FE5413F30F0263F5120@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1582180492-25297-5-git-send-email-spujar@nvidia.com>
+X-Cookie: Dead? No excuse for laying off work.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 09:26:29AM +0000, Anson Huang wrote:
-> Hi, Daniel
-> 
-> > >   *       a valid .of_node, for the sensor node.
-> > > @@ -499,36 +546,22 @@ thermal_zone_of_sensor_register(struct device
-> > *dev, int sensor_id, void *data,
-> > >  	sensor_np = of_node_get(dev->of_node);
-> > >
-> > >  	for_each_available_child_of_node(np, child) {
-> > > -		struct of_phandle_args sensor_specs;
-> > >  		int ret, id;
-> > >
-> > >  		/* For now, thermal framework supports only 1 sensor per
-> > zone */
-> > > -		ret = of_parse_phandle_with_args(child, "thermal-sensors",
-> > > -						 "#thermal-sensor-cells",
-> > > -						 0, &sensor_specs);
-> > > +		ret = thermal_zone_of_get_sensor_id(child, sensor_np, &id);
-> > >  		if (ret)
-> > >  			continue;
-> > >
-> > > -		if (sensor_specs.args_count >= 1) {
-> > > -			id = sensor_specs.args[0];
-> > > -			WARN(sensor_specs.args_count > 1,
-> > > -			     "%pOFn: too many cells in sensor specifier %d\n",
-> > > -			     sensor_specs.np, sensor_specs.args_count);
-> > > -		} else {
-> > > -			id = 0;
-> > > -		}
-> > 
-> > Please take also the opportunity to factor out the function
-> > thermal_zone_of_sensor_register().
-> 
-> Sorry, I do NOT quite understand terms "factor out the function ...", could you please advise more detail?
 
-Never mind, I realized I puzzled myself with the changes in the series :)
+--FEz7ebHBGB6b2e8X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks
+On Thu, Feb 20, 2020 at 12:04:46PM +0530, Sameer Pujar wrote:
 
-  -- Daniel
+> @@ -0,0 +1,938 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * tegra210_i2s.c - Tegra210 I2S driver
+> + *
 
--- 
+All C++ please.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> +static void tegra210_i2s_set_data_offset(struct tegra210_i2s *i2s,
+> +					 unsigned int data_offset)
+> +{
+> +	unsigned int mask = I2S_CTRL_DATA_OFFSET_MASK;
+> +	unsigned int shift = I2S_DATA_SHIFT;
+> +	unsigned int reg;
+> +
+> +	reg = TEGRA210_I2S_TX_CTRL;
+> +	regmap_update_bits(i2s->regmap, reg, mask, data_offset << shift);
+> +
+> +	reg = TEGRA210_I2S_RX_CTRL;
+> +	regmap_update_bits(i2s->regmap, reg, mask, data_offset << shift);
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+The way this is written is *weird*, especially the use of reg - it'd
+probably be clearer to just use the values directly rather than have
+these intermediate temporary values.
+
+> +static int tegra210_i2s_get_control(struct snd_kcontrol *kcontrol,
+> +				    struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_component *compnt = snd_soc_kcontrol_component(kcontrol);
+> +	struct tegra210_i2s *i2s = snd_soc_component_get_drvdata(compnt);
+> +	long *uctl_val = &ucontrol->value.integer.value[0];
+> +
+> +	if (strstr(kcontrol->id.name, "Loopback"))
+> +		*uctl_val = i2s->loopback;
+> +	else if (strstr(kcontrol->id.name, "Sample Rate"))
+> +		*uctl_val = i2s->srate_override;
+> +	else if (strstr(kcontrol->id.name, "FSYNC Width"))
+> +		*uctl_val = i2s->fsync_width;
+> +	else if (strstr(kcontrol->id.name, "Playback Audio Bit Format"))
+> +		*uctl_val = i2s->audio_fmt_override[I2S_RX_PATH];
+> +	else if (strstr(kcontrol->id.name, "Capture Audio Bit Format"))
+> +		*uctl_val = i2s->audio_fmt_override[I2S_TX_PATH];
+
+Same issue as the DMIC driver, these really shouldn't be exposed to
+userspace as regular controls.
+
+> +	/*
+> +	 * For playback I2S RX-CIF and for capture TX-CIF is used.
+> +	 * With reference to AHUB, for I2S, SNDRV_PCM_STREAM_CAPTURE stream is
+> +	 * actually for playback.
+> +	 */
+> +	path = (substream->stream == SNDRV_PCM_STREAM_CAPTURE) ?
+> +	       I2S_RX_PATH : I2S_TX_PATH;
+
+Please write normal conditional statements, it makes things easier to
+read.
+
+--FEz7ebHBGB6b2e8X
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5P2VcACgkQJNaLcl1U
+h9D/awf/U2ZCR7nNWNrI95I8xTMDKuA/JDQe0xYLuDIfs3GKQSPQMpUDhki+WZMN
+DqFveacFKjMaU6kxGpoFWONkDSLzRjWguMjv0+SwXJPDbwYmJFsfOFNPc8AjXIDc
+YsgXv6n/zHWQGC9w7tU3/Goy7n87FGWsBIKsBAQF2K4ZhubTgA9zggVBKLArj7J1
+WpidsKFtr0DqBk/BKpQfERYQIQqND2xScFnTkrp80A55wu0rzNW2wP4XXWcOkPbS
+jYoVHY81EV3ExQzN3T7FbOO6PWfXZMPwUw+UwfODLvFCbpmQJSkiMiv5x4qXJDrS
+wxx80JuxpcjWr6qKYltb4t/R/+AgZg==
+=0K47
+-----END PGP SIGNATURE-----
+
+--FEz7ebHBGB6b2e8X--
