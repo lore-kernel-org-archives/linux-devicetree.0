@@ -2,204 +2,238 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F67CC35640
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C64C35646
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BF620722
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3A620722
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:12:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="X1vPAjB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgBUKJf (ORCPT
+        id S1728486AbgBUKMX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:09:35 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41845 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgBUKJf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 05:09:35 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so1501260otc.8;
-        Fri, 21 Feb 2020 02:09:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9uswFKJA3UguMUgU3A3OPoWPldnhscfWTGKerHuP5hA=;
-        b=RIB9HdvMfhkQRGvc6PtvHYLSMOFgUYv6udd7SscdPTV+yK0mc9vQO1ANLUtv8uhqrJ
-         jK1ypQRefO8kuo3RNbiKGOXVmbdV9REtGVxV6mp5Vp1ZDGul7HKmKggso7x3ua82YymY
-         NQfo6F2q6ElzeUFP2Qz7vvZ89V1XHR1eVwwrE+iFhz/Vc9cIWBxx2Woxqa7Ujt0G2k6y
-         PTVcw5PC+s4IQjjfeFw1SgdxANb2lAzVfuMBmRkiQNiTgQPh89o+pkpuu0H2TJgveNr7
-         1CJA/Z0BIm94/maKFZOckrthCbOAcTDco1/mWrLyXynhiVod0J9PyzoWOy6qHblIKI1/
-         xMGQ==
-X-Gm-Message-State: APjAAAUTZkK9ie4C1UhrYWxQkf2aD/qMO+KZ9CWJYOGBGV2/0mxrrqYV
-        PdRvrD6vVJpToSTKr+UC/cxZOtdCCQab7jx8KhI=
-X-Google-Smtp-Source: APXvYqx+lR58sJt3zglwXKZApEjdRFMug7P91pMn1BNbGNAivnSC6znljpvev3pzmq+qlYV7M7doYSTCKf1bWzRIf8I=
-X-Received: by 2002:a05:6830:1d4:: with SMTP id r20mr12990862ota.107.1582279773101;
- Fri, 21 Feb 2020 02:09:33 -0800 (PST)
+        Fri, 21 Feb 2020 05:12:23 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5479 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728642AbgBUKMW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 05:12:22 -0500
+X-UUID: def911ffc3114aa19d8e1637ef2b42d0-20200221
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=tuEWm1Ee4wXJyzSN+S1Qu1qevryEJRM0ul94CpEBzBo=;
+        b=X1vPAjB78jZ1mU/6FpSOt8zOCtE/TP5Eualw5NHZFvj+wXPxldBKDU25tdxxI5ZGgnchXqNWycEx2759NkgXtYr7MTLzMkit1XwvtLdvOGo+j3vryR2XroNtj0ZeVS+RvaIfwAT8ZY1KugVLSQ4g65GjM82APPsUiXfkJJSZxAQ=;
+X-UUID: def911ffc3114aa19d8e1637ef2b42d0-20200221
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 307226751; Fri, 21 Feb 2020 18:12:13 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 21 Feb 2020 18:11:31 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 21 Feb 2020 18:11:53 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>
+CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Subject: [PATCH v8 3/4] arm64: dts: mediatek: add mt6765 support
+Date:   Fri, 21 Feb 2020 18:12:08 +0800
+Message-ID: <1582279929-11535-4-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1582279929-11535-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1582279929-11535-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com> <20200220172403.26062-7-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20200220172403.26062-7-wsa+renesas@sang-engineering.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Feb 2020 11:09:21 +0100
-Message-ID: <CAMuHMdUvADDozCX6Bd0dDVejpTY-k42naEnB7Q5Z6w7Yg94_Vw@mail.gmail.com>
-Subject: Re: [RFC PATCH 6/7] i2c: of: mark a whole array of regs as reserved
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 813D9FA6D90F61D061BEC2FE1EC4D1E4BAFFE49B23474D79DC21D41A5A447D1C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wolfram,
+RnJvbTogTWFycyBDaGVuZyA8bWFycy5jaGVuZ0BtZWRpYXRlay5jb20+DQoNCkFkZCBiYXNpYyBj
+aGlwIHN1cHBvcnQgZm9yIE1lZGlhdGVrIDY3NjUsIGluY2x1ZGUNCnVhcnQgbm9kZSB3aXRoIGNv
+cnJlY3QgdWFydCBjbG9ja3MsIHB3cmFwIGRldmljZQ0KDQpBZGQgY2xvY2sgY29udHJvbGxlciBu
+b2RlcywgaW5jbHVkZSB0b3Bja2dlbiwgaW5mcmFjZmcsDQphcG1peGVkc3lzIGFuZCBzdWJzeXN0
+ZW0uDQoNClNpZ25lZC1vZmYtYnk6IE1hcnMgQ2hlbmcgPG1hcnMuY2hlbmdAbWVkaWF0ZWsuY29t
+Pg0KU2lnbmVkLW9mZi1ieTogT3dlbiBDaGVuIDxvd2VuLmNoZW5AbWVkaWF0ZWsuY29tPg0KU2ln
+bmVkLW9mZi1ieTogTWFjcGF1bCBMaW4gPG1hY3BhdWwubGluQG1lZGlhdGVrLmNvbT4NCkFja2Vk
+LWJ5OiBNYXJjIFp5bmdpZXIgPG1hcmMuenluZ2llckBhcm0uY29tPg0KLS0tDQogYXJjaC9hcm02
+NC9ib290L2R0cy9tZWRpYXRlay9NYWtlZmlsZSAgICAgICB8ICAgIDEgKw0KIGFyY2gvYXJtNjQv
+Ym9vdC9kdHMvbWVkaWF0ZWsvbXQ2NzY1LWV2Yi5kdHMgfCAgIDMzICsrKysNCiBhcmNoL2FybTY0
+L2Jvb3QvZHRzL21lZGlhdGVrL210Njc2NS5kdHNpICAgIHwgIDI1MyArKysrKysrKysrKysrKysr
+KysrKysrKysrKysNCiAzIGZpbGVzIGNoYW5nZWQsIDI4NyBpbnNlcnRpb25zKCspDQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2NzY1LWV2Yi5kdHMN
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NjUu
+ZHRzaQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9NYWtlZmls
+ZSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZpbGUNCmluZGV4IDQ1OGJiYzQu
+LjIyYmRmMWEgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL01ha2Vm
+aWxlDQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL01ha2VmaWxlDQpAQCAtMSw2
+ICsxLDcgQEANCiAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQogZHRiLSQoQ09O
+RklHX0FSQ0hfTUVESUFURUspICs9IG10MjcxMi1ldmIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hf
+TUVESUFURUspICs9IG10Njc1NS1ldmIuZHRiDQorZHRiLSQoQ09ORklHX0FSQ0hfTUVESUFURUsp
+ICs9IG10Njc2NS1ldmIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hfTUVESUFURUspICs9IG10Njc5
+NS1ldmIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hfTUVESUFURUspICs9IG10Njc5Ny1ldmIuZHRi
+DQogZHRiLSQoQ09ORklHX0FSQ0hfTUVESUFURUspICs9IG10Njc5Ny14MjAtZGV2LmR0Yg0KZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2NzY1LWV2Yi5kdHMgYi9h
+cmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc2NS1ldmIuZHRzDQpuZXcgZmlsZSBtb2Rl
+IDEwMDY0NA0KaW5kZXggMDAwMDAwMC4uMzZkZGRmZjINCi0tLSAvZGV2L251bGwNCisrKyBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2NzY1LWV2Yi5kdHMNCkBAIC0wLDAgKzEsMzMg
+QEANCisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KKy8qDQorICogZHRzIGZp
+bGUgZm9yIE1lZGlhdGVrIE1UNjc2NQ0KKyAqDQorICogKEMpIENvcHlyaWdodCAyMDE4LiBNZWRp
+YXRlaywgSW5jLg0KKyAqDQorICogTWFycyBDaGVuZyA8bWFycy5jaGVuZ0BtZWRpYXRlay5jb20+
+DQorICovDQorDQorL2R0cy12MS87DQorI2luY2x1ZGUgIm10Njc2NS5kdHNpIg0KKw0KKy8gew0K
+Kwltb2RlbCA9ICJNZWRpYVRlayBNVDY3NjUgRVZCIjsNCisJY29tcGF0aWJsZSA9ICJtZWRpYXRl
+ayxtdDY3NjUtZXZiIiwgIm1lZGlhdGVrLG10Njc2NSI7DQorDQorCWFsaWFzZXMgew0KKwkJc2Vy
+aWFsMCA9ICZ1YXJ0MDsNCisJfTsNCisNCisJbWVtb3J5QDQwMDAwMDAwIHsNCisJCWRldmljZV90
+eXBlID0gIm1lbW9yeSI7DQorCQlyZWcgPSA8MCAweDQwMDAwMDAwIDAgMHgxZTgwMDAwMD47DQor
+CX07DQorDQorCWNob3NlbiB7DQorCQlzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjkyMTYwMG44IjsN
+CisJfTsNCit9Ow0KKw0KKyZ1YXJ0MCB7DQorCXN0YXR1cyA9ICJva2F5IjsNCit9Ow0KZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2NzY1LmR0c2kgYi9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc2NS5kdHNpDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0K
+aW5kZXggMDAwMDAwMC4uMjY2MjQ3MA0KLS0tIC9kZXYvbnVsbA0KKysrIGIvYXJjaC9hcm02NC9i
+b290L2R0cy9tZWRpYXRlay9tdDY3NjUuZHRzaQ0KQEAgLTAsMCArMSwyNTMgQEANCisvLyBTUERY
+LUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KKy8qDQorICogZHRzIGZpbGUgZm9yIE1lZGlh
+dGVrIE1UNjc2NQ0KKyAqDQorICogKEMpIENvcHlyaWdodCAyMDE4LiBNZWRpYXRlaywgSW5jLg0K
+KyAqDQorICogTWFycyBDaGVuZyA8bWFycy5jaGVuZ0BtZWRpYXRlay5jb20+DQorICovDQorDQor
+I2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS5oPg0KKyNpbmNs
+dWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+DQorI2luY2x1
+ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL210Njc2NS1jbGsuaD4NCisNCisvIHsNCisJY29tcGF0aWJs
+ZSA9ICJtZWRpYXRlayxtdDY3NjUiOw0KKwlpbnRlcnJ1cHQtcGFyZW50ID0gPCZzeXNpcnE+Ow0K
+KwkjYWRkcmVzcy1jZWxscyA9IDwyPjsNCisJI3NpemUtY2VsbHMgPSA8Mj47DQorDQorCXBzY2kg
+ew0KKwkJY29tcGF0aWJsZSA9ICJhcm0scHNjaS0wLjIiOw0KKwkJbWV0aG9kID0gInNtYyI7DQor
+CX07DQorDQorCWNwdXMgew0KKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQorCQkjc2l6ZS1jZWxs
+cyA9IDwwPjsNCisNCisJCWNwdUAwIHsNCisJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KKwkJCWNv
+bXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTMiOw0KKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7
+DQorCQkJcmVnID0gPDB4MDAwPjsNCisJCX07DQorDQorCQljcHVAMSB7DQorCQkJZGV2aWNlX3R5
+cGUgPSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTUzIjsNCisJCQllbmFi
+bGUtbWV0aG9kID0gInBzY2kiOw0KKwkJCXJlZyA9IDwweDAwMT47DQorCQl9Ow0KKw0KKwkJY3B1
+QDIgew0KKwkJCWRldmljZV90eXBlID0gImNwdSI7DQorCQkJY29tcGF0aWJsZSA9ICJhcm0sY29y
+dGV4LWE1MyI7DQorCQkJZW5hYmxlLW1ldGhvZCA9ICJwc2NpIjsNCisJCQlyZWcgPSA8MHgwMDI+
+Ow0KKwkJfTsNCisNCisJCWNwdUAzIHsNCisJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KKwkJCWNv
+bXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTMiOw0KKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7
+DQorCQkJcmVnID0gPDB4MDAzPjsNCisJCX07DQorDQorCQljcHVAMTAwIHsNCisJCQlkZXZpY2Vf
+dHlwZSA9ICJjcHUiOw0KKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTMiOw0KKwkJCWVu
+YWJsZS1tZXRob2QgPSAicHNjaSI7DQorCQkJcmVnID0gPDB4MTAwPjsNCisJCX07DQorDQorCQlj
+cHVAMTAxIHsNCisJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KKwkJCWNvbXBhdGlibGUgPSAiYXJt
+LGNvcnRleC1hNTMiOw0KKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorCQkJcmVnID0gPDB4
+MTAxPjsNCisJCX07DQorDQorCQljcHVAMTAyIHsNCisJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0K
+KwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTMiOw0KKwkJCWVuYWJsZS1tZXRob2QgPSAi
+cHNjaSI7DQorCQkJcmVnID0gPDB4MTAyPjsNCisJCX07DQorDQorCQljcHVAMTAzIHsNCisJCQlk
+ZXZpY2VfdHlwZSA9ICJjcHUiOw0KKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTMiOw0K
+KwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorCQkJcmVnID0gPDB4MTAzPjsNCisJCX07DQor
+CX07DQorDQorCWNsb2NrcyB7DQorCQljbGsyNm06IGNsazI2bSB7DQorCQkJY29tcGF0aWJsZSA9
+ICJmaXhlZC1jbG9jayI7DQorCQkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KKwkJCWNsb2NrLWZyZXF1
+ZW5jeSA9IDwyNjAwMDAwMD47DQorCQl9Ow0KKw0KKwkJY2xrMzJrOiBjbGszMmsgew0KKwkJCWNv
+bXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KKwkJCSNjbG9jay1jZWxscyA9IDwwPjsNCisJCQlj
+bG9jay1mcmVxdWVuY3kgPSA8MzIwMDA+Ow0KKwkJfTsNCisJfTsNCisNCisJdGltZXIgew0KKwkJ
+Y29tcGF0aWJsZSA9ICJhcm0sYXJtdjgtdGltZXIiOw0KKwkJaW50ZXJydXB0LXBhcmVudCA9IDwm
+Z2ljPjsNCisJCWludGVycnVwdHMgPSA8R0lDX1BQSSAxMyBJUlFfVFlQRV9MRVZFTF9MT1c+LA0K
+KwkJCSAgICAgPEdJQ19QUEkgMTQgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCisJCQkgICAgIDxHSUNf
+UFBJIDExIElSUV9UWVBFX0xFVkVMX0xPVz4sDQorCQkJICAgICA8R0lDX1BQSSAxMCBJUlFfVFlQ
+RV9MRVZFTF9MT1c+Ow0KKwl9Ow0KKw0KKwlzb2Mgew0KKwkJI2FkZHJlc3MtY2VsbHMgPSA8Mj47
+DQorCQkjc2l6ZS1jZWxscyA9IDwyPjsNCisJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7DQor
+CQlyYW5nZXM7DQorDQorCQlnaWM6IGludGVycnVwdC1jb250cm9sbGVyQGMwMDAwMDAgew0KKwkJ
+CWNvbXBhdGlibGUgPSAiYXJtLGdpYy12MyI7DQorCQkJI2ludGVycnVwdC1jZWxscyA9IDwzPjsN
+CisJCQkjYWRkcmVzcy1jZWxscyA9IDwyPjsNCisJCQkjc2l6ZS1jZWxscyA9IDwyPjsNCisJCQlp
+bnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+Ow0KKwkJCWludGVycnVwdC1jb250cm9sbGVyOw0KKwkJ
+CXJlZyA9IDwwIDB4MGMwMDAwMDAgMCAweDQwMDAwPiwgIC8qIEdJQ0QgKi8NCisJCQkgICAgICA8
+MCAweDBjMTAwMDAwIDAgMHgyMDAwMDA+LCAvKiBHSUNSICovDQorCQkJICAgICAgPDAgMHgwYzQw
+MDAwMCAwIDB4MjAwMD4sICAgLyogR0lDQyAqLw0KKwkJCSAgICAgIDwwIDB4MGM0MTAwMDAgMCAw
+eDIwMDA+LCAgIC8qIEdJQ0ggKi8NCisJCQkgICAgICA8MCAweDBjNDIwMDAwIDAgMHgyMDAwMD47
+ICAvKiBHSUNWICovDQorCQkJaW50ZXJydXB0cyA9IDxHSUNfUFBJIDkgSVJRX1RZUEVfTEVWRUxf
+SElHSD47DQorCQl9Ow0KKw0KKwkJdG9wY2tnZW46IHN5c2NvbkAxMDAwMDAwMCB7DQorCQkJY29t
+cGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NjUtdG9wY2tnZW4iLCAic3lzY29uIjsNCisJCQlyZWcg
+PSA8MCAweDEwMDAwMDAwIDAgMHgxMDAwPjsNCisJCQkjY2xvY2stY2VsbHMgPSA8MT47DQorCQl9
+Ow0KKw0KKwkJaW5mcmFjZmc6IHN5c2NvbkAxMDAwMTAwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJt
+ZWRpYXRlayxtdDY3NjUtaW5mcmFjZmciLCAic3lzY29uIjsNCisJCQlyZWcgPSA8MCAweDEwMDAx
+MDAwIDAgMHgxMDAwPjsNCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTQ3IElSUV9UWVBFX0VE
+R0VfUklTSU5HPjsNCisJCQkjY2xvY2stY2VsbHMgPSA8MT47DQorCQl9Ow0KKw0KKwkJcGVyaWNm
+ZzogcGVyaWNmZ0AxMDAwMzAwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NjUt
+cGVyaWNmZyIsICJzeXNjb24iOw0KKwkJCXJlZyA9IDwwIDB4MTAwMDMwMDAgMCAweDEwMDA+Ow0K
+KwkJfTsNCisNCisJCXNjcHN5czogc2Nwc3lzQDEwMDA2MDAwIHsNCisJCQljb21wYXRpYmxlID0g
+Im1lZGlhdGVrLG10Njc2NS1zY3BzeXMiOw0KKwkJCXJlZyA9CTwwIDB4MTAwMDYwMDAgMCAweDEw
+MDA+OyAvKiBzcG0gKi8NCisJCQkjcG93ZXItZG9tYWluLWNlbGxzID0gPDE+Ow0KKwkJCWNsb2Nr
+cyA9IDwmdG9wY2tnZW4gQ0xLX1RPUF9NRkdfU0VMPiwNCisJCQkJIDwmdG9wY2tnZW4gQ0xLX1RP
+UF9NTV9TRUw+LA0KKwkJCQkgPCZtbXN5c19jb25maWcgQ0xLX01NX1NNSV9DT01NT04+LA0KKwkJ
+CQkgPCZtbXN5c19jb25maWcgQ0xLX01NX1NNSV9DT01NMD4sDQorCQkJCSA8Jm1tc3lzX2NvbmZp
+ZyBDTEtfTU1fU01JX0NPTU0xPiwNCisJCQkJIDwmbW1zeXNfY29uZmlnIENMS19NTV9TTUlfTEFS
+QjA+LA0KKwkJCQkgPCZpbWdzeXMgQ0xLX0lNR19MQVJCMj4sDQorCQkJCSA8Jm1tc3lzX2NvbmZp
+ZyBDTEtfTU1fU01JX0lNRz4sDQorCQkJCSA8JmNhbXN5cyBDTEtfQ0FNX0xBUkIzPiwNCisJCQkJ
+IDwmY2Ftc3lzIENMS19DQU1fREZQX1ZBRD4sDQorCQkJCSA8JmNhbXN5cyBDTEtfQ0FNPiwNCisJ
+CQkJIDwmY2Ftc3lzIENMS19DQU1fQ0NVPiwNCisJCQkJIDwmbW1zeXNfY29uZmlnIENMS19NTV9T
+TUlfQ0FNPjsNCisJCQljbG9jay1uYW1lcyA9ICJtZmciLCAibW0iLA0KKwkJCQkgICAgICAibW0t
+MCIsICJtbS0xIiwgIm1tLTIiLCAibW0tMyIsDQorCQkJCSAgICAgICJpc3AtMCIsICJpc3AtMSIs
+ICJjYW0tMCIsICJjYW0tMSIsDQorCQkJCSAgICAgICJjYW0tMiIsICJjYW0tMyIsICJjYW0tNCI7
+DQorCQkJaW5mcmFjZmcgPSA8JmluZnJhY2ZnPjsNCisJCQlzbWlfY29tbSA9IDwmc21pX2NvbW1v
+bj47DQorCQl9Ow0KKw0KKwkJYXBtaXhlZDogc3lzY29uQDEwMDBjMDAwIHsNCisJCQljb21wYXRp
+YmxlID0gIm1lZGlhdGVrLG10Njc2NS1hcG1peGVkc3lzIiwgInN5c2NvbiI7DQorCQkJcmVnID0g
+PDAgMHgxMDAwYzAwMCAwIDB4MTAwMD47DQorCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KKwkJfTsN
+CisNCisJCXN5c2lycTogaW50ZXJydXB0LWNvbnRyb2xsZXJAMTAyMDBhODAgew0KKwkJCWNvbXBh
+dGlibGUgPSAibWVkaWF0ZWssbXQ2NzY1LXN5c2lycSIsDQorCQkJCSAgICAgIm1lZGlhdGVrLG10
+NjU3Ny1zeXNpcnEiOw0KKwkJCWludGVycnVwdC1jb250cm9sbGVyOw0KKwkJCSNpbnRlcnJ1cHQt
+Y2VsbHMgPSA8Mz47DQorCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCisJCQlyZWcgPSA8
+MCAweDEwMjAwYTgwIDAgMHg1MD47DQorCQl9Ow0KKw0KKwkJdWFydDA6IHNlcmlhbEAxMTAwMjAw
+MCB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NjUtdWFydCIsDQorCQkJCSAgICAg
+Im1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCisJCQlyZWcgPSA8MCAweDExMDAyMDAwIDAgMHg0MDA+
+Ow0KKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA5MSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KKwkJ
+CWNsb2NrcyA9IDwmaW5mcmFjZmcgQ0xLX0lGUl9VQVJUMD4sDQorCQkJCSA8JmluZnJhY2ZnIENM
+S19JRlJfQVBfRE1BPjsNCisJCQljbG9jay1uYW1lcyA9ICJiYXVkIiwgImJ1cyI7DQorCQkJc3Rh
+dHVzID0gImRpc2FibGVkIjsNCisJCX07DQorDQorCQl1YXJ0MTogc2VyaWFsQDExMDAzMDAwIHsN
+CisJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc2NS11YXJ0IiwNCisJCQkJICAgICAibWVk
+aWF0ZWssbXQ2NTc3LXVhcnQiOw0KKwkJCXJlZyA9IDwwIDB4MTEwMDMwMDAgMCAweDQwMD47DQor
+CQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDkyIElSUV9UWVBFX0xFVkVMX0xPVz47DQorCQkJY2xv
+Y2tzID0gPCZpbmZyYWNmZyBDTEtfSUZSX1VBUlQxPiwNCisJCQkJIDwmaW5mcmFjZmcgQ0xLX0lG
+Ul9BUF9ETUE+Ow0KKwkJCWNsb2NrLW5hbWVzID0gImJhdWQiLCAiYnVzIjsNCisJCQlzdGF0dXMg
+PSAiZGlzYWJsZWQiOw0KKwkJfTsNCisNCisJCWF1ZGlvOiBzeXNjb25AMTEyMjAwMDAgew0KKwkJ
+CWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2NzY1LWF1ZHN5cyIsICJzeXNjb24iOw0KKwkJCXJl
+ZyA9IDwwIDB4MTEyMjAwMDAgMCAweDEwMDA+Ow0KKwkJCSNjbG9jay1jZWxscyA9IDwxPjsNCisJ
+CX07DQorDQorCQltaXBpX3J4X2FuYV9jc2kwYTogc3lzY29uQDExYzEwMDAwIHsNCisJCQljb21w
+YXRpYmxlID0gIm1lZGlhdGVrLG10Njc2NS1taXBpMGEiLA0KKwkJCQkgICAgICJzeXNjb24iOw0K
+KwkJCXJlZyA9IDwwIDB4MTFjMTAwMDAgMCAweDEwMDA+Ow0KKwkJCSNjbG9jay1jZWxscyA9IDwx
+PjsNCisJCX07DQorDQorCQltbXN5c19jb25maWc6IHN5c2NvbkAxNDAwMDAwMCB7DQorCQkJY29t
+cGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NjUtbW1zeXMiLCAic3lzY29uIjsNCisJCQlyZWcgPSA8
+MCAweDE0MDAwMDAwIDAgMHgxMDAwPjsNCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjI3IElS
+UV9UWVBFX0xFVkVMX0xPVz47DQorCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KKwkJfTsNCisNCisJ
+CXNtaV9jb21tb246IHNtaV9jb21tb25AMTQwMDIwMDAgew0KKwkJCWNvbXBhdGlibGUgPSAibWVk
+aWF0ZWssbXQ2NzY1LXNtaS1jb21tb24iLCAic3lzY29uIjsNCisJCQlyZWcgPSA8MCAweDE0MDAy
+MDAwIDAgMHgxMDAwPjsNCisJCX07DQorDQorCQlpbWdzeXM6IHN5c2NvbkAxNTAyMDAwMCB7DQor
+CQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NjUtaW1nc3lzIiwgInN5c2NvbiI7DQorCQkJ
+cmVnID0gPDAgMHgxNTAyMDAwMCAwIDB4MTAwMD47DQorCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0K
+KwkJfTsNCisNCisJCXZlbmNfZ2Nvbjogc3lzY29uQDE3MDAwMDAwIHsNCisJCQljb21wYXRpYmxl
+ID0gIm1lZGlhdGVrLG10Njc2NS12Y29kZWNzeXMiLCAic3lzY29uIjsNCisJCQlyZWcgPSA8MCAw
+eDE3MDAwMDAwIDAgMHgxMDAwMD47DQorCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KKwkJfTsNCisN
+CisJCWNhbXN5czogc3lzY29uQDFhMDAwMDAwICB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRl
+ayxtdDY3NjUtY2Ftc3lzIiwgInN5c2NvbiI7DQorCQkJcmVnID0gPDAgMHgxYTAwMDAwMCAwIDB4
+MTAwMD47DQorCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KKwkJfTsNCisJfTsgLyogZW5kIG9mIHNv
+YyAqLw0KK307DQotLSANCjEuNy45LjUNCg==
 
-On Thu, Feb 20, 2020 at 6:26 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> Back then, 'reg' properties in I2C DT bindings only contained one
-> address and this address was assigned a device and, thus, blocked.
-> Meanwhile, chips using multiple addresses are common and the 'reg'
-> property can be an array described by 'reg-names'. This code enhances
-> I2C DT parsing, so it will reserve all addresses described in an array.
-> They will be bound to the 'dummy' driver as 'reserved' iff the first
-> address can be assigned successfully. If that is not the case, the array
-> is not further considered. If one later address of the array can not be
-> assigned, it will be reported but we don't bail out. The driver has to
-> decide if that address is critical or not.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-One comment below.
-
-> --- a/drivers/i2c/i2c-core-of.c
-> +++ b/drivers/i2c/i2c-core-of.c
-> @@ -21,20 +21,12 @@
->
->  #include "i2c-core.h"
->
-> -int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
-> +static void of_i2c_decode_board_info(struct device_node *node, u32 addr,
-> +                                    bool first_addr, struct i2c_board_info *info)
->  {
-> -       u32 addr;
-> -       int ret;
-> -
->         memset(info, 0, sizeof(*info));
->
-> -       ret = of_property_read_u32(node, "reg", &addr);
-> -       if (ret) {
-> -               pr_err("invalid reg on %pOF\n", node);
-> -               return ret;
-> -       }
-> -
-> -       if (of_modalias_node(node, info->type, sizeof(info->type)) < 0)
-> +       if (!first_addr || of_modalias_node(node, info->type, sizeof(info->type)) < 0)
->                 strlcpy(info->type, I2C_RESERVED_DRV_NAME, sizeof(I2C_RESERVED_DRV_NAME));
->
->         if (addr & I2C_TEN_BIT_ADDRESS) {
-> @@ -51,11 +43,27 @@ int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
->         info->of_node = node;
->         info->fwnode = of_fwnode_handle(node);
->
-> -       if (of_property_read_bool(node, "host-notify"))
-> -               info->flags |= I2C_CLIENT_HOST_NOTIFY;
-> +       if (first_addr) {
-> +               if (of_property_read_bool(node, "host-notify"))
-> +                       info->flags |= I2C_CLIENT_HOST_NOTIFY;
-> +
-> +               if (of_get_property(node, "wakeup-source", NULL))
-> +                       info->flags |= I2C_CLIENT_WAKE;
-> +       }
-> +}
-> +
-> +int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
-> +{
-> +       u32 addr;
-> +       int ret;
-> +
-> +       ret = of_property_read_u32(node, "reg", &addr);
-
-Perhaps the time is ripe to start considering #address-cells, instead
-of assuming 1, here ...
-
-> +       if (ret) {
-> +               pr_err("invalid reg on %pOF\n", node);
-> +               return ret;
-> +       }
->
-> -       if (of_get_property(node, "wakeup-source", NULL))
-> -               info->flags |= I2C_CLIENT_WAKE;
-> +       of_i2c_decode_board_info(node, addr, true, info);
->
->         return 0;
->  }
-> @@ -64,21 +72,33 @@ EXPORT_SYMBOL_GPL(of_i2c_get_board_info);
->  static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
->                                                  struct device_node *node)
->  {
-> -       struct i2c_client *client;
-> +       struct i2c_client *client, *first_client = ERR_PTR(-ENOENT);
->         struct i2c_board_info info;
-> -       int ret;
-> +       bool first_reg = true;
-> +       struct property *prop;
-> +       const __be32 *cur;
-> +       u32 reg;
->
->         pr_debug("register %pOF\n", node);
->
-> -       ret = of_i2c_get_board_info(node, &info);
-> -       if (ret)
-> -               return ERR_PTR(ret);
-> +       of_property_for_each_u32(node, "reg", prop, cur, reg) {
-
-... and especially here, if this code can ever be reused for i3c, which uses 3.
-
-> +               of_i2c_decode_board_info(node, reg, first_reg, &info);
-> +
-> +               client = i2c_new_client_device(adap, &info);
-> +               if (IS_ERR(client)) {
-> +                       pr_err("failure registering addr 0x%02x for %pOF\n",
-> +                               reg, node);
-> +                       if (first_reg)
-> +                               return client;
-> +               }
->
-> -       client = i2c_new_client_device(adap, &info);
-> -       if (IS_ERR(client))
-> -               pr_err("failure registering %pOF\n", node);
-> +               if (first_reg) {
-> +                       first_client = client;
-> +                       first_reg = false;
-> +               }
-> +       }
->
-> -       return client;
-> +       return first_client;
->  }
->
->  void of_i2c_register_devices(struct i2c_adapter *adap)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
