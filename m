@@ -2,297 +2,138 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF01AC35647
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 11:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406DAC35646
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 11:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5B424650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 11:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1490924650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 11:53:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ahBR5381"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgBULhl (ORCPT
+        id S1728062AbgBULxI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:37:41 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57218 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbgBULhl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 06:37:41 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C43CB278760
-Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
-To:     CK Hu <ck.hu@mediatek.com>, Matthias Brugger <mbrugger@suse.com>
-Cc:     mark.rutland@arm.com, Kate Stewart <kstewart@linuxfoundation.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>, airlied@linux.ie,
-        mturquette@baylibre.com, dri-devel@lists.freedesktop.org,
-        Richard Fontana <rfontana@redhat.com>,
-        laurent.pinchart@ideasonboard.com, ulrich.hecht+renesas@gmail.com,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-clk@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>, wens@csie.org,
-        Allison Randal <allison@lohutok.net>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, frank-w@public-files.de,
-        Seiya Wang <seiya.wang@mediatek.com>, sean.wang@mediatek.com,
-        Houlong Wei <houlong.wei@mediatek.com>, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>, sboyd@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>, matthias.bgg@kernel.org
-References: <20200220172147.919996-1-enric.balletbo@collabora.com>
- <1582259996.1846.7.camel@mtksdaap41>
- <7a87b486-1622-7f27-f5af-427b94a14c00@collabora.com>
- <1582277229.25992.9.camel@mtksdaap41>
- <1393a8c5-065f-cccb-2563-8b159c951d4b@suse.com>
- <1582283518.5889.10.camel@mtksdaap41>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <6deab0a4-44a6-a15f-ac01-374f818b267c@collabora.com>
-Date:   Fri, 21 Feb 2020 12:37:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 21 Feb 2020 06:53:08 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:47810 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbgBULxI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 06:53:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Y7RbabUMIDfHWd7Ngw4xz5H4W9/l5MseELv5WZtFTE0=; b=ahBR5381IZD9MUKbH2u1z1WLC
+        KL5VezEwjBFD4BdxEJuOcvM2Uzlr7WUVzm1Zon4Zi4oOSzk9IEOipABaycY28AmAn0b+MbkrNT1tt
+        30JKFO/P/E1DbXZlnDobJuqLzEJGYPhiwXmNqM1lpYtAvad6nJxHWTkgLxG3w1bYXakOie9v1OpYy
+        t1FhKZX0rVOKhRZnSRlC/5RydWxIi7iwGpikJpElXjEC8lTdoL9IfukeZ7x7Isz6IlffpC9nxhHrs
+        P1NcVdaN0Wfz1TPM1RJigTHfn9N5EsnwMXtKYqYiC7INe8OWJD+Va3SFaq5n2RfjPKM/+6as7+ECk
+        K7J4JFjlA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:50816)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j56rU-00011f-Lm; Fri, 21 Feb 2020 11:52:52 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j56rQ-0003Tj-P3; Fri, 21 Feb 2020 11:52:48 +0000
+Date:   Fri, 21 Feb 2020 11:52:48 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     ansuelsmth@gmail.com
+Cc:     'Andy Gross' <agross@kernel.org>,
+        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        'Rob Herring' <robh+dt@kernel.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Andrew Lunn' <andrew@lunn.ch>,
+        'Florian Fainelli' <f.fainelli@gmail.com>,
+        'Heiner Kallweit' <hkallweit1@gmail.com>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: R: [PATCH v3 1/2] net: mdio: add ipq8064 mdio driver
+Message-ID: <20200221115248.GH25745@shell.armlinux.org.uk>
+References: <20200220232624.7001-1-ansuelsmth@gmail.com>
+ <20200221004013.GF25745@shell.armlinux.org.uk>
+ <000601d5e850$c0161cc0$40425640$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1582283518.5889.10.camel@mtksdaap41>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000601d5e850$c0161cc0$40425640$@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi CK and Matthias,
+On Fri, Feb 21, 2020 at 01:49:17AM +0100, ansuelsmth@gmail.com wrote:
+> > On Fri, Feb 21, 2020 at 12:26:21AM +0100, Ansuel Smith wrote:
+> > > +static int
+> > > +ipq8064_mdio_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct device_node *np = pdev->dev.of_node;
+> > > +	struct ipq8064_mdio *priv;
+> > > +	struct mii_bus *bus;
+> > > +	int ret;
+> > > +
+> > > +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
+> > > +	if (!bus)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	bus->name = "ipq8064_mdio_bus";
+> > > +	bus->read = ipq8064_mdio_read;
+> > > +	bus->write = ipq8064_mdio_write;
+> > > +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev-
+> > >dev));
+> > > +	bus->parent = &pdev->dev;
+> > > +
+> > > +	priv = bus->priv;
+> > > +	priv->base = syscon_node_to_regmap(np);
+> > > +	if (IS_ERR_OR_NULL(priv->base)) {
+> > > +		priv->base = syscon_regmap_lookup_by_phandle(np,
+> > "master");
+> > > +		if (IS_ERR_OR_NULL(priv->base)) {
+> > > +			dev_err(&pdev->dev, "master phandle not
+> > found\n");
+> > > +			return -EINVAL;
+> > > +		}
+> > > +	}
+> > 
+> > I'm curious why you've kept this as-is given my comments?
+> > 
+> > If you don't agree with them, it would be helpful to reply to the
+> > review email giving the reasons why.
+>
+> I read your command and now I understand what you mean. Since they both
+> never return NULL the IS_ERR_OR_NULL is wrong and only IS_ERR should be
+> used. Correct me if I'm wrong.
+> About the error propagation, should I return the
+> syscon_regmap_lookup_by_phandle
+> error or I can keep the EINVAL error? 
 
-On 21/2/20 12:11, CK Hu wrote:
-> Hi, Matthias:
-> 
-> On Fri, 2020-02-21 at 11:24 +0100, Matthias Brugger wrote:
->>
->> On 21/02/2020 10:27, CK Hu wrote:
->>> Hi, Enric:
->>>
->>> On Fri, 2020-02-21 at 09:56 +0100, Enric Balletbo i Serra wrote:
->>>> Hi CK,
->>>>
->>>> Thanks for your quick answer.
->>>>
->>>> On 21/2/20 5:39, CK Hu wrote:
->>>>> Hi, Enric:
->>>>>
->>>>> On Thu, 2020-02-20 at 18:21 +0100, Enric Balletbo i Serra wrote:
->>>>>> Dear all,
->>>>>>
->>>>>> Those patches are intended to solve an old standing issue on some
->>>>>> Mediatek devices (mt8173, mt2701 and mt2712) in a slightly different way
->>>>>> to the precedent series.
->>>>>>
->>>>>> Up to now both drivers, clock and drm are probed with the same device tree
->>>>>> compatible. But only the first driver get probed, which in effect breaks
->>>>>> graphics on those devices.
->>>>>>
->>>>>> The version eight of the series tries to solve the problem with a
->>>>>> different approach than the previous series but similar to how is solved
->>>>>> on other Mediatek devices.
->>>>>>
->>>>>> The MMSYS (Multimedia subsystem) in Mediatek SoCs has some registers to
->>>>>> control clock gates (which is used in the clk driver) and some registers
->>>>>> to set the routing and enable the differnet blocks of the display
->>>>>> and MDP (Media Data Path) subsystem. On this series the clk driver is
->>>>>> not a pure clock controller but a system controller that can provide
->>>>>> access to the shared registers between the different drivers that need
->>>>>> it (mediatek-drm and mediatek-mdp). And the biggest change is, that in
->>>>>> this version, clk driver is the entry point (parent) which will trigger
->>>>>> the probe of the corresponding mediatek-drm driver and pass its MMSYS
->>>>>> platform data for display configuration.
->>>>>
->>>>> When mmsys is a system controller, I prefer to place mmsys in
->>>>> drivers/soc/mediatek, and it share registers for clock, display, and mdp
->>>>> driver. This means the probe function is placed in
->>>>> drivers/soc/mediatek ,its display clock function, mdp clock function are
->>>>> placed in drivers/clk, display routing are placed in drivers/gpu/drm,
->>>>> and mdp routing are placed in dirvers/video.
->>>>>
->>>>
->>>> I understand what you mean but I am not sure this makes the code clearer and
->>>> useful. The driver in drivers/soc/mediatek will be a simple dummy implementation
->>>> of a "simple-mfd" device (a driver that simply matches with
->>>> "mediatek,mt8173-mmsys" and instantiates the "clk-mt8173-mm" and the
->>>> "mediatek-drm" driver (note that mediatek-mdp" is already instantiated via
->>>> device-tree).
->>>>
->>>
->>> It's clear that mmsys is neither a pure clock controller nor a pure
->>> routing controller for display and mdp. 
->>>
->>>> It'd be nice had a proper device-tree with a "simple-mfd" for mmsys from the
->>>> beginning representing how really hardwware is, but I think that, change this
->>>> now, will break backward compatibility.
->>>
->>> Maybe this is a solution. Current device tree would work only on old
->>> kernel version with a bug, so this mean there is no any device tree
->>> works on kernel version without bug. Why do we compatible with such
->>> device tree?
->>>
->>
+Hi,
 
-So the only reason why current DT worked at some point is because there was a
-kernel bug?
+You probably want something like:
 
-If that's the case I think we shouldn't worry about break DT compatibility (I'm
-sorry for those that having a buggy kernel makes display working)
+	priv->base = syscon_node_to_regmap(np);
+	if (IS_ERR(priv->base) && priv->base != ERR_PTR(-EPROBE_DEFER))
+		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
 
->> The idea behind this is, that the device-tree could be passed by some boot
->> firmware, so that the OS do not care about it. For this we need a stable DTS as
->> otherwise newer kernel with older FW would break.
->>
->> DTS is supposed to be just a different description of the HW like ACPI. So it
->> has to be compatible (newer kernel with older DTS and if possible vice versa).
-> 
-> In my view, there is no FW (except some bug-inside FW) which works on
-> this dts, so this dts is in a initial state. I think the compatibility
-> is based on that dts correctly describe the HW. If we find this dts does
-> not correctly describe the HW and it's in a initial state, should we
-> still make it compatible?
-> 
+	if (priv->base == ERR_PTR(-EPROBE_DEFER)) {
+		return -EPROBE_DEFER;
+	} else if (IS_ERR(priv->base)) {
+		dev_err(&pdev->dev, "error getting syscon regmap, error=%pe\n",
+			priv->base);
+		return PTR_ERR(priv->base);
+	}
 
-In this case I think we don't need to worry about buggy kernels, the only thing
-that we need to take in consideration is that mmsys is instantiated on both (the
-old DT and the new DT), we shouldn't expect display working (because never
-worked, right?)
+Please ensure that you test the above, including the case where you
+should fall through to syscon_regmap_lookup_by_phandle().
 
-With that in mind, I agree that is a good opportunity to fix properly the HW
-topology.
-
-What thing that worries me is that I see this pattern on all Mediatek SoCs, does
-this mean that display was never well supported for Mediatek SoCs?
-
-Thanks.
-
-> If you have better solution, just let's forget this.
-> 
-> Regards,
-> CK
-> 
->>
->> Regards,
->> Matthias
->>
->>> Regards,
->>> CK
->>>
->>>>
->>>> IMHO I think that considering the clk driver as entry point is fine, but this is
->>>> something that the clock maintainers should decide.
->>>>
->>>> Also note that this is not only a MT8173 problem I am seeing the same problem on
->>>> all other Mediatek SoCs.
->>>>
->>>> Thanks.
->>>>
->>>>> Regards,
->>>>> CK
->>>>>
->>>>>>
->>>>>> All this series was tested on the Acer R13 Chromebook only.
->>>>>>
->>>>>> For reference, here are the links to the old discussions:
->>>>>>
->>>>>> * v7: https://patchwork.kernel.org/project/linux-mediatek/list/?series=241217
->>>>>> * v6: https://patchwork.kernel.org/project/linux-mediatek/list/?series=213219
->>>>>> * v5: https://patchwork.kernel.org/project/linux-mediatek/list/?series=44063
->>>>>> * v4:
->>>>>>   * https://patchwork.kernel.org/patch/10530871/
->>>>>>   * https://patchwork.kernel.org/patch/10530883/
->>>>>>   * https://patchwork.kernel.org/patch/10530885/
->>>>>>   * https://patchwork.kernel.org/patch/10530911/
->>>>>>   * https://patchwork.kernel.org/patch/10530913/
->>>>>> * v3:
->>>>>>   * https://patchwork.kernel.org/patch/10367857/
->>>>>>   * https://patchwork.kernel.org/patch/10367861/
->>>>>>   * https://patchwork.kernel.org/patch/10367877/
->>>>>>   * https://patchwork.kernel.org/patch/10367875/
->>>>>>   * https://patchwork.kernel.org/patch/10367885/
->>>>>>   * https://patchwork.kernel.org/patch/10367883/
->>>>>>   * https://patchwork.kernel.org/patch/10367889/
->>>>>>   * https://patchwork.kernel.org/patch/10367907/
->>>>>>   * https://patchwork.kernel.org/patch/10367909/
->>>>>>   * https://patchwork.kernel.org/patch/10367905/
->>>>>> * v2: No relevant discussion, see v3
->>>>>> * v1:
->>>>>>   * https://patchwork.kernel.org/patch/10016497/
->>>>>>   * https://patchwork.kernel.org/patch/10016499/
->>>>>>   * https://patchwork.kernel.org/patch/10016505/
->>>>>>   * https://patchwork.kernel.org/patch/10016507/
->>>>>>
->>>>>> Best regards,
->>>>>>  Enric
->>>>>>
->>>>>> Changes in v8:
->>>>>> - Be a builtin_platform_driver like other mediatek mmsys drivers.
->>>>>> - New patches introduced in this series.
->>>>>>
->>>>>> Changes in v7:
->>>>>> - Add R-by from CK
->>>>>> - Add R-by from CK
->>>>>> - Fix check of return value of of_clk_get
->>>>>> - Fix identation
->>>>>> - Free clk_data->clks as well
->>>>>> - Get rid of private data structure
->>>>>>
->>>>>> Enric Balletbo i Serra (2):
->>>>>>   drm/mediatek: Move MMSYS configuration to include/linux/platform_data
->>>>>>   clk/drm: mediatek: Fix mediatek-drm device probing
->>>>>>
->>>>>> Matthias Brugger (4):
->>>>>>   drm/mediatek: Use regmap for register access
->>>>>>   drm/mediatek: Omit warning on probe defers
->>>>>>   media: mtk-mdp: Check return value of of_clk_get
->>>>>>   clk: mediatek: mt8173: Switch MMSYS to platform driver
->>>>>>
->>>>>>  drivers/clk/mediatek/Kconfig                  |   6 +
->>>>>>  drivers/clk/mediatek/Makefile                 |   1 +
->>>>>>  drivers/clk/mediatek/clk-mt2701-mm.c          |  30 +++
->>>>>>  drivers/clk/mediatek/clk-mt2712-mm.c          |  44 +++++
->>>>>>  drivers/clk/mediatek/clk-mt8173-mm.c          | 172 ++++++++++++++++++
->>>>>>  drivers/clk/mediatek/clk-mt8173.c             | 104 -----------
->>>>>>  drivers/gpu/drm/mediatek/mtk_disp_color.c     |   5 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |   5 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |   5 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_dpi.c            |  12 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |   4 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c        |  53 +++---
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |   4 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  56 +-----
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 113 +-----------
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  13 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_dsi.c            |   8 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_hdmi.c           |   4 +-
->>>>>>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |   6 +
->>>>>>  include/linux/platform_data/mtk_mmsys.h       |  73 ++++++++
->>>>>>  20 files changed, 401 insertions(+), 317 deletions(-)
->>>>>>  create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
->>>>>>  create mode 100644 include/linux/platform_data/mtk_mmsys.h
->>>>>>
->>>>>
->>>>
->>>> _______________________________________________
->>>> Linux-mediatek mailing list
->>>> Linux-mediatek@lists.infradead.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
->>>
->>
->> _______________________________________________
->> Linux-mediatek mailing list
->> Linux-mediatek@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
