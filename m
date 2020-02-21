@@ -2,216 +2,139 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A747FC35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBAAC35657
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867382465D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F4F24650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582299139;
+	bh=LtQtdYpi0xdtEi4kNUUpmNMz7z7vsWWRX5Zunzwdmhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UXWxcKLW/bXCUn3TMwXRBROcM11i94y31ASU4ljs7Cr8gGLiWCW0O0T8WssBBDTgE
+	 zUBzb3k57yZwhFO2SAyS0Rm/VJMEYaWL8jMu3hj0YExLAq79b6/m3TQIAqqbK3NPWV
+	 C6zxlpceQmQ2Tmfz+Xw9vgixUgIxb9/rFLKUyj/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgBUP3F (ORCPT
+        id S1728590AbgBUPcS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:29:05 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59182 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728528AbgBUP3E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 10:29:04 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C5347294EDD
-Subject: Re: [PATCH v4 1/2] dt-bindings: i2c: cros-ec-tunnel: convert
- i2c-cros-ec-tunnel.txt to yaml
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        linux-i2c@vger.kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
-        groeck@chromium.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, helen.koike@collabora.com,
-        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com,
-        sebastian.reichel@collabora.com
-References: <20200221123214.26341-1-dafna.hirschfeld@collabora.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <f903795e-cd62-7407-2da2-bea3a1df8da0@collabora.com>
-Date:   Fri, 21 Feb 2020 16:28:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 21 Feb 2020 10:32:18 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39774 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgBUPcS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 10:32:18 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so2327196oty.6;
+        Fri, 21 Feb 2020 07:32:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5jRzIkWfQ+0gox1TYbOKZYWDKTNe51R7eEKfAaND2e8=;
+        b=EwglTzWDYHi5zUI0G73egd4M8WlMq3bTf6ltjxwAhfwj0yGP2OQra9rJ/T28QVtQcF
+         VuLxYSannvQna2hi5P14PtkBHxph2sznltyrZqcAMS+swFY02tYpZEq9ezMzZQxQBaLz
+         YhBGldvZtk1mLwRrKnd+D2Td72Jr6D5lG+eDMv0Iv3me1ck5dWhwtmD8dZgjcZlRqrut
+         7cm3y91tdzTj9/WoxYLlHTkGjsf/PUxmuURJ60K3P30u7PabB5oKSBj/Q6wBWaD8j7Lj
+         tV+h3B6dwD1O9NLdi0uFieY4rOd2m6IYzW1m6bKd7vh0Kf2G58B2vPnJ/tDV+5yc7MdL
+         sLfQ==
+X-Gm-Message-State: APjAAAWGJ6+FxRtS2tsO1TB6zAaQy7MvqN6sBg4MFYZmAhqqy+zm088S
+        w77myMc3OGIYntQLqKV56w==
+X-Google-Smtp-Source: APXvYqyIi7otPk4YqJ66riR/MI9UiSp8vpqQOhiJlly3+GQnLyt8fa9IB1l62IViMdRSA1KiKTCn5w==
+X-Received: by 2002:a9d:6f0a:: with SMTP id n10mr29655564otq.54.1582299137818;
+        Fri, 21 Feb 2020 07:32:17 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t9sm1108521otm.76.2020.02.21.07.32.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:32:16 -0800 (PST)
+Received: (nullmailer pid 14335 invoked by uid 1000);
+        Fri, 21 Feb 2020 15:32:15 -0000
+Date:   Fri, 21 Feb 2020 09:32:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to
+ json-schema
+Message-ID: <20200221153215.GA9815@bogus>
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
+ <20200221021002.18795-2-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221123214.26341-1-dafna.hirschfeld@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221021002.18795-2-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dafna,
-
-On 21/2/20 13:32, Dafna Hirschfeld wrote:
-> Convert the binding file i2c-cros-ec-tunnel.txt to yaml format.
+On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier GPIO controller binding to DT schema format.
 > 
-> This was tested and verified on ARM and ARM64 with:
+> I omitted the 'gpio-ranges' property because it is defined in the
+> dt-schema project (/schemas/gpio/gpio.yaml).
 > 
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+> As of writing, the 'gpio-ranges-group-names' is not defined in that
+> file despite it is a common property described in
+> Documentation/devicetree/bindings/gpio/gpio.txt
+> So, I defined it in this schema.
 > 
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
-> Changes since v1:
-> - changing the subject to start with "dt-bindings: i2c: cros-ec-tunnel:"
-> - changing the license to (GPL-2.0-only OR BSD-2-Clause)
-> - removing "Guenter Roeck <groeck@chromium.org>" from the maintainers list
-> - adding ref: /schemas/i2c/i2c-controller.yaml
 > 
-> Changes since v2:
-> - adding another patch that fixes a warning found by this patch
+> I have a question about the range about 'ngpio'.
 > 
-> Changes since v3:
-> - In the example, change sbs-battery@b to battery@b
+>   ngpios:
+>     minimum: 0
+>     maximum: 512
+> 
+> The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
+> https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
+> 
+> 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
+> 
+> I cannot omit the minimum because minimum and maximum depend on each other.
+> I just put a sensible number, 512, in maximum.
+> 
+> If this range is entirely unneeded, I will delete it.
+
+This property is generally for when you can have some number less 
+than a maximum number implied by the compatible string. 
+
+If there is really no max (e.g. 2^32 - 1 is valid), then just do 
+'ngpios: true'
+
 > 
 > 
->  .../bindings/i2c/i2c-cros-ec-tunnel.txt       | 39 ------------
->  .../bindings/i2c/i2c-cros-ec-tunnel.yaml      | 63 +++++++++++++++++++
->  2 files changed, 63 insertions(+), 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+>  .../bindings/gpio/gpio-uniphier.txt           | 51 -----------
+>  .../gpio/socionext,uniphier-gpio.yaml         | 89 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 90 insertions(+), 52 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
 > 
 
-According to the feedback I received on another patch from Rob, seems that you
-should name the file with the full compatible string
-"google,i2c-cros-ec-tunnel.yaml"
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I know we didn't do this with the extcon-usbc-cros-ec.yaml but seems this is the
-right way to do it. Just take this in consideration for future patches.
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Error: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dts:38.34-35 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
-> deleted file mode 100644
-> index 898f030eba62..000000000000
-> --- a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
-> +++ /dev/null
-> @@ -1,39 +0,0 @@
-> -I2C bus that tunnels through the ChromeOS EC (cros-ec)
-> -======================================================
-> -On some ChromeOS board designs we've got a connection to the EC (embedded
-> -controller) but no direct connection to some devices on the other side of
-> -the EC (like a battery and PMIC).  To get access to those devices we need
-> -to tunnel our i2c commands through the EC.
-> -
-> -The node for this device should be under a cros-ec node like google,cros-ec-spi
-> -or google,cros-ec-i2c.
-> -
-> -
-> -Required properties:
-> -- compatible: google,cros-ec-i2c-tunnel
-> -- google,remote-bus: The EC bus we'd like to talk to.
-> -
-> -Optional child nodes:
-> -- One node per I2C device connected to the tunnelled I2C bus.
-> -
-> -
-> -Example:
-> -	cros-ec@0 {
-> -		compatible = "google,cros-ec-spi";
-> -
-> -		...
-> -
-> -		i2c-tunnel {
-> -			compatible = "google,cros-ec-i2c-tunnel";
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			google,remote-bus = <0>;
-> -
-> -			battery: sbs-battery@b {
-> -				compatible = "sbs,sbs-battery";
-> -				reg = <0xb>;
-> -				sbs,poll-retry-count = <1>;
-> -			};
-> -		};
-> -	}
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
-> new file mode 100644
-> index 000000000000..cfe4f0aeb46f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/i2c/i2c-cros-ec-tunnel.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: I2C bus that tunnels through the ChromeOS EC (cros-ec)
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> +
-> +description: |
-> +  On some ChromeOS board designs we've got a connection to the EC (embedded
-> +  controller) but no direct connection to some devices on the other side of
-> +  the EC (like a battery and PMIC). To get access to those devices we need
-> +  to tunnel our i2c commands through the EC.
-> +  The node for this device should be under a cros-ec node like google,cros-ec-spi
-> +  or google,cros-ec-i2c.
-> +
-> +allOf:
-> +  - $ref: /schemas/i2c/i2c-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const:
-> +      google,cros-ec-i2c-tunnel
-> +
-> +  google,remote-bus:
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
-> +    description: The EC bus we'd like to talk to.
-> +
-> +  "#address-cells": true
-> +  "#size-cells": true
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +    description: One node per I2C device connected to the tunnelled I2C bus.
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - google,remote-bus
-> +
-> +examples:
-> +  - |
-> +    cros-ec@0 {
-> +        compatible = "google,cros-ec-spi";
-
-Like we did with the extcon-usbc-cros-ec.yaml I think would be nice have a
-complete example here too.
-
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0>;
-
-
-> +        i2c-tunnel {
-> +            compatible = "google,cros-ec-i2c-tunnel";
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            google,remote-bus = <0>;
-> +
-> +            battery: battery@b {
-> +                compatible = "sbs,sbs-battery";
-> +                reg = <0xb>;
-> +                sbs,poll-retry-count = <1>;
-> +            };
-> +        };
-> +    };
-> 
+See https://patchwork.ozlabs.org/patch/1241747
+Please check and re-submit.
