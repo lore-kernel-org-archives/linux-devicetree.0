@@ -2,901 +2,216 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3CBC35647
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9472C35647
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC17E24653
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582289069;
-	bh=EzMFvnTbwJYRDJ8USbV10LmkEcG6eSi7Xkl89vBvWLw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MaJiOSDTGF9G1ExIzEAtOxMlvDs1muteFO/FPEquS3JOfRplJ7d+xm2YON7K+voKf
-	 jbfnZzD9kWJ6848Cur8btGmatc2dp9pgV9CSdb0yAUNcq95W4M0zKIi4xiyoiY0LZb
-	 smjQ05nTFycGHs1RVjJVU+/JknTltc3vPFKihsss=
+	by mail.kernel.org (Postfix) with ESMTP id A229224650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Is97m+zF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgBUMo2 (ORCPT
+        id S1727312AbgBUMxH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:44:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727137AbgBUMo2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:44:28 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF2462073A;
-        Fri, 21 Feb 2020 12:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582289066;
-        bh=EzMFvnTbwJYRDJ8USbV10LmkEcG6eSi7Xkl89vBvWLw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YaRB35xRGeBYrEgZE26BBCppP/PoarcsnlmgamDaBTDlHw9R2dna7XuQCFbW0vZTJ
-         LzsKBAR38npb04vAwwBcUbRnKLRvk4bwosPG5wg0i1UgpYsV9SSyITtvvLpHU4UIxV
-         IEo+sq9jQCi4BumtE/hW8LExKPcmXsw2OIc2b2sk=
-Date:   Fri, 21 Feb 2020 12:44:21 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 2/5] iio: adc: axi-adc: add support for AXI ADC IP core
-Message-ID: <20200221124421.0fabdeb0@archlinux>
-In-Reply-To: <20200220150317.1864-2-alexandru.ardelean@analog.com>
-References: <20200220150317.1864-1-alexandru.ardelean@analog.com>
-        <20200220150317.1864-2-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Feb 2020 07:53:07 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35504 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbgBUMxH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 07:53:07 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w12so1951712wrt.2
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 04:53:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1Ecw0TwcU7uRxX0RbgoPbcukxSNyerj4Gg5H+/7jGU4=;
+        b=Is97m+zF/OlL47unjgTyrlN2h5LOz7b+bCuBXaZ7I4NfCKXkYB+eEn9tr8HWToU5hS
+         LcgaMH98pZ8E1XJVjarNN4j5rDbOg0TvWZqonAeorXDYmylpc5/p3a6zdZo0+OViPxVf
+         vjaBs1HwK+d066WsYLlvTd/cfgCUGAocMJZCBxAbIYOmchE4hYYwfT2fgcgtO/lDa6n+
+         s46hilc6kKO54iNjcQIKiz/zMeNqSx8RMh2L/6aFfRv62MCyYyw9TIi26wXy7zkiHsnO
+         0qJx6mpEC9etxLhetlmYRb+0QZ7ItHTVG67ZgyBXOa2HCHtlIL/DA/fAs1ZuOWKYzTqv
+         60OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1Ecw0TwcU7uRxX0RbgoPbcukxSNyerj4Gg5H+/7jGU4=;
+        b=spHdcIxorFVqDgEOfdOL5XFJYNS9pP+/BWctP37E9ax+3tUyj4NQmMQv6yk6mjt1Jz
+         38FYDOepz7Isq+c8evQAQyXbVY6Knxx/5SUZ7EtnJIIzO9oay9ewYKbytX9kdSnyIeL2
+         dUAouuI3be3kq+ycVBxqYqJepKdSyTZ/iOYudQrtKN3SqYjGafO/8jVa94OA3s0PE8Mu
+         y2jrb8Jbw8FdqytcqJebsZokI6bAQNL8znf9zknPWZoJ8u+cVfJkGB+0hsrzjyj545vj
+         Ou2oF/K335DQjdRcUNjDT6bUJrhjqQHnDXmDg8XUn26JBmvFUw5U8FPf8kuSLRULuvPh
+         OlCw==
+X-Gm-Message-State: APjAAAUQIeBG24e6BeIGzLPQASuY8BixkknXPzqQ8FjauMDswJGVG767
+        Hx+muLFMYyLGvAQyAKhR1ZdwGQ==
+X-Google-Smtp-Source: APXvYqxlFnvz5Oqlv3ZiF1S9hXG57kU+AY4Dg2xiBGuM31y83G3pczXUHHnhoRpdAgUpGaKfUCxWBQ==
+X-Received: by 2002:a05:6000:124b:: with SMTP id j11mr45114087wrx.285.1582289584497;
+        Fri, 21 Feb 2020 04:53:04 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
+        by smtp.gmail.com with ESMTPSA id k10sm3781715wrd.68.2020.02.21.04.53.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 04:53:03 -0800 (PST)
+Date:   Fri, 21 Feb 2020 13:53:00 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, aisheng.dong@nxp.com,
+        linux@roeck-us.net, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        daniel.baluta@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
+        dinguyen@kernel.org, leonard.crestez@nxp.com,
+        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V15 RESEND 3/5] thermal: imx_sc: add i.MX system
+ controller thermal support
+Message-ID: <20200221125300.GB10516@linaro.org>
+References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
+ <1582161028-2844-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582161028-2844-3-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Feb 2020 17:03:14 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+Hi Anson,
 
-> From: Michael Hennerich <michael.hennerich@analog.com>
-> 
-> This change adds support for the Analog Devices Generic AXI ADC IP core.
-> The IP core is used for interfacing with analog-to-digital (ADC) converters
-> that require either a high-speed serial interface (JESD204B/C) or a source
-> synchronous parallel interface (LVDS/CMOS).
-> 
-> Usually, some other interface type (i.e SPI) is used as a control interface
-> for the actual ADC, while the IP core (controlled via this driver), will
-> interface to the data-lines of the ADC and handle  the streaming of data
-> into memory via DMA.
-> 
-> Because of this, the AXI ADC driver needs the other SPI-ADC driver to
-> register with it. The SPI-ADC needs to be register via the SPI framework,
-> while the AXI ADC registers as a platform driver. The two cannot be ordered
-> in a hierarchy as both drivers have their own registers, and trying to
-> organize this [in a hierarchy becomes] problematic when trying to map
-> memory/registers.
-> 
-> There are some modes where the AXI ADC can operate as standalone ADC, but
-> those will be implemented at a later point in time.
-> 
-> Link: https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+sorry for the delay with this review, hopefully the upstreaming will be now a
+bit more smooth.
 
-In general looks good to me.  A few specific comments inline.
+Apart the comments below, the driver looks good to me.
 
-Thanks,
-
-Jonathan
-
+On Thu, Feb 20, 2020 at 09:10:26AM +0800, Anson Huang wrote:
+> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+> inside, the system controller is in charge of controlling power,
+> clock and thermal sensors etc..
+> 
+> This patch adds i.MX system controller thermal driver support,
+> Linux kernel has to communicate with system controller via MU
+> (message unit) IPC to get each thermal sensor's temperature,
+> it supports multiple sensors which are passed from device tree,
+> please see the binding doc for details.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  drivers/iio/adc/Kconfig         |  20 +
->  drivers/iio/adc/Makefile        |   1 +
->  drivers/iio/adc/axi-adc.c       | 622 ++++++++++++++++++++++++++++++++
->  include/linux/iio/adc/axi-adc.h |  79 ++++
->  4 files changed, 722 insertions(+)
->  create mode 100644 drivers/iio/adc/axi-adc.c
->  create mode 100644 include/linux/iio/adc/axi-adc.h
+> No change.
+> ---
+>  drivers/thermal/Kconfig          |  11 +++
+>  drivers/thermal/Makefile         |   1 +
+>  drivers/thermal/imx_sc_thermal.c | 142 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 154 insertions(+)
+>  create mode 100644 drivers/thermal/imx_sc_thermal.c
 > 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index f4da821c4022..6cd48a256122 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -282,6 +282,26 @@ config AT91_SAMA5D2_ADC
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called at91-sama5d2_adc.
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 5a05db5..d1cb8dc 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -251,6 +251,17 @@ config IMX_THERMAL
+>  	  cpufreq is used as the cooling device to throttle CPUs when the
+>  	  passive trip is crossed.
 >  
-> +config AXI_ADC
-> +	tristate "Analog Devices Generic AXI ADC IP core driver"
-> +	select IIO_BUFFER
-> +	select IIO_BUFFER_HW_CONSUMER
-> +	select IIO_BUFFER_DMAENGINE
+> +config IMX_SC_THERMAL
+> +	tristate "Temperature sensor driver for NXP i.MX SoCs with System Controller"
+> +	depends on ARCH_MXC && IMX_SCU
+
+IMX_SCU depends on IMX_MBOX which depends on ARCH_MXC. This dependency could be
+simplified.
+
+Also add the COMPILE_TEST option to improve compilation test coverage.
+
+> +	depends on OF
 > +	help
-> +	  Say yes here to build support for Analog Devices Generic
-> +	  AXI ADC IP core. The IP core is used for interfacing with
-> +	  analog-to-digital (ADC) converters that require either a high-speed
-> +	  serial interface (JESD204B/C) or a source synchronous parallel
-> +	  interface (LVDS/CMOS).
-> +	  Typically (for such devices) SPI will be used for configuration only,
-> +	  while this IP core handles the streaming of data into memory via DMA.
+> +	  Support for Temperature Monitor (TEMPMON) found on NXP i.MX SoCs with
+> +	  system controller inside, Linux kernel has to communicate with system
+> +	  controller via MU (message unit) IPC to get temperature from thermal
+> +	  sensor. It supports one critical trip point and one
+> +	  passive trip point for each thermal sensor.
 > +
-> +	  Link: https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> +	  If unsure, say N (but it's safe to say "Y").
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called axi-adc.
-> +
->  config AXP20X_ADC
->  	tristate "X-Powers AXP20X and AXP22X ADC driver"
->  	depends on MFD_AXP20X
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 8462455b4228..e14fabd53246 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -29,6 +29,7 @@ obj-$(CONFIG_AD799X) += ad799x.o
->  obj-$(CONFIG_ASPEED_ADC) += aspeed_adc.o
->  obj-$(CONFIG_AT91_ADC) += at91_adc.o
->  obj-$(CONFIG_AT91_SAMA5D2_ADC) += at91-sama5d2_adc.o
-> +obj-$(CONFIG_AXI_ADC) += axi-adc.o
->  obj-$(CONFIG_AXP20X_ADC) += axp20x_adc.o
->  obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
->  obj-$(CONFIG_BCM_IPROC_ADC) += bcm_iproc_adc.o
-> diff --git a/drivers/iio/adc/axi-adc.c b/drivers/iio/adc/axi-adc.c
+>  config MAX77620_THERMAL
+>  	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
+>  	depends on MFD_MAX77620
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 9fb88e2..a11a6d8 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+= db8500_thermal.o
+>  obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
+>  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
+>  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
+> +obj-$(CONFIG_IMX_SC_THERMAL)	+= imx_sc_thermal.o
+>  obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
+>  obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
+>  obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
+> diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
 > new file mode 100644
-> index 000000000000..9ddd64fdab2d
+> index 0000000..d406ecb
 > --- /dev/null
-> +++ b/drivers/iio/adc/axi-adc.c
-
-I suspect this may not be the only AXI based ADC interface in the
-world.   As such, prefix with adi-axi perhaps.
-
-> @@ -0,0 +1,622 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
+> +++ b/drivers/thermal/imx_sc_thermal.c
+> @@ -0,0 +1,142 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 > +/*
-> + * Analog Devices Generic AXI ADC IP core
-> + * Link: https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> + *
-> + * Copyright 2012-2020 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/delay.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/buffer-dmaengine.h>
-> +
-> +#include <linux/fpga/adi-axi-common.h>
-> +#include <linux/iio/adc/axi-adc.h>
-> +
-> +/**
-> + * Register definitions:
-> + *   https://wiki.analog.com/resources/fpga/docs/axi_adc_ip#register_map
-> + */
-> +
-> +#define AXI_ADC_UPPER16_MSK		GENMASK(31, 16)
-> +#define AXI_ADC_UPPER16_SET(x)		FIELD_PREP(AXI_ADC_UPPER16_MSK, x)
-> +#define AXI_ADC_UPPER16_GET(x)		FIELD_GET(AXI_ADC_UPPER16_MSK, x)
-> +
-> +#define AXI_ADC_LOWER16_MSK		GENMASK(15, 0)
-> +#define AXI_ADC_LOWER16_SET(x)		FIELD_PREP(AXI_ADC_UPPER16_MSK, x)
-> +#define AXI_ADC_LOWER16_GET(x)		FIELD_GET(AXI_ADC_LOWER16_MSK, x)
-> +
-> +/* ADC controls */
-> +
-> +#define AXI_ADC_REG_RSTN			0x0040
-> +#define   AXI_ADC_MMCM_RSTN			BIT(1)
-> +#define   AXI_ADC_RSTN				BIT(0)
-> +
-> +#define AXI_ADC_REG_CNTRL			0x0044
-> +#define   AXI_ADC_R1_MODE			BIT(2)
-> +#define   AXI_ADC_DDR_EDGESEL			BIT(1)
-> +#define   AXI_ADC_PIN_MODE			BIT(0)
-> +
-> +#define AXI_ADC_REG_CLK_FREQ			0x0054
-> +#define AXI_ADC_REG_CLK_RATIO			0x0058
-> +
-> +#define AXI_ADC_REG_STATUS			0x005C
-> +#define   AXI_ADC_MUX_PN_ERR			BIT(3)
-> +#define   AXI_ADC_MUX_PN_OOS			BIT(2)
-> +#define   AXI_ADC_MUX_OVER_RANGE		BIT(1)
-> +#define   AXI_ADC_STATUS			BIT(0)
-> +
-> +#define AXI_ADC_REG_DRP_CNTRL			0x0070
-> +#define   AXI_ADC_DRP_SEL			BIT(29)
-> +#define   AXI_ADC_DRP_RWN			BIT(28)
-> +#define   AXI_ADC_DRP_ADDRESS_MSK		GENMASK(27, 16)
-> +#define   AXI_ADC_DRP_ADDRESS_SET(x)		\
-> +		FIELD_PREP(AXI_ADC_DRP_ADDRESS_MSK, x)
-> +#define   AXI_ADC_DRP_ADDRESS_GET(x)		\
-> +		FIELD_GET(AXI_ADC_DRP_ADDRESS_MSK, x)
-> +#define   AXI_ADC_DRP_WDATA_SET			AXI_ADC_LOWER16_SET
-> +#define   AXI_ADC_DRP_WDATA_GET			AXI_ADC_LOWER16_GET
-> +
-> +#define AXI_REG_DRP_STATUS			0x0074
-> +#define   AXI_ADC_DRP_STATUS			BIT(16)
-> +#define   AXI_ADC_DRP_RDATA_SET			AXI_ADC_LOWER16_SET
-> +#define   AXI_ADC_DRP_RDATA_GET			AXI_ADC_LOWER16_GET
-> +
-> +#define AXI_ADC_REG_DMA_STATUS			0x0088
-> +#define   AXI_ADC_DMA_OVF			BIT(2)
-> +#define   AXI_ADC_DMA_UNF			BIT(1)
-> +#define   AXI_ADC_DMA_STATUS			BIT(0)
-> +
-> +#define ADI_REG_DMA_BUSWIDTH			0x008C
-> +#define AXI_ADC_REG_GP_CONTROL			0x00BC
-> +#define AXI_ADC_REG_ADC_DP_DISABLE		0x00C0
-> +
-> +/* ADC Channel controls */
-> +
-> +#define AXI_ADC_REG_CHAN_CNTRL(c)		(0x0400 + (c) * 0x40)
-> +#define   AXI_ADC_PN_SEL			BIT(10)
-> +#define   AXI_ADC_IQCOR_ENB			BIT(9)
-> +#define   AXI_ADC_DCFILT_ENB			BIT(8)
-> +#define   AXI_ADC_FORMAT_SIGNEXT		BIT(6)
-> +#define   AXI_ADC_FORMAT_TYPE			BIT(5)
-> +#define   AXI_ADC_FORMAT_ENABLE			BIT(4)
-> +#define   AXI_ADC_PN23_TYPE			BIT(1)
-> +#define   AXI_ADC_ENABLE			BIT(0)
-> +
-> +#define AXI_ADC_REG_CHAN_STATUS(c)		(0x0404 + (c) * 0x40)
-> +#define   AXI_ADC_PN_ERR			BIT(2)
-> +#define   AXI_ADC_PN_OOS			BIT(1)
-> +#define   AXI_ADC_OVER_RANGE			BIT(0)
-> +
-> +#define AXI_ADC_REG_CHAN_CNTRL_1(c)		(0x0410 + (c) * 0x40)
-> +#define   AXI_ADC_DCFILT_OFFSET_MSK		AXI_ADC_UPPER16_MSK
-> +#define   AXI_ADC_DCFILT_OFFSET_SET		AXI_ADC_UPPER16_SET
-> +#define   AXI_ADC_DCFILT_OFFSET_GET		AXI_ADC_UPPER16_GET
-> +#define   AXI_ADC_DCFILT_COEFF_MSK		AXI_ADC_LOWER16_MSK
-> +#define   AXI_ADC_DCFILT_COEFF_SET		AXI_ADC_LOWER16_SET
-> +#define   AXI_ADC_DCFILT_COEFF_GET		AXI_ADC_LOWER16_GET
-> +
-> +#define AXI_ADC_REG_CHAN_CNTRL_2(c)		(0x0414 + (c) * 0x40)
-> +#define   AXI_ADC_IQCOR_COEFF_1_MSK		AXI_ADC_UPPER16_MSK
-> +#define   AXI_ADC_IQCOR_COEFF_1_SET		AXI_ADC_UPPER16_SET
-> +#define   AXI_ADC_IQCOR_COEFF_1_GET		AXI_ADC_UPPER16_GET
-> +#define   AXI_ADC_IQCOR_COEFF_2_MSK		AXI_ADC_LOWER16_MSK
-> +#define   AXI_ADC_IQCOR_COEFF_2_SET		AXI_ADC_LOWER16_SET
-> +#define   AXI_ADC_IQCOR_COEFF_2_GET		AXI_ADC_LOWER16_GET
-> +
-> +/*  format is 1.1.14 (sign, integer and fractional bits) */
-> +#define AXI_ADC_IQCOR_INT_1			0x4000UL
-> +#define AXI_ADC_IQCOR_SIGN_BIT			BIT(15)
-> +/* The constant below is (2 * PI * 0x4000), where 0x4000 is AXI_ADC_IQCOR_INT_1 */
-> +#define AXI_ADC_2_X_PI_X_INT_1			102944ULL
-> +
-> +#define AXI_ADC_REG_CHAN_CNTRL_3(c)		(0x0418 + (c) * 0x40)
-> +#define   AXI_ADC_ADC_PN_SEL_MSK		AXI_ADC_UPPER16_MSK
-> +#define   AXI_ADC_ADC_PN_SEL_SET		AXI_ADC_UPPER16_SET
-> +#define   AXI_ADC_ADC_PN_SEL_GET		AXI_ADC_UPPER16_GET
-> +#define   AXI_ADC_ADC_DATA_SEL_MSK		AXI_ADC_LOWER16_MSK
-> +#define   AXI_ADC_ADC_DATA_SEL_SET		AXI_ADC_LOWER16_SET
-> +#define   AXI_ADC_ADC_DATA_SEL_GET		AXI_ADC_LOWER16_GET
-> +
-> +#define AXI_ADC_REG_CHAN_USR_CNTRL_2(c)		(0x0424 + (c) * 0x40)
-> +#define   AXI_ADC_USR_DECIMATION_M_MSK		AXI_ADC_UPPER16_MSK
-> +#define   AXI_ADC_USR_DECIMATION_M_SET		AXI_ADC_UPPER16_SET
-> +#define   AXI_ADC_USR_DECIMATION_M_GET		AXI_ADC_UPPER16_GET
-> +#define   AXI_ADC_USR_DECIMATION_N_MSK		AXI_ADC_LOWER16_MSK
-> +#define   AXI_ADC_USR_DECIMATION_N_SET		AXI_ADC_LOWER16_SET
-> +#define   AXI_ADC_USR_DECIMATION_N_GET		AXI_ADC_LOWER16_GET
-> +
-> +/* debugfs direct register access */
-> +#define DEBUGFS_DRA_PCORE_REG_MAGIC		BIT(31)
-> +
-> +struct axi_adc_core_info {
-> +	unsigned int			version;
-> +};
-> +
-> +struct axi_adc_state {
-> +	struct mutex			lock;
-> +
-> +	struct axi_adc_client		*client;
-> +	void __iomem			*regs;
-> +	unsigned int			regs_size;
-> +};
-> +
-> +struct axi_adc_client {
-> +	struct list_head		entry;
-> +	struct axi_adc_conv		conv;
-> +	struct axi_adc_state		*state;
-> +	struct device			*dev;
-> +	const struct axi_adc_core_info	*info;
-> +};
-> +
-> +static LIST_HEAD(axi_adc_registered_clients);
-> +static DEFINE_MUTEX(axi_adc_registered_clients_lock);
-> +
-> +static struct axi_adc_client *axi_adc_conv_to_client(struct axi_adc_conv *conv)
-> +{
-> +	if (!conv)
-> +		return NULL;
-> +	return container_of(conv, struct axi_adc_client, conv);
-> +}
-> +
-> +void *axi_adc_conv_priv(struct axi_adc_conv *conv)
-> +{
-> +	struct axi_adc_client *cl = axi_adc_conv_to_client(conv);
-> +
-> +	if (!cl)
-> +		return NULL;
-> +
-> +	return (char *)cl + ALIGN(sizeof(struct axi_adc_client), IIO_ALIGN);
-> +}
-> +EXPORT_SYMBOL_GPL(axi_adc_conv_priv);
-> +
-> +static void axi_adc_write(struct axi_adc_state *st, unsigned int reg,
-> +			  unsigned int val)
-> +{
-> +	iowrite32(val, st->regs + reg);
-> +}
-> +
-> +static unsigned int axi_adc_read(struct axi_adc_state *st, unsigned int reg)
-> +{
-> +	return ioread32(st->regs + reg);
-> +}
-> +
-> +static int axi_adc_config_dma_buffer(struct device *dev,
-> +				     struct iio_dev *indio_dev)
-> +{
-> +	struct iio_buffer *buffer;
-> +	const char *dma_name;
-> +
-> +	if (!device_property_present(dev, "dmas"))
-> +		return 0;
-> +
-> +	if (device_property_read_string(dev, "dma-names", &dma_name))
-> +		dma_name = "rx";
-> +
-> +	buffer = devm_iio_dmaengine_buffer_alloc(indio_dev->dev.parent,
-> +						 dma_name);
-> +	if (IS_ERR(buffer))
-> +		return PTR_ERR(buffer);
-> +
-> +	indio_dev->modes |= INDIO_BUFFER_HARDWARE;
-> +	iio_device_attach_buffer(indio_dev, buffer);
-> +
-> +	return 0;
-> +}
-> +
-> +static int axi_adc_read_raw(struct iio_dev *indio_dev,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val, int *val2, long mask)
-> +{
-> +	struct axi_adc_state *st = iio_priv(indio_dev);
-> +	struct axi_adc_conv *conv = &st->client->conv;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		/* fall-through */
-> +	default:
-> +		if (!conv->read_raw)
-> +			return -ENOSYS;
-> +
-> +		return conv->read_raw(conv, chan, val, val2, mask);
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int axi_adc_write_raw(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan,
-> +			     int val, int val2, long mask)
-> +{
-> +	struct axi_adc_state *st = iio_priv(indio_dev);
-> +	struct axi_adc_conv *conv = &st->client->conv;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		/* fall-through */
+> + * Copyright 2018-2019 NXP.
 
-Umm.  Got to ask. If you only have one option and a default, why have
-the option? Or indeed the switch statement at all..
+*sigh* 2020 now ...
 
-> +	default:
-> +		if (!conv->write_raw)
-> +			return -ENOSYS;
-> +
-> +		return conv->write_raw(conv, chan, val, val2, mask);
-> +	}
-> +}
-> +
-> +static int axi_adc_update_scan_mode(struct iio_dev *indio_dev,
-> +				    const unsigned long *scan_mask)
-> +{
-> +	struct axi_adc_state *st = iio_priv(indio_dev);
-> +	struct axi_adc_conv *conv = &st->client->conv;
-> +	unsigned int i, ctrl;
-> +
-> +	for (i = 0; i < conv->chip_info->num_channels; i++) {
-> +		ctrl = axi_adc_read(st, AXI_ADC_REG_CHAN_CNTRL(i));
-> +
-> +		if (test_bit(i, scan_mask))
-> +			ctrl |= AXI_ADC_ENABLE;
-> +		else
-> +			ctrl &= ~AXI_ADC_ENABLE;
-> +
-> +		axi_adc_write(st, AXI_ADC_REG_CHAN_CNTRL(i), ctrl);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +struct axi_adc_conv *axi_adc_conv_register(struct device *dev, int sizeof_priv)
-> +{
-> +	struct axi_adc_client *cl;
-> +	size_t alloc_size;
-> +
-> +	alloc_size = sizeof(struct axi_adc_client);
-> +	if (sizeof_priv) {
-> +		alloc_size = ALIGN(alloc_size, IIO_ALIGN);
-> +		alloc_size += sizeof_priv;
-> +	}
-> +	alloc_size += IIO_ALIGN - 1;
-> +
-> +	cl = kzalloc(alloc_size, GFP_KERNEL);
-> +	if (!cl)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	mutex_lock(&axi_adc_registered_clients_lock);
-> +
-> +	get_device(dev);
-> +	cl->dev = dev;
-> +
-> +	list_add_tail(&cl->entry, &axi_adc_registered_clients);
-> +
-> +	mutex_unlock(&axi_adc_registered_clients_lock);
-> +
-> +	return &cl->conv;
-> +}
-> +EXPORT_SYMBOL_GPL(axi_adc_conv_register);
-> +
-> +void axi_adc_conv_unregister(struct axi_adc_conv *conv)
-> +{
-> +	struct axi_adc_client *cl = axi_adc_conv_to_client(conv);
-> +
-> +	if (!cl)
-> +		return;
-> +
-> +	mutex_lock(&axi_adc_registered_clients_lock);
-> +
-> +	put_device(cl->dev);
-> +	list_del(&cl->entry);
-> +	kfree(cl);
-> +
-> +	mutex_unlock(&axi_adc_registered_clients_lock);
-> +}
-> +EXPORT_SYMBOL(axi_adc_conv_unregister);
+[ ... ]
 
-You could avoid exporting the non devm versions to encourage people
-to only use the managed ones.
-
-> +
-> +static void devm_axi_adc_conv_release(struct device *dev, void *res)
+> +static int imx_sc_thermal_get_temp(void *data, int *temp)
 > +{
-> +	axi_adc_conv_unregister(*(struct axi_adc_conv **)res);
-> +}
-> +
-> +static int devm_axi_adc_conv_match(struct device *dev, void *res, void *data)
-> +{
-> +	struct axi_adc_conv **r = res;
-> +
-> +	return *r == data;
-> +}
-> +
-> +struct axi_adc_conv *devm_axi_adc_conv_register(struct device *dev,
-> +						int sizeof_priv)
-> +{
-> +	struct axi_adc_conv **ptr, *conv;
-> +
-> +	ptr = devres_alloc(devm_axi_adc_conv_release, sizeof(*ptr),
-> +			   GFP_KERNEL);
-> +	if (!ptr)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	conv = axi_adc_conv_register(dev, sizeof_priv);
-> +	if (IS_ERR(conv)) {
-> +		devres_free(ptr);
-> +		return ERR_CAST(conv);
-> +	}
-> +
-> +	*ptr = conv;
-> +	devres_add(dev, ptr);
-> +
-> +	return conv;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_axi_adc_conv_register);
-> +
-> +void devm_axi_adc_conv_unregister(struct device *dev,
-> +				  struct axi_adc_conv *conv)
-Note that there is no 'need' to provide devm unregister functions
-if it is unlikely a driver will actually use them.
-
-May well be better to clean the ones in here out until we
-actually need them.  If nothing else having them may encourage
-bad driver architecture.
-
-hohum.  I should probably just remove the ones in the IIO core
-that never get used as well...
-
-devm_iio_device_unregister for example.
-
-> +{
-> +	int rc;
-> +
-> +	rc = devres_release(dev, devm_axi_adc_conv_release,
-> +			    devm_axi_adc_conv_match, conv);
-> +	WARN_ON(rc);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_axi_adc_conv_unregister);
-> +
-> +static ssize_t in_voltage_scale_available_show(struct device *dev,
-> +					       struct device_attribute *attr,
-> +					       char *buf)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct axi_adc_state *st = iio_priv(indio_dev);
-> +	struct axi_adc_conv *conv = &st->client->conv;
-> +	size_t len = 0;
-> +	int i;
-> +
-> +	if (!conv->chip_info->num_scales) {
-> +		buf[0] = '\n';
-> +		return 1;
-> +	}
-> +
-> +	for (i = 0; i < conv->chip_info->num_scales; i++) {
-> +		const unsigned int *s = conv->chip_info->scale_table[i];
-> +
-> +		len += scnprintf(buf + len, PAGE_SIZE - len,
-> +				 "%u.%06u ", s[0], s[1]);
-> +	}
-> +	buf[len - 1] = '\n';
-> +
-> +	return len;
-> +}
-> +
-> +static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
-> +
-> +static struct attribute *axi_adc_attributes[] = {
-> +	&iio_dev_attr_in_voltage_scale_available.dev_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group axi_adc_attribute_group = {
-> +	.attrs = axi_adc_attributes,
-> +};
-> +
-> +static const struct iio_info axi_adc_info = {
-> +	.read_raw = &axi_adc_read_raw,
-> +	.write_raw = &axi_adc_write_raw,
-> +	.attrs = &axi_adc_attribute_group,
-> +	.update_scan_mode = &axi_adc_update_scan_mode,
-> +};
-> +
-> +static const struct axi_adc_core_info axi_adc_10_0_a_info = {
-> +	.version = ADI_AXI_PCORE_VER(10, 0, 'a'),
-> +};
-> +
-> +/* Match table for of_platform binding */
-> +static const struct of_device_id axi_adc_of_match[] = {
-> +	{ .compatible = "adi,axi-adc-10.0.a", .data = &axi_adc_10_0_a_info },
-> +	{ /* end of list */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, axi_adc_of_match);
-> +
-> +struct axi_adc_client *axi_adc_attach_client(struct device *dev)
-> +{
-> +	const struct of_device_id *id;
-> +	struct axi_adc_client *cl;
-> +	struct device_node *cln;
-> +
-> +	if (!dev->of_node) {
-> +		dev_err(dev, "DT node is null\n");
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	id = of_match_node(axi_adc_of_match, dev->of_node);
-> +	if (!id)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	cln = of_parse_phandle(dev->of_node, "axi-adc-client", 0);
-> +	if (!cln) {
-> +		dev_err(dev, "No 'axi-adc-client' node defined\n");
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	mutex_lock(&axi_adc_registered_clients_lock);
-> +
-> +	list_for_each_entry(cl, &axi_adc_registered_clients, entry) {
-> +		if (!cl->dev)
-> +			continue;
-> +		if (cl->dev->of_node == cln) {
-> +			if (!try_module_get(dev->driver->owner)) {
-> +				mutex_unlock(&axi_adc_registered_clients_lock);
-> +				return ERR_PTR(-ENODEV);
-> +			}
-> +			get_device(dev);
-> +			cl->info = id->data;
-> +			mutex_unlock(&axi_adc_registered_clients_lock);
-> +			return cl;
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&axi_adc_registered_clients_lock);
-> +
-> +	return ERR_PTR(-EPROBE_DEFER);
-> +}
-> +
-> +static int axi_adc_setup_channels(struct device *dev, struct axi_adc_state *st)
-> +{
-> +	struct axi_adc_conv *conv = conv = &st->client->conv;
-> +	unsigned int val;
-> +	int i, ret;
-> +
-> +	if (conv->preenable_setup) {
-> +		ret = conv->preenable_setup(conv);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	for (i = 0; i < conv->chip_info->num_channels; i++) {
-> +		if (i & 1)
-> +			val = AXI_ADC_IQCOR_COEFF_2_SET(AXI_ADC_IQCOR_INT_1);
-> +		else
-> +			val = AXI_ADC_IQCOR_COEFF_1_SET(AXI_ADC_IQCOR_INT_1);
-> +		axi_adc_write(st, AXI_ADC_REG_CHAN_CNTRL_2(i), val);
-> +
-> +		axi_adc_write(st, AXI_ADC_REG_CHAN_CNTRL(i),
-> +			      AXI_ADC_FORMAT_SIGNEXT | AXI_ADC_FORMAT_ENABLE |
-> +			      AXI_ADC_IQCOR_ENB | AXI_ADC_ENABLE);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int axi_adc_alloc_channels(struct iio_dev *indio_dev,
-> +				  struct axi_adc_conv *conv)
-> +{
-> +	unsigned int i, num = conv->chip_info->num_channels;
-> +	struct device *dev = indio_dev->dev.parent;
-> +	struct iio_chan_spec *channels;
-> +
-> +	channels = devm_kcalloc(dev, num, sizeof(*channels), GFP_KERNEL);
-> +	if (!channels)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < conv->chip_info->num_channels; i++)
-> +		channels[i] = conv->chip_info->channels->iio_chan;
-> +
-> +	indio_dev->num_channels = num;
-> +	indio_dev->channels = channels;
-> +
-> +	return 0;
-> +}
-> +
-> +struct axi_adc_cleanup_data {
-> +	struct axi_adc_state	*st;
-> +	struct axi_adc_client	*cl;
-> +};
-
-Doesn't seem to be used.
-
-> +
-> +static void axi_adc_cleanup(void *data)
-> +{
-> +	struct axi_adc_client *cl = data;
-> +
-> +	put_device(cl->dev);
-> +	module_put(cl->dev->driver->owner);
-> +}
-> +
-> +static int axi_adc_probe(struct platform_device *pdev)
-> +{
-> +	struct axi_adc_conv *conv;
-> +	struct iio_dev *indio_dev;
-> +	struct axi_adc_client *cl;
-> +	struct axi_adc_state *st;
-> +	struct resource *mem;
-> +	unsigned int ver;
+> +	struct imx_sc_msg_misc_get_temp msg;
+> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+> +	struct imx_sc_sensor *sensor = data;
 > +	int ret;
 > +
-> +	cl = axi_adc_attach_client(&pdev->dev);
-> +	if (IS_ERR(cl))
-> +		return PTR_ERR(cl);
+> +	msg.data.req.resource_id = sensor->resource_id;
+> +	msg.data.req.type = IMX_SC_C_TEMP;
 > +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
-> +	if (indio_dev == NULL)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(indio_dev);
-> +	st->client = cl;
-> +	cl->state = st;
-> +	mutex_init(&st->lock);
-> +
-> +	ret = devm_add_action_or_reset(&pdev->dev, axi_adc_cleanup, cl);
+> +	hdr->ver = IMX_SC_RPC_VERSION;
+> +	hdr->svc = IMX_SC_RPC_SVC_MISC;
+> +	hdr->func = IMX_SC_MISC_FUNC_GET_TEMP;
+> +	hdr->size = 2;
 
-This is unwinding things in axi_adc_attach_client, so should be
-called immediately after that, not with the iio device allocation
-in between.
+Can you explain this 'size' value?
 
-> +	if (ret)
-> +		return ret;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	st->regs_size = resource_size(mem);
-> +	st->regs = devm_ioremap_resource(&pdev->dev, mem);
+[ ... ]
 
-Can we use devm_platform_ioremap_resource here?
-We grab regs_size but don't seem to use it.
+> +MODULE_DEVICE_TABLE(of, imx_sc_thermal_table);
+> +
+> +static struct platform_driver imx_sc_thermal_driver = {
+> +		.probe = imx_sc_thermal_probe,
 
+The driver can be compiled as module but there is no 'remove' callback
 
-> +	if (IS_ERR(st->regs))
-> +		return PTR_ERR(st->regs);
-> +
-> +	conv = &st->client->conv;
-> +
-> +	/* Reset HDL Core */
-> +	axi_adc_write(st, AXI_ADC_REG_RSTN, 0);
-> +	mdelay(10);
-> +	axi_adc_write(st, AXI_ADC_REG_RSTN, AXI_ADC_MMCM_RSTN);
-> +	mdelay(10);
-> +	axi_adc_write(st, AXI_ADC_REG_RSTN, AXI_ADC_RSTN | AXI_ADC_MMCM_RSTN);
-> +
-> +	ver = axi_adc_read(st, ADI_AXI_REG_VERSION);
-> +
-> +	if (cl->info->version > ver) {
-> +		dev_err(&pdev->dev,
-> +			"IP core version is too old. Expected %d.%.2d.%c, Reported %d.%.2d.%c\n",
-> +			ADI_AXI_PCORE_VER_MAJOR(cl->info->version),
-> +			ADI_AXI_PCORE_VER_MINOR(cl->info->version),
-> +			ADI_AXI_PCORE_VER_PATCH(cl->info->version),
-> +			ADI_AXI_PCORE_VER_MAJOR(ver),
-> +			ADI_AXI_PCORE_VER_MINOR(ver),
-> +			ADI_AXI_PCORE_VER_PATCH(ver));
-> +		return -ENODEV;
-> +	}
-> +
-> +	indio_dev->info = &axi_adc_info;
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->name = pdev->dev.of_node->name;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	ret = axi_adc_alloc_channels(indio_dev, conv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = axi_adc_config_dma_buffer(&pdev->dev, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = axi_adc_setup_channels(&pdev->dev, st);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_iio_device_register(&pdev->dev, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(&pdev->dev, "AXI ADC IP core (%d.%.2d.%c) probed\n",
-> +		ADI_AXI_PCORE_VER_MAJOR(ver),
-> +		ADI_AXI_PCORE_VER_MINOR(ver),
-> +		ADI_AXI_PCORE_VER_PATCH(ver));
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver axi_adc_driver = {
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +		.of_match_table = axi_adc_of_match,
-> +	},
-> +	.probe = axi_adc_probe,
+> +		.driver = {
+> +			.name = "imx-sc-thermal",
+> +			.of_match_table = imx_sc_thermal_table,
+> +		},
 > +};
+> +module_platform_driver(imx_sc_thermal_driver);
 > +
-> +module_platform_driver(axi_adc_driver);
-> +
-> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices Generic AXI ADC IP core driver");
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("Thermal driver for NXP i.MX SoCs with system controller");
 > +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/iio/adc/axi-adc.h b/include/linux/iio/adc/axi-adc.h
-> new file mode 100644
-> index 000000000000..d367c442dc52
-> --- /dev/null
-> +++ b/include/linux/iio/adc/axi-adc.h
-> @@ -0,0 +1,79 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Analog Devices Generic AXI ADC IP core driver/library
-> + * Link: https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> + *
-> + * Copyright 2012-2020 Analog Devices Inc.
-> + */
-> +#ifndef __AXI_ADC_H__
-> +#define __AXI_ADC_H__
-> +
-> +struct device;
-> +
-> +/**
-> + * struct axi_adc_chan_spec - AXI ADC channel wrapper
-> + *			      maps IIO channel data with AXI ADC specifics
-> + * @iio_chan		IIO channel specification
-> + * @num_lanes		Number of lanes per channel
-> + */
-> +struct axi_adc_chan_spec {
-> +	struct iio_chan_spec		iio_chan;
-> +	unsigned int			num_lanes;
-> +};
-> +
-> +/**
-> + * struct axi_adc_chip_info - Chip specific information
-> + * @name		Chip name
-> + * @id			Chip ID (usually product ID)
-> + * @channels		Channel specifications of type @struct axi_adc_chan_spec
-> + * @num_channels	Number of @channels
-> + * @scale_table		Supported scales by the chip; tuples of 2 ints
-> + * @num_scales		Number of scales in the table
-> + * @max_rate		Maximum sampling rate supported by the device
-> + */
-> +struct axi_adc_chip_info {
-> +	const char			*name;
-> +	unsigned int			id;
-> +
-> +	const struct axi_adc_chan_spec	*channels;
-> +	unsigned int			num_channels;
-> +
-> +	const unsigned int		(*scale_table)[2];
-> +	int				num_scales;
-> +
-> +	unsigned long			max_rate;
-> +};
-> +
-> +/**
-> + * struct axi_adc_conv - data of the ADC attached to the AXI ADC
-> + * @chip_info		chip info details for the client ADC
-> + * @preenable_setup	op to run in the client before enabling the AXI ADC
-> + * @read_raw		IIO read_raw hook for the client ADC
-> + * @write_raw		IIO write_raw hook for the client ADC
-> + */
-> +struct axi_adc_conv {
-> +	const struct axi_adc_chip_info		*chip_info;
-> +
-> +	int (*preenable_setup)(struct axi_adc_conv *conv);
-> +	int (*reg_access)(struct axi_adc_conv *conv, unsigned int reg,
-> +			  unsigned int writeval, unsigned int *readval);
-> +	int (*read_raw)(struct axi_adc_conv *conv,
-> +			struct iio_chan_spec const *chan,
-> +			int *val, int *val2, long mask);
-> +	int (*write_raw)(struct axi_adc_conv *conv,
-> +			 struct iio_chan_spec const *chan,
-> +			 int val, int val2, long mask);
-> +};
-> +
-> +struct axi_adc_conv *axi_adc_conv_register(struct device *dev,
-> +					   int sizeof_priv);
-> +void axi_adc_conv_unregister(struct axi_adc_conv *conv);
-> +
-> +struct axi_adc_conv *devm_axi_adc_conv_register(struct device *dev,
-> +						int sizeof_priv);
-> +void devm_axi_adc_conv_unregister(struct device *dev,
-> +				  struct axi_adc_conv *conv);
-> +
-> +void *axi_adc_conv_priv(struct axi_adc_conv *conv);
-> +
-> +#endif
 
+
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
