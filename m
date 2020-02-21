@@ -2,201 +2,224 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245F1C11D00
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 02:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F745C11D25
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 02:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C6C206EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 02:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A411208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 02:23:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lkna8bgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbgBUCTU (ORCPT
+        id S1729576AbgBUCXR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:19:20 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:34892 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbgBUCTU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:19:20 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7F5EB1A6558;
-        Fri, 21 Feb 2020 03:19:17 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 14D6E1A652F;
-        Fri, 21 Feb 2020 03:19:12 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 87476402A0;
-        Fri, 21 Feb 2020 10:19:05 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] ARM: dts: imx: make wdog node name generic
-Date:   Fri, 21 Feb 2020 10:13:20 +0800
-Message-Id: <1582251200-15562-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 20 Feb 2020 21:23:17 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35175 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729222AbgBUCXR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 21:23:17 -0500
+Received: by mail-il1-f193.google.com with SMTP id g12so441297ild.2
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 18:23:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1r4Guz/pyXp2FmGJuccB7640iKmbat2fCQTpns04iQA=;
+        b=Lkna8bgrY1wIa2D6YpzLy0LrWfgzvaUEsUsl3en59bAJAaA2vZ9VPIKQlDXtm+3+2+
+         9pdBEzbHik3jHDJbH4uFvxBtmgF8H1fX2vh7XTfL3CQHeRV+r5yUeRR6SesXPJidAZxW
+         qE20XApR58nXLCYXwc7cWM3YGLzFqizc+vgPA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1r4Guz/pyXp2FmGJuccB7640iKmbat2fCQTpns04iQA=;
+        b=U7Ux9K1bhP7aANVvKjbXF5XTUZF8+JrN3w50o2J8PCtZKIp0WCZP5kUIn+RQp8ebk9
+         Xe3c4YapZCl2joBSILElFPwS2XmteSH3KBfHlEUf8ZEqQdBlA8NSAM/GcBwoQlrdOS6d
+         rbrebBwk/KUdwmKKe87xQPy/TqNm2KI4c0JhYAmurJztmBEEYE9SXP5R2AKf1dyj6AYp
+         CNLZP6qXO7/rOgtP3uOxdLFBYNEfmxshaBdoLVAXsdZ1Kl/p2PVND1JWariJbrKJej0X
+         X2JL0rH3GDFuHF9zxfx3FHSh5H59BkLisr545cj3PTRyqcrMNlyrXbivjO5ZErTicjXi
+         phmQ==
+X-Gm-Message-State: APjAAAUrzdowqsnRNIQJyHJcoydpa5bpamJ/gjLIC7Lg/ukNONYFl94f
+        G3RauKwSkc6zjgx0yDWmGFE/yladfxpD0ZI2dSXAIg==
+X-Google-Smtp-Source: APXvYqyrSLErmbSrh9z11lK8TdqiabptjiOsG76i8R6M6oB7VpHn99tIgFQZTTtENubg4nsK88nil5eScTiP60KPOrA=
+X-Received: by 2002:a92:af8e:: with SMTP id v14mr32001179ill.150.1582251795343;
+ Thu, 20 Feb 2020 18:23:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20200210063523.133333-1-hsinyi@chromium.org> <20200210063523.133333-4-hsinyi@chromium.org>
+ <bbc75f19-0581-c902-a455-13157d66d72f@gmail.com>
+In-Reply-To: <bbc75f19-0581-c902-a455-13157d66d72f@gmail.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri, 21 Feb 2020 10:22:49 +0800
+Message-ID: <CAJMQK-iR4YHdgKfXGiM-gLVo7535KMaZobk=j4whF2g-xJ11DA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/5] arm64: dts: mt8173: fix unit name warnings
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Node name should be generic, use "watchdog" instead of "wdog" for
-wdog nodes.
+On Fri, Feb 21, 2020 at 6:17 AM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>
+>
+>
+> On 10/02/2020 07:35, Hsin-Yi Wang wrote:
+> > Fixing several unit name warnings:
+> >
+> > Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
+> > Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
+> > Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
+> > Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+> >
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 38 ++++++++++++------------
+> >  1 file changed, 19 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index 790cd64aa447..2b7f566fb407 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -42,14 +42,14 @@ aliases {
+> >               dpi0 = &dpi0;
+> >               dsi0 = &dsi0;
+> >               dsi1 = &dsi1;
+> > -             mdp_rdma0 = &mdp_rdma0;
+> > -             mdp_rdma1 = &mdp_rdma1;
+> > -             mdp_rsz0 = &mdp_rsz0;
+> > -             mdp_rsz1 = &mdp_rsz1;
+> > -             mdp_rsz2 = &mdp_rsz2;
+> > -             mdp_wdma0 = &mdp_wdma0;
+> > -             mdp_wrot0 = &mdp_wrot0;
+> > -             mdp_wrot1 = &mdp_wrot1;
+> > +             mdp-rdma0 = &mdp_rdma0;
+> > +             mdp-rdma1 = &mdp_rdma1;
+> > +             mdp-rsz0 = &mdp_rsz0;
+> > +             mdp-rsz1 = &mdp_rsz1;
+> > +             mdp-rsz2 = &mdp_rsz2;
+> > +             mdp-wdma0 = &mdp_wdma0;
+> > +             mdp-wrot0 = &mdp_wrot0;
+> > +             mdp-wrot1 = &mdp_wrot1;
+>
+> Won't we need to update the mdp driver as well, as it uses of_alias_get_id()?
+>
+It's fixed in the fifth patch
+https://patchwork.kernel.org/patch/11372623/
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 4 ++--
- arch/arm/boot/dts/imx6sl.dtsi  | 4 ++--
- arch/arm/boot/dts/imx6sx.dtsi  | 6 +++---
- arch/arm/boot/dts/imx6ul.dtsi  | 6 +++---
- arch/arm/boot/dts/imx7s.dtsi   | 8 ++++----
- 5 files changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 97c0a85..886ab81 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -669,14 +669,14 @@
- 				status = "disabled";
- 			};
- 
--			wdog1: wdog@20bc000 {
-+			wdog1: watchdog@20bc000 {
- 				compatible = "fsl,imx6q-wdt", "fsl,imx21-wdt";
- 				reg = <0x020bc000 0x4000>;
- 				interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6QDL_CLK_IPG>;
- 			};
- 
--			wdog2: wdog@20c0000 {
-+			wdog2: watchdog@20c0000 {
- 				compatible = "fsl,imx6q-wdt", "fsl,imx21-wdt";
- 				reg = <0x020c0000 0x4000>;
- 				interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index ea889f7..db626b2 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -499,14 +499,14 @@
- 				status = "disabled";
- 			};
- 
--			wdog1: wdog@20bc000 {
-+			wdog1: watchdog@20bc000 {
- 				compatible = "fsl,imx6sl-wdt", "fsl,imx21-wdt";
- 				reg = <0x020bc000 0x4000>;
- 				interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SL_CLK_IPG>;
- 			};
- 
--			wdog2: wdog@20c0000 {
-+			wdog2: watchdog@20c0000 {
- 				compatible = "fsl,imx6sl-wdt", "fsl,imx21-wdt";
- 				reg = <0x020c0000 0x4000>;
- 				interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 1198117..6db9ca09 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -567,14 +567,14 @@
- 				status = "disabled";
- 			};
- 
--			wdog1: wdog@20bc000 {
-+			wdog1: watchdog@20bc000 {
- 				compatible = "fsl,imx6sx-wdt", "fsl,imx21-wdt";
- 				reg = <0x020bc000 0x4000>;
- 				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SX_CLK_IPG>;
- 			};
- 
--			wdog2: wdog@20c0000 {
-+			wdog2: watchdog@20c0000 {
- 				compatible = "fsl,imx6sx-wdt", "fsl,imx21-wdt";
- 				reg = <0x020c0000 0x4000>;
- 				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1289,7 +1289,7 @@
- 				status = "disabled";
- 			};
- 
--			wdog3: wdog@2288000 {
-+			wdog3: watchdog@2288000 {
- 				compatible = "fsl,imx6sx-wdt", "fsl,imx21-wdt";
- 				reg = <0x02288000 0x4000>;
- 				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 30cce35..e1807e9 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -531,14 +531,14 @@
- 				status = "disabled";
- 			};
- 
--			wdog1: wdog@20bc000 {
-+			wdog1: watchdog@20bc000 {
- 				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
- 				reg = <0x020bc000 0x4000>;
- 				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_WDOG1>;
- 			};
- 
--			wdog2: wdog@20c0000 {
-+			wdog2: watchdog@20c0000 {
- 				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
- 				reg = <0x020c0000 0x4000>;
- 				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1007,7 +1007,7 @@
- 				status = "disabled";
- 			};
- 
--			wdog3: wdog@21e4000 {
-+			wdog3: watchdog@21e4000 {
- 				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
- 				reg = <0x021e4000 0x4000>;
- 				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 1ac5045..196bbd6 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -406,14 +406,14 @@
- 				gpio-ranges = <&iomuxc 0 139 16>;
- 			};
- 
--			wdog1: wdog@30280000 {
-+			wdog1: watchdog@30280000 {
- 				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
- 				reg = <0x30280000 0x10000>;
- 				interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX7D_WDOG1_ROOT_CLK>;
- 			};
- 
--			wdog2: wdog@30290000 {
-+			wdog2: watchdog@30290000 {
- 				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
- 				reg = <0x30290000 0x10000>;
- 				interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-@@ -421,7 +421,7 @@
- 				status = "disabled";
- 			};
- 
--			wdog3: wdog@302a0000 {
-+			wdog3: watchdog@302a0000 {
- 				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
- 				reg = <0x302a0000 0x10000>;
- 				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-@@ -429,7 +429,7 @@
- 				status = "disabled";
- 			};
- 
--			wdog4: wdog@302b0000 {
-+			wdog4: watchdog@302b0000 {
- 				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
- 				reg = <0x302b0000 0x10000>;
- 				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.7.4
-
+> >               serial0 = &uart0;
+> >               serial1 = &uart1;
+> >               serial2 = &uart2;
+> > @@ -246,21 +246,21 @@ psci {
+> >               cpu_on        = <0x84000003>;
+> >       };
+> >
+> > -     clk26m: oscillator@0 {
+> > +     clk26m: oscillator0 {
+> >               compatible = "fixed-clock";
+> >               #clock-cells = <0>;
+> >               clock-frequency = <26000000>;
+> >               clock-output-names = "clk26m";
+> >       };
+> >
+> > -     clk32k: oscillator@1 {
+> > +     clk32k: oscillator1 {
+> >               compatible = "fixed-clock";
+> >               #clock-cells = <0>;
+> >               clock-frequency = <32000>;
+> >               clock-output-names = "clk32k";
+> >       };
+> >
+> > -     cpum_ck: oscillator@2 {
+> > +     cpum_ck: oscillator2 {
+> >               compatible = "fixed-clock";
+> >               #clock-cells = <0>;
+> >               clock-frequency = <0>;
+> > @@ -276,19 +276,19 @@ cpu_thermal: cpu_thermal {
+> >                       sustainable-power = <1500>; /* milliwatts */
+> >
+> >                       trips {
+> > -                             threshold: trip-point@0 {
+> > +                             threshold: trip-point0 {
+> >                                       temperature = <68000>;
+> >                                       hysteresis = <2000>;
+> >                                       type = "passive";
+> >                               };
+> >
+> > -                             target: trip-point@1 {
+> > +                             target: trip-point1 {
+> >                                       temperature = <85000>;
+> >                                       hysteresis = <2000>;
+> >                                       type = "passive";
+> >                               };
+> >
+> > -                             cpu_crit: cpu_crit@0 {
+> > +                             cpu_crit: cpu_crit0 {
+> >                                       temperature = <115000>;
+> >                                       hysteresis = <2000>;
+> >                                       type = "critical";
+> > @@ -296,13 +296,13 @@ cpu_crit: cpu_crit@0 {
+> >                       };
+> >
+> >                       cooling-maps {
+> > -                             map@0 {
+> > +                             map0 {
+> >                                       trip = <&target>;
+> >                                       cooling-device = <&cpu0 0 0>,
+> >                                                        <&cpu1 0 0>;
+> >                                       contribution = <3072>;
+> >                               };
+> > -                             map@1 {
+> > +                             map1 {
+> >                                       trip = <&target>;
+> >                                       cooling-device = <&cpu2 0 0>,
+> >                                                        <&cpu3 0 0>;
+> > @@ -316,7 +316,7 @@ reserved-memory {
+> >               #address-cells = <2>;
+> >               #size-cells = <2>;
+> >               ranges;
+> > -             vpu_dma_reserved: vpu_dma_mem_region {
+> > +             vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
+> >                       compatible = "shared-dma-pool";
+> >                       reg = <0 0xb7000000 0 0x500000>;
+> >                       alignment = <0x1000>;
+> > @@ -368,7 +368,7 @@ syscfg_pctl_a: syscfg_pctl_a@10005000 {
+> >                       reg = <0 0x10005000 0 0x1000>;
+> >               };
+> >
+> > -             pio: pinctrl@10005000 {
+> > +             pio: pinctrl@1000b000 {
+> >                       compatible = "mediatek,mt8173-pinctrl";
+> >                       reg = <0 0x1000b000 0 0x1000>;
+> >                       mediatek,pctl-regmap = <&syscfg_pctl_a>;
+> > @@ -575,7 +575,7 @@ mipi_tx1: mipi-dphy@10216000 {
+> >                       status = "disabled";
+> >               };
+> >
+> > -             gic: interrupt-controller@10220000 {
+> > +             gic: interrupt-controller@10221000 {
+> >                       compatible = "arm,gic-400";
+> >                       #interrupt-cells = <3>;
+> >                       interrupt-parent = <&gic>;
+> >
