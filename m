@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0C3C35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F5AC35656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9332124656
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6354A2073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eJbIrsJY"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iy9fYeyD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBUQMy (ORCPT
+        id S1729000AbgBUQOl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:12:54 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55331 "EHLO
+        Fri, 21 Feb 2020 11:14:41 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54935 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727039AbgBUQMu (ORCPT
+        by vger.kernel.org with ESMTP id S1727095AbgBUQOk (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:12:50 -0500
+        Fri, 21 Feb 2020 11:14:40 -0500
 Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LG83M6008257;
-        Fri, 21 Feb 2020 17:12:23 +0100
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LGEEKH013470;
+        Fri, 21 Feb 2020 17:14:26 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
  bh=84l2b91e/di7VUflYudfHEI8dwDeDuErqQcawADT30M=;
- b=eJbIrsJYUQ2ZOSZ/PQkd/4nlZgrFvcK9JbFCrGcLZhnboFdyJRziUg7iyQc/HMnD+7+4
- tiHe0B7gRQx4wom954tO7ehuk3/I0lBeqZpnHCL8I76+LB3J1ldZx0ngZlGj3eQMaTNr
- XhCroGu8re8Q1j99sPeMQCjjYI/nc06ebb/snLCaYtRZ/oph6tKZjBoEMGQyaj0z92nd
- 4nQuKbBAR27di/pTockDqlr5UUsLyOO8GG9oET+q5pXKHknUl0K01US6ZNnpBifinSTr
- AVR/7zS0EafkNjYfKTNY1BsuUjW8sFgKy9evj+ECNZWZMZEYnmXqpd3GpKF3SiGvFTOJ ew== 
+ b=iy9fYeyD4J84NGAZwItOo4iPy9fHwru5Mzt1bG1ActChIhT78uBE1aX9PDjpjpPqb7Di
+ sixhgAeW+WQM6ewcozXc7Yh6mt54AQ/oDO3cF64Ic6CZLagfy84PTOmum0bzbrDtxJak
+ SErQh6iZNMm/arKDTwrcWFDg4RKhaXu9fqHCnp/wYbYdsJ14fUgdkweApX9SuDu/RcLH
+ LchG2ggrKAHxjhtF2L4p4ZW6jtym6WjyD7XOZ3mSz17qcMV5D1KkqO4eg/nX5S205W0O
+ I/87+kcBjeyxVKp+ffdutE7qDuwbAeVw5hwT7l+lxuLacXdbC6GYUyuqnHne6KPCXqID 1Q== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8ub1r63v-1
+        by mx07-00178001.pphosted.com with ESMTP id 2y8ub1r6du-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 17:12:23 +0100
+        Fri, 21 Feb 2020 17:14:26 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A96F310002A;
-        Fri, 21 Feb 2020 17:12:20 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 768D0100034;
+        Fri, 21 Feb 2020 17:14:21 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9C53E2BE24B;
-        Fri, 21 Feb 2020 17:12:20 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 21 Feb 2020 17:12:19
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5FE552BE259;
+        Fri, 21 Feb 2020 17:14:21 +0100 (CET)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 21 Feb 2020 17:14:20
  +0100
 From:   Alexandre Torgue <alexandre.torgue@st.com>
 To:     <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
@@ -58,15 +58,15 @@ CC:     <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
         <devicetree-compiler@vger.kernel.org>, Ian Lepore <ian@freebsd.org>
 Subject: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build information
-Date:   Fri, 21 Feb 2020 17:12:14 +0100
-Message-ID: <20200221161217.20069-2-alexandre.torgue@st.com>
+Date:   Fri, 21 Feb 2020 17:14:15 +0100
+Message-ID: <20200221161418.20225-2-alexandre.torgue@st.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200221161217.20069-1-alexandre.torgue@st.com>
-References: <20200221161217.20069-1-alexandre.torgue@st.com>
+In-Reply-To: <20200221161418.20225-1-alexandre.torgue@st.com>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-21_05:2020-02-21,2020-02-21 signatures=0
