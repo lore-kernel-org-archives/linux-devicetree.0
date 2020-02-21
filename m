@@ -2,134 +2,133 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1A5C35640
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2803DC35640
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107C8222C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m5iOI48L"
+	by mail.kernel.org (Postfix) with ESMTP id 0A004206DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731157AbgBUInX (ORCPT
+        id S1729939AbgBUHwj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:43:23 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45942 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730127AbgBUHxi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 02:53:38 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01L7rABf123736;
-        Fri, 21 Feb 2020 01:53:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582271590;
-        bh=4oe8zWumyH1U/XLfwq2hHrnruwHoFbfKJKSxe0/eD4A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=m5iOI48LxCt9hBXs9jVzOFlNoQDGfM09SOucuNdRdLcsBPGKDvT8cTIa/2A1Mn3os
-         bqsUUuzUX9mRu4cqGRLtOGsCSGHzvqYLKqk4kqDZ4eeI40lK6MgJqvswYpcFoDT0Yq
-         bUft9eWP9YpyyHFYDM49x2uuO8EZZX7KIr4Ct3fQ=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01L7rA9Q023230
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Feb 2020 01:53:10 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
- Feb 2020 01:53:09 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 21 Feb 2020 01:53:09 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01L7r5hr091996;
-        Fri, 21 Feb 2020 01:53:05 -0600
-Subject: Re: [PATCH v2 2/3] can: m_can: m_can_platform: Add support for
- enabling transceiver
-To:     Dan Murphy <dmurphy@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <mkl@pengutronix.de>, <wg@grandegger.com>,
-        <sriram.dash@samsung.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
- <20200217142836.23702-3-faiz_abbas@ti.com>
- <250f905a-33c3-dd17-15c9-e282299dd742@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <8885c00b-7b73-0448-7e9d-ecb19fe84adf@ti.com>
-Date:   Fri, 21 Feb 2020 13:24:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <250f905a-33c3-dd17-15c9-e282299dd742@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 21 Feb 2020 02:52:39 -0500
+Received: from mx.socionext.com ([202.248.49.38]:51003 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729929AbgBUHwi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:38 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 21 Feb 2020 16:52:37 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 04C8D18008C;
+        Fri, 21 Feb 2020 16:52:38 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 21 Feb 2020 16:52:37 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 45B2F1A01BB;
+        Fri, 21 Feb 2020 16:52:37 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [RESEND PATCH v4 1/2] dt-bindings: dmaengine: Add UniPhier external DMA controller bindings
+Date:   Fri, 21 Feb 2020 16:52:29 +0900
+Message-Id: <1582271550-3403-2-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582271550-3403-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1582271550-3403-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dan,
+Add devicetree binding documentation for external DMA controller
+implemented on Socionext UniPhier SOCs.
 
-On 17/02/20 8:40 pm, Dan Murphy wrote:
-> Faiz
-> 
-> On 2/17/20 8:28 AM, Faiz Abbas wrote:
->> CAN transceivers on some boards have a standby line which can be
->> toggled to enable/disable the transceiver. Model this as an optional
->> fixed xceiver regulator.
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> Acked-by: Sriram Dash <sriram.dash@samsung.com>
->> ---
->>   drivers/net/can/m_can/m_can_platform.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/net/can/m_can/m_can_platform.c
->> b/drivers/net/can/m_can/m_can_platform.c
->> index 38ea5e600fb8..719468fab507 100644
->> --- a/drivers/net/can/m_can/m_can_platform.c
->> +++ b/drivers/net/can/m_can/m_can_platform.c
->> @@ -6,6 +6,7 @@
->>   // Copyright (C) 2018-19 Texas Instruments Incorporated -
->> http://www.ti.com/
->>     #include <linux/platform_device.h>
->> +#include <linux/regulator/consumer.h>
->>     #include "m_can.h"
->>   @@ -57,6 +58,7 @@ static int m_can_plat_probe(struct platform_device
->> *pdev)
->>   {
->>       struct m_can_classdev *mcan_class;
->>       struct m_can_plat_priv *priv;
->> +    struct regulator *reg_xceiver;
->>       struct resource *res;
->>       void __iomem *addr;
->>       void __iomem *mram_addr;
->> @@ -111,6 +113,10 @@ static int m_can_plat_probe(struct
->> platform_device *pdev)
->>         m_can_init_ram(mcan_class);
->>   +    reg_xceiver = devm_regulator_get_optional(&pdev->dev, "xceiver");
->> +    if (PTR_ERR(reg_xceiver) == -EPROBE_DEFER)
->> +        return -EPROBE_DEFER;
->> +
-> 
-> Where is this regulator enabled?
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ .../bindings/dma/socionext,uniphier-xdmac.yaml     | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
 
-I have set regulator-boot-on flag in the dt so this didn't require an
-enable.
-
-> Shouldn't the regulator be managed by runtime PM as well?
-> 
-
-Let me try this out.
-
-Thanks,
-Faiz
+diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+new file mode 100644
+index 00000000..86cfb59
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/socionext,uniphier-xdmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Socionext UniPhier external DMA controller
++
++description: |
++  This describes the devicetree bindings for an external DMA engine to perform
++  memory-to-memory or peripheral-to-memory data transfer capable of supporting
++  16 channels, implemented in Socionext UniPhier SoCs.
++
++maintainers:
++  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    const: socionext,uniphier-xdmac
++
++  reg:
++    items:
++      - description: XDMAC base register region (offset and length)
++      - description: XDMAC extension register region (offset and length)
++
++  interrupts:
++    maxItems: 1
++
++  "#dma-cells":
++    const: 2
++    description: |
++      DMA request from clients consists of 2 cells:
++        1. Channel index
++        2. Transfer request factor number, If no transfer factor, use 0.
++           The number is SoC-specific, and this should be specified with
++           relation to the device to use the DMA controller.
++
++  dma-channels:
++    minimum: 1
++    maximum: 16
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++
++examples:
++  - |
++    xdmac: dma-controller@5fc10000 {
++        compatible = "socionext,uniphier-xdmac";
++        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
++        interrupts = <0 188 4>;
++        #dma-cells = <2>;
++        dma-channels = <16>;
++    };
++
++...
+-- 
+2.7.4
 
