@@ -2,91 +2,124 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5324FC35657
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 17:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52422C35658
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 17:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26859222C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 17:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250E6222C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 17:18:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="To6Lkkfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgBURQI (ORCPT
+        id S1727291AbgBURSj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:16:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:44124 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbgBURQI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:16:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA62730E;
-        Fri, 21 Feb 2020 09:16:05 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C6963F68F;
-        Fri, 21 Feb 2020 09:16:05 -0800 (PST)
-Date:   Fri, 21 Feb 2020 17:15:59 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     will@kernel.org, catalin.marinas@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] arm64: perf: Support new DT compatibles
-Message-ID: <20200221171558.GA27382@lakrids.cambridge.arm.com>
-References: <cover.1582300927.git.robin.murphy@arm.com>
- <6dbd695863346bda1e5d2133643ffade6227bd9a.1582300927.git.robin.murphy@arm.com>
+        Fri, 21 Feb 2020 12:18:39 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:38752 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgBURSj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 12:18:39 -0500
+Received: by mail-yb1-f196.google.com with SMTP id v12so1449199ybi.5;
+        Fri, 21 Feb 2020 09:18:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UsIdexAiALxzKyQifSysIO1fJyf0aP+aAU2c/dx1Ago=;
+        b=To6LkkfpvlqJHmYlRMozaiXtoGHLEAmYsU3E6heV4YAFR7/YKMi7pE8v1JXTlEa2O6
+         R+Hw9OPdOIMGk4DkCT34AmHveXtDgJURe3gPHl0gUAAajrMNmxSsdsUIdBNtg3OgseBZ
+         tcH0zfBNri6UF+VWaD7gBcGnbtSVGPeO4Oho+qSnZ8Mlt+PZtATpnSDDXCPFE2JqT9mL
+         lBfGEt3d+lDnm1ePque0hRtrK7ZlI5ooEG6kgHBv+w8rcxwYfuZ8O9vth1UAJxcXpq0L
+         pdMi9zm7YvVDH7iml5SXV0q1w+bDTDgWuWZCaBavtOM+j9Bg8GfAZ3qjv9oRRAGhEKXI
+         t9iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UsIdexAiALxzKyQifSysIO1fJyf0aP+aAU2c/dx1Ago=;
+        b=cqBUR4tftQEBYyrBXazgKXQExAGxvYSfSmVQBl/WUH0wFh2rMS6gjlTrHq+Euei2di
+         tXbttUmG2hDtRQyHfjDxh/wrbGefMhSCRUAF6MKnnaffdir8u6w7KsmlSW5OUaqhw4yh
+         Rdol6iM4gLqA/6UWVY0cesYVM2JCtu1I2yiXn5hcQoNzmeSCiRkkccPhzzB7H7N/v8sM
+         OF/PlabmlyiKIftVxr4TesvC52uXM06zVrwEharRGnupk5pgt90GRu8D8EyNDk0pxasm
+         fCLTmDmRoU3hIzAgaV0o5SENCWviOqqV57tUJ9vVVPSDqgAMVkjy2LvctlT/B8wCzAKg
+         hpUg==
+X-Gm-Message-State: APjAAAVIugGA0l08Dl2ehPIP4PHwRm5hpGyBREKrFKKtjMBtFJvBOiLw
+        juU6qVD1Kp/tV+JxnnEW5y5kv0+n
+X-Google-Smtp-Source: APXvYqzYl4tIDKLb+5Vh4OEpx2jOybgaIKpG0e6x+kgfOHhXyezWBSp7YVo6A6FOfYjvVDd8nnxsJA==
+X-Received: by 2002:a25:9d92:: with SMTP id v18mr13049893ybp.176.1582305516271;
+        Fri, 21 Feb 2020 09:18:36 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id 71sm1496317ywd.59.2020.02.21.09.18.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 09:18:34 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200220130149.26283-1-geert+renesas@glider.be>
+ <20200220130149.26283-2-geert+renesas@glider.be>
+ <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
+Date:   Fri, 21 Feb 2020 11:18:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6dbd695863346bda1e5d2133643ffade6227bd9a.1582300927.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 04:04:58PM +0000, Robin Murphy wrote:
-> Add support for matching the new PMUs. For now, this just wires them up
-> as generic PMUv3 such that people writing DTs for new SoCs can do the
-> right thing, and at least have architectural and raw events be usable.
-> We can come back and fill in event maps for sysfs and/or perf tools at
-> a later date.
+Hi Linus, Rob,
+
+On 2/21/20 10:08 AM, Linus Walleij wrote:
+> On Thu, Feb 20, 2020 at 2:01 PM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
 > 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-
-Thanks for this, it looks fine to me:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
-> ---
->  arch/arm64/kernel/perf_event.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>> Extract the code to add all GPIO hogs of a gpio-hog node into its own
+>> function, so it can be reused.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>> v2:
+>>   - No changes.
 > 
-> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> index e40b65645c86..28ce582e049e 100644
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -1105,11 +1105,19 @@ static int armv8_vulcan_pmu_init(struct arm_pmu *cpu_pmu)
->  
->  static const struct of_device_id armv8_pmu_of_device_ids[] = {
->  	{.compatible = "arm,armv8-pmuv3",	.data = armv8_pmuv3_init},
-> +	{.compatible = "arm,cortex-a34-pmu",	.data = armv8_pmuv3_init},
->  	{.compatible = "arm,cortex-a35-pmu",	.data = armv8_a35_pmu_init},
->  	{.compatible = "arm,cortex-a53-pmu",	.data = armv8_a53_pmu_init},
-> +	{.compatible = "arm,cortex-a55-pmu",	.data = armv8_pmuv3_init},
->  	{.compatible = "arm,cortex-a57-pmu",	.data = armv8_a57_pmu_init},
-> +	{.compatible = "arm,cortex-a65-pmu",	.data = armv8_pmuv3_init},
->  	{.compatible = "arm,cortex-a72-pmu",	.data = armv8_a72_pmu_init},
->  	{.compatible = "arm,cortex-a73-pmu",	.data = armv8_a73_pmu_init},
-> +	{.compatible = "arm,cortex-a75-pmu",	.data = armv8_pmuv3_init},
-> +	{.compatible = "arm,cortex-a76-pmu",	.data = armv8_pmuv3_init},
-> +	{.compatible = "arm,cortex-a77-pmu",	.data = armv8_pmuv3_init},
-> +	{.compatible = "arm,neoverse-e1-pmu",	.data = armv8_pmuv3_init},
-> +	{.compatible = "arm,neoverse-n1-pmu",	.data = armv8_pmuv3_init},
->  	{.compatible = "cavium,thunder-pmu",	.data = armv8_thunder_pmu_init},
->  	{.compatible = "brcm,vulcan-pmu",	.data = armv8_vulcan_pmu_init},
->  	{},
-> -- 
-> 2.23.0.dirty
+> Patch applied with Frank's Review tag.
+
+I created a devicetree unittest to show the problem that Geert's patches
+fix.
+
+I would prefer to have my unittest patch series applied somewhere,
+immediately followed by Geert's patch series.  This way, after
+applying my series, a test fail is reported, then after Geert's
+series is applied, the test fail becomes a test pass.
+
+Can you coordinate with Rob to accept both series either via
+your tree or Rob's tree?
+
+-Frank
+
 > 
+> Yours,
+> Linus Walleij
+> 
+
