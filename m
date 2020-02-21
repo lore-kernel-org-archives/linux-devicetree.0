@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A7FC35657
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F82C35646
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C821D206EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADBBE206EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jkgvwEvx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tOVwwD8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgBUNEy (ORCPT
+        id S1728112AbgBUNFq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:04:54 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37092 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728228AbgBUNEy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 08:04:54 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a6so1765082wme.2
-        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 05:04:53 -0800 (PST)
+        Fri, 21 Feb 2020 08:05:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45180 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727095AbgBUNFq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 08:05:46 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g3so1969501wrs.12
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 05:05:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=bJNVzMRkFtXXYPsTt3SQwSqc9RpddqkHKGG4HJkeN0I=;
-        b=jkgvwEvxyvKjU2Titynfam24eXLGYSEaz4oiQM93hFTl4Jb4XLMaJcbX31PBGNr7S4
-         MfS43Igd6k6jCuZzDeWQ/4h204Y84NqG/NxkRws+7Vd1aqGx+rLpsIDijDI9YZUblMYQ
-         SAhRpyFYdkWEG2Radn/TtiRKHmfjcVcALIu5A0NbeLfuKvQWyhigGDbvzYoutsWfwMcW
-         r3DnA9sqddt7ur7yiPziRvAZlcGuEEFx782y7WHjH2JrzEww9hKjB4lncsJUbOT3ZF2F
-         hYNMVWHJRqeUEhM/fSIOyrGp3p5D3BlJFn3jbvtc1r/h2UPfXCW9p1KdWT+TUByJfH1O
-         4pxA==
+        bh=Jmee0gPaCTfsOpWSoQjCJFto4t8cMGzSFxQTb3xz48k=;
+        b=tOVwwD8qmpuy5R/iusBnSTi8xzbbMZqdDcRX1UOwcX8kYv5EzHXV5Ir5H2I6/HY6Hv
+         GHf+wxF/Eu/sDmuamXnYsjUsxTYXICaKH1O67ZVlBrWMNCXCIY8FwA5CAIT5tRVzIm5R
+         SzzKxvH5U9ZGw02P+TWARGK1gYUEDSeg0Nil+OEPJxqUoNA9ceBM1Xs+S2wAuJCu2a2t
+         BcG8GYWfdv51wj9aVj+vQ6z1GkOcoaDsm2wii0rDsEMImic2AUBX6vBFegMWdWgq+3Dv
+         Xqma0ebK4QQ3qXwG/wD/JNMq7nmiAXc4fiLJTXOZPl/Fg4IPEXNX+500312IIPGI2tC1
+         Ht6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=bJNVzMRkFtXXYPsTt3SQwSqc9RpddqkHKGG4HJkeN0I=;
-        b=QrtDqQkBpqa3vCioyejcqOO65OOy0+Yz9xipBHnuIPiDxazw/SjPaZWMp0DUzdVtda
-         63wGFx8AZlb3/8g3vK1cfhGM09/mfZQCxrM/Mt3JiwgjEvJyUPMezylJxOBQ+Xkkfhcs
-         i76gIJTXM22AolHFh5/PjVD4lbmORBYKnH1QgZmMTwIN56GSbXHNg99NLzZfrdpTT+PM
-         1nEArHPCeqm/mjGz4T53/fWo1Xv1GHVHBrRwg9VV/MG/1cwNpswMVmeLbQuc0BsCa3cN
-         Y27DIuKPprXsQ3riNVOeRMSsQG1ZfWcGTPYP2C5FHc8WbvwInO2+0zzW1L1wj3E4Onb1
-         2d2Q==
-X-Gm-Message-State: APjAAAWMdco9O+NRqJV86JIwSWpHpPHBsH6g0+omJRjiw9ZazJOaZ+9D
-        CZ0wECMCUP6ITTtfhmX8kioTUw==
-X-Google-Smtp-Source: APXvYqwrCwOw/nJYCU07QgEOQnMfnFDja/YSvf9ktRaNNnMixM8MO9y/tOJAK/QRxV9OsIfVPeM/zw==
-X-Received: by 2002:a1c:20d6:: with SMTP id g205mr3942457wmg.38.1582290292313;
-        Fri, 21 Feb 2020 05:04:52 -0800 (PST)
+        bh=Jmee0gPaCTfsOpWSoQjCJFto4t8cMGzSFxQTb3xz48k=;
+        b=U/bsYqg92FPO75O6jkyZ3XOIvSV9tZLFrsg4Uy0Vod8ki4kB6RuAdJKz4rECzklaEe
+         EwrwO+IUNoqh9ApVYIRkkMUvlXXE9GaHjZzg8Db3w+S5XSR7hXSqyH7m/klcpqJkxNd9
+         HFhcDNPE5F6MjdtAmLEGbNItL82jgM/nCBt4Ntkp6Yxdot4tn7ldCFeyqfEgszAjKOBq
+         dWswdHg6ZLHEoUd4UCe/j4R8aybf4MWzhqsl6xl5d/UHGRej5WNGP+C5eucxRgGBnTAb
+         NJEzveiyNmj2ZAJaf8m1GK1zspNkLru5Xho+aV+IzZySiSAXcdbXkW+GBjAZENT0JkrG
+         FB/w==
+X-Gm-Message-State: APjAAAWtWLmyCBB2HqVMANPHU1wqor5RqUCOhF+QW42MAL+qWZ7wSalB
+        BppeerhSxEDi7zOsP+5MdrOGRg==
+X-Google-Smtp-Source: APXvYqxdbqMgUjOMna0Vnnx+4FKMnwXT3QMS6vD/TsFNrXqcxXU3SY8DOXJ72CRLWnbQ393hdP3QPw==
+X-Received: by 2002:a5d:53c1:: with SMTP id a1mr47209498wrw.373.1582290343755;
+        Fri, 21 Feb 2020 05:05:43 -0800 (PST)
 Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
-        by smtp.gmail.com with ESMTPSA id z10sm3561868wmk.31.2020.02.21.05.04.50
+        by smtp.gmail.com with ESMTPSA id y1sm3422496wrq.16.2020.02.21.05.05.41
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 05:04:51 -0800 (PST)
-Date:   Fri, 21 Feb 2020 14:04:48 +0100
+        Fri, 21 Feb 2020 05:05:43 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:05:40 +0100
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
@@ -73,7 +73,7 @@ Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         linux-pm@vger.kernel.org, Linux-imx@nxp.com
 Subject: Re: [PATCH V15 RESEND 5/5] arm64: dts: imx: add i.MX8QXP thermal
  support
-Message-ID: <20200221130448.GC10516@linaro.org>
+Message-ID: <20200221130540.GD10516@linaro.org>
 References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
  <1582161028-2844-5-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
@@ -138,8 +138,7 @@ On Thu, Feb 20, 2020 at 09:10:28AM +0800, Anson Huang wrote:
 > +					type = "passive";
 > +				};
 
-May be you can add a 'hot' trip point before 'critical' for future use before
-reaching the emergency shutdown.
+Same comment as previous patch.
 
 > +				cpu_crit0: trip1 {
 > +					temperature = <127000>;
