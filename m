@@ -2,220 +2,130 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6E5C35642
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 09:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DD1C35642
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 09:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B308F2073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 09:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4BE222C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 09:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JG9hhOJw"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KmGNlDaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgBUJca (ORCPT
+        id S1727074AbgBUJer (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:32:30 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:49740 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727733AbgBUJc3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:32:29 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582277549; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=k1WLiAIP+Ma8dQvf0FPWqzXKeJ/V2NYVN0QX4/5QH1Y=; b=JG9hhOJwoOmUVdA4QDL6OvwLzD9reNB46rNR5qAD6LAGIr7RISRMQNIZVLmAss169D4K3xlc
- LNRlm8njmwnUAvpIUWShDBlsrSt7Ej+OZ3kLa+gOA0nP6U3+gRnvJinp11BK3MzS5gRz9UWF
- 8CrqcoLm+ScEWFDOV9rxmXzhQ2s=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4fa3a4.7fcf2602a848-smtp-out-n02;
- Fri, 21 Feb 2020 09:32:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D2CD1C433A2; Fri, 21 Feb 2020 09:32:20 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 21 Feb 2020 04:34:47 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:44453 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbgBUJer (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 04:34:47 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 859CEC4479D;
-        Fri, 21 Feb 2020 09:32:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 859CEC4479D
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
-Subject: [PATCH v6 1/3] arm64: dts: qcom: sc7180: Add cpuidle low power states
-Date:   Fri, 21 Feb 2020 15:02:05 +0530
-Message-Id: <1582277527-19638-2-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582277527-19638-1-git-send-email-mkshah@codeaurora.org>
-References: <1582277527-19638-1-git-send-email-mkshah@codeaurora.org>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C90A023D18;
+        Fri, 21 Feb 2020 10:34:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582277684;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Snop1RpX2rRCwWvJOlE+k0QPMCh/eFbh+WZC0GsS4uA=;
+        b=KmGNlDaQ0PxdmjCYZnUUKedfMyyTcUd1gXD7yIRoHmxoX8UnGY0zb8lm/piMWP+VR63s+Q
+        xDwYHFxwJHy9ZFrwvVkKljKvR6iTMLBWGm73MzpxQ7dvFMbKyX8tHOeOi7EYExgDLXEGCm
+        m1eae/F2FAQ5vFJE9UpYBMB+T+cGQ+g=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 21 Feb 2020 10:34:43 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Peng Fan <peng.fan@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Jiri Slaby <jslaby@suse.com>, Yuan Yao <yao.yuan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: Re: [PATCH 1/7] Revert "tty: serial: fsl_lpuart: drop
+ EARLYCON_DECLARE"
+In-Reply-To: <AM0PR04MB44817308EA80EBEDC0338E6D88120@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20200220174334.23322-1-michael@walle.cc>
+ <AM0PR04MB44817308EA80EBEDC0338E6D88120@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Message-ID: <51db0e6ba10b4b32dab207e0df8ef0d8@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C90A023D18
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[13];
+         NEURAL_HAM(-0.00)[-0.601];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device bindings for cpuidle states for cpu devices.
+Hi,
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+Am 2020-02-21 02:30, schrieb Peng Fan:
+>> Subject: [PATCH 1/7] Revert "tty: serial: fsl_lpuart: drop 
+>> EARLYCON_DECLARE"
+>> 
+>> This reverts commit a659652f6169240a5818cb244b280c5a362ef5a4.
+>> 
+>> This broke the earlycon on LS1021A processors because the order of the
+>> earlycon_setup() functions were changed. Before the commit the normal
+>> lpuart32_early_console_setup() was called. After the commit the
+>> lpuart32_imx_early_console_setup() is called instead.
+> 
+> How do you pass earlycon args to kernel?
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index cc5a94f..2941a7e 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -86,6 +86,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-@@ -103,6 +106,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_100>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-@@ -117,6 +123,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_200>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-@@ -131,6 +140,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_300>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-@@ -145,6 +157,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_400>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-@@ -159,6 +174,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_500>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-@@ -173,6 +191,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_SLEEP_0
-+					   &BIG_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_600>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
-@@ -187,6 +208,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_SLEEP_0
-+					   &BIG_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_700>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
-@@ -195,6 +219,60 @@
- 				next-level-cache = <&L3_0>;
- 			};
- 		};
-+
-+		idle-states {
-+			entry-method = "psci";
-+
-+			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "little-power-down";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <549>;
-+				exit-latency-us = <901>;
-+				min-residency-us = <1774>;
-+				local-timer-stop;
-+			};
-+
-+			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "little-rail-power-down";
-+				arm,psci-suspend-param = <0x40000004>;
-+				entry-latency-us = <702>;
-+				exit-latency-us = <915>;
-+				min-residency-us = <4001>;
-+				local-timer-stop;
-+			};
-+
-+			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "big-power-down";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <523>;
-+				exit-latency-us = <1244>;
-+				min-residency-us = <2207>;
-+				local-timer-stop;
-+			};
-+
-+			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "big-rail-power-down";
-+				arm,psci-suspend-param = <0x40000004>;
-+				entry-latency-us = <526>;
-+				exit-latency-us = <1854>;
-+				min-residency-us = <5555>;
-+				local-timer-stop;
-+			};
-+
-+			CLUSTER_SLEEP_0: cluster-sleep-0 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "cluster-power-down";
-+				arm,psci-suspend-param = <0x40003444>;
-+				entry-latency-us = <3263>;
-+				exit-latency-us = <6562>;
-+				min-residency-us = <9926>;
-+				local-timer-stop;
-+			};
-+		};
- 	};
- 
- 	memory@80000000 {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+earlycon=lpuart32,mmio32be,0x2950000,115200
+
+please note that there are two possible declarations: (1) an OF/ACPI 
+based
+earlycon, eg just "earlycon" on the bootargs and (2) an elaborate one 
+where
+you can give the offset and access method yourself, eg. the one from 
+above.
+
+(1) will still work even with the EARLYCON_DECLARE() removed. But (2) 
+will
+search through all possible
+   OF_DELARE_EARLYCON(lpuart32,..)
+   EARLYCON_DECLARE(lpuart32,..)
+
+and doesn't take the compatible into account. So which setup function is
+actually called depends on (a) the order of the OF_DECLARE_EARLYCON() 
+and
+EARLYCON_DECLARE() statements and (b) on the compiler (thats just a
+guess!). For me, the order in which it will actually end up in the
+__earlycon_table is reversed, eg. the last one is called. So now that
+you've removed the EARLYCON_DECLARE() the last one is the imx setup
+function which will add the reg offset and doesn't work on LS1021A.
+
+I've proposed a fix of the underlying problem [1]. But that fix also 
+requires
+the EARLYCON_DECLARE() in this driver.
+
+
+-michael
+
+[1] 
+https://lore.kernel.org/linux-serial/20200220174607.24285-1-michael@walle.cc/
