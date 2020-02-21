@@ -2,118 +2,156 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61281C35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 17:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3662C35659
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 17:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F666206E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 17:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1B224670
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 17:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8rtdkXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgBURvJ (ORCPT
+        id S1726701AbgBURwh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:51:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:44840 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgBURvJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:51:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E589C30E;
-        Fri, 21 Feb 2020 09:51:08 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C39F3F6CF;
-        Fri, 21 Feb 2020 09:51:07 -0800 (PST)
-Date:   Fri, 21 Feb 2020 17:51:05 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
-        catalin.marinas@arm.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] arm64: perf: Support new DT compatibles
-Message-ID: <20200221175105.GC27382@lakrids.cambridge.arm.com>
-References: <cover.1582300927.git.robin.murphy@arm.com>
- <6dbd695863346bda1e5d2133643ffade6227bd9a.1582300927.git.robin.murphy@arm.com>
- <20200221173847.2e9789af@donnerap.cambridge.arm.com>
+        Fri, 21 Feb 2020 12:52:37 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:35874 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgBURwg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 12:52:36 -0500
+Received: by mail-yb1-f195.google.com with SMTP id u26so1509684ybd.3;
+        Fri, 21 Feb 2020 09:52:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pfOqpQDUaur2M6YY/gkICE0ETj9HGANxbXQFE0s27Qs=;
+        b=T8rtdkXd7pSann2Acm8dZHl0L8ucIUt34HX10/+FdzKbPO6vXXvd1qO+G4fGgMyGKD
+         Lez9AIuBpCxJnUHXzL/KXaHoe6Nk8TB6fRHO5ykztU2BqNTn2fBvE150o0/SZIM1nBsa
+         Un2WauQf+OnWf6o6hdqorjNO1nVtSPp/RKUhPVop1Kjb8GcV+fj/9UUiXNln2xpXVdEw
+         drqK2p5MolJ5p3w2SKYLkLBsSAcLCwbdMJCgfbbZOY8VMuV0W1eIRyJFkms6ZhYa7PNI
+         VBzbsQEIgQn5LaLuEq2ZEdCbjt1iP3T+DS8z6+JKT6PrwiCc7AWJVFeKbsdIohA23q+l
+         T24A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pfOqpQDUaur2M6YY/gkICE0ETj9HGANxbXQFE0s27Qs=;
+        b=twUp8JxXjC+M/p8mjtCqpWyWyc/aMXS6PYCwXvLe4in1pA1zhiSp8g7uOuOX88BFz7
+         RYtFHm6R+HSVNd9CQQ1//U40Ge6tjbQLOE5JamPSKvjY2gnvg5GO4f+9YxGFgfLo8NgJ
+         ReH8m/aVusdF2JTnJhld3NA+Dduer6RQLIpkg8Difo0lmOCuG4EG55C0rpZQ73sym1gQ
+         CoTmG4MLVGHszUzV8M8VtErnhQ7pOB1mWszENZubxayBoORQtiyXy1X9V/5MripbxMAn
+         h8CrqQQ62fnbPy8tsPZ8KQqqEGMmT4b+YhT8ISAB185xbPAW1x8vm03NE9XslXO4gBSd
+         SNSA==
+X-Gm-Message-State: APjAAAXN6CohcDM8yn2STBJmn0tXNbWD8rhOXumQra9kvY7yj9h370TO
+        T25SlCOzNHAvGb9eyF8LdqQ=
+X-Google-Smtp-Source: APXvYqyJ0oww4/TUajF27cnTog03w0Ji7aBpRzBBVCKkuhgwDKSzTq1M2iEyeFbL2S7YRNA+Da6HoA==
+X-Received: by 2002:a25:99c3:: with SMTP id q3mr32471987ybo.323.1582307555679;
+        Fri, 21 Feb 2020 09:52:35 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id i84sm1570680ywc.43.2020.02.21.09.52.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 09:52:35 -0800 (PST)
+Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
+ information
+To:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        david@gibson.dropbear.id.au, sjg@chromium.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Ian Lepore <ian@freebsd.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-2-alexandre.torgue@st.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+Date:   Fri, 21 Feb 2020 11:52:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221173847.2e9789af@donnerap.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20200221161418.20225-2-alexandre.torgue@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 05:38:47PM +0000, Andre Przywara wrote:
-> On Fri, 21 Feb 2020 16:04:58 +0000
-> Robin Murphy <robin.murphy@arm.com> wrote:
+On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+> This commit adds a new script to create a file (in dts file directory) with
+> some information (date, Linux version, user). This file could then be used
+> to populate "build-info" property in every dts file that would use this
+> build information:
 > 
-> Hi,
+> Example:
 > 
-> > Add support for matching the new PMUs. For now, this just wires them up
-> > as generic PMUv3 such that people writing DTs for new SoCs can do the
-> > right thing, and at least have architectural and raw events be usable.
-> > We can come back and fill in event maps for sysfs and/or perf tools at
-> > a later date.
-> 
-> as mentioned already in a reply to another patch:
-> 
-> Is that really the right way? Isn't that calling for the intended usage of a compatible fall-back string?
-> So that a machine can just ship DTBs with for instance:
-> 	"arm,neoverse-n1-pmu", "arm,armv8-pmuv3";
-> and that would magically work with all older and newer kernels already, without any patch?
-> 
-> As it stands right now (with a single compatible), only newer kernels could use the PMU on those SoCs (ignoring tedious backports not reaching every user).
-> 
-> All that would be needed for that is to officially allow two compatible strings in the binding.
-> 
-> Cheers,
-> Andre.
-> 
-> P.S. Still thinking about dropping those compatible strings at all and using the MIDR somehow, because then also ACPI users would benefit from core specific events.
+> / {
+> 	...
+> 	build-info = /incbin/("dtb-build.txt");
 
-For ACPI we've said that the way forward is the userspace mappings, so
-that's already solved (and to a much greater degree than we could do
-within the kernel).
+s/.txt/.dtsi/
 
-The names for DT are an unfortunate legacy thing that we simply have to
-carry on with going forward in for the UAPI under sysfs.
+and same wherever the file name is used.
 
-I don't want to go mapping MIDRs to names, and open other worm cans.
 
-Thanksm
-Mark.
-
+> 	...
+> };
+> 
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> 
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index bae62549e3d2..a5af84ef4ffc 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
+>  # DTC
+>  # ---------------------------------------------------------------------------
+>  DTC ?= $(objtree)/scripts/dtc/dtc
+> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
 >  
-> > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> > ---
-> >  arch/arm64/kernel/perf_event.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> > index e40b65645c86..28ce582e049e 100644
-> > --- a/arch/arm64/kernel/perf_event.c
-> > +++ b/arch/arm64/kernel/perf_event.c
-> > @@ -1105,11 +1105,19 @@ static int armv8_vulcan_pmu_init(struct arm_pmu *cpu_pmu)
-> >  
-> >  static const struct of_device_id armv8_pmu_of_device_ids[] = {
-> >  	{.compatible = "arm,armv8-pmuv3",	.data = armv8_pmuv3_init},
-> > +	{.compatible = "arm,cortex-a34-pmu",	.data = armv8_pmuv3_init},
-> >  	{.compatible = "arm,cortex-a35-pmu",	.data = armv8_a35_pmu_init},
-> >  	{.compatible = "arm,cortex-a53-pmu",	.data = armv8_a53_pmu_init},
-> > +	{.compatible = "arm,cortex-a55-pmu",	.data = armv8_pmuv3_init},
-> >  	{.compatible = "arm,cortex-a57-pmu",	.data = armv8_a57_pmu_init},
-> > +	{.compatible = "arm,cortex-a65-pmu",	.data = armv8_pmuv3_init},
-> >  	{.compatible = "arm,cortex-a72-pmu",	.data = armv8_a72_pmu_init},
-> >  	{.compatible = "arm,cortex-a73-pmu",	.data = armv8_a73_pmu_init},
-> > +	{.compatible = "arm,cortex-a75-pmu",	.data = armv8_pmuv3_init},
-> > +	{.compatible = "arm,cortex-a76-pmu",	.data = armv8_pmuv3_init},
-> > +	{.compatible = "arm,cortex-a77-pmu",	.data = armv8_pmuv3_init},
-> > +	{.compatible = "arm,neoverse-e1-pmu",	.data = armv8_pmuv3_init},
-> > +	{.compatible = "arm,neoverse-n1-pmu",	.data = armv8_pmuv3_init},
-> >  	{.compatible = "cavium,thunder-pmu",	.data = armv8_thunder_pmu_init},
-> >  	{.compatible = "brcm,vulcan-pmu",	.data = armv8_vulcan_pmu_init},
-> >  	{},
+>  # Disable noisy checks by default
+>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+> @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+>  
+>  quiet_cmd_dtc = DTC     $@
+>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+> +	$(DTB_GEN_INFO) $(src) ; \
+>  	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+>  	$(DTC) -O $(2) -o $@ -b 0 \
+>  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
+> new file mode 100755
+> index 000000000000..0cd8bd98e410
+> --- /dev/null
+> +++ b/scripts/gen_dtb_build_info.sh
+> @@ -0,0 +1,10 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -o nounset
+> +
+> +DTB_DIR=$1
+> +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
+> +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
+
+I would remove the filler words "From", "by", "the", and the trailing
+period ('.').
+
+<bikeshed>
+You might consider using a format more like the Linux
+kernel version line, which puts parenthesis around the
+compiled by info.
+</bikeshed>
+
+-Frank
+
+> +
+> +printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
 > 
+
