@@ -2,98 +2,137 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18E1C35642
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB372C35640
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D39D324650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C206424670
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582280159;
+	bh=ohR22iBcgKNOY/FiBH57yMmxgoMNvTO5PoEx/XwwAhw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1bIAtGj7sjRWEYTC1U3eeEvG4GCPViWYmzOMQoyrzXRm5d1OA8PuDgG4ywIHJfLPe
+	 DHAgBeSLCsFmhCpAfYJhUl72XWJO/Y8L6p5ZUVe6Zk5ha26sbGiRvJcFt2VpkjEwTn
+	 x8c+hTO5zjzpMRzAu8zQoyC8BY+jpDlmc5xbexEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbgBUKPQ (ORCPT
+        id S1728278AbgBUKP7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:15:16 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45578 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgBUKPQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 05:15:16 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v19so1056614oic.12;
-        Fri, 21 Feb 2020 02:15:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nm8XPNj2T3vUB6cqjEXZ7nGfKAwujbY0F04qFgjkmjQ=;
-        b=onf6TzsxkuQX0Qdyn7t6WtQrYqrNuphUmDfj1EhNUHjloyJWP22lH44ncf0P+hh1dr
-         Mdx1MYQRaPZm4lGmu3+adul7nAcoqOsJlIJf5Xjyya6XDEA+uP1NfD1TD7SBH8EbjeGu
-         /xL0VRjLsyIXnH9uG//k5f4XFFlP0dB5ognc6p1/0l90TAV74f+Hujf3S/MJlD56nFNt
-         uooyncTA4zQqxeqg1N2AsgEbfnQ8vLGTHy3x6MIgyKgm/Vabl7Yykr/Dd4Gjiw9VoZBx
-         g41V1Attidib9h91uUaE8KLjWACWSbAgtIWjL2lIemh+UKNiB4BV60amnxOr0LMPGeEE
-         j5oQ==
-X-Gm-Message-State: APjAAAWdz85Sz+vezvg3tmP72yvx3XMDH7JGJd3HL4CYYYltf9nWw3ri
-        fYNP6ZGtd3WUzi8xImCHmzkGtrWksZzLS49qbLk=
-X-Google-Smtp-Source: APXvYqz7WikUrMhKLOm0sNqPcWz6d/IUuDU0jmDC9Xjm9FDq7/MpI0yqLXOdcKkSOPan01jsEb1TTlk2L7zVqUGNO5k=
-X-Received: by 2002:aca:c4d2:: with SMTP id u201mr1394043oif.54.1582280115669;
- Fri, 21 Feb 2020 02:15:15 -0800 (PST)
+        Fri, 21 Feb 2020 05:15:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727150AbgBUKP7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:15:59 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8322920722;
+        Fri, 21 Feb 2020 10:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582280158;
+        bh=ohR22iBcgKNOY/FiBH57yMmxgoMNvTO5PoEx/XwwAhw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vIuZa/IUYgI4YGz0xTrU1TTn3YMPU8zlWryV8sH/AKnOAfC9ouIYcP2FVv/HGD9UZ
+         iuOjocq9/zW+qQfB+2FqF0zHySnQ7dGUF8G51ysHNM17Xtmut/ix82YpLCAVLwqr3l
+         ebJiMv55X9t/tCjdtvqG6LaYCu44692FkkVHudEA=
+Date:   Fri, 21 Feb 2020 10:15:54 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>, kernel@pengutronix.de,
+        Geert Uytterhoeven <geert@glider.be>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: enabling a regulator before doing an ADC measurement
+Message-ID: <20200221101554.6b229991@archlinux>
+In-Reply-To: <20200219103235.u2roy3uchlrxqgqw@pengutronix.de>
+References: <20200219103235.u2roy3uchlrxqgqw@pengutronix.de>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Feb 2020 11:15:04 +0100
-Message-ID: <CAMuHMdX+SJPTvDqKDwD_3DaAxDT3KcEbcjLNjj4JsbcpRwd92w@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/7] i2c: of: reserve unknown and ancillary addresses
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Wed, 19 Feb 2020 11:32:35 +0100
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote:
 
-On Thu, Feb 20, 2020 at 6:26 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> One outcome of my dynamic address assignment RFC series[1] was that we
-> need a way to describe an I2C bus in DT fully. This includes unknown
-> devices and devices requiring multiple addresses. This series implements
-> that.
->
-> Patches 1+2 do some preparational refactoring. After patch 3, we can
-> have child nodes with an address, but no compatible. Those addresses
-> will be marked busy now. They are handled by the dummy driver as well,
-> but named "reserved" instead of dummy. Patches 4+5 are again some
-> preparational refactoring. After patch 6, all addresses in a 'reg' array
-> are now blocked by the I2C core, also using the dummy driver but named
-> "reserved". So, we can have something like this:
->
->         dummy@13 {
+> Hello,
+>=20
+> I have a hardware setup that looks as follows:
+>=20
+>                                 ,-------------------.
+>  ,---------.       ,---/ -------| current-regulator |
+>  |  ADC    |       |            `-------------------'
+>  |      CH0--------+
+>  |         |       |
+>  `.........'    ,-----.
+>                 |PT100|
+> 		`-----'
+> 		   |
+> 		   =E2=8F=9A
+>=20
+> So the idea is that I enable the regulator and then measure the adc's
+> input to determine the resistance of the PT100 and so its temperature.
+>=20
+> I wonder if/how I should represent that in my device's device tree. I
+> discussed this already a bit with Geert on irc and he came up with
+> something like:
+>=20
+> 	adc {
+> 		...
+> 		channel@0 {
+> 			reg =3D <0>;
+> 			supply =3D <&myregulator>;
+> 		};
+> 	};
+>=20
+> with the intention that the adc driver enables myregulator before
+> starting a measurement on channel 0.
+>=20
+> Does this sound sensible? Does something like this maybe even already
+> exist and I missed it?
 
-Hence should that be "reserved@13"?
+>=20
+> What is a bit special here is that usually a regulator is used to supply
+> a device and it's just enabled at probe time (or when the device is
+> started to be used) and disabled when done. Here the regulator is
+> supposed to be enabled only during a measurement[1] to yield the reference
+> current and doesn't supply a device. So maybe better use another
+> property name instead of plain "supply", maybe "reference-supply"?
 
->                reg = <0x13>, <0x14>;
->         };
 
-Gr{oetje,eeting}s,
+There are similar cases though they tend to be wrapped
+up in runtime pm rather than enable and disable each time.
+Note this tends not to be the case in 'first' posts of drivers, because
+it's a bit fiddly to do.  Hence it gets added later if relevant.  Often
+the regulator being disabled is the reference voltage rather than
+the primary power supply.
 
-                        Geert
+For this particular case, I'd rather see the pt100 fully represented
+(with a tiny driver).   That would be a consumer of the ADC channel
+and present it's own temperature channel.  We do this for things
+like analog accelerometers.   Then you can control the regulator
+either every time.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+That way it looks just like a normal device with simple bindings.
+The oddity being the necessity to turn the power off after a reading
+(and I guess keep it off for some minimum time?)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+
+Jonathan
+
+>=20
+> Best regards
+> Uwe
+>=20
+> [1] When the current measurement is done, the regulator must be swiched
+> off again to not warm up the PT100 and so fudge future measurements.
+>=20
+
