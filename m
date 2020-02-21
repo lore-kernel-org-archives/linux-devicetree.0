@@ -2,211 +2,320 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A074CC11D25
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 03:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB69C11D27
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 03:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685EC24650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 03:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10EE222C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 03:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FbGSB0h5"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="sKSyyk3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbgBUDWn (ORCPT
+        id S1729637AbgBUDke (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 22:22:43 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:52343 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729280AbgBUDWn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 22:22:43 -0500
-X-UUID: 3c2e5660f6fe4fe58d128a0482ece93e-20200221
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=W1qBOr/o2c6oN+xEinZ/5XZvJQQxuQK5tYMkqakT5DQ=;
-        b=FbGSB0h5F35eD1TgdyaVBpbChcBFI9WO0IEuz+rod74tT3TNQH1qMu1zOWDCTj6Fd/nz1DNoZ9zcay11bbxuH0rHrG1/lWSg1+SdMvx2zDd3+gDZfDUp+SQZ9rI97kvgYFnDM58Xwsw9nIAutUKNzeKkgs2ZNiQX69xER8U0qc4=;
-X-UUID: 3c2e5660f6fe4fe58d128a0482ece93e-20200221
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1232468223; Fri, 21 Feb 2020 11:22:35 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 21 Feb 2020 11:21:43 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 21 Feb 2020 11:22:14 +0800
-Message-ID: <1582255353.19370.2.camel@mtksdaap41>
-Subject: Re: [PATCH v10 4/4] i2c: core: support bus regulator controlling in
- adapter
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     <rafael.j.wysocki@intel.com>
-CC:     Tomasz Figa <tfiga@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Date:   Fri, 21 Feb 2020 11:22:33 +0800
-In-Reply-To: <CAAFQd5DtnBhGV-VemTwudm7K-UtFsGg99YGuD-cyR93u0OAPuA@mail.gmail.com>
-References: <20200116025637.3524-1-bibby.hsieh@mediatek.com>
-         <20200116025637.3524-5-bibby.hsieh@mediatek.com>
-         <CAAFQd5Bh9dUuu2fzxQSyuyRrEvN5o8PBqPCUTdrC5btN2Q1HVw@mail.gmail.com>
-         <CAAFQd5DtnBhGV-VemTwudm7K-UtFsGg99YGuD-cyR93u0OAPuA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Thu, 20 Feb 2020 22:40:34 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:61081 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727944AbgBUDke (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 22:40:34 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 01L3cSHA001563;
+        Fri, 21 Feb 2020 12:38:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01L3cSHA001563
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582256309;
+        bh=9fN7Ow7rqVeONqx0lv47MnGX/K8QzO8kQz42Q/AlqEY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sKSyyk3MdpVI9hgmbZBZCbe8knOjzRwkd1aM5Aq3/pCEL1TZ0qJl4sa8awPcFMNAY
+         OcFY4tgqfqmKSR5mXwGVw5nJvyAlC1Vbf2cs6bAKDLoPc0nM/ghXSxt8LKL31nHPXk
+         lpbmK06RWoeuNYWXUP5LAvJTaxODD9WgnydAlv8tilS8VhULiSHJMspbqGCat2unk9
+         Q3CI4xcLlv36JjuI2SDwvvx8KYzS5hMrCRCVxps2/bZ/tlEGtVgXGWnq3i9YwbwlBy
+         tIJRVz0+OlzL79B2fxIYNriSjWmo32SdG5jgo3eN+p0GCCqSvcCGI1qYVWF31Aw/Sy
+         Cu94nMTizwgYw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: [PATCH] dt-bindings: mmc: Convert Cadence SD/SDIO/eMMC controller to json-schema
+Date:   Fri, 21 Feb 2020 12:38:19 +0900
+Message-Id: <20200221033819.2966-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIFJhZmFlbCwNCg0KSSdtIFNvcnJ5IHRvIGJvdGhlciB5b3UuDQoNCkknbSBub3Qgc3VyZSBp
-ZiB5b3UgcmVjZWl2ZSBvdXIgZW1haWwuLi4NClNvIEkgcmUtc2VudCB0aGlzIGVtYWlsIHRvIHlv
-dXIgYW5vdGhlciBlbWFpbC4NCg0KVGhhbmtzLg0KDQpCaWJieQ0KDQpPbiBNb24sIDIwMjAtMDIt
-MTcgYXQgMTg6NDUgKzA5MDAsIFRvbWFzeiBGaWdhIHdyb3RlOg0KPiBIaSBSYWZhZWwsDQo+IA0K
-PiBPbiBUdWUsIEphbiAyOCwgMjAyMCBhdCA0OjMxIFBNIFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJv
-bWl1bS5vcmc+IHdyb3RlOg0KPiA+DQo+ID4gSGkgUmFmYWVsLA0KPiA+DQo+ID4gT24gVGh1LCBK
-YW4gMTYsIDIwMjAgYXQgMTE6NTYgQU0gQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVr
-LmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gQWx0aG91Z2ggaW4gdGhlIG1vc3QgcGxhdGZvcm1z
-LCB0aGUgYnVzIHBvd2VyIG9mIGkyYw0KPiA+ID4gYXJlIGFsd2F5IG9uLCBzb21lIHBsYXRmb3Jt
-cyBkaXNhYmxlIHRoZSBpMmMgYnVzIHBvd2VyDQo+ID4gPiBpbiBvcmRlciB0byBtZWV0IGxvdyBw
-b3dlciByZXF1ZXN0Lg0KPiA+ID4NCj4gPiA+IFdlIGdldCBhbmQgZW5hYmxlIGJ1bGsgcmVndWxh
-dG9yIGluIGkyYyBhZGFwdGVyIGRldmljZS4NCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBC
-aWJieSBIc2llaCA8YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAg
-ZHJpdmVycy9pMmMvaTJjLWNvcmUtYmFzZS5jIHwgODEgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKw0KPiA+ID4gIGluY2x1ZGUvbGludXgvaTJjLmggICAgICAgICB8ICAzICsr
-DQo+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA4NCBpbnNlcnRpb25zKCspDQo+ID4gPg0KPiA+DQo+
-ID4gSSBwb3N0ZWQgc29tZSBjb21tZW50cyBpbiBhIHNlcGFyYXRlIHJlcGx5IFsxXSBhbmQgV29s
-ZnJhbSBjb25maXJtZWQNCj4gPiB0aGF0IGhlJ3MgZmluZSB3aXRoIHRoZSBhcHByb2FjaCBbMl0u
-IFdvdWxkIHlvdSBoYXZlIHNvbWUgdGltZSB0byB0YWtlDQo+ID4gYSBsb29rIGZyb20gdGhlIFBN
-IHBvaW50IG9mIHZpZXc/IFRoYW5rcy4NCj4gPg0KPiA+IFsxXSBodHRwczovL3BhdGNod29yay5v
-emxhYnMub3JnL3BhdGNoLzEyMjM5OTEvIzIzNTA5ODQNCj4gPiBbMl0gaHR0cHM6Ly9wYXRjaHdv
-cmsub3psYWJzLm9yZy9wYXRjaC8xMjIzOTkxLyMyMzUxMDMyDQo+ID4NCj4gPiBQbGVhc2UgbGV0
-IG1lIGtub3cgaWYgeW91IHdhbnQgbWUgdG8gQ0MgeW91IGRpcmVjdGx5IG9uIGFueSBvZiB0aG9z
-ZSByZXBsaWVzLg0KPiANCj4gV291bGQgeW91IGhhdmUgYSBmZXcgbWludXRlcyB0byB0YWtlIGEg
-bG9vayBhdCB0aGlzPw0KPiANCj4gVGhhbmtzLA0KPiBUb21hc3oNCj4gDQo+ID4NCj4gPiBCZXN0
-IHJlZ2FyZHMsDQo+ID4gVG9tYXN6DQo+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2ky
-Yy9pMmMtY29yZS1iYXNlLmMgYi9kcml2ZXJzL2kyYy9pMmMtY29yZS1iYXNlLmMNCj4gPiA+IGlu
-ZGV4IDkzMzNjODY1ZDRhOS4uOWI5ZTk2YjA5NGNhIDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVy
-cy9pMmMvaTJjLWNvcmUtYmFzZS5jDQo+ID4gPiArKysgYi9kcml2ZXJzL2kyYy9pMmMtY29yZS1i
-YXNlLmMNCj4gPiA+IEBAIC0zMDYsNiArMzA2LDcgQEAgc3RhdGljIGludCBpMmNfc21idXNfaG9z
-dF9ub3RpZnlfdG9faXJxKGNvbnN0IHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQo+ID4gPiAg
-c3RhdGljIGludCBpMmNfZGV2aWNlX3Byb2JlKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiA+ICB7
-DQo+ID4gPiAgICAgICAgIHN0cnVjdCBpMmNfY2xpZW50ICAgICAgICpjbGllbnQgPSBpMmNfdmVy
-aWZ5X2NsaWVudChkZXYpOw0KPiA+ID4gKyAgICAgICBzdHJ1Y3QgaTJjX2FkYXB0ZXIgICAgICAq
-YWRhcCA9IGNsaWVudC0+YWRhcHRlcjsNCj4gPiA+ICAgICAgICAgc3RydWN0IGkyY19kcml2ZXIg
-ICAgICAgKmRyaXZlcjsNCj4gPiA+ICAgICAgICAgaW50IHN0YXR1czsNCj4gPiA+DQo+ID4gPiBA
-QCAtMzcxLDYgKzM3MiwxMiBAQCBzdGF0aWMgaW50IGkyY19kZXZpY2VfcHJvYmUoc3RydWN0IGRl
-dmljZSAqZGV2KQ0KPiA+ID4NCj4gPiA+ICAgICAgICAgZGV2X2RiZyhkZXYsICJwcm9iZVxuIik7
-DQo+ID4gPg0KPiA+ID4gKyAgICAgICBzdGF0dXMgPSByZWd1bGF0b3JfZW5hYmxlKGFkYXAtPmJ1
-c19yZWcpOw0KPiA+ID4gKyAgICAgICBpZiAoc3RhdHVzICE9IDApIHsNCj4gPiA+ICsgICAgICAg
-ICAgICAgICBkZXZfZXJyKCZhZGFwLT5kZXYsICJGYWlsZWQgdG8gZW5hYmxlIHBvd2VyIHJlZ3Vs
-YXRvclxuIik7DQo+ID4gPiArICAgICAgICAgICAgICAgZ290byBlcnJfY2xlYXJfd2FrZXVwX2ly
-cTsNCj4gPiA+ICsgICAgICAgfQ0KPiA+ID4gKw0KPiA+ID4gICAgICAgICBzdGF0dXMgPSBvZl9j
-bGtfc2V0X2RlZmF1bHRzKGRldi0+b2Zfbm9kZSwgZmFsc2UpOw0KPiA+ID4gICAgICAgICBpZiAo
-c3RhdHVzIDwgMCkNCj4gPiA+ICAgICAgICAgICAgICAgICBnb3RvIGVycl9jbGVhcl93YWtldXBf
-aXJxOw0KPiA+ID4gQEAgLTQwNyw2ICs0MTQsNyBAQCBzdGF0aWMgaW50IGkyY19kZXZpY2VfcHJv
-YmUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ID4gIHN0YXRpYyBpbnQgaTJjX2RldmljZV9yZW1v
-dmUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ID4gIHsNCj4gPiA+ICAgICAgICAgc3RydWN0IGky
-Y19jbGllbnQgICAgICAgKmNsaWVudCA9IGkyY192ZXJpZnlfY2xpZW50KGRldik7DQo+ID4gPiAr
-ICAgICAgIHN0cnVjdCBpMmNfYWRhcHRlciAgICAgICphZGFwID0gY2xpZW50LT5hZGFwdGVyOw0K
-PiA+ID4gICAgICAgICBzdHJ1Y3QgaTJjX2RyaXZlciAgICAgICAqZHJpdmVyOw0KPiA+ID4gICAg
-ICAgICBpbnQgc3RhdHVzID0gMDsNCj4gPiA+DQo+ID4gPiBAQCAtNDIwLDYgKzQyOCw4IEBAIHN0
-YXRpYyBpbnQgaTJjX2RldmljZV9yZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ID4gICAg
-ICAgICB9DQo+ID4gPg0KPiA+ID4gICAgICAgICBkZXZfcG1fZG9tYWluX2RldGFjaCgmY2xpZW50
-LT5kZXYsIHRydWUpOw0KPiA+ID4gKyAgICAgICBpZiAoIXBtX3J1bnRpbWVfc3RhdHVzX3N1c3Bl
-bmRlZCgmYWRhcC0+ZGV2KSkNCj4gPiA+ICsgICAgICAgICAgICAgICByZWd1bGF0b3JfZGlzYWJs
-ZShhZGFwLT5idXNfcmVnKTsNCj4gPiA+DQo+ID4gPiAgICAgICAgIGRldl9wbV9jbGVhcl93YWtl
-X2lycSgmY2xpZW50LT5kZXYpOw0KPiA+ID4gICAgICAgICBkZXZpY2VfaW5pdF93YWtldXAoJmNs
-aWVudC0+ZGV2LCBmYWxzZSk7DQo+ID4gPiBAQCAtNDMxLDYgKzQ0MSw3MSBAQCBzdGF0aWMgaW50
-IGkyY19kZXZpY2VfcmVtb3ZlKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiA+ICAgICAgICAgcmV0
-dXJuIHN0YXR1czsNCj4gPiA+ICB9DQo+ID4gPg0KPiA+ID4gKyNpZmRlZiBDT05GSUdfUE1fU0xF
-RVANCj4gPiA+ICtzdGF0aWMgaW50IGkyY19yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+
-ID4gK3sNCj4gPiA+ICsgICAgICAgc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCA9IGkyY192ZXJp
-ZnlfY2xpZW50KGRldik7DQo+ID4gPiArICAgICAgIHN0cnVjdCBpMmNfYWRhcHRlciAqYWRhcCA9
-IGNsaWVudC0+YWRhcHRlcjsNCj4gPiA+ICsgICAgICAgaW50IGVycjsNCj4gPiA+ICsNCj4gPiA+
-ICsgICAgICAgaWYgKHBtX3J1bnRpbWVfc3RhdHVzX3N1c3BlbmRlZCgmYWRhcC0+ZGV2KSkgew0K
-PiA+ID4gKyAgICAgICAgICAgICAgIGVyciA9IHJlZ3VsYXRvcl9lbmFibGUoYWRhcC0+YnVzX3Jl
-Zyk7DQo+ID4gPiArICAgICAgICAgICAgICAgaWYgKGVycikNCj4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHJldHVybiBlcnI7DQo+ID4gPiArICAgICAgIH0NCj4gPiA+ICsNCj4gPiA+ICsg
-ICAgICAgcmV0dXJuIHBtX2dlbmVyaWNfcmVzdW1lKGRldik7DQo+ID4gPiArfQ0KPiA+ID4gKw0K
-PiA+ID4gK3N0YXRpYyBpbnQgaTJjX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ID4g
-K3sNCj4gPiA+ICsgICAgICAgc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCA9IGkyY192ZXJpZnlf
-Y2xpZW50KGRldik7DQo+ID4gPiArICAgICAgIHN0cnVjdCBpMmNfYWRhcHRlciAqYWRhcCA9IGNs
-aWVudC0+YWRhcHRlcjsNCj4gPiA+ICsgICAgICAgaW50IGVycjsNCj4gPiA+ICsNCj4gPiA+ICsg
-ICAgICAgaWYgKCFwbV9ydW50aW1lX3N0YXR1c19zdXNwZW5kZWQoJmFkYXAtPmRldikpIHsNCj4g
-PiA+ICsgICAgICAgICAgICAgICBlcnIgPSByZWd1bGF0b3JfZGlzYWJsZShhZGFwLT5idXNfcmVn
-KTsNCj4gPiA+ICsgICAgICAgICAgICAgICBpZiAoZXJyKQ0KPiA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgcmV0dXJuIGVycjsNCj4gPiA+ICsgICAgICAgfQ0KPiA+ID4gKw0KPiA+ID4gKyAg
-ICAgICByZXR1cm4gcG1fZ2VuZXJpY19zdXNwZW5kKGRldik7DQo+ID4gPiArfQ0KPiA+ID4gKyNl
-bmRpZg0KPiA+ID4gKw0KPiA+ID4gKyNpZmRlZiBDT05GSUdfUE0NCj4gPiA+ICtzdGF0aWMgaW50
-IGkyY19ydW50aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gPiArew0KPiA+ID4g
-KyAgICAgICBzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gaTJjX3ZlcmlmeV9jbGllbnQoZGV2
-KTsNCj4gPiA+ICsgICAgICAgc3RydWN0IGkyY19hZGFwdGVyICphZGFwID0gY2xpZW50LT5hZGFw
-dGVyOw0KPiA+ID4gKyAgICAgICBpbnQgZXJyOw0KPiA+ID4gKw0KPiA+ID4gKyAgICAgICBlcnIg
-PSByZWd1bGF0b3JfZW5hYmxlKGFkYXAtPmJ1c19yZWcpOw0KPiA+ID4gKyAgICAgICBpZiAoZXJy
-KQ0KPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBlcnI7DQo+ID4gPiArDQo+ID4gPiArICAg
-ICAgIHJldHVybiBwbV9nZW5lcmljX3J1bnRpbWVfcmVzdW1lKGRldik7DQo+ID4gPiArfQ0KPiA+
-ID4gKw0KPiA+ID4gK3N0YXRpYyBpbnQgaTJjX3J1bnRpbWVfc3VzcGVuZChzdHJ1Y3QgZGV2aWNl
-ICpkZXYpDQo+ID4gPiArew0KPiA+ID4gKyAgICAgICBzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50
-ID0gaTJjX3ZlcmlmeV9jbGllbnQoZGV2KTsNCj4gPiA+ICsgICAgICAgc3RydWN0IGkyY19hZGFw
-dGVyICphZGFwID0gY2xpZW50LT5hZGFwdGVyOw0KPiA+ID4gKyAgICAgICBpbnQgZXJyOw0KPiA+
-ID4gKw0KPiA+ID4gKyAgICAgICBlcnIgPSBwbV9nZW5lcmljX3J1bnRpbWVfc3VzcGVuZChkZXYp
-Ow0KPiA+ID4gKyAgICAgICBpZiAoZXJyKQ0KPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBl
-cnI7DQo+ID4gPiArDQo+ID4gPiArICAgICAgIHJldHVybiByZWd1bGF0b3JfZGlzYWJsZShhZGFw
-LT5idXNfcmVnKTsNCj4gPiA+ICt9DQo+ID4gPiArI2VuZGlmDQo+ID4gPiArDQo+ID4gPiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGkyY19kZXZpY2VfcG0gPSB7DQo+ID4gPiArICAg
-ICAgIFNFVF9TWVNURU1fU0xFRVBfUE1fT1BTKGkyY19zdXNwZW5kLCBpMmNfcmVzdW1lKQ0KPiA+
-ID4gKyAgICAgICBTRVRfUlVOVElNRV9QTV9PUFMoaTJjX3J1bnRpbWVfc3VzcGVuZCwgaTJjX3J1
-bnRpbWVfcmVzdW1lLCBOVUxMKQ0KPiA+ID4gK307DQo+ID4gPiArDQo+ID4gPiAgc3RhdGljIHZv
-aWQgaTJjX2RldmljZV9zaHV0ZG93bihzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gPiAgew0KPiA+
-ID4gICAgICAgICBzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gaTJjX3ZlcmlmeV9jbGllbnQo
-ZGV2KTsNCj4gPiA+IEBAIC00ODgsNiArNTYzLDcgQEAgc3RydWN0IGJ1c190eXBlIGkyY19idXNf
-dHlwZSA9IHsNCj4gPiA+ICAgICAgICAgLnByb2JlICAgICAgICAgID0gaTJjX2RldmljZV9wcm9i
-ZSwNCj4gPiA+ICAgICAgICAgLnJlbW92ZSAgICAgICAgID0gaTJjX2RldmljZV9yZW1vdmUsDQo+
-ID4gPiAgICAgICAgIC5zaHV0ZG93biAgICAgICA9IGkyY19kZXZpY2Vfc2h1dGRvd24sDQo+ID4g
-PiArICAgICAgIC5wbSAgICAgICAgICAgICA9ICZpMmNfZGV2aWNlX3BtLA0KPiA+ID4gIH07DQo+
-ID4gPiAgRVhQT1JUX1NZTUJPTF9HUEwoaTJjX2J1c190eXBlKTsNCj4gPiA+DQo+ID4gPiBAQCAt
-MTM1MSw2ICsxNDI3LDExIEBAIHN0YXRpYyBpbnQgaTJjX3JlZ2lzdGVyX2FkYXB0ZXIoc3RydWN0
-IGkyY19hZGFwdGVyICphZGFwKQ0KPiA+ID4gICAgICAgICAgICAgICAgIGdvdG8gb3V0X3JlZzsN
-Cj4gPiA+DQo+ID4gPiAgICAgICAgIGRldl9kYmcoJmFkYXAtPmRldiwgImFkYXB0ZXIgWyVzXSBy
-ZWdpc3RlcmVkXG4iLCBhZGFwLT5uYW1lKTsNCj4gPiA+ICsgICAgICAgYWRhcC0+YnVzX3JlZyA9
-IGRldm1fcmVndWxhdG9yX2dldCgmYWRhcC0+ZGV2LCAiYnVzIik7DQo+ID4gPiArICAgICAgIGlm
-IChJU19FUlIoYWRhcC0+YnVzX3JlZykpIHsNCj4gPiA+ICsgICAgICAgICAgICAgICByZXMgPSBQ
-VFJfRVJSKGFkYXAtPmJ1c19yZWcpOw0KPiA+ID4gKyAgICAgICAgICAgICAgIGdvdG8gb3V0X3Jl
-ZzsNCj4gPiA+ICsgICAgICAgfQ0KPiA+ID4NCj4gPiA+ICAgICAgICAgcG1fcnVudGltZV9ub19j
-YWxsYmFja3MoJmFkYXAtPmRldik7DQo+ID4gPiAgICAgICAgIHBtX3N1c3BlbmRfaWdub3JlX2No
-aWxkcmVuKCZhZGFwLT5kZXYsIHRydWUpOw0KPiA+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGlu
-dXgvaTJjLmggYi9pbmNsdWRlL2xpbnV4L2kyYy5oDQo+ID4gPiBpbmRleCBkMmY3ODY3MDY2NTcu
-LjgzM2I4MWE2ODBkYSAxMDA2NDQNCj4gPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvaTJjLmgNCj4g
-PiA+ICsrKyBiL2luY2x1ZGUvbGludXgvaTJjLmgNCj4gPiA+IEBAIC0xNSw2ICsxNSw3IEBADQo+
-ID4gPiAgI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPiAgICAgIC8qIGZvciBzdHJ1Y3QgZGV2aWNl
-ICovDQo+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L3NjaGVkLmg+ICAgICAgIC8qIGZvciBjb21wbGV0
-aW9uICovDQo+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+DQo+ID4gPiArI2luY2x1ZGUg
-PGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KPiA+ID4gICNpbmNsdWRlIDxsaW51eC9ydG11
-dGV4Lmg+DQo+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L2lycWRvbWFpbi5oPiAgICAgICAgICAgLyog
-Zm9yIEhvc3QgTm90aWZ5IElSUSAqLw0KPiA+ID4gICNpbmNsdWRlIDxsaW51eC9vZi5oPiAgICAg
-ICAgICAvKiBmb3Igc3RydWN0IGRldmljZV9ub2RlICovDQo+ID4gPiBAQCAtMzMwLDYgKzMzMSw3
-IEBAIHN0cnVjdCBpMmNfY2xpZW50IHsNCj4gPiA+ICAgICAgICAgaW50IGluaXRfaXJxOyAgICAg
-ICAgICAgICAgICAgICAvKiBpcnEgc2V0IGF0IGluaXRpYWxpemF0aW9uICAgICovDQo+ID4gPiAg
-ICAgICAgIGludCBpcnE7ICAgICAgICAgICAgICAgICAgICAgICAgLyogaXJxIGlzc3VlZCBieSBk
-ZXZpY2UgICAgICAgICAqLw0KPiA+ID4gICAgICAgICBzdHJ1Y3QgbGlzdF9oZWFkIGRldGVjdGVk
-Ow0KPiA+ID4gKw0KPiA+ID4gICNpZiBJU19FTkFCTEVEKENPTkZJR19JMkNfU0xBVkUpDQo+ID4g
-PiAgICAgICAgIGkyY19zbGF2ZV9jYl90IHNsYXZlX2NiOyAgICAgICAgLyogY2FsbGJhY2sgZm9y
-IHNsYXZlIG1vZGUgICAgICAqLw0KPiA+ID4gICNlbmRpZg0KPiA+ID4gQEAgLTcyMyw2ICs3MjUs
-NyBAQCBzdHJ1Y3QgaTJjX2FkYXB0ZXIgew0KPiA+ID4gICAgICAgICBjb25zdCBzdHJ1Y3QgaTJj
-X2FkYXB0ZXJfcXVpcmtzICpxdWlya3M7DQo+ID4gPg0KPiA+ID4gICAgICAgICBzdHJ1Y3QgaXJx
-X2RvbWFpbiAqaG9zdF9ub3RpZnlfZG9tYWluOw0KPiA+ID4gKyAgICAgICBzdHJ1Y3QgcmVndWxh
-dG9yICpidXNfcmVnOw0KPiA+ID4gIH07DQo+ID4gPiAgI2RlZmluZSB0b19pMmNfYWRhcHRlcihk
-KSBjb250YWluZXJfb2YoZCwgc3RydWN0IGkyY19hZGFwdGVyLCBkZXYpDQo+ID4gPg0KPiA+ID4g
-LS0NCj4gPiA+IDIuMTguMA0KDQo=
+Convert the Cadence SD/SDIO/eMMC host controller IP (a.k.a. SD4HC)
+binding to DT schema format.
+
+Socionext UniPhier ARM 64-bit SoCs are integrated with this IP.
+
+Cc: Piotr Sroka <piotrs@cadence.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+I wanted to kept some precious comments, which apply to multiple
+properties.
+
+I do not think 'description:' is a good fit for this.
+
+I was searching for a way to insert a comment line that does not
+affect the schema.
+
+The $comment did not work. I just use '#', which is YAML comment.
+If there is a better way, please let me know.
+
+
+ .../devicetree/bindings/mmc/cdns,sdhci.yaml   | 143 ++++++++++++++++++
+ .../devicetree/bindings/mmc/sdhci-cadence.txt |  80 ----------
+ 2 files changed, 143 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
+
+diff --git a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+new file mode 100644
+index 000000000000..caf765721eb2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+@@ -0,0 +1,143 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mmc/cdns,sdhci.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cadence SD/SDIO/eMMC Host Controller (SD4HC)
++
++maintainers:
++  - Masahiro Yamada <yamada.masahiro@socionext.com>
++  - Piotr Sroka <piotrs@cadence.com>
++
++allOf:
++  - $ref: mmc-controller.yaml
++
++properties:
++  compatible:
++    items:
++      - enum:
++         - socionext,uniphier-sd4hc
++      - const: cdns,sd4hc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  # PHY DLL input delays:
++  # They are used to delay the data valid window, and align the window to
++  # sampling clock. The delay starts from 5ns (for delay parameter equal to 0)
++  # and it is increased by 2.5ns in each step.
++
++  cdns,phy-input-delay-sd-highspeed:
++    description: Value of the delay in the input path for SD high-speed timing
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x1f
++
++  cdns,phy-input-delay-legacy:
++    description: Value of the delay in the input path for legacy timing
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x1f
++
++  cdns,phy-input-delay-sd-uhs-sdr12:
++    description: Value of the delay in the input path for SD UHS SDR12 timing
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x1f
++
++  cdns,phy-input-delay-sd-uhs-sdr25:
++    description: Value of the delay in the input path for SD UHS SDR25 timing
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x1f
++
++  cdns,phy-input-delay-sd-uhs-sdr50:
++    description: Value of the delay in the input path for SD UHS SDR50 timing
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x1f
++
++  cdns,phy-input-delay-sd-uhs-ddr50:
++    description: Value of the delay in the input path for SD UHS DDR50 timing
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x1f
++
++  cdns,phy-input-delay-mmc-highspeed:
++    description: Value of the delay in the input path for MMC high-speed timing
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x1f
++
++  cdns,phy-input-delay-mmc-ddr:
++    description: Value of the delay in the input path for eMMC high-speed DDR timing
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x1f
++
++  # PHY DLL clock delays:
++  # Each delay property represents the fraction of the clock period.
++  # The approximate delay value will be
++  # (<delay property value>/128)*sdmclk_clock_period.
++
++  cdns,phy-dll-delay-sdclk:
++    description: |
++      Value of the delay introduced on the sdclk output for all modes except
++      HS200, HS400 and HS400_ES.
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x7f
++
++  cdns,phy-dll-delay-sdclk-hsmmc:
++    description: |
++      Value of the delay introduced on the sdclk output for HS200, HS400 and
++      HS400_ES speed modes.
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x7f
++
++  cdns,phy-dll-delay-strobe:
++    description: |
++      Value of the delay introduced on the dat_strobe input used in
++      HS400 / HS400_ES speed modes.
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++      - maximum: 0x7f
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++examples:
++  - |
++    emmc: sdhci@5a000000 {
++        compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
++        reg = <0x5a000000 0x400>;
++        interrupts = <0 78 4>;
++        clocks = <&clk 4>;
++        bus-width = <8>;
++        mmc-ddr-1_8v;
++        mmc-hs200-1_8v;
++        mmc-hs400-1_8v;
++        cdns,phy-dll-delay-sdclk = <0>;
++    };
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
+deleted file mode 100644
+index fa423c277853..000000000000
+--- a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
++++ /dev/null
+@@ -1,80 +0,0 @@
+-* Cadence SD/SDIO/eMMC Host Controller
+-
+-Required properties:
+-- compatible: should be one of the following:
+-    "cdns,sd4hc"               - default of the IP
+-    "socionext,uniphier-sd4hc" - for Socionext UniPhier SoCs
+-- reg: offset and length of the register set for the device.
+-- interrupts: a single interrupt specifier.
+-- clocks: phandle to the input clock.
+-
+-Optional properties:
+-For eMMC configuration, supported speed modes are not indicated by the SDHCI
+-Capabilities Register.  Instead, the following properties should be specified
+-if supported.  See mmc.txt for details.
+-- mmc-ddr-1_8v
+-- mmc-ddr-1_2v
+-- mmc-hs200-1_8v
+-- mmc-hs200-1_2v
+-- mmc-hs400-1_8v
+-- mmc-hs400-1_2v
+-
+-Some PHY delays can be configured by following properties.
+-PHY DLL input delays:
+-They are used to delay the data valid window, and align the window
+-to sampling clock. The delay starts from 5ns (for delay parameter equal to 0)
+-and it is increased by 2.5ns in each step.
+-- cdns,phy-input-delay-sd-highspeed:
+-  Value of the delay in the input path for SD high-speed timing
+-  Valid range = [0:0x1F].
+-- cdns,phy-input-delay-legacy:
+-  Value of the delay in the input path for legacy timing
+-  Valid range = [0:0x1F].
+-- cdns,phy-input-delay-sd-uhs-sdr12:
+-  Value of the delay in the input path for SD UHS SDR12 timing
+-  Valid range = [0:0x1F].
+-- cdns,phy-input-delay-sd-uhs-sdr25:
+-  Value of the delay in the input path for SD UHS SDR25 timing
+-  Valid range = [0:0x1F].
+-- cdns,phy-input-delay-sd-uhs-sdr50:
+-  Value of the delay in the input path for SD UHS SDR50 timing
+-  Valid range = [0:0x1F].
+-- cdns,phy-input-delay-sd-uhs-ddr50:
+-  Value of the delay in the input path for SD UHS DDR50 timing
+-  Valid range = [0:0x1F].
+-- cdns,phy-input-delay-mmc-highspeed:
+-  Value of the delay in the input path for MMC high-speed timing
+-  Valid range = [0:0x1F].
+-- cdns,phy-input-delay-mmc-ddr:
+-  Value of the delay in the input path for eMMC high-speed DDR timing
+-  Valid range = [0:0x1F].
+-
+-PHY DLL clock delays:
+-Each delay property represents the fraction of the clock period.
+-The approximate delay value will be
+-(<delay property value>/128)*sdmclk_clock_period.
+-- cdns,phy-dll-delay-sdclk:
+-  Value of the delay introduced on the sdclk output
+-  for all modes except HS200, HS400 and HS400_ES.
+-  Valid range = [0:0x7F].
+-- cdns,phy-dll-delay-sdclk-hsmmc:
+-  Value of the delay introduced on the sdclk output
+-  for HS200, HS400 and HS400_ES speed modes.
+-  Valid range = [0:0x7F].
+-- cdns,phy-dll-delay-strobe:
+-  Value of the delay introduced on the dat_strobe input
+-  used in HS400 / HS400_ES speed modes.
+-  Valid range = [0:0x7F].
+-
+-Example:
+-	emmc: sdhci@5a000000 {
+-		compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
+-		reg = <0x5a000000 0x400>;
+-		interrupts = <0 78 4>;
+-		clocks = <&clk 4>;
+-		bus-width = <8>;
+-		mmc-ddr-1_8v;
+-		mmc-hs200-1_8v;
+-		mmc-hs400-1_8v;
+-		cdns,phy-dll-delay-sdclk = <0>;
+-	};
+-- 
+2.17.1
 
