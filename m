@@ -2,126 +2,170 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C3C35640
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 06:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB00C35640
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 06:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9699C208C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 06:08:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmK1U1D9"
+	by mail.kernel.org (Postfix) with ESMTP id 7D58820722
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 06:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582267310;
+	bh=P+lKiv1d787VDGVdhhdfylLnYV7ZSQyLH3Xi8jpXxrk=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=R6fn41OlCKIpwo5wK+X/YVfPlrMp6w3EtL85YNe4KPcs7WxZqrLlPkJ3ekBj6O62T
+	 r2gnH+EQEnWElWc5hKiuIsQSFpyzn0OEb7D+GYSHiFZsUiu3skO1qBG7T+9j84P7Sm
+	 /YvKdmrhQgPGSfgem1gC+uHHilFGi/XAe3Q5wIkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgBUGIs (ORCPT
+        id S1726224AbgBUGlu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:08:48 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34584 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgBUGIs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 01:08:48 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so632033lfc.1;
-        Thu, 20 Feb 2020 22:08:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1vjAsiVJu0Xf8moFlCsGCMAJaKUjfw7ZDgAxe/OTIBI=;
-        b=bmK1U1D9Co0bNdjfb+Z8qyJSGQPOYJ/YlJsmmQjLdyG+mc3GEI8QcnmDPDClvjSrlV
-         qIWAZdaZF9lG5TNbsWT2bUyhgKw03sCn86fEovTL6AO3LS25lrytfgvN1zI8vyn0kOPb
-         F8IDkLuzkoq82LcLcxsx2xVx+xR+cGhfPIfNtErtqS1DAQP3ZPS7bkMiVK/sJ0IdsE3R
-         ZZWOWzcyi73Wrv6dC1C/aJ7D+J/C9dy7sXF2KgZymprTP95BFiXvVGsUUPa5dcf1AhHR
-         Yvo8pvgGZ4VmWvRRHjEtHKND73qL9kig8EMj8GZ6KWa4ra1qyQILj/zoueL3KoKwMuHN
-         EZTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1vjAsiVJu0Xf8moFlCsGCMAJaKUjfw7ZDgAxe/OTIBI=;
-        b=F7Yp6VjP6rY+A5YXTcCoqs7ZCB10AqxSttEJtpw+z1WgtG3Y9Vu/xJJafpCt8wj66D
-         znGTd2jFhGSV4bhW7aLlUSqGX3TnWLZtelo69gaP0wS+736KKiHkjDGs3K+DshwnTc7e
-         0uGQOcGOJ8tFmy33/jHw1SiC5pkpYHl+KpijskBU0YRBwo1ixLbhqwROEge3bpmQnVh6
-         h0MY6Vn7f3SXmIMj7Wl9kHMLyJKFTYQFdzO8ORbGFKdtEEueWgkxLgQzXKzEdYtIPLqZ
-         IpO5JznVhyO1eIsrdBq3je7HVXxd8gTTuee94GQumCrNvIkhcGQDNFyg7nTqPgiqjhIs
-         OWCg==
-X-Gm-Message-State: APjAAAXaLUXVyBElW4RLg+tTCN9YyhoNoE5uuCnx5ol7m02VvE7p4kkc
-        0nVRgPRaxkJguFVn6jIa6Jg=
-X-Google-Smtp-Source: APXvYqzDj/Q/sNBvdjs+fIyINcfoBTt6Aby1wfLyTGnlgZfFHhDa0HRT97+rsnLll7pN6lDNn26++Q==
-X-Received: by 2002:a19:6509:: with SMTP id z9mr18447794lfb.97.1582265326236;
-        Thu, 20 Feb 2020 22:08:46 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id a10sm970539lfr.94.2020.02.20.22.08.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 22:08:45 -0800 (PST)
-Subject: Re: [PATCH v3 07/10] ASoC: tegra: add Tegra210 based ADMAIF driver
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com
-References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
- <1582180492-25297-8-git-send-email-spujar@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e6114203-57d1-bc74-f786-c2246ccb4341@gmail.com>
-Date:   Fri, 21 Feb 2020 09:08:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 21 Feb 2020 01:41:50 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:44021 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgBUGlu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 01:41:50 -0500
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 01L6fOtD002177;
+        Fri, 21 Feb 2020 15:41:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01L6fOtD002177
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582267285;
+        bh=w9qQFtOkV425rrij+z9xWleLToj7ihi//PoOcVDN2Ls=;
+        h=From:Date:Subject:To:Cc:From;
+        b=EmYHYFjxJeWWjuE7FpRIcMpVpbQvYa1azVujiZpRCPSsyY35BcDmkIm6LuFWO7LcC
+         quQEOk/Xtic26YqcHn3Cq1abtW3zfwR/SVViwXi0dDjkOGrGdjh31hDSxgMbECUPJu
+         Y0hjbsmhVLbjvw3wXRR4jroZ/0wt4KcEJtO5T98t5qWueJKOnxZP0N/73Dp3La8Kni
+         CF1ajTgMlpDvjwbBXI9iQsGIgWMU3k74egfDmlG1gTirzv03lbmOxjWWn8xEiNQPrL
+         7wgEpfQKHtoYHGBWJZ64zvG2edbyRtEuMFua2NLVbAJsB4I4SpwMVTJWxSXPwDqF88
+         c5ZSz/hYUYN+g==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id p6so561576vsj.11;
+        Thu, 20 Feb 2020 22:41:25 -0800 (PST)
+X-Gm-Message-State: APjAAAXmOB3023VSu11MbMsXkEZ8wfmiV131CyhJMk9kxQSkir8locVM
+        BmejnN+4CwCFoIxzKFqwdYN1ZXt5JbDrqtUpLe0=
+X-Google-Smtp-Source: APXvYqxlurREctTusUbI4NfwEoWK1BdgrIss1QRpDZcokNud451FRNaB4WBxWTzCUckU19r/OoH75MaXPz0bIJE05q4=
+X-Received: by 2002:a67:fa4b:: with SMTP id j11mr19540806vsq.155.1582267284130;
+ Thu, 20 Feb 2020 22:41:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1582180492-25297-8-git-send-email-spujar@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 21 Feb 2020 15:40:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASS5CCLi=7LNBHqHgdtaYgAFkcgTGYvmGds7y8cnWzBMw@mail.gmail.com>
+Message-ID: <CAK7LNASS5CCLi=7LNBHqHgdtaYgAFkcgTGYvmGds7y8cnWzBMw@mail.gmail.com>
+Subject: Some questions about DT-schema
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-20.02.2020 09:34, Sameer Pujar пишет:
-> ADMAIF is the interface between ADMA and AHUB. Each ADMA channel that
-> sends/receives data to/from AHUB must intreface through an ADMAIF channel.
-> ADMA channel sending data to AHUB pairs with an ADMAIF Tx channel and
-> similarly ADMA channel receiving data from AHUB pairs with an ADMAIF Rx
-> channel. Buffer size is configuranle for each ADMAIF channel, but currently
-> SW uses default values.
-> 
-> This patch registers ADMAIF driver with ASoC framework. The component
-> driver exposes DAPM widgets, routes and kcontrols for the device. The DAI
-> driver exposes ADMAIF interfaces, which can be used to connect different
-> components in the ASoC layer. Makefile and Kconfig support is added to
-> allow to build the driver. The ADMAIF device can be enabled in the DT via
-> "nvidia,tegra210-admaif" compatible binding.
-> 
-> Tegra PCM driver is updated to expose required PCM interfaces and
-> snd_pcm_ops callbacks.
-> 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
-...
-> +int tegra_pcm_construct(struct snd_soc_component *component,
-> +			struct snd_soc_pcm_runtime *rtd);
-> +void tegra_pcm_destruct(struct snd_soc_component *component,
-> +			struct snd_pcm *pcm);
-> +int tegra_pcm_open(struct snd_soc_component *component,
-> +		   struct snd_pcm_substream *substream);
-> +int tegra_pcm_close(struct snd_soc_component *component,
-> +		    struct snd_pcm_substream *substream);
-> +int tegra_pcm_hw_params(struct snd_soc_component *component,
-> +			struct snd_pcm_substream *substream,
-> +			struct snd_pcm_hw_params *params);
-> +int tegra_pcm_hw_free(struct snd_soc_component *component,
-> +		      struct snd_pcm_substream *substream);
-> +int tegra_pcm_mmap(struct snd_soc_component *component,
-> +		   struct snd_pcm_substream *substream,
-> +		   struct vm_area_struct *vma);
+[Q1] Order of reset-names, clock-names, etc.
 
-> +int tegra_pcm_trigger(struct snd_soc_component *component,
-> +		      struct snd_pcm_substream *substream, int cmd);
+I have nodes that describe multiple reset lines:
 
-Looks like this function doesn't exist.
+It looks like this:
+
+    reset-names = "host", "bridge";
+    resets = <&rst 0>, <&rst 1>;
+
+
+I looks into some existing schema files
+to figure out how to describe this.
+
+We typically do this.
+
+reset-names:
+  - items:
+    - const: host
+    - const: bridge
+
+
+Since 'items' checks each item against the corresponding index,
+it is order-sensitive.
+
+
+So, the following DT passes the schema.
+
+    reset-names = "host", "bridge";
+    resets = <&rst 0>, <&rst 1>;
+
+
+However, the following DT fails in the schema checking.
+
+    reset-names = "bridge", "host";
+    resets = <&rst 1>, <&rst 0>;
+
+The latter is as correct as the former,
+and should work equivalently.
+
+If we are always required to write the "host", "bridge", in this order,
+there is no point of 'reset-names'.
+So, this is a restriction we should not impose.
+
+
+So, if we want to accept both cases,
+we need to write like this:
+
+reset-names:
+  - oneOf:
+    - items:
+      - const: host
+      - const: bridge
+    - items:
+      - const: bridge
+      - const: host
+
+
+If we have 3 reset singles, we end up with listing 6 patterns.
+Is there a good way to describe this?
+
+Or, the policy is,
+there is only one way to do one thing ?
+
+
+[Q2] Tupling reg, range, etc.
+
+In the context of dt-schema,
+'reg' is essentially, array of array,
+and it is important to how you tuple values.
+
+    reg = <1 2>, <3 4>;
+
+    reg = <1>, <2>, <3>, <4>;
+
+    reg = <1 2 3 4>;
+
+All of the three are compiled into the equivalent DTB,
+but in the context of schema checking,
+the number of items is, 2, 4, 1, respectively.
+
+So, we need to care about tuple values correctly
+based on #address-cells and #size-cells.
+
+
+In some DT, I previously wrote ranges like this
+
+   ranges = <1 0x00000000 0x42000000 0x02000000,
+             5 0x00000000 0x46000000 0x01000000>;
+
+But, now probably more correct way is:
+
+   ranges = <1 0x00000000 0x42000000 0x02000000>,
+            <5 0x00000000 0x46000000 0x01000000>;
+
+
+This is a new restriction, and it also means
+we cannot perform schema checking against
+dis-assembled DT  (dtb->dts).
+
+Is this correct?
+
+
+-- 
+Best Regards
+Masahiro Yamada
