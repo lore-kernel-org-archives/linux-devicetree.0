@@ -2,77 +2,93 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197CBC35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4EBC35656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00532067D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9BD224650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 16:08:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yl4rYrff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgBUQFF (ORCPT
+        id S1728312AbgBUQIk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:05:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:42538 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729050AbgBUQFF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:05:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75189FEC;
-        Fri, 21 Feb 2020 08:05:04 -0800 (PST)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A05FA3F68F;
-        Fri, 21 Feb 2020 08:05:03 -0800 (PST)
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/3] dt-bindings: ARM: Add recent Cortex/Neoverse PMUs
-Date:   Fri, 21 Feb 2020 16:04:57 +0000
-Message-Id: <3954ca0b86641e5e6a1935886df6658b9305ec4a.1582300927.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.23.0.dirty
-In-Reply-To: <cover.1582300927.git.robin.murphy@arm.com>
-References: <cover.1582300927.git.robin.murphy@arm.com>
+        Fri, 21 Feb 2020 11:08:40 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46889 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728130AbgBUQIk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 11:08:40 -0500
+Received: by mail-lj1-f196.google.com with SMTP id x14so2687113ljd.13
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 08:08:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RkTsQTvfjgOEGdlDXKGCeeZxoa04rIy9ygJ3R4JduGw=;
+        b=Yl4rYrff+zKVIc9yoeCBgHu0Hr6Lxdr2Dk+weltYHKGkpqyZwgJl2IO1NgO2i0vT/E
+         99a5A1dgaz45Pjo84/pcasIWbjqjIkhY03aq+EbKkljQaPvu53PSnv8MEzWd5lTXHMO6
+         ILy1pKyOIN8MEJYzd46PlFensSAb/peD4Pyzc4ZoFZxBo5atPVjDya8qF0JhhOx/I9uH
+         H4VTjhsow4h49cwt3AvmwmV5/jMHvdy9OPRNCwK3mPh3pTOogHt5J/wFCgkfN4Z6so40
+         qDYMC5mecGJY7L2h7znzdfQ3Jzp5HE4zgleSo1s22yfX5NZQo5mSlGfgtS+JqaLjPGOy
+         +whQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RkTsQTvfjgOEGdlDXKGCeeZxoa04rIy9ygJ3R4JduGw=;
+        b=HKuibbxRfpIODjA49uirUBUgnASNQr/NEdf0KqdosHVxF3NvcuQ8en2DwxHdygbLS9
+         V1acc7zPhteS+n/1GCRIG/ZFYGKjJmZ2b70i6mrDBmv0S6vlbrJDI0dT6jogDspejsb3
+         61WgeNppoPYA8JotEDp+v3eTqqXzu1rvXYeFP/eyaU57XkPATMdXTvKtBWn0YTAAdQ7D
+         G6agdPhOaigEzzSxGuMp/UHAKH2Ux4Cl4Xau1eJ3Jo8tubRkHyRP5qWyB7jVXH4brIx1
+         rzxwjww5oEzktRtQwlqSlk7ckWcwvauRE4F2uI43v3XF7jOABvjtLXd3QUlCv6BCMy1R
+         W4kg==
+X-Gm-Message-State: APjAAAWuGdzm+eKl0nJjGGRGztkudW8I1biU6Uxj8/qlD3Pf2C3jcvbH
+        nCRckFbQ87ki4bGWaog9MnQ8oGam91zYVeHqzFoGIA==
+X-Google-Smtp-Source: APXvYqzjBTruiUzyd12hI2oewAEFW5wvp0x48B+Xz9xN6AHcyQ7rQQbPBXV6MVxQYYXX7uV28p+joU8wSXIlz+RTL/U=
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr23390889ljc.39.1582301318561;
+ Fri, 21 Feb 2020 08:08:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200220130149.26283-1-geert+renesas@glider.be> <20200220130149.26283-2-geert+renesas@glider.be>
+In-Reply-To: <20200220130149.26283-2-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 21 Feb 2020 17:08:27 +0100
+Message-ID: <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add new PMU definitions to correspond with the CPU bindings.
+On Thu, Feb 20, 2020 at 2:01 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- Documentation/devicetree/bindings/arm/pmu.yaml | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> Extract the code to add all GPIO hogs of a gpio-hog node into its own
+> function, so it can be reused.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - No changes.
 
-diff --git a/Documentation/devicetree/bindings/arm/pmu.yaml b/Documentation/devicetree/bindings/arm/pmu.yaml
-index 52ae094ce330..cc52195d0e9e 100644
---- a/Documentation/devicetree/bindings/arm/pmu.yaml
-+++ b/Documentation/devicetree/bindings/arm/pmu.yaml
-@@ -21,11 +21,20 @@ properties:
-       - enum:
-           - apm,potenza-pmu
-           - arm,armv8-pmuv3
-+          - arm,neoverse-n1-pmu
-+          - arm,neoverse-e1-pmu
-+          - arm,cortex-a77-pmu
-+          - arm,cortex-a76-pmu
-+          - arm,cortex-a75-pmu
-           - arm,cortex-a73-pmu
-           - arm,cortex-a72-pmu
-+          - arm,cortex-a65-pmu
-           - arm,cortex-a57-pmu
-+          - arm,cortex-a55-pmu
-           - arm,cortex-a53-pmu
-           - arm,cortex-a35-pmu
-+          - arm,cortex-a34-pmu
-+          - arm,cortex-a32-pmu
-           - arm,cortex-a17-pmu
-           - arm,cortex-a15-pmu
-           - arm,cortex-a12-pmu
--- 
-2.23.0.dirty
+Patch applied with Frank's Review tag.
 
+Yours,
+Linus Walleij
