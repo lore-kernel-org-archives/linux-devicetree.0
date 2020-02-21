@@ -2,134 +2,126 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AABC35642
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 05:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E37C35642
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 05:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74FB208C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 05:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F30124653
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 05:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iR/Hnhsw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QVp/FC2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbgBUF2A (ORCPT
+        id S1726984AbgBUFiW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 00:28:00 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40158 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgBUF2A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 00:28:00 -0500
-Received: by mail-lf1-f66.google.com with SMTP id c23so555859lfi.7;
-        Thu, 20 Feb 2020 21:27:58 -0800 (PST)
+        Fri, 21 Feb 2020 00:38:22 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43283 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbgBUFiV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 00:38:21 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u12so399181pgb.10
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 21:38:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=53gVHOVv+aazLVffnAnZapThLxuxSIM6yvCzFavsnfo=;
-        b=iR/HnhswRBJL0Eb1YhkshQ71r8WZae6s4qyPXEHFu1b3G/BwJGgfoTZEN/7NbiTeVY
-         wJcjGcaRiLLkplm0dxXtJtMKSRd4S+h5thVN0BJ6pzca7M+/D/UoVd7ueUSDNxKbuih2
-         cx7eRCAaMXE6p97TXrl2RtHyvO87oraaNkt7CuF773rqooTm+EMV2zStQXm5dkmGwPQP
-         tEa4is0Oc6e0xGlVo7YO+5hutXKoTwxlUZzlHXz720uWKTaBVTI8iJKnZC5jIuEJbBaS
-         js5XdhRE5VDOCWHwlA4G3FtMaj3izXanmukoI0P0aOnBBHCSDSoHUUfBluGYl6OWOgn8
-         NdEQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xR1GRxFdUV2TwDvxuNR/pK3VYzRWJYZmKivDEUcKc5w=;
+        b=QVp/FC2NiAc3rBycqqqlyoa0rlWBGhP8nW8nvvVd1pRXp9Io6ugF1YFhOrlCramk4m
+         maGakRF1l77Fn3JdI/QLF3uqnkV56NYnLn0ct7McCl8jjFS/RuIzCVK4rKwS0eMsanTp
+         JJZ6xUxzRnD685IHKwcVyvWnx6ogkbaou6bhU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=53gVHOVv+aazLVffnAnZapThLxuxSIM6yvCzFavsnfo=;
-        b=bMjgUz/cLtwZbMJ6gMIWGsfB7b2kRslfjC2ASNNOmSByb7ppJCbTBSxtsB05jlh9Hb
-         6RuNLGbAzQvb2+dHso7ahr3Sr+wP3y9GSbdmcRgsqNYZ3I86BXG2QHSg2OXKo85/Hgc2
-         G4t/q9gOhBc3Hpf/1p3umNM9t2xDqH7XN04+19oX6pN96LaKk2jiFRjt4kqH+OKBQ0R6
-         E+XiS7uKRUte8yX6vWI1u9BIOsdlToYkRMSJ7WF5mNi86NKgy6cO8lhNz49ggZDVlDhr
-         tZVU0tt6Xde3wFp0SJgzwF+kfPB1nlxvwnG+AzcsXcnI2jvbGb6jig1tYI1ld6/efaz1
-         UUlA==
-X-Gm-Message-State: APjAAAWT3eXDNKjr2dekf5bbImVVZHOQBanY5KLYTlWcryZsSC04zEpg
-        IWYAOgPq4QlhJg3AstLJMLs=
-X-Google-Smtp-Source: APXvYqyiPLAcLmfgNz8dfxXwbYBLTptG6VXSzZJ+C7dVJ8PZhJq6nscU8y34IZsubI8W7nKWqe2djA==
-X-Received: by 2002:ac2:44a7:: with SMTP id c7mr7647289lfm.32.1582262877961;
-        Thu, 20 Feb 2020 21:27:57 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id f16sm876606ljn.17.2020.02.20.21.27.56
+        bh=xR1GRxFdUV2TwDvxuNR/pK3VYzRWJYZmKivDEUcKc5w=;
+        b=SvMSw+6YUtxvRY+ACrQrPuRI5Bz2Nz0706vIdKveaR2iZD6UgCvIyzilTdguD5C66q
+         Xno50fdbnp5No7Rhtkvp11x0bE+fXvHqN2nmDwTrOzmT/utX6hDVjyj1o8YNzIbR81Yy
+         0CRhTB1dbF93yGxZUi1eLR48MkLy1KRYxNtpBdfCv4lY6gDSvty9RRDpnNQuhfFIQuT3
+         QZMHPqclke0jWI/js/cjCI4uJMFN3+C+9xjiY9GX5fse6p2/Po+6vxacTfKd0KEA5Iid
+         QUSROHgKG3k9ODXoQGB50IzCphknLyZtr8kyZKvysMiutGSYpiz6SThLWJF0eITIgV+o
+         Bl2w==
+X-Gm-Message-State: APjAAAW0J89w+XEltbnP09PUXZ9YhP71Jg8pqBJXT6Vf/Wy81/IpUnec
+        QCl7qUNDoOZXDBQOYw0VPhVrSQ==
+X-Google-Smtp-Source: APXvYqwNbEeASGO4ArQ+KQ49tlopvldlo5/I0QneTu45MVpD2X1Vvxvy9falEjB7Hs8GL48/Mzv+xA==
+X-Received: by 2002:a62:486:: with SMTP id 128mr36207829pfe.236.1582263499298;
+        Thu, 20 Feb 2020 21:38:19 -0800 (PST)
+Received: from localhost ([2401:fa00:9:14:1105:3e8a:838d:e326])
+        by smtp.gmail.com with ESMTPSA id b25sm1329060pfo.38.2020.02.20.21.38.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 21:27:57 -0800 (PST)
-Subject: Re: [PATCH v3 02/10] ASoC: tegra: add support for CIF programming
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com
-References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
- <1582180492-25297-3-git-send-email-spujar@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8c39dbe9-a2b9-62e8-3a26-32cc747d0e60@gmail.com>
-Date:   Fri, 21 Feb 2020 08:27:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 20 Feb 2020 21:38:18 -0800 (PST)
+From:   Evan Benn <evanbenn@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     jwerner@chromium.org, Evan Benn <evanbenn@chromium.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
+Subject: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+Date:   Fri, 21 Feb 2020 16:38:00 +1100
+Message-Id: <20200221053802.70716-1-evanbenn@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-In-Reply-To: <1582180492-25297-3-git-send-email-spujar@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-20.02.2020 09:34, Sameer Pujar пишет:
-> Audio Client Interface (CIF) is a proprietary interface employed to route
-> audio samples through Audio Hub (AHUB) components by inter connecting the
-> various modules.
-> 
-> This patch exports an inline function tegra_set_cif() which can be used,
-> for now, to program CIF on Tegra210 and later Tegra generations. Later it
-> can be extended to include helpers for legacy chips as well.
-> 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->  sound/soc/tegra/tegra_cif.h | 63 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 sound/soc/tegra/tegra_cif.h
-> 
-> diff --git a/sound/soc/tegra/tegra_cif.h b/sound/soc/tegra/tegra_cif.h
-> new file mode 100644
-> index 0000000..ecc0850
-> --- /dev/null
-> +++ b/sound/soc/tegra/tegra_cif.h
-> @@ -0,0 +1,63 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * tegra_cif.h - TEGRA Audio CIF Programming
-> + *
-> + * Copyright (c) 2020 NVIDIA CORPORATION.  All rights reserved.
-> + *
-> + */
-> +
-> +#ifndef __TEGRA_CIF_H__
-> +#define __TEGRA_CIF_H__
+This is currently supported in firmware deployed on oak, hana and elm mt8173
+chromebook devices. The kernel driver is written to be a generic SMC
+watchdog driver.
 
-For completeness here should be:
+Arm Trusted Firmware upstreaming review:
+    https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
 
-#include <linux/regmap.h>
+Patch to add oak, hana, elm device tree:
+    https://lore.kernel.org/linux-arm-kernel/20200110073730.213789-1-hsinyi@chromium.org/
+I would like to add the device tree support after the above patch is
+accepted.
 
-...
-> +static inline void tegra_set_cif(struct regmap *regmap, unsigned int reg,
-> +				 struct tegra_cif_conf *conf)
-> +{
-...
-> +	regmap_update_bits(regmap, reg, TEGRA_ACIF_UPDATE_MASK, value);
-> +}
-> +
-> +#endif
-> 
+Changes in v2:
+- Change name arm > mt8173
+- use watchdog_stop_on_reboot
+- use watchdog_stop_on_unregister
+- use devm_watchdog_register_device
+- remove smcwd_shutdown, smcwd_remove
+- change error codes
 
-Otherwise:
+Evan Benn (1):
+  dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Julius Werner (1):
+  watchdog: Add new mt8173_smc_wdt watchdog driver
+
+ .../bindings/watchdog/mt8173,smc-wdt.yaml     |  30 ++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/watchdog/Kconfig                      |  13 ++
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/mt8173_smc_wdt.c             | 160 ++++++++++++++++++
+ 6 files changed, 212 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+ create mode 100644 drivers/watchdog/mt8173_smc_wdt.c
+
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
