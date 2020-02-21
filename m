@@ -2,216 +2,621 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9472C35647
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36BAC35647
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A229224650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Is97m+zF"
+	by mail.kernel.org (Postfix) with ESMTP id 5AFD924650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582289882;
+	bh=JfuMqEvxzqjs+LoLa/shLMP2qrszBuyjaIxCwTpw2+4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Z7racF+mu9dSgM4KjsPYDXDgB1btOdQVehUu8iQ3V8orWjLDEWB/Miw144eQrlwvg
+	 E4/nK4JulVLEvkBLw1+imy3MVmkhdw6Z/+YYWOhlfEzb2p844ViiPUXJHxXRdJOkQs
+	 6SCDgmB1tvbGIxf5AUFAWJMErBMT+VP675osUMAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgBUMxH (ORCPT
+        id S1727315AbgBUM6C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:53:07 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35504 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727161AbgBUMxH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 07:53:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w12so1951712wrt.2
-        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 04:53:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1Ecw0TwcU7uRxX0RbgoPbcukxSNyerj4Gg5H+/7jGU4=;
-        b=Is97m+zF/OlL47unjgTyrlN2h5LOz7b+bCuBXaZ7I4NfCKXkYB+eEn9tr8HWToU5hS
-         LcgaMH98pZ8E1XJVjarNN4j5rDbOg0TvWZqonAeorXDYmylpc5/p3a6zdZo0+OViPxVf
-         vjaBs1HwK+d066WsYLlvTd/cfgCUGAocMJZCBxAbIYOmchE4hYYwfT2fgcgtO/lDa6n+
-         s46hilc6kKO54iNjcQIKiz/zMeNqSx8RMh2L/6aFfRv62MCyYyw9TIi26wXy7zkiHsnO
-         0qJx6mpEC9etxLhetlmYRb+0QZ7ItHTVG67ZgyBXOa2HCHtlIL/DA/fAs1ZuOWKYzTqv
-         60OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1Ecw0TwcU7uRxX0RbgoPbcukxSNyerj4Gg5H+/7jGU4=;
-        b=spHdcIxorFVqDgEOfdOL5XFJYNS9pP+/BWctP37E9ax+3tUyj4NQmMQv6yk6mjt1Jz
-         38FYDOepz7Isq+c8evQAQyXbVY6Knxx/5SUZ7EtnJIIzO9oay9ewYKbytX9kdSnyIeL2
-         dUAouuI3be3kq+ycVBxqYqJepKdSyTZ/iOYudQrtKN3SqYjGafO/8jVa94OA3s0PE8Mu
-         y2jrb8Jbw8FdqytcqJebsZokI6bAQNL8znf9zknPWZoJ8u+cVfJkGB+0hsrzjyj545vj
-         Ou2oF/K335DQjdRcUNjDT6bUJrhjqQHnDXmDg8XUn26JBmvFUw5U8FPf8kuSLRULuvPh
-         OlCw==
-X-Gm-Message-State: APjAAAUQIeBG24e6BeIGzLPQASuY8BixkknXPzqQ8FjauMDswJGVG767
-        Hx+muLFMYyLGvAQyAKhR1ZdwGQ==
-X-Google-Smtp-Source: APXvYqxlFnvz5Oqlv3ZiF1S9hXG57kU+AY4Dg2xiBGuM31y83G3pczXUHHnhoRpdAgUpGaKfUCxWBQ==
-X-Received: by 2002:a05:6000:124b:: with SMTP id j11mr45114087wrx.285.1582289584497;
-        Fri, 21 Feb 2020 04:53:04 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
-        by smtp.gmail.com with ESMTPSA id k10sm3781715wrd.68.2020.02.21.04.53.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 04:53:03 -0800 (PST)
-Date:   Fri, 21 Feb 2020 13:53:00 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, aisheng.dong@nxp.com,
-        linux@roeck-us.net, srinivas.kandagatla@linaro.org,
-        krzk@kernel.org, fugang.duan@nxp.com, peng.fan@nxp.com,
-        daniel.baluta@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
-        dinguyen@kernel.org, leonard.crestez@nxp.com,
-        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V15 RESEND 3/5] thermal: imx_sc: add i.MX system
- controller thermal support
-Message-ID: <20200221125300.GB10516@linaro.org>
-References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
- <1582161028-2844-3-git-send-email-Anson.Huang@nxp.com>
+        Fri, 21 Feb 2020 07:58:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727161AbgBUM6B (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:58:01 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45449206EF;
+        Fri, 21 Feb 2020 12:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582289880;
+        bh=JfuMqEvxzqjs+LoLa/shLMP2qrszBuyjaIxCwTpw2+4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZqRgXg35D+cF6afTGRZtl/9kbo4xhDiCu/4GdaipVEk5amfKSMNH8spd7uJu7PNUo
+         qIohjCv80Xxsy0flIDoB1M+2tgqGzJJ8zQZtFNcKNMu3SS9yeiqWYRqTBuHMVME8po
+         NmJmnYoJMMty6lbuL0FrBqDLufzx3r4OeZ7kki1w=
+Date:   Fri, 21 Feb 2020 12:57:56 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 4/5] iio: adc: ad9467: add support AD9467 ADC
+Message-ID: <20200221125756.77e1e098@archlinux>
+In-Reply-To: <20200220150317.1864-4-alexandru.ardelean@analog.com>
+References: <20200220150317.1864-1-alexandru.ardelean@analog.com>
+        <20200220150317.1864-4-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582161028-2844-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anson,
+On Thu, 20 Feb 2020 17:03:16 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-sorry for the delay with this review, hopefully the upstreaming will be now a
-bit more smooth.
-
-Apart the comments below, the driver looks good to me.
-
-On Thu, Feb 20, 2020 at 09:10:26AM +0800, Anson Huang wrote:
-> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-> inside, the system controller is in charge of controlling power,
-> clock and thermal sensors etc..
+> From: Michael Hennerich <michael.hennerich@analog.com>
 > 
-> This patch adds i.MX system controller thermal driver support,
-> Linux kernel has to communicate with system controller via MU
-> (message unit) IPC to get each thermal sensor's temperature,
-> it supports multiple sensors which are passed from device tree,
-> please see the binding doc for details.
+> The AD9467 is a 16-bit, monolithic, IF sampling analog-to-digital converter
+> (ADC). It is optimized for high performanceover wide bandwidths and ease of
+> use. The product operates at a 250 MSPS conversion rate and is designed for
+> wireless receivers, instrumentation, and test equipment that require a high
+> dynamic range. The ADC requires 1.8 V and 3.3 V power supplies and a low
+> voltage differential input clock for full performance operation. No
+> external reference or driver components are required for many applications.
+> Data outputs are LVDS compatible (ANSI-644 compatible) and include the
+> means to reduce the overall current needed for short trace distances.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Since the chip can operate at such high sample-rates (much higher than
+> classical interfaces), it requires that a DMA controller be used to
+> interface directly to the chip and push data into memory.
+> Typically, the AXI ADC IP core is used to interface with it.
+> 
+> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/AD9467.pdf
+> 
+> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+A few minor things inline.
+
+Jonathan
 > ---
-> No change.
-> ---
->  drivers/thermal/Kconfig          |  11 +++
->  drivers/thermal/Makefile         |   1 +
->  drivers/thermal/imx_sc_thermal.c | 142 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 154 insertions(+)
->  create mode 100644 drivers/thermal/imx_sc_thermal.c
+>  drivers/iio/adc/Kconfig  |  15 ++
+>  drivers/iio/adc/Makefile |   1 +
+>  drivers/iio/adc/ad9467.c | 447 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 463 insertions(+)
+>  create mode 100644 drivers/iio/adc/ad9467.c
 > 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 5a05db5..d1cb8dc 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -251,6 +251,17 @@ config IMX_THERMAL
->  	  cpufreq is used as the cooling device to throttle CPUs when the
->  	  passive trip is crossed.
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 6cd48a256122..229b8bc6f9b6 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -246,6 +246,21 @@ config AD799X
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called ad799x.
 >  
-> +config IMX_SC_THERMAL
-> +	tristate "Temperature sensor driver for NXP i.MX SoCs with System Controller"
-> +	depends on ARCH_MXC && IMX_SCU
-
-IMX_SCU depends on IMX_MBOX which depends on ARCH_MXC. This dependency could be
-simplified.
-
-Also add the COMPILE_TEST option to improve compilation test coverage.
-
-> +	depends on OF
+> +config AD9467
+> +	tristate "Analog Devices AD9467 High Speed ADC driver"
+> +	depends on SPI
+> +	select AXI_ADC
 > +	help
-> +	  Support for Temperature Monitor (TEMPMON) found on NXP i.MX SoCs with
-> +	  system controller inside, Linux kernel has to communicate with system
-> +	  controller via MU (message unit) IPC to get temperature from thermal
-> +	  sensor. It supports one critical trip point and one
-> +	  passive trip point for each thermal sensor.
+> +	  Say yes here to build support for Analog Devices:
+> +	  * AD9467 16-Bit, 200 MSPS/250 MSPS Analog-to-Digital Converter
 > +
->  config MAX77620_THERMAL
->  	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
->  	depends on MFD_MAX77620
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 9fb88e2..a11a6d8 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -43,6 +43,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+= db8500_thermal.o
->  obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
->  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
->  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
-> +obj-$(CONFIG_IMX_SC_THERMAL)	+= imx_sc_thermal.o
->  obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
->  obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
->  obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
-> diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
+> +	  The driver requires the assistance of the AXI ADC IP core to operate,
+> +	  since SPI is used for configuration only, while data has to be
+> +	  streamed into memory via DMA.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called ad9467.
+> +
+>  config ASPEED_ADC
+>  	tristate "Aspeed ADC"
+>  	depends on ARCH_ASPEED || COMPILE_TEST
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index e14fabd53246..5018220b8ec7 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
+>  obj-$(CONFIG_AD7887) += ad7887.o
+>  obj-$(CONFIG_AD7949) += ad7949.o
+>  obj-$(CONFIG_AD799X) += ad799x.o
+> +obj-$(CONFIG_AD9467) += ad9467.o
+>  obj-$(CONFIG_ASPEED_ADC) += aspeed_adc.o
+>  obj-$(CONFIG_AT91_ADC) += at91_adc.o
+>  obj-$(CONFIG_AT91_SAMA5D2_ADC) += at91-sama5d2_adc.o
+> diff --git a/drivers/iio/adc/ad9467.c b/drivers/iio/adc/ad9467.c
 > new file mode 100644
-> index 0000000..d406ecb
+> index 000000000000..f268bbb6bcf6
 > --- /dev/null
-> +++ b/drivers/thermal/imx_sc_thermal.c
-> @@ -0,0 +1,142 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+> +++ b/drivers/iio/adc/ad9467.c
+> @@ -0,0 +1,447 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * Copyright 2018-2019 NXP.
+> + * Analog Devices AD9467 SPI ADC driver
+> + *
+> + * Copyright 2012-2020 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/err.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/of.h>
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +#include <linux/clk.h>
+> +
+> +#include <linux/iio/adc/axi-adc.h>
+> +
+> +/*
+> + * ADI High-Speed ADC common spi interface registers
+> + * See Application-Note AN-877:
+> + *   https://www.analog.com/media/en/technical-documentation/application-notes/AN-877.pdf
+> + */
+> +
+> +#define ADI_ADC_REG_CHIP_PORT_CONF		0x00
 
-*sigh* 2020 now ...
+These prefixes should reflect the chip we are supporting here.
+They aren't true for 'all' ADI parts.  
 
-[ ... ]
+You could come up with some 'generic' but not to generic prefix
+if you prefer.
 
-> +static int imx_sc_thermal_get_temp(void *data, int *temp)
+> +#define ADI_ADC_REG_CHIP_ID			0x01
+> +#define ADI_ADC_REG_CHIP_GRADE			0x02
+> +#define ADI_ADC_REG_CHAN_INDEX			0x05
+> +#define ADI_ADC_REG_TRANSFER			0xFF
+> +#define ADI_ADC_REG_MODES			0x08
+> +#define ADI_ADC_REG_TEST_IO			0x0D
+> +#define ADI_ADC_REG_ADC_INPUT			0x0F
+> +#define ADI_ADC_REG_OFFSET			0x10
+> +#define ADI_ADC_REG_OUTPUT_MODE			0x14
+> +#define ADI_ADC_REG_OUTPUT_ADJUST		0x15
+> +#define ADI_ADC_REG_OUTPUT_PHASE		0x16
+> +#define ADI_ADC_REG_OUTPUT_DELAY		0x17
+> +#define ADI_ADC_REG_VREF			0x18
+> +#define ADI_ADC_REG_ANALOG_INPUT		0x2C
+> +
+> +/* ADI_ADC_REG_TEST_IO */
+> +#define ADI_ADC_TESTMODE_OFF			0x0
+> +#define ADI_ADC_TESTMODE_MIDSCALE_SHORT		0x1
+> +#define ADI_ADC_TESTMODE_POS_FULLSCALE		0x2
+> +#define ADI_ADC_TESTMODE_NEG_FULLSCALE		0x3
+> +#define ADI_ADC_TESTMODE_ALT_CHECKERBOARD	0x4
+> +#define ADI_ADC_TESTMODE_PN23_SEQ		0x5
+> +#define ADI_ADC_TESTMODE_PN9_SEQ		0x6
+> +#define ADI_ADC_TESTMODE_ONE_ZERO_TOGGLE	0x7
+> +#define ADI_ADC_TESTMODE_USER			0x8
+> +#define ADI_ADC_TESTMODE_BIT_TOGGLE		0x9
+> +#define ADI_ADC_TESTMODE_SYNC			0xA
+> +#define ADI_ADC_TESTMODE_ONE_BIT_HIGH		0xB
+> +#define ADI_ADC_TESTMODE_MIXED_BIT_FREQUENCY	0xC
+> +#define ADI_ADC_TESTMODE_RAMP			0xF
+> +
+> +/* ADI_ADC_REG_TRANSFER */
+> +#define ADI_ADC_TRANSFER_SYNC			0x1
+> +
+> +/* ADI_ADC_REG_OUTPUT_MODE */
+> +#define ADI_ADC_OUTPUT_MODE_OFFSET_BINARY	0x0
+> +#define ADI_ADC_OUTPUT_MODE_TWOS_COMPLEMENT	0x1
+> +#define ADI_ADC_OUTPUT_MODE_GRAY_CODE		0x2
+> +
+> +/* ADI_ADC_REG_OUTPUT_PHASE */
+> +#define ADI_ADC_OUTPUT_EVEN_ODD_MODE_EN		0x20
+> +#define ADI_ADC_INVERT_DCO_CLK			0x80
+> +
+> +/* ADI_ADC_REG_OUTPUT_DELAY */
+> +#define ADI_ADC_DCO_DELAY_ENABLE		0x80
+> +
+> +/*
+> + * Analog Devices AD9467 16-Bit, 200/250 MSPS ADC
+> + */
+> +
+> +#define CHIPID_AD9467			0x50
+> +#define AD9467_DEF_OUTPUT_MODE		0x08
+> +#define AD9467_REG_VREF_MASK		0x0F
+> +
+> +enum {
+> +	ID_AD9467,
+> +};
+> +
+> +struct ad9467_state {
+> +	struct spi_device		*spi;
+> +	struct clk			*clk;
+> +	unsigned int			output_mode;
+> +
+> +	struct gpio_desc		*pwrdown_gpio;
+> +	struct gpio_desc		*reset_gpio;
+> +};
+> +
+> +static int ad9467_spi_read(struct spi_device *spi, unsigned int reg)
 > +{
-> +	struct imx_sc_msg_misc_get_temp msg;
-> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-> +	struct imx_sc_sensor *sensor = data;
+> +	unsigned char buf[3];
 > +	int ret;
 > +
-> +	msg.data.req.resource_id = sensor->resource_id;
-> +	msg.data.req.type = IMX_SC_C_TEMP;
+> +	buf[0] = 0x80 | (reg >> 8);
+> +	buf[1] = reg & 0xFF;
 > +
-> +	hdr->ver = IMX_SC_RPC_VERSION;
-> +	hdr->svc = IMX_SC_RPC_SVC_MISC;
-> +	hdr->func = IMX_SC_MISC_FUNC_GET_TEMP;
-> +	hdr->size = 2;
-
-Can you explain this 'size' value?
-
-[ ... ]
-
-> +MODULE_DEVICE_TABLE(of, imx_sc_thermal_table);
+> +	ret = spi_write_then_read(spi, &buf[0], 2, &buf[2], 1);
 > +
-> +static struct platform_driver imx_sc_thermal_driver = {
-> +		.probe = imx_sc_thermal_probe,
-
-The driver can be compiled as module but there is no 'remove' callback
-
-> +		.driver = {
-> +			.name = "imx-sc-thermal",
-> +			.of_match_table = imx_sc_thermal_table,
-> +		},
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return buf[2];
+> +}
+> +
+> +static int ad9467_spi_write(struct spi_device *spi, unsigned int reg,
+> +			    unsigned int val)
+> +{
+> +	unsigned char buf[3];
+> +
+> +	buf[0] = reg >> 8;
+> +	buf[1] = reg & 0xFF;
+> +	buf[2] = val;
+> +
+> +	return spi_write(spi, buf, ARRAY_SIZE(buf));
+> +}
+> +
+> +static int ad9467_reg_access(struct axi_adc_conv *conv, unsigned int reg,
+> +			     unsigned int writeval, unsigned int *readval)
+> +{
+> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
+> +	struct spi_device *spi = st->spi;
+> +	int ret;
+> +
+> +	if (readval == NULL) {
+> +		ret = ad9467_spi_write(spi, reg, writeval);
+> +		ad9467_spi_write(spi, ADI_ADC_REG_TRANSFER,
+> +				 ADI_ADC_TRANSFER_SYNC);
+> +		return ret;
+> +	}
+> +
+> +	ret = ad9467_spi_read(spi, reg);
+> +	if (ret < 0)
+> +		return ret;
+> +	*readval = ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static const unsigned int ad9467_scale_table[][2] = {
+> +	{2000, 0}, {2100, 6}, {2200, 7},
+> +	{2300, 8}, {2400, 9}, {2500, 10},
 > +};
-> +module_platform_driver(imx_sc_thermal_driver);
 > +
-> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-> +MODULE_DESCRIPTION("Thermal driver for NXP i.MX SoCs with system controller");
+> +static void __ad9467_get_scale(struct axi_adc_conv *conv, int index,
+> +			       unsigned int *val, unsigned int *val2)
+> +{
+> +	const struct axi_adc_chip_info *info = conv->chip_info;
+> +	const struct iio_chan_spec *chan = &info->channels[0].iio_chan;
+> +	unsigned int tmp;
+> +
+> +	tmp = (info->scale_table[index][0] * 1000000ULL) >>
+> +			chan->scan_type.realbits;
+> +	*val = tmp / 1000000;
+> +	*val2 = tmp % 1000000;
+> +}
+> +
+> +#define AD9467_CHAN(_chan, _si, _bits, _sign)				\
+> +{									\
+> +	.type = IIO_VOLTAGE,						\
+> +	.indexed = 1,							\
+> +	.channel = _chan,						\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_CALIBSCALE) |		\
+> +		BIT(IIO_CHAN_INFO_CALIBBIAS) |				\
+> +		BIT(IIO_CHAN_INFO_CALIBPHASE) |				\
+
+These don't seem to be handled that I can see...
+
+> +		BIT(IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY),	\
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |		\
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ),				\
+> +	.scan_index = _si,						\
+> +	.scan_type = {							\
+> +		.sign = _sign,						\
+> +		.realbits = _bits,					\
+> +		.storagebits = 16,					\
+> +		.shift = 0,						\
+
+shift of 0 is the "obvious" default so no need to specify it...
+
+> +	},								\
+> +}
+> +
+> +static const struct axi_adc_chan_spec ad9467_channels[] = {
+> +	{
+> +		.iio_chan = AD9467_CHAN(0, 0, 16, 'S'),
+> +		.num_lanes = 8,
+> +	},
+> +};
+> +
+> +static const struct axi_adc_chip_info ad9467_chip_info_tbl[] = {
+> +	[ID_AD9467] = {
+> +		.id = CHIPID_AD9467,
+> +		.max_rate = 250000000UL,
+> +		.scale_table = ad9467_scale_table,
+> +		.num_scales = ARRAY_SIZE(ad9467_scale_table),
+> +		.channels = ad9467_channels,
+> +		.num_channels = ARRAY_SIZE(ad9467_channels),
+> +	},
+> +};
+> +
+> +static int ad9467_get_scale(struct axi_adc_conv *conv, int *val, int *val2)
+> +{
+> +	const struct axi_adc_chip_info *info = conv->chip_info;
+> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
+> +	unsigned int i, vref_val, vref_mask;
+> +
+> +	vref_val = ad9467_spi_read(st->spi, ADI_ADC_REG_VREF);
+> +
+> +	switch (info->id) {
+> +	case CHIPID_AD9467:
+> +		vref_mask = AD9467_REG_VREF_MASK;
+> +		break;
+> +	default:
+> +		vref_mask = 0xFFFF;
+> +		break;
+> +	}
+> +
+> +	vref_val &= vref_mask;
+> +
+> +	for (i = 0; i < info->num_scales; i++) {
+> +		if (vref_val == info->scale_table[i][1])
+> +			break;
+> +	}
+> +
+> +	if (i == info->num_scales)
+> +		return -ERANGE;
+> +
+> +	__ad9467_get_scale(conv, i, val, val2);
+> +
+> +	return IIO_VAL_INT_PLUS_MICRO;
+> +}
+> +
+> +static int ad9467_set_scale(struct axi_adc_conv *conv, int val, int val2)
+> +{
+> +	const struct axi_adc_chip_info *info = conv->chip_info;
+> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
+> +	unsigned int scale_val[2];
+> +	unsigned int i;
+> +
+> +	if (val != 0)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < info->num_scales; i++) {
+> +		__ad9467_get_scale(conv, i, &scale_val[0], &scale_val[1]);
+> +		if (scale_val[0] != val || scale_val[1] != val2)
+> +			continue;
+> +
+> +		ad9467_spi_write(st->spi, ADI_ADC_REG_VREF,
+> +				 info->scale_table[i][1]);
+> +		ad9467_spi_write(st->spi, ADI_ADC_REG_TRANSFER,
+> +				 ADI_ADC_TRANSFER_SYNC);
+> +		return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ad9467_read_raw(struct axi_adc_conv *conv,
+> +			   struct iio_chan_spec const *chan,
+> +			   int *val, int *val2, long m)
+> +{
+> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
+> +
+> +	switch (m) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		return ad9467_get_scale(conv, val, val2);
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		if (!st->clk)
+> +			return -ENODEV;
+> +
+> +		*val = clk_get_rate(st->clk);
+> +
+> +		return IIO_VAL_INT;
+> +
+> +	}
+> +	return -EINVAL;
+
+I'd put that in a default in the switch as you may get warnings
+from some static checkers otherwise.
+
+> +}
+> +
+> +static int ad9467_write_raw(struct axi_adc_conv *conv,
+> +			    struct iio_chan_spec const *chan,
+> +			    int val, int val2, long mask)
+> +{
+> +	const struct axi_adc_chip_info *info = conv->chip_info;
+> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
+> +	unsigned long r_clk;
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		return ad9467_set_scale(conv, val, val2);
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		if (!st->clk)
+> +			return -ENODEV;
+> +
+> +		if (chan->extend_name)
+> +			return -ENODEV;
+> +
+> +		r_clk = clk_round_rate(st->clk, val);
+> +		if (r_clk < 0 || r_clk > info->max_rate) {
+> +			dev_warn(&st->spi->dev,
+> +				 "Error setting ADC sample rate %ld", r_clk);
+> +			return -EINVAL;
+> +		}
+> +
+> +		ret = clk_set_rate(st->clk, r_clk);
+> +		if (ret < 0)
+> +			return ret;
+return clk_set_rate(st->clk, r_clk) is probably the same.
+Might as well do early returns everywhere.
+
+> +
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad9467_outputmode_set(struct spi_device *spi, unsigned int mode)
+> +{
+> +	int ret;
+> +
+> +	ret = ad9467_spi_write(spi, ADI_ADC_REG_OUTPUT_MODE, mode);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return ad9467_spi_write(spi, ADI_ADC_REG_TRANSFER,
+> +				ADI_ADC_TRANSFER_SYNC);
+> +}
+> +
+> +static int ad9467_preenable_setup(struct axi_adc_conv *conv)
+> +{
+> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
+> +
+> +	return ad9467_outputmode_set(st->spi, st->output_mode);
+> +}
+> +
+> +static int ad9467_setup(struct ad9467_state *st, unsigned int chip_id)
+> +{
+> +	switch (chip_id) {
+> +	case CHIPID_AD9467:
+> +		st->output_mode = AD9467_DEF_OUTPUT_MODE |
+> +				  ADI_ADC_OUTPUT_MODE_TWOS_COMPLEMENT;
+> +		break;
+
+return 0 unless you are going to add anything after the switch statement.
+
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void ad9467_clk_disable(void *data)
+> +{
+> +	struct ad9467_state *st = data;
+> +
+> +	clk_disable_unprepare(st->clk);
+> +}
+> +
+> +static int ad9467_probe(struct spi_device *spi)
+> +{
+> +	struct axi_adc_conv *conv;
+> +	struct ad9467_state *st;
+> +	unsigned int id;
+> +	int ret;
+> +
+> +	conv = devm_axi_adc_conv_register(&spi->dev, sizeof(*st));
+> +
+
+No blank line between a call and it's error handler.
+
+> +	if (IS_ERR(conv))
+> +		return PTR_ERR(conv);
+> +
+> +	st = axi_adc_conv_priv(conv);
+> +	st->spi = spi;
+> +
+> +	st->clk = devm_clk_get(&spi->dev, "sample-clock");
+> +	if (IS_ERR(st->clk))
+> +		return PTR_ERR(st->clk);
+> +
+> +	ret = clk_prepare_enable(st->clk);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = devm_add_action_or_reset(&spi->dev, ad9467_clk_disable, st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->pwrdown_gpio = devm_gpiod_get_optional(&spi->dev, "powerdown",
+> +						   GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->pwrdown_gpio))
+> +		return PTR_ERR(st->pwrdown_gpio);
+> +
+> +	st->reset_gpio = devm_gpiod_get_optional(&spi->dev, "reset",
+> +						 GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->reset_gpio))
+> +		return PTR_ERR(st->reset_gpio);
+> +
+> +	if (st->reset_gpio) {
+> +		udelay(1);
+> +		ret = gpiod_direction_output(st->reset_gpio, 1);
+> +		mdelay(10);
+> +	}
+> +
+> +	spi_set_drvdata(spi, st);
+> +
+> +	id = spi_get_device_id(spi)->driver_data;
+> +	conv->chip_info = &ad9467_chip_info_tbl[id];
+> +
+> +	id = ad9467_spi_read(spi, ADI_ADC_REG_CHIP_ID);
+> +	if (id != conv->chip_info->id) {
+> +		dev_err(&spi->dev, "Unrecognized CHIP_ID 0x%X\n", id);
+> +		return -ENODEV;
+> +	}
+> +
+> +	conv->reg_access = ad9467_reg_access;
+> +	conv->write_raw = ad9467_write_raw;
+> +	conv->read_raw = ad9467_read_raw;
+> +	conv->preenable_setup = ad9467_preenable_setup;
+> +
+> +	return ad9467_setup(st, id);
+> +}
+> +
+> +static const struct spi_device_id ad9467_id[] = {
+> +	{ "ad9467", ID_AD9467 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(spi, ad9467_id);
+> +
+> +static const struct of_device_id ad9467_of_match[] = {
+> +	{ .compatible = "adi,ad9467" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, ad9467_of_match);
+> +
+> +static struct spi_driver ad9467_driver = {
+> +	.driver = {
+> +		.name = "ad9467",
+> +		.of_match_table = ad9467_of_match,
+> +	},
+> +	.probe = ad9467_probe,
+> +	.id_table = ad9467_id,
+
+This is something I've only just started raising in reviews.
+If a driver can't realistically be instantiated without firmware
+bindings, there isn't really any point in providing the id_table
+that I can think of so please remove.
+
+> +};
+> +module_spi_driver(ad9467_driver);
+> +
+> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD9467 ADC driver");
 > +MODULE_LICENSE("GPL v2");
 
-
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
