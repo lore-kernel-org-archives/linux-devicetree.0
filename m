@@ -2,426 +2,282 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A02BC35642
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958ADC3564C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC65024653
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:20:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CJUAW8Ze"
+	by mail.kernel.org (Postfix) with ESMTP id 6C40924656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgBUKUA (ORCPT
+        id S1728983AbgBUKUg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:20:00 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:32970 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgBUKUA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 05:20:00 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01LAJuk5028849;
-        Fri, 21 Feb 2020 04:19:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582280396;
-        bh=TxWn8rUcinsejInpcKOgDRY9tGl+wXh/X4uKM6YooEs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=CJUAW8ZeGrfzEjC3inyqEsnso7qJgRWyfaf4he27ml24elOwTbI03+6BLVNPyj8lv
-         PKH+Tqqyx1RTV6tLhQ+Ep/YIbSYOh9ttyRpy4P75GPuix5Mlg+lcEr0fOyCESHC/tL
-         A+35NVuDEPKSsordz3q3ezLqPhuMFCDq6RSmKg5Y=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01LAJuUs115818
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Feb 2020 04:19:56 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
- Feb 2020 04:19:55 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 21 Feb 2020 04:19:55 -0600
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01LAJnwo034983;
-        Fri, 21 Feb 2020 04:19:52 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>, <afd@ti.com>, <s-anna@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        <devicetree@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv7 01/15] dt-bindings: remoteproc: Add OMAP remoteproc bindings
-Date:   Fri, 21 Feb 2020 12:19:22 +0200
-Message-ID: <20200221101936.16833-2-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200221101936.16833-1-t-kristo@ti.com>
-References: <20200221101936.16833-1-t-kristo@ti.com>
+        Fri, 21 Feb 2020 05:20:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38940 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728980AbgBUKUc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:20:32 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6801BB1F3;
+        Fri, 21 Feb 2020 10:20:26 +0000 (UTC)
+Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
+To:     CK Hu <ck.hu@mediatek.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        airlied@linux.ie, mturquette@baylibre.com, sboyd@kernel.org,
+        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        rdunlap@infradead.org, dri-devel@lists.freedesktop.org,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        linux-clk@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        sean.wang@mediatek.com, frank-w@public-files.de,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Fabien Parent <fparent@baylibre.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Owen Chen <owen.chen@mediatek.com>
+References: <20200220172147.919996-1-enric.balletbo@collabora.com>
+ <1582259996.1846.7.camel@mtksdaap41>
+From:   Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
+ mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
+ fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
+ OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
+ gTh//XESJZ8S6KlOWbLXRE+yfkKDXQx2Jr1XuVvM3zPqH5FMg8reRVFsQ+vI0b+OlyekT/Xe
+ 0Hwvqkev95GG6x7yseJwI+2ydDH6M5O7fPKFW5mzAdDE2g/K9B4e2tYK6/rA7Fq4cqiAw1+u
+ EgO44+eFgv082xtBez5WNkGn18vtw0LW3ESmKh19u6kEGoi0WZwslCNaGFrS4M7OH+aOJeqK
+ fx5dIv2CEbxc6xnHY7dwkcHikTA4QdbdFeUSuj4YhIZ+0QlDVtS1QEXyvZbZky7ur9rHkZvP
+ ZqlUsLJ2nOqsmahMTIQ8Mgx9SLEShWqD4kOF4zNfPJsgEMB49KbS2o9jxbGB+JKupjNddfxZ
+ HlH1KF8QwCMZEYaTNogrVazuEJzx6JdRpR3sFda/0x5qjTadwIW6Cl9tkqe2h391dOGX1eOA
+ 1ntn9O/39KqSrWNGvm+1raHK+Ev1yPtn0Wxn+0oy1tl67TxUjQARAQABtCRNYXR0aGlhcyBC
+ cnVnZ2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT6JAjgEEwECACIFAlV6iM0CGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAAAoJENkUC7JWEwLx6isQAIMGBgJnFWovDS7ClZtjz1LgoY8skcMU
+ ghUZY4Z/rwwPqmMPbY8KYDdOFA+kMTEiAHOR+IyOVe2+HlMrXv/qYH4pRoxQKm8H9FbdZXgL
+ bG8IPlBu80ZSOwWjVH+tG62KHW4RzssVrgXEFR1ZPTdbfN+9Gtf7kKxcGxWnurRJFzBEZi4s
+ RfTSulQKqTxJ/sewOb/0kfGOJYPAt/QN5SUaWa6ILa5QFg8bLAj6bZ81CDStswDt/zJmAWp0
+ 08NOnhrZaTQdRU7mTMddUph5YVNXEXd3ThOl8PetTyoSCt04PPTDDmyeMgB5C3INLo1AXhEp
+ NTdu+okvD56MqCxgMfexXiqYOkEWs/wv4LWC8V8EI3Z+DQ0YuoymI5MFPsW39aPmmBhSiacx
+ diC+7cQVQRwBR6Oz/k9oLc+0/15mc+XlbvyYfscGWs6CEeidDQyNKE/yX75KjLUSvOXYV4d4
+ UdaNrSoEcK/5XlW5IJNM9yae6ZOL8vZrs5u1+/w7pAlCDAAokz/As0vZ7xWiePrI+kTzuOt5
+ psfJOdEoMKQWWFGd/9olX5ZAyh9iXk9TQprGUOaX6sFjDrsTRycmmD9i4PdQTawObEEiAfzx
+ 1m2MwiDs2nppsRr7qwAjyRhCq2TOAh0EDRNgYaSlbIXX/zp38FpK/9DMbtH14vVvG6FXog75
+ HBoOuQINBF3VOQcBEAC3UEGmZof7Sj515LImi2SunNlmRtKznKAGeIJQZCpelaqCtztSj+q3
+ E4Uv3W46x1fX++yck70XJS/dk0jZOHA1UYJO8I/0Tq7iBJK7ER9XJVOEJI+9EkcIbasL4QwA
+ 5QynGiRxf0zZvtsERtxKN4/8TgpNrf2r4klJ5aWJqCFR8xdd2KZP+7Gk/kBrb8P+9xRQYct6
+ V/1PKKEfIGiF3I3N4QXe/2uruR2pqZkiFv5ZisOKj9LOpN3WD7Cc8lue7jnOShCti0G7nyfu
+ 7yij6lS6aY65NHZvp1yyIH3MlqJVEiA6ovyncrZ+cTwTDCfogoectPLHlP+vZnSKTI56KMO6
+ ZnRU488tOfCZvvzQ3KbctbU5QyJ4q2cje/kbNnJLzc2ie2+yJF3ig8ZANEFPf2MDIGvy8NGX
+ /dGksq7BYEVOzVtgwu7SxhqvCjA7Pz4yf4JEVS9GtfGhyLDmfQ/U+Anu9B7Lia4JnhXKcfVJ
+ 5Vvcpnn3NxAeSwq2nPPY4qG1fwUJ5U6Ydb27jHyz+hRUxkJcSr1CuZWF0i8mcEKqr7VuHlQL
+ ZF+Ob+8sfC3mF6zQcOy1sLMvKIDQtMgAN0/vtE3Y4lvMGQK5YTbVgJMu1zyRNCU/4bybbcrn
+ DyTaOV4JIq6amsKv/mo/I2WSJ7UcLgQYQB918364uwXDqo/NICya6QARAQABiQRsBBgBCAAg
+ FiEE5rmSGMDywyUcLDoX2RQLslYTAvEFAl3VOQcCGwICQAkQ2RQLslYTAvHBdCAEGQEIAB0W
+ IQRR28oeHOqtRg8H+7wvbX5N9sKofgUCXdU5BwAKCRAvbX5N9sKofv1FEAC2VvqgAv3Lwkzl
+ HVPe/TZMcWKnw4yHti8QkKd7OV70CmoLpXHbpFJCMFXUnBIG/oGmAME1dqtMYI9dyt7ooZ9f
+ y7WvqGdcAdk0c/tsUYlCIG/lGoYV/jk6E6FuNcLIdzSOuc2NjgzaNORQL4oi47Nqy+CBT3vm
+ eiULwyJoGp+AwHZpvlb7ESJNw0I6Df7VJGzn9mRDSLLJtrYWKFJ5LDeNNSM+wkEXXnGd17Gh
+ z2OmLREq68+InX3VdrenM2e0jGmzGpxmRLUdKo8jrf+6s17N5J6MHNbRfPYGL9v/lH0enGnU
+ AQLc7Nps4EBNj/UGaHZ4BUrfGk3YV7VmPsetOCbMGZJ58xxJc3SgpBYQjm0e0FvDldSPQ3Di
+ EyFS2Ix8TYcCpxqjOwvfiwTOLd562Fki8qcg5OaWWwMUxs4FryhRKho2DsbORZIonn1r2o8m
+ SiP+Emqp7IRcX5ZMJS/oVwDwG0EmZV8WmkXMsUz9DMXl+ANmZ+Nz1zONEkcAYdEwydCVbzyJ
+ ZqaNhXJ7nuys2r2lSqXoDiUhMXvDTQHk9cg0WTSUxw1R2RaKm7bgfqsmE47rFI/ifo6sIJwa
+ xewBHmgfd3hPMD2I9iuZ9cBcP6FOnzaz7twRtOwIn0wyrT38ZMJ6uhNCKqSnnRRpHQC+G491
+ +MnBVhl+YxLX7khcD8pjoNsYEACzm2IArSJ6hmUK/9jE5IwLPXQRBYzKYPaCCGPGiN/iLAHY
+ xsanxQ3j776gosfP7aP4gvTyt3aKgU1gIkEUNWgNGkX9SetDwuwfnlRkEe67lfIyR0nMxodF
+ VBzWvN+W6rH7Rr8JDoJvarsnZ3jmdjHyMxIKwaPX+JT9sqMwG26H3WGxt1YLExFbQmcZfFwR
+ SSVuEDm4aPdbhVgJ9NDHAromJW3sliltfsl1EojKreIwNyxNeLt2GHCqy21BHBsFyLRR0UYA
+ biNPmnq7rkwwNVNcSBh9nLTrvg/Tqp+5LJ9/veK/C8tHTblqTMm6LwwtTbetZHLBc7JMg3Py
+ ew8VPhlIZPWGvlWcgGz96yT/bIWZWhwUDGzVoE7b2IeaMnwPzgQm85wp+H1Ep5bzJ4E0pcet
+ w5Xgxsw62z36+kmAEUOcl4sVA+1Me4iRBdPj7IsO/A5UBb0w8t9weVzOr8D+eEZVob5EpYN8
+ lY1K7+ZuGpRC3gn5EWl/HWCYvfJXw03slcAE+Lkz3s94p3Hqpz9zWjegQcfyIGRZkhgxL193
+ qu0CpXf4ofk6uzu1BW3BQgNgS+22Z46J++lbpT/hq7jMFh++9dqBvJcmEb2Zm/P6M3VyvT8b
+ ZkL3chuMUXBSYe1dLi21Dilutfp+NN6Wrm+ZE6OJaKulkab5YDdXH1BGOp8x1LkCDQRd1TlI
+ ARAAm78mTny44HwdIYNK4ZQH6U5pxcJtU45LLBmSr4DK/7er9chpvJ5pgzCGuI25ceNTEg5F
+ ChYcgfNMKqwCAekkV9Iegzi6UK448W1eOp8QeQDS6sHpLSOe8np6/zvmUvhiLokk7tZBhGz+
+ Xs5qQmJPXcag7AMifuEcf88ZSpChmUB3WflJV2DpxF3sSon5Ew2i53umXLqdRIJEw1Zs2puD
+ JaMqwP3wIyMdrfdIH1ZBBJDIWV/53P52mKtYQ0Khje+/AolpKl96opi6o9VLGeqkpeqrKM2c
+ b1bjo5Zmn4lXl6NvJRH/ZT68zBtOKUtwhSlOB2bE8IDonQZCOYo2w0opiAgyfpbij8uiI7si
+ BE6bWx2fQpsmi4JrZBmhDT6n/uYleGW0DRcZmE2UjeekPWUumN13jaVZuhThV65SnhU05chZ
+ T8vU1nATAwirMVeXgeZGLwxhscduk3nNb5VSsV95EM/KOtilrH69ZL6Xrnw88f6xaaGPdVyU
+ igBTWc/fcWuw1+nkGJDNqjfSvB7ie114R08Q28aYt8LCJRXYM1WuYloTcIhRSXUohGgHmh7u
+ sl469/Ra5CFaMhT3yCVciuHdZh3u+x+O1sRcOhaFW3BkxKEy+ntxw8J7ZzhgFOgi2HGkOGgM
+ 9R03A6ywc0sPwbgkgF7HCLirshP2U/qxWy3C8DkAEQEAAYkCNgQYAQgAIBYhBOa5khjA8sMl
+ HCw6F9kUC7JWEwLxBQJd1TlIAhsMAAoJENkUC7JWEwLxtdcP/jHJ9vI8adFi1HQoWUKCQbZd
+ Z5ZJHayFKIzU9kZE/FHzzzMDZYFgcCTs2kmUVyGloStXpZ0WtdCMMB31jBoQe5x9LtICHEip
+ 0irNXm80WsyPCEHU3wx91QkOmDJftm6T8+F3lqhlc3CwJGpoPY7AVlevzXNJfATZR0+Yh9Nh
+ ON5Ww4AjsZntqQKxE8rrieLRd+he57ZdRKtRRNGKZOS4wetNhodjfnjhr4Z25BAssD5q+x4u
+ aO8ofGxTjOdrSnRhvhzPCgmP7BKRUZA0wNvFxjboIw8rbTiOFGb1Ebrzuqrrr3WFuK4C1YAF
+ 4CyXUBL6Z1Lto//i44ziQUK9diAgfE/8GhXP0JlMwRUBlXNtErJgItR/XAuFwfO6BOI43P19
+ YwEsuyQq+rubW2WvrWY2Bj2dXDAKUxS4TuLUf2v/b9Rct36ljzbNxeEWt+Yq4IOY6QHnE+w4
+ xVAkfwjT+Vup8sCp+zFJv9fVUpo/bjePOL4PMP1y+PYrp4PmPmRwoklBpy1ep8m8XURv46fG
+ UHUEIsTwPWs2Q87k7vjYyrcyAOarX2X5pvMQvpAMADGf2Z3wrCsDdG25w2HztweUNd9QEprt
+ JG8GNNzMOD4cQ82Ta7eGvPWPeXauWJDLVR9jHtWT9Ot3BQgmApLxACvwvD1a69jaFKov28SP
+ HxUCQ9Y1Y/Ct
+Message-ID: <6c453dff-8de5-5de3-3ea7-34b691abea25@suse.com>
+Date:   Fri, 21 Feb 2020 11:20:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <1582259996.1846.7.camel@mtksdaap41>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+Adding Lee Jones.
 
-Add the device tree bindings document for the IPU and DSP
-remote processor devices on OMAP4+ SoCs.
+On 21/02/2020 05:39, CK Hu wrote:
+> Hi, Enric:
+> 
+> On Thu, 2020-02-20 at 18:21 +0100, Enric Balletbo i Serra wrote:
+>> Dear all,
+>>
+>> Those patches are intended to solve an old standing issue on some
+>> Mediatek devices (mt8173, mt2701 and mt2712) in a slightly different way
+>> to the precedent series.
+>>
+>> Up to now both drivers, clock and drm are probed with the same device tree
+>> compatible. But only the first driver get probed, which in effect breaks
+>> graphics on those devices.
+>>
+>> The version eight of the series tries to solve the problem with a
+>> different approach than the previous series but similar to how is solved
+>> on other Mediatek devices.
+>>
+>> The MMSYS (Multimedia subsystem) in Mediatek SoCs has some registers to
+>> control clock gates (which is used in the clk driver) and some registers
+>> to set the routing and enable the differnet blocks of the display
+>> and MDP (Media Data Path) subsystem. On this series the clk driver is
+>> not a pure clock controller but a system controller that can provide
+>> access to the shared registers between the different drivers that need
+>> it (mediatek-drm and mediatek-mdp). And the biggest change is, that in
+>> this version, clk driver is the entry point (parent) which will trigger
+>> the probe of the corresponding mediatek-drm driver and pass its MMSYS
+>> platform data for display configuration.
+> 
+> When mmsys is a system controller, I prefer to place mmsys in
+> drivers/soc/mediatek, and it share registers for clock, display, and mdp
+> driver. This means the probe function is placed in
+> drivers/soc/mediatek ,its display clock function, mdp clock function are
+> placed in drivers/clk, display routing are placed in drivers/gpu/drm,
+> and mdp routing are placed in dirvers/video.
+> 
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Suman Anna <s-anna@ti.com>
-[t-kristo@ti.com: converted to schema]
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v7:
- - Added Rob's Reviewed-by
- - Added extra comment about recommended delay/effect of negative value
-   under ti,autosuspend-delay-ms
- - Fixed typo in the omap5 example for firmware file extension (xem4 instead
-   of xem)
+Which sounds to me like a mfd device. Something we already tried and got a
+NACKed by Lee Jones:
+https://patchwork.kernel.org/patch/10367877/
 
- .../remoteproc/ti,omap-remoteproc.yaml        | 324 ++++++++++++++++++
- 1 file changed, 324 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+Maybe we understand the problem better now to give more arguments why it makes
+sense to create a mfd here?
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-new file mode 100644
-index 000000000000..084960a8f17a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-@@ -0,0 +1,324 @@
-+# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/remoteproc/ti,omap-remoteproc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: OMAP4+ Remoteproc Devices
-+
-+maintainers:
-+  - Suman Anna <s-anna@ti.com>
-+
-+description:
-+  The OMAP family of SoCs usually have one or more slave processor sub-systems
-+  that are used to offload some of the processor-intensive tasks, or to manage
-+  other hardware accelerators, for achieving various system level goals.
-+
-+  The processor cores in the sub-system are usually behind an IOMMU, and may
-+  contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
-+  caches, an Interrupt Controller, a Cache Controller etc.
-+
-+  The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
-+  sub-system. The DSP processor sub-system can contain any of the TI's C64x,
-+  C66x or C67x family of DSP cores as the main execution unit. The IPU processor
-+  sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core
-+  Cortex-M4 processors.
-+
-+  Each remote processor sub-system is represented as a single DT node. Each node
-+  has a number of required or optional properties that enable the OS running on
-+  the host processor (MPU) to perform the device management of the remote
-+  processor and to communicate with the remote processor. The various properties
-+  can be classified as constant or variable. The constant properties are
-+  dictated by the SoC and does not change from one board to another having the
-+  same SoC. Examples of constant properties include 'iommus', 'reg'. The
-+  variable properties are dictated by the system integration aspects such as
-+  memory on the board, or configuration used within the corresponding firmware
-+  image. Examples of variable properties include 'mboxes', 'memory-region',
-+  'timers', 'watchdog-timers' etc.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,omap4-dsp
-+      - ti,omap5-dsp
-+      - ti,dra7-dsp
-+      - ti,omap4-ipu
-+      - ti,omap5-ipu
-+      - ti,dra7-ipu
-+
-+  iommus:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      phandles to OMAP IOMMU nodes, that need to be programmed
-+      for this remote processor to access any external RAM memory or
-+      other peripheral device address spaces. This property usually
-+      has only a single phandle. Multiple phandles are used only in
-+      cases where the sub-system has different ports for different
-+      sub-modules within the processor sub-system (eg: DRA7 DSPs),
-+      and need the same programming in both the MMUs.
-+
-+  mboxes:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
-+      communication with the remote processor. The specifier format is
-+      as per the bindings,
-+      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
-+      This property should match with the sub-mailbox node used in
-+      the firmware image.
-+
-+  clocks:
-+    description: |
-+      Main functional clock for the remote processor
-+
-+  resets:
-+    description: |
-+      Reset handles for the remote processor
-+
-+  firmware-name:
-+    description: |
-+      Default name of the firmware to load to the remote processor.
-+
-+# Optional properties:
-+# --------------------
-+# Some of these properties are mandatory on some SoCs, and some are optional
-+# depending on the configuration of the firmware image to be executed on the
-+# remote processor. The conditions are mentioned for each property.
-+#
-+# The following are the optional properties:
-+
-+  memory-region:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      phandle to the reserved memory node to be associated
-+      with the remoteproc device. The reserved memory node
-+      can be a CMA memory node, and should be defined as
-+      per the bindings,
-+      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-+
-+  reg:
-+    description: |
-+      Address space for any remoteproc memories present on
-+      the SoC. Should contain an entry for each value in
-+      'reg-names'. These are mandatory for all DSP and IPU
-+      processors that have them (OMAP4/OMAP5 DSPs do not have
-+      any RAMs)
-+
-+  reg-names:
-+    description: |
-+      Required names for each of the address spaces defined in
-+      the 'reg' property. Expects the names from the following
-+      list, in the specified order, each representing the corresponding
-+      internal RAM memory region.
-+    minItems: 1
-+    maxItems: 3
-+    items:
-+      - const: l2ram
-+      - const: l1pram
-+      - const: l1dram
-+
-+  ti,bootreg:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      Should be a triple of the phandle to the System Control
-+      Configuration region that contains the boot address
-+      register, the register offset of the boot address
-+      register within the System Control module, and the bit
-+      shift within the register. This property is required for
-+      all the DSP instances on OMAP4, OMAP5 and DRA7xx SoCs.
-+
-+  ti,autosuspend-delay-ms:
-+    description: |
-+      Custom autosuspend delay for the remoteproc in milliseconds.
-+      Recommended values is preferable to be in the order of couple
-+      of seconds. A negative value can also be used to disable the
-+      autosuspend behavior.
-+
-+  ti,timers:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      One or more phandles to OMAP DMTimer nodes, that serve
-+      as System/Tick timers for the OS running on the remote
-+      processors. This will usually be a single timer if the
-+      processor sub-system is running in SMP mode, or one per
-+      core in the processor sub-system. This can also be used
-+      to reserve specific timers to be dedicated to the
-+      remote processors.
-+
-+      This property is mandatory on remote processors requiring
-+      external tick wakeup, and to support Power Management
-+      features. The timers to be used should match with the
-+      timers used in the firmware image.
-+
-+  ti,watchdog-timers:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      One or more phandles to OMAP DMTimer nodes, used to
-+      serve as Watchdog timers for the processor cores. This
-+      will usually be one per executing processor core, even
-+      if the processor sub-system is running a SMP OS.
-+
-+      The timers to be used should match with the watchdog
-+      timers used in the firmware image.
-+
-+if:
-+  properties:
-+    compatible:
-+      enum:
-+        - ti,dra7-dsp
-+then:
-+  properties:
-+    reg:
-+      minItems: 3
-+      maxItems: 3
-+  required:
-+    - reg
-+    - reg-names
-+    - ti,bootreg
-+
-+else:
-+  if:
-+    properties:
-+      compatible:
-+        enum:
-+          - ti,omap4-ipu
-+          - ti,omap5-ipu
-+          - ti,dra7-ipu
-+  then:
-+    properties:
-+      reg:
-+        minItems: 1
-+        maxItems: 1
-+      ti,bootreg: false
-+    required:
-+      - reg
-+      - reg-names
-+
-+  else:
-+    properties:
-+      reg: false
-+    required:
-+      - ti,bootreg
-+
-+required:
-+  - compatible
-+  - iommus
-+  - mboxes
-+  - clocks
-+  - resets
-+  - firmware-name
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+
-+    //Example 1: OMAP4 DSP
-+
-+    /* DSP Reserved Memory node */
-+    #include <dt-bindings/clock/omap4.h>
-+    reserved-memory {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        dsp_memory_region: dsp-memory@98000000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0x98000000 0x800000>;
-+            reusable;
-+        };
-+    };
-+
-+    /* DSP node */
-+    ocp {
-+        dsp: dsp {
-+            compatible = "ti,omap4-dsp";
-+            ti,bootreg = <&scm_conf 0x304 0>;
-+            iommus = <&mmu_dsp>;
-+            mboxes = <&mailbox &mbox_dsp>;
-+            memory-region = <&dsp_memory_region>;
-+            ti,timers = <&timer5>;
-+            ti,watchdog-timers = <&timer6>;
-+            clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
-+            resets = <&prm_tesla 0>, <&prm_tesla 1>;
-+            firmware-name = "omap4-dsp-fw.xe64T";
-+        };
-+    };
-+
-+  - |+
-+
-+    //Example 2: OMAP5 IPU
-+
-+    /* IPU Reserved Memory node */
-+    #include <dt-bindings/clock/omap5.h>
-+    reserved-memory {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        ipu_memory_region: ipu-memory@95800000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0 0x95800000 0 0x3800000>;
-+            reusable;
-+        };
-+    };
-+
-+    /* IPU node */
-+    ocp {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        ipu: ipu@55020000 {
-+            compatible = "ti,omap5-ipu";
-+            reg = <0x55020000 0x10000>;
-+            reg-names = "l2ram";
-+            iommus = <&mmu_ipu>;
-+            mboxes = <&mailbox &mbox_ipu>;
-+            memory-region = <&ipu_memory_region>;
-+            ti,timers = <&timer3>, <&timer4>;
-+            ti,watchdog-timers = <&timer9>, <&timer11>;
-+            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
-+            resets = <&prm_core 2>;
-+            firmware-name = "omap5-ipu-fw.xem4";
-+        };
-+    };
-+
-+  - |+
-+
-+    //Example 3: DRA7xx/AM57xx DSP
-+
-+    /* DSP1 Reserved Memory node */
-+    #include <dt-bindings/clock/dra7.h>
-+    reserved-memory {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        dsp1_memory_region: dsp1-memory@99000000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0x0 0x99000000 0x0 0x4000000>;
-+            reusable;
-+        };
-+    };
-+
-+    /* DSP1 node */
-+    ocp {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        dsp1: dsp@40800000 {
-+            compatible = "ti,dra7-dsp";
-+            reg = <0x40800000 0x48000>,
-+                  <0x40e00000 0x8000>,
-+                  <0x40f00000 0x8000>;
-+            reg-names = "l2ram", "l1pram", "l1dram";
-+            ti,bootreg = <&scm_conf 0x55c 0>;
-+            iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
-+            mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
-+            memory-region = <&dsp1_memory_region>;
-+            ti,timers = <&timer5>;
-+            ti,watchdog-timers = <&timer10>;
-+            resets = <&prm_dsp1 0>;
-+            clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
-+            firmware-name = "dra7-dsp1-fw.xe66";
-+        };
-+    };
--- 
-2.17.1
+Regards,
+Matthias
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Regards,
+> CK
+> 
+>>
+>> All this series was tested on the Acer R13 Chromebook only.
+>>
+>> For reference, here are the links to the old discussions:
+>>
+>> * v7: https://patchwork.kernel.org/project/linux-mediatek/list/?series=241217
+>> * v6: https://patchwork.kernel.org/project/linux-mediatek/list/?series=213219
+>> * v5: https://patchwork.kernel.org/project/linux-mediatek/list/?series=44063
+>> * v4:
+>>   * https://patchwork.kernel.org/patch/10530871/
+>>   * https://patchwork.kernel.org/patch/10530883/
+>>   * https://patchwork.kernel.org/patch/10530885/
+>>   * https://patchwork.kernel.org/patch/10530911/
+>>   * https://patchwork.kernel.org/patch/10530913/
+>> * v3:
+>>   * https://patchwork.kernel.org/patch/10367857/
+>>   * https://patchwork.kernel.org/patch/10367861/
+>>   * https://patchwork.kernel.org/patch/10367877/
+>>   * https://patchwork.kernel.org/patch/10367875/
+>>   * https://patchwork.kernel.org/patch/10367885/
+>>   * https://patchwork.kernel.org/patch/10367883/
+>>   * https://patchwork.kernel.org/patch/10367889/
+>>   * https://patchwork.kernel.org/patch/10367907/
+>>   * https://patchwork.kernel.org/patch/10367909/
+>>   * https://patchwork.kernel.org/patch/10367905/
+>> * v2: No relevant discussion, see v3
+>> * v1:
+>>   * https://patchwork.kernel.org/patch/10016497/
+>>   * https://patchwork.kernel.org/patch/10016499/
+>>   * https://patchwork.kernel.org/patch/10016505/
+>>   * https://patchwork.kernel.org/patch/10016507/
+>>
+>> Best regards,
+>>  Enric
+>>
+>> Changes in v8:
+>> - Be a builtin_platform_driver like other mediatek mmsys drivers.
+>> - New patches introduced in this series.
+>>
+>> Changes in v7:
+>> - Add R-by from CK
+>> - Add R-by from CK
+>> - Fix check of return value of of_clk_get
+>> - Fix identation
+>> - Free clk_data->clks as well
+>> - Get rid of private data structure
+>>
+>> Enric Balletbo i Serra (2):
+>>   drm/mediatek: Move MMSYS configuration to include/linux/platform_data
+>>   clk/drm: mediatek: Fix mediatek-drm device probing
+>>
+>> Matthias Brugger (4):
+>>   drm/mediatek: Use regmap for register access
+>>   drm/mediatek: Omit warning on probe defers
+>>   media: mtk-mdp: Check return value of of_clk_get
+>>   clk: mediatek: mt8173: Switch MMSYS to platform driver
+>>
+>>  drivers/clk/mediatek/Kconfig                  |   6 +
+>>  drivers/clk/mediatek/Makefile                 |   1 +
+>>  drivers/clk/mediatek/clk-mt2701-mm.c          |  30 +++
+>>  drivers/clk/mediatek/clk-mt2712-mm.c          |  44 +++++
+>>  drivers/clk/mediatek/clk-mt8173-mm.c          | 172 ++++++++++++++++++
+>>  drivers/clk/mediatek/clk-mt8173.c             | 104 -----------
+>>  drivers/gpu/drm/mediatek/mtk_disp_color.c     |   5 +-
+>>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |   5 +-
+>>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |   5 +-
+>>  drivers/gpu/drm/mediatek/mtk_dpi.c            |  12 +-
+>>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |   4 +-
+>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c        |  53 +++---
+>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |   4 +-
+>>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  56 +-----
+>>  drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 113 +-----------
+>>  drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  13 +-
+>>  drivers/gpu/drm/mediatek/mtk_dsi.c            |   8 +-
+>>  drivers/gpu/drm/mediatek/mtk_hdmi.c           |   4 +-
+>>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |   6 +
+>>  include/linux/platform_data/mtk_mmsys.h       |  73 ++++++++
+>>  20 files changed, 401 insertions(+), 317 deletions(-)
+>>  create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
+>>  create mode 100644 include/linux/platform_data/mtk_mmsys.h
+>>
+> 
