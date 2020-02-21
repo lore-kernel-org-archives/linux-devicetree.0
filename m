@@ -2,130 +2,104 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8315C35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24621C35646
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D44207FD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE0120722
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 10:41:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jFRFDwIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbgBUKdA (ORCPT
+        id S1727027AbgBUKlO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:33:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:36156 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726976AbgBUKc7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:32:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4350131B;
-        Fri, 21 Feb 2020 02:32:59 -0800 (PST)
-Received: from [10.37.12.243] (unknown [10.37.12.243])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21EB53F68F;
-        Fri, 21 Feb 2020 02:32:55 -0800 (PST)
-Subject: Re: [RESEND PATCH v2 0/2] Enable Odroid-XU3/4 to use Energy Model and
- Energy Aware Scheduler
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kgene@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, cw00.choi@samsung.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
-        dietmar.eggemann@arm.com
-References: <20200220095636.29469-1-lukasz.luba@arm.com>
- <20200220180040.GA8338@kozik-lap>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <597f1475-754c-d77a-b599-0fa07d8ee948@arm.com>
-Date:   Fri, 21 Feb 2020 10:32:53 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 21 Feb 2020 05:41:14 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43066 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgBUKlO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 05:41:14 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r11so1433552wrq.10
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 02:41:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=nC38uQjZDz3wMRzUDRjp52c9Hy5uCnGBGkiYQn+GewE=;
+        b=jFRFDwIWQUOtcfddu0setQkrtBAAsg+QM4SFFjMIfs1t2qtIm0uY7i8crq9De6BNzc
+         Dtmli57wfgiv+8hXV/TFGnq9teiaSzgi8MwR1QQlhBXnc+XRDK0+UQ4NT5WD1X+CDrV+
+         sJBDa7KYxgxHPFHz4VxYS/x5pJK+EguZ4u447bTGH5MPg5CdBX3mmARRiypZ7ZyZPr2e
+         FKJTapXALLySo1mmmxFw0kI+65Y+YiqMiLgxJ67v6SZEA35vfk0WbL1/9p0xWJ6+W3pn
+         BizqQ5sktYD0I+kUvccg9I9+ICSSgWYFz/5SmlbSxoi1InaZoRSpRNS//odmTCwExi2r
+         spEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=nC38uQjZDz3wMRzUDRjp52c9Hy5uCnGBGkiYQn+GewE=;
+        b=UV71UyuG0JuTNf+5r1S9FWW+kqKkJdeOhoe/8urCTFzlYJwGGeVRQ/A43ksQdokvG1
+         SV2ncZRSbyRELE1HV15PCdSOO2/+eYyNFPHo2aHYEP3g9u4iua9BlZ2o2S0ILJFVulPN
+         5GZIw+TATFM6rjITNBZu9geSEuONS4ktN4sDp0qw6yGsLK0208ZZ4FIeJUegxa3NFsIt
+         yQ7WD7MgWv9jMN6AekRb3s7oAjU0OCXx4LEOemWAXz9NQy6hA+p4qg9QCL8QbhxTsr1e
+         srwUBYy4IOWzXq50Jazu0Qk9iHp/A1f50/MG3Miwjd5Na7h89HVlyq2ez2uQy1bUTTIe
+         mWIQ==
+X-Gm-Message-State: APjAAAUNosYyVTYSt9kbLxSvTy5kKea7GEeKJDaEAeXMVtea2fqbtDA5
+        nOhMCYfiEwjmyBR7gXj/PRtmDA==
+X-Google-Smtp-Source: APXvYqy2Z7KXJqoiyg14kzMzg6EQiEnMDyNve9Bd9jHVjubhjmti6d9+RBVLDiLaHEsRbCPSAAbbmw==
+X-Received: by 2002:adf:a453:: with SMTP id e19mr45872540wra.48.1582281671269;
+        Fri, 21 Feb 2020 02:41:11 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q9sm3437231wrx.18.2020.02.21.02.41.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 02:41:10 -0800 (PST)
+References: <20200220205711.77953-1-martin.blumenstingl@googlemail.com> <20200220205711.77953-2-martin.blumenstingl@googlemail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] ASoC: meson: aiu: Document Meson8 and Meson8b support in the dt-bindings
+In-reply-to: <20200220205711.77953-2-martin.blumenstingl@googlemail.com>
+Date:   Fri, 21 Feb 2020 11:41:09 +0100
+Message-ID: <1jtv3k2pfe.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220180040.GA8338@kozik-lap>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On 2/20/20 6:00 PM, Krzysztof Kozlowski wrote:
-> On Thu, Feb 20, 2020 at 09:56:34AM +0000, Lukasz Luba wrote:
->> Hi all,
->>
->> This is just a resend, now with proper v2 in the patches subject.
->>
->> The Odroid-XU4/3 is a decent and easy accessible ARM big.LITTLE platform,
->> which might be used for research and development.
->>
->> This small patch set provides possibility to run Energy Aware Scheduler (EAS)
->> on Odroid-XU4/3 and experiment with it.
->>
->> The patch 1/2 provides 'dynamic-power-coefficient' in CPU DT nodes, which is
->> then used by the Energy Model (EM).
->> The patch 2/2 enables SCHED_MC (which adds another level in scheduling domains)
->> and enables EM making EAS possible to run (when schedutil is set as a CPUFreq
->> governor).
->>
->> 1. Test results
->>
->> Two types of different tests have been executed. The first is energy test
->> case showing impact on energy consumption of this patch set. It is using a
->> synthetic set of tasks (rt-app based). The second is the performance test
->> case which is using hackbench (less time to complete is better).
->> In both tests schedutil has been used as cpufreq governor. In all tests
->> PROVE_LOCKING has not been compiled into the kernels.
->>
->> 1.1 Energy test case
->>
->> 10 iterations of 24 periodic rt-app tasks (16ms period, 10% duty-cycle)
->> with energy measurement. The cpufreq governor - schedutil. Unit is Joules.
->> The energy is calculated based on hwmon0 and hwmon3 power1_input.
->> The goal is to save energy, lower is better.
->>
->> +-----------+-----------------+------------------------+
->> |           | Without patches | With patches           |
->> +-----------+--------+--------+----------------+-------+
->> | benchmark |  Mean  | RSD*   | Mean           | RSD*  |
->> +-----------+--------+--------+----------------+-------+
->> | 24 rt-app |  21.56 |  1.37% |  19.85 (-9.2%) | 0.92% |
->> |    tasks  |        |        |                |       |
->> +-----------+--------+--------+----------------+-------+
->>
->> 1.2 Performance test case
->>
->> 10 consecutive iterations of hackbench (hackbench -l 500 -s 4096),
->> no delay between two successive executions.
->> The cpufreq governor - schedutil. Units in seconds.
->> The goal is to see not regression, lower completion time is better.
->>
->> +-----------+-----------------+------------------------+
->> |           | Without patches | With patches           |
->> +-----------+--------+--------+----------------+-------+
->> | benchmark | Mean   | RSD*   | Mean           | RSD*  |
->> +-----------+--------+--------+----------------+-------+
->> | hackbench |  8.15  | 2.86%  |  7.95 (-2.5%)  | 0.60% |
->> +-----------+--------+--------+----------------+-------+
->>
->> *RSD: Relative Standard Deviation (std dev / mean)
-> 
-> Nice measurements!
+On Thu 20 Feb 2020 at 21:57, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-Glad to hear that.
+> The AIU audio output controller on the Meson8 and Meson8b SoC families
+> is compatible with the one found in the GXBB family. Document the
+> compatible string for these two older SoCs.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-> 
-> Applied both, thank you.
-> 
-> Best regards,
-> Krzysztof
-> 
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
 
-Thank you for applying this.
+> ---
+>  Documentation/devicetree/bindings/sound/amlogic,aiu.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/sound/amlogic,aiu.yaml b/Documentation/devicetree/bindings/sound/amlogic,aiu.yaml
+> index 3ef7632dcb59..a61bccf915d8 100644
+> --- a/Documentation/devicetree/bindings/sound/amlogic,aiu.yaml
+> +++ b/Documentation/devicetree/bindings/sound/amlogic,aiu.yaml
+> @@ -21,6 +21,8 @@ properties:
+>        - enum:
+>          - amlogic,aiu-gxbb
+>          - amlogic,aiu-gxl
+> +        - amlogic,aiu-meson8
+> +        - amlogic,aiu-meson8b
+>        - const:
+>            amlogic,aiu
 
-Regards,
-Lukasz
