@@ -7,124 +7,153 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FFEC35669
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 22:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FAEC35666
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6F6206DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 22:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7AD22465D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582322702;
-	bh=ixkaQsOyXc65L7U5cAzBy/t7QDxhcFt3SZW7c7F25dw=;
+	s=default; t=1582323114;
+	bh=bf2RsaSvZhMI79nHgHionWDyrsV17B3qT+29dL6QM30=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xAyqIZzZ7gCUN9HaYXcK8ifR09z5rqnkWOuTqO+dBtCI+gfzH2f9l8NnEyRdpC5vb
-	 zFBu5rnnAtfzO5Wx8V3PjF0eCVa3cD5IXDxrfdVfnBnt3T4MK1kSgiEJi81xnLG3a1
-	 uI74mwbA4NMF4EYBeGIe3RC9vzqppgo3jrwfI3lE=
+	b=l7QCJCISFX+pKsvEpQN+adJs7kqyu32pF1DwufmBrxGIk3MCabxsc+K+pxdREexjG
+	 btnMTiyOnjEF/J26CyBBQcXBGtlJIyF3rSR2XhMZ8rd7TKQNoSvdlqCEQYiHYYAiuf
+	 ZDyIjlchWSH7/6Xj8hCgzeDj9vrpqrUCizo1r/9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgBUWE7 (ORCPT
+        id S1726826AbgBUWLy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 17:04:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49572 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 17:11:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgBUWE7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 17:04:59 -0500
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        id S1726725AbgBUWLy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 17:11:54 -0500
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58CD72072C;
-        Fri, 21 Feb 2020 22:04:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 212962467A;
+        Fri, 21 Feb 2020 22:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582322698;
-        bh=ixkaQsOyXc65L7U5cAzBy/t7QDxhcFt3SZW7c7F25dw=;
+        s=default; t=1582323113;
+        bh=bf2RsaSvZhMI79nHgHionWDyrsV17B3qT+29dL6QM30=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hE+MPvG/9HlApVb7a1C28KlYECMfNuRDiN5O/RjQeGCMCTPwZif/S/YvJ3If4HBTr
-         Zcf5e4RSkOSoTbbHRzOeqS1MPWOHar1v8y4TTptGKAnNkZlw4pcEM412p0OvN5oN2S
-         N6+5cm3k6Gaukxa1iLXjUVY1CJuM9VvipF3t7LrA=
-Received: by mail-qt1-f181.google.com with SMTP id n17so2428773qtv.2;
-        Fri, 21 Feb 2020 14:04:58 -0800 (PST)
-X-Gm-Message-State: APjAAAX5ccd/wo+Yi5RqNKmlZzcMfwAwJfJdzxQBsrVW/Yt432JeySLU
-        q5OnmIU6fMdpNPPyoR4nERzfkFpV0GbVVluKLA==
-X-Google-Smtp-Source: APXvYqzIdyYmWrgE2znfgfwuWRqr27wwCfU9j74qwfxNfJB8wFPqCO8UUY9xs6KKGgpRQQM31GBK5HGN7l7/vsKP0xo=
-X-Received: by 2002:aed:2344:: with SMTP id i4mr34521971qtc.136.1582322697489;
- Fri, 21 Feb 2020 14:04:57 -0800 (PST)
+        b=uLjEhdPGfBBs8J8kMdI9gKpPjMd/M6RazcBBvo02LI5gk5BBFs1us7fw56ebDGrNr
+         hDqGewgjxff4DzdXTjm8dNTCjRJxHnGbNdbxaZF/ZCJqBbS4adXiRUSQWuVIIS7L26
+         e7yPR4613FuK8IHfzY0sRp0MoZGPOYUofpaCd1UI=
+Received: by mail-qv1-f44.google.com with SMTP id ci20so323874qvb.4;
+        Fri, 21 Feb 2020 14:11:53 -0800 (PST)
+X-Gm-Message-State: APjAAAVivR2353AR4kVorgtpB2nMIOumPz2X2wA3uQbFRmriV7WZGve4
+        1JONzwQhqHQM0bOzzn/vpgDpF1pWc5bNzb6XjA==
+X-Google-Smtp-Source: APXvYqyYbXN85xYUMFaOgLv6Q5mUpNeZ8NyF/CcoNZ4CxdRu4RUYJEOgtcn8M4e8AKdcB5TiFQMt27ZRzzmiMvhInMw=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr31162876qvn.79.1582323112146;
+ Fri, 21 Feb 2020 14:11:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221041631.10960-1-chris.packham@alliedtelesis.co.nz>
- <20200221041631.10960-4-chris.packham@alliedtelesis.co.nz>
- <CAL_JsqK+jKyRr98_YX1GGwk-rHrLMOq_v7Z_57dQWYYQPuLS7A@mail.gmail.com> <20200221155259.GA11868@roeck-us.net>
-In-Reply-To: <20200221155259.GA11868@roeck-us.net>
+References: <20200221053802.70716-1-evanbenn@chromium.org> <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+In-Reply-To: <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 21 Feb 2020 16:04:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK5MqD9vqS0A1oTDkMvVkBFM83_fLAp7M7zR5uEv+NEJw@mail.gmail.com>
-Message-ID: <CAL_JsqK5MqD9vqS0A1oTDkMvVkBFM83_fLAp7M7zR5uEv+NEJw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] dt-bindings: hwmon: Document adt7475 invert-pwm property
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Jean Delvare <jdelvare@suse.com>,
+Date:   Fri, 21 Feb 2020 16:11:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
+Message-ID: <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
+To:     Evan Benn <evanbenn@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Julius Werner <jwerner@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 9:53 AM Guenter Roeck <linux@roeck-us.net> wrote:
+On Thu, Feb 20, 2020 at 11:38 PM Evan Benn <evanbenn@chromium.org> wrote:
 >
-> On Fri, Feb 21, 2020 at 09:40:00AM -0600, Rob Herring wrote:
-> > On Thu, Feb 20, 2020 at 10:16 PM Chris Packham
-> > <chris.packham@alliedtelesis.co.nz> wrote:
-> > >
-> > > Add binding information for the invert-pwm property.
-> > >
-> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> > > ---
-> > >
-> > > Notes:
-> > >     Changes in v4:
-> > >     - use $ref uint32 and enum
-> > >     - add adi vendor prefix
-> > >
-> > >     Cahnges in v3:
-> > >     - new
-> > >
-> > >  Documentation/devicetree/bindings/hwmon/adt7475.yaml | 12 ++++++++++++
-> > >  1 file changed, 12 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> > > index e40612ee075f..6a358b30586c 100644
-> > > --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> > > +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> > > @@ -50,6 +50,17 @@ patternProperties:
-> > >       - $ref: /schemas/types.yaml#/definitions/uint32
-> > >       - enum: [0, 1]
-> > >
-> > > +  "^adi,invert-pwm[1-3]$":
-> > > +    description: |
-> > > +      Configures the pwm output to use inverted logic. If set to 1
-> > > +      the pwm uses a logic low output for 100% duty cycle. If set
-> > > +      to 0 the pwm uses a logic high output for 100% duty cycle.
-> > > +      If the property is absent the pwm retains it's configuration
-> > > +      from the bios/bootloader.
-> >
-> > I believe we already have an inverted flag for consumers. That doesn't
-> > work if you don't have a consumer described in DT, but then the
-> > question is should you? Or is this something the user will want to
-> > configure from userspace.
-> >
+> This watchdog can be used on ARM systems with a Secure
+> Monitor firmware to forward watchdog operations to
+> firmware via a Secure Monitor Call.
 >
-> Normally that is a system property. It is difficult to imagine
-> that it would ever have to be configured from userspace at runtime.
-> Most of the time users won't have any idea, and the board datasheet
-> (if avaible) won't list such information.
+> Signed-off-by: Evan Benn <evanbenn@chromium.org>
+> ---
+>
+> Changes in v2:
+> - Change name arm > mt8173
+>
+>  .../bindings/watchdog/mt8173,smc-wdt.yaml     | 30 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 ++++
+>  2 files changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+> new file mode 100644
+> index 0000000000000..ff45e13bc548b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+> @@ -0,0 +1,30 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/mt8173,smc-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM Secure Monitor Call based watchdog
+> +
+> +allOf:
+> +  - $ref: "watchdog.yaml#"
+> +
+> +maintainers:
+> +  - Julius Werner <jwerner@chromium.org>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mt8173,smc-wdt
 
-Yes, I agree and for those cases I'd expect the consumer is described
-in DT too. I read and refreshed my memory on this binding after
-sending this. I believe this is for a fan which I'd expect to be in DT
-as fans need power and there's different types.
+compatible strings are in the form <vendor>,<device>. 'mt8173' is not a vendor.
 
-The userspace case I was thinking of was more the hobbyist boards with
-PWM to a connector.
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    watchdog {
 
-Rob
+This should be a child of some Mediatek firmware node. I assume
+watchdog is not the *only* function.
+
+> +      compatible = "mt8173,smc-wdt";
+> +      timeout-sec = <15>;
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e48ab79879ace..59e8779363c12 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1421,6 +1421,12 @@ S:       Maintained
+>  F:     Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+>  F:     drivers/irqchip/irq-al-fic.c
+>
+> +ARM SMC WATCHDOG DRIVER
+> +M:     Julius Werner <jwerner@chromium.org>
+> +R:     Evan Benn <evanbenn@chromium.org>
+> +S:     Maintained
+> +F:     devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+> +
+>  ARM SMMU DRIVERS
+>  M:     Will Deacon <will@kernel.org>
+>  R:     Robin Murphy <robin.murphy@arm.com>
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
