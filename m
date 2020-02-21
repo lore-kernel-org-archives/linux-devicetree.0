@@ -2,161 +2,143 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1128DC3565B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 19:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6203C35660
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 19:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67F3206EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 19:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769CB2467B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 19:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582313931;
+	bh=EEkZlC+I38fRKP6ziqRCvYvuuIeevZ+KKVHywn56mIo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MLyTTpRZFFuGR6prAPdhC0/trdsJUqXodv8vfNJRTabdiPHKo3LbbcuGlSK7YTk76
+	 2GXvnMbBT4G2slSfElOTRDKvoONNKuvDscPTaXiYYA3ZjkAVrMQMUb6Eq71g+CtpMb
+	 xgglwkxlM4BMfbJswnbnJ8hcCDTkIbB2gme9VSH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgBUTfm (ORCPT
+        id S1726541AbgBUTis (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:35:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:46672 "EHLO foss.arm.com"
+        Fri, 21 Feb 2020 14:38:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbgBUTfm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:35:42 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D32A30E;
-        Fri, 21 Feb 2020 11:35:41 -0800 (PST)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B3CF33F6CF;
-        Fri, 21 Feb 2020 11:35:40 -0800 (PST)
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 5/5] arm64: perf: Support new DT compatibles
-Date:   Fri, 21 Feb 2020 19:35:32 +0000
-Message-Id: <6e5087621bd8112a35733054689d7c785b4bdde5.1582312530.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.23.0.dirty
-In-Reply-To: <cover.1582312530.git.robin.murphy@arm.com>
-References: <cover.1582312530.git.robin.murphy@arm.com>
+        id S1726160AbgBUTis (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:38:48 -0500
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10D46208C4;
+        Fri, 21 Feb 2020 19:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582313927;
+        bh=EEkZlC+I38fRKP6ziqRCvYvuuIeevZ+KKVHywn56mIo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lSKHq40hs1M19YD7sOxUNFDFS+a1h50X64VxCq+PakYXlJeADg7DcA3iat/R3ND5r
+         NBztjxKxeObSrBRP4eJlhb0YrH7+D/OcTKGrGIy7dztPBMg6aZiG1IXmiSeXHFAeET
+         5OkECh3IMxLo2OqHs0+kHkRN6c2239scLdmpYumc=
+Received: by mail-qk1-f181.google.com with SMTP id t83so2939496qke.3;
+        Fri, 21 Feb 2020 11:38:47 -0800 (PST)
+X-Gm-Message-State: APjAAAUImARs3TZpXprIcHG9kaPw6o7AGPIUQAG1kg4y6YRLdBbw9jPK
+        JBnJhdIZRQulqyK8g6CQi4A+NMBopdT9L3tXzA==
+X-Google-Smtp-Source: APXvYqyxd8WdkXFWOCS8SNWYv4nZmrG8aLBX6mYw4szswF8/Esf6AsZA0GubHXwAODvuaiVsM3W6LKr6xJSmuO65sEY=
+X-Received: by 2002:a37:6457:: with SMTP id y84mr36111932qkb.254.1582313926194;
+ Fri, 21 Feb 2020 11:38:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-2-alexandre.torgue@st.com> <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+In-Reply-To: <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 21 Feb 2020 13:38:34 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJuj1=ae+_-L7_R6+ZfcbNW99BDUDSvuYSsN1=gRcvQqQ@mail.gmail.com>
+Message-ID: <CAL_JsqJuj1=ae+_-L7_R6+ZfcbNW99BDUDSvuYSsN1=gRcvQqQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build information
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Ian Lepore <ian@freebsd.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for matching the new PMUs. For now, this just wires them up
-as generic PMUv3 such that people writing DTs for new SoCs can do the
-right thing, and at least have architectural and raw events be usable.
-We can come back and fill in event maps for sysfs and/or perf tools at
-a later date.
+On Fri, Feb 21, 2020 at 11:52 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+> > This commit adds a new script to create a file (in dts file directory) with
+> > some information (date, Linux version, user). This file could then be used
+> > to populate "build-info" property in every dts file that would use this
+> > build information:
+> >
+> > Example:
+> >
+> > / {
+> >       ...
+> >       build-info = /incbin/("dtb-build.txt");
+>
+> s/.txt/.dtsi/
+>
+> and same wherever the file name is used.
+>
+>
+> >       ...
+> > };
+> >
+> > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> >
+> > diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> > index bae62549e3d2..a5af84ef4ffc 100644
+> > --- a/scripts/Makefile.lib
+> > +++ b/scripts/Makefile.lib
+> > @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
+> >  # DTC
+> >  # ---------------------------------------------------------------------------
+> >  DTC ?= $(objtree)/scripts/dtc/dtc
+> > +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
+> >
+> >  # Disable noisy checks by default
+> >  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+> > @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+> >
+> >  quiet_cmd_dtc = DTC     $@
+> >  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+> > +     $(DTB_GEN_INFO) $(src) ; \
+> >       $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+> >       $(DTC) -O $(2) -o $@ -b 0 \
+> >               $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+> > diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
+> > new file mode 100755
+> > index 000000000000..0cd8bd98e410
+> > --- /dev/null
+> > +++ b/scripts/gen_dtb_build_info.sh
+> > @@ -0,0 +1,10 @@
+> > +#!/bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +set -o nounset
+> > +
+> > +DTB_DIR=$1
+> > +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
+> > +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
+>
+> I would remove the filler words "From", "by", "the", and the trailing
+> period ('.').
+>
+> <bikeshed>
+> You might consider using a format more like the Linux
+> kernel version line, which puts parenthesis around the
+> compiled by info.
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
+IMO, we should use exactly the Linux kernel version line. Or exactly
+the u-boot version line when built in u-boot.
 
-v2: define separate init functions to preserve the user ABI for naming
-    (and perhaps more crucially, to simply avoid sysfs collisions on
-     the inevitable A7[567] + A55 big.LITTLE systems)
-
- arch/arm64/kernel/perf_event.c | 56 ++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
-
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 1e0b04da2f3a..726cd8bda025 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -991,6 +991,12 @@ static int armv8_pmuv3_init(struct arm_pmu *cpu_pmu)
- 			      armv8_pmuv3_map_event, NULL, NULL);
- }
- 
-+static int armv8_a34_pmu_init(struct arm_pmu *cpu_pmu)
-+{
-+	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a34",
-+			      armv8_pmuv3_map_event, NULL, NULL);
-+}
-+
- static int armv8_a35_pmu_init(struct arm_pmu *cpu_pmu)
- {
- 	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a35",
-@@ -1003,12 +1009,24 @@ static int armv8_a53_pmu_init(struct arm_pmu *cpu_pmu)
- 			      armv8_a53_map_event, NULL, NULL);
- }
- 
-+static int armv8_a55_pmu_init(struct arm_pmu *cpu_pmu)
-+{
-+	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a55",
-+			      armv8_pmuv3_map_event, NULL, NULL);
-+}
-+
- static int armv8_a57_pmu_init(struct arm_pmu *cpu_pmu)
- {
- 	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a57",
- 			      armv8_a57_map_event, NULL, NULL);
- }
- 
-+static int armv8_a65_pmu_init(struct arm_pmu *cpu_pmu)
-+{
-+	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a65",
-+			      armv8_pmuv3_map_event, NULL, NULL);
-+}
-+
- static int armv8_a72_pmu_init(struct arm_pmu *cpu_pmu)
- {
- 	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a72",
-@@ -1021,6 +1039,36 @@ static int armv8_a73_pmu_init(struct arm_pmu *cpu_pmu)
- 			      armv8_a73_map_event, NULL, NULL);
- }
- 
-+static int armv8_a75_pmu_init(struct arm_pmu *cpu_pmu)
-+{
-+	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a75",
-+			      armv8_pmuv3_map_event, NULL, NULL);
-+}
-+
-+static int armv8_a76_pmu_init(struct arm_pmu *cpu_pmu)
-+{
-+	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a76",
-+			      armv8_pmuv3_map_event, NULL, NULL);
-+}
-+
-+static int armv8_a77_pmu_init(struct arm_pmu *cpu_pmu)
-+{
-+	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a77",
-+			      armv8_pmuv3_map_event, NULL, NULL);
-+}
-+
-+static int armv8_e1_pmu_init(struct arm_pmu *cpu_pmu)
-+{
-+	return armv8_pmu_init(cpu_pmu, "armv8_neoverse_e1",
-+			      armv8_pmuv3_map_event, NULL, NULL);
-+}
-+
-+static int armv8_n1_pmu_init(struct arm_pmu *cpu_pmu)
-+{
-+	return armv8_pmu_init(cpu_pmu, "armv8_neoverse_n1",
-+			      armv8_pmuv3_map_event, NULL, NULL);
-+}
-+
- static int armv8_thunder_pmu_init(struct arm_pmu *cpu_pmu)
- {
- 	return armv8_pmu_init(cpu_pmu, "armv8_cavium_thunder",
-@@ -1035,11 +1083,19 @@ static int armv8_vulcan_pmu_init(struct arm_pmu *cpu_pmu)
- 
- static const struct of_device_id armv8_pmu_of_device_ids[] = {
- 	{.compatible = "arm,armv8-pmuv3",	.data = armv8_pmuv3_init},
-+	{.compatible = "arm,cortex-a34-pmu",	.data = armv8_a34_pmu_init},
- 	{.compatible = "arm,cortex-a35-pmu",	.data = armv8_a35_pmu_init},
- 	{.compatible = "arm,cortex-a53-pmu",	.data = armv8_a53_pmu_init},
-+	{.compatible = "arm,cortex-a55-pmu",	.data = armv8_a55_pmu_init},
- 	{.compatible = "arm,cortex-a57-pmu",	.data = armv8_a57_pmu_init},
-+	{.compatible = "arm,cortex-a65-pmu",	.data = armv8_a65_pmu_init},
- 	{.compatible = "arm,cortex-a72-pmu",	.data = armv8_a72_pmu_init},
- 	{.compatible = "arm,cortex-a73-pmu",	.data = armv8_a73_pmu_init},
-+	{.compatible = "arm,cortex-a75-pmu",	.data = armv8_a75_pmu_init},
-+	{.compatible = "arm,cortex-a76-pmu",	.data = armv8_a76_pmu_init},
-+	{.compatible = "arm,cortex-a77-pmu",	.data = armv8_a77_pmu_init},
-+	{.compatible = "arm,neoverse-e1-pmu",	.data = armv8_e1_pmu_init},
-+	{.compatible = "arm,neoverse-n1-pmu",	.data = armv8_n1_pmu_init},
- 	{.compatible = "cavium,thunder-pmu",	.data = armv8_thunder_pmu_init},
- 	{.compatible = "brcm,vulcan-pmu",	.data = armv8_vulcan_pmu_init},
- 	{},
--- 
-2.23.0.dirty
-
+Rob
