@@ -2,110 +2,440 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD771C3566F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 20:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1E4C35669
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 21:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CED24650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 20:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018D7208C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 21:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuYSHn6m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X+F3ZE3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgBUUrC (ORCPT
+        id S1726878AbgBUVQv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:47:02 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38228 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgBUUrC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 15:47:02 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x185so1864910pfc.5;
-        Fri, 21 Feb 2020 12:47:01 -0800 (PST)
+        Fri, 21 Feb 2020 16:16:51 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36662 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgBUVQv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 16:16:51 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so1396608plm.3
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 13:16:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=82wXbaKxRFjsoQQsO8QepB6AihqwY3AEJl7r9u0kpGw=;
-        b=AuYSHn6mP7IaxfUclYudxXEWRdwuTZLXOSYwBCCQUceCrLM5fqU4As4Rt/q+NUsO1k
-         qgDZXU1etfABOXuFfZ6QFrMjNZIUA0BwKT7Ukoi3C4hp5ebskEnKvgKxy9mK+NxdAJZ5
-         cJAcTHggDlceqrWd9Xgkk0uF20RGm2kabLgmR8BAFeS7n3X/kpVcnUbUN3jsdRxrSdm6
-         qKC3N9Au8cXYCltWUYsgFqiieAoLp+rKe8FcRdS29jg/CXXXE21YFl5kJ3/DWk6ULvn+
-         jKjUbbXouX0UMz44Dd2qa1BAqGDDgwCQU4PKPaGaC/e551I4RycTskcwwPXSVb/C4Ko7
-         izCw==
+        bh=jbWjcCeJ+tMsJ37H+v4wCDC++6PlNXZq8kBvXslPfN4=;
+        b=X+F3ZE3hbunhDZmTf0XuTehr8+T2eymaP89vqHqLM9LwMJ/bvw9HT1TfnRuCp8rXJF
+         T78t4x9pMEE4gqOH44YiYKiZ6pYZON1PYBEt/4yXUGkZ86GIrwi6qel3QVW0mCVztdE5
+         Vf/8uLx4WCt/3H1fGVHDcLl8cWHqqdO7gw7jPjagYgv6yzCAFOPM5R25J+QXDU8m6MIz
+         0SzXOZHOiMO1LNpa02ZHOXNFfwr5OKUXe6LXgNOh7X/Qeg4KtcmNO48kByg39euyTejJ
+         X9/EU8bRi0AgFhTEA/o0NDnfHl7y76VqVK+Htnu7jSg0ouUsS2xuKw0YiUFq6msD5opp
+         13NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=82wXbaKxRFjsoQQsO8QepB6AihqwY3AEJl7r9u0kpGw=;
-        b=BCMKznhacKOk/+zEy66Ct419A0nli0XDpJb030g7FQ8nu61JK/2gexXwdXG3SfjET9
-         OCUAbeQNyKwK+Zn1S1MT6EoMMii+9QReYBs2xoSIVUAHt4g/x1boPfmZSY2HvAJsX/Xn
-         34trs9Rpt9lT226WiAJDxqA8JuK9b+efgapqJNbWU7cnZ7ljq/QmJvKAGc1x+cmLGKdo
-         5pvwQj+qWXvxKW13a9b+dYF1EsdY8emDHmemdak8jA3ZvbiAN5NCGIMKFesI+bg0YENb
-         Bg3TwNRN28CgjVL7AQ/72u9CDerXZycWxZCq8NgrkSUxIbJ1Zc6FfLuizUATLP9bIn35
-         rFRg==
-X-Gm-Message-State: APjAAAVLfcUjav4/4Tts1b+p5KTPMwLt7X7gfduQuPZf3C27BHOXLFgR
-        /mOpwVQBGEmTQs7LqzVwSY4=
-X-Google-Smtp-Source: APXvYqwAbHoXgv/y42qNumObTpDSMx/5xWOVAecfBhM/FdD2ExFfWZv09tikVXilfBaCIuSFByMblg==
-X-Received: by 2002:a63:6383:: with SMTP id x125mr37208834pgb.409.1582318021317;
-        Fri, 21 Feb 2020 12:47:01 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w189sm3770262pfw.157.2020.02.21.12.46.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 12:47:00 -0800 (PST)
-Date:   Fri, 21 Feb 2020 12:46:58 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Julius Werner <jwerner@chromium.org>
-Cc:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Evan Benn <evanbenn@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Yonghui Yu <yonghui.yu@amlogic.com>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
- arm,smc-wdt compatible
-Message-ID: <20200221204658.GA6074@roeck-us.net>
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <20200219223046.GA16537@bogus>
- <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
- <20200219232005.GA9737@roeck-us.net>
- <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
- <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com>
- <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jbWjcCeJ+tMsJ37H+v4wCDC++6PlNXZq8kBvXslPfN4=;
+        b=H5zmg1LvHanf9Hnv3ZBM3/EpDG+BhX+eKzbzCGSMh8vkKzrosPwW7VadTgWQSRJnRP
+         aCteK6QODhazIl59M1om6AyxWuKRJg5OZeavwnyauPISbBcT0pxTxPZ94wWdWI0NlJIl
+         7GT+ZUEDn1lc5ZXk2TF7PzxTr+K/N1nxoAIVWNQBrCFCi4QIWVhPDaWMDxxOo/4EwYwl
+         hTEFOqPQsF/DO9kz8ZFEa+duRVO55LoRHaQirPY84tinc9gFOmroXP4jALF1u1udVr2P
+         BK44lAwfMQiJJ5VPTsyT/HruAxN67E50BjUjsDJ6fHgJe1cniHBIMnjWk0HExocreNEy
+         OHRQ==
+X-Gm-Message-State: APjAAAX3dtI268x7eNtCzKJIWb1KJBIBNKhNL4PUIm9s/iALZkJFk/iw
+        NNrDchwuDoLnRWgxyrFTDZISkQ==
+X-Google-Smtp-Source: APXvYqyvpohp5Lwua3UpWk1U7OsOu9P1jPfqEvBnFOsRxZ8SULDy58bOHnFgSH6gf/9akXUCoJgEcQ==
+X-Received: by 2002:a17:90a:fb87:: with SMTP id cp7mr5304844pjb.56.1582319809893;
+        Fri, 21 Feb 2020 13:16:49 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id c26sm3879574pfj.8.2020.02.21.13.16.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 13:16:48 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:16:46 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     peng.fan@nxp.com
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/9] remoteproc: imx_rproc: surport early booted remote
+ processor
+Message-ID: <20200221211646.GB10368@xps15>
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+ <1582097265-20170-5-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1582097265-20170-5-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:41:47AM -0800, Julius Werner wrote:
-> > Because the ATF does not define standard wdt index, each vendor defines
-> > its own index.
-> > So I don't think that the current driver[0] can fully cover my usecases.
+On Wed, Feb 19, 2020 at 03:27:40PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> I think the best way to solve this would be to put the SMC function ID
-> as another field into the device tree, so that multiple vendors could
-> share the same driver even if their firmware interface uses a
-> different SMC. But they still have to implement the same API for that
-> SMC, of course, not sure if the Meson driver is suitable for that (but
-> if it is then I think merging those drivers would be a good idea).
+> When remote processor is booted by bootloader, Linux need to
+> ignore firmware loading, and ignore remote processor start/stop
+> related hardware operations. what should do is to need to handle
+> memory-regions and resource table.
+> 
+> Add a src_started entry to check whether Cortex-M4 is started for i.MX7D
+> and i.MX6SX.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/remoteproc/imx_rproc.c | 240 +++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 220 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index 3e72b6f38d4b..b9fabe269fd2 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -74,6 +74,7 @@ struct imx_rproc_dcfg {
+>  	u32				src_mask;
+>  	u32				src_start;
+>  	u32				src_stop;
+> +	u32				src_started;
+>  	const struct imx_rproc_att	*att;
+>  	size_t				att_size;
+>  };
+> @@ -85,6 +86,7 @@ struct imx_rproc {
+>  	const struct imx_rproc_dcfg	*dcfg;
+>  	struct imx_rproc_mem		mem[IMX7D_RPROC_MEM_MAX];
+>  	struct clk			*clk;
+> +	bool				early_boot;
+>  };
+>  
+>  static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
+> @@ -142,6 +144,7 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx7d = {
+>  	.src_mask	= IMX7D_M4_RST_MASK,
+>  	.src_start	= IMX7D_M4_START,
+>  	.src_stop	= IMX7D_M4_STOP,
+> +	.src_started	= IMX7D_ENABLE_M4,
+>  	.att		= imx_rproc_att_imx7d,
+>  	.att_size	= ARRAY_SIZE(imx_rproc_att_imx7d),
+>  };
+> @@ -151,6 +154,7 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx6sx = {
+>  	.src_mask	= IMX6SX_M4_RST_MASK,
+>  	.src_start	= IMX6SX_M4_START,
+>  	.src_stop	= IMX6SX_M4_STOP,
+> +	.src_started	= IMX6SX_ENABLE_M4,
+>  	.att		= imx_rproc_att_imx6sx,
+>  	.att_size	= ARRAY_SIZE(imx_rproc_att_imx6sx),
+>  };
+> @@ -162,6 +166,9 @@ static int imx_rproc_start(struct rproc *rproc)
+>  	struct device *dev = priv->dev;
+>  	int ret;
+>  
+> +	if (priv->early_boot)
+> +		return 0;
+> +
+>  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
+>  				 dcfg->src_mask, dcfg->src_start);
+>  	if (ret)
+> @@ -177,6 +184,9 @@ static int imx_rproc_stop(struct rproc *rproc)
+>  	struct device *dev = priv->dev;
+>  	int ret;
+>  
+> +	if (priv->early_boot)
+> +		return 0;
+> +
+>  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
+>  				 dcfg->src_mask, dcfg->src_stop);
+>  	if (ret)
+> @@ -240,10 +250,167 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+>  	return va;
+>  }
+>  
+> +static int imx_rproc_elf_load_segments(struct rproc *rproc,
+> +				       const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_load_segments(rproc, fw);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_rproc_mem_alloc(struct rproc *rproc,
+> +			       struct rproc_mem_entry *mem)
+> +{
+> +	struct device *dev = rproc->dev.parent;
+> +	void *va;
+> +
+> +	dev_dbg(dev, "map memory: %p+%x\n", &mem->dma, mem->len);
+> +	va = ioremap_wc(mem->dma, mem->len);
+> +	if (IS_ERR_OR_NULL(va)) {
+> +		dev_err(dev, "Unable to map memory region: %p+%x\n",
+> +			&mem->dma, mem->len);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* Update memory entry va */
+> +	mem->va = va;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_rproc_mem_release(struct rproc *rproc,
+> +				 struct rproc_mem_entry *mem)
+> +{
+> +	dev_dbg(rproc->dev.parent, "unmap memory: %pa\n", &mem->dma);
+> +	iounmap(mem->va);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +	struct resource_table *resource_table;
+> +	struct device_node *np = priv->dev->of_node;
+> +	struct of_phandle_iterator it;
+> +	struct rproc_mem_entry *mem;
+> +	struct reserved_mem *rmem;
+> +	int index = 0;
+> +	int elems;
+> +	int ret;
+> +	u64 da;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_load_rsc_table(rproc, fw);
 
-More common would be to have a single driver and multiple compatible
-strings. The driver would then pick the SMC function ID from the compatible
-string. After all, we'd not only need the SMC function ID; parameters
-are also different.
+Once again I will concentrate on the scenario rather than making comments on the
+code.
 
-Guenter
+If I understand correctly if the AP is responsible for loading the firmware and
+starting the MCU, the ELF image contains a resource table that describes all the
+memory areas and vdev needed.
+
+Otherwise the MCU firmware that is preloaded by the boot loader or the SCU
+does _not_ have a resource table and as such specifics need to be coming from
+the DT.  
+
+Is my assesment correct?
+
+> +
+> +	/* Register associated reserved memory regions */
+> +	of_phandle_iterator_init(&it, np, "memory-region", NULL, 0);
+> +	while (of_phandle_iterator_next(&it) == 0) {
+> +		rmem = of_reserved_mem_lookup(it.node);
+> +		if (!rmem) {
+> +			dev_err(priv->dev, "unable to acquire memory-region\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		/* No need to translate pa to da */
+> +		da = rmem->base;
+> +
+> +		if (strcmp(it.node->name, "vdev0buffer")) {
+> +			/* Register memory region */
+> +			mem = rproc_mem_entry_init(priv->dev, NULL,
+> +						   (dma_addr_t)rmem->base,
+> +						   rmem->size, da,
+> +						   imx_rproc_mem_alloc,
+> +						   imx_rproc_mem_release,
+> +						   it.node->name);
+> +
+> +			if (mem)
+> +				rproc_coredump_add_segment(rproc, da,
+> +							   rmem->size);
+> +		} else {
+> +			/* Register reserved memory for vdev buffer alloc */
+> +			mem = rproc_of_resm_mem_entry_init(priv->dev, index,
+> +							   rmem->size,
+> +							   rmem->base,
+> +							   it.node->name);
+> +		}
+> +
+> +		if (!mem)
+> +			return -ENOMEM;
+> +
+> +		rproc_add_carveout(rproc, mem);
+> +		index++;
+> +	}
+> +
+> +	/*Parse device tree to get resource table */
+> +	elems = of_property_count_u32_elems(np, "rsrc-table");
+> +	if (elems < 0) {
+> +		dev_err(&rproc->dev, "no rsrc-table\n");
+> +		return elems;
+> +	}
+> +
+> +	resource_table = kzalloc(elems * sizeof(u32), GFP_KERNEL);
+> +	if (!resource_table)
+> +		return PTR_ERR(resource_table);
+> +
+> +	ret = of_property_read_u32_array(np, "rsrc-table",
+> +					 (u32 *)resource_table, elems);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rproc->cached_table = resource_table;
+> +	rproc->table_ptr = resource_table;
+> +	rproc->table_sz = elems * sizeof(u32);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct resource_table *
+> +imx_rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
+> +				    const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_find_loaded_rsc_table(rproc, fw);
+> +
+> +	return NULL;
+> +}
+> +
+> +static int imx_rproc_elf_sanity_check(struct rproc *rproc,
+> +				      const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_sanity_check(rproc, fw);
+> +
+> +	return 0;
+> +}
+> +
+> +static u32 imx_rproc_elf_get_boot_addr(struct rproc *rproc,
+> +				       const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_get_boot_addr(rproc, fw);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct rproc_ops imx_rproc_ops = {
+>  	.start		= imx_rproc_start,
+>  	.stop		= imx_rproc_stop,
+>  	.da_to_va       = imx_rproc_da_to_va,
+> +	.load		= imx_rproc_elf_load_segments,
+> +	.parse_fw	= imx_rproc_parse_fw,
+> +	.find_loaded_rsc_table = imx_rproc_elf_find_loaded_rsc_table,
+> +	.sanity_check	= imx_rproc_elf_sanity_check,
+> +	.get_boot_addr	= imx_rproc_elf_get_boot_addr,
+>  };
+>  
+>  static int imx_rproc_addr_init(struct imx_rproc *priv,
+> @@ -309,6 +476,31 @@ static int imx_rproc_addr_init(struct imx_rproc *priv,
+>  	return 0;
+>  }
+>  
+> +static int imx_rproc_configure_mode(struct imx_rproc *priv)
+> +{
+> +	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
+> +	struct device *dev = priv->dev;
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (of_get_property(dev->of_node, "early-booted", NULL)) {
+> +		priv->early_boot = true;
+> +	} else {
+> +		ret = regmap_read(priv->regmap, dcfg->src_reg, &val);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to read src\n");
+> +			return ret;
+> +		}
+> +
+> +		priv->early_boot = !!(val & dcfg->src_started);
+> +	}
+> +
+> +	if (priv->early_boot)
+> +		priv->rproc->skip_fw_load = true;
+> +
+> +	return 0;
+> +}
+> +
+>  static int imx_rproc_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -347,27 +539,33 @@ static int imx_rproc_probe(struct platform_device *pdev)
+>  
+>  	dev_set_drvdata(dev, rproc);
+>  
+> -	ret = imx_rproc_addr_init(priv, pdev);
+> -	if (ret) {
+> -		dev_err(dev, "failed on imx_rproc_addr_init\n");
+> +	ret = imx_rproc_configure_mode(priv);
+> +	if (ret)
+>  		goto err_put_rproc;
+> -	}
+>  
+> -	priv->clk = devm_clk_get(dev, NULL);
+> -	if (IS_ERR(priv->clk)) {
+> -		dev_err(dev, "Failed to get clock\n");
+> -		ret = PTR_ERR(priv->clk);
+> -		goto err_put_rproc;
+> -	}
+> +	if (!priv->early_boot) {
+> +		ret = imx_rproc_addr_init(priv, pdev);
+> +		if (ret) {
+> +			dev_err(dev, "failed on imx_rproc_addr_init\n");
+> +			goto err_put_rproc;
+> +		}
+>  
+> -	/*
+> -	 * clk for M4 block including memory. Should be
+> -	 * enabled before .start for FW transfer.
+> -	 */
+> -	ret = clk_prepare_enable(priv->clk);
+> -	if (ret) {
+> -		dev_err(&rproc->dev, "Failed to enable clock\n");
+> -		goto err_put_rproc;
+> +		priv->clk = devm_clk_get(dev, NULL);
+> +		if (IS_ERR(priv->clk)) {
+> +			dev_err(dev, "Failed to get clock\n");
+> +			ret = PTR_ERR(priv->clk);
+> +			goto err_put_rproc;
+> +		}
+> +
+> +		/*
+> +		 * clk for M4 block including memory. Should be
+> +		 * enabled before .start for FW transfer.
+> +		 */
+> +		ret = clk_prepare_enable(priv->clk);
+> +		if (ret) {
+> +			dev_err(&rproc->dev, "Failed to enable clock\n");
+> +			goto err_put_rproc;
+> +		}
+>  	}
+>  
+>  	ret = rproc_add(rproc);
+> @@ -379,7 +577,8 @@ static int imx_rproc_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  err_put_clk:
+> -	clk_disable_unprepare(priv->clk);
+> +	if (!priv->early_boot)
+> +		clk_disable_unprepare(priv->clk);
+>  err_put_rproc:
+>  	rproc_free(rproc);
+>  
+> @@ -391,7 +590,8 @@ static int imx_rproc_remove(struct platform_device *pdev)
+>  	struct rproc *rproc = platform_get_drvdata(pdev);
+>  	struct imx_rproc *priv = rproc->priv;
+>  
+> -	clk_disable_unprepare(priv->clk);
+> +	if (!priv->early_boot)
+> +		clk_disable_unprepare(priv->clk);
+>  	rproc_del(rproc);
+>  	rproc_free(rproc);
+>  
+> -- 
+> 2.16.4
+> 
