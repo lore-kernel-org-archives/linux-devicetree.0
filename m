@@ -2,88 +2,92 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638B6C35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BDFC35647
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D9524656
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF732071E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582288745;
+	bh=sNAVKTRBngWU+2TyxJb4sGncGp00AoX91Oj9U2SgxNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fZFnSEOLYms5lN9kksb6H845+bSLkQ0k9fQG0xKpa7O6J91Ru7KYai87isNRsceav
+	 zfGp2dPPRqr4ZhODoyD7QMbsxXZmK9LGMxWypsiVcCfB+UkCFNSMlMvYxCbd7MAmXG
+	 lflGOWXYlKJ3stv7iKOONkHRLge+no01WQCNGvXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgBUMcg (ORCPT
+        id S1727973AbgBUMjF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:32:36 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57670 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgBUMcf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 07:32:35 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id E19C82938B1
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        dafna.hirschfeld@collabora.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, helen.koike@collabora.com,
-        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com,
-        sebastian.reichel@collabora.com
-Subject: [PATCH v4 2/2] arm64: tegra: fix nodes names under i2c-tunnel
-Date:   Fri, 21 Feb 2020 13:32:14 +0100
-Message-Id: <20200221123214.26341-2-dafna.hirschfeld@collabora.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200221123214.26341-1-dafna.hirschfeld@collabora.com>
-References: <20200221123214.26341-1-dafna.hirschfeld@collabora.com>
+        Fri, 21 Feb 2020 07:39:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:38474 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726976AbgBUMjE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:39:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 590A130E;
+        Fri, 21 Feb 2020 04:39:04 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5D5B3F68F;
+        Fri, 21 Feb 2020 04:39:03 -0800 (PST)
+Date:   Fri, 21 Feb 2020 12:39:02 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, digetx@gmail.com,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
+        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
+Subject: Re: [PATCH v3 01/10] dt-bindings: sound: tegra: add DT binding for
+ AHUB
+Message-ID: <20200221123902.GC5546@sirena.org.uk>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-2-git-send-email-spujar@nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="32u276st3Jlj2kUU"
+Content-Disposition: inline
+In-Reply-To: <1582180492-25297-2-git-send-email-spujar@nvidia.com>
+X-Cookie: Dead? No excuse for laying off work.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Change the node names so that they match the class
-of the device and have a unit address.
-The changes are:
-bq24735 -> charger@9
-smart-battery -> battery@b
 
-This also fixes the warning:
-'bq24735', 'smart-battery' do not match any of the
-regexes: '^.*@[0-9a-f]+$', 'pinctrl-[0-9]+'
+--32u276st3Jlj2kUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
----
-Changes since v3:
-- in v3 I only added a unit address to the nodes' names.
-In v4 I also change the names to match the class of the device
-and changed the commit log accordingly.
+On Thu, Feb 20, 2020 at 12:04:43PM +0530, Sameer Pujar wrote:
+> Audio Hub (AHUB) comprises a collection of hardware accelerators for audio
+> pre-processing and post-processing and a programmable full crossbar for
+> audio routing across these accelerators. This patch adds YAML schema for DT
 
- arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-index a0385a386a3f..4cd99dac541b 100644
---- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-@@ -767,7 +767,7 @@
- 
- 				google,remote-bus = <0>;
- 
--				charger: bq24735 {
-+				charger: charger@9 {
- 					compatible = "ti,bq24735";
- 					reg = <0x9>;
- 					interrupt-parent = <&gpio>;
-@@ -778,7 +778,7 @@
- 							GPIO_ACTIVE_HIGH>;
- 				};
- 
--				battery: smart-battery {
-+				battery: battery@b {
- 					compatible = "sbs,sbs-battery";
- 					reg = <0xb>;
- 					battery-name = "battery";
--- 
-2.17.1
+--32u276st3Jlj2kUU
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Pz2UACgkQJNaLcl1U
+h9AHeQf+Piae6cY2B5ePno99lDsl5PHxfR24xDy2XG2/hPqCtEqWXT3EcJlRacLQ
+a6tlKMXvOgdQ4wYzctGGH1SBj00qM6k/Wl4hYaCqxyNdk/6L9VlDM/3S2Aab8Src
+CQ9RHkGUgsWqeAH5KsZ/nFWy9jJ43f+s6hhuJXizxMhAylNlMMvFF7cbahu0nqnu
+K/sB0GN3f+TYIkqCjbuSRdIobC54aMU2mubTk7a0dgEKHfl69Zb8HBVHgjhkSBGf
+r8av9AKtl0yOFQIqVA9PhlOkgwsYdCa5mJKULWK728W/pbPGr+c96RqEgo8vijQg
+bKLrSY6B+ljUVJnpaT5KvMMEYSPevQ==
+=SKbZ
+-----END PGP SIGNATURE-----
+
+--32u276st3Jlj2kUU--
