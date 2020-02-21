@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A005C35646
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC42C35655
 	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5ED24670
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF9F24653
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBUMVo (ORCPT
+        id S1727686AbgBUMVp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:21:44 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:41530 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727683AbgBUMVo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 07:21:44 -0500
+        Fri, 21 Feb 2020 07:21:45 -0500
+Received: from albert.telenet-ops.be ([195.130.137.90]:39796 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgBUMVp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 07:21:45 -0500
 Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id 5QMi2200C5USYZQ06QMiA0; Fri, 21 Feb 2020 13:21:42 +0100
+        by albert.telenet-ops.be with bizsmtp
+        id 5QMi2200D5USYZQ06QMinh; Fri, 21 Feb 2020 13:21:42 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j57JO-0002E7-6D; Fri, 21 Feb 2020 13:21:42 +0100
+        id 1j57JO-0002E9-7I; Fri, 21 Feb 2020 13:21:42 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j57JO-0008LO-4p; Fri, 21 Feb 2020 13:21:42 +0100
+        id 1j57JO-0008LS-5n; Fri, 21 Feb 2020 13:21:42 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Marcus Wolf <linux@Wolf-Entwicklungen.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -38,9 +38,9 @@ To:     Marcus Wolf <linux@Wolf-Entwicklungen.de>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     devel@driverdev.osuosl.org, devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/3] staging: pi433: overlay: Fix reg-related warnings
-Date:   Fri, 21 Feb 2020 13:21:32 +0100
-Message-Id: <20200221122133.32024-3-geert+renesas@glider.be>
+Subject: [PATCH 3/3] staging: pi433: overlay: Convert to sugar syntax
+Date:   Fri, 21 Feb 2020 13:21:33 +0100
+Message-Id: <20200221122133.32024-4-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200221122133.32024-1-geert+renesas@glider.be>
 References: <20200221122133.32024-1-geert+renesas@glider.be>
@@ -49,46 +49,111 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When running "scripts/dtc/dtc -@ -I dts -O dtb -o pi433-overlay.dtbo.1
-drivers/staging/pi433/Documentation/devicetree/pi433-overlay.dts":
-
-    drivers/staging/pi433/Documentation/devicetree/pi433-overlay.dts:13.12-15.6: Warning (unit_address_vs_reg): /fragment@0/__overlay__/spidev@0: node has a unit name, but no reg property
-    drivers/staging/pi433/Documentation/devicetree/pi433-overlay.dts:17.12-19.6: Warning (unit_address_vs_reg): /fragment@0/__overlay__/spidev@1: node has a unit name, but no reg property
-
-Add the missing "reg" properties to fix this.
-
-    drivers/staging/pi433/Documentation/devicetree/pi433-overlay.dts:14.5-15: Warning (reg_format): /fragment@0/__overlay__/spidev@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-    drivers/staging/pi433/Documentation/devicetree/pi433-overlay.dts:19.5-15: Warning (reg_format): /fragment@0/__overlay__/spidev@1:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-
-Add the missing "#{address,size}-cells" to fix this.
+Using overlay sugar syntax makes the DTS overlay files easier to read
+(and write).
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../staging/pi433/Documentation/devicetree/pi433-overlay.dts  | 4 ++++
- 1 file changed, 4 insertions(+)
+Why are there two separate fragments for spi0? Can't they be combined?
+Why do you need the spidev@1 entry?
+---
+ .../devicetree/pi433-overlay.dts              | 79 ++++++++-----------
+ 1 file changed, 35 insertions(+), 44 deletions(-)
 
 diff --git a/drivers/staging/pi433/Documentation/devicetree/pi433-overlay.dts b/drivers/staging/pi433/Documentation/devicetree/pi433-overlay.dts
-index dfc9f974ac24ecc1..b584180d78d019aa 100644
+index b584180d78d019aa..096137fcd5cc0131 100644
 --- a/drivers/staging/pi433/Documentation/devicetree/pi433-overlay.dts
 +++ b/drivers/staging/pi433/Documentation/devicetree/pi433-overlay.dts
-@@ -8,13 +8,17 @@
- 	fragment@0 {
- 		target = <&spi0>;
- 		__overlay__ {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			status = "okay";
+@@ -4,54 +4,45 @@
  
- 			spidev@0{
-+				reg = <0>;
- 				status = "disabled";
- 			};
+ / {
+ 	compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
++};
++
++&spi0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	spidev@0{
++		reg = <0>;
++		status = "disabled";
++	};
  
- 			spidev@1{
-+				reg = <1>;
- 				status = "disabled";
- 			};
- 		};
+-	fragment@0 {
+-		target = <&spi0>;
+-		__overlay__ {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			status = "okay";
+-
+-			spidev@0{
+-				reg = <0>;
+-				status = "disabled";
+-			};
+-
+-			spidev@1{
+-				reg = <1>;
+-				status = "disabled";
+-			};
+-		};
++	spidev@1{
++		reg = <1>;
++		status = "disabled";
+ 	};
++};
+ 
+-	fragment@1 {
+-		target = <&gpio>;
+-		__overlay__ {
+-			pi433_pins: pi433_pins {
+-				brcm,pins = <7 25 24>;
+-				brcm,function = <0 0 0>; // in in in
+-			};
+-		};
++&gpio {
++	pi433_pins: pi433_pins {
++		brcm,pins = <7 25 24>;
++		brcm,function = <0 0 0>; // in in in
+ 	};
++};
+ 
+-	fragment@2 {
+-		target = <&spi0>;
+-		__overlay__ {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			status = "okay";
+-
+-			pi433: pi433@0 {
+-				compatible = "Smarthome-Wolf,pi433";
+-				reg = <0>;
+-				spi-max-frequency = <10000000>;
+-				status = "okay";
+-
+-				pinctrl-0 = <&pi433_pins>;
+-				DIO0-gpio = <&gpio 24 0>;
+-				DIO1-gpio = <&gpio 25 0>;
+-				DIO2-gpio = <&gpio  7 0>;
+-			};
+-		};
++&spi0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	pi433: pi433@0 {
++		compatible = "Smarthome-Wolf,pi433";
++		reg = <0>;
++		spi-max-frequency = <10000000>;
++		status = "okay";
++
++		pinctrl-0 = <&pi433_pins>;
++		DIO0-gpio = <&gpio 24 0>;
++		DIO1-gpio = <&gpio 25 0>;
++		DIO2-gpio = <&gpio  7 0>;
+ 	};
+ };
 -- 
 2.17.1
 
