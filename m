@@ -2,102 +2,117 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233BFC35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDD6C35656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB162206E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:36:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YJwIqRv9"
+	by mail.kernel.org (Postfix) with ESMTP id C637A206E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582299616;
+	bh=+DoRoBMJXa06a9s5rF/Tg0R2Bb7OUU1w4NYR6LGt5us=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LbLolxBH/v3Ek0cxBMbSf5S3XWX7e8KFR0JiPmiH6J0zEeT2ZXOGE0FUsSAAa6tIu
+	 +JvVX2mqEbrZRQnTAhfIDEM8G0nLQUyzDPjqcvI+4KYrpJZnIbcxa6vxHCIiVWesNw
+	 pX1DY39TwkrVyimA8AiWMbVZ0qVDTIlb4G7rL6w4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgBUPgc (ORCPT
+        id S1728914AbgBUPkN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:36:32 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35607 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728968AbgBUPgV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 10:36:21 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b17so2380195wmb.0
-        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 07:36:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eFN2VKHrE+JD0cGAI+3A9MIQDzvF5Lgt98hOYp/CejM=;
-        b=YJwIqRv9ZAZT+JufvECzrUvECj3c7vl3DwyjpavnRiTUC+BT5MwCGuUuHrmuPh5Qdx
-         2k2nK57li5jZtok/isZ8Y1ljxslqxASi+smgJ7u9748rS31vEE6rk1FFWUbLXsNaFofV
-         WC9+91sUznQKJ4ukv+rpRKMuxbM8RZgHoBZyWBPbD0POsX8WiOb+0mYGMRZ4w9iu5anB
-         PV2NTKPrVoTm9H6mFTrDDZISPtGpVmOjN6OQMXYBeRUeZh21ze7FU98JEInnGCL2lpOo
-         CK7zxw0pRThM7dM1fWfJlbzxNQP95XAMC63rKo7kS7d/iCJPCdB1RkSa+kMv8AtG/3Si
-         M6ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eFN2VKHrE+JD0cGAI+3A9MIQDzvF5Lgt98hOYp/CejM=;
-        b=cHOSNDFSDpoz0OpbU8QUXWiRHij/rwOk/roa/NIaVhMWObcSArEVOFySbUN2Z+fG2X
-         p9qqn+L5UBIeTzb0L0y7qeLqaWTqmGPJGRp1fHZdGTo2bEmjQzENwUwlXpkuc6PCJkJ0
-         XbqFlxY0qxB2QEQU9EGLWdL1Ga872774LdsKjn5AtfHaeqYaedBrdIC4haom1ZgHTtF1
-         bLcwiRTCjL8WsOIU2A5XltvqB+X/JNdxCgRYFbEjmtaA0VGg3LTMAQpoNwrKhkmex/Ac
-         5iWp0R62VMe5QGZt65mFVRXKmZxVwupdTfAwzTOL54L318UHbuYrUyGYb8eSsC9v2L3H
-         pIMw==
-X-Gm-Message-State: APjAAAXh5DbylA6XWheemdG0SsOEaL9ko8mtnoHUqZbxyznuFuAMrtev
-        D/uA03aHUnUQM8DEIsHxlWdWaA==
-X-Google-Smtp-Source: APXvYqyKrZMlHSg/htp/5+30XIfFhh5aJwM5uacnmK48s3KUO/TfzxUThJS8Jhao+rZrzsLIALqGhQ==
-X-Received: by 2002:a7b:c14d:: with SMTP id z13mr4597867wmi.71.1582299379163;
-        Fri, 21 Feb 2020 07:36:19 -0800 (PST)
-Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id z25sm4198782wmf.14.2020.02.21.07.36.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:36:18 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH v2 3/3] ASoC: meson: axg-card: add toacodec support
-Date:   Fri, 21 Feb 2020 16:36:07 +0100
-Message-Id: <20200221153607.1585499-4-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200221153607.1585499-1-jbrunet@baylibre.com>
-References: <20200221153607.1585499-1-jbrunet@baylibre.com>
+        Fri, 21 Feb 2020 10:40:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728815AbgBUPkM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:40:12 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3325F208E4;
+        Fri, 21 Feb 2020 15:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582299612;
+        bh=+DoRoBMJXa06a9s5rF/Tg0R2Bb7OUU1w4NYR6LGt5us=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=C50UxxIIkUBAA2owQJBxXLzj5mfErfF8Pc2OBetl4t/cV2KyEMFMjn8eC4BwC7mmB
+         kCwDosbSs53gE4Sdr5Fg43Ax+XA9Ho+WY/6Ra20KzNoV0s1vrbxL2eSWxW29kf/Mqk
+         pkg+U+QsIhllO3E7zJbObensr46EDR31k4fiVQ/w=
+Received: by mail-qk1-f176.google.com with SMTP id u124so2142822qkh.13;
+        Fri, 21 Feb 2020 07:40:12 -0800 (PST)
+X-Gm-Message-State: APjAAAVWTnkvg0TT+tYQ0dwv4VG90sEhb2AlHYq/UYKheOekFsdrUtva
+        UyaKIOjoiDlVrAqb3AWsHyj9DjU4LPJxqKXl/g==
+X-Google-Smtp-Source: APXvYqy0D6b0D+YPb02EPEVdZaz7+H9RHdQphCR7I5xx5+N9sBx4J8AdIN+Hdpb187sXHw7HfZ4TtvWRgV6uosWTKgo=
+X-Received: by 2002:a05:620a:1237:: with SMTP id v23mr17847336qkj.223.1582299611320;
+ Fri, 21 Feb 2020 07:40:11 -0800 (PST)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20200221041631.10960-1-chris.packham@alliedtelesis.co.nz> <20200221041631.10960-4-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200221041631.10960-4-chris.packham@alliedtelesis.co.nz>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 21 Feb 2020 09:40:00 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK+jKyRr98_YX1GGwk-rHrLMOq_v7Z_57dQWYYQPuLS7A@mail.gmail.com>
+Message-ID: <CAL_JsqK+jKyRr98_YX1GGwk-rHrLMOq_v7Z_57dQWYYQPuLS7A@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] dt-bindings: hwmon: Document adt7475 invert-pwm property
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Make sure the axg audio card driver recognise the dai_link as a
-codec-to-codec link if the cpu dai is the internal dac glue.
+On Thu, Feb 20, 2020 at 10:16 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> Add binding information for the invert-pwm property.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>
+> Notes:
+>     Changes in v4:
+>     - use $ref uint32 and enum
+>     - add adi vendor prefix
+>
+>     Cahnges in v3:
+>     - new
+>
+>  Documentation/devicetree/bindings/hwmon/adt7475.yaml | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> index e40612ee075f..6a358b30586c 100644
+> --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> @@ -50,6 +50,17 @@ patternProperties:
+>       - $ref: /schemas/types.yaml#/definitions/uint32
+>       - enum: [0, 1]
+>
+> +  "^adi,invert-pwm[1-3]$":
+> +    description: |
+> +      Configures the pwm output to use inverted logic. If set to 1
+> +      the pwm uses a logic low output for 100% duty cycle. If set
+> +      to 0 the pwm uses a logic high output for 100% duty cycle.
+> +      If the property is absent the pwm retains it's configuration
+> +      from the bios/bootloader.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/axg-card.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I believe we already have an inverted flag for consumers. That doesn't
+work if you don't have a consumer described in DT, but then the
+question is should you? Or is this something the user will want to
+configure from userspace.
 
-diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
-index 372dc696cc8e..48651631bdcf 100644
---- a/sound/soc/meson/axg-card.c
-+++ b/sound/soc/meson/axg-card.c
-@@ -303,7 +303,8 @@ static int axg_card_cpu_is_tdm_iface(struct device_node *np)
- 
- static int axg_card_cpu_is_codec(struct device_node *np)
- {
--	return of_device_is_compatible(np, DT_PREFIX "g12a-tohdmitx");
-+	return of_device_is_compatible(np, DT_PREFIX "g12a-tohdmitx") ||
-+		of_device_is_compatible(np, DT_PREFIX "g12a-toacodec");
- }
- 
- static int axg_card_add_link(struct snd_soc_card *card, struct device_node *np,
--- 
-2.24.1
+The problem with 'invert' properties is they assume you know what the
+not inverted state is. I would also make this an array:
 
+adi,pwm-active-state = <1 0 0 1>; // PWM1 and PWM2 active low
+
+And not present means <1 1 1 1>.
+
+Rob
