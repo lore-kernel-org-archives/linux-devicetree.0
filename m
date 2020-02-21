@@ -2,159 +2,141 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F78EC11D27
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 00:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68473C11D00
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 00:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E8024654
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 00:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DC324654
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 00:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVv11Zk8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RC1y9Ev8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgBUAVF (ORCPT
+        id S1729497AbgBUAYC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:21:05 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36780 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729392AbgBUAVE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 19:21:04 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 185so264389pfv.3;
-        Thu, 20 Feb 2020 16:21:04 -0800 (PST)
+        Thu, 20 Feb 2020 19:24:02 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40267 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729451AbgBUAYC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 19:24:02 -0500
+Received: by mail-pj1-f67.google.com with SMTP id 12so226235pjb.5
+        for <devicetree@vger.kernel.org>; Thu, 20 Feb 2020 16:24:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=a4/ljhrEhbsVqKPnJ2k+YSVwNBU/denU+0a+fK/lh98=;
-        b=EVv11Zk8AYB9hS7c/Lkhd52HNoMejxxMg8MSwFwHJcv1rgn10PAhKhBkvQKJZ9BaG4
-         NskY5M0YE8o7EDmxnYtEItF+4qEF9oy85BAypdcQLsWCfoUN5s6/K5sf4UBUKmZFHt21
-         sPDTaDsivhrGrdnpq+r/7LFFJ6iUnNpEAJYJXg8Ee0SInqr6LR18ucHGaTIv12TSpOY7
-         T3kbv9FZQGel1oR9RlWLR13Zh+N6dF1UN7NKb9P1kVE3+7PHhjs68qRSxLFcCG6rbc83
-         bG7S9Xx0Y70mXDOROUbqjhVu+2fpCEoIw+v7N18ETcmTnwuHDxcgjGu+SiaRh2I9/UOe
-         84zg==
+        bh=N+W2ETEjDh4VNtgtmLh/TfEkNqYr/Dj+9ajtDJm9neY=;
+        b=RC1y9Ev8yYPshv4Bs732//4TwtEKj4z/RU6pjfL30nYLsKEse7Ahw4+tlJLRCJcYPi
+         QHtBOyv+Qik/4Nn8QKBRwMA1A2R4jCmYA0rQDE6KXO24k4yzHT0fiCIEnPMExEWZiWXA
+         ag7DzPHT64h0fZaJAQjYG6clhowVsW+2rW6h0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a4/ljhrEhbsVqKPnJ2k+YSVwNBU/denU+0a+fK/lh98=;
-        b=V80Bz0ZGMAnZBahABZ3L77yb8lFytDXCSKBA7nBPtQ28Vkz5vVJAvwyKnEFtcUl8Om
-         XByd7hpJ5nnSJYutV5FCNeJS7+NL0FHedFxuYKjpWPVe4WuFgZ6H43cYLWLiYoI1TP0/
-         epJCNra9iCkmKhIjfl+AgLdMuyXKAnhLbL3yuK1Nt2BcJOe8wBXaqBGRG40DP/CqJ35v
-         babkNFvxu05nCz+7SQChrM+tcfbiL8nhAodwHoa20nqz23R2ZSrOHXS46aPQ1UXF30rD
-         i+rRrsyWeo9NJW/Ge0Uls04j7ehAGU/B+stw5QM5DjUbl89/LaJezADPwWEsSFSE3ALX
-         mpSw==
-X-Gm-Message-State: APjAAAVkeBNq2on4geQysTic6leQngP62LjxTQPQDhg3WC6qUO5jZIw9
-        ZFUQjsiVuuzds+nbV7RQFJ0=
-X-Google-Smtp-Source: APXvYqyjiF/VG6y/NeQCdPXrhpSws4JsxzMcf4IkrfSRa3KYM7f7ExChm9MNA6NOGinrsiWkqQIdvQ==
-X-Received: by 2002:a63:3e05:: with SMTP id l5mr35763336pga.293.1582244463971;
-        Thu, 20 Feb 2020 16:21:03 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:500::6:8f30])
-        by smtp.gmail.com with ESMTPSA id t11sm541459pjo.21.2020.02.20.16.21.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Feb 2020 16:21:03 -0800 (PST)
-Date:   Thu, 20 Feb 2020 16:20:59 -0800
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Subject: Re: [PATCH 2/2] usb: gadget: aspeed: fixup usb1 device descriptor at
- init time
-Message-ID: <20200221002059.GB7815@taoren-ubuntu-R90MNF91>
-References: <20200218235600.6763-1-rentao.bupt@gmail.com>
- <20200218235600.6763-3-rentao.bupt@gmail.com>
- <55e77bcb37ec780094b8d226f89bd5557e30d913.camel@kernel.crashing.org>
+        bh=N+W2ETEjDh4VNtgtmLh/TfEkNqYr/Dj+9ajtDJm9neY=;
+        b=RazXLUnRugpgzm/Xl7WiYKrdRW/RsU8yk6rGHiSX2FYHNB937IKNTzeK87gVROqYkl
+         /oKT7IaC9YSwMM5r1gxcMWwxFAlUi8c0coS+PX3GV1mf4d9aoDGHNu0C458LXCSwGe2m
+         zrPd/afVUPAd8Bhp0RANohVUur89sH2c+wh94ekOu3ryPB/KfNG6SpYRBY+UuaJ1lR1e
+         H7KCM9lbXuoHUnANYKHapMnGq+lzCiVM6uKoVGdr0ZpwRJjPGS0qLvLvPA+uVwKiFEVZ
+         vR2XQkNuQLx1dcy5lD8oZmVGyJ9S4Oj/fKlI9YkTEgwDjQ5Vw034ZeejflLJYJzCvZGF
+         YgLQ==
+X-Gm-Message-State: APjAAAUxbs2aDslwXn/Ce5GJP1dAU7dl60NCP/xDoQMSZQadR63TjD8p
+        swzx8JN4+cauDrd0WzFwhCNbyg==
+X-Google-Smtp-Source: APXvYqyocUfmVHntXz0Jeoqt9gMILke4bXLLeHZVx9N6jDKA2rov2r0w1ZLTo07S4ZMWTAhuiB+C2Q==
+X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr32244576plv.297.1582244642055;
+        Thu, 20 Feb 2020 16:24:02 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id f127sm726701pfa.112.2020.02.20.16.24.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 16:24:01 -0800 (PST)
+Date:   Thu, 20 Feb 2020 16:24:00 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org
+Subject: Re: [PATCH 3/6] i2c: i2c-qcom-geni: Add interconnect support
+Message-ID: <20200221002400.GD24720@google.com>
+References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
+ <1581946205-27189-4-git-send-email-akashast@codeaurora.org>
+ <20200218224709.GF15781@google.com>
+ <84a7d97a-4e10-5509-9c87-af8a545c7385@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <55e77bcb37ec780094b8d226f89bd5557e30d913.camel@kernel.crashing.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <84a7d97a-4e10-5509-9c87-af8a545c7385@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 12:39:45PM +1100, Benjamin Herrenschmidt wrote:
-> On Tue, 2020-02-18 at 15:56 -0800, rentao.bupt@gmail.com wrote:
-> > From: Tao Ren <rentao.bupt@gmail.com>
-> > 
-> > This patch moves fixup-usb1-device-descriptor logic from get_descriptor
-> > handler to "ast_vhub_fixup_dev_desc" function so the device descriptor
-> > is only patched once (at vhub init time).
+Hi Akash,
+
+On Wed, Feb 19, 2020 at 07:17:44PM +0530, Akash Asthana wrote:
+> Hi Matthias,
 > 
-> I don't like this either. We should make ast_vhub_dev_desc and patch a
-> copy here too. I know today there's only one instance of the vhub in a
-> given SoC but that might not always be the case.
-
-Sure. I will introduce per-hub descripor instances in patch v2.
-
-
-Cheers,
-
-Tao
+> On 2/19/2020 4:17 AM, Matthias Kaehlcke wrote:
+> > On Mon, Feb 17, 2020 at 07:00:02PM +0530, Akash Asthana wrote:
+> > > Get the interconnect paths for I2C based Serial Engine device
+> > > and vote according to the bus speed of the driver.
+> > > 
+> > > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> > > ---
+> > >   drivers/i2c/busses/i2c-qcom-geni.c | 84 ++++++++++++++++++++++++++++++++++++--
+> > >   1 file changed, 80 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> > > index 17abf60c..5de10a1 100644
+> > > --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> > > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> > >
+> > >   static void geni_i2c_err_misc(struct geni_i2c_dev *gi2c)
+> > >   {
+> > >   	u32 m_cmd = readl_relaxed(gi2c->se.base + SE_GENI_M_CMD0);
+> > > @@ -563,17 +601,34 @@ static int geni_i2c_probe(struct platform_device *pdev)
+> > >   	gi2c->adap.dev.of_node = pdev->dev.of_node;
+> > >   	strlcpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
+> > > +	ret = geni_i2c_icc_get(&gi2c->se);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +	/* Set the bus quota to a reasonable value */
+> > > +	gi2c->se.avg_bw_core = Bps_to_icc(1000);
+> > > +	gi2c->se.peak_bw_core = Bps_to_icc(CORE_2X_100_MHZ);
+> > > +	gi2c->se.avg_bw_cpu = Bps_to_icc(1000);
+> > > +	gi2c->se.peak_bw_cpu = Bps_to_icc(1000);
+> > > +	gi2c->se.avg_bw_ddr = Bps_to_icc(gi2c->clk_freq_out);
+> > > +	gi2c->se.peak_bw_ddr = Bps_to_icc(2 * gi2c->clk_freq_out);
+> > > +
+> > > +	/* Vote for core clocks and CPU for register access */
+> > > +	icc_set_bw(gi2c->se.icc_path[GENI_TO_CORE], gi2c->se.avg_bw_core,
+> > > +				gi2c->se.peak_bw_core);
+> > > +	icc_set_bw(gi2c->se.icc_path[CPU_TO_GENI], gi2c->se.avg_bw_cpu,
+> > > +				gi2c->se.peak_bw_cpu);
+> > error handling needed?
 > 
-> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> > ---
-> >  drivers/usb/gadget/udc/aspeed-vhub/hub.c | 20 +++++++++-----------
-> >  1 file changed, 9 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/hub.c b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-> > index 4e3ef83283a6..b8bf54b12adc 100644
-> > --- a/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-> > +++ b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-> > @@ -76,13 +76,6 @@ static struct usb_device_descriptor ast_vhub_dev_desc = {
-> >  	.bNumConfigurations	= 1,
-> >  };
-> >  
-> > -/* Patches to the above when forcing USB1 mode */
-> > -static void ast_vhub_patch_dev_desc_usb1(struct usb_device_descriptor *desc)
-> > -{
-> > -	desc->bcdUSB = cpu_to_le16(0x0100);
-> > -	desc->bDeviceProtocol = 0;
-> > -}
-> > -
-> >  /*
-> >   * Configuration descriptor: same comments as above
-> >   * regarding handling USB1 mode.
-> > @@ -316,10 +309,6 @@ static int ast_vhub_rep_desc(struct ast_vhub_ep *ep,
-> >  	if (len > dsize)
-> >  		len = dsize;
-> >  
-> > -	/* Patch it if forcing USB1 */
-> > -	if (desc_type == USB_DT_DEVICE && ep->vhub->force_usb1)
-> > -		ast_vhub_patch_dev_desc_usb1(ep->buf);
-> > -
-> >  	/* Shoot it from the EP buffer */
-> >  	return ast_vhub_reply(ep, NULL, len);
-> >  }
-> > @@ -878,6 +867,15 @@ static void ast_vhub_fixup_dev_desc(struct ast_vhub *vhub)
-> >  		if (of_str[id])
-> >  			ast_vhub_str_array[i].s = of_str[id];
-> >  	}
-> > +
-> > +	/*
-> > +	 * Update USB Release Number and Protocol code if vhub is running
-> > +	 * at USB 1.x speed.
-> > +	 */
-> > +	if (vhub->force_usb1) {
-> > +		ast_vhub_dev_desc.bcdUSB = cpu_to_le16(0x0100);
-> > +		ast_vhub_dev_desc.bDeviceProtocol = 0;
-> > +	}
-> >  }
-> >  
-> >  void ast_vhub_init_hub(struct ast_vhub *vhub)
+> I will add error handling for GENI_TO_CORE path in all the drivers. Will it
+> be okay if we don't handle errors for CPU_TO_GENI and GENI_TO_DDR path
 > 
+> as CPU and DDR will be running at much higher frequency?
+
+It may still work, but you might never know that there was a problem. I
+would be inclined to check the return value of all invocations of icc_set_bw()
+- including runtime suspend/resume - and log a message if a problem is
+detected. For runtime suspend/resume it would probably be wise to use
+dev_err_ratelimited(), to avoid spamming the system log too much in case of
+a persistent problem.
+
+If others think that error checking all icc_set_bw() calls is overkill
+please speak up :)
+
+Thanks
+
+Matthias
