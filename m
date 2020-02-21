@@ -2,109 +2,181 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0566AC35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC98C35655
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F2C24672
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:12:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CS/oR3AB"
+	by mail.kernel.org (Postfix) with ESMTP id 5D414207FD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 12:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgBUMMC (ORCPT
+        id S1727077AbgBUMLw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:12:02 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39196 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbgBUMMB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 07:12:01 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so1781770wrt.6
-        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 04:12:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hS96wgt/ER0zqCa5SCOVpu61bVnBbfmDRQTyUX2IrAg=;
-        b=CS/oR3ABVm90GOGwxlesbU5UaRDqDi4937vJIZTYLNgqFuONm21aZHfScF1yfn5sAO
-         xdxwA0HkcqUqTryI/sndrYYXkvoPVOAFhEEC3AzBENzt3TA3GfZ5pbXcjskloGHkCTpZ
-         a77kpInQpoS3R/nE1wh7iy1tE7R+PB8uZsyNSP/TNDZLndcmcCGV83fW63VZdCSbFDkb
-         dGQ/VBQeP6CBnmYAGuZN5H+5VLNTKx9sdLzMAjP/uMS0dgHQej5Z7MhJVnrhhgiIJJ78
-         QTReeJZnSZTQJRREy+l5X1Q9RwN4MNBQQw37iC78fTKYq6khyXtgU9FsErbddnK5PQ2+
-         ZUUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hS96wgt/ER0zqCa5SCOVpu61bVnBbfmDRQTyUX2IrAg=;
-        b=mUAQE+pVjDU7s5t9REod3RiF2vfhjbqggEFEk9KcGEzjxFYveq1Z28EEKogvWa7bD6
-         oqSDmiSHZJod95FalQgrmpDfw1RuVjYQ9Xcc+9UG4UPFUWTcOSXdVZu58J+Gyoeo8qHg
-         KUm5Ar1rHO/JsarM+VHRQgGr8NGrxG3I+aWxe9vsc79gNdcTc6lmfI0ltHgNNp5u9xpm
-         whbRosvPfjxV9vxD3lPdcQheMjr3qoYc1oOqrxWDu4T+2qSXp4s735+150exMJVGTwnZ
-         c+8Izz13rxbLqjwVCD1zn2p3eVQxFwAE6QoPM3rBgD2p/stZa+Hs26997FjEy+hSxN2i
-         nQkA==
-X-Gm-Message-State: APjAAAVKPIIYeCSnlPoIwUat+sHbbOuL2I4gxk2X4BKMifPUAbhhrPeu
-        cQ3eAtUIsQE9qOgbjjfS/1h5+g==
-X-Google-Smtp-Source: APXvYqwYh4N7wz2XscGcCwMNShVzzwC6C2HoeJjKHoDg8DxmO/DkVmrmpDieYviHEdy0nbFzFz8hSg==
-X-Received: by 2002:a05:6000:108b:: with SMTP id y11mr49634195wrw.187.1582287119261;
-        Fri, 21 Feb 2020 04:11:59 -0800 (PST)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id w22sm3553127wmk.34.2020.02.21.04.11.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 04:11:58 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH] ASoC: meson: g12a: add tohdmitx reset
+        Fri, 21 Feb 2020 07:11:52 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:41996 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbgBUMLv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 07:11:51 -0500
+Received: from ramsan ([84.195.182.253])
+        by xavier.telenet-ops.be with bizsmtp
+        id 5QBo2200M5USYZQ01QBo1q; Fri, 21 Feb 2020 13:11:48 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j579o-0001zN-F8; Fri, 21 Feb 2020 13:11:48 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j579o-00087C-Da; Fri, 21 Feb 2020 13:11:48 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: reset: rcar-rst: Convert to json-schema
 Date:   Fri, 21 Feb 2020 13:11:46 +0100
-Message-Id: <20200221121146.1498427-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Message-Id: <20200221121146.31153-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Reset the g12a hdmi codec glue on probe. This ensure a sane startup state.
+Convert the Renesas R-Car Reset Controller Device Tree binding
+documentation to json-schema.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- sound/soc/meson/g12a-tohdmitx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../devicetree/bindings/reset/renesas,rst.txt | 48 ---------------
+ .../bindings/reset/renesas,rst.yaml           | 61 +++++++++++++++++++
+ 2 files changed, 61 insertions(+), 48 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.yaml
 
-diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
-index f8853f2fba08..9b2b59536ced 100644
---- a/sound/soc/meson/g12a-tohdmitx.c
-+++ b/sound/soc/meson/g12a-tohdmitx.c
-@@ -8,6 +8,7 @@
- #include <linux/module.h>
- #include <sound/pcm_params.h>
- #include <linux/regmap.h>
-+#include <linux/reset.h>
- #include <sound/soc.h>
- #include <sound/soc-dai.h>
- 
-@@ -245,6 +246,11 @@ static int g12a_tohdmitx_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	void __iomem *regs;
- 	struct regmap *map;
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt b/Documentation/devicetree/bindings/reset/renesas,rst.txt
+deleted file mode 100644
+index de7f06ccd003da9f..0000000000000000
+--- a/Documentation/devicetree/bindings/reset/renesas,rst.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-DT bindings for the Renesas R-Car and RZ/G Reset Controllers
+-
+-The R-Car and RZ/G Reset Controllers provide reset control, and implement the
+-following functions:
+-  - Latching of the levels on mode pins when PRESET# is negated,
+-  - Mode monitoring register,
+-  - Reset control of peripheral devices (on R-Car Gen1),
+-  - Watchdog timer (on R-Car Gen1),
+-  - Register-based reset control and boot address registers for the various CPU
+-    cores (on R-Car Gen2 and Gen3, and on RZ/G).
+-
+-
+-Required properties:
+-  - compatible: Should be
+-		  - "renesas,<soctype>-reset-wdt" for R-Car Gen1,
+-		  - "renesas,<soctype>-rst" for R-Car Gen2 and Gen3, and RZ/G
+-		Examples with soctypes are:
+-		  - "renesas,r8a7743-rst" (RZ/G1M)
+-		  - "renesas,r8a7744-rst" (RZ/G1N)
+-		  - "renesas,r8a7745-rst" (RZ/G1E)
+-		  - "renesas,r8a77470-rst" (RZ/G1C)
+-		  - "renesas,r8a774a1-rst" (RZ/G2M)
+-		  - "renesas,r8a774b1-rst" (RZ/G2N)
+-		  - "renesas,r8a774c0-rst" (RZ/G2E)
+-		  - "renesas,r8a7778-reset-wdt" (R-Car M1A)
+-		  - "renesas,r8a7779-reset-wdt" (R-Car H1)
+-		  - "renesas,r8a7790-rst" (R-Car H2)
+-		  - "renesas,r8a7791-rst" (R-Car M2-W)
+-		  - "renesas,r8a7792-rst" (R-Car V2H
+-		  - "renesas,r8a7793-rst" (R-Car M2-N)
+-		  - "renesas,r8a7794-rst" (R-Car E2)
+-		  - "renesas,r8a7795-rst" (R-Car H3)
+-		  - "renesas,r8a7796-rst" (R-Car M3-W)
+-		  - "renesas,r8a77961-rst" (R-Car M3-W+)
+-		  - "renesas,r8a77965-rst" (R-Car M3-N)
+-		  - "renesas,r8a77970-rst" (R-Car V3M)
+-		  - "renesas,r8a77980-rst" (R-Car V3H)
+-		  - "renesas,r8a77990-rst" (R-Car E3)
+-		  - "renesas,r8a77995-rst" (R-Car D3)
+-  - reg: Address start and address range for the device.
+-
+-
+-Example:
+-
+-	rst: reset-controller@e6160000 {
+-		compatible = "renesas,r8a7795-rst";
+-		reg = <0 0xe6160000 0 0x0200>;
+-	};
+diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.yaml b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
+new file mode 100644
+index 0000000000000000..5819eebfca064dff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/reset/renesas,rst.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+	ret = device_reset(dev);
-+	if (ret)
-+		return ret;
- 
- 	regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(regs))
++title: DT bindings for the Renesas R-Car and RZ/G Reset Controller
++
++maintainers:
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++  - Magnus Damm <magnus.damm@gmail.com>
++
++description: |
++  The R-Car and RZ/G Reset Controllers provide reset control, and implement the
++  following functions:
++    - Latching of the levels on mode pins when PRESET# is negated,
++    - Mode monitoring register,
++    - Reset control of peripheral devices (on R-Car Gen1),
++    - Watchdog timer (on R-Car Gen1),
++    - Register-based reset control and boot address registers for the various
++      CPU cores (on R-Car Gen2 and Gen3, and on RZ/G).
++
++properties:
++  compatible:
++    enum:
++      - renesas,r8a7743-rst       # RZ/G1M
++      - renesas,r8a7744-rst       # RZ/G1N
++      - renesas,r8a7745-rst       # RZ/G1E
++      - renesas,r8a77470-rst      # RZ/G1C
++      - renesas,r8a774a1-rst      # RZ/G2M
++      - renesas,r8a774b1-rst      # RZ/G2N
++      - renesas,r8a774c0-rst      # RZ/G2E
++      - renesas,r8a7778-reset-wdt # R-Car M1A
++      - renesas,r8a7779-reset-wdt # R-Car H1
++      - renesas,r8a7790-rst       # R-Car H2
++      - renesas,r8a7791-rst       # R-Car M2-W
++      - renesas,r8a7792-rst       # R-Car V2H
++      - renesas,r8a7793-rst       # R-Car M2-N
++      - renesas,r8a7794-rst       # R-Car E2
++      - renesas,r8a7795-rst       # R-Car H3
++      - renesas,r8a7796-rst       # R-Car M3-W
++      - renesas,r8a77961-rst      # R-Car M3-W+
++      - renesas,r8a77965-rst      # R-Car M3-N
++      - renesas,r8a77970-rst      # R-Car V3M
++      - renesas,r8a77980-rst      # R-Car V3H
++      - renesas,r8a77990-rst      # R-Car E3
++      - renesas,r8a77995-rst      # R-Car D3
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    rst: reset-controller@e6160000 {
++            compatible = "renesas,r8a7795-rst";
++            reg = <0xe6160000 0x0200>;
++    };
 -- 
-2.24.1
+2.17.1
 
