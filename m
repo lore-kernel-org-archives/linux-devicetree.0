@@ -2,115 +2,110 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BF5C35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE16C35657
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB089222C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582292292;
-	bh=xwZtYdVGm1YdaKV8BKeiJhwK+7maJ+h8QKPM8JBtYqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JrvA0E95ihF2jHdGqgnQHSaVzJKzfdoNWYjH2lNSBFbDNQgwYlB3W8V9YD0yutoeC
-	 MWhCayDRjUu4Ug+CHEMLNZ5T+x1vvNyRqNYKo2KFFH4QrxSL8T2PG4ack2Qy7585/K
-	 0AMy2E46bQRL9t/RE1D1tALPx6WINyzyEj4iXp/s=
+	by mail.kernel.org (Postfix) with ESMTP id 2D0AC208C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:49:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YG2Me4Pv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgBUNiH (ORCPT
+        id S1727470AbgBUNtf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:38:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:39538 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgBUNiH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:38:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1539630E;
-        Fri, 21 Feb 2020 05:38:06 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24D5D3F703;
-        Fri, 21 Feb 2020 05:38:05 -0800 (PST)
-Date:   Fri, 21 Feb 2020 13:38:03 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
-        lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, digetx@gmail.com,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
-        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
-Subject: Re: [PATCH v3 05/10] ASoC: tegra: add Tegra210 based AHUB driver
-Message-ID: <20200221133803.GF5546@sirena.org.uk>
-References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
- <1582180492-25297-6-git-send-email-spujar@nvidia.com>
+        Fri, 21 Feb 2020 08:49:35 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41848 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbgBUNte (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 08:49:34 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so1527972lfp.8
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 05:49:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PyeTvkkAnCUH4kZEoAfj76XyH5K0PchtC9IwnXWSMfs=;
+        b=YG2Me4PvMR7Nd4Rf3b4HuL0McVpAs2ooY3qUvclfGG6VO4MC/BBM0kQvM5dScEvBXr
+         vLeI2IDKOaJ8uWbNrA6AcwrvTaDzjGvV/AJVCyf2NW98WsAGjXW5Z38taX4+3FP6BWDa
+         ZhPxOuFJMqcsj8NFTN7q6izUJ5i3ydx3J1wyHqXRdMY8bOeh5SqZkJL/Sxl1xWoC5j60
+         3TkvEeBUfubdnzFGAgOzJfMLzr9rS7PmQle/hlnsWoYThcmwnlzsk63lYUJDi5RR+bzr
+         ulT/1tSnlezUrU0rBX6AwR70JEzyLctsHwyss5YrYaMNZ7c/lTVw9PYduwyD04b54Pq5
+         sbvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PyeTvkkAnCUH4kZEoAfj76XyH5K0PchtC9IwnXWSMfs=;
+        b=O3BFX2zWKL5xCY9j/KP7tF+W5pXJgMTaFjf7lt0/jzG0bt8C2Gyd5SdGjJm08IN+Jq
+         sAYZ2Bqc9LiiwivnQdrIlzpqXOs4v3YVqCgskaDAHHIp+eCBo3NzI9t+dGhIej9lmwsc
+         LQm02IWF4GI1i42SfgrohVcgE4uOtje0nLT2+Rd1E/w3328IKPU2iEDdktGnk1DUacr6
+         LfQTLYfTtJ1Y9wnoSYJuLrlXs89BPAT9eOdgNUUQ8jvMZG72Byrv6f5JA69xTL+yPcYZ
+         tWGs09iZEhfzHuOtHbfI97/8uK6C6p44oATUCOaL/1bUJq6Io5sRv9iJWTnxdf0nARmm
+         l/6g==
+X-Gm-Message-State: APjAAAWmOY40CffHetO8FkkUxnfE38TYY+IQNXuuFqQSOwjgPe+R0Cti
+        0n3NQJQmB+1vP/5DOQxB1AKgw2iO2N4eEpbnsP40EQ==
+X-Google-Smtp-Source: APXvYqyD6Dr4b4HePic8xdZLes9fbr6+6iEYjYET6yQoleUZB8SKOT+AsIr4ANsP3MzU8OsOa8AganE0j95rngWdD5Q=
+X-Received: by 2002:a19:5e1d:: with SMTP id s29mr20061128lfb.21.1582292972470;
+ Fri, 21 Feb 2020 05:49:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="p8PhoBjPxaQXD0vg"
-Content-Disposition: inline
-In-Reply-To: <1582180492-25297-6-git-send-email-spujar@nvidia.com>
-X-Cookie: Dead? No excuse for laying off work.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com> <1d333e88974571322c14cf3e881b9a854e94bd9d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <1d333e88974571322c14cf3e881b9a854e94bd9d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 21 Feb 2020 14:49:21 +0100
+Message-ID: <CACRpkdY1oa859bkVrgwA4iai7982GL_EMxns5+wAhQr+ggf9Kw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/5] power: Add linear_range helper
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        mikko.mutanen@fi.rohmeurope.com, markus.laine@fi.rohmeurope.com,
+        Mark Brown <broonie@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Feb 14, 2020 at 8:37 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
---p8PhoBjPxaQXD0vg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Many devices have control registers which control some measurable
+> property. Often a register contains control field so that change in
+> this field causes linear change in the controlled property. It is not
+> a rare case that user wants to give 'meaningfull' control values and
+> driver needs to convert them to register field values. Even more
+> often user wants to 'see' the currently set value - again in
+> meaningfull units - and driver needs to convert the values it reads
+> from register to these meaningfull units.
 
-On Thu, Feb 20, 2020 at 12:04:47PM +0530, Sameer Pujar wrote:
+Rename meaningfull -> meaningful
 
-> The Audio Hub (AHUB) comprises a collection of hardware accelerators for
-> audio pre/post-processing and a programmable full crossbar (XBAR) for
-> routing audio data across these accelerators in time and in parallel.
-> AHUB supports multiple interfaces to I2S, DSPK, DMIC etc., XBAR is a
-> switch used to configure or modify audio routing between HW accelerators
-> present inside AHUB.
->=20
-> This patch registers AHUB component with ASoC framework. The component
-> driver exposes DAPM widgets, routes and kcontrols for the device. The DAI
-> driver exposes AHUB interfaces, which can be used to connect different
-> components in the ASoC layer. Currently the driver takes care of XBAR
-> programming to allow audio data flow through various clients of the AHUB.
+> This ideas is stol... borrowed from regulator framework's
+> regulator_linear_ranges handling.
 
-The current way to represent complex digitial routing inside SoCs is to
-use DPCM, this is not great and causes a bunch of problems with the
-framework but it's at least consistent between SoCs and is less visible
-to the ABI than this is.  Ideally what we'd be doing is propagating
-digital configuration along audio paths like we do for analog with DAPM,
-Morimoto-san has done a lot of the groundwork for doing that with
-converting everything to components but nobody has worked on that yet.
-Your stuff looks a lot more like this than it does DPCM at the minute
-but it completely sidesteps the digital configuration part of things
-without trying to integrate with the framework which isn't great.
+Hehe maybe one day we can move the whole thing to lib/
+but let's take one step at a time.
 
-I'm really not thrilled about the idea of just hacking around the side
-of things like this is doing, the ideal thing would be starting the work
-on the framework to propagate digital configuration - I *think* you can
-get away with only a subset of the problem here (just copying
-configuration straight through) since this looks like it's just straight
-point to point links with little in the way of DSP.  If not DPCM would
-be the way to go I think.
+> Provide a linear_range helper which can do conversion from user value
+> to register value 'selector'.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>
+> Where should we put these?
 
---p8PhoBjPxaQXD0vg
-Content-Type: application/pgp-signature; name="signature.asc"
+This works.
 
------BEGIN PGP SIGNATURE-----
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5P3ToACgkQJNaLcl1U
-h9Dwzwf/advF/uesEAwOfyBFgKsZU2OvOfZNWh3z/hn0WbNlr6NtvLRDYEOjdsbA
-1cWkU2QWhi1rmf+aeWuOOXLwfJ69OczEeEmo0PODUMrWFNFfWGhnyyo7vGU5MP0S
-lHxiqyUhlU4SQJDNuHKhUZigSKEcwH1ofxGTk4SS43VGvG4KrQIZrIZeuWkYcdzN
-Py+JpKWnpqDPAs19Rqe9jNUY2qFnF0V7VT5zZKMnXEVwHSjlHqzMHH/maokSugYa
-ftNy9GuN7MKL18zAZ7DKDqljpUOPnRfnoiys4qq1LYXXey7e5nbFpOdihRBU5XQS
-csloEVBpHZgw77kXeOmlE5dbWwlsQw==
-=c0+G
------END PGP SIGNATURE-----
-
---p8PhoBjPxaQXD0vg--
+Yours,
+Linus Walleij
