@@ -4,101 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D43EC35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADBBC35656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711CC20679
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F9620679
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 15:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582298612;
-	bh=5cCGx7bIXXLnzp1wb3yfU0CCQCElbax4ANrQkMTI5IY=;
+	s=default; t=1582298750;
+	bh=Nen23GVdyYonBOzTvdXanZARdnRmJrFrVMnIXLsidWQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k8T48Iwgz8dbk6QVETvbmaJHmO2oLOzpzqKhivvqf63n+FQ5tn6cZsO76+o+rP3Az
-	 j4RJIe76gCFs6lmlel4HIJ1t03P4ZtZxYevCy4kWav02LkV1mMwn58wo+sDUPgYnNH
-	 l1SRP21xdmCWytAloxuB9TJvYVL3MdSFboipRFDg=
+	b=d0D2V8vSfpgzcV6Wtv2HfBkAw+hsUjVXvxmkJJLj2GIPEat9Iae9wQDajzb56ZGqr
+	 ikLEgpnw7H/r1TDBV/0m+JQOZxRENVZ6j9yJyvto8NXT02H7TthywyrhVypNFg8fde
+	 yy5WZCHVL6RXym9N7uaL0crWKkjqqTbChd+TwPZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgBUPX1 (ORCPT
+        id S1728002AbgBUPZu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:23:27 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35049 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgBUPX0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 10:23:26 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b18so1916501oie.2;
-        Fri, 21 Feb 2020 07:23:26 -0800 (PST)
+        Fri, 21 Feb 2020 10:25:50 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44298 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728528AbgBUPZt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 10:25:49 -0500
+Received: by mail-oi1-f194.google.com with SMTP id d62so1894176oia.11;
+        Fri, 21 Feb 2020 07:25:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gTGq4yWgJFhGViZ4fBiXU+ZAKZhYnnp0hu1ty+BdHro=;
-        b=Y8WwJEIyz37oZEmo04gfk1wOsEAdjw/qEhMeZViefKY3VD95CtK35RFQzLQHZyAZNT
-         ClX8AeqD7yhRR1IEZcrOQ+oO64uatq6tulKl2fkctz1Iy9itVZem6TVuHI/tzN5a/gIZ
-         uBgn1OdAoji8QN/Z5/E5CVe7qCF0B9mF3usIPpVbb9+hgAou9pVCTwYGaFa+LOBFyh/s
-         HAKhcQ9it1nMSi+l1C5RdTrTPOgbnTqxdEIjJ/DvtVUkAu5mA9SV8lLdUZDTNIuUlwuU
-         OklYj/If9c0TyULnpNEVRogBN7Nu/ojmGM2kspiBaB4UroN+m8KTEc+Lk1x9U8kDCRcE
-         DMUQ==
-X-Gm-Message-State: APjAAAUcgKpz/O5lUvKSYxWjYYbdRtif/yyCaIJQKUMHwyX1JAsEuMBP
-        TMFRE6rABmIs4xgY5+idEW1d//w=
-X-Google-Smtp-Source: APXvYqwIL/Ef3nIGebbSsg4aoz2UkM9iIu6S2SYfpyWp9RVPHnG6sMz57whuohiAgwNuQK/hxmBpvw==
-X-Received: by 2002:a05:6808:64d:: with SMTP id z13mr2422401oih.104.1582298605660;
-        Fri, 21 Feb 2020 07:23:25 -0800 (PST)
+        bh=iSM0EyjvmfxoFHCod2p0l5Pl9JBcuIkD94e/FTwKMK4=;
+        b=EUO/m50hA6uJvILkeTee6/13AytgzpZ6p86tB2i03miialvsSdJO7D/HkyhaEfBfbX
+         UdnblTWA49D9okfh1WeSIriw4Z4PYF+muCKAVkt+CReblPiDzSzKakwNGkm5HXs+WioZ
+         lbf77dVC6+vQ+KDQMp8KkALgWGXuml41m73gaxBWg3dFTrKeFhQfgXbRvM+TPIFPoHYe
+         KuMWoYm7d4yO6Y8x4VBrE1M5QpzfbWgeVWCa1oOW+PoZUuMKyCUQGYbwougBq3+I2/MQ
+         Puxj0ijxFr6lT2lO+QIChUTOPixlJvqly8BgRexZFHr8yPdmm+NsjV8oCNgddoBE9Snt
+         +wZA==
+X-Gm-Message-State: APjAAAVpX7/QYV6uLpVQRZB42lrRwR9g29zMlZM+wDCh3wFGIOgUoLxQ
+        gk99IuIyN/nobM8Inb32Cw==
+X-Google-Smtp-Source: APXvYqwAPapyWF61DOlIKdFT1cYJ5jK5jFsvyQonr/MrRrIlZGCawUtzEC7o3L2NKwc64wuonBhk2A==
+X-Received: by 2002:aca:f242:: with SMTP id q63mr2466113oih.72.1582298748045;
+        Fri, 21 Feb 2020 07:25:48 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e21sm994272oib.16.2020.02.21.07.23.24
+        by smtp.gmail.com with ESMTPSA id i20sm1131503otp.14.2020.02.21.07.25.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:23:24 -0800 (PST)
-Received: (nullmailer pid 30615 invoked by uid 1000);
-        Fri, 21 Feb 2020 15:23:23 -0000
-Date:   Fri, 21 Feb 2020 09:23:23 -0600
+        Fri, 21 Feb 2020 07:25:47 -0800 (PST)
+Received: (nullmailer pid 1560 invoked by uid 1000);
+        Fri, 21 Feb 2020 15:25:46 -0000
+Date:   Fri, 21 Feb 2020 09:25:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] Documentation: devictree: Add ipq806x mdio
- bindings
-Message-ID: <20200221152323.GA29820@bogus>
-References: <20200220232624.7001-1-ansuelsmth@gmail.com>
- <20200220232624.7001-2-ansuelsmth@gmail.com>
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: arm: Convert UniPhier board/SoC
+ bindings to json-schema
+Message-ID: <20200221152546.GA1327@bogus>
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220232624.7001-2-ansuelsmth@gmail.com>
+In-Reply-To: <20200221021002.18795-1-yamada.masahiro@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2020 00:26:22 +0100, Ansuel Smith wrote:
-> Add documentations for ipq806x mdio driver.
+On Fri, 21 Feb 2020 11:10:00 +0900, Masahiro Yamada wrote:
+> Convert the Socionext UniPhier board/SoC binding to DT schema format.
 > 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> 
+>  .../bindings/arm/socionext/uniphier.txt       | 47 -------------
+>  .../bindings/arm/socionext/uniphier.yaml      | 70 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 71 insertions(+), 48 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
 Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Error: Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dts:23.28-29 syntax error
+Error: Documentation/devicetree/bindings/arm/socionext/uniphier.example.dts:18.9-10 syntax error
 FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dt.yaml] Error 1
+scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/arm/socionext/uniphier.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/arm/socionext/uniphier.example.dt.yaml] Error 1
 Makefile:1263: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1241711
+See https://patchwork.ozlabs.org/patch/1241745
 Please check and re-submit.
