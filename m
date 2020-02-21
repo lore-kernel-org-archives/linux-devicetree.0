@@ -2,109 +2,157 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3C3C35640
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68FDC35641
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF852469D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A593020679
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0vR7OpRW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbgBUIZg (ORCPT
+        id S2388594AbgBUIZt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:25:36 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.66]:58144 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388779AbgBUIZR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:25:17 -0500
-Received: from [100.112.198.146] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.eu-west-1.aws.symcld.net id 97/DA-44550-AE39F4E5; Fri, 21 Feb 2020 08:25:14 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRWlGSWpSXmKPExsVy8MN7Xd1Xk/3
-  jDKZtlbKYc76FxWL+kXOsFocXvWC0aF68ns3i/tejjBY3P31jtbi8aw6bRfvG2awWS69fZLJ4
-  /6mTyaJ17xF2i/97drBb/Nw1j8Xi9sTJjA58HmvmrWH02LLyJpPHzll32T02repk87hzbQ+bx
-  /65a9g9+v8aeHzeJBfAEcWamZeUX5HAmrHoRTdzwQf2isuXJrI3ML5m7WLk4hASWMsosXvZLe
-  YuRg4gp1Ji3k2hLkZODl4BU4ndX6+wgthsAjoSj2auZwKxWQRUJQ49v84CYgsLWEpsabnHCDJ
-  HROAks0Tnva8sIA6zwDRGiT0fDzNDTBKUODnzCVgHs4CExMEXL8DiQgJaEufWrGKcwMg9C0nZ
-  LCRlCxiZVjFaJBVlpmeU5CZm5ugaGhjoGhoa6RpamukaGpvrJVbpJumlluqWpxaX6BrqJZYX6
-  xVX5ibnpOjlpZZsYgQGfUrBkc4djL/XvNc7xCjJwaQkyqvY5x8nxJeUn1KZkVicEV9UmpNafI
-  hRhoNDSYL32QSgnGBRanpqRVpmDjACYdISHDxKIryOvUBp3uKCxNzizHSI1ClGXY7r7/cuZRZ
-  iycvPS5US522dBFQkAFKUUZoHNwKWDC4xykoJ8zIyMDAI8RSkFuVmlqDKv2IU52BUEub9MRFo
-  Ck9mXgncpldARzABHfFe2AfkiJJEhJRUA1MHn8fM4xI328QO6/TO+z+zM9DHfsV1yxWzNuTPW
-  84i9yKj9PIckZfsm0+k8/98e9n1lIrTOpm64AO7rHiff2s2u724Qv+jYc7sgpCOmzw341/L+E
-  zpEkx0da57Uzj/RHHMVtVmabZewX0+cmp/s79MYZ1kFbl+pYeFbMOFnub6yVlm0xZL26jlizI
-  4lc77/mMbU2tZ7ayF1hPvmyV9ieBTkbF9x5+vGOIwYY9jkrlPZm7hhLYbkTO1Tje8a51fMmeu
-  8DulS/1VPE3196dPDmKKF/fu/fkwV6BOYoHQ2zTfHfyGjHPZ41JZO4IMSnZuso3ZsEnnf7be6
-  u4JGx+sic1ckstybGPWn5ee2QHflViKMxINtZiLihMBB91GJ4EDAAA=
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-15.tower-288.messagelabs.com!1582273513!731327!2
-X-Originating-IP: [193.240.239.45]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 22386 invoked from network); 21 Feb 2020 08:25:14 -0000
-Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
-  by server-15.tower-288.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 21 Feb 2020 08:25:14 -0000
-Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Fri, 21 Feb 2020 09:25:13 +0100
-Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- 7701813F671; Fri, 21 Feb 2020 17:25:11 +0900 (KST)
-Message-ID: <cover.1582270025.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Fri, 21 Feb 2020 16:27:05 +0900
-Subject: [PATCH V9 0/3]  da7280: haptic driver submission
-To:     "David S. Miller" <davem@davemloft.net>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        Fri, 21 Feb 2020 03:25:49 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36032 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388829AbgBUIZs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 03:25:48 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so954908wru.3
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 00:25:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TXvq+EuElcafseyPa7Xn9BIOxypv/HGxoGPqvN1nfZA=;
+        b=0vR7OpRWb43/h5/gI3hfsOzbo8AUJRSYzECLw98e+lDQF7+xvGznDeOc2G3WpPAQkx
+         msqWiqCw5bHAate/jXi91zGVeflcUoUvr2K9M+T85G0KWwTRcpU/eNYQ/hSaG/FK++El
+         ZOP4g5IrXVoiB1UhWTS5xu/wvkdVO+l0TQUB3w5JPSSv/1rF1QYbx0aaqPvh+zd1UxIZ
+         hkvUB1iXdtefkWb8Le7+KtoKPUVs3Zu3NLrrrNO2chU9C/6+8FVt4Q2PZbBrm2xkcR/t
+         fsAq+07bhFEbHFLwd8V0UDLiibpnqxdi5ANL8EkyNxwlXaPJMsRpqeXnrXH8Non/ak5F
+         Tfvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TXvq+EuElcafseyPa7Xn9BIOxypv/HGxoGPqvN1nfZA=;
+        b=Bln8jF/tOZhqERb2bfE/jaOa4wkQJaKtDEd1hW40543nlrffMlRWd0DiUdmWFmMVg9
+         gQ1ydXT8EwzI9X+jj58Y2nOoxkp+/v0zbq/MhHFLXGd02JkuwneWmZn8XVBE1H1g4fbH
+         hShUocup2u5csZQLm4+XltCOdN5gFIkI8gdtMpMeNFNWE6/Eh7jnwaQsXdjsid/mACsI
+         UP/mRZecgs+dGj7eE6fLAttQ0b72DLRsbfxyc8ITvxbRPaqqiNBR60naKhT3jX9IX7vu
+         3OGfYh1paE27krlinoHqqm7cDK//ZDlOXDcFhChxEJAJa2BxS93TFd+sFR3nA6HRcNG7
+         KpPw==
+X-Gm-Message-State: APjAAAVNQm2shSlJubP3BthOmlUIFDTJ50gf2/i1Em+c4/KVGhkkmu9y
+        z4HpjCbLeTt9OSjGpTm4mTkNZg==
+X-Google-Smtp-Source: APXvYqwWNTLg5jYxYhcBRVc0+kdrHr6iJ8Fa1H5VxAKW7NSwQQEg6HjJBqUFt17tnQm+zo2bJx1O5A==
+X-Received: by 2002:a5d:5347:: with SMTP id t7mr47046590wrv.401.1582273546143;
+        Fri, 21 Feb 2020 00:25:46 -0800 (PST)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:4ca8:b25b:98e4:858? ([2a01:e35:2ec0:82b0:4ca8:b25b:98e4:858])
+        by smtp.gmail.com with ESMTPSA id f65sm2752337wmf.29.2020.02.21.00.25.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 00:25:45 -0800 (PST)
+Subject: Re: [PATCH] dt-bindings: power: Fix dt_binding_check error
+To:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Victor Wan <victor.wan@amlogic.com>
+References: <1582269169-17557-1-git-send-email-jianxin.pan@amlogic.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <b3da2987-a226-b230-4379-1ff4d57ef7fe@baylibre.com>
+Date:   Fri, 21 Feb 2020 09:25:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1582269169-17557-1-git-send-email-jianxin.pan@amlogic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for the Dialog DA7280 Haptic driver IC.
+On 21/02/2020 08:12, Jianxin Pan wrote:
+> Missing ';' in the end of secure-monitor example node.
+> 
+> Fixes: f50b4108ede1 ("dt-bindings: power: add Amlogic secure power domains bindings")
+> Reported-by: Rob Herring<robh+dt@kernel.org>
+> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> ---
+>  Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> index af32209..bc4e037 100644
+> --- a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> @@ -36,5 +36,5 @@ examples:
+>              compatible = "amlogic,meson-a1-pwrc";
+>              #power-domain-cells = <1>;
+>          };
+> -    }
+> +    };
+>  
+> 
 
-In this patch set the following is provided:
-
-[PATCH V9 1/3] MAINTAINERS file update for DA7280
-[PATCH V9 2/3] DA7280 DT Binding
-[PATCH V9 3/3] DA7280 Driver
-
-This patch applies against linux-next and v5.5
-
-Thank you,
-Roy Im, Dialog Semiconductor Ltd.
-
-Roy Im (3):
-  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
-  dt-bindings: input: Add document bindings for DA7280
-  Input: new da7280 haptic driver
-
- .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
- MAINTAINERS                                        |    2 +
- drivers/input/misc/Kconfig                         |   13 +
- drivers/input/misc/Makefile                        |    1 +
- drivers/input/misc/da7280.c                        | 1880 ++++++++++++++++++++
- 5 files changed, 2005 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
- create mode 100644 drivers/input/misc/da7280.c
-
--- 
-end-of-patch for PATCH V9
-
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
