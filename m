@@ -2,165 +2,87 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44C3C11D00
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 02:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B76DC11D00
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 02:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A29C20722
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 02:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D242C24650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 02:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="TKEJiQp0"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uJFOP4A+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgBUCZy (ORCPT
+        id S1729608AbgBUCjP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:25:54 -0500
-Received: from conuserg-09.nifty.com ([210.131.2.76]:23423 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729222AbgBUCZy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 21:25:54 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 01L2P6P4019101;
-        Fri, 21 Feb 2020 11:25:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01L2P6P4019101
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582251907;
-        bh=eqHny2FaqNErlaYN7wu9BhfmPoOAesBI8drGqqCcumU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TKEJiQp0Jz01Hs5YJIVJSHWi8i8mxGOblcOKkYhYWSMLGCXwut6zT2hr3jJ2Fp6i9
-         MU9zGmCJfeoqjBdjtN29n5GrXRemKacIW/GjCDi208sSieuJfEcpm0/mh+2L71X2d0
-         F/DJFWnQgoiG9CsZx9jxtEZA+T1XErp7mr/pv8dFwdC72xQSstOM0BUexWRuzeDa5W
-         hyeBhDa1Jg1v7q3hr9g06GjNUHfCSlfMd69A3axQUlNYnQDkxAiS9Ge07c/XtG4U0n
-         MiA3MkaFIeogPLpbEzVwDyhSHvMpd0RdyQJgomUdgG4Ie4hgzIb0MOiZrZnovFVxma
-         x00o7hYBKyPrw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thu, 20 Feb 2020 21:39:15 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:23466 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729259AbgBUCjP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Feb 2020 21:39:15 -0500
+X-UUID: 9e3efbe0b5074d69af190b54988f52bc-20200221
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=RpulXJAZR+NqeOVzsHlHAJYWbww70aOP1WMWbMK1iwg=;
+        b=uJFOP4A+wNF949LOBsiNII4+dcVn2ipkHntBB1bGuZQ3gBHxY1U6BlDX/csa1yCq64IBlaetpImq0B4Y9tsqn/S4dZ4OJchzCLOaXGdpPTECVNkdfQliyAvXE0gHO1VRn+hyuZFvFGlaDokSxxToEfoJPJGsrN8t9BDSf4Vb/LA=;
+X-UUID: 9e3efbe0b5074d69af190b54988f52bc-20200221
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1772381247; Fri, 21 Feb 2020 10:39:09 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 21 Feb 2020 10:38:17 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 21 Feb 2020 10:38:48 +0800
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: dma: Convert UniPhier MIO DMA controller to json-schema
-Date:   Fri, 21 Feb 2020 11:25:04 +0900
-Message-Id: <20200221022504.24104-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        <linux-arm-kernel@lists.infradead.org>,
+        <wsd_upstream@mediatek.com>, <wen.su@mediatek.com>
+Subject: [RESEND v2 0/4] Add Support for MediaTek PMIC MT6359 Regulator
+Date:   Fri, 21 Feb 2020 10:39:02 +0800
+Message-ID: <1582252746-8149-1-git-send-email-Wen.Su@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the UniPhier MIO (Media I/O) DMA controller binding to DT
-schema format.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- .../dma/socionext,uniphier-mio-dmac.yaml      | 59 +++++++++++++++++++
- .../bindings/dma/uniphier-mio-dmac.txt        | 25 --------
- 2 files changed, 59 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
-new file mode 100644
-index 000000000000..817e5aec3b31
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/socionext,uniphier-mio-dmac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier Media IO DMA controller
-+
-+description: |
-+  This works as an external DMA engine for SD/eMMC controllers etc.
-+  found in UniPhier LD4, Pro4, sLD8 SoCs.
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: socionext,uniphier-mio-dmac
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: |
-+      A list of interrupt specifiers associated with the DMA channels.
-+      The number of interrupt lines is SoC-dependent.
-+
-+  clocks:
-+    maxItems: 1
-+
-+  '#dma-cells':
-+    description: The single cell represents the channel index.
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - '#dma-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    // In the example below, "interrupts = <0 68 4>, <0 68 4>, ..." is not a
-+    // typo. The first two channels share a single interrupt line.
-+
-+    dmac: dma-controller@5a000000 {
-+        compatible = "socionext,uniphier-mio-dmac";
-+        reg = <0x5a000000 0x1000>;
-+        interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
-+                     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
-+        clocks = <&mio_clk 7>;
-+        #dma-cells = <1>;
-+    };
-diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-deleted file mode 100644
-index b12388dc7eac..000000000000
---- a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--UniPhier Media IO DMA controller
--
--This works as an external DMA engine for SD/eMMC controllers etc.
--found in UniPhier LD4, Pro4, sLD8 SoCs.
--
--Required properties:
--- compatible: should be "socionext,uniphier-mio-dmac".
--- reg: offset and length of the register set for the device.
--- interrupts: a list of interrupt specifiers associated with the DMA channels.
--- clocks: a single clock specifier.
--- #dma-cells: should be <1>. The single cell represents the channel index.
--
--Example:
--	dmac: dma-controller@5a000000 {
--		compatible = "socionext,uniphier-mio-dmac";
--		reg = <0x5a000000 0x1000>;
--		interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
--			     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
--		clocks = <&mio_clk 7>;
--		#dma-cells = <1>;
--	};
--
--Note:
--In the example above, "interrupts = <0 68 4>, <0 68 4>, ..." is not a typo.
--The first two channels share a single interrupt line.
--- 
-2.17.1
+VGhpcyBwYXRjaHNldCBhZGQgc3VwcG9ydCB0byBNVDYzNTkgUE1JQyByZWd1bGF0b3IuIE1UNjM1
+OSBpcyBwcmltYXJ5DQpQTUlDIGZvciBNVDY3NzkgcGxhdGZvcm0uDQoNCkNoYW5nZXMgc2luY2Ug
+djI6DQotIHJlbW92ZSBvcGVuIGNvZGluZyBpbiB0aGUgbXQ2MzU5IHJlZ3VsYXRvciBmb3Igdm9s
+dF90YWJsZSB0eXBlIHJlZ3VsYXRvcnMNCi0gcmVmaW5lIGNvZGluZyBzdHlsZSBpbiB0aGUgbXQ2
+MzU5IHJlZ3VsYXRvciB0byBhdm9pZCB1c2luZyB0ZXJuZXJ5IG9wZXJhdG9yDQotIHJlbW92ZSB1
+bm5lY2Vzc2FyeSByZWplY3Qgb3BlcmF0aW9uIGluIG10NjM1OSByZWd1bGF0b3Igc2V0IG1vZGUg
+ZnVuY3Rpb24NCg0KDQp3ZW4uc3UgKDQpOg0KICBkdC1iaW5kaW5nczogcmVndWxhdG9yOiBBZGQg
+ZG9jdW1lbnQgZm9yIE1UNjM1OSByZWd1bGF0b3INCiAgbWZkOiBBZGQgZm9yIFBNSUMgTVQ2MzU5
+IHJlZ2lzdGVycyBkZWZpbml0aW9uDQogIHJlZ3VsYXRvcjogbXQ2MzU5OiBBZGQgc3VwcG9ydCBm
+b3IgTVQ2MzU5IHJlZ3VsYXRvcg0KICBhcm02NDogZHRzOiBtdDYzNTk6IGFkZCBQTUlDIE1UNjM1
+OSByZWxhdGVkIG5vZGVzDQoNCiAuLi4vYmluZGluZ3MvcmVndWxhdG9yL210NjM1OS1yZWd1bGF0
+b3IudHh0ICAgICAgICB8ICA1OSArKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2
+MzU5LmR0c2kgICAgICAgICAgIHwgMzEyICsrKysrKysrDQogZHJpdmVycy9yZWd1bGF0b3IvS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKw0KIGRyaXZlcnMvcmVndWxhdG9y
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJzL3JlZ3Vs
+YXRvci9tdDYzNTktcmVndWxhdG9yLmMgICAgICAgICAgICAgICB8IDg1OSArKysrKysrKysrKysr
+KysrKysrKysNCiBpbmNsdWRlL2xpbnV4L21mZC9tdDYzNTkvcmVnaXN0ZXJzLmggICAgICAgICAg
+ICAgICB8IDUzMSArKysrKysrKysrKysrDQogaW5jbHVkZS9saW51eC9yZWd1bGF0b3IvbXQ2MzU5
+LXJlZ3VsYXRvci5oICAgICAgICAgfCAgNTggKysNCiA3IGZpbGVzIGNoYW5nZWQsIDE4MjkgaW5z
+ZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcmVndWxhdG9yL210NjM1OS1yZWd1bGF0b3IudHh0DQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2MzU5LmR0c2kNCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9yZWd1bGF0b3IvbXQ2MzU5LXJlZ3VsYXRvci5jDQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvbWZkL210NjM1OS9yZWdpc3RlcnMuaA0KIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L3JlZ3VsYXRvci9tdDYzNTktcmVndWxhdG9yLmg=
 
