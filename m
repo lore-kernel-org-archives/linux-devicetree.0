@@ -2,166 +2,172 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A69C35647
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A7FC35657
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE42524650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:02:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582290154;
-	bh=+xThR+azD9P2PWAejGynVSIEcWpxJ01pdUUIs8XZVyQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1S9FueKyZMYNQ4GHFZfKxH+sc1NUEdU92aorFOf+w82CHnMw/51tKCkj9q2/ByoSa
-	 is+M61B7Gh9qoXnZwznnwuyWGlakep3UO0+vu2Da6j4sDaWq3UUtFMP7T5anWJDmTS
-	 Gpt82WQcccmD6Z4mvd55vJGluVD4tYBiL0bhM1mI=
+	by mail.kernel.org (Postfix) with ESMTP id C821D206EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 13:04:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jkgvwEvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgBUNCe (ORCPT
+        id S1728466AbgBUNEy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:02:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbgBUNCd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:02:33 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3944A206EF;
-        Fri, 21 Feb 2020 13:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582290153;
-        bh=+xThR+azD9P2PWAejGynVSIEcWpxJ01pdUUIs8XZVyQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DbjAK8q5Dm9NlzmJd7h9GddT6Axyzs8xTlD19xIrpPu/fEwWKHCBW08DCqDLl6CFp
-         q1kdk8vujsgwhzRK6p4wVVa1GVNTRO+Jwnaeeabb8PoUYQYkDqtV04nNVSk6iEMCkS
-         o1JPk42oqmPoXOvBakWKryxfeQXZgIx9BBzF9vQ4=
-Date:   Fri, 21 Feb 2020 13:02:28 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Junho <djunho@gmail.com>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        michael.hennerich@analog.com, patrick.vasseur@c-s.fr,
-        alexandru.Ardelean@analog.com
-Subject: Re: [PATCH v2] dt-bindings: iio: adc: ad7923: Add binding
- documentation for AD7928
-Message-ID: <20200221130228.3428c44a@archlinux>
-In-Reply-To: <20200218110647.24758-1-djunho@padtec.com.br>
-References: <20200218110647.24758-1-djunho@padtec.com.br>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Feb 2020 08:04:54 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37092 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728228AbgBUNEy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 08:04:54 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a6so1765082wme.2
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 05:04:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=bJNVzMRkFtXXYPsTt3SQwSqc9RpddqkHKGG4HJkeN0I=;
+        b=jkgvwEvxyvKjU2Titynfam24eXLGYSEaz4oiQM93hFTl4Jb4XLMaJcbX31PBGNr7S4
+         MfS43Igd6k6jCuZzDeWQ/4h204Y84NqG/NxkRws+7Vd1aqGx+rLpsIDijDI9YZUblMYQ
+         SAhRpyFYdkWEG2Radn/TtiRKHmfjcVcALIu5A0NbeLfuKvQWyhigGDbvzYoutsWfwMcW
+         r3DnA9sqddt7ur7yiPziRvAZlcGuEEFx782y7WHjH2JrzEww9hKjB4lncsJUbOT3ZF2F
+         hYNMVWHJRqeUEhM/fSIOyrGp3p5D3BlJFn3jbvtc1r/h2UPfXCW9p1KdWT+TUByJfH1O
+         4pxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=bJNVzMRkFtXXYPsTt3SQwSqc9RpddqkHKGG4HJkeN0I=;
+        b=QrtDqQkBpqa3vCioyejcqOO65OOy0+Yz9xipBHnuIPiDxazw/SjPaZWMp0DUzdVtda
+         63wGFx8AZlb3/8g3vK1cfhGM09/mfZQCxrM/Mt3JiwgjEvJyUPMezylJxOBQ+Xkkfhcs
+         i76gIJTXM22AolHFh5/PjVD4lbmORBYKnH1QgZmMTwIN56GSbXHNg99NLzZfrdpTT+PM
+         1nEArHPCeqm/mjGz4T53/fWo1Xv1GHVHBrRwg9VV/MG/1cwNpswMVmeLbQuc0BsCa3cN
+         Y27DIuKPprXsQ3riNVOeRMSsQG1ZfWcGTPYP2C5FHc8WbvwInO2+0zzW1L1wj3E4Onb1
+         2d2Q==
+X-Gm-Message-State: APjAAAWMdco9O+NRqJV86JIwSWpHpPHBsH6g0+omJRjiw9ZazJOaZ+9D
+        CZ0wECMCUP6ITTtfhmX8kioTUw==
+X-Google-Smtp-Source: APXvYqwrCwOw/nJYCU07QgEOQnMfnFDja/YSvf9ktRaNNnMixM8MO9y/tOJAK/QRxV9OsIfVPeM/zw==
+X-Received: by 2002:a1c:20d6:: with SMTP id g205mr3942457wmg.38.1582290292313;
+        Fri, 21 Feb 2020 05:04:52 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
+        by smtp.gmail.com with ESMTPSA id z10sm3561868wmk.31.2020.02.21.05.04.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 05:04:51 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:04:48 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, aisheng.dong@nxp.com,
+        linux@roeck-us.net, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        daniel.baluta@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
+        dinguyen@kernel.org, leonard.crestez@nxp.com,
+        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V15 RESEND 5/5] arm64: dts: imx: add i.MX8QXP thermal
+ support
+Message-ID: <20200221130448.GC10516@linaro.org>
+References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
+ <1582161028-2844-5-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582161028-2844-5-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Feb 2020 08:06:47 -0300
-Daniel Junho <djunho@gmail.com> wrote:
-
-> From: Daniel Junho <djunho@gmail.com>
+On Thu, Feb 20, 2020 at 09:10:28AM +0800, Anson Huang wrote:
+> Add i.MX8QXP CPU thermal zone support.
 > 
-> This patch add device tree binding documentation for AD7923 adc in YAML
-> format.
-> 
-> Signed-off-by: Daniel Junho <djunho@gmail.com>
-
-One thing inline. I'll fix up when applying.
-
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> Changes in v2:
-> - Fix the license header to "GPL-2.0-only OR BSD-2-Clause";
-> - Change the Michael Hennerich email.
+> No change.
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 36 ++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
->  .../bindings/iio/adc/adi,ad7923.yaml          | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index fb5f752..0a14fe4 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -11,6 +11,7 @@
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/pinctrl/pads-imx8qxp.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	interrupt-parent = <&gic>;
+> @@ -189,6 +190,11 @@
+>  			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+>  			timeout-sec = <60>;
+>  		};
+> +
+> +		tsens: thermal-sensor {
+> +			compatible = "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
+> +			#thermal-sensor-cells = <1>;
+> +		};
+>  	};
+>  
+>  	timer {
+> @@ -586,4 +592,34 @@
+>  			#clock-cells = <1>;
+>  		};
+>  	};
+> +
+> +	thermal_zones: thermal-zones {
+> +		cpu-thermal0 {
+> +			polling-delay-passive = <250>;
+> +			polling-delay = <2000>;
+> +			thermal-sensors = <&tsens IMX_SC_R_SYSTEM>;
+> +			trips {
+> +				cpu_alert0: trip0 {
+> +					temperature = <107000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+
+May be you can add a 'hot' trip point before 'critical' for future use before
+reaching the emergency shutdown.
+
+> +				cpu_crit0: trip1 {
+> +					temperature = <127000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_alert0>;
+> +					cooling-device =
+> +						<&A35_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&A35_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&A35_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&A35_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +	};
+>  };
+> -- 
+> 2.7.4
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-> new file mode 100644
-> index 000000000000..e293df9442cd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7923.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7923 and similars with 4 and 8 Channel ADCs.
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>"
 
-Some left over quotes at the end of each line..
+-- 
 
-> +  - Patrick Vasseur <patrick.vasseur@c-s.fr>"
-> +
-> +description: |
-> +  Analog Devices AD7904, AD7914, AD7923, AD7924 4 Channel ADCs, and AD7908,
-> +   AD7918, AD7928 8 Channels ADCs.
-> +
-> +  Specifications about the part can be found at:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7923.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7904_7914_7924.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7908_7918_7928.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7904
-> +      - adi,ad7914
-> +      - adi,ad7923
-> +      - adi,ad7924
-> +      - adi,ad7908
-> +      - adi,ad7918
-> +      - adi,ad7928
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  refin-supply:
-> +    description: |
-> +      The regulator supply for ADC reference voltage.
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      ad7928: adc@0 {
-> +        compatible = "adi,ad7928";
-> +        reg = <0>;
-> +        spi-max-frequency = <25000000>;
-> +        refin-supply = <&adc_vref>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +      };
-> +    };
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
