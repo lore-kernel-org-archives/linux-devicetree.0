@@ -4,60 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7590C35656
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCBDC35646
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA2920656
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50DC624650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RKc50qWQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="inQU1Tfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgBUOmz (ORCPT
+        id S1728910AbgBUOoA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:42:55 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40992 "EHLO
+        Fri, 21 Feb 2020 09:44:00 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42590 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728425AbgBUOmz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 09:42:55 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so2427830ljc.8
-        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 06:42:53 -0800 (PST)
+        with ESMTP id S1728837AbgBUOoA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 09:44:00 -0500
+Received: by mail-lj1-f193.google.com with SMTP id d10so2421575ljl.9
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 06:43:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TfwhgDHEklncUQidyHCpGyvOwyCft49V7Fap/k80gu8=;
-        b=RKc50qWQW5JUHoFyHSCc18gTHWep0/bdQ7X3lrnM61wt7aD4JHP7ydRJcxLKBtccpA
-         5HKI6An997w+9x3Eu5GfnhcACLBcAZxJUHKFM5XkRUfSmIw2pX3T8soMHxPBc2ZVhZPk
-         otxGRG0yTGT/yaPO7i5Sn0AkvbsA09CEvbFAuhO+HUGUEVVmCURiPVApBIQU5siRjq04
-         xbFt4Q/mIAvMHcIA7+xdHWEjz6F1jfwEu/fSPBBjaHiUIcAKyVIgTPEZqVj8/Oi1peMK
-         el5DLBPv/5P5oZ6B6f5A1KjXdmJ96YmIpBUKSI7posaQELJidKfJ9HhHZVsq8cLrd3zK
-         4jHg==
+        bh=zxyoG6nAOs3iDcNS4Z1SWTTrzy8IIEIHsRCmOX+8xu8=;
+        b=inQU1TfpUZ0CBu0amQil1sCPaEvQ1X8UG63hrSvoCXKC9OkJUw4NMr6UZu1quhG+L9
+         m8YCxsLYKkVSCb89IEHwGlTUj0tH/crnSogq6yuDyx0qPbP6ihLIMc/zM/wz7Jd5bfZX
+         xqdCioCkyRNOG+0cX3werPRMLlItgEq+fIuGgib/XzcQgBpWVVecshjDu2aNJLc1l4yi
+         TTCnHBUb9eqLDB5NnruRQGWv0DiUiWCHYv1y6fdAC6syv9Ba0POKaArPytKmQVSZhyHN
+         9/f92rq53NN4462mByG3m2loQLus9vC/HY17sDr+Eczq05z38i4HtQGxUAhrVtZtf5sz
+         50tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TfwhgDHEklncUQidyHCpGyvOwyCft49V7Fap/k80gu8=;
-        b=c3Gvp30pRkr1BiIUcaDWPHt8hbzb6yaI/iPz0XXfkNq+CqAK0U7sxlRPKEPGkrFnuY
-         e6K07ku1FMM9dbNNlyJriiNImqtx74Ws+y0c+Vu861SjqIB2NVFTOpKruBRjDL3QyKih
-         JtEDnTEDL/LIrrkRUIcn9RCEZq/eUhgFeeDCOdhHG46a/RCY93GHJonfDc5sDbBiQu80
-         bUliHPNBlADjEpZLiTosjwdr2PHgnEcUHDr4cW23I0RlxJHSvveCqtT+SNYrH4tBiROa
-         x5v6vK/nkahLtnegEAA+UhQ0Q+YQKRLuvR5V15K4j532iSoAVKuSg0aJGh8jUjsCriEg
-         bPqA==
-X-Gm-Message-State: APjAAAWw6q6YZ4shqnN+O81DOl+nhP3BMgk3L3ubIKO5R353cTYyAmzY
-        zkmF00oYrmEe/ncHxuoEK41y0YAzaI9eSmJg3v6KCg==
-X-Google-Smtp-Source: APXvYqzgoeW5K8DqPL4tqHNwBvjMIGmjMtAVsQtMYi5lx4Vk/lJjNQQy6wkBDm/+PCOZbQHMB3p9VjdLQVGYccMGcI0=
-X-Received: by 2002:a2e:9013:: with SMTP id h19mr23010571ljg.223.1582296172343;
- Fri, 21 Feb 2020 06:42:52 -0800 (PST)
+        bh=zxyoG6nAOs3iDcNS4Z1SWTTrzy8IIEIHsRCmOX+8xu8=;
+        b=R5uRgVk5/1S+adGV/B9tYCVyPgvbmRul2Ld8jCfCfl8a+4/Lwm2Wz5FryewIdJ5k8F
+         9ufV7IFVHe5Zo8k6boe3E9if1yXlg6ZpHiD/DAkqmpZ79fcp3neMzWxychYnjyYNldg6
+         ZYW1imVTmLdSGGxggeeR2+ZhWHG7Ps63GH72J2xQ07loMskytIWwiOPCTSUpMDMX1bXf
+         qFraKBwx1GzrR+QM6ipNZWtorS7IwXF311K3gUQsri2zxpMl/qwovK5ICTycolDzD0Tk
+         I3SusAQvS4b8EKudL8+pzNMxhhKQHzvpvRMNzoWGPFyRG4oK6kHv4Wktpc27bWu5W7cL
+         BRAg==
+X-Gm-Message-State: APjAAAV/V3yGNFxcuTkb1PGn0XXJaVHgGofn9LplzY2rZ269RoLU5gtz
+        SyZPQ6hVMyzupiR5a5i54pbd/8i68NmSXYZaSIP1Jg==
+X-Google-Smtp-Source: APXvYqyb3t85xjKPwhD4gyHOTimxwHuO6OJKXBDhsaLSjnAYbEB8tiQngZaDfestVaUMXo0GwsmKGj6lvPD5AwNsoeE=
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr23189523ljc.39.1582296238375;
+ Fri, 21 Feb 2020 06:43:58 -0800 (PST)
 MIME-Version: 1.0
-References: <1582012300-30260-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1582012300-30260-1-git-send-email-Anson.Huang@nxp.com>
+References: <1582012300-30260-1-git-send-email-Anson.Huang@nxp.com> <1582012300-30260-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1582012300-30260-2-git-send-email-Anson.Huang@nxp.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 15:42:41 +0100
-Message-ID: <CACRpkdZS9V_XugLuvzhWfd9Pk8xO4SBakShZ+RMeyK4z8fGQhg@mail.gmail.com>
-Subject: Re: [PATCH V4 1/4] dt-bindings: pinctrl: Convert i.MX8MQ to json-schema
+Date:   Fri, 21 Feb 2020 15:43:47 +0100
+Message-ID: <CACRpkdYuC4iiuKrRWnH6Rrr_AV+F54_AT9X9BdktPaaie5zy3w@mail.gmail.com>
+Subject: Re: [PATCH V4 2/4] dt-bindings: pinctrl: Convert i.MX8MM to json-schema
 To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
         Fabio Estevam <festevam@gmail.com>,
@@ -81,7 +80,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Tue, Feb 18, 2020 at 8:57 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-> Convert the i.MX8MQ pinctrl binding to DT schema format using json-schema
+> Convert the i.MX8MM pinctrl binding to DT schema format using json-schema
 >
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
