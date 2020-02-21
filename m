@@ -2,137 +2,129 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2DFC35669
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 21:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FFEC35669
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 22:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A612073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 21:56:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I+k7ayqy"
+	by mail.kernel.org (Postfix) with ESMTP id 7B6F6206DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 22:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582322702;
+	bh=ixkaQsOyXc65L7U5cAzBy/t7QDxhcFt3SZW7c7F25dw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xAyqIZzZ7gCUN9HaYXcK8ifR09z5rqnkWOuTqO+dBtCI+gfzH2f9l8NnEyRdpC5vb
+	 zFBu5rnnAtfzO5Wx8V3PjF0eCVa3cD5IXDxrfdVfnBnt3T4MK1kSgiEJi81xnLG3a1
+	 uI74mwbA4NMF4EYBeGIe3RC9vzqppgo3jrwfI3lE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgBUV4K (ORCPT
+        id S1726731AbgBUWE7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:56:10 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37517 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgBUV4K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 16:56:10 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m13so1366308pjb.2
-        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 13:56:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4R75gLHGBZqI7rZdCrlVgn8bgkA+VU53aPQUf73iw7U=;
-        b=I+k7ayqyClm2D7rCoFnih/D2ZbHNrdAKdYMiZsgvr3/8YQ/PswRNV+Ag8sRHA13Fl8
-         5GG8QlXX8xyyeg5ZjML/PN3ZnZkcLGTfRc/qeTqLurZJVoPF9IvmFmBJjKScrnuS1Zmg
-         Hu9BLmU8x4oXbNU9LW3fVSWW2PSr2sv8KWZRRwkrq0WsIuz8/eHaMACRA9dYAeoldwrV
-         QbfLzPGYYw37ekbgDnKPEDSezIlGU0+4XzToj6Be+f0qtzwzMxZvnjLwVQS8sh9Osuoq
-         eE7m4SGh5fiyElgoHNhVF1/uU3j79QFd6L0vzHwZjGLSRbvCdZz6xHq1invHhlCy+Nsj
-         vpbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4R75gLHGBZqI7rZdCrlVgn8bgkA+VU53aPQUf73iw7U=;
-        b=btNXzzudV3uTU7ma9DYpnP4Hi1fVZvfQ+NxnwywXn2hxCv1i3x3e+8w5qfkYb/rdmC
-         LHPLa0LjFIwBxBPdbzL+H+GVQsKDdU59h7ADpJTPMtiPHSmKKmL+pkMp2CbIJJ/vEfoz
-         3O2p5SQ8xEim8lhC5ct2S+xgDDUvIMWrl4VQTeHagFkVaHmFlLf9xWQgaabNdcqSHtj7
-         mSu/iptRcGCF88GgnPf7aQ2MwKgAa/YdZuYrd7XGFywiHMvWFe2L89WbC6tPG2c+PGNz
-         SkJfVaVqcLQifoPpYlde+wJ2gcsJQBe1Ia9ng8JHsZX7ny1nJOXbgPA8ROpT/mF48VBJ
-         Hjiw==
-X-Gm-Message-State: APjAAAUOKq700Y6SOxnVwX4MojxNKSl9WehakXEP1ES+pqJJt/giEg7r
-        vJhwF5Bd9HDBbBSI4spgOZbXeA==
-X-Google-Smtp-Source: APXvYqzBIUmw7IC4MYwzkgRvIoSRfaSA2ePp8ibxXugv7bCVL8F2ywUMJumZw5ngey7+HU21z3EjsA==
-X-Received: by 2002:a17:902:8545:: with SMTP id d5mr36651230plo.116.1582322167908;
-        Fri, 21 Feb 2020 13:56:07 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id h26sm3931993pfr.9.2020.02.21.13.56.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 13:56:07 -0800 (PST)
-Date:   Fri, 21 Feb 2020 14:56:05 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     peng.fan@nxp.com
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] remoteproc: imx_rproc: parse early-booted property
-Message-ID: <20200221215605.GC10368@xps15>
-References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
- <1582097265-20170-6-git-send-email-peng.fan@nxp.com>
+        Fri, 21 Feb 2020 17:04:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbgBUWE7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Feb 2020 17:04:59 -0500
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58CD72072C;
+        Fri, 21 Feb 2020 22:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582322698;
+        bh=ixkaQsOyXc65L7U5cAzBy/t7QDxhcFt3SZW7c7F25dw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hE+MPvG/9HlApVb7a1C28KlYECMfNuRDiN5O/RjQeGCMCTPwZif/S/YvJ3If4HBTr
+         Zcf5e4RSkOSoTbbHRzOeqS1MPWOHar1v8y4TTptGKAnNkZlw4pcEM412p0OvN5oN2S
+         N6+5cm3k6Gaukxa1iLXjUVY1CJuM9VvipF3t7LrA=
+Received: by mail-qt1-f181.google.com with SMTP id n17so2428773qtv.2;
+        Fri, 21 Feb 2020 14:04:58 -0800 (PST)
+X-Gm-Message-State: APjAAAX5ccd/wo+Yi5RqNKmlZzcMfwAwJfJdzxQBsrVW/Yt432JeySLU
+        q5OnmIU6fMdpNPPyoR4nERzfkFpV0GbVVluKLA==
+X-Google-Smtp-Source: APXvYqzIdyYmWrgE2znfgfwuWRqr27wwCfU9j74qwfxNfJB8wFPqCO8UUY9xs6KKGgpRQQM31GBK5HGN7l7/vsKP0xo=
+X-Received: by 2002:aed:2344:: with SMTP id i4mr34521971qtc.136.1582322697489;
+ Fri, 21 Feb 2020 14:04:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582097265-20170-6-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200221041631.10960-1-chris.packham@alliedtelesis.co.nz>
+ <20200221041631.10960-4-chris.packham@alliedtelesis.co.nz>
+ <CAL_JsqK+jKyRr98_YX1GGwk-rHrLMOq_v7Z_57dQWYYQPuLS7A@mail.gmail.com> <20200221155259.GA11868@roeck-us.net>
+In-Reply-To: <20200221155259.GA11868@roeck-us.net>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 21 Feb 2020 16:04:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK5MqD9vqS0A1oTDkMvVkBFM83_fLAp7M7zR5uEv+NEJw@mail.gmail.com>
+Message-ID: <CAL_JsqK5MqD9vqS0A1oTDkMvVkBFM83_fLAp7M7zR5uEv+NEJw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] dt-bindings: hwmon: Document adt7475 invert-pwm property
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Jean Delvare <jdelvare@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 03:27:41PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> If early-property exists, there is no need to check syscon.
-> Just mark early_boot as true.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/remoteproc/imx_rproc.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index b9fabe269fd2..e31ea1090cf3 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -483,7 +483,9 @@ static int imx_rproc_configure_mode(struct imx_rproc *priv)
->  	int ret;
->  	u32 val;
->  
-> -	if (of_get_property(dev->of_node, "early-booted", NULL)) {
-> +	if (dcfg->variants == IMX7ULP) {
+On Fri, Feb 21, 2020 at 9:53 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Fri, Feb 21, 2020 at 09:40:00AM -0600, Rob Herring wrote:
+> > On Thu, Feb 20, 2020 at 10:16 PM Chris Packham
+> > <chris.packham@alliedtelesis.co.nz> wrote:
+> > >
+> > > Add binding information for the invert-pwm property.
+> > >
+> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > ---
+> > >
+> > > Notes:
+> > >     Changes in v4:
+> > >     - use $ref uint32 and enum
+> > >     - add adi vendor prefix
+> > >
+> > >     Cahnges in v3:
+> > >     - new
+> > >
+> > >  Documentation/devicetree/bindings/hwmon/adt7475.yaml | 12 ++++++++++++
+> > >  1 file changed, 12 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> > > index e40612ee075f..6a358b30586c 100644
+> > > --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> > > +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> > > @@ -50,6 +50,17 @@ patternProperties:
+> > >       - $ref: /schemas/types.yaml#/definitions/uint32
+> > >       - enum: [0, 1]
+> > >
+> > > +  "^adi,invert-pwm[1-3]$":
+> > > +    description: |
+> > > +      Configures the pwm output to use inverted logic. If set to 1
+> > > +      the pwm uses a logic low output for 100% duty cycle. If set
+> > > +      to 0 the pwm uses a logic high output for 100% duty cycle.
+> > > +      If the property is absent the pwm retains it's configuration
+> > > +      from the bios/bootloader.
+> >
+> > I believe we already have an inverted flag for consumers. That doesn't
+> > work if you don't have a consumer described in DT, but then the
+> > question is should you? Or is this something the user will want to
+> > configure from userspace.
+> >
+>
+> Normally that is a system property. It is difficult to imagine
+> that it would ever have to be configured from userspace at runtime.
+> Most of the time users won't have any idea, and the board datasheet
+> (if avaible) won't list such information.
 
-Where does dcfg->variants comes from?  
+Yes, I agree and for those cases I'd expect the consumer is described
+in DT too. I read and refreshed my memory on this binding after
+sending this. I believe this is for a fan which I'd expect to be in DT
+as fans need power and there's different types.
 
-This patch doesn't compile, nor does the one before it.  I will not review
-another patchset like that. 
+The userspace case I was thinking of was more the hobbyist boards with
+PWM to a connector.
 
-> +		priv->early_boot = true;
-> +	} else if (of_get_property(dev->of_node, "early-booted", NULL)) {
->  		priv->early_boot = true;
->  	} else {
->  		ret = regmap_read(priv->regmap, dcfg->src_reg, &val);
-> @@ -509,15 +511,17 @@ static int imx_rproc_probe(struct platform_device *pdev)
->  	struct rproc *rproc;
->  	struct regmap_config config = { .name = "imx-rproc" };
->  	const struct imx_rproc_dcfg *dcfg;
-> -	struct regmap *regmap;
-> +	struct regmap *regmap = NULL;
->  	int ret;
->  
-> -	regmap = syscon_regmap_lookup_by_phandle(np, "syscon");
-> -	if (IS_ERR(regmap)) {
-> -		dev_err(dev, "failed to find syscon\n");
-> -		return PTR_ERR(regmap);
-> +	if (!of_get_property(np, "early-booted", NULL)) {
-> +		regmap = syscon_regmap_lookup_by_phandle(np, "syscon");
-> +		if (IS_ERR(regmap)) {
-> +			dev_err(dev, "failed to find syscon\n");
-> +			return PTR_ERR(regmap);
-> +		}
-> +		regmap_attach_dev(dev, regmap, &config);
->  	}
-> -	regmap_attach_dev(dev, regmap, &config);
->  
->  	/* set some other name then imx */
->  	rproc = rproc_alloc(dev, "imx-rproc", &imx_rproc_ops,
-> -- 
-> 2.16.4
-> 
+Rob
