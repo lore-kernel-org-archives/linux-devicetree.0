@@ -2,85 +2,135 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C67C35640
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 09:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE97C35641
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 09:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1B1222C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 09:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921C824676
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 09:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MDZToudB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgBUJuO (ORCPT
+        id S1728278AbgBUJwf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:50:14 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44011 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727150AbgBUJuO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 04:50:14 -0500
-Received: by mail-ot1-f65.google.com with SMTP id p8so1447921oth.10;
-        Fri, 21 Feb 2020 01:50:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LGtPhAVjIvRquefayqs6YiIA/tNdWVoN+WLDPh1u7gE=;
-        b=MvypmPBbjmipDMALQTb/Kz6EUsxFrmfj9XTg25swESgqg2fdIRrb7z9lEdnA4MN4FK
-         4w6kiqpXck/bhiBkMnn3usG90+InPrvLb7g6vsIxGGCSRNPO81V6R6LqY+ANhUCFatrE
-         PzNx9vTDqd9nfspRnsNZw1I+C/i6PMwglk5+fVFesyGlMVkADhu+LMOp62d+/zcmUUIh
-         SOXF2K6jhLY8H/0rfoPW8SxPqK3rNlnolNNMMFjFFIUXh81V0O5Z6WbG2a/OsQDLW1Dn
-         VRef4stnGCNJ1RJpyy+7Kye7tb9dp1eFr7q4CovRDTyixB5TojNC38TUEtET7SJqTvK+
-         WS6w==
-X-Gm-Message-State: APjAAAV4DuWk1iihnZF6YW2elnBQq99Ser9QcGQ77kvNdw9yueuqyVNW
-        UHAU1aABDr+iSMWNbyDmTpqw6i9xJQ6ZIzqLdWs=
-X-Google-Smtp-Source: APXvYqwm+9QUakxr4sAH21zwcX7ad8NwXiWnkq/zDR06hcy6RD3aCDm8gQ7zDkbZbqGMQTUgWgb5ROsz2Bqdvv3L3xg=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr12558550otk.145.1582278613276;
- Fri, 21 Feb 2020 01:50:13 -0800 (PST)
+        Fri, 21 Feb 2020 04:52:35 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:23893 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726989AbgBUJwf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 04:52:35 -0500
+X-UUID: 2e534da1a58c42bda6f01e4e9cc0387f-20200221
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=d/WFlzDa3S2eOt2IkKMzp95187HzPikccPGAx6OY+ks=;
+        b=MDZToudBH8ip+Ztx5jNMegXDvOZNGAMvN2YSA9j7SdkhRJA9toKJyYU091jbnDz6+3yP6cNlVwJtPsKicJWXzb4O55PPaVCnZtN/ztpJCfVf0DdMR7N4kNm545HiUcexjsajfF1U1lCZ4mfdvBpW1SHGkBnZjqGIvymKT/7rNto=;
+X-UUID: 2e534da1a58c42bda6f01e4e9cc0387f-20200221
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 946751563; Fri, 21 Feb 2020 17:52:31 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 21 Feb 2020 17:51:43 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 21 Feb 2020 17:52:59 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>
+CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Subject: [PATCH 0/5] Add basic clock support for mt6765
+Date:   Fri, 21 Feb 2020 17:52:17 +0800
+Message-ID: <1582278742-1626-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com> <20200220172403.26062-5-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20200220172403.26062-5-wsa+renesas@sang-engineering.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Feb 2020 10:50:02 +0100
-Message-ID: <CAMuHMdW-foZ+o1RbvEH8xX_zPa0sJ_kqRX+u4=bFRFNCHbLdwg@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/7] i2c: of: remove superfluous parameter from
- exported function
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 6:26 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> 'dev' is only used for printing an error message. However, that
-> information is not needed because '%pOF' fully describes the location of
-> the error. Drop the 'dev' and remove the superfluous parameter.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+VGhpcyBwYXRjaCBzZXQgYWRkcyBiYXNpYyBjbG9jayBzdXBwb3J0IGZvciBNZWRpYXRlaydzIG5l
+dyA4LWNvcmUgU29DLA0KTVQ2NzY1LCB3aGljaCBpcyBtYWlubHkgZm9yIHNtYXJ0cGhvbmUgYXBw
+bGljYXRpb24uIFdoaWNoIGhhcyBiZWVuDQpzcGxpdCBmcm9tIHByZXZpb3VzIHBhdGNoIHNldCB2
+NzogQWRkIGJhc2ljIFNvQyBzdXBwb3J0IGZvciBtdDY3NjUuDQoNCiAgaHR0cHM6Ly9wYXRjaHdv
+cmsua2VybmVsLm9yZy9jb3Zlci8xMTM3MDEwNS8NCg0KQ2hhbmdlcyBpbiB0aGlzIHBhdGNoIHNl
+dDoNCjEuIFRha2UgcGF0Y2hlcyAjMSwgIzMsICM0IGZyb20gb3JpZ2luIHBhdGNoIHNldC4NCiAg
+LSBbdjcsMS83XSBkdC1iaW5kaW5nczogY2xvY2s6IG1lZGlhdGVrOiBkb2N1bWVudCBjbGsgYmlu
+ZGluZ3MgZm9yDQogICAgTWVkaWF0ZWsgTVQ2NzY1IFNvQw0KICAtIFt2NywzLzddIGNsazogbWVk
+aWF0ZWs6IGFkZCBtdDY3NjUgY2xvY2sgSURzDQogIC0gW3Y3LDQvN10gY2xrOiBtZWRpYXRlazog
+QWRkIE1UNjc2NSBjbG9jayBzdXBwb3J0DQoyLiBTcGxpdCBvcmlnaW4gcGF0Y2ggIzEgaW50byAz
+IHBhdGNoZXM6DQogIC0gW1BBVENIIDEvNV0gZHQtYmluZGluZ3M6IGNsb2NrOiBtZWRpYXRlazog
+ZG9jdW1lbnQgY2xrIGJpbmRpbmdzIGZvcg0KICAgIE1lZGlhdGVrIE1UNjc2NSBTb0MNCiAgLSBb
+UEFUQ0ggMi81XSBkdC1iaW5kaW5nczogY2xvY2s6IG1lZGlhdGVrOiBkb2N1bWVudCBjbGsgYmlu
+ZGluZ3MNCiAgICBtaXBpMGEgZm9yIE1lZGlhdGVrIE1UNjc2NSBTb0MNCiAgLSBbUEFUQ0ggMy81
+XSBkdC1iaW5kaW5nczogY2xvY2s6IG1lZGlhdGVrOiBkb2N1bWVudCBjbGsgYmluZGluZ3MgDQog
+ICAgdmNvZGVjc3lzIGZvciBNZWRpYXRlayBNVDY3NjUgU29DDQoNCk1hY3BhdWwgTGluICgzKToN
+CiAgZHQtYmluZGluZ3M6IGNsb2NrOiBtZWRpYXRlazogZG9jdW1lbnQgY2xrIGJpbmRpbmdzIGZv
+ciBNZWRpYXRlaw0KICAgIE1UNjc2NSBTb0MNCiAgZHQtYmluZGluZ3M6IGNsb2NrOiBtZWRpYXRl
+azogZG9jdW1lbnQgY2xrIGJpbmRpbmdzIG1pcGkwYSBmb3INCiAgICBNZWRpYXRlayBNVDY3NjUg
+U29DDQogIGR0LWJpbmRpbmdzOiBjbG9jazogbWVkaWF0ZWs6IGRvY3VtZW50IGNsayBiaW5kaW5n
+cyB2Y29kZWNzeXMgZm9yDQogICAgTWVkaWF0ZWsgTVQ2NzY1IFNvQw0KDQpNYXJzIENoZW5nICgx
+KToNCiAgY2xrOiBtZWRpYXRlazogYWRkIG10Njc2NSBjbG9jayBJRHMNCg0KT3dlbiBDaGVuICgx
+KToNCiAgY2xrOiBtZWRpYXRlazogQWRkIE1UNjc2NSBjbG9jayBzdXBwb3J0DQoNCiAuLi4vYXJt
+L21lZGlhdGVrL21lZGlhdGVrLGFwbWl4ZWRzeXMudHh0ICAgICAgfCAgIDEgKw0KIC4uLi9iaW5k
+aW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssYXVkc3lzLnR4dCB8ICAgMSArDQogLi4uL2JpbmRp
+bmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxjYW1zeXMudHh0IHwgICAxICsNCiAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGltZ3N5cy50eHQgfCAgIDEgKw0KIC4uLi9hcm0vbWVk
+aWF0ZWsvbWVkaWF0ZWssaW5mcmFjZmcudHh0ICAgICAgICB8ICAgMSArDQogLi4uL2JpbmRpbmdz
+L2FybS9tZWRpYXRlay9tZWRpYXRlayxtaXBpMGEudHh0IHwgIDI4ICsNCiAuLi4vYmluZGluZ3Mv
+YXJtL21lZGlhdGVrL21lZGlhdGVrLG1tc3lzLnR4dCAgfCAgIDEgKw0KIC4uLi9hcm0vbWVkaWF0
+ZWsvbWVkaWF0ZWsscGVyaWNmZy50eHQgICAgICAgICB8ICAgMSArDQogLi4uL2FybS9tZWRpYXRl
+ay9tZWRpYXRlayx0b3Bja2dlbi50eHQgICAgICAgIHwgICAxICsNCiAuLi4vYXJtL21lZGlhdGVr
+L21lZGlhdGVrLHZjb2RlY3N5cy50eHQgICAgICAgfCAgMjcgKw0KIGRyaXZlcnMvY2xrL21lZGlh
+dGVrL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICA4NiArKw0KIGRyaXZlcnMvY2xrL21lZGlh
+dGVrL01ha2VmaWxlICAgICAgICAgICAgICAgICB8ICAgNyArDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1hdWRpby5jICAgICAgIHwgMTAwICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1jYW0uYyAgICAgICAgIHwgIDc0ICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1pbWcuYyAgICAgICAgIHwgIDcwICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1taXBpMGEuYyAgICAgIHwgIDY4ICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1tbS5jICAgICAgICAgIHwgIDk2ICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS12Y29kZWMuYyAgICAgIHwgIDcwICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS5jICAgICAgICAgICAgIHwgOTUyICsrKysrKysrKysrKysrKysrKw0KIGlu
+Y2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svbXQ2NzY1LWNsay5oICAgICAgICB8IDMxMyArKysrKysN
+CiAyMCBmaWxlcyBjaGFuZ2VkLCAxODk5IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRl
+ayxtaXBpMGEudHh0DQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssdmNvZGVjc3lzLnR4dA0KIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ2NzY1LWF1ZGlvLmMNCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc2NS1jYW0uYw0KIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ2NzY1LWltZy5jDQog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NjUtbWlwaTBh
+LmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc2NS1t
+bS5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NjUt
+dmNvZGVjLmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10
+Njc2NS5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svbXQ2
+NzY1LWNsay5oDQoNCi0tIA0KMi4xOC4wDQo=
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
