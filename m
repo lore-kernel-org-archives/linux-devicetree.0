@@ -2,156 +2,140 @@ Return-Path: <SRS0=98KY=4J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE92BC35646
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117C4C35656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E8C24650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E9C24650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Feb 2020 14:34:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSS8G86A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DUMUWH+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgBUOcK (ORCPT
+        id S1728781AbgBUOeL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:32:10 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38963 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgBUOcK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 09:32:10 -0500
-Received: by mail-wm1-f66.google.com with SMTP id c84so2123590wme.4;
-        Fri, 21 Feb 2020 06:32:08 -0800 (PST)
+        Fri, 21 Feb 2020 09:34:11 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42561 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728392AbgBUOeL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 09:34:11 -0500
+Received: by mail-lj1-f194.google.com with SMTP id d10so2387992ljl.9
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 06:34:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kGlgDo9M9XGHB0o0rwRFWRiv//bvSK3bYB5+0sd515M=;
-        b=RSS8G86A2iOHXIt+m5SYMDSTduj+VJhaaT16v/AYbp3oc0PYHHR7O/KhHKrh/yyD2l
-         IMxPtwG09XK/ateKXoQpKTjzLjgUeRYv2uugUkO2njJC2PZvzvTrj2XRXhS+JfA4yRmT
-         D8TjJjSel09swB47hxOgbk7f7cyLPKPEcgYP5lppkhYRQQms71JrWfLUyiqxHpMYNedL
-         ECwH7pYc14kQ6r7Zd2REhZ6eLcmMQ3W7JacPE1zJ/yVRyHJ083mhA6gqhwk6fj2m/itR
-         ZsX7hTdRWwhIzU8U/phcSHdilQsqmrroddIaLwdJij4vAPvWUuOpH6g0sVPjWfELq4UV
-         raww==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qE1ZprvNAQZEaedKCgeg3ifr2lhMX5FFSbIkCacp4Kw=;
+        b=DUMUWH+o5xdEn4HR/SntOIZf6pWK2WCRJo9GDytRJlf/wRrfthg3iixysSl789z7QV
+         cWt75Jm8nDTe+v9ctDDtSdF0l5ln3hu7YnDUgIww04Q1jOLT3LlEJY5Np7xnnDm12q22
+         zMtcwL6aW4EdhmjVpuhoKoluw2mZk8ZlFiPs7NXZpmM1yCzC0wVB0BH1b3EG4rqRqa9C
+         pYVGdEP1BZ1xifOB1yzVdKi9iSVyJh2LWc8OsI88wTr7ivb3LyFWFFC5WkJlQ9bnDKOI
+         Tv60UO/1LRXTVVXr8nBzNDWO6d8+PQniSdcEiO/19AcFYSeICRQ7COilyc6YYMi1QnPa
+         y2iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kGlgDo9M9XGHB0o0rwRFWRiv//bvSK3bYB5+0sd515M=;
-        b=rQWhMBW6SqSDYhwq96YOnjr5TOsqwNYnOkxLgNtG4jhTaWd6NV6aWpVWU6QRuiaCeA
-         Klomzk95JqSMPyf8rhY/GZorhn+I/L/O3JbBUmrtADDYp3+geGY/TYo7hzK5BMGog3EI
-         8FFaoHCi04l+U57w02EWmw3BMv+YGx8Uh1X2bqtxMARzVGUoawUYTQ2BffuPgvxGorS6
-         WsShezaPcfzuODJPxvAzfgGqlZTnh1r42ndProotL890oOSSO3Nd6AQLKskwwhaj3QRI
-         vlUjCRD2858ZPJgb0SOqgdSENmxSdnVBbpgwxE+X6/twO+YpzZX3tUv43eDlkprhfOY5
-         VX6Q==
-X-Gm-Message-State: APjAAAWNz3/huEirgK8n2mQCLQEX2ZjnW+NVg7FPAanShALJEPed8uOH
-        OeboqClw+VsPL2tFDpeQOnJ1OqWQKiY=
-X-Google-Smtp-Source: APXvYqz8aEgYoUhbOHE6PpkLL/zuy243O+yjkamkO4hz8v9eZB0TUbtgcfvuxOlmM0MojBai/11wfQ==
-X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr4381037wmj.72.1582295527411;
-        Fri, 21 Feb 2020 06:32:07 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id y185sm4291290wmg.2.2020.02.21.06.32.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 06:32:06 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qE1ZprvNAQZEaedKCgeg3ifr2lhMX5FFSbIkCacp4Kw=;
+        b=myVGpq67MwKBGi1FNmrJT3S9msxvXus6sZt2YWWM91ieQGGJF3Gzl3EOhBaADkx0rP
+         wkgXWYnQdZK+QrqRHhnJr9nlk93Esqh+4inazNXh+/xuuKZLPIJET/EKpmd9npBvuFa8
+         69rcAO2b/fBVGFXJTilZFFDTBUmvSQxkMtmWjVJmbsb5ZXrraj2oWbjvrP8grZwwdWim
+         0OnTAD6lshSTqVJ0CAF7jGNs7Tou1ObGR2aBPpFzreTUyxJx1zAUu71UuOWu/Y49YC+c
+         PZAMiIsW1o71zsYTzItv4oSV1zsdRICB4Xz+n4vAc2JTGoqCLDP+UxvUV9Kl4IZHtvbq
+         MtHw==
+X-Gm-Message-State: APjAAAVsBeTuSpIp1I7DjxcQB43ue7UjUDkcqm7avsfI5g4qm1Ef46SV
+        WgfUPc+4793OninhZL81+n4NSDfPxEQ+6KfeMDgy/w==
+X-Google-Smtp-Source: APXvYqw4oSVVlShPCelo7IGnTIlbPgsMGxvB5xli1PlMp8bLrG3RvR3Haq1OJ5idjUHugDKxC+iAjv/NG+M/2+LLAR0=
+X-Received: by 2002:a2e:81c3:: with SMTP id s3mr21749572ljg.168.1582295649418;
+ Fri, 21 Feb 2020 06:34:09 -0800 (PST)
+MIME-Version: 1.0
+References: <1581921111-24172-1-git-send-email-chun-hung.wu@mediatek.com> <1581921111-24172-2-git-send-email-chun-hung.wu@mediatek.com>
+In-Reply-To: <1581921111-24172-2-git-send-email-chun-hung.wu@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 21 Feb 2020 15:33:58 +0100
+Message-ID: <CACRpkdauCe-zAcsO5q_79+Ux_a2=bktA5UqKjWs4XdBJZ3wWeg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] [1/4] mmc: core: expose MMC_CAP2_CQE* to dt
+To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] Documentation: devictree: Add ipq806x mdio bindings
-Date:   Fri, 21 Feb 2020 15:31:51 +0100
-Message-Id: <20200221143153.21186-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200221143153.21186-1-ansuelsmth@gmail.com>
-References: <20200221143153.21186-1-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        kernel-team@android.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentations for ipq806x mdio driver.
+On Mon, Feb 17, 2020 at 7:32 AM Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> Expose MMC_CAP2_CQE and MMC_CAP2_CQE_DCMD
+> to host->caps2 if
+> 1. "supports-cqe" is defined in dt and
+> 2. "disable-cqe-dcmd" is not defined in dt.
+>
+> ---
+>  drivers/mmc/core/host.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index 105b7a7..efb0dbe 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -319,6 +319,14 @@ int mmc_of_parse(struct mmc_host *host)
+>                 host->caps2 |= MMC_CAP2_NO_SD;
+>         if (device_property_read_bool(dev, "no-mmc"))
+>                 host->caps2 |= MMC_CAP2_NO_MMC;
+> +       if (device_property_read_bool(dev, "supports-cqe"))
+> +               host->caps2 |= MMC_CAP2_CQE;
 
-diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-new file mode 100644
-index 000000000000..d2254a5ff2ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x MDIO bus controller
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description: |+
-+  The ipq806x soc have a MDIO dedicated controller that is
-+  used to comunicate with the gmac phy conntected.
-+  Child nodes of this MDIO bus controller node are standard
-+  Ethernet PHY device nodes as described in
-+  Documentation/devicetree/bindings/net/phy.txt
-+
-+allOf:
-+  - $ref: "mdio.yaml#"
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq8064-mdio
-+  reg:
-+    maxItems: 1
-+    description: address and length of the register set for the device
-+  clocks:
-+    maxItems: 1
-+    description: A reference to the clock supplying the MDIO bus controller
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    mdio0: mdio@37000000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        compatible = "qcom,ipq8064-mdio", "syscon";
-+        reg = <0x37000000 0x200000>;
-+        resets = <&gcc GMAC_CORE1_RESET>;
-+        reset-names = "stmmaceth";
-+        clocks = <&gcc GMAC_CORE1_CLK>;
-+
-+        switch@10 {
-+            compatible = "qca,qca8337";
-+            ...
-+        }
-+    };
--- 
-2.25.0
+I don't understand why this is even a DT property as it should
+be clear from the hosts compatible whether it supports CQE or
+not. But it's too late to do anything about that I suppose, and
+I just assume there is something I don't understand here.
 
+> +       /* Must be after "supports-cqe" check */
+> +       if (!device_property_read_bool(dev, "disable-cqe-dcmd")) {
+> +               if (host->caps2 & MMC_CAP2_CQE)
+> +                       host->caps2 |= MMC_CAP2_CQE_DCMD;
+> +       }
+
+This is the right place to do this I suppose. Disabling CQE
+selectively is something you might wanna do for debugging.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+I see that some drivers are already parsing this DT property
+on their own, should we follow up with patches so that these:
+
+$ git grep 'supports-cqe'
+drivers/mmc/host/sdhci-brcmstb.c:       if
+(device_property_read_bool(&pdev->dev, "supports-cqe")) {
+drivers/mmc/host/sdhci-msm.c:   if (of_property_read_bool(node, "supports-cqe"))
+drivers/mmc/host/sdhci-tegra.c: if
+(device_property_read_bool(host->mmc->parent, "supports-cqe"))
+
+Make use of the central parsing instead?
+
+Yours,
+Linus Walleij
