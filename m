@@ -2,322 +2,250 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E40BC35671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 14:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F889C35666
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 14:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F017720702
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 14:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB19720702
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 14:58:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zJUnV+qB"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="BDD2LYnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbgBVOf0 (ORCPT
+        id S1727576AbgBVO6p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 09:35:26 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:46166 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbgBVOf0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 09:35:26 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 01MEYkvx030545;
-        Sat, 22 Feb 2020 23:34:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 01MEYkvx030545
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582382087;
-        bh=5R5701ZYweXd3rfKO1OuY5xutb8Z93pleM360HuNZrI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=zJUnV+qBlhmzCwf/FiFVYh2VD9T/1jkoMKbG6TE0jjLqdw+etoS2G+BpZg16Wf4aZ
-         U6CiiXQOtiiUxgAGp189hKd/qY/sE83ORQvW6mgq3L2n9sIwCXaE96nKOJrvBlNo8x
-         zWIBFOP5vtC5PwVMj2usEkwGYCSgJwVJlOIdPzevq299wYKyvb81zgRZpJ7ZtRg7cr
-         FdVGmklnZtm75JOzxXLADMyO0w0s8or1pCdj0AmGBOJkXJ2ozioU9eANgFDyV7WjHR
-         fW4y2TUcBBL1+k7DWsewna6gxPYZGrELlNxtNXzSJe7Gg1mXGvm4i86Hp/qUaZbs+S
-         gydVON6OZ39hA==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Piotr Sroka <piotrs@cadence.com>,
+        Sat, 22 Feb 2020 09:58:45 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42010 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbgBVO6p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 09:58:45 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 83so3628982lfh.9
+        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 06:58:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=22sCVmgYfxumFwE6ka2/N0j/kYteb6WIfPOgGgCHluQ=;
+        b=BDD2LYnN6Kn7VtWK03Zk1oP11ZNrZvkryw52Sol5noa1IrV3/gh9497+KWHFfukInp
+         H9WG1/NNs4ryW9H7PQM6yMOQtMK7hTG9q1owLo5W8w/cnZPfJl1wZAYzosuUWNOo5iGm
+         0m5/iRTikpgVP9Wk90nCMaKuCA7ejFQKk7LzzA8aBCKgwjZVn2uAEF4x0zgvjNmVKdui
+         a4MXn6Arhd7g6tZnYVk//DXI6nqa4RZ1moUPXlBUtkbyZnagNnpkfVYRhh+IUwH1if0z
+         yNKX7/vkZb8il11O1fsoOFuTpezeFhuAO6wE+QDqIowFcIWlp7yxt8bwViu9gPjjA6Hx
+         DoXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=22sCVmgYfxumFwE6ka2/N0j/kYteb6WIfPOgGgCHluQ=;
+        b=UljVslyfrm/uW9P5i/pH5D4rZkWOIo5UPIrCkUYG61HSOE/3jB8BZdJYmkvBJTQ2C2
+         7agx4X+5TkbWzposzvsZpD+sOfYllPPdvFdfWm9gLRYclDQko9FIKBuSRxxLOvlEo7sB
+         2S97r92b59Eyn6xNX2Hs0qDo+xLxVCaUhsBTF/XI/LcME2SxCdpcE2eEaDpCgggRwfZy
+         wgjB5aHfwq2cVcWOUw/Jrj5p2vCFVHBtYfBAtovosa3MPQe6S3o2VvV/YoeLCtsv/Ere
+         lKqjvdel6tJGB+IGM/6eSf3MidoWUgI0fsA8cJSQwgjsl2UA6U8XrJhNe1P+nKerIdzD
+         t8lA==
+X-Gm-Message-State: APjAAAWsoixH9XbyncBgVC3YbCtEy9EpSJNpC1dnJ6PR3mvSM4fQMiq7
+        7OEehk1uiS5JjUw5ZLYu27JOpw==
+X-Google-Smtp-Source: APXvYqyxUEKoWyaLCyvyvLLdqteGGq57VnEDUZkNRmpZsdyK61bq5cZQ0OoyHPca46c+T5GtRCEcXg==
+X-Received: by 2002:a19:f608:: with SMTP id x8mr22591799lfe.115.1582383522603;
+        Sat, 22 Feb 2020 06:58:42 -0800 (PST)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id m83sm3306652lfa.5.2020.02.22.06.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 06:58:41 -0800 (PST)
+Date:   Sat, 22 Feb 2020 15:58:41 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: mmc: Convert Cadence SD/SDIO/eMMC controller to json-schema
-Date:   Sat, 22 Feb 2020 23:34:44 +0900
-Message-Id: <20200222143444.5135-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: power: rcar-sysc: Convert to json-schema
+Message-ID: <20200222145841.GD1444588@oden.dyn.berto.se>
+References: <20200221121022.30970-1-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200221121022.30970-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Cadence SD/SDIO/eMMC host controller IP (a.k.a. SD4HC)
-binding to DT schema format.
+Hi Geert,
 
-Socionext UniPhier ARM 64-bit SoCs are integrated with this IP.
+Thanks for your work.
 
-Cc: Piotr Sroka <piotrs@cadence.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+On 2020-02-21 13:10:22 +0100, Geert Uytterhoeven wrote:
+> Convert the Renesas R-Car System Controller Device Tree binding
+> documentation to json-schema.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I wanted to keep some precious comments, which apply to multiple
-properties.
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-I do not think 'description:' is a good fit for this.
+> ---
+>  .../bindings/power/renesas,rcar-sysc.txt      | 62 ----------------
+>  .../bindings/power/renesas,rcar-sysc.yaml     | 73 +++++++++++++++++++
+>  2 files changed, 73 insertions(+), 62 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/renesas,rcar-sysc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+> deleted file mode 100644
+> index acb41fade926e2de..0000000000000000
+> --- a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+> +++ /dev/null
+> @@ -1,62 +0,0 @@
+> -DT bindings for the Renesas R-Car (RZ/G) System Controller
+> -
+> -== System Controller Node ==
+> -
+> -The R-Car (RZ/G) System Controller provides power management for the CPU cores
+> -and various coprocessors.
+> -
+> -Required properties:
+> -  - compatible: Must contain exactly one of the following:
+> -      - "renesas,r8a7743-sysc" (RZ/G1M)
+> -      - "renesas,r8a7744-sysc" (RZ/G1N)
+> -      - "renesas,r8a7745-sysc" (RZ/G1E)
+> -      - "renesas,r8a77470-sysc" (RZ/G1C)
+> -      - "renesas,r8a774a1-sysc" (RZ/G2M)
+> -      - "renesas,r8a774b1-sysc" (RZ/G2N)
+> -      - "renesas,r8a774c0-sysc" (RZ/G2E)
+> -      - "renesas,r8a7779-sysc" (R-Car H1)
+> -      - "renesas,r8a7790-sysc" (R-Car H2)
+> -      - "renesas,r8a7791-sysc" (R-Car M2-W)
+> -      - "renesas,r8a7792-sysc" (R-Car V2H)
+> -      - "renesas,r8a7793-sysc" (R-Car M2-N)
+> -      - "renesas,r8a7794-sysc" (R-Car E2)
+> -      - "renesas,r8a7795-sysc" (R-Car H3)
+> -      - "renesas,r8a7796-sysc" (R-Car M3-W)
+> -      - "renesas,r8a77961-sysc" (R-Car M3-W+)
+> -      - "renesas,r8a77965-sysc" (R-Car M3-N)
+> -      - "renesas,r8a77970-sysc" (R-Car V3M)
+> -      - "renesas,r8a77980-sysc" (R-Car V3H)
+> -      - "renesas,r8a77990-sysc" (R-Car E3)
+> -      - "renesas,r8a77995-sysc" (R-Car D3)
+> -  - reg: Address start and address range for the device.
+> -  - #power-domain-cells: Must be 1.
+> -
+> -
+> -Example:
+> -
+> -	sysc: system-controller@e6180000 {
+> -		compatible = "renesas,r8a7791-sysc";
+> -		reg = <0 0xe6180000 0 0x0200>;
+> -		#power-domain-cells = <1>;
+> -	};
+> -
+> -
+> -== PM Domain Consumers ==
+> -
+> -Devices residing in a power area must refer to that power area, as documented
+> -by the generic PM domain bindings in
+> -Documentation/devicetree/bindings/power/power_domain.txt.
+> -
+> -Required properties:
+> -  - power-domains: A phandle and symbolic PM domain specifier, as defined in
+> -		   <dt-bindings/power/r8a77*-sysc.h>.
+> -
+> -
+> -Example:
+> -
+> -	L2_CA15: cache-controller@0 {
+> -		compatible = "cache";
+> -		power-domains = <&sysc R8A7791_PD_CA15_SCU>;
+> -		cache-unified;
+> -		cache-level = <2>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.yaml b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.yaml
+> new file mode 100644
+> index 0000000000000000..8daa23e1c49a3f81
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/renesas,rcar-sysc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: DT bindings for the Renesas R-Car and RZ/G System Controller
+> +
+> +maintainers:
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> +  - Magnus Damm <magnus.damm@gmail.com>
+> +
+> +description:
+> +  The R-Car (RZ/G) System Controller provides power management for the CPU
+> +  cores and various coprocessors.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - renesas,r8a7743-sysc  # RZ/G1M
+> +      - renesas,r8a7744-sysc  # RZ/G1N
+> +      - renesas,r8a7745-sysc  # RZ/G1E
+> +      - renesas,r8a77470-sysc # RZ/G1C
+> +      - renesas,r8a774a1-sysc # RZ/G2M
+> +      - renesas,r8a774b1-sysc # RZ/G2N
+> +      - renesas,r8a774c0-sysc # RZ/G2E
+> +      - renesas,r8a7779-sysc  # R-Car H1
+> +      - renesas,r8a7790-sysc  # R-Car H2
+> +      - renesas,r8a7791-sysc  # R-Car M2-W
+> +      - renesas,r8a7792-sysc  # R-Car V2H
+> +      - renesas,r8a7793-sysc  # R-Car M2-N
+> +      - renesas,r8a7794-sysc  # R-Car E2
+> +      - renesas,r8a7795-sysc  # R-Car H3
+> +      - renesas,r8a77961-sysc # R-Car M3-W+
+> +      - renesas,r8a77965-sysc # R-Car M3-N
+> +      - renesas,r8a7796-sysc  # R-Car M3-W
+> +      - renesas,r8a77970-sysc # R-Car V3M
+> +      - renesas,r8a77980-sysc # R-Car V3H
+> +      - renesas,r8a77990-sysc # R-Car E3
+> +      - renesas,r8a77995-sysc # R-Car D3
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#power-domain-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#power-domain-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    // System Controller node
+> +    sysc: system-controller@e6180000 {
+> +            compatible = "renesas,r8a7791-sysc";
+> +            reg = <0xe6180000 0x0200>;
+> +            #power-domain-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    // Power Domain consumers
+> +    #include <dt-bindings/power/r8a7791-sysc.h>
+> +
+> +    cache-controller-0 {
+> +            compatible = "cache";
+> +            power-domains = <&sysc R8A7791_PD_CA15_SCU>;
+> +            cache-unified;
+> +            cache-level = <2>;
+> +    };
+> -- 
+> 2.17.1
+> 
 
-I was searching for a way to insert a comment line that does not
-affect the schema.
-
-The $comment did not work. I just use '#', which is YAML comment.
-If there is a better way, please let me know.
-
-
-Changes in v2:
-  - fix schema warning in example
-
- .../devicetree/bindings/mmc/cdns,sdhci.yaml   | 143 ++++++++++++++++++
- .../devicetree/bindings/mmc/sdhci-cadence.txt |  80 ----------
- 2 files changed, 143 insertions(+), 80 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-new file mode 100644
-index 000000000000..2f45dd0d04db
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-@@ -0,0 +1,143 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/cdns,sdhci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cadence SD/SDIO/eMMC Host Controller (SD4HC)
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+  - Piotr Sroka <piotrs@cadence.com>
-+
-+allOf:
-+  - $ref: mmc-controller.yaml
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+         - socionext,uniphier-sd4hc
-+      - const: cdns,sd4hc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  # PHY DLL input delays:
-+  # They are used to delay the data valid window, and align the window to
-+  # sampling clock. The delay starts from 5ns (for delay parameter equal to 0)
-+  # and it is increased by 2.5ns in each step.
-+
-+  cdns,phy-input-delay-sd-highspeed:
-+    description: Value of the delay in the input path for SD high-speed timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-legacy:
-+    description: Value of the delay in the input path for legacy timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-sdr12:
-+    description: Value of the delay in the input path for SD UHS SDR12 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-sdr25:
-+    description: Value of the delay in the input path for SD UHS SDR25 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-sdr50:
-+    description: Value of the delay in the input path for SD UHS SDR50 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-ddr50:
-+    description: Value of the delay in the input path for SD UHS DDR50 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-mmc-highspeed:
-+    description: Value of the delay in the input path for MMC high-speed timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-mmc-ddr:
-+    description: Value of the delay in the input path for eMMC high-speed DDR timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  # PHY DLL clock delays:
-+  # Each delay property represents the fraction of the clock period.
-+  # The approximate delay value will be
-+  # (<delay property value>/128)*sdmclk_clock_period.
-+
-+  cdns,phy-dll-delay-sdclk:
-+    description: |
-+      Value of the delay introduced on the sdclk output for all modes except
-+      HS200, HS400 and HS400_ES.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x7f
-+
-+  cdns,phy-dll-delay-sdclk-hsmmc:
-+    description: |
-+      Value of the delay introduced on the sdclk output for HS200, HS400 and
-+      HS400_ES speed modes.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x7f
-+
-+  cdns,phy-dll-delay-strobe:
-+    description: |
-+      Value of the delay introduced on the dat_strobe input used in
-+      HS400 / HS400_ES speed modes.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x7f
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    emmc: mmc@5a000000 {
-+        compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
-+        reg = <0x5a000000 0x400>;
-+        interrupts = <0 78 4>;
-+        clocks = <&clk 4>;
-+        bus-width = <8>;
-+        mmc-ddr-1_8v;
-+        mmc-hs200-1_8v;
-+        mmc-hs400-1_8v;
-+        cdns,phy-dll-delay-sdclk = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-deleted file mode 100644
-index fa423c277853..000000000000
---- a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-+++ /dev/null
-@@ -1,80 +0,0 @@
--* Cadence SD/SDIO/eMMC Host Controller
--
--Required properties:
--- compatible: should be one of the following:
--    "cdns,sd4hc"               - default of the IP
--    "socionext,uniphier-sd4hc" - for Socionext UniPhier SoCs
--- reg: offset and length of the register set for the device.
--- interrupts: a single interrupt specifier.
--- clocks: phandle to the input clock.
--
--Optional properties:
--For eMMC configuration, supported speed modes are not indicated by the SDHCI
--Capabilities Register.  Instead, the following properties should be specified
--if supported.  See mmc.txt for details.
--- mmc-ddr-1_8v
--- mmc-ddr-1_2v
--- mmc-hs200-1_8v
--- mmc-hs200-1_2v
--- mmc-hs400-1_8v
--- mmc-hs400-1_2v
--
--Some PHY delays can be configured by following properties.
--PHY DLL input delays:
--They are used to delay the data valid window, and align the window
--to sampling clock. The delay starts from 5ns (for delay parameter equal to 0)
--and it is increased by 2.5ns in each step.
--- cdns,phy-input-delay-sd-highspeed:
--  Value of the delay in the input path for SD high-speed timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-legacy:
--  Value of the delay in the input path for legacy timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-sdr12:
--  Value of the delay in the input path for SD UHS SDR12 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-sdr25:
--  Value of the delay in the input path for SD UHS SDR25 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-sdr50:
--  Value of the delay in the input path for SD UHS SDR50 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-ddr50:
--  Value of the delay in the input path for SD UHS DDR50 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-mmc-highspeed:
--  Value of the delay in the input path for MMC high-speed timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-mmc-ddr:
--  Value of the delay in the input path for eMMC high-speed DDR timing
--  Valid range = [0:0x1F].
--
--PHY DLL clock delays:
--Each delay property represents the fraction of the clock period.
--The approximate delay value will be
--(<delay property value>/128)*sdmclk_clock_period.
--- cdns,phy-dll-delay-sdclk:
--  Value of the delay introduced on the sdclk output
--  for all modes except HS200, HS400 and HS400_ES.
--  Valid range = [0:0x7F].
--- cdns,phy-dll-delay-sdclk-hsmmc:
--  Value of the delay introduced on the sdclk output
--  for HS200, HS400 and HS400_ES speed modes.
--  Valid range = [0:0x7F].
--- cdns,phy-dll-delay-strobe:
--  Value of the delay introduced on the dat_strobe input
--  used in HS400 / HS400_ES speed modes.
--  Valid range = [0:0x7F].
--
--Example:
--	emmc: sdhci@5a000000 {
--		compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
--		reg = <0x5a000000 0x400>;
--		interrupts = <0 78 4>;
--		clocks = <&clk 4>;
--		bus-width = <8>;
--		mmc-ddr-1_8v;
--		mmc-hs200-1_8v;
--		mmc-hs400-1_8v;
--		cdns,phy-dll-delay-sdclk = <0>;
--	};
 -- 
-2.17.1
-
+Regards,
+Niklas Söderlund
