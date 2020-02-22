@@ -2,239 +2,213 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1CDC35666
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 11:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E2BC35666
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 11:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AAB6206EF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 11:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4D1206EF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 11:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PNIDnbjh"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="I8oZj+/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgBVL0c (ORCPT
+        id S1726883AbgBVL3C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 06:26:32 -0500
-Received: from conuserg-11.nifty.com ([210.131.2.78]:23006 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgBVL0b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 06:26:31 -0500
-X-Greylist: delayed 114357 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 06:26:30 EST
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 01MBPiNS007850;
-        Sat, 22 Feb 2020 20:25:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 01MBPiNS007850
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582370745;
-        bh=eXDfPRFxogywQqOMeY/U+G4h/BSruC6jLHkszgzRqkE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PNIDnbjhGTxyWhYNsljipr3Yqg6frgIECAzLzYlcG0pdOioG+oCJmo97l9MlMxWXg
-         Zhf81tCfdaY5LMXuENpGh8Y2rku/dMVLor/DpuCiKTdkKJtiGIFF+nnfWSgHgxS2BI
-         UYuqEchS+8+XsD5d+1G41ZcvJTxDEq3X9hE/z1Aqq54sK7/cO6kTFLxB7r2rPotBl6
-         EjqNPjdzx6Ysb1OXz4c1E5weZFdeJscRXDiPq/UATQhU2duek/7yb0fjU9z30BqWNg
-         x4RMAiMg/UcstwWA7hRnhC+H/0ShSAZhStD2zrbrz1b2em4265Nn9mYghvggwILbtr
-         J9yvZe+oNr9vg==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
-Subject: [PATCH] dt-bindings: mmc: Convert UniPhier SD controller to json-schema
-Date:   Sat, 22 Feb 2020 20:25:41 +0900
-Message-Id: <20200222112541.573-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 22 Feb 2020 06:29:02 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:52341 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgBVL3C (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 06:29:02 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C25BA22F43;
+        Sat, 22 Feb 2020 12:28:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582370938;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=e0h+j99WGr7wIIbHMLcV3S5aoHAcIz/PdQJyb0wgPnM=;
+        b=I8oZj+/HaL1gIkhtRKfWF3mOwkdK9UnbDUhuCokq1OMD1SG0VB+vPxRsbJMhtK5G97O0wl
+        Fb5aOlyDjbmhZcyVTw7oCxW61DlgokC9PdAj9GYRqPFAKD9GyyLmnuHvSP6huIutEaKBd/
+        GaaRjcFG3DyjHvfQRbpEMvXuEPUC6kg=
+From:   Michael Walle <michael@walle.cc>
+To:     olteanv@gmail.com
+Cc:     andrew@lunn.ch, davem@davemloft.net, devicetree@vger.kernel.org,
+        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, vivien.didelot@gmail.com,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v2 net-next/devicetree 3/5] dt-bindings: net: dsa: ocelot: document the vsc9959 core
+Date:   Sat, 22 Feb 2020 12:28:41 +0100
+Message-Id: <20200222112841.29927-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200219151259.14273-4-olteanv@gmail.com>
+References: <20200219151259.14273-4-olteanv@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C25BA22F43
+X-Spamd-Result: default: False [4.90 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.617];
+         DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.0.0.2:email,0.0.0.3:email,0.0.0.0:email,0.0.0.4:email,0.0.0.5:email,0.0.0.1:email];
+         RCPT_COUNT_TWELVE(0.00)[12];
+         MID_CONTAINS_FROM(1.00)[];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
+         FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,vger.kernel.org,gmail.com,arm.com,kernel.org,walle.cc]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the UniPhier SD controller binding to DT schema format.
+> This patch adds the required documentation for the embedded L2 switch
+> inside the NXP LS1028A chip.
+> 
+> I've submitted it in the legacy format instead of yaml schema, because
+> DSA itself has not yet been converted to yaml, and this driver defines
+> no custom bindings.
+> 
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+> Changes in v2:
+> Adapted phy-mode = "gmii" to phy-mode = "internal".
+> 
+>  .../devicetree/bindings/net/dsa/ocelot.txt    | 96 +++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/ocelot.txt b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
+> new file mode 100644
+> index 000000000000..a9d86e09dafa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
+> @@ -0,0 +1,96 @@
+> +Microchip Ocelot switch driver family
+> +=====================================
+> +
+> +Felix
+> +-----
+> +
+> +The VSC9959 core is currently the only switch supported by the driver, and is
+> +found in the NXP LS1028A. It is a PCI device, part of the larger ENETC root
+> +complex. As a result, the ethernet-switch node is a sub-node of the PCIe root
+> +complex node and its "reg" property conforms to the parent node bindings:
+> +
+> +* reg: Specifies PCIe Device Number and Function Number of the endpoint device,
+> +  in this case for the Ethernet L2Switch it is PF5 (of device 0, bus 0).
+> +
+> +It does not require a "compatible" string.
+> +
+> +The interrupt line is used to signal availability of PTP TX timestamps and for
+> +TSN frame preemption.
+> +
+> +For the external switch ports, depending on board configuration, "phy-mode" and
+> +"phy-handle" are populated by board specific device tree instances. Ports 4 and
+> +5 are fixed as internal ports in the NXP LS1028A instantiation.
+> +
+> +Any port can be disabled, but the CPU port should be kept enabled.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+What is the reason for this? Do you mean if you actually want to use it? In
+fact, I'd would like to see it disabled by default in the .dtsi file. It
+doesn't make sense to just have the CPU port enabled, but not any of the
+outgoing ports. It'd just confuse the user if there is an additional
+network port which cannot be used.
 
-If there is a better way to describe reset-names,
-please let me know.
+-michael
 
+> +
+> +The CPU port property ("ethernet"), which is assigned by default to the 2.5Gbps
+> +port@4, can be moved to the 1Gbps port@5, depending on the specific use case.
+> +DSA tagging is supported on a single port at a time.
+> +
+> +For the rest of the device tree binding definitions, which are standard DSA and
+> +PCI, refer to the following documents:
+> +
+> +Documentation/devicetree/bindings/net/dsa/dsa.txt
+> +Documentation/devicetree/bindings/pci/pci.txt
+> +
+> +Example:
+> +
+> +&soc {
+> +	pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+> +		ethernet-switch@0,5 {
+> +			reg = <0x000500 0 0 0 0>;
+> +			/* IEP INT_B */
+> +			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				/* External ports */
+> +				port@0 {
+> +					reg = <0>;
+> +					label = "swp0";
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					label = "swp1";
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					label = "swp2";
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					label = "swp3";
+> +				};
+> +
+> +				/* Tagging CPU port */
+> +				port@4 {
+> +					reg = <4>;
+> +					ethernet = <&enetc_port2>;
+> +					phy-mode = "internal";
+> +
+> +					fixed-link {
+> +						speed = <2500>;
+> +						full-duplex;
+> +					};
+> +				};
+> +
+> +				/* Non-tagging CPU port */
+> +				port@5 {
+> +					reg = <5>;
+> +					phy-mode = "internal";
+> +					status = "disabled";
+> +
+> +					fixed-link {
+> +						speed = <1000>;
+> +						full-duplex;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.17.1
 
- .../bindings/mmc/socionext,uniphier-sd.yaml   | 99 +++++++++++++++++++
- .../devicetree/bindings/mmc/uniphier-sd.txt   | 55 -----------
- 2 files changed, 99 insertions(+), 55 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/socionext,uniphier-sd.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/uniphier-sd.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/socionext,uniphier-sd.yaml b/Documentation/devicetree/bindings/mmc/socionext,uniphier-sd.yaml
-new file mode 100644
-index 000000000000..cdfac9b4411b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/socionext,uniphier-sd.yaml
-@@ -0,0 +1,99 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/socionext,uniphier-sd.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier SD/SDIO/eMMC controller
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+
-+properties:
-+  compatible:
-+    description: version 2.91, 3.1, 3.1.1, respectively
-+    enum:
-+      - socionext,uniphier-sd-v2.91
-+      - socionext,uniphier-sd-v3.1
-+      - socionext,uniphier-sd-v3.1.1
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  reset-names:
-+    description: |
-+      There are three reset signals at maximum
-+        host:   mandatory for all variants
-+        bridge: exist only for version 2.91
-+        hw:     optional. exist if eMMC hw reset line is available
-+    oneOf:
-+      - const: host
-+      - items:
-+        - const: host
-+        - const: bridge
-+      - items:
-+        - const: host
-+        - const: hw
-+      - items:
-+        - const: host
-+        - const: bridge
-+        - const: hw
-+
-+  resets:
-+    minItems: 1
-+    maxItems: 3
-+
-+allOf:
-+  - $ref: mmc-controller.yaml
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: socionext,uniphier-sd-v2.91
-+    then:
-+      properties:
-+        reset-names:
-+          contains:
-+            const: bridge
-+    else:
-+      properties:
-+        reset-names:
-+          not:
-+            contains:
-+              const: bridge
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - reset-names
-+  - resets
-+
-+examples:
-+  - |
-+    sd: mmc@5a400000 {
-+        compatible = "socionext,uniphier-sd-v2.91";
-+        reg = <0x5a400000 0x200>;
-+        interrupts = <0 76 4>;
-+        pinctrl-names = "default", "uhs";
-+        pinctrl-0 = <&pinctrl_sd>;
-+        pinctrl-1 = <&pinctrl_sd_uhs>;
-+        clocks = <&mio_clk 0>;
-+        reset-names = "host", "bridge";
-+        resets = <&mio_rst 0>, <&mio_rst 3>;
-+        dma-names = "rx-tx";
-+        dmas = <&dmac 4>;
-+        bus-width = <4>;
-+        cap-sd-highspeed;
-+        sd-uhs-sdr12;
-+        sd-uhs-sdr25;
-+        sd-uhs-sdr50;
-+    };
-diff --git a/Documentation/devicetree/bindings/mmc/uniphier-sd.txt b/Documentation/devicetree/bindings/mmc/uniphier-sd.txt
-deleted file mode 100644
-index e1d658755722..000000000000
---- a/Documentation/devicetree/bindings/mmc/uniphier-sd.txt
-+++ /dev/null
-@@ -1,55 +0,0 @@
--UniPhier SD/eMMC controller
--
--Required properties:
--- compatible: should be one of the following:
--    "socionext,uniphier-sd-v2.91"  - IP version 2.91
--    "socionext,uniphier-sd-v3.1"   - IP version 3.1
--    "socionext,uniphier-sd-v3.1.1" - IP version 3.1.1
--- reg: offset and length of the register set for the device.
--- interrupts: a single interrupt specifier.
--- clocks: a single clock specifier of the controller clock.
--- reset-names: should contain the following:
--    "host"   - mandatory for all versions
--    "bridge" - should exist only for "socionext,uniphier-sd-v2.91"
--    "hw"     - should exist if eMMC hw reset line is available
--- resets: a list of reset specifiers, corresponding to the reset-names
--
--Optional properties:
--- pinctrl-names: if present, should contain the following:
--    "default" - should exist for all instances
--    "uhs"     - should exist for SD instance with UHS support
--- pinctrl-0: pin control state for the default mode
--- pinctrl-1: pin control state for the UHS mode
--- dma-names: should be "rx-tx" if present.
--  This property can exist only for "socionext,uniphier-sd-v2.91".
--- dmas: a single DMA channel specifier
--  This property can exist only for "socionext,uniphier-sd-v2.91".
--- bus-width: see mmc.txt
--- cap-sd-highspeed: see mmc.txt
--- cap-mmc-highspeed: see mmc.txt
--- sd-uhs-sdr12: see mmc.txt
--- sd-uhs-sdr25: see mmc.txt
--- sd-uhs-sdr50: see mmc.txt
--- cap-mmc-hw-reset: should exist if reset-names contains "hw". see mmc.txt
--- non-removable: see mmc.txt
--
--Example:
--
--	sd: sdhc@5a400000 {
--		compatible = "socionext,uniphier-sd-v2.91";
--		reg = <0x5a400000 0x200>;
--		interrupts = <0 76 4>;
--		pinctrl-names = "default", "uhs";
--		pinctrl-0 = <&pinctrl_sd>;
--		pinctrl-1 = <&pinctrl_sd_uhs>;
--		clocks = <&mio_clk 0>;
--		reset-names = "host", "bridge";
--		resets = <&mio_rst 0>, <&mio_rst 3>;
--		dma-names = "rx-tx";
--		dmas = <&dmac 4>;
--		bus-width = <4>;
--		cap-sd-highspeed;
--		sd-uhs-sdr12;
--		sd-uhs-sdr25;
--		sd-uhs-sdr50;
--	};
--- 
-2.17.1
 
