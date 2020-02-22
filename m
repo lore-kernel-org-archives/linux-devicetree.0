@@ -2,84 +2,69 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED88AC35673
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 19:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77000C35666
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 19:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26CC214DB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 19:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498FA20702
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 19:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582398307;
-	bh=YiWf/FYt2l+Or/lobMbtOdv8wa//de5wWbhZINemizQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OXKl29JtWKwN8jnterk9FytQSojl/4uDocMJXSaVRqOk+Mp2YioCCFACyAkQ5p9Pb
-	 Ow5EcOpW2ZfMK65FDXipN11IckIufZLijYnJJv170C7cKdhJIII1npF/HcQDckxELc
-	 swSDycgSAUyfkDOHMcEkOUOv++zgfVDlcb8JFD8Y=
+	s=default; t=1582400714;
+	bh=e/wizAP3md2y/e0mJQfbbdsgCpx0aiSivl+PEsy+vb4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=BwUd5nEt8BlOKE+Ebr6IbJNa6udUY1KzgFOVPkhhl6yZnKnNBcXLqr5l+Nnfl23Vf
+	 WwXhgeVOlrFF24Tr6U3eDipWoSutKml6kHfZ5RB/vBPihO+6hDnRNKXTntT7/J/T95
+	 3wK/T7MKZ+lyVjR+t4fog9wjyEYGe9r48NDGDebM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgBVTEz (ORCPT
+        id S1726758AbgBVTpN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 14:04:55 -0500
-Received: from conuserg-09.nifty.com ([210.131.2.76]:23006 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgBVTEz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 14:04:55 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 01MJ4cZ4012807;
-        Sun, 23 Feb 2020 04:04:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01MJ4cZ4012807
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582398280;
-        bh=CKV2mLdhn4rZmWRUQWRtoBNfJibOoB2mxoSqdYrpxT8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bXwa5UjtDiDN0ZVWw7SA3NWvmQJDFc2CgBdllAU4YwuemCPVYL/aL/ROECuldUl73
-         Cx9wQP7dkqTkwP8pqoF1zSjvptolR/oGB+1sG5o4OVNn4zNhZi/6x9hl+jd5VxHXWA
-         f/03VJL5JpRYdkgYo3SBEO+xKvcUeCGXAhJIU+Y+NW+J5Ay3/Bep+TZ4Nx5VViW958
-         5MOC0a4/ccTG/3pX9yuCgLthOgczd9KxOz1Y9ZqXNUs4+Rw4xk6fkuOQEDuK+2gLm2
-         K/SYxThoDioVsJu7UPHy17fwvQV/j4EoXPPruL6oJy9IgcZDY1pjc9yWh36OlRcN7o
-         QlztR3TUqItog==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] kbuild: remove unneeded semicolon at the end of cmd_dtb_check
-Date:   Sun, 23 Feb 2020 04:04:32 +0900
-Message-Id: <20200222190435.11767-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200222190435.11767-1-masahiroy@kernel.org>
-References: <20200222190435.11767-1-masahiroy@kernel.org>
+        Sat, 22 Feb 2020 14:45:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbgBVTpN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Feb 2020 14:45:13 -0500
+Subject: Re: [GIT PULL] Devicetree fixes for v5.6, part 2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582400713;
+        bh=e/wizAP3md2y/e0mJQfbbdsgCpx0aiSivl+PEsy+vb4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=TXUFT5yn5Ya8VCXEEwecYn2bpRrhPOkLQZLxq+OX5XeAs4dNpFS2CXXSiOVDmfyYU
+         psEe3heig237tD9ykAfxZiczGB3r+49Y0E3s0YHEzihdwBxspzGYJPj1yi56ExnYAO
+         nLfCaS7iCeApIAo0k/WIn9NDhGFi2VfOG5gPDr28=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200221215503.GA26346@bogus>
+References: <20200221215503.GA26346@bogus>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200221215503.GA26346@bogus>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ tags/devicetree-fixes-for-5.6-2
+X-PR-Tracked-Commit-Id: 854bdbae9058bcf09b0add70b6047bc9ca776de2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fea630215a9e767fd3917b2cb09ec3ded58f88a2
+Message-Id: <158240071306.14316.13731618209914121479.pr-tracker-bot@kernel.org>
+Date:   Sat, 22 Feb 2020 19:45:13 +0000
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This trailing semicolon is unneeded.
+The pull request you sent on Fri, 21 Feb 2020 15:55:03 -0600:
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.6-2
 
- scripts/Makefile.lib | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fea630215a9e767fd3917b2cb09ec3ded58f88a2
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 64b938c10039..752ff0a225a9 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -300,7 +300,7 @@ DT_BINDING_DIR := Documentation/devicetree/bindings
- DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
- 
- quiet_cmd_dtb_check =	CHECK   $@
--      cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@ ;
-+      cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@
- 
- define rule_dtc
- 	$(call cmd_and_fixdep,dtc,yaml)
+Thank you!
+
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
