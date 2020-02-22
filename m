@@ -2,158 +2,180 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96056C35674
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 20:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57443C35666
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 21:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F71220707
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 20:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3AC206EF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 21:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="KfFZENIH"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RjHT6V8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgBVUmd (ORCPT
+        id S1726853AbgBVVkn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 15:42:33 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42177 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgBVUmc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 15:42:32 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 83so4000269lfh.9
-        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 12:42:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8/dqp+6ZkvRRmpmaUZJPJGMl+JnMMGYivypZ+qu1IdQ=;
-        b=KfFZENIHa1kD6D/djqtV3blmirkAzxujGlBUFJP08Yxr+SBEzFzJLYLcEkkSqydT8X
-         WcrEABFsSj/iama8pmWwrD0OkIPADuTDhFwjkBQNCgz/X0EWGkD1A4XiSLivvtseRDn3
-         TYiTvAMUlNv9hyetNnMvhIBTGGb1OuWpsVfnhJ58Ho9wGJ0wB9TYgJ5UCENxnu42+3oN
-         6xdXDF7aUEKvAcq1gbBTewL0jcm8+bY6gCsU9i2lqP/47SV9kF6bH2y1LxAWkiCHpe0t
-         kV/STK4XxyKUpd3IzE0SYkQyeH3TH8R8H0taoZJWSQCs2wPxYJJrzMW7vncAb+rmRqgS
-         m6ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=8/dqp+6ZkvRRmpmaUZJPJGMl+JnMMGYivypZ+qu1IdQ=;
-        b=fkrRREX/4NyExJY5GRmvDd5EWKt5XYJsm5h2g8yJO9QcPXG2ImqJigNWvst1LaEmp6
-         reE2y+RKNTVi8l2dExLi5WFBr2wgPCq1Qj4Vqd5GSL+URwcsG+zGKHXLJrxrDj7S/W4L
-         CbXrkTZIeUSmGZ921DPMS6+qjfIveDe0wJ6WOUwSAT6CoPm3z8Mu2vogAoJWp4uVQw8r
-         xGVV8GdPEkUImvoXdH/hzys8+b2HL1+pQxBpXVRWKT9crrQU2asrqI34Xm+I9tuRKcMU
-         w/j+2mMf/VVspjMLKz4GpkZU38C1fGG/ivyPhChBwK/xpg7Kjagw9jPNTeQ95+ibGBML
-         jvxw==
-X-Gm-Message-State: APjAAAUM1MgDgQv8MQaXDRMZi2osuxLXyT541vQQzK5eH+s6fmjYYBmm
-        kOstTBVtwWQ6Min2Z4swNARvjQ==
-X-Google-Smtp-Source: APXvYqx/B38YxteGwSNzJbkis53V2cy++o3q6ZdclQVcDwud+2NQuhy0RoD9Gg/qpGXsI9f1WGPORw==
-X-Received: by 2002:a19:6b0e:: with SMTP id d14mr4043585lfa.46.1582404149341;
-        Sat, 22 Feb 2020 12:42:29 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:4621:26b8:f6bb:b31c:6567:7228])
-        by smtp.gmail.com with ESMTPSA id v16sm3543019lfp.92.2020.02.22.12.42.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 22 Feb 2020 12:42:28 -0800 (PST)
-Subject: Re: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
-To:     "Behme Dirk (CM/ESO2)" <dirk.behme@de.bosch.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
- <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
- <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <5603f393-554d-e2a8-c2d8-6bafc20f4169@cogentembedded.com>
-Date:   Sat, 22 Feb 2020 23:42:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Sat, 22 Feb 2020 16:40:43 -0500
+Received: from vps.xff.cz ([195.181.215.36]:33162 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbgBVVkn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Feb 2020 16:40:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582407641; bh=n/YtLfVCyVXP+mWFkjUYJqHKw++vxYLHzIOxG9EZXdk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RjHT6V8Y3pQ/ti1xfG4/iXH8NMgav6xPA3+JxLk3YvGktporIz9WQpFCv19WxjZVC
+         HEP/J7wFIlJcvilXiKreH08mktTYOQdOg3UhFAOUcfFgHGiJZU6DUbdDPnMDV1XunT
+         3nMEFY7iuo7gjqTNAgtayVqgaA8YCev5RZ4KO6Uw=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ARM: dts: sun8i-a83t: Add thermal trip points/cooling maps
+Date:   Sat, 22 Feb 2020 22:40:39 +0100
+Message-Id: <20200222214039.209426-1-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 02/10/2020 01:21 PM, Behme Dirk (CM/ESO2) wrote:
+This enables passive cooling by down-regulating CPU voltage
+and frequency.
 
->> Add the memory driver for Renesas RPC-IF which registers either SPI or
->> HyperFLash device depending on the contents of the device tree subnode.
->> It also provides the absract "back end" device APIs that can be used by
->> the "front end" SPI/MTD drivers to talk to the real hardware.
->>
->> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> 
-> FYI, please find below [1] the changes I did locally on this driver. It seems to read & write successfully on my custom M3 (R8A7796) device, now.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 60 +++++++++++++++++++++++++++----
+ 1 file changed, 54 insertions(+), 6 deletions(-)
 
-   Not for me...
-   BTW, your patch had whitespace ruined, I had to apply it by hand, you'd better
-attach the patches, not paste. :-/
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 74ac7ee9383cf..53c2b6a836f27 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -72,7 +72,7 @@ cpu0: cpu@0 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C0CPUX>;
+@@ -83,7 +83,7 @@ cpu@1 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C0CPUX>;
+@@ -94,7 +94,7 @@ cpu@2 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C0CPUX>;
+@@ -116,7 +116,7 @@ cpu100: cpu@100 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@101 {
++		cpu101: cpu@101 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C1CPUX>;
+@@ -127,7 +127,7 @@ cpu@101 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@102 {
++		cpu102: cpu@102 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C1CPUX>;
+@@ -138,7 +138,7 @@ cpu@102 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@103 {
++		cpu103: cpu@103 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C1CPUX>;
+@@ -1188,12 +1188,60 @@ cpu0_thermal: cpu0-thermal {
+ 			polling-delay-passive = <0>;
+ 			polling-delay = <0>;
+ 			thermal-sensors = <&ths 0>;
++
++			trips {
++				cpu0_hot: cpu-hot {
++					temperature = <80000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cpu0_very_hot: cpu-very-hot {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				cpu-hot-limit {
++					trip = <&cpu0_hot>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
+ 		};
+ 
+ 		cpu1_thermal: cpu1-thermal {
+ 			polling-delay-passive = <0>;
+ 			polling-delay = <0>;
+ 			thermal-sensors = <&ths 1>;
++
++			trips {
++				cpu1_hot: cpu-hot {
++					temperature = <80000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cpu1_very_hot: cpu-very-hot {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				cpu-hot-limit {
++					trip = <&cpu1_hot>;
++					cooling-device = <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
+ 		};
+ 
+ 		gpu_thermal: gpu-thermal {
+-- 
+2.25.1
 
-> Best regards
-> 
-> Dirk
-> 
-> [1]
-> 
-> From d72b805cc461ab1e9747c973e9be84e7abb8f828 Mon Sep 17 00:00:00 2001
-> From: Dirk Behme <dirk.behme@de.bosch.com>
-> Date: Tue, 4 Feb 2020 08:39:31 +0100
-> Subject: [PATCH] memory: renesas-rpc-if: Correct the STRTIM and some other
->  clean up
-> 
-> This is required to make the driver work correctly in my M3 environment.
-> 
-> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-> ---
->  drivers/memory/renesas-rpc-if.c | 42 ++++++++++++++++++++-------------
->  1 file changed, 25 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/memory/renesas-rpc-if.c b/drivers/memory/renesas-rpc-if.c
-> index 04be92b64bfa..f4356b066384 100644
-> --- a/drivers/memory/renesas-rpc-if.c
-> +++ b/drivers/memory/renesas-rpc-if.c
-[...]
-> @@ -513,19 +525,15 @@ ssize_t rpcif_dirmap_read(struct rpcif *rpc, u64 offs, size_t len, void *buf)
->      pm_runtime_get_sync(rpc->dev);
-> 
->      regmap_update_bits(rpc->regmap, RPCIF_CMNCR, RPCIF_CMNCR_MD, 0);
-> -    regmap_write(rpc->regmap, RPCIF_DRCR,
-> -             RPCIF_DRCR_RBURST(32) | RPCIF_DRCR_RBE);
-> -    regmap_write(rpc->regmap, RPCIF_DRCMR, rpc->command);
-> -    regmap_write(rpc->regmap, RPCIF_DREAR,
-> -             RPCIF_DREAR_EAV(offs >> 25) | RPCIF_DREAR_EAC(1));
-> -    regmap_write(rpc->regmap, RPCIF_DROPR, rpc->option);
-> -    regmap_write(rpc->regmap, RPCIF_DRENR,
-> -             rpc->enable & ~RPCIF_SMENR_SPIDE(0xF));
-> -    regmap_write(rpc->regmap, RPCIF_DRDMCR, rpc->dummy);
-> -    regmap_write(rpc->regmap, RPCIF_DRDRENR, rpc->ddr);
-
-   The driver somehow works only with this left in place (with 2 bytes eaten
-as before), otherwise all the flash reads all 0xff (via dirmap).
-
-> +    ret = wait_msg_xfer_end(rpc);
-> +    if (ret) {
-> +        len = 0;
-> +        goto err_out;
-> +    }
-> 
->      memcpy_fromio(buf, rpc->dirmap + from, len);
-> 
-> +err_out:
->      pm_runtime_put(rpc->dev);
-> 
->      return len;
-
-MBR, Sergei
