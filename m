@@ -3,120 +3,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC82C35671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 13:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B720FC35671
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 13:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3776020659
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 13:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6FF20684
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 13:54:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Y4GkoE5L"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BPaJKluO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kmrHIqVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgBVNd2 (ORCPT
+        id S1727480AbgBVNyl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 08:33:28 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:37091 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgBVNd2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 08:33:28 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id DB577230E1;
-        Sat, 22 Feb 2020 14:33:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582378405;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ju1sES4dqml8Iarmbh4tFHkRxf0KzZNsexlc5IqJhjQ=;
-        b=Y4GkoE5LTskillGNJQ+3bSPxHjSgzvfhF11ANViWaA2IHkC19paRBFoSAbLc5Tp+PM8+rC
-        tiAE+03lwzUsUWplX4AZR9/qf+Ce+aTeGExtKyneY9ugm/uvgGZXG1ca1/y9I6gEDMz7PE
-        Fs0ui8yxZEk89W6Xs1oH2kgwbjfPqmE=
-From:   Michael Walle <michael@walle.cc>
-To:     davem@davemloft.net
-Cc:     andrew@lunn.ch, devicetree@vger.kernel.org, f.fainelli@gmail.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        netdev@vger.kernel.org, olteanv@gmail.com, robh+dt@kernel.org,
-        shawnguo@kernel.org, vivien.didelot@gmail.com,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 net-next/devicetree 0/5] DT bindings for Felix DSA switch on LS1028A
-Date:   Sat, 22 Feb 2020 14:33:13 +0100
-Message-Id: <20200222133313.9993-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200219.111213.2304689693183810621.davem@davemloft.net>
-References: <20200219.111213.2304689693183810621.davem@davemloft.net>
+        Sat, 22 Feb 2020 08:54:41 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:42205 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726839AbgBVNyk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Feb 2020 08:54:40 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 61127769C;
+        Sat, 22 Feb 2020 08:54:37 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 22 Feb 2020 08:54:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=0cjuZ1FokHkr7VejpQgGbhNPCo9
+        LC+1ql4eCmuopToU=; b=BPaJKluOePR8Oz0j8SQsF0RzdUX63vXBAdpjPvQxBaV
+        +T8U58SaAuHyzcwBJ4EnIEphJa8oKLu335NJNY/cwj5h6m9gV7+NvmFblXQiiWZP
+        CtQPYvEVLO733sId5cESKvaY7NF1JvrRQHhOxBlFHgeKjLzd9lnhXTFIEIsPh6No
+        Ix5CcfNPwA9xOEBgGAGCsF44v6YNQAMvqiGTimQ6b0Ew02L2XikrfGv7mdJ5RvUX
+        LIcG28M7isDk+8jynWAxkAMLy0mGfSWNP1WgAejdYLHhSsWQGj1LnnyXDEzqppHb
+        bJvThNoDwvZH4Lmrqw3AqiROZdyOSTwhDAS1tRz0b9A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0cjuZ1
+        FokHkr7VejpQgGbhNPCo9LC+1ql4eCmuopToU=; b=kmrHIqVXqpghKYGvb1jPMG
+        Rsuf5H8GhfRr8lJE4m3GwMRvhvQoCVEmujBVwOKunCCQ7l3DqTszKh3f4zPpUnIG
+        TFoA8a/vfHZTgfuhsisT6nfBlQHR48cY6jw6zKnMS0dURebqauhE0W4L8rmZa8XE
+        aCXn4i9+s7Bd+VV6akY/3ySSR6hlECMUVXtHSwcbx6w1iokfMRS0CFHxKs++kgRx
+        qNajrqHax8aBhGlCPQHcD9XrdaYEC7AcuTI0j40Qa0SsAHYRsiCPGQUNlq0lab+8
+        8I0b4Gb2poi1rdZIdTyRSihLRZ152LJ4IbwPPtNlBd5I2xGrjhguV3pkhH7IAxRw
+        ==
+X-ME-Sender: <xms:mzJRXuSELrfvd7cQNfNxA6mQN3HzEKbZnkqA08SeB-eLBsFue5Nsow>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeeigdehkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:mzJRXnRSJWs-rkG1TDQY3sIzkiTiOg06Oo2s7eJEX9IA3LaDWIqN8g>
+    <xmx:mzJRXkX6-YfnuyXmJr34XYNzLay0onPMOcBsyZD--oG9CzOnWyIKGA>
+    <xmx:mzJRXs0p4NeA2aVnWzQZPf6_D_Vwa6Dsob5kUDcFftqd5-7661FE6g>
+    <xmx:nTJRXkYaCFvFs62KLk55rsr1R7oQLe9aqOyzQS1ggtPG7hkcJojTjQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A18A23280059;
+        Sat, 22 Feb 2020 08:54:35 -0500 (EST)
+Date:   Sat, 22 Feb 2020 14:54:34 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
+Message-ID: <20200222135434.xou7zhix4u6vymbc@gilmour.lan>
+References: <20200221222711.15973-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: DB577230E1
-X-Spamd-Result: default: False [4.90 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.601];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[12];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         FREEMAIL_CC(0.00)[lunn.ch,vger.kernel.org,gmail.com,arm.com,kernel.org,walle.cc]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> This series officializes the device tree bindings for the embedded
-> Ethernet switch on NXP LS1028A (and for the reference design board).
-> The driver has been in the tree since v5.4-rc6.
-> 
-> As per feedback received in v1, I've changed the DT bindings for the
-> internal ports from "gmii" to "internal". So I would like the entire
-> series to be merged through a single tree, be it net-next or devicetree.
-> If this happens, I would like the other maintainer to acknowledge this
-> fact and the patches themselves. Thanks.
-> 
-> Claudiu Manoil (2):
->   arm64: dts: fsl: ls1028a: add node for Felix switch
->   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
-> 
-> Vladimir Oltean (3):
->   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for ENETC
->     RCIE
->   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
->   dt-bindings: net: dsa: ocelot: document the vsc9959 core
+On Fri, Feb 21, 2020 at 04:27:10PM -0600, Rob Herring wrote:
+> Fix all the warnings in the DT binding schema examples when built with
+> 'W=1'. This is in preparation to make that the default for examples.
+>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-For all patches except 5/5 (because it was tested on a custom board) and
-with patch from [1] applied:
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-Tested-by: Michael Walle <michael@walle.cc>
-
--michael
-
-[1] https://patchwork.ozlabs.org/patch/1239296/
-
-> 
->  .../devicetree/bindings/net/dsa/ocelot.txt    | 96 +++++++++++++++++++
->  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 51 ++++++++++
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 85 +++++++++++++++-
->  drivers/net/dsa/ocelot/felix.c                |  3 +-
->  drivers/net/dsa/ocelot/felix_vsc9959.c        |  3 +-
->  5 files changed, 232 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
-
--- 
-2.17.1
-
-
+Maxime
