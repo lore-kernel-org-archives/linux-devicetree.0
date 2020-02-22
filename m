@@ -2,193 +2,303 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4818C35671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1242BC35671
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3C2206EF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582387488;
-	bh=kyHcfYLp7PIEkk3DgyydXfdC9VufMIJvr7m2G/Nredw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=J5aSPpEyGhvhP90vXiKLbFjNKIhdu/7VuAbzdABILip8S7uZ+qCHkqiMhDvBGUDa9
-	 0skjR4YnD/Q6OHHW8scvQhR3sSmPqyBtYBsw6Ok84UBw1mD6cAT5AODcvgAjXls2kp
-	 ry4GBexgLEoOubUwzAiE+Qw2UdRxwh+tnXYycVDg=
+	by mail.kernel.org (Postfix) with ESMTP id DE5D620702
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:16:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9e2qo9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgBVQEs (ORCPT
+        id S1727470AbgBVQQp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:04:48 -0500
-Received: from condef-08.nifty.com ([202.248.20.73]:48819 "EHLO
-        condef-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgBVQEs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 11:04:48 -0500
-X-Greylist: delayed 493 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 11:04:45 EST
-Received: from conssluserg-06.nifty.com ([10.126.8.85])by condef-08.nifty.com with ESMTP id 01MFqu6F005862
-        for <devicetree@vger.kernel.org>; Sun, 23 Feb 2020 00:52:56 +0900
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 01MFqYJ5000360;
-        Sun, 23 Feb 2020 00:52:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01MFqYJ5000360
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582386755;
-        bh=b79vhxmCX6yKeHzVZPJuEHpj+VRqCppVQz99zHvQULc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CwfDYortCZndDqpgaHRVU/nvQ6js3133I8s48rXc49xm6qLvgbQPJyb0zOj0cUsaJ
-         p1AgYP8sfxaPye4j2P1OsNQxHRv1eEksV8GgwxIyXCn/F4CchD2nJKcml4dLH9sv85
-         ic+Xg4VffEMF7pme/saBoN72ZB2lzol1wF703wS0jsFtFnRkpYV5JBXYz8ydYWbcEP
-         tbbUJYMaVKE7OFdQTQUXwhgDHkgMIY/Fc9YOzoPl5RufpJhCgCi2sGZh+64OUX1rwK
-         +sZWC1APVHRr5sgbZRFvyCCJnZore9b0hUNJxjGyVf41LXNaloTgyb22Q3g2V3d9b7
-         I6gki/mI1CmRg==
-X-Nifty-SrcIP: [209.85.221.182]
-Received: by mail-vk1-f182.google.com with SMTP id t129so1426465vkg.6;
-        Sat, 22 Feb 2020 07:52:35 -0800 (PST)
-X-Gm-Message-State: APjAAAUuETcyViyvbR8mPy1J++gAStXhemXyWv24iCLbZU28Kgy31bmu
-        sbzYaoUj7Mh4rrpN2AIsH0e6UjMtc5NleR7cRus=
-X-Google-Smtp-Source: APXvYqw2wXUdhO8BX/0WSoErCEp5bPm8ePO7UxLErrQ+H4iqs20FbW/Aye5pDcCSkjOmCSoFD7l6iaBKBVmYzFOzfl8=
-X-Received: by 2002:a1f:8cd5:: with SMTP id o204mr20164314vkd.66.1582386753765;
- Sat, 22 Feb 2020 07:52:33 -0800 (PST)
+        Sat, 22 Feb 2020 11:16:45 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34525 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727339AbgBVQQo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 11:16:44 -0500
+Received: by mail-wr1-f65.google.com with SMTP id n10so5462731wrm.1;
+        Sat, 22 Feb 2020 08:16:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ap8QsmRAabEWr23sTHvV+RbUWNEzGkqvYmVi6hlKNZc=;
+        b=c9e2qo9sNEKLViHpBQnasS5W19GbKfne+q7pWQ3eNVc2eWucUWo6TfjHh8v62Ogavc
+         Kb+swkv/1HmteYdBL7BI6W99QVheoDc6PhTpvAMXXXKEGF87Cm6UCXhkDvgcM3G+3YNt
+         iP4VaQnoq45wj3gNu5Dyqk+nJCJwxri31VPY8JOSVtdArmo8Oxz/lEnKeR/vJCaUEhSF
+         LhVuXMnZkrnRI/d2YZwCSGP4aoJNuU9bhwXd9/mtTJtWn5GJKoXujceM/DxtjoyMJaqE
+         fk75E7cDFpn0NsBxqMGuGDmJlTqN7g37MzPQxvZUduBXc1hB4+8NIGosaxLfHVY50Tsh
+         euKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ap8QsmRAabEWr23sTHvV+RbUWNEzGkqvYmVi6hlKNZc=;
+        b=XHw2rYJZINxulOC23COFwC6PXc+D7rGK5d2ywVaqYHYt2nfHufozr6X81BR4AQM/fo
+         KMjVi+iG/QK1zur/VJFwI7FNrHG6EikGcb+fDSBUaXEKzApXc3AihfGYEU2sTxhxFiuG
+         MAqJ9u3v4yeKKSDrh6CN/oU/+aW6QktqBPtKVZkwVk/p7t2Lfj1lDAfQfsS9noUoJsVv
+         V28ZbItmjFOZ/v5ZNNCr10W6Zzr7P6OlLnbR9TsC8OMoaeYhv77vUgMt1BoJjOBezP5c
+         8Xu7sIpZiUvKDjg2hcIFovq59xt+6knBuPC6OntsC/6/7WjHxX3dpGpuQ+FG4HkpHMQQ
+         DOqQ==
+X-Gm-Message-State: APjAAAWvgPkFfdzAe+sHy5sbrDiqieYfwaWSWjtqJzS3vhgM3yyANAOH
+        MjhympVzqu5NieELbPlNy/s=
+X-Google-Smtp-Source: APXvYqzfYQoaP3NA4bZsR7qsvAbWgxpl+LscpV0ejOtcKkdSptqP/w8olYN8E6jp2wro5Gwq6VhlBA==
+X-Received: by 2002:a5d:66cc:: with SMTP id k12mr54094406wrw.72.1582388202107;
+        Sat, 22 Feb 2020 08:16:42 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (host110-18-dynamic.45-213-r.retail.telecomitalia.it. [213.45.18.110])
+        by smtp.googlemail.com with ESMTPSA id a198sm8906855wme.12.2020.02.22.08.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 08:16:41 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/2] net: mdio: add ipq8064 mdio driver
+Date:   Sat, 22 Feb 2020 17:16:26 +0100
+Message-Id: <20200222161629.1862-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200221222955.21038-1-robh@kernel.org>
-In-Reply-To: <20200221222955.21038-1-robh@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 23 Feb 2020 00:51:57 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQkKG1nzfLmqPnU000ViEqiv9GV6Z2QQaSOBJaoxXU7fw@mail.gmail.com>
-Message-ID: <CAK7LNAQkKG1nzfLmqPnU000ViEqiv9GV6Z2QQaSOBJaoxXU7fw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kbuild: Always validate DT binding examples against
- all schemas
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Currently ipq806x soc use generic bitbang driver to
+comunicate with the gmac ethernet interface.
+Add a dedicated driver created by chunkeey to fix this.
 
+Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/net/phy/Kconfig        |   8 ++
+ drivers/net/phy/Makefile       |   1 +
+ drivers/net/phy/mdio-ipq8064.c | 166 +++++++++++++++++++++++++++++++++
+ 3 files changed, 175 insertions(+)
+ create mode 100644 drivers/net/phy/mdio-ipq8064.c
 
-
-On Sat, Feb 22, 2020 at 7:29 AM Rob Herring <robh@kernel.org> wrote:
->
-> Most folks only run dt_binding_check on the single schema they care about
-> by setting DT_SCHEMA_FILES. That means example is only checked against
-> that one schema which is not always sufficient.
->
-> Let's address this by splitting processed-schema.yaml into 2 files: one
-> that's always all schemas for the examples and one that's just the schema
-> in DT_SCHEMA_FILES for dtbs.
->
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Cc: linux-kbuild@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-
-
-I understood what you want to do, but
-you are adding too complicated code
-into scripts/Malefile.lib
-
-Also, I do not like fragile workaround like
-$(word 2, $(real-prereqs)
-
-I attached a simpler implementation below.
-I also changed .gitignore
-
-
-
-
-
-diff --git a/Documentation/devicetree/bindings/.gitignore
-b/Documentation/devicetree/bindings/.gitignore
-index ef82fcfcccab..57afa1533a5f 100644
---- a/Documentation/devicetree/bindings/.gitignore
-+++ b/Documentation/devicetree/bindings/.gitignore
-@@ -1,2 +1,2 @@
- *.example.dts
--processed-schema.yaml
-+processed-schema*.yaml
-diff --git a/Documentation/devicetree/bindings/Makefile
-b/Documentation/devicetree/bindings/Makefile
-index 646cb3525373..7c40d5ba1b51 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -2,7 +2,6 @@
- DT_DOC_CHECKER ?= dt-doc-validate
- DT_EXTRACT_EX ?= dt-extract-example
- DT_MK_SCHEMA ?= dt-mk-schema
--DT_MK_SCHEMA_FLAGS := $(if $(DT_SCHEMA_FILES), -u)
-
- quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
-       cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
-@@ -11,26 +10,33 @@ quiet_cmd_chk_binding = CHKDT   $(patsubst
-$(srctree)/%,%,$<)
- $(obj)/%.example.dts: $(src)/%.yaml FORCE
-        $(call if_changed,chk_binding)
-
--DT_TMP_SCHEMA := processed-schema.yaml
-+# Use full schemas when checking %.example.dts
-+DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
-
- quiet_cmd_mk_schema = SCHEMA  $@
-       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-$(real-prereqs)
-
--DT_DOCS = $(shell \
-+DT_DOCS = $(addprefix $(src)/, \
-+       $(shell \
-        cd $(srctree)/$(src) && \
-        find * \( -name '*.yaml' ! \
--               -name $(DT_TMP_SCHEMA) ! \
-+               -name 'processed-schema*' ! \
-                -name '*.example.dt.yaml' \) \
--       )
-+       ))
-
--DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
-+DT_SCHEMA_FILES ?= $(DT_DOCS)
-
- ifeq ($(CHECK_DTBS),)
- extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
- extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
-+extra-y += processed-schema-examples.yaml
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9dabe03a668c..ec2a5493a7e8 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -157,6 +157,14 @@ config MDIO_I2C
+ 
+ 	  This is library mode.
+ 
++config MDIO_IPQ8064
++	tristate "Qualcomm IPQ8064 MDIO interface support"
++	depends on HAS_IOMEM && OF_MDIO
++	depends on MFD_SYSCON
++	help
++	  This driver supports the MDIO interface found in the network
++	  interface units of the IPQ8064 SoC
 +
-+$(obj)/processed-schema-examples.yaml: $(DT_DOCS) FORCE
-+       $(call if_changed,mk_schema)
- endif
-
--$(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
-+$(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := -u
-+$(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) FORCE
-        $(call if_changed,mk_schema)
-
--extra-y += $(DT_TMP_SCHEMA)
-+extra-y += processed-schema.yaml
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index bae62549e3d2..7ddeb4f718b6 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -297,7 +297,8 @@ $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
-
- DT_CHECKER ?= dt-validate
- DT_BINDING_DIR := Documentation/devicetree/bindings
--DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
-+# DT_TMP_SCHEMA may be overridden from
-Documentation/devicetree/bindings/Makefile
-+DT_TMP_SCHEMA ?= $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
-
- quiet_cmd_dtb_check =  CHECK   $@
-       cmd_dtb_check =  $(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR)
--p $(DT_TMP_SCHEMA) $@ ;
-
-
-
+ config MDIO_MOXART
+ 	tristate "MOXA ART MDIO interface support"
+ 	depends on ARCH_MOXART || COMPILE_TEST
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fe5badf13b65..8f02bd2089f3 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+ obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+ obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
++obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+ obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
+new file mode 100644
+index 000000000000..74d6b92a6f48
+--- /dev/null
++++ b/drivers/net/phy/mdio-ipq8064.c
+@@ -0,0 +1,166 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Qualcomm IPQ8064 MDIO interface driver
++//
++// Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
++
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++
++/* MII address register definitions */
++#define MII_ADDR_REG_ADDR                       0x10
++#define MII_BUSY                                BIT(0)
++#define MII_WRITE                               BIT(1)
++#define MII_CLKRANGE_60_100M                    (0 << 2)
++#define MII_CLKRANGE_100_150M                   (1 << 2)
++#define MII_CLKRANGE_20_35M                     (2 << 2)
++#define MII_CLKRANGE_35_60M                     (3 << 2)
++#define MII_CLKRANGE_150_250M                   (4 << 2)
++#define MII_CLKRANGE_250_300M                   (5 << 2)
++#define MII_CLKRANGE_MASK			GENMASK(4, 2)
++#define MII_REG_SHIFT				6
++#define MII_REG_MASK				GENMASK(10, 6)
++#define MII_ADDR_SHIFT				11
++#define MII_ADDR_MASK				GENMASK(15, 11)
++
++#define MII_DATA_REG_ADDR                       0x14
++
++#define MII_MDIO_DELAY_USEC                     (1000)
++#define MII_MDIO_RETRY_MSEC                     (10)
++
++struct ipq8064_mdio {
++	struct regmap *base; /* NSS_GMAC0_BASE */
++};
++
++static int
++ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
++{
++	u32 busy;
++
++	return regmap_read_poll_timeout(priv->base, MII_ADDR_REG_ADDR, busy,
++					!(busy & MII_BUSY), MII_MDIO_DELAY_USEC,
++					MII_MDIO_RETRY_MSEC * USEC_PER_MSEC);
++}
++
++static int
++ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
++	u32 ret_val;
++	int err;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(10, 20);
++
++	err = ipq8064_mdio_wait_busy(priv);
++	if (err)
++		return err;
++
++	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
++	return (int)ret_val;
++}
++
++static int
++ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(10, 20);
++
++	return ipq8064_mdio_wait_busy(priv);
++}
++
++static int
++ipq8064_mdio_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct ipq8064_mdio *priv;
++	struct mii_bus *bus;
++	int ret;
++
++	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = "ipq8064_mdio_bus";
++	bus->read = ipq8064_mdio_read;
++	bus->write = ipq8064_mdio_write;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
++	bus->parent = &pdev->dev;
++
++	priv = bus->priv;
++	priv->base = syscon_node_to_regmap(np);
++	if (IS_ERR(priv->base) && priv->base != ERR_PTR(-EPROBE_DEFER))
++		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
++
++	if (priv->base == ERR_PTR(-EPROBE_DEFER)) {
++		return -EPROBE_DEFER;
++	} else if (IS_ERR(priv->base)) {
++		dev_err(&pdev->dev, "error getting syscon regmap, error=%pe\n",
++			priv->base);
++		return PTR_ERR(priv->base);
++	}
++
++	ret = of_mdiobus_register(bus, np);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, bus);
++	return 0;
++}
++
++static int
++ipq8064_mdio_remove(struct platform_device *pdev)
++{
++	struct mii_bus *bus = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(bus);
++
++	return 0;
++}
++
++static const struct of_device_id ipq8064_mdio_dt_ids[] = {
++	{ .compatible = "qcom,ipq8064-mdio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
++
++static struct platform_driver ipq8064_mdio_driver = {
++	.probe = ipq8064_mdio_probe,
++	.remove = ipq8064_mdio_remove,
++	.driver = {
++		.name = "ipq8064-mdio",
++		.of_match_table = ipq8064_mdio_dt_ids,
++	},
++};
++
++module_platform_driver(ipq8064_mdio_driver);
++
++MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
++MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
++MODULE_LICENSE("GPL");
 -- 
-Best Regards
-Masahiro Yamada
+2.25.0
+
