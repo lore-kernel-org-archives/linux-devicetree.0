@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5733C35671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F4FC35671
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88498206ED
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF7A206ED
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XkrY8yO4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DCeJQWqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgBVQZI (ORCPT
+        id S1727053AbgBVQZO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:25:08 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:34839 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727714AbgBVQZH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 11:25:07 -0500
-Received: by mail-pj1-f68.google.com with SMTP id q39so2143256pjc.0
-        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 08:25:07 -0800 (PST)
+        Sat, 22 Feb 2020 11:25:14 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37493 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727619AbgBVQZN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 11:25:13 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so2957020pfn.4
+        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 08:25:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VcbN+zbqnNuxs1Y+XpjZhKj62zQGe5VKHxFInvYNzhY=;
-        b=XkrY8yO4wKTo1Ip/tvQeTKJ6BzqMkJdo09DcPnZHfMbhF8ykoejeQh+siDxQLdIimL
-         qn5Sz4uupzVNkVPjXrEYXgm101KJVUF3dB5wABhKDecayZ7Zn3BtMJtPGlE9aVQAqGnG
-         kwiUp7nlyF+uhreEYdaZZpvI57blTv9VB8HN2ZT+ndjzpEyk2hPHvCvM03ZP64ZMs7ky
-         /Zu4yfinheyLwFBGvn3vLSu33X6gSq6brXGxMjNVcSxGVdKT4Z03s9SMCBzHef3g6VhD
-         mhuHW/BSrvmEUJ7PUF3ICazyTYRHdRhWPwuPklGPwwrzfeT0y6hn0/95iIGSYjy/maaT
-         h//w==
+        bh=ToHubF4KECCMrwSTfQauUnB07RA2vKU+QmGUx0zj7dk=;
+        b=DCeJQWqMYEktzqwzYPWXrCtBjxlTN8VoLK6rTnVSJ+DyThaYmZG4zMy3J0uAcv5Xl6
+         NTFZV5I50yPOniS5gf0xWJH2PZ+CmoCgCyT0RGbxaOHZBpXWkLCoD58p/vpgq9wR7s6r
+         vJwrEd4Qdlr+awqgO1zD6srjSxbvwRSNN/oYR4kEz8evxlBLsVi5CeOULy/e5DkSgF/b
+         1wrr6XV6qrvNLX4R699w4FgeGpTYIIqQoIEH34dlqPzw2pbaP9tiidjLStIO1d5eAO3d
+         KUlN4/nws3fNhI+lLEsiGP+3hu+n5gtOQgjkxmo4yB6uOAVRNUDoMnlaqrhHzsLUZXSk
+         QVkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=VcbN+zbqnNuxs1Y+XpjZhKj62zQGe5VKHxFInvYNzhY=;
-        b=s6pwlHM/I1c/It9XqzpA7ZrCsKZe4awCvVQ8ieiL9GXIu5NhmdOmYwfmDJjTb1Ea57
-         0sdJXmmNzuW5WcCwTEdGQk6DVK+WGu++9nTvRjsFYNtMAShekSfJSzuZ7KEg0TyJQrml
-         1bXf5dpVUY+XJucSFT/Q0jQ+6v52Xq9DJY3BiCacsnYX2bI7fO2qo8ZCdcQMMvznNclV
-         D4tMSjhwbrJoprp1lOiO+bajt19W0E0vQxAYO+VRmE4MjhKU6JX1qcB4zpHxrGvB6SX5
-         faV+F5NRgWIBSsdtGwJ1knfNvfZG7GHTrbVg56Vano//eD9eQVFtKVXjSO7I4hdJqIUC
-         giow==
-X-Gm-Message-State: APjAAAXACYyyv8oY02NloOufGOX26bng3sMl1aMGbUybkYZquHfRE2bJ
-        7UTnV3ZLa4OtUD5AcOokevmw8eh2fA==
-X-Google-Smtp-Source: APXvYqx/LFN4kFjlJlu5S7c+YgXjlHWaEEHF6Jx72iqDrj6XzazM2iceQO8QQj3BejL48ZDwDwQ9dg==
-X-Received: by 2002:a17:902:b409:: with SMTP id x9mr42518281plr.218.1582388706985;
-        Sat, 22 Feb 2020 08:25:06 -0800 (PST)
+        bh=ToHubF4KECCMrwSTfQauUnB07RA2vKU+QmGUx0zj7dk=;
+        b=uV3v/YW+Z38bXxmK8sUaoT3PsH46pithBkfl8NJDtTDhv1doEyU7KpNL6cu7eSSutv
+         XcLLQZO+pYX3xHgURFhNh1YYerS2jMznvDRHkeqHiWI9PzHr/cSjn6zMG2N7qyVoGiLO
+         Q73g2+xOHHsvhZH+qMtuWIjYtSGYnkBoetf3oFLm+bOE9yaCOZZtwVSqiUNqJoaR1LtP
+         g6MnpMpZbOcWJPSa6CC85oKtqsrpEW9rvrFMStgtPK3SjEo0wUf+R0GEP2XEoRID2Sd9
+         h5ttVA2y75i+NS5OsHdZldBpZLVp23F7SG0udxGuFWKl3nTDdPrr7se9QRPzN7jOUZsV
+         opZw==
+X-Gm-Message-State: APjAAAWc2+9w7dJeR2Q7ipsL5Nwdq/hki/lyA56u2kusmXbuiAoxP0ze
+        ZppV8ZBhdQpXzD7SYWIzJLu9
+X-Google-Smtp-Source: APXvYqxqECy1swcSUk5Q/XFynMYjNqC7uwTEp6QMHAMY0oAVrNhg714YYtW+z6ull/nvzMusU+x6RQ==
+X-Received: by 2002:a63:120f:: with SMTP id h15mr45746851pgl.235.1582388712857;
+        Sat, 22 Feb 2020 08:25:12 -0800 (PST)
 Received: from localhost.localdomain ([2409:4072:801:b38c:89e8:305c:23c4:b77f])
-        by smtp.gmail.com with ESMTPSA id q17sm6851296pfg.123.2020.02.22.08.25.02
+        by smtp.gmail.com with ESMTPSA id q17sm6851296pfg.123.2020.02.22.08.25.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 08:25:05 -0800 (PST)
+        Sat, 22 Feb 2020 08:25:12 -0800 (PST)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     matthias.bgg@gmail.com, robh+dt@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         adamboardman@gmail.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/4] dt-bindings: i2c: Document I2C controller binding for MT6797 SoC
-Date:   Sat, 22 Feb 2020 21:54:41 +0530
-Message-Id: <20200222162444.11590-2-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 2/4] arm64: dts: mediatek: Add I2C support for MT6797 SoC
+Date:   Sat, 22 Feb 2020 21:54:42 +0530
+Message-Id: <20200222162444.11590-3-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
 References: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
@@ -71,26 +71,260 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-I2C controller driver for MT6577 SoC is reused for MT6797 SoC. Hence,
-document that in DT binding.
+Add I2C support for Mediatek MT6797 SoC. There are a total of 8 I2C
+controllers in this SoC (2 being shared) and they are same as the
+controllers present in MT6577 SoC. Hence, the driver support is added with
+DT fallback method.
+
+As per the datasheet, there are controllers with _imm prefix like i2c2_imm
+and i2c3_imm. These appears to be in different memory regions but sharing
+the same pins with i2c2 and i2c3 respectively. Since there is no clear
+evidence of what they really are, I've adapted the numbering/naming scheme
+from the downstream code by Mediatek.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi | 220 +++++++++++++++++++++++
+ 1 file changed, 220 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt b/Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt
-index 68f6d73a8b73..88b71c1b32c9 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt
-@@ -8,6 +8,7 @@ Required properties:
-       "mediatek,mt2712-i2c": for MediaTek MT2712
-       "mediatek,mt6577-i2c": for MediaTek MT6577
-       "mediatek,mt6589-i2c": for MediaTek MT6589
-+      "mediatek,mt6797-i2c", "mediatek,mt6577-i2c": for MediaTek MT6797
-       "mediatek,mt7622-i2c": for MediaTek MT7622
-       "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for MediaTek MT7623
-       "mediatek,mt7629-i2c", "mediatek,mt2712-i2c": for MediaTek MT7629
+diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+index 2b2a69c7567f..22f093960d27 100644
+--- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+@@ -155,6 +155,62 @@
+ 					 <MT6797_GPIO233__FUNC_UTXD1>;
+ 			};
+ 		};
++
++		i2c0_pins_a: i2c0 {
++			pins0 {
++				pinmux = <MT6797_GPIO37__FUNC_SCL0_0>,
++					 <MT6797_GPIO38__FUNC_SDA0_0>;
++			};
++		};
++
++		i2c1_pins_a: i2c1 {
++			pins1 {
++				pinmux = <MT6797_GPIO55__FUNC_SCL1_0>,
++					 <MT6797_GPIO56__FUNC_SDA1_0>;
++			};
++		};
++
++		i2c2_pins_a: i2c2 {
++			pins2 {
++				pinmux = <MT6797_GPIO96__FUNC_SCL2_0>,
++					 <MT6797_GPIO95__FUNC_SDA2_0>;
++			};
++		};
++
++		i2c3_pins_a: i2c3 {
++			pins3 {
++				pinmux = <MT6797_GPIO75__FUNC_SDA3_0>,
++					 <MT6797_GPIO74__FUNC_SCL3_0>;
++			};
++		};
++
++		i2c4_pins_a: i2c4 {
++			pins4 {
++				pinmux = <MT6797_GPIO238__FUNC_SDA4_0>,
++					 <MT6797_GPIO239__FUNC_SCL4_0>;
++			};
++		};
++
++		i2c5_pins_a: i2c5 {
++			pins5 {
++				pinmux = <MT6797_GPIO240__FUNC_SDA5_0>,
++					 <MT6797_GPIO241__FUNC_SCL5_0>;
++			};
++		};
++
++		i2c6_pins_a: i2c6 {
++			pins6 {
++				pinmux = <MT6797_GPIO152__FUNC_SDA6_0>,
++					 <MT6797_GPIO151__FUNC_SCL6_0>;
++			};
++		};
++
++		i2c7_pins_a: i2c7 {
++			pins7 {
++				pinmux = <MT6797_GPIO154__FUNC_SDA7_0>,
++					 <MT6797_GPIO153__FUNC_SCL7_0>;
++			};
++		};
+ 	};
+ 
+ 	scpsys: scpsys@10006000 {
+@@ -233,6 +289,170 @@
+ 		status = "disabled";
+ 	};
+ 
++	i2c0: i2c@11007000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <0>;
++		reg = <0 0x11007000 0 0x1000>,
++		      <0 0x11000100 0 0x80>;
++		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C0>,
++			 <&infrasys CLK_INFRA_AP_DMA>;
++		clock-names = "main", "dma";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c1: i2c@11008000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <1>;
++		reg = <0 0x11008000 0 0x1000>,
++		      <0 0x11000180 0 0x80>;
++		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C1>,
++			 <&infrasys CLK_INFRA_AP_DMA>;
++		clock-names = "main", "dma";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c8: i2c@11009000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <8>;
++		reg = <0 0x11009000 0 0x1000>,
++		      <0 0x11000200 0 0x80>;
++		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C2>,
++			 <&infrasys CLK_INFRA_AP_DMA>,
++			 <&infrasys CLK_INFRA_I2C2_ARB>;
++		clock-names = "main", "dma", "arb";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c9: i2c@1100d000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <9>;
++		reg = <0 0x1100d000 0 0x1000>,
++		      <0 0x11000280 0 0x80>;
++		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C3>,
++			 <&infrasys CLK_INFRA_AP_DMA>,
++			 <&infrasys CLK_INFRA_I2C3_ARB>;
++		clock-names = "main", "dma", "arb";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c6: i2c@1100e000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <6>;
++		reg = <0 0x1100e000 0 0x1000>,
++		      <0 0x11000500 0 0x80>;
++		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C_APPM>,
++			 <&infrasys CLK_INFRA_AP_DMA>;
++		clock-names = "main", "dma";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c7: i2c@11010000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <7>;
++		reg = <0 0x11010000 0 0x1000>,
++		      <0 0x11000580 0 0x80>;
++		interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C_GPUPM>,
++			 <&infrasys CLK_INFRA_AP_DMA>;
++		clock-names = "main", "dma";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c4: i2c@11011000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <4>;
++		reg = <0 0x11011000 0 0x1000>,
++		      <0 0x11000300 0 0x80>;
++		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C4>,
++			 <&infrasys CLK_INFRA_AP_DMA>;
++		clock-names = "main", "dma";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c2: i2c@11013000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <2>;
++		reg = <0 0x11013000 0 0x1000>,
++		      <0 0x11000400 0 0x80>;
++		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C2_IMM>,
++			 <&infrasys CLK_INFRA_AP_DMA>,
++			 <&infrasys CLK_INFRA_I2C2_ARB>;
++		clock-names = "main", "dma", "arb";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c3: i2c@11014000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <3>;
++		reg = <0 0x11014000 0 0x1000>,
++		      <0 0x11000480 0 0x80>;
++		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C3_IMM>,
++			 <&infrasys CLK_INFRA_AP_DMA>,
++			 <&infrasys CLK_INFRA_I2C3_ARB>;
++		clock-names = "main", "dma", "arb";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c5: i2c@1101c000 {
++		compatible = "mediatek,mt6797-i2c",
++			     "mediatek,mt6577-i2c";
++		id = <5>;
++		reg = <0 0x1101c000 0 0x1000>,
++		      <0 0x11000380 0 0x80>;
++		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infrasys CLK_INFRA_I2C5>,
++			 <&infrasys CLK_INFRA_AP_DMA>;
++		clock-names = "main", "dma";
++		clock-div = <10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	mmsys: mmsys_config@14000000 {
+ 		compatible = "mediatek,mt6797-mmsys", "syscon";
+ 		reg = <0 0x14000000 0 0x1000>;
 -- 
 2.17.1
 
