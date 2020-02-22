@@ -2,107 +2,88 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1CCC35669
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 01:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7B4C35671
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 04:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37C520722
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 01:41:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e7OPKG2K"
+	by mail.kernel.org (Postfix) with ESMTP id 7FC452071E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 04:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBVBko (ORCPT
+        id S1726328AbgBVEBD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 20:40:44 -0500
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:36398 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgBVBkn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 20:40:43 -0500
-Received: by mail-pl1-f201.google.com with SMTP id bg1so2165334plb.3
-        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 17:40:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=0Alq4aXp7YzXN+AKMP8eBqRG3yPiXOJvC1/VEWq2Syo=;
-        b=e7OPKG2KhyChpWNNR4nLuUXy4ylVfjqLMB0INuqTgORVMt4c48EOCa1hX7f0vVumGV
-         Fl12/3GISHBbAZ97RhHkmzUnwcBemFYtUitr0VJcMtjeqpFxtUVOKyNmvgs7bmfVKCbC
-         9KOa3O/uxq9/bSScNcxqwFUIBpU2Dk0Nevxnjbwq9NYDFPNPFYF82PBcwjVPtHAObGCy
-         sX4eERpRAQDnlpBKSFC417QE5MtuCxGl+zr+heynrIeikegYLZAfZTNmhbZ6hDclGTgx
-         8TJ0QSLqeS/71knXjOGDITkEFZxZSlCB7KHiB1MAYy/cR/WtHU8JCG1hUSQ9PupLWjLG
-         63IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=0Alq4aXp7YzXN+AKMP8eBqRG3yPiXOJvC1/VEWq2Syo=;
-        b=de6/JHBcZv/7l43pmAMx4bhTQGvQOupaSXmcd2JWSXATpjfwGtbw/3K2bpK5+kITYR
-         YSnjPyTec26Pzgsxv/o8Cpxe3dsaQFn+KIIt05VyaiFmW20IGz0vZfIrHZIQ6Ymz3ngw
-         Fb/y9aCsNAH40w6Dd4Km9ZCRf/ORNzAWn0vUc+EnReOhMNEPCKRVtBlwxgjBbkds3Ykw
-         kHVjz/OzzvLz1NX8lsv1yFsiVy6DpzbpXFq/+GpCT93waSScqjRgwIrGfzffh/jjDw/2
-         H6ok1mV390zbyZDp+lIsGuBJIpfFsVJaj+/HYu9aTnwdnUJluOiYglz5xB8t0NS4Tiqb
-         8zYg==
-X-Gm-Message-State: APjAAAXlZYV0+wpHVMGW9M6OeclH1J5myyAhgOuKFXR2GhwuzU3+C01L
-        XSBYvtcm+5WfIU8eevW7nWqYEP63ayvYDMo=
-X-Google-Smtp-Source: APXvYqxW9MycS0KQIN3NTm0UDrGeNfKtCCiDECg2Y+zwfxgcfOoFsWcvFC2gpjKZaciSFlbJG9dbBDG/OdhB4VY=
-X-Received: by 2002:a63:2a13:: with SMTP id q19mr22138542pgq.82.1582335642711;
- Fri, 21 Feb 2020 17:40:42 -0800 (PST)
-Date:   Fri, 21 Feb 2020 17:40:33 -0800
-Message-Id: <20200222014038.180923-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v1 0/5] Add fw_devlink kernel commandline option
-From:   Saravana Kannan <saravanak@google.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
+        Fri, 21 Feb 2020 23:01:03 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:57549 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgBVEBD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 23:01:03 -0500
+Received: from [10.28.90.152] (10.28.90.152) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Sat, 22 Feb 2020
+ 12:01:26 +0800
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+To:     Julius Werner <jwerner@chromium.org>
+CC:     Evan Benn <evanbenn@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-efi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus>
+ <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net>
+ <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+ <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com>
+ <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
+Date:   Sat, 22 Feb 2020 12:01:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Originating-IP: [10.28.90.152]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-1/5 isn't really related to adding fw_devlink, but I'm just rolling it
-into this series.
+Hi, Julius
 
-The rest of the series is about adding fw_devlink kernel commandline
-that can be set to off|permissive|on|rpm which are in increasing order
-of enforcement by device links.
+On 2020/2/22 3:41, Julius Werner wrote:
+>> Because the ATF does not define standard wdt index, each vendor defines
+>> its own index.
+>> So I don't think that the current driver[0] can fully cover my usecases.
+> I think the best way to solve this would be to put the SMC function ID
+> as another field into the device tree, so that multiple vendors could
+> share the same driver even if their firmware interface uses a
+> different SMC. But they still have to implement the same API for that
+> SMC, of course, not sure if the Meson driver is suitable for that (but
+> if it is then I think merging those drivers would be a good idea).
+The SMC function ID may be solved by the DTS, but the wdt indexs(Eg: 
+SMCWD_INFO) are also different
+for each vendor. The imx_sc_wdt.c is also use the SMC to operate the 
+WDT, but the wdt indexs(Eg: IMX_SIP_TIMER_START_WDOG)
+are different from ours. IMO, If the ATF can implement a common hal 
+interface and index for watchdog, then writing a
+common smc wdt driver will be easier to compatible with all vendors.
 
-2/5 is the most "interesting" part.
-
-The hope is that once this series merges, we'll consider enabling
-fw_devlink=permissive by default and at a later point in time ideally
-"on".
-
-Thanks,
-Saravana
-
-Saravana Kannan (5):
-  driver core: Reevaluate dev->links.need_for_probe as suppliers are
-    added
-  driver core: Add fw_devlink kernel commandline option
-  efi/arm: Start using fw_devlink_get_flags()
-  of: property: Start using fw_devlink_get_flags()
-  of: property: Delete of_devlink kernel commandline option
-
- .../admin-guide/kernel-parameters.txt         | 24 +++++++++----
- drivers/base/core.c                           | 35 +++++++++++++++++--
- drivers/firmware/efi/arm-init.c               |  2 +-
- drivers/of/property.c                         |  8 +----
- include/linux/fwnode.h                        |  2 ++
- 5 files changed, 54 insertions(+), 17 deletions(-)
-
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+Best Regards
+>
+> .
