@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FC3C35671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 22:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D62C35669
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 23:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5105124656
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 22:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DA321741
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 23:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="s918W/Z1"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="mBIbednI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgBVWcH (ORCPT
+        id S1726908AbgBVXOd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 17:32:07 -0500
-Received: from vps.xff.cz ([195.181.215.36]:33620 "EHLO vps.xff.cz"
+        Sat, 22 Feb 2020 18:14:33 -0500
+Received: from vps.xff.cz ([195.181.215.36]:33974 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbgBVWb7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Feb 2020 17:31:59 -0500
+        id S1726865AbgBVXOd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Feb 2020 18:14:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582410717; bh=Ga061MTjmxH5y21oztEFBQFEgUWK38i88cNLUyFojpg=;
+        t=1582413271; bh=ZfpciIj4N/ohC5xxET/7O8AAxYB9cySsBo6ydi0t5+E=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=s918W/Z11f/MbFrWcew6lw1koOJjjA68IVU4pRBHY5hQrn0ciimIRxhXvWWNv+bDA
-         Uv2rGddobx4Ul17mPDE5qcY+AJa1Uz9yI5C0akTtR2OE5dEK465y+L6FkThdM/Ay3Y
-         WIQoV2jteZGTnc9NV02UgZClC32uJz+fX5Xr5in4=
+        b=mBIbednIO0f1b1OU46STOHFWNVaSoDFgW9GXvd/AxkhWoElcraX72ilVHdTdRtHbB
+         wS/hbfGVmYtFnU2ZvVuRqm1pmCotSeoX4JbTDB7OT3smhLf9ka5SZJNiQuZMjBJw4g
+         o2Tapz8AEKRv0T6titDi7YC14Z3/qawG3YLziTMM=
 From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com, Maxime Ripard <mripard@kernel.org>,
+To:     linux-sunxi@googlegroups.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     Ondrej Jirman <megous@megous.com>,
-        Tomas Novotny <tomas@novotny.cz>,
-        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/4] ARM: dts: sun8i-a83t-tbs-a711: HM5065 doesn't like such a high voltage
-Date:   Sat, 22 Feb 2020 23:31:52 +0100
-Message-Id: <20200222223154.221632-3-megous@megous.com>
-In-Reply-To: <20200222223154.221632-1-megous@megous.com>
-References: <20200222223154.221632-1-megous@megous.com>
+        Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/4] dt-bindings: input: gpio-vibrator: Don't require enable-gpios
+Date:   Sun, 23 Feb 2020 00:14:25 +0100
+Message-Id: <20200222231428.233621-2-megous@megous.com>
+In-Reply-To: <20200222231428.233621-1-megous@megous.com>
+References: <20200222231428.233621-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -51,29 +51,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Lowering the voltage solves the quick image degradation over time
-(minutes), that was probably caused by overheating.
+It is possible to turn the motor on/off just by enabling/disabling
+the vcc-supply.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index ee5ce3556b2ad..ae1fd2ee3bcce 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -371,8 +371,8 @@ &reg_dldo2 {
- };
+diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+index b98bf9363c8ff..f8f4093a0a454 100644
+--- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
++++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+@@ -24,7 +24,6 @@ properties:
  
- &reg_dldo3 {
--	regulator-min-microvolt = <2800000>;
--	regulator-max-microvolt = <2800000>;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
- 	regulator-name = "vdd-csi";
- };
+ required:
+   - compatible
+-  - enable-gpios
  
+ examples:
+   - |
 -- 
 2.25.1
 
