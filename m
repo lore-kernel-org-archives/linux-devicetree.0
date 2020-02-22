@@ -2,70 +2,74 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCD0C35669
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 05:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6FFC35673
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 05:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E940F214DB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 05:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD2E20707
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 05:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582348850;
-	bh=DXbuJPNsogTXj3Xlgpu474tYpxCmg96iOck0OK1De+Y=;
+	s=default; t=1582349603;
+	bh=UAynlrotBk0FmHZnSdHsZMAiHJVBUDjojQexsIfluho=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Wj1NUPXjmBLbgUuou06c55ziGD0b6A6YHnfYUVJIdxOmDXfKb5z11BARlVvkBUzmC
-	 XiB9FnKsnROD98HKxQnagmrCII4KV0ddJF92ymT7tFSWHHc4n3KnhK6aqy7Jkey8aT
-	 UhQ/5a86ssItrr2ANsmXv4dCzFyiBXfiwF9HQ/FM=
+	b=R1ocZXRqFdszyzu/7EXzC9SVzXRxuzXZRNuW8RSAlDX0fL42jKiCTng5xUFIomwnN
+	 uFW3lGRYOY0SLxmAX9ZjaZIk9qThVw2Bk2NATzLi4Y+sXeu6BudKVCb3EojokQMKpi
+	 Wdgqx8jpWYR+FP77aDbJHJQ1uD8FKM8Tkij2FwDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgBVFUt (ORCPT
+        id S1726196AbgBVFdU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 00:20:49 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:36666 "EHLO
+        Sat, 22 Feb 2020 00:33:20 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:58306 "EHLO
         conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgBVFUt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 00:20:49 -0500
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 01M5KafQ024227;
-        Sat, 22 Feb 2020 14:20:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01M5KafQ024227
+        with ESMTP id S1726151AbgBVFdT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 00:33:19 -0500
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 01M5XDb8000801;
+        Sat, 22 Feb 2020 14:33:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01M5XDb8000801
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582348837;
-        bh=YKumM6nl7wDW7iBXi9YToiaP0C6K2ymg4jrBCpX08fE=;
+        s=dec2015msa; t=1582349594;
+        bh=kfkRB8NqTSB8RfnnWhYO851m+pZCn26htPS02MwccbU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0EoB32tRjcYyXjBskhEVHxvbQUuHzD9oUgSFQWaex7AW1gPRVL7YIs9NaI3sljXKg
-         HTbmHsXsbiEgQjV9U3wxlN7Xu7EJTIIadkVRd1wyFJYvzVjnFkN8EwBRRRwef6hpPp
-         lait7OkvHVGxupON+CusjwCHCKaF3A9ZIF5aKqICTafZVpI5Zm0u/fU8dorEO+R9SF
-         fUPMntDoe0dCRGnn6Oz0VPvirFFrWeyd0ctnfmFAWcvWNBapCQTakHBDSM+pHn00wu
-         mqTgPAEoeY72Q87eKu6J/3iWCobU+oGd4dSK9+Tlj80yYcsQdWk++/4KjmS6f04Bsz
-         RkjpK0E2M2iOw==
-X-Nifty-SrcIP: [209.85.221.171]
-Received: by mail-vk1-f171.google.com with SMTP id g7so1176931vkl.12;
-        Fri, 21 Feb 2020 21:20:37 -0800 (PST)
-X-Gm-Message-State: APjAAAVbbPAiJJxuH38omZ5ezcmEagjuV6/aod1nOM8VsVODJtfhKs4k
-        f/C8TOjcOpI0ysruXPiqssJ7T00OT+FC+8l4jpo=
-X-Google-Smtp-Source: APXvYqxjngNGYOqQSFORfjCOAcW75hxKKdFrDL8gdS/YktQZrg2mNGMXCeQL1YMeVqq9jyAzI3zQoyABnxgxvjdJyvM=
-X-Received: by 2002:a1f:bfc2:: with SMTP id p185mr19206254vkf.73.1582348835888;
- Fri, 21 Feb 2020 21:20:35 -0800 (PST)
+        b=jGpTyMmaQFCA/yAC8SI4sEY5rRsGwV7n37iHBsYx0Tf7yhCGxJurnEkRnYv7mXkEJ
+         JsG/XgCkElNDfWpzULElIwahEskifFcCgfbfMXCevqXYv/LoxA47zlm0vQm2c+wXks
+         9sU0GorFjzp+hiEZTdTagyKsg7jPMB0IirRAzwYH6j1ZvpUe4A//reJSJZAgZdootB
+         2g7WnMlVvqwRfef0X7RYd/XXHwhTzr55mpoceajykax0eZUJhKShxiuBLuEbqxsn9r
+         23cnn4NQdvEhPKtWkgxQp/tWiyQ7DXLBQ2ZGCkxLv13OY12pHAVXycTmv8OGqxec2N
+         bHWw0f1u66WqQ==
+X-Nifty-SrcIP: [209.85.221.175]
+Received: by mail-vk1-f175.google.com with SMTP id w4so1193531vkd.5;
+        Fri, 21 Feb 2020 21:33:14 -0800 (PST)
+X-Gm-Message-State: APjAAAX9u7kSV5E4z26VhT21c5/p6BMSVa0JSalDpoLUTvi30+AlUk11
+        5KHMakTJ92TETGCzaHaUkDF5RruOVSnLL0yU3B0=
+X-Google-Smtp-Source: APXvYqw0koqWOvytLQ0hXmAEc9eS7xUecajG9z93OX8duyLUDb6bva5IL7M/xtzmqsUqDWyYc6mF9iWEJjnMvLa+UjA=
+X-Received: by 2002:a1f:1bc3:: with SMTP id b186mr19356263vkb.96.1582349592746;
+ Fri, 21 Feb 2020 21:33:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221021002.18795-1-yamada.masahiro@socionext.com> <20200221152546.GA1327@bogus>
-In-Reply-To: <20200221152546.GA1327@bogus>
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
+ <20200221021002.18795-2-yamada.masahiro@socionext.com> <20200221153215.GA9815@bogus>
+In-Reply-To: <20200221153215.GA9815@bogus>
 From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 22 Feb 2020 14:20:00 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQnJPOB7-e8GCjmXb4HpNdYqz0TsDvQ8_SJpcN9vsgeqA@mail.gmail.com>
-Message-ID: <CAK7LNAQnJPOB7-e8GCjmXb4HpNdYqz0TsDvQ8_SJpcN9vsgeqA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: arm: Convert UniPhier board/SoC bindings
- to json-schema
+Date:   Sat, 22 Feb 2020 14:32:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
+Message-ID: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
 To:     Rob Herring <robh@kernel.org>
 Cc:     DTML <devicetree@vger.kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
@@ -75,55 +79,86 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Rob,
 
-On Sat, Feb 22, 2020 at 12:25 AM Rob Herring <robh@kernel.org> wrote:
+On Sat, Feb 22, 2020 at 12:32 AM Rob Herring <robh@kernel.org> wrote:
 >
-> On Fri, 21 Feb 2020 11:10:00 +0900, Masahiro Yamada wrote:
-> > Convert the Socionext UniPhier board/SoC binding to DT schema format.
+> On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
+> > Convert the UniPhier GPIO controller binding to DT schema format.
+> >
+> > I omitted the 'gpio-ranges' property because it is defined in the
+> > dt-schema project (/schemas/gpio/gpio.yaml).
+> >
+> > As of writing, the 'gpio-ranges-group-names' is not defined in that
+> > file despite it is a common property described in
+> > Documentation/devicetree/bindings/gpio/gpio.txt
+> > So, I defined it in this schema.
 > >
 > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > > ---
 > >
-> >  .../bindings/arm/socionext/uniphier.txt       | 47 -------------
-> >  .../bindings/arm/socionext/uniphier.yaml      | 70 +++++++++++++++++++
+> > I have a question about the range about 'ngpio'.
+> >
+> >   ngpios:
+> >     minimum: 0
+> >     maximum: 512
+> >
+> > The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
+> > https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
+> >
+> > 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
+> >
+> > I cannot omit the minimum because minimum and maximum depend on each other.
+> > I just put a sensible number, 512, in maximum.
+> >
+> > If this range is entirely unneeded, I will delete it.
+>
+> This property is generally for when you can have some number less
+> than a maximum number implied by the compatible string.
+>
+> If there is really no max (e.g. 2^32 - 1 is valid), then just do
+> 'ngpios: true'
+
+
+What does ': true' mean?
+
+
+If it is documented somewhere,
+could you point me to the reference?
+
+Even if I remove the 'ngpio' entirely
+from my dt-schema, the 'ngpio' is checked
+correctly.
+
+
+
+
+>
+> >
+> >
+> >  .../bindings/gpio/gpio-uniphier.txt           | 51 -----------
+> >  .../gpio/socionext,uniphier-gpio.yaml         | 89 +++++++++++++++++++
 > >  MAINTAINERS                                   |  2 +-
-> >  3 files changed, 71 insertions(+), 48 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+> >  3 files changed, 90 insertions(+), 52 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
 > >
 >
 > My bot found errors running 'make dt_binding_check' on your patch:
 >
 > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> Error: Documentation/devicetree/bindings/arm/socionext/uniphier.example.dts:18.9-10 syntax error
+> Error: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dts:38.34-35 syntax error
 > FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/arm/socionext/uniphier.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/arm/socionext/uniphier.example.dt.yaml] Error 1
+> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml] Error 1
 > Makefile:1263: recipe for target 'dt_binding_check' failed
 > make: *** [dt_binding_check] Error 2
 >
-> See https://patchwork.ozlabs.org/patch/1241745
+> See https://patchwork.ozlabs.org/patch/1241747
 > Please check and re-submit.
 
-
-I checked 'make dtbs_check',
-but did not test 'make dt_binding_check'.
-
-I remember that
-'make dtbs_check' no longer check example.dts after
-93512dad334deb444619505f1fbb761156f7471b
+OK, I will.
 
 
 
-Anyway, the example is fold into the plugin node,
-so I cannot avoid the schema error about $nodename.
-
-/home/masahiro/workspace/linux-unph/Documentation/devicetree/bindings/arm/socionext/uniphier.example.dt.yaml:
-example-0: $nodename:0: '/' was expected
-
-
-I will remove this example.
-
-
---
+-- 
 Best Regards
 Masahiro Yamada
