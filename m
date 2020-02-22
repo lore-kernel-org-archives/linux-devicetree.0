@@ -2,199 +2,158 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE3FC35674
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 20:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96056C35674
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 20:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75C520702
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 20:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F71220707
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 20:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="UdXKmzUu"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="KfFZENIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgBVUBL (ORCPT
+        id S1726856AbgBVUmd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 15:01:11 -0500
-Received: from mail-40134.protonmail.ch ([185.70.40.134]:43373 "EHLO
-        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgBVUBK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 15:01:10 -0500
-Date:   Sat, 22 Feb 2020 20:00:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1582401668;
-        bh=9QTCFtpYa096BcF+fNJ+hFEpUdDElt7IQEIk4DEbu8Q=;
-        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
-        b=UdXKmzUu7Gi5seNkwIDeLnuW+YM0twYXl5lC4KsTW2NdfsR/GKPL61yxUPlMHnvaO
-         /k2uDlMfAaUmVWjahNU81RmYhYo/u0YVf6HavZMoh4QI3Uw15U3nVqedWKwqidDfm4
-         jmA98Tq5/2163O55NCtKoeFvTuS9RIaBYsksRTEE=
-To:     devicetree@vger.kernel.org
-From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-        <nfraprado@protonmail.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-crypto@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-          <nfraprado@protonmail.com>
-Subject: [PATCH v2] dt-bindings: rng: Convert BCM2835 to DT schema
-Message-ID: <20200222200037.3203931-1-nfraprado@protonmail.com>
-Feedback-ID: cwTKJQq-dqva77NrgNeIaWzOvcDQqfI9VSy7DoyJdvgY6-nEE7fD-E-3GiKFHexW4OBWbzutmMZN6q4SflMDRw==:Ext:ProtonMail
+        Sat, 22 Feb 2020 15:42:33 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42177 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgBVUmc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 15:42:32 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 83so4000269lfh.9
+        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 12:42:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8/dqp+6ZkvRRmpmaUZJPJGMl+JnMMGYivypZ+qu1IdQ=;
+        b=KfFZENIHa1kD6D/djqtV3blmirkAzxujGlBUFJP08Yxr+SBEzFzJLYLcEkkSqydT8X
+         WcrEABFsSj/iama8pmWwrD0OkIPADuTDhFwjkBQNCgz/X0EWGkD1A4XiSLivvtseRDn3
+         TYiTvAMUlNv9hyetNnMvhIBTGGb1OuWpsVfnhJ58Ho9wGJ0wB9TYgJ5UCENxnu42+3oN
+         6xdXDF7aUEKvAcq1gbBTewL0jcm8+bY6gCsU9i2lqP/47SV9kF6bH2y1LxAWkiCHpe0t
+         kV/STK4XxyKUpd3IzE0SYkQyeH3TH8R8H0taoZJWSQCs2wPxYJJrzMW7vncAb+rmRqgS
+         m6ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=8/dqp+6ZkvRRmpmaUZJPJGMl+JnMMGYivypZ+qu1IdQ=;
+        b=fkrRREX/4NyExJY5GRmvDd5EWKt5XYJsm5h2g8yJO9QcPXG2ImqJigNWvst1LaEmp6
+         reE2y+RKNTVi8l2dExLi5WFBr2wgPCq1Qj4Vqd5GSL+URwcsG+zGKHXLJrxrDj7S/W4L
+         CbXrkTZIeUSmGZ921DPMS6+qjfIveDe0wJ6WOUwSAT6CoPm3z8Mu2vogAoJWp4uVQw8r
+         xGVV8GdPEkUImvoXdH/hzys8+b2HL1+pQxBpXVRWKT9crrQU2asrqI34Xm+I9tuRKcMU
+         w/j+2mMf/VVspjMLKz4GpkZU38C1fGG/ivyPhChBwK/xpg7Kjagw9jPNTeQ95+ibGBML
+         jvxw==
+X-Gm-Message-State: APjAAAUM1MgDgQv8MQaXDRMZi2osuxLXyT541vQQzK5eH+s6fmjYYBmm
+        kOstTBVtwWQ6Min2Z4swNARvjQ==
+X-Google-Smtp-Source: APXvYqx/B38YxteGwSNzJbkis53V2cy++o3q6ZdclQVcDwud+2NQuhy0RoD9Gg/qpGXsI9f1WGPORw==
+X-Received: by 2002:a19:6b0e:: with SMTP id d14mr4043585lfa.46.1582404149341;
+        Sat, 22 Feb 2020 12:42:29 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:4621:26b8:f6bb:b31c:6567:7228])
+        by smtp.gmail.com with ESMTPSA id v16sm3543019lfp.92.2020.02.22.12.42.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 22 Feb 2020 12:42:28 -0800 (PST)
+Subject: Re: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
+To:     "Behme Dirk (CM/ESO2)" <dirk.behme@de.bosch.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
+ <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
+ <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <5603f393-554d-e2a8-c2d8-6bafc20f4169@cogentembedded.com>
+Date:   Sat, 22 Feb 2020 23:42:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert BCM2835/6368 Random number generator bindings to DT schema.
+On 02/10/2020 01:21 PM, Behme Dirk (CM/ESO2) wrote:
 
-Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
----
+>> Add the memory driver for Renesas RPC-IF which registers either SPI or
+>> HyperFLash device depending on the contents of the device tree subnode.
+>> It also provides the absract "back end" device APIs that can be used by
+>> the "front end" SPI/MTD drivers to talk to the real hardware.
+>>
+>> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> 
+> FYI, please find below [1] the changes I did locally on this driver. It seems to read & write successfully on my custom M3 (R8A7796) device, now.
 
-Changes in v2:
-- Remove description for common properties
-- Drop label from example
+   Not for me...
+   BTW, your patch had whitespace ruined, I had to apply it by hand, you'd better
+attach the patches, not paste. :-/
 
-This patch was tested with:
-make ARCH=3Darm dt_binding_check
-make ARCH=3Darm DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/rng/brc=
-m,bcm2835.yaml dtbs_check
+> Best regards
+> 
+> Dirk
+> 
+> [1]
+> 
+> From d72b805cc461ab1e9747c973e9be84e7abb8f828 Mon Sep 17 00:00:00 2001
+> From: Dirk Behme <dirk.behme@de.bosch.com>
+> Date: Tue, 4 Feb 2020 08:39:31 +0100
+> Subject: [PATCH] memory: renesas-rpc-if: Correct the STRTIM and some other
+>  clean up
+> 
+> This is required to make the driver work correctly in my M3 environment.
+> 
+> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+> ---
+>  drivers/memory/renesas-rpc-if.c | 42 ++++++++++++++++++++-------------
+>  1 file changed, 25 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/memory/renesas-rpc-if.c b/drivers/memory/renesas-rpc-if.c
+> index 04be92b64bfa..f4356b066384 100644
+> --- a/drivers/memory/renesas-rpc-if.c
+> +++ b/drivers/memory/renesas-rpc-if.c
+[...]
+> @@ -513,19 +525,15 @@ ssize_t rpcif_dirmap_read(struct rpcif *rpc, u64 offs, size_t len, void *buf)
+>      pm_runtime_get_sync(rpc->dev);
+> 
+>      regmap_update_bits(rpc->regmap, RPCIF_CMNCR, RPCIF_CMNCR_MD, 0);
+> -    regmap_write(rpc->regmap, RPCIF_DRCR,
+> -             RPCIF_DRCR_RBURST(32) | RPCIF_DRCR_RBE);
+> -    regmap_write(rpc->regmap, RPCIF_DRCMR, rpc->command);
+> -    regmap_write(rpc->regmap, RPCIF_DREAR,
+> -             RPCIF_DREAR_EAV(offs >> 25) | RPCIF_DREAR_EAC(1));
+> -    regmap_write(rpc->regmap, RPCIF_DROPR, rpc->option);
+> -    regmap_write(rpc->regmap, RPCIF_DRENR,
+> -             rpc->enable & ~RPCIF_SMENR_SPIDE(0xF));
+> -    regmap_write(rpc->regmap, RPCIF_DRDMCR, rpc->dummy);
+> -    regmap_write(rpc->regmap, RPCIF_DRDRENR, rpc->ddr);
 
-Thanks,
-N=C3=ADcolas
+   The driver somehow works only with this left in place (with 2 bytes eaten
+as before), otherwise all the flash reads all 0xff (via dirmap).
 
- .../devicetree/bindings/rng/brcm,bcm2835.txt  | 40 -------------
- .../devicetree/bindings/rng/brcm,bcm2835.yaml | 59 +++++++++++++++++++
- 2 files changed, 59 insertions(+), 40 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
- create mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+> +    ret = wait_msg_xfer_end(rpc);
+> +    if (ret) {
+> +        len = 0;
+> +        goto err_out;
+> +    }
+> 
+>      memcpy_fromio(buf, rpc->dirmap + from, len);
+> 
+> +err_out:
+>      pm_runtime_put(rpc->dev);
+> 
+>      return len;
 
-diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt b/Docum=
-entation/devicetree/bindings/rng/brcm,bcm2835.txt
-deleted file mode 100644
-index aaac7975f61c..000000000000
---- a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
-+++ /dev/null
-@@ -1,40 +0,0 @@
--BCM2835/6368 Random number generator
--
--Required properties:
--
--- compatible : should be one of
--=09"brcm,bcm2835-rng"
--=09"brcm,bcm-nsp-rng"
--=09"brcm,bcm5301x-rng" or
--=09"brcm,bcm6368-rng"
--- reg : Specifies base physical address and size of the registers.
--
--Optional properties:
--
--- clocks : phandle to clock-controller plus clock-specifier pair
--- clock-names : "ipsec" as a clock name
--
--Optional properties:
--
--- interrupts: specify the interrupt for the RNG block
--
--Example:
--
--rng {
--=09compatible =3D "brcm,bcm2835-rng";
--=09reg =3D <0x7e104000 0x10>;
--=09interrupts =3D <2 29>;
--};
--
--rng@18033000 {
--=09compatible =3D "brcm,bcm-nsp-rng";
--=09reg =3D <0x18033000 0x14>;
--};
--
--random: rng@10004180 {
--=09compatible =3D "brcm,bcm6368-rng";
--=09reg =3D <0x10004180 0x14>;
--
--=09clocks =3D <&periph_clk 18>;
--=09clock-names =3D "ipsec";
--};
-diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml b/Docu=
-mentation/devicetree/bindings/rng/brcm,bcm2835.yaml
-new file mode 100644
-index 000000000000..42d9a38e4e1a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rng/brcm,bcm2835.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: BCM2835/6368 Random number generator
-+
-+maintainers:
-+  - Stefan Wahren <stefan.wahren@i2se.com>
-+  - Florian Fainelli <f.fainelli@gmail.com>
-+  - Herbert Xu <herbert@gondor.apana.org.au>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - brcm,bcm2835-rng
-+      - brcm,bcm-nsp-rng
-+      - brcm,bcm5301x-rng
-+      - brcm,bcm6368-rng
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: ipsec
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    rng {
-+        compatible =3D "brcm,bcm2835-rng";
-+        reg =3D <0x7e104000 0x10>;
-+        interrupts =3D <2 29>;
-+    };
-+
-+  - |
-+    rng@18033000 {
-+        compatible =3D "brcm,bcm-nsp-rng";
-+        reg =3D <0x18033000 0x14>;
-+    };
-+
-+  - |
-+    rng@10004180 {
-+        compatible =3D "brcm,bcm6368-rng";
-+        reg =3D <0x10004180 0x14>;
-+
-+        clocks =3D <&periph_clk 18>;
-+        clock-names =3D "ipsec";
-+    };
---=20
-2.25.0
-
-
+MBR, Sergei
