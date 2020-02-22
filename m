@@ -2,88 +2,128 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7B4C35671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 04:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCD0C35669
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 05:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC452071E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 04:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E940F214DB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 05:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582348850;
+	bh=DXbuJPNsogTXj3Xlgpu474tYpxCmg96iOck0OK1De+Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Wj1NUPXjmBLbgUuou06c55ziGD0b6A6YHnfYUVJIdxOmDXfKb5z11BARlVvkBUzmC
+	 XiB9FnKsnROD98HKxQnagmrCII4KV0ddJF92ymT7tFSWHHc4n3KnhK6aqy7Jkey8aT
+	 UhQ/5a86ssItrr2ANsmXv4dCzFyiBXfiwF9HQ/FM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgBVEBD (ORCPT
+        id S1726085AbgBVFUt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Feb 2020 23:01:03 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:57549 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgBVEBD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Feb 2020 23:01:03 -0500
-Received: from [10.28.90.152] (10.28.90.152) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Sat, 22 Feb 2020
- 12:01:26 +0800
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
- arm,smc-wdt compatible
-To:     Julius Werner <jwerner@chromium.org>
-CC:     Evan Benn <evanbenn@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-watchdog@vger.kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Yonghui Yu <yonghui.yu@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <20200219223046.GA16537@bogus>
- <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
- <20200219232005.GA9737@roeck-us.net>
- <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
- <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com>
- <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
-Date:   Sat, 22 Feb 2020 12:01:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Sat, 22 Feb 2020 00:20:49 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:36666 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgBVFUt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 00:20:49 -0500
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 01M5KafQ024227;
+        Sat, 22 Feb 2020 14:20:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01M5KafQ024227
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582348837;
+        bh=YKumM6nl7wDW7iBXi9YToiaP0C6K2ymg4jrBCpX08fE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0EoB32tRjcYyXjBskhEVHxvbQUuHzD9oUgSFQWaex7AW1gPRVL7YIs9NaI3sljXKg
+         HTbmHsXsbiEgQjV9U3wxlN7Xu7EJTIIadkVRd1wyFJYvzVjnFkN8EwBRRRwef6hpPp
+         lait7OkvHVGxupON+CusjwCHCKaF3A9ZIF5aKqICTafZVpI5Zm0u/fU8dorEO+R9SF
+         fUPMntDoe0dCRGnn6Oz0VPvirFFrWeyd0ctnfmFAWcvWNBapCQTakHBDSM+pHn00wu
+         mqTgPAEoeY72Q87eKu6J/3iWCobU+oGd4dSK9+Tlj80yYcsQdWk++/4KjmS6f04Bsz
+         RkjpK0E2M2iOw==
+X-Nifty-SrcIP: [209.85.221.171]
+Received: by mail-vk1-f171.google.com with SMTP id g7so1176931vkl.12;
+        Fri, 21 Feb 2020 21:20:37 -0800 (PST)
+X-Gm-Message-State: APjAAAVbbPAiJJxuH38omZ5ezcmEagjuV6/aod1nOM8VsVODJtfhKs4k
+        f/C8TOjcOpI0ysruXPiqssJ7T00OT+FC+8l4jpo=
+X-Google-Smtp-Source: APXvYqxjngNGYOqQSFORfjCOAcW75hxKKdFrDL8gdS/YktQZrg2mNGMXCeQL1YMeVqq9jyAzI3zQoyABnxgxvjdJyvM=
+X-Received: by 2002:a1f:bfc2:: with SMTP id p185mr19206254vkf.73.1582348835888;
+ Fri, 21 Feb 2020 21:20:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Originating-IP: [10.28.90.152]
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com> <20200221152546.GA1327@bogus>
+In-Reply-To: <20200221152546.GA1327@bogus>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 22 Feb 2020 14:20:00 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQnJPOB7-e8GCjmXb4HpNdYqz0TsDvQ8_SJpcN9vsgeqA@mail.gmail.com>
+Message-ID: <CAK7LNAQnJPOB7-e8GCjmXb4HpNdYqz0TsDvQ8_SJpcN9vsgeqA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: Convert UniPhier board/SoC bindings
+ to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Julius
+Hi Rob,
 
-On 2020/2/22 3:41, Julius Werner wrote:
->> Because the ATF does not define standard wdt index, each vendor defines
->> its own index.
->> So I don't think that the current driver[0] can fully cover my usecases.
-> I think the best way to solve this would be to put the SMC function ID
-> as another field into the device tree, so that multiple vendors could
-> share the same driver even if their firmware interface uses a
-> different SMC. But they still have to implement the same API for that
-> SMC, of course, not sure if the Meson driver is suitable for that (but
-> if it is then I think merging those drivers would be a good idea).
-The SMC function ID may be solved by the DTS, but the wdt indexs(Eg: 
-SMCWD_INFO) are also different
-for each vendor. The imx_sc_wdt.c is also use the SMC to operate the 
-WDT, but the wdt indexs(Eg: IMX_SIP_TIMER_START_WDOG)
-are different from ours. IMO, If the ATF can implement a common hal 
-interface and index for watchdog, then writing a
-common smc wdt driver will be easier to compatible with all vendors.
-
-Best Regards
+On Sat, Feb 22, 2020 at 12:25 AM Rob Herring <robh@kernel.org> wrote:
 >
-> .
+> On Fri, 21 Feb 2020 11:10:00 +0900, Masahiro Yamada wrote:
+> > Convert the Socionext UniPhier board/SoC binding to DT schema format.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  .../bindings/arm/socionext/uniphier.txt       | 47 -------------
+> >  .../bindings/arm/socionext/uniphier.yaml      | 70 +++++++++++++++++++
+> >  MAINTAINERS                                   |  2 +-
+> >  3 files changed, 71 insertions(+), 48 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> Error: Documentation/devicetree/bindings/arm/socionext/uniphier.example.dts:18.9-10 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/arm/socionext/uniphier.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/arm/socionext/uniphier.example.dt.yaml] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> See https://patchwork.ozlabs.org/patch/1241745
+> Please check and re-submit.
+
+
+I checked 'make dtbs_check',
+but did not test 'make dt_binding_check'.
+
+I remember that
+'make dtbs_check' no longer check example.dts after
+93512dad334deb444619505f1fbb761156f7471b
+
+
+
+Anyway, the example is fold into the plugin node,
+so I cannot avoid the schema error about $nodename.
+
+/home/masahiro/workspace/linux-unph/Documentation/devicetree/bindings/arm/socionext/uniphier.example.dt.yaml:
+example-0: $nodename:0: '/' was expected
+
+
+I will remove this example.
+
+
+--
+Best Regards
+Masahiro Yamada
