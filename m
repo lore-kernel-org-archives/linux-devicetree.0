@@ -2,188 +2,103 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C572CC35673
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAF3C35669
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 07:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EF12192A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="HfTPlUp6"
+	by mail.kernel.org (Postfix) with ESMTP id 97A34208C4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 07:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582357068;
+	bh=wwlcvLyUUjq+aCUhLUkAhHiYjSH4uxAtpnE4vgF+h+s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Vim/vrnSmCUwv/gBvsaMuB4fWoq4ZgStvP321yKx/OL0+KAr4yASP3Y3p2bAmO7Bk
+	 ZmtVXXTp63/qU3mRu3Xa6R2qQoRgUzZeZindEYodM9m0pYgR5/fmEjHlSKv57pbEu9
+	 uD5u1htVJFoxbqHix3Vcw8fRLSTbwttDWub/jgjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbgBVGph (ORCPT
+        id S1727206AbgBVHhp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:45:37 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:58915 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbgBVGpd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 01:45:33 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 01M6ik5P005982;
-        Sat, 22 Feb 2020 15:44:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 01M6ik5P005982
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582353887;
-        bh=pw80puZqFh3HIHozKVPIxQUqE9lmyrEYJKdro2WSFao=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HfTPlUp6gRIDOM5AHjHcEoJbHhsA6IQ8dnxS7J5KrSP/Ez3Vwzsj/ZT8dooUjJI3p
-         qbk1DKyeDhD6acKXMrPMkudpMKXIWHJ5CPQq8whHCcr352EEqebWpibBPgEsukJ3lx
-         iSfNvle3Vz+9+Y4P2q7O03gcKCV9OluLy4YZedWnwsxKCAECgPd3VuuhHkQz3m/3Yk
-         WCkSxasMFRqdTRjdppN9Zoib6+rt7sWRtvj/odAsW0kyOdppfhxOB6H9VCMTzaenTa
-         fcpmAA64MfEIRPcfCuzWkXbXKs9K5DieDc9B00+6NXZO7M7X0IIUy+9n1jiAW1EXjP
-         2b2Xv7oXiZeVw==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 1/4] ARM: dts: uniphier: change SD/eMMC node names to follow json-schema
-Date:   Sat, 22 Feb 2020 15:44:42 +0900
-Message-Id: <20200222064445.14903-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 22 Feb 2020 02:37:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgBVHhp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Feb 2020 02:37:45 -0500
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51912208C4
+        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 07:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582357064;
+        bh=wwlcvLyUUjq+aCUhLUkAhHiYjSH4uxAtpnE4vgF+h+s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Sde1d7C2Mjm5LUHGg8qaINBz5JTdkBfBVrrLfsWGpon33qFPiE/ee/UOtpXKaJU6b
+         JUmiiHm+dNfZJAYZYLPWDvCawpz4J8r21Z4cdbveVj32CVYxIg6nmgLiidgfRSy4eU
+         0giwVyyBDBzF7qhezjrG2J6RzGKmKwFQqALnjHkg=
+Received: by mail-wm1-f43.google.com with SMTP id t14so4200578wmi.5
+        for <devicetree@vger.kernel.org>; Fri, 21 Feb 2020 23:37:44 -0800 (PST)
+X-Gm-Message-State: APjAAAUMqpNcxgtAlA7602UQVfazlV2dqfolWp1lFiLDziYpNflpW0DQ
+        wwOkiVGc/7ffT/MUd1HgpuVhdetStJX0c4zOb6MnHw==
+X-Google-Smtp-Source: APXvYqzLEqjaOCEz1rffDgh/i9rxHLaVrhkmq+aVjKgFm+xgANVXwtlOL9ob2zJTeWHA7/jtQHU14ap2WODxfLZ++eY=
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr9246324wmk.68.1582357062812;
+ Fri, 21 Feb 2020 23:37:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20200222014038.180923-1-saravanak@google.com> <20200222014038.180923-4-saravanak@google.com>
+In-Reply-To: <20200222014038.180923-4-saravanak@google.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 22 Feb 2020 08:37:31 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu8GtHQpFGM5U61uH86dnesnaVCkvqrPA6Y8wv4qRc8V4A@mail.gmail.com>
+Message-ID: <CAKv+Gu8GtHQpFGM5U61uH86dnesnaVCkvqrPA6Y8wv4qRc8V4A@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] efi/arm: Start using fw_devlink_get_flags()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Follow the standard nodename pattern "^mmc(@.*)?$" defined in
-Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+On Sat, 22 Feb 2020 at 02:40, Saravana Kannan <saravanak@google.com> wrote:
+>
+> The fw_devlink_get_flags() provides the right flags to use when creating
+> mandatory device links derived from information provided by the
+> firmware. So, use that.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
- arch/arm/boot/dts/uniphier-ld4.dtsi  | 4 ++--
- arch/arm/boot/dts/uniphier-pro4.dtsi | 6 +++---
- arch/arm/boot/dts/uniphier-pro5.dtsi | 4 ++--
- arch/arm/boot/dts/uniphier-pxs2.dtsi | 4 ++--
- arch/arm/boot/dts/uniphier-sld8.dtsi | 4 ++--
- 5 files changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
-index 64ec46c72a4c..f3a20dc0b22b 100644
---- a/arch/arm/boot/dts/uniphier-ld4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
-@@ -245,7 +245,7 @@
- 			#dma-cells = <1>;
- 		};
- 
--		sd: sdhc@5a400000 {
-+		sd: mmc@5a400000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a400000 0x200>;
-@@ -265,7 +265,7 @@
- 			sd-uhs-sdr50;
- 		};
- 
--		emmc: sdhc@5a500000 {
-+		emmc: mmc@5a500000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a500000 0x200>;
-diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
-index 2ec04d7972ef..e96b5796f0f8 100644
---- a/arch/arm/boot/dts/uniphier-pro4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
-@@ -279,7 +279,7 @@
- 			#dma-cells = <1>;
- 		};
- 
--		sd: sdhc@5a400000 {
-+		sd: mmc@5a400000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a400000 0x200>;
-@@ -299,7 +299,7 @@
- 			sd-uhs-sdr50;
- 		};
- 
--		emmc: sdhc@5a500000 {
-+		emmc: mmc@5a500000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a500000 0x200>;
-@@ -317,7 +317,7 @@
- 			non-removable;
- 		};
- 
--		sd1: sdhc@5a600000 {
-+		sd1: mmc@5a600000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a600000 0x200>;
-diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
-index ea3961f920a0..f794a0676760 100644
---- a/arch/arm/boot/dts/uniphier-pro5.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
-@@ -469,7 +469,7 @@
- 			resets = <&sys_rst 2>, <&sys_rst 2>;
- 		};
- 
--		emmc: sdhc@68400000 {
-+		emmc: mmc@68400000 {
- 			compatible = "socionext,uniphier-sd-v3.1";
- 			status = "disabled";
- 			reg = <0x68400000 0x800>;
-@@ -485,7 +485,7 @@
- 			non-removable;
- 		};
- 
--		sd: sdhc@68800000 {
-+		sd: mmc@68800000 {
- 			compatible = "socionext,uniphier-sd-v3.1";
- 			status = "disabled";
- 			reg = <0x68800000 0x800>;
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index 13b0d4a7741f..04d6bef3a00f 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -446,7 +446,7 @@
- 			};
- 		};
- 
--		emmc: sdhc@5a000000 {
-+		emmc: mmc@5a000000 {
- 			compatible = "socionext,uniphier-sd-v3.1.1";
- 			status = "disabled";
- 			reg = <0x5a000000 0x800>;
-@@ -462,7 +462,7 @@
- 			non-removable;
- 		};
- 
--		sd: sdhc@5a400000 {
-+		sd: mmc@5a400000 {
- 			compatible = "socionext,uniphier-sd-v3.1.1";
- 			status = "disabled";
- 			reg = <0x5a400000 0x800>;
-diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
-index 4fc6676f5486..beb1eac85436 100644
---- a/arch/arm/boot/dts/uniphier-sld8.dtsi
-+++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
-@@ -249,7 +249,7 @@
- 			#dma-cells = <1>;
- 		};
- 
--		sd: sdhc@5a400000 {
-+		sd: mmc@5a400000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a400000 0x200>;
-@@ -269,7 +269,7 @@
- 			sd-uhs-sdr50;
- 		};
- 
--		emmc: sdhc@5a500000 {
-+		emmc: mmc@5a500000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a500000 0x200>;
--- 
-2.17.1
-
+>  drivers/firmware/efi/arm-init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
+> index d99f5b0c8a09..6703bedfa9e1 100644
+> --- a/drivers/firmware/efi/arm-init.c
+> +++ b/drivers/firmware/efi/arm-init.c
+> @@ -349,7 +349,7 @@ static int efifb_add_links(const struct fwnode_handle *fwnode,
+>          * If this fails, retrying this function at a later point won't
+>          * change anything. So, don't return an error after this.
+>          */
+> -       if (!device_link_add(dev, sup_dev, 0))
+> +       if (!device_link_add(dev, sup_dev, fw_devlink_get_flags()))
+>                 dev_warn(dev, "device_link_add() failed\n");
+>
+>         put_device(sup_dev);
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
