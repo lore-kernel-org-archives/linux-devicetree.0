@@ -2,69 +2,199 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77000C35666
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 19:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE3FC35674
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 20:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 498FA20702
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 19:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582400714;
-	bh=e/wizAP3md2y/e0mJQfbbdsgCpx0aiSivl+PEsy+vb4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=BwUd5nEt8BlOKE+Ebr6IbJNa6udUY1KzgFOVPkhhl6yZnKnNBcXLqr5l+Nnfl23Vf
-	 WwXhgeVOlrFF24Tr6U3eDipWoSutKml6kHfZ5RB/vBPihO+6hDnRNKXTntT7/J/T95
-	 3wK/T7MKZ+lyVjR+t4fog9wjyEYGe9r48NDGDebM=
+	by mail.kernel.org (Postfix) with ESMTP id C75C520702
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 20:01:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="UdXKmzUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgBVTpN (ORCPT
+        id S1726884AbgBVUBL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 14:45:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgBVTpN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Feb 2020 14:45:13 -0500
-Subject: Re: [GIT PULL] Devicetree fixes for v5.6, part 2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582400713;
-        bh=e/wizAP3md2y/e0mJQfbbdsgCpx0aiSivl+PEsy+vb4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=TXUFT5yn5Ya8VCXEEwecYn2bpRrhPOkLQZLxq+OX5XeAs4dNpFS2CXXSiOVDmfyYU
-         psEe3heig237tD9ykAfxZiczGB3r+49Y0E3s0YHEzihdwBxspzGYJPj1yi56ExnYAO
-         nLfCaS7iCeApIAo0k/WIn9NDhGFi2VfOG5gPDr28=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200221215503.GA26346@bogus>
-References: <20200221215503.GA26346@bogus>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200221215503.GA26346@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-fixes-for-5.6-2
-X-PR-Tracked-Commit-Id: 854bdbae9058bcf09b0add70b6047bc9ca776de2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fea630215a9e767fd3917b2cb09ec3ded58f88a2
-Message-Id: <158240071306.14316.13731618209914121479.pr-tracker-bot@kernel.org>
-Date:   Sat, 22 Feb 2020 19:45:13 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+        Sat, 22 Feb 2020 15:01:11 -0500
+Received: from mail-40134.protonmail.ch ([185.70.40.134]:43373 "EHLO
+        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgBVUBK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 15:01:10 -0500
+Date:   Sat, 22 Feb 2020 20:00:59 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1582401668;
+        bh=9QTCFtpYa096BcF+fNJ+hFEpUdDElt7IQEIk4DEbu8Q=;
+        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
+        b=UdXKmzUu7Gi5seNkwIDeLnuW+YM0twYXl5lC4KsTW2NdfsR/GKPL61yxUPlMHnvaO
+         /k2uDlMfAaUmVWjahNU81RmYhYo/u0YVf6HavZMoh4QI3Uw15U3nVqedWKwqidDfm4
+         jmA98Tq5/2163O55NCtKoeFvTuS9RIaBYsksRTEE=
+To:     devicetree@vger.kernel.org
+From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+        <nfraprado@protonmail.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-crypto@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+          <nfraprado@protonmail.com>
+Subject: [PATCH v2] dt-bindings: rng: Convert BCM2835 to DT schema
+Message-ID: <20200222200037.3203931-1-nfraprado@protonmail.com>
+Feedback-ID: cwTKJQq-dqva77NrgNeIaWzOvcDQqfI9VSy7DoyJdvgY6-nEE7fD-E-3GiKFHexW4OBWbzutmMZN6q4SflMDRw==:Ext:ProtonMail
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The pull request you sent on Fri, 21 Feb 2020 15:55:03 -0600:
+Convert BCM2835/6368 Random number generator bindings to DT schema.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.6-2
+Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
+---
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fea630215a9e767fd3917b2cb09ec3ded58f88a2
+Changes in v2:
+- Remove description for common properties
+- Drop label from example
 
-Thank you!
+This patch was tested with:
+make ARCH=3Darm dt_binding_check
+make ARCH=3Darm DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/rng/brc=
+m,bcm2835.yaml dtbs_check
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks,
+N=C3=ADcolas
+
+ .../devicetree/bindings/rng/brcm,bcm2835.txt  | 40 -------------
+ .../devicetree/bindings/rng/brcm,bcm2835.yaml | 59 +++++++++++++++++++
+ 2 files changed, 59 insertions(+), 40 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
+ create mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+
+diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt b/Docum=
+entation/devicetree/bindings/rng/brcm,bcm2835.txt
+deleted file mode 100644
+index aaac7975f61c..000000000000
+--- a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
++++ /dev/null
+@@ -1,40 +0,0 @@
+-BCM2835/6368 Random number generator
+-
+-Required properties:
+-
+-- compatible : should be one of
+-=09"brcm,bcm2835-rng"
+-=09"brcm,bcm-nsp-rng"
+-=09"brcm,bcm5301x-rng" or
+-=09"brcm,bcm6368-rng"
+-- reg : Specifies base physical address and size of the registers.
+-
+-Optional properties:
+-
+-- clocks : phandle to clock-controller plus clock-specifier pair
+-- clock-names : "ipsec" as a clock name
+-
+-Optional properties:
+-
+-- interrupts: specify the interrupt for the RNG block
+-
+-Example:
+-
+-rng {
+-=09compatible =3D "brcm,bcm2835-rng";
+-=09reg =3D <0x7e104000 0x10>;
+-=09interrupts =3D <2 29>;
+-};
+-
+-rng@18033000 {
+-=09compatible =3D "brcm,bcm-nsp-rng";
+-=09reg =3D <0x18033000 0x14>;
+-};
+-
+-random: rng@10004180 {
+-=09compatible =3D "brcm,bcm6368-rng";
+-=09reg =3D <0x10004180 0x14>;
+-
+-=09clocks =3D <&periph_clk 18>;
+-=09clock-names =3D "ipsec";
+-};
+diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml b/Docu=
+mentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+new file mode 100644
+index 000000000000..42d9a38e4e1a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rng/brcm,bcm2835.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: BCM2835/6368 Random number generator
++
++maintainers:
++  - Stefan Wahren <stefan.wahren@i2se.com>
++  - Florian Fainelli <f.fainelli@gmail.com>
++  - Herbert Xu <herbert@gondor.apana.org.au>
++
++properties:
++  compatible:
++    enum:
++      - brcm,bcm2835-rng
++      - brcm,bcm-nsp-rng
++      - brcm,bcm5301x-rng
++      - brcm,bcm6368-rng
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: ipsec
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    rng {
++        compatible =3D "brcm,bcm2835-rng";
++        reg =3D <0x7e104000 0x10>;
++        interrupts =3D <2 29>;
++    };
++
++  - |
++    rng@18033000 {
++        compatible =3D "brcm,bcm-nsp-rng";
++        reg =3D <0x18033000 0x14>;
++    };
++
++  - |
++    rng@10004180 {
++        compatible =3D "brcm,bcm6368-rng";
++        reg =3D <0x10004180 0x14>;
++
++        clocks =3D <&periph_clk 18>;
++        clock-names =3D "ipsec";
++    };
+--=20
+2.25.0
+
+
