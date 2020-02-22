@@ -3,148 +3,192 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60982C35666
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 15:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4818C35671
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3365B206EF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 15:59:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="agovbtnV"
+	by mail.kernel.org (Postfix) with ESMTP id AF3C2206EF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582387488;
+	bh=kyHcfYLp7PIEkk3DgyydXfdC9VufMIJvr7m2G/Nredw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=J5aSPpEyGhvhP90vXiKLbFjNKIhdu/7VuAbzdABILip8S7uZ+qCHkqiMhDvBGUDa9
+	 0skjR4YnD/Q6OHHW8scvQhR3sSmPqyBtYBsw6Ok84UBw1mD6cAT5AODcvgAjXls2kp
+	 ry4GBexgLEoOubUwzAiE+Qw2UdRxwh+tnXYycVDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgBVP7C (ORCPT
+        id S1727494AbgBVQEs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 10:59:02 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54036 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgBVP7B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 10:59:01 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwwdC094152;
-        Sat, 22 Feb 2020 09:58:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582387138;
-        bh=FZIbChqraScWDQp84GWjNyufMYe6dLz98wNOtdVdA9w=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=agovbtnVY0axeM52R6T3EureLxertyc9nLmKiwf6Zxk8VpSXEYfuKzIKvkWCwiT9q
-         b9Gm17lLgojwIpR+dd2ps7RhNK3eL3hGesu5/oMI8F+FgWlxN3miNxhK/mw5Rvrvfi
-         wis79zlHdgHXNgGoX6OZLza1zyVbBvFXmQ2wecSI=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwwjw077271;
-        Sat, 22 Feb 2020 09:58:58 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 22
- Feb 2020 09:58:58 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sat, 22 Feb 2020 09:58:58 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwvGb076957;
-        Sat, 22 Feb 2020 09:58:57 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 9/9] arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux and phy defs
-Date:   Sat, 22 Feb 2020 17:57:52 +0200
-Message-ID: <20200222155752.22021-10-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200222155752.22021-1-grygorii.strashko@ti.com>
-References: <20200222155752.22021-1-grygorii.strashko@ti.com>
+        Sat, 22 Feb 2020 11:04:48 -0500
+Received: from condef-08.nifty.com ([202.248.20.73]:48819 "EHLO
+        condef-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbgBVQEs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 11:04:48 -0500
+X-Greylist: delayed 493 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 11:04:45 EST
+Received: from conssluserg-06.nifty.com ([10.126.8.85])by condef-08.nifty.com with ESMTP id 01MFqu6F005862
+        for <devicetree@vger.kernel.org>; Sun, 23 Feb 2020 00:52:56 +0900
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 01MFqYJ5000360;
+        Sun, 23 Feb 2020 00:52:35 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01MFqYJ5000360
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582386755;
+        bh=b79vhxmCX6yKeHzVZPJuEHpj+VRqCppVQz99zHvQULc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CwfDYortCZndDqpgaHRVU/nvQ6js3133I8s48rXc49xm6qLvgbQPJyb0zOj0cUsaJ
+         p1AgYP8sfxaPye4j2P1OsNQxHRv1eEksV8GgwxIyXCn/F4CchD2nJKcml4dLH9sv85
+         ic+Xg4VffEMF7pme/saBoN72ZB2lzol1wF703wS0jsFtFnRkpYV5JBXYz8ydYWbcEP
+         tbbUJYMaVKE7OFdQTQUXwhgDHkgMIY/Fc9YOzoPl5RufpJhCgCi2sGZh+64OUX1rwK
+         +sZWC1APVHRr5sgbZRFvyCCJnZore9b0hUNJxjGyVf41LXNaloTgyb22Q3g2V3d9b7
+         I6gki/mI1CmRg==
+X-Nifty-SrcIP: [209.85.221.182]
+Received: by mail-vk1-f182.google.com with SMTP id t129so1426465vkg.6;
+        Sat, 22 Feb 2020 07:52:35 -0800 (PST)
+X-Gm-Message-State: APjAAAUuETcyViyvbR8mPy1J++gAStXhemXyWv24iCLbZU28Kgy31bmu
+        sbzYaoUj7Mh4rrpN2AIsH0e6UjMtc5NleR7cRus=
+X-Google-Smtp-Source: APXvYqw2wXUdhO8BX/0WSoErCEp5bPm8ePO7UxLErrQ+H4iqs20FbW/Aye5pDcCSkjOmCSoFD7l6iaBKBVmYzFOzfl8=
+X-Received: by 2002:a1f:8cd5:: with SMTP id o204mr20164314vkd.66.1582386753765;
+ Sat, 22 Feb 2020 07:52:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200221222955.21038-1-robh@kernel.org>
+In-Reply-To: <20200221222955.21038-1-robh@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 23 Feb 2020 00:51:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQkKG1nzfLmqPnU000ViEqiv9GV6Z2QQaSOBJaoxXU7fw@mail.gmail.com>
+Message-ID: <CAK7LNAQkKG1nzfLmqPnU000ViEqiv9GV6Z2QQaSOBJaoxXU7fw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kbuild: Always validate DT binding examples against
+ all schemas
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The TI J721E EVM base board has TI DP83867 PHY connected to external CPSW
-NUSS Port 1 in rgmii-rxid mode.
+Hi Rob,
 
-Hence, add pinmux and Ethernet PHY configuration for TI j721e SoC MCU
-Gigabit Ethernet subsystem (MCU CPSW2G NUSS).
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../dts/ti/k3-j721e-common-proc-board.dts     | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index 7a5c3d4adadd..98e5e17e3ff7 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -8,6 +8,7 @@
- #include "k3-j721e-som-p0.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/net/ti-dp83867.h>
- 
- / {
- 	chosen {
-@@ -128,6 +129,30 @@
- 			J721E_WKUP_IOPAD(0x38, PIN_INPUT, 0) /* (A23) MCU_OSPI1_LBCLKO */
- 		>;
- 	};
+On Sat, Feb 22, 2020 at 7:29 AM Rob Herring <robh@kernel.org> wrote:
+>
+> Most folks only run dt_binding_check on the single schema they care about
+> by setting DT_SCHEMA_FILES. That means example is only checked against
+> that one schema which is not always sufficient.
+>
+> Let's address this by splitting processed-schema.yaml into 2 files: one
+> that's always all schemas for the examples and one that's just the schema
+> in DT_SCHEMA_FILES for dtbs.
+>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: linux-kbuild@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+
+I understood what you want to do, but
+you are adding too complicated code
+into scripts/Malefile.lib
+
+Also, I do not like fragile workaround like
+$(word 2, $(real-prereqs)
+
+I attached a simpler implementation below.
+I also changed .gitignore
+
+
+
+
+
+diff --git a/Documentation/devicetree/bindings/.gitignore
+b/Documentation/devicetree/bindings/.gitignore
+index ef82fcfcccab..57afa1533a5f 100644
+--- a/Documentation/devicetree/bindings/.gitignore
++++ b/Documentation/devicetree/bindings/.gitignore
+@@ -1,2 +1,2 @@
+ *.example.dts
+-processed-schema.yaml
++processed-schema*.yaml
+diff --git a/Documentation/devicetree/bindings/Makefile
+b/Documentation/devicetree/bindings/Makefile
+index 646cb3525373..7c40d5ba1b51 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -2,7 +2,6 @@
+ DT_DOC_CHECKER ?= dt-doc-validate
+ DT_EXTRACT_EX ?= dt-extract-example
+ DT_MK_SCHEMA ?= dt-mk-schema
+-DT_MK_SCHEMA_FLAGS := $(if $(DT_SCHEMA_FILES), -u)
+
+ quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
+       cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
+@@ -11,26 +10,33 @@ quiet_cmd_chk_binding = CHKDT   $(patsubst
+$(srctree)/%,%,$<)
+ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+        $(call if_changed,chk_binding)
+
+-DT_TMP_SCHEMA := processed-schema.yaml
++# Use full schemas when checking %.example.dts
++DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+
+ quiet_cmd_mk_schema = SCHEMA  $@
+       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+$(real-prereqs)
+
+-DT_DOCS = $(shell \
++DT_DOCS = $(addprefix $(src)/, \
++       $(shell \
+        cd $(srctree)/$(src) && \
+        find * \( -name '*.yaml' ! \
+-               -name $(DT_TMP_SCHEMA) ! \
++               -name 'processed-schema*' ! \
+                -name '*.example.dt.yaml' \) \
+-       )
++       ))
+
+-DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
++DT_SCHEMA_FILES ?= $(DT_DOCS)
+
+ ifeq ($(CHECK_DTBS),)
+ extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+ extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
++extra-y += processed-schema-examples.yaml
 +
-+	mcu_cpsw_pins_default: mcu_cpsw_pins_default {
-+		pinctrl-single,pins = <
-+			J721E_WKUP_IOPAD(0x0058, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
-+			J721E_WKUP_IOPAD(0x005c, PIN_INPUT, 0) /* MCU_RGMII1_RX_CTL */
-+			J721E_WKUP_IOPAD(0x0060, PIN_OUTPUT, 0) /* MCU_RGMII1_TD3 */
-+			J721E_WKUP_IOPAD(0x0064, PIN_OUTPUT, 0) /* MCU_RGMII1_TD2 */
-+			J721E_WKUP_IOPAD(0x0068, PIN_OUTPUT, 0) /* MCU_RGMII1_TD1 */
-+			J721E_WKUP_IOPAD(0x006c, PIN_OUTPUT, 0) /* MCU_RGMII1_TD0 */
-+			J721E_WKUP_IOPAD(0x0078, PIN_INPUT, 0) /* MCU_RGMII1_RD3 */
-+			J721E_WKUP_IOPAD(0x007c, PIN_INPUT, 0) /* MCU_RGMII1_RD2 */
-+			J721E_WKUP_IOPAD(0x0080, PIN_INPUT, 0) /* MCU_RGMII1_RD1 */
-+			J721E_WKUP_IOPAD(0x0084, PIN_INPUT, 0) /* MCU_RGMII1_RD0 */
-+			J721E_WKUP_IOPAD(0x0070, PIN_INPUT, 0) /* MCU_RGMII1_TXC */
-+			J721E_WKUP_IOPAD(0x0074, PIN_INPUT, 0) /* MCU_RGMII1_RXC */
-+		>;
-+	};
-+
-+	mcu_mdio_pins_default: mcu_mdio1_pins_default {
-+		pinctrl-single,pins = <
-+			J721E_WKUP_IOPAD(0x008c, PIN_OUTPUT, 0) /* MCU_MDIO0_MDC */
-+			J721E_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* MCU_MDIO0_MDIO */
-+		>;
-+	};
- };
- 
- &wkup_uart0 {
-@@ -429,3 +454,21 @@
- 		#gpio-cells = <2>;
- 	};
- };
-+
-+&mcu_cpsw {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcu_cpsw_pins_default &mcu_mdio_pins_default>;
-+};
-+
-+&davinci_mdio {
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+	};
-+};
-+
-+&cpsw_port1 {
-+	phy-mode = "rgmii-rxid";
-+	phy-handle = <&phy0>;
-+};
++$(obj)/processed-schema-examples.yaml: $(DT_DOCS) FORCE
++       $(call if_changed,mk_schema)
+ endif
+
+-$(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
++$(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := -u
++$(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) FORCE
+        $(call if_changed,mk_schema)
+
+-extra-y += $(DT_TMP_SCHEMA)
++extra-y += processed-schema.yaml
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index bae62549e3d2..7ddeb4f718b6 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -297,7 +297,8 @@ $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
+
+ DT_CHECKER ?= dt-validate
+ DT_BINDING_DIR := Documentation/devicetree/bindings
+-DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
++# DT_TMP_SCHEMA may be overridden from
+Documentation/devicetree/bindings/Makefile
++DT_TMP_SCHEMA ?= $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
+
+ quiet_cmd_dtb_check =  CHECK   $@
+       cmd_dtb_check =  $(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR)
+-p $(DT_TMP_SCHEMA) $@ ;
+
+
+
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
