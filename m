@@ -2,106 +2,131 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0D0C35666
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C62C35671
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0ECC208C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPC1RCXa"
+	by mail.kernel.org (Postfix) with ESMTP id EA3FF208C4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgBVMdS (ORCPT
+        id S1727259AbgBVMfA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 07:33:18 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43416 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgBVMdS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 07:33:18 -0500
-Received: by mail-ed1-f65.google.com with SMTP id dc19so5877805edb.10;
-        Sat, 22 Feb 2020 04:33:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Oi8wtUJc/ZugTi+ijz3fdth5kIyS+1a0ZDxcmMSZ+Ww=;
-        b=UPC1RCXaaTRucYrzIsJUBYFQPRozFLRYPaby3m4gsIOM+Wok5jFCsijg++GMLkTgcD
-         emjQAgGbeGTDKCuEgy708ZwH8nsHR8SLDIKSSFeORVERTU221fsQHzp7QM1/gFYz4Ueb
-         SNuT79hDLJUmE8Ejt7rGYfAlTvV9ZjrqTBN2kfauVapGP+jAUsRL+lFFfjcq26Ar9PXJ
-         KI66coEmGbl5YnC20VwY0y7uwJOMbJhQF41vyVYsiRewTF2NdSLtuQ3YiPxpZR9b9EJu
-         zfEmlMSZbXLIVImjIIIxOqicZ8jy3y/jckgIDh7n3r1W78+1vHaoz/CIlqnT3Wj/TEKW
-         obYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Oi8wtUJc/ZugTi+ijz3fdth5kIyS+1a0ZDxcmMSZ+Ww=;
-        b=pR4cNWxKiakjzQX4JyFE2GcnyWa+qWO9ko8RP+t/Xx87t+73eI+cTXfgAvpZkxZzjN
-         E4L6mUzfpbXotjZOFiSbqhwHES63ULwLJsepPYo3lSsMteh8jG9O9QfhMSozQ/qmXVqc
-         7ZVU/hyepDNdqCnnJAGo9/cHdsNZtVleY3W4ofTDDQ6F4OlqwbBfhNZ0x0Sm1mAABb47
-         WxTwgvY1AwzpmCa/e8ewZg1KibAUlvDepxAArcpADKU6CJSnFtAnj4OtYfy8/xWST3kr
-         BOOUHBcVgfU6cMcypUT1xWfKvFbYEJGnOVQRzshruNKRml3B+4/dWdNEidohxuXSNx/j
-         W+JQ==
-X-Gm-Message-State: APjAAAUDThjVeysqd3TDUapzmfRI6s9x34dkBZ9AxJ6wJpFrotYFcy/O
-        dvG01AtMFvtvIjMMXcQUJ4cPIL899PCI1+XK6n0=
-X-Google-Smtp-Source: APXvYqxZOaxYQ2aJT+V+cev2nVAQE4ak0/DAh9KbLNirVUNjfgjAqdVfgOUCrvX6Tl1imqGzGxeJM8UVPW50MiKWAYA=
-X-Received: by 2002:a17:906:1e48:: with SMTP id i8mr36633456ejj.189.1582374796161;
- Sat, 22 Feb 2020 04:33:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20200219151259.14273-4-olteanv@gmail.com> <20200222112841.29927-1-michael@walle.cc>
-In-Reply-To: <20200222112841.29927-1-michael@walle.cc>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sat, 22 Feb 2020 14:33:05 +0200
-Message-ID: <CA+h21hroaskWAmCcv7UuMDEXSVAAmbX+JGTLr-pBqN-kj-=fGg@mail.gmail.com>
-Subject: Re: [PATCH v2 net-next/devicetree 3/5] dt-bindings: net: dsa: ocelot:
- document the vsc9959 core
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        Sat, 22 Feb 2020 07:35:00 -0500
+Received: from sauhun.de ([88.99.104.3]:53602 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726763AbgBVMfA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Feb 2020 07:35:00 -0500
+Received: from localhost (p5486C6B7.dip0.t-ipconnect.de [84.134.198.183])
+        by pokefinder.org (Postfix) with ESMTPSA id F30102C07F9;
+        Sat, 22 Feb 2020 13:34:57 +0100 (CET)
+Date:   Sat, 22 Feb 2020 13:34:57 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
         devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        netdev <netdev@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH 1/5] i2c: i2c-stm32f7: disable/restore Fast Mode Plus
+ bits in low power modes
+Message-ID: <20200222123457.GG1716@kunai>
+References: <1579795970-22319-1-git-send-email-alain.volmat@st.com>
+ <1579795970-22319-2-git-send-email-alain.volmat@st.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IuhbYIxU28t+Kd57"
+Content-Disposition: inline
+In-Reply-To: <1579795970-22319-2-git-send-email-alain.volmat@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Michael,
 
-On Sat, 22 Feb 2020 at 13:28, Michael Walle <michael@walle.cc> wrote:
->
-> > +Any port can be disabled, but the CPU port should be kept enabled.
->
-> What is the reason for this? Do you mean if you actually want to use it? In
-> fact, I'd would like to see it disabled by default in the .dtsi file. It
-> doesn't make sense to just have the CPU port enabled, but not any of the
-> outgoing ports. It'd just confuse the user if there is an additional
-> network port which cannot be used.
->
-> -michael
->
+--IuhbYIxU28t+Kd57
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I can disable all internal ports by default, but there is one
-configuration which will not work: enabling only eno3 and switch port
-5. This is because the switch PCS registers belong to eno2, and if
-that is disabled, the memory accesses will be invalid. So providing a
-configuration with eno2 disabled by default is more likely to produce
-confusion. But I'll try to clarify better next time.
+Hi Alain,
 
-> > --
-> > 2.17.1
->
->
+thanks for the patch. A few comments:
 
-Thanks,
--Vladimir
+> @@ -303,6 +303,8 @@ struct stm32f7_i2c_msg {
+>   * @dma: dma data
+>   * @use_dma: boolean to know if dma is used in the current transfer
+>   * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
+> + * @regmap_reg: register address for setting Fast Mode Plus bits
+> + * @regmap_mask: mask for Fast Mode Plus bits in set register
+>   * @wakeup_src: boolean to know if the device is a wakeup source
+>   */
+>  struct stm32f7_i2c_dev {
+> @@ -326,6 +328,8 @@ struct stm32f7_i2c_dev {
+>  	struct stm32_i2c_dma *dma;
+>  	bool use_dma;
+>  	struct regmap *regmap;
+> +	u32 regmap_reg;
+> +	u32 regmap_mask;
+
+Is this really a descriptive naming? From looking at the code,
+'syscfg_reg' or 'fmp_reg' sound more suitable to me?
+
+> +{
+> +	if (i2c_dev->speed !=3D STM32_I2C_SPEED_FAST_PLUS ||
+> +	    IS_ERR_OR_NULL(i2c_dev->regmap)) {
+> +		/* Optional */
+> +		return 0;
+> +	}
+
+No brackets needed here.
+
+
+> -	ret =3D of_property_read_u32_index(np, "st,syscfg-fmp", 2, &mask);
+> +	ret =3D of_property_read_u32_index(np, "st,syscfg-fmp", 2,
+> +					 &i2c_dev->regmap_mask);
+>  	if (ret)
+>  		return ret;
+> =20
+> -	return regmap_update_bits(i2c_dev->regmap, reg, mask, mask);
+> +	return 0;
+
+Can be shortened now to
+	return of_property_read_u32_index(...);
+
+> +		ret =3D stm32f7_i2c_write_fm_plus_bits(i2c_dev, 1);
+
+The type of the last parameter is bool, so using 'true/false' instead of
+'1/0' is a tad more readable, I think.
+
+Regards,
+
+   Wolfram
+
+
+--IuhbYIxU28t+Kd57
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5RH/EACgkQFA3kzBSg
+KbavNg/9GAfGIB4N92n2trj9XDA9COdUjFm1R4Ll9GV1q55OEyFvjsYjVYJ7HNaV
+oRJWmf+gP9YqJ3UAkTLLSSxtL5fzy6qZA7AK8is3x4ujhLJSUgUladxMDj2iYdeu
+jkcCBpz7qVEJuHmfUb+E+7jtTLDhYPiaWMuYcZxu56lOCRfyS9eQNXUXneYkRxZf
+S3WC9j9/6ePMl/GzT5bR9xDdEsyfH34NgPuDKS4Q/ctEJIvprOKZ3rx8ydOiK5Xt
+kTTvH27KzoAmUpB7uvMCiedvHDqe2n3iApM1J5A4b9InH+2bLq0TbzDNFHYxDGZL
+BH6HGMKyMBSRejbY52ZKD8ppwgE5QSl1/S12801F1HDNV37gjkh+1j163+x8Km0w
+yb/erg1hXCvgE8z6KT7ulFDp6PCvhbaMG7c1mQFfut5Uc+ZRNSVqkEMgoxhCV39/
+U8IfeO9dd6Sa3oPgCH7MH5SXw4887sSgj+6n4Ft1UX2rIC1UPyx2l0mPo0Y458ZT
+0zEAGlOoStKH9JlcHzZFRppTBQXgg64DG7DzdBNFR/+ZVlp6jKHosOn3cpCvtIVG
+VwlK16wVO0I7Iy4Jffm+VTlycexDet7pNK+GeD3VCQEk65/gJSh5Tq5tnEfTY8/g
+DFM/GdKlFVSM/CN9PZKD/tTpTlNh2k5MSmmrjLY8A+vnpERPKpU=
+=KSsS
+-----END PGP SIGNATURE-----
+
+--IuhbYIxU28t+Kd57--
