@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AF1C35669
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED7FC35673
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA70208C4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C7B214DB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LTJLxviy"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GzV7Wrcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgBVGp3 (ORCPT
+        id S1727181AbgBVGpd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:45:29 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:58837 "EHLO
+        Sat, 22 Feb 2020 01:45:33 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:58913 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgBVGp3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 01:45:29 -0500
+        with ESMTP id S1727151AbgBVGpc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 01:45:32 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 01M6ik5S005982;
-        Sat, 22 Feb 2020 15:44:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 01M6ik5S005982
+        by conuserg-07.nifty.com with ESMTP id 01M6ik5Q005982;
+        Sat, 22 Feb 2020 15:44:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 01M6ik5Q005982
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582353889;
-        bh=QqGyHAeO/ubqw+w/CGTT6IeJ8TCbUiUiGrqEMAfnxi0=;
+        s=dec2015msa; t=1582353888;
+        bh=XNADDpgXs/F1tHD7+GUzG3MoPh7/+PucFfzMncSuySI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LTJLxviy0//6PBFHicl9ayUMniCHU2eba/TlzDSH/zXskm74nbSi1qOoY6VLNBwC5
-         PFSgmku0BNeEYOan3HeY85X6gzU5RDQB+r8yI9WhgOWObiAduIm0p2aTzccXu2iQaJ
-         ycyLpUJU3lX2eCWq8USB9t8glHCDvU1QzoMusnYu27k8Vzqjr5YmGCET9prTxaNIqy
-         75X2fETzshvUHcqwFzPtZH82kORGdkSnWztOoc4FLiYIAD26PuhtI2ioQ9MePOb+9T
-         NzL/ryQ88XD7hI2j5Ug4sC7QRRfhfNrCCBjg4d2534VNax99fPk+DJFKrnVKR1Ltzq
-         Wcne4+TPzZ2bA==
+        b=GzV7Wrcvqbq348pmivGRJEKMuTHuMo8cZbl/BH7zPvJVHHDYZ2KzlxmspN+NnmMYu
+         e6MepJJplhg0eRguJQHWc/lDfXqCx1ixrM87T+D0s5xZwQqq3q/U3sZCHFq+qu4+nQ
+         udVFeboUTgAtgk6geSY4L2O4svHcRZg8YDW8IWRBH3Yk2GZaZeFU+5pfGUPUpcOHvD
+         O8lMAhLmAdrGZk4Fsr9mu6CwSl2TLg2bViMabpqKuYABHWZDaYcOKSjoburugY/sri
+         HXEJSski+KECEoPebMMSsynS0zN691JHGdw5k7Qj4WFpny2ZbN9EwMeXKXlciZeBto
+         m2Xn5TCtZMrWQ==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-arm-kernel@lists.infradead.org
@@ -43,9 +43,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, masahiroy@kernel.org,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 4/4] arm64: dts: uniphier: rename aidet node names to follow json-schema
-Date:   Sat, 22 Feb 2020 15:44:45 +0900
-Message-Id: <20200222064445.14903-4-yamada.masahiro@socionext.com>
+Subject: [PATCH 2/4] arm64: dts: uniphier: change SD/eMMC node names to follow json-schema
+Date:   Sat, 22 Feb 2020 15:44:43 +0900
+Message-Id: <20200222064445.14903-2-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200222064445.14903-1-yamada.masahiro@socionext.com>
 References: <20200222064445.14903-1-yamada.masahiro@socionext.com>
@@ -54,56 +54,74 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Follow the standard nodename pattern "^interrupt-controller(@[0-9a-f,]+)*$"
-defined in schemas/interrupt-controller.yaml of dt-schema.
+Follow the standard nodename pattern "^mmc(@.*)?$" defined in
+Documentation/devicetree/bindings/mmc/mmc-controller.yaml
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 2 +-
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 2 +-
- arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 4 ++--
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index 7510db465f33..2e53daca9f5c 100644
+index 5b18bda9c5a6..7510db465f33 100644
 --- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
 +++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -566,7 +566,7 @@
+@@ -433,7 +433,7 @@
  			};
  		};
  
--		aidet: aidet@5fc20000 {
-+		aidet: interrupt-controller@5fc20000 {
- 			compatible = "socionext,uniphier-ld11-aidet";
- 			reg = <0x5fc20000 0x200>;
- 			interrupt-controller;
+-		emmc: sdhc@5a000000 {
++		emmc: mmc@5a000000 {
+ 			compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
+ 			reg = <0x5a000000 0x400>;
+ 			interrupts = <0 78 4>;
 diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index 8d360c5cc32b..be984200a70e 100644
+index f2dc5f695020..8d360c5cc32b 100644
 --- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
 +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -664,7 +664,7 @@
+@@ -559,7 +559,7 @@
  			};
  		};
  
--		aidet: aidet@5fc20000 {
-+		aidet: interrupt-controller@5fc20000 {
- 			compatible = "socionext,uniphier-ld20-aidet";
- 			reg = <0x5fc20000 0x200>;
- 			interrupt-controller;
+-		emmc: sdhc@5a000000 {
++		emmc: mmc@5a000000 {
+ 			compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
+ 			reg = <0x5a000000 0x400>;
+ 			interrupts = <0 78 4>;
+@@ -578,7 +578,7 @@
+ 			cdns,phy-dll-delay-sdclk-hsmmc = <21>;
+ 		};
+ 
+-		sd: sdhc@5a400000 {
++		sd: mmc@5a400000 {
+ 			compatible = "socionext,uniphier-sd-v3.1.1";
+ 			status = "disabled";
+ 			reg = <0x5a400000 0x800>;
 diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-index d51b0735917c..994fea7b12c1 100644
+index 73e7e1203b09..d51b0735917c 100644
 --- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
 +++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-@@ -462,7 +462,7 @@
+@@ -353,7 +353,7 @@
  			};
  		};
  
--		aidet: aidet@5fc20000 {
-+		aidet: interrupt-controller@5fc20000 {
- 			compatible = "socionext,uniphier-pxs3-aidet";
- 			reg = <0x5fc20000 0x200>;
- 			interrupt-controller;
+-		emmc: sdhc@5a000000 {
++		emmc: mmc@5a000000 {
+ 			compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
+ 			reg = <0x5a000000 0x400>;
+ 			interrupts = <0 78 4>;
+@@ -372,7 +372,7 @@
+ 			cdns,phy-dll-delay-sdclk-hsmmc = <21>;
+ 		};
+ 
+-		sd: sdhc@5a400000 {
++		sd: mmc@5a400000 {
+ 			compatible = "socionext,uniphier-sd-v3.1.1";
+ 			status = "disabled";
+ 			reg = <0x5a400000 0x800>;
 -- 
 2.17.1
 
