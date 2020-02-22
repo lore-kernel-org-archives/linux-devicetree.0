@@ -2,156 +2,101 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B70C35671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FDAC35672
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19F7206E2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB05D20702
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSyv5Uf3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AdCuHZNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgBVQQr (ORCPT
+        id S1727701AbgBVQZD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:16:47 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38286 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbgBVQQr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 11:16:47 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a9so5062127wmj.3;
-        Sat, 22 Feb 2020 08:16:46 -0800 (PST)
+        Sat, 22 Feb 2020 11:25:03 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:50202 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgBVQZD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 11:25:03 -0500
+Received: by mail-pj1-f67.google.com with SMTP id r67so2129757pjb.0
+        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 08:25:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kGlgDo9M9XGHB0o0rwRFWRiv//bvSK3bYB5+0sd515M=;
-        b=iSyv5Uf3jTCZi1qP7OEoGBdZIyralVcALePGw4cvaNP7kfkmVQGREiKmNzA7wQDrO8
-         cBZ1BO/P8iec24Usy7d3kOzOBOOgKSOtpDtPs100S2W7K+sbWcsAa/SQlG/R4xFPYmpB
-         4D8fCPiaD26lHJvNcl73hvZD2v/H0ke3f34x8i3X4zqHebQZQgGoq4/YpykzvYHuAVId
-         mhYPJBoFPE59KXttN7/wCF2pGYrP7YuLjJcsPhDyhXFUZdH/w6wbogmYa2+8kgCidEFW
-         JAqQqPNLfZXrludv7QhZSjC/V+MH7/TyQo8MtftNBITJbP1dV94DuvrnejW+pDOSkqJf
-         uFaw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ks7y/QSYAArJm8l8kQ7dWIxmdbWnSg+WMxAzD2T6n1c=;
+        b=AdCuHZNFaRFDtgAAkhhYnFi/ZD1m9YBfJU01emxU4mSbXwDRhs1uDdwwYPrHYE+eBS
+         GI4xxETIdZE/1zzNfMz0oVP3qlaf87/HfcgBXY8m6U6baMqi6/WQ+LdXInCdLcoIQZAL
+         xDMNi2jguKXQ3LInFv0OtDfbUBxZMH2wUAyK/84KntG2ZEAl7rbKPGl+gWanNGicIdFp
+         q0KASqHTpV2HD0HgSzBkiNVEIMJd41sWk+X/XsdK/vN5/ZV2yHZ4ism2B0qFGQ+JruDV
+         RjnkFLntq729UCaXVHPF74Pq3Ajg2YR/Z+DO9qGH2xd4nLDuQvzBEksJJShR6Ggdbwhw
+         Q2dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kGlgDo9M9XGHB0o0rwRFWRiv//bvSK3bYB5+0sd515M=;
-        b=oXkLJfrjxh6KcgjqE8NlNTFgeyK23R5yUxzen/Rru7ewXyFWZ2anPWRvxRoLuSBHk+
-         M6hxDSz3iIphIAli4obZUZMOzeVkjPIVMLE6BxZ9O8/SE8XUkLAnQyjtYN3nQmNgN2P5
-         OwCw2gkVWEjfH4ChzXb2zck2UvWGVE5Y9vkDTqbGyyaHr5fGph/FZrtYFW8y77P7D1jr
-         643jSCbBD13MS/LQFxKg9aUnbTmJluqMaTH44ObMu20VQ8J0kKnfTcFNwbidg1DIwTFe
-         RG/qLfFmECAgC2jDGIIk0RtWDsHUwQzqTJ5/bUkf0V1f5KL8HzeLHJ9QUFIZg6zPYyJm
-         AbHA==
-X-Gm-Message-State: APjAAAWZGiqhuSMto7tozm6QG8EcUKHITnTWgC++v6iEtxtjHQs6i5D7
-        form76WLxo2q4UxuDS5bHLsBWUWVjBI=
-X-Google-Smtp-Source: APXvYqw5kKBXigjGSz/Z92PocEd2TTF+JpExdkk8WwK2gpL/nherzvmltVWhU4TmOHhcV4Ifnfa/7w==
-X-Received: by 2002:a7b:c14e:: with SMTP id z14mr10726823wmi.58.1582388205505;
-        Sat, 22 Feb 2020 08:16:45 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (host110-18-dynamic.45-213-r.retail.telecomitalia.it. [213.45.18.110])
-        by smtp.googlemail.com with ESMTPSA id a198sm8906855wme.12.2020.02.22.08.16.43
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ks7y/QSYAArJm8l8kQ7dWIxmdbWnSg+WMxAzD2T6n1c=;
+        b=oNUIt6E5lLVJIWt7uQ5XB+aSdKqg1jT5nm+97lMHsSQJ8MZmkBwYeK3sLQHlyj9A1j
+         bSRyojwDRkl0x1hdiVTOVXv2ng3AnJXKtwOxT2sOwysqOqmWpHVr7yQYqZD4+3rCFEDf
+         qHgjFJLvTKGXI4QR84E4CezERsYFoMwh8XbmPDXo4uFl2lxrO36yOp6rRQMdaeKJ5Ot9
+         0qT5mKAJM0kP9oTgZ+2JMTdXx3lXyMDXNoZ7ACA4F+3UKkz58AcWMNCCC88LuOwq/wG8
+         oRU7rebxgiwxpGfOOCQMHgYBePl4J+xGHsKqDViMjaqCAT2M+7Wq0dYIDteKQdsqDVv7
+         BkYg==
+X-Gm-Message-State: APjAAAU5nHFbKNXbZxMCsBnUlRaqlIt9SswZAYcd9/d6wCyCriMpNNFw
+        iuVcQyA3pSzJnSBsEFpfh82G
+X-Google-Smtp-Source: APXvYqwDqWgruAJNxa7ONzq20wF+AVoEojPMgADvEuzyv7YdZNMt2utDAZTxPjtcVVj83OJFNZAHgQ==
+X-Received: by 2002:a17:90a:fe02:: with SMTP id ck2mr9841156pjb.10.1582388701954;
+        Sat, 22 Feb 2020 08:25:01 -0800 (PST)
+Received: from localhost.localdomain ([2409:4072:801:b38c:89e8:305c:23c4:b77f])
+        by smtp.gmail.com with ESMTPSA id q17sm6851296pfg.123.2020.02.22.08.24.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 08:16:44 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/2] Documentation: devictree: Add ipq806x mdio bindings
-Date:   Sat, 22 Feb 2020 17:16:27 +0100
-Message-Id: <20200222161629.1862-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200222161629.1862-1-ansuelsmth@gmail.com>
-References: <20200222161629.1862-1-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Sat, 22 Feb 2020 08:25:01 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     matthias.bgg@gmail.com, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        adamboardman@gmail.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/4] Add I2C controller support for MT6797 SoC
+Date:   Sat, 22 Feb 2020 21:54:40 +0530
+Message-Id: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentations for ipq806x mdio driver.
+Hello,
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+This patchset adds I2C controller support for Mediatek MT6797 SoC. There
+are a total of 8 I2C controllers in this SoC (2 being shared) and they are
+same as the controllers present in MT6577 SoC. Hence, the driver support is
+added with DT fallback method.
 
-diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-new file mode 100644
-index 000000000000..d2254a5ff2ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x MDIO bus controller
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description: |+
-+  The ipq806x soc have a MDIO dedicated controller that is
-+  used to comunicate with the gmac phy conntected.
-+  Child nodes of this MDIO bus controller node are standard
-+  Ethernet PHY device nodes as described in
-+  Documentation/devicetree/bindings/net/phy.txt
-+
-+allOf:
-+  - $ref: "mdio.yaml#"
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq8064-mdio
-+  reg:
-+    maxItems: 1
-+    description: address and length of the register set for the device
-+  clocks:
-+    maxItems: 1
-+    description: A reference to the clock supplying the MDIO bus controller
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    mdio0: mdio@37000000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        compatible = "qcom,ipq8064-mdio", "syscon";
-+        reg = <0x37000000 0x200000>;
-+        resets = <&gcc GMAC_CORE1_RESET>;
-+        reset-names = "stmmaceth";
-+        clocks = <&gcc GMAC_CORE1_CLK>;
-+
-+        switch@10 {
-+            compatible = "qca,qca8337";
-+            ...
-+        }
-+    };
+As per the datasheet, there are controllers with _imm prefix like i2c2_imm
+and i2c3_imm. These appears to be in different memory regions but sharing
+the same pins with i2c2 and i2c3 respectively. Since there is no clear
+evidence of what they really are, I've adapted the numbering/naming scheme
+from the downstream code by Mediatek.
+
+This patchset has been tested on 96Boards X20 development board.
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (4):
+  dt-bindings: i2c: Document I2C controller binding for MT6797 SoC
+  arm64: dts: mediatek: Add I2C support for MT6797 SoC
+  arm64: dts: mediatek: Enable I2C support for 96Boards X20 Development
+    board
+  arm64: dts: mediatek: Switch to SPDX license identifier for MT6797 SoC
+
+ .../devicetree/bindings/i2c/i2c-mt65xx.txt    |   1 +
+ .../boot/dts/mediatek/mt6797-x20-dev.dts      |  49 ++++
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi      | 229 +++++++++++++++++-
+ 3 files changed, 271 insertions(+), 8 deletions(-)
+
 -- 
-2.25.0
+2.17.1
 
