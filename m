@@ -2,119 +2,121 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65048C35671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 15:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9141DC35666
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 15:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DA9208C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 15:04:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="kvhJmk6X"
+	by mail.kernel.org (Postfix) with ESMTP id 7300E20702
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 15:08:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgBVPEA (ORCPT
+        id S1727794AbgBVPIO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 10:04:00 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34460 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbgBVPEA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 10:04:00 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l18so3674937lfc.1
-        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 07:03:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Xifd8WijE8GTahP3bmRGY4Sh30aYMNX7/F7d8gaMK0M=;
-        b=kvhJmk6XLbSxYn8Qjx1BuLosQ1khAzVj8FF5GAPFk6XZqKJ8Qss4pEneppvA9kr8XL
-         pgiSNkEtfDwsUE0qcDMkOS0tz3HarxiRexYMFIOgJI2hI7ywPC5rq7Rs9y4+mOrwQhpW
-         9epQWVUoz6Xssan3vvFeqfSWNV50tIK+9QIHvjrXoiZf8ZWSnmD4muv4WZnv9ZmtCoQf
-         sYFRLK+HfTiuZZpdcSXteB02Pcm4LFV/4TgY8KGJsxIHgloidZpzfPCGH7u2+4JWssDs
-         gNu2LGtTf6e3u7/qSbEAeSAOjRdxskSfBCX1/+eWAWs31GwfUtQ9EgKvt4rASQ+qj1Mg
-         /yvQ==
+        Sat, 22 Feb 2020 10:08:14 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:39622 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgBVPIN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 10:08:13 -0500
+Received: by mail-il1-f199.google.com with SMTP id c24so5948900ila.6
+        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 07:08:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Xifd8WijE8GTahP3bmRGY4Sh30aYMNX7/F7d8gaMK0M=;
-        b=OcINrjCSuh9QkdrN/Wk6UEFdcIDpFoOqR6AuA7cMjOFlaCPljgZn3jW+9V/K+0uGex
-         6wRrvYWcLFnFgu0z9S8Xdtv2YlFLssKcbqqnyfrZGnwv1ByIOQGOf4XfbQG2dkqhyNSo
-         ncbaxCxwvDSt1HTHFVdtDHEw+xUQojlyMBqk/pWoGdccL5sCmXe04basf+Wp6GQXbST8
-         T/qouH9aSOfS1AUM5yUUJt4Onu932qYcH/NtQyWqYVAlaZ41PmULiuB0gkgPGmyRZpjC
-         AheltjVZNgcXyu9PvcoHYzi69f+Po7csk25NSiD+YIcjL8+R1TCVpmp8RkzuSlVhk++U
-         YfqA==
-X-Gm-Message-State: APjAAAXUfK4O0zhQ/WmLsgKnLWmEbqO6gJynrDXfl92vwaePO4mSHzac
-        EkjWTFVK4ZbjPLxSR7pZOLtgkIHvKIE=
-X-Google-Smtp-Source: APXvYqxL0tbEYrhWH41q9mPIM4qs0NfEKPE2NiFblTDT21q2Rpd/pk/K3bhgcG+848q06IQNrgpF1Q==
-X-Received: by 2002:ac2:46dc:: with SMTP id p28mr22696651lfo.23.1582383836868;
-        Sat, 22 Feb 2020 07:03:56 -0800 (PST)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id z1sm3230464lfh.35.2020.02.22.07.03.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 07:03:56 -0800 (PST)
-Date:   Sat, 22 Feb 2020 16:03:55 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: r8a7779: Remove deprecated "renesas,rcar-sata"
- compatible value
-Message-ID: <20200222150355.GE1444588@oden.dyn.berto.se>
-References: <20200219153929.11073-1-geert+renesas@glider.be>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=mgUjHs4g9bSaFC5XPvo9JG4ciHdYePxlQqjSBI/frtc=;
+        b=U9Xqa1semzJD5YoAVIaeWY4ud014bDqeQVN2IDqeRQtOrp/zl+m4te2+8IxLi4nQzW
+         qnMYosnAaO92nHvZAoiSMn+oTzbC/lGVzGwC4lOw9uEZ1Ltlx1NjEuBZkWpzE/v7qbxe
+         XiQ9wbOwpQYjShspHmMOuFLuWddi7FA8KLZ0368sXIDvBOjFWu/CU4CaJk5qMXhiaq6f
+         yNelB8eiSmK7ilM8vIQrfZ9H3paSxLQh3kR/si0t0WBUnHIXJiWp9QS3YBReLqUysRGi
+         P+LZNRpsU9lPUpJP8jCSIrP2uoBx18Bdi9Uo3WdoPG7Zo0hrr9xn9xGiEy9/oIdFm+Nz
+         tfIw==
+X-Gm-Message-State: APjAAAUN9ul2kMuNqDas4TQdYAjs7LNVHTFc99kvZ2J3O0lPken405bU
+        ZCR/a3ZAN+PQYUQu4LES2UbjO+k9hL/JCaIJmgEY0iU1uLnV
+X-Google-Smtp-Source: APXvYqzQ9v3Jv/j+mdzsfcplavver9uu7MnultdBhWVRk1X95/5PxqZRz8vbVu8k7B0bZB7tDzEqLuXzaQLP6vbQFAXORhVQIVhm
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219153929.11073-1-geert+renesas@glider.be>
+X-Received: by 2002:a92:af4b:: with SMTP id n72mr45268383ili.288.1582384091534;
+ Sat, 22 Feb 2020 07:08:11 -0800 (PST)
+Date:   Sat, 22 Feb 2020 07:08:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000acd115059f2b8188@google.com>
+Subject: BUG: sleeping function called from invalid context in
+ lock_sock_nested (2)
+From:   syzbot <syzbot+a5df189917e79d5e59c9@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, daniel@zonque.org, davem@davemloft.net,
+        devicetree@vger.kernel.org, jdelvare@suse.com,
+        john.fastabend@gmail.com, kafai@fb.com, kuba@kernel.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@roeck-us.net, mark.rutland@arm.com, netdev@vger.kernel.org,
+        robh+dt@kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+Hello,
 
-Thanks for your work.
+syzbot found the following crash on:
 
-On 2020-02-19 16:39:29 +0100, Geert Uytterhoeven wrote:
-> The "renesas,rcar-sata" compatible value was deprecated by
-> "renesas,sata-r8a7779" many years ago, in commit e67adb4e669db834
-> ("sata_rcar: Add R-Car Gen2 SATA PHY support").  Drop it.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+HEAD commit:    0a44cac8 Merge tag 'dma-mapping-5.6' of git://git.infradea..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=152eba29e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a61f2164c515c07f
+dashboard link: https://syzkaller.appspot.com/bug?extid=a5df189917e79d5e59c9
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117a0931e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d8c109e00000
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+The bug was bisected to:
 
-> ---
-> To be queued in renesas-fixes for v5.6, as not having to care about the
-> deprecated value will simplify the json-schema conversion.
-> ---
->  arch/arm/boot/dts/r8a7779.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-> index beb9885e6ffca7a5..c0999e27e9b145e3 100644
-> --- a/arch/arm/boot/dts/r8a7779.dtsi
-> +++ b/arch/arm/boot/dts/r8a7779.dtsi
-> @@ -377,7 +377,7 @@
->  	};
->  
->  	sata: sata@fc600000 {
-> -		compatible = "renesas,sata-r8a7779", "renesas,rcar-sata";
-> +		compatible = "renesas,sata-r8a7779";
->  		reg = <0xfc600000 0x200000>;
->  		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
->  		clocks = <&mstp1_clks R8A7779_CLK_SATA>;
-> -- 
-> 2.17.1
-> 
+commit 5ac6badc5aa057ceb1d50c93326a81db6e89ad2f
+Author: Daniel Mack <daniel@zonque.org>
+Date:   Thu Jul 11 12:45:03 2019 +0000
 
--- 
-Regards,
-Niklas Söderlund
+    device-tree: bindinds: add NXP PCT2075 as compatible device to LM75
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15924629e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17924629e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13924629e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a5df189917e79d5e59c9@syzkaller.appspotmail.com
+Fixes: 5ac6badc5aa0 ("device-tree: bindinds: add NXP PCT2075 as compatible device to LM75")
+
+BUG: sleeping function called from invalid context at net/core/sock.c:2935
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 2687, name: kworker/1:3
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<ffffffff867b39c7>] sock_hash_free+0xd7/0x460 net/core/sock_map.c:869
+CPU: 1 PID: 2687 Comm: kworker/1:3 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events bpf_map_free_deferred
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ ___might_sleep+0x449/0x5e0 kernel/sched/core.c:6798
+ __might_sleep+0x8f/0x100 kernel/sched/core.c:6751
+ lock_sock_nested+0x36/0x120 net/core/sock.c:2935
+ lock_sock include/net/sock.h:1516 [inline]
+ sock_hash_free+0x200/0x460 net/core/sock_map.c:872
+ bpf_map_free_deferred+0xb2/0x110 kernel/bpf/syscall.c:474
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
