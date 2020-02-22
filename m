@@ -2,200 +2,150 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924FBC35666
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59149C35671
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462E9206EF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:47:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="oC+1V8NG"
+	by mail.kernel.org (Postfix) with ESMTP id 2C25220702
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 16:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582390251;
+	bh=y1IU9aOcbMs7lufYIheqPXc0WiAeuFziYRvZuF3V4a8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ucIVxr/di7mjHWpBY+m4Mp5BNMOsqD7XqjUKGvFILhGGqtmt9Wi41nJVE1jVsfeCe
+	 kdjaoBKA3G/LZpNYcewAX0oHIuYyFDR88Elm5ZQwpczCP/0+WF/KZSVVQxXz0SVN7T
+	 whfxUCxRrVNIK2dPU2XdFIHiXqytLQTbjhMgS3m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgBVQrA (ORCPT
+        id S1726044AbgBVQuu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:47:00 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:52428 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgBVQrA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:47:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hRPFx+PZRKzFa546U2qlzpkcDSCf1FnKKySJh6PyUnk=; b=oC+1V8NGKKnq7OtxR/z/2+PlL
-        osEQgR5r2xXL+cgeZLa/H+O9n5VzM6dFMo/Svr3XEQG+6JGrzTl7Wf4jQAtSeLDWhFANu5yCnUawY
-        fumyiXfOa4IN56RipwHlDQckMhRJKg4Q/cBn8o9uLoXW//NQycb0Zp31azMifaIEY8DLg=;
-Received: from p5dc58966.dip0.t-ipconnect.de ([93.197.137.102] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j5XvF-0004EA-Um; Sat, 22 Feb 2020 17:46:34 +0100
-Received: from localhost ([127.0.0.1])
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j5XvF-0002YK-B5; Sat, 22 Feb 2020 17:46:33 +0100
-Date:   Sat, 22 Feb 2020 17:46:08 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH v5 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
-Message-ID: <20200222174408.10588e32@kemnade.info>
-In-Reply-To: <D59DC84C-837E-4856-8FED-580381F748FF@goldelico.com>
-References: <cover.1582367141.git.hns@goldelico.com>
-        <51642368a064073ab99bb3110863b5fadc382f82.1582367141.git.hns@goldelico.com>
-        <20200222165738.61cde2a0@kemnade.info>
-        <D59DC84C-837E-4856-8FED-580381F748FF@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        Sat, 22 Feb 2020 11:50:50 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:50631 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgBVQuu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 11:50:50 -0500
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 01MGokUG022778;
+        Sun, 23 Feb 2020 01:50:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01MGokUG022778
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582390247;
+        bh=ntkgHYUYCfIwZNIh8WL84KmzpWPirlhPyraQtzsQYdk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dyup2KWKIfIIEZ2JS8/N7vw5FHYnQYVHFcchipX13bXB88ywC3RTO+17LPMXaWEZQ
+         WBSly9tizmDr+QlJ74VN7Y9JPuOr3yv6xMC3H2tbiSLIf4uQ97jRYe/L/EcxtABdDa
+         7MswKFgm03WqAYug/KQfFk7ZFTF01Fr5HwaQf0G4coMlsOJg3LOTopaPaZgzGp5B4n
+         xP5RGE4l2Nk1EOZpeFVI4Enm7DQIiKCYGtzI6h8F+9i4IVrEjYAxr1nbO6X7p4fX1V
+         a+pzsKvMCBSa789GVoHw5fEwwQJ87lopDW1KCapEWmHQGLpfi6HwQl0gUmihyNaj28
+         dyIkwQ80x0VzQ==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id a2so3236286vso.3;
+        Sat, 22 Feb 2020 08:50:46 -0800 (PST)
+X-Gm-Message-State: APjAAAW0ghFXyxZKhHDoD5RKDz5fL3tryd7KXNLJhjLNWDM5BCyxM0KX
+        dYOTbgPXVK8aOWPvsicXT/IsI9U2T+qBxU9y/tU=
+X-Google-Smtp-Source: APXvYqyWutBden8aJ3HU4rqJhQ+/ltavj3SvOxpcg7LDa5NGabG42XSuDN8zg7hRQTNqH2n5elTn/BHqmpBgtmFCqyY=
+X-Received: by 2002:a67:fa4b:: with SMTP id j11mr23386621vsq.155.1582390245902;
+ Sat, 22 Feb 2020 08:50:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/TgvauzzV4EyUJ_hH4abMMTu"; protocol="application/pgp-signature"
+References: <20200221222955.21038-1-robh@kernel.org> <20200221222955.21038-2-robh@kernel.org>
+In-Reply-To: <20200221222955.21038-2-robh@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 23 Feb 2020 01:50:09 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATo6b178Zfj3gOdnicFfP6s5-yNwbPg+CAd4YcKHYdFqA@mail.gmail.com>
+Message-ID: <CAK7LNATo6b178Zfj3gOdnicFfP6s5-yNwbPg+CAd4YcKHYdFqA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kbuild: Build DT binding examples with dtc warnings enabled
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---Sig_/TgvauzzV4EyUJ_hH4abMMTu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Rob,
 
-On Sat, 22 Feb 2020 17:34:06 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+On Sat, Feb 22, 2020 at 7:29 AM Rob Herring <robh@kernel.org> wrote:
+>
+> Now that we have a separate rule for DT binding examples, we can customize
+> the dtc options. Let's adjust the dtc warnings to me more strict by
+> default so the examples get cleaned up as they get converted to schema.
+>
+> Leaving 'avoid_unnecessary_addr_size' and 'graph_child_address' warnings
+> disabled as examples tend to be incomplete and they generates a lot of
+> warnings.
+>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: linux-kbuild@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  scripts/Makefile.lib | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 78fa1a3d983a..1a149e680308 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -308,6 +308,10 @@ define rule_dtc_dt_yaml
+>         $(call cmd,dtb_check,$(word 2, $(real-prereqs)))
+>  endef
+>
+> +$(obj)/%.example.dt.yaml: DTC_FLAGS = \
+> +       -Wno-avoid_unnecessary_addr_size \
+> +       -Wno-graph_child_address
+> +
 
-> > Am 22.02.2020 um 16:57 schrieb Andreas Kemnade <andreas@kemnade.info>:
-> >=20
-> > On Sat, 22 Feb 2020 11:25:37 +0100
-> > "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-> >  =20
-> >> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >>=20
-> >> This patch brings support for the JZ4780 efuse. Currently it only expo=
-ses
-> >> a read only access to the entire 8K bits efuse memory.
-> >>=20
-> >> Tested-by: Mathieu Malaterre <malat@debian.org>
-> >> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >> [converted to yaml]
-> >> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> >> ---
-> >> .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 50 +++++++++++++++++++
-> >> 1 file changed, 50 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4=
-780-efuse.yaml
-> >>=20
-> >> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-ef=
-use.yaml b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-> >> new file mode 100644
-> >> index 000000000000..09a8ef937750
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-> >> @@ -0,0 +1,50 @@
-> >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Ingenic JZ EFUSE driver bindings
-> >> +
-> >> +maintainers:
-> >> +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >> +
-> >> +allOf:
-> >> +  - $ref: "nvmem.yaml#"
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - ingenic,jz4780-efuse
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +
-> >> +  clocks:
-> >> +    # Handle for the ahb for the efuse.
-> >> +    maxItems: 1
-> >> +
-> >> +  clock-names:
-> >> +   items:
-> >> +     - const:  ahb2 =20
-> > as Rob said: probably not needed, since it is a single
-> > clock, and the driver uses devm_clk_get(dev, NULL), so it should be pre=
-pared
-> > for that without any extra work. =20
->=20
-> The question is if a specific driver implementation should determine
-> what the DT requires or the other way round. I don't know...
->=20
-> I did interpret Rob's comment differently: there was
->=20
-> > - "clock-names"		Must be "bus_clk" =20
->=20
-> and he did say:=20
->=20
-> 	'clk' is redundant. How about 'ahb'?
->=20
-> So I thought he refers to the _clk suffix?
->=20
 
-and he said to my first try:
----
-> +  clock-names:
-> +   items:
-> +     - const:  bus_clk =20
 
-My prior comment still applies.
+This does not work since I suggested to
+not add this pattern rule in 1/2.
 
-Also, for a single clock, you don't really need a name.
----
 
-Regards,
-Andreas
+Instead, you can override DTC_FLAGS
+from Documentation/devicetree/bindings/Makefile
 
---Sig_/TgvauzzV4EyUJ_hH4abMMTu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+So, alternative solution is like follows
+(on top of my suggestion in 1/2)
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5RWtAACgkQl4jFM1s/
-ye9VGhAAjRo5srdoJRml/7fEUEz7mS3nNuWp3JYCd8woqNanA6WUNL+vOHuys9d3
-ZOrX4MQ83qwlD+clQIvrN7qNNeXtZr6btgH+JynIWOePOlKtWK/crwh+UkANROyM
-jHxOIqJiIJ33EOVDTXP9+FIm4W48m/sGQQxvq1jjJ8ASw7gvZ/M3MDeMQJPZuhvn
-PAjIV9Lqs4X0TSZTvTQ+ThYXFllCyxwKojcyODrJAWKx9VMqCc9fz2SYMgYSrAwX
-2Sdv7aU5h1eD/1KUhchDRsAsIgzNjmalPkhL+SXj2flmaLSYKXIUQgpWwiKn4i96
-oLSh+vsQcrhMvN/L+F+iqSTVdDcAkxhfOB4jb1ReGbYasyJwNm/8ROiXMS5+zv/x
-dBWeGRR4DS+A6Z3ccPxJNdug1TtBQNJHvhal/TePTtxBuG0IL4Sq7SY5BPnjQi7w
-JoYxL3xuGZ2ee7Qb1U+gvWqgL38lB0kumxSnDneHBZT9dqOvcsD5OhgRfVAScGvM
-tWpwsXhuGq3tLr0/GCCj8Fik5WGMoambyt/rRFF7IKaOLraiJlqAdGEg5tiY8R8p
-wWuwF2YW29NX4sziZsVVTSnf5Y51HDn20/IVAHFU8fpZPjnFn30lyydddhKAeIzf
-jBy+63J7qYP0+Vqk/8w5g3SVnqiZXc+ZB+rpdA3lPKsBe/XRKO0=
-=7A1/
------END PGP SIGNATURE-----
 
---Sig_/TgvauzzV4EyUJ_hH4abMMTu--
+diff --git a/Documentation/devicetree/bindings/Makefile
+b/Documentation/devicetree/bindings/Makefile
+index 7c40d5ba1b51..e44c972849e6 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -12,6 +12,8 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+
+ # Use full schemas when checking %.example.dts
+ DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
++# More strict checks for examples
++override DTC_FLAGS := -Wno-avoid_unnecessary_addr_size -Wno-graph_child_address
+
+ quiet_cmd_mk_schema = SCHEMA  $@
+       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+$(real-prereqs)
+
+
+
+
+
+One limitation for this way is that
+you cannot use W=1, W=2, W=3 for example DT.
+
+
+
+>  $(obj)/%.example.dt.yaml: $(src)/%.example.dts $(DT_EXAMPLES_SCHEMA) $(DTC) FORCE
+>         $(call if_changed_rule,dtc_dt_yaml)
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
