@@ -2,126 +2,98 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EB3C35672
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 11:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A24C35671
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18AFB208C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 11:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9D32071E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:03:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NzKvVRbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgBVLog (ORCPT
+        id S1726883AbgBVMDT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 06:44:36 -0500
-Received: from sauhun.de ([88.99.104.3]:53152 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgBVLog (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Feb 2020 06:44:36 -0500
-Received: from localhost (p5486C6B7.dip0.t-ipconnect.de [84.134.198.183])
-        by pokefinder.org (Postfix) with ESMTPSA id 2399A2C07F9;
-        Sat, 22 Feb 2020 12:44:34 +0100 (CET)
-Date:   Sat, 22 Feb 2020 12:44:33 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kamel.bouhara@bootlin.com, Nicolas.Ferre@microchip.com,
-        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
-        robh@kernel.org, peda@axentia.se, linux@armlinux.org.uk
-Subject: Re: [PATCH v3 3/6] i2c: at91: Send bus clear command if SDA is down
-Message-ID: <20200222114433.GC1716@kunai>
-References: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
- <20200115115422.17097-4-codrin.ciubotariu@microchip.com>
+        Sat, 22 Feb 2020 07:03:19 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44564 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgBVMDT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 07:03:19 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q8so5010066ljj.11
+        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 04:03:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KI6FYDIlYmOfWKvl/WJxJSFM4DVF5Yvn/VpcEKIII3A=;
+        b=NzKvVRbdGdb7fet4JDEYWjdZd0SZoiMLU09m15vyGP/1mMMmO/uRvhKieGH2bvf+oQ
+         LwTVfBxvexh7++Lrbf85ZdIsvFBUTqPH6DKsX1/QDGV7fvhealZr+BgaShmKWrxgFMOK
+         a7Lkkm7zaawNvRivqbYce4u2yn/YTXtAWEEZZRftNFxjjcxf1H3Gq3cWy4ozRbptGKhC
+         tEiHb35z+oBMpb5L0M1NpgAEGR5msj41T75nOw1kuqAX0oxB51TlR99TkYGJvpY0J+B9
+         aj77pVqbVxpTwbSxwN439qwoxdcyWsmFHTCw/M/Ij42tt5KpyMCnKB/ak01a8kg2N8vs
+         fqKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KI6FYDIlYmOfWKvl/WJxJSFM4DVF5Yvn/VpcEKIII3A=;
+        b=VS7IXLCxZEhd9uiNWiRRgf/vW3yLms5zXgbiNjIEcpm+Hq7qi8+br4Mpvr7nmHH8E4
+         UoPpR2VUMRtgVb6VaQBbwltI86myOgpOsN8YdRo7YAXcXBLDUtzbhE39mKsUVy87y83W
+         yGivRKvSB7UEw+qgvS9nSBW5j9eMnSj7NIodMA8HdVrREcrdAJtnrttIibx6D2aYy/I4
+         ndP46+lSkVIUrlRxMZoE7ZOq5Am19HrlgyL5OXl4cRwQVyDcSev/p9WtXmVUBvqUxyFD
+         yK33B26p2Uls3VVsE7gLB5f31XSOcXjomBy5afbAp4qRkEM/XWLYfLhAduADJHvqKXsT
+         hlig==
+X-Gm-Message-State: APjAAAW6v4UnscoyxjLMOo1qmuNBH9NXRFinNTdcOcts2/VryYYLWrig
+        3Zo1Bvg1vus4R9MCEzhst39W+qNkYlvfkAVOVZxV/A==
+X-Google-Smtp-Source: APXvYqx7HNT3OvQPpFRpcfvn1fZJFwlOJRC5z5A3c4pljTmYD1KHOgqnauKg9oW5ZN7eF81XJxTgpFvAQEKoAMqxkl8=
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr25892647ljc.39.1582372996940;
+ Sat, 22 Feb 2020 04:03:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2/5bycvrmDh4d1IB"
-Content-Disposition: inline
-In-Reply-To: <20200115115422.17097-4-codrin.ciubotariu@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200221222711.15973-1-robh@kernel.org>
+In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 22 Feb 2020 13:03:05 +0100
+Message-ID: <CACRpkdZN5TMnAsf5SmKvwAqSpwu+oE1Yx7SDz6tksRjxDE1HRw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Feb 21, 2020 at 11:27 PM Rob Herring <robh@kernel.org> wrote:
 
---2/5bycvrmDh4d1IB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Fix all the warnings in the DT binding schema examples when built with
+> 'W=1'. This is in preparation to make that the default for examples.
+>
+(...)
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-On Wed, Jan 15, 2020 at 01:54:19PM +0200, Codrin Ciubotariu wrote:
-> After a transfer timeout, some faulty I2C slave devices might hold down
-> the SDA pin. We can generate a bus clear command, hoping that the slave
-> might release the pins.
-> If the CLEAR command is not supported, we will use gpio recovery, if
-> available, to reset the bus.
->=20
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-One thing to improve:
-
-> +	/*
-> +	 * some faulty I2C slave devices might hold SDA down;
-> +	 * we can send a bus clear command, hoping that the pins will be
-> +	 * released
-> +	 */
-> +	if (has_clear_cmd) {
-> +		if (!(dev->transfer_status & AT91_TWI_SDA)) {
-> +			dev_dbg(dev->dev,
-> +				"SDA is down; sending bus clear command\n");
-> +			if (dev->use_alt_cmd) {
-> +				unsigned int acr;
-> +
-> +				acr =3D at91_twi_read(dev, AT91_TWI_ACR);
-> +				acr &=3D ~AT91_TWI_ACR_DATAL_MASK;
-> +				at91_twi_write(dev, AT91_TWI_ACR, acr);
-> +			}
-> +			at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
-> +		}
-
-The inner if-block should be a seperate function, then you could do in
-probe:
-
-	if (has_clear_cmd)
-		rinfo->recover_bus =3D <the above function>;
-	else
-		rinfo->recover_bus =3D i2c_generic_scl_recovery;
-
-Then, i2c_recover_bus() will always do the right thing. More readable
-and better maintainable IMO.
-
-If this is not possible (maybe I overlooked some logic), then maybe this
-will work:
-
-	rinfo->recover_bus =3D <your custom function>;
-
-and put the
-
-	if (has_clear_cmd)
-
-block there.
-
-
---2/5bycvrmDh4d1IB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5RFCEACgkQFA3kzBSg
-KbawZQ//djH+GtmK3cq1f/dFHYW7brVxy999V22SKk3jREpntfZkN3nb23ARpOvR
-JxIHA71f3FR5XIIyLWV0xzU04ZsmwZctcQ5jS15KPNHzHShSRgXWq0ioGAjzxkX2
-AKqutS55+2qUGELcX7C/KKeIaLLOfzdvrol4ZPqowCaMrP/DbqcNh/7qL2JB244N
-5giSlvyaOmOMIO8ZdMqrA85G+OwHMDcChti8Ba9TxzSmDJRas46XQ9HkwvEEpdca
-iUoPbSj3hFaAlplTUVs/j4NlOV0fIjxeC3fGYgXTVIGOD1KvGfh4+f+YI2lV9YDx
-lAHcIM6fUTx0+uC4dFWJdaqq+9QfyxHPnCOiH8wIr8XKDvOQbAIu2kP/C80QvhL3
-WeK3fl/JMwxLC3b4fFeAvki9Kdzt42IFK2EDXw/uWyDa39Vl1smk3vRDqHkDzKoB
-DUZ+BWF9VB/y5qdgN2lvT510u0oiCMW0EuaOgZHrvvB08+e7Z5PNZvJb+JzUaXYo
-oSVCsdevMNE7yBX+aBjjOegU8p2ip9jIHCGRiKALM1ab1Vr1co/x3U02hecgTBNd
-VOfHwyBQbdukaExvFAmcrCBeWDOCLUj1F6Wy8g38hBhwKcT1kG/xqYflmQdeTKJk
-taBIAgbnPcMxpcqh+yphRZv69GXo3KQ9fwygszyHw4KWp4d0p50=
-=P68w
------END PGP SIGNATURE-----
-
---2/5bycvrmDh4d1IB--
+Yours,
+Linus Walleij
