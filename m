@@ -2,116 +2,76 @@ Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464B4C35666
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F271C35666
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D174208C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:04:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ss7aDoEA"
+	by mail.kernel.org (Postfix) with ESMTP id 5C98E206EF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 12:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgBVMEJ (ORCPT
+        id S1726839AbgBVMJm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 07:04:09 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60724 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgBVMEJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 07:04:09 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01MC46iT102100;
-        Sat, 22 Feb 2020 06:04:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582373046;
-        bh=90rqKQX22TWwXBOG89ZWUJQsPdv0lNIbOTJq3JG+a4U=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Ss7aDoEAHT4xyG1x10EPfUYH3bGFmfUY9p3XWeVB7+lGOJ/tzkRIvp106f6RxFFUF
-         GplLqF5A5iMGU7tNpT4Sn8dHoUkMogq8SllYqr6sSRsRg/NjcHVfj6uL+QEB9GuxMv
-         pagQSN2Z7IPsZt55vP5chPhfSGNwAqFVvaHN5mFM=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01MC464e000687
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 22 Feb 2020 06:04:06 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 22
- Feb 2020 06:04:06 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sat, 22 Feb 2020 06:04:06 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01MC45mF107172;
-        Sat, 22 Feb 2020 06:04:05 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [for-next PATCH 1/5] phy: ti: gmii-sel: simplify config dependencies between net drivers and gmii phy
-Date:   Sat, 22 Feb 2020 14:03:54 +0200
-Message-ID: <20200222120358.10003-2-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200222120358.10003-1-grygorii.strashko@ti.com>
-References: <20200222120358.10003-1-grygorii.strashko@ti.com>
+        Sat, 22 Feb 2020 07:09:42 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:54416 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgBVMJl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 07:09:41 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 18E9720096;
+        Sat, 22 Feb 2020 13:09:36 +0100 (CET)
+Date:   Sat, 22 Feb 2020 13:09:35 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
+Message-ID: <20200222120935.GA28287@ravnborg.org>
+References: <20200221222711.15973-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=tF-oHSDVtcwdfmBeXYUA:9 a=CjuIK1q_8ugA:10 a=H9xpq_V2WxwA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The phy-gmii-sel can be only autoselacted in Kconfig and now the pretty
-complex Kconfig dependencies are defined for phy-gmii-sel driver, which
-also need to be updated every time phy-gmii-sel is re-used for any new
-networking driver.
+Hi Rob.
 
-Simplify Kconfig definotion for phy-gmii-sel PHY driver - drop all
-depndencies and from networking drivers and rely on using 'imply imply
-PHY_TI_GMII_SEL' in Kconfig definotions for networking drivers instead.
+On Fri, Feb 21, 2020 at 04:27:10PM -0600, Rob Herring wrote:
+> Fix all the warnings in the DT binding schema examples when built with
+> 'W=1'. This is in preparation to make that the default for examples.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/Kconfig | 1 +
- drivers/phy/ti/Kconfig          | 3 ---
- 2 files changed, 1 insertion(+), 3 deletions(-)
+Browsed it all - looks good.
 
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index bf98e0fa7d8b..8a6ca16eee3b 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -53,6 +53,7 @@ config TI_CPSW
- 	select MFD_SYSCON
- 	select PAGE_POOL
- 	select REGMAP
-+	imply PHY_TI_GMII_SEL
- 	---help---
- 	  This driver supports TI's CPSW Ethernet Switch.
- 
-diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
-index 6dbe9d0b9ff3..15a3bcf32308 100644
---- a/drivers/phy/ti/Kconfig
-+++ b/drivers/phy/ti/Kconfig
-@@ -106,11 +106,8 @@ config TWL4030_USB
- 
- config PHY_TI_GMII_SEL
- 	tristate
--	default y if TI_CPSW=y || TI_CPSW_SWITCHDEV=y
--	depends on TI_CPSW || TI_CPSW_SWITCHDEV || COMPILE_TEST
- 	select GENERIC_PHY
- 	select REGMAP
--	default m
- 	help
- 	  This driver supports configuring of the TI CPSW Port mode depending on
- 	  the Ethernet PHY connected to the CPSW Port.
--- 
-2.17.1
-
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
