@@ -2,84 +2,93 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38240C35666
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 13:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14565C35666
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 13:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADBB206E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 13:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10AC217F4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 13:14:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Fx68tUzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgBWNEX (ORCPT
+        id S1726534AbgBWNOu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 08:04:23 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:56417 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbgBWNEX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 08:04:23 -0500
-Received: from localhost.localdomain ([37.4.249.121]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MhDEo-1jaDwE2jC6-00eMCo; Sun, 23 Feb 2020 14:04:12 +0100
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH] ARM: bcm2835_defconfig: Explicitly restore CONFIG_DEBUG_FS
-Date:   Sun, 23 Feb 2020 14:02:56 +0100
-Message-Id: <1582462976-30646-1-git-send-email-stefan.wahren@i2se.com>
-X-Mailer: git-send-email 2.7.4
-X-Provags-ID: V03:K1:CoVY1sXEwV2l9EVwIL4/vKabbkLRc6PDSydEJoCPv/DceZV9G+X
- +4Lsl2DE3ev9q4tPi8ZfMi/sOcG/535sYaOvQ8AHxonjQuQCe/C5BxhTPft9VB5KrlsG/lJ
- Z8h8KdxVCkJinnAxuTDG1iz2VQnIHWdlSxr1PA03By5GpXGJrMUbaxDYbZYp66bq833slJr
- iLFFf9mNBOocesZpllMkw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c/XCZm9674I=:VfT84tFuX8f64fMm1J1I52
- sETxGV0spQSxtdN+tGh2miB5BCFLH+o2mTomzwgHSML9CzEZI9eaz78tA5uguEJHcpKDAzZq+
- iLISvMKoMyfet3y/7h90bzjb8BdJ5pEyvi4l9pnym2U8h0UC0J0eWOLIM/gLZGzWDRtDAif4L
- gk/AP4DxHWsocnwJlx6UQaiiVoAGVwt/YlRlYqQcQz6LIN0j+95m69ISV954nqSRtH0GvbU2c
- Ta663VWP/N8kdtlurTuWGPc6HHjZzV+g6N2kWpmhWu8eqDtb2fLWLDNKMvvwKrgUOcamFciSP
- dCZMtu6YnFdS4QNNDZII7uf+99l1zxzagL376n/iNEOKPaPpdJTTu+5Bd+j5fVy1qYebg95da
- c/hMB+zc3wfj1dWrfHUmJEycA88ZEDp2Uu205mtxY+loQKGWnfeqqt6iivb0Hllynp3s04q7l
- nToDN5fxpbTdZ6/zd9UULcXp1liYXAM1QlHiQ1pYVVw6dAXWMy4msMHozTRuGUexy/IKX+6eR
- 8qiv5EFabZRR7IVuAqPFSTi0w+Tu34Fmt0uuBd8F7juho2/5GlMDSMIv+hm/jYH2HctlECXK5
- Fo4k1/LBUvK3PvAQPs7sP2eTIa71Dil3Mrpm53Qw2WPtYWAPmXq4H0O1M2pMeTxXgF/buGUJJ
- lCshihATi/XM/W2/HaNKUjNwUnSNguYFO8AO+odzp3WB5hCp0VNp5clkG+fehT7Kkzd8JCNo2
- ihs7cHFL7lcPUBb900AAl5cn9rmeE4T/ODPCgBXRt/lHmoiOMjdAXrGn0x7esNvZfb9iO4NeD
- y7h42kMEwIopee0l1dxQ6mBJQZril99E0odWq4nQnRHhg8m9Ei5YYGhGNSWYQVBVKFcJ7Nr
+        Sun, 23 Feb 2020 08:14:50 -0500
+Received: from vps.xff.cz ([195.181.215.36]:42654 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbgBWNOu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Feb 2020 08:14:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582463688; bh=54xRUvTGkyMdNnk2rkB4/jjx5Pxs9Bu2zPWHTbo071c=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Fx68tUzrMaT6Zx3ogeXuS/EuwQ/VR0ubxBgXvpNRbq2SWOrAY0bPpSM9f1lhlSbYu
+         kAuBvr+0OHOjhyVClPIvqc247aXGz9ytldoXD4bs6Drr632oAP4KbvS9dfjDYXU5bd
+         ih4c6a4n5lWwEzMwvrMJMsmKmEgPythG0hxvhEDM=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/4] dt-bindings: leds: Add a binding for AXP813 charger led
+Date:   Sun, 23 Feb 2020 14:14:32 +0100
+Message-Id: <20200223131435.681620-2-megous@megous.com>
+In-Reply-To: <20200223131435.681620-1-megous@megous.com>
+References: <20200223131435.681620-1-megous@megous.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS dependency")
-accidentally dropped the DEBUG FS support in bcm2835_defconfig. So
-restore the config as before the commit.
+The AXP813 PMIC can control one LED. Add binding to represent the LED.
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Fixes: 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS dependency")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- arch/arm/configs/bcm2835_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/leds/leds-axp20x.yaml | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.yaml
 
-diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
-index 3843754..8e7a3ed 100644
---- a/arch/arm/configs/bcm2835_defconfig
-+++ b/arch/arm/configs/bcm2835_defconfig
-@@ -183,6 +183,7 @@ CONFIG_SCHED_TRACER=y
- CONFIG_STACK_TRACER=y
- CONFIG_FUNCTION_PROFILER=y
- CONFIG_TEST_KSTRTOX=y
-+CONFIG_DEBUG_FS=y
- CONFIG_KGDB=y
- CONFIG_KGDB_KDB=y
- CONFIG_STRICT_DEVMEM=y
+diff --git a/Documentation/devicetree/bindings/leds/leds-axp20x.yaml b/Documentation/devicetree/bindings/leds/leds-axp20x.yaml
+new file mode 100644
+index 0000000000000..79282d55764bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-axp20x.yaml
+@@ -0,0 +1,24 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-axp20x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LED driver for AXP813 PMIC from X-Powers.
++
++maintainers:
++  - Ondrej Jirman <megous@megous.com>
++
++description: |
++  This module is part of the AXP20x MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/axp20x.txt.
++
++  The LED controller is represented as a sub-node of the PMIC node on
++  the device tree.
++
++properties:
++  compatible:
++    const: x-powers,axp813-charger-led
++
++required:
++  - compatible
 -- 
-2.7.4
+2.25.1
 
