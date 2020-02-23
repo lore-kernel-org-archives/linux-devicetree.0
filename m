@@ -2,198 +2,113 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F87EC35673
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A2CC35671
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381EF2187F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582448404;
-	bh=aAzVoMpDVq9WDUFxqdTTt7WSy3tdNYzWVm8UGetuG08=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=kDthKlkG6bm7LZXK2wOnxKb0VZTNpVQLfoq+81pC9JuV+8O+Y+8ukazFh1p3Cb3wa
-	 UoqLuh5O2kL0lKG9aPmNBWz2GZ8Wl/p31EXuvgAy8b9ccnb3Y27aOKWgi+HlScl+Al
-	 n5qURHXVzi/d4ZYbNc8/bOmIujMuAnHZSZiwaSpA=
+	by mail.kernel.org (Postfix) with ESMTP id C4627208C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:10:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qgn/kwOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgBWJAD (ORCPT
+        id S1726308AbgBWJKB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 04:00:03 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40264 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgBWJAD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 04:00:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=RNB2J+mEHhCNl0xuNBvvHTB/2tWC60YI0L4tSd1QRB0=; b=GPUn5ur3nKI8vkZxD9zlfePIvg
-        nYQ2HGRdonyN9ziEioizfW8K80tgKNBfd+diHIFZUweMFwqc1qBhNnrvWnDQYRQRweDIGMArB4v2R
-        v6ePauHBnkFdZOFIc5sohI/3kse56yFR8eovN5pOAhfbC54SgEifNm83aPwU30wOWH4s0LI3By36A
-        n/n8EW/0d9bB7jm+3kwbbRMXlGYQCtzmwyDKZ39c29i6Bt//Z2koUTUB0xvv3Jgx9bQp+y/cMWTIY
-        vkp5MjPItSg6CGw8DTU5zxNqBviQ0LONpxkFW9gmzxIHd5u6CP8jMAOjEmpa4vjcYQ8K0BbK3fo2Y
-        7r/GfDXA==;
-Received: from [80.156.29.194] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5n7F-0007ZW-MS; Sun, 23 Feb 2020 08:59:57 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1j5n7D-001RYm-3q; Sun, 23 Feb 2020 09:59:55 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH] docs: dt: fix several broken doc references
-Date:   Sun, 23 Feb 2020 09:59:53 +0100
-Message-Id: <0e530494349b37eb2eab4a8eccf56626e0b18e6d.1582448388.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 23 Feb 2020 04:10:01 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34334 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgBWJKB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 04:10:01 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n10so6845417wrm.1;
+        Sun, 23 Feb 2020 01:09:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
+        b=qgn/kwOXb6rkHNyIZ6bRJng6LH3lH/HQl5AZwfwLmx0GS4J8ExGX9cHMVHTZ6gusnp
+         IxdZB3kMaWI9O5J58icoAOeghd7kIJXFSaavCppXoXS0C5m3QARTQhU6Q57ozihS0u7K
+         BM8LR6pw3Q2yk8nHMMjekoD5UTYdHdJ3hrjbUTWeJncaHnsoJk74/rvV9u/jbZD6CjH/
+         1yjLIPRfXIQKpf6Bn68PMnc8yvQrLQ4yW+qAI90qtMXww/UmKLdkGUPgI9+ZqqmGRzWc
+         bb2CfW3OuE9pYU3+GjUS0v/aUAcKONVTMl8Q7cxujjpxhnQwr0+XE1q+d9nSeEyDWDLr
+         wSLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
+        b=ivuiVWRwNkrKIbMf4gkkhVLkc35wYK5SRsyUDo/7jr5MBNSbz9E42Ci5/KYrZNZbRz
+         KAJTZ2M1zkpu17QijUqp1UTNCiW6o41f9Yq8C4HQoy/CgYcYSPk6BmxLoRnLgjW+0F7+
+         d09vpmfml4k/5Qo49nMRLUOWbCd716X0LyeyTB6tYfliXGNCVuPorfG1hzPxnY8Umy+7
+         pVc10y3i83HQqaqdOf2MSdL9NxwHsSz04b3qCxN5kAjvP0n1bURJ7g4pyJb246VnqdPQ
+         nGA/knF1W/NuXDrv9s4WB7/zlmUdDafemO3R0ICB6cDQR+FgQPY/usDLt/jKLa1VbC7V
+         a4AQ==
+X-Gm-Message-State: APjAAAU19n4qFUhYK89AV2QG66k7PquwzZrq77k5pWjeMZwaT98uhV7Y
+        ET+mlXmUsKp5hbeIkqHsUnk=
+X-Google-Smtp-Source: APXvYqynWcijyO/xnVA8R+8xgwTevrjbD+iuKtHMtHFQDIaNbai1TGHrC8jRZpNnLtRHAd/Ruv6k3g==
+X-Received: by 2002:a5d:5381:: with SMTP id d1mr58709265wrv.259.1582448998448;
+        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2de2:db00:5dbb:1717:2cb6:4104])
+        by smtp.gmail.com with ESMTPSA id d9sm12657464wrx.94.2020.02.23.01.09.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     David Daney <david.daney@cavium.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
+Date:   Sun, 23 Feb 2020 10:09:50 +0100
+Message-Id: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are several DT doc references that require manual fixes.
-I found 3 cases fixed on this patch:
+Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
+DT schema") combines all information from pci-thunder-{pem,ecam}.txt
+into host-generic-pci.yaml, and deleted the two files in
+Documentation/devicetree/bindings/pci/.
 
-	- directory named "binding/" instead of "bindings/";
-	- .txt to .yaml renames;
-	- file renames (still on txt format);
+Since then, ./scripts/get_maintainer.pl --self-test complains:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+  no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
+
+As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
+small part of the host-generic-pci.yaml, do not add this file to the
+PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
+the removed files.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- .../devicetree/bindings/mtd/cadence-nand-controller.txt       | 2 +-
- .../devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt      | 2 +-
- Documentation/devicetree/bindings/sound/st,stm32-sai.txt      | 2 +-
- Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt  | 2 +-
- Documentation/devicetree/bindings/spi/st,stm32-spi.yaml       | 2 +-
- MAINTAINERS                                                   | 4 ++--
- .../devicetree/bindings/net/wireless/siliabs,wfx.txt          | 2 +-
- 7 files changed, 8 insertions(+), 8 deletions(-)
+Robert, are you still the maintainer of this driver?
+Rob Herring, please pick this patch.
+applies cleanly on current master and next-20200221
 
-diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-index f3893c4d3c6a..d2eada5044b2 100644
---- a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-+++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-@@ -27,7 +27,7 @@ Required properties of NAND chips:
-   - reg: shall contain the native Chip Select ids from 0 to max supported by
-     the cadence nand flash controller
- 
--See Documentation/devicetree/bindings/mtd/nand.txt for more details on
-+See Documentation/devicetree/bindings/mtd/nand-controller.yaml for more details on
- generic bindings.
- 
- Example:
-diff --git a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-index 48a7f916c5e4..88b57b0ca1f4 100644
---- a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-+++ b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-@@ -45,7 +45,7 @@ Optional properties:
-   switch queue
- 
- - resets: a single phandle and reset identifier pair. See
--  Documentation/devicetree/binding/reset/reset.txt for details.
-+  Documentation/devicetree/bindings/reset/reset.txt for details.
- 
- - reset-names: If the "reset" property is specified, this property should have
-   the value "switch" to denote the switch reset line.
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-index 944743dd9212..c42b91e525fa 100644
---- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-@@ -36,7 +36,7 @@ SAI subnodes required properties:
-   - clock-names: Must contain "sai_ck".
- 	Must also contain "MCLK", if SAI shares a master clock,
- 	with a SAI set as MCLK clock provider.
--  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
-+  - dmas: see Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
-   - dma-names: identifier string for each DMA request line
- 	"tx": if sai sub-block is configured as playback DAI
- 	"rx": if sai sub-block is configured as capture DAI
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-index 33826f2459fa..ca9101777c44 100644
---- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-@@ -10,7 +10,7 @@ Required properties:
-   - clock-names: must contain "kclk"
-   - interrupts: cpu DAI interrupt line
-   - dmas: DMA specifiers for audio data DMA and iec control flow DMA
--    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
-+    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
-   - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
- 
- Optional properties:
-diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-index f0d979664f07..e49ecbf715ba 100644
---- a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-@@ -49,7 +49,7 @@ properties:
-   dmas:
-     description: |
-       DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
--      the STM32 DMA bindings Documentation/devicetree/bindings/dma/stm32-dma.txt.
-+      the STM32 DMA bindings Documentation/devicetree/bindings/dma/st,stm32-dma.yaml.
-     items:
-       - description: rx DMA channel
-       - description: tx DMA channel
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
+
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d81701ea3336..6b30a58bd77b 100644
+index 2af5fa73155e..d43a8f9769db 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4480,7 +4480,7 @@ L:	linux-media@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/platform/sunxi/sun6i-csi/
--F:	Documentation/devicetree/bindings/media/sun6i-csi.txt
-+F:	Documentation/devicetree/bindings/media/allwinner,sun6i-a31-csi.yaml
+@@ -12953,7 +12953,6 @@ M:	Robert Richter <rrichter@marvell.com>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Supported
+-F:	Documentation/devicetree/bindings/pci/pci-thunder-*
+ F:	drivers/pci/controller/pci-thunder-*
  
- CW1200 WLAN driver
- M:	Solomon Peachy <pizza@shaftnet.org>
-@@ -15955,7 +15955,7 @@ F:	drivers/*/stm32-*timer*
- F:	drivers/pwm/pwm-stm32*
- F:	include/linux/*/stm32-*tim*
- F:	Documentation/ABI/testing/*timer-stm32
--F:	Documentation/devicetree/bindings/*/stm32-*timer*
-+F:	Documentation/devicetree/bindings/*/*stm32-*timer*
- F:	Documentation/devicetree/bindings/pwm/pwm-stm32*
- 
- STMMAC ETHERNET DRIVER
-diff --git a/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt b/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
-index ffec79c14786..17db67559f5e 100644
---- a/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
-+++ b/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
-@@ -94,5 +94,5 @@ Some properties are recognized either by SPI and SDIO versions:
-    Must contains 64 hexadecimal digits. Not supported in current version.
- 
- WFx driver also supports `mac-address` and `local-mac-address` as described in
--Documentation/devicetree/binding/net/ethernet.txt
-+Documentation/devicetree/bindings/net/ethernet.txt
- 
+ PCIE DRIVER FOR HISILICON
 -- 
-2.24.1
+2.17.1
 
