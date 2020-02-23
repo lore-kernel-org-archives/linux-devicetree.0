@@ -2,113 +2,125 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A2CC35671
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CC1C35671
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4627208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458F8214DB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qgn/kwOX"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="KBLgQTYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgBWJKB (ORCPT
+        id S1726236AbgBWJ5j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 04:10:01 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34334 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgBWJKB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 04:10:01 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n10so6845417wrm.1;
-        Sun, 23 Feb 2020 01:09:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
-        b=qgn/kwOXb6rkHNyIZ6bRJng6LH3lH/HQl5AZwfwLmx0GS4J8ExGX9cHMVHTZ6gusnp
-         IxdZB3kMaWI9O5J58icoAOeghd7kIJXFSaavCppXoXS0C5m3QARTQhU6Q57ozihS0u7K
-         BM8LR6pw3Q2yk8nHMMjekoD5UTYdHdJ3hrjbUTWeJncaHnsoJk74/rvV9u/jbZD6CjH/
-         1yjLIPRfXIQKpf6Bn68PMnc8yvQrLQ4yW+qAI90qtMXww/UmKLdkGUPgI9+ZqqmGRzWc
-         bb2CfW3OuE9pYU3+GjUS0v/aUAcKONVTMl8Q7cxujjpxhnQwr0+XE1q+d9nSeEyDWDLr
-         wSLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
-        b=ivuiVWRwNkrKIbMf4gkkhVLkc35wYK5SRsyUDo/7jr5MBNSbz9E42Ci5/KYrZNZbRz
-         KAJTZ2M1zkpu17QijUqp1UTNCiW6o41f9Yq8C4HQoy/CgYcYSPk6BmxLoRnLgjW+0F7+
-         d09vpmfml4k/5Qo49nMRLUOWbCd716X0LyeyTB6tYfliXGNCVuPorfG1hzPxnY8Umy+7
-         pVc10y3i83HQqaqdOf2MSdL9NxwHsSz04b3qCxN5kAjvP0n1bURJ7g4pyJb246VnqdPQ
-         nGA/knF1W/NuXDrv9s4WB7/zlmUdDafemO3R0ICB6cDQR+FgQPY/usDLt/jKLa1VbC7V
-         a4AQ==
-X-Gm-Message-State: APjAAAU19n4qFUhYK89AV2QG66k7PquwzZrq77k5pWjeMZwaT98uhV7Y
-        ET+mlXmUsKp5hbeIkqHsUnk=
-X-Google-Smtp-Source: APXvYqynWcijyO/xnVA8R+8xgwTevrjbD+iuKtHMtHFQDIaNbai1TGHrC8jRZpNnLtRHAd/Ruv6k3g==
-X-Received: by 2002:a5d:5381:: with SMTP id d1mr58709265wrv.259.1582448998448;
-        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2de2:db00:5dbb:1717:2cb6:4104])
-        by smtp.gmail.com with ESMTPSA id d9sm12657464wrx.94.2020.02.23.01.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     David Daney <david.daney@cavium.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
-Date:   Sun, 23 Feb 2020 10:09:50 +0100
-Message-Id: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 23 Feb 2020 04:57:39 -0500
+Received: from vps.xff.cz ([195.181.215.36]:41430 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725980AbgBWJ5j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Feb 2020 04:57:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582451857; bh=Hc3Q/e3isq42FZVZz5Pj1+rkdYA5T7YqVfZ3lSbKHwM=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=KBLgQTYNtOdfr0C8KgWxzTcFc9H4LySTQ3Y2+AYmD1O0bUlSZ7CqOWG9Bnmy4p0aN
+         UHCxvhQuuCvVN/Eathp3L8kX54EJBUF2WnR1EY0HTlyZJ/EEWGNPCbqE5N2n7BnzCf
+         v4yNsINPB0peqyQ18CwD8sYkROsvuULDUSk5C2J0=
+Date:   Sun, 23 Feb 2020 10:57:36 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Tomas Novotny <tomas@novotny.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [linux-sunxi] [PATCH 2/4] ARM: dts: sun8i-a83t-tbs-a711: HM5065
+ doesn't like such a high voltage
+Message-ID: <20200223095736.5c3dr66734kv3ypg@core.my.home>
+Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Tomas Novotny <tomas@novotny.cz>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200222223154.221632-1-megous@megous.com>
+ <20200222223154.221632-3-megous@megous.com>
+ <CAGb2v67uOXE7_28yn8Q2uo320vE1FsqL-ewG4p1nViim3q0xbw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67uOXE7_28yn8Q2uo320vE1FsqL-ewG4p1nViim3q0xbw@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
-DT schema") combines all information from pci-thunder-{pem,ecam}.txt
-into host-generic-pci.yaml, and deleted the two files in
-Documentation/devicetree/bindings/pci/.
+Hello,
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+On Sun, Feb 23, 2020 at 11:39:17AM +0800, Chen-Yu Tsai wrote:
+> On Sun, Feb 23, 2020 at 6:32 AM Ondrej Jirman <megous@megous.com> wrote:
+> >
+> > Lowering the voltage solves the quick image degradation over time
+> > (minutes), that was probably caused by overheating.
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> 
+> Makes sense. A lot of camera sensors run their digital parts off 1.8V.
+> This one is no different.
+> 
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> 
+> The whole CSI stuff isn't enabled in the device tree yet though, and
+> there are a lot of regulators with CSI in their names. Will this get
+> worked on?
 
-  no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
+Yes, I'm preparing support for both cameras in this branch:
 
-As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
-small part of the host-generic-pci.yaml, do not add this file to the
-PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
-the removed files.
+  https://megous.com/git/linux/log/?h=cam-5.6
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Robert, are you still the maintainer of this driver?
-Rob Herring, please pick this patch.
-applies cleanly on current master and next-20200221
+Both already work quite well. I'm just sending some fixes early.
 
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+Both cameras work best at 1.8V for the digital part.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2af5fa73155e..d43a8f9769db 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12953,7 +12953,6 @@ M:	Robert Richter <rrichter@marvell.com>
- L:	linux-pci@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Supported
--F:	Documentation/devicetree/bindings/pci/pci-thunder-*
- F:	drivers/pci/controller/pci-thunder-*
- 
- PCIE DRIVER FOR HISILICON
--- 
-2.17.1
+regards,
+	o.
 
+> ChenYu
+> 
+> > ---
+> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > index ee5ce3556b2ad..ae1fd2ee3bcce 100644
+> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > @@ -371,8 +371,8 @@ &reg_dldo2 {
+> >  };
+> >
+> >  &reg_dldo3 {
+> > -       regulator-min-microvolt = <2800000>;
+> > -       regulator-max-microvolt = <2800000>;
+> > +       regulator-min-microvolt = <1800000>;
+> > +       regulator-max-microvolt = <1800000>;
+> >         regulator-name = "vdd-csi";
+> >  };
+> >
+> > --
+> > 2.25.1
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200222223154.221632-3-megous%40megous.com.
