@@ -6,54 +6,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB48EC35670
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 03:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB32C35671
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 04:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5896208C4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 03:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E5E2067D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 04:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgBWDjb (ORCPT
+        id S1727093AbgBWEEA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 22:39:31 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44349 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbgBWDja (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 22:39:30 -0500
-Received: by mail-ed1-f65.google.com with SMTP id g19so7553914eds.11;
-        Sat, 22 Feb 2020 19:39:29 -0800 (PST)
+        Sat, 22 Feb 2020 23:04:00 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33787 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgBWED7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 23:03:59 -0500
+Received: by mail-ed1-f67.google.com with SMTP id r21so7647530edq.0;
+        Sat, 22 Feb 2020 20:03:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/A0yvIhucZ8Hkj54s0R1HqAKKYsO/mERBumFFbw1Gu4=;
-        b=K8ii9ZU0iZkY0/B1J8yCNQgQRFN1Q/dRICPBOVjsGjPPN4tWUlqehOyOTnHtFYRRGg
-         QoxRjWqG5RdRMgjKrXsqHw0+5NcdPBQ9/U+1a5KVLc+9Cb+zddiJKpbSQsIKgGCLY/lI
-         M4W5kk9TVMeUvsUQtlHpclomZ6W1l+qLDiTB3ZqQ7l0/VXe8wOPSmSLSock4OyrfDALx
-         1DZXGBOcRvpCYg0rWnpUEGdloZxWYgV5C8Otaq+VfVW2chwl9d7L5xXOFBpwBczEj+hb
-         wzaLhPiBGchfGXGUNldsU8yKH6m69aaKnAOZRW9XKH4YRc67WByLMeTMzxesFV5hEQg3
-         +yPQ==
-X-Gm-Message-State: APjAAAU7VgBzhltTmvXFS/Mr1/s8moUTDd1Hd52XMuHw82xVOeSdn3HK
-        x6qT896K8qVMBs0GuYkdl7OvsmCzXr4=
-X-Google-Smtp-Source: APXvYqwomLoUmZNlwLlKQcJzIuNZ8/lL9VbciuFH74AMa2ghRthadhfqVJBQkjnCeTeuioZiQo76UQ==
-X-Received: by 2002:a17:906:b208:: with SMTP id p8mr42701700ejz.191.1582429168416;
-        Sat, 22 Feb 2020 19:39:28 -0800 (PST)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
-        by smtp.gmail.com with ESMTPSA id a24sm574964ejt.40.2020.02.22.19.39.27
+        bh=BwEdqYydc8kdzSGTpNrqTMnSIQHLxOA+j53stoAmXIE=;
+        b=AYn5m+1G10wSaRo1IWwIUeGU9gyPu6w0eVfT8R5p4QCPQNgyiLRYXfqC/natGksJ3R
+         z4oA5oH2+OM7L02kX1Ug55K7cm0AhLmL33X0xe5E4augSwdECK7QkB2oleu/TrWIvt4a
+         0NbSbfMNQysYBSyQRyUPAyiXmWMDo+/HsWH4dg0dnSWNg4lueXxwr5eYtC5gDfM8HiVV
+         ZEUqeAe3DH1j4MdD17N4PJl/x96FY7YyOryHcprI6Y2KdQphg2f7kmOxH1qCG7fHBxPi
+         8BPCLct1XZ0RH/YsuD/MkXXjSMdUZy0ku1Bmx06CPxaan7qZ2/9YwhDGuJd+0eaLawpx
+         xQ0Q==
+X-Gm-Message-State: APjAAAV8PvCjCMjJVOxi/cVn3X74nJtxU7brEvOhVgIzWLDVIA95xydc
+        z4AVwHDECfbb+KGOtA3raV4lI3no07s=
+X-Google-Smtp-Source: APXvYqzrGSKXsrUGEXvzayBJLLJsND9LjHZK33uvYbD3CrtB/5P33UQxvPC1QhwB/L2HmC6n3SNaAA==
+X-Received: by 2002:a17:906:b2c5:: with SMTP id cf5mr41763793ejb.325.1582430637215;
+        Sat, 22 Feb 2020 20:03:57 -0800 (PST)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
+        by smtp.gmail.com with ESMTPSA id i11sm582047ejv.64.2020.02.22.20.03.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Feb 2020 19:39:28 -0800 (PST)
-Received: by mail-wr1-f49.google.com with SMTP id w12so6395843wrt.2;
-        Sat, 22 Feb 2020 19:39:27 -0800 (PST)
-X-Received: by 2002:a5d:6805:: with SMTP id w5mr59546453wru.64.1582429167621;
- Sat, 22 Feb 2020 19:39:27 -0800 (PST)
+        Sat, 22 Feb 2020 20:03:56 -0800 (PST)
+Received: by mail-wr1-f42.google.com with SMTP id n10so6439954wrm.1;
+        Sat, 22 Feb 2020 20:03:56 -0800 (PST)
+X-Received: by 2002:a5d:640d:: with SMTP id z13mr55885217wru.181.1582430636158;
+ Sat, 22 Feb 2020 20:03:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20200222223154.221632-1-megous@megous.com> <20200222223154.221632-3-megous@megous.com>
-In-Reply-To: <20200222223154.221632-3-megous@megous.com>
+References: <20200222223154.221632-1-megous@megous.com> <20200222223154.221632-2-megous@megous.com>
+ <CAGb2v67XwrYA8FLF9wpnngm9F-F9UV2m+rr+r3t+KUVv5-EMiw@mail.gmail.com>
+In-Reply-To: <CAGb2v67XwrYA8FLF9wpnngm9F-F9UV2m+rr+r3t+KUVv5-EMiw@mail.gmail.com>
 From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Sun, 23 Feb 2020 11:39:17 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67uOXE7_28yn8Q2uo320vE1FsqL-ewG4p1nViim3q0xbw@mail.gmail.com>
-Message-ID: <CAGb2v67uOXE7_28yn8Q2uo320vE1FsqL-ewG4p1nViim3q0xbw@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 2/4] ARM: dts: sun8i-a83t-tbs-a711: HM5065
- doesn't like such a high voltage
+Date:   Sun, 23 Feb 2020 12:03:46 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66G5P_souwFHodO0_NYhWyQ+dGE4fbqLLK3qd9ue7Kk9g@mail.gmail.com>
+Message-ID: <CAGb2v66G5P_souwFHodO0_NYhWyQ+dGE4fbqLLK3qd9ue7Kk9g@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 1/4] ARM: dts: sun8i-a83t-tbs-a711: OOB WiFi
+ interrupt doesn't work
 To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
 Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -64,54 +65,66 @@ Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
         <devicetree@vger.kernel.org>,
         "moderated list:ARM/Allwinner sunXi SoC support" 
         <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
+        open list <linux-kernel@vger.kernel.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 6:32 AM Ondrej Jirman <megous@megous.com> wrote:
+On Sun, Feb 23, 2020 at 11:26 AM Chen-Yu Tsai <wens@csie.org> wrote:
 >
-> Lowering the voltage solves the quick image degradation over time
-> (minutes), that was probably caused by overheating.
+> Hi,
 >
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+>
+> On Sun, Feb 23, 2020 at 6:32 AM Ondrej Jirman <megous@megous.com> wrote:
+> >
+> > It just causes a constant rate of 5000 interrupts per second for both
+> > GPIO and MMC, even if nothing is happening. Rely on in-band interrupts
+> > instead.
+> >
+> > Fixes: 0e23372080def7bb ("arm: dts: sun8i: Add the TBS A711 tablet devicetree")
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+>
+> What WiFi chip/module does this use? It might be worth asking Broadcom
+> people to help with this and fix the driver.
 
-Makes sense. A lot of camera sensors run their digital parts off 1.8V.
-This one is no different.
+Based on the comments in the device tree file, it uses an AP6210, which
+is a BCM43362 inside for SDIO-based WiFi. There is a recent fix in 5.6-rc1
+for this,
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+    8c8e60fb86a9 brcmfmac: sdio: Fix OOB interrupt initialization on brcm43362
 
-The whole CSI stuff isn't enabled in the device tree yet though, and
-there are a lot of regulators with CSI in their names. Will this get
-worked on?
+which seems to fix things for me. Could you try it on your end?
 
 ChenYu
 
-> ---
->  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+
+> ChenYu
 >
-> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> index ee5ce3556b2ad..ae1fd2ee3bcce 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> @@ -371,8 +371,8 @@ &reg_dldo2 {
->  };
->
->  &reg_dldo3 {
-> -       regulator-min-microvolt = <2800000>;
-> -       regulator-max-microvolt = <2800000>;
-> +       regulator-min-microvolt = <1800000>;
-> +       regulator-max-microvolt = <1800000>;
->         regulator-name = "vdd-csi";
->  };
->
-> --
-> 2.25.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200222223154.221632-3-megous%40megous.com.
+> > ---
+> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 3 ---
+> >  1 file changed, 3 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > index 2fd31a0a0b344..ee5ce3556b2ad 100644
+> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > @@ -214,9 +214,6 @@ &mmc1 {
+> >         brcmf: wifi@1 {
+> >                 reg = <1>;
+> >                 compatible = "brcm,bcm4329-fmac";
+> > -               interrupt-parent = <&r_pio>;
+> > -               interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 WL_WAKE_UP */
+> > -               interrupt-names = "host-wake";
+> >         };
+> >  };
+> >
+> > --
+> > 2.25.1
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200222223154.221632-2-megous%40megous.com.
