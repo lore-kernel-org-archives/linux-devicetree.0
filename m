@@ -1,399 +1,208 @@
-Return-Path: <SRS0=C9Bv=4K=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E395EC35671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 23:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03569C35671
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 00:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98FDA206EF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Feb 2020 23:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B2220707
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 00:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/Rh4RRz"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jnTHWOW5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgBVXrq (ORCPT
+        id S1726895AbgBWABo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 18:47:46 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36983 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgBVXrp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 18:47:45 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a6so5660169wme.2;
-        Sat, 22 Feb 2020 15:47:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3NLOKNuy3wOlKfDFx23/tDNafjli/SnJXKzCIElhmy0=;
-        b=U/Rh4RRzcb8tY1cEJJ1T+DICzXvhtSGmYZGmUwMsDs4Bgz8zkc0zBAWuz8CMsAiKDk
-         +upUtaj1bq0Sv+hd+yIAz0BawQj53DPmS61Ik+TSRH5jUI2hZHihrXr+tW1IXfjrf6Mp
-         Xo5pRkiXFNBoU44atvYpaFZx+qU0wqa20SYMDHIhqgGJBnLKQVhZ8jjVcFr1LhD2tRbT
-         8Y2JU9X36sCyXCoA+vRbM5kwTJCXsYv0St8BZfIY6qQMVyvI7QAUatHm51h5VkEX3A5X
-         AifOqJumE9JCINt6W5q+fUfto3e8iF8Au+LSXgzkqV0uL+bQf2N7X4nU9kzGaNWEvZ+K
-         YhdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3NLOKNuy3wOlKfDFx23/tDNafjli/SnJXKzCIElhmy0=;
-        b=a60lZYr7vll4cPUYB5eNb3IgfOtwsW71N53CbFyiJC0NP+5hYEw8VxAKpMt7H0oMIo
-         ZM1T0i+AkZ129OEKzlkWtZCwq3j45h+2/wVOh+XQOE2T+VJuG3gn2SXYvjIIMv9WTX3D
-         K5zM+Y7LoCCdvYDTsFHFADOTBiGzRE3F9ACfmujsN8+wz8vgNbqaHW4MzsQsOD7hYx5T
-         +mJWYKTGggwe8kcoubRbjZOj2z0QxuheXptVxf+diTdhhgNq0pUwJJ7rwudbbmwG9fUv
-         t1smooS9VJ6EtM9wN7fhedwkDR4MzDk1kdx68VB6Lsu89f7X4Jddlxk281ykImc2KcW2
-         6YQA==
-X-Gm-Message-State: APjAAAXB8B0I0qaArcf1uLxV5SEoynZDVfTMV9lMEWxjEElhQdiNnn/o
-        RwLCy8C2/hxjmm+AfsKc8vg=
-X-Google-Smtp-Source: APXvYqy2FFh037CfHljHCxw+h+qk9cVQiaBhO4c15GfY3LprPQwlAVx3YjqZ70WYga7e9oxvUR0cPg==
-X-Received: by 2002:a1c:7512:: with SMTP id o18mr7791919wmc.110.1582415262627;
-        Sat, 22 Feb 2020 15:47:42 -0800 (PST)
-Received: from debian64.daheim (p5B0D74C0.dip0.t-ipconnect.de. [91.13.116.192])
-        by smtp.gmail.com with ESMTPSA id u62sm10958245wmu.17.2020.02.22.15.47.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 15:47:41 -0800 (PST)
-Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
-        by debian64.daheim with esmtp (Exim 4.93)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1j5eUm-0005nV-Ns; Sun, 23 Feb 2020 00:47:40 +0100
-From:   Christian Lamparter <chunkeey@gmail.com>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] net: mdio: add ipq8064 mdio driver
-Date:   Sun, 23 Feb 2020 00:47:40 +0100
-Message-ID: <4475595.vek7CkyBFf@debian64>
-In-Reply-To: <20200222161629.1862-1-ansuelsmth@gmail.com>
-References: <20200222161629.1862-1-ansuelsmth@gmail.com>
-MIME-Version: 1.0
+        Sat, 22 Feb 2020 19:01:44 -0500
+Received: from mail-eopbgr130054.outbound.protection.outlook.com ([40.107.13.54]:22401
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726881AbgBWABn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Feb 2020 19:01:43 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q1Ocl/eyCAo0o4avnpq5ecN9yDL5TH6E/hiMP/5DbZF+YGW7BstieX6zdsk/8U1EbXRko4CZ+tLJX5jRSTXRWIrWGfHrG/zyXiWuVJOwrCCUEGY+twpykwcqPzKo2PqgaUfqLYiiVaGwy42ViWuKIRHwrMn4GbphD6wA4ZdwH7eYx8QEmj8Hp60mVzugAcfW9gWTA4LKzKYwI61QcFb2TZPj/LnvY5VhkAIGxEJKQpvzhD2PF2EK2L5BRxR88jL2FL+GSr/F7J4DyTJs9k44g7qIfVSPiy+m0Wnci6fLRFf2YWoY4KiLTptB9lyD1H+xcP0WXsCP4ozoDS58GaIGBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZwE/mmrHGrzg8quN3M2ttt3p23R1oFXKNG8rqxD47jc=;
+ b=IpJzCqIBUppgbM25LZVVgxrpblhCjrPV2oHwEIaT21dhyDvZEZmFwAFgENdWlfVL4h0XyWaSpM8YrO14und9UwIVCre4oKFfVcownIoS36/SfGoi4k+Pto4t/JnziQwH5d2t2VAbsvF/QHZilzkYcPvyh2xM7xiu0q0epnEW+JTdMCCLcnfEJlnL5TP6mwNilQpzcZobi+d2H794PE0tkmJV4bThHqNECgpUGD2PRkVEPLzCwA9Rq5/BwPJFAGcOXxmtaCNiCpJLlF3AAFIj3dbP3ifMiZONi859hhq4KmTbp6hZZoRnkZ4ksyVu+yfLghYk+jKfxP6vubNXbWQKcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZwE/mmrHGrzg8quN3M2ttt3p23R1oFXKNG8rqxD47jc=;
+ b=jnTHWOW50KqeAYMTaqgRSDXaVXQB2Ha7VGyde68zB7xvyByZP/FCb40GIDpF8hGqX5A0Vx78AsIRPF1SAWpmnMpXZG7+VyJGEFghposRuv0W504oh6QSCVY4XevLRpIPzP1+IPWXF8OEe0ZPc5Pg8noyRm6h8qIxnF2IyqRe8P8=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4785.eurprd04.prod.outlook.com (20.176.215.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Sun, 23 Feb 2020 00:01:38 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.033; Sun, 23 Feb 2020
+ 00:01:38 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     "ohad@wizery.com" <ohad@wizery.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 3/9] remoteproc: add support to skip firmware load when
+ recovery
+Thread-Topic: [PATCH 3/9] remoteproc: add support to skip firmware load when
+ recovery
+Thread-Index: AQHV5vbtBcsi7uUDB0+hcFvNM8RaVqgl/3AAgAHq/5A=
+Date:   Sun, 23 Feb 2020 00:01:38 +0000
+Message-ID: <AM0PR04MB44810B020E8C4F099D8F47A588EF0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+ <1582097265-20170-4-git-send-email-peng.fan@nxp.com>
+ <20200221184236.GA10368@xps15>
+In-Reply-To: <20200221184236.GA10368@xps15>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [117.82.241.14]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 458ee98e-6f4e-45c7-31d9-08d7b7f38e25
+x-ms-traffictypediagnostic: AM0PR04MB4785:|AM0PR04MB4785:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB478503D2AC58297EB7CA7D2188EF0@AM0PR04MB4785.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 0322B4EDE1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(396003)(346002)(39860400002)(136003)(189003)(199004)(86362001)(52536014)(81166006)(8676002)(81156014)(8936002)(6916009)(7696005)(4326008)(54906003)(76116006)(66476007)(66946007)(66556008)(7416002)(5660300002)(71200400001)(316002)(64756008)(66446008)(6506007)(44832011)(26005)(186003)(2906002)(33656002)(55016002)(9686003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4785;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: L2LsAKB3OMKFCfMX60UD+S3ROmC8lelaat7eu1NAJaE1hWPznZMAajG5yag9iKpZT5j5MDoqQr/lC6WfyfIbQ3PkBDF4hyohUgiEPxsW9yvhGXSEtgHhWhMEuN+JVZltwVCdlyrHFwLqg5k41wWPL6hU+I/2RaZNRtLVU9o7cLzcvtsSpxEHqhq055o/BGyb0H3AmleZtoJ7Uhof9LZhL7bFPfszkk+vaCQz1o0GfVspsVnXPFYgRDp5tqPvN0ZIKx2xZUhmvjNc4bGlWkkfliGaztBL8xGL2pYwMMVNRSl6UTTpVHxjwFyYFDb4rR2Y7CX9O2x0BEGAxsqvhnNkixaXTLM1dkV8e/w0LpsErs3/Utt/Y/LgG4/q6BC4NPOPjjb2S8K7n8k3N1xi7DCunfA3oMAufuAsFX/cf1awoWZZw00MACjUY01boDm+ZmBX
+x-ms-exchange-antispam-messagedata: MF6f8pFJx4pAbTJ8sRbTCfGVGfkmTA6zqNG1sgfFzQbxT0wMoU/51bppjga26axigMQiMwfROJDzrQl985Vb7mt/f6SKxA5lZov6uvqOQCRaw2MJtY0Dlx2YGNHJxsyP+me2YqxiWKgJkJ7JwYKeHA==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 458ee98e-6f4e-45c7-31d9-08d7b7f38e25
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2020 00:01:38.5073
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GJovSucEXBk3laAdehfJbRjMtt0TrC5vFmIHN9HbTfPnHJTtrD9RDpkDGWg1YpoH94i3CGPPozgqLdHDRvx/SA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4785
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Mathieu,
 
-On Saturday, 22 February 2020 17:16:26 CET Mr. Smith wrote:
-> Currently ipq806x soc use generic bitbang driver to
-> comunicate with the gmac ethernet interface.
-> Add a dedicated driver created by chunkeey to fix this.
-
-Ok, I'm officially a bit "out-of-the-loop" here (was looking for
-a changelog, but I guess I missed that mail). So please excuse me,
-if I say something that was already stated. Instead kindly reply
-with a text extract (preferably with the link to the mail as I'm not
-a regular linux-net subscriber) to that discussion.
-
-> Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
-Ahh, I see that
-"docs: Clarify the usage and sign-off requirements for Co-developed-by"
-did away with the "original author" wording in the submitting-patches doc.
-So keeping the original "From:" doesn't matter as such anymore.
-
-Still, for reference (historical digs or if someone wants to take a peek):
-Most of this patch comes from a patch named:
-700-net-mdio-add-ipq8064-mdio-driver.patch
-
-which is part of a bigger "ipq8064: ipq8064-mdio + dsa test" commit.
-This is currently in a staging tree hosted on <git.openwrt.org>.
-Here's a direct link: [0] (sadly, this is not self-updating).=20
-
-Background: This driver was mainly written to make and test the qca8k
-patches I posted to the linux-net ML last year. The Idea was that I
-didn't have to deal with the odd random timing issues on the slow debug
-kernels, when I was perfing/hammering the device.=20
-(The IPQ8064 has/had various scaling problems so, this might be already
-fixed by some of Mr. Smith's other work for the abandoned IPQ8064).
-
-=46rom what I know, this patch mostly helps/fixes a problem with the
-out-of-tree OpenWrt swconfig-based ar8216/ar8236 driver for the
-used QCA8337 switch.
-This driver really needs the faster, more efficient reads due to having
-a statistics worker which is just gobbing cycles because of all the
-exclusive-access bit-banging taking place.
-(Remember, the worker could read all the phy-counters for each of the 7
-ports over gpio-mdio (there have been attempts to make it less hoggy
-in the mean time though). While the IPQ8064 SoC has a beefy dual-core
-Cortex-A15 with up to 1.4GHz*, this bitbanging will result in a
-considerable load on at least one of the cores.)
-
-Mr. Smith knows more about this though, as he has the hardware and
-is the upcoming IPQ8064 expert on this.=20
-
-=46rom my POV, I never anticipated this hack was up to standards of linux-n=
-et.
-As there is this ugly dependency on having the "master" MAC (handled by the=
-=20
-sttmac/dwmac-ipq806x.c) part up and operational all the time (that's why
-the "master" property is needed for some devices at least).
-=20
-I had hopes to do this properly and integrate it into
-dwmac-ipq806x.c, but this requires much more work and ultimately
-"virtual-mdio" was "just good enough=E2=84=A2=EF=B8=8F" for standard, produ=
-ction kernels.
-=46rom what I remember the Qualcomm devs themselves never bothered in their
-abandoned posts with the DeviceTree for the qcom-ipq8064.dts to include a
-standalone mdio driver. Instead the dev went straight to "virtual-mdio".
-(but this was too long ago to really remember the details and it's getting =
-late)
-
-But Ok, if linux-net is content with the standalone mdio-ipq8064 approach,
-then: Sure!
-
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index 9dabe03a668c..ec2a5493a7e8 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -157,6 +157,14 @@ config MDIO_I2C
-> =20
->  	  This is library mode.
-> =20
-> +config MDIO_IPQ8064
-> +	tristate "Qualcomm IPQ8064 MDIO interface support"
-> +	depends on HAS_IOMEM && OF_MDIO
-> +	depends on MFD_SYSCON
-> +	help
-> +	  This driver supports the MDIO interface found in the network
-> +	  interface units of the IPQ8064 SoC
-> +
->  config MDIO_MOXART
->  	tristate "MOXA ART MDIO interface support"
->  	depends on ARCH_MOXART || COMPILE_TEST
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index fe5badf13b65..8f02bd2089f3 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+=3D mdio-cavium.o
->  obj-$(CONFIG_MDIO_GPIO)		+=3D mdio-gpio.o
->  obj-$(CONFIG_MDIO_HISI_FEMAC)	+=3D mdio-hisi-femac.o
->  obj-$(CONFIG_MDIO_I2C)		+=3D mdio-i2c.o
-> +obj-$(CONFIG_MDIO_IPQ8064)	+=3D mdio-ipq8064.o
->  obj-$(CONFIG_MDIO_MOXART)	+=3D mdio-moxart.o
->  obj-$(CONFIG_MDIO_MSCC_MIIM)	+=3D mdio-mscc-miim.o
->  obj-$(CONFIG_MDIO_OCTEON)	+=3D mdio-octeon.o
-> diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq806=
-4.c
-> new file mode 100644
-> index 000000000000..74d6b92a6f48
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-ipq8064.c
-> @@ -0,0 +1,166 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Qualcomm IPQ8064 MDIO interface driver
-> +//
-> +// Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
-> +
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/syscon.h>
-> +
-> +/* MII address register definitions */
-> +#define MII_ADDR_REG_ADDR                       0x10
-> +#define MII_BUSY                                BIT(0)
-> +#define MII_WRITE                               BIT(1)
-> +#define MII_CLKRANGE_60_100M                    (0 << 2)
-> +#define MII_CLKRANGE_100_150M                   (1 << 2)
-> +#define MII_CLKRANGE_20_35M                     (2 << 2)
-> +#define MII_CLKRANGE_35_60M                     (3 << 2)
-> +#define MII_CLKRANGE_150_250M                   (4 << 2)
-> +#define MII_CLKRANGE_250_300M                   (5 << 2)
-> +#define MII_CLKRANGE_MASK			GENMASK(4, 2)
-> +#define MII_REG_SHIFT				6
-> +#define MII_REG_MASK				GENMASK(10, 6)
-> +#define MII_ADDR_SHIFT				11
-> +#define MII_ADDR_MASK				GENMASK(15, 11)
-Is it just me, or is something weird going on with tabs vs. spaces here
-(and below in ipq8064_mdio_wait_busy() )?
-
-> +
-> +#define MII_DATA_REG_ADDR                       0x14
-> +
-> +#define MII_MDIO_DELAY_USEC                     (1000)
-> +#define MII_MDIO_RETRY_MSEC                     (10)
-> +
-> +struct ipq8064_mdio {
-> +	struct regmap *base; /* NSS_GMAC0_BASE */
-> +};
-> +
-> +static int
-> +ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
-> +{
-> +	u32 busy;
-> +
-> +	return regmap_read_poll_timeout(priv->base, MII_ADDR_REG_ADDR, busy,
-> +					!(busy & MII_BUSY), MII_MDIO_DELAY_USEC,
-> +					MII_MDIO_RETRY_MSEC * USEC_PER_MSEC);
-Didn't know this macro existed. This look much nicer.
-
-
-> +}
-> +
-> +static int
-> +ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
-> +{
-> +	struct ipq8064_mdio *priv =3D bus->priv;
-> +	u32 miiaddr =3D MII_BUSY | MII_CLKRANGE_250_300M;
-> +	u32 ret_val;
-> +	int err;
-> +
-> +	/* Reject clause 45 */
-> +	if (reg_offset & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-Heh, C45 on IPQ806X? Ok, anyone know the hardware or is this some fancy
-forward-thinking future-proofing?
-(So it this will not break in the future. Not that the SoC of the
-ipq8064 could more than 1GBit/s per port from what I know.)
-
-> +
-> +	miiaddr |=3D ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-> +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-> +
-> +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-> +	usleep_range(10, 20);
-Yeeah, this looks a bit different. I did measure with a for-loop how many
-udelay(1); a operation took. I can't remember the exact values (I think it
-was "8", so the "
-	SLEEPING FOR "A FEW" USECS ( < ~10us? ):
-		* Use udelay" from the timers-howto.txt applies, right?
-
-But I know that "8" (again, 8 is the stand-in value) would seemed
-too bike-sheddy... And looks like it was since this got changed.
-
-> +
-> +	err =3D ipq8064_mdio_wait_busy(priv);
-> +	if (err)
-> +		return err;
-> +
-> +	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
-> +	return (int)ret_val;
-> +}
-> +
-> +static int
-> +ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u1=
-6 data)
-> +{
-> +	struct ipq8064_mdio *priv =3D bus->priv;
-> +	u32 miiaddr =3D MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
-> +
-> +	/* Reject clause 45 */
-> +	if (reg_offset & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
-> +
-> +	miiaddr |=3D ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-> +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-> +
-> +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-> +	usleep_range(10, 20);
-> +
-> +	return ipq8064_mdio_wait_busy(priv);
-> +}
-> +
-> +static int
-> +ipq8064_mdio_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	struct ipq8064_mdio *priv;
-> +	struct mii_bus *bus;
-> +	int ret;
-> +
-> +	bus =3D devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
-> +	if (!bus)
-> +		return -ENOMEM;
-> +
-> +	bus->name =3D "ipq8064_mdio_bus";
-> +	bus->read =3D ipq8064_mdio_read;
-> +	bus->write =3D ipq8064_mdio_write;
-> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
-> +	bus->parent =3D &pdev->dev;
-> +
-> +	priv =3D bus->priv;
-> +	priv->base =3D syscon_node_to_regmap(np);
-> +	if (IS_ERR(priv->base) && priv->base !=3D ERR_PTR(-EPROBE_DEFER))
-> +		priv->base =3D syscon_regmap_lookup_by_phandle(np, "master");
-> +
-> +	if (priv->base =3D=3D ERR_PTR(-EPROBE_DEFER)) {
-> +		return -EPROBE_DEFER;
-> +	} else if (IS_ERR(priv->base)) {
-> +		dev_err(&pdev->dev, "error getting syscon regmap, error=3D%pe\n",
-> +			priv->base);
-> +		return PTR_ERR(priv->base);
-> +	}
-> +
-> +	ret =3D of_mdiobus_register(bus, np);
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, bus);
-> +	return 0;
-> +}
-> +
-> +static int
-> +ipq8064_mdio_remove(struct platform_device *pdev)
-> +{
-> +	struct mii_bus *bus =3D platform_get_drvdata(pdev);
-> +
-> +	mdiobus_unregister(bus);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ipq8064_mdio_dt_ids[] =3D {
-> +	{ .compatible =3D "qcom,ipq8064-mdio" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
-> +
-> +static struct platform_driver ipq8064_mdio_driver =3D {
-> +	.probe =3D ipq8064_mdio_probe,
-> +	.remove =3D ipq8064_mdio_remove,
-> +	.driver =3D {
-> +		.name =3D "ipq8064-mdio",
-> +		.of_match_table =3D ipq8064_mdio_dt_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(ipq8064_mdio_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
-> +MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
-@Mr. Smith: Don't you want to add yourself there (and in the boilerplate)
-as well then?=20
-
-> +MODULE_LICENSE("GPL");
+> Subject: Re: [PATCH 3/9] remoteproc: add support to skip firmware load wh=
+en
+> recovery
 >=20
+> Hi Peng,
+>=20
+> On Wed, Feb 19, 2020 at 03:27:39PM +0800, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > Remote processor such as M4 inside i.MX8QXP is not handled by Linux
+> > when it is configured to run inside its own hardware partition by
+> > system control unit(SCU). So even remote processor crash reset, it is
+> > handled by SCU, not linux. To such case, firmware load should be
+> > ignored, So introduce skip_fw_load_recovery and platform driver should
+> > set it if needed.
+>=20
+> For now I will not comment on the code - I just need clarifications on th=
+e
+> scenario.
+>=20
+> In the specific case you are trying to address here, I understand that wh=
+en the
+> M4 crashes, the SCU will recognize that and reload the MCU firmware. Does
+> the SCU also start the MCU or is that left to the remoteproc subsystem?
 
-Cheers and good night,
-Christian
+SCU starts M4. Linux has no permission to start/stop M4 from hardware
+perspective with hardware partition feature enabled.
 
-=2D--
-[0] <https://git.openwrt.org/?p=3Dopenwrt/staging/chunkeey.git;a=3Dblob;f=
-=3Dtarget/linux/ipq806x/patches-4.19/700-net-mdio-add-ipq8064-mdio-driver.p=
-atch;h=3D6f25b895cacb34b7fcf3e275c15ab26e25252fa8;hb=3D1034741b8735608b022d=
-55b08df34d4cff423b46>
+Regards,
+Peng.
 
-
-
-
+>=20
+> Thanks,
+> Mathieu
+>=20
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  drivers/remoteproc/remoteproc_core.c | 19 +++++++++++--------
+> >  include/linux/remoteproc.h           |  1 +
+> >  2 files changed, 12 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/remoteproc/remoteproc_core.c
+> > b/drivers/remoteproc/remoteproc_core.c
+> > index 876b5420a32b..ca310e3582bf 100644
+> > --- a/drivers/remoteproc/remoteproc_core.c
+> > +++ b/drivers/remoteproc/remoteproc_core.c
+> > @@ -1678,20 +1678,23 @@ int rproc_trigger_recovery(struct rproc *rproc)
+> >  	if (ret)
+> >  		goto unlock_mutex;
+> >
+> > -	/* generate coredump */
+> > -	rproc_coredump(rproc);
+> > +	if (!rproc->skip_fw_load_recovery) {
+> > +		/* generate coredump */
+> > +		rproc_coredump(rproc);
+> >
+> > -	/* load firmware */
+> > -	ret =3D request_firmware(&firmware_p, rproc->firmware, dev);
+> > -	if (ret < 0) {
+> > -		dev_err(dev, "request_firmware failed: %d\n", ret);
+> > -		goto unlock_mutex;
+> > +		/* load firmware */
+> > +		ret =3D request_firmware(&firmware_p, rproc->firmware, dev);
+> > +		if (ret < 0) {
+> > +			dev_err(dev, "request_firmware failed: %d\n", ret);
+> > +			goto unlock_mutex;
+> > +		}
+> >  	}
+> >
+> >  	/* boot the remote processor up again */
+> >  	ret =3D rproc_start(rproc, firmware_p);
+> >
+> > -	release_firmware(firmware_p);
+> > +	if (!rproc->skip_fw_load_recovery)
+> > +		release_firmware(firmware_p);
+> >
+> >  unlock_mutex:
+> >  	mutex_unlock(&rproc->lock);
+> > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> > index 4fd5bedab4fa..fe6ee253b385 100644
+> > --- a/include/linux/remoteproc.h
+> > +++ b/include/linux/remoteproc.h
+> > @@ -514,6 +514,7 @@ struct rproc {
+> >  	bool has_iommu;
+> >  	bool auto_boot;
+> >  	bool skip_fw_load;
+> > +	bool skip_fw_load_recovery;
+> >  	struct list_head dump_segments;
+> >  	int nb_vdev;
+> >  };
+> > --
+> > 2.16.4
+> >
