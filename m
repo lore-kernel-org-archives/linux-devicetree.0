@@ -2,134 +2,173 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7BDC35673
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 20:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE745C35675
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 22:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D004F206ED
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 20:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEEE24650
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 22:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBcUEWtH"
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="LwL/iptB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgBWUr3 (ORCPT
+        id S1727158AbgBWWBZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 15:47:29 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35823 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727190AbgBWUr3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 15:47:29 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w12so8015058wrt.2;
-        Sun, 23 Feb 2020 12:47:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QZjZXAIJGmhzIoJIXLLcQGATRWxRcQcmbOZU2XUvhr8=;
-        b=FBcUEWtHHdC03wzlf5lOzaeabI5rY7dNTvBXsGVuHv6J7MVi2E/uGnJD4a5eQeSXsB
-         KjDZyemAlBZNe4aQxdzHSzOT1dWMdWNqQ77sozG7WjNLXc+YV/fBmTh/7MUEttAHanR9
-         Jsn1aza9iZCS/Zz7pFw75NHtnyXlY8m+udFgo/T7qqBWULbF0OO3g8JdbenVkYVjf7km
-         7RKuWc5KQSGrYn483r1iY5fLdVKLriMxdn1+Hjnds2O5ueFGY7/T3oG4RfiuZKWGM8KX
-         qOiNdKnfauQQAmCcXMEOO0mx4fpHsDcu9Jo7lljwYXBqOQEltJJ4Z+TYOEBmUwVuUK7u
-         Glhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=QZjZXAIJGmhzIoJIXLLcQGATRWxRcQcmbOZU2XUvhr8=;
-        b=EoTxNHw9U6/YFJFp2a19TYsou/vaAi2Dv3Uwi4zTE/gyVVTgS2cBiIZk1bUQZS3Oh7
-         +DLpCqxcJvslw4Yf1EtQCugz2OA9lmyHk23ZRe6hR2tlc5Vl9jLof8qHxqTxYWrzDRAw
-         CA9516tphsI3SZR4XGTB2VzdtfAwEO1IC81txqmC/9ulvgkW17HxFPPqcjIhHvSwgZb1
-         7pdDj0tKD4+h7+qLoi59T78NNo1xGo+7lcaby5hvNqIHG5IdOCOJvXDojWI/Wnx1gphj
-         w9EH78s2+cKu63JY5UVfnXVvga9madiwVaAGQOca9vJtZq+rzbHdKB9R5yFedHnQkF8T
-         N+fA==
-X-Gm-Message-State: APjAAAXvxZ55GC65RJ5OlRmkMc0XEpDH0c4rz7hKiwNIZ6Mxco2Twj4r
-        3E06zjDPhtMsaddckOO8ZhQ=
-X-Google-Smtp-Source: APXvYqwui9MKPbwXd20NXyO7coHBC44a229d+ygMe0+oWAsi8GGbCfVA7032TrEIAXA89yiBWxpQ0g==
-X-Received: by 2002:adf:f744:: with SMTP id z4mr57099002wrp.318.1582490847193;
-        Sun, 23 Feb 2020 12:47:27 -0800 (PST)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id z8sm14817927wrq.22.2020.02.23.12.47.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 12:47:26 -0800 (PST)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
-        michael@walle.cc, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 devicetree 3/6] net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
-Date:   Sun, 23 Feb 2020 22:47:13 +0200
-Message-Id: <20200223204716.26170-4-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200223204716.26170-1-olteanv@gmail.com>
-References: <20200223204716.26170-1-olteanv@gmail.com>
+        Sun, 23 Feb 2020 17:01:25 -0500
+Received: from ozlabs.org ([203.11.71.1]:35501 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgBWWBZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Feb 2020 17:01:25 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 48QfKZ3rhhz9sR4; Mon, 24 Feb 2020 09:01:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1582495282;
+        bh=offKD/tuqL/DSDa2v25Jc0IM7BprqmjMf6LCeNiIZbE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LwL/iptBEMCarj+f3q8Os3B2TZTfsaK9r0ubJJ13bhD5UKGSewVyTATKgRL6ybTw6
+         TZ6r3y3evxFJ2T7GHqr77PmlzWNZc74Q2JYKrMRZpOZtmz7niIl6Ti9OpZmYSBayjZ
+         TBuqRBuLuno8PmSPypNw+iutg3ImuBykUAEZ9CMI=
+Date:   Mon, 24 Feb 2020 08:59:36 +1100
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Ian Lepore <ian@freebsd.org>
+Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
+ information
+Message-ID: <20200223215936.GB1751@umbus.fritz.box>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-2-alexandre.torgue@st.com>
+ <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
+In-Reply-To: <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-phy-mode = "gmii" is confusing because it may mean that the port
-supports the 8-bit-wide parallel data interface pinout, which it
-doesn't.
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It may also be confusing because one of the "gmii" internal ports is
-actually overclocked to run at 2.5Gbps (even though, yes, as far as the
-switch MAC is concerned, it still thinks it's gigabit).
+On Fri, Feb 21, 2020 at 11:52:34AM -0600, Frank Rowand wrote:
+> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+> > This commit adds a new script to create a file (in dts file directory) =
+with
+> > some information (date, Linux version, user). This file could then be u=
+sed
+> > to populate "build-info" property in every dts file that would use this
+> > build information:
+> >=20
+> > Example:
+> >=20
+> > / {
+> > 	...
+> > 	build-info =3D /incbin/("dtb-build.txt");
+>=20
+> s/.txt/.dtsi/
 
-So use the phy-mode = "internal" property to describe the internal ports
-inside the NXP LS1028A chip (the ones facing the ENETC). The change
-should be fine, because the device tree bindings document is yet to be
-introduced, and there are no stable DT blobs in use.
+I don't think that makes sense.  This is an /incbin/ not an /include/
+so the text file is *not* dts information.
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Tested-by: Michael Walle <michael@walle.cc>
----
-Changes in v3:
-None.
+> and same wherever the file name is used.
+>=20
+>=20
+> > 	...
+> > };
+> >=20
+> > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> >=20
+> > diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> > index bae62549e3d2..a5af84ef4ffc 100644
+> > --- a/scripts/Makefile.lib
+> > +++ b/scripts/Makefile.lib
+> > @@ -246,6 +246,7 @@ quiet_cmd_gzip =3D GZIP    $@
+> >  # DTC
+> >  # --------------------------------------------------------------------=
+-------
+> >  DTC ?=3D $(objtree)/scripts/dtc/dtc
+> > +DTB_GEN_INFO ?=3D $(objtree)/scripts/gen_dtb_build_info.sh
+> > =20
+> >  # Disable noisy checks by default
+> >  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+> > @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+> > =20
+> >  quiet_cmd_dtc =3D DTC     $@
+> >  cmd_dtc =3D mkdir -p $(dir ${dtc-tmp}) ; \
+> > +	$(DTB_GEN_INFO) $(src) ; \
+> >  	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< =
+; \
+> >  	$(DTC) -O $(2) -o $@ -b 0 \
+> >  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+> > diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info=
+=2Esh
+> > new file mode 100755
+> > index 000000000000..0cd8bd98e410
+> > --- /dev/null
+> > +++ b/scripts/gen_dtb_build_info.sh
+> > @@ -0,0 +1,10 @@
+> > +#!/bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +set -o nounset
+> > +
+> > +DTB_DIR=3D$1
+> > +DTB_COMPILE_BY=3D$(whoami | sed 's/\\/\\\\/')
+> > +DTB_INFO=3D"From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\=
+0"
+>=20
+> I would remove the filler words "From", "by", "the", and the trailing
+> period ('.').
+>=20
+> <bikeshed>
+> You might consider using a format more like the Linux
+> kernel version line, which puts parenthesis around the
+> compiled by info.
+> </bikeshed>
+>=20
+> -Frank
+>=20
+> > +
+> > +printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
+> >=20
+>=20
 
-Changes in v2:
-Patch is new.
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
- drivers/net/dsa/ocelot/felix.c         | 3 +--
- drivers/net/dsa/ocelot/felix_vsc9959.c | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-index 3257962c147e..35124ef7e75b 100644
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -176,8 +176,7 @@ static void felix_phylink_validate(struct dsa_switch *ds, int port,
- 	phylink_set(mask, 100baseT_Full);
- 	phylink_set(mask, 1000baseT_Full);
- 
--	/* The internal ports that run at 2.5G are overclocked GMII */
--	if (state->interface == PHY_INTERFACE_MODE_GMII ||
-+	if (state->interface == PHY_INTERFACE_MODE_INTERNAL ||
- 	    state->interface == PHY_INTERFACE_MODE_2500BASEX ||
- 	    state->interface == PHY_INTERFACE_MODE_USXGMII) {
- 		phylink_set(mask, 2500baseT_Full);
-diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
-index 2c812b481778..93800e81cdd4 100644
---- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-+++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-@@ -955,8 +955,7 @@ static int vsc9959_prevalidate_phy_mode(struct ocelot *ocelot, int port,
- 					phy_interface_t phy_mode)
- {
- 	switch (phy_mode) {
--	case PHY_INTERFACE_MODE_GMII:
--		/* Only supported on internal to-CPU ports */
-+	case PHY_INTERFACE_MODE_INTERNAL:
- 		if (port != 4 && port != 5)
- 			return -ENOTSUPP;
- 		return 0;
--- 
-2.17.1
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5S9cMACgkQbDjKyiDZ
+s5L+uA/+Ijah4iblw6QeplPNZ0j5P3vPdvAPrnFrpiCY6faeGB25BQpakMQSxYd7
+AUVpiyiW7OO5Re1VP7+A7M3RIeR2ZN8Yl7dQsb2Evpbs4cB4LyRfmZCLUebEkUuY
+lOSjFCIwLrM7InrWM2cS3Xim0i5jC9m1SB7TKAG+VQCT+ahF3rHSfoqKDADyoEov
+M6zVCPvPCnw8UF8JsciD3vn1ehO8MFNWDPxJmVl+FqXGn/woSD6CXqMRFOhkMILe
+qIThs0v1fGeKAKZgNnzfblAT8MHwOWIEq/uCDKktxsEFXe0Htb5m7O+jblm2jAyE
+XviDax1jJkzAn8LcJaguDZhekE5AbG4cimW2NV9Y4qYDqcKrUKxJlZxNC+7rAypV
+nlry93xwydvEHISHa2AB7zHOM0BTYlRBOYQRmFrwZO1uc9h4MV2K1P5LAtxRki/h
+gXnKoekE8bkqs6/9P0bTRQ9PpyKs/sYZpUcZmzezuwkopRjHLv1ohlJj/x6dZb9w
+X+FkHVdFs0cREO9nGTUeCvm/rfe+ntpnJzG9iBkOwIj1XVZQQu19CXBYoSAP5uX+
+vsxZH83B//jEMEj/oMYgdFbKxZqxoaFwJxBMRZSHFEHAQ9h+wCQS/tXmHqXvPTWJ
+ds7GSr5+Cv03afxPFENdyX69B1a3YFGT2qDKgln3YuRVs8Ww5no=
+=v1oI
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
