@@ -2,61 +2,59 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E15FC35670
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 10:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4C4C35671
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 10:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC890214DB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 10:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A873206ED
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 10:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="EUkfKzys"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="ASvUC3zf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgBWKQt (ORCPT
+        id S1726748AbgBWKhi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 05:16:49 -0500
-Received: from vps.xff.cz ([195.181.215.36]:41622 "EHLO vps.xff.cz"
+        Sun, 23 Feb 2020 05:37:38 -0500
+Received: from vps.xff.cz ([195.181.215.36]:41764 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgBWKQt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Feb 2020 05:16:49 -0500
+        id S1725980AbgBWKhi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Feb 2020 05:37:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582453007; bh=z9sC5wOeZ8k/vAYXkg0uXqw7iHlxu3PkoDa1zkNANqo=;
+        t=1582454257; bh=F25Sml78iMjr19VTKxWNGaFjBxZ6Zvw7TPMvdEJ0DF4=;
         h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=EUkfKzysbsZv/G2CQHBgmg57Mjo5pY2Tv1ICSiqbr8bgTmRbvOiwKlrH0dI4iCKH6
-         f2sR6XefKn/pzCE9nQQooHrTywRSCrda5EPehSjYOPf72B8p0pFhcn/2XOu6YgLyb4
-         +u7CCVPdFCmvzZ6giMTnggkNR5+KOfBuY8uuyhII=
-Date:   Sun, 23 Feb 2020 11:16:47 +0100
+        b=ASvUC3zf8QJbFhXlpMHCkWZXJ4yNj/Er35jQ9uYfRm12wUeXCv+IZsFmYNnteKbk5
+         +JyoBmlQhB6r4G2ZFAEg+OgaJAjsX0O9Kbcoyl+J1bbDbkJQc7oojR/f0lhdJLaVEu
+         OodwRFVhGKOfUkl3hMi7Ghobo7toW5CF5vA4nB08=
+Date:   Sun, 23 Feb 2020 11:37:36 +0100
 From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     linux-sunxi@googlegroups.com, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
         "moderated list:ARM/Allwinner sunXi SoC support" 
         <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: sun8i-h3: Add thermal trip points/cooling maps
-Message-ID: <20200223101647.wqhya3uqvgmsvj32@core.my.home>
-Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
+Subject: Re: [linux-sunxi] [PATCH] arm64: dts: sun50i-h5-orange-pi-pc2: Add
+ CPUX voltage regulator
+Message-ID: <20200223103736.5uigz2nvvee3w5yr@core.my.home>
+Mail-Followup-To: Samuel Holland <samuel@sholland.org>,
+        linux-sunxi@googlegroups.com, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
         "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-References: <20200222214224.209860-1-megous@megous.com>
- <CAGb2v671FS+k07xWRbr1+3XWNKAsVx2AaWKOrDfyYpt2Lf-gtg@mail.gmail.com>
+References: <20200222214541.210318-1-megous@megous.com>
+ <92a2b808-8280-7ad4-cfb4-8ff9488c02c8@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGb2v671FS+k07xWRbr1+3XWNKAsVx2AaWKOrDfyYpt2Lf-gtg@mail.gmail.com>
+In-Reply-To: <92a2b808-8280-7ad4-cfb4-8ff9488c02c8@sholland.org>
 X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
  <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
@@ -64,28 +62,96 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Hi Samuel,
 
-On Sun, Feb 23, 2020 at 11:29:31AM +0800, Chen-Yu Tsai wrote:
-> On Sun, Feb 23, 2020 at 5:42 AM Ondrej Jirman <megous@megous.com> wrote:
-> >
-> > This enables passive cooling by down-regulating CPU voltage
-> > and frequency.
+On Sat, Feb 22, 2020 at 09:26:30PM -0600, Samuel Holland wrote:
+> Hi Ondrej,
 > 
+> On 2/22/20 3:45 PM, Ondrej Jirman wrote:
+> > Orange Pi PC2 features sy8106a regulator just like Orange Pi PC.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 29 +++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> > index 70b5f09984218..5feedde95b5fc 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> > @@ -85,6 +85,10 @@ reg_usb0_vbus: usb0-vbus {
+> >  	};
+> >  };
+> >  
+> > +&cpu0 {
+> > +	cpu-supply = <&reg_vdd_cpux>;
+> > +};
+> > +
 > 
-> Please state for the record how the trip points were derived. Were they from
-> the BSP? Or the user manual?
+> This should go alphabetically after "codec".
+> 
+> >  &codec {
+> >  	allwinner,audio-routing =
+> >  		"Line Out", "LINEOUT",
+> > @@ -180,6 +184,31 @@ flash@0 {
+> >  	};
+> >  };
+> >  
+> > +&r_i2c {
+> 
+> This should go alphabetically before "spi0".
+> 
+> > +	status = "okay";
+> > +
+> > +	reg_vdd_cpux: regulator@65 {
+> > +		compatible = "silergy,sy8106a";
+> > +		reg = <0x65>;
+> > +		regulator-name = "vdd-cpux";
+> > +		silergy,fixed-microvolt = <1200000>;
+> 
+> The resistors in the datasheet (10k/11.8k) make this 1.1V.
 
-I used a slightly lowered value from the BSP code. 110 seemed like a lot for
-the critical temp. So I rounded it off to 100°C.
+Ah, you're right. I didn't notice the fine print bellow:
 
-https://megous.com/git/linux/tree/drivers/thermal/sunxi-temperature.c?h=a83t-3.4-bsp-tbs-a711#n1139
+  https://megous.com/dl/tmp/e696b6042b80bf2e.png
 
-H3 lists the same recommended ambient temperature range as A83T. -20 to 70 °C.
+only the big number above. Hehe.
+
+> > +		/*
+> > +		 * The datasheet uses 1.1V as the minimum value of VDD-CPUX,
+> > +		 * however both the Armbian DVFS table and the official one
+> > +		 * have operating points with voltage under 1.1V, and both
+> > +		 * DVFS table are known to work properly at the lowest
+> > +		 * operating point.
+> > +		 *
+> > +		 * Use 1.0V as the minimum voltage instead.
+> > +		 */
+> 
+> The datasheet I have for H5 has "TBD" for the VDD-CPUX volatage range. I think
+> this comment only applies to H3 and is not necessary here.
+
+Ok.
+
+> > +		regulator-min-microvolt = <1000000>;
+> > +		regulator-max-microvolt = <1400000>;
+> > +		regulator-ramp-delay = <200>;
+> > +		regulator-boot-on;
+> > +		regulator-always-on;
+> > +	};
+> > +};
+> > +
+> >  &uart0 {
+> >  	pinctrl-names = "default";
+> >  	pinctrl-0 = <&uart0_pa_pins>;
+> > 
+> 
+> Otherwise,
+> Reviewed-by: Samuel Holland <samuel@sholland.org>
+
+Thanks for the feedback.
 
 regards,
 	o.
 
-> ChenYu
-> 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Regards,
+> Samuel
