@@ -2,86 +2,75 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB39C35673
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 04:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F87EC35673
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E02206D7
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 04:09:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="e56Uo1uJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qj4ADG+u"
+	by mail.kernel.org (Postfix) with ESMTP id 381EF2187F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:00:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582448404;
+	bh=aAzVoMpDVq9WDUFxqdTTt7WSy3tdNYzWVm8UGetuG08=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=kDthKlkG6bm7LZXK2wOnxKb0VZTNpVQLfoq+81pC9JuV+8O+Y+8ukazFh1p3Cb3wa
+	 UoqLuh5O2kL0lKG9aPmNBWz2GZ8Wl/p31EXuvgAy8b9ccnb3Y27aOKWgi+HlScl+Al
+	 n5qURHXVzi/d4ZYbNc8/bOmIujMuAnHZSZiwaSpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbgBWEI5 (ORCPT
+        id S1726236AbgBWJAD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 23:08:57 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:35629 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727133AbgBWEI5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Feb 2020 23:08:57 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5C9066BAF;
-        Sat, 22 Feb 2020 23:08:56 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sat, 22 Feb 2020 23:08:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=1fk3i2ClaxdX2
-        eU49K7tz0VJPn9jPZZckBW1lekbOSw=; b=e56Uo1uJqzMwdtD1kJVo81LGzVr6C
-        YXxXfHfIXjB1Kg14i7eASZisJRM9AFuYZddFiI/Y1IYaf/BUgFsi2Z1gKTTXVE+5
-        QPyAkwX+e1Sqw7J5r7gLrpXN98Vd5nqg2Di9U6F7yyY19ZM/19KHRKezFJXKcP9m
-        ZLWn8EzH7jdPjTv+VIsH88g3QN681H/JOKGEXuvXkU5UrvUiThuVfsqQDPNvI8eT
-        YqvJ6hfPIpLnEwosC6hiJ4/5UGA8epmcvSTOCz2wKcL8XrcxNDnyrFBp2PfEP1yy
-        8YB3HIizmGBUoVDI8Ilal0PBkMRDfNstBKgRp6Gk858a22Evm4+tqzJHg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=1fk3i2ClaxdX2eU49K7tz0VJPn9jPZZckBW1lekbOSw=; b=Qj4ADG+u
-        h57PIkB7VKOUc7akOReEHEi/GgNu5w5vM9Zsb/s9QQHCFS6GmXNYXn29Ax+AWrTo
-        mO0N/8h6fC24nS+IfyPzO19/w2Z/k2XIvDRoEOTiAmTdXQetp5Tu1de2PgUloNel
-        cCD+ZBiBdT9g/d8jWcj6hucPtxZzUCWQm3KPuYJNqZvm2kHRq25ph8ZNHmYD6oGi
-        Hc9H9+IPaLjNAuPrCeDFVrEpr+HbF2Wo5PaVRKu6rvbjDV6YKxv3pOZevbe7Tuds
-        rUXppjTHXrH6roJBjIBrIg4gRk/o7Hf+rGn3k0uSa/DDwAw4eS6CPPgZct9VI2EE
-        EA5hV58goDTqWw==
-X-ME-Sender: <xms:2PpRXhj7rCGz5DFPrgXlQGapsYMHKTkDolpd0ZqoRByCxgYA-XYHZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeejgdeigecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
-    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
-    ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedunecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:2PpRXh3kj8fRDQVJXVY01touArKTklrt15fw8irZtWd4kbYuNumMNQ>
-    <xmx:2PpRXsdnQ3jbwBDoLJjZ5_BD4rhuwDbhHi1zSeBQbIGLsuWV-hxldw>
-    <xmx:2PpRXvw2EjRxT_69KxDLAdxt2-yXTl2318fzHurhjnExONq66gqaYw>
-    <xmx:2PpRXugx0Kd3Gzxf87sDn49i_NaUZjlx58VcObKja7rwMuynVE8Sew>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BE71E328005A;
-        Sat, 22 Feb 2020 23:08:55 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v7 3/6] ARM: dts: sunxi: a83t: Add msgbox node
-Date:   Sat, 22 Feb 2020 22:08:50 -0600
-Message-Id: <20200223040853.2658-4-samuel@sholland.org>
+        Sun, 23 Feb 2020 04:00:03 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40264 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgBWJAD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 04:00:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=RNB2J+mEHhCNl0xuNBvvHTB/2tWC60YI0L4tSd1QRB0=; b=GPUn5ur3nKI8vkZxD9zlfePIvg
+        nYQ2HGRdonyN9ziEioizfW8K80tgKNBfd+diHIFZUweMFwqc1qBhNnrvWnDQYRQRweDIGMArB4v2R
+        v6ePauHBnkFdZOFIc5sohI/3kse56yFR8eovN5pOAhfbC54SgEifNm83aPwU30wOWH4s0LI3By36A
+        n/n8EW/0d9bB7jm+3kwbbRMXlGYQCtzmwyDKZ39c29i6Bt//Z2koUTUB0xvv3Jgx9bQp+y/cMWTIY
+        vkp5MjPItSg6CGw8DTU5zxNqBviQ0LONpxkFW9gmzxIHd5u6CP8jMAOjEmpa4vjcYQ8K0BbK3fo2Y
+        7r/GfDXA==;
+Received: from [80.156.29.194] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5n7F-0007ZW-MS; Sun, 23 Feb 2020 08:59:57 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1j5n7D-001RYm-3q; Sun, 23 Feb 2020 09:59:55 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Olivier Moysan <olivier.moysan@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH] docs: dt: fix several broken doc references
+Date:   Sun, 23 Feb 2020 09:59:53 +0100
+Message-Id: <0e530494349b37eb2eab4a8eccf56626e0b18e6d.1582448388.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200223040853.2658-1-samuel@sholland.org>
-References: <20200223040853.2658-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -89,37 +78,122 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The A83T SoC contains a message box that can be used to send messages
-and interrupts back and forth between the ARM application CPUs and the
-ARISC coprocessor. Add a device tree node for it.
+There are several DT doc references that require manual fixes.
+I found 3 cases fixed on this patch:
 
-Tested-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+	- directory named "binding/" instead of "bindings/";
+	- .txt to .yaml renames;
+	- file renames (still on txt format);
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../devicetree/bindings/mtd/cadence-nand-controller.txt       | 2 +-
+ .../devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt      | 2 +-
+ Documentation/devicetree/bindings/sound/st,stm32-sai.txt      | 2 +-
+ Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt  | 2 +-
+ Documentation/devicetree/bindings/spi/st,stm32-spi.yaml       | 2 +-
+ MAINTAINERS                                                   | 4 ++--
+ .../devicetree/bindings/net/wireless/siliabs,wfx.txt          | 2 +-
+ 7 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 74ac7ee9383c..cdec59eebff4 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -599,6 +599,16 @@ crypto: crypto@1c15000 {
- 			clock-names = "bus", "mod";
- 		};
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+index f3893c4d3c6a..d2eada5044b2 100644
+--- a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
++++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+@@ -27,7 +27,7 @@ Required properties of NAND chips:
+   - reg: shall contain the native Chip Select ids from 0 to max supported by
+     the cadence nand flash controller
  
-+		msgbox: mailbox@1c17000 {
-+			compatible = "allwinner,sun8i-a83t-msgbox",
-+				     "allwinner,sun6i-a31-msgbox";
-+			reg = <0x01c17000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MSGBOX>;
-+			resets = <&ccu RST_BUS_MSGBOX>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <1>;
-+		};
-+
- 		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-a83t-musb",
- 				     "allwinner,sun8i-a33-musb";
+-See Documentation/devicetree/bindings/mtd/nand.txt for more details on
++See Documentation/devicetree/bindings/mtd/nand-controller.yaml for more details on
+ generic bindings.
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
+index 48a7f916c5e4..88b57b0ca1f4 100644
+--- a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
++++ b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
+@@ -45,7 +45,7 @@ Optional properties:
+   switch queue
+ 
+ - resets: a single phandle and reset identifier pair. See
+-  Documentation/devicetree/binding/reset/reset.txt for details.
++  Documentation/devicetree/bindings/reset/reset.txt for details.
+ 
+ - reset-names: If the "reset" property is specified, this property should have
+   the value "switch" to denote the switch reset line.
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+index 944743dd9212..c42b91e525fa 100644
+--- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
++++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+@@ -36,7 +36,7 @@ SAI subnodes required properties:
+   - clock-names: Must contain "sai_ck".
+ 	Must also contain "MCLK", if SAI shares a master clock,
+ 	with a SAI set as MCLK clock provider.
+-  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
++  - dmas: see Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
+   - dma-names: identifier string for each DMA request line
+ 	"tx": if sai sub-block is configured as playback DAI
+ 	"rx": if sai sub-block is configured as capture DAI
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+index 33826f2459fa..ca9101777c44 100644
+--- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
++++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+@@ -10,7 +10,7 @@ Required properties:
+   - clock-names: must contain "kclk"
+   - interrupts: cpu DAI interrupt line
+   - dmas: DMA specifiers for audio data DMA and iec control flow DMA
+-    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
++    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
+   - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+index f0d979664f07..e49ecbf715ba 100644
+--- a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
++++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+@@ -49,7 +49,7 @@ properties:
+   dmas:
+     description: |
+       DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
+-      the STM32 DMA bindings Documentation/devicetree/bindings/dma/stm32-dma.txt.
++      the STM32 DMA bindings Documentation/devicetree/bindings/dma/st,stm32-dma.yaml.
+     items:
+       - description: rx DMA channel
+       - description: tx DMA channel
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d81701ea3336..6b30a58bd77b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4480,7 +4480,7 @@ L:	linux-media@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
+ F:	drivers/media/platform/sunxi/sun6i-csi/
+-F:	Documentation/devicetree/bindings/media/sun6i-csi.txt
++F:	Documentation/devicetree/bindings/media/allwinner,sun6i-a31-csi.yaml
+ 
+ CW1200 WLAN driver
+ M:	Solomon Peachy <pizza@shaftnet.org>
+@@ -15955,7 +15955,7 @@ F:	drivers/*/stm32-*timer*
+ F:	drivers/pwm/pwm-stm32*
+ F:	include/linux/*/stm32-*tim*
+ F:	Documentation/ABI/testing/*timer-stm32
+-F:	Documentation/devicetree/bindings/*/stm32-*timer*
++F:	Documentation/devicetree/bindings/*/*stm32-*timer*
+ F:	Documentation/devicetree/bindings/pwm/pwm-stm32*
+ 
+ STMMAC ETHERNET DRIVER
+diff --git a/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt b/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
+index ffec79c14786..17db67559f5e 100644
+--- a/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
++++ b/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
+@@ -94,5 +94,5 @@ Some properties are recognized either by SPI and SDIO versions:
+    Must contains 64 hexadecimal digits. Not supported in current version.
+ 
+ WFx driver also supports `mac-address` and `local-mac-address` as described in
+-Documentation/devicetree/binding/net/ethernet.txt
++Documentation/devicetree/bindings/net/ethernet.txt
+ 
 -- 
 2.24.1
 
