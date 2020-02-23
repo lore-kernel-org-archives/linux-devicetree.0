@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F48C35675
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 20:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E519C35671
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 20:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECD7206ED
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 20:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E786B206ED
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 20:47:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQUWIhVy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LByWPWnc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgBWUrd (ORCPT
+        id S1727100AbgBWUrz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 15:47:33 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53567 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbgBWUrc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 15:47:32 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s10so7003896wmh.3;
-        Sun, 23 Feb 2020 12:47:30 -0800 (PST)
+        Sun, 23 Feb 2020 15:47:55 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46646 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727188AbgBWUr3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 15:47:29 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g4so1645131wro.13;
+        Sun, 23 Feb 2020 12:47:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nCv2qkKWtDHxvh0iJVpICyofV+GyS7wLpg2MkaCMWPk=;
-        b=uQUWIhVyeHDJO3kl6IiLNDfiSruZu5K+JGkYSWw/08eoGiGCpoI73jviO7+ZaucIsz
-         d7MAxzx+hM9HTmsi827oyHoTqwdMEYUS6EhkPVUnZVwsFfFnaB6ETeBYgT+mpTjNvBc4
-         vKNK4KLHJtUzKuswR0dzzPHInq0c3sP4xYCB/3zvwXXTlaqa/YwEJh3thoH8KoNu1vSF
-         aeoHnLcQZE34HsAKg+rDMhgy6WjOYDuMWaUSGQTdL9cPC1XW5uvrq7IW7Zwuv24TVgKl
-         ItGMJZyARgBjUnRwYvbOaulrqEUYsC8iT33wwwf4nmsDf5NW2Kdi0/CDBtUVeUrpeh7D
-         iUgA==
+        bh=Sv8jsEDNCFEDM8odFJWiRtPKsZJBV3sbBHzIM26MUDA=;
+        b=LByWPWncpyh0fl9q5MQGiNZ3TN0DL0kQn3wDO4l+kNOmL+BQivgXgiM+ZF31Ot7Pvp
+         pICQTxBM+xWe3/Usw+HtBNBRZp2j/8uD3Z0nOCsPFvkHh/txrSID4s65V0RhLUKWn3C5
+         Occ25OJ60b50E4E2vtinwe62G84STsrgi/6av4FhFftk24sB517U/t1MeQ0mh4NegGXH
+         v9rowHIkBfldL7dXflYQvrkGP7Wl94BqHwTcJdHdIgGtzbB9lrau71SHXRd3de6UHWWs
+         Dzz3S20a5IKidkaurR3+O45/wISKw1jivmhISgEd9hIQly5ktWY6li0M1dez4mYOBs1d
+         Ap2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=nCv2qkKWtDHxvh0iJVpICyofV+GyS7wLpg2MkaCMWPk=;
-        b=IitEDoGsv15NMXQV2zTJ4KkDhZ91Qq4fs+A99gSJjkiips0yNuJJhnrgwdVjmfpBoN
-         XzJh6RiMiPNrid2kd2XiqX/6PscEa2AnbX0LW2lNUY7DdoIqJljdc1B2tpVmvfSXAXOy
-         84kfgwz7NKu6gDCjzHO5DxGSxFwXy9bcshBC76igEo8O9Z7pRLNYRNVQnRtmfFuS79Fl
-         eeg3I0LSco1HQf1EZunLDTbEUSOqVgq6SyflzHydXL0wYFscRPrOZl2fVrpDj79b7vI2
-         TFW1h0GMDXaefCc+u5yrgH+FpVGHd5nOXeCO44A4U1gNtFda3KoswtDG/TDqQ6DdSqGq
-         j54w==
-X-Gm-Message-State: APjAAAWZm1KZOeWQhWo99+4B921GsoJgzDTvA67yxttTCgOo+ybJL6CM
-        vES7MFxy9rih7ihItCmATuw=
-X-Google-Smtp-Source: APXvYqwAIHFb5U25fiKcxG+LHaNwfLUx56quFjS0RQfNVzq19+7miByBXZU3T503uLyBzS+NbWHa1Q==
-X-Received: by 2002:a7b:c190:: with SMTP id y16mr17907150wmi.107.1582490849726;
-        Sun, 23 Feb 2020 12:47:29 -0800 (PST)
+        bh=Sv8jsEDNCFEDM8odFJWiRtPKsZJBV3sbBHzIM26MUDA=;
+        b=HwSSKn99IE1BSjTtpx74+WLPy9U7mVKd3Uh0ETNRXIbeZbnbQQVkEdzHH1A9UVW/bG
+         4xzkjAM2TPa7VWoDIsquJgRvnI+jZ7s6oeYAqmLj7xvvwIDcoXSrNoPl5sO4OZWwDd7u
+         sF4ifKu7FDsw9m99//EMN7SQop1udsIQB7QF64k5rRdrGrsfJOt0xnz+C+iWZDmkKW6m
+         5SdSxaoyRJ/zv2GHz8oK49mjkkDiL0zsc1C2hM8IMi9FXFEnDl+VkIgYSfr40k3/B0Ro
+         FtPv7tqFAiTq+Mu+Zw/GzBJE1iI6FU+b/N/FNtEmoESty6OfCeBTbaRtvXcqIaVARaql
+         gqbQ==
+X-Gm-Message-State: APjAAAWtFM9OzMkJbwoh/vhNyIVYgEdC1e3DzOBMydR7NMAQYc3qFMIy
+        ciLNEj1P4zOoJEd8f7F/JiU=
+X-Google-Smtp-Source: APXvYqz9BRcLgtmNXrCiLnXwc44nHuiohUPLa+G7d5UwS5JCClSsN/2vlwkClCklXj7ED3Fyrxo6qg==
+X-Received: by 2002:adf:ea42:: with SMTP id j2mr3149619wrn.377.1582490845979;
+        Sun, 23 Feb 2020 12:47:25 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id z8sm14817927wrq.22.2020.02.23.12.47.28
+        by smtp.gmail.com with ESMTPSA id z8sm14817927wrq.22.2020.02.23.12.47.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 12:47:29 -0800 (PST)
+        Sun, 23 Feb 2020 12:47:25 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org
@@ -62,9 +62,9 @@ Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
         alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
         michael@walle.cc, davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 devicetree 5/6] arm64: dts: fsl: ls1028a: add node for Felix switch
-Date:   Sun, 23 Feb 2020 22:47:15 +0200
-Message-Id: <20200223204716.26170-6-olteanv@gmail.com>
+Subject: [PATCH v3 devicetree 2/6] arm64: dts: fsl: ls1028a: disable all enetc ports by default
+Date:   Sun, 23 Feb 2020 22:47:12 +0200
+Message-Id: <20200223204716.26170-3-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200223204716.26170-1-olteanv@gmail.com>
 References: <20200223204716.26170-1-olteanv@gmail.com>
@@ -73,176 +73,84 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Add the switch device node, available on PF5, so that the switch port
-sub-nodes (net devices) can be linked to corresponding board specific
-phy nodes (external ports) or have their link mode defined (internal
-ports).
+There are few boards that enable all ENETC ports, so instead of having
+board DTs disable them, do so in the DTSI and have the boards enable the
+ports they use.
 
-The switch device features 6 ports, 4 with external links and 2
-internally facing to the LS1028A SoC and connected via fixed links to 2
-internal ENETC Ethernet controller ports.
-
-Add the corresponding ENETC host port device nodes, mapped to PF2 and
-PF6 PCIe functions. Since the switch only supports tagging on one CPU
-port, only one port pair (swp4, eno2) is enabled by default and the
-other, lower speed, port pair is disabled to prevent the PCI core from
-probing them. If enabled, swp5 will be a fixed-link slave port.
-
-DSA tagging can also be moved from the swp4-eno2 2.5G port pair to the
-1G swp5-eno3 pair by changing the ethernet = <&enetc_port2> phandle to
-<&enetc_port3> and moving it under port5, but in that case enetc_port2
-should not be disabled, because it is the hardware owner of the Felix
-PCS and disabling its memory would result in access faults in the Felix
-DSA driver.
-
-All ports are disabled by default, including the CPU port, and need to
-be enabled on a per-board basis.
-
-The phy-mode binding of the internal ENETC ports was modified from
-"gmii" to "internal" to match the phy-mode of the internal-facing switch
-ports connected to them. The ENETC driver does not perform any phy_mode
-validation anyway, so the change is only cosmetic. Also, enetc_port2 is
-defined as a fixed-link 1000 Mbps port even though it is 2500 Mbps (as
-can be seen by the fact that it is connected to mscc_felix_port4). The
-fact that it is currently defined as 1000 Mbps is an artifact of its
-PHYLIB implementation instead of PHYLINK (the former can't describe a
-fixed-link speed higher than what swphy can emulate from the Clause 22
-MDIO spec).
-
-The switch's INTB interrupt line signals:
-- PTP TX timestamp availability
-- TSN Frame Preemption
-
-And don't forget to enable the 4MB BAR4 in the root complex ECAM space,
-where the switch registers are mapped.
-
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Tested-by: Michael Walle <michael@walle.cc>
 ---
 Changes in v3:
-- Disabled the CPU port and the DSA master by default.
-- Removed the "ethernet" property from the DTSI to let the board set the
-  CPU port.
+Patch is new.
 
-Changes in v2:
-Adapted phy-mode = "gmii" to phy-mode = "internal".
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 5 +----
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    | 5 +++++
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 83 ++++++++++++++++++-
- 1 file changed, 82 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index ca409d907b36..dd69c5b821e9 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -225,6 +225,7 @@
+ &enetc_port1 {
+ 	phy-handle = <&qds_phy1>;
+ 	phy-connection-type = "rgmii-id";
++	status = "okay";
+ };
+ 
+ &sai1 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index afb55653850d..14efe3b06042 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -180,6 +180,7 @@
+ &enetc_port0 {
+ 	phy-handle = <&sgmii_phy0>;
+ 	phy-connection-type = "sgmii";
++	status = "okay";
+ 
+ 	mdio {
+ 		#address-cells = <1>;
+@@ -190,10 +191,6 @@
+ 	};
+ };
+ 
+-&enetc_port1 {
+-	status = "disabled";
+-};
+-
+ &sai4 {
+ 	status = "okay";
+ };
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 1b330b7cce62..90ff75547db0 100644
+index dfead691e509..1b330b7cce62 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -700,7 +700,9 @@
- 				  /* PF1: VF0-1 BAR0 - non-prefetchable memory */
- 				  0x82000000 0x0 0x00000000  0x1 0xf8210000  0x0 0x020000
- 				  /* PF1: VF0-1 BAR2 - prefetchable memory */
--				  0xc2000000 0x0 0x00000000  0x1 0xf8230000  0x0 0x020000>;
-+				  0xc2000000 0x0 0x00000000  0x1 0xf8230000  0x0 0x020000
-+				  /* BAR4 (PF5) - non-prefetchable memory */
-+				  0x82000000 0x0 0x00000000  0x1 0xfc000000  0x0 0x400000>;
- 
+@@ -705,17 +705,22 @@
  			enetc_port0: ethernet@0,0 {
  				compatible = "fsl,enetc";
-@@ -714,6 +716,18 @@
- 				status = "disabled";
- 			};
- 
-+			enetc_port2: ethernet@0,2 {
-+				compatible = "fsl,enetc";
-+				reg = <0x000200 0 0 0 0>;
-+				phy-mode = "internal";
+ 				reg = <0x000000 0 0 0 0>;
 +				status = "disabled";
+ 			};
 +
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
+ 			enetc_port1: ethernet@0,1 {
+ 				compatible = "fsl,enetc";
+ 				reg = <0x000100 0 0 0 0>;
++				status = "disabled";
+ 			};
 +
  			enetc_mdio_pf3: mdio@0,3 {
  				compatible = "fsl,enetc-mdio";
  				reg = <0x000300 0 0 0 0>;
-@@ -727,6 +741,73 @@
- 				clocks = <&clockgen 4 0>;
- 				little-endian;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
  			};
 +
-+			ethernet-switch@0,5 {
-+				reg = <0x000500 0 0 0 0>;
-+				/* IEP INT_B */
-+				interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					/* External ports */
-+					mscc_felix_port0: port@0 {
-+						reg = <0>;
-+						status = "disabled";
-+					};
-+
-+					mscc_felix_port1: port@1 {
-+						reg = <1>;
-+						status = "disabled";
-+					};
-+
-+					mscc_felix_port2: port@2 {
-+						reg = <2>;
-+						status = "disabled";
-+					};
-+
-+					mscc_felix_port3: port@3 {
-+						reg = <3>;
-+						status = "disabled";
-+					};
-+
-+					/* Internal ports */
-+					mscc_felix_port4: port@4 {
-+						reg = <4>;
-+						phy-mode = "internal";
-+						status = "disabled";
-+
-+						fixed-link {
-+							speed = <2500>;
-+							full-duplex;
-+						};
-+					};
-+
-+					mscc_felix_port5: port@5 {
-+						reg = <5>;
-+						phy-mode = "internal";
-+						status = "disabled";
-+
-+						fixed-link {
-+							speed = <1000>;
-+							full-duplex;
-+						};
-+					};
-+				};
-+			};
-+
-+			enetc_port3: ethernet@0,6 {
-+				compatible = "fsl,enetc";
-+				reg = <0x000600 0 0 0 0>;
-+				phy-mode = "internal";
-+				status = "disabled";
-+
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
- 		};
- 	};
- 
+ 			ethernet@0,4 {
+ 				compatible = "fsl,enetc-ptp";
+ 				reg = <0x000400 0 0 0 0>;
 -- 
 2.17.1
 
