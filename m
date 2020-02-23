@@ -2,188 +2,68 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B93C35671
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 14:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B9AC35671
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 15:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F290D20637
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 14:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B946D20637
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 15:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgBWO4i (ORCPT
+        id S1726933AbgBWPHg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 09:56:38 -0500
-Received: from mga12.intel.com ([192.55.52.136]:40120 "EHLO mga12.intel.com"
+        Sun, 23 Feb 2020 10:07:36 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:60632 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgBWO4i (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Feb 2020 09:56:38 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 06:56:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,476,1574150400"; 
-   d="scan'208";a="255331825"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 23 Feb 2020 06:56:36 -0800
-Date:   Sun, 23 Feb 2020 06:56:36 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Alistair Delva <adelva@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kenny Root <kroot@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, devicetree@vger.kernel.org,
-        linux-nvdimm@lists.01.org, kernel-team@android.com
-Subject: Re: [PATCH 1/2] libnvdimm/of_pmem: handle memory-region in DT
-Message-ID: <20200223145635.GB29607@iweiny-DESK2.sc.intel.com>
-References: <20200222183010.197844-1-adelva@google.com>
+        id S1726678AbgBWPHg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Feb 2020 10:07:36 -0500
+Received: from p508fd060.dip0.t-ipconnect.de ([80.143.208.96] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1j5sqs-0003if-PL; Sun, 23 Feb 2020 16:07:26 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     dri-devel@lists.freedesktop.org
+Cc:     thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        christoph.muellner@theobroma-systems.com, robin.murphy@arm.com,
+        linux-rockchip@lists.infradead.org, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH 1/3] dt-bindings: Add vendor prefix for Elida
+Date:   Sun, 23 Feb 2020 16:07:09 +0100
+Message-Id: <20200223150711.194482-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222183010.197844-1-adelva@google.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 10:30:09AM -0800, Alistair Delva wrote:
-> From: Kenny Root <kroot@google.com>
-> 
-> Add support for parsing the 'memory-region' DT property in addition to
-> the 'reg' DT property. This enables use cases where the pmem region is
-> not in I/O address space or dedicated memory (e.g. a bootloader
-> carveout).
-> 
-> Signed-off-by: Kenny Root <kroot@google.com>
-> Signed-off-by: Alistair Delva <adelva@google.com>
-> Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-nvdimm@lists.01.org
-> Cc: kernel-team@android.com
-> ---
->  drivers/nvdimm/of_pmem.c | 75 ++++++++++++++++++++++++++--------------
->  1 file changed, 50 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
-> index 8224d1431ea9..a68e44fb0041 100644
-> --- a/drivers/nvdimm/of_pmem.c
-> +++ b/drivers/nvdimm/of_pmem.c
-> @@ -14,13 +14,47 @@ struct of_pmem_private {
->  	struct nvdimm_bus *bus;
->  };
->  
-> +static void of_pmem_register_region(struct platform_device *pdev,
-> +				    struct nvdimm_bus *bus,
-> +				    struct device_node *np,
-> +				    struct resource *res, bool is_volatile)
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-FWIW it would be easier to review if this was splut into a patch which created
-the helper of_pmem_register_region() without the new logic.  Then added the new
-logic here.
+Shenzen Elida Technology Co. Ltd. is a Chinese TFT manufacturer.
 
-> +{
-> +	struct nd_region_desc ndr_desc;
-> +	struct nd_region *region;
-> +
-> +	/*
-> +	 * NB: libnvdimm copies the data from ndr_desc into it's own
-> +	 * structures so passing a stack pointer is fine.
-> +	 */
-> +	memset(&ndr_desc, 0, sizeof(ndr_desc));
-> +	ndr_desc.numa_node = dev_to_node(&pdev->dev);
-> +	ndr_desc.target_node = ndr_desc.numa_node;
-> +	ndr_desc.res = res;
-> +	ndr_desc.of_node = np;
-> +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> +
-> +	if (is_volatile)
-> +		region = nvdimm_volatile_region_create(bus, &ndr_desc);
-> +	else
-> +		region = nvdimm_pmem_region_create(bus, &ndr_desc);
-> +
-> +	if (!region)
-> +		dev_warn(&pdev->dev,
-> +			 "Unable to register region %pR from %pOF\n",
-> +			 ndr_desc.res, np);
-> +	else
-> +		dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
-> +			ndr_desc.res, np);
-> +}
-> +
->  static int of_pmem_region_probe(struct platform_device *pdev)
->  {
->  	struct of_pmem_private *priv;
-> -	struct device_node *np;
-> +	struct device_node *mrp, *np;
->  	struct nvdimm_bus *bus;
-> +	struct resource res;
->  	bool is_volatile;
-> -	int i;
-> +	int i, ret;
->  
->  	np = dev_of_node(&pdev->dev);
->  	if (!np)
-> @@ -46,31 +80,22 @@ static int of_pmem_region_probe(struct platform_device *pdev)
->  			is_volatile ? "volatile" : "non-volatile",  np);
->  
->  	for (i = 0; i < pdev->num_resources; i++) {
-> -		struct nd_region_desc ndr_desc;
-> -		struct nd_region *region;
-> -
-> -		/*
-> -		 * NB: libnvdimm copies the data from ndr_desc into it's own
-> -		 * structures so passing a stack pointer is fine.
-> -		 */
-> -		memset(&ndr_desc, 0, sizeof(ndr_desc));
-> -		ndr_desc.numa_node = dev_to_node(&pdev->dev);
-> -		ndr_desc.target_node = ndr_desc.numa_node;
-> -		ndr_desc.res = &pdev->resource[i];
-> -		ndr_desc.of_node = np;
-> -		set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> -
-> -		if (is_volatile)
-> -			region = nvdimm_volatile_region_create(bus, &ndr_desc);
-> -		else
-> -			region = nvdimm_pmem_region_create(bus, &ndr_desc);
-> +		of_pmem_register_region(pdev, bus, np, &pdev->resource[i],
-> +					is_volatile);
-> +	}
->  
-> -		if (!region)
-> -			dev_warn(&pdev->dev, "Unable to register region %pR from %pOF\n",
-> -					ndr_desc.res, np);
-> +	i = 0;
-> +	while ((mr_np = of_parse_phandle(np, "memory-region", i++))) {
-> +		ret = of_address_to_resource(mr_np, 0, &res);
-> +		if (ret)
-> +			dev_warn(
-> +				&pdev->dev,
-> +				"Unable to acquire memory-region from %pOF: %d\n",
-> +				mr_np, ret);
->  		else
-> -			dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
-> -					ndr_desc.res, np);
-> +			of_pmem_register_region(pdev, bus, np, &res,
-> +						is_volatile);
-> +		of_node_put(mr_np);
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Why of_node_put()?
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9e67944bec9c..38d3149d3adc 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -285,6 +285,8 @@ patternProperties:
+     description: Elan Microelectronic Corp.
+   "^elgin,.*":
+     description: Elgin S/A.
++  "^elida,.*":
++    description: Shenzhen Elida Technology Co., Ltd.
+   "^embest,.*":
+     description: Shenzhen Embest Technology Co., Ltd.
+   "^emlid,.*":
+-- 
+2.24.1
 
-Ira
->  	}
->  
->  	return 0;
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
-> 
