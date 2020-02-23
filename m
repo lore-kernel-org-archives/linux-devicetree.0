@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CC1C35671
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8FCC35671
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 10:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458F8214DB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 09:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60661206ED
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 10:02:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="KBLgQTYN"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RMa8HcLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgBWJ5j (ORCPT
+        id S1726534AbgBWKC2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 04:57:39 -0500
-Received: from vps.xff.cz ([195.181.215.36]:41430 "EHLO vps.xff.cz"
+        Sun, 23 Feb 2020 05:02:28 -0500
+Received: from vps.xff.cz ([195.181.215.36]:41500 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgBWJ5j (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Feb 2020 04:57:39 -0500
+        id S1725980AbgBWKC1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Feb 2020 05:02:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582451857; bh=Hc3Q/e3isq42FZVZz5Pj1+rkdYA5T7YqVfZ3lSbKHwM=;
+        t=1582452145; bh=ZLOyODypymrlYWhAyRXBc5vQ3z2suv+ka0Ds1dIXppg=;
         h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=KBLgQTYNtOdfr0C8KgWxzTcFc9H4LySTQ3Y2+AYmD1O0bUlSZ7CqOWG9Bnmy4p0aN
-         UHCxvhQuuCvVN/Eathp3L8kX54EJBUF2WnR1EY0HTlyZJ/EEWGNPCbqE5N2n7BnzCf
-         v4yNsINPB0peqyQ18CwD8sYkROsvuULDUSk5C2J0=
-Date:   Sun, 23 Feb 2020 10:57:36 +0100
+        b=RMa8HcLbYgAb1fS1SFCnKRuGxHeANm6erMaQXhCMz6vy3LGJptsw8NeVlT51V6xjq
+         Jo+GWZ56u2dY5+QGZnC3KaOuf6SRBsPKjEyfctS3mZGRfR1/dlXrTJTIkJrT1xtlmp
+         BDnt13ikBk4X35zHfrGTVAl5+r7SXtPaZYYF9fgI=
+Date:   Sun, 23 Feb 2020 11:02:25 +0100
 From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
 To:     Chen-Yu Tsai <wens@csie.org>
 Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
@@ -40,10 +40,11 @@ Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
         <devicetree@vger.kernel.org>,
         "moderated list:ARM/Allwinner sunXi SoC support" 
         <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [linux-sunxi] [PATCH 2/4] ARM: dts: sun8i-a83t-tbs-a711: HM5065
- doesn't like such a high voltage
-Message-ID: <20200223095736.5c3dr66734kv3ypg@core.my.home>
+        open list <linux-kernel@vger.kernel.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>
+Subject: Re: [linux-sunxi] [PATCH 1/4] ARM: dts: sun8i-a83t-tbs-a711: OOB
+ WiFi interrupt doesn't work
+Message-ID: <20200223100225.6e6n65mc3mj365wy@core.my.home>
 Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
         linux-sunxi <linux-sunxi@googlegroups.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -51,14 +52,16 @@ Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
         Mark Rutland <mark.rutland@arm.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
         "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
+        open list <linux-kernel@vger.kernel.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>
 References: <20200222223154.221632-1-megous@megous.com>
- <20200222223154.221632-3-megous@megous.com>
- <CAGb2v67uOXE7_28yn8Q2uo320vE1FsqL-ewG4p1nViim3q0xbw@mail.gmail.com>
+ <20200222223154.221632-2-megous@megous.com>
+ <CAGb2v67XwrYA8FLF9wpnngm9F-F9UV2m+rr+r3t+KUVv5-EMiw@mail.gmail.com>
+ <CAGb2v66G5P_souwFHodO0_NYhWyQ+dGE4fbqLLK3qd9ue7Kk9g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGb2v67uOXE7_28yn8Q2uo320vE1FsqL-ewG4p1nViim3q0xbw@mail.gmail.com>
+In-Reply-To: <CAGb2v66G5P_souwFHodO0_NYhWyQ+dGE4fbqLLK3qd9ue7Kk9g@mail.gmail.com>
 X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
  <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
@@ -66,61 +69,67 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
-
-On Sun, Feb 23, 2020 at 11:39:17AM +0800, Chen-Yu Tsai wrote:
-> On Sun, Feb 23, 2020 at 6:32 AM Ondrej Jirman <megous@megous.com> wrote:
+On Sun, Feb 23, 2020 at 12:03:46PM +0800, Chen-Yu Tsai wrote:
+> On Sun, Feb 23, 2020 at 11:26 AM Chen-Yu Tsai <wens@csie.org> wrote:
 > >
-> > Lowering the voltage solves the quick image degradation over time
-> > (minutes), that was probably caused by overheating.
+> > Hi,
 > >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> >
+> > On Sun, Feb 23, 2020 at 6:32 AM Ondrej Jirman <megous@megous.com> wrote:
+> > >
+> > > It just causes a constant rate of 5000 interrupts per second for both
+> > > GPIO and MMC, even if nothing is happening. Rely on in-band interrupts
+> > > instead.
+> > >
+> > > Fixes: 0e23372080def7bb ("arm: dts: sun8i: Add the TBS A711 tablet devicetree")
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> >
+> > What WiFi chip/module does this use? It might be worth asking Broadcom
+> > people to help with this and fix the driver.
 > 
-> Makes sense. A lot of camera sensors run their digital parts off 1.8V.
-> This one is no different.
+> Based on the comments in the device tree file, it uses an AP6210, which
+> is a BCM43362 inside for SDIO-based WiFi. There is a recent fix in 5.6-rc1
+> for this,
 > 
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
+>     8c8e60fb86a9 brcmfmac: sdio: Fix OOB interrupt initialization on brcm43362
 > 
-> The whole CSI stuff isn't enabled in the device tree yet though, and
-> there are a lot of regulators with CSI in their names. Will this get
-> worked on?
+> which seems to fix things for me. Could you try it on your end?
 
-Yes, I'm preparing support for both cameras in this branch:
+Interesting, thanks for finding out! I'll test it.
 
-  https://megous.com/git/linux/log/?h=cam-5.6
-
-Both already work quite well. I'm just sending some fixes early.
-
-Both cameras work best at 1.8V for the digital part.
+I think it will work, since my tablet started having overheating issue recently,
+and I tracked it down to this.
 
 regards,
 	o.
 
 > ChenYu
 > 
-> > ---
-> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> > ChenYu
 > >
-> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > index ee5ce3556b2ad..ae1fd2ee3bcce 100644
-> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > @@ -371,8 +371,8 @@ &reg_dldo2 {
-> >  };
-> >
-> >  &reg_dldo3 {
-> > -       regulator-min-microvolt = <2800000>;
-> > -       regulator-max-microvolt = <2800000>;
-> > +       regulator-min-microvolt = <1800000>;
-> > +       regulator-max-microvolt = <1800000>;
-> >         regulator-name = "vdd-csi";
-> >  };
-> >
-> > --
-> > 2.25.1
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200222223154.221632-3-megous%40megous.com.
+> > > ---
+> > >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 3 ---
+> > >  1 file changed, 3 deletions(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > > index 2fd31a0a0b344..ee5ce3556b2ad 100644
+> > > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > > @@ -214,9 +214,6 @@ &mmc1 {
+> > >         brcmf: wifi@1 {
+> > >                 reg = <1>;
+> > >                 compatible = "brcm,bcm4329-fmac";
+> > > -               interrupt-parent = <&r_pio>;
+> > > -               interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 WL_WAKE_UP */
+> > > -               interrupt-names = "host-wake";
+> > >         };
+> > >  };
+> > >
+> > > --
+> > > 2.25.1
+> > >
+> > > --
+> > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200222223154.221632-2-megous%40megous.com.
