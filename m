@@ -2,92 +2,80 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D743C35673
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94617C35670
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 03:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F37206D7
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425184;
-	bh=b0T7XcKyF7fdfoO4CCzBX1iv4p+VefjFERsskt64TYA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejlpdjcDf+awN7x9ypRXroETjCWseYPt4xsIQ5EDFQJQ90uz/jXtzspvwHFFZQGqd
-	 Gauv1wfOqAFb2Rh617fpAOFG0+h2gTl4fVdusrmbwsDLFIOJuz9tANmnv0vxC0f2vu
-	 0TBM+rITAdsAhPKJm7jIgoQAjBOnBCFtunlb78YA=
+	by mail.kernel.org (Postfix) with ESMTP id 3AD24208C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 03:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="l8Tf0h9K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgBWCdA (ORCPT
+        id S1727181AbgBWDQS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:33:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52190 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 22:16:18 -0500
+Received: from vps.xff.cz ([195.181.215.36]:36846 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbgBWCXA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:00 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FBF322464;
-        Sun, 23 Feb 2020 02:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424580;
-        bh=b0T7XcKyF7fdfoO4CCzBX1iv4p+VefjFERsskt64TYA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SubP6+ehdXAUX7Da6ZZ/IuGDkVkuKQMk9DIffcj0mvc16lc6Vj8F8j4R5OIgCSWrr
-         QxH49UWAVijsHvHIa2OAHAx6/HBE1hvzO0CTnbDKEmPKLiFbasdJsQringWaRM9T/k
-         /yfWMK/RzM+1xNPbQyA0MNVA1SWlbBxjQTwmdGSk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 20/50] ARM: dts: sti: fixup sound frame-inversion for stihxxx-b2120.dtsi
-Date:   Sat, 22 Feb 2020 21:22:05 -0500
-Message-Id: <20200223022235.1404-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
-References: <20200223022235.1404-1-sashal@kernel.org>
+        id S1727115AbgBWDQS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Feb 2020 22:16:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582427776; bh=x4ETbhklf9C5iN2AAibtBUXNgpDN11ycD8F1mG47eMs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=l8Tf0h9KZfoXwcar7dNECQUNppL6t+Q2ZCVJyIc+Sm5Y/xzkaYlxhELRRlcAL8U6s
+         E9Ye2E+H/QruMazofyY3hlsrJAsKOkngPI5oKipvVb9MqDeYLQPHk6z2d4UFj9DReT
+         hek33f/l/90bKn+HzwcvfPnGB1cq0oJ9fAM+HI8c=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Sunil Mohan Adapa <sunil@medhas.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Add support for PocketBook Touch Lux 3 e-book reader
+Date:   Sun, 23 Feb 2020 04:16:11 +0100
+Message-Id: <20200223031614.515563-1-megous@megous.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+This series adds a fairly complete support for this e-book reader.
 
-[ Upstream commit f24667779b5348279e5e4328312a141a730a1fc7 ]
+Missing parts are eink display driver and the touch panel driver.
+Support for both is available out-of-tree for now at:
+  https://megous.com/git/linux/log/?h=pb-5.6
 
-frame-inversion is "flag" not "uint32".
-This patch fixup it.
+The rest of the board is supported by the mainline drivers.
 
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/stihxxx-b2120.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please take a look.
 
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 60e11045ad762..d051f080e52ec 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -46,7 +46,7 @@
- 			/* DAC */
- 			format = "i2s";
- 			mclk-fs = <256>;
--			frame-inversion = <1>;
-+			frame-inversion;
- 			cpu {
- 				sound-dai = <&sti_uni_player2>;
- 			};
+thank you and regards,
+  Ondrej Jirman
+
+Ondrej Jirman (3):
+  dt-bindings: vendor-prefixes: Add prefix for PocketBook International
+    SA
+  dt-bindings: arm: sunxi: Add PocketBook Touch Lux 3
+  ARM: dts: sun5i: Add PocketBook Touch Lux 3 support
+
+ .../devicetree/bindings/arm/sunxi.yaml        |   5 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../dts/sun5i-a13-pocketbook-touch-lux-3.dts  | 257 ++++++++++++++++++
+ 4 files changed, 265 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun5i-a13-pocketbook-touch-lux-3.dts
+
 -- 
-2.20.1
+2.25.1
 
