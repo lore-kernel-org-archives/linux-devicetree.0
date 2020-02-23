@@ -2,111 +2,93 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9433C35671
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 18:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CABCC35671
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 20:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72C220836
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 18:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FC220836
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 20:19:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Bo1BWpsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgBWSDf (ORCPT
+        id S1726678AbgBWUTf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 13:03:35 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:42919 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBWSDf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 13:03:35 -0500
-Received: from localhost.localdomain ([37.4.249.121]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1N8EdM-1jRo3d2MZk-014Eed; Sun, 23 Feb 2020 19:03:29 +0100
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Sun, 23 Feb 2020 15:19:35 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:56518 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgBWUTf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 15:19:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VKpyWUJ7gW4E+h1Y5//iHVzFJTXsAhZvji90FqZCHZ0=; b=Bo1BWpsMUXHWoFmIvPDEszdUn
+        JEq8dcLY9j8yHx6HijJLxLxZpPJk5BHAkvNiVKvr/FI1rx/ZJbi6VZrMknyTHObwNDOaJkjBhEomn
+        TMo/C1bocYASl49lrI5X9yrB+dXHSJCNtxtxepUOlkNDxqadtuByghMavnC/wxprEe1mZKfoNu0m7
+        /oJWPyGUvCrwpw3PM+7U5jCrMcqI52rw3oymW4MlBkii1/60Kf1ULuumqjx4zjAjs587EFHHuaRVH
+        0pO5uNDqE0DZchOll+pR5DPzkfNhxGgcUvjKR9GF42YvGaWiJ3Cp7A5O1hyIKUZpfWnm4jqnB6h+9
+        79ii2fnYQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:44320)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j5xii-0006sy-HP; Sun, 23 Feb 2020 20:19:20 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j5xie-0005j2-CE; Sun, 23 Feb 2020 20:19:16 +0000
+Date:   Sun, 23 Feb 2020 20:19:16 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Christian Lamparter <chunkeey@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH] ARM: dts: bcm283x: Add missing properties to the PWR LED
-Date:   Sun, 23 Feb 2020 19:03:05 +0100
-Message-Id: <1582480985-6773-1-git-send-email-stefan.wahren@i2se.com>
-X-Mailer: git-send-email 2.7.4
-X-Provags-ID: V03:K1:XcNS9Ic/XYxQMTQVRGfFHMyCdVwa7jnl5/ZEYauO68lvf+tRpdP
- RG4lDH6u8NZ95HK7hjeqZscQmy/bYszpKWfZ/uHyy+neEAvAFQN4Oi7M8YuRrFFsWnwe4Qj
- IIsnv03fNNuVecjADqaz36u1EWxM8PF5rFFqTUsCXd3HjaLFOA29KRIFoPNoFgDdlILA210
- fUTVkGAFhc0eWswM5BeWA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FUS2MfPpk1Q=:Y8tGNSjK/6mAPT2ud3hm5B
- NvB1PT+wrqRcQETrjkr8Rkr1iSdJBdSmHvxqrpkl6MK6mkCa9On9DOvKrvpzjdoMf4Cl1+uL6
- imEugl63jZLPiDk3YCeLXhxSxhhHWdrgRrd8a9mGGTPgtDMczTlGJJbPVov1B1XigGT5gHNo6
- b0meEfJeDMdbTYJQRf5uaATuJNh1m99/YE0jxN3O7yvtMW27cznFtSL2K3+tQrietupGTB4lv
- ARF51pd6lVOGaC+N/HyGXufUUcQmnzuecC1OV5hz7MoKtBfGd+l4mdfOa2lf1MVL17a3e3as2
- gTNeuneOoPamVDXfo4et7HTw7xvRxchCftvE+Xq/92VuSgFNwtcyKOEJsLCq9lrpytBMNbb5F
- nkSzKRvg8WLDsSnAs+7yLADS18MKAS5TGCZllOvMldv3D5Re8f8Kh9d5cA0dRpVwfP5NHtDMY
- JxDhj8nZf1e3iFgvW76m5lbzSOtO9bWpueuy+68DBjAounpF2NHK2KmtFT3lNzu8QRf68SXu5
- t6dAuU2QGWnKyh4RLcoKB276Mwiy8cJOVgi2b+urOktt6EYBaYF19rmfDDzREweaybgAeHViP
- qlIDPDs4tuqaxStm1nIKbrYILPNS1JQHXjKG2n7WIt3f+bMP3LrAQtfQk/V7hvzBV0/Rr26hN
- DESJA6quAgDIba04/IRHSoTrYMm+z7er/5B/4+rWoIhA1PUNr1bpYdVjIWhnkOD4TZGoUoCIP
- 2jFy/QH7DqrkVJeYz0NfVyxrDoLF2vIVWYZZS7vWH6JjBQrW/HxuUqpboXGze9RZbgOoKVoX6
- ylYECUTbjknv5T5/jI/8oU35z2e+B4B12l85NYr99Sz9t3nvfjtmWreZcgu9O5CTLgDNz7a
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] net: mdio: add ipq8064 mdio driver
+Message-ID: <20200223201916.GO25745@shell.armlinux.org.uk>
+References: <20200222161629.1862-1-ansuelsmth@gmail.com>
+ <4475595.vek7CkyBFf@debian64>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4475595.vek7CkyBFf@debian64>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds the missing properties to the PWR LED for the RPi 3 & 4 boards,
-which are already set for the other boards. Without them we will lose
-the LED state after suspend.
+On Sun, Feb 23, 2020 at 12:47:40AM +0100, Christian Lamparter wrote:
+> > +static int
+> > +ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
+> > +{
+> > +	struct ipq8064_mdio *priv = bus->priv;
+> > +	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
+> > +	u32 ret_val;
+> > +	int err;
+> > +
+> > +	/* Reject clause 45 */
+> > +	if (reg_offset & MII_ADDR_C45)
+> > +		return -EOPNOTSUPP;
+> Heh, C45 on IPQ806X? Ok, anyone know the hardware or is this some fancy
+> forward-thinking future-proofing?
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts      | 2 ++
- arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts | 2 ++
- arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 2 ++
- 3 files changed, 6 insertions(+)
+Quite simply, the driver as written does not support C45, so it should
+reject it, rather than truncating the "reg_offset" and issuing C22
+cycles instead.
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index cb33852..f242834 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -31,6 +31,8 @@
- 		pwr {
- 			label = "PWR";
- 			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-+			default-state = "keep";
-+			linux,default-trigger = "default-on";
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
-index 66ab35e..28be033 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
-@@ -26,6 +26,8 @@
- 		pwr {
- 			label = "PWR";
- 			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-+			default-state = "keep";
-+			linux,default-trigger = "default-on";
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-index 74ed6d0..3734314 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-@@ -27,6 +27,8 @@
- 		pwr {
- 			label = "PWR";
- 			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-+			default-state = "keep";
-+			linux,default-trigger = "default-on";
- 		};
- 	};
- 
 -- 
-2.7.4
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
