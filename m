@@ -2,226 +2,92 @@ Return-Path: <SRS0=8u50=4L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D011C35673
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 02:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B402C35669
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 003E1208C4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 02:19:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="BGD571Vt"
+	by mail.kernel.org (Postfix) with ESMTP id 3580B2192A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582424507;
+	bh=b0T7XcKyF7fdfoO4CCzBX1iv4p+VefjFERsskt64TYA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qqG3dUQZ8Ztjgetmogc+lVQyoKh3pKmCQAOtsCZ2iiHcOAUzsATvoZRaISkzCqqav
+	 nyRwjm98jzKcoyR2D8TgnId9cFkEfZNlieaz2hmZlEEmD3s7E1O85dDj16kKCCBft2
+	 GT8d1X0XfwJKP6S5VcRKeaa+5BS2/0mGvCudx17I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgBWCTs (ORCPT
+        id S1727718AbgBWCVq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:19:48 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39062 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgBWCTs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Feb 2020 21:19:48 -0500
-Received: by mail-lj1-f194.google.com with SMTP id o15so6234581ljg.6
-        for <devicetree@vger.kernel.org>; Sat, 22 Feb 2020 18:19:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Irx2r1P/k3fOiC744Xive5cTd/jpQZMndI6U1NS5XfM=;
-        b=BGD571Vtqqt5ZcmgjFbUzmU77zsRsFzS2Yj/cxOY/dnMeCR1os4hIG60yCxZdpNPgW
-         XeCqwd6AJeQcOGoDWt5KxiS9ijLDg/JdhQBn9Ml4W3Hjc+UuPpSvkOFGd7fYRfG9YKqF
-         P9xS3ieuV6CLOxHiuosQGUV22ZqNlifem7wwrQO9cFlNU5G9rNO9DUI5PVzvdTBkILcY
-         uWrAlDvCaPza35NEAmPXnCHWpy0r0FNTJeUqTwDLNDFnziRVyiHnfJIlM8AzmQSQ9RPS
-         /v87gyzi+Hsp8WJo+YYXZRkO0Brh1PxEX1vty7w5lThAoz9og3kaUP4JYrGTBkk/MBG1
-         8juw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Irx2r1P/k3fOiC744Xive5cTd/jpQZMndI6U1NS5XfM=;
-        b=YaDaEzYKdS8xVTcFIEGxjnWdnBN+0I/F1tdwwR8KKHlH8t5COf139zIstsD5rYEvlN
-         8FbIrcaicWErh43SIsyWGjc6xiJ+/ghERUxnjKQOKgbh7kE0BI6CFFuwTh+eLi0HTvhr
-         rqnkfvqxgH+zK9XfZeYB+0aGjqQ7CP0Ch6RRa4kShAKDfcvBebSsR6yWFYqQLm5JWcc9
-         Fd4apjfiAyXZx9l4o53anH64Ygs/m4ShKHD0MPIB6jdq89xgttWcnMvhUQbGCBUHkC69
-         bJLri9VLTziRvE/sXJqh1e2OOmfqsrgpetVo+V2/W9IIcQD9YHLptfnVcaKCiuhfzDN5
-         Csrg==
-X-Gm-Message-State: APjAAAVH16UhT9LEybGfdBgz7ApSklV7JFQN/3DuOZn2FSGVF1jALYrV
-        vr2MmkFut0WMlvMd4ypjqQs+4w==
-X-Google-Smtp-Source: APXvYqxwHWl5Xl3pYUtxomwtsfwHf3xINRXEZFd5VGUDEdWF8rFnERTpSRYDnABxx5ajTDZ+r35jVg==
-X-Received: by 2002:a2e:b8d0:: with SMTP id s16mr24410146ljp.32.1582424385729;
-        Sat, 22 Feb 2020 18:19:45 -0800 (PST)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id w9sm3950312ljh.106.2020.02.22.18.19.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 18:19:45 -0800 (PST)
-Date:   Sun, 23 Feb 2020 03:19:44 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: reset: rcar-rst: Convert to json-schema
-Message-ID: <20200223021944.GG1444588@oden.dyn.berto.se>
-References: <20200221121146.31153-1-geert+renesas@glider.be>
+        Sat, 22 Feb 2020 21:21:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727708AbgBWCVp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:45 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD362214DB;
+        Sun, 23 Feb 2020 02:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582424505;
+        bh=b0T7XcKyF7fdfoO4CCzBX1iv4p+VefjFERsskt64TYA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i77Vk/J7TDJqXKm6002HID74eMcTfYAZSaWrtUgisXwgqrP7uaWz+jsZd1UfIdSuY
+         qVGo6Vda6oDP2e/05DGGsRZGdZNb8ewq5oAlwSNhKimgt/Lm1KkstX7O9aYljVb0+O
+         upakQSOxY5hobZaEu1y+Wx4hIC5hzRD/tCgjuNn0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 21/58] ARM: dts: sti: fixup sound frame-inversion for stihxxx-b2120.dtsi
+Date:   Sat, 22 Feb 2020 21:20:42 -0500
+Message-Id: <20200223022119.707-21-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
+References: <20200223022119.707-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200221121146.31153-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Thanks for your work.
+[ Upstream commit f24667779b5348279e5e4328312a141a730a1fc7 ]
 
-On 2020-02-21 13:11:46 +0100, Geert Uytterhoeven wrote:
-> Convert the Renesas R-Car Reset Controller Device Tree binding
-> documentation to json-schema.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+frame-inversion is "flag" not "uint32".
+This patch fixup it.
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/stihxxx-b2120.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  .../devicetree/bindings/reset/renesas,rst.txt | 48 ---------------
->  .../bindings/reset/renesas,rst.yaml           | 61 +++++++++++++++++++
->  2 files changed, 61 insertions(+), 48 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.txt
->  create mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt b/Documentation/devicetree/bindings/reset/renesas,rst.txt
-> deleted file mode 100644
-> index de7f06ccd003da9f..0000000000000000
-> --- a/Documentation/devicetree/bindings/reset/renesas,rst.txt
-> +++ /dev/null
-> @@ -1,48 +0,0 @@
-> -DT bindings for the Renesas R-Car and RZ/G Reset Controllers
-> -
-> -The R-Car and RZ/G Reset Controllers provide reset control, and implement the
-> -following functions:
-> -  - Latching of the levels on mode pins when PRESET# is negated,
-> -  - Mode monitoring register,
-> -  - Reset control of peripheral devices (on R-Car Gen1),
-> -  - Watchdog timer (on R-Car Gen1),
-> -  - Register-based reset control and boot address registers for the various CPU
-> -    cores (on R-Car Gen2 and Gen3, and on RZ/G).
-> -
-> -
-> -Required properties:
-> -  - compatible: Should be
-> -		  - "renesas,<soctype>-reset-wdt" for R-Car Gen1,
-> -		  - "renesas,<soctype>-rst" for R-Car Gen2 and Gen3, and RZ/G
-> -		Examples with soctypes are:
-> -		  - "renesas,r8a7743-rst" (RZ/G1M)
-> -		  - "renesas,r8a7744-rst" (RZ/G1N)
-> -		  - "renesas,r8a7745-rst" (RZ/G1E)
-> -		  - "renesas,r8a77470-rst" (RZ/G1C)
-> -		  - "renesas,r8a774a1-rst" (RZ/G2M)
-> -		  - "renesas,r8a774b1-rst" (RZ/G2N)
-> -		  - "renesas,r8a774c0-rst" (RZ/G2E)
-> -		  - "renesas,r8a7778-reset-wdt" (R-Car M1A)
-> -		  - "renesas,r8a7779-reset-wdt" (R-Car H1)
-> -		  - "renesas,r8a7790-rst" (R-Car H2)
-> -		  - "renesas,r8a7791-rst" (R-Car M2-W)
-> -		  - "renesas,r8a7792-rst" (R-Car V2H
-> -		  - "renesas,r8a7793-rst" (R-Car M2-N)
-> -		  - "renesas,r8a7794-rst" (R-Car E2)
-> -		  - "renesas,r8a7795-rst" (R-Car H3)
-> -		  - "renesas,r8a7796-rst" (R-Car M3-W)
-> -		  - "renesas,r8a77961-rst" (R-Car M3-W+)
-> -		  - "renesas,r8a77965-rst" (R-Car M3-N)
-> -		  - "renesas,r8a77970-rst" (R-Car V3M)
-> -		  - "renesas,r8a77980-rst" (R-Car V3H)
-> -		  - "renesas,r8a77990-rst" (R-Car E3)
-> -		  - "renesas,r8a77995-rst" (R-Car D3)
-> -  - reg: Address start and address range for the device.
-> -
-> -
-> -Example:
-> -
-> -	rst: reset-controller@e6160000 {
-> -		compatible = "renesas,r8a7795-rst";
-> -		reg = <0 0xe6160000 0 0x0200>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.yaml b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
-> new file mode 100644
-> index 0000000000000000..5819eebfca064dff
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/reset/renesas,rst.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: DT bindings for the Renesas R-Car and RZ/G Reset Controller
-> +
-> +maintainers:
-> +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> +  - Magnus Damm <magnus.damm@gmail.com>
-> +
-> +description: |
-> +  The R-Car and RZ/G Reset Controllers provide reset control, and implement the
-> +  following functions:
-> +    - Latching of the levels on mode pins when PRESET# is negated,
-> +    - Mode monitoring register,
-> +    - Reset control of peripheral devices (on R-Car Gen1),
-> +    - Watchdog timer (on R-Car Gen1),
-> +    - Register-based reset control and boot address registers for the various
-> +      CPU cores (on R-Car Gen2 and Gen3, and on RZ/G).
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - renesas,r8a7743-rst       # RZ/G1M
-> +      - renesas,r8a7744-rst       # RZ/G1N
-> +      - renesas,r8a7745-rst       # RZ/G1E
-> +      - renesas,r8a77470-rst      # RZ/G1C
-> +      - renesas,r8a774a1-rst      # RZ/G2M
-> +      - renesas,r8a774b1-rst      # RZ/G2N
-> +      - renesas,r8a774c0-rst      # RZ/G2E
-> +      - renesas,r8a7778-reset-wdt # R-Car M1A
-> +      - renesas,r8a7779-reset-wdt # R-Car H1
-> +      - renesas,r8a7790-rst       # R-Car H2
-> +      - renesas,r8a7791-rst       # R-Car M2-W
-> +      - renesas,r8a7792-rst       # R-Car V2H
-> +      - renesas,r8a7793-rst       # R-Car M2-N
-> +      - renesas,r8a7794-rst       # R-Car E2
-> +      - renesas,r8a7795-rst       # R-Car H3
-> +      - renesas,r8a7796-rst       # R-Car M3-W
-> +      - renesas,r8a77961-rst      # R-Car M3-W+
-> +      - renesas,r8a77965-rst      # R-Car M3-N
-> +      - renesas,r8a77970-rst      # R-Car V3M
-> +      - renesas,r8a77980-rst      # R-Car V3H
-> +      - renesas,r8a77990-rst      # R-Car E3
-> +      - renesas,r8a77995-rst      # R-Car D3
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    rst: reset-controller@e6160000 {
-> +            compatible = "renesas,r8a7795-rst";
-> +            reg = <0xe6160000 0x0200>;
-> +    };
-> -- 
-> 2.17.1
-> 
-
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 60e11045ad762..d051f080e52ec 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -46,7 +46,7 @@
+ 			/* DAC */
+ 			format = "i2s";
+ 			mclk-fs = <256>;
+-			frame-inversion = <1>;
++			frame-inversion;
+ 			cpu {
+ 				sound-dai = <&sti_uni_player2>;
+ 			};
 -- 
-Regards,
-Niklas Söderlund
+2.20.1
+
