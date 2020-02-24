@@ -2,100 +2,111 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7414C35641
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 05:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B886C35679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 05:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A719206CC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 05:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF3320661
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 05:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Im5FBTbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725895AbgBXFGW (ORCPT
+        id S1727189AbgBXF3z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 00:06:22 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:59070 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgBXFGW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 00:06:22 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::f0c])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4D22A152F3D63;
-        Sun, 23 Feb 2020 21:06:21 -0800 (PST)
-Date:   Sun, 23 Feb 2020 21:06:20 -0800 (PST)
-Message-Id: <20200223.210620.497537969860161356.davem@davemloft.net>
-To:     grygorii.strashko@ti.com
-Cc:     rogerq@ti.com, t-kristo@ti.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        peter.ujfalusi@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 5/9] net: ethernet: ti: introduce am65x/j721e
- gigabit eth subsystem driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200222155752.22021-6-grygorii.strashko@ti.com>
-References: <20200222155752.22021-1-grygorii.strashko@ti.com>
-        <20200222155752.22021-6-grygorii.strashko@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Feb 2020 21:06:21 -0800 (PST)
+        Mon, 24 Feb 2020 00:29:55 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19390 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726502AbgBXF3z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 00:29:55 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582522194; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=gPFSRWjhwAw28i80R20gawLJ6dnAWyyyj5ws/7ZwfPY=; b=Im5FBTbSozPdCRcyi3t/ilOS8Aq2PtkhbO4GDpy2/8lD8yat4NXeZ9UARLUVf8wwwxkaWGvC
+ rtymBcZ2ZQBygu4aSIoZTWifnGbYTiVg5XiJhN9JponrNATuRugHNh37wudzZ6JHd9bJ7cgy
+ 9DT+jZWjRVuO+iGVRvpRK1s6GxI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e535f41.7fb8060e0ed8-smtp-out-n03;
+ Mon, 24 Feb 2020 05:29:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 685FFC447A2; Mon, 24 Feb 2020 05:29:37 +0000 (UTC)
+Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E736C43383;
+        Mon, 24 Feb 2020 05:29:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E736C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, hemantg@codeaurora.org, mka@chromium.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Matthias Kaehlcke <matthias@chromium.org>
+Subject: [RESEND v3] arm64: dts: qcom: sc7180: Add bluetooth node on SC7180 IDP board
+Date:   Mon, 24 Feb 2020 10:59:26 +0530
+Message-Id: <20200224052926.1391-1-bgodavar@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Sat, 22 Feb 2020 17:57:48 +0200
+Add bluetooth SoC WCN3990 node for SC7180 IDP board.
 
-> +/**
-> + * struct am65_cpsw_regdump_hdr - regdump record header
-> + *
-> + * @module_id: CPSW module ID
-> + * @len: CPSW module registers space length in u32
-> + */
-> +
-> +struct am65_cpsw_regdump_hdr {
-> +	u32 module_id;
-> +	u32 len;
-> +} __packed;
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <matthias@chromium.org>
+---
+v3:
+  * Updated subject.
+  * added reviewed by tag
+v2:
+  * updated commit text
+  * removed status form dts node
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I see no reason for this __packed attribute, please remove it.
-
-> +void am65_cpsw_nuss_adjust_link(struct net_device *ndev)
-> +{
-> +	struct am65_cpsw_port *port = am65_ndev_to_port(ndev);
-> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> +	struct phy_device *phy = port->slave.phy;
-> +	u32 mac_control = 0;
-
-Please order the local variables in reverse christmas tree order,
-thank you.
-
-> +static void am65_cpsw_nuss_ndo_slave_set_rx_mode(struct net_device *ndev)
-> +{
-> +	struct am65_cpsw_port *port = am65_ndev_to_port(ndev);
-> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> +	u32 port_mask;
-> +	bool promisc;
-
-Likewise.
-
-> +static int am65_cpsw_nuss_rx_push(struct am65_cpsw_common *common,
-> +				  struct sk_buff *skb)
-> +{
-> +	struct cppi5_host_desc_t *desc_rx;
-> +	struct am65_cpsw_rx_chn *rx_chn = &common->rx_chns;
-> +	struct device *dev = common->dev;
-> +	dma_addr_t desc_dma;
-> +	dma_addr_t buf_dma;
-> +	u32 pkt_len = skb_tailroom(skb);
-> +	void *swdata;
-
-Likewsie.
-
-And so on, and so forth, for your entire submission.
-
-Thank you.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 388f50ad4fde..d76e83c0a8e1 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -17,6 +17,7 @@
+ 	compatible = "qcom,sc7180-idp", "qcom,sc7180";
+ 
+ 	aliases {
++		bluetooth0 = &bluetooth;
+ 		hsuart0 = &uart3;
+ 		serial0 = &uart8;
+ 	};
+@@ -256,6 +257,16 @@
+ 
+ &uart3 {
+ 	status = "okay";
++
++	bluetooth: wcn3990-bt {
++		compatible = "qcom,wcn3990-bt";
++		vddio-supply = <&vreg_l10a_1p8>;
++		vddxo-supply = <&vreg_l1c_1p8>;
++		vddrf-supply = <&vreg_l2c_1p3>;
++		vddch0-supply = <&vreg_l10c_3p3>;
++		max-speed = <3200000>;
++		clocks = <&rpmhcc RPMH_RF_CLK2>;
++	};
+ };
+ 
+ &uart8 {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
