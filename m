@@ -2,167 +2,101 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D964C35671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455EFC11D2F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F6C20828
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D4832082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y2SB6Ot1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IP/4NB2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgBXLOU (ORCPT
+        id S1726765AbgBXLTI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:14:20 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38592 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBXLOU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:14:20 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a9so8934919wmj.3
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 03:14:18 -0800 (PST)
+        Mon, 24 Feb 2020 06:19:08 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39339 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXLTI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:19:08 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so1111965wrn.6
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 03:19:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=rEL57opEJN8/M1hHG6RBhacoGA9dbpZI+caSv19yBPg=;
-        b=Y2SB6Ot1NpA4yEtYlNlGVS6WbbYy62GylUKjUPQ9jAQ5GDwkSw/7FzCVsSoKPfcCsg
-         VgStUYDM9NJEfKHihK4r/mgnsJtAhKNvw8ImGDx1p+kW1l7PWONzHMwtcK0p04PnOI+k
-         DYBtasmbocFV3+GWMMUwzLg5E39R6/neBgial1l2jN5cMSC6aUNPmaGb7ytsYwEMOenL
-         sXCVQtR42MbPQgo811lhsruXf2x84ZVoVB4C20djzpEc1k9amNtHyLK60FArjQ0TjLcl
-         egt2/DenXPKPfCl9gWypKExnmSXDTJ/bBABMEWP2jBIvWDY1IfnF/JOlFG5PMLg1wHG8
-         ZWAQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vVRUXC9u/A5DLNgpNy0TmY7xGnxbSS2LdHcV0vtIQ9w=;
+        b=IP/4NB2V96p5cK7ZEAZIyjpWd2aQhUH+RqG3KUykEhIMjYWfhRfRI0vOL+3/XqBt27
+         AnGJOv5WBR8/eE0hHClDsaUsAWijH6AByJ4puFJeDRzsbDjLLSmqIww0uUUQnTAu9KjT
+         9NdhpwiSmxPlquwzxPG2Ma/oIRoCKye6SnN2lf1z2T1KIjjeBsLxJIBPxWU8IS+pcj7c
+         +GqutI7vfgQRodizAvK6FxX2J/KKdOf8FXqvrA4fauqYpyoIqNZsDLq8NS4Eikh8o1Xe
+         4r09RDhLeH3KW8/JbMvfAx2hlPchFokl1GOoY93YZ/BSlNRVeKruXS0imYgT1FIs+A+N
+         AoKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=rEL57opEJN8/M1hHG6RBhacoGA9dbpZI+caSv19yBPg=;
-        b=XnjZhOGY6XyN2BraD+MKK9UUH7WhMSxhuMZoyUS6n70h03OzS5Y0vW+Chec72PF4Fm
-         vVYNYOvSlYPHW2xYTfnaQxDsChm4xyRmjm9I3o84KSs8ciRQWY2uTodHzbtW65XtofVJ
-         yM5bNRkkvUZhJiP9Bcc9pa/LPIiV3wWPS+4ZiDgP9NBpWe9TjUCW8T7udesMb5p59mHm
-         61OnfSbpiqS6eN0QH25jf0L3QXzNkarmdwlFQ/xRwMDs2swxG/ZsVHkiOT7GjygX2STJ
-         QC+l4orsQPFSD+dx9uq+uO9mMHoLA1cIpRYY2MKrXy4Tvwfrg4lidjXz99CxRmDa8raj
-         qsBA==
-X-Gm-Message-State: APjAAAXh3I/PoQ2Ty91OnYnyv81l5B0ntD7VGtxYAtwvy43zKsBis++2
-        PEtDTqUcsqYa7afJDQDSliICWQ==
-X-Google-Smtp-Source: APXvYqyYDybLl6oJArR1E7Ob1XgcUlj3eWE/hkbMJ5C6QLsbf6VZzxRxzRyzLqwVHI9YWmytlHTlxw==
-X-Received: by 2002:a1c:44d:: with SMTP id 74mr22455122wme.53.1582542858178;
-        Mon, 24 Feb 2020 03:14:18 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id r5sm17483330wrt.43.2020.02.24.03.14.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 03:14:17 -0800 (PST)
-Date:   Mon, 24 Feb 2020 11:14:48 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     dmitry.torokhov@gmail.com, thierry.reding@gmail.com,
-        jic23@kernel.org, devicetree@vger.kernel.org,
-        linux-input@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v5 2/7] mfd: Add support for Azoteq
- IQS620A/621/622/624/625
-Message-ID: <20200224111448.GS3494@dell>
-References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
- <1581895931-6056-3-git-send-email-jeff@labundy.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vVRUXC9u/A5DLNgpNy0TmY7xGnxbSS2LdHcV0vtIQ9w=;
+        b=jsyPT+RQJ13mmPpmaxKmdj16/fZwTbMuakbfe0P71035R2hsB+XuJruZxn7feB0FGe
+         FID7IwYGD6c3ojDhQxAV29hZzRiIJq5mZDTQCZ3ykEmU/m5lJjL5MGei8YTIDy7uEckD
+         1CPt/DUFGb5Pg0/9a0vNX8jyLeEe7Ym4FBw0eYUlaVKw2VNtpxyfTutyI5ETTqRNqtnc
+         L/KOr56egRnDalSvy1iIYyPAKvb3cGl3oTfZuxVFvY1YooX/wKwQOdHMUUICCabtlzCx
+         CBhGyuM4VQLLl/wG0U1JqC70WeB0Ch/M3VGpurywi9Zsdnc/YmzAwBy2HBcJ77rgJdJ+
+         Lq1Q==
+X-Gm-Message-State: APjAAAV18K3Tp7OSq6TF9Q0iSE7mwJ1Ip/ST4TCuBfGHztaJ/rgXkI3G
+        WzRcE00SvYDG7ljxB65AbZkqKw==
+X-Google-Smtp-Source: APXvYqxscWh2g3lQVU75MYddDZiS9qAP6S4WWNDYSa5oAgaL2XIPlhyKiWkgVVRAKc+rWHMrz7ZhfA==
+X-Received: by 2002:a5d:5303:: with SMTP id e3mr9779258wrv.274.1582543145120;
+        Mon, 24 Feb 2020 03:19:05 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id r3sm18580182wrn.34.2020.02.24.03.19.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Feb 2020 03:19:04 -0800 (PST)
+Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <20200221222711.15973-1-robh@kernel.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <383f3a95-6ae9-ee42-d173-88ce18c35016@linaro.org>
+Date:   Mon, 24 Feb 2020 11:19:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581895931-6056-3-git-send-email-jeff@labundy.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 16 Feb 2020, Jeff LaBundy wrote:
 
-> This patch adds core support for the Azoteq IQS620A, IQS621, IQS622,
-> IQS624 and IQS625 multi-function sensors.
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> ---
-> Changes in v5:
->   - Merged iqs62x-core.c and iqs62x-tables.c into a single iqs62x.c
->   - Corrected spelling of "data sheet" to "datasheet"
->   - Added one line of whitespace in various places to improve readability
->   - Replaced iqs62x->map with iqs62x->regmap throughout
->   - Added the prox_settings member to the iqs62x_dev_desc struct and eliminated
->     the ternary operator in iqs62x_dev_init to determine SAR UI enable register
->     address
->   - Added a comment in iqs62x_dev_init to explain the background for the bounds
->     checking done on the IQS624/625 interval divider
->   - Added #defines for the delays used within iqs62x_dev_init
->   - Renamed iqs62x_fw_prs and iqs62x_fw_cb to iqs62x_firmware_parse and
->     iqs62x_firmware_load, respectively
->   - Updated the call to devm_mfd_add_devices to use PLATFORM_DEVID_NONE instead
->     of -1 and printed "sub-devices" instead of "devices" in the error message
->   - Dropped #defines for mfd_cell names in favor of the actual string names and
->     collapsed mfd_cells with no other members into one line
->   - Demoted iqs62x_devs to a static array as it is not used by any sub-devices
->   - Removed unnecessary { IQS620A_DEV, ... } enum and IQS62X_NUM_DEV #define
->   - Removed the soft reset and associated delay in iqs62x_probe to preserve any
->     PWM-related changes made by a bootloader
->   - Updated the comments in iqs62x_probe to highlight the significance of blank
->     calibration registers and why the outer loop may be exited early
->   - Made the first call to regmap_update_bits in iqs62x_suspend consistent with
->     other instances in the series that set a single bit by passing all ones for
->     the value instead of the mask
-> 
-> Changes in v4:
->   - None
-> 
-> Changes in v3:
->   - None
-> 
-> Changes in v2:
->   - Merged 'Copyright' and 'Author' lines into one in introductory comments
->   - Replaced 'error' with 'ret' throughout
->   - Updated iqs62x_dev_init to account for 4/8/16-MHz clock divider in start-up
->     delays and replaced ATI timeout routine with regmap_read_poll_timeout
->   - Added an error message to iqs62x_irq in case device status fails to be read
->   - Replaced sw_num member of iqs62x_core with a local variable in iqs62x_probe
->     as the former was unused anywhere else
->   - Added comments throughout iqs62x_probe to clarify how devices are matched
->     based on the presence of calibration data
->   - Inverted the product and software number comparison logic in iqs62x_probe
->     to avoid an else...continue branch
->   - Changed iqs62x_probe from .probe callback to .probe_new callback, thereby
->     eliminating the otherwise unused iqs62x_id array
->   - Moved iqs62x_suspend and iqs62x_resume below iqs62x_remove
->   - Eliminated tabbed alignment of regmap_config and i2c_driver struct members
->   - Added register definitions for register addresses used in iqs621_cal_regs,
->     iqs620at_cal_regs and iqs62x_devs arrays
->   - Removed of_compatible string from IQS622 mfd_cell struct as its proximity
->     (now ambient light) sensing functionality need not be represented using a
->     child node
->   - Dissolved union in iqs62x_event_data to allow simultaneous use of ir_flags
->     and als_flags
->   - Removed temp_flags member of iqs62x_event_data, IQS62X_EVENT_TEMP register
->     enumeration and IQS62X_EVENT_UI_HI/LO from iqs620a_event_regs (thereby re-
->     ducing IQS62X_EVENT_SIZE to 10) as they were unused
-> 
->  drivers/mfd/Kconfig        |   13 +
->  drivers/mfd/Makefile       |    1 +
->  drivers/mfd/iqs62x.c       | 1063 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/iqs62x.h |  139 ++++++
->  4 files changed, 1216 insertions(+)
->  create mode 100644 drivers/mfd/iqs62x.c
->  create mode 100644 include/linux/mfd/iqs62x.h
 
-Well done Jeff.  Good job.
+On 21/02/2020 22:27, Rob Herring wrote:
+>   Documentation/devicetree/bindings/nvmem/nvmem.yaml |  2 ++
+for nvmem changes,
 
-Applied, thanks.
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
