@@ -2,135 +2,185 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_RHS_DOB autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE94C11D2F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 17:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E07C11D30
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 17:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB0C2084E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 17:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3A121556
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 17:39:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="AjPklyf5"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="FoSjuyUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgBXRgs (ORCPT
+        id S1727978AbgBXRjn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:36:48 -0500
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:43187 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727259AbgBXRgr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:36:47 -0500
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 6HeejhXRRyIme6Heij4c5R; Mon, 24 Feb 2020 18:36:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582565805; bh=+Ut1mFONrMyDQY1g0dvIqwQmUQyccv/MhZXUMWlHI9A=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=AjPklyf5BwQcNHOgIqII5CgvXvmQ1u4PiNNlUpLpKq2LWeWDdeNN1l4VivqIlBI4D
-         K6KO4mKvo4UCrOFYB1ok9plTr5KSKjPk7ZHmg9c/rKZKRTu9dPY6B5NGcwNw+beimV
-         pWgzdX/kjeC7+sTVYaHMQpyZ1LwJ3d5VE8PDabba4fxWUbByaPEPGVgNLRDdnQ+r+p
-         EwpKgoaSu0/oM7DOXfyB1xSsDRfLCAnOeGx6VoYnLE9HKj8e9rXilQJANYkEnkvm72
-         6oSXCjkwZogH4rbFriWzzRqQTTANFEu40AcVxFFq2cjGeZ+KXGaFM8vT5WNRmfRA5C
-         DGx8nXNjzAjog==
-Subject: Re: [PATCH v7 06/13] media: mtk-mdp: Check return value of of_clk_get
-To:     matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com,
-        enric.balletbo@collabora.com
-Cc:     devicetree@vger.kernel.org, drinkcat@chromium.org,
-        frank-w@public-files.de, sean.wang@mediatek.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        wens@csie.org, linux-mediatek@lists.infradead.org,
-        rdunlap@infradead.org, hsinyi@chromium.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-References: <20200213201953.15268-1-matthias.bgg@kernel.org>
- <20200213201953.15268-7-matthias.bgg@kernel.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <9d39ba53-482e-ba8f-2699-c34540a3dfd0@xs4all.nl>
-Date:   Mon, 24 Feb 2020 18:36:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 24 Feb 2020 12:39:43 -0500
+Received: from vps.xff.cz ([195.181.215.36]:60558 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727108AbgBXRjn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:39:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582565980; bh=bssBG1gkye/nYahI0KI7q69HyEXw05nP1PGKKo8PTDc=;
+        h=Date:From:To:Subject:References:X-My-GPG-KeyId:From;
+        b=FoSjuyUEQg2Zi08JDwJhfQKkeU+UWADJZHnAIBU7RY8JU1qByM7iZvFuW4x2nwBhW
+         LQFABB99Nv08xlfT9LxVBgzfhtmJdwqdWhQL/3tmhYi4PipX5/Iz3/KcHZUkzBtI1T
+         2QNNcU+zW2sm3ErVaf8txlY3VNGztiHLu/jjvP6E=
+Date:   Mon, 24 Feb 2020 18:39:40 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i-a83t: Add thermal trip points/cooling
+ maps
+Message-ID: <20200224173940.huwpaqhrc5ngbmji@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200224165417.334617-1-megous@megous.com>
+ <2e4213a6-2aaf-641c-f741-9503f3ffd5fe@linaro.org>
+ <20200224172328.yauwfgov664ayrd6@core.my.home>
 MIME-Version: 1.0
-In-Reply-To: <20200213201953.15268-7-matthias.bgg@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPySf1WBmv9/RjqzYz0BQrBmUht4Eva9g0QKaBR+01XPvXf6Dc7Z2L6oIPUgvGSRSBSFLEDzxEqIQxoAIRiayxX34Q+8Lq0cvVinehfGodRFg1Pt8Xtv
- Le3q4kyfX7omNMDWyWR693Q/8hU3nGZTxpH3Epk2cPojh08FWuyHCr6/qXBwne18uXeZI7asrpcnzMAGzsPQA2yzr/d7hlZL8mVQ+hnaSoKLdln3FY/JUB9k
- xVmii4ez/4ZtoMv39s8o+fFV28vxY9ncLBEG3bNtQvh3VL/Z3ycs3bI4Qn+Op/6C2HOB3TPaW6F/+vO2psgJdTTOYe1ipwXXg//ZA6jnDX56kRPljtOk02qA
- 5jTh9vPH06cfk/+jgovkB8gSn4L+0Hdkh7FJH9sPX5uShf7q8O/+zIqIohpBeJP0Dh3Yg143bKxhmWyl5N+wrkcrzMlmZIMjtXmXvP5AMtagZCPoK6vwT+9H
- VPhcbhGiWxVEXRZOqZhQQPtNSoOa62oK6lITRcaYj6RQE8Jm2xFQemNaQu2yqTY/LolxXsUH64Lxctk+DjjWhM4kyMBxOh1fIORL3/EChGfXDJdbrszHA5cN
- b0xSiu5x0jHOSj1g0S+8c0amgRey9HMs1nNjeaYJXXetUf5o7fmAZ64Nsc2DLyijHppuILpRCur9KTJZV4T4SbEsHjVkA2DLnVCF8/X8tF4svoUkifM+PfKG
- mZk73l2d94eyjyKBTao45kOB8gGZ7BZmPMJ8XFKxHBS2QO2K1MCpUC2rUo6VGKnnM89eTib/mgSwgdT3nQt1mcWtyBT2P/YiioVSUANAZXnKoHg+YLzKbuIS
- qhnipdRHQHZ0wqpNmjhnctoRWmY53pBb01kK++5Eu2oJiPHB4lq/NH/eGln9wrK1qv7WzwZMGEfLC+KComyvr9J7qbjCfIHakhDRukt3EFvLxHnXN9z5yVh1
- RQRVrrr56dKoFXVcDhNLMDmGz2rz1rLXtFHgbwVfKOM6t2HOa2cCIGLheHUjzsLGubuWsdH4v7QAJWQcpNcFyLTY88X007mEhYDgcB486IsA5xwHjdMfE6it
- +/AEsmalRYePA+Xv27YRGaBkwwcasHLXraWguBJ3YT7FzyE2b4EocUkP+RQ2C+0C0GwBZEs5SdYGudBxmAHZ+n0jARTz4B9QdHuZf+CKyE2QRRsJ3kkQBSY7
- CiymZeJ+kXPXXU2qZugulQEx6TB7dY6owNLKOzmCmFs=
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200224172328.yauwfgov664ayrd6@core.my.home>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
+On Mon, Feb 24, 2020 at 06:23:28PM +0100, megous hlavni wrote:
+> Hi, 
+> 
+> On Mon, Feb 24, 2020 at 06:06:20PM +0100, Daniel Lezcano wrote:
+> > On 24/02/2020 17:54, Ondrej Jirman wrote:
+> > > This enables passive cooling by down-regulating CPU voltage
+> > >  			clocks = <&ccu CLK_C1CPUX>;
+> > > @@ -1188,12 +1188,60 @@ cpu0_thermal: cpu0-thermal {
+> > >  			polling-delay-passive = <0>;
+> > >  			polling-delay = <0>;
+> > >  			thermal-sensors = <&ths 0>;
+> > > +
+> > > +			trips {
+> > > +				cpu0_hot: cpu-hot {
+> > > +					temperature = <80000>;
+> > > +					hysteresis = <2000>;
+> > > +					type = "passive";
+> > > +				};
+> > > +
+> > > +				cpu0_very_hot: cpu-very-hot {
+> > > +					temperature = <100000>;
+> > > +					hysteresis = <0>;
+> > > +					type = "critical";
+> > > +				};
+> > > +			};
+> > > +
+> > > +			cooling-maps {
+> > > +				cpu-hot-limit {
+> > > +					trip = <&cpu0_hot>;
+> > > +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > > +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > > +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > > +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> > > +				};
+> > > +			};
+> > >  		};
+> > >  
+> > >  		cpu1_thermal: cpu1-thermal {
+> > >  			polling-delay-passive = <0>;
+> > 
+> > No polling to mitigate?
+> 
+> Polling to mitigate what?
+> 
+> The driver is using interrupts whenever new reading is available, and
+> notifies tz of the change. I don't have a reason to believe any new
+> values are available from thermal sensor outside of the interrupt
+> period.
 
-On 2/13/20 9:19 PM, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
-> 
-> Check the return value of of_clk_get and print an error
-> message if not EPROBE_DEFER.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+To be more clear, new temperatures are available from the thermal sensor driver
+at the rate of 4 per second, which should be enough to do quick adjustments to
+the thermal zone/cooling device even for quick temperature rises.
 
-This patch is independent from the remainder of this series, right?
-It looks good to me, so is it OK if I merge this in the media subsystem?
+https://elixir.bootlin.com/linux/v5.6-rc3/source/drivers/thermal/sun8i_thermal.c#L442
 
-Regards,
+There's no slow/fast period depending on whether the cooling is active.
+It's always fast and no polling of the thermal sensor is needed.
 
-	Hans
+regards,
+	o.
 
+> > >  			polling-delay = <0>;
+> > >  			thermal-sensors = <&ths 1>;
+> > > +
+> > > +			trips {
+> > > +				cpu1_hot: cpu-hot {
+> > > +					temperature = <80000>;
+> > > +					hysteresis = <2000>;
+> > > +					type = "passive";
+> > 
+> > I'm curious, can you really reach this temperature with a cortex-a7
+> > running at 1.2GHz max?
 > 
-> ---
+> That depends on ambient temperature. I'd say easily. My A83T is running
+> iniside enclosed space with no cooling other than dissipating heat to
+> the board.
 > 
-> Changes in v7:
-> - fix check of return value of of_clk_get
-> - fix identation
+> Anyway, I'm running my A83T boards at 1.8GHz. And A83T can run up to 2GHz
+> at the best SoC bin.
 > 
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
+> I'll probably submit updated cpufreq table at some point too, once I fix
+> it up to use the SoC bin information.
 > 
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+> https://megous.com/git/linux/commit/?h=ths-5.6&id=171b7c3c3db98b5939d28d0c96b384edda95cec3
 > 
-> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> index 0c4788af78dd..58abfbdfb82d 100644
-> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> @@ -110,6 +110,12 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
->  
->  	for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
->  		comp->clk[i] = of_clk_get(node, i);
-> +		if (IS_ERR(comp->clk[i])) {
-> +			if (PTR_ERR(comp->clk[i]) != -EPROBE_DEFER)
-> +				dev_err(dev, "Failed to get clock\n");
-> +
-> +			return PTR_ERR(comp->clk[i]);
-> +		}
->  
->  		/* Only RDMA needs two clocks */
->  		if (comp->type != MTK_MDP_RDMA)
+> regards,
+> 	o.
 > 
-
+> > > +				};
+> > > +
+> > > +				cpu1_very_hot: cpu-very-hot {
+> > > +					temperature = <100000>;
+> > > +					hysteresis = <0>;
+> > > +					type = "critical";
+> > > +				};
+> > > +			};
+> > > +
+> > > +			cooling-maps {
+> > > +				cpu-hot-limit {
+> > > +					trip = <&cpu1_hot>;
+> > > +					cooling-device = <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > > +							 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > > +							 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > > +							 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> > > +				};
+> > > +			};
+> > >  		};
+> > >  
+> > >  		gpu_thermal: gpu-thermal {
+> > > 
+> > 
+> > 
+> > -- 
+> >  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> > 
+> > Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> > <http://twitter.com/#!/linaroorg> Twitter |
+> > <http://www.linaro.org/linaro-blog/> Blog
+> > 
