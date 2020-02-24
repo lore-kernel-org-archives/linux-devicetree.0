@@ -7,63 +7,64 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59BCC11D31
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43132C11D2F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A08EB2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F0620658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:16:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WysXComR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YaYzNuQK"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="DhKd0P5G";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sTNAt1mj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgBXJQE (ORCPT
+        id S1727987AbgBXJQF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:16:04 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:33209 "EHLO
+        Mon, 24 Feb 2020 04:16:05 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:45365 "EHLO
         wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727470AbgBXJQD (ORCPT
+        by vger.kernel.org with ESMTP id S1728178AbgBXJQF (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:16:03 -0500
+        Mon, 24 Feb 2020 04:16:05 -0500
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 04:16:03 EST
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 9C404616;
-        Mon, 24 Feb 2020 04:10:56 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:10:57 -0500
+        by mailnew.west.internal (Postfix) with ESMTP id B5261605;
+        Mon, 24 Feb 2020 04:09:34 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=Oud9k5YAKLNlL
-        n76NcHUsNmMIyu3RhEvhCjZPCxILhQ=; b=WysXComRQOrkzVlOkF0bcvuvALVz0
-        rQ6dt34fmbM75rf+U5ZUnyHQiQRJWlMVRppvsg2UKvIl4jliYb4FFNsl7/hL/6yl
-        vE8Ujrrk+msBRhzEd84CUO83HJnS+YNITQMxTcCRjG+POhHHCggMhdJ8GzQswaOj
-        HXwFeOVPhfkL6UNu4A0ipulQMsfMpf9gjCGZpOieU8W5zwwBMI8DLVu/0NPLTzwF
-        j6i1x4pz/i83EoZ0Jov3q2osUgvFSh8JidQ0T+wxjl6cowGLX2Lz6OMzZ/S5kUlr
-        in+ofHGt2gtHJmYMBSq06ylie536CXk5aqsglvf+yCnyfulyNrBfiugQg==
+        :mime-version:content-transfer-encoding; s=fm2; bh=uLtns6AGYyhR2
+        mHtFQT06p/ZWFfTJ2DIAXurRHKaoRw=; b=DhKd0P5GJvdLtV2/9K7KSzrx0m8W7
+        khCKpVHiuVVcOUu6TxIZn8muLo/DnMOZDHAeTI0Zqody+6sf5+dHsohu0/fgVC5R
+        783wB/saX4Vrt1nGOtNgtfA9pMimCekab3vf3Ek0s2uIGoL+UtRP6jhZLQMkv2pB
+        Prat/Ca2Tu0hc4lqpUpTeuNvM8dD8WW4a3P9ScWCtfUim5aaPUbY4sjNq/flfkrl
+        OHaqSOWww28PO5NmqLAeKrinLosgQgQajrDo4tfrfX3o8Udz8rwxJffDZ0A2JLkh
+        BiX8xtzJ9l2cEmyP4bCcPX86ECNCzAYow+vxcmwrDnNLw6bWEMBVuxTbg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=Oud9k5YAKLNlLn76NcHUsNmMIyu3RhEvhCjZPCxILhQ=; b=YaYzNuQK
-        e2tA4DzVHpnZCSZ/pcCU+WKFrQCbAkUj7+RBEly3ZW4bsxpmp2gy6GCOnd4SSNbk
-        DiMh1GCh/LXsEXnKS6ULsNH0imQIgzPi3WpNZ1UaZlKVdI/3gXL8br8Y7SONvPYY
-        18SPhLedLxTpG2SR5FZOrrL+VnejS7zB50cDZ/HfVnvOURMEBARbdrvAv60wzlU8
-        T/2zV0UjIeTwzsLpNrgxPbk3I4eVGfGxJCMLQnODxac/5mprfqQIe87GXqW5OXq9
-        IQ6t2nOaSmzq+6MAaTuGtecdZxYCXQZ9aVIyDhVF/hfJ7V8G8kstQb7CGUdpLDXv
-        hST4qG21pqODwg==
-X-ME-Sender: <xms:IJNTXrmqQf_QmKhXHa6PLjCt_aWxZvKV-BlbJhq-yD_jEe0g-QCneA>
+        fm2; bh=uLtns6AGYyhR2mHtFQT06p/ZWFfTJ2DIAXurRHKaoRw=; b=sTNAt1mj
+        oMS8EmjluG8H+wHX81rBGtVdfN49EiVSNigLtzI4gni1D4xmsWwptBGTVTM69QRZ
+        eID30SGQtL0hPo8iH90qglpxzEvHQloAloeKuyzw13+0QyYiF9ouXH95F51ixjEw
+        fZAsHPc+snBDobirtrJIDS1NtQ4Yyt0D4bqI1kPC+uWxctaqq9gftMuW+rN/r1WM
+        B0ARXRERe0y6/zgPvwpgmnFRYrp5sOqC5p/52RZYaRd9C52W9QFvXF06ToxrLCRM
+        sgpey00cPkOIwA/qihATQSp4O+B4YEF3BaD2czMeORtaG3sf5h233vxs67EeS7Sb
+        NgzzA78oPsy7mw==
+X-ME-Sender: <xms:zpJTXkpLdbDEsQVcFoMwwWuA0HcTVgpPiqlK6VA1eovXohcUr_supw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
     lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
     ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
     phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgepvdejnecurfgrrhgrmhepmhgrihhlfhhr
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgepvdegnecurfgrrhgrmhepmhgrihhlfhhr
     ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:IJNTXnpW99XgU9_zmu5L0K7fm8deu1fwXREmL4BCu2FMCxXbZbg0sg>
-    <xmx:IJNTXokoTthE2z8foRhGg-mPt2MqINc2aVoTZmgqPbdMqXaV6JYu6w>
-    <xmx:IJNTXtKNcUjqF3p-1FtLBqwjwtxiHsroAciYrQvGEEkGvHV_WwQ1oQ>
-    <xmx:IJNTXlovYgJyGoTx1wGLxT-WYZbyOT9NWY1e7qKKMp4gMjNBgdtk1pXgGa0>
+X-ME-Proxy: <xmx:zpJTXkuVt7CQ83hN3gZ7xFqSMRLxlX1TcDRLwoB6SuidPnKHN43zVQ>
+    <xmx:zpJTXuI-GuedMDFNpCDrehD0YfPYmpeNuRcBIDfqAqkrf-CxDqqohg>
+    <xmx:zpJTXjq18WjfhbDKNyfHHZNrUsYyG6Io1EJHeXWmQsxJXGPJREnlQw>
+    <xmx:zpJTXo9kaMLF9yFsVtMl1SmnKWDzBB1_lcIJbx24eNh9I6TQapW5AMod3Vo>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DDF17328005A;
-        Mon, 24 Feb 2020 04:10:55 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 021313060F9B;
+        Mon, 24 Feb 2020 04:09:33 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +77,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 88/89] dt-bindings: display: vc4: hdmi: Add BCM2711 HDMI controllers bindings
-Date:   Mon, 24 Feb 2020 10:07:30 +0100
-Message-Id: <4c21dda4f0b73977de1e54d408d7bf6bf3b6d238.1582533919.git-series.maxime@cerno.tech>
+Subject: [PATCH 31/89] dt-bindings: display: vc4: dsi: Add missing clock properties
+Date:   Mon, 24 Feb 2020 10:06:33 +0100
+Message-Id: <2d7aaa0bdf3f0cb66d14700fb77348453b3cd29a.1582533919.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
@@ -89,175 +90,55 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The HDMI controllers found in the BCM2711 SoC need some adjustments to the
-bindings, especially since the registers have been shuffled around in more
-register ranges.
+While the device tree and the driver expected a clock-names and a
+clock-cells properties, it wasn't explicitly documented in the previous
+binding. Make sure it is now.
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml | 118 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 109 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml | 11 +++++++-
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
-index 52b3cdac0bdf..a9d24e1cf684 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
-@@ -11,24 +11,58 @@ maintainers:
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+index 3887675f844e..3c643b227a70 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+@@ -10,6 +10,9 @@ maintainers:
+   - Eric Anholt <eric@anholt.net>
  
  properties:
++  "#clock-cells":
++    const: 1
++
    compatible:
--    const: brcm,bcm2835-hdmi
-+    enum:
-+      - brcm,bcm2835-hdmi
-+      - brcm,bcm2711-hdmi0
-+      - brcm,bcm2711-hdmi1
+     enum:
+       - brcm,bcm2835-dsi0
+@@ -24,6 +27,12 @@ properties:
+       - description: The DSI ESC clock
+       - description: The DSI pixel clock
  
-   reg:
-+    oneOf:
-+      - items:
-+        - description: HDMI register range
-+        - description: HD register range
-+
-+      - items:
-+        - description: HDMI controller register range
-+        - description: DVP register range
-+        - description: HDMI PHY register range
-+        - description: Rate Manager register range
-+        - description: Packet RAM register range
-+        - description: Metadata RAM register range
-+        - description: CSC register range
-+        - description: CEC register range
-+        - description: HD register range
-+
-+  reg-names:
-     items:
--      - description: HDMI register range
--      - description: HD register range
-+      - const: hdmi
-+      - const: dvp
++  clock-names:
++    items:
 +      - const: phy
-+      - const: rm
-+      - const: packet
-+      - const: metadata
-+      - const: csc
-+      - const: cec
-+      - const: hd
- 
-   interrupts:
-     minItems: 2
- 
-   clocks:
--    items:
--      - description: The pixel clock
--      - description: The HDMI state machine clock
-+    oneOf:
-+      - items:
-+        - description: The pixel clock
-+        - description: The HDMI state machine clock
++      - const: escape
++      - const: pixel
 +
-+      - items:
-+        - description: The HDMI state machine clock
+   clock-output-names: true
+     # FIXME: The meta-schemas don't seem to allow it for now
+     # items:
+@@ -35,9 +44,11 @@ properties:
+     maxItems: 1
  
-   clock-names:
--    items:
--      - const: pixel
-+    oneOf:
-+      - items:
-+        - const: pixel
-+        - const: hdmi
-+
-       - const: hdmi
- 
-   ddc:
-@@ -51,15 +85,54 @@ properties:
-   dma-names:
-     const: audio-rx
- 
-+  resets:
-+    maxItems: 1
-+
  required:
++  - "#clock-cells"
    - compatible
    - reg
--  - interrupts
    - clocks
-   - ddc
++  - clock-names
+   - clock-output-names
+   - interrupts
  
- additionalProperties: false
- 
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - brcm,bcm2711-hdmi0
-+          - brcm,bcm2711-hdmi1
-+
-+then:
-+  properties:
-+    reg:
-+      minItems: 9
-+
-+    clocks:
-+      maxItems: 1
-+
-+    clock-names:
-+      maxItems: 1
-+
-+  required:
-+    - reg-names
-+    - resets
-+
-+else:
-+  properties:
-+    reg:
-+      maxItems: 2
-+
-+    clocks:
-+      minItems: 2
-+
-+    clock-names:
-+      minItems: 2
-+
-+  required:
-+    - interrupts
-+
- examples:
-   - |
-     #include <dt-bindings/clock/bcm2835.h>
-@@ -77,4 +150,31 @@ examples:
-         clock-names = "pixel", "hdmi";
-     };
- 
-+  - |
-+    hdmi0: hdmi@7ef00700 {
-+        compatible = "brcm,bcm2711-hdmi0";
-+        reg = <0x7ef00700 0x300>,
-+              <0x7ef00300 0x200>,
-+              <0x7ef00f00 0x80>,
-+              <0x7ef00f80 0x80>,
-+              <0x7ef01b00 0x200>,
-+              <0x7ef01f00 0x400>,
-+              <0x7ef00200 0x80>,
-+              <0x7ef04300 0x100>,
-+              <0x7ef20000 0x100>;
-+        reg-names = "hdmi",
-+                    "dvp",
-+                    "phy",
-+                    "rm",
-+                    "packet",
-+                    "metadata",
-+                    "csc",
-+                    "cec",
-+                    "hd";
-+        clocks = <&firmware_clocks 13>;
-+        clock-names = "hdmi";
-+        resets = <&dvp 0>;
-+        ddc = <&ddc0>;
-+    };
-+
- ...
 -- 
 git-series 0.9.1
