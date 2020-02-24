@@ -6,97 +6,85 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD75C38BE2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC68DC38BE0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5494520838
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C2420836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582569724;
-	bh=ihceO+T/x+/tMknvWNDEsdNL367MrjkPL6xk72G0/qc=;
+	s=default; t=1582569894;
+	bh=CX7tYenrXiZvQGCwBSXU28CkL5Wj5sOaG/vcbkWwXz4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J6JIqxlRQUreQeXPb0qDWN+vswxBk3X3xQvK5ZS56aUdwLcSEUBiay+07UwMNDfLt
-	 an/zSQ3aXyUXRNzczCD9KFPAqAdDCdOcVuDnTbCPTWgwM2l5Tf5I71WJSaMED9U0tj
-	 lJafWlBdBeeB1dtL2IEu68uvvAVeVXkEFJ+6lTGY=
+	b=A7bYLVpwAtFwgl1SZMJMUbMYgyg20zRQWLqbzCseqoKlsPX9YiyoqRjWOnyFmmkfO
+	 xqlO5PB54DJFYHKp9PfBlSIWQpF4tYlfyFIqTvfJh4LdnPTg5HTA8sbvYJSU31nwYL
+	 Dp8O2BEDAwugufw/F0ygzlSnpzke+LHtbtrqPW4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgBXSmE (ORCPT
+        id S1727689AbgBXSoy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:42:04 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36476 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbgBXSmD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:42:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id j20so9694372otq.3;
-        Mon, 24 Feb 2020 10:42:03 -0800 (PST)
+        Mon, 24 Feb 2020 13:44:54 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39694 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgBXSox (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:44:53 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 18so6974999oij.6;
+        Mon, 24 Feb 2020 10:44:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0oNSfC/VueKVt/Nz7VSIdO4jhQ0NPkVJt3k9o2m6tZQ=;
-        b=DgdLN4yg9NCsMZ2a929hhQj8yt8Zum4KsPlwM8OU1zNUjT+9JmzfHSYnRxz9a+X7Vc
-         O+YJVJ++0gB0KhbLKteLDG3CnH3BPjk4Hc+QKd71c6IwwbwsgxJpvc6ywHSb69i41jWt
-         +6OS1RiwywKGEUax9KBf01rfSxaTG/HRxVAAi5YQjVzbU9r/3MFvpcTV615wJDl/tct2
-         OP2hJ4k1X97XoWjlARZtIwbKlS4iNRfy5LCgo9kCgMYMxVjuTkogE1LnC1Ksg/eEqnBh
-         W7BYRucx+BN3/zbS6b8fWmKKfuM9IScNiEtACKrM1BCT48WAaWxO2aa2ZcgMSxWDsSlN
-         6Hkw==
-X-Gm-Message-State: APjAAAVbUfLkz78muMSmrqxNUP3duS/iVFP9CHtWVTZOIi5tREbqZeKR
-        hHQONE9r9suaHH8vXmyMvFZubrQ=
-X-Google-Smtp-Source: APXvYqz00HiO0Z2/dfXCRqcQOlXMa9/Bu6VsS+b3HJP8XuF8m3LmzbOURtJ9vXw8MuKXObQfvQXlmA==
-X-Received: by 2002:a9d:64b:: with SMTP id 69mr39683937otn.237.1582569722788;
-        Mon, 24 Feb 2020 10:42:02 -0800 (PST)
+        bh=ZXEayj8xf3Si4hv36edVPHio/K5x1RomX601FJVG5oI=;
+        b=ZlOuwycup5L1p69xG1io6qfLLxvRFP4SdgX8JWXA4WeDjpniNPjPuYkInXpUrkI8D7
+         yg1MwLhJuJguZDogPMmcj3Wxa+GAj9hVWZOkuw6F9O/QuQLTOQ7cIx2HQQFiG84epdCa
+         78WonXFnAv//8+zxm/qkySXjdpK5+UulQsn5J6VUH2wu45taOXtydUcy88HmmnujHNaQ
+         T75ZaVO+wIbFdto0FrnEM7u1KI1hLy8Go0qv1N+CZl3RuOVEi1X6+thdmVpq+CK4Oq/B
+         XmhNZhs95gq/wcTkh2uvz4O2oDbwN9TXxpZSftFw0VlE2Wu0CgNoorgguwbw0D0H/wTP
+         mskg==
+X-Gm-Message-State: APjAAAUfKQlIQN5oZ50krroGmzAd/mOj4i+h4DQjHDm/AgcmjBbSn9V+
+        Xv82X2YRslFO5LdhoC9pNFG9MF4=
+X-Google-Smtp-Source: APXvYqyQEk9IgcxUJXQaTD6Vy2Stx22qTLXqchW+luQSCrCnqBcUEm3Nwg6USR5r2OPJI7LIO3oQeQ==
+X-Received: by 2002:aca:1108:: with SMTP id 8mr343387oir.127.1582569892915;
+        Mon, 24 Feb 2020 10:44:52 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v134sm2287844oia.38.2020.02.24.10.42.01
+        by smtp.gmail.com with ESMTPSA id t203sm4318661oig.39.2020.02.24.10.44.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 10:42:02 -0800 (PST)
-Received: (nullmailer pid 7356 invoked by uid 1000);
-        Mon, 24 Feb 2020 18:42:01 -0000
-Date:   Mon, 24 Feb 2020 12:42:01 -0600
+        Mon, 24 Feb 2020 10:44:52 -0800 (PST)
+Received: (nullmailer pid 14849 invoked by uid 1000);
+        Mon, 24 Feb 2020 18:44:51 -0000
+Date:   Mon, 24 Feb 2020 12:44:51 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v5 3/5] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-Message-ID: <20200224184201.GA6030@bogus>
-References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
- <1582540703-6328-4-git-send-email-tdas@codeaurora.org>
+To:     min.li.xe@renesas.com
+Cc:     mark.rutland@arm.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4 1/2] dt-bindings: ptp: Add device tree
+ binding for IDT 82P33 based PTP clock
+Message-ID: <20200224184451.GA13180@bogus>
+References: <1582321718-27516-1-git-send-email-min.li.xe@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582540703-6328-4-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <1582321718-27516-1-git-send-email-min.li.xe@renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2020 16:08:21 +0530, Taniya Das wrote:
-> The Modem Subsystem clock provider have a bunch of generic properties
-> that are needed in a device tree. Add a YAML schemas for those.
+On Fri, Feb 21, 2020 at 04:48:38PM -0500, min.li.xe@renesas.com wrote:
+> From: Min Li <min.li.xe@renesas.com>
 > 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Add device tree binding doc for the PTP clock based on IDT 82P33
+> Synchronization Management Unit (SMU).
+> 
+> Changes since v1:
+>  - As suggested by Rob Herring:
+>    1. Drop reg description for i2c
+>    2. Replace i2c@1 with i2c
+>    3. Add addtionalProperties: false
+> 
+> Signed-off-by: Min Li <min.li.xe@renesas.com>
 > ---
->  .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
-> 
+>  .../devicetree/bindings/ptp/ptp-idt82p33.yaml      | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Error: Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dts:21.26-27 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1242999
-Please check and re-submit.
+Reviewed-by: Rob Herring <robh@kernel.org>
