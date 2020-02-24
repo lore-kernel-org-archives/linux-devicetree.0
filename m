@@ -2,109 +2,141 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E54AC35671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF25C35671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619A32082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582543235;
-	bh=tfwxnUm8CTy64G41f2iMr9bjPIyqP0yFAFqjYV9SOYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D57uVwS7aMt84z0LrZiZAPTfMXeXEJQn4YLb6LVdqkY9MrHslf3OvAuUh3mo3IwBg
-	 pGSKEDrQHW/kl5xG0R4tHyKapexV8EqVYL7AjRbDlDTIXmYt7yOANqnk277Kdt4ZEl
-	 +pwT4md5umvXaLYSpPZwiRWzzqgRxt3h/4V7AEg0=
+	by mail.kernel.org (Postfix) with ESMTP id 3157B20732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:29:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Kp6riYbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgBXLUe (ORCPT
+        id S1727202AbgBXL3F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:20:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbgBXLUe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:20:34 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8CB220828;
-        Mon, 24 Feb 2020 11:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582543234;
-        bh=tfwxnUm8CTy64G41f2iMr9bjPIyqP0yFAFqjYV9SOYE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FnM2JMMOaqo3jU/7fznFVD+LadG9PBNNBtKfvwkV4jblDtsqK1/uqVUVQqc7uf1cF
-         AAD2elF8e05a0Y47WScHvQyp8eLtZPQjLNNyAs2WFWXTmnoZ0n8u6n4uKUhFe6G1Ja
-         VH+gdhqHJxRWBqUuU4vEgOzijzhE7+Zx+uBTI0Ng=
-Date:   Mon, 24 Feb 2020 19:20:26 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
-        michael@walle.cc, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 devicetree 0/6] DT bindings for Felix DSA switch on
- LS1028A
-Message-ID: <20200224112026.GF27688@dragon>
-References: <20200223204716.26170-1-olteanv@gmail.com>
+        Mon, 24 Feb 2020 06:29:05 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1321 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXL3F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:29:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e53b35c0000>; Mon, 24 Feb 2020 03:28:29 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Feb 2020 03:29:04 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Feb 2020 03:29:04 -0800
+Received: from [10.26.11.229] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
+ 2020 11:28:59 +0000
+Subject: Re: [PATCH v3 03/10] ASoC: tegra: add Tegra210 based DMIC driver
+To:     Mark Brown <broonie@kernel.org>
+CC:     Sameer Pujar <spujar@nvidia.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <digetx@gmail.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-4-git-send-email-spujar@nvidia.com>
+ <20200221130005.GD5546@sirena.org.uk>
+ <316ce0d5-318d-0533-ef06-bd7e8672f893@nvidia.com>
+ <20200221165535.GG5546@sirena.org.uk>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <47f94534-e997-d56c-5793-ae832fb2add4@nvidia.com>
+Date:   Mon, 24 Feb 2020 11:28:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223204716.26170-1-olteanv@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200221165535.GG5546@sirena.org.uk>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582543709; bh=qUgfEWROPZ5NHbaz93BXjwIxn40AQzx3A83F2mD4UMA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Kp6riYbQFS4x3zgXyfXPsN6bYbX54Fntx/GCuBqqbnS0IE6/fyN+OtDghfd4BpB7P
+         zjLe27l68nvPON2uD7gvad/ZVCmufdxg5wxwScrI0ksow9L4VkjQI5hKlRQJ/F/Zub
+         LEbfEwVLHDfm6ReBG/qCck9VkkX+jnLJl39xeoYaYwenen8ELQ+5N8x9Qph+OZg8Ig
+         EcCKu4t5zkX6rvri0dmWALx77bFUXW/HO4bdQA6+IGceTEy4FrN5LStg5r/1kgvqOd
+         xuO++9PCrU+goQkxYxguIHcbGfRtguYIAtITIRhLmGI3ldjt7dmijOL1qC7dL4eZf2
+         GoD1tGkiqCrHg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 10:47:10PM +0200, Vladimir Oltean wrote:
-> This series officializes the device tree bindings for the embedded
-> Ethernet switch on NXP LS1028A (and for the reference design board).
-> The driver has been in the tree since v5.4-rc6.
-> 
-> It also performs some DT binding changes and minor cleanup, as per
-> feedback received in v1 and v2:
-> 
-> - I've changed the DT bindings for the internal ports from "gmii" to
->   "internal". This means changing the ENETC phy-mode as well, for
->   uniformity. So I would like the entire series to be merged through a
->   single tree, probably the devicetree one - something which David
->   Miller has aggreed to, here [0].
-> - Disabled all Ethernet ports in the LS1028A DTSI by default, which
->   means not only the newly introduced switch ports, but also RGMII
->   standalone port 1.
-> 
-> [0]: https://lkml.org/lkml/2020/2/19/973
-> 
-> Claudiu Manoil (2):
->   arm64: dts: fsl: ls1028a: add node for Felix switch
->   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
-> 
-> Vladimir Oltean (4):
->   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for ENETC
->     RCIE
->   arm64: dts: fsl: ls1028a: disable all enetc ports by default
 
-I applied these 4 DTS patches with changing prefix to 'arm64: dts: ls1028a: '.
+On 21/02/2020 16:55, Mark Brown wrote:
+> On Fri, Feb 21, 2020 at 02:31:05PM +0000, Jon Hunter wrote:
+>> On 21/02/2020 13:00, Mark Brown wrote:
+> 
+>>>> +	srate = params_rate(params);
+>>>> +	if (dmic->srate_override)
+>>>> +		srate = dmic->srate_override;
+> 
+>>> How does this work for userspace?  If we just ignore the sample rate we
+>>> were asked for I'd expect that the application would get upset.
+> 
+>> Tegra has a hardware sample rate converter (though driver not yet
+>> upstream or part of this initial series) and if using the sample-rate
+>> converter, then the actual rate captured by the DMIC interface could be
+>> different from the resulting sample-rate.
+> 
+> The ideal thing in a component model would be to represent those sample
+> rate convertors directly to usrspace so the routing and rewriting is
+> explicit.
 
-Shawn
+I assume that it would be OK for the sample rate converter itself to
+expose mixer controls to configure its input and output rates so the
+user could configure as needed?
 
->   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
->   dt-bindings: net: dsa: ocelot: document the vsc9959 core
+>> So we want a way to indicate to the DMIC it is capturing at rate X,
+>> while the resulting sample-rate is Y.
 > 
->  .../devicetree/bindings/net/dsa/ocelot.txt    | 116 ++++++++++++++++++
->  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |   1 +
->  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  61 ++++++++-
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  89 +++++++++++++-
->  drivers/net/dsa/ocelot/felix.c                |   3 +-
->  drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
->  6 files changed, 265 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
+>> I am not sure if there is a better way to do this? Ideally, the DMIC
+>> would query the rate from the upstream MUX it is connected to, but I am
+>> not sure if there is a way to do that. So right now it is a manual
+>> process and the user has to configure these which are not ideal.
 > 
-> -- 
-> 2.17.1
-> 
+> Is there any *need* for these to be user configurable?  What's normally
+> happening at the minute is that either the external DAIs are fixed
+> configuration and the DSP just converts everything or there's no format
+> conversion done and things get passed through.
+
+I can see that in most cases there are a finite set of configurations
+that the end user may use. However, we would like to make the
+configuration flexible as possible and this also allow us to test lots
+of different configurations for verification purposes as well.
+
+So a typical scenario would be ...
+
+DMIC --> SRC --> DMA
+
+Where SRC is the sample-rate converter. Now, the DMICs support upto
+48kHz and although it maybe unlikely that someone would want to up
+convert to say 96kHz, it is possible we can do this with the SRC.
+
+So if the user executes arecord with '-r 96000', the DMIC hw_params
+would return an error as this is not supported. So today we override
+this. However, the best solution would be to allow the user the set the
+input of the SRC and then if the DMIC output is routed via the SRC use
+the SRC input rate instead of the actual rate seen/specified by the
+user. So like you said in your other mail, if we could propagate the
+rate information that would be ideal.
+
+Jon
+
+-- 
+nvpublic
