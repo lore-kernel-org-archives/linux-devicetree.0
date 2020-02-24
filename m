@@ -2,126 +2,114 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E14C35679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 06:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E422C3567B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4FF20714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 06:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7330320714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="MKauvzKy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IZOmGdk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgBXGs4 (ORCPT
+        id S1726765AbgBXHUe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:48:56 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:58500 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgBXGs4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:48:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aPzPOEhOYS+oQENKbcZiCCH54g8sQ13jYUVbMT5jUEE=; b=MKauvzKyrpIiXp8VhkLghbILf
-        MVXZusn70gwuzUAU2tFUA8nRd4jSqsAQl5I1jKm+iirmod1+Rs2XqhHSjCxzFTFpcoGO1k0bUXQP+
-        pqj4/MrcMf10j4vMAc55KsrOU5G3koQkLUuncnfHK0/kFAl9qoZsQFVvZ8h4DkE+6R5KM=;
-Received: from [77.247.85.102] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j67Xu-0001bc-0B; Mon, 24 Feb 2020 07:48:50 +0100
-Received: from localhost ([127.0.0.1])
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j67Xr-0007GL-Je; Mon, 24 Feb 2020 07:48:47 +0100
-Date:   Mon, 24 Feb 2020 07:48:04 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH RFC] Bindings: nvmem: add bindings for JZ4780 efuse
-Message-ID: <20200224074804.3a5999ca@kemnade.info>
-In-Reply-To: <CAL_JsqKTdpbLfPq_eGUf-w-0s8JMndbMrQ2BsMt+8y+eqQ-kZw@mail.gmail.com>
-References: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
-        <20200220060001.25807-1-andreas@kemnade.info>
-        <CAL_JsqKTdpbLfPq_eGUf-w-0s8JMndbMrQ2BsMt+8y+eqQ-kZw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        Mon, 24 Feb 2020 02:20:34 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37341 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBXHUd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 02:20:33 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m13so3767433pjb.2
+        for <devicetree@vger.kernel.org>; Sun, 23 Feb 2020 23:20:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pp4OJKlkTUP/JKWBsfGX5IGPygvYeWUCLyYPIlFud78=;
+        b=IZOmGdk3jvbALg78q+Ogcc/os8rR7kNvGziTpMuqqxVshDSb7T0/n5kLOgxiYvrD6L
+         FsaIT/opnfyAbJqctDkl/nSg+/poz+r/XpgrWrCj0upAr29DF+L7hRl6W4XhxLudNiZy
+         mQLaah2Y3ds1XjtYfOSm9hQLGA8Fp+1cwAg+ZoVnIAJkSf+i0RN6yxwnEfj9WAoj1QP9
+         3cCkaSDjwRYAy9gTaNUU81Rp+oHJn4ppYGFivh0T0knTRTQnKpNsuGoto8fVCwI2NNKS
+         N78wCh30Yi+vNrdi6ujUkU1bDTZ7+FjVlQRwtYpE3nNUngzpsG5Jp9vpFUfwl1Z8H12w
+         8FnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pp4OJKlkTUP/JKWBsfGX5IGPygvYeWUCLyYPIlFud78=;
+        b=X7UhM/rMOfj6kMu1WIgdlfN4FcpvbBFD/xhCXxNJkNbS4Ly1AUbpemeklT/RC55Bgu
+         WYZ+HWfhMhUqItzq/5VWf+sC6+IVlrUAzfM2q3kNGlpPL7pEYUiFaVulbcRdpPba8hZ7
+         W+3rLWMIXOXBpwQPNPeXaHsmey0fZwdkqPXHOng57++rYLma/KwsbrufYc/rKAaYDySk
+         TqVU3KY+kx4YY8nccPCLq+ndsmkiy0Jb8N3LgITQ2i1jGI8aLEjYCVEQf5a7bPpHRkUX
+         QJv2K3ZF1TzaPwHoPH3htNCFhSvzMlXED0Iol18iO63Satk0PgtlxTF5z1USIJsTPvVy
+         NgZg==
+X-Gm-Message-State: APjAAAUHrfYejcB4RcbOFG41dORuw+sc0PuZVIX/sAxFQ2BpHl9wuuKW
+        SeDyEF/ZEm8Ys4rlAQ55AR9cVg==
+X-Google-Smtp-Source: APXvYqy3jXvJE7VyZtpKH6rIFhGNbXxpgKh1xaZZt9uPKJ3Z6xLRb6oa+wLz4XgROfrFkfGKGYes3Q==
+X-Received: by 2002:a17:90b:4396:: with SMTP id in22mr18082228pjb.83.1582528831644;
+        Sun, 23 Feb 2020 23:20:31 -0800 (PST)
+Received: from localhost ([45.127.44.57])
+        by smtp.gmail.com with ESMTPSA id p23sm11452767pgn.92.2020.02.23.23.20.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 23:20:30 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [RFC PATCH v5 0/3] Convert thermal bindings to yaml
+Date:   Mon, 24 Feb 2020 12:50:24 +0530
+Message-Id: <cover.1582527752.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/qC/AVLdY9Jg/Kbhrq+v8j_Q"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---Sig_/qC/AVLdY9Jg/Kbhrq+v8j_Q
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi all,
 
-On Thu, 20 Feb 2020 13:53:55 -0600
-Rob Herring <robh@kernel.org> wrote:
+Here is a series splitting up the thermal bindings into 3 separate bindings
+in YAML, one each of the sensor, cooling-device and the thermal zones.
+Since I was learning about YAML parsers while creating these bindings,
+there are bound to be some issues.
 
-[...]
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clock =20
->=20
-> 'make dt_binding_check' would have pointed the error here for you:
->=20
-I did run make dt_binding_check...
-It stopped because the jz4780-cgu.h included was missing. Then I have added
-that line and have started dt_binding_check again.
-At least here it is doing a full rerun in the second part.
-After some time I scrolled back and noticed DTC passed
-and missed that
+I have to add that the bindings as they exist today, don't really follow
+the "describe the hardware" model of devicetree. e.g. the entire
+thermal-zone binding is a software abstraction to tie arbitrary,
+board-specific trip points to cooling strategies. This doesn't fit well
+into the model where the same SoC in two different form-factor devices e.g.
+mobile and laptop, will have fairly different thermal profiles and might
+benefit from different trip points and mitigation heuristics. I've started
+some experiments with moving the thermal zone data to a board-specific
+platform data that is used to initialise a "thermal zone driver".
 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvme=
-m/ingenic,jz4780-efuse.example.dt.yaml:
-> efuse@134100d0: 'clock' is a required property
->=20
-in the CHECKS line. Well, dt_binding_check is a bit noisy. I guess I should
-have redirected all output to a text file, before and after my changes. and
-diffed the results.=20
-Is there any script ready for that?
+In any case, if we ever move down that path, it'll probably end up being v2
+of the binding, so this series is still relevant.
+
+Please help review.
 
 Regards,
-Andreas
+Amit
 
---Sig_/qC/AVLdY9Jg/Kbhrq+v8j_Q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+Amit Kucheria (3):
+  dt-bindings: thermal: Add yaml bindings for thermal sensors
+  dt-bindings: thermal: Add yaml bindings for thermal cooling-devices
+  dt-bindings: thermal: Add yaml bindings for thermal zones
 
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5TcaQACgkQl4jFM1s/
-ye+qEg//RuC/awIoIvvNfAs0LvNMWhnRjEmuJCXPJv7SqCNMbgwxLpFpr8II3bid
-R0XiugVmlY6N6bWBy4C2WI2Y/CYX0FxmSzD9MhhPqbD+TxuiB8PmlWdnMCbqmM8b
-RWFDS1xdh3G3iEGO8+gu0arCysRAsEazkLv0PMKHX9n2Y6+qJYgPy8rbZ8ObG7tp
-dJmhZQYv6FjQJ0VGl/L6RNdwBOoNX1Q3QEP/RLRLn+VAIkWWqGrAGXNMA3FznN2u
-JwJZkXLUJaBi3docdXpPjtsEhZryuIjBfprsI5Q38+ot5SSboe7xUq5XzsCYzRfw
-fDqhhOmdW3sou7KEBcr0NPapAnEB3PJXqaunsrgNH9oIVUudVa0FC+PVk/jZ5vk7
-wO/Z349eo3lGGrKQQhxNd/sErrJi2pdRT1RqjelyFssQ7QeOOBHp8EQLeQV+R29x
-q9xnDCMs5XQnxWl0+r2YlbXo0ibpe45o5jJGRjJokUFKqv6bjFlcdVtMjPhh2dK/
-BrWoGGrj42ts+ZTKVt0Y2I8djhuUrc2YtXjwUv/JAAly0bE5o2acuOcKMNJMQLXM
-vlieSRzztvqI8Be94byPJURtT3qSxNpHu5CYoi/cDxdWvt++LmdryRYZF7wswFO/
-gtiBSIG3Xsvb6Q8poDwlcwGAxu09cdHRUm9XLzaEP3vBuo+R7RY=
-=R3/0
------END PGP SIGNATURE-----
+ .../thermal/thermal-cooling-devices.yaml      | 114 +++++++
+ .../bindings/thermal/thermal-sensor.yaml      |  70 ++++
+ .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
+ 3 files changed, 486 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
 
---Sig_/qC/AVLdY9Jg/Kbhrq+v8j_Q--
+-- 
+2.20.1
+
