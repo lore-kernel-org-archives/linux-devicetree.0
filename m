@@ -5,59 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E876C3567A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 02:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6DEC35677
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 02:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012542067D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 02:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E2A2067D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 02:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dl3xLDMm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ewQZZzHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgBXCIZ (ORCPT
+        id S1727170AbgBXCKc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 21:08:25 -0500
-Received: from mail-ua1-f73.google.com ([209.85.222.73]:34628 "EHLO
-        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbgBXCIY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 21:08:24 -0500
-Received: by mail-ua1-f73.google.com with SMTP id z17so1025649uaa.1
-        for <devicetree@vger.kernel.org>; Sun, 23 Feb 2020 18:08:24 -0800 (PST)
+        Sun, 23 Feb 2020 21:10:32 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:55902 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBXCKc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 21:10:32 -0500
+Received: by mail-pg1-f202.google.com with SMTP id r10so3525557pgu.22
+        for <devicetree@vger.kernel.org>; Sun, 23 Feb 2020 18:10:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=tfMKf34rzYmaH8xdI4hD1ENek/gjKmpNdihWWrIkihY=;
-        b=dl3xLDMmDQHWYwGTPecBMrhl8cp1ubi79/y4uC7zvxw13x5kxR0hIrdzcb6mpDjnIR
-         akn7tFOCzC75LJ2U9XJBX1yKrH60zz44P5XPslfmv7fJWnv+CjXCSxIC9H0Qj+eap13U
-         b1797Qo5mdforvpT4UbfBeE3Kwe7zvdlEFiny/xDlpedod7j01y2vCVM9O1Wdm+DQDdY
-         DdqUI16njA1pwpu3TGvZTWuiHMHMU4z/1vto4Gwv59MGXnZwoueBJu8V1lHvMMEwWG63
-         3p9DXJ3CcgM+sXeYNC/XM9jp86gtz5/p+nNxrhXAKSgazBzSfBhHDwhZwBGiPwrwNWVE
-         ydSQ==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=xXnVPSTtq6JKEca5i5uwLN/shdFSGa9fDblOik0nzOE=;
+        b=ewQZZzHbAIm9IaVDu9F0bc2esO1BNMP2dV5Rp45y8mFa8Z0HBz43i3HohNjPmgKnZF
+         iGvAM0Z71h7ZTE66msAdaRCfRpaOSuKti3gKQcx16Iza8AaubCFm30jx7F0Y8VJdz56P
+         p5JifXyJlkxxvdhB0WTwuFfXVQ90hE8ZMGORE/RZCHHPnqei3atfgwfHGcNA3I1FZ18h
+         0Iuvr5oHofTsZzrJmhJipc5xrmilXc5ctdxC6HQ5QgYDVHvMWu4d5abZXY/KvQjNxha7
+         Hkur+YO1PRIZeqbJcGRVm8AwuZFnIei1lXZgQF++GRM57usyRdsHLq5QnO0h2KmhgnQA
+         RitA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=tfMKf34rzYmaH8xdI4hD1ENek/gjKmpNdihWWrIkihY=;
-        b=JQXkPiRZVsOBr3UDZYqm0d2AwuXTViGc0dDbtiMELaWqb7BPtIrva51EWY6ICW2uc0
-         lZHcmWYa04obEtmN0bnYFZnQz3DNUZsllc2EZbJLjgPFB8g2o/abYZrb0YOoj+BN/p5q
-         mK77bccqYIA6qKulChahOuEnMN6tAZgjgL62TpsB0GZc3DS4ctQrO8JkbKFL2wHvxNPW
-         6QJ3AjzYqnKVlNtMHHmpXQ/Uk3lIM/sDkhkoVvMOqtKQytdKoki0JRZEZDguywmDWmLl
-         geXmMuLsCk2NevuaTYhbQ0qkzXzIWv28ArWxKQ0RH28qq/8XVulSflwUzu+gYY12iz41
-         d+rw==
-X-Gm-Message-State: APjAAAUGd1lXzOQUOn89PjMsebxUKrAcV+GX5YcZvBg4Z8E3Ji93uBxl
-        WuuhEMOsmxJF0Wjz4SOZmC/Jkq96JFI=
-X-Google-Smtp-Source: APXvYqwTsPEqq0vSJALIwRT24gVR2Zsdll9IQ6yQ0KfZKKmTVDr8mHQmzYKgR5Kxy/Fg4GEAIXU4VmCCVXc=
-X-Received: by 2002:a67:89c4:: with SMTP id l187mr24451432vsd.31.1582510103411;
- Sun, 23 Feb 2020 18:08:23 -0800 (PST)
-Date:   Sun, 23 Feb 2020 18:08:15 -0800
-In-Reply-To: <20200224020815.139570-1-adelva@google.com>
-Message-Id: <20200224020815.139570-3-adelva@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=xXnVPSTtq6JKEca5i5uwLN/shdFSGa9fDblOik0nzOE=;
+        b=USoEZKoKMsi7bWjxAQR3q5t2U10Ib0hG63mRsUfa39YFYbMFv8IVDOaiVwJqttCscZ
+         QUhgoD2bxF4b6+GIW2t6VKXXgmBz1WRrvlok1j2trlJ2IsbKgw4Eq4yJh5CK+klrdY1L
+         gbCkxW8BXmxLTj3iXeu9kFI5pczQzfBx5Tbi1AQg9pP0acy6qmfrCkaRthI2pK7muI7F
+         eDT4AJc9IMUFvvZBdDQJtpMwkjTFXyR+KypGWNRuVbKUsJRrIMFpyaWh01937jNTwZbV
+         n0+RRvJZGJuQjPpfuBEC8Luqkjb52tYADD0E2p5q9n771fmK/z9yJr4a53fsJMVm4nHA
+         Cr4w==
+X-Gm-Message-State: APjAAAXCnAHwmaopI1wxLl8TxDHUEQku5OOpunmcMgVTjuYZjXgoU+75
+        ExIWVoef2u3fjc+wAoH7iJ4hc1oZ9Fo=
+X-Google-Smtp-Source: APXvYqzh7LWx5FHfbXoqvdMOKLDRvpI9RTMgE9OYFl93HPIxPAzkWl5IGjaOk/mtBxp40jqIQkZIat3Is54=
+X-Received: by 2002:a63:8743:: with SMTP id i64mr49147206pge.243.1582510231389;
+ Sun, 23 Feb 2020 18:10:31 -0800 (PST)
+Date:   Sun, 23 Feb 2020 18:10:27 -0800
+Message-Id: <20200224021029.142701-1-adelva@google.com>
 Mime-Version: 1.0
-References: <20200224020815.139570-1-adelva@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2 3/3] dt-bindings: pmem-region: Document memory-region
+Subject: [PATCH v3 1/3] libnvdimm/of_pmem: factor out region registration
 From:   Alistair Delva <adelva@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kenny Root <kroot@google.com>,
@@ -76,13 +72,12 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Kenny Root <kroot@google.com>
 
-From: Kenny Root <kroot@google.com>
-
-Add documentation and example for memory-region in pmem.
+Factor out region registration for 'reg' node. A follow-up change will
+use of_pmem_register_region() to handle memory-region nodes too.
 
 Signed-off-by: Kenny Root <kroot@google.com>
 Signed-off-by: Alistair Delva <adelva@google.com>
-Cc: "Oliver O'Halloran" <oohall@gmail.com>
+Reviewed-by: "Oliver O'Halloran" <oohall@gmail.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>
@@ -92,53 +87,88 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-nvdimm@lists.01.org
 Cc: kernel-team@android.com
 ---
- .../devicetree/bindings/pmem/pmem-region.txt  | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+[v3: adelva: remove duplicate "From:"]
+ drivers/nvdimm/of_pmem.c | 60 +++++++++++++++++++++++-----------------
+ 1 file changed, 35 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-index 5cfa4f016a00..0ec87bd034e0 100644
---- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
-+++ b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-@@ -29,6 +29,18 @@ Required properties:
- 		in a separate device node. Having multiple address ranges in a
- 		node implies no special relationship between the two ranges.
+diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
+index 8224d1431ea9..fdf54494e8c9 100644
+--- a/drivers/nvdimm/of_pmem.c
++++ b/drivers/nvdimm/of_pmem.c
+@@ -14,6 +14,39 @@ struct of_pmem_private {
+ 	struct nvdimm_bus *bus;
+ };
  
-+		This property may be replaced or supplemented with a
-+		memory-region property. Only one of reg or memory-region
-+		properties is required.
-+
-+	- memory-region:
-+		Reference to the reserved memory node. The reserved memory
-+		node should be defined as per the bindings in
-+		reserved-memory.txt
-+
-+		This property may be replaced or supplemented with a reg
-+		property. Only one of reg or memory-region is required.
-+
- Optional properties:
- 	- Any relevant NUMA assocativity properties for the target platform.
- 
-@@ -63,3 +75,20 @@ Examples:
- 		volatile;
- 	};
- 
++static void of_pmem_register_region(struct platform_device *pdev,
++				    struct nvdimm_bus *bus,
++				    struct device_node *np,
++				    struct resource *res, bool is_volatile)
++{
++	struct nd_region_desc ndr_desc;
++	struct nd_region *region;
 +
 +	/*
-+	 * This example uses a reserved-memory entry instead of
-+	 * specifying the memory region directly in the node.
++	 * NB: libnvdimm copies the data from ndr_desc into it's own
++	 * structures so passing a stack pointer is fine.
 +	 */
++	memset(&ndr_desc, 0, sizeof(ndr_desc));
++	ndr_desc.numa_node = dev_to_node(&pdev->dev);
++	ndr_desc.target_node = ndr_desc.numa_node;
++	ndr_desc.res = res;
++	ndr_desc.of_node = np;
++	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
 +
-+	reserved-memory {
-+		pmem_1: pmem@5000 {
-+			no-map;
-+			reg = <0x00005000 0x00001000>;
-+		};
-+	};
++	if (is_volatile)
++		region = nvdimm_volatile_region_create(bus, &ndr_desc);
++	else
++		region = nvdimm_pmem_region_create(bus, &ndr_desc);
 +
-+	pmem@1 {
-+		compatible = "pmem-region";
-+		memory-region = <&pmem_1>;
-+	};
++	if (!region)
++		dev_warn(&pdev->dev,
++			 "Unable to register region %pR from %pOF\n",
++			 ndr_desc.res, np);
++	else
++		dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
++			ndr_desc.res, np);
++}
++
+ static int of_pmem_region_probe(struct platform_device *pdev)
+ {
+ 	struct of_pmem_private *priv;
+@@ -46,31 +79,8 @@ static int of_pmem_region_probe(struct platform_device *pdev)
+ 			is_volatile ? "volatile" : "non-volatile",  np);
+ 
+ 	for (i = 0; i < pdev->num_resources; i++) {
+-		struct nd_region_desc ndr_desc;
+-		struct nd_region *region;
+-
+-		/*
+-		 * NB: libnvdimm copies the data from ndr_desc into it's own
+-		 * structures so passing a stack pointer is fine.
+-		 */
+-		memset(&ndr_desc, 0, sizeof(ndr_desc));
+-		ndr_desc.numa_node = dev_to_node(&pdev->dev);
+-		ndr_desc.target_node = ndr_desc.numa_node;
+-		ndr_desc.res = &pdev->resource[i];
+-		ndr_desc.of_node = np;
+-		set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
+-
+-		if (is_volatile)
+-			region = nvdimm_volatile_region_create(bus, &ndr_desc);
+-		else
+-			region = nvdimm_pmem_region_create(bus, &ndr_desc);
+-
+-		if (!region)
+-			dev_warn(&pdev->dev, "Unable to register region %pR from %pOF\n",
+-					ndr_desc.res, np);
+-		else
+-			dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
+-					ndr_desc.res, np);
++		of_pmem_register_region(pdev, bus, np, &pdev->resource[i],
++					is_volatile);
+ 	}
+ 
+ 	return 0;
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
