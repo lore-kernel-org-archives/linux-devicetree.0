@@ -2,176 +2,124 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF82C38BE2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E38C38BE2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 19:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B953E2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3BD20838
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 19:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="K9J9F9PV"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="FnR6SEUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgBXS7L (ORCPT
+        id S1727750AbgBXTA7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:59:11 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37074 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727750AbgBXS7K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:59:10 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so7582795lfc.4
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 10:59:08 -0800 (PST)
+        Mon, 24 Feb 2020 14:00:59 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:42747 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727187AbgBXTA7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 14:00:59 -0500
+Received: by mail-qv1-f65.google.com with SMTP id dc14so4595287qvb.9
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 11:00:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DWIogKdup7RNMEQuGw4ZK8XOOx0NelgD6LsQ23lIpno=;
-        b=K9J9F9PV+48ev9LK8v98rsnmW179zWtfmyhq0RgD2gPng7rPjM11KvxdB0vwPZrecW
-         0ZJF5dYneiH+au5KOHmBFw8QF4N1Iw0/mEd0A4jiiAmFWHtE10cFS2ov5YWqcR8A1iQI
-         mwaMkZjCY275H3YMSHT1FGGlzaQMZq2r8t+H+r02QFlVgLD0bAdWKCSdlnHeb6+hJa/H
-         bYm9F7ScwA5B9K38urOwf0g27uW+omFOWqIExTILY1vP7BE3BjaBkQhCHcByfQO8ous3
-         BaL+XAofK48p2a7X4Q5zgSzweH+XZ1Skoi3bGvhmgg6p6RhDeI74kPpMFgXTm4l0GzvA
-         07jQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nS4y9b6My/7+JIxHts6eLm8z0C4thsb5l3wuyiXD29Q=;
+        b=FnR6SEUSqjm6pva9hmjZjjMQWlNtH8BimVmLzNHoyK5KObnwJJd4v62FvcucQXR613
+         Vs8HRCZGupCTQ5IZ0JUUxDfBksnOmCrAaBY+t9FVQ6WaO9/f1nfENMH64EtLf6mQOl3A
+         ULGnEHBvxwQ+J67AeNEUPMlBMuj+D9qb1H5X2oBhmsBZnIHcb4yro7ts8Lp+wdj45jEW
+         v76e8KPBbvQd89kU+MetflzO8JQksrPwRwleGV8a9HuL+52ruaZpjBkc9Ny6pYP+Y1YO
+         IlJp1zbAGL4jPjja65grNuAP/DFEdsR9iZ2aPGrstIS0jUFiDV/TkZWtZDP/2nIWRKh9
+         659A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DWIogKdup7RNMEQuGw4ZK8XOOx0NelgD6LsQ23lIpno=;
-        b=o1+g4vxw1VynnyJ5j+uLwSoydqCoWwoNooh1oXIXENIdyQ/vIV7qqk5RHg5zlL21Ms
-         9cp43DQJ1RI6rTbPUTc4JClX2VjMUVCOgfqKttJSE24PFWpvha5f+9N7LlJjN4FGfEgY
-         Tyd8//EdsSzuZwWICzeiQoscxpwVJEOX+op9+WoCqXGLuDOM/Mk84tHA3nNZb5webWIi
-         7QS9zIb7dCzq0fSUjcVO4ptK/nLyvQM6LzqURH0GhEyO9O3tHnFUXvZM0jxSgj3E6DM9
-         8hbY5ygZw9MEq9BXhts/4FH+HyHKWpBUofxv+Sf6r5yWlnXGXkf8ctc9VWXlWIfGDLzg
-         R8RA==
-X-Gm-Message-State: APjAAAUGO04inT0eF4Ix/3lqw8g9cLmWvXYguRk/B3Evf4elDpjos/Kz
-        nSU4oDaiM4mcEv+QexN4e6d8lLjn+O4=
-X-Google-Smtp-Source: APXvYqy0tBQh6NrjPUVDkFA+Xh7MQuqHB2EeKfbvVtje8TT1bP0hItq13fx2MA+evvjyvRSeln3ZBw==
-X-Received: by 2002:ac2:489b:: with SMTP id x27mr27518111lfc.130.1582570747459;
-        Mon, 24 Feb 2020 10:59:07 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:4845:f7d3:88db:d8d1:c530:4d4])
-        by smtp.gmail.com with ESMTPSA id a3sm2281419lfo.70.2020.02.24.10.59.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Feb 2020 10:59:06 -0800 (PST)
-Subject: Re: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
-To:     "Behme Dirk (CM/ESO2)" <dirk.behme@de.bosch.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
- <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
- <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
- <5603f393-554d-e2a8-c2d8-6bafc20f4169@cogentembedded.com>
- <cba1e2ec-4896-23ef-ef7b-0f80d4310127@de.bosch.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <ec545462-54ed-9e23-049e-1807d24ec084@cogentembedded.com>
-Date:   Mon, 24 Feb 2020 21:59:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nS4y9b6My/7+JIxHts6eLm8z0C4thsb5l3wuyiXD29Q=;
+        b=A+vlGl1HaFrKaaWmav19hGbE84Pk4/Wjt46p3K11yJPvlGKprCh1GduoLl72RQh8FC
+         doWq7/U/8tAoeqto/sHl58uPaElb2isrUXyVYhFXbXHR2Dh9hFj2bfba24ObX0oarkg9
+         TZc54opIcnoyPbspbmfmKWDf8UVNXi/ujYDiTfWtF/0vOv/TvbsScvMPZjbzXmSdvLhV
+         Wdd7LdQKPalmMh3zKDXjNBo/nRaD8pIHBUSqJz4D2oVM/CC6UYCLpEf3AKRQmXrACFTy
+         onudczLWDNbLVcJ+cBOWFg37vo/zFvCpMsEhv6GXYXhFFeQoracXBj+8ELX9JuimQyli
+         FGKw==
+X-Gm-Message-State: APjAAAUIjwJMGQ7nz3nISEfAM6iz44phR+QrHMGppxB7uDIKK7bqFY9a
+        LyXApic/HY1isOzYGaVlrWr1/g==
+X-Google-Smtp-Source: APXvYqyNbYKidHbzZ1XJJ2LbIhIEjWa9RFdUt4bTzm6wm+o3ErpK3Y9OIJTvmpvQbXJ0sVD9TGvEfA==
+X-Received: by 2002:ad4:4b21:: with SMTP id s1mr47274639qvw.81.1582570858491;
+        Mon, 24 Feb 2020 11:00:58 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id m17sm6086872qki.128.2020.02.24.11.00.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Feb 2020 11:00:57 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j6IyO-0005Dy-Tk; Mon, 24 Feb 2020 15:00:56 -0400
+Date:   Mon, 24 Feb 2020 15:00:56 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        yi.l.liu@intel.com, zhangfei.gao@linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200224190056.GT31668@ziepe.ca>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+ <20200224182401.353359-2-jean-philippe@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <cba1e2ec-4896-23ef-ef7b-0f80d4310127@de.bosch.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224182401.353359-2-jean-philippe@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
-
-On 02/24/2020 08:46 AM, Behme Dirk (CM/ESO2) wrote:
-
->>>> Add the memory driver for Renesas RPC-IF which registers either SPI or
->>>> HyperFLash device depending on the contents of the device tree subnode.
->>>> It also provides the absract "back end" device APIs that can be used by
->>>> the "front end" SPI/MTD drivers to talk to the real hardware.
->>>>
->>>> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
->>>>
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>
->>>
->>> FYI, please find below [1] the changes I did locally on this driver. It seems to read & write successfully on my custom M3 (R8A7796) device, now.
->>
->>     Not for me...
->>     BTW, your patch had whitespace ruined, I had to apply it by hand, you'd better
->> attach the patches, not paste. :-/
+On Mon, Feb 24, 2020 at 07:23:36PM +0100, Jean-Philippe Brucker wrote:
+> The new allocation scheme introduced by 2c7933f53f6b ("mm/mmu_notifiers:
+> add a get/put scheme for the registration") provides a convenient way
+> for users to attach notifier data to an mm. However, it would be even
+> better to create this notifier data atomically.
 > 
-> 
-> Ok. There are other mailing lists complaining about attachments ;)
+> Since the alloc_notifier() callback only takes an mm argument at the
+> moment, some users have to perform the allocation in two times.
+> alloc_notifier() initially creates an incomplete structure, which is
+> then finalized using more context once mmu_notifier_get() returns. This
+> second step requires carrying an initialization lock in the notifier
+> data and playing dirty tricks to order memory accesses against live
+> invalidation.
 
-   All Linux MLs prefer patches inline. :-)
-   But you seem to paste the patches to the mail edited in some MUA (which does ruin
-whitespace). Don't do that, it's better to just attach.
+This was the intended pattern. Tthere shouldn't be an real issue as
+there shouldn't be any data on which to invalidate, ie the later patch
+does:
 
-> Even better, maybe we should put what we have so far publicly anywhere, e.g. github.
++       list_for_each_entry_rcu(bond, &io_mm->devices, mm_head)
 
-  Cogent has an accout there, I'll try asking the management if it could also be used...
+And that list is empty post-allocation, so no 'dirty tricks' required.
 
->>> Best regards
->>>
->>> Dirk
->>>
->>> [1]
->>>
->>>  From d72b805cc461ab1e9747c973e9be84e7abb8f828 Mon Sep 17 00:00:00 2001
->>> From: Dirk Behme <dirk.behme@de.bosch.com>
->>> Date: Tue, 4 Feb 2020 08:39:31 +0100
->>> Subject: [PATCH] memory: renesas-rpc-if: Correct the STRTIM and some other
->>>   clean up
->>>
->>> This is required to make the driver work correctly in my M3 environment.
->>>
->>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
->>> ---
->>>   drivers/memory/renesas-rpc-if.c | 42 ++++++++++++++++++++-------------
->>>   1 file changed, 25 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/drivers/memory/renesas-rpc-if.c b/drivers/memory/renesas-rpc-if.c
->>> index 04be92b64bfa..f4356b066384 100644
->>> --- a/drivers/memory/renesas-rpc-if.c
->>> +++ b/drivers/memory/renesas-rpc-if.c
->> [...]
->>> @@ -513,19 +525,15 @@ ssize_t rpcif_dirmap_read(struct rpcif *rpc, u64 offs, size_t len, void *buf)
->>>       pm_runtime_get_sync(rpc->dev);
->>>
->>>       regmap_update_bits(rpc->regmap, RPCIF_CMNCR, RPCIF_CMNCR_MD, 0);
->>> -    regmap_write(rpc->regmap, RPCIF_DRCR,
->>> -             RPCIF_DRCR_RBURST(32) | RPCIF_DRCR_RBE);
->>> -    regmap_write(rpc->regmap, RPCIF_DRCMR, rpc->command);
->>> -    regmap_write(rpc->regmap, RPCIF_DREAR,
->>> -             RPCIF_DREAR_EAV(offs >> 25) | RPCIF_DREAR_EAC(1));
->>> -    regmap_write(rpc->regmap, RPCIF_DROPR, rpc->option);
->>> -    regmap_write(rpc->regmap, RPCIF_DRENR,
->>> -             rpc->enable & ~RPCIF_SMENR_SPIDE(0xF));
->>> -    regmap_write(rpc->regmap, RPCIF_DRDMCR, rpc->dummy);
->>> -    regmap_write(rpc->regmap, RPCIF_DRDRENR, rpc->ddr);
->>
->>     The driver somehow works only with this left in place (with 2 bytes eaten
->> as before), otherwise all the flash reads all 0xff (via dirmap).
-> 
-> 
-> Do you boot from hyperflash?
+The other op callback is release, which also cannot be called as the
+caller must hold a mmget to establish the notifier.
 
-   No, I have arewto say 'cpld write 30 1' in U-Boot before a boot a kernel.
-Normally, the V3x Starter Kit boards are wired for the QSPI flash chips.
+So just use the locking that already exists. There is one function
+that calls io_mm_get() which immediately calls io_mm_attach, which
+immediately grabs the global iommu_sva_lock.
 
-> The system I'm using for testing boots from hyperflash. So most probably all registers
-> I don't touch in the driver are put into a reasonable state by the boot code, already.
-> If you don't boot from hyperflash, that at least would explain our different behavior.
+Thus init the pasid for the first time under that lock and everything
+is fine.
 
-   Yes. Mind dumping the registers and sending to me?
+There is nothing inherently wrong with the approach in this patch, but
+it seems unneeded in this case..
 
-> Best regards
-> 
-> Dirk
-
-MBR, Sergei
+Jason
