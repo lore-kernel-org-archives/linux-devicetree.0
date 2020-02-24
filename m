@@ -2,211 +2,66 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9706CC3567B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F711C3567B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A2420714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:38:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="KtY/Ywwr"
+	by mail.kernel.org (Postfix) with ESMTP id 127452072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582530221;
+	bh=e0jaSeqZM376UDVXHw0hgmq9BjN9Q0bkHXtY3Y1ogRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PlUlPExuwgDFc5E9Mz/xJH/J35l7h9YL2Y0zIUWmj56yUw57hic49VoIGlnQBcjKN
+	 ekodO+O9qnblavgifRfXiBbuHoVdaP9EKAoDVtWK0zBmHSsMyy/6SBjz6Qx5T8amEr
+	 VnLU+Z6FecEZkbAzC033eu/kMgy/pcPjulm6WigI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgBXHiO (ORCPT
+        id S1727170AbgBXHnk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:38:14 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:49762 "EHLO mail.andi.de1.cc"
+        Mon, 24 Feb 2020 02:43:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbgBXHiN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:38:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=451vApj/9D7x1KWh4ddIWyxRkUvpD9CgPV5nIaS4pg8=; b=KtY/YwwrUmK+tuG8zoyRvRTIJ
-        pq2X+lzhaJ1cHUq/lJhqBVnIzeaAxq+CaQU7AnlTTjWrQ7+89qicwrmxEDbh9YIu6rmNDHyCdy1v0
-        EWPbjWxdd53ySVmT1PJ+NCG7WHA3Ght0BVs1kdgbT7Ffmdakqn25D1iGxFOqsbY1QizTo=;
-Received: from p578b2b7d.dip0.t-ipconnect.de ([87.139.43.125] helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j68JF-00021S-3e; Mon, 24 Feb 2020 08:37:45 +0100
-Received: from localhost ([::1])
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j68GR-0007vf-WD; Mon, 24 Feb 2020 08:34:52 +0100
-Date:   Mon, 24 Feb 2020 08:33:35 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH v5 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
-Message-ID: <20200224083335.06a352f8@kemnade.info>
-In-Reply-To: <D59DC84C-837E-4856-8FED-580381F748FF@goldelico.com>
-References: <cover.1582367141.git.hns@goldelico.com>
-        <51642368a064073ab99bb3110863b5fadc382f82.1582367141.git.hns@goldelico.com>
-        <20200222165738.61cde2a0@kemnade.info>
-        <D59DC84C-837E-4856-8FED-580381F748FF@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        id S1726452AbgBXHnk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 02:43:40 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4860D20675;
+        Mon, 24 Feb 2020 07:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582530219;
+        bh=e0jaSeqZM376UDVXHw0hgmq9BjN9Q0bkHXtY3Y1ogRk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lQ76U4eHAyYXRaZ5OyNnILC0k5zxnC8LqTkL6oLvAkeIh6a2LbB5PM74r50GH55Nr
+         r2xAj91lJix1cKeyx24jxAPwN+FKtzukh7kbu8WtopZO+LPgE9oHPKyqhw3g0xtPbG
+         bZR9jvt4pW8Mu8A+PdtBdsCB3JkAUBv6rmy5fLVY=
+Date:   Mon, 24 Feb 2020 15:43:33 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] ARM: dts: imx: make wdog node name generic
+Message-ID: <20200224074332.GX27688@dragon>
+References: <1582251200-15562-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/jAuKxTh/ki.VbCviTA9NKWw"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582251200-15562-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---Sig_/jAuKxTh/ki.VbCviTA9NKWw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Feb 21, 2020 at 10:13:20AM +0800, Anson Huang wrote:
+> Node name should be generic, use "watchdog" instead of "wdog" for
+> wdog nodes.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-On Sat, 22 Feb 2020 17:34:06 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-
-> > Am 22.02.2020 um 16:57 schrieb Andreas Kemnade <andreas@kemnade.info>:
-> >=20
-> > On Sat, 22 Feb 2020 11:25:37 +0100
-> > "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-> >  =20
-> >> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >>=20
-> >> This patch brings support for the JZ4780 efuse. Currently it only expo=
-ses
-> >> a read only access to the entire 8K bits efuse memory.
-> >>=20
-> >> Tested-by: Mathieu Malaterre <malat@debian.org>
-> >> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >> [converted to yaml]
-> >> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> >> ---
-> >> .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 50 +++++++++++++++++++
-> >> 1 file changed, 50 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4=
-780-efuse.yaml
-> >>=20
-> >> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-ef=
-use.yaml b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-> >> new file mode 100644
-> >> index 000000000000..09a8ef937750
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-> >> @@ -0,0 +1,50 @@
-> >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Ingenic JZ EFUSE driver bindings
-> >> +
-> >> +maintainers:
-> >> +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >> +
-> >> +allOf:
-> >> +  - $ref: "nvmem.yaml#"
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - ingenic,jz4780-efuse
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +
-> >> +  clocks:
-> >> +    # Handle for the ahb for the efuse.
-> >> +    maxItems: 1
-> >> +
-> >> +  clock-names:
-> >> +   items:
-> >> +     - const:  ahb2 =20
-> > as Rob said: probably not needed, since it is a single
-> > clock, and the driver uses devm_clk_get(dev, NULL), so it should be pre=
-pared
-> > for that without any extra work. =20
->=20
-> The question is if a specific driver implementation should determine
-> what the DT requires or the other way round. I don't know...
->=20
-> I did interpret Rob's comment differently: there was
->=20
-> > - "clock-names"		Must be "bus_clk" =20
->=20
-> and he did say:=20
->=20
-> 	'clk' is redundant. How about 'ahb'?
->=20
-> So I thought he refers to the _clk suffix?
->=20
-> >  =20
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - clock-names =20
-> > so it is not required here (but "- clocks" (not "- clock") as said in e=
-arlier
-> > mail). =20
->=20
-> Well, this is another example where I do not yet see any improvement by y=
-aml.
-> It is the same amount of guessing what should be written where. Is this to
-> be added or not? When is it and why, when not and why?
->=20
-well, this is the list of required properties which have to be an any
-devicetree using that device, the conversion of the comments for the proper=
-ties
-in the .txt-file.
-So, if you do not declare a property before, you cannot specify that it is
-required. So if we drop the definition of clock-names we cannot declare it
-as required.=20
-
-Regards,
-Andreas
-
---Sig_/jAuKxTh/ki.VbCviTA9NKWw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5TfE8ACgkQl4jFM1s/
-ye+aFQ//eslMTAbmAQ0DqEVfmmyBhqkH057WoRaE73bxRve/4YpLAdx9IFVnaznl
-vdFg1N8Z2FAnktyM5rZJ0BUFt4U5U61DcCYrFUSg7MRWu74DxMQIhx/e0s9IMJM2
-CldWXozOxoT1sYQ/eb4e6Gu9P9F2yu1qgsSDxRn+4hriUkXLI1x8BJz0myZyp32m
-I1MTHTP9n5aVWKj1xo/FwrF2FNWRgLFAFsPwV0/Q7UWld/175hbYKnH5kcyho7sA
-sNu0RnnG3Oh1gAiHbUlWLAZIT/3hwmR8yZ6EVYTmFEwxnb3nOQrI91NomP5wHBYf
-tp+f2EDYJMZCC0Sopnzm/Vw8etxSSxMtViyVltSr7D798O9nMBhpSrqvttCNPC9o
-0v2lJcTGxsilklPXZ7cJJyoiyKTMacv6JOZk7skDtpaojCdb/tDdutsN8i1CMcYC
-yorhcdlDAHdB/JaSw0qXocir4UAwlmJHA4chSuPmhbBCpXl29QW3tMi4IGbYerCk
-iMZWJV0prIsXQRUoxsV65rnuAIhtaPNadjJvSdd4tC5YZ1KwaCg5nr1Oh+Ja8Sen
-Tx/QYAeLT5bdQYpgENgunibR7m8c+WUUhLs7sdEU6pfDGzQS2YFlR6pXAdH2bPzn
-2S8jAKo8sxOGVzAcDfBALaendEYoVDv9ElnffqemmRDhumzlnAI=
-=QwX9
------END PGP SIGNATURE-----
-
---Sig_/jAuKxTh/ki.VbCviTA9NKWw--
+Applied, thanks.
