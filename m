@@ -2,148 +2,115 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29E7C35671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32668C35671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727AF2072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="nZYC8M/a"
+	by mail.kernel.org (Postfix) with ESMTP id F3B2D2082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582544650;
+	bh=KmxduwQKZjZKSqFWNovrd741QLsrLPnBuv2/ssSA9Gc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gfZFJ1v9VAnZgUcW71pDnjnMVbeIthLe+Ki4lfuFphj3xrIAiPnq3+ow4393207yB
+	 I9is0A8BfcTxoklth5ukX8TZ9oiXqQ1zQZPv9FwjtmkrDs21xU792FM7R4WA5icQXo
+	 d3Tt8Jo0jpNZY4eTplnW9aGuSR9slZthLJsgwNrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgBXLic (ORCPT
+        id S1727308AbgBXLoJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:38:32 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:35573 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXLib (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:38:31 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8123C22F00;
-        Mon, 24 Feb 2020 12:38:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582544309;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ATJ7FEy8mNyFSf7mhjpZz7vvqF1vlw/dfVmlo7ml+8I=;
-        b=nZYC8M/aCrC+rIryhmGaMHYYKK0YbOA2Ghg3VEpxrmxItu0RVkt5amPnhs4SEW9Mcrqvol
-        EZdxmg2J5fXFTfjYW3LznIRbxzlQNJydD/3VqQSqpvff3Fi18WH69ka3ldWbJBw6hLueNQ
-        Nc9a1Vzkrfnl/KKUa/RLAelYQeGNuKM=
+        Mon, 24 Feb 2020 06:44:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:35786 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727275AbgBXLoJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:44:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9580A30E;
+        Mon, 24 Feb 2020 03:44:08 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E92EF3F703;
+        Mon, 24 Feb 2020 03:44:07 -0800 (PST)
+Date:   Mon, 24 Feb 2020 11:44:06 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        digetx@gmail.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+Subject: Re: [PATCH v3 03/10] ASoC: tegra: add Tegra210 based DMIC driver
+Message-ID: <20200224114406.GB6215@sirena.org.uk>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-4-git-send-email-spujar@nvidia.com>
+ <20200221130005.GD5546@sirena.org.uk>
+ <316ce0d5-318d-0533-ef06-bd7e8672f893@nvidia.com>
+ <20200221165535.GG5546@sirena.org.uk>
+ <47f94534-e997-d56c-5793-ae832fb2add4@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 24 Feb 2020 12:38:26 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 devicetree 0/6] DT bindings for Felix DSA switch on
- LS1028A
-In-Reply-To: <20200224112026.GF27688@dragon>
-References: <20200223204716.26170-1-olteanv@gmail.com>
- <20200224112026.GF27688@dragon>
-Message-ID: <f92f01d60589d94bb25a38dd828200b0@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: /
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 8123C22F00
-X-Spamd-Result: default: False [-0.10 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[13];
-         NEURAL_HAM(-0.00)[-0.684];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[gmail.com,kernel.org,arm.com,vger.kernel.org,lunn.ch,nxp.com,davemloft.net];
-         MID_RHS_MATCH_FROM(0.00)[]
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LpQ9ahxlCli8rRTG"
+Content-Disposition: inline
+In-Reply-To: <47f94534-e997-d56c-5793-ae832fb2add4@nvidia.com>
+X-Cookie: How you look depends on where you go.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shawn,
 
-Am 2020-02-24 12:20, schrieb Shawn Guo:
-> On Sun, Feb 23, 2020 at 10:47:10PM +0200, Vladimir Oltean wrote:
->> This series officializes the device tree bindings for the embedded
->> Ethernet switch on NXP LS1028A (and for the reference design board).
->> The driver has been in the tree since v5.4-rc6.
->> 
->> It also performs some DT binding changes and minor cleanup, as per
->> feedback received in v1 and v2:
->> 
->> - I've changed the DT bindings for the internal ports from "gmii" to
->>   "internal". This means changing the ENETC phy-mode as well, for
->>   uniformity. So I would like the entire series to be merged through a
->>   single tree, probably the devicetree one - something which David
->>   Miller has aggreed to, here [0].
->> - Disabled all Ethernet ports in the LS1028A DTSI by default, which
->>   means not only the newly introduced switch ports, but also RGMII
->>   standalone port 1.
->> 
->> [0]: https://lkml.org/lkml/2020/2/19/973
->> 
->> Claudiu Manoil (2):
->>   arm64: dts: fsl: ls1028a: add node for Felix switch
->>   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
->> 
->> Vladimir Oltean (4):
->>   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for 
->> ENETC
->>     RCIE
->>   arm64: dts: fsl: ls1028a: disable all enetc ports by default
-> 
-> I applied these 4 DTS patches with changing prefix to 'arm64: dts: 
-> ls1028a: '.
+--LpQ9ahxlCli8rRTG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Oh, then the kontron-sl28 boards won't have ethernet because the nodes 
-are
-disabled now. I'll send a patch shortly which explicitly sets the status 
-to
-"okay", hopefully you can pick it up so it'll end up in the same pull 
-request
-as this one:
+On Mon, Feb 24, 2020 at 11:28:57AM +0000, Jon Hunter wrote:
+> On 21/02/2020 16:55, Mark Brown wrote:
 
-   arm64: dts: fsl: ls1028a: disable all enetc ports by default
+> > The ideal thing in a component model would be to represent those sample
+> > rate convertors directly to usrspace so the routing and rewriting is
+> > explicit.
 
--michael
+> I assume that it would be OK for the sample rate converter itself to
+> expose mixer controls to configure its input and output rates so the
+> user could configure as needed?
 
-> 
-> Shawn
-> 
->>   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
->>   dt-bindings: net: dsa: ocelot: document the vsc9959 core
->> 
->>  .../devicetree/bindings/net/dsa/ocelot.txt    | 116 
->> ++++++++++++++++++
->>  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |   1 +
->>  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  61 ++++++++-
->>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  89 +++++++++++++-
->>  drivers/net/dsa/ocelot/felix.c                |   3 +-
->>  drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
->>  6 files changed, 265 insertions(+), 8 deletions(-)
->>  create mode 100644 
->> Documentation/devicetree/bindings/net/dsa/ocelot.txt
->> 
->> --
->> 2.17.1
->> 
+I don't think so, I'd not expect the individual drivers to be doing
+anything user visible here - if we know what a digital transformation
+looks like the framework should be offering anything that's needed to
+users (and hiding controls that don't have any practical control in a
+given system).
+
+> > Is there any *need* for these to be user configurable?  What's normally
+> > happening at the minute is that either the external DAIs are fixed
+> > configuration and the DSP just converts everything or there's no format
+> > conversion done and things get passed through.
+
+> I can see that in most cases there are a finite set of configurations
+> that the end user may use. However, we would like to make the
+> configuration flexible as possible and this also allow us to test lots
+> of different configurations for verification purposes as well.
+
+Internal testing often requires things that can't be exposed to users,
+the extreme examples are things like battery chargers with health and
+safety issues if the full range of control is available.
+
+--LpQ9ahxlCli8rRTG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5TtwUACgkQJNaLcl1U
+h9Crqgf/ZrHdav/H3sg+ks8XPns3tfhmaN7zdKxLkEl7rclyGrxXkz0hGGNflA0b
+ZmCq+byMf1McM1Ay4GqHsIP6kYxwqqZzKPpoV1tOZRHrH85RoI3qrofsZAuEYGMP
+KZ36BR55I1oIZXa6NxuOM/Fdrg4hcNanuK43zaXWS9mM3UweiIlXCmvBiWZR4koK
+dArroM9BXo7ZXuWWVbhmAfnu6Mi/ZUk3uGauKjlP1Odo7N9B4aRvhV686h3Baaq1
+zeLawuT/y9N6G623+AkUKTuuEUfLfk/fhE16y2SsrCxgxrRvBqKDNZLjO9YkiiD9
+vcfUOJKsjpBy/LOF4JV2iwHc5xC+wA==
+=rFOB
+-----END PGP SIGNATURE-----
+
+--LpQ9ahxlCli8rRTG--
