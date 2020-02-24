@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA1BC35673
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 01:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0ACC35673
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 02:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2AA6206E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 01:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D83206E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 02:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582509423;
-	bh=RjjvelCSB3sw7rmvNAkcaVIPmUcD/FgzgrYTn+iASdE=;
+	s=default; t=1582509679;
+	bh=axFW7bEh8+eVcpf/My/7t/8mqtcesmwale7L6FdGbQc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fNCJcO5bhgpq+pJDmto29HsjaGGdft8frawiGHxNOdx9flZNmbCEBZOX/k3Yk2PCS
-	 CYsAZQg3+3dR6fSJI0Vrhin8TYP07dBgaClLglP9Q9pO7bv5E7/c1EK8ELhRSI21aO
-	 NcvCc2OrSokzrerSv6BIU/3FMegDusIu6GWxnYGI=
+	b=ljyUCeU/SnbI8wOoqomi6hFJRuAymZ4Q9n+aKTX2aXH7OxAS4/FeE7xvRlqWiURsG
+	 5cX8cPulfvHp7U2waEhtHghOmIcDcNr6wHwObsJHaS7x0IeQ3x/V7LWHv0QLi9vUHr
+	 h5zyqdp59aZiVFXYzryZeJ1wfPhydy7xzHONukUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgBXB5D (ORCPT
+        id S1727166AbgBXCBT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:57:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52190 "EHLO mail.kernel.org"
+        Sun, 23 Feb 2020 21:01:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727151AbgBXB5D (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:57:03 -0500
+        id S1727151AbgBXCBS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Feb 2020 21:01:18 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63F27205C9;
-        Mon, 24 Feb 2020 01:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 471FB205C9;
+        Mon, 24 Feb 2020 02:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582509422;
-        bh=RjjvelCSB3sw7rmvNAkcaVIPmUcD/FgzgrYTn+iASdE=;
+        s=default; t=1582509678;
+        bh=axFW7bEh8+eVcpf/My/7t/8mqtcesmwale7L6FdGbQc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j4fhzQXNsZXLRXHVD4gJXXfoOlXDNkmr1ur5RYNLm+pZn2QJ9tIRNIo/HvWaxsHyd
-         jRV/8HPCQtu3tEk1nBa1dSHBK2WOnVYL3rmSFf9UYo6ksDhy5ZXBzK7c5zgLTppRq3
-         9nCT7DtwGRLHdWCtmKb4AfmQITkZ62e2mjXwe4us=
-Date:   Mon, 24 Feb 2020 09:56:51 +0800
+        b=L3qDPbiRb3tIg7oWaK/qPmhpSpgRp5fW8pJcQLlJO+kUCvsL0myrRhM3IiXNOfunh
+         sBBNM0vUfP+hPr17+ttytHuxQICnKMia/w1TylUulL4Qzh0fXu0oxIpZL2tK/1eQzA
+         kjjUlwmfjleDEYKsRk5KxfwtHRKOpKhswXb++wHg=
+Date:   Mon, 24 Feb 2020 10:01:10 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Martin Kepplinger <martin.kepplinger@puri.sm>
 Cc:     robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
@@ -47,68 +47,123 @@ Cc:     robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
         devicetree@vger.kernel.org, kernel@puri.sm,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: Re: [PATCH v2 1/9] arm64: dts: librem5-devkit: add sai2 and sai6
- pinctrl definitions
-Message-ID: <20200224015650.GD27688@dragon>
+Subject: Re: [PATCH v2 3/9] arm64: dts: librem5-devkit: add the simcom 7100
+ modem and sgtl5000 audio codec
+Message-ID: <20200224020109.GE27688@dragon>
 References: <20200218084942.4884-1-martin.kepplinger@puri.sm>
- <20200218084942.4884-2-martin.kepplinger@puri.sm>
+ <20200218084942.4884-4-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218084942.4884-2-martin.kepplinger@puri.sm>
+In-Reply-To: <20200218084942.4884-4-martin.kepplinger@puri.sm>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 09:49:34AM +0100, Martin Kepplinger wrote:
+On Tue, Feb 18, 2020 at 09:49:36AM +0100, Martin Kepplinger wrote:
 > From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 > 
-> Add missing sai2 and sai6 audio interface pinctrl definitions for the
-> Librem 5 devkit.
+> Add the simcomm modem and the sgtl5000 audio codec.
 > 
 > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+>  .../dts/freescale/imx8mq-librem5-devkit.dts   | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> index 25135b08d4f8..ec12477d925d 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> @@ -148,6 +148,53 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	wwan_codec: sound-wwan-codec {
+> +		compatible = "option,gtm601";
+> +		#sound-dai-cells = <0>;
+> +	};
+> +
+> +	sound {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "sgtl5000";
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,widgets =
+> +			"Microphone", "Microphone Jack",
+> +			"Headphone", "Headphone Jack",
+> +			"Speaker", "Speaker Ext",
+> +			"Line", "Line In Jack";
+> +		simple-audio-card,routing =
+> +			"MIC_IN", "Microphone Jack",
+> +			"Microphone Jack", "Mic Bias",
+> +			"LINE_IN", "Line In Jack",
+> +			"Headphone Jack", "HP_OUT",
+> +			"Speaker Ext", "LINE_OUT";
+> +
+> +		simple-audio-card,cpu {
+> +			sound-dai = <&sai2>;
+> +		};
+> +
+> +		simple-audio-card,codec {
+> +			sound-dai = <&audio_codec>;
+> +			clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
+> +			frame-master;
+> +			bitclock-master;
+> +		};
+> +	};
+> +
+> +	sound-wwan {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "SIMCom SIM7100";
+> +		simple-audio-card,format = "dsp_a";
 
-We do not need to be so verbose.  It can be squashed into patch #2.
+newline
+
+> +		simple-audio-card,cpu {
+> +			sound-dai = <&sai6>;
+> +		};
+
+newline
+
+> +		telephony_link_master: simple-audio-card,codec {
+> +			sound-dai = <&wwan_codec>;
+> +			frame-master;
+> +			bitclock-master;
+> +		};
+> +	};
+> +
+>  	vibrator {
+>  		compatible = "gpio-vibrator";
+>  		pinctrl-names = "default";
+> @@ -426,6 +473,19 @@
+>  		vddio-supply = <&reg_3v3_p>;
+>  	};
+>  
+> +	audio_codec: sgtl5000@a {
+
+Node name needs to be generic, not the label name.  So it should be:
+
+	sgtl5000: audio-codec@a {
 
 Shawn
 
-> ---
->  .../dts/freescale/imx8mq-librem5-devkit.dts   | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> index 007c14eec676..1e9fa80be647 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -567,6 +567,25 @@
->  		>;
->  	};
->  
-> +	pinctrl_sai2: sai2grp {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC	0xd6
-> +			MX8MQ_IOMUXC_SAI2_TXC_SAI2_TX_BCLK	0xd6
-> +			MX8MQ_IOMUXC_SAI2_TXD0_SAI2_TX_DATA0	0xd6
-> +			MX8MQ_IOMUXC_SAI2_RXD0_SAI2_RX_DATA0	0xd6
-> +			MX8MQ_IOMUXC_SAI2_MCLK_SAI2_MCLK	0xd6
-> +		>;
+> +		compatible = "fsl,sgtl5000";
+> +		clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
+> +		assigned-clocks = <&clk IMX8MQ_CLK_SAI2>;
+> +		assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
+> +		assigned-clock-rates = <24576000>;
+> +		#sound-dai-cells = <0>;
+> +		reg = <0x0a>;
+> +		VDDD-supply = <&reg_1v8_p>;
+> +		VDDIO-supply = <&reg_3v3_p>;
+> +		VDDA-supply = <&reg_3v3_p>;
 > +	};
 > +
-> +	pinctrl_sai6: sai6grp {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_SAI1_RXD5_SAI6_RX_DATA0	0xd6
-> +			MX8MQ_IOMUXC_SAI1_RXD6_SAI6_RX_SYNC	0xd6
-> +			MX8MQ_IOMUXC_SAI1_TXD4_SAI6_RX_BCLK     0xd6
-> +			MX8MQ_IOMUXC_SAI1_TXD5_SAI6_TX_DATA0	0xd6
-> +		>;
-> +	};
-> +
->  	pinctrl_typec: typecgrp {
->  		fsl,pins = <
->  			MX8MQ_IOMUXC_NAND_DATA06_GPIO3_IO12		0x16
+>  	touchscreen@5d {
+>  		compatible = "goodix,gt5688";
+>  		reg = <0x5d>;
 > -- 
 > 2.20.1
 > 
