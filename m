@@ -2,228 +2,421 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2E2C38C00
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8C5C38BFA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE8722464
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:47:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qcf4YAHK"
+	by mail.kernel.org (Postfix) with ESMTP id 4960B20CC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582581290;
+	bh=obX8DiN4IrYT1zO5U8yavN8DCCXwanFzw3GwRY1tH1g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1D+qpRo0S+AIGmES6kTTSw8y5SnJ6E2vP+W/FFu4tHxc6WCRz6Rpa9E+4qe0njBJ2
+	 ImL5zKl3NlLsMXiAYMLFHf7VP4sguzHCoQuTvSWcdgArM44rWHDj2X05uuF87V5Ndo
+	 +0scPD0vOiSKgX7YSHD3ykv3QpkwgrqmNvdZI4rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgBXVrm (ORCPT
+        id S1728040AbgBXVyk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:47:42 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40426 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgBXVrl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 16:47:41 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so939275wmi.5;
-        Mon, 24 Feb 2020 13:47:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wpGsu30wsrwwgvONGvaCoryOWDxeUCSkXTPhLer+B18=;
-        b=qcf4YAHKArN90n8hn53nSe6TLi2TTwsNbbKf3kqrzyMmHSYiflKVLWm8xb2EXvF+yQ
-         UxeUPIlbDJdFf0D0pymlZWgW7RCQuvb0HDgUH6/atrE7LsCBCxn4p5KT9PCcS9eOhCg/
-         jiwVesUKeN4puJjuyrA8AVwBXpk1Bh3AqiKUhMjMMe5jZ5oE+A8DVFT0cFdJJjFtHnI/
-         ehR9lOZJsd0PECCvrvKe9O5J6iavJFsnDXpbvOftwm+ULYb3lxs694v0maIkHRfVVki9
-         Flt42aYmfbfhcttBi4e9gM7EVft8/E5wmYb9TnfbV9EFLvZiYu7Xv4mLKVokeNYr9mrH
-         2pqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wpGsu30wsrwwgvONGvaCoryOWDxeUCSkXTPhLer+B18=;
-        b=V3sJgFtgHDydL1oxvt9rEQAeNYOdvMxiWLxpLUjKU8ldbiCWaKtOhBEqXbXXhnK559
-         u+VNGy4TpIeRPDTajB3qiMjgcbRPVP+4SguwRAICY6U3Vu/0CsAX7dRSVWIUXb8K4t8Q
-         RuqyCCvYrXgmfgyeYr+1k8eHSU8Q3RnsoETwYDycjKPCfUDp313HL6dcxEr6+h+E3p4J
-         mSAf9jUoGJUpdLlzWl67aGuTAVGOJwv2R++0DvkBqjfKWARu+UhDiyMgk0rC+8l3lS2a
-         XwTB2WEBpU4L5ugbCkYM6ECtMfVBcAIXI5/TTnl8dqn9PKXQrnyTi+Y/JDOTreM59HXV
-         WbjQ==
-X-Gm-Message-State: APjAAAV1FkasSyaUYpHZ1iuj3G2TlanA8bE4aZYC8KfaptXFTkGt0USq
-        Be9pjf83hRPbY4etT1u+8R0=
-X-Google-Smtp-Source: APXvYqyWNknQAEOEv/bM1o5Bk4ZxRvTdT5bpVvR4f6fdeWOI8TXCvriMZx0NtsLnHGMVRyLMrjnrVg==
-X-Received: by 2002:a7b:c218:: with SMTP id x24mr931234wmi.149.1582580858823;
-        Mon, 24 Feb 2020 13:47:38 -0800 (PST)
-Received: from ziggy.stardust ([130.65.254.13])
-        by smtp.gmail.com with ESMTPSA id f12sm1062871wmj.10.2020.02.24.13.47.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 13:47:38 -0800 (PST)
-Subject: Re: [PATCH v7 06/13] media: mtk-mdp: Check return value of of_clk_get
-To:     Hans Verkuil <hverkuil@xs4all.nl>, matthias.bgg@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com, enric.balletbo@collabora.com
-Cc:     devicetree@vger.kernel.org, drinkcat@chromium.org,
-        frank-w@public-files.de, sean.wang@mediatek.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        wens@csie.org, linux-mediatek@lists.infradead.org,
-        rdunlap@infradead.org, hsinyi@chromium.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-References: <20200213201953.15268-1-matthias.bgg@kernel.org>
- <20200213201953.15268-7-matthias.bgg@kernel.org>
- <9d39ba53-482e-ba8f-2699-c34540a3dfd0@xs4all.nl>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1c75d9ef-555a-7a07-b17a-c985605a16bc@gmail.com>
-Date:   Mon, 24 Feb 2020 22:47:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 24 Feb 2020 16:54:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727421AbgBXVyj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:54:39 -0500
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05910218AC;
+        Mon, 24 Feb 2020 21:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582581278;
+        bh=obX8DiN4IrYT1zO5U8yavN8DCCXwanFzw3GwRY1tH1g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qi/Or2syWvs4vt/3zqxDi7OsAV/wGo4jhq+rRRl/HMz8N7pqG0cTciXbUBV0qVr9c
+         eEW9pUI72QtZcvuHGMQJMQE7M0h+PKBp7tRZGxkrR5tbaAb2M1Sd6yMZ7Tks9d6Z0z
+         r3EhI+huoh+bTVS/NtTLPMWa/E9mKePmq+HRXsyc=
+Received: by mail-qv1-f46.google.com with SMTP id l14so4813694qvu.12;
+        Mon, 24 Feb 2020 13:54:37 -0800 (PST)
+X-Gm-Message-State: APjAAAX5f6UxR+m6VRkalxWORKjik5TpeR6faiMizGGIcIU8nW1VxpjJ
+        eZ7rfLsicD5kVuq66cS6NYSyRy78JjghHhUv0g==
+X-Google-Smtp-Source: APXvYqzwUVT+GARPLCUuMgnIG0gjCzR3NI+tm7sDdZJ+6BoRvSiv/BjaaIHEAuFY8Dmx2ij5u+++18RFUoPRGIgA4Kw=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr45666490qvo.20.1582581277019;
+ Mon, 24 Feb 2020 13:54:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <9d39ba53-482e-ba8f-2699-c34540a3dfd0@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1582528977.git.amit.kucheria@linaro.org> <59d24f8ec98e29d119c5cbdb2abe6d4644cc51cf.1582528977.git.amit.kucheria@linaro.org>
+In-Reply-To: <59d24f8ec98e29d119c5cbdb2abe6d4644cc51cf.1582528977.git.amit.kucheria@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 24 Feb 2020 15:54:25 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+wBF-VGmaaDk6EYzE=4g7Yq=w15WLL=mLjiR5FmxdWkQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+wBF-VGmaaDk6EYzE=4g7Yq=w15WLL=mLjiR5FmxdWkQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 3/3] dt-bindings: thermal: Add yaml bindings for
+ thermal zones
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Feb 24, 2020 at 1:26 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> As part of moving the thermal bindings to YAML, split it up into 3
+> bindings: thermal sensors, cooling devices and thermal zones.
+>
+> The thermal-zone binding is a software abstraction to capture the
+> properties of each zone - how often they should be checked, the
+> temperature thresholds (trips) at which mitigation actions need to be
+> taken and the level of mitigation needed at those thresholds.
+>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
+>  1 file changed, 302 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> new file mode 100644
+> index 000000000000..bc1ce8e41324
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> @@ -0,0 +1,302 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR MIT)
 
+Why MIT instead of BSD-2-Clause? And do you have rights to add that?
+Any text you copied over from the .txt file was only GPL2. Relicensing
+would be nice if you can get permission from the authors.
 
-On 24/02/2020 18:36, Hans Verkuil wrote:
-> Hi Matthias,
-> 
-> On 2/13/20 9:19 PM, matthias.bgg@kernel.org wrote:
->> From: Matthias Brugger <mbrugger@suse.com>
->>
->> Check the return value of of_clk_get and print an error
->> message if not EPROBE_DEFER.
->>
->> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> 
-> This patch is independent from the remainder of this series, right?
-> It looks good to me, so is it OK if I merge this in the media subsystem?
-> 
+> +# Copyright 2020 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
+> +$schema: http://devicetree.org/meta-schemas/base.yaml#
+> +
+> +title: Thermal zone binding
+> +
+> +maintainers:
+> +  - Amit Kucheria <amitk@kernel.org>
+> +
+> +description: |
+> +  Thermal management is achieved in devicetree by describing the sensor hardware
+> +  and the software abstraction of cooling devices and thermal zones required to
+> +  take appropriate action to mitigate thermal overloads.
+> +
+> +  The following node types are used to completely describe a thermal management
+> +  system in devicetree:
+> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
+> +   - cooling-device: device used to dissipate heat either passively or artively
 
-Yes it is independent. Please merge it to the media subsystem.
+typo
 
-Thanks,
-Matthias
+> +   - thermal-zones: a container of the following node types used to describe all
+> +     thermal data for the platform
+> +
+> +  This binding describes the thermal-zones.
+> +
+> +  The polling-delay properties of a thermal-zone are bound to the maximum dT/dt
+> +  (temperature derivative over time) in two situations for a thermal zone:
+> +    1. when passive cooling is activated (polling-delay-passive)
+> +    2. when the zone just needs to be monitored (polling-delay) or when
+> +       active cooling is activated.
+> +
+> +  The maximum dT/dt is highly bound to hardware power consumption and
+> +  dissipation capability. The delays should be chosen to account for said
+> +  max dT/dt, such that a device does not cross several trip boundaries
+> +  unexpectedly between polls. Choosing the right polling delays shall avoid
+> +  having the device in temperature ranges that may damage the silicon structures
+> +  and reduce silicon lifetime.
+> +
+> +properties:
+> +  thermal-zones:
+> +    type: object
+> +    description:
+> +      A /thermal-zones node is required in order to use the thermal framework to
+> +      manage input from the various thermal zones in the system in order to
+> +      mitigate thermal overload conditions. It does not represent a real device
+> +      in the system, but acts as a container to link thermal sensor devices,
+> +      platform-data regarding temperature thresholds and the mitigation actions
+> +      to take when the temperature crosses those thresholds.
+> +
+> +    properties:
+> +      $nodename:
+> +        pattern: "^[a-zA-Z][a-zA-Z0-9,\\-]{1,12}-thermal$"
+> +        type: object
+> +        description:
+> +          Each thermal zone node contains information about how frequently it
+> +          must be checked, the sensor responsible for reporting temperature for
+> +          this zone, one sub-node containing the various trip points for this
+> +          zone and one sub-node containing all the zone cooling-maps.
+> +
+> +        properties:
+> +          polling-delay:
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+> +            minimum: 0
+> +            description:
+> +              The maximum number of milliseconds to wait between polls when
+> +              checking this thermal zone. Setting this to 0 disables the polling
+> +              timers setup by the thermal framework and assumes that the thermal
+> +              sensors in this zone support interrupts.
+> +
+> +          polling-delay-passive:
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+> +            minimum: 0
+> +            description:
+> +              The maximum number of milliseconds to wait between polls when
+> +              checking this thermal zone while doing passive cooling. Setting
+> +              this to 0 disables the polling timers setup by the thermal
+> +              framework and assumes that the thermal sensors in this zone
+> +              support interrupts.
+> +
+> +          thermal-sensors:
+> +            $ref: /schemas/types.yaml#/definitions/phandle-array
+> +            description:
+> +              A list of thermal sensor phandles and sensor specifiers used to
+> +              monitor this thermal zone.
+> +
+> +          trips:
+> +            type: object
+> +            description:
+> +              This node describes a set of points in the temperature domain at
+> +              which the thermal framework needs to takes action. The actions to
+> +              be taken are defined in another node called cooling-maps.
+> +
+> +            patternProperties:
+> +              "^[a-zA-Z][a-zA-Z0-9,+\\._]{0,63}$":
+> +                type: object
+> +
+> +                properties:
+> +                  temperature:
+> +                    $ref: /schemas/types.yaml#/definitions/int32
+> +                    description:
+> +                      An integer expressing the trip temperature in millicelsius.
 
-> Regards,
-> 
-> 	Hans
-> 
->>
->> ---
->>
->> Changes in v7:
->> - fix check of return value of of_clk_get
->> - fix identation
->>
->> Changes in v6: None
->> Changes in v5: None
->> Changes in v4: None
->> Changes in v3: None
->> Changes in v2: None
->>
->>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
->> index 0c4788af78dd..58abfbdfb82d 100644
->> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
->> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
->> @@ -110,6 +110,12 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
->>  
->>  	for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
->>  		comp->clk[i] = of_clk_get(node, i);
->> +		if (IS_ERR(comp->clk[i])) {
->> +			if (PTR_ERR(comp->clk[i]) != -EPROBE_DEFER)
->> +				dev_err(dev, "Failed to get clock\n");
->> +
->> +			return PTR_ERR(comp->clk[i]);
->> +		}
->>  
->>  		/* Only RDMA needs two clocks */
->>  		if (comp->type != MTK_MDP_RDMA)
->>
-> 
+Wouldn't 200000 mC be a reasonable max? And -273000 mC min.
+
+> +
+> +                  hysteresis:
+> +                    $ref: /schemas/types.yaml#/definitions/uint32
+> +                    description:
+> +                      An unsigned integer expressing the hysteresis delta with
+> +                      respect to the trip temperature property above, also in
+> +                      millicelsius.
+> +
+> +                  type:
+> +                    oneOf:
+> +                      - items:
+> +                        - enum:
+
+Drop oneOf and items. Just enum is enough.
+
+> +                            - active
+> +                            - passive
+> +                            - hot
+> +                            - critical
+> +                    description: |
+> +                      There are four valid trip types,
+> +                       - active   - enable active cooling e.g. fans
+> +                       - passive  - enable passive cooling e.g. throttling cpu
+> +                       - hot      - send notification to driver if .notify
+> +                                    callback registered
+> +                       - critical - send notification to driver if .notify
+> +                                    callback registered and trigger a shutdown
+
+Perhaps make these comments on each enum entry.
+
+> +
+> +                required:
+> +                  - temperature
+> +                  - hysteresis
+> +                  - type
+
+'additionalProperties: false'? Or can the node have other properties?
+
+> +
+> +          cooling-maps:
+> +            type: object
+> +            description:
+> +              This node describes the action to be taken when a thermal zone
+> +              crosses one of the temperature thresholds described in the trips
+> +              node. The action takes the form of a mapping relation between a
+> +              trip and the target cooling device state.
+> +
+> +            patternProperties:
+> +              "^map[0-9][-a-zA-Z0-9]*$":
+> +                type: object
+> +
+> +                properties:
+> +                  trip:
+> +                    $ref: /schemas/types.yaml#/definitions/phandle
+> +                    description:
+> +                      A phandle of a trip point node within this thermal zone.
+> +
+> +                  cooling-device:
+> +                    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +                    description:
+> +                      A list of cooling device phandles along with the minimum
+> +                      and maximum cooling state specifiers for each cooling
+> +                      device. Using the THERMAL_NO_LIMIT (-1UL) constant in the
+> +                      cooling-device phandle limit specifier lets the framework
+> +                      use the minimum and maximum cooling state for that cooling
+> +                      device automatically.
+> +
+> +                  contribution:
+> +                    $ref: /schemas/types.yaml#/definitions/uint32
+> +                    minimum: 0
+> +                    maximum: 100
+> +                    description:
+> +                      The contribution of the cooling devices at the trip
+> +                      temperature, both referenced in this map, to this thermal
+> +                      zone as a percentage.
+> +
+> +                required:
+> +                  - trip
+> +                  - cooling-device
+
+'additionalProperties: false'?
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/thermal/thermal.h>
+> +
+> +    // Example 1: SDM845 TSENS
+> +    soc: soc@0 {
+> +            #address-cells = <2>;
+> +            #size-cells = <2>;
+> +
+> +            /* ... */
+> +
+> +            tsens0: thermal-sensor@c263000 {
+> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> +                    reg = <0 0x0c263000 0 0x1ff>, /* TM */
+> +                          <0 0x0c222000 0 0x1ff>; /* SROT */
+> +                    #qcom,sensors = <13>;
+> +                    interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "uplow";
+> +                    #thermal-sensor-cells = <1>;
+> +            };
+> +
+> +            tsens1: thermal-sensor@c265000 {
+> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> +                    reg = <0 0x0c265000 0 0x1ff>, /* TM */
+> +                          <0 0x0c223000 0 0x1ff>; /* SROT */
+> +                    #qcom,sensors = <8>;
+> +                    interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "uplow";
+> +                    #thermal-sensor-cells = <1>;
+> +            };
+> +    };
+> +
+> +    /* ... */
+> +
+> +    thermal-zones {
+> +            cpu0-thermal {
+> +                    polling-delay-passive = <250>;
+> +                    polling-delay = <1000>;
+> +
+> +                    thermal-sensors = <&tsens0 1>;
+> +
+> +                    trips {
+> +                            cpu0_alert0: trip-point0 {
+> +                                    temperature = <90000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "passive";
+> +                            };
+> +
+> +                            cpu0_alert1: trip-point1 {
+> +                                    temperature = <95000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "passive";
+> +                            };
+> +
+> +                            cpu0_crit: cpu_crit {
+> +                                    temperature = <110000>;
+> +                                    hysteresis = <1000>;
+> +                                    type = "critical";
+> +                            };
+> +                    };
+> +
+> +                    cooling-maps {
+> +                            map0 {
+> +                                    trip = <&cpu0_alert0>;
+> +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU1 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU2 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU3 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>;
+> +                            };
+> +
+> +                            map1 {
+> +                                    trip = <&cpu0_alert1>;
+> +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU1 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU2 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU3 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>;
+> +                            };
+> +                    };
+> +            };
+> +
+> +            /* ... */
+> +
+> +            cluster0-thermal {
+> +                    polling-delay-passive = <250>;
+> +                    polling-delay = <1000>;
+> +
+> +                    thermal-sensors = <&tsens0 5>;
+> +
+> +                    trips {
+> +                            cluster0_alert0: trip-point0 {
+> +                                    temperature = <90000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "hot";
+> +                            };
+> +                            cluster0_crit: cluster0_crit {
+> +                                    temperature = <110000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "critical";
+> +                            };
+> +                    };
+> +            };
+> +
+> +            /* ... */
+> +
+> +            gpu-thermal-top {
+> +                    polling-delay-passive = <250>;
+> +                    polling-delay = <1000>;
+> +
+> +                    thermal-sensors = <&tsens0 11>;
+> +
+> +                    trips {
+> +                            gpu1_alert0: trip-point0 {
+> +                                    temperature = <90000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "hot";
+> +                            };
+> +                    };
+> +            };
+> +    };
+> +...
+> --
+> 2.20.1
+>
