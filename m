@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633D9C38BF1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607E1C34055
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39EBB218AC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380D120880
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zxiRGOVQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aDvzZHPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgBXSYt (ORCPT
+        id S1727976AbgBXSYk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:24:49 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50436 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728008AbgBXSYs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:24:48 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a5so324322wmb.0
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 10:24:47 -0800 (PST)
+        Mon, 24 Feb 2020 13:24:40 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42488 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727916AbgBXSYk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:24:40 -0500
+Received: by mail-wr1-f67.google.com with SMTP id p18so7933597wre.9
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 10:24:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1/v4/yX+Rb+z7FmgKRxusFg6LNtZiO3DMXvnBgeOuHA=;
-        b=zxiRGOVQbUYycQsFrjTLJX2IpngMLUiFnM9zOzjXR47e2SetqBWdJnpHlovEcuPFBv
-         FexG3YDDT1ALrD/D+FKHkP2MIXaGBqx7A0sQaHVDRDNDQVr6jS2GdDb8Dv4EB4Ft15Rc
-         X+Oex0fYMVCjcbrMtfUHVdIYJ1+hcTCMOOiPeqQ4R0z6xH0F4B7muTW0XjymSxneLuIP
-         UjsAEBRJN0lKsKcUb0AF5d72SsOmuIZT45CPqq1FHWour+tr4KPFS8ATERhupHhS/6vO
-         NnLNTmMYIpRJABwOkWxXIjD1Zqj0p9uyUCjjFEDFuUat5g+KAY0cf2+EDDRSjS2adgZy
-         cP3g==
+        bh=6tqcdrj1xZvDcY7k2ZzEJzD20ZqgKnIoPLeb93yl2Xc=;
+        b=aDvzZHPt9iVEQwZJj1vud5mf/cCAG1jb3PpU0tPKkgnq9edj9bpqrHE6Eoktch/Wxe
+         YkevW7vtCQ7o4zxdCRdqv7yvITCgSxf6H6szEOP+F3WE5Ip0NrJp+tBFY4ii8waFp1+G
+         g6F0duX+U/X1mGeZhsHnDiBNc6YigoXnE6IXag4W7ySDFxe6VvcC+ni71ci5R9yuXX8R
+         EIF3HXiiGiaQ+0ZIc7OclYDsNN6BvIE7UZlNby1PK/lZ5772P8Uf8yq5xCyAqHI7MCxu
+         HvKguxhEpuIXgThDOS+/Ngh5iwPVr2umzGovygvcHO1ZCp3TmC3j/q2drow2O6jsDj8S
+         bnng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1/v4/yX+Rb+z7FmgKRxusFg6LNtZiO3DMXvnBgeOuHA=;
-        b=HBNYGeIGqV1wvRT6g61HSwXW0+Bsv98u2hjjOGyK2XQGIPQ2vE1JL03KGPw2UFvcc1
-         8a5RHN6b1LPoUsUEQmDyK/NuLRDN7fu34UhrLkBNYaEJTfkkACJ3tIfbFHIU0lF98aT4
-         lr+Ft7WA/K8xnKjGkpcQmYtuy+tWkw/sDGwUUTb7QStXbiXV2nTZGtndWmrRQkTki3nA
-         EdvGHCqylLqYyhCpGU5OKhbfJNEIscG+ULA4T8i+sc+G6Hb3vA+/Gop7SNH+QwySAyWc
-         aTHtllhKZHG8yyNBDgUwDVrMPNthGTW3HPIKrevNraQbZMBwf/TLFl7wSF1RfyRsAJum
-         OzrQ==
-X-Gm-Message-State: APjAAAXabSgvczWMfolRkgcwOMwG05+eljQwYWD1BGjCQgBdQjqGvwxc
-        mb9TJ1lC7uw/h8pNdoGnQcEDHw==
-X-Google-Smtp-Source: APXvYqxqoFKehhPoecAVUtglmpmoNhk6pIi6LUZIxLg0IgobfRPy8bO8YntSNF9Wq6iiPuinGYBuMA==
-X-Received: by 2002:a05:600c:2255:: with SMTP id a21mr309717wmm.79.1582568687070;
-        Mon, 24 Feb 2020 10:24:47 -0800 (PST)
+        bh=6tqcdrj1xZvDcY7k2ZzEJzD20ZqgKnIoPLeb93yl2Xc=;
+        b=oEFztYIThzcAmT/ZYd64PCHdb9fn740PTG7GHJUPBFpcekTZqPslk/uscgD+emEuj4
+         hhhTT9wdU5bdqDRvKtMKn8I8zpZ+p5F5cthxsOKksrANeqYW1s2oVegRmrHsxNEU0vce
+         XEF1IBRlhpEcZqUTVzfpj72eBdzykt5mhIHHqvupSGuneweTGK7TDrJggMGupRpOX0Gh
+         KISB+KwKwR2HMRK7iRL0v2HFKAkWuHbPl8ttKC3Bvm6cVbn1BN6BCQA0xh5wXrUBC3HD
+         t/92EedNwtHw2Y6pOiGKq+/gT5lgk88NI39g3v4NQShVPKVnoN/rjml7iNz/NGzUnLiX
+         AH5A==
+X-Gm-Message-State: APjAAAVtaaUuLP7Nuc9ThH5cBVwmkp4CAn9VaupcZNmrkGZBc9FTSe2B
+        PFhCYH/3Q2YnxNvW2UhOJuf8Og==
+X-Google-Smtp-Source: APXvYqweDyVog+lllJdgzOC5yFjqb0Y6Z6mnJXgAaaIz7bHvgd5fr5XnnlJkWPmoF4mmrIHnKf7dfA==
+X-Received: by 2002:adf:fec4:: with SMTP id q4mr9813505wrs.368.1582568678393;
+        Mon, 24 Feb 2020 10:24:38 -0800 (PST)
 Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id n3sm304255wmc.27.2020.02.24.10.24.46
+        by smtp.gmail.com with ESMTPSA id n3sm304255wmc.27.2020.02.24.10.24.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 10:24:46 -0800 (PST)
+        Mon, 24 Feb 2020 10:24:38 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -65,9 +65,9 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
         christian.koenig@amd.com, yi.l.liu@intel.com,
         zhangfei.gao@linaro.org
-Subject: [PATCH v4 16/26] iommu/arm-smmu-v3: Add dev_to_master() helper
-Date:   Mon, 24 Feb 2020 19:23:51 +0100
-Message-Id: <20200224182401.353359-17-jean-philippe@linaro.org>
+Subject: [PATCH v4 08/26] iommu/io-pgtable-arm: Move some definitions to a header
+Date:   Mon, 24 Feb 2020 19:23:43 +0100
+Message-Id: <20200224182401.353359-9-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200224182401.353359-1-jean-philippe@linaro.org>
 References: <20200224182401.353359-1-jean-philippe@linaro.org>
@@ -78,52 +78,104 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We'll need to frequently find the SMMU master associated to a device
-when implementing SVA. Move it to a separate function.
+Extract some of the most generic TCR defines, so they can be reused by
+the page table sharing code.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/iommu/io-pgtable-arm.c | 27 ++-------------------------
+ drivers/iommu/io-pgtable-arm.h | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+), 25 deletions(-)
+ create mode 100644 drivers/iommu/io-pgtable-arm.h
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 77a846440ba6..54bd6913d648 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -747,6 +747,15 @@ static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
- 	return container_of(dom, struct arm_smmu_domain, domain);
- }
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index 983b08477e64..75782b525c2f 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -20,6 +20,8 @@
  
-+static struct arm_smmu_master *dev_to_master(struct device *dev)
-+{
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ #include <asm/barrier.h>
+ 
++#include "io-pgtable-arm.h"
 +
-+	if (!fwspec)
-+		return NULL;
-+	return fwspec->iommu_priv;
-+}
+ #define ARM_LPAE_MAX_ADDR_BITS		52
+ #define ARM_LPAE_S2_MAX_CONCAT_PAGES	16
+ #define ARM_LPAE_MAX_LEVELS		4
+@@ -100,23 +102,6 @@
+ #define ARM_LPAE_PTE_MEMATTR_DEV	(((arm_lpae_iopte)0x1) << 2)
+ 
+ /* Register bits */
+-#define ARM_LPAE_TCR_TG0_4K		0
+-#define ARM_LPAE_TCR_TG0_64K		1
+-#define ARM_LPAE_TCR_TG0_16K		2
+-
+-#define ARM_LPAE_TCR_TG1_16K		1
+-#define ARM_LPAE_TCR_TG1_4K		2
+-#define ARM_LPAE_TCR_TG1_64K		3
+-
+-#define ARM_LPAE_TCR_SH_NS		0
+-#define ARM_LPAE_TCR_SH_OS		2
+-#define ARM_LPAE_TCR_SH_IS		3
+-
+-#define ARM_LPAE_TCR_RGN_NC		0
+-#define ARM_LPAE_TCR_RGN_WBWA		1
+-#define ARM_LPAE_TCR_RGN_WT		2
+-#define ARM_LPAE_TCR_RGN_WB		3
+-
+ #define ARM_LPAE_VTCR_SL0_MASK		0x3
+ 
+ #define ARM_LPAE_TCR_T0SZ_SHIFT		0
+@@ -124,14 +109,6 @@
+ #define ARM_LPAE_VTCR_PS_SHIFT		16
+ #define ARM_LPAE_VTCR_PS_MASK		0x7
+ 
+-#define ARM_LPAE_TCR_PS_32_BIT		0x0ULL
+-#define ARM_LPAE_TCR_PS_36_BIT		0x1ULL
+-#define ARM_LPAE_TCR_PS_40_BIT		0x2ULL
+-#define ARM_LPAE_TCR_PS_42_BIT		0x3ULL
+-#define ARM_LPAE_TCR_PS_44_BIT		0x4ULL
+-#define ARM_LPAE_TCR_PS_48_BIT		0x5ULL
+-#define ARM_LPAE_TCR_PS_52_BIT		0x6ULL
+-
+ #define ARM_LPAE_MAIR_ATTR_SHIFT(n)	((n) << 3)
+ #define ARM_LPAE_MAIR_ATTR_MASK		0xff
+ #define ARM_LPAE_MAIR_ATTR_DEVICE	0x04
+diff --git a/drivers/iommu/io-pgtable-arm.h b/drivers/iommu/io-pgtable-arm.h
+new file mode 100644
+index 000000000000..ba7cfdf7afa0
+--- /dev/null
++++ b/drivers/iommu/io-pgtable-arm.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef IO_PGTABLE_ARM_H_
++#define IO_PGTABLE_ARM_H_
 +
- static void parse_driver_options(struct arm_smmu_device *smmu)
- {
- 	int i = 0;
-@@ -2940,15 +2949,13 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- {
- 	int ret = 0;
- 	unsigned long flags;
--	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct arm_smmu_device *smmu;
-+	struct arm_smmu_master *master = dev_to_master(dev);
- 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
--	struct arm_smmu_master *master;
- 
--	if (!fwspec)
-+	if (!master)
- 		return -ENOENT;
- 
--	master = fwspec->iommu_priv;
- 	smmu = master->smmu;
- 
- 	arm_smmu_detach_dev(master);
++#define ARM_LPAE_TCR_TG0_4K		0
++#define ARM_LPAE_TCR_TG0_64K		1
++#define ARM_LPAE_TCR_TG0_16K		2
++
++#define ARM_LPAE_TCR_TG1_16K		1
++#define ARM_LPAE_TCR_TG1_4K		2
++#define ARM_LPAE_TCR_TG1_64K		3
++
++#define ARM_LPAE_TCR_SH_NS		0
++#define ARM_LPAE_TCR_SH_OS		2
++#define ARM_LPAE_TCR_SH_IS		3
++
++#define ARM_LPAE_TCR_RGN_NC		0
++#define ARM_LPAE_TCR_RGN_WBWA		1
++#define ARM_LPAE_TCR_RGN_WT		2
++#define ARM_LPAE_TCR_RGN_WB		3
++
++#define ARM_LPAE_TCR_PS_32_BIT		0x0ULL
++#define ARM_LPAE_TCR_PS_36_BIT		0x1ULL
++#define ARM_LPAE_TCR_PS_40_BIT		0x2ULL
++#define ARM_LPAE_TCR_PS_42_BIT		0x3ULL
++#define ARM_LPAE_TCR_PS_44_BIT		0x4ULL
++#define ARM_LPAE_TCR_PS_48_BIT		0x5ULL
++#define ARM_LPAE_TCR_PS_52_BIT		0x6ULL
++
++#endif /* IO_PGTABLE_ARM_H_ */
 -- 
 2.25.0
 
