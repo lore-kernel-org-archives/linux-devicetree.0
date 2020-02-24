@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED444C11D39
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31637C352A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FF421744
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019E42084E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hQ7R/j32"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pDRHKweD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBXSYi (ORCPT
+        id S1727982AbgBXSYn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:24:38 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41926 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727922AbgBXSYh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:24:37 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so11579051wrw.8
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 10:24:36 -0800 (PST)
+        Mon, 24 Feb 2020 13:24:43 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39207 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727922AbgBXSYm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:24:42 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so2768772wrn.6
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 10:24:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5ke1+5YSOcxDNzSzBBGnaN+kOVlCxvSlETx/6pQryQw=;
-        b=hQ7R/j32SLrNiw6cB+MKzedjV5jb7wC2uDlPXljxSGn/Mm+e8K6vJRpSEh03PvC4u9
-         6SWVO6jkqy8f1MhFEXuwvn5CVzySq1eAR0OMIHnH231Ilx59ro788ZXbVKhAb08vEu3x
-         2DRDRX3reoEDjA1nXPvHdhi3NlMMHALRilHOP4FbegQ6bDl+MXF72BSCvs01Iga0ey/V
-         lRA5BpuJcyT4Bo+4XEn4NxJCsLV3waRxK/XqqsUDdfn1vY0NKse5RC5ThKKbEOiOSL6S
-         WBTlf6zQcjBQmTv4KAcSJKa3LHmn9N03VuV6CMiAjWvmhiZgf7OibmnfYlq8z45tqDXq
-         +QmQ==
+        bh=fiWmOcLAVe+tVXhcsvVE1DFO1O4ryIgAcLdwqW0ca+M=;
+        b=pDRHKweDnlBKRULwy0ik0zwEBtEv1j2cgrRKvimaQC6F87phqKiS6hoWHYe79Woxaq
+         dvU2Y+udalR1IWc9MZSMY0Zs5f9NdIHxKJhYe9t+iiuM18v5G9IPkB7YyVsl1xvn6G0k
+         Lyx8J36rm2ynK9P22EeAO7k6RYA6roW1f6WRVmaqmmlmQjHQxIyE4MBbDQS/EJmu3I3p
+         Qd3S4xWYoA2d1rHcA8AWP0OW4En+tWRi+9rXYw9g503nUnZih/bJ/n2/yoE090xj2LJU
+         H5r4hDx2HFNGusqI0S9/YfyB+pnbzKC6Jhc3+KlEeOqTYu+SoSFgOQm1PAsvdd7NVhoF
+         WL4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5ke1+5YSOcxDNzSzBBGnaN+kOVlCxvSlETx/6pQryQw=;
-        b=Viq51Ll0GVyFp6MbBzFtln97s2t3mrvHPwO9A9oBp7seYCi829GNaOuVhc1Gzswx6A
-         n08t8EH3yhR9KNQYPgXCOJfsdi5sfjiQEBl0lbe4kkwt8F0lv5854EYfVpLOYDxFR/h9
-         EBXtPnkin6mS1SQ+r2yfA0GJ3gvLeOiq/sEzHB4Hl7uqZrU7POn1/Y5lC0SfAei5tWpY
-         tG3si+oCI3+yA5XJFyQ+/Msjz4by0EqNLvs5UyQBf8USuaG5U2yDqKQvAdRLXi9DLcAz
-         ZQhG8tuRObGXQknjMNz7twoIOEHE029zHZ40ueghB6fHe8aeKzPPo70TRI4C5qoNRweD
-         yv1Q==
-X-Gm-Message-State: APjAAAVWbd2nUyQhbjsQEoopNyNAyV1ArnpCo6yfj0hb4ohWTcIgt7kq
-        fI1orf3LVNGUt0KORMEmDgDD9A==
-X-Google-Smtp-Source: APXvYqxKuED5BtGA+H9sncjVVYaPSWdkOdWHekAifEqs9Cn+ZBcftrmVm7FgSaad06EVLWBinDxKzg==
-X-Received: by 2002:adf:df83:: with SMTP id z3mr67641748wrl.389.1582568676229;
-        Mon, 24 Feb 2020 10:24:36 -0800 (PST)
+        bh=fiWmOcLAVe+tVXhcsvVE1DFO1O4ryIgAcLdwqW0ca+M=;
+        b=ObC9Qq3keOAr4RrS7xilXOJu8ww2m51wv9SWjbt3/82tDheSG5eYq7S5xU6D0r3MuR
+         3aDXp9JuCnSKIGiUHYD6B3PIooA4Cix6yZ9/m6J1sHeNwHykezZfKSA9DUmCVzv8ZItm
+         02lISJdJSbxszr/+DNelulfSl8vZyLoXp2xGUTqMP4jvTzofPsreNiaSWTTrOzwmkadz
+         nwLiRRavju1GqWW0dGm1ka06cwKvbjmczss7BIJLVhPkjuqBGD4ayszob5uN8tVgXSPA
+         HJBfMq8SoAa098nG/ZNmZV8l1J2OyjduETYCuO5VfWq+p/JE0mMzjXLnfWsoVnP19raM
+         cH3Q==
+X-Gm-Message-State: APjAAAW4U5FKl+UBEe1WIJ+irt0rsTmdBGLnPXpz93eRnTzF2q6keWXG
+        ECksKx/Ft2mCJV8ERfAIy5/2UA==
+X-Google-Smtp-Source: APXvYqz8CuJxubqS6SRPcAebK5WrAwOgc3vNvNYTHpZ8VXVrF/jAhnwu+rN8D9EGJiHbmYtTOasOQA==
+X-Received: by 2002:a5d:4f8b:: with SMTP id d11mr65031300wru.87.1582568680476;
+        Mon, 24 Feb 2020 10:24:40 -0800 (PST)
 Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id n3sm304255wmc.27.2020.02.24.10.24.35
+        by smtp.gmail.com with ESMTPSA id n3sm304255wmc.27.2020.02.24.10.24.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 10:24:35 -0800 (PST)
+        Mon, 24 Feb 2020 10:24:40 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -64,11 +64,10 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         kevin.tian@intel.com, baolu.lu@linux.intel.com,
         Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
         christian.koenig@amd.com, yi.l.liu@intel.com,
-        zhangfei.gao@linaro.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: [PATCH v4 06/26] iommu/sva: Register page fault handler
-Date:   Mon, 24 Feb 2020 19:23:41 +0100
-Message-Id: <20200224182401.353359-7-jean-philippe@linaro.org>
+        zhangfei.gao@linaro.org
+Subject: [PATCH v4 10/26] arm64: cpufeature: Export symbol read_sanitised_ftr_reg()
+Date:   Mon, 24 Feb 2020 19:23:45 +0100
+Message-Id: <20200224182401.353359-11-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200224182401.353359-1-jean-philippe@linaro.org>
 References: <20200224182401.353359-1-jean-philippe@linaro.org>
@@ -79,85 +78,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-
-When enabling SVA, register the fault handler. Device driver will register
-an I/O page fault queue before or after calling iommu_sva_enable. The
-fault queue must be flushed before any io_mm is freed, to make sure that
-its PASID isn't used in any fault queue, and can be reallocated. Add
-iopf_queue_flush() calls in a few strategic locations.
+The SMMUv3 driver would like to read the MMFR0 PARANGE field in order to
+share CPU page tables with devices. Allow the driver to be built as
+module by exporting the read_sanitized_ftr_reg() cpufeature symbol.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/Kconfig     |  1 +
- drivers/iommu/iommu-sva.c | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
+ arch/arm64/kernel/cpufeature.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index e4a42e1708b4..211684e785ea 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -106,6 +106,7 @@ config IOMMU_DMA
- config IOMMU_SVA
- 	bool
- 	select IOASID
-+	select IOMMU_PAGE_FAULT
- 	select IOMMU_API
- 	select MMU_NOTIFIER
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 0b6715625cf6..a96d2fb12e4d 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -838,6 +838,7 @@ u64 read_sanitised_ftr_reg(u32 id)
+ 	BUG_ON(!regp);
+ 	return regp->sys_val;
+ }
++EXPORT_SYMBOL_GPL(read_sanitised_ftr_reg);
  
-diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
-index bfd0c477f290..494ca0824e4b 100644
---- a/drivers/iommu/iommu-sva.c
-+++ b/drivers/iommu/iommu-sva.c
-@@ -366,6 +366,8 @@ static void io_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- 			dev_WARN(dev, "possible leak of PASID %u",
- 				 io_mm->pasid);
- 
-+		iopf_queue_flush_dev(dev, io_mm->pasid);
-+
- 		/* unbind() frees the bond, we just detach it */
- 		io_mm_detach_locked(bond);
- 	}
-@@ -442,11 +444,20 @@ static void iommu_sva_unbind_locked(struct iommu_bond *bond)
- 
- void iommu_sva_unbind_generic(struct iommu_sva *handle)
- {
-+	int pasid;
- 	struct iommu_param *param = handle->dev->iommu_param;
- 
- 	if (WARN_ON(!param))
- 		return;
- 
-+	/*
-+	 * Caller stopped the device from issuing PASIDs, now make sure they are
-+	 * out of the fault queue.
-+	 */
-+	pasid = iommu_sva_get_pasid_generic(handle);
-+	if (pasid != IOMMU_PASID_INVALID)
-+		iopf_queue_flush_dev(handle->dev, pasid);
-+
- 	mutex_lock(&param->sva_lock);
- 	mutex_lock(&iommu_sva_lock);
- 	iommu_sva_unbind_locked(to_iommu_bond(handle));
-@@ -484,6 +495,10 @@ int iommu_sva_enable(struct device *dev, struct iommu_sva_param *sva_param)
- 		goto err_unlock;
- 	}
- 
-+	ret = iommu_register_device_fault_handler(dev, iommu_queue_iopf, dev);
-+	if (ret)
-+		goto err_unlock;
-+
- 	dev->iommu_param->sva_param = new_param;
- 	mutex_unlock(&param->sva_lock);
- 	return 0;
-@@ -521,6 +536,7 @@ int iommu_sva_disable(struct device *dev)
- 		goto out_unlock;
- 	}
- 
-+	iommu_unregister_device_fault_handler(dev);
- 	kfree(param->sva_param);
- 	param->sva_param = NULL;
- out_unlock:
+ #define read_sysreg_case(r)	\
+ 	case r:		return read_sysreg_s(r)
 -- 
 2.25.0
 
