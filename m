@@ -6,137 +6,137 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318EAC35679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE359C11D2B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0647E20828
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BCAF20828
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:22:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="oQm/TvZr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TB1cVtI7"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pITX30Se"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbgBXJUX (ORCPT
+        id S1727278AbgBXJWx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:20:23 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:37287 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726687AbgBXJUX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:20:23 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2A13C213F4;
-        Mon, 24 Feb 2020 04:20:22 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:20:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=4FAYsRBkOa26LsnccPdAjqvJIED
-        dTNwKyyIBqp33KCo=; b=oQm/TvZrb6E0KKtZjwj4oLmuTwNtRu/ZzfE8hYWtGcp
-        Zdlk5Rwp2eM4hzTMgk/zutAqvI5olyTeKBkqKpQqYDxJUrPadyonrEahuzKoYPGt
-        BJcPpyZhrhXPO49WwV+BqSSxTHYrJ9F4v8Duld4dARf9Ro9MWfHNOC/+o73uV4hi
-        zY2bLJZWQzf8IDygpnMkZsYDSR62WPQiF67k7cJ5nA+5UMHAah92TRUp2Ivy2YM5
-        zxvRPRHyhMMxym8nohwPbiicTedXrCBcj8UwUNs2khX6dlUEByH/Fu1Me2znAOT+
-        gO4lAXCNzFWw+IheiQrz4ibItuWxp5FIGPDBl063TpQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=4FAYsR
-        BkOa26LsnccPdAjqvJIEDdTNwKyyIBqp33KCo=; b=TB1cVtI7pUAdoX37U/vKc+
-        Q8DsIeECEz6n+zWjYKz74EGrCWSY3QVqyIh3POnjEmwHUcy++O4DYzdi50bL8w7x
-        tekaRk8Xbqj/a3hHrnGNcfA+5s2LZ2ySXvYcRcnIdGnk/8vOCvPJcrEFGpaGeeAD
-        1Q10CgytV8KHt0KWHgf/SnHUFVaSQITQThsxN6n9Keo4a9RKIc9m2yzoFsvbbE/P
-        fAsfTk0uEwrEMwd4eYzM3C/BQb78eg1Q6cG/OIZdy9ND/MYWP1ww2Rz4UOXWNaqT
-        6m79mZj/UEdzzJzLthinl/9cxavc1Ma4vcgDaiFomsGcUOv9kdwZrAsYVskMD+eQ
-        ==
-X-ME-Sender: <xms:VZVTXivAV4qTGhIgkivrNTDdStEHgW2t2TFf9F9v1LOD1VJzrWvfOQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtgddtfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epmhgvghhouhhsrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
-    hordhtvggthh
-X-ME-Proxy: <xmx:VZVTXrtAzwF5qL7tKYhe4jpESrv0JcEiS4SRjdfhNF_90G2USVAnAw>
-    <xmx:VZVTXqtJstnCcUjycgKQ665U69xBH6prjVnV3GQAYXHzJ_Q9LEV-wQ>
-    <xmx:VZVTXr6ATPbOEfpWow4nNkbdeUAZAxBYlWTrn5sV6vvnpq1CKgUfJQ>
-    <xmx:VpVTXknoqFgA-zhEBQqERw_FNEFnXT1zmzU6JVrsYQoSIJkpUdDMkw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4C12E3060F9B;
-        Mon, 24 Feb 2020 04:20:21 -0500 (EST)
-Date:   Mon, 24 Feb 2020 10:20:20 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
+        Mon, 24 Feb 2020 04:22:53 -0500
+Received: from mail-eopbgr140077.outbound.protection.outlook.com ([40.107.14.77]:23665
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726687AbgBXJWw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 04:22:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IR5bmWyjoSZtYDIjpU+uGCV6x3DD82ehKArV0tHGd+WKg+BKAsmF0dQZ7RGnqEN1eQwFe9B9hgp0E4eKQp4YqjMlwU8uoLS9JUaFc4+johYURjFHPr5o28GLc+3hydr437yECONlwKgogKLqiJeVN5qRsngiwqTrlQIxnavW/hawGqQhrpyWxx0x2YxMCZGZhxOJQoO3/YuY5KZjhTqAgoDkaaKSubhdddDuYCY4OApVys5lnI2nCZfRKGio9lg/2Fy5FYgOkBmZIG1AXgI49Yds+viDlynbJTWC7KXFgnxFmNMn4HSiqf9ikePWF9K+cQgNkVD8smLr+3E8zIRGmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=de1aR3MFLCX7Yz5h5aV2dNt/PB6gDlUvr9xuHi6g/Kg=;
+ b=KfooYzX42txGeCCCJh0QJjbONCO0ofZzvSdsBhA203tbdDOoo9ZRKOoWD+RHo1Xc7p2d91+0n7lBCK72tvnM76Hv4OH2SeMWWvhOu8XnLWtlnHqYiWel2yBC1KkC6XYWKBbUWhSiuwy4cWegXqdrRRMSh1dHKh+NXnMWA8vQ3Jaj0n9tm4oai3b19inPhpgP9SD9EmEqt4wXrXbceuxjVLFI2h574Xk/CWexV3vTJeOw/uYJi5QdeeZ/aiqwlsQhOztv+MbIopLFlx8TZBtzJR6/PTeSnOvab0LsJK4SZ1eQfLqpXVxTc6hLnxB7wFG3pNeYWgDj9jju0hHZhGkLZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=de1aR3MFLCX7Yz5h5aV2dNt/PB6gDlUvr9xuHi6g/Kg=;
+ b=pITX30SeeFFups8+DfN1kNyZ2/CWHfnVcvsc0XvmbzKvWKWlQsiU2pA0sva+f9Ys8mi1H7arjA5BkaYcgxfduSC4JMHhfOqwdjXbHDb3p3ZLiNs1vJ9jg/+9ZhmlPW1sCUIDbq11ZeG2U2n6OK3Nj7OHBzNwkzToJ6+QpixZImU=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6907.eurprd04.prod.outlook.com (52.133.242.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.18; Mon, 24 Feb 2020 09:22:48 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
+ 09:22:48 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Michael Walle <michael@walle.cc>, Shawn Guo <shawnguo@kernel.org>
+CC:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: sun8i-a83t: Add thermal trip points/cooling
- maps
-Message-ID: <20200224092020.xxru2rkhrywonrx7@gilmour.lan>
-References: <20200222214039.209426-1-megous@megous.com>
- <CAGb2v647zKVrDvnHeLvwNPEZLX+yTgPq-x7MJkp9=duzkQN3mw@mail.gmail.com>
- <20200223101050.lqe5uegpmoyqvna6@core.my.home>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Roy Zang <roy.zang@nxp.com>
+Subject: RE: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+Thread-Topic: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+Thread-Index: AQHVYUIA2y+cYTzIk0ebobZ1u8h9/agrEWeAgAAI9wCAAALoAIAAB6mw
+Date:   Mon, 24 Feb 2020 09:22:47 +0000
+Message-ID: <DB8PR04MB67474FF5451A647C4495526F84EC0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190902034319.14026-2-xiaowei.bao@nxp.com>
+ <20200224081105.13878-1-michael@walle.cc> <20200224084307.GD27688@dragon>
+ <a3aeabddc82ca86e3dca9c26081a0077@walle.cc>
+In-Reply-To: <a3aeabddc82ca86e3dca9c26081a0077@walle.cc>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [223.72.66.225]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ca9c9c18-6fe0-4b13-f624-08d7b90b1d51
+x-ms-traffictypediagnostic: DB8PR04MB6907:|DB8PR04MB6907:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6907C3D2C62A2BECF5EC59FA84EC0@DB8PR04MB6907.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 032334F434
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(136003)(396003)(39860400002)(199004)(189003)(7416002)(5660300002)(86362001)(55016002)(9686003)(8676002)(81156014)(81166006)(8936002)(6506007)(53546011)(7696005)(33656002)(52536014)(66476007)(478600001)(66556008)(110136005)(66446008)(316002)(64756008)(4326008)(54906003)(2906002)(71200400001)(26005)(186003)(76116006)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6907;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZLC5LPh151g4wdlqKVWYmB6xZrbqy8oRG5AL708l4N2PZlbdrJirG+vQpviXR0IAFSesM9C4IdL5RfcR7LjDZkVQn5YPB/RqSEmg1u4t/32jcVQ+cN6n/qo+NHEXqhoP5B6cA+e2aQOj2pKxUS6JiY5baCUobcu4d6Wy7JDsw5Ag0RlBNzF7T58Md5D2l+uheka0mm02rjtKXdCBLVbeVMDZdzY9U8uXFoumaXdckRqyO5sBu5yS7+XE5YuVa5qonTr/jIUGPHnqCJzuocSiHSuodQLwlMM0LVPFHndWVpAKND9nuS2V/+igNj32HzX+jwG8YSPaL0bQ2q7/edeRMTA22Gabhi59tTWTB42MTecLxg+wtAIClVL+1HqHFKqN3fIr0iY6pZLipa3XWY1xacm7Z9CgOKBTKI/i18LV37RehNrJyWoYfofpNhYkNv/Z
+x-ms-exchange-antispam-messagedata: imaKY1Jdo5rbJ3B5eMwzk84/xhMgymnR7hYn8mBOLH20nKyi+MKJuGrz0zmpHeMrjqA3TnwuIXs1kzekNmY4KYKjDabSUeh99hEczcBJTSDhj6+at1EBsQPdoGU5/VLNzk7kGFgvsbGXuHY8dWh0YQ==
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2s6qec42w4cbjxw2"
-Content-Disposition: inline
-In-Reply-To: <20200223101050.lqe5uegpmoyqvna6@core.my.home>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca9c9c18-6fe0-4b13-f624-08d7b90b1d51
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2020 09:22:48.2924
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aRHElNM7C0zIZEpnbQHcYXwE7AGqhUrY0LIN+IWSSzYxLUFQDqj7qrX/t6g23l2WLRBFeDg61J4+kWrdnyBj8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6907
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---2s6qec42w4cbjxw2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Feb 23, 2020 at 11:10:50AM +0100, Ond=C5=99ej Jirman wrote:
-> Hello,
->
-> On Sun, Feb 23, 2020 at 11:29:07AM +0800, Chen-Yu Tsai wrote:
-> > Hi,
-> >
-> > On Sun, Feb 23, 2020 at 5:40 AM Ondrej Jirman <megous@megous.com> wrote:
-> > >
-> > > This enables passive cooling by down-regulating CPU voltage
-> > > and frequency.
-> >
-> > Please state for the record how the trip points were derived. Were they=
- from
-> > the BSP? Or the user manual?
->
-> The values are taken from the BSP for A83T:
->
-> https://megous.com/git/linux/tree/drivers/thermal/sunxi-temperature.c?h=
-=3Da83t-3.4-bsp-tbs-a711#n747
->
-> The datasheet only mentions recommended Ta (ambient operating temperature=
-) range
-> -20 to +70=C2=B0C. So die voltages will be larger than that. I guess that=
- roughly
-> matches the BSP values.
-
-Can you put that in the commit log?
-
-Thanks!
-Maxime
-
---2s6qec42w4cbjxw2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlOVVAAKCRDj7w1vZxhR
-xX3uAP9BHDiExokGZnYdS2Hnvg/6BxQA+lI33CwXBcAtyDDNygD9Hd30W+Yao0Js
-DAIsy3WRebkWFb2c2O+NCt21wer90gI=
-=pwbG
------END PGP SIGNATURE-----
-
---2s6qec42w4cbjxw2--
+SGkgTWljaGFlbCBhbmQgU2hhd24sDQoNCkknbGwgdXBkYXRlIHRoZSBwYXRjaCB3aXRoIGlvbW11
+LW1hcCBwcm9wZXJ0eS4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNoYWVsIFdhbGxlIDxtaWNoYWVsQHdhbGxlLmNjPg0KPiBT
+ZW50OiAyMDIwxOoy1MIyNMjVIDE2OjU0DQo+IFRvOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5l
+bC5vcmc+DQo+IENjOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT47IFoucS4gSG91
+DQo+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47DQo+IGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3Rz
+Lm96bGFicy5vcmc7DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IG1hcmsucnV0bGFuZEBh
+cm0uY29tOyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUg
+PG1pbmdrYWkuaHVAbnhwLmNvbT47DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgUm95IFphbmcgPHJv
+eS56YW5nQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMi8zXSBhcm02NDogZHRz
+OiBsczEwMjhhOiBBZGQgUENJZSBjb250cm9sbGVyIERUDQo+IG5vZGVzDQo+IA0KPiBIaSBTaGF3
+biwgYWxsLA0KPiANCj4gQW0gMjAyMC0wMi0yNCAwOTo0Mywgc2NocmllYiBTaGF3biBHdW86DQo+
+ID4gT24gTW9uLCBGZWIgMjQsIDIwMjAgYXQgMDk6MTE6MDVBTSArMDEwMCwgTWljaGFlbCBXYWxs
+ZSB3cm90ZToNCj4gPj4gSGkgWGlhb3dlaSwgSGkgU2hhd24sDQo+ID4+DQo+ID4+ID4gTFMxMDI4
+YSBpbXBsZW1lbnRzIDIgUENJZSAzLjAgY29udHJvbGxlcnMuDQo+ID4+DQo+ID4+IFBhdGNoIDEv
+MyBhbmQgMy8zIGFyZSBpbiBMaW51cycgdHJlZSBidXQgbm9ib2R5IHNlZW1zIHRvIGNhcmUgYWJv
+dXQNCj4gPj4gdGhpcyBwYXRjaCBhbnltb3JlIDooDQo+ID4+DQo+ID4+IFRoaXMgZG9lc24ndCB3
+b3JrIHdlbGwgd2l0aCB0aGUgSU9NTVUsIGJlY2F1c2UgdGhlIGlvbW11LW1hcCBwcm9wZXJ0eQ0K
+PiA+PiBpcyBtaXNzaW5nLiBUaGUgYm9vdGxvYWRlciBuZWVkcyB0aGUgJnNtbXUgcGhhbmRsZSB0
+byBmaXh1cCB0aGUNCj4gPj4gZW50cnkuDQo+ID4+IFNlZQ0KPiA+PiBiZWxvdy4NCj4gPj4NCj4g
+Pj4gU2hhd24sIHdpbGwgeW91IGFkZCB0aGlzIHBhdGNoIHRvIHlvdXIgdHJlZSBvbmNlIGl0cyBm
+aXhlZCwNCj4gPj4gY29uc2lkZXJpbmcgaXQganVzdCBhZGRzIHRoZSBkZXZpY2UgdHJlZSBub2Rl
+IGZvciB0aGUgTFMxMDI4QT8NCj4gPg0KPiA+IFRoZSBwYXRjaC90aHJlYWQgaXMgYSBiaXQgYWdl
+ZC4gIFlvdSBtYXkgd2FudCB0byBzZW5kIGFuIHVwZGF0ZWQgcGF0Y2gNCj4gPiBmb3IgZGlzY3Vz
+c2lvbi4NCj4gDQo+IFNvIHNob3VsZCBJIGp1c3QgcGljayB1cCB0aGUgcGF0Y2ggYWRkIG15IHR3
+byBmaXhlcyBhbmQgc2VuZCBpdCBhZ2Fpbj8NCj4gV2hhdCBhYm91dA0KPiB0aGUgU2lnbmVkLW9m
+Zi1ieSB0YWdzPyBMZWF2ZSB0aGVtPyBSZXBsYWNlIHRoZW0/IEFkZCBtaW5lPw0KPiANCj4gLW1p
+Y2hhZWwNCg==
