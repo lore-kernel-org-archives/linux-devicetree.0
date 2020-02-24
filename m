@@ -2,93 +2,87 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74481C35641
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 03:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F53C35669
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 04:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0B120836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 03:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7162072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 04:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582515758;
-	bh=6d15W9/8t0f2BUQq/bxEpoTZNWBs5M53q2YcmBYzXJ0=;
+	s=default; t=1582518986;
+	bh=/4yI/EmjrZA0BYlRei8XKfUb9S0CAu/7EaLhXrGl1ws=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kN9nySrExyrVRXpc4a3n5e8OYojzienFjDO+XJBhm4IAFTy5DK1y45SAr/0o84Qgr
-	 K/NBm0eOsf5CFvgFpFjqd86MpFfqXYgcvQKbrviJ5Hs3IVHNgPZEmdWIMocnH+VHNY
-	 BtKuHNLIDFvDsME7TaTGmyQsPTbdHdgzZmYwH7cc=
+	b=oNLFSEEujk/IMoT/FISIIxwWT2LXZdJ6ePuhtzmw1MNShmKfYjJiOI8a2acGPbWrv
+	 ASrl5ea5FI1kxVJVDqZ1e/TPxsS0sYJktaLXKMgQ0aaYbmsEuzWfHaqug36lAF76VF
+	 VlF6e/L3oTByxqiFLdRG7mFgXyvWKDFpn8XUihnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgBXDmh (ORCPT
+        id S1727202AbgBXEgZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 22:42:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49612 "EHLO mail.kernel.org"
+        Sun, 23 Feb 2020 23:36:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbgBXDmh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Feb 2020 22:42:37 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        id S1727186AbgBXEgZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Feb 2020 23:36:25 -0500
+Received: from localhost (unknown [122.182.199.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 662B920828;
-        Mon, 24 Feb 2020 03:42:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F62C20658;
+        Mon, 24 Feb 2020 04:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582515757;
-        bh=6d15W9/8t0f2BUQq/bxEpoTZNWBs5M53q2YcmBYzXJ0=;
+        s=default; t=1582518984;
+        bh=/4yI/EmjrZA0BYlRei8XKfUb9S0CAu/7EaLhXrGl1ws=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tCB4N1aZ8GuKSjK3dMk5vpqqBqZJhK5/4GGhIskjcnuh1zXQ2LzPeSgWo6Pz2++tY
-         XImGD8Jn5K4j3PL2J+JijVyd5prlNfr8JMYCaFHx08hyD34BsyJpjlpbY/N1AptujL
-         Fx8yybQuWlpbCOGp4PcOxP6s9O6mPH2IqXuYqeiY=
-Date:   Mon, 24 Feb 2020 11:42:28 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opanyuk <igor.opanyuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: imx7-colibri: Fix frequency for sd/mmc
-Message-ID: <20200224034228.GI27688@dragon>
-References: <20200219131121.3565738-1-oleksandr.suvorov@toradex.com>
+        b=Lvn3yXXeFP97NyX/cctvAFkNpXvDs5frfR5b2WU+WX48PSjNSjq4heS4n+XRb/06h
+         Mef1kqZSjAGz78wE7IsrHpbECrGo39ABGQnKLuSsstTPLrcGKITFibkbqgW+9FFAtz
+         geKvomcOZGuenkEti1zgBFSVxWIQ4iJbWCi3jENo=
+Date:   Mon, 24 Feb 2020 10:06:18 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
+Message-ID: <20200224043618.GR2618@vkoul-mobl>
+References: <20200221222711.15973-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219131121.3565738-1-oleksandr.suvorov@toradex.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:11:24PM +0000, Oleksandr Suvorov wrote:
-> SD/MMC on Colibri iMX7S/D modules successfully support
-> 200Mhz frequency in HS200 mode.
+On 21-02-20, 16:27, Rob Herring wrote:
+> Fix all the warnings in the DT binding schema examples when built with
+> 'W=1'. This is in preparation to make that the default for examples.
 > 
-> Removing the unnecessary max-frequency limit significantly
-> increases the performance:
-> 
-> == before fix ====
-> root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
-> /dev/mmcblk0:
->  Timing buffered disk reads: 252 MB in  3.02 seconds =  83.54 MB/sec
-> ==================
-> 
-> === after fix ====
-> root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
-> /dev/mmcblk0:
->  Timing buffered disk reads: 408 MB in  3.00 seconds = 135.94 MB/sec
-> ==================
-> 
-> Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support")
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-Applied, thanks.
+For this:
+
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml        | 14 +-------------
+
+Acked-by: Vinod Koul <vkoul@kernel.org>
+
+-- 
+~Vinod
