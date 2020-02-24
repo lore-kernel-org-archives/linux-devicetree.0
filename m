@@ -2,173 +2,154 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCEBC35679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376D6C3567B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82A820838
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060F720828
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:26:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jmnDs3bO"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="u+9JZhJN";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="OGCdSJgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgBXKSB (ORCPT
+        id S1726628AbgBXK06 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:18:01 -0500
-Received: from mail-bn8nam12on2071.outbound.protection.outlook.com ([40.107.237.71]:6149
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726509AbgBXKSB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:18:01 -0500
+        Mon, 24 Feb 2020 05:26:58 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:64244 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726509AbgBXK06 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:26:58 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OAPHMM024077;
+        Mon, 24 Feb 2020 02:26:42 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=rwyTeoFkSkKpb+yKNfh1/RiEe4+6DwPvTwU2MpxR9iA=;
+ b=u+9JZhJN+h4Q8xgh0Ppcfz8wMk9awqIykm52eS39pUjdM6OGLuJZRlLwCp4OfVVOjU9y
+ TTC8XME3VuQscWYumkRAx7GFuD2LmHRFV+Tv+BW2ZZMwQJeWm0U0m8oFwPVFg2NiV837
+ iWtHMRhKUzS6gzvHCwURUbn2eGLBXIIR87znz9qPe1l/CxpHOfW/f+tn8jGpHX0I1UL8
+ LHmf1Y6Impqjhiq+i424a9YzJHdq8k6dbN0FIQIEso0KtEnaBPDEzg/AZ7l4w+BGmsRW
+ tMlujdJre/cDHFLfY9pOPGX6mUnXonwvEbuj7PRpVipTmhTIP4LtOfsRuo3RGebj22zu JA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2yb4pt5sdu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 24 Feb 2020 02:26:42 -0800
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 24 Feb
+ 2020 02:26:40 -0800
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.50) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Mon, 24 Feb 2020 02:26:40 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NyA/G1bZn1gc/f34dVcvJhZxXqLwUm+CmjobDzj5y+AwB27IRr9laV8L2fGIJx2w2zQ/OwHyWTnrk6VIiIaBrwpCABupNN6wgijLAO4ed8LD0oThd718YvjQ0S8c5ShcLRI0T/7xRrQFpV2zvh9c7WyKDTbEoy0lC24ADZbZk05KLG+njqZidZXGVBq7XeR8pmmHBZ5vM+tjLlmH3QpB2jhTo11sKKJ+DqA4b7v0YBjp381MX3gOqamRIEeA7CQI1n4GkQUe0RK1Xrz/wa257SjD42r+cqt5Ln83aOlf9w9dRGU7b6AfH0SGyI+Lz9QVbfIatV+zmPfhFUMbjC+4Jw==
+ b=MKZmgrzdKKDrSo+oMtMJD37rVixhcpcL1XGpBjIVa8oo5XYnmeED6FvoujDTfPrxwRBCCs7mm8dbDfw2k+6mfbTEOk51OdElmYf7TMRYiQln7SslycrOsv19/N22tnFYv736WWEyyjidLYG1D39Q7BgRil2VuqA3+YuoPoLMJxxFIcQsYZdw2UX7GQOado4oiYv7q9fJNu7lqrQVUNGDLdHy/yrenwE8w8hPIv4e08UFXiCU4pWHiFlF0fQiw8k8y2v9aXWc6s8k6zeXmBs4Bzn/TzW5tCY1cYXjyAH73tbfk+cRiq6PmWmOacB6AEbX5FjwFJeX0pIRg5GXPwMhdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zVtFvnRZ9VJpMCxxPhvBAs4hb6GT0QuQsyKC2jmna8w=;
- b=lhwtO9CJcWPRTRqRlf4xwlT8ahC0uCfTJmT0gF0GQBXdpk3Naz3FO/e6hjGIzfouD/hbsOE4GlGEoIbMx+hfJbd16K2q1D1DRTD9SmWt2W9/RkSGKGnNMWxO1Y4SAumiFtsglu720g0BQNfAmojxtO5+KcNdwaW5wEKbN1gTqOG9hBJyLBGk6BOt+FTYOYM/m6bmtNWQamJFQih5jNBzUlTALhkaAXxlbPoQHixcFny++9lY3oc6ggxO2x7jnvrEbD6hmNDPZiR9guLR1PNQEs32ZJ/jPi27kcb05lIlneaCCGusiFgwj51jIJeTRP1t5o0wmmDn6chASKtQl2e42Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+ bh=rwyTeoFkSkKpb+yKNfh1/RiEe4+6DwPvTwU2MpxR9iA=;
+ b=G4f+8gorMmb54ftcgD/SpHYaa0ygGrae5HQRZpX1ete94mSywwL00Z0v1Oocki8bDXkKVJuZRBrKsPY/+VQx/D7BLxrvekVKmtyTLGfoeg3c1Xou4S3R/YKRUfx1HgMhECfFwvJXBDXBZqPq3hrb0cBbn+tOxqkzIGqxaAhuF1ChdKcZK0DmJDql+Pl71AbVeaebBa3L8t25UM9IDk/y0G3blmHcrKu0SAD8F3aB8w8Alz7FnHVsmJnQo96bDtxmdAdEPF1EPaY1aLUmoxNymyYlrC8rpP1gdrq2NiXlkynkXhBI6vXFN5HNCb+oLIIp4p+wcPSpy5aylQmWHa6xQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zVtFvnRZ9VJpMCxxPhvBAs4hb6GT0QuQsyKC2jmna8w=;
- b=jmnDs3bOoQ/rSQAI6OCMWMB1Hv6Aha+sLzzVYIuaD+lUPNAQkf6BfgAnlMEvsQLrLy857jzRAOmC/5p1N9DKZNYhIVaAFtip+n8Y224cKKoP0ubRYXmK5a3CuXFTGjl0sG6DVvsszujSYl50p2RfObLWXGhowQUl7MWoQigRCPo=
-Received: from SN4PR0201CA0040.namprd02.prod.outlook.com
- (2603:10b6:803:2e::26) by CY4PR02MB2824.namprd02.prod.outlook.com
- (2603:10b6:903:122::22) with Microsoft SMTP Server (version=TLS1_2,
+ bh=rwyTeoFkSkKpb+yKNfh1/RiEe4+6DwPvTwU2MpxR9iA=;
+ b=OGCdSJgTt1xBjNlJutWKR24ZBTW4VhT5ULs9vaQybDwiXhiy48gN7+RKlsRw3FSFYv9bbVfJdlxHovWBQBS8uJyw4aubKcsGmWP75sF6Q3K/Mia2v0HRV+jgSQXrEZjGpMjFrzLWxpyl691bpp7dJ8glySMRo6i+R/xANF1wBWQ=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
+ by MN2PR18MB3248.namprd18.prod.outlook.com (2603:10b6:208:16c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Mon, 24 Feb
- 2020 10:17:56 +0000
-Received: from BL2NAM02FT040.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::202) by SN4PR0201CA0040.outlook.office365.com
- (2603:10b6:803:2e::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend
- Transport; Mon, 24 Feb 2020 10:17:56 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT040.mail.protection.outlook.com (10.152.77.193) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18
- via Frontend Transport; Mon, 24 Feb 2020 10:17:56 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j6AoF-0004AZ-Ig; Mon, 24 Feb 2020 02:17:55 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j6AoA-0005uU-Fm; Mon, 24 Feb 2020 02:17:50 -0800
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01OAHffE001598;
-        Mon, 24 Feb 2020 02:17:41 -0800
-Received: from [172.30.17.108]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1j6Ao0-0005t5-RW; Mon, 24 Feb 2020 02:17:41 -0800
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: arasan: Document 'xlnx,versal-8.9a'
- controller
-To:     Manish Narani <manish.narani@xilinx.com>, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com,
-        adrian.hunter@intel.com
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        git@xilinx.com
-References: <1582115313-115667-1-git-send-email-manish.narani@xilinx.com>
- <1582115313-115667-2-git-send-email-manish.narani@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <040f8348-7338-446f-8571-481daa281c93@xilinx.com>
-Date:   Mon, 24 Feb 2020 11:17:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ 2020 10:26:39 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
+ 10:26:39 +0000
+Date:   Mon, 24 Feb 2020 11:26:31 +0100
+From:   Robert Richter <rrichter@marvell.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Will Deacon <will@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Joe Perches <joe@perches.com>,
+        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
+Message-ID: <20200224102631.c5yluo6u5ipghyz4@rric.localdomain>
+References: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR0902CA0016.eurprd09.prod.outlook.com
+ (2603:10a6:3:e5::26) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
 MIME-Version: 1.0
-In-Reply-To: <1582115313-115667-2-git-send-email-manish.narani@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(396003)(136003)(199004)(189003)(186003)(478600001)(4326008)(26005)(2616005)(36756003)(31686004)(107886003)(426003)(70586007)(70206006)(44832011)(336012)(81166006)(316002)(8936002)(5660300002)(6666004)(9786002)(356004)(81156014)(2906002)(8676002)(31696002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2824;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR0902CA0016.eurprd09.prod.outlook.com (2603:10a6:3:e5::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Mon, 24 Feb 2020 10:26:36 +0000
+X-Originating-IP: [31.208.96.227]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 07fdc851-6839-4768-e714-08d7b912d0fa
-X-MS-TrafficTypeDiagnostic: CY4PR02MB2824:
-X-Microsoft-Antispam-PRVS: <CY4PR02MB282478D3DFD7DEF3F1DA34CCC6EC0@CY4PR02MB2824.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Office365-Filtering-Correlation-Id: cbc2b49a-9060-40e0-740b-08d7b9140850
+X-MS-TrafficTypeDiagnostic: MN2PR18MB3248:
+X-Microsoft-Antispam-PRVS: <MN2PR18MB3248FD63358A92416E31E6CAD9EC0@MN2PR18MB3248.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-Forefront-PRVS: 032334F434
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(396003)(366004)(136003)(199004)(189003)(4744005)(53546011)(6506007)(86362001)(54906003)(8936002)(6666004)(478600001)(81156014)(4326008)(6916009)(8676002)(7416002)(81166006)(16526019)(52116002)(7696005)(66476007)(26005)(186003)(5660300002)(66556008)(1076003)(956004)(316002)(55016002)(9686003)(66946007)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3248;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DYimMkl99p4Q9eDudgPdLGPM11GvFhjvY6lA/UjfopiOdYo4QWEa3F/WKP/XNF+JNZ5yPyl1sEXzFTICz17ORUpdYUz7fc0+eO8yL2h8IYf6CGsRO15JwgJz3rqJXG1bg9da8iWKsorI1SfjQ9gL1930h9dLU64V8T1bCeuh1huFMFWFjGvI5lvMbgqen5mirea4CoA4kYoUsh58+zaAmttBSxW4dFI2ZqRorH14uysS2pAbko50wcl0ZyFOix9scPM34/p0EzY/I3YdB2u7p5EZdK+kW3hXwcLYgLg1TJuNfbwi+Baij/LgNe4m72mEj2LoLDwUylzpU1z+IZDlrpxIlzCG7/ZnDe2+Sx8YxkYpPoMLLExdNLRaJ0yrHOM9Cl1IcxY/wF3I2LtjBcGipKzQpMDAA5QR7TYQSBIO6VkA4EEpwYeBpmeLebMmU8z5qgy1d30+4ro6SYptyiegByBLjUt5LYNaXfBUsR5ChT0kY9mDc6B73Xh+IDRlM7WZ
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 10:17:56.1117
+X-Microsoft-Antispam-Message-Info: WcbjnANNbe0y6EasU91hh4AToRZy1Kr4obBDFIFtjC5fgqSJ0DliaEsA4jfoBbkuywXgagXshvcx0Ra5jPlpbwAIK82KBBYvv8h9JHnlmJSkqxmi/s7Lxs+QI0ZS1kOmwoO1cgbMTJ7lATgaZvKZEU2ygOdMYVjiW05iaWli6p2dX/Y96Tse6trWbyaeVAKiysThasjEtLQEoc/uLA1+KCIuyX9Szk7qhQA+kmFOCjx6dvgLNO96z2aLHohsDKXbDebRbm0vendvxyv7K+L4e3WZxqk2osAKwsVfeTTIKCfLux5oBg0vO4Cvx+Tbt08YANBSwrVrATyUD5j926RSC56GOPEzPtiyybTZoSPgDlHoIq+N1IGRNNlB1F+KeocXm84l9VZfe9AvLDLX8G+ovVL5p2MhwLwwIC0ssuwTbGKdgAzCTBLFEjd+aiR7FHTs
+X-MS-Exchange-AntiSpam-MessageData: ENropoDvTVnM2vdcYAZvvhbbRvlGYTptLW8l2VhabOEdyyHmejlcWEV7RrMlRjepzJDNnO5EJpxOUu6zxJkkECmAZ7AHiRy95pYTasMAjNt3kxQRPH54DmqsJKUajTrEVRXm11xjCrqM7M7cyd331A==
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbc2b49a-9060-40e0-740b-08d7b9140850
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 10:26:38.8498
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07fdc851-6839-4768-e714-08d7b912d0fa
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2824
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6Ha3TaM+RftgQJenvcs4eFrBVsK0SJulT4trcZSzEepBA4KslhOueJ6z3ni0W824/CC//r416bhdoTE+x8XaXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3248
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-24_02:2020-02-21,2020-02-24 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19. 02. 20 13:28, Manish Narani wrote:
-> Add documentation for 'xlnx,versal-8.9a' SDHCI controller followed by
-> example.
-> 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  .../devicetree/bindings/mmc/arasan,sdhci.txt      | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> index 428685eb2ded..630fe707f5c4 100644
-> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> @@ -18,6 +18,9 @@ Required Properties:
->      - "xlnx,zynqmp-8.9a": ZynqMP SDHCI 8.9a PHY
->        For this device it is strongly suggested to include clock-output-names and
->        #clock-cells.
-> +    - "xlnx,versal-8.9a": Versal SDHCI 8.9a PHY
-> +      For this device it is strongly suggested to include clock-output-names and
-> +      #clock-cells.
->      - "ti,am654-sdhci-5.1", "arasan,sdhci-5.1": TI AM654 MMC PHY
->  	Note: This binding has been deprecated and moved to [5].
->      - "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1": Intel LGM eMMC PHY
-> @@ -104,6 +107,18 @@ Example:
->  		clk-phase-sd-hs = <63>, <72>;
->  	};
->  
-> +	sdhci: mmc@f1040000 {
-> +		compatible = "xlnx,versal-8.9a", "arasan,sdhci-8.9a";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 126 4>;
-> +		reg = <0x0 0xf1040000 0x0 0x10000>;
-> +		clocks = <&clk200>, <&clk200>;
-> +		clock-names = "clk_xin", "clk_ahb";
-> +		clock-output-names = "clk_out_sd0", "clk_in_sd0";
-> +		#clock-cells = <1>;
-> +		clk-phase-sd-hs = <132>, <60>;
-> +	};
-> +
->  	emmc: sdhci@ec700000 {
->  		compatible = "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1";
->  		reg = <0xec700000 0x300>;
-> 
+Hi Lukas,
 
-Acked-by: Michal Simek <michal.simek@xilinx.com>
+On 23.02.20 10:09:50, Lukas Bulwahn wrote:
+> Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
+> DT schema") combines all information from pci-thunder-{pem,ecam}.txt
+> into host-generic-pci.yaml, and deleted the two files in
+> Documentation/devicetree/bindings/pci/.
+> 
+> Since then, ./scripts/get_maintainer.pl --self-test complains:
+> 
+>   no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
+> 
+> As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
+> small part of the host-generic-pci.yaml, do not add this file to the
+> PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
+> the removed files.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+
+Acked-by: Robert Richter <rrichter@marvell.com>
+
+> ---
+> Robert, are you still the maintainer of this driver?
+
+Sure. I inherited the driver a couple of months ago from David who is
+no longer at Cavium/ Marvell.
 
 Thanks,
-Michal
+
+-Robert
