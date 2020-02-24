@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B9DC38BE3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244B0C38BFB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B90121744
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA19821927
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J9A0ZfwW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zuB/c0OA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgBXSYp (ORCPT
+        id S1728022AbgBXSYy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:24:45 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35617 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBXSYp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:24:45 -0500
-Received: by mail-wm1-f65.google.com with SMTP id m3so161159wmi.0
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 10:24:43 -0800 (PST)
+        Mon, 24 Feb 2020 13:24:54 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35641 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727755AbgBXSYx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:24:53 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m3so161655wmi.0
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 10:24:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KHws8PPyeoETs9MQxZkRIDY5PffBS7gRHL2ghOeKyiM=;
-        b=J9A0ZfwW2Sg5Oi6rxq36ZRvJqnC+eT7pD0P717DYVO6/HFHQ95x+UxG3pT7JhyRRKq
-         CdIF02uk2292tIngupeW/yBbUErtCxYmDRVo6/5y/bkWByPW3bThl1dFBPj02zswj4Jj
-         qF1YBh2b5YpZCqRYchpXE+tX4M0bWn5d/yg2DE/0qXgJdRLQn7Jv41Au15O+H858/zQt
-         czw8MaqmewR7TtTWraIWi2f/TynY8Vh/Nb1Xohjt8dZw13zDR/5E+o6/8wq/Q/qSoglg
-         qTLXTok0ayNKInC5TtlxmZx8bCE3DudSWrwI0IGO3EVxbfrtz46cdYcJcsn41BOBbITL
-         /gGw==
+        bh=5LozG5AByqC+Y2QsZ96qniz5z6ofm6RdMRwjrLXS+sI=;
+        b=zuB/c0OAZTGH2gXaCP3au67WP342eVaV0fpGipW5OGGN73wuEBs/1ROZf/qKpO3VQt
+         woFLTxZNGIJ4967+Me5izVNTthCeacqxnSzqP00CSdVZMYLxj/tNulidjUqG/0VzmRjZ
+         QBZKhGAJqmIBtlFc+1BYL0isbmHkquFthlxS1h9jLjYAR2EePZIEbd27msJirvOsnTsx
+         RtziIkQVAZ7U2qRYVUnPq6uOoH+JWffn9cp0foAx+2pOdmEGO8+xrnjYEsG5ZmahMt01
+         evtZlwEGkxH6SJ4mAKSe6obj4rsKWhmZnxT9Y8StwOwgIqQtl1cZzvX0yP51JfpyAWBn
+         X2ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KHws8PPyeoETs9MQxZkRIDY5PffBS7gRHL2ghOeKyiM=;
-        b=tDHSMkdfYRP0xesEvpDlwz0I5TLa42JmX4OYIWZAO3QQTw/Oc0FVPODNuW7ylUi2Ii
-         t4NYkXC0OVUIrsLgomgz8mvTd2d98bTcGbGlv9rjXtI/brbAW/nN0mmhT8lo++fPbtnH
-         l15bFe3oHXcotgg2WjfCLUmg9IawmibnWjJW/q4HfL9M9NLrEWMLgkbQQtR2OLg/PnjZ
-         QHOIXX+Vs+O5dIzSlH5Z7h16lO1CQxTu5wNNij5+CXw7vCN8UWLUM1zQozQuN88sn5Pe
-         0IFviCasKg3hacmWyylk8Ubrpyrc6GoLrvFslzACkUluiisNm4i5I3dsJt/ZFxKZJhQx
-         uSJg==
-X-Gm-Message-State: APjAAAU0+d41wvGgnykii/TBkaAlJ25p3L4epcfZUA/oHCuU/m1R7mcY
-        bw6GJjNSQGuY76MtsBoh+oCnrg==
-X-Google-Smtp-Source: APXvYqynW6kWyhnVaJWymOzWm/6YFP2jaUG27aS/Wip8UJw52RMXIUpjgeRxpypHFTwzOYwt3yNJ4A==
-X-Received: by 2002:a1c:67c3:: with SMTP id b186mr345249wmc.36.1582568682671;
-        Mon, 24 Feb 2020 10:24:42 -0800 (PST)
+        bh=5LozG5AByqC+Y2QsZ96qniz5z6ofm6RdMRwjrLXS+sI=;
+        b=F5JgAu3GRvdf+JwvOgnv+vpAK+imxvgTMmBqoY3Ecv6wzRfUqGBFUb8IdYZjeWI2wz
+         uOd/BfwkQEQ+udUZHX/xM947QgmOMPCaxUbC6UTAvd/l1mjKjm53er75a1KobfyBocTx
+         jr5HHL4yu6YdnruzNr3X+wRiWMio8vPafpnf8FwLeXqelnOwbfd8yVFLKL8Y6ijfJW05
+         4/i2uHY1r5jRwVkhkGs1SEqyVFU0JbNHsLFjB6HFWr7kmYB02fL76ICjt5+6CMHWZtUL
+         fufSC5LbW/CBOnObGZjWcjpM4nB+5i0NIRHFsxQmwAtLRqAda/FgwYEyoluYqTXZU9FT
+         TjMQ==
+X-Gm-Message-State: APjAAAUAMYXGilneAxNbyFfv4xvnGHI2NjWTx1y/nwQBjabnaM1Eh9gl
+        S+oIvtIOVXLIROkWk3Rd61fLxg==
+X-Google-Smtp-Source: APXvYqzYYT4fN7IA/sD4kQOlIG2hDqJ3nfsH3tflLkE3KADa5Uj7qCLqWe6yrMSFQh0UM4q/4UEzKA==
+X-Received: by 2002:a1c:f001:: with SMTP id a1mr323565wmb.76.1582568691412;
+        Mon, 24 Feb 2020 10:24:51 -0800 (PST)
 Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id n3sm304255wmc.27.2020.02.24.10.24.41
+        by smtp.gmail.com with ESMTPSA id n3sm304255wmc.27.2020.02.24.10.24.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 10:24:42 -0800 (PST)
+        Mon, 24 Feb 2020 10:24:51 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -66,9 +66,9 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         christian.koenig@amd.com, yi.l.liu@intel.com,
         zhangfei.gao@linaro.org,
         Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: [PATCH v4 12/26] iommu/arm-smmu-v3: Seize private ASID
-Date:   Mon, 24 Feb 2020 19:23:47 +0100
-Message-Id: <20200224182401.353359-13-jean-philippe@linaro.org>
+Subject: [PATCH v4 20/26] iommu/arm-smmu-v3: Maintain a SID->device structure
+Date:   Mon, 24 Feb 2020 19:23:55 +0100
+Message-Id: <20200224182401.353359-21-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200224182401.353359-1-jean-philippe@linaro.org>
 References: <20200224182401.353359-1-jean-philippe@linaro.org>
@@ -81,184 +81,296 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-The SMMU has a single ASID space, the union of shared and private ASID
-sets. This means that the SMMU driver competes with the arch allocator
-for ASIDs. Shared ASIDs are those of Linux processes, allocated by the
-arch, and contribute in broadcast TLB maintenance. Private ASIDs are
-allocated by the SMMU driver and used for "classic" map/unmap DMA. They
-require explicit TLB invalidations.
-
-When we pin down an mm_context and get an ASID that is already in use by
-the SMMU, it belongs to a private context. We used to simply abort the
-bind, but this is unfair to users that would be unable to bind a few
-seemingly random processes. Try to allocate a new private ASID for the
-context, and make the old ASID shared.
-
-Introduce a new lock to prevent races when rewriting context
-descriptors. Unfortunately it has to be a spinlock since we take it
-while holding the asid lock, which will be held in non-sleepable context
-(freeing ASIDs from an RCU callback).
+When handling faults from the event or PRI queue, we need to find the
+struct device associated to a SID. Add a rb_tree to keep track of SIDs.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 83 +++++++++++++++++++++++++++++--------
- 1 file changed, 66 insertions(+), 17 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 177 +++++++++++++++++++++++++++++-------
+ 1 file changed, 145 insertions(+), 32 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 3f9adfd1b015..2839527ec9ee 100644
+index 015e8e59e0ef..28f8583cd47b 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -717,6 +717,7 @@ struct arm_smmu_option_prop {
+@@ -684,6 +684,15 @@ struct arm_smmu_device {
+ 
+ 	/* IOMMU core code handle */
+ 	struct iommu_device		iommu;
++
++	struct rb_root			streams;
++	struct mutex			streams_mutex;
++};
++
++struct arm_smmu_stream {
++	u32				id;
++	struct arm_smmu_master		*master;
++	struct rb_node			node;
  };
  
- static DEFINE_XARRAY_ALLOC1(asid_xa);
-+static DEFINE_SPINLOCK(contexts_lock);
+ /* SMMU private data for each master */
+@@ -692,8 +701,8 @@ struct arm_smmu_master {
+ 	struct device			*dev;
+ 	struct arm_smmu_domain		*domain;
+ 	struct list_head		domain_head;
+-	u32				*sids;
+-	unsigned int			num_sids;
++	struct arm_smmu_stream		*streams;
++	unsigned int			num_streams;
+ 	bool				ats_enabled;
+ 	unsigned int			ssid_bits;
+ };
+@@ -1573,8 +1582,8 @@ static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
  
- static struct arm_smmu_option_prop arm_smmu_options[] = {
- 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
-@@ -1513,6 +1514,17 @@ static int arm_smmu_cmdq_batch_submit(struct arm_smmu_device *smmu,
- }
- 
- /* Context descriptor manipulation functions */
-+static void arm_smmu_tlb_inv_asid(struct arm_smmu_device *smmu, u16 asid)
-+{
-+	struct arm_smmu_cmdq_ent cmd = {
-+		.opcode = CMDQ_OP_TLBI_NH_ASID,
-+		.tlbi.asid = asid,
-+	};
-+
-+	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-+	arm_smmu_cmdq_issue_sync(smmu);
-+}
-+
- static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
- 			     int ssid, bool leaf)
- {
-@@ -1547,7 +1559,7 @@ static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
- 	size_t size = CTXDESC_L2_ENTRIES * (CTXDESC_CD_DWORDS << 3);
- 
- 	l1_desc->l2ptr = dmam_alloc_coherent(smmu->dev, size,
--					     &l1_desc->l2ptr_dma, GFP_KERNEL);
-+					     &l1_desc->l2ptr_dma, GFP_ATOMIC);
- 	if (!l1_desc->l2ptr) {
- 		dev_warn(smmu->dev,
- 			 "failed to allocate context descriptor table\n");
-@@ -1593,8 +1605,8 @@ static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
- 	return l1_desc->l2ptr + idx * CTXDESC_CD_DWORDS;
- }
- 
--static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
--				   int ssid, struct arm_smmu_ctx_desc *cd)
-+static int __arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-+				     int ssid, struct arm_smmu_ctx_desc *cd)
- {
- 	/*
- 	 * This function handles the following cases:
-@@ -1670,6 +1682,17 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+ 	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
+ 	list_for_each_entry(master, &smmu_domain->devices, domain_head) {
+-		for (i = 0; i < master->num_sids; i++) {
+-			cmd.cfgi.sid = master->sids[i];
++		for (i = 0; i < master->num_streams; i++) {
++			cmd.cfgi.sid = master->streams[i].id;
+ 			arm_smmu_cmdq_batch_add(smmu, &cmds, &cmd);
+ 		}
+ 	}
+@@ -2201,6 +2210,32 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu_device *smmu, u32 sid)
  	return 0;
  }
  
-+static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-+				   int ssid, struct arm_smmu_ctx_desc *cd)
++__maybe_unused
++static struct arm_smmu_master *
++arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
 +{
-+	int ret;
++	struct rb_node *node;
++	struct arm_smmu_stream *stream;
++	struct arm_smmu_master *master = NULL;
 +
-+	spin_lock(&contexts_lock);
-+	ret = __arm_smmu_write_ctx_desc(smmu_domain, ssid, cd);
-+	spin_unlock(&contexts_lock);
++	mutex_lock(&smmu->streams_mutex);
++	node = smmu->streams.rb_node;
++	while (node) {
++		stream = rb_entry(node, struct arm_smmu_stream, node);
++		if (stream->id < sid) {
++			node = node->rb_right;
++		} else if (stream->id > sid) {
++			node = node->rb_left;
++		} else {
++			master = stream->master;
++			break;
++		}
++	}
++	mutex_unlock(&smmu->streams_mutex);
++
++	return master;
++}
++
+ /* IRQ and event handlers */
+ static irqreturn_t arm_smmu_evtq_thread(int irq, void *dev)
+ {
+@@ -2434,8 +2469,8 @@ static int arm_smmu_atc_inv_master(struct arm_smmu_master *master, int ssid)
+ 
+ 	arm_smmu_atc_inv_to_cmd(ssid, 0, 0, &cmd);
+ 
+-	for (i = 0; i < master->num_sids; i++) {
+-		cmd.atc.sid = master->sids[i];
++	for (i = 0; i < master->num_streams; i++) {
++		cmd.atc.sid = master->streams[i].id;
+ 		arm_smmu_cmdq_issue_cmd(master->smmu, &cmd);
+ 	}
+ 
+@@ -2478,8 +2513,8 @@ static int arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain,
+ 		if (!master->ats_enabled)
+ 			continue;
+ 
+-		for (i = 0; i < master->num_sids; i++) {
+-			cmd.atc.sid = master->sids[i];
++		for (i = 0; i < master->num_streams; i++) {
++			cmd.atc.sid = master->streams[i].id;
+ 			arm_smmu_cmdq_batch_add(smmu_domain->smmu, &cmds, &cmd);
+ 		}
+ 	}
+@@ -2846,13 +2881,13 @@ static void arm_smmu_install_ste_for_dev(struct arm_smmu_master *master)
+ 	int i, j;
+ 	struct arm_smmu_device *smmu = master->smmu;
+ 
+-	for (i = 0; i < master->num_sids; ++i) {
+-		u32 sid = master->sids[i];
++	for (i = 0; i < master->num_streams; ++i) {
++		u32 sid = master->streams[i].id;
+ 		__le64 *step = arm_smmu_get_step_for_sid(smmu, sid);
+ 
+ 		/* Bridged PCI devices may end up with duplicated IDs */
+ 		for (j = 0; j < i; j++)
+-			if (master->sids[j] == sid)
++			if (master->streams[j].id == sid)
+ 				break;
+ 		if (j < i)
+ 			continue;
+@@ -3105,8 +3140,8 @@ static void arm_smmu_mm_invalidate(struct device *dev, int pasid, void *entry,
+ 
+ 	arm_smmu_atc_inv_to_cmd(pasid, iova, size, &cmd);
+ 
+-	for (i = 0; i < master->num_sids; i++) {
+-		cmd.atc.sid = master->sids[i];
++	for (i = 0; i < master->num_streams; i++) {
++		cmd.atc.sid = master->streams[i].id;
+ 		arm_smmu_cmdq_batch_add(master->smmu, &cmds, &cmd);
+ 	}
+ 
+@@ -3206,11 +3241,99 @@ static bool arm_smmu_sid_in_range(struct arm_smmu_device *smmu, u32 sid)
+ 	return sid < limit;
+ }
+ 
++static int arm_smmu_insert_master(struct arm_smmu_device *smmu,
++				  struct arm_smmu_master *master)
++{
++	int i;
++	int ret = 0;
++	struct arm_smmu_stream *new_stream, *cur_stream;
++	struct rb_node **new_node, *parent_node = NULL;
++	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
++
++	master->streams = kcalloc(fwspec->num_ids,
++				  sizeof(struct arm_smmu_stream), GFP_KERNEL);
++	if (!master->streams)
++		return -ENOMEM;
++	master->num_streams = fwspec->num_ids;
++
++	mutex_lock(&smmu->streams_mutex);
++	for (i = 0; i < fwspec->num_ids && !ret; i++) {
++		u32 sid = fwspec->ids[i];
++
++		new_stream = &master->streams[i];
++		new_stream->id = sid;
++		new_stream->master = master;
++
++		/* Check the SIDs are in range of the SMMU and our stream table */
++		if (!arm_smmu_sid_in_range(smmu, sid)) {
++			ret = -ERANGE;
++			break;
++		}
++
++		/* Ensure l2 strtab is initialised */
++		if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
++			ret = arm_smmu_init_l2_strtab(smmu, sid);
++			if (ret)
++				break;
++		}
++
++		/* Insert into SID tree */
++		new_node = &(smmu->streams.rb_node);
++		while (*new_node) {
++			cur_stream = rb_entry(*new_node, struct arm_smmu_stream,
++					      node);
++			parent_node = *new_node;
++			if (cur_stream->id > new_stream->id) {
++				new_node = &((*new_node)->rb_left);
++			} else if (cur_stream->id < new_stream->id) {
++				new_node = &((*new_node)->rb_right);
++			} else {
++				dev_warn(master->dev,
++					 "stream %u already in tree\n",
++					 cur_stream->id);
++				ret = -EINVAL;
++				break;
++			}
++		}
++
++		if (!ret) {
++			rb_link_node(&new_stream->node, parent_node, new_node);
++			rb_insert_color(&new_stream->node, &smmu->streams);
++		}
++	}
++
++	if (ret) {
++		for (; i > 0; i--)
++			rb_erase(&master->streams[i].node, &smmu->streams);
++		kfree(master->streams);
++	}
++	mutex_unlock(&smmu->streams_mutex);
++
 +	return ret;
 +}
 +
- static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
++static void arm_smmu_remove_master(struct arm_smmu_device *smmu,
++				   struct arm_smmu_master *master)
++{
++	int i;
++	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
++
++	if (!master->streams)
++		return;
++
++	mutex_lock(&smmu->streams_mutex);
++	for (i = 0; i < fwspec->num_ids; i++)
++		rb_erase(&master->streams[i].node, &smmu->streams);
++	mutex_unlock(&smmu->streams_mutex);
++
++	kfree(master->streams);
++}
++
+ static struct iommu_ops arm_smmu_ops;
+ 
+ static int arm_smmu_add_device(struct device *dev)
+ {
+-	int i, ret;
++	int ret;
+ 	struct arm_smmu_device *smmu;
+ 	struct arm_smmu_master *master;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+@@ -3232,26 +3355,11 @@ static int arm_smmu_add_device(struct device *dev)
+ 
+ 	master->dev = dev;
+ 	master->smmu = smmu;
+-	master->sids = fwspec->ids;
+-	master->num_sids = fwspec->num_ids;
+ 	fwspec->iommu_priv = master;
+ 
+-	/* Check the SIDs are in range of the SMMU and our stream table */
+-	for (i = 0; i < master->num_sids; i++) {
+-		u32 sid = master->sids[i];
+-
+-		if (!arm_smmu_sid_in_range(smmu, sid)) {
+-			ret = -ERANGE;
+-			goto err_free_master;
+-		}
+-
+-		/* Ensure l2 strtab is initialised */
+-		if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
+-			ret = arm_smmu_init_l2_strtab(smmu, sid);
+-			if (ret)
+-				goto err_free_master;
+-		}
+-	}
++	ret = arm_smmu_insert_master(smmu, master);
++	if (ret)
++		goto err_free_master;
+ 
+ 	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
+ 
+@@ -3286,6 +3394,7 @@ static int arm_smmu_add_device(struct device *dev)
+ 	iommu_device_unlink(&smmu->iommu, dev);
+ err_disable_pasid:
+ 	arm_smmu_disable_pasid(master);
++	arm_smmu_remove_master(smmu, master);
+ err_free_master:
+ 	kfree(master);
+ 	fwspec->iommu_priv = NULL;
+@@ -3308,6 +3417,7 @@ static void arm_smmu_remove_device(struct device *dev)
+ 	iommu_group_remove_device(dev);
+ 	iommu_device_unlink(&smmu->iommu, dev);
+ 	arm_smmu_disable_pasid(master);
++	arm_smmu_remove_master(smmu, master);
+ 	kfree(master);
+ 	iommu_fwspec_free(dev);
+ }
+@@ -3751,6 +3861,9 @@ static int arm_smmu_init_structures(struct arm_smmu_device *smmu)
  {
  	int ret;
-@@ -1773,9 +1796,18 @@ static bool arm_smmu_free_asid(struct arm_smmu_ctx_desc *cd)
- 	return free;
- }
  
-+/*
-+ * Try to reserve this ASID in the SMMU. If it is in use, try to steal it from
-+ * the private entry. Careful here, we may be modifying the context tables of
-+ * another SMMU!
-+ */
- static struct arm_smmu_ctx_desc *arm_smmu_share_asid(u16 asid)
- {
-+	int ret;
-+	u32 new_asid;
- 	struct arm_smmu_ctx_desc *cd;
-+	struct arm_smmu_device *smmu;
-+	struct arm_smmu_domain *smmu_domain;
- 
- 	cd = xa_load(&asid_xa, asid);
- 	if (!cd)
-@@ -1791,11 +1823,31 @@ static struct arm_smmu_ctx_desc *arm_smmu_share_asid(u16 asid)
- 		return cd;
- 	}
- 
-+	smmu_domain = container_of(cd, struct arm_smmu_domain, s1_cfg.cd);
-+	smmu = smmu_domain->smmu;
++	mutex_init(&smmu->streams_mutex);
++	smmu->streams = RB_ROOT;
 +
-+	/*
-+	 * Race with unmap: TLB invalidations will start targeting the new ASID,
-+	 * which isn't assigned yet. We'll do an invalidate-all on the old ASID
-+	 * later, so it doesn't matter.
-+	 */
-+	ret = __xa_alloc(&asid_xa, &new_asid, cd,
-+			 XA_LIMIT(1, 1 << smmu->asid_bits), GFP_ATOMIC);
-+	if (ret)
-+		return ERR_PTR(-ENOSPC);
-+	cd->asid = new_asid;
-+
- 	/*
--	 * Ouch, ASID is already in use for a private cd.
--	 * TODO: seize it.
-+	 * Update ASID and invalidate CD in all associated masters. There will
-+	 * be some overlap between use of both ASIDs, until we invalidate the
-+	 * TLB.
- 	 */
--	return ERR_PTR(-EEXIST);
-+	arm_smmu_write_ctx_desc(smmu_domain, 0, cd);
-+
-+	/* Invalidate TLB entries previously associated with that context */
-+	arm_smmu_tlb_inv_asid(smmu, asid);
-+
-+	return NULL;
- }
- 
- __maybe_unused
-@@ -2389,15 +2441,6 @@ static void arm_smmu_tlb_inv_context(void *cookie)
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
- 	struct arm_smmu_cmdq_ent cmd;
- 
--	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
--		cmd.opcode	= CMDQ_OP_TLBI_NH_ASID;
--		cmd.tlbi.asid	= smmu_domain->s1_cfg.cd.asid;
--		cmd.tlbi.vmid	= 0;
--	} else {
--		cmd.opcode	= CMDQ_OP_TLBI_S12_VMALL;
--		cmd.tlbi.vmid	= smmu_domain->s2_cfg.vmid;
--	}
--
- 	/*
- 	 * NOTE: when io-pgtable is in non-strict mode, we may get here with
- 	 * PTEs previously cleared by unmaps on the current CPU not yet visible
-@@ -2405,8 +2448,14 @@ static void arm_smmu_tlb_inv_context(void *cookie)
- 	 * insertion to guarantee those are observed before the TLBI. Do be
- 	 * careful, 007.
- 	 */
--	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
--	arm_smmu_cmdq_issue_sync(smmu);
-+	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
-+		arm_smmu_tlb_inv_asid(smmu, smmu_domain->s1_cfg.cd.asid);
-+	} else {
-+		cmd.opcode	= CMDQ_OP_TLBI_S12_VMALL;
-+		cmd.tlbi.vmid	= smmu_domain->s2_cfg.vmid;
-+		arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-+		arm_smmu_cmdq_issue_sync(smmu);
-+	}
- 	arm_smmu_atc_inv_domain(smmu_domain, 0, 0, 0);
- }
- 
+ 	ret = arm_smmu_init_queues(smmu);
+ 	if (ret)
+ 		return ret;
 -- 
 2.25.0
 
