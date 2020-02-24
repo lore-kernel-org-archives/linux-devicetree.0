@@ -2,125 +2,133 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24F7C11D30
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 12:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16C1C35671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 12:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B792920836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 12:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34912072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 12:29:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZWuGLRvX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="m7KGt/cW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbgBXMVL (ORCPT
+        id S1727265AbgBXM3o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:21:11 -0500
-Received: from mail-am6eur05on2070.outbound.protection.outlook.com ([40.107.22.70]:4353
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727339AbgBXMVL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:21:11 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RPycoQhZKWh6lygN00NruP7+8pWqhUsJLfe+hWy6XPp0RRu54Wuodt2iaZre+gBwf3P5J+VHa7YAXANYKsxJtdbSv8XratINDa3QYztBpRgearui9/WaBuJkvtmNmaXXaWd9wsuhMXk+uGPMUC0BVVv7oXr2HIjKQNIfEGyEzSDJ6PMeG0I43bHtOjfV4WhptkcyqV8PRHFj52eSRL4EbBYvytwKJNOgBufv/O0RRYWDAbz27I4OU/5mRivk+RtemMP+YexdXuZOo6jBbgq1esK8FXRKcqasi4lAKKQji2QeLb1erpFN2mGnbH4gzVtkdFb/d4Qfiy+oXacoQyOHrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DHxcmVKGfrdDerATQ+EJ7vFcPynWagSATcLhAN8jaOQ=;
- b=nBv4xjG5I9gkelVbEuLRCKKoKPBpQ3Eem35DXtE7EQS/pIpyS0IYI2MsuzmtEQazH8wVezlCZXvA0C3EacbNCw2qZw0i+IX30RzeVRnLuqxz3A529dd4CzFOqod0/rDvIzq/O7LdSTKCtQe2p9IlA4ab39bxpGQU3ghIA7HlgLPWlGEkO37YVFB8TzHdqTMWaDU0lXlgnEVWCxmyiS5xo4AqexbPbuYMw+m5gdBgql1qd6vEPwC0CSiua+V5x5jVTuRl5NCn66f6QIThCRpzV1xMCKGU5r3meiZAiBGS0islFsCu8ZtFQdQd7pHdYix+uhUojG86/oGlAyNh4s2fqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DHxcmVKGfrdDerATQ+EJ7vFcPynWagSATcLhAN8jaOQ=;
- b=ZWuGLRvX8bd/KspGUEY++bBf/8nW8NFgiTRz6B/HxvnqNK/9t16/LC9uYifp7OUOXZitcLs5I88G7oh2pqjP6y6zHAhq/2GCrdbSPyjb8CdoL57XXU6VSdhSs0vrfGfiWO56yDB3m/SSfYLg7126Mi4XArNmjmygcvZY6RAMgms=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6289.eurprd04.prod.outlook.com (20.179.35.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Mon, 24 Feb 2020 12:20:59 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
- 12:20:59 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com, leonard.crestez@nxp.com,
-        o.rempel@pengutronix.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        m.felsch@pengutronix.de, hongxing.zhu@nxp.com,
-        aisheng.dong@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 1/3] dt-bindings: mailbox: imx-mu: add fsl,scu property
-Date:   Mon, 24 Feb 2020 20:14:32 +0800
-Message-Id: <1582546474-21721-2-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582546474-21721-1-git-send-email-peng.fan@nxp.com>
-References: <1582546474-21721-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR04CA0077.apcprd04.prod.outlook.com
- (2603:1096:202:15::21) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        Mon, 24 Feb 2020 07:29:44 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1502 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXM3o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 07:29:44 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e53c16a0000>; Mon, 24 Feb 2020 04:28:26 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Feb 2020 04:29:42 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Feb 2020 04:29:42 -0800
+Received: from [10.25.72.216] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
+ 2020 12:29:36 +0000
+CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <digetx@gmail.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+Subject: Re: Re: [PATCH v3 03/10] ASoC: tegra: add Tegra210 based DMIC driver
+To:     Mark Brown <broonie@kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-4-git-send-email-spujar@nvidia.com>
+ <20200221130005.GD5546@sirena.org.uk>
+ <316ce0d5-318d-0533-ef06-bd7e8672f893@nvidia.com>
+ <20200221165535.GG5546@sirena.org.uk>
+ <47f94534-e997-d56c-5793-ae832fb2add4@nvidia.com>
+ <20200224114406.GB6215@sirena.org.uk>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <f70c7c12-dbc0-a725-f06a-86fab868e7dc@nvidia.com>
+Date:   Mon, 24 Feb 2020 17:59:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by HK2PR04CA0077.apcprd04.prod.outlook.com (2603:1096:202:15::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.18 via Frontend Transport; Mon, 24 Feb 2020 12:20:54 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 90f766de-3c01-44fc-d97d-08d7b9240130
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6289:|AM0PR04MB6289:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB628998DC4D3DBF93227D88B988EC0@AM0PR04MB6289.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
-X-Forefront-PRVS: 032334F434
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(199004)(189003)(4744005)(2616005)(6506007)(9686003)(6512007)(15650500001)(26005)(86362001)(81166006)(52116002)(6666004)(8936002)(7416002)(8676002)(81156014)(5660300002)(66556008)(316002)(16526019)(6486002)(4326008)(69590400006)(66946007)(36756003)(186003)(66476007)(478600001)(2906002)(956004)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6289;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kCAQsfLHQpSsjzWWFm5/YysXvQeBfKaQ3AWwQDA4lUBqo4zBvC2aodTIC3VDWg9rz/Bs3//1K8rw0P0eSL31yoT7QhqrChnedxa21SH8mTxQMYInDx+cTqPJM4zIW22exw3bg9PkIn3ss8bpy7lGnWA0eMZm9oVC/9lsOlw2R0GwI5qPiQjqm9B8WEEgWQe8fdAtcpK7waQzEfb7wU4KdDy5lWUFeWpgwnCwOTWgeHdHyUVNeEbmjZ+knLt8yOupcmoNFal/UgHBJop+l/DP2qRhK5hysx5/8U9xOgp3V2HlEmG7LQ7XhXcSOvfCyaZb80KVASKxjDXbCVCqRKn5IcQQ8jhfYwlZK90Bg+Zph825QxM55uCZIez1/nm6HyiOjkD7IfOhIEFFhx1Z3kMx+UFm29Xm2ZjZatONvtYteThsMMGkGFFKb2CfzeV4BFlfKVqzsKoHX6jSE7T4XZv8zYmPu9v911jCs5VdKnA0kTPBgPxFH9BoZgGjMrEVdJ3v5eIuyDJxud+Ti3jAM0h5jTi2K46IoDN2DLpklH3QeNDXut2iOJdbP4QwW49Fuh1I
-X-MS-Exchange-AntiSpam-MessageData: CnYgFtliJlj0Hz9j/G4dvmJHJe0Cj5m4i8fPW2DfpVeVtVONPYEil4bSLW2oQ0lXsqrvDaUQzLCkUAD4zrna8YMBF/yHYdi/+UG9AKdrdBWq8ig9Ov/zKD53EJgpoZafwIbiFjkM0Uu6zVntGc5u0Q==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90f766de-3c01-44fc-d97d-08d7b9240130
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 12:20:58.9942
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: owD5yGkxosnDYwmrJXZY9t16yz0KJxu5Ok2/NhyYj8e6W3HpJKFu/v37MxFsVfbK8ReI37/ZbM9PXEStnzildA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6289
+In-Reply-To: <20200224114406.GB6215@sirena.org.uk>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582547306; bh=BkJlDeQ3uyXrk5Yxotr7FKq3o5UzwF+OuQbFVpldsnE=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=m7KGt/cW33jZxBsTvrRquBVKLgHFaOpj6cmOI1gq/8AfoWti0CfVl/UC/cKsdx2Tl
+         LPR0FyGeYqObSIHNLgTpg/bnzwkiKdHynqTk0m96C/NuinqMnu0r5xDRx5dwYt6agw
+         tCgQSj4p+W6tjaI5Xn8/IgyRug9t60KlWjGxqKSBvI+SyuQp8S3qvoypKpO9+glYu+
+         oQyMNMxCdod4dN44ZuZmGj5aW5gUlPB3uhFx4xr1xNYQpnUlZ2ZEUzSppeWSF0JXX8
+         s41KLrXdprytk/NksFqe/3VcKWs5xMpcFcJcLly5g9g2iheYHqFSBZy+BwHWFSqJDg
+         XUFRvHcAR8D1A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
 
-Add fsl,scu property, this needs to be enabled for SCU channel type.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 1 +
- 1 file changed, 1 insertion(+)
+On 2/24/2020 5:14 PM, Mark Brown wrote:
+> On Mon, Feb 24, 2020 at 11:28:57AM +0000, Jon Hunter wrote:
+>> On 21/02/2020 16:55, Mark Brown wrote:
+>>> The ideal thing in a component model would be to represent those sample
+>>> rate convertors directly to usrspace so the routing and rewriting is
+>>> explicit.
+>> I assume that it would be OK for the sample rate converter itself to
+>> expose mixer controls to configure its input and output rates so the
+>> user could configure as needed?
+> I don't think so, I'd not expect the individual drivers to be doing
+> anything user visible here - if we know what a digital transformation
+> looks like the framework should be offering anything that's needed to
+> users (and hiding controls that don't have any practical control in a
+> given system).
 
-diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-index 9c43357c5924..5b502bcf7122 100644
---- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-+++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-@@ -45,6 +45,7 @@ Optional properties:
- -------------------
- - clocks :	phandle to the input clock.
- - fsl,mu-side-b : Should be set for side B MU.
-+- fsl,scu: Support i.MX8/8X SCU channel type
- 
- Examples:
- --------
--- 
-2.16.4
+Are you suggesting to have some alternate way of users configuring 
+sample rates (and other params) and not use mixer control method?
+
+This is a typical use case we see,
+- [stream-1] Lets say high resolution audio is playing (96kHz, 24-bit, 
+stereo)
+- [stream-2] Randomly system notifications of small durations come 
+(48kHz, 16-bit, stereo)
+The requirement is, both streams should be mixed and played.
+
+Tegra Audio HW has Mixer module for mixing multiple streams. In above 
+case, stream-2 requires upsampling to 96kHz (employ SRC) and 24-bit. 
+Then mix with stream1 and play. This needs to be configured at runtime. 
+In another session, mixing for 192kHz and 48kHz might be required with 
+the same audio path. Idea was to allow users to setup their custom path 
+for specific audio applications. In the current series, I am focussing 
+on I/O modules (where overrides do not demonstrate the above use case) 
+and does not include other HW accelerators that Tegra Audio HW offers. 
+Things would be more complicated when user wants to use multiplexers and 
+demultiplexers. For simple use cases overrides are not used.
+
+Is there a better way for user to configure custom audio paths?
+
+>
+>>> Is there any *need* for these to be user configurable?  What's normally
+>>> happening at the minute is that either the external DAIs are fixed
+>>> configuration and the DSP just converts everything or there's no format
+>>> conversion done and things get passed through.
+>> I can see that in most cases there are a finite set of configurations
+>> that the end user may use. However, we would like to make the
+>> configuration flexible as possible and this also allow us to test lots
+>> of different configurations for verification purposes as well.
+> Internal testing often requires things that can't be exposed to users,
+> the extreme examples are things like battery chargers with health and
+> safety issues if the full range of control is available.
 
