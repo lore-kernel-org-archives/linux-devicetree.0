@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F5EC11D30
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77780C11D30
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A89E20836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390EC20836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cDDn02CY"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K9z8jYfd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgBXOfA (ORCPT
+        id S1727827AbgBXOfC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:35:00 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8373 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgBXOfA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 09:35:00 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e53def00000>; Mon, 24 Feb 2020 06:34:24 -0800
+        Mon, 24 Feb 2020 09:35:02 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6117 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbgBXOfC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 09:35:02 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e53deca0000>; Mon, 24 Feb 2020 06:33:46 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 24 Feb 2020 06:34:59 -0800
+  Mon, 24 Feb 2020 06:35:01 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 24 Feb 2020 06:34:59 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
- 2020 14:34:59 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Feb 2020 14:34:58 +0000
+        by hqpgpgate102.nvidia.com on Mon, 24 Feb 2020 06:35:01 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
+ 2020 14:35:01 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Feb 2020 14:35:01 +0000
 Received: from thunderball.nvidia.com (Not Verified[10.21.140.91]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e53df110000>; Mon, 24 Feb 2020 06:34:58 -0800
+        id <B5e53df140006>; Mon, 24 Feb 2020 06:35:01 -0800
 From:   Jon Hunter <jonathanh@nvidia.com>
 To:     Thierry Reding <thierry.reding@gmail.com>
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, <stable@vger.kernel.org>
-Subject: [PATCH 3/4] ARM64: tegra: Fix Tegra186 SOR supply
-Date:   Mon, 24 Feb 2020 14:34:35 +0000
-Message-ID: <20200224143436.5438-3-jonathanh@nvidia.com>
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH 4/4] ARM64: tegra: Populate LP8557 backlight regulator
+Date:   Mon, 24 Feb 2020 14:34:36 +0000
+Message-ID: <20200224143436.5438-4-jonathanh@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200224143436.5438-1-jonathanh@nvidia.com>
 References: <20200224143436.5438-1-jonathanh@nvidia.com>
@@ -51,51 +51,46 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582554864; bh=lUBb2WrI059cKuJQ/lQ6zAeA/dUVGu1GIMzWYnFLzuA=;
+        t=1582554826; bh=8MBs7jrK7WrFNE7o6bG0zu41Sicfxu97bK94j6RYNJs=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=cDDn02CYOMd1x5bK/t7LoZ9fYn59xu8HcaGTMnsTAUfJYYkF5vUqcWjve/5PtksEv
-         +bYF/ELx+KLrbyXQ4LtKHW1V8F2iDHhNR1Rrs+/MUuPuxuOXwTsaYJgLd2A/FWO54O
-         men6fW7E5dJS7lmfJ050sgzZs+TABrFO/dyzOfrekczCVpqlnJEsPvdpFlBbzg125A
-         ZW3sMSe1pW+54pvkCWL7YF/RFnb9zefc0feJmu0Ky+kMH2QOFPSvufzsFBxOr1bUaJ
-         wqzLNTYwY6tWNy7axusq4KLKuCViERaAqSs/UlzzsrOQHJeecBOlH2GkFi8z7JASz2
-         ucv0C5PUNzlTg==
+        b=K9z8jYfdaYDh/XGz5S/vyzBWYN4ZPYT6jkue5E5YiUVIyQgLCoZqfSIh3h9luB+/C
+         DhYTYMkUQRLasUE0VX9dr4Bn0Hxeaw8DjYS7BUq4LqfNwWjsCSsNEhk26FGBEUvhRH
+         i2nMUMk5Ivw78ouR6qNZhI6freANsproJ+yQkA0cC9WXj5mQw4xcKRmL48dccxrX47
+         aQi0BDk3SCzZBAa+4G3yynAGiRNiFuLVWkg/vFMcq1JDp6a2mVs/CS3Qj0/heE9gPn
+         Qr2Wy0Oa6tg3jhxR9hk7qyy5FlkfDAtJOlUt6sPloPS4bhqqDJtbnXZL7lzHDP+sw+
+         RZcjavnvJtCIQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The following warning is observed on the Jetson TX2 platform ...
+The following warning is observed on Jetson TX1 platform because the
+supply regulator is not specified for the backlight.
 
- WARNING KERN tegra-sor 15540000.sor: 15540000.sor supply \
-              vdd-hdmi-dp-pll not found, using dummy regulator
+ WARNING KERN lp855x 0-002c: 0-002c supply power not found, using dummy regulator
 
-The problem is caused because the regulator for the SOR device is
-missing the '-supply' suffix in Device-Tree. Therefore, add the
-'-supply' suffix to fix this warning.
+The backlight supply is provided by the 3.3V SYS rail and so add this
+as the supply for the backlight.
 
-Fixes: 3fdfaf8718fa arm64: tegra: Enable DP support on Jetson TX2
-
-Cc: <stable@vger.kernel.org>
 Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-index 961b1be0c56b..1af7f9ffb7b6 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-@@ -278,7 +278,7 @@
- 			status = "okay";
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
+index c70a610f8e3a..ea0e1efa6973 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
+@@ -56,6 +56,7 @@
+ 		backlight: backlight@2c {
+ 			compatible = "ti,lp8557";
+ 			reg = <0x2c>;
++			power-supply = <&vdd_3v3_sys>;
  
- 			avdd-io-hdmi-dp-supply = <&vdd_hdmi_1v05>;
--			vdd-hdmi-dp-pll = <&vdd_1v8_ap>;
-+			vdd-hdmi-dp-pll-supply = <&vdd_1v8_ap>;
- 
- 			nvidia,dpaux = <&dpaux>;
- 		};
+ 			dev-ctrl = /bits/ 8 <0x80>;
+ 			init-brt = /bits/ 8 <0xff>;
 -- 
 2.17.1
 
