@@ -2,87 +2,91 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AFCC3567B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344C3C11D28
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C6C20714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582533798;
-	bh=9veiwHQ321Wt5pyHqEi/01Nw1+0zBBW21SsYQPjAqOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jHc51OMpTNQTqVW53LfxZCwH6Se4IoE/mokKJ3LAZsFyNOa14yB6FbUlq3JJK0Jcw
-	 XE1EQFa9m9K0wxcIQWKC9TmmwyodnC6ip+ts1aqKTAYNJso4fTParVuPJjmRAoXd3B
-	 xPpXTI75dfCX7LsIC/EesbuoUDw26WOoKpetXAsI=
+	by mail.kernel.org (Postfix) with ESMTP id 0A9CB2072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgBXInS (ORCPT
+        id S1726687AbgBXIpu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:43:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgBXInR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:43:17 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 543AB20661;
-        Mon, 24 Feb 2020 08:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582533797;
-        bh=9veiwHQ321Wt5pyHqEi/01Nw1+0zBBW21SsYQPjAqOc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U0n5WXGRRH/yQhjuQyGKM/mRikRUbqKQ4zz6qfsZ+Gowv69j8/VHm2lzuTmD9hJvn
-         /kSOKy0zDgzWKceEvlzewW3AnxCtUEaQKmNAjGFnbeHsgsAY+AfCxD9MOMPm+D4G/x
-         4Y6PxQOrEdSh8ieKEQVtvoGvSkQCfIglQ6GLai5k=
-Date:   Mon, 24 Feb 2020 16:43:10 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     xiaowei.bao@nxp.com, Zhiqiang.Hou@nxp.com, bhelgaas@google.com,
-        devicetree@vger.kernel.org, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
-        roy.zang@nxp.com
-Subject: Re: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-Message-ID: <20200224084307.GD27688@dragon>
-References: <20190902034319.14026-2-xiaowei.bao@nxp.com>
- <20200224081105.13878-1-michael@walle.cc>
+        Mon, 24 Feb 2020 03:45:50 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:34669 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXIpt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 03:45:49 -0500
+X-Originating-IP: 86.201.231.92
+Received: from xps13 (lfbn-tou-1-149-92.w86-201.abo.wanadoo.fr [86.201.231.92])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id B8DBF60015;
+        Mon, 24 Feb 2020 08:45:44 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 09:45:44 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Olivier Moysan <olivier.moysan@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        =?UTF-8?B?SsOpcsO0bWU=?= Pouiller <jerome.pouiller@silabs.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH] docs: dt: fix several broken doc references
+Message-ID: <20200224094544.63f10b7c@xps13>
+In-Reply-To: <0e530494349b37eb2eab4a8eccf56626e0b18e6d.1582448388.git.mchehab+huawei@kernel.org>
+References: <0e530494349b37eb2eab4a8eccf56626e0b18e6d.1582448388.git.mchehab+huawei@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224081105.13878-1-michael@walle.cc>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 09:11:05AM +0100, Michael Walle wrote:
-> Hi Xiaowei, Hi Shawn,
-> 
-> > LS1028a implements 2 PCIe 3.0 controllers.
-> 
-> Patch 1/3 and 3/3 are in Linus' tree but nobody seems to care about this patch
-> anymore :(
-> 
-> This doesn't work well with the IOMMU, because the iommu-map property is
-> missing. The bootloader needs the &smmu phandle to fixup the entry. See
-> below.
-> 
-> Shawn, will you add this patch to your tree once its fixed, considering it
-> just adds the device tree node for the LS1028A?
+Hi Mauro,
 
-The patch/thread is a bit aged.  You may want to send an updated patch
-for discussion.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote on Sun, 23 Feb
+2020 09:59:53 +0100:
 
-Shawn
-
+> There are several DT doc references that require manual fixes.
+> I found 3 cases fixed on this patch:
 > 
-> > 
-> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 	- directory named "binding/" instead of "bindings/";
+> 	- .txt to .yaml renames;
+> 	- file renames (still on txt format);
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  .../devicetree/bindings/mtd/cadence-nand-controller.txt       | 2 +-
+>  .../devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt      | 2 +-
+>  Documentation/devicetree/bindings/sound/st,stm32-sai.txt      | 2 +-
+>  Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt  | 2 +-
+>  Documentation/devicetree/bindings/spi/st,stm32-spi.yaml       | 2 +-
+>  MAINTAINERS                                                   | 4 ++--
+>  .../devicetree/bindings/net/wireless/siliabs,wfx.txt          | 2 +-
+>  7 files changed, 8 insertions(+), 8 deletions(-)
+
+For the Cadence file,
+
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Thanks,
+Miquèl
