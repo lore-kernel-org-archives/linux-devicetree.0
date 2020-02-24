@@ -2,495 +2,138 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6078BC35670
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 01:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20553C35673
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 01:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6BD205C9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 01:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD13C205C9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 01:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FkXDNS4G"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n8isivMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbgBXBRI (ORCPT
+        id S1727187AbgBXBS6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:17:08 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36992 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgBXBRI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 20:17:08 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01O1Gu5R079983;
-        Sun, 23 Feb 2020 19:16:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582507016;
-        bh=y6nnpuc3nFl46C5sPxEeUff54sJnsVDjqKhjAE1tLuM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FkXDNS4GZwlNQi3YapPU+n9P62EIknRxfmTxo/6Kq0Faf+tXgab7WUMFBkH3RBtyA
-         hyhNoYXyXzMAMpvz7NRHurhO6k0POx3RJvwGVnqkgpaX6pknSCat7aKn4GPypOyEG/
-         pLQROXj06eeoZ8f3KBT+x+r0mfsMjcEbtxDUaSAE=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01O1GuYa127711
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 23 Feb 2020 19:16:56 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 23
- Feb 2020 19:16:55 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 23 Feb 2020 19:16:55 -0600
-Received: from [10.250.132.7] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01O1Gp1p055793;
-        Sun, 23 Feb 2020 19:16:52 -0600
-Subject: Re: [PATCH 2/4] thermal: k3: Add support for bandgap sensors
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
-        <amit.kucheria@verdurent.com>, <t-kristo@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-References: <20200213102440.20539-1-j-keerthy@ti.com>
- <20200213102440.20539-3-j-keerthy@ti.com> <20200220221334.GA7119@linaro.org>
-From:   "J, KEERTHY" <j-keerthy@ti.com>
-Message-ID: <987f9f02-151c-22a6-6afc-0c7a17e1da62@ti.com>
-Date:   Mon, 24 Feb 2020 06:46:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 23 Feb 2020 20:18:58 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40602 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbgBXBS6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 20:18:58 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z7so4250436pgk.7
+        for <devicetree@vger.kernel.org>; Sun, 23 Feb 2020 17:18:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zT10dhFzTQfQk4qZLNGzW74d8YteQDI8/eIgEFfv+OM=;
+        b=n8isivMfbvLTUE8W5OF33bsEQHbC9GWAfYDMGxgEsCd67xnLu5gDVB9DXvZR6Rsx1O
+         55Mu59uQZ9ycLOFST2i7wZ7g5Hz2Km/BWEoh8CuZd9UfD8ypdnoG0zR2phZcKA7ScuyY
+         3/UoFGfVGlgcXlM70PiZd0OSnnRxK7cvW1Uw4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zT10dhFzTQfQk4qZLNGzW74d8YteQDI8/eIgEFfv+OM=;
+        b=dASTcjOn0mjc/2ectxYAddyMAl17NQbsvdjmymnRhM2S132egHviiOX/uBQ7E/S7Ky
+         nJ3CFRlG/cbSWf98fcw56EkkAIeazsOLXOWqQB85BVBQwyco3wlW8s0+eLAFZT7tCfjH
+         d/iVT0Sg7OY1aMW48d+W+FEDRD89nVHo19Yq3HNEOxVWyRZCAxtqU81zcNF0t5wMWoTK
+         0aeNIYn+XSmCAU4URddkT/XztFMjk5NOf6YrJdZMCHevA8Cl/z6KIlTcu5+Muei1Duhh
+         BchBT8SUl3YxnT/I0A5fBUXg8m0zlrrOfdQCUg5IKYzQrKdbffYLJfB7jm/t80r2PjQj
+         SBtw==
+X-Gm-Message-State: APjAAAUzthcyE9kUqiNJL/luPXFOW6Md6aBo6EAeFpD20czPy2fQFX82
+        yuokG1wqXX1MVfCqge5mX5TOAcjhWJy2aA==
+X-Google-Smtp-Source: APXvYqx9UHYEkJPSozrRHLjxQr35exznoN/y90RQUV7PTu9EUqqiaGx5x7QZTKecywt4McSGOEMrjg==
+X-Received: by 2002:a63:1a50:: with SMTP id a16mr49365222pgm.389.1582507135940;
+        Sun, 23 Feb 2020 17:18:55 -0800 (PST)
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com. [209.85.214.169])
+        by smtp.gmail.com with ESMTPSA id v29sm3026344pgc.72.2020.02.23.17.18.55
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Feb 2020 17:18:55 -0800 (PST)
+Received: by mail-pl1-f169.google.com with SMTP id t6so3364451plj.5
+        for <devicetree@vger.kernel.org>; Sun, 23 Feb 2020 17:18:55 -0800 (PST)
+X-Received: by 2002:a1f:add3:: with SMTP id w202mr22215488vke.30.1582506662987;
+ Sun, 23 Feb 2020 17:11:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200220221334.GA7119@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus> <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net> <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+ <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com> <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+ <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
+In-Reply-To: <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
+From:   Evan Benn <evanbenn@chromium.org>
+Date:   Mon, 24 Feb 2020 12:10:37 +1100
+X-Gmail-Original-Message-ID: <CAKz_xw3z7uXtK1SQKYLu_oP3GmqKR7RXvWj2b1cfyZO-Q-ZxQw@mail.gmail.com>
+Message-ID: <CAKz_xw3z7uXtK1SQKYLu_oP3GmqKR7RXvWj2b1cfyZO-Q-ZxQw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+To:     Xingyu Chen <xingyu.chen@amlogic.com>
+Cc:     Julius Werner <jwerner@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-watchdog@vger.kernel.org,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello,
+
+I think the intention is that this driver talks to a 'standard' arm
+smc firmware watchdog call:
+
+https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
+
+Each device could re-implement that ATF driver to talk to the specific hardware,
+and could perhaps use a custom SMCWD_FUNC_ID, defined in the dts.
+
+The goal was to provide an ATF patch and linux driver patch that would
+be generic. But the above ATF patch
+is only for mt8173. Right now it just specifies an interface. It has
+less functionality than your meson driver Xingyu.
+If it is not suitable, that is fine.
+
+The above ATF patch is deployed on oak, elm, and hana mt8173
+chromebook devices, this driver is intended to support those devices.
+
+Evan
 
 
-On 2/21/2020 3:43 AM, Daniel Lezcano wrote:
-> On Thu, Feb 13, 2020 at 03:54:38PM +0530, Keerthy wrote:
->> The bandgap provides current and voltage reference for its internal
->> circuits and other analog IP blocks. The analog-to-digital
->> converter (ADC) produces an output value that is proportional
->> to the silicon temperature.
->>
->> Currently reading temperatures and trend computing is supported
->> as there are no active/passive cooling agent supported.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   drivers/thermal/Kconfig      |  12 ++
->>   drivers/thermal/Makefile     |   1 +
->>   drivers/thermal/k3_bandgap.c | 342 +++++++++++++++++++++++++++++++++++
->>   3 files changed, 355 insertions(+)
->>   create mode 100644 drivers/thermal/k3_bandgap.c
->>
->> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
->> index 5a05db5438d6..fa598eddc7ac 100644
->> --- a/drivers/thermal/Kconfig
->> +++ b/drivers/thermal/Kconfig
->> @@ -251,6 +251,18 @@ config IMX_THERMAL
->>   	  cpufreq is used as the cooling device to throttle CPUs when the
->>   	  passive trip is crossed.
->>   
->> +config K3_THERMAL
->> +	bool "Texas Instruments K3 thermal support"
->> +	depends on THERMAL
-> 
-> All the Kconfig is under the THERMAL option, so this dependency is not
-> necessary.
-
-Okay
-
-> 
->> +	depends on ARCH_K3 || COMPILE_TEST
->> +	help
->> +	  If you say yes here you get thermal support for the Texas Instruments
->> +	  K3 SoC family. The current chip supported is:
->> +	   - AM654
->> +
->> +	  This includes temperature reading functionality and also trend
->> +	  computation.
->> +
-> 
-> [ ... ]
-> 
->> +
->> +#define K3_VTM_ADC_BEGIN_VAL		540
->> +#define K3_VTM_ADC_END_VAL		944
->> +
->> +static const int k3_adc_to_temp[K3_VTM_ADC_END_VAL - K3_VTM_ADC_BEGIN_VAL
->> +				+ 1] = {
-> 
-> No need to specify a size for the array that can be done with:
-> 
-> static const int k3_adc_to_temp[] = {
-> 
-> And then use ARRAY_SIZE macro.
-
-Okay. I will address all the comments mentioned below.
-
-Thanks for the review.
-
-- Keerthy
-
-> 
->> +	-40000, -40000, -40000, -40000, -39800, -39400, -39000, -38600, -38200,
->> +	-37800, -37400, -37000, -36600, -36200, -35800, -35300, -34700, -34200,
->> +	-33800, -33400, -33000, -32600, -32200, -31800, -31400, -31000, -30600,
->> +	-30200, -29800, -29400, -29000, -28600, -28200, -27700, -27100, -26600,
->> +	-26200, -25800, -25400, -25000, -24600, -24200, -23800, -23400, -23000,
->> +	-22600, -22200, -21800, -21400, -21000, -20500, -19900, -19400, -19000,
->> +	-18600, -18200, -17800, -17400, -17000, -16600, -16200, -15800, -15400,
->> +	-15000, -14600, -14200, -13800, -13400, -13000, -12500, -11900, -11400,
->> +	-11000, -10600, -10200, -9800, -9400, -9000, -8600, -8200, -7800, -7400,
->> +	-7000, -6600, -6200, -5800, -5400, -5000, -4500, -3900, -3400, -3000,
->> +	-2600, -2200, -1800, -1400, -1000, -600, -200, 200, 600, 1000, 1400,
->> +	1800, 2200, 2600, 3000, 3400, 3900, 4500, 5000, 5400, 5800, 6200, 6600,
->> +	7000, 7400, 7800, 8200, 8600, 9000, 9400, 9800, 10200, 10600, 11000,
->> +	11400, 11800, 12200, 12700, 13300, 13800, 14200, 14600, 15000, 15400,
->> +	15800, 16200, 16600, 17000, 17400, 17800, 18200, 18600, 19000, 19400,
->> +	19800, 20200, 20600, 21000, 21400, 21900, 22500, 23000, 23400, 23800,
->> +	24200, 24600, 25000, 25400, 25800, 26200, 26600, 27000, 27400, 27800,
->> +	28200, 28600, 29000, 29400, 29800, 30200, 30600, 31000, 31400, 31900,
->> +	32500, 33000, 33400, 33800, 34200, 34600, 35000, 35400, 35800, 36200,
->> +	36600, 37000, 37400, 37800, 38200, 38600, 39000, 39400, 39800, 40200,
->> +	40600, 41000, 41400, 41800, 42200, 42600, 43100, 43700, 44200, 44600,
->> +	45000, 45400, 45800, 46200, 46600, 47000, 47400, 47800, 48200, 48600,
->> +	49000, 49400, 49800, 50200, 50600, 51000, 51400, 51800, 52200, 52600,
->> +	53000, 53400, 53800, 54200, 54600, 55000, 55400, 55900, 56500, 57000,
->> +	57400, 57800, 58200, 58600, 59000, 59400, 59800, 60200, 60600, 61000,
->> +	61400, 61800, 62200, 62600, 63000, 63400, 63800, 64200, 64600, 65000,
->> +	65400, 65800, 66200, 66600, 67000, 67400, 67800, 68200, 68600, 69000,
->> +	69400, 69800, 70200, 70600, 71000, 71500, 72100, 72600, 73000, 73400,
->> +	73800, 74200, 74600, 75000, 75400, 75800, 76200, 76600, 77000, 77400,
->> +	77800, 78200, 78600, 79000, 79400, 79800, 80200, 80600, 81000, 81400,
->> +	81800, 82200, 82600, 83000, 83400, 83800, 84200, 84600, 85000, 85400,
->> +	85800, 86200, 86600, 87000, 87400, 87800, 88200, 88600, 89000, 89400,
->> +	89800, 90200, 90600, 91000, 91400, 91800, 92200, 92600, 93000, 93400,
->> +	93800, 94200, 94600, 95000, 95400, 95800, 96200, 96600, 97000, 97500,
->> +	98100, 98600, 99000, 99400, 99800, 100200, 100600, 101000, 101400,
->> +	101800, 102200, 102600, 103000, 103400, 103800, 104200, 104600, 105000,
->> +	105400, 105800, 106200, 106600, 107000, 107400, 107800, 108200, 108600,
->> +	109000, 109400, 109800, 110200, 110600, 111000, 111400, 111800, 112200,
->> +	112600, 113000, 113400, 113800, 114200, 114600, 115000, 115400, 115800,
->> +	116200, 116600, 117000, 117400, 117800, 118200, 118600, 119000, 119400,
->> +	119800, 120200, 120600, 121000, 121400, 121800, 122200, 122600, 123000,
->> +	123400, 123800, 124200, 124600, 124900, 125000,
->> +};
->> +
->> +struct k3_thermal_data;
->> +
->> +struct k3_bandgap {
->> +	struct device *dev;
-> 
-> This field is useless, the function using it can use the local dev variable
-> 
->> +	void __iomem *base;
->> +	const struct k3_bandgap_data *conf;
->> +	spinlock_t lock; /* shields this struct */
-> 
-> Where is used this lock?
-> 
->> +	int ts_cnt;
-> 
-> This field is unused.
-> 
->> +	u32 errata;
->> +	struct k3_thermal_data *ts_data[K3_VTM_MAX_NUM_TS];
-> 
-> This field is unused.
-> 
->> +};
->> +
->> +struct k3_vtm_driver_data {
->> +	u32 errata;
->> +};
->> +
->> +/* common data structures */
->> +struct k3_thermal_data {
->> +	struct thermal_zone_device *ti_thermal;
->> +	struct thermal_cooling_device *cool_dev;
-> 
-> This field is unused
-> 
->> +	struct k3_bandgap *bgp;
->> +	enum thermal_device_mode mode;
-> 
-> This field is unused
-> 
->> +	struct work_struct thermal_wq;
-> 
-> Where is used this workq?
-> 
->> +	int sensor_id;
->> +	u32 ctrl_offset;
->> +	u32 stat_offset;
->> +	int prev_temp;
->> +};
->> +
->> +static unsigned int vtm_get_best_value(unsigned int s0, unsigned int s1,
->> +				       unsigned int s2)
->> +{
->> +	int d01 = abs(s0 - s1);
->> +	int d02 = abs(s0 - s2);
->> +	int d12 = abs(s1 - s2);
->> +
->> +	if (d01 <= d02 && d01 <= d12)
->> +		return (s0 + s1) / 2;
->> +
->> +	if (d02 <= d01 && d02 <= d12)
->> +		return (s0 + s2) / 2;
->> +
->> +	return (s1 + s2) / 2;
->> +}
->> +
->> +static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
->> +			    int *temp)
->> +{
->> +	struct k3_bandgap *bgp;
->> +	unsigned int dtemp, s0, s1, s2;
->> +
->> +	bgp = devdata->bgp;
-> 
-> nit: missing line
-> 
->> +	/**
->> +	 * Errata is applicable for am654 pg 1.0 silicon. There
->> +	 * is a variation of the order for 8-10 degree centigrade.
->> +	 * Work around that by getting the average of two closest
->> +	 * readings out of three readings everytime we want to
->> +	 * report temperatures.
->> +	 *
->> +	 * Errata workaround.
->> +	 */
-> 
-> nit: extra line
-> 
->> +	if (bgp->errata) {
-> 
-> Right now only am654 is supported and has the errata. This test is pointless
-> because no other compatible string is defined. If you want to set the scene for
-> more platforms I suggest to add a get_temp function in the drvdata which does
-> this 3 points averaging and get rid of this test (and the errata field).
-> 
->> +		s0 = readl(bgp->base + devdata->stat_offset) &
->> +			K3_VTM_TS_STAT_DTEMP_MASK;
->> +		s1 = readl(bgp->base + devdata->stat_offset) &
->> +			K3_VTM_TS_STAT_DTEMP_MASK;
->> +		s2 = readl(bgp->base + devdata->stat_offset) &
->> +			K3_VTM_TS_STAT_DTEMP_MASK;
->> +		dtemp = vtm_get_best_value(s0, s1, s2);
->> +	} else {
->> +		dtemp = readl(bgp->base + devdata->stat_offset) &
->> +				K3_VTM_TS_STAT_DTEMP_MASK;
->> +	}
->> +
->> +	if (dtemp < K3_VTM_ADC_BEGIN_VAL || dtemp > K3_VTM_ADC_END_VAL)
->> +		return -EINVAL;
->> +
->> +	*temp = k3_adc_to_temp[dtemp - K3_VTM_ADC_BEGIN_VAL];
->> +
->> +	return 0;
->> +}
->> +
->> +/* thermal zone ops */
->> +/* Get temperature callback function for thermal zone */
-> 
-> Fix comment format
-> 
-> /*
->   *
->   */
-> 
->> +static int k3_thermal_get_temp(void *devdata, int *temp)
->> +{
->> +	struct k3_thermal_data *data = devdata;
->> +	int ret = 0;
->> +
->> +	ret = k3_bgp_read_temp(data, temp);
->> +	if (ret)
->> +		return ret;
->> +
->> +	data->prev_temp = *temp;
->> +
->> +	return ret;
->> +}
->> +
->> +static int k3_thermal_get_trend(void *p, int trip, enum thermal_trend *trend)
->> +{
->> +	struct k3_thermal_data *data = p;
->> +	struct k3_bandgap *bgp;
->> +	int ret = 0, temp = 0;
->> +
->> +	bgp = data->bgp;
->> +
->> +	ret = k3_bgp_read_temp(data, &temp);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (temp > data->prev_temp)
->> +		*trend = THERMAL_TREND_RAISING;
->> +	else if (temp < data->prev_temp)
->> +		*trend = THERMAL_TREND_DROPPING;
->> +	else
->> +		*trend = THERMAL_TREND_STABLE;
->> +
->> +	return 0;
->> +}
-> 
-> This function get_trend() is not really useful, it does what the governors do.
-> 
-> It can be dropped.
-> 
->> +static const struct thermal_zone_of_device_ops k3_of_thermal_ops = {
->> +	.get_temp = k3_thermal_get_temp,
->> +	.get_trend = k3_thermal_get_trend,
->> +};
->> +
->> +static void k3_thermal_work(struct work_struct *work)
->> +{
->> +	struct k3_thermal_data *data = container_of(work,
->> +					struct k3_thermal_data, thermal_wq);
->> +
->> +	thermal_zone_device_update(data->ti_thermal, THERMAL_EVENT_UNSPECIFIED);
->> +
->> +	dev_dbg(&data->ti_thermal->device, "updated thermal zone %s\n",
->> +		data->ti_thermal->type);
->> +}
->> +
->> +static const struct of_device_id of_k3_bandgap_match[];
->> +
->> +static int k3_bandgap_probe(struct platform_device *pdev)
->> +{
->> +	int ret = 0, cnt, val, id, reg_cnt = 0;
->> +	struct resource *res;
->> +	struct device *dev = &pdev->dev;
->> +	struct k3_bandgap *bgp;
->> +	struct k3_thermal_data *data;
->> +	const struct k3_vtm_driver_data *drv_data;
->> +
->> +	bgp = devm_kzalloc(&pdev->dev, sizeof(*bgp), GFP_KERNEL);
->> +	if (!bgp)
->> +		return -ENOMEM;
->> +
->> +	drv_data = of_device_get_match_data(&pdev->dev);
->> +	if (drv_data)
->> +		bgp->errata = drv_data->errata;
->> +
->> +	bgp->dev = dev;
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	bgp->base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(bgp->base))
->> +		return PTR_ERR(bgp->base);
->> +
->> +	pm_runtime_enable(dev);
->> +	ret = pm_runtime_get_sync(dev);
->> +	if (ret < 0) {
->> +		pm_runtime_put_noidle(dev);
->> +		pm_runtime_disable(dev);
->> +		return ret;
->> +	}
->> +
->> +	/* Get the sensor count in the VTM */
->> +	val = readl(bgp->base + K3_VTM_DEVINFO_PWR0_OFFSET);
->> +	cnt = val & K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK;
->> +	cnt >>= __ffs(K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK);
->> +	bgp->ts_cnt = cnt;
->> +
->> +	data = devm_kcalloc(bgp->dev, cnt, sizeof(*data), GFP_KERNEL);
->> +	if (!data) {
->> +		ret = -ENOMEM;
->> +		goto err_alloc;
->> +	}
->> +
->> +	/* Register the thermal sensors */
->> +	for (id = 0; id < cnt; id++) {
->> +		data[id].sensor_id = id;
->> +		data[id].bgp = bgp;
->> +		data[id].ctrl_offset = K3_VTM_TMPSENS0_CTRL_OFFSET +
->> +					id * K3_VTM_REGS_PER_TS;
->> +		data[id].stat_offset = data[id].ctrl_offset + 0x8;
->> +		INIT_WORK(&data[id].thermal_wq, k3_thermal_work);
->> +
->> +		val = readl(data[id].bgp->base + data[id].ctrl_offset);
->> +		val |= (K3_VTM_TMPSENS_CTRL_SOC |
->> +			K3_VTM_TMPSENS_CTRL_CLRZ |
->> +			K3_VTM_TMPSENS_CTRL_CLKON_REQ);
->> +		val &= ~K3_VTM_TMPSENS_CTRL_CBIASSEL;
->> +		writel(val, data[id].bgp->base + data[id].ctrl_offset);
->> +
->> +		bgp->ts_data[id] = &data[id];
->> +		data[id].ti_thermal =
->> +		devm_thermal_zone_of_sensor_register(bgp->dev, id,
->> +						     &data[id],
->> +						     &k3_of_thermal_ops);
->> +		if (IS_ERR(data[id].ti_thermal)) {
->> +			dev_err(bgp->dev, "thermal zone device is NULL\n");
->> +			ret = PTR_ERR(data[id].ti_thermal);
->> +			goto err_alloc;
->> +		}
->> +
->> +		reg_cnt++;
->> +
->> +		/* Initialize Previous temp */
->> +		k3_thermal_get_temp(&data[id], &data[id].prev_temp);
->> +	}
->> +
->> +	platform_set_drvdata(pdev, bgp);
->> +
->> +	return 0;
->> +
->> +err_alloc:
->> +	pm_runtime_put_sync(&pdev->dev);
->> +	pm_runtime_disable(&pdev->dev);
->> +
->> +	return ret;
->> +}
->> +
->> +static int k3_bandgap_remove(struct platform_device *pdev)
->> +{
->> +	pm_runtime_put_sync(&pdev->dev);
->> +	pm_runtime_disable(&pdev->dev);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct k3_vtm_driver_data am654_data = {
->> +	.errata = 1,
->> +};
->> +
->> +static const struct of_device_id of_k3_bandgap_match[] = {
->> +	{
->> +		.compatible = "ti,am654-vtm",
->> +		.data = &am654_data,
->> +	},
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, of_k3_bandgap_match);
->> +
->> +static struct platform_driver k3_bandgap_sensor_driver = {
->> +	.probe = k3_bandgap_probe,
->> +	.remove = k3_bandgap_remove,
->> +	.driver = {
->> +		.name = "k3-soc-thermal",
->> +		.of_match_table	= of_k3_bandgap_match,
->> +	},
->> +};
->> +
->> +module_platform_driver(k3_bandgap_sensor_driver);
->> +
->> +MODULE_DESCRIPTION("K3 bandgap temperature sensor driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR("J Keerthy <j-keerthy@ti.com>");
->> -- 
->> 2.17.1
->>
-> 
+On Sat, Feb 22, 2020 at 3:01 PM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
+>
+> Hi, Julius
+>
+> On 2020/2/22 3:41, Julius Werner wrote:
+> >> Because the ATF does not define standard wdt index, each vendor defines
+> >> its own index.
+> >> So I don't think that the current driver[0] can fully cover my usecases.
+> > I think the best way to solve this would be to put the SMC function ID
+> > as another field into the device tree, so that multiple vendors could
+> > share the same driver even if their firmware interface uses a
+> > different SMC. But they still have to implement the same API for that
+> > SMC, of course, not sure if the Meson driver is suitable for that (but
+> > if it is then I think merging those drivers would be a good idea).
+> The SMC function ID may be solved by the DTS, but the wdt indexs(Eg:
+> SMCWD_INFO) are also different
+> for each vendor. The imx_sc_wdt.c is also use the SMC to operate the
+> WDT, but the wdt indexs(Eg: IMX_SIP_TIMER_START_WDOG)
+> are different from ours. IMO, If the ATF can implement a common hal
+> interface and index for watchdog, then writing a
+> common smc wdt driver will be easier to compatible with all vendors.
+>
+> Best Regards
+> >
+> > .
