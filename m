@@ -2,96 +2,121 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F3FC35671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C16C35671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F1E2082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA68F20838
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:51:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IYYHtx4H"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BKZdz9HM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgBXLqo (ORCPT
+        id S1727277AbgBXLvB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:46:44 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:18413 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727318AbgBXLqn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:46:43 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582544803; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=RQyNQ3DFWtlsQXD4V++chr0ZTqGNZET5yxGQsVzgceo=; b=IYYHtx4HRv0jxoTXuHO1zqgAp0bHy2AhOQJKWAixhw2tK8DeqboirrecZ95PK0bqn19c0kpR
- zF4eEGcAxtG+yOTKF6TpyM8UPami1a3YRHWXNjY2N3N9GLxJsLQxS9lnB8oID07MKzcMVk0o
- hdpofe/xF0mh1w+VWUbchgRj0w0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e53b7a1.7f963daa67a0-smtp-out-n01;
- Mon, 24 Feb 2020 11:46:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 475DDC4479D; Mon, 24 Feb 2020 11:46:41 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 24 Feb 2020 06:51:01 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:36193 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbgBXLvB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:51:01 -0500
+Received: from mwalle01.sab.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C3B6C43383;
-        Mon, 24 Feb 2020 11:46:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C3B6C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH V2] dt-bindings: mmc: sdhci-msm: Add CQE reg map
-Date:   Mon, 24 Feb 2020 17:14:43 +0530
-Message-Id: <1582544683-9505-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
-References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id DEA2422F00;
+        Mon, 24 Feb 2020 12:50:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582545059;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AGoftlXtPDkl6tdoN4g4nLlzfqZ5fb+l68Uc8F12Pnk=;
+        b=BKZdz9HMC+by7IJBwDLcq7etejsomdPgSJDWZUxFdRgtDW0aDmVaBErBhsFLyj3TSlE5Bb
+        8a56/4veaOOn1UewHFAjIdg/LNkByuC5W8LUxW/xxd7Rcay78IUz6ipCIjKTGsqmBwhOjf
+        LEYZg2/Lv0btJqKLwKgtXgths71xFCk=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] arm64: dts: ls1028: sl28: explicitly enable network ports
+Date:   Mon, 24 Feb 2020 12:50:52 +0100
+Message-Id: <20200224115052.27328-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: DEA2422F00
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.776];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-CQE feature has been enabled on sdhci-msm. Add CQE reg map
-and reg names that need to be supplied for supporting CQE feature.
+Since commit b9213899d2b0 ("arm64: dts: ls1028a: disable all enetc ports
+by default") all the network ports are disabled by default. This makes
+sense, but now we have to enable them explicitly in the boards. Do so
+for the sl28 module.
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Since we are at it. Make sure the second port is only enabled for the
+variant 4 of the module. Variant 3 has only one network port.
+
+Signed-off-by: Michael Walle <michael@walle.cc>
 ---
 
-Changes since V1:
-	- Dropped _mem suffix to reg names.
----
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+This patch actually superseeds the following:
+  https://lore.kernel.org/linux-devicetree/20200220180919.6069-1-michael@walle.cc/
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index 7ee639b..5445931 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -26,7 +26,13 @@ Required properties:
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts      | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
+index f659e89face8..df212ed5bb94 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
+@@ -21,6 +21,7 @@
+ &enetc_port1 {
+ 	phy-handle = <&phy1>;
+ 	phy-connection-type = "rgmii-id";
++	status = "okay";
  
- - reg: Base address and length of the register in the following order:
- 	- Host controller register map (required)
--	- SD Core register map (required for msm-v4 and below)
-+	- SD Core register map (required for controllers earlier than msm-v5)
-+	- CQE register map (Optional, CQE support is present on SDHC instance meant
-+	                    for eMMC and version v4.2 and above)
-+- reg-names: When CQE register map is supplied, below reg-names are required
-+	- "hc" for Host controller register map
-+	- "core" for SD core register map
-+	- "cqhci" for CQE register map
- - interrupts: Should contain an interrupt-specifiers for the interrupts:
- 	- Host controller interrupt (required)
- - pinctrl-names: Should contain only one value - "default".
+ 	mdio {
+ 		#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+index d221ed471cde..e6ad2f64e64e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+@@ -35,6 +35,7 @@
+ &enetc_port0 {
+ 	phy-handle = <&phy0>;
+ 	phy-connection-type = "sgmii";
++	status = "okay";
+ 
+ 	mdio {
+ 		#address-cells = <1>;
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+2.20.1
+
