@@ -2,102 +2,194 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9CDC11D29
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97840C3567B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260E02051A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B67420714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNbz54fC"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="m9o9jxnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgBXIAH (ORCPT
+        id S1726509AbgBXILV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:00:07 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34421 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727219AbgBXIAG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 03:00:06 -0500
-Received: by mail-ed1-f66.google.com with SMTP id r18so10833991edl.1;
-        Mon, 24 Feb 2020 00:00:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E3TPleAUgNgDX1i0JZ6Z1GuDFF1HhSm02+337vlCwag=;
-        b=cNbz54fCDHS0ScreqVr2XdbiQm37Mqfx2V04lxIzVjWe3oz2yJ4Pu41ykDpr4oKj6G
-         EbVkRRpVHHsF5lq0Lu2MgD7786NjqoapCJV0AnfZW+6ca2DvWd7Q2/8sMpW4NfwPuXfc
-         dhDDeAUEILQ3KsCghE18Wks9LiucmdnRa6aT60JUUZPS6FOKEjblKNxy9IydYIF+vnPO
-         AzStqdgvpkUw6SmSxRrzYdC0sIzQGZi7llTpWYG1WDUW6gfpHWc36Dr1ku3Ro3CjWpCx
-         06ncrTh1ioW3stGGhzx9p3yDBv33n1JheXwOeaZbi/Ah8SlF9sRzn5kHsuhQQ9kD4GMU
-         lO1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E3TPleAUgNgDX1i0JZ6Z1GuDFF1HhSm02+337vlCwag=;
-        b=fxq1g66dUe+aIyI3dBYFiEHNFWgfq4d4ThAydd8wwPzeu5wX8ZK6zXc7q/LIOY3LNJ
-         /TVLa6eX54bzJZWBlRHlq6eoqchAhMAUqo27cgNJqcCYv/Vh+wYP4u/s3lIYFuxNOv+J
-         ArINcJpEzRPlA+tooEabTUl/RA8i8NaBQDG6xESApt0Ll2VeufMSEPrO7fgYetY5eBEm
-         OB352piFvOvcqIcBvPqjEeBkCgws8fypQUqOUnqPgWf4AoaeLOljBkkcoxDBhJkR4fe2
-         wp4OkKbPShdjaVIQTwXeumtAehCF04qCa23xiKcbBrZAKry9B7/338wiPO5kWN4GCigd
-         5zeQ==
-X-Gm-Message-State: APjAAAU5Jo3Su1uayBXfYwePCEcs7RrjgZyMGEtN+0hvdIVKPc6J4+bz
-        OFq9J8kMVQopo+Wj/QW0EBgZxoVnzZhlhzcHH1M=
-X-Google-Smtp-Source: APXvYqzDKsSr/zLMTMBZjkKh+5oYwQrP1dYhAZyVY4mr7r0/enepGxWhN24WjF6NFK73tr+1TthN5WZoEpPLDPoHixs=
-X-Received: by 2002:aa7:d145:: with SMTP id r5mr45319685edo.337.1582531204774;
- Mon, 24 Feb 2020 00:00:04 -0800 (PST)
+        Mon, 24 Feb 2020 03:11:21 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:56651 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBXILV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 03:11:21 -0500
+Received: from mwalle01.sab.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 7C5B122ED5;
+        Mon, 24 Feb 2020 09:11:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582531878;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uunZrjy3s12DlnbMOTQxFCthmdhavGDhtf/Hy0AGfm4=;
+        b=m9o9jxnJg36uapNHQq8CiIPZZ86tRsoXEi2xbTjK5WeVWxg1a1X3z/QkoZVdwrQgymsIsx
+        YNvAOcuus8KyqKkUNvDDZQrM8CyYSbKuSUyS/Tq+PQ5SNfwbAA0dVxjM3YQkUOmp16v8SO
+        pBdHRGdFQ157gdiJUdjz9ZF7weMgNA8=
+From:   Michael Walle <michael@walle.cc>
+To:     xiaowei.bao@nxp.com
+Cc:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
+        roy.zang@nxp.com, shawnguo@kernel.org,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+Date:   Mon, 24 Feb 2020 09:11:05 +0100
+Message-Id: <20200224081105.13878-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190902034319.14026-2-xiaowei.bao@nxp.com>
+References: <20190902034319.14026-2-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-References: <20200219151259.14273-1-olteanv@gmail.com> <20200224063154.GK27688@dragon>
-In-Reply-To: <20200224063154.GK27688@dragon>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 24 Feb 2020 09:59:53 +0200
-Message-ID: <CA+h21hok4V_-uarhnyBkdXqnwRdXpgRJWLSvuuVn8K3VRMtrcA@mail.gmail.com>
-Subject: Re: [PATCH v2 net-next/devicetree 0/5] DT bindings for Felix DSA
- switch on LS1028A
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 7C5B122ED5
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.765];
+         DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.51.225.64:email,0.53.103.224:email];
+         RCPT_COUNT_TWELVE(0.00)[17];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shawn,
+Hi Xiaowei, Hi Shawn,
 
-On Mon, 24 Feb 2020 at 08:32, Shawn Guo <shawnguo@kernel.org> wrote:
->
-> On Wed, Feb 19, 2020 at 05:12:54PM +0200, Vladimir Oltean wrote:
-> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >
-> > As per feedback received in v1, I've changed the DT bindings for the
-> > internal ports from "gmii" to "internal". So I would like the entire
-> > series to be merged through a single tree, be it net-next or devicetree.
->
-> Will applying the patches via different trees as normal cause any
-> issue like build breakage or regression on either tree?  Otherwise, I do
-> not see the series needs to go in through a single tree.
->
-> Shawn
->
+> LS1028a implements 2 PCIe 3.0 controllers.
 
-No, the point is that I've made some changes in the device tree
-bindings validation in the driver, which make the driver without those
-changes incompatible with the bindings themselves that I'm
-introducing. So I would like the driver to be operational on the
-actual commit that introduces the bindings, at least in your tree. I
-don't expect merge conflicts to occur in that area of the code.
+Patch 1/3 and 3/3 are in Linus' tree but nobody seems to care about this patch
+anymore :(
 
-Thanks,
--Vladimir
+This doesn't work well with the IOMMU, because the iommu-map property is
+missing. The bootloader needs the &smmu phandle to fixup the entry. See
+below.
+
+Shawn, will you add this patch to your tree once its fixed, considering it
+just adds the device tree node for the LS1028A?
+
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> v2:
+>  - Fix up the legacy INTx allocate failed issue.
+> v3:
+>  - No change.
+> v4:
+>  - Remove the num-lanes property.
+> v5:
+>  - Add the num-viewport property.
+> v6:
+>  - move num-viewport to 8.
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 52 ++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 72b9a75..c043b1d 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -625,6 +625,58 @@
+>  			};
+>  		};
+>  
+> +		pcie@3400000 {
+> +			compatible = "fsl,ls1028a-pcie";
+> +			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+> +			       0x80 0x00000000 0x0 0x00002000>; /* configuration space */
+> +			reg-names = "regs", "config";
+> +			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
+> +				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> +			interrupt-names = "pme", "aer";
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			dma-coherent;
+> +			num-viewport = <8>;
+> +			bus-range = <0x0 0xff>;
+> +			ranges = <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000   /* downstream I/O */
+> +				  0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+> +			msi-parent = <&its>;
+iommu-map = <0 &smmu 0 0>; /* fixed up by bootloader */
+
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 7>;
+> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie@3500000 {
+> +			compatible = "fsl,ls1028a-pcie";
+> +			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+> +			       0x88 0x00000000 0x0 0x00002000>; /* configuration space */
+> +			reg-names = "regs", "config";
+> +			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "pme", "aer";
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			dma-coherent;
+> +			num-viewport = <8>;
+> +			bus-range = <0x0 0xff>;
+> +			ranges = <0x81000000 0x0 0x00000000 0x88 0x00010000 0x0 0x00010000   /* downstream I/O */
+> +				  0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+> +			msi-parent = <&its>;
+likewise
+
+
+With these two fixes:
+
+Tested-by: Michael Walle <michael@walle.cc>
+
+-michael
+
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 7>;
+> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +		};
+> +
+>  		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+>  			compatible = "pci-host-ecam-generic";
+>  			reg = <0x01 0xf0000000 0x0 0x100000>;
+> -- 
+> 2.9.5
+> 
+> 
