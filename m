@@ -2,151 +2,190 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388A7C11D32
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAA6C11D2F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2AC20880
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA3320838
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="WDKWj//9"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="NLuyiR9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbgBXQ2m (ORCPT
+        id S1727177AbgBXQyb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:28:42 -0500
-Received: from vps.xff.cz ([195.181.215.36]:59288 "EHLO vps.xff.cz"
+        Mon, 24 Feb 2020 11:54:31 -0500
+Received: from vps.xff.cz ([195.181.215.36]:59666 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727299AbgBXQ2m (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:28:42 -0500
+        id S1727108AbgBXQya (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:54:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582561720; bh=wkV253iNdu34zWLZa2QqrlFlrBm18YkIXQNR8JlEGXc=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=WDKWj//9hWJyzQ+9eJs8ZC/lnXAkW5HiOq9ChU8ruQvc7s2a8caBEhBu0EBTqedJL
-         oF0QzLdL5peysOVfOP4s0H2nZXya9z8FBi6xQQZP8L8Am/AvpCoJXQZQq6M2YpXbpR
-         Z5xeQIUsADukIZgVk853toibAnc2nrgeVvxDR+jk=
-Date:   Mon, 24 Feb 2020 17:28:40 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
+        t=1582563269; bh=bXleBqxpwvxMLnOw4FuIKeZikmPAgqyT4C7j2/p3/WA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NLuyiR9Q7d/imiTXP42D1TVu/I0SKzHae44k3Y8poVJnmljL5ZdzUVKleIRauIGnB
+         Zl43UHhSc0bLaurhrdnLUFF7hRx3fVUGq4GpjblSQVPEqvvF7LZgaNAwmox58VdQPH
+         Gwsp8ypgtPo9bZGbEcrRLELhN0XcH1HD2vQUDJd4=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [linux-sunxi] Re: [PATCH 0/4] Add support for charger LED for
- AXP813 and TBS A711 Tablet
-Message-ID: <20200224162840.z7csqagz2frwvmf3@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Stefan Mavrodiev <stefan@olimex.com>, linux-sunxi@googlegroups.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200223131435.681620-1-megous@megous.com>
- <20200223132730.6g7tnm2f263oubhv@core.my.home>
- <20200223133517.hfqrg5dta2xk4zj3@core.my.home>
- <1464324b-2b69-c20e-4af8-f32ae5451ea6@olimex.com>
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] ARM: dts: sun8i-a83t: Add thermal trip points/cooling maps
+Date:   Mon, 24 Feb 2020 17:54:17 +0100
+Message-Id: <20200224165417.334617-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1464324b-2b69-c20e-4af8-f32ae5451ea6@olimex.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 08:31:06AM +0200, Stefan Mavrodiev wrote:
-> 
-> On 2/23/20 3:35 PM, Ondřej Jirman wrote:
-> > On Sun, Feb 23, 2020 at 02:27:30PM +0100, megous hlavni wrote:
-> > > On Sun, Feb 23, 2020 at 02:14:31PM +0100, megous hlavni wrote:
-> > > > The tablet has a charger LED exposed on the top. This LED is controlled
-> > > > by AXP813 PMIC. Add support for enabling the LED and using it either
-> > > > for charging indication (handled by PMIC automatically) or for other uses
-> > > > via user control.
-> > > Dang, I just noticed someone sent a similar driver recently, although I had this
-> > > one prepared for quite some time (since 2017) in my tree. I guess I should have
-> > > sent it earlier.
-> > > 
-> > > Please ignore.
-> > Though the meaning of "recently" is a bit relative. The other work was sent in
-> > a year ago. Here's a reference:
-> > 
-> >    https://lore.kernel.org/patchwork/cover/1042764/
-> 
-> Hi,
-> 
-> I'm the author of the 'other' work. I don't know the full story here, but I
-> don't
-> mind someone else submitting this patch as his.
+This enables passive cooling by down-regulating CPU voltage
+and frequency.
 
-Hello Stefan,
+For the trip points, I used values from the BSP code directly.
 
-There's really no story. Just me being a bit anoyed at myself, for not checking
-the mailing lists prior to spending some time cleaning up and extending some old
-patches to upstream them, and wasting quite a bit of time in the process.
+The critical trip point value is 30°C above the maximum recommended
+ambient temperature (70°C) for the SoC from the datasheet, so there's
+some headroom even at such a high ambient temperature.
 
-https://megous.com/git/linux/commit/?h=linux-tbs&id=737eec64565d328cab98b75879e3f9eb1cf2f609
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 60 +++++++++++++++++++++++++++----
+ 1 file changed, 54 insertions(+), 6 deletions(-)
 
-> When I submitted the last patch, there was the proposal to use the
-> ledtrig-pattern instead
-> of sysfs entries. Also AXP209 has inverted CTRL bit.
-> 
-> Please read the the 'other' discussion.
+v2:
+- added more detail to the commit description
 
-Thanks, I'll check it out.
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 74ac7ee9383cf..53c2b6a836f27 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -72,7 +72,7 @@ cpu0: cpu@0 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C0CPUX>;
+@@ -83,7 +83,7 @@ cpu@1 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C0CPUX>;
+@@ -94,7 +94,7 @@ cpu@2 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C0CPUX>;
+@@ -116,7 +116,7 @@ cpu100: cpu@100 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@101 {
++		cpu101: cpu@101 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C1CPUX>;
+@@ -127,7 +127,7 @@ cpu@101 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@102 {
++		cpu102: cpu@102 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C1CPUX>;
+@@ -138,7 +138,7 @@ cpu@102 {
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@103 {
++		cpu103: cpu@103 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			clocks = <&ccu CLK_C1CPUX>;
+@@ -1188,12 +1188,60 @@ cpu0_thermal: cpu0-thermal {
+ 			polling-delay-passive = <0>;
+ 			polling-delay = <0>;
+ 			thermal-sensors = <&ths 0>;
++
++			trips {
++				cpu0_hot: cpu-hot {
++					temperature = <80000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cpu0_very_hot: cpu-very-hot {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				cpu-hot-limit {
++					trip = <&cpu0_hot>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
+ 		};
+ 
+ 		cpu1_thermal: cpu1-thermal {
+ 			polling-delay-passive = <0>;
+ 			polling-delay = <0>;
+ 			thermal-sensors = <&ths 1>;
++
++			trips {
++				cpu1_hot: cpu-hot {
++					temperature = <80000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cpu1_very_hot: cpu-very-hot {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				cpu-hot-limit {
++					trip = <&cpu1_hot>;
++					cooling-device = <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
+ 		};
+ 
+ 		gpu_thermal: gpu-thermal {
+-- 
+2.25.1
 
-regards,
-	o.
-
-> Best regards,
-> Stefan Mavrodiev
-> 
-> > 
-> > > regards,
-> > > 	o.
-> > > 
-> > > 
-> > > > Please take a look.
-> > > > 
-> > > > thank you and regards,
-> > > >    Ondrej Jirman
-> > > > 
-> > > > Ondrej Jirman (4):
-> > > >    dt-bindings: leds: Add a binding for AXP813 charger led
-> > > >    leds: axp20x: Support charger LED on AXP20x like PMICs
-> > > >    ARM: dts: axp813: Add charger LED
-> > > >    ARM: dts: sun8i-a83t-tbs-a711: Enable charging LED
-> > > > 
-> > > >   .../devicetree/bindings/leds/leds-axp20x.yaml |  24 ++
-> > > >   arch/arm/boot/dts/axp81x.dtsi                 |   5 +
-> > > >   arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     |   4 +
-> > > >   drivers/leds/Kconfig                          |   7 +
-> > > >   drivers/leds/Makefile                         |   1 +
-> > > >   drivers/leds/leds-axp20x.c                    | 240 ++++++++++++++++++
-> > > >   drivers/mfd/axp20x.c                          |   3 +
-> > > >   7 files changed, 284 insertions(+)
-> > > >   create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.yaml
-> > > >   create mode 100644 drivers/leds/leds-axp20x.c
-> > > > 
-> > > > -- 
-> > > > 2.25.1
-> > > > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
