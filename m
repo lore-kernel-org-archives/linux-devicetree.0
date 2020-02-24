@@ -2,139 +2,132 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A985AC11D30
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426DDC11D30
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A71120726
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194D120836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:13:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tL8VJS4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgBXLD5 (ORCPT
+        id S1726216AbgBXLNy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:03:57 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:48589 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBXLD5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:03:57 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: yIjgW6gckhVxf2hH7puC/m2slZpKqfrqwurH8P1fdvPbbtz3WByCDkSjBYfeylgxBsSgS3EpH6
- KJLSewKjs/u9f7erD8Jd/Bei1ADvWywJy89ktEYnHloYnwI8UeJ0BAthbi5W/EhoFbnG0lAK7K
- nzjDHURrE+HfPSycBDNQIsq5cdBIRio0DyHP1i9kNOMknugU9XLh+J/qVntQzOZ9GiyeSid8Se
- L03S4N47ZOWaVXnxI6DIVMuGyA5H7EhLpRuxeZoYJh2c+rYT5ebzoRiy8ubCrZAgQ5LI2Mav7D
- hCE=
-X-IronPort-AV: E=Sophos;i="5.70,479,1574146800"; 
-   d="scan'208";a="3379355"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Feb 2020 04:03:56 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Feb 2020 04:03:51 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 24 Feb 2020 04:04:01 -0700
-Date:   Mon, 24 Feb 2020 12:03:50 +0100
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Paul Burton" <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 1/2] net: mscc: ocelot: Add support for tcam
-Message-ID: <20200224110350.7kdzf4kml4iaem4i@soft-dev3.microsemi.net>
-References: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
- <1559287017-32397-2-git-send-email-horatiu.vultur@microchip.com>
- <CA+h21hoSA5DECsA+faJ91n0jBhAR5BZnkMm=Dx4JfNDp8J+xbw@mail.gmail.com>
+        Mon, 24 Feb 2020 06:13:54 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34147 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727183AbgBXLNy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:13:54 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z15so1567368wrl.1
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 03:13:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Mh1d0aGZXBcGpL9RuplRZdSm3AVkRnYe3oS1toATjYE=;
+        b=tL8VJS4ob05hCQrgIx8wpD7rln8HVS80aBRN3zNf1hHjE5+2uwPcKZQD4kpRNRUzVw
+         y2HNshaAjNmGi7Sov6ebNaGRnmUuoFACFUBstueEhotMxvTvqQP6CzX4Zyo8FSbAuDv7
+         QFlK9ZOzujld6GYBDPa5xRg/5EYIRSZAA3fBy+2iVGLWMDfS3nb+faUGolfyc32UvgH7
+         fOzaRlXd8bsTSYUCHK0fvC4P4jRXkI/34JtDLW7OdDztGP0OEEChAL70D0tjb+ufFEUK
+         rLsnnXpGZsCfYYm/lo66E9zepWp7JS8qnQUEY+oX7MA8c390zjk+EDH5IkBdp0bACXEq
+         fbVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Mh1d0aGZXBcGpL9RuplRZdSm3AVkRnYe3oS1toATjYE=;
+        b=YfuZ6N+DEpDxttO8R1hFj3S48f/mZfKmsAK6aRyAlIPtWZIybNsm1Q2US6YpXQV9ko
+         BPdMi53upuQ2R88zHjCATHJCC/d+YFMeF1P26/yJx1b5LTgamLHUaiHHoCdSuBBTJk7P
+         9Lxk8ncWn78DtuYGjY1rugvJPLSy2oBVRaHYxhaWlKyuzPFzzilFLoU9sjhEK5ucioHV
+         +C+tB1yDx11DqjG6ZLV/jK0tlzWXG39cdbvCDD2uJxJum0HvKT+CqSV1ttLYVEZ5R63n
+         rYJZOUue6VpzjJkuJFZ5aWGqBSIf3VWWLGUKPaqjDNa72/vpzbIlhkz9a63EF2bPtn8f
+         id2g==
+X-Gm-Message-State: APjAAAWvJq5z43P1OhJl5GHzOlbMSqbayKyZUux8vZE18d4kXSAmL9up
+        fMmTIcfaGYvGaJnxXva3l/fo4w==
+X-Google-Smtp-Source: APXvYqzSwHgv7l1zqhx5avrCHp4FE1Qp8CaMgplZWJajrSVOxXJtGoOGvCDqGgzPuchDv1c+GXos3w==
+X-Received: by 2002:a5d:5381:: with SMTP id d1mr65289586wrv.259.1582542832122;
+        Mon, 24 Feb 2020 03:13:52 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id d17sm12802127wmb.36.2020.02.24.03.13.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 03:13:51 -0800 (PST)
+Date:   Mon, 24 Feb 2020 11:14:22 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     dmitry.torokhov@gmail.com, thierry.reding@gmail.com,
+        jic23@kernel.org, devicetree@vger.kernel.org,
+        linux-input@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v5 1/7] dt-bindings: Add bindings for Azoteq
+ IQS620A/621/622/624/625
+Message-ID: <20200224111422.GR3494@dell>
+References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
+ <1581895931-6056-2-git-send-email-jeff@labundy.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+h21hoSA5DECsA+faJ91n0jBhAR5BZnkMm=Dx4JfNDp8J+xbw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1581895931-6056-2-git-send-email-jeff@labundy.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vladimir,
+On Sun, 16 Feb 2020, Jeff LaBundy wrote:
 
-The 02/24/2020 12:38, Vladimir Oltean wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> This patch adds device tree bindings for the Azoteq IQS620A, IQS621,
+> IQS622, IQS624 and IQS625 multi-function sensors.
 > 
-> Hi Horatiu,
+> A total of three bindings are presented (one MFD and two child nodes);
+> they are submitted as a single patch because the child node bindings
+> have no meaning in the absence of the MFD binding.
 > 
-> On Fri, 31 May 2019 at 10:18, Horatiu Vultur
-> <horatiu.vultur@microchip.com> wrote:
-> >
-> > Add ACL support using the TCAM. Using ACL it is possible to create rules
-> > in hardware to filter/redirect frames.
-> >
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> > ---
-> >  arch/mips/boot/dts/mscc/ocelot.dtsi      |   5 +-
-> >  drivers/net/ethernet/mscc/Makefile       |   2 +-
-> >  drivers/net/ethernet/mscc/ocelot.c       |  13 +
-> >  drivers/net/ethernet/mscc/ocelot.h       |   8 +
-> >  drivers/net/ethernet/mscc/ocelot_ace.c   | 777 +++++++++++++++++++++++++++++++
-> >  drivers/net/ethernet/mscc/ocelot_ace.h   | 227 +++++++++
-> >  drivers/net/ethernet/mscc/ocelot_board.c |   1 +
-> >  drivers/net/ethernet/mscc/ocelot_regs.c  |  11 +
-> >  drivers/net/ethernet/mscc/ocelot_s2.h    |  64 +++
-> >  drivers/net/ethernet/mscc/ocelot_vcap.h  | 403 ++++++++++++++++
-> >  10 files changed, 1508 insertions(+), 3 deletions(-)
-> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.c
-> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.h
-> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_s2.h
-> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_vcap.h
-> >
+> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes in v5:
+>   - Corrected spelling of "data sheets" to "datasheets"
+>   - Replaced words "additional air button" with "proximity-activated function"
+>     in comment above first example
 > 
-> I was testing this functionality and it looks like the MAC_ETYPE keys
-> (src_mac, dst_mac) only match non-IP frames.
-> Example, this rule doesn't drop ping traffic:
+> Changes in v4:
+>   - None
 > 
-> tc qdisc add dev swp0 clsact
-> tc filter add dev swp0 ingress flower skip_sw dst_mac
-> 96:e1:ef:64:1b:44 action drop
+> Changes in v3:
+>   - Specified 'additionalProperties: false' within the parent MFD node and all
+>     child nodes ("keys", "hall-switch-north/south" and "pwm")
+>   - Defined the "hall-switch-north/south" child nodes unconditionally and then
+>     inverted the subsequent if/then to filter them from devices for which that
+>     functionality is unavailable
+>   - Added Reviewed-by trailer
 > 
-> Would it be possible to do anything about that?
+> Changes in v2:
+>   - Removed "prox" child node and moved "keys" and "pwm" child nodes to their
+>     own bindings
+>   - Replaced linux,fw-file property with more common firmware-name property
+>   - Converted all bindings to YAML
+> 
+>  .../devicetree/bindings/input/iqs62x-keys.yaml     | 132 +++++++++++++++
+>  Documentation/devicetree/bindings/mfd/iqs62x.yaml  | 179 +++++++++++++++++++++
+>  .../devicetree/bindings/pwm/iqs620a-pwm.yaml       |  32 ++++
+>  3 files changed, 343 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/iqs62x-keys.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/iqs62x.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pwm/iqs620a-pwm.yaml
 
-What you could do is to configure each port in such a way, to treat IP
-frames as MAC_ETYPE frames. Have a look in ANA:PORT[0-11]:VCAP_S2_CFG.
-
-There might be a problem with this approach. If you configure the port
-in such a way, then all your rules with the keys IP6, IP4 will not be
-match on that port.
-
-> 
-> Thanks,
-> -Vladimir
+Applied, thanks.
 
 -- 
-/Horatiu
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
