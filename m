@@ -2,115 +2,166 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40822C11D2B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BB4C3567B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1842920836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 09:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C918220836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hr23lqTt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gKBFDLay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgBXJqW (ORCPT
+        id S1726925AbgBXKOs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:46:22 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62083 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726628AbgBXJqW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 04:46:22 -0500
-X-UUID: 15efe623feed440a82ff83e29f541fd1-20200224
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JJObHOiFNWZrMDB8kq3sMti+Ri6V2M0iYaOtSYj8HuU=;
-        b=hr23lqTthINWXnyqH4FlJZ93clckrD8c2YBD5KQCbAwl1+cMWaGGMF3XqR8jIgyEIQ4ESiynsunRR/peYZmkPZvdQevHMU7s9jWu3khE9ievaw3b0LSAgAFiNMwlYyn3V3uCt9CB5Zq/z+Frm0e33tQA2eZvSaA7HFGoVNyfd2Y=;
-X-UUID: 15efe623feed440a82ff83e29f541fd1-20200224
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 81929236; Mon, 24 Feb 2020 17:46:15 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs07n2.mediatek.inc
- (172.21.101.141) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 24 Feb
- 2020 17:45:26 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 24 Feb 2020 17:44:58 +0800
-Message-ID: <1582537569.859.14.camel@mhfsdcap03>
-Subject: Re: [PATCH v6 1/5] media: platform: Fix jpeg dec driver bug and
- improve code quality
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        <srv_heupstream@mediatek.com>
-Date:   Mon, 24 Feb 2020 17:46:09 +0800
-In-Reply-To: <20200214093506.GA193786@chromium.org>
-References: <20200121095320.32258-1-xia.jiang@mediatek.com>
-         <20200121095320.32258-2-xia.jiang@mediatek.com>
-         <20200214093506.GA193786@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 24 Feb 2020 05:14:48 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50914 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXKOs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 05:14:48 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OAEf0Q121189;
+        Mon, 24 Feb 2020 04:14:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582539281;
+        bh=j5EShPBLoNlbSYRTeOcz+xqi62LNvQ2h7rAp88THS0k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gKBFDLay1h129RL9y1t9AdnzTRjKEovZTPDIz6BDaI80a6V6NN4Dz7eLKBoD+80xB
+         Z15ZfDVzImqZ8Zb4/cjDK8OR4Y4UrvWSopueTxKYdm6mM2bvIblA/VA5nGLowdq0qo
+         924xKQZThIU+KYkidZgHxofwhGN1T6/GuQ7XSZKk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01OAEfeP125615
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Feb 2020 04:14:41 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
+ Feb 2020 04:14:41 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 24 Feb 2020 04:14:41 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OAEc93090524;
+        Mon, 24 Feb 2020 04:14:38 -0600
+Subject: Re: [PATCH v2 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in
+ Cadence platform to DT schema
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200217111519.29163-1-kishon@ti.com>
+ <20200217111519.29163-3-kishon@ti.com> <20200219203205.GA14068@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <2b927c66-d640-fb11-878a-c69a459a28f8@ti.com>
+Date:   Mon, 24 Feb 2020 15:48:21 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200219203205.GA14068@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAyLTE0IGF0IDE4OjM1ICswOTAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4g
-SGkgWGlhLA0KPiANCj4gT24gVHVlLCBKYW4gMjEsIDIwMjAgYXQgMDU6NTM6MTdQTSArMDgwMCwg
-WGlhIEppYW5nIHdyb3RlOg0KPiA+IEZpeCB2NGwyLWNvbXBsaWFuY2UgdGVzdCBidWcgYW5kIGlt
-cHJvdmUgY29kZSBxdWFsaXR5IG9mIGpwZWcgZGVjb2RlDQo+ID4gZHJpdmVyLCBiZWNhdXNlIHRo
-ZSBqcGVnIGVuY29kZSBkcml2ZXIgd2lsbCBiYXNlIG9uIGl0Lg0KPiA+IA0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IFhpYSBKaWFuZyA8eGlhLmppYW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiB2
-NjogYWxpZ25tZW50ICdNVEtfSlBFR19EQ1RTSVpFJyBtYXRjaCBvcGVuIHBhcmVudGhlc2lzLg0K
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiB2NTog
-VXNlIGNsYW1wKCl0byByZXBsYWNlIG10a19qcGVnX2JvdW5kX2FsaWduX2ltYWdlKCkgYW5kIHJv
-dW5kX3VwKCkNCj4gPiAgICAgdG8gcmVwbGFjZSBtdGtfanBlZ19hbGlnbigpLg0KPiA+ICAgICBH
-ZXQgY29ycmVjdCBjb21wb3NlIHZhbHVlIGluIG10a19qcGVnX3NlbGVjdGlvbigpLg0KPiA+ICAg
-ICBDYW5jZWwgc3BpbiBsb2NrIGFuZCB1bmxvY2sgb3BlcmF0aW9uIGluIGRldmljZSBydW4gZnVu
-Y3Rpb24uDQo+ID4gICAgIENoYW5nZSByZWdpc3RlciBvZmZzZXQgaGV4IG51bWJlcmFscyBmcm9t
-IHVwZXJjYXNlIHRvIGxvd2VyY2FzZS4NCj4gPiANCj4gPiB2NDogbmV3IGFkZCBwYXRjaCBmb3Ig
-djRsMi1jb21wbGlhbmNlIHRlc3QgYnVnIGZpeC4NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIHBhdGNo
-LiBUaGUgY2hhbmdlcyBsb29rIGdvb2QgdG8gbWUsIGJ1dCBlYWNoIG9mIHRoZQ0KPiB1bnJlbGF0
-ZWQgY2hhbmdlcyBzaG91bGQgYmUgc3BsaXQgaW50byBpdHMgb3duIHBhdGNoLCB3aXRoIHByb3Bl
-cg0KPiBleHBsYW5hdGlvbiBpbiBpdHMgY29tbWl0IG1lc3NhZ2UuIEVzcGVjaWFsbHkgdGhlIG9u
-ZXMgdGhhdCBpbnRyb2R1Y2UNCj4gYmVoYXZpb3IgY2hhbmdlcywgc3VjaCBhcyB0aGUgU19TRUxF
-Q1RJT04gb3IgbG9ja2luZyBjaGFuZ2UuDQo+IA0KPiBBbHNvIHBsZWFzZSBzZWUgb25lIGNvbW1l
-bnQgaW5saW5lLg0KPiANCj4gW3NuaXBdDQo+IA0KPiA+IEBAIC04MDEsNyArNzc4LDYgQEAgc3Rh
-dGljIHZvaWQgbXRrX2pwZWdfZGV2aWNlX3J1bih2b2lkICpwcml2KQ0KPiA+ICAJc3RydWN0IG10
-a19qcGVnX2RldiAqanBlZyA9IGN0eC0+anBlZzsNCj4gPiAgCXN0cnVjdCB2YjJfdjRsMl9idWZm
-ZXIgKnNyY19idWYsICpkc3RfYnVmOw0KPiA+ICAJZW51bSB2YjJfYnVmZmVyX3N0YXRlIGJ1Zl9z
-dGF0ZSA9IFZCMl9CVUZfU1RBVEVfRVJST1I7DQo+ID4gLQl1bnNpZ25lZCBsb25nIGZsYWdzOw0K
-PiA+ICAJc3RydWN0IG10a19qcGVnX3NyY19idWYgKmpwZWdfc3JjX2J1ZjsNCj4gPiAgCXN0cnVj
-dCBtdGtfanBlZ19icyBiczsNCj4gPiAgCXN0cnVjdCBtdGtfanBlZ19mYiBmYjsNCj4gPiBAQCAt
-ODI5LDEzICs4MDUsMTEgQEAgc3RhdGljIHZvaWQgbXRrX2pwZWdfZGV2aWNlX3J1bih2b2lkICpw
-cml2KQ0KPiA+ICAJaWYgKG10a19qcGVnX3NldF9kZWNfZHN0KGN0eCwgJmpwZWdfc3JjX2J1Zi0+
-ZGVjX3BhcmFtLCAmZHN0X2J1Zi0+dmIyX2J1ZiwgJmZiKSkNCj4gPiAgCQlnb3RvIGRlY19lbmQ7
-DQo+ID4gIA0KPiA+IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJmpwZWctPmh3X2xvY2ssIGZsYWdzKTsN
-Cj4gDQo+IFdoeSBpcyBpdCBzYWZlIHRvIHJlbW92ZSB0aGUgbG9ja2luZyBoZXJlPw0KRGVhciBU
-b21hc3osDQoNCkkgd2lsbCBzcGxpdCB1bnJlbGF0ZWQgY2hhbmdlcyBpbnRvIGRpZmZlcmVudCBw
-YXRjaGVzLg0KDQpNeSBvcGluaW9uIGFib3V0IHJlbW92ZSBsb2NraW5nIGlzIGZvbGxvd2luZyhh
-ZnRlciBkZWVwIHRoaW5raW5nKToNCg0KVGhlIGRldmljZV9ydW4gZnVuY3Rpb24gY2FuIGJlIG9u
-bHkgY2FsbGVkIG9uY2UgZm9yIG9uZSBpbnN0YW5jZS4NCkZvciBtdWx0aS1pbnN0YW5jZSxpcyB0
-aGVyZSBhbnkgcG9zc3NpYmlsaXR5IG9mIGh3IG92ZXJyaWRlIGlmIHJlbW92aW5nIGxvY2tpbmc/
-SSB0aGluayBzby4NCldoYXQgYWJvdXQgeW91ciBmdXJ0aGVyIG9waW5pb24/DQoNCkJlc3QgUmVn
-YXJkcywNClhpYSBKaWFuZw0KPiA+ICAJbXRrX2pwZWdfZGVjX3Jlc2V0KGpwZWctPmRlY19yZWdf
-YmFzZSk7DQo+ID4gIAltdGtfanBlZ19kZWNfc2V0X2NvbmZpZyhqcGVnLT5kZWNfcmVnX2Jhc2Us
-DQo+ID4gIAkJCQkmanBlZ19zcmNfYnVmLT5kZWNfcGFyYW0sICZicywgJmZiKTsNCj4gPiAgDQo+
-ID4gIAltdGtfanBlZ19kZWNfc3RhcnQoanBlZy0+ZGVjX3JlZ19iYXNlKTsNCj4gPiAtCXNwaW5f
-dW5sb2NrX2lycXJlc3RvcmUoJmpwZWctPmh3X2xvY2ssIGZsYWdzKTsNCj4gPiAgCXJldHVybjsN
-Cj4gPiAgDQo+ID4gIGRlY19lbmQ6DQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IFRvbWFzeg0KPiAN
-Cg0K
+Hi Rob,
 
+On 20/02/20 2:02 am, Rob Herring wrote:
+> On Mon, Feb 17, 2020 at 04:45:19PM +0530, Kishon Vijay Abraham I wrote:
+>> Include Cadence core DT schema and define the Cadence platform DT schema
+>> for both Host and Endpoint mode. Note: The Cadence core DT schema could
+>> be included for other platforms using Cadence PCIe core.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
+>>  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
+>>  MAINTAINERS                                   |  2 +-
+>>  5 files changed, 125 insertions(+), 94 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> 
+> 
+>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>> new file mode 100644
+>> index 000000000000..2f605297f862
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>> @@ -0,0 +1,76 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Cadence PCIe host controller
+>> +
+>> +maintainers:
+>> +  - Tom Joseph <tjoseph@cadence.com>
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/pci/pci-bus.yaml#
+>> +  - $ref: "cdns-pcie-host.yaml#"
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: cdns,cdns-pcie-host
+>> +
+>> +  reg:
+>> +    maxItems: 3
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: reg
+>> +      - const: cfg
+>> +      - const: mem
+>> +
+>> +  msi-parent: true
+>> +
+>> +required:
+>> +  - reg
+>> +  - reg-names
+>> +
+>> +examples:
+>> +  - |
+>> +    bus {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        pcie@fb000000 {
+>> +            compatible = "cdns,cdns-pcie-host";
+>> +            device_type = "pci";
+>> +            #address-cells = <3>;
+>> +            #size-cells = <2>;
+>> +            bus-range = <0x0 0xff>;
+>> +            linux,pci-domain = <0>;
+>> +            cdns,max-outbound-regions = <16>;
+>> +            cdns,no-bar-match-nbits = <32>;
+> 
+>> +            vendor-id = /bits/ 16 <0x17cd>;
+>> +            device-id = /bits/ 16 <0x0200>;
+> 
+> Please make these 32-bit as that is what the spec says.
+
+Can you clarify this is mentioned in which spec? PCI spec has both of
+these 16 bits and I checked the PCI binding doc but couldn't spot the
+size of these fields.
+
+[1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+
+Thanks
+Kishon
