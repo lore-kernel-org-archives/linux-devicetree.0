@@ -2,109 +2,108 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_RHS_DOB autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D547C38BE2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEFEC38BE2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1482820CC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582568878;
-	bh=umAnb5ekYeQXE5qdZwgUn2od2g+XRXhwSwaqS5+ud0w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GZd5ZQ7iJWunEIKp6SYpD46naYvmslIFU6kygYWVMaMi7SCdE27kdJiwMHepUxrjw
-	 odW4Wurc8w2RQ+z8mrzGZJNqwTJoGz3V5MyPmu2Vzfp3/HoOZl6ML+f8zlUiWosudo
-	 PWirIMomSEGHRrZ8I6Tknu6GLo4sUwE8bmKA+RFk=
+	by mail.kernel.org (Postfix) with ESMTP id 77D462084E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:33:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="L3/tRvvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbgBXS15 (ORCPT
+        id S1726663AbgBXSdD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:27:57 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34240 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbgBXS15 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:27:57 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l136so9885896oig.1;
-        Mon, 24 Feb 2020 10:27:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8b3MliEDFbDrUpBm8jGhwYqreoGs6m8FNnF/yNIueEU=;
-        b=BkRg2/6gEsYakveiAVaz5/SLu28xZ5uKrq6Zg22HgyTQAjavyWMUPy8gNAfUV4xorW
-         E++f5oMa/9O5R6BH3cxB/tP1qodo6qjrXebTii0dtv0aI9Q4qcn7fuXtC8DF8A1HGlOI
-         0PcZFnSVYDSJxwgi4xl53s550fCKeqh4rmkcykM17IsyJn1MZU6Po3uujNL1SWDFxkOW
-         kYRia9cw9SWa0lSLVJ49ng5z4RTTDYDuISpOExK1XcLnn8CDW6Mf41jIX/p+3KkGJsAS
-         Bvw4iR593L59oPXqYg2TPTOHhHwZ+YqmzHe9ip0zWM6ZdYyD3HIRnBed5GKcYXh/TRBL
-         +kmw==
-X-Gm-Message-State: APjAAAWzU2PAOj6NnKUk0FWL4zDcNmVEmfkyRHNsA2p6PVA9OADeof/1
-        CyzdZRNMreOwTzLvaZqPjQ==
-X-Google-Smtp-Source: APXvYqyzy4iiGXu+ZZ3t2yBP3j4K/yU2pKb0H/blTr6+iujeHVCL8mJihe7tO3CjLAVcADKqUCNWGQ==
-X-Received: by 2002:aca:bfc2:: with SMTP id p185mr318449oif.57.1582568876626;
-        Mon, 24 Feb 2020 10:27:56 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v10sm4255017oic.32.2020.02.24.10.27.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 10:27:56 -0800 (PST)
-Received: (nullmailer pid 13156 invoked by uid 1000);
-        Mon, 24 Feb 2020 18:27:55 -0000
-Date:   Mon, 24 Feb 2020 12:27:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        =?iso-8859-1?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: Re: [PATCH] docs: dt: fix several broken doc references
-Message-ID: <20200224182755.GB27161@bogus>
-References: <0e530494349b37eb2eab4a8eccf56626e0b18e6d.1582448388.git.mchehab+huawei@kernel.org>
+        Mon, 24 Feb 2020 13:33:03 -0500
+Received: from vps.xff.cz ([195.181.215.36]:33236 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbgBXSdD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:33:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582569181; bh=9mqkV16PsZRdF8vb7JAmbDN3tZ6Pelbha30uweql6Dc=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=L3/tRvvN9VGe+SIY9zKlDypNgHtG9CvMG6/DnGGu/Pj5Xoykbk7JMbxD4PZ5Z6HGL
+         uthPS2w4LoCkM8jw2Ec6jipbasGJ6RnXPbqAzUu1aYXv8/rQ4xhC+4TRf/dXAbngHM
+         6Tc/o3+stmYbsNKoyrsPJmEvUHT1htQRM9Y00k+A=
+Date:   Mon, 24 Feb 2020 19:33:00 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i-a83t: Add thermal trip points/cooling
+ maps
+Message-ID: <20200224183300.jnclticehmc7uevs@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200224165417.334617-1-megous@megous.com>
+ <2e4213a6-2aaf-641c-f741-9503f3ffd5fe@linaro.org>
+ <20200224172328.yauwfgov664ayrd6@core.my.home>
+ <20200224173940.huwpaqhrc5ngbmji@core.my.home>
+ <25a5dfb2-93bb-90c3-8156-0cfbed1f9995@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0e530494349b37eb2eab4a8eccf56626e0b18e6d.1582448388.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <25a5dfb2-93bb-90c3-8156-0cfbed1f9995@linaro.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 09:59:53AM +0100, Mauro Carvalho Chehab wrote:
-> There are several DT doc references that require manual fixes.
-> I found 3 cases fixed on this patch:
+On Mon, Feb 24, 2020 at 06:56:18PM +0100, Daniel Lezcano wrote:
+> On 24/02/2020 18:39, Ondřej Jirman wrote:
+> > On Mon, Feb 24, 2020 at 06:23:28PM +0100, megous hlavni wrote:
+> > 
+> > To be more clear, new temperatures are available from the thermal sensor driver
+> > at the rate of 4 per second, which should be enough to do quick adjustments to
+> > the thermal zone/cooling device even for quick temperature rises.
+> > 
+> > https://elixir.bootlin.com/linux/v5.6-rc3/source/drivers/thermal/sun8i_thermal.c#L442
+> > 
+> > There's no slow/fast period depending on whether the cooling is active.
+> > It's always fast and no polling of the thermal sensor is needed.
 > 
-> 	- directory named "binding/" instead of "bindings/";
-> 	- .txt to .yaml renames;
-> 	- file renames (still on txt format);
+> Thanks for the clarification. All sensors have their specificity.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  .../devicetree/bindings/mtd/cadence-nand-controller.txt       | 2 +-
->  .../devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt      | 2 +-
->  Documentation/devicetree/bindings/sound/st,stm32-sai.txt      | 2 +-
->  Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt  | 2 +-
->  Documentation/devicetree/bindings/spi/st,stm32-spi.yaml       | 2 +-
->  MAINTAINERS                                                   | 4 ++--
->  .../devicetree/bindings/net/wireless/siliabs,wfx.txt          | 2 +-
->  7 files changed, 8 insertions(+), 8 deletions(-)
+> Does the sensor allow to create a threshold temperature where an
+> interrupt fires when crossing the boundary? That would be interesting
+> for performance and energy saving to disable the interrupts until
+> 'cpu0_hot' is reached, no?
 
-Applied.
+I think so. I don't think it would affect this binding though. It would still
+require no polling, and thermal driver would probably just have to be updated
+to get the relevant information about trip points from the thermal zone and
+notify it of changes/trip point crossing.
 
-Rob
+I don't think it would affect performance or energy saving much though.
+4 interrupts per second is barely noticeable, and there are much bigger
+fish to fry, when it comes to power savings on A83T at this point.
+
+thank you and regards,
+	o.
+
+
+> -- 
+>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+> 
