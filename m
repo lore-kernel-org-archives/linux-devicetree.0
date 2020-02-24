@@ -2,176 +2,380 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F45DC11D2F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F25AC11D35
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F2220714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:25:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="LFgcDy1+"
+	by mail.kernel.org (Postfix) with ESMTP id 0496D20714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgBXPZe (ORCPT
+        id S1727670AbgBXP0q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:25:34 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:39764 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727539AbgBXPZd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 10:25:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582557931; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SmPgy2zJNFt//FFDsKzJvPnH2D7WIJX2Um97SB6yv+c=;
-        b=LFgcDy1+ROVN5JpGz88s8QhlbuOHE3h8ALc+Z9060O/Mrdqm+FEkrgUqWw1BJ05pUgReqH
-        AZu/manhY5V9y5dnsMJkCN5mbesaJWCIctAsJBznYNr2lo3BsQ92JTRnzbbegS3BODcoPD
-        ufIDouoowNNxWM0auRjpUlLpA4sVhUw=
-Date:   Mon, 24 Feb 2020 12:25:14 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v5 3/5] remoteproc: Add prepare/unprepare callbacks
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mon, 24 Feb 2020 10:26:46 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:60180 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727674AbgBXP0p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 10:26:45 -0500
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id 6fSh2200v5USYZQ01fShpF; Mon, 24 Feb 2020 16:26:42 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j6Fd3-0006KY-R5; Mon, 24 Feb 2020 16:26:41 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j6Fd3-0000MI-Ob; Mon, 24 Feb 2020 16:26:41 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1582557914.3.1@crapouillou.net>
-In-Reply-To: <daf58c35-c240-e50a-da50-48b14c0e097c@st.com>
-References: <20200211142614.13567-1-paul@crapouillou.net>
-        <20200211142614.13567-3-paul@crapouillou.net>
-        <daf58c35-c240-e50a-da50-48b14c0e097c@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: clock: renesas: cpg-mssr: Convert to json-schema
+Date:   Mon, 24 Feb 2020 16:26:40 +0100
+Message-Id: <20200224152640.1318-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Arnaud,
+Convert the Renesas Clock Pulse Generator / Module Standby and Software
+Reset Device Tree binding documentation to json-schema.
 
+Note that #reset-cells was incorrecty marked a required property for
+RZ/A2 before.
 
-Le mar., f=E9vr. 18, 2020 at 17:31, Arnaud POULIQUEN=20
-<arnaud.pouliquen@st.com> a =E9crit :
-> Hi Paul,
->=20
-> I still wonder about the use of pm_runtime mechanism as a more=20
-> generic alternative...
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ .../bindings/clock/renesas,cpg-mssr.txt       | 101 ---------
+ .../bindings/clock/renesas,cpg-mssr.yaml      | 204 ++++++++++++++++++
+ 2 files changed, 204 insertions(+), 101 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
 
-The use of pm_runtime is perfect if CONFIG_PM is enabled, but otherwise=20
-it's a bit cumbersome, as the clocks must be enabled in the probe.
-
--Paul
-
-> Else just a minor remark inline.
->=20
-> On 2/11/20 3:26 PM, Paul Cercueil wrote:
->>  The .prepare() callback is called before the firmware is loaded to
->>  memory. This is useful for instance in the case where some setup is
->>  required for the memory to be accessible.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>=20
->>  Notes:
->>      v2-v4: No change
->>      v5: Move calls to prepare/unprepare to=20
->> rproc_fw_boot/rproc_shutdown
->>=20
->>   drivers/remoteproc/remoteproc_core.c | 16 +++++++++++++++-
->>   include/linux/remoteproc.h           |  4 ++++
->>   2 files changed, 19 insertions(+), 1 deletion(-)
->>=20
->>  diff --git a/drivers/remoteproc/remoteproc_core.c=20
->> b/drivers/remoteproc/remoteproc_core.c
->>  index fe5c7a2f9767..022b927e176b 100644
->>  --- a/drivers/remoteproc/remoteproc_core.c
->>  +++ b/drivers/remoteproc/remoteproc_core.c
->>  @@ -1373,6 +1373,14 @@ static int rproc_fw_boot(struct rproc=20
->> *rproc, const struct firmware *fw)
->>=20
->>   	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
->>=20
->>  +	if (rproc->ops->prepare) {
->>  +		ret =3D rproc->ops->prepare(rproc);
->>  +		if (ret) {
->>  +			dev_err(dev, "Failed to prepare rproc: %d\n", ret);
->>  +			return ret;
->>  +		}
->>  +	}
->>  +
->>   	/*
->>   	 * if enabling an IOMMU isn't relevant for this rproc, this is
->>   	 * just a nop
->>  @@ -1380,7 +1388,7 @@ static int rproc_fw_boot(struct rproc *rproc,=20
->> const struct firmware *fw)
->>   	ret =3D rproc_enable_iommu(rproc);
->>   	if (ret) {
->>   		dev_err(dev, "can't enable iommu: %d\n", ret);
->>  -		return ret;
->>  +		goto unprepare_rproc;
->>   	}
->>=20
->>   	rproc->bootaddr =3D rproc_get_boot_addr(rproc, fw);
->>  @@ -1424,6 +1432,9 @@ static int rproc_fw_boot(struct rproc *rproc,=20
->> const struct firmware *fw)
->>   	rproc->table_ptr =3D NULL;
->>   disable_iommu:
->>   	rproc_disable_iommu(rproc);
->>  +unprepare_rproc:
->>  +	if (rproc->ops->unprepare)
->>  +		rproc->ops->unprepare(rproc);
->>   	return ret;
->>   }
->>=20
->>  @@ -1823,6 +1834,9 @@ void rproc_shutdown(struct rproc *rproc)
->>=20
->>   	rproc_disable_iommu(rproc);
->>=20
->>  +	if (rproc->ops->unprepare)
->>  +		rproc->ops->unprepare(rproc);
->>  +
->>   	/* Free the copy of the resource table */
->>   	kfree(rproc->cached_table);
->>   	rproc->cached_table =3D NULL;
->>  diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->>  index 5f201f0c86c3..a6272d1ba384 100644
->>  --- a/include/linux/remoteproc.h
->>  +++ b/include/linux/remoteproc.h
->>  @@ -355,6 +355,8 @@ enum rsc_handling_status {
->>=20
->>   /**
->>    * struct rproc_ops - platform-specific device handlers
->>  + * @prepare:	prepare the device for power up (before the firmware=20
->> is loaded)
->>  + * @unprepare:	unprepare the device after it is stopped
->=20
-> Would be nice here to precise that these functions are optional
-> you can look at rproc_ops struct for example.
->=20
-> Regards,
-> Arnaud
->=20
->>    * @start:	power on the device and boot it
->>    * @stop:	power off the device
->>    * @kick:	kick a virtqueue (virtqueue id given as a parameter)
->>  @@ -371,6 +373,8 @@ enum rsc_handling_status {
->>    * @get_boot_addr:	get boot address to entry point specified in=20
->> firmware
->>    */
->>   struct rproc_ops {
->>  +	int (*prepare)(struct rproc *rproc);
->>  +	void (*unprepare)(struct rproc *rproc);
->>   	int (*start)(struct rproc *rproc);
->>   	int (*stop)(struct rproc *rproc);
->>   	void (*kick)(struct rproc *rproc, int vqid);
->>=20
-
-=
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+deleted file mode 100644
+index 5846dee455b6318d..0000000000000000
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
++++ /dev/null
+@@ -1,100 +0,0 @@
+-* Renesas Clock Pulse Generator / Module Standby and Software Reset
+-
+-On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
+-and MSSR (Module Standby and Software Reset) blocks are intimately connected,
+-and share the same register block.
+-
+-They provide the following functionalities:
+-  - The CPG block generates various core clocks,
+-  - The MSSR block provides two functions:
+-      1. Module Standby, providing a Clock Domain to control the clock supply
+-	 to individual SoC devices,
+-      2. Reset Control, to perform a software reset of individual SoC devices.
+-
+-Required Properties:
+-  - compatible: Must be one of:
+-      - "renesas,r7s9210-cpg-mssr" for the r7s9210 SoC (RZ/A2)
+-      - "renesas,r8a7743-cpg-mssr" for the r8a7743 SoC (RZ/G1M)
+-      - "renesas,r8a7744-cpg-mssr" for the r8a7744 SoC (RZ/G1N)
+-      - "renesas,r8a7745-cpg-mssr" for the r8a7745 SoC (RZ/G1E)
+-      - "renesas,r8a77470-cpg-mssr" for the r8a77470 SoC (RZ/G1C)
+-      - "renesas,r8a774a1-cpg-mssr" for the r8a774a1 SoC (RZ/G2M)
+-      - "renesas,r8a774b1-cpg-mssr" for the r8a774b1 SoC (RZ/G2N)
+-      - "renesas,r8a774c0-cpg-mssr" for the r8a774c0 SoC (RZ/G2E)
+-      - "renesas,r8a7790-cpg-mssr" for the r8a7790 SoC (R-Car H2)
+-      - "renesas,r8a7791-cpg-mssr" for the r8a7791 SoC (R-Car M2-W)
+-      - "renesas,r8a7792-cpg-mssr" for the r8a7792 SoC (R-Car V2H)
+-      - "renesas,r8a7793-cpg-mssr" for the r8a7793 SoC (R-Car M2-N)
+-      - "renesas,r8a7794-cpg-mssr" for the r8a7794 SoC (R-Car E2)
+-      - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC (R-Car H3)
+-      - "renesas,r8a7796-cpg-mssr" for the r8a77960 SoC (R-Car M3-W)
+-      - "renesas,r8a77961-cpg-mssr" for the r8a77961 SoC (R-Car M3-W+)
+-      - "renesas,r8a77965-cpg-mssr" for the r8a77965 SoC (R-Car M3-N)
+-      - "renesas,r8a77970-cpg-mssr" for the r8a77970 SoC (R-Car V3M)
+-      - "renesas,r8a77980-cpg-mssr" for the r8a77980 SoC (R-Car V3H)
+-      - "renesas,r8a77990-cpg-mssr" for the r8a77990 SoC (R-Car E3)
+-      - "renesas,r8a77995-cpg-mssr" for the r8a77995 SoC (R-Car D3)
+-
+-  - reg: Base address and length of the memory resource used by the CPG/MSSR
+-    block
+-
+-  - clocks: References to external parent clocks, one entry for each entry in
+-    clock-names
+-  - clock-names: List of external parent clock names. Valid names are:
+-      - "extal" (r7s9210, r8a7743, r8a7744, r8a7745, r8a77470, r8a774a1,
+-		 r8a774b1, r8a774c0, r8a7790, r8a7791, r8a7792, r8a7793,
+-		 r8a7794, r8a7795, r8a77960, r8a77961, r8a77965, r8a77970,
+-		 r8a77980, r8a77990, r8a77995)
+-      - "extalr" (r8a774a1, r8a774b1, r8a7795, r8a77960, r8a77961, r8a77965,
+-		  r8a77970, r8a77980)
+-      - "usb_extal" (r8a7743, r8a7744, r8a7745, r8a77470, r8a7790, r8a7791,
+-		     r8a7793, r8a7794)
+-
+-  - #clock-cells: Must be 2
+-      - For CPG core clocks, the two clock specifier cells must be "CPG_CORE"
+-	and a core clock reference, as defined in
+-	<dt-bindings/clock/*-cpg-mssr.h>.
+-      - For module clocks, the two clock specifier cells must be "CPG_MOD" and
+-	a module number, as defined in the datasheet.
+-
+-  - #power-domain-cells: Must be 0
+-      - SoC devices that are part of the CPG/MSSR Clock Domain and can be
+-	power-managed through Module Standby should refer to the CPG device
+-	node in their "power-domains" property, as documented by the generic PM
+-	Domain bindings in
+-	Documentation/devicetree/bindings/power/power-domain.yaml.
+-
+-  - #reset-cells: Must be 1
+-      - The single reset specifier cell must be the module number, as defined
+-	in the datasheet.
+-
+-
+-Examples
+---------
+-
+-  - CPG device node:
+-
+-	cpg: clock-controller@e6150000 {
+-		compatible = "renesas,r8a7795-cpg-mssr";
+-		reg = <0 0xe6150000 0 0x1000>;
+-		clocks = <&extal_clk>, <&extalr_clk>;
+-		clock-names = "extal", "extalr";
+-		#clock-cells = <2>;
+-		#power-domain-cells = <0>;
+-		#reset-cells = <1>;
+-	};
+-
+-
+-  - CPG/MSSR Clock Domain member device node:
+-
+-	scif2: serial@e6e88000 {
+-		compatible = "renesas,scif-r8a7795", "renesas,scif";
+-		reg = <0 0xe6e88000 0 64>;
+-		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cpg CPG_MOD 310>;
+-		clock-names = "fck";
+-		dmas = <&dmac1 0x13>, <&dmac1 0x12>;
+-		dma-names = "tx", "rx";
+-		power-domains = <&cpg>;
+-		resets = <&cpg 310>;
+-	};
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+new file mode 100644
+index 0000000000000000..dfbd1933f1bc56de
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+@@ -0,0 +1,204 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/clock/renesas,cpg-mssr.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Renesas Clock Pulse Generator / Module Standby and Software Reset
++
++maintainers:
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++
++description: |
++  On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
++  and MSSR (Module Standby and Software Reset) blocks are intimately connected,
++  and share the same register block.
++
++  They provide the following functionalities:
++    - The CPG block generates various core clocks,
++    - The MSSR block provides two functions:
++        1. Module Standby, providing a Clock Domain to control the clock supply
++           to individual SoC devices,
++        2. Reset Control, to perform a software reset of individual SoC devices.
++
++properties:
++  compatible:
++    enum:
++      - renesas,r7s9210-cpg-mssr  # RZ/A2
++      - renesas,r8a7743-cpg-mssr  # RZ/G1M
++      - renesas,r8a7744-cpg-mssr  # RZ/G1N
++      - renesas,r8a7745-cpg-mssr  # RZ/G1E
++      - renesas,r8a77470-cpg-mssr # RZ/G1C
++      - renesas,r8a774a1-cpg-mssr # RZ/G2M
++      - renesas,r8a774b1-cpg-mssr # RZ/G2N
++      - renesas,r8a774c0-cpg-mssr # RZ/G2E
++      - renesas,r8a7790-cpg-mssr  # R-Car H2
++      - renesas,r8a7791-cpg-mssr  # R-Car M2-W
++      - renesas,r8a7792-cpg-mssr  # R-Car V2H
++      - renesas,r8a7793-cpg-mssr  # R-Car M2-N
++      - renesas,r8a7794-cpg-mssr  # R-Car E2
++      - renesas,r8a7795-cpg-mssr  # R-Car H3
++      - renesas,r8a7796-cpg-mssr  # R-Car M3-W
++      - renesas,r8a77961-cpg-mssr # R-Car M3-W+
++      - renesas,r8a77965-cpg-mssr # R-Car M3-N
++      - renesas,r8a77970-cpg-mssr # R-Car V3M
++      - renesas,r8a77980-cpg-mssr # R-Car V3H
++      - renesas,r8a77990-cpg-mssr # R-Car E3
++      - renesas,r8a77995-cpg-mssr # R-Car D3
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++
++  '#clock-cells':
++    description: |
++      - For CPG core clocks, the two clock specifier cells must be "CPG_CORE"
++        and a core clock reference, as defined in
++        <dt-bindings/clock/*-cpg-mssr.h>
++      - For module clocks, the two clock specifier cells must be "CPG_MOD" and
++        a module number, as defined in the datasheet.
++    const: 2
++
++  '#power-domain-cells':
++    description:
++      SoC devices that are part of the CPG/MSSR Clock Domain and can be
++      power-managed through Module Standby should refer to the CPG device node
++      in their "power-domains" property, as documented by the generic PM Domain
++      bindings in Documentation/devicetree/bindings/power/power-domain.yaml.
++    const: 0
++
++  '#reset-cells':
++    description:
++      The single reset specifier cell must be the module number, as defined in
++      the datasheet.
++    const: 1
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          items:
++            enum:
++              - renesas,r7s9210-cpg-mssr
++              - renesas,r8a774c0-cpg-mssr
++              - renesas,r8a7792-cpg-mssr
++              - renesas,r8a77990-cpg-mssr
++              - renesas,r8a77995-cpg-mssr
++
++    then:
++      properties:
++        clock:
++          maxItems: 1
++        clock-names:
++          maxItems: 1
++          items:
++            - const: extal
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - renesas,r8a7743-cpg-mssr
++              - renesas,r8a7744-cpg-mssr
++              - renesas,r8a7745-cpg-mssr
++              - renesas,r8a77470-cpg-mssr
++              - renesas,r8a7790-cpg-mssr
++              - renesas,r8a7791-cpg-mssr
++              - renesas,r8a7793-cpg-mssr
++              - renesas,r8a7794-cpg-mssr
++
++    then:
++      properties:
++        clock:
++          minItems: 2
++        clock-names:
++          minItems: 2
++          items:
++            - const: extal
++            - const: usb_extal
++
++  - if:
++      properties:
++        compatible:
++          items:
++            enum:
++              - renesas,r8a774a1-cpg-mssr
++              - renesas,r8a774b1-cpg-mssr
++              - renesas,r8a7795-cpg-mssr
++              - renesas,r8a7796-cpg-mssr
++              - renesas,r8a77961-cpg-mssr
++              - renesas,r8a77965-cpg-mssr
++              - renesas,r8a77970-cpg-mssr
++              - renesas,r8a77980-cpg-mssr
++
++    then:
++      properties:
++        clock:
++          minItems: 2
++        clock-names:
++          minItems: 2
++          items:
++            - const: extal
++            - const: extalr
++
++  - if:
++      not:
++        properties:
++          compatible:
++            items:
++              enum:
++                - renesas,r7s9210-cpg-mssr
++    then:
++      required:
++        - '#reset-cells'
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++  - '#power-domain-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    // CPG device node:
++
++    cpg: clock-controller@e6150000 {
++            compatible = "renesas,r8a7795-cpg-mssr";
++            reg = <0xe6150000 0x1000>;
++            clocks = <&extal_clk>, <&extalr_clk>;
++            clock-names = "extal", "extalr";
++            #clock-cells = <2>;
++            #power-domain-cells = <0>;
++            #reset-cells = <1>;
++    };
++
++  - |
++    // CPG/MSSR Clock Domain member device node:
++    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    scif2: serial@e6e88000 {
++            compatible = "renesas,scif-r8a7795", "renesas,rcar-gen3-scif",
++                         "renesas,scif";
++            reg = <0xe6e88000 64>;
++            interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&cpg CPG_MOD 310>, <&cpg CPG_CORE R8A7795_CLK_S3D1>,
++                     <&scif_clk>;
++            clock-names = "fck";
++            dmas = <&dmac1 0x13>, <&dmac1 0x12>, <&dmac2 0x13>, <&dmac2 0x12>;
++            dma-names = "tx", "rx", "tx", "rx";
++            power-domains = <&cpg>;
++            resets = <&cpg 310>;
++    };
+-- 
+2.17.1
 
