@@ -2,162 +2,96 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C377C38BFA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 22:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C40C38BFA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 22:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95E720732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 22:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2E32084E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 22:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582584777;
+	bh=OHUXywB+hrxxqwwMwnxwex85m23Hj71gqHmjW7Twzp8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xWNT4laYPhIbNZg+NKDrqJ9A3w6BvTR4IE+lGtMNkRbN5C288U8Xk3zfdtr9FCY9q
+	 9xnqEs91QZ/mMnwYuAOBKwTdCMlliJzVz95AVF4ee5SV8s73V9zxHJyHJmi5fHl86w
+	 1OKBLo7AD7zN/qBt1aXmCMXn/mnv8CVOUY27WMI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgBXWtV (ORCPT
+        id S1728139AbgBXWw4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:49:21 -0500
-Received: from mga12.intel.com ([192.55.52.136]:37327 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgBXWtV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:49:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 14:49:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
-   d="scan'208";a="231269244"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Feb 2020 14:49:20 -0800
-Date:   Mon, 24 Feb 2020 14:49:20 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Alistair Delva <adelva@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kenny Root <kroot@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, devicetree@vger.kernel.org,
-        linux-nvdimm@lists.01.org, kernel-team@android.com
-Subject: Re: [PATCH v2 1/3] libnvdimm/of_pmem: factor out region registration
-Message-ID: <20200224224920.GA8867@iweiny-DESK2.sc.intel.com>
-References: <20200224020815.139570-1-adelva@google.com>
+        Mon, 24 Feb 2020 17:52:56 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43955 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBXWw4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 17:52:56 -0500
+Received: by mail-oi1-f194.google.com with SMTP id p125so10634931oif.10;
+        Mon, 24 Feb 2020 14:52:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2VGkRfLiHvM2TWoSDShwRBkAOB7OyJ3X9em7omr73hg=;
+        b=JO+kAFrf5uz60OOx2SG2USFXgkpYVjScYrp33umKi7Ga8H71UaYNyNoZuqLExWDGuV
+         +0UTk/U+n6VVpKJtklzH/iErZshjOUUVg5twjZ0QmJu0dunwGW2c6wWf9ds+moEd9zH9
+         h0UlxeEEnCLBfndkNLCiHOmNVpgbVuhig4DO0X/J4UMXBtpuAQD+rYMIXawL6PyBxmon
+         TOV7N6oz5LV1RF4DMWvjdNNsey5SoiouNz1ytU+4J9zJ1WmaqUQI95vHzDeMsMtVk/wj
+         yLW/Z97rU4SJUFn5wf3zz2ojGq9Vd6RAqUCP3Y22MvGBtgwxoe5XSYvz0uUEq9VHnMLl
+         1CJQ==
+X-Gm-Message-State: APjAAAXznrNc+LrJuWhzbfWL6erptJGQeEPCszHPFdbTiapuamigitMK
+        8PsZ7lFIUDIPuU0M9IGE6f0ogzc=
+X-Google-Smtp-Source: APXvYqxNziUsuA47UX0NTr+m+tVpLc9FqF9UWCb6tSYpAhM7QwzWHHXBED+wGh7of/+ZHnbcD464yA==
+X-Received: by 2002:aca:b588:: with SMTP id e130mr1145135oif.176.1582584774399;
+        Mon, 24 Feb 2020 14:52:54 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m22sm4971939otj.3.2020.02.24.14.52.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 14:52:53 -0800 (PST)
+Received: (nullmailer pid 10835 invoked by uid 1000);
+        Mon, 24 Feb 2020 22:52:53 -0000
+Date:   Mon, 24 Feb 2020 16:52:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] kbuild: fix DT binding schema rule to detect command
+ line changes
+Message-ID: <20200224225253.GA27948@bogus>
+References: <20200222190435.11767-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224020815.139570-1-adelva@google.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200222190435.11767-1-masahiroy@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 06:08:13PM -0800, Alistair Delva wrote:
-> From: Kenny Root <kroot@google.com>
+On Sun, Feb 23, 2020 at 04:04:31AM +0900, Masahiro Yamada wrote:
+> This if_change_rule is not working; it cannot detect any command line
+> changes.
 > 
-> From: Kenny Root <kroot@google.com>
+> The reason is because cmd-check in scripts/Kbuild.include compares
+> $(cmd_$@) and $(cmd_$1), but cmd_dtc_dt_yaml does not exist here.
 > 
-> Factor out region registration for 'reg' node. A follow-up change will
-> use of_pmem_register_region() to handle memory-region nodes too.
-
-Thanks!
-
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-
+> For if_change_rule to work properly, the stem part of cmd_* and rule_*
+> must match. Because this cmd_and_fixdep invokes cmd_dtc, this rule must
+> be named rule_dtc.
 > 
-> Signed-off-by: Kenny Root <kroot@google.com>
-> Signed-off-by: Alistair Delva <adelva@google.com>
-> Reviewed-by: "Oliver O'Halloran" <oohall@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-nvdimm@lists.01.org
-> Cc: kernel-team@android.com
+> Fixes: 4f0e3a57d6eb ("kbuild: Add support for DT binding schema checks")
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  drivers/nvdimm/of_pmem.c | 60 +++++++++++++++++++++++-----------------
->  1 file changed, 35 insertions(+), 25 deletions(-)
 > 
-> diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
-> index 8224d1431ea9..fdf54494e8c9 100644
-> --- a/drivers/nvdimm/of_pmem.c
-> +++ b/drivers/nvdimm/of_pmem.c
-> @@ -14,6 +14,39 @@ struct of_pmem_private {
->  	struct nvdimm_bus *bus;
->  };
->  
-> +static void of_pmem_register_region(struct platform_device *pdev,
-> +				    struct nvdimm_bus *bus,
-> +				    struct device_node *np,
-> +				    struct resource *res, bool is_volatile)
-> +{
-> +	struct nd_region_desc ndr_desc;
-> +	struct nd_region *region;
-> +
-> +	/*
-> +	 * NB: libnvdimm copies the data from ndr_desc into it's own
-> +	 * structures so passing a stack pointer is fine.
-> +	 */
-> +	memset(&ndr_desc, 0, sizeof(ndr_desc));
-> +	ndr_desc.numa_node = dev_to_node(&pdev->dev);
-> +	ndr_desc.target_node = ndr_desc.numa_node;
-> +	ndr_desc.res = res;
-> +	ndr_desc.of_node = np;
-> +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> +
-> +	if (is_volatile)
-> +		region = nvdimm_volatile_region_create(bus, &ndr_desc);
-> +	else
-> +		region = nvdimm_pmem_region_create(bus, &ndr_desc);
-> +
-> +	if (!region)
-> +		dev_warn(&pdev->dev,
-> +			 "Unable to register region %pR from %pOF\n",
-> +			 ndr_desc.res, np);
-> +	else
-> +		dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
-> +			ndr_desc.res, np);
-> +}
-> +
->  static int of_pmem_region_probe(struct platform_device *pdev)
->  {
->  	struct of_pmem_private *priv;
-> @@ -46,31 +79,8 @@ static int of_pmem_region_probe(struct platform_device *pdev)
->  			is_volatile ? "volatile" : "non-volatile",  np);
->  
->  	for (i = 0; i < pdev->num_resources; i++) {
-> -		struct nd_region_desc ndr_desc;
-> -		struct nd_region *region;
-> -
-> -		/*
-> -		 * NB: libnvdimm copies the data from ndr_desc into it's own
-> -		 * structures so passing a stack pointer is fine.
-> -		 */
-> -		memset(&ndr_desc, 0, sizeof(ndr_desc));
-> -		ndr_desc.numa_node = dev_to_node(&pdev->dev);
-> -		ndr_desc.target_node = ndr_desc.numa_node;
-> -		ndr_desc.res = &pdev->resource[i];
-> -		ndr_desc.of_node = np;
-> -		set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> -
-> -		if (is_volatile)
-> -			region = nvdimm_volatile_region_create(bus, &ndr_desc);
-> -		else
-> -			region = nvdimm_pmem_region_create(bus, &ndr_desc);
-> -
-> -		if (!region)
-> -			dev_warn(&pdev->dev, "Unable to register region %pR from %pOF\n",
-> -					ndr_desc.res, np);
-> -		else
-> -			dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
-> -					ndr_desc.res, np);
-> +		of_pmem_register_region(pdev, bus, np, &pdev->resource[i],
-> +					is_volatile);
->  	}
->  
->  	return 0;
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
-> 
+>  scripts/Makefile.lib | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+
+For the series,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+I'm assuming you will take these? If not, I can in the DT tree.
+
+Rob
