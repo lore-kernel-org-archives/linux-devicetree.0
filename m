@@ -2,111 +2,176 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FB6C11D30
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F45DC11D2F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39AEE2082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582557319;
-	bh=o1nOGaQHdZL0UAsK/bjsu+6BAwDuNsTZaQNaSLe2HLE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DUSoPWIoo4N/SRlUhEKnn9U+QB8RagiFaFXVO3IpoodpOQ/sBeOTD48RD/BoYWt+2
-	 jWt0LZSUn0C6fUYjblOCAadYLYnaYR+8SZ2DDEruplzJB2j3pdDTiNajUpQhRfxjAy
-	 QxBHLk4t4rgSGquEKCEDi3t0+vcgmL5ZOoPOcoBo=
+	by mail.kernel.org (Postfix) with ESMTP id 33F2220714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:25:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="LFgcDy1+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgBXPPS (ORCPT
+        id S1727607AbgBXPZe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:15:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727742AbgBXPPS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:15:18 -0500
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7BEA20838;
-        Mon, 24 Feb 2020 15:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582557318;
-        bh=o1nOGaQHdZL0UAsK/bjsu+6BAwDuNsTZaQNaSLe2HLE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HRf8OqzGxscXlFCy7Kr95TbhR2fqQG8f2vdcwZdx5MMJTpA8+DrGUKwwDupCJHAXJ
-         Lpe/vG+HPf7LfAKpn/L6UjmIzGsfYogpJjWyPPuIKX2EwdWPCP33Ps5cc9AEuDNSJq
-         wd6cUOAExGR8miZSpHtD5A3/EEFKNcuBNIhykFfA=
-Received: by mail-qv1-f49.google.com with SMTP id y2so4236512qvu.13;
-        Mon, 24 Feb 2020 07:15:17 -0800 (PST)
-X-Gm-Message-State: APjAAAXYoRVmrwG9KiFEgH3rdmQm/NtEw+2dx8UdR2DZVjccrCMCJl0E
-        ciO2aAKbC83gJoKWEtKrQCoT47aDzgg6YDdxVA==
-X-Google-Smtp-Source: APXvYqx6fBgVnq9vjh/yHZnkbthH3EWPw/BqHYWMQ6citY+xthXlZQgnZuHLmeSOEN0UIorxy5g/2npA/CWQaro2QqE=
-X-Received: by 2002:a0c:ef47:: with SMTP id t7mr12552684qvs.136.1582557317000;
- Mon, 24 Feb 2020 07:15:17 -0800 (PST)
+        Mon, 24 Feb 2020 10:25:34 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:39764 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbgBXPZd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 10:25:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582557931; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SmPgy2zJNFt//FFDsKzJvPnH2D7WIJX2Um97SB6yv+c=;
+        b=LFgcDy1+ROVN5JpGz88s8QhlbuOHE3h8ALc+Z9060O/Mrdqm+FEkrgUqWw1BJ05pUgReqH
+        AZu/manhY5V9y5dnsMJkCN5mbesaJWCIctAsJBznYNr2lo3BsQ92JTRnzbbegS3BODcoPD
+        ufIDouoowNNxWM0auRjpUlLpA4sVhUw=
+Date:   Mon, 24 Feb 2020 12:25:14 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v5 3/5] remoteproc: Add prepare/unprepare callbacks
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1582557914.3.1@crapouillou.net>
+In-Reply-To: <daf58c35-c240-e50a-da50-48b14c0e097c@st.com>
+References: <20200211142614.13567-1-paul@crapouillou.net>
+        <20200211142614.13567-3-paul@crapouillou.net>
+        <daf58c35-c240-e50a-da50-48b14c0e097c@st.com>
 MIME-Version: 1.0
-References: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
- <20200220060001.25807-1-andreas@kemnade.info> <CAL_JsqKTdpbLfPq_eGUf-w-0s8JMndbMrQ2BsMt+8y+eqQ-kZw@mail.gmail.com>
- <20200224074804.3a5999ca@kemnade.info>
-In-Reply-To: <20200224074804.3a5999ca@kemnade.info>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 24 Feb 2020 09:15:05 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKNAQT996sDSW+k=SZq5NwzQn4wbEB0fS9_19rKdXMGYg@mail.gmail.com>
-Message-ID: <CAL_JsqKNAQT996sDSW+k=SZq5NwzQn4wbEB0fS9_19rKdXMGYg@mail.gmail.com>
-Subject: Re: [PATCH RFC] Bindings: nvmem: add bindings for JZ4780 efuse
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 12:48 AM Andreas Kemnade <andreas@kemnade.info> wrote:
->
-> On Thu, 20 Feb 2020 13:53:55 -0600
-> Rob Herring <robh@kernel.org> wrote:
->
-> [...]
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - clock
-> >
-> > 'make dt_binding_check' would have pointed the error here for you:
-> >
-> I did run make dt_binding_check...
-> It stopped because the jz4780-cgu.h included was missing. Then I have added
-> that line and have started dt_binding_check again.
-> At least here it is doing a full rerun in the second part.
-> After some time I scrolled back and noticed DTC passed
-> and missed that
->
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.example.dt.yaml:
-> > efuse@134100d0: 'clock' is a required property
-> >
-> in the CHECKS line. Well, dt_binding_check is a bit noisy. I guess I should
-> have redirected all output to a text file, before and after my changes. and
-> diffed the results.
-> Is there any script ready for that?
+Hi Arnaud,
 
-grep 'ingenic,jz4780-efuse' <build log> ?
 
-Noisy? There's 8 warnings on Linus' master currently[1]. I try to keep
-that at 0, but I wouldn't call 8 noisy.
+Le mar., f=E9vr. 18, 2020 at 17:31, Arnaud POULIQUEN=20
+<arnaud.pouliquen@st.com> a =E9crit :
+> Hi Paul,
+>=20
+> I still wonder about the use of pm_runtime mechanism as a more=20
+> generic alternative...
 
-Rob
+The use of pm_runtime is perfect if CONFIG_PM is enabled, but otherwise=20
+it's a bit cumbersome, as the clocks must be enabled in the probe.
 
-[1] https://gitlab.com/robherring/linux-dt-bindings/-/jobs/447630363
+-Paul
+
+> Else just a minor remark inline.
+>=20
+> On 2/11/20 3:26 PM, Paul Cercueil wrote:
+>>  The .prepare() callback is called before the firmware is loaded to
+>>  memory. This is useful for instance in the case where some setup is
+>>  required for the memory to be accessible.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2-v4: No change
+>>      v5: Move calls to prepare/unprepare to=20
+>> rproc_fw_boot/rproc_shutdown
+>>=20
+>>   drivers/remoteproc/remoteproc_core.c | 16 +++++++++++++++-
+>>   include/linux/remoteproc.h           |  4 ++++
+>>   2 files changed, 19 insertions(+), 1 deletion(-)
+>>=20
+>>  diff --git a/drivers/remoteproc/remoteproc_core.c=20
+>> b/drivers/remoteproc/remoteproc_core.c
+>>  index fe5c7a2f9767..022b927e176b 100644
+>>  --- a/drivers/remoteproc/remoteproc_core.c
+>>  +++ b/drivers/remoteproc/remoteproc_core.c
+>>  @@ -1373,6 +1373,14 @@ static int rproc_fw_boot(struct rproc=20
+>> *rproc, const struct firmware *fw)
+>>=20
+>>   	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+>>=20
+>>  +	if (rproc->ops->prepare) {
+>>  +		ret =3D rproc->ops->prepare(rproc);
+>>  +		if (ret) {
+>>  +			dev_err(dev, "Failed to prepare rproc: %d\n", ret);
+>>  +			return ret;
+>>  +		}
+>>  +	}
+>>  +
+>>   	/*
+>>   	 * if enabling an IOMMU isn't relevant for this rproc, this is
+>>   	 * just a nop
+>>  @@ -1380,7 +1388,7 @@ static int rproc_fw_boot(struct rproc *rproc,=20
+>> const struct firmware *fw)
+>>   	ret =3D rproc_enable_iommu(rproc);
+>>   	if (ret) {
+>>   		dev_err(dev, "can't enable iommu: %d\n", ret);
+>>  -		return ret;
+>>  +		goto unprepare_rproc;
+>>   	}
+>>=20
+>>   	rproc->bootaddr =3D rproc_get_boot_addr(rproc, fw);
+>>  @@ -1424,6 +1432,9 @@ static int rproc_fw_boot(struct rproc *rproc,=20
+>> const struct firmware *fw)
+>>   	rproc->table_ptr =3D NULL;
+>>   disable_iommu:
+>>   	rproc_disable_iommu(rproc);
+>>  +unprepare_rproc:
+>>  +	if (rproc->ops->unprepare)
+>>  +		rproc->ops->unprepare(rproc);
+>>   	return ret;
+>>   }
+>>=20
+>>  @@ -1823,6 +1834,9 @@ void rproc_shutdown(struct rproc *rproc)
+>>=20
+>>   	rproc_disable_iommu(rproc);
+>>=20
+>>  +	if (rproc->ops->unprepare)
+>>  +		rproc->ops->unprepare(rproc);
+>>  +
+>>   	/* Free the copy of the resource table */
+>>   	kfree(rproc->cached_table);
+>>   	rproc->cached_table =3D NULL;
+>>  diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>  index 5f201f0c86c3..a6272d1ba384 100644
+>>  --- a/include/linux/remoteproc.h
+>>  +++ b/include/linux/remoteproc.h
+>>  @@ -355,6 +355,8 @@ enum rsc_handling_status {
+>>=20
+>>   /**
+>>    * struct rproc_ops - platform-specific device handlers
+>>  + * @prepare:	prepare the device for power up (before the firmware=20
+>> is loaded)
+>>  + * @unprepare:	unprepare the device after it is stopped
+>=20
+> Would be nice here to precise that these functions are optional
+> you can look at rproc_ops struct for example.
+>=20
+> Regards,
+> Arnaud
+>=20
+>>    * @start:	power on the device and boot it
+>>    * @stop:	power off the device
+>>    * @kick:	kick a virtqueue (virtqueue id given as a parameter)
+>>  @@ -371,6 +373,8 @@ enum rsc_handling_status {
+>>    * @get_boot_addr:	get boot address to entry point specified in=20
+>> firmware
+>>    */
+>>   struct rproc_ops {
+>>  +	int (*prepare)(struct rproc *rproc);
+>>  +	void (*unprepare)(struct rproc *rproc);
+>>   	int (*start)(struct rproc *rproc);
+>>   	int (*stop)(struct rproc *rproc);
+>>   	void (*kick)(struct rproc *rproc, int vqid);
+>>=20
+
+=
+
