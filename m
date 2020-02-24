@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF280C11D34
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA2DC11D35
 	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877EB2082F
+	by mail.kernel.org (Postfix) with ESMTP id B5E0820836
 	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LpM7mpj7"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BxwsppZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgBXO6m (ORCPT
+        id S1727910AbgBXO6m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 24 Feb 2020 09:58:42 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42138 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgBXO6f (ORCPT
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40850 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbgBXO6f (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 09:58:35 -0500
-Received: by mail-wr1-f65.google.com with SMTP id p18so7095990wre.9
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 06:58:34 -0800 (PST)
+Received: by mail-wr1-f68.google.com with SMTP id t3so10720254wru.7
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 06:58:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UdwXQ7pH6rI6ueZApn+K43TDTHvz3mfvfA2n6YIMVTA=;
-        b=LpM7mpj7LiZYFY1F/LHsfKrbgKu9KMEEPBIR7iDONOQtj5dzo4PULT5jUyW8VBENL7
-         ErVZShkH6j+APMl0j47EspIm4CwGk9WYyH+f6FoSIYTjN4yTAoJh+CJiUTrJ5Gdtwqwq
-         b6w2PcF2xLt7hUCknO6OepJMPbtuZhua9fSEKjbXvhGoX/pERSl3Y9o7tppCYNjp8ESs
-         O1c993L2XPYgrMdjGFiGfQJAn6Tn75s3iH6AqFliUtHIChwfNQvJrCBf0tIFCjXOqOgl
-         S8Ons34q9AFhe8dmhrVCQ6kXq9TCLFxm1YFMA2n0G3vawr70esVlFNS5i9GgW4pgD8X2
-         3vRA==
+        bh=+m5Zk6ATehdxswy6Hjbn0kVD8RHIMq9I1KqtdFphR4Y=;
+        b=BxwsppZ2TqEjT+8Z3y25ke1pudvOilFOi8pPUubmpCnhiDngRYPXdE94G7U9Ava7zQ
+         RomwNhFUanS4atJGqdbEqofH6EZH/03ujPLOashF22t7WT2B1Fhp7Z9KFA+8uPmxzRMt
+         0h2oPjI7KDMWdHsVDhW1N6Eu9/UVeLCDLPonER6wXezzegFK9KFX61o0pT2TOElUJex3
+         gQv8ec3/kuemWFl7o+5ymRoCd6NmXdQ66o7/uaxH+5SIUtHSfr05mntPv7wZsULLI7Ij
+         bWBoqaYzCjFr3npplC/8TRkuHWl35sd6nxfFn9P3WZ9X8q8LCuQOiF8stMRuF4ocpmby
+         fbYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UdwXQ7pH6rI6ueZApn+K43TDTHvz3mfvfA2n6YIMVTA=;
-        b=QD+8VbaGcUzruOWSdacOEIvtZLNifRfeICU0ypbJuq8U7uVuWDRkGiIWkQNtxwl0Zz
-         WDSGXkSUHvKCYmw5SEcXAMWm55ZdrGHHuRDgLUYL/uRsJ4J+ulM6iE/3rFYjq6/BbM/C
-         cnJF200bT5wBdhocPmtfTisY5U97hIjtnXcn9P8j8XtFBldtubhePEfI6A0wgRVfynPC
-         c6t5dE2ONiHGJoSCShi7XU7eNqKRjQtfw+Iv8pEJjaPVZg2MasWQn0UoB0iEW2+4OB+3
-         AfCcSaA99cN/exA6nw+8HPJJOYr1GmpVxot0gMbvVdXQrthXYsau7oD+wIrAL0OM5mR7
-         ba7A==
-X-Gm-Message-State: APjAAAW12IzePrP4KIOsXMM3DShKKO0iOoJJDdzd2ihVcjnWexeHr8EK
-        CTpVlBty+Uzickvp1oRX0BiCeA==
-X-Google-Smtp-Source: APXvYqx6BBo21R5PTgXLbRReQuUMfO7alOUBEJcwx+E701SSNNZySFjVl7yKssosp1Wkvm7UURQw2Q==
-X-Received: by 2002:a5d:6b88:: with SMTP id n8mr69304362wrx.288.1582556313782;
-        Mon, 24 Feb 2020 06:58:33 -0800 (PST)
+        bh=+m5Zk6ATehdxswy6Hjbn0kVD8RHIMq9I1KqtdFphR4Y=;
+        b=drXGI3q4/mjN8W6Vqe9oqsHUsZl34QtRKwwf9druPSAokC+XoMHxh4XdLKlIzfH36b
+         oicTqwYZrrg/E4macWE9Amz9zXTRzBxz5PPXWyNbyWSgmMf/YyUctKjgL01Hl5NIm0Yz
+         6Mva342h1yq0WltyJ+NimTkzKqbiM/U2BXq2iqTlel+ZHALYbopQ2CY+Kg+WeqPGlPhj
+         U0iIeLdWsvqJyfrk5ENIJRGQ5FOmgJfG9QUfNh7LmtCYH1kCRbtEfJoHIIGHbqNjdWS1
+         y2LKG957Gva+unpkpuuwyask/7kpTIpTSsGpyyVVBgMKnVrpq90fKAMghvRaMylm+bha
+         VRxQ==
+X-Gm-Message-State: APjAAAW/XMqagljdemrYXeIZTSrUKpdRnlw/hJpung+CXwC7hGzdyOYj
+        aoki7M8WcxiMnXbLEmTWofwGZg==
+X-Google-Smtp-Source: APXvYqwKJQRnmPqcIIix9h+Okty9D6LqCQRrxgqAPcpQ8cagQSHDEFG5tHJ6MlgBAUv48MiCgtTlPw==
+X-Received: by 2002:a5d:6411:: with SMTP id z17mr70933271wru.57.1582556312782;
+        Mon, 24 Feb 2020 06:58:32 -0800 (PST)
 Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id j12sm8035127wrt.35.2020.02.24.06.58.32
+        by smtp.googlemail.com with ESMTPSA id j12sm8035127wrt.35.2020.02.24.06.58.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 06:58:33 -0800 (PST)
+        Mon, 24 Feb 2020 06:58:32 -0800 (PST)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>
@@ -62,9 +62,9 @@ Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org,
         Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 8/9] ASoC: meson: convert g12a tohdmitx control to schema
-Date:   Mon, 24 Feb 2020 15:58:20 +0100
-Message-Id: <20200224145821.262873-9-jbrunet@baylibre.com>
+Subject: [PATCH 7/9] ASoC: meson: convert axg spdif output to schema
+Date:   Mon, 24 Feb 2020 15:58:19 +0100
+Message-Id: <20200224145821.262873-8-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200224145821.262873-1-jbrunet@baylibre.com>
 References: <20200224145821.262873-1-jbrunet@baylibre.com>
@@ -76,94 +76,61 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the DT binding documentation for the Amlogic g12a tohdmitx codec
-glue to schema.
+Convert the DT binding documentation for the Amlogic axg spdif output to
+schema.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../bindings/sound/amlogic,g12a-tohdmitx.txt  | 58 -------------------
- .../bindings/sound/amlogic,g12a-tohdmitx.yaml | 53 +++++++++++++++++
- 2 files changed, 53 insertions(+), 58 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
- create mode 100644 Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.yaml
+ .../bindings/sound/amlogic,axg-spdifout.txt   | 25 ------
+ .../bindings/sound/amlogic,axg-spdifout.yaml  | 77 +++++++++++++++++++
+ 2 files changed, 77 insertions(+), 25 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.yaml
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
 deleted file mode 100644
-index 4e8cd7eb7cec..000000000000
---- a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
+index 28381dd1f633..000000000000
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
 +++ /dev/null
-@@ -1,58 +0,0 @@
--* Amlogic HDMI Tx control glue
+@@ -1,25 +0,0 @@
+-* Amlogic Audio SPDIF Output
 -
 -Required properties:
--- compatible: "amlogic,g12a-tohdmitx" or
--	      "amlogic,sm1-tohdmitx"
--- reg: physical base address of the controller and length of memory
--       mapped region.
--- #sound-dai-cells: should be 1.
--- resets: phandle to the dedicated reset line of the hdmitx glue.
+-- compatible: 'amlogic,axg-spdifout' or
+-	      'amlogic,g12a-spdifout' or
+-	      'amlogic,sm1-spdifout'
+-- clocks: list of clock phandle, one for each entry clock-names.
+-- clock-names: should contain the following:
+-  * "pclk" : peripheral clock.
+-  * "mclk" : master clock
+-- #sound-dai-cells: must be 0.
 -
--Example on the S905X2 SoC:
+-Optional property:
+-- resets: phandle to the dedicated reset line of the spdif output.
 -
--tohdmitx: audio-controller@744 {
--	compatible = "amlogic,g12a-tohdmitx";
--	reg = <0x0 0x744 0x0 0x4>;
--	#sound-dai-cells = <1>;
--	resets = <&clkc_audio AUD_RESET_TOHDMITX>;
+-Example on the A113 SoC:
+-
+-spdifout: audio-controller@480 {
+-	compatible = "amlogic,axg-spdifout";
+-	reg = <0x0 0x480 0x0 0x50>;
+-	#sound-dai-cells = <0>;
+-	clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
+-		 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
+-	clock-names = "pclk", "mclk";
 -};
--
--Example of an 'amlogic,axg-sound-card':
--
--sound {
--	compatible = "amlogic,axg-sound-card";
--
--[...]
--
--	dai-link-x {
--		sound-dai = <&tdmif_a>;
--		dai-format = "i2s";
--		dai-tdm-slot-tx-mask-0 = <1 1>;
--
--		codec-0 {
--			sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
--		};
--
--		codec-1 {
--			sound-dai = <&external_dac>;
--		};
--	};
--
--	dai-link-y {
--		sound-dai = <&tdmif_c>;
--		dai-format = "i2s";
--		dai-tdm-slot-tx-mask-0 = <1 1>;
--
--		codec {
--			sound-dai = <&tohdmitx TOHDMITX_I2S_IN_C>;
--		};
--	};
--
--	dai-link-z {
--		sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
--
--		codec {
--			sound-dai = <&hdmi_tx>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.yaml b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.yaml
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.yaml
 new file mode 100644
-index 000000000000..fdd64d103f33
+index 000000000000..9ac52916f88b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.yaml
-@@ -0,0 +1,53 @@
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.yaml
+@@ -0,0 +1,77 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/sound/amlogic,g12a-tohdmitx.yaml#
++$id: http://devicetree.org/schemas/sound/amlogic,axg-spdifout.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Amlogic G12a HDMI Tx Control Glue
++title: Amlogic Audio AXG SPDIF Output
 +
 +maintainers:
 +  - Jerome Brunet <jbrunet@baylibre.com>
@@ -173,43 +140,67 @@ index 000000000000..fdd64d103f33
 +    pattern: "^audio-controller@.*"
 +
 +  "#sound-dai-cells":
-+    const: 1
++    const: 0
 +
 +  compatible:
 +    oneOf:
 +      - items:
 +        - const:
-+            amlogic,g12a-tohdmitx
++            amlogic,axg-spdifout
 +      - items:
 +        - enum:
-+          - amlogic,sm1-tohdmitx
++          - amlogic,g12a-spdifout
++          - amlogic,sm1-spdifout
 +        - const:
-+            amlogic,g12a-tohdmitx
++            amlogic,axg-spdifout
++
++  clocks:
++    items:
++      - description: Peripheral clock
++      - description: SPDIF output master clock
++
++  clock-names:
++    items:
++      - const: pclk
++      - const: mclk
 +
 +  reg:
 +    maxItems: 1
 +
 +  resets:
-+    maxItems: 1
++    items:
++      - description: dedicated device reset line
 +
 +required:
 +  - "#sound-dai-cells"
 +  - compatible
 +  - reg
-+  - resets
++  - clocks
++  - clock-names
++
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - amlogic,g12a-spdifout
++          - amlogic,sm1-spdifout
++then:
++  required:
++    - resets
 +
 +examples:
 +  - |
-+    #include <dt-bindings/reset/amlogic,meson-g12a-audio-reset.h>
++    #include <dt-bindings/clock/axg-audio-clkc.h>
 +
-+    tohdmitx: audio-controller@744 {
-+    	compatible = "amlogic,g12a-tohdmitx";
-+        reg = <0x0 0x744 0x0 0x4>;
-+        #sound-dai-cells = <1>;
-+        resets = <&clkc_audio AUD_RESET_TOHDMITX>;
++    spdifout: audio-controller@480 {
++    	compatible = "amlogic,axg-spdifout";
++        reg = <0x0 0x480 0x0 0x50>;
++        #sound-dai-cells = <0>;
++        clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
++                 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
++        clock-names = "pclk", "mclk";
 +    };
-+
-+
 -- 
 2.24.1
 
