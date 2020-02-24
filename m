@@ -2,70 +2,93 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7011DC35671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B1AC35671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 12:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D4B2082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582545543;
-	bh=527/P0PCxAx1P3oVPckFcLKVR2UnWZl2M0CPxqoBIk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Umtl0qlXfUcifvCCDydNVZ85wzdGqnUqA2U7BBngWRUwHJ/LkSvvwKVQPiFc7m8NE
-	 svN/HV9AiS3ljatm1PrAtcMBVFwL3OptHwHkYGSsU15cd0rAt8MDYrdoz0WG0Zj9YX
-	 mBLyIio5MDjQHwT86NY3IfoKZ3FNP0gLHaq3de8E=
+	by mail.kernel.org (Postfix) with ESMTP id B120C20732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 12:16:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3mXP28Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgBXL7D (ORCPT
+        id S1727282AbgBXMQS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:59:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727351AbgBXL7C (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:59:02 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B914D20828;
-        Mon, 24 Feb 2020 11:58:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582545542;
-        bh=527/P0PCxAx1P3oVPckFcLKVR2UnWZl2M0CPxqoBIk8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GSTFUuC4JnlbirXZ+HGrAkvpP4DjdiSDsPM/8vaNQ/PdHplKpt7o8SMDP5X+QAGDZ
-         XphGKVbFzlZ5C7s1+3sNbaMLp+VUtyJuONxTUP57vTEcx6ETyWOG3/n1GH4nNwOo6K
-         eMFJVma+cPkZWrzifs/dc/QW0e3OmBlFzwoKoLWQ=
-Date:   Mon, 24 Feb 2020 19:58:55 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH] arm64: dts: ls1028: sl28: explicitly enable network ports
-Message-ID: <20200224115854.GG27688@dragon>
-References: <20200224115052.27328-1-michael@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224115052.27328-1-michael@walle.cc>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 24 Feb 2020 07:16:18 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35209 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXMQS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 07:16:18 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b17so9140315wmb.0;
+        Mon, 24 Feb 2020 04:16:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=XPjzytM7w1uClSMXbpEVkJXmp/8+ZSQb5PcZcXLELJQ=;
+        b=V3mXP28Q4ffq50vDSoTlF1xSkdSeXspgnCERbp4VKruiPhhPb1PATphkbe8v8MTmFB
+         1Z2OQkCefIgGokn0lQlj355TEpu/DNnzY5NOtRyHGWHK0YjYnqsx/VYBP9JL3LMJOkaP
+         Oq9+4WkFS7c3ShMNGOSHcE4m8R02MQ6orB+dgCAcgj9IyV1Zl7DmaN9wejVVoNnGMNCi
+         yxh4x4B3hnSCkV0zgAcfOzSy3hCrDcL2ok4ImoqAHxBWizIxTbyuAh7ePNa0YuecRDgF
+         DbzOdkVShGZdeez0ZJOM0gepvjHYy9vQPadBwVAGHBG6E7ipThPzF4AoTO6fm4Wf1mTj
+         U0vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XPjzytM7w1uClSMXbpEVkJXmp/8+ZSQb5PcZcXLELJQ=;
+        b=JcP3NwV4LaFYf9UmJapkyO70PvLnDSSJnIM23fhE4ANbpaRPoPz/7L8PZ5t0VG7hLQ
+         m30Llfjb0GSJqwDWWF/8vKEG3CdnGZHdf7GtilNF3xddaEGxh3VryBrsHhx+HUSVJGSU
+         KyFxcWgi4ValoXdj1GXrDiLwfHbc+VmN0HXtmHVdzuwnUqk5CY64YTDMHQSj3f5mNGyB
+         pOM0PYU1SdMK/NU2gvu86craGa16iYnUQi4VPXlxvTvBNHtsZHHfR4ewDHWzku//5qbd
+         E571MeCSCJC1ZQhol94NcoUfsqrhitGuwTaIYw+FXA4w1/5bCrV3IhNz5qBSlfDPomO1
+         hEQw==
+X-Gm-Message-State: APjAAAVqU5tKDH2RGH8jb4u6i7oG4U7jmQJQDkVxkaNdWWlwccP+EaSI
+        /FSksir3D7Y4DBGdMRE8arM=
+X-Google-Smtp-Source: APXvYqwfE04voGa/UTraT7VXsY2989dxXkN06vIHcnN9MmyG1I8v6qCn78HSk/853GR5U0U0ZgLrVA==
+X-Received: by 2002:a1c:9c52:: with SMTP id f79mr22028359wme.30.1582546576736;
+        Mon, 24 Feb 2020 04:16:16 -0800 (PST)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id a13sm8450456wrv.62.2020.02.24.04.16.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 04:16:16 -0800 (PST)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
+        michael@walle.cc, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 net-next 0/2] Remainder for "DT bindings for Felix DSA switch on LS1028A"
+Date:   Mon, 24 Feb 2020 14:15:32 +0200
+Message-Id: <20200224121534.29679-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 12:50:52PM +0100, Michael Walle wrote:
-> Since commit b9213899d2b0 ("arm64: dts: ls1028a: disable all enetc ports
-> by default") all the network ports are disabled by default. This makes
-> sense, but now we have to enable them explicitly in the boards. Do so
-> for the sl28 module.
-> 
-> Since we are at it. Make sure the second port is only enabled for the
-> variant 4 of the module. Variant 3 has only one network port.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Applied, thanks.
+This series is the remainder of patchset [0] which has been merged
+through Shawn Guo's devicetree tree.
+
+It contains changes to the PHY mode validation in the Felix driver
+("gmii" to "internal") and the documentation for the DT bindings.
+
+[0]: https://patchwork.ozlabs.org/cover/1242716/
+
+Vladimir Oltean (2):
+  net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
+  dt-bindings: net: dsa: ocelot: document the vsc9959 core
+
+ .../devicetree/bindings/net/dsa/ocelot.txt    | 116 ++++++++++++++++++
+ drivers/net/dsa/ocelot/felix.c                |   3 +-
+ drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
+ 3 files changed, 118 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
+
+-- 
+2.17.1
+
