@@ -2,96 +2,76 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA783C3567B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 06:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C5C35679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 06:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2302072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 06:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582525416;
-	bh=OsPgg0jY2d2muGW/C79n94xMbYStT13zHqGcvLqf3y8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZoG+lHNWvZkEnGQIlNG8aX18t3dQ7VPPGLjoQJ2Rmd4hx6Jp7Z9pWVkxnQq3LBcvr
-	 xU0FWrWXg4CW6bJOIe4bm5BhJjGgXmEdC8yOvDKcaQTm9hR+dRATwTBvGRNi2CkqFb
-	 FVGmRe67hBg42ZiO9rhaW0OX4WrDZJ4Cr55yKq64=
+	by mail.kernel.org (Postfix) with ESMTP id 148FB20661
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 06:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgBXGXg (ORCPT
+        id S1726502AbgBXGat (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:23:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55616 "EHLO mail.kernel.org"
+        Mon, 24 Feb 2020 01:30:49 -0500
+Received: from comms.puri.sm ([159.203.221.185]:46804 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgBXGXf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:23:35 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB9B20661;
-        Mon, 24 Feb 2020 06:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582525415;
-        bh=OsPgg0jY2d2muGW/C79n94xMbYStT13zHqGcvLqf3y8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ejxIowobUWbHpDL2VqIuu3+29xFVJ+OL41TWpQKVnsKCAYGEpPCD+FwlzgrC96Ex4
-         GAOGDEWGYbTb+Lqf4csoXeytrZidb0hD1l5KOm5ggy+pH2Gb/0h6XPPzO6KFkpduDr
-         RPA3HYPUHQ52qztTPqBcCnzXQ7niO0upLNQNplus=
-Date:   Mon, 24 Feb 2020 14:23:27 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opanyuk <igor.opanyuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Walle <michael@walle.cc>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robert Jones <rjones@gateworks.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
-        <sebastien.szymanski@armadeus.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/3] Add Aster carrier board support for Colibri iMX7
- CoM
-Message-ID: <20200224062326.GJ27688@dragon>
-References: <20200219130043.3563238-1-oleksandr.suvorov@toradex.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219130043.3563238-1-oleksandr.suvorov@toradex.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726060AbgBXGat (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 01:30:49 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id CD823E035E;
+        Sun, 23 Feb 2020 22:30:48 -0800 (PST)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id lH7ivXSrSg3T; Sun, 23 Feb 2020 22:30:48 -0800 (PST)
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+To:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de
+Cc:     linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
+        kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH v3 0/8] arm64: dts: librem5-devkit: description updates
+Date:   Mon, 24 Feb 2020 07:29:09 +0100
+Message-Id: <20200224062917.4895-1-martin.kepplinger@puri.sm>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:00:48PM +0000, Oleksandr Suvorov wrote:
-> 
-> This series adds devicetrees for the Toradex Aster board along with
-> Toradex Computer on Module Colibri iMX7S/iMX7D.
-> 
-> Changes in v2:
-> - Change X11 license to MIT
-> - Change X11 license to MIT
-> - Sort nodes alphabetically
-> - Document compatibles for an Aster board in the separate commit of
->   the series
-> - Drop the undocumented device (spidev-around work will be sent in
->   the separate patchset)
-> 
-> Oleksandr Suvorov (3):
->   ARM: dts: imx7-colibri: Convert to SPDX license tags for Colibri iMX7
->   dt-bindings: arm: fsl: add nxp based toradex colibri-imx7 bindings
->   ARM: dts: imx7-colibri: add support for Toradex Aster carrier board
+These are additions to the imx8mq-librem5-devkit devicetree description
+we are running for quite some time. All users should have them:
 
-Applied all, thanks.
+revision history
+----------------
+v3: review by Show: newline / hyphen issues; squashed related ones.
+    thanks a lot.
+v2: review by Shawn and Guido: remove a battery description
+    add SoB tags, coding style fixes, squash and reorder audio
+    descritions, remove redundant and unneeded changes.
+    https://lore.kernel.org/linux-arm-kernel/20200218084942.4884-1-martin.kepplinger@puri.sm/
+v1: https://lore.kernel.org/linux-arm-kernel/20200205143003.28408-1-martin.kepplinger@puri.sm/
+
+
+Angus Ainslie (Purism) (7):
+  arm64: dts: librem5-devkit: enable sai2 and sai6 audio interface
+  arm64: dts: librem5-devkit: add the simcom 7100 modem and sgtl5000
+    audio codec
+  arm64: dts: librem5-devkit: allow modem to wake the system from
+    suspend
+  arm64: dts: librem5-devkit: add a vbus supply to usb0
+  arm64: dts: librem5-devkit: add the regulators for DVFS
+  arm64: dts: librem5-devkit: allow the redpine card to be removed
+  arm64: dts: librem5-devkit: increase the VBUS current in the kernel
+
+Martin Kepplinger (1):
+  arm64: dts: librem5-devkit: add lsm9ds1 mount matrix
+
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 136 +++++++++++++++++-
+ 1 file changed, 133 insertions(+), 3 deletions(-)
+
+-- 
+2.20.1
+
