@@ -2,213 +2,121 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925B5C3567B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BB1C35679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60CB720714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C88820578
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 07:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tX4PPsoA"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="uXt0JYDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgBXHUm (ORCPT
+        id S1726778AbgBXHWT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:20:42 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39824 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgBXHUk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 02:20:40 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 84so4887727pfy.6
-        for <devicetree@vger.kernel.org>; Sun, 23 Feb 2020 23:20:39 -0800 (PST)
+        Mon, 24 Feb 2020 02:22:19 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34172 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgBXHWT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 02:22:19 -0500
+Received: by mail-ua1-f67.google.com with SMTP id 1so2870651uao.1
+        for <devicetree@vger.kernel.org>; Sun, 23 Feb 2020 23:22:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d17BUbT9BeIhozRgLya99QrlVVsu5JDoV05HFzpYDyI=;
-        b=tX4PPsoAZ93qYdTGJqfLDnzMCWiEL3N5LumrMh2+TNF6m+7oLL1F/EyrLxp8necb50
-         lRiepTn9LHb9aWKxBomyH/Iaa5/v51oKIB//XnqfstKAsBTut8pSKd8fdWs8xwQHuUzg
-         8o8wlUgtf2HJvHwcJejj/aPFf+g3iMDcY0O67nMuaj7aUtWswClNLW6mdlG5ThzeAwGH
-         0hDVabld3B5XHbNQebcc4dJ/nHLD0T+lP0B+OHv/3fY0gKFH+tcRw0zKkySPCCZ5OM9d
-         f8Z8PibHVvKo9ab7zuC/u8JhdzJ33I3KimAGvdJenvKTatQ6EbleVbIYNofJR8XYYF1O
-         FALw==
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=51VpaiWfXJd1ONeSEUuEOWBMV41ZnSSRJG+n3jg+2Ko=;
+        b=uXt0JYDxbDwwvUxezeC7a0GwQS/QoUKiPOOvCcnibKZADVlU20s696uVOrhCwyJ9uD
+         ebeOhCAu+glMcm8JwQJc7NynJr6maQvt/Q3W1Z5FHboIMkw8LjWT34FT6FQBmtYQBkBD
+         tiilg+lE6Q4YmUCeFq2D3+IM2habtm/yvHnQgOp93Fa+jZYMQ3P/iQX4xncguVgs+htm
+         84nedT0uT3cWK+EDwKjY1/aEEGrdU+W3RZNLcFTmBI130iA3UiUI4gSNQYqtSwzaM5rZ
+         NpQieeMXPKgyy0DFkcErj60rJbMjRQ+02CXK8W06u7EMIwEidMCys6BU9Ss+clceXT8u
+         5AGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d17BUbT9BeIhozRgLya99QrlVVsu5JDoV05HFzpYDyI=;
-        b=EnkXT+WnxK/FKYAgJ4pDlPWwvMYnU3B+vM3p7CZyt6WbDYBJFoy8H9AySnmI5PXcAo
-         1LP2++eVkP/KHtXlCvA/k0N8QqD4Pjt94FfNNITFT+oHr0JH6u3Qsg6J6hDt7k4oVo+x
-         7p1IIySpmgjJ34DnmfY6F7+is0MjhEtqaxiNsuiVLHFdpqZt2nHFp5S3EO9XfKhlJLFS
-         n5UkMgZqVMGdJh3VtQwwdyLZnsvYNZzSRuedHF/Fqi2sbDehArRWvZM5XD6J7NDKLwy0
-         I8FzC/RoYY9Nd0W/SnQ87CKwsVOK1w+5ytOoSSQohs1J5E6TFXTTrfmx022i/EWmjIAd
-         RTNw==
-X-Gm-Message-State: APjAAAUG5pqUAkB9QUDipi/7fXg5nHbCYNp55l38UjJlDUfQO4Wo7QdJ
-        cdNE9FfzBuybajH2vQ15ZHwQNQ==
-X-Google-Smtp-Source: APXvYqzkJT+9NfIMSJwyBdAUhvFLgxMSJMdeZTpH6ySLbj3mVts+tjLm4Pji5DqLD/oefGUw4ie0hg==
-X-Received: by 2002:aa7:86c2:: with SMTP id h2mr50096222pfo.45.1582528839386;
-        Sun, 23 Feb 2020 23:20:39 -0800 (PST)
-Received: from localhost ([45.127.44.57])
-        by smtp.gmail.com with ESMTPSA id p24sm11375421pff.69.2020.02.23.23.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 23:20:38 -0800 (PST)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=51VpaiWfXJd1ONeSEUuEOWBMV41ZnSSRJG+n3jg+2Ko=;
+        b=EJ1d7cZuvTvQc3mj5G9nDwX2t/UZJfLzv5HGxOl1xgMKsWYR6kJx/g2z6Pq23Fzx+e
+         RG6X/Suw9ix+JX9zrhj1ilZRbpmn57BIsRXcAVWuPgsNgPSaxcU2WNMyhDEsMu9mhs+L
+         D2R6GKKhM9AHc4HyVUICd/VOfYRaJ9/+5Bcmg6y0qK8d1u3ExiDasoYbPGzTPsEVwoyt
+         +BOhGsKkDys0tKYmLn9XxiLMdGFYpyvWvlJxvw900CtMobiTtrG88lzApXMEgGJBOA2J
+         MRc5wxryuqw+ikmE1SYsvOjDQf98qF5zAp9ludrYHNux99qHvwzasOKNQZaWrfi4KJjB
+         XjmA==
+X-Gm-Message-State: APjAAAXgpV/KjtxQirklqKV6kdXkfQeq9qQc19ydgbVnL3L7hDyUbRud
+        p9sICgFpB07Gtcz64T8TvuKDQ11yXu8ZUGj+44ye8w==
+X-Google-Smtp-Source: APXvYqwotp7wpK2rG0V2qY5vEm6T/AGJnDE4PrXlDeoCMmvRzQPnX9+w+hVrp1Rer4U4wdebA3lwWbaWut3U5wqk+kk=
+X-Received: by 2002:ab0:634c:: with SMTP id f12mr24202339uap.48.1582528938687;
+ Sun, 23 Feb 2020 23:22:18 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1582527752.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1582527752.git.amit.kucheria@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Mon, 24 Feb 2020 12:52:07 +0530
+Message-ID: <CAHLCerPQ1MhxHPYx9sODTf25MFzEYO7W8rREdarTUCGHJzZ2LQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 0/3] Convert thermal bindings to yaml
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Amit Kucheria <amit.kucheria@verdurent.com>,
         Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RFC PATCH v5 2/3] dt-bindings: thermal: Add yaml bindings for thermal cooling-devices
-Date:   Mon, 24 Feb 2020 12:50:26 +0530
-Message-Id: <aec68dc9afc15785397ade1c9da8365349cc1516.1582527752.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1582527752.git.amit.kucheria@linaro.org>
-References: <cover.1582527752.git.amit.kucheria@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As part of moving the thermal bindings to YAML, split it up into 3
-bindings: thermal sensors, cooling devices and thermal zones.
+Sigh, typo on my part with the version of the series. Will resend with
+corrections.
 
-The property #cooling-cells is required in each device that acts as a
-cooling device - whether active or passive. So any device that can
-throttle its performance to passively reduce heat dissipation (e.g.
-cpus, gpus) and any device that can actively dissipate heat at different
-levels (e.g. fans) will contain this property.
-
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- .../thermal/thermal-cooling-devices.yaml      | 114 ++++++++++++++++++
- 1 file changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-
-diff --git a/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-new file mode 100644
-index 000000000000..6aafca25af9b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-@@ -0,0 +1,114 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+# Copyright 2020 Linaro Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/thermal-cooling-devices.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Thermal cooling device binding
-+
-+maintainers:
-+  - Amit Kucheria <amitk@kernel.org>
-+
-+description: |
-+  Thermal management is achieved in devicetree by describing the sensor hardware
-+  and the software abstraction of cooling devices and thermal zones required to
-+  take appropriate action to mitigate thermal overload.
-+
-+  The following node types are used to completely describe a thermal management
-+  system in devicetree:
-+   - thermal-sensor: device that measures temperature, has SoC-specific bindings
-+   - cooling-device: device used to dissipate heat either passively or artively
-+   - thermal-zones: a container of the following node types used to describe all
-+     thermal data for the platform
-+
-+  This binding describes the cooling devices.
-+
-+  There are essentially two ways to provide control on power dissipation:
-+    - Passive cooling: by means of regulating device performance. A typical
-+      passive cooling mechanism is a CPU that has dynamic voltage and frequency
-+      scaling (DVFS), and uses lower frequencies as cooling states.
-+    - Active cooling: by means of activating devices in order to remove the
-+      dissipated heat, e.g. regulating fan speeds.
-+
-+  Any cooling device has a range of cooling states (i.e. different levels of
-+  heat dissipation). They also have a way to determine the state of cooling in
-+  which the device is. For example, a fan's cooling states correspond to the
-+  different fan speeds possible. Cooling states are referred to by single
-+  unsigned integers, where larger numbers mean greater heat dissipation. The
-+  precise set of cooling states associated with a device should be defined in
-+  a particular device's binding.
-+
-+properties:
-+  "#cooling-cells":
-+    description:
-+        Must be 2, in order to specify minimum and maximum cooling state used in
-+        the cooling-maps reference. The first cell is the minimum cooling state
-+        and the second cell is the maximum cooling state requested.
-+    const: 2
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/thermal/thermal.h>
-+
-+    // Example 1: Cpufreq cooling device on CPU0
-+    cpus {
-+            #address-cells = <2>;
-+            #size-cells = <0>;
-+
-+            CPU0: cpu@0 {
-+                    device_type = "cpu";
-+                    compatible = "qcom,kryo385";
-+                    reg = <0x0 0x0>;
-+                    enable-method = "psci";
-+                    cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+                                       &LITTLE_CPU_SLEEP_1
-+                                       &CLUSTER_SLEEP_0>;
-+                    capacity-dmips-mhz = <607>;
-+                    dynamic-power-coefficient = <100>;
-+                    qcom,freq-domain = <&cpufreq_hw 0>;
-+                    #cooling-cells = <2>;
-+                    next-level-cache = <&L2_0>;
-+                    L2_0: l2-cache {
-+                            compatible = "cache";
-+                            next-level-cache = <&L3_0>;
-+                            L3_0: l3-cache {
-+                                    compatible = "cache";
-+                            };
-+                    };
-+          };
-+
-+          /* ... */
-+
-+    };
-+
-+    /* ... */
-+
-+    thermal-zones {
-+            cpu0-thermal {
-+                    polling-delay-passive = <250>;
-+                    polling-delay = <1000>;
-+
-+                    thermal-sensors = <&tsens0 1>;
-+
-+                    trips {
-+                            cpu0_alert0: trip-point0 {
-+                                    temperature = <90000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                            };
-+                    };
-+
-+                    cooling-maps {
-+                            map0 {
-+                                    trip = <&cpu0_alert0>;
-+                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
-+                                                            THERMAL_NO_LIMIT>;
-+                            };
-+                    };
-+            };
-+
-+            /* ... */
-+    };
-+...
--- 
-2.20.1
-
+On Mon, Feb 24, 2020 at 12:50 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> Hi all,
+>
+> Here is a series splitting up the thermal bindings into 3 separate bindings
+> in YAML, one each of the sensor, cooling-device and the thermal zones.
+> Since I was learning about YAML parsers while creating these bindings,
+> there are bound to be some issues.
+>
+> I have to add that the bindings as they exist today, don't really follow
+> the "describe the hardware" model of devicetree. e.g. the entire
+> thermal-zone binding is a software abstraction to tie arbitrary,
+> board-specific trip points to cooling strategies. This doesn't fit well
+> into the model where the same SoC in two different form-factor devices e.g.
+> mobile and laptop, will have fairly different thermal profiles and might
+> benefit from different trip points and mitigation heuristics. I've started
+> some experiments with moving the thermal zone data to a board-specific
+> platform data that is used to initialise a "thermal zone driver".
+>
+> In any case, if we ever move down that path, it'll probably end up being v2
+> of the binding, so this series is still relevant.
+>
+> Please help review.
+>
+> Regards,
+> Amit
+>
+>
+> Amit Kucheria (3):
+>   dt-bindings: thermal: Add yaml bindings for thermal sensors
+>   dt-bindings: thermal: Add yaml bindings for thermal cooling-devices
+>   dt-bindings: thermal: Add yaml bindings for thermal zones
+>
+>  .../thermal/thermal-cooling-devices.yaml      | 114 +++++++
+>  .../bindings/thermal/thermal-sensor.yaml      |  70 ++++
+>  .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
+>  3 files changed, 486 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+>
+> --
+> 2.20.1
+>
