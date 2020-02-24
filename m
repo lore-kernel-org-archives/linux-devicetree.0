@@ -2,171 +2,189 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FCCC35671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116F1C35671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2E72080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:50:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="inMbfyqu"
+	by mail.kernel.org (Postfix) with ESMTP id E3FC420578
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbgBXNuY (ORCPT
+        id S1727510AbgBXNve (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:50:24 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:50346 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727310AbgBXNuY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:50:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582552224; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=W628OvkNRlX9E5Eh9zzngUI5dh1s51b264AW8MC+oWY=; b=inMbfyquGM27kOUcWN0JF/IxNRAtDsbu/kI8QjV8uhH4kOQnOaycxZHgaBL7abZDCJCcwndl
- ISpEL1z5RD2nInicW5cVAlSHLFXkJ4j9tNOTV8w1ek2xaOX8vwrvPiTCdQaG46u2Zw8hgnRq
- xGCMeCuD48h8V/7Hh3JJe67Hizw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e53d498.7f1382beb7d8-smtp-out-n03;
- Mon, 24 Feb 2020 13:50:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 42017C4479F; Mon, 24 Feb 2020 13:50:15 +0000 (UTC)
-Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9DBA9C43383;
-        Mon, 24 Feb 2020 13:50:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9DBA9C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH RFC] mmc: sdhci-msm: Toggle fifo write clk after ungating
- sdcc clk
-To:     Sayali Lokhande <sayalil@codeaurora.org>,
-        bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        ppvk@codeaurora.org, rampraka@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org
-References: <1582190446-4778-1-git-send-email-sayalil@codeaurora.org>
- <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <4e4f1e44-8033-94e9-641c-a74232727895@codeaurora.org>
-Date:   Mon, 24 Feb 2020 19:19:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 24 Feb 2020 08:51:34 -0500
+Received: from andre.telenet-ops.be ([195.130.132.53]:56668 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727501AbgBXNve (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 08:51:34 -0500
+Received: from ramsan ([84.195.182.253])
+        by andre.telenet-ops.be with bizsmtp
+        id 6drX2200A5USYZQ01drXQ6; Mon, 24 Feb 2020 14:51:31 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j6E8x-00052L-7F; Mon, 24 Feb 2020 14:51:31 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j6E8x-0008Il-56; Mon, 24 Feb 2020 14:51:31 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] dt-bindings: reset: rcar-rst: Convert to json-schema
+Date:   Mon, 24 Feb 2020 14:51:29 +0100
+Message-Id: <20200224135129.31870-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the Renesas R-Car Reset Controller Device Tree binding
+documentation to json-schema.
 
-On 2/20/2020 2:50 PM, Sayali Lokhande wrote:
-> From: Ram Prakash Gupta <rampraka@codeaurora.org>
->
-> During GCC level clock gating of MCLK, the async FIFO
-> gets into some hang condition, such that for the next
-> transfer after MCLK ungating, first bit of CMD response
-> doesn't get written in to the FIFO. This cause the CPSM
-> to hang eventually leading to SW timeout.
->
-> To fix the issue, toggle the FIFO write clock after
-> MCLK ungated to get the FIFO pointers and flags to
-> valid states.
->
-> Change-Id: Ibef2d1d283ac0b6983c609a4abc98bc574d31fa6
-> Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> ---
->   drivers/mmc/host/sdhci-msm.c | 43 +++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 43 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index c3a160c..eaa3e95 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -127,6 +127,8 @@
->   #define CQHCI_VENDOR_CFG1	0xA00
->   #define CQHCI_VENDOR_DIS_RST_ON_CQ_EN	(0x3 << 13)
->   
-> +#define RCLK_TOGGLE 0x2
-> +
->   struct sdhci_msm_offset {
->   	u32 core_hc_mode;
->   	u32 core_mci_data_cnt;
-> @@ -1554,6 +1556,43 @@ static void __sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->   	sdhci_enable_clk(host, clk);
->   }
->   
-> +/*
-> + * After MCLK ugating, toggle the FIFO write clock to get
-> + * the FIFO pointers and flags to valid state.
-> + */
-> +static void sdhci_msm_toggle_fifo_write_clk(struct sdhci_host *host)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
-> +	struct mmc_card *card = host->mmc->card;
-> +
-> +	if (msm_host->tuning_done ||
-> +			(card && card->ext_csd.strobe_support &&
-> +			card->host->ios.enhanced_strobe)) {
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+---
+v2:
+  - Add Reviewed-by,
+  - Drop "DT bindings for the" from title.
+---
+ .../devicetree/bindings/reset/renesas,rst.txt | 48 ---------------
+ .../bindings/reset/renesas,rst.yaml           | 61 +++++++++++++++++++
+ 2 files changed, 61 insertions(+), 48 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.yaml
 
-This issue is present on only HS400ES mode.
+diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt b/Documentation/devicetree/bindings/reset/renesas,rst.txt
+deleted file mode 100644
+index de7f06ccd003da9f..0000000000000000
+--- a/Documentation/devicetree/bindings/reset/renesas,rst.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-DT bindings for the Renesas R-Car and RZ/G Reset Controllers
+-
+-The R-Car and RZ/G Reset Controllers provide reset control, and implement the
+-following functions:
+-  - Latching of the levels on mode pins when PRESET# is negated,
+-  - Mode monitoring register,
+-  - Reset control of peripheral devices (on R-Car Gen1),
+-  - Watchdog timer (on R-Car Gen1),
+-  - Register-based reset control and boot address registers for the various CPU
+-    cores (on R-Car Gen2 and Gen3, and on RZ/G).
+-
+-
+-Required properties:
+-  - compatible: Should be
+-		  - "renesas,<soctype>-reset-wdt" for R-Car Gen1,
+-		  - "renesas,<soctype>-rst" for R-Car Gen2 and Gen3, and RZ/G
+-		Examples with soctypes are:
+-		  - "renesas,r8a7743-rst" (RZ/G1M)
+-		  - "renesas,r8a7744-rst" (RZ/G1N)
+-		  - "renesas,r8a7745-rst" (RZ/G1E)
+-		  - "renesas,r8a77470-rst" (RZ/G1C)
+-		  - "renesas,r8a774a1-rst" (RZ/G2M)
+-		  - "renesas,r8a774b1-rst" (RZ/G2N)
+-		  - "renesas,r8a774c0-rst" (RZ/G2E)
+-		  - "renesas,r8a7778-reset-wdt" (R-Car M1A)
+-		  - "renesas,r8a7779-reset-wdt" (R-Car H1)
+-		  - "renesas,r8a7790-rst" (R-Car H2)
+-		  - "renesas,r8a7791-rst" (R-Car M2-W)
+-		  - "renesas,r8a7792-rst" (R-Car V2H
+-		  - "renesas,r8a7793-rst" (R-Car M2-N)
+-		  - "renesas,r8a7794-rst" (R-Car E2)
+-		  - "renesas,r8a7795-rst" (R-Car H3)
+-		  - "renesas,r8a7796-rst" (R-Car M3-W)
+-		  - "renesas,r8a77961-rst" (R-Car M3-W+)
+-		  - "renesas,r8a77965-rst" (R-Car M3-N)
+-		  - "renesas,r8a77970-rst" (R-Car V3M)
+-		  - "renesas,r8a77980-rst" (R-Car V3H)
+-		  - "renesas,r8a77990-rst" (R-Car E3)
+-		  - "renesas,r8a77995-rst" (R-Car D3)
+-  - reg: Address start and address range for the device.
+-
+-
+-Example:
+-
+-	rst: reset-controller@e6160000 {
+-		compatible = "renesas,r8a7795-rst";
+-		reg = <0 0xe6160000 0 0x0200>;
+-	};
+diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.yaml b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
+new file mode 100644
+index 0000000000000000..f329d3e0ce8825dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/reset/renesas,rst.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Renesas R-Car and RZ/G Reset Controller
++
++maintainers:
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++  - Magnus Damm <magnus.damm@gmail.com>
++
++description: |
++  The R-Car and RZ/G Reset Controllers provide reset control, and implement the
++  following functions:
++    - Latching of the levels on mode pins when PRESET# is negated,
++    - Mode monitoring register,
++    - Reset control of peripheral devices (on R-Car Gen1),
++    - Watchdog timer (on R-Car Gen1),
++    - Register-based reset control and boot address registers for the various
++      CPU cores (on R-Car Gen2 and Gen3, and on RZ/G).
++
++properties:
++  compatible:
++    enum:
++      - renesas,r8a7743-rst       # RZ/G1M
++      - renesas,r8a7744-rst       # RZ/G1N
++      - renesas,r8a7745-rst       # RZ/G1E
++      - renesas,r8a77470-rst      # RZ/G1C
++      - renesas,r8a774a1-rst      # RZ/G2M
++      - renesas,r8a774b1-rst      # RZ/G2N
++      - renesas,r8a774c0-rst      # RZ/G2E
++      - renesas,r8a7778-reset-wdt # R-Car M1A
++      - renesas,r8a7779-reset-wdt # R-Car H1
++      - renesas,r8a7790-rst       # R-Car H2
++      - renesas,r8a7791-rst       # R-Car M2-W
++      - renesas,r8a7792-rst       # R-Car V2H
++      - renesas,r8a7793-rst       # R-Car M2-N
++      - renesas,r8a7794-rst       # R-Car E2
++      - renesas,r8a7795-rst       # R-Car H3
++      - renesas,r8a7796-rst       # R-Car M3-W
++      - renesas,r8a77961-rst      # R-Car M3-W+
++      - renesas,r8a77965-rst      # R-Car M3-N
++      - renesas,r8a77970-rst      # R-Car V3M
++      - renesas,r8a77980-rst      # R-Car V3H
++      - renesas,r8a77990-rst      # R-Car E3
++      - renesas,r8a77995-rst      # R-Car D3
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    rst: reset-controller@e6160000 {
++            compatible = "renesas,r8a7795-rst";
++            reg = <0xe6160000 0x0200>;
++    };
+-- 
+2.17.1
 
-If(host->ios.enhanced_strob) check should be sufficient, other checks 
-are not needed.
-
-> +		/*
-> +		 * set HC_REG_DLL_CONFIG_3[1] to select MCLK as
-> +		 * DLL input clock
-> +		 */
-> +		writel_relaxed(((readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config_3))
-> +			| RCLK_TOGGLE), host->ioaddr +
-> +			msm_offset->core_dll_config_3);
-> +		/* ensure above write as toggling same bit quickly */
-> +		wmb();
-> +		udelay(2);
-> +		/*
-> +		 * clear HC_REG_DLL_CONFIG_3[1] to select RCLK as
-> +		 * DLL input clock
-> +		 */
-> +		writel_relaxed(((readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config_3))
-> +			& ~RCLK_TOGGLE), host->ioaddr +
-> +			msm_offset->core_dll_config_3);
-> +	}
-> +}
-> +
->   /* sdhci_msm_set_clock - Called with (host->lock) spinlock held. */
->   static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->   {
-> @@ -2149,6 +2188,10 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
->   				       msm_host->bulk_clks);
->   	if (ret)
->   		return ret;
-> +	if (host->mmc &&
-> +			(host->mmc->ios.timing == MMC_TIMING_MMC_HS400))
-These checks are not needed. You can have these checks within 
-sdhci_msm_toggle_fifo_write_clk
-> +		sdhci_msm_toggle_fifo_write_clk(host);
-> +
->   	/*
->   	 * Whenever core-clock is gated dynamically, it's needed to
->   	 * restore the SDR DLL settings when the clock is ungated.
