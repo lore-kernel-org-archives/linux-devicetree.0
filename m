@@ -2,108 +2,120 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_RHS_DOB autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEFEC38BE2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4699CC38BE1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D462084E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="L3/tRvvN"
+	by mail.kernel.org (Postfix) with ESMTP id 1E9A520836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582569493;
+	bh=HKGf1vixZ1cIXykh3YzYG1OpYhwbo+RkoLyvnacjPoI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hWy2mVMP3Ti/7JsN+ejhZres8B3E/X+9xu2yVH+zmqmkhKdWpiOEveNVCXmqXUuFq
+	 2qr0dZV7QskQjPhRyyW+jDsIOjSABO5hzzpfDVV3dSEUPNh+IxpqiQ/WCguXp4EyhV
+	 RxuaLCaU4wOgoaYPUrDGh+yLUgq1SVHm+CDQVNac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgBXSdD (ORCPT
+        id S1726664AbgBXSiM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:33:03 -0500
-Received: from vps.xff.cz ([195.181.215.36]:33236 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbgBXSdD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:33:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582569181; bh=9mqkV16PsZRdF8vb7JAmbDN3tZ6Pelbha30uweql6Dc=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=L3/tRvvN9VGe+SIY9zKlDypNgHtG9CvMG6/DnGGu/Pj5Xoykbk7JMbxD4PZ5Z6HGL
-         uthPS2w4LoCkM8jw2Ec6jipbasGJ6RnXPbqAzUu1aYXv8/rQ4xhC+4TRf/dXAbngHM
-         6Tc/o3+stmYbsNKoyrsPJmEvUHT1htQRM9Y00k+A=
-Date:   Mon, 24 Feb 2020 19:33:00 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: sun8i-a83t: Add thermal trip points/cooling
- maps
-Message-ID: <20200224183300.jnclticehmc7uevs@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200224165417.334617-1-megous@megous.com>
- <2e4213a6-2aaf-641c-f741-9503f3ffd5fe@linaro.org>
- <20200224172328.yauwfgov664ayrd6@core.my.home>
- <20200224173940.huwpaqhrc5ngbmji@core.my.home>
- <25a5dfb2-93bb-90c3-8156-0cfbed1f9995@linaro.org>
+        Mon, 24 Feb 2020 13:38:12 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36120 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgBXSiM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:38:12 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j20so9683143otq.3;
+        Mon, 24 Feb 2020 10:38:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CTcGzA0z5i+6lNDLcB/Tsj2HAX7a4+dM5kF5P26aJ2Y=;
+        b=k2JC62cHMtWz7LTQXqVrY5QKna9x8UDbQDJkUF07FaV9q1x6t9roaGxsv6cYCC87x9
+         4rZG9Tu6PzT7Vh3nYvhLhI/AvmIUluQnssRHAOe+T20rZIFkMPlQMxz7c74tuDHaOm+C
+         wyUxob4BfNvLFIfdbmBM+Oh2bjHa+/4LFhMUjU6+8G4CNSvbrxG22BTokdI3FbFtiplt
+         6GprUsbHBDdk0ldg39zylIE9XEAdF7o9kmACVbSjlaL+od3Oc9uteb2CYgbSn2YB5B4o
+         +wvnb7/EojT7RXoQHzU702XZFEskKOJ/0FTkaDui3VLJHPhVYoTvOUqv/qFHtv2/UPyu
+         hBMg==
+X-Gm-Message-State: APjAAAVArL3LsqZXwFmp3HB+vTiVwxy28WB/6z07JTpbEnke+1SCN9Nw
+        9ii/iyTdL7wlhd5g8GFBfqbQtI4=
+X-Google-Smtp-Source: APXvYqxDJn4NGNj1cMp1cZ6TxisP/0/u3ApEFGvmUGox+1qFMTezAYo1AiqpbEkiMaIenh1wvw6Fng==
+X-Received: by 2002:a9d:624e:: with SMTP id i14mr42070548otk.371.1582569491495;
+        Mon, 24 Feb 2020 10:38:11 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 108sm4769375oti.1.2020.02.24.10.38.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 10:38:10 -0800 (PST)
+Received: (nullmailer pid 32747 invoked by uid 1000);
+        Mon, 24 Feb 2020 18:38:10 -0000
+Date:   Mon, 24 Feb 2020 12:38:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>,
+        Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: mfd: Add Gateworks System Controller
+ bindings
+Message-ID: <20200224183810.GA32214@bogus>
+References: <1582320476-1098-1-git-send-email-tharvey@gateworks.com>
+ <1582320476-1098-2-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <25a5dfb2-93bb-90c3-8156-0cfbed1f9995@linaro.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <1582320476-1098-2-git-send-email-tharvey@gateworks.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 06:56:18PM +0100, Daniel Lezcano wrote:
-> On 24/02/2020 18:39, Ondřej Jirman wrote:
-> > On Mon, Feb 24, 2020 at 06:23:28PM +0100, megous hlavni wrote:
-> > 
-> > To be more clear, new temperatures are available from the thermal sensor driver
-> > at the rate of 4 per second, which should be enough to do quick adjustments to
-> > the thermal zone/cooling device even for quick temperature rises.
-> > 
-> > https://elixir.bootlin.com/linux/v5.6-rc3/source/drivers/thermal/sun8i_thermal.c#L442
-> > 
-> > There's no slow/fast period depending on whether the cooling is active.
-> > It's always fast and no polling of the thermal sensor is needed.
+On Fri, 21 Feb 2020 13:27:54 -0800, Tim Harvey wrote:
+> This patch adds documentation of device-tree bindings for the
+> Gateworks System Controller (GSC).
 > 
-> Thanks for the clarification. All sensors have their specificity.
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 > 
-> Does the sensor allow to create a threshold temperature where an
-> interrupt fires when crossing the boundary? That would be interesting
-> for performance and energy saving to disable the interrupts until
-> 'cpu0_hot' is reached, no?
-
-I think so. I don't think it would affect this binding though. It would still
-require no polling, and thermal driver would probably just have to be updated
-to get the relevant information about trip points from the thermal zone and
-notify it of changes/trip point crossing.
-
-I don't think it would affect performance or energy saving much though.
-4 interrupts per second is barely noticeable, and there are much bigger
-fish to fry, when it comes to power savings on A83T at this point.
-
-thank you and regards,
-	o.
-
-
-> -- 
->  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> v4:
+>  - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+>  - remove unncessary resolution/scaling properties for ADCs
+>  - update to yaml
+>  - remove watchdog
 > 
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
+> v3:
+>  - replaced _ with -
+>  - remove input bindings
+>  - added full description of hwmon
+>  - fix unit address of hwmon child nodes
 > 
+> update dts
+> 
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> 
+> merge with binding doc
+> ---
+>  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 156 +++++++++++++++++++++
+>  1 file changed, 156 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+warning: no schema found in file: Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml: ignoring, error parsing file
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml:  while parsing a block mapping
+  in "<unicode string>", line 62, column 11
+did not find expected key
+  in "<unicode string>", line 75, column 12
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/mfd/gateworks-gsc.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/mfd/gateworks-gsc.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1242346
+Please check and re-submit.
