@@ -2,120 +2,171 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAB5C11D2F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D12C35671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3360920828
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582550313;
-	bh=lv1M7Ii9Kt5bXH1YXOoOMU/lPivMJ76BP24o9zQYoQI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J/237dcDK3psf7rVrWJnACVxbdSkk8gLdqLnjXJg8cexTUIISOznjH8Szz0gcIxTS
-	 RFKSjYQGjbw+C5IPU+1uecFmj9vxR/xLQABgKJMVzd3GT4+MBWpTzTsPb4623w2WYN
-	 zBSvHZttHwY7qOrE0n516hRfjXhHt6HESt1ixWZg=
+	by mail.kernel.org (Postfix) with ESMTP id 3180C2072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:23:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZ+Er6bn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgBXNS3 (ORCPT
+        id S1726788AbgBXNXJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:18:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:36960 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727275AbgBXNS3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:18:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C53E730E;
-        Mon, 24 Feb 2020 05:18:28 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49DE93F534;
-        Mon, 24 Feb 2020 05:18:28 -0800 (PST)
-Date:   Mon, 24 Feb 2020 13:18:26 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        digetx@gmail.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com
-Subject: Re: Re: [PATCH v3 03/10] ASoC: tegra: add Tegra210 based DMIC driver
-Message-ID: <20200224131826.GI6215@sirena.org.uk>
-References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
- <1582180492-25297-4-git-send-email-spujar@nvidia.com>
- <20200221130005.GD5546@sirena.org.uk>
- <316ce0d5-318d-0533-ef06-bd7e8672f893@nvidia.com>
- <20200221165535.GG5546@sirena.org.uk>
- <47f94534-e997-d56c-5793-ae832fb2add4@nvidia.com>
- <20200224114406.GB6215@sirena.org.uk>
- <f70c7c12-dbc0-a725-f06a-86fab868e7dc@nvidia.com>
+        Mon, 24 Feb 2020 08:23:09 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43735 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgBXNXJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 08:23:09 -0500
+Received: by mail-wr1-f66.google.com with SMTP id r11so10351598wrq.10;
+        Mon, 24 Feb 2020 05:23:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VVbC5gLHR4yvUi9/1oHpmpfPLd1cTf7rKPhbOVibfvA=;
+        b=nZ+Er6bnu9NAANUCJQsLH9xn2qY4PV29m4rBNuQLqX+sm7XjOQSOVhr3uvinbc3Gw2
+         Z8Gy97ASz6Waj6Tlb0W9fOejWx2niXnXxlWyV6u6Gy0x/WsFBcpEJ2pj6VSIYWibluqn
+         NDibT5RHD+I8fj0piJJLqET6z0NUXtsMKCHk4RDIvOePogmLKDsqxAQPGbY3UL4b2ss+
+         /sUU3wixVdGMoZ+jdqVZxHZgn3aPmBe4w76JwDTBsjeY2HsL6GSyBGeLglv6rxtAy+da
+         2siGfxYT2eYZJfYytqUAcglrqlE3lNhl16sRAVg8Cw7l265RiBxd4lNdPl+iQgjcjcKD
+         ky6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VVbC5gLHR4yvUi9/1oHpmpfPLd1cTf7rKPhbOVibfvA=;
+        b=QF9SkXP0VFWuPVrovoxZLa07uxuCGnsnJ98UxxilUvJ8lX5+brquxCIJXiIJYVeQx5
+         ubv1+mO6K/yY1ZXGdKm+Q3X1vyrZCi7dFvdgMpP9kAYAnZkyVPLuws5v1KQQ8+6MVZSk
+         CUyfdfAejKo9f74ZEUScUIsjqNhbiFkIpFafOpx+gYpq1DFknG1ZjKDc0nnP4gL4KJo3
+         KAajfkyK42XA5seObKDvdZ8Y3Onc8r8OZ2yssFXMsKTNbRy8C2K3BUXbNp8Y3fx40BD6
+         YwRiTBtM321l7l0svXKBBSCLAlDpvWErsM4YtXAd0pt9R55BlKboKEPHffLO1bjzYmYB
+         ErGw==
+X-Gm-Message-State: APjAAAVxmRRilRMDROUJ2PUKm/U66787CDiccYcZtwEOlJp9KYrqMkF6
+        YTUt2zQ+LM+J9fNPyGQUoFCcQHmn
+X-Google-Smtp-Source: APXvYqzxxkpsyjYl9JyAtHtAmjKM8GLv1qb2XlMzrH7fcepRzF8ODOpD7CmTVLcSCaFAXRbbT7LgBA==
+X-Received: by 2002:a5d:66ca:: with SMTP id k10mr15454421wrw.194.1582550587045;
+        Mon, 24 Feb 2020 05:23:07 -0800 (PST)
+Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
+        by smtp.gmail.com with ESMTPSA id s22sm17464417wmh.4.2020.02.24.05.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 05:23:06 -0800 (PST)
+Date:   Mon, 24 Feb 2020 14:23:03 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
+Message-ID: <20200224132303.GB2209519@ulmo>
+References: <20200221222711.15973-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="CNK/L7dwKXQ4Ub8J"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="QTprm0S8XgL7H0Dt"
 Content-Disposition: inline
-In-Reply-To: <f70c7c12-dbc0-a725-f06a-86fab868e7dc@nvidia.com>
-X-Cookie: How you look depends on where you go.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---CNK/L7dwKXQ4Ub8J
+--QTprm0S8XgL7H0Dt
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2020 at 05:59:33PM +0530, Sameer Pujar wrote:
-> On 2/24/2020 5:14 PM, Mark Brown wrote:
+On Fri, Feb 21, 2020 at 04:27:10PM -0600, Rob Herring wrote:
+> Fix all the warnings in the DT binding schema examples when built with
+> 'W=3D1'. This is in preparation to make that the default for examples.
+>=20
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/stm32/st,mlahb.yaml    |  2 +-
+>  .../clock/allwinner,sun4i-a10-osc-clk.yaml         |  2 +-
+>  .../bindings/clock/allwinner,sun9i-a80-gt-clk.yaml |  2 +-
+>  .../display/allwinner,sun4i-a10-tv-encoder.yaml    |  6 +-----
+>  .../bindings/display/bridge/anx6345.yaml           | 10 ++--------
+>  .../display/panel/leadtek,ltk500hd1829.yaml        |  2 ++
+>  .../bindings/display/panel/xinpeng,xpp055c272.yaml |  2 ++
+>  .../bindings/display/simple-framebuffer.yaml       |  6 +-----
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml        | 14 +-------------
+>  .../devicetree/bindings/gpu/arm,mali-bifrost.yaml  | 14 +++++++-------
+>  .../devicetree/bindings/gpu/arm,mali-midgard.yaml  | 14 +++++++-------
+>  .../bindings/iio/adc/samsung,exynos-adc.yaml       |  2 +-
+>  .../bindings/input/touchscreen/goodix.yaml         |  2 +-
+>  .../devicetree/bindings/media/ti,cal.yaml          |  2 +-
+>  .../devicetree/bindings/mfd/max77650.yaml          |  4 ++--
+>  .../devicetree/bindings/mmc/mmc-controller.yaml    |  1 +
+>  Documentation/devicetree/bindings/nvmem/nvmem.yaml |  2 ++
+>  .../bindings/phy/allwinner,sun4i-a10-usb-phy.yaml  |  2 +-
+>  .../bindings/pinctrl/st,stm32-pinctrl.yaml         |  2 +-
+>  .../devicetree/bindings/regulator/regulator.yaml   |  2 +-
+>  .../sram/allwinner,sun4i-a10-system-control.yaml   |  2 +-
+>  .../bindings/timer/allwinner,sun4i-a10-timer.yaml  |  2 +-
+>  22 files changed, 39 insertions(+), 58 deletions(-)
 
-> > I don't think so, I'd not expect the individual drivers to be doing
-> > anything user visible here - if we know what a digital transformation
-> > looks like the framework should be offering anything that's needed to
-> > users (and hiding controls that don't have any practical control in a
-> > given system).
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-> Are you suggesting to have some alternate way of users configuring sample
-> rates (and other params) and not use mixer control method?
-
-I'm mainly saying the driver shouldn't be doing it directly, it should
-be doing something much closer to hwparams for digital formats.
-
-> This is a typical use case we see,
-> - [stream-1] Lets say high resolution audio is playing (96kHz, 24-bit,
-> stereo)
-> - [stream-2] Randomly system notifications of small durations come (48kHz,
-> 16-bit, stereo)
-> The requirement is, both streams should be mixed and played.
-
-Most systems like this would run the output at a fixed sample rate here
-so there'd be no runtime configuration.
-
-> Is there a better way for user to configure custom audio paths?
-
-Fit what you're doing into DPCM.  It's not particularly great but it's
-what we have at the minute.
-
-This isn't me not understanding your use case, this is me saying that
-it would be better to either work like other existing drivers or improve
-the framework so that it works better for everyone.
-
---CNK/L7dwKXQ4Ub8J
+--QTprm0S8XgL7H0Dt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5TzSEACgkQJNaLcl1U
-h9BAhwf/QhpoDg6KiehDe7VRnOhtmPEXAczk9wdg+IxjQr0QRsmC+kn/PQ9O+TJG
-puwkmjpN5PJmU+kUECaCiZO5midMxKemgI4ITEHhtBGmuOhaRv/Fq4HwHJoYPvNu
-QCgOqLmAA/A7GSMZFPKterSWZ37254QlSiiBo77wWvzBgsByJ/JaBEyvWOPHQfaJ
-S+TsoKJV2hh73j8GfBxMJPzoDxoetly2+sUhudtNG7fPAlKyoX7rkRYn/JBmlFxf
-Zz3VF3oq+6zyraU3o7z/Ki76E5MXclTItaA0qQ0sYKJmVdbN4VMAwmzsqBhVe1e9
-fGzmk+Ai8I9CHO4TczYKw5D5YYxs8A==
-=ZFLp
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5TzjcACgkQ3SOs138+
+s6GeWhAArfC4DkbVVCEJsL56rih4V9WezBzZTgBe1i7wY66Vpn+tD3fjS7VGo9rZ
+VHqoeP4Ny+uMURGs8jNhigP/wiDxAPuRcyMsw8daDESGMxcafJFa1Jczv+NZv+XL
+4DDgKxYRSmPLdaYr7IKwEEj0Rrz1RMpHff51gX+Nj6nxZ8Y8KpYWPvn5STXsbzal
+ESS82GbDWWnvXonMsXQZ+86BHxWZaFqgKKOKAog692OXOl1qFprityO8LLCM2edB
+5HCAdRQiJAJaH+osFgT/vocpq5hqEk93NZj7efmZ4DPoTe2wMuoUgdh5alRM3XK7
+nKTxOFHx7oe7MiWRglyhyjGiCxzB24g5CXAjL1Sj12weqE2GMzDQxiswLUcUNu4B
+vYTmfeHUbXuiDly++sC1xQpIhaepNV9gr+GuH1JAYbMwkinAixZgXtWLC9IjT9+Z
+mwb6+muaIR8OZwC3SsPWYEKn3zAa7TQaAlPrQTCZZucBK/80saCnE0o5JqqmCjN6
+2DoG7yxnmgQfp/l8f5cL34bHtuwarJ4kdppZUetIsyX1FUB9ihRUKbAkwEfruPU7
+1vvthv6rLFcTQVGxUNXlT5cNs390K3pDOP5KfRhDXdfkTh9q6VP5svmvZWLd4a3X
+vefVbUKo+4iS8tRRUD6WC2x6dHdAA18BcBlGd/Cpvem/2s4JpXU=
+=Ilg9
 -----END PGP SIGNATURE-----
 
---CNK/L7dwKXQ4Ub8J--
+--QTprm0S8XgL7H0Dt--
