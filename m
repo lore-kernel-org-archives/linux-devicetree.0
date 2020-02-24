@@ -2,327 +2,214 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017AEC38BF9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68D9C38BE2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5B620CC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLfNCpXs"
+	by mail.kernel.org (Postfix) with ESMTP id BC041222D9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582579102;
+	bh=t1eTliHoc2mPAZ5+cMY6XLRoRkBliWk7pQLe/PrJWQI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RvdUQeRLIORdPTcAKM60iMJSe5/rysr0T4VA/tdiTJVnhZYkBHIrYvhBiGM0lXUEE
+	 vBrBpiX0JodX5GPgVod9+yxbYM/+AZFun1+YhPKK/ffxqEYhT3gFlJiDFMb9PcOKby
+	 NJRL/7QYfph9r8ty8dlopQ15+hrA+O4TRfW/zQGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgBXVKn (ORCPT
+        id S1727421AbgBXVSW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:10:43 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40856 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727459AbgBXVKn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 16:10:43 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t3so12104340wru.7;
-        Mon, 24 Feb 2020 13:10:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yy+X7DrHgGbuvo7Mx28qlKxTXUfj1P67Jn/BBZc/WKg=;
-        b=XLfNCpXsrWvjZwCmy/Zo99J+1y8dgO5B5/o+wYElugvJj0BkMYjO30D1DJdrs1tCjQ
-         8jWBzkc/eD68T1JGA2Nbn5ayt/6xpwMBid4X+Bqzycyh92C5KT6o03ENWGqWkDRpwcs5
-         0Hdi+0aJWIVLq4+9TePmg/TRLLJTA4qpIdeMb5A4dt+Sp2Pov6xcT1VQK/7tFCGNmVFe
-         nMoPLkJZBqkWdKrF9agGC+zb3aCWEWvXsjWGoi8qgh+yO9HjGSrayV1mTXqyqe/1f9hj
-         1Zzotv6GeeAjpmYlPBLURqmL5rIR+803nlcQPdwipqreTX+plwZVaEJNPlT4zwxYQCvP
-         WHSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yy+X7DrHgGbuvo7Mx28qlKxTXUfj1P67Jn/BBZc/WKg=;
-        b=GqwutCb7yY1gVIE/0bQSHM8yUr73mDzjoKiGpbJInbhnu8Y160C/ttCsnuewUNyvWe
-         W8rmJkqnLD/1Fj9K1r/G20wEBkZwDThYcL+WlwexN8R/A7qnmgEvz+5PAFTHsfxNriyg
-         /OeSQvJ5Ult7TRMVeoCJj1AfsFCNG90W+ZYk+rYX0fGyCnPzLqH9ZgKNbFtg6rkaBbM9
-         NxvkjkHCb3H/pF0QQSVp4SWE6ON4FL2Dph56U52eDJgSUBsHd3E2Q0rBH+vZhY0Mj6PX
-         jjGNIKAzxUS5YGbrp5Z1qysqpU7UhUSY0OmgN+A7EF6AWMxk4/6LxrFwGNKbgr1gcRBK
-         5MEw==
-X-Gm-Message-State: APjAAAVIpJ2Noy2Xqd+HBObsFi6WIAnGTl6kUp7Qjke+E63xGwBj/HP6
-        G8yQJiR3K9+842bR+/A1W5Q=
-X-Google-Smtp-Source: APXvYqwpactMwwAc9SldXGTqY/9FGnHhtkz3TSQnJOPuxltn9o8CNNW4qRVWBv+BEyXXHzG766THcw==
-X-Received: by 2002:adf:82ef:: with SMTP id 102mr17341019wrc.23.1582578638971;
-        Mon, 24 Feb 2020 13:10:38 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id i204sm917780wma.44.2020.02.24.13.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 13:10:38 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 1/2] net: mdio: add ipq8064 mdio driver
-Date:   Mon, 24 Feb 2020 22:10:30 +0100
-Message-Id: <20200224211035.16897-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 24 Feb 2020 16:18:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726980AbgBXVSW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:18:22 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD04221D7E;
+        Mon, 24 Feb 2020 21:18:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582579100;
+        bh=t1eTliHoc2mPAZ5+cMY6XLRoRkBliWk7pQLe/PrJWQI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IQ5Jg+rXkq7W86aSzgukHnRm7wF3TjjR/Jna466xzekRDyTwVhDBAT5AclTrdbD7T
+         cNlGlb+F33za6e4LO7OgYC5Jk3lTGe6ZF0C8zGTww4lbv+gb/EderrWBWBmv307J4V
+         jgMBqobB+3c4BmAybfSm8O6i6kTzYaBfqvbgLl+M=
+Received: by mail-qk1-f170.google.com with SMTP id h4so10067560qkm.0;
+        Mon, 24 Feb 2020 13:18:20 -0800 (PST)
+X-Gm-Message-State: APjAAAWS8i+XGOFyVw+n+qQWilw9QKgIaSUxnNlne3iH+md9ZH55dglV
+        CSNNZUP0A/8fCtrEfE9tAgw5Dk7PFV0ULauBjQ==
+X-Google-Smtp-Source: APXvYqwElsUFz2YJr9sAnpK7fUd2MZkG+RiH3HIosqqkDZ4NSI+i7fmzLXB5Du6ldT1zi6ODN/u/qWHFAarLhawea4I=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr52638795qkg.152.1582579099834;
+ Mon, 24 Feb 2020 13:18:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
+ <20200221021002.18795-2-yamada.masahiro@socionext.com> <20200221153215.GA9815@bogus>
+ <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
+ <CAL_Jsq+za-2VQ3uaLK0bUoziTyoNeL4T48F+hVv1Wy4b+5rAGA@mail.gmail.com> <CAK7LNASLaEX_Ocph88ZYMyi03KPQmr6-3mMhrZeAZCoAgUrEtQ@mail.gmail.com>
+In-Reply-To: <CAK7LNASLaEX_Ocph88ZYMyi03KPQmr6-3mMhrZeAZCoAgUrEtQ@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 24 Feb 2020 15:18:08 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKZ6uZ=gEQX6akL+ASwF6ZfJJyeT_r52UaCQbaqVxxr2w@mail.gmail.com>
+Message-ID: <CAL_JsqKZ6uZ=gEQX6akL+ASwF6ZfJJyeT_r52UaCQbaqVxxr2w@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently ipq806x soc use generic bitbang driver to
-comunicate with the gmac ethernet interface.
-Add a dedicated driver created by chunkeey to fix this.
+On Mon, Feb 24, 2020 at 10:00 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Rob,
+>
+> On Mon, Feb 24, 2020 at 11:52 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Feb 21, 2020 at 11:33 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > On Sat, Feb 22, 2020 at 12:32 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
+> > > > > Convert the UniPhier GPIO controller binding to DT schema format.
+> > > > >
+> > > > > I omitted the 'gpio-ranges' property because it is defined in the
+> > > > > dt-schema project (/schemas/gpio/gpio.yaml).
+> > > > >
+> > > > > As of writing, the 'gpio-ranges-group-names' is not defined in that
+> > > > > file despite it is a common property described in
+> > > > > Documentation/devicetree/bindings/gpio/gpio.txt
+> > > > > So, I defined it in this schema.
+> > > > >
+> > > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > > ---
+> > > > >
+> > > > > I have a question about the range about 'ngpio'.
+> > > > >
+> > > > >   ngpios:
+> > > > >     minimum: 0
+> > > > >     maximum: 512
+> > > > >
+> > > > > The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
+> > > > > https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
+> > > > >
+> > > > > 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
+> > > > >
+> > > > > I cannot omit the minimum because minimum and maximum depend on each other.
+> > > > > I just put a sensible number, 512, in maximum.
+> > > > >
+> > > > > If this range is entirely unneeded, I will delete it.
+> > > >
+> > > > This property is generally for when you can have some number less
+> > > > than a maximum number implied by the compatible string.
+> > > >
+> > > > If there is really no max (e.g. 2^32 - 1 is valid), then just do
+> > > > 'ngpios: true'
+> > >
+> > >
+> > > What does ': true' mean?
+> >
+> > It's a schema that always passes validation. It's purpose here is just
+> > to say you are using this common property for this binding.
+>
+>
+>
+> OK, I see two useful cases:
+>
+> [1]
+> Documenting purpose in order to clarify
+> that you are using this property
+>
+> [2]
+> You need to explicitly specify ': true'
+> if you have 'additionalProperties: false' .
+> Otherwise, the following warning is displayed:
+> ... do not match any of the regexes: 'pinctrl-[0-9]+'
+>
+>
+>
+> For [1], it is already clear that this binding
+> is using ngpios from 'require'
+>
+>
+> require:
+>   - ngpios
+>
+>
+>
+> > >
+> > > If it is documented somewhere,
+> > > could you point me to the reference?
+> >
+> > https://github.com/devicetree-org/dt-schema/blob/master/schemas/gpio/gpio.yaml
+> >
+> > >
+> > > Even if I remove the 'ngpio' entirely
+> > > from my dt-schema, the 'ngpio' is checked
+> > > correctly.
+> >
+> > Yes, if you change it to a string value for example, it should fail.
+> > (Only if DT_SCHEMA_FILES is not set without my kbuild changes)
+> >
+> > You should also add 'additionalProperties: false' at the top level of
+> > your schema and then it will also fail if you don't list ngpios in
+> > properties.
+>
+> Hmm, I am confused.
+>
+> 'require: - ngpios' will warn if you don't list ngpios.
+>
+> 'additionalProperties: false' will warn if you list
+> other properties than what is explicitly specified.
 
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
-Changes in v7:
-- Add myself as module author and copyright
-- Reduced usleep_range to 8-10 as suggested by chunkeey
+Yeah, that's a quirk of json-schema. We could probably ensure that
+anything listed in 'required' also has a property schema, but in this
+case I think it's better to be explicit.
 
-Changes in v6:
-- Fix error in commit description
-- Add co-developed tag
+Without 'additionalProperties: false', then the validation will pass
+with a 'foo-bar' property. Or worse, typos like 'ngpio', 'nrgpios',
+'#gpios-cells', etc. will pass validation.
 
-Changes in v5:
-- Rename define to more rappresentative name
+> BTW, I will not add 'additionalProperties: false'
+> in this binding.
+>
+>
+> The real DT files have
+>
+>  interrupt-parent = <&aidet>;
+> (arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi line 324)
+>
+> but, commit 791d3ef2e11100449837dc0b6fe884e60ca3a484
+> removed interrupt-parent from bindings.
 
-Changes in v4:
-- Fix wrong print value in dev_err 
+interrupt-parent is automagically added by the tools for any node with
+'interrupts'. Similarly, 'interrupts-extended' will also work.
 
-Changes in v3:
-- Fix wrong return logic on error
+Rob
 
-Changes in v2:
-- Use regmap_read_poll_timeout
-- Reject clause 45
- 
- drivers/net/phy/Kconfig        |   8 ++
- drivers/net/phy/Makefile       |   1 +
- drivers/net/phy/mdio-ipq8064.c | 169 +++++++++++++++++++++++++++++++++
- 3 files changed, 178 insertions(+)
- create mode 100644 drivers/net/phy/mdio-ipq8064.c
-
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 9dabe03a668c..ec2a5493a7e8 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -157,6 +157,14 @@ config MDIO_I2C
- 
- 	  This is library mode.
- 
-+config MDIO_IPQ8064
-+	tristate "Qualcomm IPQ8064 MDIO interface support"
-+	depends on HAS_IOMEM && OF_MDIO
-+	depends on MFD_SYSCON
-+	help
-+	  This driver supports the MDIO interface found in the network
-+	  interface units of the IPQ8064 SoC
-+
- config MDIO_MOXART
- 	tristate "MOXA ART MDIO interface support"
- 	depends on ARCH_MOXART || COMPILE_TEST
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index fe5badf13b65..8f02bd2089f3 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
- obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
- obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
- obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
-+obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
- obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
- obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
- obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
-diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
-new file mode 100644
-index 000000000000..9713d6e8c076
---- /dev/null
-+++ b/drivers/net/phy/mdio-ipq8064.c
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Qualcomm IPQ8064 MDIO interface driver
-+ *
-+ * Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
-+ * Copyright (C) 2020 Ansuel Smith <ansuelsmth@gmail.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/of_mdio.h>
-+#include <linux/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/syscon.h>
-+
-+/* MII address register definitions */
-+#define MII_ADDR_REG_ADDR                       0x10
-+#define MII_BUSY                                BIT(0)
-+#define MII_WRITE                               BIT(1)
-+#define MII_CLKRANGE_60_100M                    (0 << 2)
-+#define MII_CLKRANGE_100_150M                   (1 << 2)
-+#define MII_CLKRANGE_20_35M                     (2 << 2)
-+#define MII_CLKRANGE_35_60M                     (3 << 2)
-+#define MII_CLKRANGE_150_250M                   (4 << 2)
-+#define MII_CLKRANGE_250_300M                   (5 << 2)
-+#define MII_CLKRANGE_MASK			GENMASK(4, 2)
-+#define MII_REG_SHIFT				6
-+#define MII_REG_MASK				GENMASK(10, 6)
-+#define MII_ADDR_SHIFT				11
-+#define MII_ADDR_MASK				GENMASK(15, 11)
-+
-+#define MII_DATA_REG_ADDR                       0x14
-+
-+#define MII_MDIO_DELAY_USEC                     (1000)
-+#define MII_MDIO_RETRY_MSEC                     (10)
-+
-+struct ipq8064_mdio {
-+	struct regmap *base; /* NSS_GMAC0_BASE */
-+};
-+
-+static int
-+ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
-+{
-+	u32 busy;
-+
-+	return regmap_read_poll_timeout(priv->base, MII_ADDR_REG_ADDR, busy,
-+					!(busy & MII_BUSY), MII_MDIO_DELAY_USEC,
-+					MII_MDIO_RETRY_MSEC * USEC_PER_MSEC);
-+}
-+
-+static int
-+ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
-+{
-+	struct ipq8064_mdio *priv = bus->priv;
-+	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
-+	u32 ret_val;
-+	int err;
-+
-+	/* Reject clause 45 */
-+	if (reg_offset & MII_ADDR_C45)
-+		return -EOPNOTSUPP;
-+
-+	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-+		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-+
-+	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-+	usleep_range(8, 10);
-+
-+	err = ipq8064_mdio_wait_busy(priv);
-+	if (err)
-+		return err;
-+
-+	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
-+	return (int)ret_val;
-+}
-+
-+static int
-+ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
-+{
-+	struct ipq8064_mdio *priv = bus->priv;
-+	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
-+
-+	/* Reject clause 45 */
-+	if (reg_offset & MII_ADDR_C45)
-+		return -EOPNOTSUPP;
-+
-+	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
-+
-+	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-+		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-+
-+	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-+	usleep_range(8, 10);
-+
-+	return ipq8064_mdio_wait_busy(priv);
-+}
-+
-+static int
-+ipq8064_mdio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct ipq8064_mdio *priv;
-+	struct mii_bus *bus;
-+	int ret;
-+
-+	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
-+	if (!bus)
-+		return -ENOMEM;
-+
-+	bus->name = "ipq8064_mdio_bus";
-+	bus->read = ipq8064_mdio_read;
-+	bus->write = ipq8064_mdio_write;
-+	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
-+	bus->parent = &pdev->dev;
-+
-+	priv = bus->priv;
-+	priv->base = syscon_node_to_regmap(np);
-+	if (IS_ERR(priv->base) && priv->base != ERR_PTR(-EPROBE_DEFER))
-+		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
-+
-+	if (priv->base == ERR_PTR(-EPROBE_DEFER)) {
-+		return -EPROBE_DEFER;
-+	} else if (IS_ERR(priv->base)) {
-+		dev_err(&pdev->dev, "error getting syscon regmap, error=%pe\n",
-+				priv->base);
-+		return PTR_ERR(priv->base);
-+	}
-+
-+	ret = of_mdiobus_register(bus, np);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, bus);
-+	return 0;
-+}
-+
-+static int
-+ipq8064_mdio_remove(struct platform_device *pdev)
-+{
-+	struct mii_bus *bus = platform_get_drvdata(pdev);
-+
-+	mdiobus_unregister(bus);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ipq8064_mdio_dt_ids[] = {
-+	{ .compatible = "qcom,ipq8064-mdio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
-+
-+static struct platform_driver ipq8064_mdio_driver = {
-+	.probe = ipq8064_mdio_probe,
-+	.remove = ipq8064_mdio_remove,
-+	.driver = {
-+		.name = "ipq8064-mdio",
-+		.of_match_table = ipq8064_mdio_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(ipq8064_mdio_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
-+MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
-+MODULE_AUTHOR("Ansuel Smith <ansuelsmth@gmail.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.25.0
-
+>
+>
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
