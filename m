@@ -2,166 +2,279 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BB4C3567B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD35BC3567B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C918220836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEC020838
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 10:17:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gKBFDLay"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WixG3cAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgBXKOs (ORCPT
+        id S1727193AbgBXKRm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:14:48 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50914 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBXKOs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 05:14:48 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OAEf0Q121189;
-        Mon, 24 Feb 2020 04:14:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582539281;
-        bh=j5EShPBLoNlbSYRTeOcz+xqi62LNvQ2h7rAp88THS0k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gKBFDLay1h129RL9y1t9AdnzTRjKEovZTPDIz6BDaI80a6V6NN4Dz7eLKBoD+80xB
-         Z15ZfDVzImqZ8Zb4/cjDK8OR4Y4UrvWSopueTxKYdm6mM2bvIblA/VA5nGLowdq0qo
-         924xKQZThIU+KYkidZgHxofwhGN1T6/GuQ7XSZKk=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01OAEfeP125615
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Feb 2020 04:14:41 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
- Feb 2020 04:14:41 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 24 Feb 2020 04:14:41 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OAEc93090524;
-        Mon, 24 Feb 2020 04:14:38 -0600
-Subject: Re: [PATCH v2 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in
- Cadence platform to DT schema
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200217111519.29163-1-kishon@ti.com>
- <20200217111519.29163-3-kishon@ti.com> <20200219203205.GA14068@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <2b927c66-d640-fb11-878a-c69a459a28f8@ti.com>
-Date:   Mon, 24 Feb 2020 15:48:21 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 24 Feb 2020 05:17:42 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35825 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXKRl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 05:17:41 -0500
+Received: by mail-io1-f65.google.com with SMTP id h8so9710668iob.2;
+        Mon, 24 Feb 2020 02:17:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7tqgnHB78w+khquGpyEPrfbvz14CK0FBf/BfCrVKj88=;
+        b=WixG3cAlWOKVA4zty0GxO81FbCDDDdvXcsrqJIiNoeOazlCyYJhLt//qepqkHWRO+i
+         au8MthJG6xQCVYimonXq9J9UTkxQXTdXeNwnnCFAHRTYFa09tVbWDVrszuNNcd48xy79
+         M4607MnC3gbpRzJcoaCojUBEi5DyF0la38CNAh+2NTCj+lJ+103ixbRogzGDVh1V4uM+
+         9+r0ecBMS49H+uLc6Edb//J6Pj451lLdugtqNKHmng3AISj9RlOqV9UNxLAUgRxMb2bU
+         xkN1jLWgnF70i9ajrtqOS07p8Qzum6J0p4vXRWAInArvAziclsYDozRZmKb9k128O5se
+         MvGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7tqgnHB78w+khquGpyEPrfbvz14CK0FBf/BfCrVKj88=;
+        b=bNCcRnyk0ujTkRi2WuPJz7sNGdZZG0zY6b+6BGuH4xxPhTJfA2j2xTPii2Kd4u0vBW
+         hi3WluAjkHiTJss3qZgsR+Y/ewSQo4NOJqVXIItrowhQYIzYXqcWnQjAGxAN2Phinklf
+         3lDY8TR7myuisQMogyMh8HTrNdV3igzF9yKsU+Fq2TvuFo5xI1Q013MB9lIOLcLOZ1sL
+         V1Phs4BUjpb5f2LZ1Gt48r5onmtZifjFrnbjD+gjpA2qagsEBLIETnpK9jFmYn4xDKH7
+         hovnof7K9GcE87cKFy+p54Pgdg3Z6yN6EC7QPaddqpl+Ctm9c7/jN8UpG5cPwfUCCIYv
+         l4eA==
+X-Gm-Message-State: APjAAAXMeEpHKkSsCme3RTY8j+illlWR1z9/MgOnFC8TWcpaCb5J9lUR
+        CfT863YF02NMdAMMVJWy17PUKdXPYN1uD2iRniDsIILt
+X-Google-Smtp-Source: APXvYqwPv4BN9QmonBXFEkWlD/VhU4fuL8hHLJ8UwrlbVXmch79Uws0KccS8fO8B/i+cYv9Wj4Xn1YJ0Kro0+Mktymw=
+X-Received: by 2002:a6b:b48e:: with SMTP id d136mr50065897iof.243.1582539460606;
+ Mon, 24 Feb 2020 02:17:40 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200219203205.GA14068@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200216173446.1823-1-linux.amoon@gmail.com> <20200216173446.1823-4-linux.amoon@gmail.com>
+ <1jmu9hzlo2.fsf@starbuckisacylon.baylibre.com> <CANAwSgSaQgU=H3h0S9deT11HA8z9R=Fhy5Kawii9tSBxKf2Wgw@mail.gmail.com>
+ <CAFBinCCSosE1XfwbKZOR9G+DVYg8zFcKShmTNWUhh1e8W0VoAQ@mail.gmail.com>
+ <CANAwSgRZy1K0GZq30cEoH2KiJfjX-5LvkMy79ZeM_aSEyrkD+g@mail.gmail.com> <1jo8togwmi.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jo8togwmi.fsf@starbuckisacylon.baylibre.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Mon, 24 Feb 2020 15:47:29 +0530
+Message-ID: <CANAwSgSKUEJEe_H6XnKmHZNtB549jLau=TY00jzCHAC8zb_7oA@mail.gmail.com>
+Subject: Re: [PATCHv1 3/3] clk: meson: g12a: set cpu clock divider flags too CLK_IS_CRITICAL
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi  Jerome,
 
-On 20/02/20 2:02 am, Rob Herring wrote:
-> On Mon, Feb 17, 2020 at 04:45:19PM +0530, Kishon Vijay Abraham I wrote:
->> Include Cadence core DT schema and define the Cadence platform DT schema
->> for both Host and Endpoint mode. Note: The Cadence core DT schema could
->> be included for other platforms using Cadence PCIe core.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
->>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
->>  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
->>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
->>  MAINTAINERS                                   |  2 +-
->>  5 files changed, 125 insertions(+), 94 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
->>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
->>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> 
-> 
->> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->> new file mode 100644
->> index 000000000000..2f605297f862
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Cadence PCIe host controller
->> +
->> +maintainers:
->> +  - Tom Joseph <tjoseph@cadence.com>
->> +
->> +allOf:
->> +  - $ref: /schemas/pci/pci-bus.yaml#
->> +  - $ref: "cdns-pcie-host.yaml#"
->> +
->> +properties:
->> +  compatible:
->> +    const: cdns,cdns-pcie-host
->> +
->> +  reg:
->> +    maxItems: 3
->> +
->> +  reg-names:
->> +    items:
->> +      - const: reg
->> +      - const: cfg
->> +      - const: mem
->> +
->> +  msi-parent: true
->> +
->> +required:
->> +  - reg
->> +  - reg-names
->> +
->> +examples:
->> +  - |
->> +    bus {
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +
->> +        pcie@fb000000 {
->> +            compatible = "cdns,cdns-pcie-host";
->> +            device_type = "pci";
->> +            #address-cells = <3>;
->> +            #size-cells = <2>;
->> +            bus-range = <0x0 0xff>;
->> +            linux,pci-domain = <0>;
->> +            cdns,max-outbound-regions = <16>;
->> +            cdns,no-bar-match-nbits = <32>;
-> 
->> +            vendor-id = /bits/ 16 <0x17cd>;
->> +            device-id = /bits/ 16 <0x0200>;
-> 
-> Please make these 32-bit as that is what the spec says.
+On Mon, 24 Feb 2020 at 15:01, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+>
+> On Sun 23 Feb 2020 at 14:34, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> > Hi Martin / Jerome / Neil,
+> >
+> > On Fri, 21 Feb 2020 at 02:45, Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
+> >>
+> >> Hi Anand,
+> >>
+> >> On Mon, Feb 17, 2020 at 2:30 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> >> [...]
+> >> > > > @@ -681,7 +682,7 @@ static struct clk_regmap g12b_cpub_clk = {
+> >> > > >                       &g12a_sys_pll.hw
+> >> > > >               },
+> >> > > >               .num_parents = 2,
+> >> > > > -             .flags = CLK_SET_RATE_PARENT,
+> >> > > > +             .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+> >> > >
+> >> > > Why not. Neil what do you think of this ?
+> >> > > If nothing is claiming this clock and enabling it then I suppose it
+> >> > > could make sense.
+> >> > >
+> >> > I would like core developers to handle this.
+> >> > Sorry for the noise.
+> >> can you please resend this patch with only the change to g12b_cpub_clk?
+> >> I have no G12B board myself so it would be great if you could take care of this!
+> >>
+> >>
+> >> Martin
+> >
+> > Thanks, yes I will try again, but I have a question.
+> >
+> > On eMMC module  *cpub_clk* is not getting enabled, see below is
+> > clk_summay of eMMC.
+>
+> I'm sorry but I don't understand the link between the cpu clock of the
+> second cluster and MMC.
+>
+> > [...]
+> >           fclk_div2_div               1        1        0   999999985
+> >         0     0  50000
+> >              fclk_div2                2        2        0   999999985
+> >         0     0  50000
+> >                 ff3f0000.ethernet#m250_sel       1        1        0
+> > 999999985          0     0  50000
+> >                    ff3f0000.ethernet#m250_div       1        1
+> > 0   249999997          0     0  50000
+> >                       ff3f0000.ethernet#fixed_div2       1        1
+> >     0   124999998          0     0  50000
+> >                          ff3f0000.ethernet#rgmii_tx_en       1
+> > 1        0   124999998          0     0  50000
+> >                 ffe07000.mmc#mux       1        1        0   999999985
+> >          0     0  50000
+> >                    ffe07000.mmc#div       1        1        0
+> > 199999997          0     0  50000
+> >                 cpub_clk_dyn1_sel       0        0        0
+> > 999999985          0     0  50000
+> >                    cpub_clk_dyn1       0        0        0   999999985
+> >          0     0  50000
+> >                       cpub_clk_dyn       0        0        0
+> > 999999985          0     0  50000
+> >                          cpub_clk       0        0        0
+> > 999999985          0     0  50000
+> >                             cpub_clk_div8       0        0        0
+> > 124999998          0     0  50000
+> >                             cpub_clk_div7       0        0        0
+> > 142857140          0     0  50000
+> >                             cpub_clk_div6       0        0        0
+> > 166666664          0     0  50000
+> >                                cpub_clk_trace_sel       0        0
+> >    0   166666664          0     0  50000
+> >                                   cpub_clk_trace       0        0
+> >   0   166666664          0     0  50000
+> >                             cpub_clk_div5       0        0        0
+> > 199999997          0     0  50000
+> >                                cpub_clk_apb_sel       0        0
+> >  0   199999997          0     0  50000
+> >                                   cpub_clk_apb       0        0
+> > 0   199999997          0     0  50000
+> >                             cpub_clk_div4       0        0        0
+> > 249999996          0     0  50000
+> >                             cpub_clk_div3       0        0        0
+> > 333333328          0     0  50000
+> >                                cpub_clk_atb_sel       0        0
+> >  0   333333328          0     0  50000
+> >                                   cpub_clk_atb       0        0
+> > 0   333333328          0     0  50000
+> >                             cpub_clk_div2       0        0        0
+> > 499999992          0     0  50000
+> >                                cpub_clk_axi_sel       0        0
+> >  0   499999992          0     0  50000
+> >                                   cpub_clk_axi       0        0
+> > 0   499999992          0     0  50000
+> >                             cpub_clk_div16_en       0        0
+> > 0   999999985          0     0  50000
+> >                                cpub_clk_div16       0        0
+> > 0    62499999          0     0  50000
+>
+> I can't read that.
+>
+> >
+> > After enable *cpub_clk* flags with
+> > .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+> > this clk is enabled on microSD card see clk_summary below.
+>
+> Again, I don't get the relationship between cpub and sdcard (or eMMC)
+>
 
-Can you clarify this is mentioned in which spec? PCI spec has both of
-these 16 bits and I checked the PCI binding doc but couldn't spot the
-size of these fields.
+Yes their is not relation with the cpub and sdcard and eMMC,
+I understood  that cpub_clk is not getting enable which is causing
+the staling at booting using sdcard.
 
-[1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+sorry about this logs.
 
-Thanks
-Kishon
+> > [...]
+> >          fclk_div2_div               1        1        0   999999985
+> >        0     0  50000
+> >              fclk_div2                3        3        0   999999985
+> >         0     0  50000
+> >                 ff3f0000.ethernet#m250_sel       1        1        0
+> > 999999985          0     0  50000
+> >                    ff3f0000.ethernet#m250_div       1        1
+> > 0   249999997          0     0  50000
+> >                       ff3f0000.ethernet#fixed_div2       1        1
+> >     0   124999998          0     0  50000
+> >                          ff3f0000.ethernet#rgmii_tx_en       1
+> > 1        0   124999998          0     0  50000
+> >                 ffe05000.sd#mux       1        1        0   999999985
+> >         0     0  50000
+> >                    ffe05000.sd#div       1        1        0
+> > 50000000          0     0  50000
+> >                 cpub_clk_dyn1_sel       1        1        0
+> > 999999985          0     0  50000
+> >                    cpub_clk_dyn1       1        1        0   999999985
+> >          0     0  50000
+> >                       cpub_clk_dyn       1        1        0
+> > 999999985          0     0  50000
+> >                          cpub_clk       1        1        0
+> > 999999985          0     0  50000
+> >                             cpub_clk_div8       0        0        0
+> > 124999998          0     0  50000
+> >                             cpub_clk_div7       0        0        0
+> > 142857140          0     0  50000
+> >                             cpub_clk_div6       0        0        0
+> > 166666664          0     0  50000
+> >                                cpub_clk_trace_sel       0        0
+> >    0   166666664          0     0  50000
+> >                                   cpub_clk_trace       0        0
+> >   0   166666664          0     0  50000
+> >                             cpub_clk_div5       0        0        0
+> > 199999997          0     0  50000
+> >                                cpub_clk_apb_sel       0        0
+> >  0   199999997          0     0  50000
+> >                                   cpub_clk_apb       0        0
+> > 0   199999997          0     0  50000
+> >                             cpub_clk_div4       0        0        0
+> > 249999996          0     0  50000
+> >                             cpub_clk_div3       0        0        0
+> > 333333328          0     0  50000
+> >                                cpub_clk_atb_sel       0        0
+> >  0   333333328          0     0  50000
+> >                                   cpub_clk_atb       0        0
+> > 0   333333328          0     0  50000
+> >                             cpub_clk_div2       0        0        0
+> > 499999992          0     0  50000
+> >                                cpub_clk_axi_sel       0        0
+> >  0   499999992          0     0  50000
+> >                                   cpub_clk_axi       0        0
+> > 0   499999992          0     0  50000
+> >                             cpub_clk_div16_en       0        0
+> > 0   999999985          0     0  50000
+> >                                cpub_clk_div16       0        0
+> > 0    62499999          0     0  50000
+> >                    cpub_clk_dyn1_div       0        0        0
+> > 999999985          0     0  50000
+> >
+> > Is this correct approach to set the flags to enable *cpub_clk*.
+> > .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+> >
+> > What I meant is their *Dyn_enable[26]* field for enable/disable for
+> > HHI_SYS_CPU_CLK_CNTL0 and HHI_SYS_CPUB_CLK_CNTL clk controller.
+> > in the S922X datasheets which could help resolve this issue.
+> > Any thought on this.
+>
+> I sorry but I'm just lost. I don't understand anything above so I can't
+> comment.
+
+I am not able to express my self clearly,
+I will try to submit the patch by enable cpub_clk with following flags.
+
+ .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+
+-Anand
