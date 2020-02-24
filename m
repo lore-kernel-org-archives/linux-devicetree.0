@@ -2,135 +2,139 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC50C3567B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A985AC11D30
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4D12080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:01:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="rqjz591J";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Jo4xIfDL"
+	by mail.kernel.org (Postfix) with ESMTP id 8A71120726
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgBXLBE (ORCPT
+        id S1726838AbgBXLD5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:01:04 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:47271 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727302AbgBXLBE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:01:04 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E5629762B;
-        Mon, 24 Feb 2020 06:01:03 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 06:01:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=ZcsAxlQzmgfp+248gfkt50f72yf
-        XGFM0CMrpGGcfUak=; b=rqjz591JyJS7eCFFOrCKQhv/MhN/QfOGyBQHd2az1pe
-        WoqWgpILpqn+XAr01g3Y/9dvYLq7Px2l+vOrWjirHSTKJ9M2TDOjem/FhVYW16Fy
-        m5obfjQOt43XZUtCALzLBvYqNNG3eODcPaWqR4jTmSUAc6mOrjGkPGjbGwUyZtD5
-        SIoR3MG7B6/ZG6IFXDdy8aSbSQM8ZkJ/lqAU9WNI2pcxWkfjlIYuPFUAgfqo4zMQ
-        rZhrxUFTICGUBUF67QKAcjvOIlqY2/sOSn/Yrm6epoV5f0Nbhf1ribeFFlhzHgNh
-        +68wIZz4oI/zTlcarut4v6Puy4ue/AXzsZbuTW6Tgog==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ZcsAxl
-        Qzmgfp+248gfkt50f72yfXGFM0CMrpGGcfUak=; b=Jo4xIfDL4pFRKONJsrXrFG
-        AeGka/mFhVhUhgta9DD9XrZ8f30gJMqjGgId7HQMTyVn0bQW082W2Qb2TdhRRrrq
-        37ExqrAwI5CPuPfaqeULjwziJWHym10gzeF5ZqiEjESUZO3fi1dGBrfvT4aTMtsS
-        guieuIG1OY3sAKcVkzgsOJVA99XbSWzG1836DpPLesT8m525wfeqjZslrrj4hjpm
-        /vDnIF1aG9IsN7izRd+EBRrdtWUmbwUVkkKs4sPNUCNJ42xYkoSJBSOOKI7/8nCP
-        BYVmQXeFOzkGQ6yVHrH2Re2AInKDt5sJd0E8LyRBL6gUKEPYhimASk61+jiAGMWw
-        ==
-X-ME-Sender: <xms:7axTXmfCGfACAU-Go-6vz9eql4Q2BSZVUiXte9X8yotSfx2FCw1XUQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtgddvfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:7axTXkh9gpLI75GndVJ3GdD5soM5-p7zjLEBMKls7wFQRkKiZw7r-Q>
-    <xmx:7axTXiYK4d3j8xndCEeDylH7DAgYfHrpspQOaMPMJ2zryJiOFBF_2Q>
-    <xmx:7axTXvINQpa3s1NrVBiSHThpOsjpCYByxIgwTPYIhYnm3f3f7HhLDA>
-    <xmx:76xTXguzJNiO0fOLLqMGRMeXVH-bHX0VrUTxCVQTQS6xoCpM9ZDL8Q>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8B3CC3060FD3;
-        Mon, 24 Feb 2020 06:01:01 -0500 (EST)
-Date:   Mon, 24 Feb 2020 12:01:00 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
+        Mon, 24 Feb 2020 06:03:57 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:48589 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXLD5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:03:57 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: yIjgW6gckhVxf2hH7puC/m2slZpKqfrqwurH8P1fdvPbbtz3WByCDkSjBYfeylgxBsSgS3EpH6
+ KJLSewKjs/u9f7erD8Jd/Bei1ADvWywJy89ktEYnHloYnwI8UeJ0BAthbi5W/EhoFbnG0lAK7K
+ nzjDHURrE+HfPSycBDNQIsq5cdBIRio0DyHP1i9kNOMknugU9XLh+J/qVntQzOZ9GiyeSid8Se
+ L03S4N47ZOWaVXnxI6DIVMuGyA5H7EhLpRuxeZoYJh2c+rYT5ebzoRiy8ubCrZAgQ5LI2Mav7D
+ hCE=
+X-IronPort-AV: E=Sophos;i="5.70,479,1574146800"; 
+   d="scan'208";a="3379355"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Feb 2020 04:03:56 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 24 Feb 2020 04:03:51 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 24 Feb 2020 04:04:01 -0700
+Date:   Mon, 24 Feb 2020 12:03:50 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>, Icenowy Zheng <icenowy@aosc.io>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: sun50i-a64: Add i2c2 pins
-Message-ID: <20200224110100.acwln7zv3j5y67b2@gilmour.lan>
-References: <20200223172916.843379-1-megous@megous.com>
- <20200223172916.843379-2-megous@megous.com>
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Paul Burton" <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 1/2] net: mscc: ocelot: Add support for tcam
+Message-ID: <20200224110350.7kdzf4kml4iaem4i@soft-dev3.microsemi.net>
+References: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
+ <1559287017-32397-2-git-send-email-horatiu.vultur@microchip.com>
+ <CA+h21hoSA5DECsA+faJ91n0jBhAR5BZnkMm=Dx4JfNDp8J+xbw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="itczx53dk2nynkp7"
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200223172916.843379-2-megous@megous.com>
+In-Reply-To: <CA+h21hoSA5DECsA+faJ91n0jBhAR5BZnkMm=Dx4JfNDp8J+xbw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Vladimir,
 
---itczx53dk2nynkp7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The 02/24/2020 12:38, Vladimir Oltean wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> Hi Horatiu,
+> 
+> On Fri, 31 May 2019 at 10:18, Horatiu Vultur
+> <horatiu.vultur@microchip.com> wrote:
+> >
+> > Add ACL support using the TCAM. Using ACL it is possible to create rules
+> > in hardware to filter/redirect frames.
+> >
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  arch/mips/boot/dts/mscc/ocelot.dtsi      |   5 +-
+> >  drivers/net/ethernet/mscc/Makefile       |   2 +-
+> >  drivers/net/ethernet/mscc/ocelot.c       |  13 +
+> >  drivers/net/ethernet/mscc/ocelot.h       |   8 +
+> >  drivers/net/ethernet/mscc/ocelot_ace.c   | 777 +++++++++++++++++++++++++++++++
+> >  drivers/net/ethernet/mscc/ocelot_ace.h   | 227 +++++++++
+> >  drivers/net/ethernet/mscc/ocelot_board.c |   1 +
+> >  drivers/net/ethernet/mscc/ocelot_regs.c  |  11 +
+> >  drivers/net/ethernet/mscc/ocelot_s2.h    |  64 +++
+> >  drivers/net/ethernet/mscc/ocelot_vcap.h  | 403 ++++++++++++++++
+> >  10 files changed, 1508 insertions(+), 3 deletions(-)
+> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.c
+> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.h
+> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_s2.h
+> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_vcap.h
+> >
+> 
+> I was testing this functionality and it looks like the MAC_ETYPE keys
+> (src_mac, dst_mac) only match non-IP frames.
+> Example, this rule doesn't drop ping traffic:
+> 
+> tc qdisc add dev swp0 clsact
+> tc filter add dev swp0 ingress flower skip_sw dst_mac
+> 96:e1:ef:64:1b:44 action drop
+> 
+> Would it be possible to do anything about that?
 
-On Sun, Feb 23, 2020 at 06:29:14PM +0100, Ondrej Jirman wrote:
-> PinePhone needs I2C2 pins description. Add it.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 862b47dc9dc90..0fdf5f400d743 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -671,6 +671,11 @@ i2c1_pins: i2c1-pins {
->  				function = "i2c1";
->  			};
->
-> +			i2c2_pins: i2c2-pins {
-> +				pins = "PE14", "PE15";
-> +				function = "i2c2";
-> +			};
-> +
+What you could do is to configure each port in such a way, to treat IP
+frames as MAC_ETYPE frames. Have a look in ANA:PORT[0-11]:VCAP_S2_CFG.
 
-Setting it as the default muxing for i2c2 would be great
+There might be a problem with this approach. If you configure the port
+in such a way, then all your rules with the keys IP6, IP4 will not be
+match on that port.
 
-Maxime
+> 
+> Thanks,
+> -Vladimir
 
---itczx53dk2nynkp7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlOs6wAKCRDj7w1vZxhR
-xWI6AP44VoFKHK85VXx0xXuA1V0bHXa63zvjVyvoz5TB5O0mBAEAkLlwyvfiL8mG
-2Ch1ACilRsLV/RB4PLsPCRzuHl8uNwU=
-=M8JW
------END PGP SIGNATURE-----
-
---itczx53dk2nynkp7--
+-- 
+/Horatiu
