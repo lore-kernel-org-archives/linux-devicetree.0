@@ -2,128 +2,120 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21E1C11D38
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAB5C11D2F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26C720732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J8OaXTwY"
+	by mail.kernel.org (Postfix) with ESMTP id 3360920828
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582550313;
+	bh=lv1M7Ii9Kt5bXH1YXOoOMU/lPivMJ76BP24o9zQYoQI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J/237dcDK3psf7rVrWJnACVxbdSkk8gLdqLnjXJg8cexTUIISOznjH8Szz0gcIxTS
+	 RFKSjYQGjbw+C5IPU+1uecFmj9vxR/xLQABgKJMVzd3GT4+MBWpTzTsPb4623w2WYN
+	 zBSvHZttHwY7qOrE0n516hRfjXhHt6HESt1ixWZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgBXNIM (ORCPT
+        id S1727497AbgBXNS3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:08:12 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37492 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbgBXNIK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 08:08:10 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OD7CsK028839;
-        Mon, 24 Feb 2020 07:07:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582549632;
-        bh=Tx9NLTynxh7HMA5VHJWXsAof1AdXnE/KAs53Nqq7E70=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=J8OaXTwY6rJidCznLf2G/vSUju+4HU3kRW0QV+CMkL2fpPxI5mFwt5l1u7GY1i0cK
-         fhdwF15G4WtYxb0NBQQmKRDL/VCrdAXaZORkAKh4uNPMzhrjf4desB5yiRBKSQYI5e
-         lr23otClWqEaN2djtLEvvM3O3oRjPmZTJi+w6edQ=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01OD7CFB102821
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Feb 2020 07:07:12 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
- Feb 2020 07:07:11 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 24 Feb 2020 07:07:12 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD7B3m002482;
-        Mon, 24 Feb 2020 07:07:11 -0600
-Subject: Re: [PATCH 2/7] docs: dt: fix several broken references due to
- renames
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-CC:     Jonathan Corbet <corbet@lwn.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Jyri Sarha <jsarha@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-leds@vger.kernel.org>, <linux-aspeed@lists.ozlabs.org>,
-        <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-pm@vger.kernel.org>
-References: <cover.1582361737.git.mchehab+huawei@kernel.org>
- <83c5df4acbbe0fa55a1d58d4c4a435b51cd2a7ad.1582361737.git.mchehab+huawei@kernel.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e9ae8125-3f8f-5f8c-c19c-34ac1bb5c982@ti.com>
-Date:   Mon, 24 Feb 2020 07:02:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 08:18:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:36960 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727275AbgBXNS3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 08:18:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C53E730E;
+        Mon, 24 Feb 2020 05:18:28 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49DE93F534;
+        Mon, 24 Feb 2020 05:18:28 -0800 (PST)
+Date:   Mon, 24 Feb 2020 13:18:26 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        digetx@gmail.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+Subject: Re: Re: [PATCH v3 03/10] ASoC: tegra: add Tegra210 based DMIC driver
+Message-ID: <20200224131826.GI6215@sirena.org.uk>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-4-git-send-email-spujar@nvidia.com>
+ <20200221130005.GD5546@sirena.org.uk>
+ <316ce0d5-318d-0533-ef06-bd7e8672f893@nvidia.com>
+ <20200221165535.GG5546@sirena.org.uk>
+ <47f94534-e997-d56c-5793-ae832fb2add4@nvidia.com>
+ <20200224114406.GB6215@sirena.org.uk>
+ <f70c7c12-dbc0-a725-f06a-86fab868e7dc@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <83c5df4acbbe0fa55a1d58d4c4a435b51cd2a7ad.1582361737.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CNK/L7dwKXQ4Ub8J"
+Content-Disposition: inline
+In-Reply-To: <f70c7c12-dbc0-a725-f06a-86fab868e7dc@nvidia.com>
+X-Cookie: How you look depends on where you go.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mauro
 
-On 2/22/20 3:00 AM, Mauro Carvalho Chehab wrote:
-> Several DT references got broken due to txt->yaml conversion.
->
-> Those are auto-fixed by running:
->
-> 	scripts/documentation-file-ref-check --fix
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->   Documentation/devicetree/bindings/arm/arm,scmi.txt        | 2 +-
->   Documentation/devicetree/bindings/arm/arm,scpi.txt        | 2 +-
->   .../devicetree/bindings/arm/bcm/brcm,bcm63138.txt         | 2 +-
->   .../devicetree/bindings/arm/hisilicon/hi3519-sysctrl.txt  | 2 +-
->   .../devicetree/bindings/arm/msm/qcom,idle-state.txt       | 2 +-
->   Documentation/devicetree/bindings/arm/omap/mpu.txt        | 2 +-
->   Documentation/devicetree/bindings/arm/psci.yaml           | 2 +-
->   .../devicetree/bindings/clock/qcom,gcc-apq8064.yaml       | 2 +-
->   .../devicetree/bindings/display/tilcdc/tilcdc.txt         | 2 +-
->   Documentation/devicetree/bindings/leds/common.yaml        | 2 +-
+--CNK/L7dwKXQ4Ub8J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-For LEDs
+On Mon, Feb 24, 2020 at 05:59:33PM +0530, Sameer Pujar wrote:
+> On 2/24/2020 5:14 PM, Mark Brown wrote:
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
+> > I don't think so, I'd not expect the individual drivers to be doing
+> > anything user visible here - if we know what a digital transformation
+> > looks like the framework should be offering anything that's needed to
+> > users (and hiding controls that don't have any practical control in a
+> > given system).
 
+> Are you suggesting to have some alternate way of users configuring sample
+> rates (and other params) and not use mixer control method?
 
+I'm mainly saying the driver shouldn't be doing it directly, it should
+be doing something much closer to hwparams for digital formats.
+
+> This is a typical use case we see,
+> - [stream-1] Lets say high resolution audio is playing (96kHz, 24-bit,
+> stereo)
+> - [stream-2] Randomly system notifications of small durations come (48kHz,
+> 16-bit, stereo)
+> The requirement is, both streams should be mixed and played.
+
+Most systems like this would run the output at a fixed sample rate here
+so there'd be no runtime configuration.
+
+> Is there a better way for user to configure custom audio paths?
+
+Fit what you're doing into DPCM.  It's not particularly great but it's
+what we have at the minute.
+
+This isn't me not understanding your use case, this is me saying that
+it would be better to either work like other existing drivers or improve
+the framework so that it works better for everyone.
+
+--CNK/L7dwKXQ4Ub8J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5TzSEACgkQJNaLcl1U
+h9BAhwf/QhpoDg6KiehDe7VRnOhtmPEXAczk9wdg+IxjQr0QRsmC+kn/PQ9O+TJG
+puwkmjpN5PJmU+kUECaCiZO5midMxKemgI4ITEHhtBGmuOhaRv/Fq4HwHJoYPvNu
+QCgOqLmAA/A7GSMZFPKterSWZ37254QlSiiBo77wWvzBgsByJ/JaBEyvWOPHQfaJ
+S+TsoKJV2hh73j8GfBxMJPzoDxoetly2+sUhudtNG7fPAlKyoX7rkRYn/JBmlFxf
+Zz3VF3oq+6zyraU3o7z/Ki76E5MXclTItaA0qQ0sYKJmVdbN4VMAwmzsqBhVe1e9
+fGzmk+Ai8I9CHO4TczYKw5D5YYxs8A==
+=ZFLp
+-----END PGP SIGNATURE-----
+
+--CNK/L7dwKXQ4Ub8J--
