@@ -2,82 +2,134 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB5EC11D2F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540F5C11D30
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 17:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C430D20838
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D262084E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 17:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brixit-nl.20150623.gappssmtp.com header.i=@brixit-nl.20150623.gappssmtp.com header.b="h156Ozvf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P607In2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbgBXQ60 (ORCPT
+        id S1727740AbgBXRGZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:58:26 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52383 "EHLO
+        Mon, 24 Feb 2020 12:06:25 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39559 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgBXQ6Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 11:58:25 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so47847wmc.2
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 08:58:23 -0800 (PST)
+        with ESMTP id S1727259AbgBXRGZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 12:06:25 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c84so64861wme.4
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 09:06:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brixit-nl.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=qtL/A0NxvdmVrbp5VWhXe/4VC/boWsW7Z2GIwfkPEJ8=;
-        b=h156OzvfhxrD2vJ0bBbrChXHEA+eozI/EjjG90aPwwine90jeYBKeXqVsNdBD+CsQG
-         b0LIBTIDGuy/trF4XBUQM4ttgWjSb2KqxtIxzsVjBEAQHT6qqUb9Fze7VZQqtwncP9MU
-         aaPF90UtgXuotqakbgK4LAZXq7HSZR6fVwpaDZcU/sOM4VCE1SX+RsPkY1RmXw6YjqmD
-         fAUF8pYfzAPLjcrKbihz+bXx/oESOO7k3sL2pJwJcKXgwx7dsIyx07Utlruo9vmy+I4q
-         qBjlEXn1lNuGwDL/wkf8VTfyj1EpFcIUy5tZQtDPIlbnFo9Q+F95OafnwqO0jGrrc4HD
-         crUw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FV1+URIh0vJGkDR+Y3sgl5GcK5Z91KqhxIrgPs2m0DY=;
+        b=P607In2Fd4CMWizhD2Dp+XgvX5J21OTVO3M/zrdlEnePBi1j+EdqlODhZk9VNI2RxS
+         yV9vgn07rxiOxdi1oeTea2Vsanjsmsg3bW82s/rvoJoG6SgI8ZEbs8lCrjcUghuJGmxZ
+         V68cEH3CyvgKFafmHF+ZfQH6hLLT/74AzJbQfCkCb6pjLtkw/aw7kdY6TzdqAShE7X+c
+         0JrDF8xysaCATUr3QbFX4Sgjw7bkZ0Pdd+7KA1v4/2qi8+lO84pEeNlt1IqAkMjbthoy
+         3tVV1RoKkOBtY8pQkss4G2RXfEakw1sJIPbvcIrOm544+8ebLT7GRCln9WOoLR+60HOO
+         l8AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qtL/A0NxvdmVrbp5VWhXe/4VC/boWsW7Z2GIwfkPEJ8=;
-        b=R8L9MQC+oqn/5DYpv0/76wgcYsstUGaIlVY/Y1h7UHjaCjGQC9UeTMeCpGzx4TOt0T
-         ZfJnEeuvxAquDTo1l8vdi2SJF7UQFDjSPIHA7yUmacMiDoFRNAte1lFE+mPmcLbASp5B
-         z9n8N0CEjFBuzU4D1rGHTEtLKpMhXMv+50sAXZwIvurng9ucIS3CC/7EqcHkPW7FzPhV
-         1C5r/59xe3mHnm1qC6Gi3NsTAPp4hKPSNAjUoe36MqwWxzBedmSYQumykXctcw8uDsAd
-         IxSfvk2W1ti7o1Y8lFwml0QrdgWr1bni0E/+XOWwW5HoCj1Q7IBe6NzCtbwlr74nj/Wv
-         C0mQ==
-X-Gm-Message-State: APjAAAUcEZyeHlXV3DUjgNj7SCl4CbqKhwJ6IIW/j0nXoGwAUjuDVfK/
-        JjTUF2xiZeTTl34ab9/VDzLLcw==
-X-Google-Smtp-Source: APXvYqxFjB6KX5pBSxYCOM2KXZtEVnjCOi1pN58quBTw2E5vBr5+t5+Eihp/taAfsR0sG28beZYQYg==
-X-Received: by 2002:a1c:b457:: with SMTP id d84mr2551wmf.172.1582563502682;
-        Mon, 24 Feb 2020 08:58:22 -0800 (PST)
-Received: from [192.168.2.43] ([185.54.207.135])
-        by smtp.gmail.com with ESMTPSA id h18sm20112446wrv.78.2020.02.24.08.58.21
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=FV1+URIh0vJGkDR+Y3sgl5GcK5Z91KqhxIrgPs2m0DY=;
+        b=oShamrP5kcYwIZgZcKUtgOYwZp1JXgfEOZaPNcVeCBxIkJMT83D7eseUl7eTPGYl5u
+         xD9Pf5jVcgMaIHfwsnFQRbOlxpms9zMyMVkir5Wa7nv5xBSGuooSfELmeRxwnEgQLcvb
+         SO0/MU0Th9ZTkEJy85MZnDlfvFIPq1NuCNy8iGCHWwE+Pi0EQv1/U5UFrUgW2j85mwcj
+         lA63l9IYok+NWWEcixpB3fKiautgidqQJVxY+xza+5Cr2FqntYauOwYEoMRhgX+veljF
+         s3ShFsv80T1f5AxABQ/5Z9QkcVCB32EsywGvw/fMlkzUhOnA76zOdnCtKDLc/opMPpLn
+         f/WA==
+X-Gm-Message-State: APjAAAUoP1CreHd2cTKR//IdsxikrincDjcht2APdf0L7Qitfcw6rzQN
+        BXObO5Wuu3FMN0B1BLhpHa5rVw==
+X-Google-Smtp-Source: APXvYqyvdVU6XrIfybjn/aVZi9uPZ1QB0thGmlars9DoePVBy4bV+vuFggKy8v0x+56p9oi82M1+1g==
+X-Received: by 2002:a1c:610a:: with SMTP id v10mr50621wmb.44.1582563982624;
+        Mon, 24 Feb 2020 09:06:22 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:545a:2a71:2add:41f7? ([2a01:e34:ed2f:f020:545a:2a71:2add:41f7])
+        by smtp.googlemail.com with ESMTPSA id c77sm44829wmd.12.2020.02.24.09.06.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 08:58:22 -0800 (PST)
-Subject: Re: [PATCH 3/3] arm64: dts: allwinner: Add initial support for Pine64
- PinePhone
-To:     Maxime Ripard <maxime@cerno.tech>, linux-sunxi@googlegroups.com,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Mon, 24 Feb 2020 09:06:21 -0800 (PST)
+Subject: Re: [PATCH v2] ARM: dts: sun8i-a83t: Add thermal trip points/cooling
+ maps
+To:     Ondrej Jirman <megous@megous.com>, linux-sunxi@googlegroups.com
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Luca Weiss <luca@z3ntu.xyz>, Bhushan Shah <bshah@kde.org>,
-        Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200223172916.843379-1-megous@megous.com>
- <20200223172916.843379-4-megous@megous.com>
- <20200224110027.ry3v7ms76hwbdn22@gilmour.lan>
- <20200224125652.pd666ltpvdjctvsd@core.my.home>
-From:   Martijn Braam <martijn@brixit.nl>
-Message-ID: <6d29ec53-9ebd-49d6-8b33-d722de5f03f1@brixit.nl>
-Date:   Mon, 24 Feb 2020 17:58:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200224165417.334617-1-megous@megous.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2e4213a6-2aaf-641c-f741-9503f3ffd5fe@linaro.org>
+Date:   Mon, 24 Feb 2020 18:06:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200224125652.pd666ltpvdjctvsd@core.my.home>
+In-Reply-To: <20200224165417.334617-1-megous@megous.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -86,611 +138,157 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 24/02/2020 17:54, Ondrej Jirman wrote:
+> This enables passive cooling by down-regulating CPU voltage
+> and frequency.
+> 
+> For the trip points, I used values from the BSP code directly.
+> 
+> The critical trip point value is 30°C above the maximum recommended
+> ambient temperature (70°C) for the SoC from the datasheet, so there's
+> some headroom even at such a high ambient temperature.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 60 +++++++++++++++++++++++++++----
+>  1 file changed, 54 insertions(+), 6 deletions(-)
+> 
+> v2:
+> - added more detail to the commit description
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> index 74ac7ee9383cf..53c2b6a836f27 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -72,7 +72,7 @@ cpu0: cpu@0 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@1 {
+> +		cpu1: cpu@1 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C0CPUX>;
+> @@ -83,7 +83,7 @@ cpu@1 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@2 {
+> +		cpu2: cpu@2 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C0CPUX>;
+> @@ -94,7 +94,7 @@ cpu@2 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@3 {
+> +		cpu3: cpu@3 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C0CPUX>;
+> @@ -116,7 +116,7 @@ cpu100: cpu@100 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@101 {
+> +		cpu101: cpu@101 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C1CPUX>;
+> @@ -127,7 +127,7 @@ cpu@101 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@102 {
+> +		cpu102: cpu@102 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C1CPUX>;
+> @@ -138,7 +138,7 @@ cpu@102 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@103 {
+> +		cpu103: cpu@103 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C1CPUX>;
+> @@ -1188,12 +1188,60 @@ cpu0_thermal: cpu0-thermal {
+>  			polling-delay-passive = <0>;
+>  			polling-delay = <0>;
+>  			thermal-sensors = <&ths 0>;
+> +
+> +			trips {
+> +				cpu0_hot: cpu-hot {
+> +					temperature = <80000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				cpu0_very_hot: cpu-very-hot {
+> +					temperature = <100000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				cpu-hot-limit {
+> +					trip = <&cpu0_hot>;
+> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+>  		cpu1_thermal: cpu1-thermal {
+>  			polling-delay-passive = <0>;
+
+No polling to mitigate?
+
+>  			polling-delay = <0>;
+>  			thermal-sensors = <&ths 1>;
+> +
+> +			trips {
+> +				cpu1_hot: cpu-hot {
+> +					temperature = <80000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+
+I'm curious, can you really reach this temperature with a cortex-a7
+running at 1.2GHz max?
+
+> +				};
+> +
+> +				cpu1_very_hot: cpu-very-hot {
+> +					temperature = <100000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				cpu-hot-limit {
+> +					trip = <&cpu1_hot>;
+> +					cooling-device = <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+>  		gpu_thermal: gpu-thermal {
+> 
 
 
-On 2020-02-24 13:56, Ondřej Jirman wrote:
-> Hello Maxime,
-> 
-> On Mon, Feb 24, 2020 at 12:00:27PM +0100, Maxime Ripard wrote:
->> Hi,
->>
->> On Sun, Feb 23, 2020 at 06:29:16PM +0100, Ondrej Jirman wrote:
->>> At them moment PinePhone comes in two slightly incompatible variants:
->>>
->>> - 1.0: Early Developer Batch
->>> - 1.1: Braveheart Batch
->>>
->>> There will be at least one more incompatible variant in the very near
->>> future, so let's start by sharing the dtsi among multiple variants,
->>> right away, even though the HW description doesn't yet include the
->>> different bits.
->>>
->>> This is a basic DT that includes only features that are already
->>> supported by mainline drivers.
->>
->> What are those incompatibilities? It's not really obvious from your
->> patch.
-> 
-> The changes are listed here:
-> 
-> https://wiki.pine64.org/index.php/PinePhone_v1.1_-_Braveheart#Changes_from_1.0
-> 
-> Substantial ones are:
-> 
-> 2. Swap PC3 to FLASH_EN and PD24 to FLASH_TRIGOUT, where previously they were reversed
-> 5. Set the EG25G's PWRKEY on by default (see resistor R1526)
-> 6. Add R630 resistor location, populate with 0K by default. Allows adjusting to
->    different battery thermistors in case this is not possible in software.
-> 
-> The incompatiblilities between 1.1 and 1.2 will be more extensive:
-> 
-> https://wiki.pine64.org/index.php/PinePhone/Power_Management#Suggested_GPIO_Hardware_Changes
-> 
->>> Co-developed-by: Samuel Holland <samuel@sholland.org>
->>> Signed-off-by: Samuel Holland <samuel@sholland.org>
->>> Co-developed-by: Martijn Braam <martijn@brixit.nl>
->>> Signed-off-by: Martijn Braam <martijn@brixit.nl>
->>> Co-developed-by: Luca Weiss <luca@z3ntu.xyz>
->>> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
->>> Signed-off-by: Bhushan Shah <bshah@kde.org>
->>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->>> Signed-off-by: Ondrej Jirman <megous@megous.com>
->>> ---
->>>  arch/arm64/boot/dts/allwinner/Makefile        |   2 +
->>>  .../allwinner/sun50i-a64-pinephone-1.0.dts    |  11 +
->>>  .../allwinner/sun50i-a64-pinephone-1.1.dts    |  11 +
->>>  .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 385 ++++++++++++++++++
->>>  4 files changed, 409 insertions(+)
->>>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
->>>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
->>>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
->>>
->>> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
->>> index cf4f78617c3f3..79ca263672c38 100644
->>> --- a/arch/arm64/boot/dts/allwinner/Makefile
->>> +++ b/arch/arm64/boot/dts/allwinner/Makefile
->>> @@ -9,6 +9,8 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
->>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-lts.dtb
->>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
->>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinebook.dtb
->>> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.0.dtb
->>> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
->>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
->>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
->>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
->>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
->>> new file mode 100644
->>> index 0000000000000..0c42272106afa
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
->>> @@ -0,0 +1,11 @@
->>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>> +// Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
->>
->> Given the list of authors, surely you're not the sole copyright owner
->> here?
-> 
-> Yes, I made this and the 1.1 dts file by myself. It's not really a meaningful
-> contribution, since at the moment it's basically empty. I suppose to have
-> a license, the file requires some author.
-> 
-> Collaborative work is mostly in the dtsi.
-> 
->>> +/dts-v1/;
->>> +
->>> +#include "sun50i-a64-pinephone.dtsi"
->>> +
->>> +/ {
->>> +	model = "Pine64 PinePhone Developer Batch (1.0)";
->>> +	compatible = "pine64,pinephone-1.0", "allwinner,sun50i-a64";
->>> +};
->>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
->>> new file mode 100644
->>> index 0000000000000..06a775c41664b
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
->>> @@ -0,0 +1,11 @@
->>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>> +// Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
->>> +
->>> +/dts-v1/;
->>> +
->>> +#include "sun50i-a64-pinephone.dtsi"
->>> +
->>> +/ {
->>> +	model = "Pine64 PinePhone Braveheart (1.1)";
->>> +	compatible = "pine64,pinephone-1.1", "allwinner,sun50i-a64";
->>> +};
->>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
->>> new file mode 100644
->>> index 0000000000000..d0cf21d82c9e9
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
->>> @@ -0,0 +1,385 @@
->>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>> +// Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.xyz>
->>> +// Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
-> 
-> For the record. Originally I took this file from:
-> 
-> https://gitlab.com/pine64-org/linux/commits/pine64-kernel-5.4.y
-> https://gitlab.com/pine64-org/linux/-/blob/pine64-kernel-5.4.y/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dts
-> 
-> about a month ago, and kept working on it in my trees for 5.5 and 5.6:
-> 
-> https://megous.com/git/linux/log/?h=pp-5.5
-> https://megous.com/git/linux/log/?h=pp-5.6
-> 
-> Adding support for using multiple cameras, bugfixing, and integrating work from
-> others, and now doing the legwork to strip the more complete DTS and make it
-> into a mainlainable state, so that collaboration can continue in the mainline
-> tree.
-> 
-> AFAIK, at this point (after stripdown), most of the work comes from Icenowy.
-> With some people contributing "smaller" things. I say "smaller" in quotes, since
-> I know that there can be a weekend of debugging behind changing a 2-3 lines, and
-> don't want to minimize anyone's contribution.
-> 
-> IANAL and I don't know what's entirely apropriate to do here. I've disucssed
-> this briefly on the IRC with involved people (that are also CCed in this
-> series), and there was a suggestion to adding a bunch of Cob/SoB tags, based on
-> some even older DTS file for dontbeevil (developer kit for PinePhone), that the
-> Icenowy's file was based on. So I did.
-> 
-> The more copyright holders the better, I guess. :) So if CCed people want to
-> be added here, and made the contribution to the present file, please state
-> so for the record again here on the mailing list, and I'll add you to the
-> header, or anywhere you wish.
-> 
-Yes please :), I have at least some i2c sensor nodes in this file,
-probably also a bunch of other minor changes but it's pretty hard to
-track through the history of the various files and branches.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
->>> +#include "sun50i-a64.dtsi"
->>> +#include "sun50i-a64-cpu-opp.dtsi"
->>> +
->>> +#include <dt-bindings/gpio/gpio.h>
->>> +#include <dt-bindings/input/input.h>
->>> +#include <dt-bindings/leds/common.h>
->>> +#include <dt-bindings/pwm/pwm.h>
->>> +
->>> +/ {
->>> +	aliases {
->>> +		serial0 = &uart0;
->>> +	};
->>> +
->>> +	chosen {
->>> +		stdout-path = "serial0:115200n8";
->>> +	};
->>> +
->>> +	leds {
->>> +		compatible = "gpio-leds";
->>> +
->>> +		blue {
->>> +			function = LED_FUNCTION_INDICATOR;
->>> +			function-enumerator = <1>;
->>> +			color = <LED_COLOR_ID_BLUE>;
->>> +			gpios = <&pio 3 20 GPIO_ACTIVE_HIGH>; /* PD20 */
->>> +		};
->>> +
->>> +		green {
->>> +			function = LED_FUNCTION_INDICATOR;
->>> +			function-enumerator = <2>;
->>> +			color = <LED_COLOR_ID_GREEN>;
->>> +			gpios = <&pio 3 18 GPIO_ACTIVE_HIGH>; /* PD18 */
->>> +		};
->>> +
->>> +		red {
->>> +			function = LED_FUNCTION_INDICATOR;
->>> +			function-enumerator = <3>;
->>> +			color = <LED_COLOR_ID_RED>;
->>> +			gpios = <&pio 3 19 GPIO_ACTIVE_HIGH>; /* PD19 */
->>> +		};
->>> +	};
->>
->> LEDs should be named using the $color:$board:$usage pattern
-> 
-> Do you mean using a label? It seems label is deprecated, and bindings should
-> start using function/function-enumerator/color properties now:
-> 
-> https://elixir.bootlin.com/linux/v5.6-rc2/source/Documentation/devicetree/bindings/leds/common.yaml#L57
-> 
-> It doesn't look like the new bindings are used much, yet. I've found:
-> 
-> https://elixir.bootlin.com/linux/v5.6-rc2/source/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-> 
-> and
-> 
-> https://elixir.bootlin.com/linux/v5.6-rc2/source/arch/arm64/boot/dts/amlogic/meson-gx-libretech-pc.dtsi#L96
-> 
-> On PinePhone these are indicator leds with no pre-defined meaning, for
-> use by the apps to indicate things like a new SMS, or missed call, or
-> whatever people desire.
-> 
->>> +
->>> +	speaker_amp: audio-amplifier {
->>> +		compatible = "simple-audio-amplifier";
->>> +		enable-gpios = <&pio 2 7 GPIO_ACTIVE_HIGH>; /* PC7 */
->>> +		sound-name-prefix = "Speaker Amp";
->>> +	};
->>> +
->>> +	vibrator {
->>> +		compatible = "gpio-vibrator";
->>> +		enable-gpios = <&pio 3 2 GPIO_ACTIVE_HIGH>; /* PD2 */
->>> +		vcc-supply = <&reg_dcdc1>;
->>> +	};
->>> +};
->>> +
->>> +&codec {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&codec_analog {
->>> +	cpvdd-supply = <&reg_eldo1>;
->>> +	status = "okay";
->>> +};
->>> +
->>> +&cpu0 {
->>> +	cpu-supply = <&reg_dcdc2>;
->>> +};
->>> +
->>> +&cpu1 {
->>> +	cpu-supply = <&reg_dcdc2>;
->>> +};
->>> +
->>> +&cpu2 {
->>> +	cpu-supply = <&reg_dcdc2>;
->>> +};
->>> +
->>> +&cpu3 {
->>> +	cpu-supply = <&reg_dcdc2>;
->>> +};
->>> +
->>> +&dai {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&ehci0 {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&ehci1 {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&i2c1 {
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&i2c1_pins>;
->>
->> That's the default
-> 
-> Ok.
-> 
->>> +	status = "okay";
->>> +
->>> +	/* Magnetometer */
->>> +	lis3mdl@1e {
->>> +		compatible = "st,lis3mdl-magn";
->>> +		reg = <0x1e>;
->>> +		vdd-supply = <&reg_dldo1>;
->>> +		vddio-supply = <&reg_dldo1>;
->>> +	};
->>> +
->>> +	/* Accelerometer/gyroscope */
->>> +	mpu6050@68 {
->>> +		compatible = "invensense,mpu6050";
->>> +		reg = <0x68>;
->>> +		interrupt-parent = <&pio>;
->>> +		interrupts = <7 5 IRQ_TYPE_EDGE_RISING>; /* PH5 */
->>> +		vdd-supply = <&reg_dldo1>;
->>> +		vddio-supply = <&reg_dldo1>;
->>> +	};
->>> +};
->>> +
->>> +/* Connected to pogo pins */
->>> +&i2c2 {
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&i2c2_pins>;
->>
->> That's the default as well
-> 
-> Actually it is not. There's not i2c2_pins at all in the mainline yet.
-> 
->>> +	status = "okay";
->>> +};
->>
->> And I'm not sure what the pogo pins are?
-> 
-> It's a common name for spring-loaded pin headers that can be used to connect the
-> phone to auxiliary devices. 6 pins are visible on this image near the top:
-> 
-> https://wiki.pine64.org/index.php/File:PinePhone_switches.jpeg
-> 
->>> +
->>> +&lradc {
->>> +	vref-supply = <&reg_aldo3>;
->>> +	status = "okay";
->>> +
->>> +	button-200 {
->>> +		label = "Volume Up";
->>> +		linux,code = <KEY_VOLUMEUP>;
->>> +		channel = <0>;
->>> +		voltage = <200000>;
->>> +	};
->>> +
->>> +	button-400 {
->>> +		label = "Volume Down";
->>> +		linux,code = <KEY_VOLUMEDOWN>;
->>> +		channel = <0>;
->>> +		voltage = <400000>;
->>> +	};
->>> +};
->>> +
->>> +&mmc0 {
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&mmc0_pins>;
->>
->> That's the default
-> 
-> Ok.
-> 
->>> +	vmmc-supply = <&reg_dcdc1>;
->>> +	vqmmc-supply = <&reg_dcdc1>;
->>> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
->>> +	disable-wp;
->>> +	bus-width = <4>;
->>> +	status = "okay";
->>> +};
->>> +
->>> +&mmc2 {
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&mmc2_pins>;
->>
->> Ditto
-> 
-> Will remove.
-> 
->>> +	vmmc-supply = <&reg_dcdc1>;
->>> +	vqmmc-supply = <&reg_dcdc1>;
->>> +	bus-width = <8>;
->>> +	non-removable;
->>> +	cap-mmc-hw-reset;
->>> +	status = "okay";
->>> +};
->>> +
->>> +&ohci0 {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&ohci1 {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&pio {
->>> +	vcc-pb-supply = <&reg_dcdc1>;
->>> +	vcc-pc-supply = <&reg_dcdc1>;
->>> +	vcc-pd-supply = <&reg_dcdc1>;
->>> +	vcc-pe-supply = <&reg_aldo1>;
->>> +	vcc-pf-supply = <&reg_dcdc1>;
->>> +	vcc-pg-supply = <&reg_dldo4>;
->>> +	vcc-ph-supply = <&reg_dcdc1>;
->>> +};
->>> +
->>> +&r_pio {
->>> +	/*
->>> +	 * FIXME: We can't add that supply for now since it would
->>> +	 * create a circular dependency between pinctrl, the regulator
->>> +	 * and the RSB Bus.
->>> +	 *
->>> +	 * vcc-pl-supply = <&reg_aldo2>;
->>> +	 */
->>> +};
->>> +
->>> +&r_rsb {
->>> +	status = "okay";
->>> +
->>> +	axp803: pmic@3a3 {
->>> +		compatible = "x-powers,axp803";
->>> +		reg = <0x3a3>;
->>> +		interrupt-parent = <&r_intc>;
->>> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->>> +	};
->>> +};
->>> +
->>> +#include "axp803.dtsi"
->>> +
->>> +&ac_power_supply {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&battery_power_supply {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&reg_aldo1 {
->>> +	regulator-min-microvolt = <1800000>;
->>> +	regulator-max-microvolt = <1800000>;
->>> +	regulator-name = "dovdd-csi";
->>> +};
->>> +
->>> +&reg_aldo2 {
->>> +	regulator-always-on;
->>> +	regulator-min-microvolt = <1800000>;
->>> +	regulator-max-microvolt = <1800000>;
->>> +	regulator-name = "vcc-pl";
->>> +};
->>> +
->>> +&reg_aldo3 {
->>> +	regulator-always-on;
->>> +	regulator-min-microvolt = <2700000>;
->>> +	regulator-max-microvolt = <3300000>;
->>> +	regulator-name = "vcc-pll-avcc";
->>> +};
->>> +
->>> +&reg_dcdc1 {
->>> +	regulator-always-on;
->>> +	regulator-min-microvolt = <3300000>;
->>> +	regulator-max-microvolt = <3300000>;
->>> +	regulator-name = "vcc-3v3";
->>> +};
->>> +
->>> +&reg_dcdc2 {
->>> +	regulator-always-on;
->>> +	regulator-min-microvolt = <1000000>;
->>> +	regulator-max-microvolt = <1300000>;
->>> +	regulator-name = "vdd-cpux";
->>> +};
->>> +
->>> +/* DCDC3 is polyphased with DCDC2 */
->>> +
->>> +&reg_dcdc5 {
->>> +	regulator-always-on;
->>> +	regulator-min-microvolt = <1200000>;
->>> +	regulator-max-microvolt = <1200000>;
->>> +	regulator-name = "vcc-dram";
->>> +};
->>> +
->>> +&reg_dcdc6 {
->>> +	regulator-always-on;
->>> +	regulator-min-microvolt = <1100000>;
->>> +	regulator-max-microvolt = <1100000>;
->>> +	regulator-name = "vdd-sys";
->>> +};
->>> +
->>> +&reg_dldo1 {
->>> +	regulator-min-microvolt = <3300000>;
->>> +	regulator-max-microvolt = <3300000>;
->>> +	regulator-name = "vcc-dsi-sensor";
->>> +};
->>> +
->>> +&reg_dldo2 {
->>> +	regulator-min-microvolt = <1800000>;
->>> +	regulator-max-microvolt = <1800000>;
->>> +	regulator-name = "vcc-mipi-io";
->>> +};
->>> +
->>> +&reg_dldo3 {
->>> +	regulator-min-microvolt = <2800000>;
->>> +	regulator-max-microvolt = <2800000>;
->>> +	regulator-name = "avdd-csi";
->>> +};
->>> +
->>> +&reg_dldo4 {
->>> +	regulator-min-microvolt = <1800000>;
->>> +	regulator-max-microvolt = <3300000>;
->>> +	regulator-name = "vcc-wifi-io";
->>> +};
->>> +
->>> +&reg_eldo1 {
->>> +	regulator-always-on;
->>> +	regulator-min-microvolt = <1800000>;
->>> +	regulator-max-microvolt = <1800000>;
->>> +	regulator-name = "vcc-lpddr";
->>> +};
->>> +
->>> +&reg_eldo3 {
->>> +	regulator-min-microvolt = <1800000>;
->>> +	regulator-max-microvolt = <1800000>;
->>> +	regulator-name = "dvdd-1v8-csi";
->>> +};
->>> +
->>> +&reg_fldo1 {
->>> +	regulator-min-microvolt = <1200000>;
->>> +	regulator-max-microvolt = <1200000>;
->>> +	regulator-name = "vcc-1v2-hsic";
->>> +};
->>> +
->>> +&reg_fldo2 {
->>> +	regulator-always-on;
->>> +	regulator-min-microvolt = <1100000>;
->>> +	regulator-max-microvolt = <1100000>;
->>> +	regulator-name = "vdd-cpus";
->>> +};
->>> +
->>> +&reg_ldo_io0 {
->>> +	regulator-min-microvolt = <3300000>;
->>> +	regulator-max-microvolt = <3300000>;
->>> +	regulator-name = "vcc-lcd-ctp-stk";
->>> +	status = "okay";
->>> +};
->>> +
->>> +&reg_ldo_io1 {
->>> +	regulator-min-microvolt = <1800000>;
->>> +	regulator-max-microvolt = <1800000>;
->>> +	regulator-name = "vcc-1v8-typec";
->>> +	status = "okay";
->>> +};
->>> +
->>> +&reg_rtc_ldo {
->>> +	regulator-name = "vcc-rtc";
->>> +};
->>> +
->>> +&sound {
->>> +	status = "okay";
->>> +	simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
->>> +	simple-audio-card,widgets = "Microphone", "Headset Microphone",
->>> +				    "Microphone", "Internal Microphone",
->>> +				    "Headphone", "Headphone Jack",
->>> +				    "Speaker", "Internal Earpiece",
->>> +				    "Speaker", "Internal Speaker";
->>> +	simple-audio-card,routing =
->>> +			"Headphone Jack", "HP",
->>> +			"Internal Earpiece", "EARPIECE",
->>> +			"Internal Speaker", "Speaker Amp OUTL",
->>> +			"Internal Speaker", "Speaker Amp OUTR",
->>> +			"Speaker Amp INL", "LINEOUT",
->>> +			"Speaker Amp INR", "LINEOUT",
->>> +			"Left DAC", "AIF1 Slot 0 Left",
->>> +			"Right DAC", "AIF1 Slot 0 Right",
->>> +			"AIF1 Slot 0 Left ADC", "Left ADC",
->>> +			"AIF1 Slot 0 Right ADC", "Right ADC",
->>> +			"Internal Microphone", "MBIAS",
->>> +			"MIC1", "Internal Microphone",
->>> +			"Headset Microphone", "HBIAS",
->>> +			"MIC2", "Headset Microphone";
->>> +};
->>> +
->>> +&uart0 {
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&uart0_pb_pins>;
->>> +	status = "okay";
->>> +};
->>> +
->>> +/* Connected to the modem */
->>> +&uart3 {
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&uart3_pins>;
->>
->> That's the default too, and I guess you'd need hardware flow control
->> here?
-> 
-> Hardware flow control is routed badly on the board, and can't be used at the
-> moment on any of the submitted versions. It may be added in 1.2.
-> 
->>> +	status = "okay";
->>> +};
->>> +
->>> +&usb_otg {
->>> +	dr_mode = "peripheral";
->>> +	status = "okay";
->>> +};
->>> +
->>> +&usb_power_supply {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&usbphy {
->>> +	status = "okay";
->>> +};
->>> --
->>> 2.25.1
->>>
->>
->> Looks good otherwise, thanks!
->> Maxime
-> 
-> Thank you for the review. :)
-> 
-> regards,
-> 	o.
-> 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
