@@ -2,116 +2,100 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACEFC11D2F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47947C11D2F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1581620836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="dLIt+PT2"
+	by mail.kernel.org (Postfix) with ESMTP id 1A89320836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582563450;
+	bh=eAFdJ/GHOBZ8JOWQZMrpGy2jHaGViHZs8DzzU5E/LqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uI4Xjps55FpPRC8DfUNGaHflvw+aHOI8YsNIRqggo3S3KHSwFpAfBPMdO+l+1hjF6
+	 h2gFTaoNwhchHWg2x9iUUIkLY3ARclokrRggDgrBJb+/zs2abMqNxU57gfoCxTN3wI
+	 l1SDdkZCNGd/jGrTWWq6/bvO/vB1A6gFc+d/CaCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgBXQyu (ORCPT
+        id S1727405AbgBXQ53 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:54:50 -0500
-Received: from vps.xff.cz ([195.181.215.36]:59702 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgBXQyu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:54:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582563288; bh=FwaS6CxBkt9Bed13hZj3FhQm0Xpmwou2Qyewryzy0rk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dLIt+PT21mzhB7bkMaBmqfbreoWoLbajY+BfxLlK58bhKOKcNJBo66sTIKJmHNXA5
-         v2kxp/PZ7fJ59SGkrQqc7pUq8+Xa+MXH0zWFAX+3baHL9aNAHL4D9EisHbeqzkZPjc
-         o3s4M5YcZ68sh5SAahz0MC19nZhe/ByRrpJD8Cmc=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] ARM: dts: sun8i-h3: Add thermal trip points/cooling maps
-Date:   Mon, 24 Feb 2020 17:54:46 +0100
-Message-Id: <20200224165446.334712-1-megous@megous.com>
+        Mon, 24 Feb 2020 11:57:29 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38685 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727874AbgBXQ53 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 11:57:29 -0500
+Received: by mail-ot1-f67.google.com with SMTP id z9so9327833oth.5;
+        Mon, 24 Feb 2020 08:57:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6g/0/6uHeJ9SHvtHOygjn4v068gQNv45K/NSYSZDP4E=;
+        b=U4bVxMHNwJ6W7JIAPFLUPteLmJJA0QGPR31VfFdSP8+ZGFAdgDOYzlj0ym5qD1aIJM
+         Bmib+pRnAW4kq0/k8psdKx5rpJLLXoV8zu5Qv6C5XJPUuHov3HldBPDZwnhZVekqAkfy
+         aQymTIFOScZk02GEXFHyuE75t4Zhw0GfDZCgFqSD+Z//bMVDFVmUS5Hyc4GPJkISlo2u
+         VTf962Unq7aK78r8TtxckMzbAf7f0I4aJKmv4nco3IKg8Y8POpM5s+xspmcX5WZII3q9
+         CkHNZBug1qUSRBzuSut9u2erF2aRNolrksI7E4U6j7w9nf8Mp1s/CF5ZSwK4kaOP5hIL
+         Sq/g==
+X-Gm-Message-State: APjAAAXpeCOe1ykqxhRx9rHz7u29dcVf1xT9Zuap25zZ3IkYOHbr/NW7
+        /jPesK7HPXFUGqWp4eDsgg==
+X-Google-Smtp-Source: APXvYqzBSMqtk4LzoxQnFIH5IwbuCE4Q4g+OfNbeilXK0aQ5gXGWn1SAYGX3ICKI7wCB5mXfcqXu7A==
+X-Received: by 2002:a05:6830:1d8b:: with SMTP id y11mr42737812oti.4.1582563448155;
+        Mon, 24 Feb 2020 08:57:28 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a1sm4610066oti.2.2020.02.24.08.57.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 08:57:27 -0800 (PST)
+Received: (nullmailer pid 27821 invoked by uid 1000);
+        Mon, 24 Feb 2020 16:57:26 -0000
+Date:   Mon, 24 Feb 2020 10:57:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     David Daney <david.daney@cavium.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Will Deacon <will@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
+Message-ID: <20200224165726.GA27161@bogus>
+References: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This enables passive cooling by down-regulating CPU voltage
-and frequency.
+On Sun, Feb 23, 2020 at 10:09:50AM +0100, Lukas Bulwahn wrote:
+> Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
+> DT schema") combines all information from pci-thunder-{pem,ecam}.txt
+> into host-generic-pci.yaml, and deleted the two files in
+> Documentation/devicetree/bindings/pci/.
+> 
+> Since then, ./scripts/get_maintainer.pl --self-test complains:
+> 
+>   no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
+> 
+> As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
+> small part of the host-generic-pci.yaml, do not add this file to the
+> PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
+> the removed files.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> Robert, are you still the maintainer of this driver?
+> Rob Herring, please pick this patch.
+> applies cleanly on current master and next-20200221
 
-For trip points, I used a slightly lowered values from the BSP
-code. The critical temperature of 110°C from BSP code seemed
-like a lot, so I rounded it off to 100°C.
+Applied, thanks.
 
-The critical trip point value is 30°C above the maximum recommended
-ambient temperature (70°C) for the SoC from the datasheet, so there's
-some headroom even at such a high ambient temperature.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-v2:
-- added more detail to the commit description
-
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 20217e2ca4d3a..e83aa6866e7ea 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -41,6 +41,7 @@
-  */
- 
- #include "sunxi-h3-h5.dtsi"
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	cpu0_opp_table: opp_table0 {
-@@ -227,6 +228,30 @@ cpu_thermal: cpu-thermal {
- 			polling-delay-passive = <0>;
- 			polling-delay = <0>;
- 			thermal-sensors = <&ths 0>;
-+
-+			trips {
-+				cpu_hot_trip: cpu-hot {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu_very_hot_trip: cpu-very-hot {
-+					temperature = <100000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				cpu-hot-limit {
-+					trip = <&cpu_hot_trip>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 	};
- };
--- 
-2.25.1
-
+Rob
