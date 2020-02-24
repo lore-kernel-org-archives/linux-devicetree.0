@@ -2,111 +2,128 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D00C11D30
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F966C11D30
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98DCD20836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:14:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Cwmjtlev"
+	by mail.kernel.org (Postfix) with ESMTP id 3157A2072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgBXOOk (ORCPT
+        id S1727593AbgBXOPy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:14:40 -0500
-Received: from vps.xff.cz ([195.181.215.36]:57708 "EHLO vps.xff.cz"
+        Mon, 24 Feb 2020 09:15:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:37852 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727489AbgBXOOk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 09:14:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582553677; bh=4qDdtHK5hpCLQh/4Uxuvof/n91iXc4o9/kYFieclHC8=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=CwmjtlevBGOGFS8tVAlWHK3CGBEAbWk3XpVkFnTMNxRatJOHfMJRhY/V+cJaC9zkG
-         kFFMrySU1yL2EhmJVrqKIs2OUozxpQaH0D0Mi30i/jvrY2o06kF1QS38dP51YcxIo+
-         9SvdGqY+Z+0RUU6DBQ99AxkJxqCUok4wPDxeL7oc=
-Date:   Mon, 24 Feb 2020 15:14:37 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/4] ARM: dts: sun8i-a83t-tbs-a711: Add support for the
- vibrator motor
-Message-ID: <20200224141437.opcsfhozfppulu4g@core.my.home>
-Mail-Followup-To: Maxime Ripard <maxime@cerno.tech>,
-        linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>, Luca Weiss <luca@z3ntu.xyz>,
-        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200222231428.233621-1-megous@megous.com>
- <20200222231428.233621-4-megous@megous.com>
- <20200224091059.lljffogofbexhudt@gilmour.lan>
+        id S1727489AbgBXOPy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 09:15:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC83730E;
+        Mon, 24 Feb 2020 06:15:53 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D6CA3F534;
+        Mon, 24 Feb 2020 06:15:51 -0800 (PST)
+Date:   Mon, 24 Feb 2020 14:15:49 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
+ platforms
+Message-ID: <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
+References: <20200123232943.10229-1-repk@triplefau.lt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224091059.lljffogofbexhudt@gilmour.lan>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200123232943.10229-1-repk@triplefau.lt>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
-
-On Mon, Feb 24, 2020 at 10:10:59AM +0100, Maxime Ripard wrote:
-> Hi,
+On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
+> PCIe device probing failures have been seen on AXG platforms and were
+> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+> in MIPI's PHY registers solved the problem. This bit controls band gap
+> reference.
 > 
-> On Sun, Feb 23, 2020 at 12:14:27AM +0100, Ondrej Jirman wrote:
-> > The board has a vibrator mottor. Hook it to the input subsystem.
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > index 2fd31a0a0b344..a22920275e99b 100644
-> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > @@ -99,6 +99,11 @@ panel_input: endpoint {
-> >  		};
-> >  	};
-> >
-> > +	vibrator {
-> > +		compatible = "gpio-vibrator";
-> > +		vcc-supply = <&reg_ldo_io1>;
-> > +	};
-> > +
+> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
+> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+> a PHY driver to control this bit instead, as well as setting the band
+> gap one in order to get reliable PCIE communication.
 > 
-> LDO IO1 can also be muxed in as a GPIO iirc, why did you choose the
-> regulator instead?
+> While at it add another PHY driver to control PCIE only PHY registers,
+> making AXG code more similar to G12A platform thus allowing to remove
+> some specific platform handling in pci-meson driver.
+> 
+> Please note that CLKID_MIPI_ENABLE removable will be done in a different
+> serie.
+> 
+> Changes since v5:
+>  - Add additionalProperties in device tree binding documentation
+>  - Make analog PHY required
+> 
+> Changes since v4:
+>  - Rename the shared MIPI/PCIe PHY to analog
+>  - Chain the MIPI/PCIe PHY to the PCIe one
+> 
+> Changes since v3:
+>  - Go back to the shared MIPI/PCIe phy driver solution from v2
+>  - Remove syscon usage
+>  - Add all dt-bindings documentation
+> 
+> Changes since v2:
+>  - Remove shared MIPI/PCIE device driver and use syscon to access register
+>    in PCIE only driver instead
+>  - Include devicetree documentation
+> 
+> Changes sinve v1:
+>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+>  - Add a PHY driver for PCIE_PHY registers
+>  - Modify pci-meson.c to make use of both PHYs and remove specific
+>    handling for AXG and G12A
+> 
+> [1] https://lkml.org/lkml/2019/12/16/119
+> 
+> Remi Pommarel (7):
+>   dt-bindings: Add AXG PCIE PHY bindings
+>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
+>   dt-bindings: PCI: meson: Update PCIE bindings documentation
+>   arm64: dts: meson-axg: Add PCIE PHY nodes
+>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
+>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+>   PCI: amlogic: Use AXG PCIE
+> 
+>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
+>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
+>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
+>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+>  drivers/phy/amlogic/Kconfig                   |  22 ++
+>  drivers/phy/amlogic/Makefile                  |  12 +-
+>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
+>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
+>  9 files changed, 543 insertions(+), 112 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
 
-According to the specification, LDO needs to be enabled (value 0b11)
-to achieve the specified max driving current of 150mA:
+Hi Remi,
 
-  https://megous.com/dl/tmp/92b7d9d94820c3ba.png
+I am ready to pull this series in, do you want me to ? Or you prefer
+it to go via a different tree upstream ?
 
-Otherwise the chip is probably just using the regular CMOS logic output
-(typically limited to around 20-35mA, but not specified in this datasheet),
-which would be probably overdriven, if we try to drive the motor with it.
-
-And since we're driving a motor directly, the more the better.
-
-thank you and regards,
-	o.
-
-> Maxime
-
-
+Thanks,
+Lorenzo
