@@ -2,135 +2,167 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB3BC11D39
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BC3C11D34
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE0821556
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582568086;
-	bh=pQEcnphSWAKNko84gSNKnOMi1Kplq6trr5YxbE4qBYg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HrZDZt1FfTTygpOJHildUThmXbsGri6z+WZGZYnV/hPROzS3gUCwWYHPR679hXsaY
-	 f/aPSyij/SWUOVMSN4eigvIn0sazU0VEcJz8Lb8+VR4iNzPZ0oYDVZEQeH4mD4HhOt
-	 1amRXyrTc/GcWa1AgKXpU8/Xfj84jBHzaIwTUpgU=
+	by mail.kernel.org (Postfix) with ESMTP id 842C820CC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s25B8T+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgBXSOp (ORCPT
+        id S1727877AbgBXSYc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:14:45 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34835 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBXSOp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:14:45 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so9602668otd.2;
-        Mon, 24 Feb 2020 10:14:44 -0800 (PST)
+        Mon, 24 Feb 2020 13:24:32 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39155 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgBXSYb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:24:31 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so2767931wrn.6
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 10:24:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JRxfwTIy/8+3jEzlkFDZdgky1C85KqEMpExdkb37WLo=;
+        b=s25B8T+S35H/O6yszlE4ht/8dnZTVbVI45eoc18FEdUcuiqMOkNv2En79g5o74Mjb1
+         zO0yPt9INl3chhwisC9rzUkdJf0KZaX+EEaOzn4at8814D7OV6Ve3Y/q4pwkE9wi4gYu
+         4NYIQP85Zbbc1PlNfDZfjeA3U8wAvoenL2JO0jnQMn9vhAAuMTLgi9jQn9Q1AdYeuJJU
+         BkB5JJMJxdDXUmmSYzWum50ng/h3NEbyy9CZzm/kqZ1bBayTgnMnxX3UOetLLAqiANAe
+         ytqloaU+0oK0O/ROB9DQ4hPFo9/4wTvVQGYWlX4dBA8x+YHwhPudv6KQaaVQDMvhpCtT
+         SQXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4nmmGful+MegUr8aRgRCB1gCieEuCvrSiIBlqsABDmE=;
-        b=T58RVwbr4NQjeRTG7UBG+4HnEZ3Sm+n3CTBfK2ekFInD+UDcONAKcxlZZqX3cJCAKG
-         yQDx22hOOKsFO3bpC2vg12DTP2Cc70iIz8ge/GmMAzIFycnL48aqpdhSIu6SjIY6Jb/w
-         3CQLtymmGzu31yeSC1BxXM41upNqLNO7KQ3B6NY5hXwu0bLHZlKgJ9t13wfdGUymQSC7
-         gDxCrtZy1C6tPwuOQUncs7QGl1e7GG5jVQyCEeecIrl44DwDngTNWsEq3fA5YoZcRLqD
-         YoyAI+NerGPADjMn6sW/1o8Dat3u5XpUHkWmBhRu9PCviV1PbFSB4U/9m+xZeckDL6v3
-         AM9g==
-X-Gm-Message-State: APjAAAUgLTqsnYnob21W3Gc+mbH6Q9aO/Gm+TVoPxiuhq6T0fFVjlKQy
-        y1zplhlC2qKQJs+7Vcb+V1aYFIA=
-X-Google-Smtp-Source: APXvYqzSAV62BhNi363gv0daEbhuDKzBdde3JmEZAlbjVYZ9GcAmP/tY+ZpDRe7P2Ti1DpLoIK6ciQ==
-X-Received: by 2002:a9d:68d9:: with SMTP id i25mr29162204oto.135.1582568083899;
-        Mon, 24 Feb 2020 10:14:43 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 60sm4761700otu.45.2020.02.24.10.14.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JRxfwTIy/8+3jEzlkFDZdgky1C85KqEMpExdkb37WLo=;
+        b=N9LEajLyncpNOQj8NixNh+fmGuJaXxxHsX2gHjMfO9f5rZoID2LCPzXfe+a1BKcRp2
+         6Lj49o2I3dqzUKM70gQUsrErSaiIR1ikjkO1kzNGA4kcznh1rUf/cDqhEhLOvbN78WC/
+         952Pc9utP/bVKJraz6HFPre+fng7vwLxumT8ruvhnRydywsnX0P4PE+IRmXMpk2xHnA6
+         v8a4E1IrSvQIPDi+czKwuRwX8ugX9GLLVBd5tB+htU6PYhYS3w/zyqIuNbkDHhQOtad4
+         daeC4XIVjxXDUFQ1s6Yj97CzyCdHXVNClar+mHTzK18hyB+qxRe9tqhxeSEt6nRH857z
+         fExQ==
+X-Gm-Message-State: APjAAAVFFcpS1t8FaWU4O00Y40WgNXp4mzeGQfjwMtGlKW2iuWpAb8ee
+        4QfbIfy42u4oe0rpO9e+CbfC3A==
+X-Google-Smtp-Source: APXvYqzE3blpq1LSjWRjclFKCyKwQ41mykQ2DJWxVVDjuNwoKAu6osDlQgygC/xn0dF39ObvsiZRIA==
+X-Received: by 2002:adf:fec4:: with SMTP id q4mr9813022wrs.368.1582568669522;
+        Mon, 24 Feb 2020 10:24:29 -0800 (PST)
+Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id n3sm304255wmc.27.2020.02.24.10.24.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 10:14:43 -0800 (PST)
-Received: (nullmailer pid 24218 invoked by uid 1000);
-        Mon, 24 Feb 2020 18:14:41 -0000
-Date:   Mon, 24 Feb 2020 12:14:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Jyri Sarha <jsarha@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/7] docs: dt: fix several broken references due to
- renames
-Message-ID: <20200224181441.GA23262@bogus>
-References: <cover.1582361737.git.mchehab+huawei@kernel.org>
- <83c5df4acbbe0fa55a1d58d4c4a435b51cd2a7ad.1582361737.git.mchehab+huawei@kernel.org>
+        Mon, 24 Feb 2020 10:24:29 -0800 (PST)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        catalin.marinas@arm.com, will@kernel.org, robin.murphy@arm.com,
+        kevin.tian@intel.com, baolu.lu@linux.intel.com,
+        Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
+        christian.koenig@amd.com, yi.l.liu@intel.com,
+        zhangfei.gao@linaro.org
+Subject: [PATCH v4 00/26] iommu: Shared Virtual Addressing and SMMUv3 support
+Date:   Mon, 24 Feb 2020 19:23:35 +0100
+Message-Id: <20200224182401.353359-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83c5df4acbbe0fa55a1d58d4c4a435b51cd2a7ad.1582361737.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 10:00:02AM +0100, Mauro Carvalho Chehab wrote:
-> Several DT references got broken due to txt->yaml conversion.
-> 
-> Those are auto-fixed by running:
-> 
-> 	scripts/documentation-file-ref-check --fix
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Reviewed-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  Documentation/devicetree/bindings/arm/arm,scmi.txt        | 2 +-
->  Documentation/devicetree/bindings/arm/arm,scpi.txt        | 2 +-
->  .../devicetree/bindings/arm/bcm/brcm,bcm63138.txt         | 2 +-
->  .../devicetree/bindings/arm/hisilicon/hi3519-sysctrl.txt  | 2 +-
->  .../devicetree/bindings/arm/msm/qcom,idle-state.txt       | 2 +-
->  Documentation/devicetree/bindings/arm/omap/mpu.txt        | 2 +-
->  Documentation/devicetree/bindings/arm/psci.yaml           | 2 +-
->  .../devicetree/bindings/clock/qcom,gcc-apq8064.yaml       | 2 +-
->  .../devicetree/bindings/display/tilcdc/tilcdc.txt         | 2 +-
->  Documentation/devicetree/bindings/leds/common.yaml        | 2 +-
->  .../devicetree/bindings/leds/register-bit-led.txt         | 2 +-
->  .../devicetree/bindings/memory-controllers/ti/emif.txt    | 2 +-
->  Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt   | 2 +-
->  .../bindings/pinctrl/aspeed,ast2400-pinctrl.yaml          | 2 +-
->  .../bindings/pinctrl/aspeed,ast2500-pinctrl.yaml          | 2 +-
->  .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml          | 2 +-
->  .../devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml  | 2 +-
->  .../devicetree/bindings/reset/st,stm32mp1-rcc.txt         | 2 +-
->  .../devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml  | 2 +-
->  MAINTAINERS                                               | 8 ++++----
->  20 files changed, 23 insertions(+), 23 deletions(-)
+Shared Virtual Addressing (SVA) allows to share process page tables with
+devices using the IOMMU. Add a generic implementation of the IOMMU SVA
+API, and add support in the Arm SMMUv3 driver.
 
-Applied.
+Previous versions of this patchset were sent over a year ago [1][2] but
+we've made a lot of progress since then:
 
-Rob
+* ATS support for SMMUv3 was merged in v5.2.
+* The bind() and fault reporting APIs have been merged in v5.3.
+* IOASID were added in v5.5.
+* SMMUv3 PASID was added in v5.6, with some pending for v5.7.
+
+* The first user of the bind() API will be merged in v5.7 [3]. The zip
+  accelerator is also the first piece of hardware that I've been able to
+  use for testing (previous versions were developed with software models)
+  and I now have tools for evaluating SVA performance. Unfortunately I
+  still don't have hardware that supports ATS and PRI; the zip accelerator
+  uses stall.
+
+These are the remaining changes for SVA support in SMMUv3. Since v3 [1]
+I fixed countless bugs and - I think - addressed everyone's comments.
+Thanks to recent MMU notifier rework, iommu-sva.c is a lot more
+straightforward. I'm still unhappy with the complicated locking in the
+SMMUv3 driver resulting from patch 12 (Seize private ASID), but I
+haven't found anything better.
+
+Please find all SVA patches on branches sva/current and sva/zip-devel at
+https://jpbrucker.net/git/linux
+
+[1] https://lore.kernel.org/linux-iommu/20180920170046.20154-1-jean-philippe.brucker@arm.com/
+[2] https://lore.kernel.org/linux-iommu/20180511190641.23008-1-jean-philippe.brucker@arm.com/
+[3] https://lore.kernel.org/linux-iommu/1581407665-13504-1-git-send-email-zhangfei.gao@linaro.org/
+
+Jean-Philippe Brucker (26):
+  mm/mmu_notifiers: pass private data down to alloc_notifier()
+  iommu/sva: Manage process address spaces
+  iommu: Add a page fault handler
+  iommu/sva: Search mm by PASID
+  iommu/iopf: Handle mm faults
+  iommu/sva: Register page fault handler
+  arm64: mm: Pin down ASIDs for sharing mm with devices
+  iommu/io-pgtable-arm: Move some definitions to a header
+  iommu/arm-smmu-v3: Manage ASIDs with xarray
+  arm64: cpufeature: Export symbol read_sanitised_ftr_reg()
+  iommu/arm-smmu-v3: Share process page tables
+  iommu/arm-smmu-v3: Seize private ASID
+  iommu/arm-smmu-v3: Add support for VHE
+  iommu/arm-smmu-v3: Enable broadcast TLB maintenance
+  iommu/arm-smmu-v3: Add SVA feature checking
+  iommu/arm-smmu-v3: Add dev_to_master() helper
+  iommu/arm-smmu-v3: Implement mm operations
+  iommu/arm-smmu-v3: Hook up ATC invalidation to mm ops
+  iommu/arm-smmu-v3: Add support for Hardware Translation Table Update
+  iommu/arm-smmu-v3: Maintain a SID->device structure
+  iommu/arm-smmu-v3: Ratelimit event dump
+  dt-bindings: document stall property for IOMMU masters
+  iommu/arm-smmu-v3: Add stall support for platform devices
+  PCI/ATS: Add PRI stubs
+  PCI/ATS: Export symbols of PRI functions
+  iommu/arm-smmu-v3: Add support for PRI
+
+ .../devicetree/bindings/iommu/iommu.txt       |   18 +
+ arch/arm64/include/asm/mmu.h                  |    1 +
+ arch/arm64/include/asm/mmu_context.h          |   11 +-
+ arch/arm64/kernel/cpufeature.c                |    1 +
+ arch/arm64/mm/context.c                       |  103 +-
+ drivers/iommu/Kconfig                         |   13 +
+ drivers/iommu/Makefile                        |    2 +
+ drivers/iommu/arm-smmu-v3.c                   | 1354 +++++++++++++++--
+ drivers/iommu/io-pgfault.c                    |  533 +++++++
+ drivers/iommu/io-pgtable-arm.c                |   27 +-
+ drivers/iommu/io-pgtable-arm.h                |   30 +
+ drivers/iommu/iommu-sva.c                     |  596 ++++++++
+ drivers/iommu/iommu-sva.h                     |   64 +
+ drivers/iommu/iommu.c                         |    1 +
+ drivers/iommu/of_iommu.c                      |    5 +-
+ drivers/misc/sgi-gru/grutlbpurge.c            |    4 +-
+ drivers/pci/ats.c                             |    4 +
+ include/linux/iommu.h                         |   73 +
+ include/linux/mmu_notifier.h                  |   10 +-
+ include/linux/pci-ats.h                       |    8 +
+ mm/mmu_notifier.c                             |    6 +-
+ 21 files changed, 2699 insertions(+), 165 deletions(-)
+ create mode 100644 drivers/iommu/io-pgfault.c
+ create mode 100644 drivers/iommu/io-pgtable-arm.h
+ create mode 100644 drivers/iommu/iommu-sva.c
+ create mode 100644 drivers/iommu/iommu-sva.h
+
+-- 
+2.25.0
+
