@@ -2,101 +2,109 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455EFC11D2F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E54AC35671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4832082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IP/4NB2V"
+	by mail.kernel.org (Postfix) with ESMTP id 619A32082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582543235;
+	bh=tfwxnUm8CTy64G41f2iMr9bjPIyqP0yFAFqjYV9SOYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D57uVwS7aMt84z0LrZiZAPTfMXeXEJQn4YLb6LVdqkY9MrHslf3OvAuUh3mo3IwBg
+	 pGSKEDrQHW/kl5xG0R4tHyKapexV8EqVYL7AjRbDlDTIXmYt7yOANqnk277Kdt4ZEl
+	 +pwT4md5umvXaLYSpPZwiRWzzqgRxt3h/4V7AEg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgBXLTI (ORCPT
+        id S1727197AbgBXLUe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:19:08 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39339 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXLTI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:19:08 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so1111965wrn.6
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 03:19:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vVRUXC9u/A5DLNgpNy0TmY7xGnxbSS2LdHcV0vtIQ9w=;
-        b=IP/4NB2V96p5cK7ZEAZIyjpWd2aQhUH+RqG3KUykEhIMjYWfhRfRI0vOL+3/XqBt27
-         AnGJOv5WBR8/eE0hHClDsaUsAWijH6AByJ4puFJeDRzsbDjLLSmqIww0uUUQnTAu9KjT
-         9NdhpwiSmxPlquwzxPG2Ma/oIRoCKye6SnN2lf1z2T1KIjjeBsLxJIBPxWU8IS+pcj7c
-         +GqutI7vfgQRodizAvK6FxX2J/KKdOf8FXqvrA4fauqYpyoIqNZsDLq8NS4Eikh8o1Xe
-         4r09RDhLeH3KW8/JbMvfAx2hlPchFokl1GOoY93YZ/BSlNRVeKruXS0imYgT1FIs+A+N
-         AoKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vVRUXC9u/A5DLNgpNy0TmY7xGnxbSS2LdHcV0vtIQ9w=;
-        b=jsyPT+RQJ13mmPpmaxKmdj16/fZwTbMuakbfe0P71035R2hsB+XuJruZxn7feB0FGe
-         FID7IwYGD6c3ojDhQxAV29hZzRiIJq5mZDTQCZ3ykEmU/m5lJjL5MGei8YTIDy7uEckD
-         1CPt/DUFGb5Pg0/9a0vNX8jyLeEe7Ym4FBw0eYUlaVKw2VNtpxyfTutyI5ETTqRNqtnc
-         L/KOr56egRnDalSvy1iIYyPAKvb3cGl3oTfZuxVFvY1YooX/wKwQOdHMUUICCabtlzCx
-         CBhGyuM4VQLLl/wG0U1JqC70WeB0Ch/M3VGpurywi9Zsdnc/YmzAwBy2HBcJ77rgJdJ+
-         Lq1Q==
-X-Gm-Message-State: APjAAAV18K3Tp7OSq6TF9Q0iSE7mwJ1Ip/ST4TCuBfGHztaJ/rgXkI3G
-        WzRcE00SvYDG7ljxB65AbZkqKw==
-X-Google-Smtp-Source: APXvYqxscWh2g3lQVU75MYddDZiS9qAP6S4WWNDYSa5oAgaL2XIPlhyKiWkgVVRAKc+rWHMrz7ZhfA==
-X-Received: by 2002:a5d:5303:: with SMTP id e3mr9779258wrv.274.1582543145120;
-        Mon, 24 Feb 2020 03:19:05 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id r3sm18580182wrn.34.2020.02.24.03.19.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Feb 2020 03:19:04 -0800 (PST)
-Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-References: <20200221222711.15973-1-robh@kernel.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <383f3a95-6ae9-ee42-d173-88ce18c35016@linaro.org>
-Date:   Mon, 24 Feb 2020 11:19:03 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 24 Feb 2020 06:20:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727185AbgBXLUe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:20:34 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8CB220828;
+        Mon, 24 Feb 2020 11:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582543234;
+        bh=tfwxnUm8CTy64G41f2iMr9bjPIyqP0yFAFqjYV9SOYE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FnM2JMMOaqo3jU/7fznFVD+LadG9PBNNBtKfvwkV4jblDtsqK1/uqVUVQqc7uf1cF
+         AAD2elF8e05a0Y47WScHvQyp8eLtZPQjLNNyAs2WFWXTmnoZ0n8u6n4uKUhFe6G1Ja
+         VH+gdhqHJxRWBqUuU4vEgOzijzhE7+Zx+uBTI0Ng=
+Date:   Mon, 24 Feb 2020 19:20:26 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
+        michael@walle.cc, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 devicetree 0/6] DT bindings for Felix DSA switch on
+ LS1028A
+Message-ID: <20200224112026.GF27688@dragon>
+References: <20200223204716.26170-1-olteanv@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223204716.26170-1-olteanv@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sun, Feb 23, 2020 at 10:47:10PM +0200, Vladimir Oltean wrote:
+> This series officializes the device tree bindings for the embedded
+> Ethernet switch on NXP LS1028A (and for the reference design board).
+> The driver has been in the tree since v5.4-rc6.
+> 
+> It also performs some DT binding changes and minor cleanup, as per
+> feedback received in v1 and v2:
+> 
+> - I've changed the DT bindings for the internal ports from "gmii" to
+>   "internal". This means changing the ENETC phy-mode as well, for
+>   uniformity. So I would like the entire series to be merged through a
+>   single tree, probably the devicetree one - something which David
+>   Miller has aggreed to, here [0].
+> - Disabled all Ethernet ports in the LS1028A DTSI by default, which
+>   means not only the newly introduced switch ports, but also RGMII
+>   standalone port 1.
+> 
+> [0]: https://lkml.org/lkml/2020/2/19/973
+> 
+> Claudiu Manoil (2):
+>   arm64: dts: fsl: ls1028a: add node for Felix switch
+>   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
+> 
+> Vladimir Oltean (4):
+>   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for ENETC
+>     RCIE
+>   arm64: dts: fsl: ls1028a: disable all enetc ports by default
 
+I applied these 4 DTS patches with changing prefix to 'arm64: dts: ls1028a: '.
 
-On 21/02/2020 22:27, Rob Herring wrote:
->   Documentation/devicetree/bindings/nvmem/nvmem.yaml |  2 ++
-for nvmem changes,
+Shawn
 
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
+>   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
+>   dt-bindings: net: dsa: ocelot: document the vsc9959 core
+> 
+>  .../devicetree/bindings/net/dsa/ocelot.txt    | 116 ++++++++++++++++++
+>  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |   1 +
+>  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  61 ++++++++-
+>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  89 +++++++++++++-
+>  drivers/net/dsa/ocelot/felix.c                |   3 +-
+>  drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
+>  6 files changed, 265 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
+> 
+> -- 
+> 2.17.1
+> 
