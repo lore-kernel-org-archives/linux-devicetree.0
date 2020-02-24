@@ -2,95 +2,143 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77780C11D30
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5B5C11D32
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390EC20836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:35:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K9z8jYfd"
+	by mail.kernel.org (Postfix) with ESMTP id C62E220838
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 14:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582555925;
+	bh=XRi0OmHVHDee1GTej+sJ5OKiNNLB45ifwcR2vnGTriE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=T2QrHkHVUsu0QtAyDFPXw7tN//QOzvUVo2EEf0Vq3YKFOluWt5ldi+0pzpT1yXe2G
+	 PPqVSy2FOPVt90oFfo6bh5W1cXKNaKSPxmT/Cwtp7YxPl6i2XQQo02vlNIYkfCbOnS
+	 2AUFTJpep/SkfMvQVBVQ9ZqetEKS2x9JxGdrm6e8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgBXOfC (ORCPT
+        id S1727513AbgBXOwF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:35:02 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6117 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgBXOfC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 09:35:02 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e53deca0000>; Mon, 24 Feb 2020 06:33:46 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 24 Feb 2020 06:35:01 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 24 Feb 2020 06:35:01 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
- 2020 14:35:01 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Feb 2020 14:35:01 +0000
-Received: from thunderball.nvidia.com (Not Verified[10.21.140.91]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e53df140006>; Mon, 24 Feb 2020 06:35:01 -0800
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 4/4] ARM64: tegra: Populate LP8557 backlight regulator
-Date:   Mon, 24 Feb 2020 14:34:36 +0000
-Message-ID: <20200224143436.5438-4-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200224143436.5438-1-jonathanh@nvidia.com>
-References: <20200224143436.5438-1-jonathanh@nvidia.com>
-X-NVConfidentiality: public
+        Mon, 24 Feb 2020 09:52:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727474AbgBXOwF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 09:52:05 -0500
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DACFC20836;
+        Mon, 24 Feb 2020 14:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582555924;
+        bh=XRi0OmHVHDee1GTej+sJ5OKiNNLB45ifwcR2vnGTriE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=emz3wz7Ro5hhDbUK45uRjE/GOzzpc3xgdSqBISPZkQrYw3cmsSjhpNfSPlXBLnwdE
+         kcewki6VbecIyeDD3mBAJWecySt85yvGUT+/ld/07q6kFoFqVchCtenkjF8QsZxBSo
+         HHcfEWbBHf1CqUCwoNQSK5oHdp8sVjA8IRaRgBf4=
+Received: by mail-qk1-f177.google.com with SMTP id h4so8919657qkm.0;
+        Mon, 24 Feb 2020 06:52:03 -0800 (PST)
+X-Gm-Message-State: APjAAAXE3OthYOmae/owoRfw3P1tJqWVVQXkFPS+db0d25c683XV4neZ
+        CwHea0iQpNgBUGgxg6qYZB1eCYskZVBEc4LaYQ==
+X-Google-Smtp-Source: APXvYqy3i2A/uaXUUl5KAquMuTkYSOzGwGzbCUu+blbmGe2ksR6g/Clz7i7XiWQ/ps6CvMEUu/w8BbbZd1N4Q9aboto=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr50756836qkg.152.1582555922990;
+ Mon, 24 Feb 2020 06:52:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582554826; bh=8MBs7jrK7WrFNE7o6bG0zu41Sicfxu97bK94j6RYNJs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=K9z8jYfdaYDh/XGz5S/vyzBWYN4ZPYT6jkue5E5YiUVIyQgLCoZqfSIh3h9luB+/C
-         DhYTYMkUQRLasUE0VX9dr4Bn0Hxeaw8DjYS7BUq4LqfNwWjsCSsNEhk26FGBEUvhRH
-         i2nMUMk5Ivw78ouR6qNZhI6freANsproJ+yQkA0cC9WXj5mQw4xcKRmL48dccxrX47
-         aQi0BDk3SCzZBAa+4G3yynAGiRNiFuLVWkg/vFMcq1JDp6a2mVs/CS3Qj0/heE9gPn
-         Qr2Wy0Oa6tg3jhxR9hk7qyy5FlkfDAtJOlUt6sPloPS4bhqqDJtbnXZL7lzHDP+sw+
-         RZcjavnvJtCIQ==
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
+ <20200221021002.18795-2-yamada.masahiro@socionext.com> <20200221153215.GA9815@bogus>
+ <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
+In-Reply-To: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 24 Feb 2020 08:51:50 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+za-2VQ3uaLK0bUoziTyoNeL4T48F+hVv1Wy4b+5rAGA@mail.gmail.com>
+Message-ID: <CAL_Jsq+za-2VQ3uaLK0bUoziTyoNeL4T48F+hVv1Wy4b+5rAGA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The following warning is observed on Jetson TX1 platform because the
-supply regulator is not specified for the backlight.
+On Fri, Feb 21, 2020 at 11:33 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Rob,
+>
+> On Sat, Feb 22, 2020 at 12:32 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
+> > > Convert the UniPhier GPIO controller binding to DT schema format.
+> > >
+> > > I omitted the 'gpio-ranges' property because it is defined in the
+> > > dt-schema project (/schemas/gpio/gpio.yaml).
+> > >
+> > > As of writing, the 'gpio-ranges-group-names' is not defined in that
+> > > file despite it is a common property described in
+> > > Documentation/devicetree/bindings/gpio/gpio.txt
+> > > So, I defined it in this schema.
+> > >
+> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > ---
+> > >
+> > > I have a question about the range about 'ngpio'.
+> > >
+> > >   ngpios:
+> > >     minimum: 0
+> > >     maximum: 512
+> > >
+> > > The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
+> > > https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
+> > >
+> > > 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
+> > >
+> > > I cannot omit the minimum because minimum and maximum depend on each other.
+> > > I just put a sensible number, 512, in maximum.
+> > >
+> > > If this range is entirely unneeded, I will delete it.
+> >
+> > This property is generally for when you can have some number less
+> > than a maximum number implied by the compatible string.
+> >
+> > If there is really no max (e.g. 2^32 - 1 is valid), then just do
+> > 'ngpios: true'
+>
+>
+> What does ': true' mean?
 
- WARNING KERN lp855x 0-002c: 0-002c supply power not found, using dummy regulator
+It's a schema that always passes validation. It's purpose here is just
+to say you are using this common property for this binding.
 
-The backlight supply is provided by the 3.3V SYS rail and so add this
-as the supply for the backlight.
+>
+> If it is documented somewhere,
+> could you point me to the reference?
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 1 +
- 1 file changed, 1 insertion(+)
+https://github.com/devicetree-org/dt-schema/blob/master/schemas/gpio/gpio.yaml
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-index c70a610f8e3a..ea0e1efa6973 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-@@ -56,6 +56,7 @@
- 		backlight: backlight@2c {
- 			compatible = "ti,lp8557";
- 			reg = <0x2c>;
-+			power-supply = <&vdd_3v3_sys>;
- 
- 			dev-ctrl = /bits/ 8 <0x80>;
- 			init-brt = /bits/ 8 <0xff>;
--- 
-2.17.1
+>
+> Even if I remove the 'ngpio' entirely
+> from my dt-schema, the 'ngpio' is checked
+> correctly.
 
+Yes, if you change it to a string value for example, it should fail.
+(Only if DT_SCHEMA_FILES is not set without my kbuild changes)
+
+You should also add 'additionalProperties: false' at the top level of
+your schema and then it will also fail if you don't list ngpios in
+properties.
+
+Rob
