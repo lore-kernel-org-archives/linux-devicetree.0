@@ -2,112 +2,159 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EDAC38BF9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E22AC38BF9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57DAD20CC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2364F20CC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEQqfu/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgBXVKx (ORCPT
+        id S1728056AbgBXVKx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 24 Feb 2020 16:10:53 -0500
-Received: from muru.com ([72.249.23.125]:57316 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbgBXVKq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:10:46 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id B86088030;
-        Mon, 24 Feb 2020 21:11:30 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH 21/23] ARM: dts: Configure interconnect target module for am437x dispc
-Date:   Mon, 24 Feb 2020 13:09:57 -0800
-Message-Id: <20200224210959.56146-22-tony@atomide.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200224210959.56146-1-tony@atomide.com>
-References: <20200224210959.56146-1-tony@atomide.com>
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38255 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbgBXVKq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 16:10:46 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a9so853098wmj.3;
+        Mon, 24 Feb 2020 13:10:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6yWM1dVY3KXj+nN/ReZRFLyP/i4t8gAHjBcXNGyYMFQ=;
+        b=mEQqfu/sa9O0wq9FoZjyB9hUTWBa49Do30CEHoosU8I3drOeyns0gC/iuheDQyubhm
+         OCXQE1qe58xL9PnsLfZizKbQTBlmKJ/l1QCnoY2mfh/jp1+q1yDELzhrbKHUsgt0Lk7K
+         GldgrHtK+7B4E+tmjmJexuQkBHi2+zfJrD9rv9kQQMTJ/2zX+uNqRCvWmRK6ttUMge1/
+         dXw7z78dorngi9f4d6Jh4a7/WP8EEeg12oTS04V5Vi5NnkDP6s+9pYPrkdQ0AnqmSO+5
+         o9X2tvRJX0BnfdaoiPMOjLgp0NRIpowhse0FOEZE0w5owUentgkd03jn41a80cUR3/wf
+         RCHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6yWM1dVY3KXj+nN/ReZRFLyP/i4t8gAHjBcXNGyYMFQ=;
+        b=YNRHL2qps+WJDv4pKxNdCtyfRueL9W7q7W3Ejh2qi5MAQC//qnqNp8LdJ2SMNDUbX2
+         Dw+iHXDFctkwhzouwSRFhX+tHUkZgeOiMWSLWVMIJsjjkyi6/V8I/J9ZfTxeJajfTcUV
+         6WXWMJldqhDoi5SX0IVVaFxBWM73cuy8If/c0mscQMCEqVewMQbbJ4r8zVlfE+2kZtSk
+         RBllxOJfoV7zxpnUsQRDtC8+Pjk/cewfzR5O0C5aqYVw8zVsI1m5BAiZYt4eU3TDKXOH
+         Lp+CbbNz4zGALXX/DGyu5KSoVcYgtp9O9MFAV5R1J3AUoVJ+C8gM2DIoYw8Irma9S0LX
+         QJ3w==
+X-Gm-Message-State: APjAAAW7UZXVd0g8BYl0+pGIh/RlfhWiv4FGQD8jtav0xLat7YKtuI8l
+        AcJCpDB/jWFz35ig0BQo9Xs=
+X-Google-Smtp-Source: APXvYqz9cj0t68TUy8GusArQPezxkC+gx4AYZMHTOs3PD80Kjlhjopv9YCUoeEh7xdXJ1rKrFGO04Q==
+X-Received: by 2002:a05:600c:230d:: with SMTP id 13mr938547wmo.13.1582578642434;
+        Mon, 24 Feb 2020 13:10:42 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id i204sm917780wma.44.2020.02.24.13.10.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 13:10:41 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 2/2] Documentation: devictree: Add ipq806x mdio bindings
+Date:   Mon, 24 Feb 2020 22:10:31 +0100
+Message-Id: <20200224211035.16897-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200224211035.16897-1-ansuelsmth@gmail.com>
+References: <20200224211035.16897-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We can now probe devices with device tree only configuration using
-ti-sysc interconnect target module driver. Let's configure the
-module, but keep the legacy "ti,hwmods" peroperty until the child
-devices are probing with ti-sysc interconnect driver.
+Add documentations for ipq806x mdio driver.
 
-Note that we also fix a harmless typo for the node name, it's
-dispc@400, not dispc@4000.
-
-Cc: Jyri Sarha <jsarha@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- arch/arm/boot/dts/am437x-l4.dtsi | 36 ++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
+Changes in v7:
+- Fix dt_binding_check problem
 
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -2150,15 +2150,39 @@ dss: dss@0 {
- 					 <0x00000c00 0x00000c00 0x00000400>,
- 					 <0x00001000 0x00001000 0x00001000>;
- 
--				dispc: dispc@4000 {
--					compatible = "ti,omap3-dispc";
--					reg = <0x400 0x400>;
--					interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-+				target-module@400 {
-+					compatible = "ti,sysc-omap2", "ti,sysc";
- 					ti,hwmods = "dss_dispc";
--					clocks = <&disp_clk>;
-+					reg = <0x400 0x4>,
-+					      <0x410 0x4>,
-+					      <0x414 0x4>;
-+					reg-names = "rev", "sysc", "syss";
-+					ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+							<SYSC_IDLE_NO>,
-+							<SYSC_IDLE_SMART>;
-+					ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+							<SYSC_IDLE_NO>,
-+							<SYSC_IDLE_SMART>;
-+					ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+							 SYSC_OMAP2_ENAWAKEUP |
-+							 SYSC_OMAP2_SOFTRESET |
-+							 SYSC_OMAP2_AUTOIDLE)>;
-+					ti,syss-mask = <1>;
-+					clocks = <&dss_clkctrl AM4_DSS_DSS_CORE_CLKCTRL 0>;
- 					clock-names = "fck";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					ranges = <0 0x400 0x400>;
- 
--					max-memory-bandwidth = <230000000>;
-+					dispc: dispc@0 {
-+						compatible = "ti,omap3-dispc";
-+						reg = <0 0x400>;
-+						interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-+						clocks = <&disp_clk>;
-+						clock-names = "fck";
+ .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+new file mode 100644
+index 000000000000..3178cbfdc661
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+						max-memory-bandwidth = <230000000>;
-+					};
- 				};
- 
- 				rfbi: rfbi@800 {
++title: Qualcomm ipq806x MDIO bus controller
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description: |+
++  The ipq806x soc have a MDIO dedicated controller that is
++  used to comunicate with the gmac phy conntected.
++  Child nodes of this MDIO bus controller node are standard
++  Ethernet PHY device nodes as described in
++  Documentation/devicetree/bindings/net/phy.txt
++
++allOf:
++  - $ref: "mdio.yaml#"
++
++properties:
++  compatible:
++    const: qcom,ipq8064-mdio
++  reg:
++    maxItems: 1
++    description: address and length of the register set for the device
++  clocks:
++    maxItems: 1
++    description: A reference to the clock supplying the MDIO bus controller
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    mdio0: mdio@37000000 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        compatible = "qcom,ipq8064-mdio", "syscon";
++        reg = <0x37000000 0x200000>;
++        resets = <&gcc GMAC_CORE1_RESET>;
++        reset-names = "stmmaceth";
++        clocks = <&gcc GMAC_CORE1_CLK>;
++
++        switch@10 {
++            compatible = "qca,qca8337";
++            /* ... */
++        };
++    };
 -- 
-2.25.1
+2.25.0
+
