@@ -2,104 +2,131 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F976C35671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 12:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E585C35671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE48720873
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 12:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E484A20828
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 13:05:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="ReGabWjx"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qaXmMS83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgBXM7s (ORCPT
+        id S1727357AbgBXNFd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:59:48 -0500
-Received: from vps.xff.cz ([195.181.215.36]:56912 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727501AbgBXM7s (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:59:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582549185; bh=9fyMxLMlwNi2Pk+BMp46DoE3AKNIuGLa/wjI2H1/1TI=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=ReGabWjx50JtBWZQvXOEPZalcv6O4nOrPEOA0yDYfRykQcuZ3agnsQV5wgtsd6W4n
-         yr1RWff/zDZU/rJ9AOp3C5rmlya4/6RRiVFTVr0OB/lw8G8mIBPKbgQXFCBpoiysjw
-         yzyyjqY5Fxsqg1cDwZhOnyUI+uM9SHFXIx4UYacg=
-Date:   Mon, 24 Feb 2020 13:59:45 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>, Icenowy Zheng <icenowy@aosc.io>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: sun50i-a64: Add i2c2 pins
-Message-ID: <20200224125945.dyl7reaqqiqds4ee@core.my.home>
-Mail-Followup-To: Maxime Ripard <maxime@cerno.tech>,
-        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>, Icenowy Zheng <icenowy@aosc.io>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200223172916.843379-1-megous@megous.com>
- <20200223172916.843379-2-megous@megous.com>
- <20200224110100.acwln7zv3j5y67b2@gilmour.lan>
+        Mon, 24 Feb 2020 08:05:33 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59064 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBXNFd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 08:05:33 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5QSX086053;
+        Mon, 24 Feb 2020 07:05:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582549526;
+        bh=SYBU5pE8qnsxWqM4agBgkitC2zqD/Vs7Rlu+vfpZ/Ho=;
+        h=From:To:CC:Subject:Date;
+        b=qaXmMS83KZP/tQwPkjqI+cxGanvDxPNW5OPXVqIlt3rIKoW/oLGjdfE8zSCwiGXyJ
+         zMx6Pwgmz8SHLEQEiO/ReNuzlX0G3vpR8rT3VI7d0CcGPTTfm5s1DdQFJKlC2QHfFO
+         tvyr/eoFJlcKfrWpoo367AhsiuXndgqbB8gRuTGY=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5Q6L109411;
+        Mon, 24 Feb 2020 07:05:26 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
+ Feb 2020 07:05:25 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 24 Feb 2020 07:05:25 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5M7N017839;
+        Mon, 24 Feb 2020 07:05:23 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH v3 0/4] dt-bindings: Convert Cadence PCIe RC/EP to DT Schema
+Date:   Mon, 24 Feb 2020 18:39:01 +0530
+Message-ID: <20200224130905.952-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224110100.acwln7zv3j5y67b2@gilmour.lan>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 12:01:00PM +0100, Maxime Ripard wrote:
-> On Sun, Feb 23, 2020 at 06:29:14PM +0100, Ondrej Jirman wrote:
-> > PinePhone needs I2C2 pins description. Add it.
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > index 862b47dc9dc90..0fdf5f400d743 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > @@ -671,6 +671,11 @@ i2c1_pins: i2c1-pins {
-> >  				function = "i2c1";
-> >  			};
-> >
-> > +			i2c2_pins: i2c2-pins {
-> > +				pins = "PE14", "PE15";
-> > +				function = "i2c2";
-> > +			};
-> > +
-> 
-> Setting it as the default muxing for i2c2 would be great
+Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
+themselves have a validation platform for validating the PCIe IP which
+is already in the upstream kernel. Right now the binding only exists for
+Cadence platform and this will result in adding redundant binding schema
+for any platform using Cadence PCIe core.
 
-Right, I checked the datasheet and it looks like this is the only pins where
-i2c2 can be muxed to.
+This series:
+1) Create cdns-pcie.yaml which includes properties that are applicable
+   to both host mode and endpoint mode of Cadence PCIe core.
+2) Create cdns-pcie-host.yaml to include properties that are specific to
+   host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
+   cdns-pcie.yaml.
+3) Create cdns-pcie-ep.yaml to include properties that are specific to
+   endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
+   cdns-pcie.yaml.
+4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
+   the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
+   and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
+   for Cadence platform then includes schema for Cadence PCIe core.
 
-I will change it.
+Changes from v2:
+*) Created "pci-ep.yaml" for common endpoint controller bindings
+*) Deprecate "cdns,max-outbound-regions" and "cdns,no-bar-match-nbits"
+   binding
 
-regards,
-	o.
+Changes from v1:
+*) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
+*) Fix example DT node for PCIe Endpoint.
 
-> Maxime
+Ref: Patches to convert Cadence driver to library
+     https://lkml.org/lkml/2019/11/11/317
 
+Some of this was initially part of [1], but to accelerate it getting
+into upstream, sending this as a separate series.
+
+[1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+
+Kishon Vijay Abraham I (4):
+  dt-bindings: PCI: Add PCI Endpoint Controller Schema
+  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+  dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
+    schema
+  dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+    bindings
+
+ .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 49 ++++++++++++
+ .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     | 75 +++++++++++++++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 28 +++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    | 32 ++++++++
+ .../devicetree/bindings/pci/pci-ep.yaml       | 41 ++++++++++
+ MAINTAINERS                                   |  2 +-
+ 8 files changed, 226 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
+
+-- 
+2.17.1
 
