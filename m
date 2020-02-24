@@ -2,128 +2,170 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F303C35675
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 00:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3709AC35673
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 00:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1759A2067D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 00:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8222067D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 00:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="VnESUfjI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZNNDRlge"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gySB25Dc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgBXAID (ORCPT
+        id S1727159AbgBXA53 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:08:03 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:53705 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726534AbgBXAID (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:08:03 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 63CCF4970;
-        Sun, 23 Feb 2020 19:08:01 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 23 Feb 2020 19:08:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=T6vwYsNt81W4QVG/9yltC3IUmOKJa1U
-        I+5Ub1sDqeVo=; b=VnESUfjI+wUMSIT8zSJGjTjnvN1Q6rr2atMpcMbCiiUf2+2
-        Htwj6KXEQ+XoQRcjudVhDCcOwskF5C1aPYvls8CtF8hE8ijxhlKEcUWpiHHfBaAZ
-        RpBN1jLdSnyFw84+0hMNBkJ0+OEsYJGQuZNZjX5qRvLg1blNdOimuZZwWcwoWWCx
-        732ASIGjAnnvLOOg7YHQR1vlBbNzr171taEkuNgFM20PTEYUDefcvNl7ZX15Gs35
-        GsdHQ03GOvWx4WvDhTTMdtdU/bjgc4UOt1YDe2sWngY4InuumosjKbGVluxYI2Gk
-        DXJAwIJBsbVFjHC2syobhh/mok5s6BA6yGVUKYw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=T6vwYs
-        Nt81W4QVG/9yltC3IUmOKJa1UI+5Ub1sDqeVo=; b=ZNNDRlgevio2rb1a2YaTdE
-        Qh34z29wQha3NxZnLqb4sYgCoqWwSVGOaN85Z1tMwRlBFQ3HmBELRcWX1sbS+ZOn
-        uca2u05lvw56h0AhBDmYL7GywahUSivkTeGdScJRJ+Df5lqlXNbJ98X7dFa2rHdg
-        aPrJdsyIKFJaWcMbMDKBZ4yHnWV0K8q9N4XGuqMx8KOrBRvXlh/jzeAYPZM5vCLg
-        H6n/Jxzkrik6LKX4S7HO9BzQddCi3OYYE3U2CyVDQbVN0yRULkmdPGLEBCUzqEPg
-        bHZtoDzF5du9tdhPH1ZhcWUnv2VOILcVgZtsBYNKKMsO5m47EgsSWZrvllqtTRLA
-        ==
-X-ME-Sender: <xms:3xNTXuMK-zhhnncLV5GITMkthKNZCwFHS9K-h156U1hfu4YOnYXcfw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeelgddulecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
-    rdhiugdrrghu
-X-ME-Proxy: <xmx:3xNTXpKC6qAm2Ahf3jxHo-c3o35FJiwIPLiVui0zfDrFEiy9M2fphQ>
-    <xmx:3xNTXoJ6X6pRGcZd4emhfEMOflc3Kmf1s7dH19zKHqpXHgcQl_HQ-A>
-    <xmx:3xNTXtX3k9pxeGni1WpGnPZwqOfxVh2mLDy8Dda6Ugrn6Keb7aq2nA>
-    <xmx:4RNTXotkO9aFVT3yBWk2fO4CBlxxh66eNbaJcXLMJnGGDcoDtR9m6A>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 16150E00A2; Sun, 23 Feb 2020 19:07:59 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-802-g7a41c81-fmstable-20200203v1
-Mime-Version: 1.0
-Message-Id: <41551c09-5443-4980-9c6f-6bc7f48aa356@www.fastmail.com>
-In-Reply-To: <83c5df4acbbe0fa55a1d58d4c4a435b51cd2a7ad.1582361737.git.mchehab+huawei@kernel.org>
-References: <cover.1582361737.git.mchehab+huawei@kernel.org>
- <83c5df4acbbe0fa55a1d58d4c4a435b51cd2a7ad.1582361737.git.mchehab+huawei@kernel.org>
-Date:   Mon, 24 Feb 2020 10:37:53 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-        "Linux Doc Mailing List" <linux-doc@vger.kernel.org>
-Cc:     "Jonathan Corbet" <corbet@lwn.net>,
-        "Sudeep Holla" <sudeep.holla@arm.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Andy Gross" <agross@kernel.org>,
-        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        "Stephen Boyd" <sboyd@kernel.org>, "Jyri Sarha" <jsarha@ti.com>,
-        "Tomi Valkeinen" <tomi.valkeinen@ti.com>,
-        "David Airlie" <airlied@linux.ie>,
-        "Daniel Vetter" <daniel@ffwll.ch>,
-        "Jacek Anaszewski" <jacek.anaszewski@gmail.com>,
-        "Pavel Machek" <pavel@ucw.cz>, "Dan Murphy" <dmurphy@ti.com>,
-        "Stuart Yoder" <stuyoder@gmail.com>,
-        "Laurentiu Tudor" <laurentiu.tudor@nxp.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Kevin Hilman" <khilman@baylibre.com>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
-        "Alexandre Torgue" <alexandre.torgue@st.com>,
-        "Zhang Rui" <rui.zhang@intel.com>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        "Amit Kucheria" <amit.kucheria@verdurent.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com, linux-pm@vger.kernel.org
-Subject: =?UTF-8?Q?Re:_[PATCH_2/7]_docs:_dt:_fix_several_broken_references_due_to?=
- =?UTF-8?Q?_renames?=
-Content-Type: text/plain
+        Sun, 23 Feb 2020 19:57:29 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41657 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBXA52 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Feb 2020 19:57:28 -0500
+Received: by mail-pf1-f194.google.com with SMTP id j9so4453506pfa.8;
+        Sun, 23 Feb 2020 16:57:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Aysh99lYJb0QB28h4UkvEdDsB5SZxGmd9sP09+ztSKE=;
+        b=gySB25DcqzWbfLwJ7ohcOp1/pIixZ1PNNyctooFBRKlDqn6YlsTfvTZo9ANX9C63O0
+         fbABfRUPdqH1LAQxZvdk13lKjGiFuxPOaqgwStuTHzVpKEh19g2ODfg5VmQ20OM7iC7i
+         VrQOJF8f7OLHc/apkdxzyw3/peC+a6zRJVPZ6287K8lmOt2Ja5dK6Apb1PSNBYOtb9VR
+         TK+zj8BnTM0AoPFZiMBXMXH0Gg0aLSOLfo20RJuruUDUZv62cV8nWB57XSgRvKzlFbdS
+         rXEHJU7MBwk1KCHO4SMmCuqCeMHIzVMeuk1Y+a7L1u7TVsVnEibSj1K2kO6tEdABop/n
+         s3NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Aysh99lYJb0QB28h4UkvEdDsB5SZxGmd9sP09+ztSKE=;
+        b=GbRkf5gWlSzA6Kr9MD96t+i8WtI3tQ0VPSJtuA8HrETpXVZsicQ0w/22o7RnRxop21
+         gSyioII9p5s8q7c+extJtSr6viDGo725LQ6rrXQygiVZTWD3LdLK0NHqChUXhAQej8b2
+         W6HsjUPdYwayX79iEhfB/wqvHn07ULKRJNeTNIuFJfQDa8kyu3UjvSW3MYt9DM9fG0x9
+         xz2QKLzVADhYAEhZd6fzrocs2tB9a9ujzpKdjpbGeg+zHOwU17glO6i86cPNmUCbQhWA
+         cVI/bsgbcOH77XY/aCDNolOvrdR+6qFvrQ3zV26MaEMEyGjJTO5/9yW4/fc7bxEDiQOh
+         lijA==
+X-Gm-Message-State: APjAAAVaZrfJWI3UcCqYKl3sYzgameceee2N6CVfRnaXy/fOmChC1DIV
+        dtizDZiTPNfKNt70BM393mc=
+X-Google-Smtp-Source: APXvYqyTUJlxELEbxm86weJqlQilHU3okCeuY1dsnmFf6p7qnYUJjYoigi4EfsVi3ANhXRQyh/xkjA==
+X-Received: by 2002:aa7:95a3:: with SMTP id a3mr23494287pfk.193.1582505847947;
+        Sun, 23 Feb 2020 16:57:27 -0800 (PST)
+Received: from [192.168.1.56] ([173.195.191.75])
+        by smtp.gmail.com with ESMTPSA id s125sm10165591pgc.53.2020.02.23.16.57.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Feb 2020 16:57:27 -0800 (PST)
+Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
+ information
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Ian Lepore <ian@freebsd.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-2-alexandre.torgue@st.com>
+ <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+ <20200223215936.GB1751@umbus.fritz.box>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <9e77ace1-6821-1094-85e0-a68228b2609d@gmail.com>
+Date:   Sun, 23 Feb 2020 18:57:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200223215936.GB1751@umbus.fritz.box>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On Sat, 22 Feb 2020, at 19:30, Mauro Carvalho Chehab wrote:
-> Several DT references got broken due to txt->yaml conversion.
+On 2/23/20 3:59 PM, David Gibson wrote:
+> On Fri, Feb 21, 2020 at 11:52:34AM -0600, Frank Rowand wrote:
+>> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+>>> This commit adds a new script to create a file (in dts file directory) with
+>>> some information (date, Linux version, user). This file could then be used
+>>> to populate "build-info" property in every dts file that would use this
+>>> build information:
+>>>
+>>> Example:
+>>>
+>>> / {
+>>> 	...
+>>> 	build-info = /incbin/("dtb-build.txt");
+>>
+>> s/.txt/.dtsi/
 > 
-> Those are auto-fixed by running:
-> 
-> 	scripts/documentation-file-ref-check --fix
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
-...
->  .../bindings/pinctrl/aspeed,ast2400-pinctrl.yaml          | 2 +-
->  .../bindings/pinctrl/aspeed,ast2500-pinctrl.yaml          | 2 +-
->  .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml          | 2 +-
+> I don't think that makes sense.  This is an /incbin/ not an /include/
+> so the text file is *not* dts information.
 
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
+You are right, thanks for catching that.
+
+-Frank
+
+> 
+>> and same wherever the file name is used.
+>>
+>>
+>>> 	...
+>>> };
+>>>
+>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>>
+>>> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+>>> index bae62549e3d2..a5af84ef4ffc 100644
+>>> --- a/scripts/Makefile.lib
+>>> +++ b/scripts/Makefile.lib
+>>> @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
+>>>  # DTC
+>>>  # ---------------------------------------------------------------------------
+>>>  DTC ?= $(objtree)/scripts/dtc/dtc
+>>> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
+>>>  
+>>>  # Disable noisy checks by default
+>>>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+>>> @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+>>>  
+>>>  quiet_cmd_dtc = DTC     $@
+>>>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+>>> +	$(DTB_GEN_INFO) $(src) ; \
+>>>  	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+>>>  	$(DTC) -O $(2) -o $@ -b 0 \
+>>>  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+>>> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
+>>> new file mode 100755
+>>> index 000000000000..0cd8bd98e410
+>>> --- /dev/null
+>>> +++ b/scripts/gen_dtb_build_info.sh
+>>> @@ -0,0 +1,10 @@
+>>> +#!/bin/bash
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +
+>>> +set -o nounset
+>>> +
+>>> +DTB_DIR=$1
+>>> +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
+>>> +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
+>>
+>> I would remove the filler words "From", "by", "the", and the trailing
+>> period ('.').
+>>
+>> <bikeshed>
+>> You might consider using a format more like the Linux
+>> kernel version line, which puts parenthesis around the
+>> compiled by info.
+>> </bikeshed>
+>>
+>> -Frank
+>>
+>>> +
+>>> +printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
+>>>
+>>
+> 
+
