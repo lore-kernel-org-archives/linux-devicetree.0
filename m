@@ -7,96 +7,123 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3344CC38BE1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405C6C38BE1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D22720836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C34420836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582569610;
-	bh=PEX+ELBPGmQLZKDttMc/4bvhTZXnLg0ng99PjqfYs7Q=;
+	s=default; t=1582569671;
+	bh=+XXUPs2oohHv/fZQpL9avJbDIDH/nbm3i/u9TygkMo4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yCPp2881UL/1YNuoJf4rBspWRmaSmcQ8X0nRYK88WLY5vNWyXnqzPNjdAVkhk0qjF
-	 mJYUWfov2iRmnMhUiKZ8SaPLneir55X+/pa5b9TnfuWuxTpUYpcQbxGFTzWXqzH9vn
-	 DVc381lh1cE1QRZecx8WeBSDkqn0VxOX2OTsv5rs=
+	b=spvhUhgakHT4rUtpIOPZVvAGI+XsHitCI8xQJaclzhMBnLNATnBoTGeaOot023W48
+	 R+/KA7ktOAgMLsGWBZ7IcqFyvkJdkPSJws57+V+dR613g7abt7qxIbrVSC/6tfzgtj
+	 Goma9Z714ONGdY7RSpuoyulES+5lOJsim7AOCGvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgBXSkG (ORCPT
+        id S1727834AbgBXSlK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:40:06 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34622 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgBXSkG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:40:06 -0500
-Received: by mail-ot1-f66.google.com with SMTP id j16so9680542otl.1;
-        Mon, 24 Feb 2020 10:40:05 -0800 (PST)
+        Mon, 24 Feb 2020 13:41:10 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34724 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgBXSlK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:41:10 -0500
+Received: by mail-ot1-f65.google.com with SMTP id j16so9683567otl.1;
+        Mon, 24 Feb 2020 10:41:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bmMsO8zlhfDBXeD1Ui5z4nfH2lAIx0D2PEMJ+/JnHXU=;
-        b=ih0HDgQ7SByC9FkVNsyAS/Zpkj8okRneRRAARWBM0x0nbWuRWieOrYs2uUVbRuiTV7
-         sAdXE/4cAvg6iKYiHvv/9t/GnUdwP3GfECBgJCw6fpaLTkLaSUp2ihQKam2nTZNi7GxN
-         Bv2UzxENuIm/ejbsIZ+oKjl/X3AbdCpyFTAkh9B5OzXtaxuLH5H2yVYiE2K6/6MWts69
-         4kUfXRwbreZunazIAKRXeYh5T2/1FyI3MPlQ7XM/wxvG/6POffoNdVksx2LgmREPhnXD
-         GZ9WEgQ8WCpfZyjXZMNMukAcWgzYDrzfOzc3ip3RHOfL2Ts5ywyk3Idnt7YaPIXqEhrV
-         JOqQ==
-X-Gm-Message-State: APjAAAXAJYARRfDBUSKFV0+DB49f27xCyM5mvTBmRSri7KiT8i1DmArh
-        ytIccxiiRS2lwO834laQDQ==
-X-Google-Smtp-Source: APXvYqyG6ueUZmR3C1vGNtlbivBqFpkBHQuuCOLIGlv1vRi+ocXBU3uxirn1DsXLCV/bF2L7rqDPag==
-X-Received: by 2002:a05:6830:139a:: with SMTP id d26mr42724177otq.75.1582569604945;
-        Mon, 24 Feb 2020 10:40:04 -0800 (PST)
+        bh=+sVRf7GGeylhrZHXm0oszIDVdS6Xo7uktXxhGGTwofg=;
+        b=iydNxzvclwjihQb67loXDkI8fF91EHbg9XHu2Ik2mIzwnEOWCM9bB33SM31iz1pXO8
+         A9A1kQFNAZ9RbDV9LkDcTsssEIZoq/d1mcvRd50vZ/eh2tuMSmT0hmqSAS0xLjavUlfn
+         P29+S9PK5vC2RvxTsj2r3+yjqXBzku0WOfQvpkT3kv6M+nIxbXMja/M35gv1RpIindjy
+         AERUuuuJbG43MqZgMt3wLus7w9Yi8dvbDeDVe/Z/xKj8v0YM0xrCvwMSE9Siyk0EodaP
+         fU6RwolapCkZNJRYhq1IG4fil3hdRY2opJ6zNxvE+DMJF7kOTPON06pzC2CAdH9aulbl
+         J8dA==
+X-Gm-Message-State: APjAAAVhWJ69d5jXUqxbxJp/wdGnA3DUoqnwtPUhxN/lqLbuHjPGvU3r
+        Lj9m75qC9+Guh1iCKelYrw==
+X-Google-Smtp-Source: APXvYqwOcQ+Wis2rH/zphuGcXoi5E6fO/77Hc1wq8cqj519RKyKMhXx/ovrxEJoXA98US2+hSw3maw==
+X-Received: by 2002:a9d:6e02:: with SMTP id e2mr42973744otr.194.1582569668643;
+        Mon, 24 Feb 2020 10:41:08 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m19sm4737721otn.47.2020.02.24.10.40.03
+        by smtp.gmail.com with ESMTPSA id i6sm4685288oto.62.2020.02.24.10.41.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 10:40:04 -0800 (PST)
-Received: (nullmailer pid 4013 invoked by uid 1000);
-        Mon, 24 Feb 2020 18:40:03 -0000
-Date:   Mon, 24 Feb 2020 12:40:03 -0600
+        Mon, 24 Feb 2020 10:41:08 -0800 (PST)
+Received: (nullmailer pid 5865 invoked by uid 1000);
+        Mon, 24 Feb 2020 18:41:07 -0000
+Date:   Mon, 24 Feb 2020 12:41:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH v1 3/3] dt-bindings: thermal: Add yaml bindings for
- thermal zones
-Message-ID: <20200224184003.GA3607@bogus>
-References: <cover.1582528977.git.amit.kucheria@linaro.org>
- <59d24f8ec98e29d119c5cbdb2abe6d4644cc51cf.1582528977.git.amit.kucheria@linaro.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 29/89] dt-bindings: display: Convert VC4 bindings to
+ schemas
+Message-ID: <20200224184107.GA4189@bogus>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <bf8aa2deea50cc3599caeb9ed1a07556353415df.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <59d24f8ec98e29d119c5cbdb2abe6d4644cc51cf.1582528977.git.amit.kucheria@linaro.org>
+In-Reply-To: <bf8aa2deea50cc3599caeb9ed1a07556353415df.1582533919.git-series.maxime@cerno.tech>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2020 12:55:37 +0530, Amit Kucheria wrote:
-> As part of moving the thermal bindings to YAML, split it up into 3
-> bindings: thermal sensors, cooling devices and thermal zones.
+On Mon, 24 Feb 2020 10:06:31 +0100, Maxime Ripard wrote:
+> The BCM283x SoCs have a display pipeline composed of several controllers
+> with device tree bindings that are supported by Linux.
 > 
-> The thermal-zone binding is a software abstraction to capture the
-> properties of each zone - how often they should be checked, the
-> temperature thresholds (trips) at which mitigation actions need to be
-> taken and the level of mitigation needed at those thresholds.
+> Now that we have the DT validation in place, let's split into separate
+> files and convert the device tree bindings for those controllers to
+> schemas.
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
->  .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
->  1 file changed, 302 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+>  Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt              | 174 +------------------------------------------------------------------------
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml         |  66 +++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml        |  73 ++++++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml        |  75 +++++++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml         |  37 +++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml |  40 +++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml         |  37 +++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml         |  42 +++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml         |  34 ++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml         |  44 ++++++++++++++++++-
+>  MAINTAINERS                                                             |   2 +-
+>  11 files changed, 449 insertions(+), 175 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
+warning: no schema found in file: Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml: ignoring, error in schema: properties
 Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupt-names: ['uplow'] is too short
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupts: [[0, 506, 4]] is too short
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupt-names: ['uplow'] is too short
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupts: [[0, 507, 4]] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml: properties: '#clock-cells' is a dependency of 'clock-output-names'
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1242847
+See https://patchwork.ozlabs.org/patch/1242907
 Please check and re-submit.
