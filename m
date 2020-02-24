@@ -2,124 +2,110 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB384C3567B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41D1C35679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C074320658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6ABE22525
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:54:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSfMJFQX"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Ta29z0+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgBXIvw (ORCPT
+        id S1727521AbgBXIxh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:51:52 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39865 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgBXIvv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 03:51:51 -0500
-Received: by mail-ed1-f66.google.com with SMTP id m13so10969006edb.6;
-        Mon, 24 Feb 2020 00:51:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GFzRwB7BBf5XP5+OFLKMdHWONCapTDpeZv+928ShWX4=;
-        b=SSfMJFQXTZjxh7uG1r9983G2qntKODxS60oAWXylxplre7Ls1BUJi3hiqsApgfGHiC
-         Qs1AYwO10Pw1W9CZHeeoPn/m3VVS6ysb9cD9HYwP42cu0EGIPuaZbODmJ5vgnT9v8/5p
-         ZiNGVE2dPLy2uJqbKs0HCV1ujQzo39hQRLWtiYb+xv9HdGUu2SG2dG3YDRtLCzITungk
-         aVYRzqL63xqOTK6WiUeTYe3GHhj43WsvzDCrAMr3Z+rb47+fleOBRALKv9Yr+lrxFuIV
-         yuQTAk/BKVfnzF2lLeWK3tjvogP0rC1E8NRTZvnlBmKLDoD5wTUQqKSHnjFOMLeGD5qL
-         hG4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GFzRwB7BBf5XP5+OFLKMdHWONCapTDpeZv+928ShWX4=;
-        b=ap0Kj+/RAdL4l9iUhbhqhOSDlf0WJBG37g5PF2wrnf8io0I5oaIQLLVa1ROOTdZf19
-         97eXRbaYnHsrSaKYrPwTlJrMdY4wuIMaI84A4AhA78nEUmGh3U75ISefL9guG0FLD9am
-         /10U56PAftEIxizPg3FzRxWeNs+8zd1tg4tiwfiFVqjvkrpNng6FCT7Foc/v06Rl8dSd
-         hq9raIeLumznXSAqYUOxHGg6wl0m1hi5LqFnrVEDErIJpRKX9Wt0sd17h8KGrL1tohji
-         joLMahu5CnCS+MT84iub3bdJK5akERQwfcvidnQl5xVl4zqF7hL5LyS0TFURQL4EItrb
-         Dn7g==
-X-Gm-Message-State: APjAAAXGQblh28Yx5f1hn1RKq/hjO6r3CkjYFqOhHVlMnjfS6hrRIgjf
-        /m8cZna+vH/CIp3WDh2Ja4UcpXfHHeScL/D8y1E=
-X-Google-Smtp-Source: APXvYqwoC1uyDhQknoARKL/WBeS6z2D7bovskBXRovKJrr7Ac9B22XojgLAAz1U59AyAVHl9V72z9MHNP47liscy5yE=
-X-Received: by 2002:a17:907:2636:: with SMTP id aq22mr29749373ejc.176.1582534309832;
- Mon, 24 Feb 2020 00:51:49 -0800 (PST)
+        Mon, 24 Feb 2020 03:53:37 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:57057 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbgBXIxh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 03:53:37 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B794923059;
+        Mon, 24 Feb 2020 09:53:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582534414;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yGHRW3l5rCA287QCNNdGXSdyqq9QPHkLJ+IpgLfP+T0=;
+        b=Ta29z0+G9GOKfOY5pEnNbXDdYrHts1jhuNXUK+UU5pGYZYKRousrquA57hOniFUq4neRJv
+        CWF0Ds23phwNWukPNrMpGKwE0OE5mmUIhqM0t2PymJhANWOk8Jh/P/Ff1ecxm+VF0nYmBQ
+        +xZno6FiY9P/UzW4OQIkZlENAnPp3wU=
 MIME-Version: 1.0
-References: <20200219151259.14273-1-olteanv@gmail.com> <20200224063154.GK27688@dragon>
- <CA+h21hok4V_-uarhnyBkdXqnwRdXpgRJWLSvuuVn8K3VRMtrcA@mail.gmail.com>
- <20200224084826.GE27688@dragon> <CA+h21hop_veYT7Ru6os2iqPV_tO+6vkZPo6sqgVf9GcNAsjWuw@mail.gmail.com>
-In-Reply-To: <CA+h21hop_veYT7Ru6os2iqPV_tO+6vkZPo6sqgVf9GcNAsjWuw@mail.gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 24 Feb 2020 10:51:39 +0200
-Message-ID: <CA+h21hr_VpU1yMNat7M=J35cQ__LB69YNvXXsuxg+t4zQS4WkA@mail.gmail.com>
-Subject: Re: [PATCH v2 net-next/devicetree 0/5] DT bindings for Felix DSA
- switch on LS1028A
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 24 Feb 2020 09:53:34 +0100
+From:   Michael Walle <michael@walle.cc>
 To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     xiaowei.bao@nxp.com, Zhiqiang.Hou@nxp.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
+        roy.zang@nxp.com
+Subject: Re: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+In-Reply-To: <20200224084307.GD27688@dragon>
+References: <20190902034319.14026-2-xiaowei.bao@nxp.com>
+ <20200224081105.13878-1-michael@walle.cc> <20200224084307.GD27688@dragon>
+Message-ID: <a3aeabddc82ca86e3dca9c26081a0077@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: B794923059
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[16];
+         NEURAL_HAM(-0.00)[-0.572];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2020 at 10:50, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> On Mon, 24 Feb 2020 at 10:48, Shawn Guo <shawnguo@kernel.org> wrote:
-> >
-> > On Mon, Feb 24, 2020 at 09:59:53AM +0200, Vladimir Oltean wrote:
-> > > Hi Shawn,
-> > >
-> > > On Mon, 24 Feb 2020 at 08:32, Shawn Guo <shawnguo@kernel.org> wrote:
-> > > >
-> > > > On Wed, Feb 19, 2020 at 05:12:54PM +0200, Vladimir Oltean wrote:
-> > > > > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> > > > >
-> > > > > As per feedback received in v1, I've changed the DT bindings for the
-> > > > > internal ports from "gmii" to "internal". So I would like the entire
-> > > > > series to be merged through a single tree, be it net-next or devicetree.
-> > > >
-> > > > Will applying the patches via different trees as normal cause any
-> > > > issue like build breakage or regression on either tree?  Otherwise, I do
-> > > > not see the series needs to go in through a single tree.
-> > > >
-> > > > Shawn
-> > > >
-> > >
-> > > No, the point is that I've made some changes in the device tree
-> > > bindings validation in the driver, which make the driver without those
-> > > changes incompatible with the bindings themselves that I'm
-> > > introducing. So I would like the driver to be operational on the
-> > > actual commit that introduces the bindings, at least in your tree. I
-> > > don't expect merge conflicts to occur in that area of the code.
-> >
-> > The dt-bindings patch is supposed to go through subsystem tree together
-> > with driver changes by nature.  That said, patch #1 and #2 are for
-> > David, and I will pick up the rest (DTS ones).
-> >
-> > Shawn
->
-> Ok, any further comments on the series or should I respin after your
-> feedback regarding the commit message prefix and the status =
-> "disabled" ordering?
->
-> -Vladimir
+Hi Shawn, all,
 
-By the way all your comments have been on v2 and I've sent v3 already.
-So this series is superseded.
+Am 2020-02-24 09:43, schrieb Shawn Guo:
+> On Mon, Feb 24, 2020 at 09:11:05AM +0100, Michael Walle wrote:
+>> Hi Xiaowei, Hi Shawn,
+>> 
+>> > LS1028a implements 2 PCIe 3.0 controllers.
+>> 
+>> Patch 1/3 and 3/3 are in Linus' tree but nobody seems to care about 
+>> this patch
+>> anymore :(
+>> 
+>> This doesn't work well with the IOMMU, because the iommu-map property 
+>> is
+>> missing. The bootloader needs the &smmu phandle to fixup the entry. 
+>> See
+>> below.
+>> 
+>> Shawn, will you add this patch to your tree once its fixed, 
+>> considering it
+>> just adds the device tree node for the LS1028A?
+> 
+> The patch/thread is a bit aged.  You may want to send an updated patch
+> for discussion.
 
-Regards,
--Vladimir
+So should I just pick up the patch add my two fixes and send it again? 
+What about
+the Signed-off-by tags? Leave them? Replace them? Add mine?
+
+-michael
