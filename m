@@ -2,286 +2,133 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741AFC38BF9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 22:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61778C38BF9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 22:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51DF321D7E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 22:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB022176D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 22:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="etBpV2HK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbgBXW25 (ORCPT
+        id S1727670AbgBXWcC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:28:57 -0500
-Received: from mga12.intel.com ([192.55.52.136]:35898 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgBXW25 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:28:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 14:28:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
-   d="scan'208";a="437858293"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.154.101]) ([10.249.154.101])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Feb 2020 14:28:53 -0800
-Subject: Re: [PATCH v10 4/4] i2c: core: support bus regulator controlling in
- adapter
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 24 Feb 2020 17:32:02 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:59520 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbgBXWcC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 17:32:02 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 81378E89;
+        Mon, 24 Feb 2020 23:32:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1582583520;
+        bh=jtnl65Hr+bnftvPmBVfUadMRLZSEnfG5ViWMnjRZp4Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=etBpV2HKWNIkC6SnIBViMTcVal7FgsZewpgy7XyLZLypptycZ1GaBBlCsQUCLMEvi
+         WuRIIXf2oATg5r1E/qMwx/+NjlpO1c/FDEv7VP3YPQMVjx8N4KSR14uEs9UcTkGNZl
+         Ng6ENPmw+emhKN1h3H1NRMavaXWgsvrbWwo5CkaI=
+Date:   Tue, 25 Feb 2020 00:31:39 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <20200116025637.3524-1-bibby.hsieh@mediatek.com>
- <20200116025637.3524-5-bibby.hsieh@mediatek.com>
- <CAAFQd5Bh9dUuu2fzxQSyuyRrEvN5o8PBqPCUTdrC5btN2Q1HVw@mail.gmail.com>
- <CAAFQd5DtnBhGV-VemTwudm7K-UtFsGg99YGuD-cyR93u0OAPuA@mail.gmail.com>
- <1582255353.19370.2.camel@mtksdaap41>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <b11d1b1a-5d00-3200-6779-e54a828915f9@intel.com>
-Date:   Mon, 24 Feb 2020 23:28:52 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        intel-gfx-trybot@lists.freedesktop.org, kernel@collabora.com,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v10 09/12] dt-bindings: display: bridge: lvds-codec: Add
+ new bus-width prop
+Message-ID: <20200224223139.GA29578@pendragon.ideasonboard.com>
+References: <20200128135514.108171-1-boris.brezillon@collabora.com>
+ <20200128135514.108171-10-boris.brezillon@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <1582255353.19370.2.camel@mtksdaap41>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200128135514.108171-10-boris.brezillon@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/21/2020 4:22 AM, Bibby Hsieh wrote:
-> Hi, Rafael,
->
-> I'm Sorry to bother you.
->
-> I'm not sure if you receive our email...
-> So I re-sent this email to your another email.
+Hi Boris,
 
-I actually have not realized that there was a question directly for me 
-in this thread.
+Thank you for the patch.
 
+On Tue, Jan 28, 2020 at 02:55:11PM +0100, Boris Brezillon wrote:
+> Add the bus-width property to describe the input bus format.
+> 
+> v10:
+> * Add changelog to the commit message
+> * Add Rob's R-b
+> 
+> v8 -> v9:
+> * No changes
+> 
+> v7:
+> * Rebase on top of lvds-codec changes
+> * Drop the data-mapping property
+> 
+> v4 -> v6:
+> * Not part of the series
+> 
+> v3:
+> * New patch
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/display/bridge/lvds-codec.yaml    | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> index 8f373029f5d2..7c4e42f4de61 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> @@ -55,6 +55,14 @@ properties:
+>          description: |
+>            For LVDS encoders, port 0 is the parallel input
+>            For LVDS decoders, port 0 is the LVDS input
+> +        properties:
+> +          bus-width:
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/uint32
+> +              - enum: [18, 24]
+> +              - default: 24
+> +          description:
+> +            Number of data lines used to transmit the RGB data.
 
-> On Mon, 2020-02-17 at 18:45 +0900, Tomasz Figa wrote:
->> Hi Rafael,
->>
->> On Tue, Jan 28, 2020 at 4:31 PM Tomasz Figa <tfiga@chromium.org> wrote:
->>> Hi Rafael,
->>>
->>> On Thu, Jan 16, 2020 at 11:56 AM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
->>>> Although in the most platforms, the bus power of i2c
->>>> are alway on, some platforms disable the i2c bus power
->>>> in order to meet low power request.
->>>>
->>>> We get and enable bulk regulator in i2c adapter device.
->>>>
->>>> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
->>>> ---
->>>>   drivers/i2c/i2c-core-base.c | 81 +++++++++++++++++++++++++++++++++++++
->>>>   include/linux/i2c.h         |  3 ++
->>>>   2 files changed, 84 insertions(+)
->>>>
->>> I posted some comments in a separate reply [1] and Wolfram confirmed
->>> that he's fine with the approach [2]. Would you have some time to take
->>> a look from the PM point of view? Thanks.
->>>
->>> [1] https://patchwork.ozlabs.org/patch/1223991/#2350984
->>> [2] https://patchwork.ozlabs.org/patch/1223991/#2351032
->>>
->>> Please let me know if you want me to CC you directly on any of those replies.
->> Would you have a few minutes to take a look at this?
->>
->> Thanks,
->> Tomasz
->>
->>> Best regards,
->>> Tomasz
->>>
->>>> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
->>>> index 9333c865d4a9..9b9e96b094ca 100644
->>>> --- a/drivers/i2c/i2c-core-base.c
->>>> +++ b/drivers/i2c/i2c-core-base.c
->>>> @@ -306,6 +306,7 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
->>>>   static int i2c_device_probe(struct device *dev)
->>>>   {
->>>>          struct i2c_client       *client = i2c_verify_client(dev);
->>>> +       struct i2c_adapter      *adap = client->adapter;
->>>>          struct i2c_driver       *driver;
->>>>          int status;
->>>>
->>>> @@ -371,6 +372,12 @@ static int i2c_device_probe(struct device *dev)
->>>>
->>>>          dev_dbg(dev, "probe\n");
->>>>
->>>> +       status = regulator_enable(adap->bus_reg);
->>>> +       if (status != 0) {
->>>> +               dev_err(&adap->dev, "Failed to enable power regulator\n");
->>>> +               goto err_clear_wakeup_irq;
->>>> +       }
->>>> +
->>>>          status = of_clk_set_defaults(dev->of_node, false);
->>>>          if (status < 0)
->>>>                  goto err_clear_wakeup_irq;
->>>> @@ -407,6 +414,7 @@ static int i2c_device_probe(struct device *dev)
->>>>   static int i2c_device_remove(struct device *dev)
->>>>   {
->>>>          struct i2c_client       *client = i2c_verify_client(dev);
->>>> +       struct i2c_adapter      *adap = client->adapter;
->>>>          struct i2c_driver       *driver;
->>>>          int status = 0;
->>>>
->>>> @@ -420,6 +428,8 @@ static int i2c_device_remove(struct device *dev)
->>>>          }
->>>>
->>>>          dev_pm_domain_detach(&client->dev, true);
->>>> +       if (!pm_runtime_status_suspended(&adap->dev))
->>>> +               regulator_disable(adap->bus_reg);
->>>>
->>>>          dev_pm_clear_wake_irq(&client->dev);
->>>>          device_init_wakeup(&client->dev, false);
->>>> @@ -431,6 +441,71 @@ static int i2c_device_remove(struct device *dev)
->>>>          return status;
->>>>   }
->>>>
->>>> +#ifdef CONFIG_PM_SLEEP
->>>> +static int i2c_resume(struct device *dev)
->>>> +{
->>>> +       struct i2c_client *client = i2c_verify_client(dev);
->>>> +       struct i2c_adapter *adap = client->adapter;
->>>> +       int err;
->>>> +
->>>> +       if (pm_runtime_status_suspended(&adap->dev)) {
+This is a bit unclear. First of all, depending on whether the node is an
+LVDS encoder or decoder, port@0 is either a parallel input or an LVDS
+input. The property mentiones RGB data, does it mean it apply to LVDS
+encoders only ? Or should it be in port@1 for LVDS decoders ?
 
-In general, this is racy, because the RPM status of the device may 
-change while it is running unless there are specific reasons why that 
-cannot happen.
+Then, I'm not sure what the property describes. Is it the number of data
+lanes that the chip has ? Or the number of lanes routed on the board ?
+Should it be specified only if the number of lanes on the board is
+different than the maximum number of lanes of the hardware ? A more
+detailed description is needed.
 
-It generally is better to do such checks at the "early resume" and 
-(analogously) "late suspend" stages when RPM is disabled.
+Updating the example would also be useful.
 
->>>> +               err = regulator_enable(adap->bus_reg);
->>>> +               if (err)
->>>> +                       return err;
->>>> +       }
->>>> +
->>>> +       return pm_generic_resume(dev);
->>>> +}
->>>> +
->>>> +static int i2c_suspend(struct device *dev)
->>>> +{
->>>> +       struct i2c_client *client = i2c_verify_client(dev);
->>>> +       struct i2c_adapter *adap = client->adapter;
->>>> +       int err;
->>>> +
->>>> +       if (!pm_runtime_status_suspended(&adap->dev)) {
->>>> +               err = regulator_disable(adap->bus_reg);
->>>> +               if (err)
->>>> +                       return err;
->>>> +       }
->>>> +
->>>> +       return pm_generic_suspend(dev);
->>>> +}
->>>> +#endif
->>>> +
->>>> +#ifdef CONFIG_PM
->>>> +static int i2c_runtime_resume(struct device *dev)
->>>> +{
->>>> +       struct i2c_client *client = i2c_verify_client(dev);
->>>> +       struct i2c_adapter *adap = client->adapter;
->>>> +       int err;
->>>> +
->>>> +       err = regulator_enable(adap->bus_reg);
->>>> +       if (err)
->>>> +               return err;
->>>> +
->>>> +       return pm_generic_runtime_resume(dev);
->>>> +}
->>>> +
->>>> +static int i2c_runtime_suspend(struct device *dev)
->>>> +{
->>>> +       struct i2c_client *client = i2c_verify_client(dev);
->>>> +       struct i2c_adapter *adap = client->adapter;
->>>> +       int err;
->>>> +
->>>> +       err = pm_generic_runtime_suspend(dev);
->>>> +       if (err)
->>>> +               return err;
->>>> +
->>>> +       return regulator_disable(adap->bus_reg);
->>>> +}
->>>> +#endif
->>>> +
->>>> +static const struct dev_pm_ops i2c_device_pm = {
->>>> +       SET_SYSTEM_SLEEP_PM_OPS(i2c_suspend, i2c_resume)
->>>> +       SET_RUNTIME_PM_OPS(i2c_runtime_suspend, i2c_runtime_resume, NULL)
->>>> +};
->>>> +
->>>>   static void i2c_device_shutdown(struct device *dev)
->>>>   {
->>>>          struct i2c_client *client = i2c_verify_client(dev);
->>>> @@ -488,6 +563,7 @@ struct bus_type i2c_bus_type = {
->>>>          .probe          = i2c_device_probe,
->>>>          .remove         = i2c_device_remove,
->>>>          .shutdown       = i2c_device_shutdown,
->>>> +       .pm             = &i2c_device_pm,
->>>>   };
->>>>   EXPORT_SYMBOL_GPL(i2c_bus_type);
->>>>
->>>> @@ -1351,6 +1427,11 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
->>>>                  goto out_reg;
->>>>
->>>>          dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
->>>> +       adap->bus_reg = devm_regulator_get(&adap->dev, "bus");
->>>> +       if (IS_ERR(adap->bus_reg)) {
->>>> +               res = PTR_ERR(adap->bus_reg);
->>>> +               goto out_reg;
->>>> +       }
->>>>
->>>>          pm_runtime_no_callbacks(&adap->dev);
->>>>          pm_suspend_ignore_children(&adap->dev, true);
->>>> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
->>>> index d2f786706657..833b81a680da 100644
->>>> --- a/include/linux/i2c.h
->>>> +++ b/include/linux/i2c.h
->>>> @@ -15,6 +15,7 @@
->>>>   #include <linux/device.h>      /* for struct device */
->>>>   #include <linux/sched.h>       /* for completion */
->>>>   #include <linux/mutex.h>
->>>> +#include <linux/regulator/consumer.h>
->>>>   #include <linux/rtmutex.h>
->>>>   #include <linux/irqdomain.h>           /* for Host Notify IRQ */
->>>>   #include <linux/of.h>          /* for struct device_node */
->>>> @@ -330,6 +331,7 @@ struct i2c_client {
->>>>          int init_irq;                   /* irq set at initialization    */
->>>>          int irq;                        /* irq issued by device         */
->>>>          struct list_head detected;
->>>> +
->>>>   #if IS_ENABLED(CONFIG_I2C_SLAVE)
->>>>          i2c_slave_cb_t slave_cb;        /* callback for slave mode      */
->>>>   #endif
->>>> @@ -723,6 +725,7 @@ struct i2c_adapter {
->>>>          const struct i2c_adapter_quirks *quirks;
->>>>
->>>>          struct irq_domain *host_notify_domain;
->>>> +       struct regulator *bus_reg;
->>>>   };
->>>>   #define to_i2c_adapter(d) container_of(d, struct i2c_adapter, dev)
->>>>
->>>> --
->>>> 2.18.0
+>  
+>        port@1:
+>          type: object
 
+-- 
+Regards,
 
+Laurent Pinchart
