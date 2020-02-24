@@ -2,154 +2,87 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E53EC35679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AFCC3567B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22EBB20714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:36:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ibNSapZo"
+	by mail.kernel.org (Postfix) with ESMTP id 58C6C20714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582533798;
+	bh=9veiwHQ321Wt5pyHqEi/01Nw1+0zBBW21SsYQPjAqOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jHc51OMpTNQTqVW53LfxZCwH6Se4IoE/mokKJ3LAZsFyNOa14yB6FbUlq3JJK0Jcw
+	 XE1EQFa9m9K0wxcIQWKC9TmmwyodnC6ip+ts1aqKTAYNJso4fTParVuPJjmRAoXd3B
+	 xPpXTI75dfCX7LsIC/EesbuoUDw26WOoKpetXAsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgBXIgo (ORCPT
+        id S1727115AbgBXInS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:36:44 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33550 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgBXIgo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 03:36:44 -0500
-Received: by mail-wr1-f65.google.com with SMTP id u6so9306671wrt.0
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 00:36:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=eQfv9Vg9FNZ1IKRXYyQ5Ipdv+XiwvqU0fwrAQYdRsOI=;
-        b=ibNSapZoeaEr3wrJYHv3XHiZ3QcEoiPhb1ADLXE8orFfh3k42YaX4YlosY1nBAT8lS
-         jMm7/rqDIRZdU064CtAfPx5YbYBvl7ntri7GdwIc8mvg1v8U0drfYleP53Whm4JQPesp
-         GpaVjSUlYI0RqKT50IZ/z5kW2AjKtlb+JmsmLWDkU2+NWWvhndcZJqjcxewYKbmVgDfq
-         ew/ledAYYSUEtv1Pu8r3gEdvxhdultHphkN+D8Hiq/5C1URDUylLs9b/OX3ZAzzb7J3G
-         /vJ776u4B4JJw0jQ5ZHDsLhCqQwmx5O1kY2cUSXXysfxE0HWZhSOXK7RtR16TR7nSHmA
-         GHyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=eQfv9Vg9FNZ1IKRXYyQ5Ipdv+XiwvqU0fwrAQYdRsOI=;
-        b=qW4rBaSxYxrxcZPSQ4+xn6jtA9LJ6H0hm+EDl06reHVoCUEmvn3N2PE1ioxwfcElph
-         gFw2uijGYbm/Z/k8BxsSf4BCanEzNauc2qET+a+LcC/F/N0au1T3iC5NJzzM/H8TZA41
-         OtO2wsZs7sifiHnj3YJs2Aeg8TfVetpP+ly8lzw8776hfQOBOT8z5YUXor/N6H3lYNP6
-         7mURf3Ut371VxgYFXeYG374Ihstn351n0az20bb7zEglkv6fYJHlwTog+J/81KEfJHvf
-         zqW4r62rQtQWGJqw7cHNLYNlnfJotReKfw1sIUhEMIZNAfLogH491XFt5xA3i2lf+a6X
-         9JuA==
-X-Gm-Message-State: APjAAAWzHQ3asCSK6Yj3PD7JJDgUKlTWhP2Vv9ObBWgsLc5+RzSIJ7Tl
-        PX+8gQNHOVYVDt5q/yAPRRV7+A==
-X-Google-Smtp-Source: APXvYqw/NrMmIvPn6D5GC4zuvZdHE1WEiDRn6PxfraTp2mGxrE4G9Fpye1/arFzUCjW7Eud9wvHmZQ==
-X-Received: by 2002:a5d:4bcf:: with SMTP id l15mr2765537wrt.0.1582533402119;
-        Mon, 24 Feb 2020 00:36:42 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id f65sm17120731wmf.29.2020.02.24.00.36.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 00:36:41 -0800 (PST)
-Date:   Mon, 24 Feb 2020 08:37:12 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
-Message-ID: <20200224083712.GH3494@dell>
-References: <20200221222711.15973-1-robh@kernel.org>
+        Mon, 24 Feb 2020 03:43:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbgBXInR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 03:43:17 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 543AB20661;
+        Mon, 24 Feb 2020 08:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582533797;
+        bh=9veiwHQ321Wt5pyHqEi/01Nw1+0zBBW21SsYQPjAqOc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U0n5WXGRRH/yQhjuQyGKM/mRikRUbqKQ4zz6qfsZ+Gowv69j8/VHm2lzuTmD9hJvn
+         /kSOKy0zDgzWKceEvlzewW3AnxCtUEaQKmNAjGFnbeHsgsAY+AfCxD9MOMPm+D4G/x
+         4Y6PxQOrEdSh8ieKEQVtvoGvSkQCfIglQ6GLai5k=
+Date:   Mon, 24 Feb 2020 16:43:10 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     xiaowei.bao@nxp.com, Zhiqiang.Hou@nxp.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
+        roy.zang@nxp.com
+Subject: Re: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+Message-ID: <20200224084307.GD27688@dragon>
+References: <20190902034319.14026-2-xiaowei.bao@nxp.com>
+ <20200224081105.13878-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200224081105.13878-1-michael@walle.cc>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2020, Rob Herring wrote:
-
-> Fix all the warnings in the DT binding schema examples when built with
-> 'W=1'. This is in preparation to make that the default for examples.
+On Mon, Feb 24, 2020 at 09:11:05AM +0100, Michael Walle wrote:
+> Hi Xiaowei, Hi Shawn,
 > 
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/arm/stm32/st,mlahb.yaml    |  2 +-
->  .../clock/allwinner,sun4i-a10-osc-clk.yaml         |  2 +-
->  .../bindings/clock/allwinner,sun9i-a80-gt-clk.yaml |  2 +-
->  .../display/allwinner,sun4i-a10-tv-encoder.yaml    |  6 +-----
->  .../bindings/display/bridge/anx6345.yaml           | 10 ++--------
->  .../display/panel/leadtek,ltk500hd1829.yaml        |  2 ++
->  .../bindings/display/panel/xinpeng,xpp055c272.yaml |  2 ++
->  .../bindings/display/simple-framebuffer.yaml       |  6 +-----
->  .../devicetree/bindings/dma/ti/k3-udma.yaml        | 14 +-------------
->  .../devicetree/bindings/gpu/arm,mali-bifrost.yaml  | 14 +++++++-------
->  .../devicetree/bindings/gpu/arm,mali-midgard.yaml  | 14 +++++++-------
->  .../bindings/iio/adc/samsung,exynos-adc.yaml       |  2 +-
->  .../bindings/input/touchscreen/goodix.yaml         |  2 +-
->  .../devicetree/bindings/media/ti,cal.yaml          |  2 +-
+> > LS1028a implements 2 PCIe 3.0 controllers.
+> 
+> Patch 1/3 and 3/3 are in Linus' tree but nobody seems to care about this patch
+> anymore :(
+> 
+> This doesn't work well with the IOMMU, because the iommu-map property is
+> missing. The bootloader needs the &smmu phandle to fixup the entry. See
+> below.
+> 
+> Shawn, will you add this patch to your tree once its fixed, considering it
+> just adds the device tree node for the LS1028A?
 
->  .../devicetree/bindings/mfd/max77650.yaml          |  4 ++--
+The patch/thread is a bit aged.  You may want to send an updated patch
+for discussion.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Shawn
 
->  .../devicetree/bindings/mmc/mmc-controller.yaml    |  1 +
->  Documentation/devicetree/bindings/nvmem/nvmem.yaml |  2 ++
->  .../bindings/phy/allwinner,sun4i-a10-usb-phy.yaml  |  2 +-
->  .../bindings/pinctrl/st,stm32-pinctrl.yaml         |  2 +-
->  .../devicetree/bindings/regulator/regulator.yaml   |  2 +-
->  .../sram/allwinner,sun4i-a10-system-control.yaml   |  2 +-
->  .../bindings/timer/allwinner,sun4i-a10-timer.yaml  |  2 +-
->  22 files changed, 39 insertions(+), 58 deletions(-)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> 
+> > 
+> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
