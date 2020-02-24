@@ -2,141 +2,148 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF25C35671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DD9C11D2F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3157B20732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB3520732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 11:32:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Kp6riYbQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZsng7Pb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgBXL3F (ORCPT
+        id S1727276AbgBXLc0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:29:05 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1321 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBXL3F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:29:05 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e53b35c0000>; Mon, 24 Feb 2020 03:28:29 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 24 Feb 2020 03:29:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 24 Feb 2020 03:29:04 -0800
-Received: from [10.26.11.229] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
- 2020 11:28:59 +0000
-Subject: Re: [PATCH v3 03/10] ASoC: tegra: add Tegra210 based DMIC driver
-To:     Mark Brown <broonie@kernel.org>
-CC:     Sameer Pujar <spujar@nvidia.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <digetx@gmail.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
- <1582180492-25297-4-git-send-email-spujar@nvidia.com>
- <20200221130005.GD5546@sirena.org.uk>
- <316ce0d5-318d-0533-ef06-bd7e8672f893@nvidia.com>
- <20200221165535.GG5546@sirena.org.uk>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <47f94534-e997-d56c-5793-ae832fb2add4@nvidia.com>
-Date:   Mon, 24 Feb 2020 11:28:57 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 06:32:26 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37463 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbgBXLc0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 06:32:26 -0500
+Received: by mail-ed1-f66.google.com with SMTP id t7so11502400edr.4;
+        Mon, 24 Feb 2020 03:32:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AfrimxhNpVIP3+bGsNCdKoq84x3eL8XHOriR3+8j0Ms=;
+        b=OZsng7PbGu7nmQgVf0EtJ4UWk9brlGfX7GQV6ScV8Un4zIbnEmMQo3K75kfZv2R4de
+         xn5deO8iu6mqROEspIXv4C7rytvd5C0l81vNnQ68QvJE/3rUTisCUF13AeFSF/ItpxLl
+         5+WzaVr95eOKF1VDrIwhwlQYOyo3rsiwqBRiwvZYpIQTtHGoBpL3vTWEe1ot1PvW8sVj
+         gLGBY3nytSKGi+JjFUhai8H+diT/G7IqNMgelKUAYJC2dD1glW01knXX957H1t72VZlB
+         Vg9twX8zXS+4S5y1bcD4RGzTFKaISbSHlUJ/SxtszwziKDtnEv3CZT1Uibr+BQkrcOIk
+         awgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AfrimxhNpVIP3+bGsNCdKoq84x3eL8XHOriR3+8j0Ms=;
+        b=Y2LGRI6hWRb8H89sCLBIv9vKYXo/jnO6CXe/fjB4qJ37CBtdpTmEYLn1DZXQGS0GOc
+         5OcdLzBDLpOS4YY+/zCWrLMeMxWz9890+jKH51ZtAr1x+iO9cOwqMIVU1sWZJQqzVATw
+         V4MbbTlXFhstH83I072WMLAHYOWr/FcGTvXOl0cJbQ9WE0+2b4pMKVtRP91beelDlEny
+         EGQzd+hG3Rv6t0tvsVLbUHi+uduepKY9Mztcbt8fkAUn94HE4+6uuauc9OTtDVCC3NDi
+         CHbGIkFxdR5YDHaQPxlhKuibfHifkSd7rjinQdbt0rM5BXRgI+M2/NihP8q9L/r+56aX
+         XdIQ==
+X-Gm-Message-State: APjAAAVk9LjqaJGDzwhHqTfrgkEljbhBzrToSFPO59otg2uehbkgQt4F
+        V8vzeld83CKfX3Vg3deBmAkXytzQGyNr4v/XBFI=
+X-Google-Smtp-Source: APXvYqx9zeCTXG6L2u/50zzr6HLZumNTp5QAGjJPhbCfCsxqyl+CRJ3+VOhlW4+ONQ2A4mxbmAR07pHS25KnPjt6JdU=
+X-Received: by 2002:aa7:d3cb:: with SMTP id o11mr46447702edr.145.1582543944370;
+ Mon, 24 Feb 2020 03:32:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200221165535.GG5546@sirena.org.uk>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582543709; bh=qUgfEWROPZ5NHbaz93BXjwIxn40AQzx3A83F2mD4UMA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Kp6riYbQFS4x3zgXyfXPsN6bYbX54Fntx/GCuBqqbnS0IE6/fyN+OtDghfd4BpB7P
-         zjLe27l68nvPON2uD7gvad/ZVCmufdxg5wxwScrI0ksow9L4VkjQI5hKlRQJ/F/Zub
-         LEbfEwVLHDfm6ReBG/qCck9VkkX+jnLJl39xeoYaYwenen8ELQ+5N8x9Qph+OZg8Ig
-         EcCKu4t5zkX6rvri0dmWALx77bFUXW/HO4bdQA6+IGceTEy4FrN5LStg5r/1kgvqOd
-         xuO++9PCrU+goQkxYxguIHcbGfRtguYIAtITIRhLmGI3ldjt7dmijOL1qC7dL4eZf2
-         GoD1tGkiqCrHg==
+References: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
+ <1559287017-32397-2-git-send-email-horatiu.vultur@microchip.com>
+ <CA+h21hoSA5DECsA+faJ91n0jBhAR5BZnkMm=Dx4JfNDp8J+xbw@mail.gmail.com> <20200224110350.7kdzf4kml4iaem4i@soft-dev3.microsemi.net>
+In-Reply-To: <20200224110350.7kdzf4kml4iaem4i@soft-dev3.microsemi.net>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 24 Feb 2020 13:32:13 +0200
+Message-ID: <CA+h21hrWqdvfApodpKbBXNH83cFT4uCgBmAtnzs+t63bhktO2g@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 1/2] net: mscc: ocelot: Add support for tcam
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Horatiu,
 
-On 21/02/2020 16:55, Mark Brown wrote:
-> On Fri, Feb 21, 2020 at 02:31:05PM +0000, Jon Hunter wrote:
->> On 21/02/2020 13:00, Mark Brown wrote:
-> 
->>>> +	srate = params_rate(params);
->>>> +	if (dmic->srate_override)
->>>> +		srate = dmic->srate_override;
-> 
->>> How does this work for userspace?  If we just ignore the sample rate we
->>> were asked for I'd expect that the application would get upset.
-> 
->> Tegra has a hardware sample rate converter (though driver not yet
->> upstream or part of this initial series) and if using the sample-rate
->> converter, then the actual rate captured by the DMIC interface could be
->> different from the resulting sample-rate.
-> 
-> The ideal thing in a component model would be to represent those sample
-> rate convertors directly to usrspace so the routing and rewriting is
-> explicit.
+On Mon, 24 Feb 2020 at 13:03, Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
+>
+> Hi Vladimir,
+>
+> The 02/24/2020 12:38, Vladimir Oltean wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> >
+> > Hi Horatiu,
+> >
+> > On Fri, 31 May 2019 at 10:18, Horatiu Vultur
+> > <horatiu.vultur@microchip.com> wrote:
+> > >
+> > > Add ACL support using the TCAM. Using ACL it is possible to create rules
+> > > in hardware to filter/redirect frames.
+> > >
+> > > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > > ---
+> > >  arch/mips/boot/dts/mscc/ocelot.dtsi      |   5 +-
+> > >  drivers/net/ethernet/mscc/Makefile       |   2 +-
+> > >  drivers/net/ethernet/mscc/ocelot.c       |  13 +
+> > >  drivers/net/ethernet/mscc/ocelot.h       |   8 +
+> > >  drivers/net/ethernet/mscc/ocelot_ace.c   | 777 +++++++++++++++++++++++++++++++
+> > >  drivers/net/ethernet/mscc/ocelot_ace.h   | 227 +++++++++
+> > >  drivers/net/ethernet/mscc/ocelot_board.c |   1 +
+> > >  drivers/net/ethernet/mscc/ocelot_regs.c  |  11 +
+> > >  drivers/net/ethernet/mscc/ocelot_s2.h    |  64 +++
+> > >  drivers/net/ethernet/mscc/ocelot_vcap.h  | 403 ++++++++++++++++
+> > >  10 files changed, 1508 insertions(+), 3 deletions(-)
+> > >  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.c
+> > >  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.h
+> > >  create mode 100644 drivers/net/ethernet/mscc/ocelot_s2.h
+> > >  create mode 100644 drivers/net/ethernet/mscc/ocelot_vcap.h
+> > >
+> >
+> > I was testing this functionality and it looks like the MAC_ETYPE keys
+> > (src_mac, dst_mac) only match non-IP frames.
+> > Example, this rule doesn't drop ping traffic:
+> >
+> > tc qdisc add dev swp0 clsact
+> > tc filter add dev swp0 ingress flower skip_sw dst_mac
+> > 96:e1:ef:64:1b:44 action drop
+> >
+> > Would it be possible to do anything about that?
+>
+> What you could do is to configure each port in such a way, to treat IP
+> frames as MAC_ETYPE frames. Have a look in ANA:PORT[0-11]:VCAP_S2_CFG.
+>
+> There might be a problem with this approach. If you configure the port
+> in such a way, then all your rules with the keys IP6, IP4 will not be
+> match on that port.
+>
 
-I assume that it would be OK for the sample rate converter itself to
-expose mixer controls to configure its input and output rates so the
-user could configure as needed?
+Thanks for the quick answer.
+Doing that is indeed problematic and would not be my first choice. I
+was expecting MAC_ETYPE rules to always match an Ethernet frame
+regardless of higher-level protocols, and that the user would decide
+the behavior via rule ordering.
 
->> So we want a way to indicate to the DMIC it is capturing at rate X,
->> while the resulting sample-rate is Y.
-> 
->> I am not sure if there is a better way to do this? Ideally, the DMIC
->> would query the rate from the upstream MUX it is connected to, but I am
->> not sure if there is a way to do that. So right now it is a manual
->> process and the user has to configure these which are not ideal.
-> 
-> Is there any *need* for these to be user configurable?  What's normally
-> happening at the minute is that either the external DAIs are fixed
-> configuration and the DSP just converts everything or there's no format
-> conversion done and things get passed through.
+> >
+> > Thanks,
+> > -Vladimir
+>
+> --
+> /Horatiu
 
-I can see that in most cases there are a finite set of configurations
-that the end user may use. However, we would like to make the
-configuration flexible as possible and this also allow us to test lots
-of different configurations for verification purposes as well.
-
-So a typical scenario would be ...
-
-DMIC --> SRC --> DMA
-
-Where SRC is the sample-rate converter. Now, the DMICs support upto
-48kHz and although it maybe unlikely that someone would want to up
-convert to say 96kHz, it is possible we can do this with the SRC.
-
-So if the user executes arecord with '-r 96000', the DMIC hw_params
-would return an error as this is not supported. So today we override
-this. However, the best solution would be to allow the user the set the
-input of the SRC and then if the DMIC output is routed via the SRC use
-the SRC input rate instead of the actual rate seen/specified by the
-user. So like you said in your other mail, if we could propagate the
-rate information that would be ideal.
-
-Jon
-
--- 
-nvpublic
+-Vladimir
