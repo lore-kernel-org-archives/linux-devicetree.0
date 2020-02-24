@@ -2,180 +2,109 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607E1C34055
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D547C38BE2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380D120880
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aDvzZHPt"
+	by mail.kernel.org (Postfix) with ESMTP id 1482820CC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 18:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582568878;
+	bh=umAnb5ekYeQXE5qdZwgUn2od2g+XRXhwSwaqS5+ud0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GZd5ZQ7iJWunEIKp6SYpD46naYvmslIFU6kygYWVMaMi7SCdE27kdJiwMHepUxrjw
+	 odW4Wurc8w2RQ+z8mrzGZJNqwTJoGz3V5MyPmu2Vzfp3/HoOZl6ML+f8zlUiWosudo
+	 PWirIMomSEGHRrZ8I6Tknu6GLo4sUwE8bmKA+RFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgBXSYk (ORCPT
+        id S1727730AbgBXS15 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:24:40 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42488 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727916AbgBXSYk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:24:40 -0500
-Received: by mail-wr1-f67.google.com with SMTP id p18so7933597wre.9
-        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 10:24:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6tqcdrj1xZvDcY7k2ZzEJzD20ZqgKnIoPLeb93yl2Xc=;
-        b=aDvzZHPt9iVEQwZJj1vud5mf/cCAG1jb3PpU0tPKkgnq9edj9bpqrHE6Eoktch/Wxe
-         YkevW7vtCQ7o4zxdCRdqv7yvITCgSxf6H6szEOP+F3WE5Ip0NrJp+tBFY4ii8waFp1+G
-         g6F0duX+U/X1mGeZhsHnDiBNc6YigoXnE6IXag4W7ySDFxe6VvcC+ni71ci5R9yuXX8R
-         EIF3HXiiGiaQ+0ZIc7OclYDsNN6BvIE7UZlNby1PK/lZ5772P8Uf8yq5xCyAqHI7MCxu
-         HvKguxhEpuIXgThDOS+/Ngh5iwPVr2umzGovygvcHO1ZCp3TmC3j/q2drow2O6jsDj8S
-         bnng==
+        Mon, 24 Feb 2020 13:27:57 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34240 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbgBXS15 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 13:27:57 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l136so9885896oig.1;
+        Mon, 24 Feb 2020 10:27:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6tqcdrj1xZvDcY7k2ZzEJzD20ZqgKnIoPLeb93yl2Xc=;
-        b=oEFztYIThzcAmT/ZYd64PCHdb9fn740PTG7GHJUPBFpcekTZqPslk/uscgD+emEuj4
-         hhhTT9wdU5bdqDRvKtMKn8I8zpZ+p5F5cthxsOKksrANeqYW1s2oVegRmrHsxNEU0vce
-         XEF1IBRlhpEcZqUTVzfpj72eBdzykt5mhIHHqvupSGuneweTGK7TDrJggMGupRpOX0Gh
-         KISB+KwKwR2HMRK7iRL0v2HFKAkWuHbPl8ttKC3Bvm6cVbn1BN6BCQA0xh5wXrUBC3HD
-         t/92EedNwtHw2Y6pOiGKq+/gT5lgk88NI39g3v4NQShVPKVnoN/rjml7iNz/NGzUnLiX
-         AH5A==
-X-Gm-Message-State: APjAAAVtaaUuLP7Nuc9ThH5cBVwmkp4CAn9VaupcZNmrkGZBc9FTSe2B
-        PFhCYH/3Q2YnxNvW2UhOJuf8Og==
-X-Google-Smtp-Source: APXvYqweDyVog+lllJdgzOC5yFjqb0Y6Z6mnJXgAaaIz7bHvgd5fr5XnnlJkWPmoF4mmrIHnKf7dfA==
-X-Received: by 2002:adf:fec4:: with SMTP id q4mr9813505wrs.368.1582568678393;
-        Mon, 24 Feb 2020 10:24:38 -0800 (PST)
-Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id n3sm304255wmc.27.2020.02.24.10.24.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8b3MliEDFbDrUpBm8jGhwYqreoGs6m8FNnF/yNIueEU=;
+        b=BkRg2/6gEsYakveiAVaz5/SLu28xZ5uKrq6Zg22HgyTQAjavyWMUPy8gNAfUV4xorW
+         E++f5oMa/9O5R6BH3cxB/tP1qodo6qjrXebTii0dtv0aI9Q4qcn7fuXtC8DF8A1HGlOI
+         0PcZFnSVYDSJxwgi4xl53s550fCKeqh4rmkcykM17IsyJn1MZU6Po3uujNL1SWDFxkOW
+         kYRia9cw9SWa0lSLVJ49ng5z4RTTDYDuISpOExK1XcLnn8CDW6Mf41jIX/p+3KkGJsAS
+         Bvw4iR593L59oPXqYg2TPTOHhHwZ+YqmzHe9ip0zWM6ZdYyD3HIRnBed5GKcYXh/TRBL
+         +kmw==
+X-Gm-Message-State: APjAAAWzU2PAOj6NnKUk0FWL4zDcNmVEmfkyRHNsA2p6PVA9OADeof/1
+        CyzdZRNMreOwTzLvaZqPjQ==
+X-Google-Smtp-Source: APXvYqyzy4iiGXu+ZZ3t2yBP3j4K/yU2pKb0H/blTr6+iujeHVCL8mJihe7tO3CjLAVcADKqUCNWGQ==
+X-Received: by 2002:aca:bfc2:: with SMTP id p185mr318449oif.57.1582568876626;
+        Mon, 24 Feb 2020 10:27:56 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v10sm4255017oic.32.2020.02.24.10.27.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 10:24:38 -0800 (PST)
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, will@kernel.org, robin.murphy@arm.com,
-        kevin.tian@intel.com, baolu.lu@linux.intel.com,
-        Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
-        christian.koenig@amd.com, yi.l.liu@intel.com,
-        zhangfei.gao@linaro.org
-Subject: [PATCH v4 08/26] iommu/io-pgtable-arm: Move some definitions to a header
-Date:   Mon, 24 Feb 2020 19:23:43 +0100
-Message-Id: <20200224182401.353359-9-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200224182401.353359-1-jean-philippe@linaro.org>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
+        Mon, 24 Feb 2020 10:27:56 -0800 (PST)
+Received: (nullmailer pid 13156 invoked by uid 1000);
+        Mon, 24 Feb 2020 18:27:55 -0000
+Date:   Mon, 24 Feb 2020 12:27:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Olivier Moysan <olivier.moysan@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        =?iso-8859-1?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH] docs: dt: fix several broken doc references
+Message-ID: <20200224182755.GB27161@bogus>
+References: <0e530494349b37eb2eab4a8eccf56626e0b18e6d.1582448388.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e530494349b37eb2eab4a8eccf56626e0b18e6d.1582448388.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Extract some of the most generic TCR defines, so they can be reused by
-the page table sharing code.
+On Sun, Feb 23, 2020 at 09:59:53AM +0100, Mauro Carvalho Chehab wrote:
+> There are several DT doc references that require manual fixes.
+> I found 3 cases fixed on this patch:
+> 
+> 	- directory named "binding/" instead of "bindings/";
+> 	- .txt to .yaml renames;
+> 	- file renames (still on txt format);
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  .../devicetree/bindings/mtd/cadence-nand-controller.txt       | 2 +-
+>  .../devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt      | 2 +-
+>  Documentation/devicetree/bindings/sound/st,stm32-sai.txt      | 2 +-
+>  Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt  | 2 +-
+>  Documentation/devicetree/bindings/spi/st,stm32-spi.yaml       | 2 +-
+>  MAINTAINERS                                                   | 4 ++--
+>  .../devicetree/bindings/net/wireless/siliabs,wfx.txt          | 2 +-
+>  7 files changed, 8 insertions(+), 8 deletions(-)
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
----
- drivers/iommu/io-pgtable-arm.c | 27 ++-------------------------
- drivers/iommu/io-pgtable-arm.h | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+), 25 deletions(-)
- create mode 100644 drivers/iommu/io-pgtable-arm.h
+Applied.
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 983b08477e64..75782b525c2f 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -20,6 +20,8 @@
- 
- #include <asm/barrier.h>
- 
-+#include "io-pgtable-arm.h"
-+
- #define ARM_LPAE_MAX_ADDR_BITS		52
- #define ARM_LPAE_S2_MAX_CONCAT_PAGES	16
- #define ARM_LPAE_MAX_LEVELS		4
-@@ -100,23 +102,6 @@
- #define ARM_LPAE_PTE_MEMATTR_DEV	(((arm_lpae_iopte)0x1) << 2)
- 
- /* Register bits */
--#define ARM_LPAE_TCR_TG0_4K		0
--#define ARM_LPAE_TCR_TG0_64K		1
--#define ARM_LPAE_TCR_TG0_16K		2
--
--#define ARM_LPAE_TCR_TG1_16K		1
--#define ARM_LPAE_TCR_TG1_4K		2
--#define ARM_LPAE_TCR_TG1_64K		3
--
--#define ARM_LPAE_TCR_SH_NS		0
--#define ARM_LPAE_TCR_SH_OS		2
--#define ARM_LPAE_TCR_SH_IS		3
--
--#define ARM_LPAE_TCR_RGN_NC		0
--#define ARM_LPAE_TCR_RGN_WBWA		1
--#define ARM_LPAE_TCR_RGN_WT		2
--#define ARM_LPAE_TCR_RGN_WB		3
--
- #define ARM_LPAE_VTCR_SL0_MASK		0x3
- 
- #define ARM_LPAE_TCR_T0SZ_SHIFT		0
-@@ -124,14 +109,6 @@
- #define ARM_LPAE_VTCR_PS_SHIFT		16
- #define ARM_LPAE_VTCR_PS_MASK		0x7
- 
--#define ARM_LPAE_TCR_PS_32_BIT		0x0ULL
--#define ARM_LPAE_TCR_PS_36_BIT		0x1ULL
--#define ARM_LPAE_TCR_PS_40_BIT		0x2ULL
--#define ARM_LPAE_TCR_PS_42_BIT		0x3ULL
--#define ARM_LPAE_TCR_PS_44_BIT		0x4ULL
--#define ARM_LPAE_TCR_PS_48_BIT		0x5ULL
--#define ARM_LPAE_TCR_PS_52_BIT		0x6ULL
--
- #define ARM_LPAE_MAIR_ATTR_SHIFT(n)	((n) << 3)
- #define ARM_LPAE_MAIR_ATTR_MASK		0xff
- #define ARM_LPAE_MAIR_ATTR_DEVICE	0x04
-diff --git a/drivers/iommu/io-pgtable-arm.h b/drivers/iommu/io-pgtable-arm.h
-new file mode 100644
-index 000000000000..ba7cfdf7afa0
---- /dev/null
-+++ b/drivers/iommu/io-pgtable-arm.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef IO_PGTABLE_ARM_H_
-+#define IO_PGTABLE_ARM_H_
-+
-+#define ARM_LPAE_TCR_TG0_4K		0
-+#define ARM_LPAE_TCR_TG0_64K		1
-+#define ARM_LPAE_TCR_TG0_16K		2
-+
-+#define ARM_LPAE_TCR_TG1_16K		1
-+#define ARM_LPAE_TCR_TG1_4K		2
-+#define ARM_LPAE_TCR_TG1_64K		3
-+
-+#define ARM_LPAE_TCR_SH_NS		0
-+#define ARM_LPAE_TCR_SH_OS		2
-+#define ARM_LPAE_TCR_SH_IS		3
-+
-+#define ARM_LPAE_TCR_RGN_NC		0
-+#define ARM_LPAE_TCR_RGN_WBWA		1
-+#define ARM_LPAE_TCR_RGN_WT		2
-+#define ARM_LPAE_TCR_RGN_WB		3
-+
-+#define ARM_LPAE_TCR_PS_32_BIT		0x0ULL
-+#define ARM_LPAE_TCR_PS_36_BIT		0x1ULL
-+#define ARM_LPAE_TCR_PS_40_BIT		0x2ULL
-+#define ARM_LPAE_TCR_PS_42_BIT		0x3ULL
-+#define ARM_LPAE_TCR_PS_44_BIT		0x4ULL
-+#define ARM_LPAE_TCR_PS_48_BIT		0x5ULL
-+#define ARM_LPAE_TCR_PS_52_BIT		0x6ULL
-+
-+#endif /* IO_PGTABLE_ARM_H_ */
--- 
-2.25.0
-
+Rob
