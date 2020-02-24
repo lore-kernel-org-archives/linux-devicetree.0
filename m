@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF89C3567B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB384C3567B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B3B20661
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C074320658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 08:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZNyxgGv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSfMJFQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgBXIur (ORCPT
+        id S1726509AbgBXIvw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:50:47 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33378 "EHLO
+        Mon, 24 Feb 2020 03:51:52 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39865 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgBXIur (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 03:50:47 -0500
-Received: by mail-ed1-f66.google.com with SMTP id r21so10991059edq.0;
-        Mon, 24 Feb 2020 00:50:45 -0800 (PST)
+        with ESMTP id S1726452AbgBXIvv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 03:51:51 -0500
+Received: by mail-ed1-f66.google.com with SMTP id m13so10969006edb.6;
+        Mon, 24 Feb 2020 00:51:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=V7kZjv63LFHKza8UDwSw6jtYnFU6nvK79NAbl1X68Oc=;
-        b=IZNyxgGvpWJs+VtgUl9O1ecpNNasDL2hsHYFFQWA8ApZtS+bnJ/SHGlYeiUDcjkF6a
-         BHj/ZCoS9r+/HTSXd3bNVoSnR8INBsnRa1FeaTxUR+OFFP2tdV52jzRihxqD9r6BTEcl
-         T/LzbWEYpWfAJO9g02inQwfZuXZ78bSk/yr9fXDXhXSDH50zPt07gy4kK7cuOzFQFAkD
-         OoBrVTX3Ey+hjGQe0xEeqXMAomlLyBdyOUGxr69YKZ6BC81usZ1XbW//3LinXfi/H4Wa
-         HtDkwUrBxRIp7+ADPBgIWsJtXr/b1AYgRUHVPSe1pClkiSYz9QM2doFsG2zKnAD4owZv
-         9q2Q==
+        bh=GFzRwB7BBf5XP5+OFLKMdHWONCapTDpeZv+928ShWX4=;
+        b=SSfMJFQXTZjxh7uG1r9983G2qntKODxS60oAWXylxplre7Ls1BUJi3hiqsApgfGHiC
+         Qs1AYwO10Pw1W9CZHeeoPn/m3VVS6ysb9cD9HYwP42cu0EGIPuaZbODmJ5vgnT9v8/5p
+         ZiNGVE2dPLy2uJqbKs0HCV1ujQzo39hQRLWtiYb+xv9HdGUu2SG2dG3YDRtLCzITungk
+         aVYRzqL63xqOTK6WiUeTYe3GHhj43WsvzDCrAMr3Z+rb47+fleOBRALKv9Yr+lrxFuIV
+         yuQTAk/BKVfnzF2lLeWK3tjvogP0rC1E8NRTZvnlBmKLDoD5wTUQqKSHnjFOMLeGD5qL
+         hG4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=V7kZjv63LFHKza8UDwSw6jtYnFU6nvK79NAbl1X68Oc=;
-        b=ofN1vC7bzLYzkw4dLjOd3MfLwGLwE/vgpQ9uSy8e18FHGRVcdLnPyJbT1Y//V2NOPH
-         rw18i7SX/j44+A4LFDVxtLArU5tKUbJb95+Z74sitvG3S722hES5ARFb652fjMOEOmgR
-         B97MQA0PdHgh+0zF00+z770FJxndBfV5fZa8l2i9H9qFbBWubpOX1g7Aqkz6Va6KuWKG
-         O1C6DcDVIJZ7CllNt2zy2JF+3cEA2EmJIki39sfCdw9iWt2K8SBgtYXd99tKUY4lzOjb
-         2K70804SwvadAIaHJhH2aGQ1hmm6y19W1x9lKxoy2hY5akWuIQfkh6jMDe+WeCC+l+x4
-         fHxg==
-X-Gm-Message-State: APjAAAWpUUqQfyLOMcnxywp9382d+oajYsLgpWLgIuuRSuL22BFFcGoZ
-        hGhxzP/IJ24XB8pOT9xHOWhXPOAblbP+URc+FAU=
-X-Google-Smtp-Source: APXvYqxpzJaz5Y96nNBzpQGXViVlrfFVtfjU89hQINu41+byhDSBl0KN7uOt7kSVe0TQ1uDays50x3ztLIDSNbxGwS0=
-X-Received: by 2002:aa7:c44e:: with SMTP id n14mr46615689edr.179.1582534245113;
- Mon, 24 Feb 2020 00:50:45 -0800 (PST)
+        bh=GFzRwB7BBf5XP5+OFLKMdHWONCapTDpeZv+928ShWX4=;
+        b=ap0Kj+/RAdL4l9iUhbhqhOSDlf0WJBG37g5PF2wrnf8io0I5oaIQLLVa1ROOTdZf19
+         97eXRbaYnHsrSaKYrPwTlJrMdY4wuIMaI84A4AhA78nEUmGh3U75ISefL9guG0FLD9am
+         /10U56PAftEIxizPg3FzRxWeNs+8zd1tg4tiwfiFVqjvkrpNng6FCT7Foc/v06Rl8dSd
+         hq9raIeLumznXSAqYUOxHGg6wl0m1hi5LqFnrVEDErIJpRKX9Wt0sd17h8KGrL1tohji
+         joLMahu5CnCS+MT84iub3bdJK5akERQwfcvidnQl5xVl4zqF7hL5LyS0TFURQL4EItrb
+         Dn7g==
+X-Gm-Message-State: APjAAAXGQblh28Yx5f1hn1RKq/hjO6r3CkjYFqOhHVlMnjfS6hrRIgjf
+        /m8cZna+vH/CIp3WDh2Ja4UcpXfHHeScL/D8y1E=
+X-Google-Smtp-Source: APXvYqwoC1uyDhQknoARKL/WBeS6z2D7bovskBXRovKJrr7Ac9B22XojgLAAz1U59AyAVHl9V72z9MHNP47liscy5yE=
+X-Received: by 2002:a17:907:2636:: with SMTP id aq22mr29749373ejc.176.1582534309832;
+ Mon, 24 Feb 2020 00:51:49 -0800 (PST)
 MIME-Version: 1.0
 References: <20200219151259.14273-1-olteanv@gmail.com> <20200224063154.GK27688@dragon>
- <CA+h21hok4V_-uarhnyBkdXqnwRdXpgRJWLSvuuVn8K3VRMtrcA@mail.gmail.com> <20200224084826.GE27688@dragon>
-In-Reply-To: <20200224084826.GE27688@dragon>
+ <CA+h21hok4V_-uarhnyBkdXqnwRdXpgRJWLSvuuVn8K3VRMtrcA@mail.gmail.com>
+ <20200224084826.GE27688@dragon> <CA+h21hop_veYT7Ru6os2iqPV_tO+6vkZPo6sqgVf9GcNAsjWuw@mail.gmail.com>
+In-Reply-To: <CA+h21hop_veYT7Ru6os2iqPV_tO+6vkZPo6sqgVf9GcNAsjWuw@mail.gmail.com>
 From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 24 Feb 2020 10:50:34 +0200
-Message-ID: <CA+h21hop_veYT7Ru6os2iqPV_tO+6vkZPo6sqgVf9GcNAsjWuw@mail.gmail.com>
+Date:   Mon, 24 Feb 2020 10:51:39 +0200
+Message-ID: <CA+h21hr_VpU1yMNat7M=J35cQ__LB69YNvXXsuxg+t4zQS4WkA@mail.gmail.com>
 Subject: Re: [PATCH v2 net-next/devicetree 0/5] DT bindings for Felix DSA
  switch on LS1028A
 To:     Shawn Guo <shawnguo@kernel.org>
@@ -75,42 +76,50 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2020 at 10:48, Shawn Guo <shawnguo@kernel.org> wrote:
+On Mon, 24 Feb 2020 at 10:50, Vladimir Oltean <olteanv@gmail.com> wrote:
 >
-> On Mon, Feb 24, 2020 at 09:59:53AM +0200, Vladimir Oltean wrote:
-> > Hi Shawn,
+> On Mon, 24 Feb 2020 at 10:48, Shawn Guo <shawnguo@kernel.org> wrote:
 > >
-> > On Mon, 24 Feb 2020 at 08:32, Shawn Guo <shawnguo@kernel.org> wrote:
+> > On Mon, Feb 24, 2020 at 09:59:53AM +0200, Vladimir Oltean wrote:
+> > > Hi Shawn,
 > > >
-> > > On Wed, Feb 19, 2020 at 05:12:54PM +0200, Vladimir Oltean wrote:
-> > > > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > > On Mon, 24 Feb 2020 at 08:32, Shawn Guo <shawnguo@kernel.org> wrote:
 > > > >
-> > > > As per feedback received in v1, I've changed the DT bindings for the
-> > > > internal ports from "gmii" to "internal". So I would like the entire
-> > > > series to be merged through a single tree, be it net-next or devicetree.
+> > > > On Wed, Feb 19, 2020 at 05:12:54PM +0200, Vladimir Oltean wrote:
+> > > > > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > > > >
+> > > > > As per feedback received in v1, I've changed the DT bindings for the
+> > > > > internal ports from "gmii" to "internal". So I would like the entire
+> > > > > series to be merged through a single tree, be it net-next or devicetree.
+> > > >
+> > > > Will applying the patches via different trees as normal cause any
+> > > > issue like build breakage or regression on either tree?  Otherwise, I do
+> > > > not see the series needs to go in through a single tree.
+> > > >
+> > > > Shawn
+> > > >
 > > >
-> > > Will applying the patches via different trees as normal cause any
-> > > issue like build breakage or regression on either tree?  Otherwise, I do
-> > > not see the series needs to go in through a single tree.
-> > >
-> > > Shawn
-> > >
+> > > No, the point is that I've made some changes in the device tree
+> > > bindings validation in the driver, which make the driver without those
+> > > changes incompatible with the bindings themselves that I'm
+> > > introducing. So I would like the driver to be operational on the
+> > > actual commit that introduces the bindings, at least in your tree. I
+> > > don't expect merge conflicts to occur in that area of the code.
 > >
-> > No, the point is that I've made some changes in the device tree
-> > bindings validation in the driver, which make the driver without those
-> > changes incompatible with the bindings themselves that I'm
-> > introducing. So I would like the driver to be operational on the
-> > actual commit that introduces the bindings, at least in your tree. I
-> > don't expect merge conflicts to occur in that area of the code.
+> > The dt-bindings patch is supposed to go through subsystem tree together
+> > with driver changes by nature.  That said, patch #1 and #2 are for
+> > David, and I will pick up the rest (DTS ones).
+> >
+> > Shawn
 >
-> The dt-bindings patch is supposed to go through subsystem tree together
-> with driver changes by nature.  That said, patch #1 and #2 are for
-> David, and I will pick up the rest (DTS ones).
+> Ok, any further comments on the series or should I respin after your
+> feedback regarding the commit message prefix and the status =
+> "disabled" ordering?
 >
-> Shawn
+> -Vladimir
 
-Ok, any further comments on the series or should I respin after your
-feedback regarding the commit message prefix and the status =
-"disabled" ordering?
+By the way all your comments have been on v2 and I've sent v3 already.
+So this series is superseded.
 
+Regards,
 -Vladimir
