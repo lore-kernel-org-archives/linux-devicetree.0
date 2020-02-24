@@ -2,75 +2,202 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93ECC11D32
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750E0C11D2F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECA720838
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4466620828
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 16:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582560038;
+	bh=4bZlsRj0hgQUg+Tv7wdAFMT4O5Wpzs211V073yPBVYg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rKpLaXiA3IuVLTSxkmZb5YXzbTN1PxeBQuV4kd3FR57qwWxyIfxroB0EqpAz8hbz1
+	 6/0blBmPQAnBW7RhInPd2SSCfr0LiCtLMHKjbSKMjudASjawfieN4l6uKEagKCPRJi
+	 xP50e7XCMrJ7IgKZi06kbdxVUxdbIzx4LGIbh7vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgBXPqM (ORCPT
+        id S1727693AbgBXQAh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:46:12 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:48122 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727734AbgBXPqM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:46:12 -0500
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id B47C12062B;
-        Mon, 24 Feb 2020 16:46:06 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 94BF1202E7;
-        Mon, 24 Feb 2020 16:46:06 +0100 (CET)
-Subject: Re: [PATCH v9 00/15] CoreSight CTI Driver
-To:     Mike Leach <mike.leach@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DT <devicetree@vger.kernel.org>, coresight@lists.linaro.org,
-        linux-doc@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
-        suzuki.poulose@arm.com, robh+dt@kernel.org, maxime@cerno.tech,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, agross@kernel.org, corbet@lwn.net
-References: <20200210213924.20037-1-mike.leach@linaro.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <0acb5970-7d87-6180-01d2-154f568a3235@free.fr>
-Date:   Mon, 24 Feb 2020 16:46:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 11:00:37 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:27349 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbgBXQAh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 11:00:37 -0500
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 01OG0UlE011600;
+        Tue, 25 Feb 2020 01:00:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01OG0UlE011600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582560031;
+        bh=rh6OBdUNfww3vfiDk7WD78TGBu735cgnzCKrnQQSFwk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=frP9VDGV+IdXmi+d2H1VLwqNi9TOUHIUpDWaGV0WsA9WBVGXo82zaO7VQ9ZV7l7lB
+         cNqERuRmFO09j53hlRurJ0XJlIsdtcWE7jKsB5bLXjjxush2tHAF9DtHSnvzcD6Twb
+         tfW7AnOy8BNvd+nN+Drt2gopc8j1zZZRrPTuiB8+VmO005XNNQDsqRzsRan/r29dp2
+         FzopPo/MpG/p5iMhHqrK7o9Bw0Og+koZWMhRfasK0aOLol+6Gm1E1ceEAVb4pHplCe
+         tonTF8rzDZBl8mHk/8qSJPQ4XB0+IcKvR39Ojwue3IKWhISkDYYqVdJa0SNdtPesZg
+         qYM+IR2xN68+A==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id 7so5975443vsr.10;
+        Mon, 24 Feb 2020 08:00:30 -0800 (PST)
+X-Gm-Message-State: APjAAAVPy1Sba5M+aIwFGx953Qg95Uxoj38z6fOnY5i6+1JbcHP0Xo3j
+        7+TO4ZLQVuleD3aS0wLGzDjPC2Yz9pxwYUdCRaI=
+X-Google-Smtp-Source: APXvYqxrUculoOzlOLP1qyhLbdIH9BNbNU6LljUdGNKtFWdx+eGRpP3R6f5HAN/+ktdJA4PyOAMI8Mb0oQ0eTgUkzOM=
+X-Received: by 2002:a67:fa4b:: with SMTP id j11mr27414888vsq.155.1582560029807;
+ Mon, 24 Feb 2020 08:00:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200210213924.20037-1-mike.leach@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Feb 24 16:46:06 2020 +0100 (CET)
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
+ <20200221021002.18795-2-yamada.masahiro@socionext.com> <20200221153215.GA9815@bogus>
+ <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com> <CAL_Jsq+za-2VQ3uaLK0bUoziTyoNeL4T48F+hVv1Wy4b+5rAGA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+za-2VQ3uaLK0bUoziTyoNeL4T48F+hVv1Wy4b+5rAGA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 25 Feb 2020 00:59:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASLaEX_Ocph88ZYMyi03KPQmr6-3mMhrZeAZCoAgUrEtQ@mail.gmail.com>
+Message-ID: <CAK7LNASLaEX_Ocph88ZYMyi03KPQmr6-3mMhrZeAZCoAgUrEtQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/02/2020 22:39, Mike Leach wrote:
+Hi Rob,
 
-> Mike Leach (15):
->   coresight: cti: Initial CoreSight CTI Driver
->   coresight: cti: Add sysfs coresight mgmt reg access.
->   coresight: cti: Add sysfs access to program function regs
->   coresight: cti: Add sysfs trigger / channel programming API
->   dt-bindings: arm: Adds CoreSight CTI hardware definitions.
->   coresight: cti: Add device tree support for v8 arch CTI
->   coresight: cti: Add device tree support for custom CTI.
->   coresight: cti: Enable CTI associated with devices.
->   coresight: cti: Add connection information to sysfs
->   dt-bindings: qcom: Add CTI options for qcom msm8916
->   dt-bindings: arm: Juno platform - add CTI entries to device tree.
->   dt-bindings: hisilicon: Add CTI bindings for hi-6220
->   docs: coresight: Update documentation for CoreSight to cover CTI.
->   docs: sysfs: coresight: Add sysfs ABI documentation for CTI
->   Update MAINTAINERS to add reviewer for CoreSight.
+On Mon, Feb 24, 2020 at 11:52 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Feb 21, 2020 at 11:33 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Sat, Feb 22, 2020 at 12:32 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
+> > > > Convert the UniPhier GPIO controller binding to DT schema format.
+> > > >
+> > > > I omitted the 'gpio-ranges' property because it is defined in the
+> > > > dt-schema project (/schemas/gpio/gpio.yaml).
+> > > >
+> > > > As of writing, the 'gpio-ranges-group-names' is not defined in that
+> > > > file despite it is a common property described in
+> > > > Documentation/devicetree/bindings/gpio/gpio.txt
+> > > > So, I defined it in this schema.
+> > > >
+> > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > ---
+> > > >
+> > > > I have a question about the range about 'ngpio'.
+> > > >
+> > > >   ngpios:
+> > > >     minimum: 0
+> > > >     maximum: 512
+> > > >
+> > > > The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
+> > > > https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
+> > > >
+> > > > 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
+> > > >
+> > > > I cannot omit the minimum because minimum and maximum depend on each other.
+> > > > I just put a sensible number, 512, in maximum.
+> > > >
+> > > > If this range is entirely unneeded, I will delete it.
+> > >
+> > > This property is generally for when you can have some number less
+> > > than a maximum number implied by the compatible string.
+> > >
+> > > If there is really no max (e.g. 2^32 - 1 is valid), then just do
+> > > 'ngpios: true'
+> >
+> >
+> > What does ': true' mean?
+>
+> It's a schema that always passes validation. It's purpose here is just
+> to say you are using this common property for this binding.
 
-Some of the patch titles end with a full stop, others don't.
-(Dunno if it's worth the hassle, in case you respin)
 
-Regards.
+
+OK, I see two useful cases:
+
+[1]
+Documenting purpose in order to clarify
+that you are using this property
+
+[2]
+You need to explicitly specify ': true'
+if you have 'additionalProperties: false' .
+Otherwise, the following warning is displayed:
+... do not match any of the regexes: 'pinctrl-[0-9]+'
+
+
+
+For [1], it is already clear that this binding
+is using ngpios from 'require'
+
+
+require:
+  - ngpios
+
+
+
+> >
+> > If it is documented somewhere,
+> > could you point me to the reference?
+>
+> https://github.com/devicetree-org/dt-schema/blob/master/schemas/gpio/gpio.yaml
+>
+> >
+> > Even if I remove the 'ngpio' entirely
+> > from my dt-schema, the 'ngpio' is checked
+> > correctly.
+>
+> Yes, if you change it to a string value for example, it should fail.
+> (Only if DT_SCHEMA_FILES is not set without my kbuild changes)
+>
+> You should also add 'additionalProperties: false' at the top level of
+> your schema and then it will also fail if you don't list ngpios in
+> properties.
+
+Hmm, I am confused.
+
+'require: - ngpios' will warn if you don't list ngpios.
+
+'additionalProperties: false' will warn if you list
+other properties than what is explicitly specified.
+
+
+
+BTW, I will not add 'additionalProperties: false'
+in this binding.
+
+
+The real DT files have
+
+ interrupt-parent = <&aidet>;
+(arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi line 324)
+
+but, commit 791d3ef2e11100449837dc0b6fe884e60ca3a484
+removed interrupt-parent from bindings.
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
