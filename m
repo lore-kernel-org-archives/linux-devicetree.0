@@ -2,123 +2,111 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABDEC11D2F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FB6C11D30
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8FC120836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:11:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tfQ1X2cS"
+	by mail.kernel.org (Postfix) with ESMTP id 39AEE2082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 15:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582557319;
+	bh=o1nOGaQHdZL0UAsK/bjsu+6BAwDuNsTZaQNaSLe2HLE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DUSoPWIoo4N/SRlUhEKnn9U+QB8RagiFaFXVO3IpoodpOQ/sBeOTD48RD/BoYWt+2
+	 jWt0LZSUn0C6fUYjblOCAadYLYnaYR+8SZ2DDEruplzJB2j3pdDTiNajUpQhRfxjAy
+	 QxBHLk4t4rgSGquEKCEDi3t0+vcgmL5ZOoPOcoBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgBXPLd (ORCPT
+        id S1727864AbgBXPPS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:11:33 -0500
-Received: from vps.xff.cz ([195.181.215.36]:58468 "EHLO vps.xff.cz"
+        Mon, 24 Feb 2020 10:15:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727299AbgBXPLd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:11:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582557091; bh=9aE+a8E4LVEOkt4HFGQF11TSms2VZ1eBDyNQaeKqK74=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=tfQ1X2cSGvWyWkk8cfn533l5XKTK8qIsCqHpeifhVET6YwxrfV/c4HQ7kAgDyZtg1
-         EemSNHRmabcJvOtTSMSP1I33wJwaxrfobg/YeZItZIRq2JW7elPmz3bbDuCsibqTVH
-         aM1WXmMSCOmobj2LdNFrUK8MQqCd/7ErnT0+zGIU=
-Date:   Mon, 24 Feb 2020 16:11:31 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
+        id S1727742AbgBXPPS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Feb 2020 10:15:18 -0500
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7BEA20838;
+        Mon, 24 Feb 2020 15:15:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582557318;
+        bh=o1nOGaQHdZL0UAsK/bjsu+6BAwDuNsTZaQNaSLe2HLE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HRf8OqzGxscXlFCy7Kr95TbhR2fqQG8f2vdcwZdx5MMJTpA8+DrGUKwwDupCJHAXJ
+         Lpe/vG+HPf7LfAKpn/L6UjmIzGsfYogpJjWyPPuIKX2EwdWPCP33Ps5cc9AEuDNSJq
+         wd6cUOAExGR8miZSpHtD5A3/EEFKNcuBNIhykFfA=
+Received: by mail-qv1-f49.google.com with SMTP id y2so4236512qvu.13;
+        Mon, 24 Feb 2020 07:15:17 -0800 (PST)
+X-Gm-Message-State: APjAAAXYoRVmrwG9KiFEgH3rdmQm/NtEw+2dx8UdR2DZVjccrCMCJl0E
+        ciO2aAKbC83gJoKWEtKrQCoT47aDzgg6YDdxVA==
+X-Google-Smtp-Source: APXvYqx6fBgVnq9vjh/yHZnkbthH3EWPw/BqHYWMQ6citY+xthXlZQgnZuHLmeSOEN0UIorxy5g/2npA/CWQaro2QqE=
+X-Received: by 2002:a0c:ef47:: with SMTP id t7mr12552684qvs.136.1582557317000;
+ Mon, 24 Feb 2020 07:15:17 -0800 (PST)
+MIME-Version: 1.0
+References: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
+ <20200220060001.25807-1-andreas@kemnade.info> <CAL_JsqKTdpbLfPq_eGUf-w-0s8JMndbMrQ2BsMt+8y+eqQ-kZw@mail.gmail.com>
+ <20200224074804.3a5999ca@kemnade.info>
+In-Reply-To: <20200224074804.3a5999ca@kemnade.info>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 24 Feb 2020 09:15:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKNAQT996sDSW+k=SZq5NwzQn4wbEB0fS9_19rKdXMGYg@mail.gmail.com>
+Message-ID: <CAL_JsqKNAQT996sDSW+k=SZq5NwzQn4wbEB0fS9_19rKdXMGYg@mail.gmail.com>
+Subject: Re: [PATCH RFC] Bindings: nvmem: add bindings for JZ4780 efuse
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: sun50i-h5-orange-pi-pc2: Add CPUX voltage
- regulator
-Message-ID: <20200224151131.fw7to7pmegj5ylqy@core.my.home>
-Mail-Followup-To: Maxime Ripard <maxime@cerno.tech>,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200223104019.527587-1-megous@megous.com>
- <20200224092704.gnnjwds3zmmravrw@gilmour.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224092704.gnnjwds3zmmravrw@gilmour.lan>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 10:27:04AM +0100, Maxime Ripard wrote:
-> On Sun, Feb 23, 2020 at 11:40:19AM +0100, Ondrej Jirman wrote:
-> > Orange Pi PC2 features sy8106a regulator just like Orange Pi PC.
+On Mon, Feb 24, 2020 at 12:48 AM Andreas Kemnade <andreas@kemnade.info> wrote:
+>
+> On Thu, 20 Feb 2020 13:53:55 -0600
+> Rob Herring <robh@kernel.org> wrote:
+>
+> [...]
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - clock
 > >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Reviewed-by: Samuel Holland <samuel@sholland.org>
-> > ---
-> >  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 20 +++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> 
-> Having a changelog would be great
-> 
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-> > index 70b5f09984218..7b2572dc84857 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-> > @@ -93,6 +93,10 @@ &codec {
-> >  	status = "okay";
-> >  };
+> > 'make dt_binding_check' would have pointed the error here for you:
 > >
-> > +&cpu0 {
-> > +	cpu-supply = <&reg_vdd_cpux>;
-> > +};
-> > +
-> >  &de {
-> >  	status = "okay";
-> >  };
-> > @@ -168,6 +172,22 @@ &ohci3 {
-> >  	status = "okay";
-> >  };
+> I did run make dt_binding_check...
+> It stopped because the jz4780-cgu.h included was missing. Then I have added
+> that line and have started dt_binding_check again.
+> At least here it is doing a full rerun in the second part.
+> After some time I scrolled back and noticed DTC passed
+> and missed that
+>
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.example.dt.yaml:
+> > efuse@134100d0: 'clock' is a required property
 > >
-> > +&r_i2c {
-> > +	status = "okay";
-> > +
-> > +	reg_vdd_cpux: regulator@65 {
-> > +		compatible = "silergy,sy8106a";
-> > +		reg = <0x65>;
-> > +		regulator-name = "vdd-cpux";
-> > +		silergy,fixed-microvolt = <1100000>;
-> > +		regulator-min-microvolt = <1000000>;
-> > +		regulator-max-microvolt = <1400000>;
-> > +		regulator-ramp-delay = <200>;
-> > +		regulator-boot-on;
-> > +		regulator-always-on;
-> > +	};
-> > +};
-> > +
-> 
-> Looks like you fixed the issues reported by Samuel though. I've
-> applied it.
+> in the CHECKS line. Well, dt_binding_check is a bit noisy. I guess I should
+> have redirected all output to a text file, before and after my changes. and
+> diffed the results.
+> Is there any script ready for that?
 
-Sorry, yes, I just did that. Re-ordering + removing a comment and changing the
-fixed voltage.
+grep 'ingenic,jz4780-efuse' <build log> ?
 
-Thank you,
-	o.
+Noisy? There's 8 warnings on Linus' master currently[1]. I try to keep
+that at 0, but I wouldn't call 8 noisy.
 
-> Maxime
+Rob
 
-
+[1] https://gitlab.com/robherring/linux-dt-bindings/-/jobs/447630363
