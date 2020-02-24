@@ -2,78 +2,93 @@ Return-Path: <SRS0=+Je1=4M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370CEC35677
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 02:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74481C35641
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 03:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B70206E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 02:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0B120836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Feb 2020 03:42:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582515758;
+	bh=6d15W9/8t0f2BUQq/bxEpoTZNWBs5M53q2YcmBYzXJ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kN9nySrExyrVRXpc4a3n5e8OYojzienFjDO+XJBhm4IAFTy5DK1y45SAr/0o84Qgr
+	 K/NBm0eOsf5CFvgFpFjqd86MpFfqXYgcvQKbrviJ5Hs3IVHNgPZEmdWIMocnH+VHNY
+	 BtKuHNLIDFvDsME7TaTGmyQsPTbdHdgzZmYwH7cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgBXCNv (ORCPT
+        id S1727183AbgBXDmh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Feb 2020 21:13:51 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:53222 "EHLO inva020.nxp.com"
+        Sun, 23 Feb 2020 22:42:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727151AbgBXCNv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Feb 2020 21:13:51 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A58971A4006;
-        Mon, 24 Feb 2020 03:13:49 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8952B1A051F;
-        Mon, 24 Feb 2020 03:13:42 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CE499402B3;
-        Mon, 24 Feb 2020 10:13:33 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        horia.geanta@nxp.com, peng.fan@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] arm64: dts: imx8mn: Adjust 1.2GHz OPP voltage to OD mode
-Date:   Mon, 24 Feb 2020 10:07:40 +0800
-Message-Id: <1582510060-12272-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727177AbgBXDmh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Feb 2020 22:42:37 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 662B920828;
+        Mon, 24 Feb 2020 03:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582515757;
+        bh=6d15W9/8t0f2BUQq/bxEpoTZNWBs5M53q2YcmBYzXJ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tCB4N1aZ8GuKSjK3dMk5vpqqBqZJhK5/4GGhIskjcnuh1zXQ2LzPeSgWo6Pz2++tY
+         XImGD8Jn5K4j3PL2J+JijVyd5prlNfr8JMYCaFHx08hyD34BsyJpjlpbY/N1AptujL
+         Fx8yybQuWlpbCOGp4PcOxP6s9O6mPH2IqXuYqeiY=
+Date:   Mon, 24 Feb 2020 11:42:28 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opanyuk <igor.opanyuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: imx7-colibri: Fix frequency for sd/mmc
+Message-ID: <20200224034228.GI27688@dragon>
+References: <20200219131121.3565738-1-oleksandr.suvorov@toradex.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219131121.3565738-1-oleksandr.suvorov@toradex.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to latest datasheet Rev.0, 10/2019, there is restriction
-as below:
+On Wed, Feb 19, 2020 at 01:11:24PM +0000, Oleksandr Suvorov wrote:
+> SD/MMC on Colibri iMX7S/D modules successfully support
+> 200Mhz frequency in HS200 mode.
+> 
+> Removing the unnecessary max-frequency limit significantly
+> increases the performance:
+> 
+> == before fix ====
+> root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+> /dev/mmcblk0:
+>  Timing buffered disk reads: 252 MB in  3.02 seconds =  83.54 MB/sec
+> ==================
+> 
+> === after fix ====
+> root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+> /dev/mmcblk0:
+>  Timing buffered disk reads: 408 MB in  3.00 seconds = 135.94 MB/sec
+> ==================
+> 
+> Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support")
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-"If VDD_SOC/GPU/DDR = 0.95V, then VDD_ARM must be >= 0.95V."
-
-As by default SoC is running at OD mode(VDD_SOC = 0.95V), so
-VDD_ARM 1.2GHz OPP's voltage should be increased to 0.95V.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Move the OPP change from board dts for soc dtsi.
----
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index c98a376..f277572 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -116,7 +116,7 @@
- 
- 		opp-1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
--			opp-microvolt = <850000>;
-+			opp-microvolt = <950000>;
- 			opp-supported-hw = <0xb00>, <0x7>;
- 			clock-latency-ns = <150000>;
- 			opp-suspend;
--- 
-2.7.4
-
+Applied, thanks.
