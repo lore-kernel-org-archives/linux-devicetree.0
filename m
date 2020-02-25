@@ -2,283 +2,212 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61E6C35DF9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202A3C35DF9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E8A2176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E859021D7E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:39:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="U1ERJ/S2"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="pvWuITwX";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="KRyzG/Zi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbgBYJdR (ORCPT
+        id S1728913AbgBYJjX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:33:17 -0500
-Received: from de-out1.bosch-org.com ([139.15.230.186]:49508 "EHLO
-        de-out1.bosch-org.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgBYJdR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 04:33:17 -0500
-X-Greylist: delayed 100007 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Feb 2020 04:33:13 EST
-Received: from fe0vm1649.rbesz01.com (unknown [139.15.230.188])
-        by fe0vms0186.rbdmz01.com (Postfix) with ESMTPS id 48RYdM2T2Hz1XLFrl;
-        Tue, 25 Feb 2020 10:33:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=de.bosch.com;
-        s=key3-intmail; t=1582623191;
-        bh=WQzLc8ik3inJZMK5lCJ26mkvaboYo4pT75ge25HpFt4=; l=10;
-        h=Subject:From:From:Reply-To:Sender;
-        b=U1ERJ/S2r91Id0F5sgo60BDJXyoxBx6MgP93B4JlySLPvqOn8QfGFDe3QjKbJJ/54
-         Vctb/Q5pJMCgaWGoxBdD1M1/m0iyH1k3ZaQViyLLOg3NyW6+3uZ7wY1ircIa+vRFXv
-         s5aEsGGqJuanrGXtV/2+b8rPE+cOX6N1mz5QFUg8=
-Received: from fe0vm1740.rbesz01.com (unknown [10.58.172.176])
-        by fe0vm1649.rbesz01.com (Postfix) with ESMTPS id 48RYdM2CG1z1xD;
-        Tue, 25 Feb 2020 10:33:11 +0100 (CET)
-X-AuditID: 0a3aad14-a97ff700000047f7-00-5e54e9d61bdb
-Received: from si0vm1949.rbesz01.com ( [10.58.173.29])
-        (using TLS with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by fe0vm1740.rbesz01.com (SMG Outbound) with SMTP id 04.0F.18423.7D9E45E5; Tue, 25 Feb 2020 10:33:11 +0100 (CET)
-Received: from FE-HUB2000.de.bosch.com (fe-hub2000.de.bosch.com [10.4.103.109])
-        by si0vm1949.rbesz01.com (Postfix) with ESMTPS id 48RYdL6W4Fz6CjZNt;
-        Tue, 25 Feb 2020 10:33:10 +0100 (CET)
-Received: from [10.34.222.178] (10.34.222.178) by FE-HUB2000.de.bosch.com
- (10.4.103.109) with Microsoft SMTP Server id 15.1.1847.3; Tue, 25 Feb 2020
- 10:33:10 +0100
-Subject: Re: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        <linux-spi@vger.kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        <linux-renesas-soc@vger.kernel.org>
-References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
- <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
- <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
- <5603f393-554d-e2a8-c2d8-6bafc20f4169@cogentembedded.com>
- <cba1e2ec-4896-23ef-ef7b-0f80d4310127@de.bosch.com>
- <ec545462-54ed-9e23-049e-1807d24ec084@cogentembedded.com>
-From:   "Behme Dirk (CM/ESO2)" <dirk.behme@de.bosch.com>
-Message-ID: <3a182ac7-8d41-cdc7-2b87-7c503f68a426@de.bosch.com>
-Date:   Tue, 25 Feb 2020 10:33:10 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 04:39:23 -0500
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:64962 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729080AbgBYJjX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 04:39:23 -0500
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01P9XDc9025946;
+        Tue, 25 Feb 2020 01:39:11 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=EbHAv5+DyQEvZ1HddA6aXB/WTUT1IxWjFvYfLPWrJOs=;
+ b=pvWuITwXFCQisP465vUqWnkAu5ZOMX9O9/aU8Q2z+vzXtT9h7rkHzjFaqJfYBXeuKo8V
+ c7FIgawOm++JmzFBpuzKFqmE3B2+MgzsHfqIpFHsC27lJnlvbfRD+dyaHs3w+K5muyp/
+ oy5cnsNk6GtVz1a2IRogHsucvH/v793kgKtw7Xw4ed3TFZxlu0sD/hrm4XB5mCPr0WCf
+ viJLi+IUliCRgVOpOVSXba6hfefRZZrkTH6NflC+4ThYzHegb6Nk7nwPcOhxXRqmJCof
+ +7SkA2IiDg6iiZq5zFrq2kmPIDhBngQoOXHvfZ63//SGKWzWMoj0vzQ4BB1rkT+VCHag DA== 
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2170.outbound.protection.outlook.com [104.47.58.170])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2yb1r7tn3g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Feb 2020 01:39:11 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WGQybksqP1bevjtL68KL1Wd7BCywIWelokLBcOcKHHtGoFjP/KlKDaScrFVCxRbm0qDOq/okxIcTX6QsoCq5Vl2mwrSAO8rgCdGF6IpYlYcl+j9LHWnAPETHxwK0IEq20upND7HaYHx+dxiDskCboHbs9ZdB9frLiyXhXt0nLnxMC7O4okzkRE6klrxweyECEiFit2YUfCQpdiiJpP/Yn7lArQYIV9JyBsz4WV/E4MlqUAX430C4gk9gAGUniqDmOU+xA1c9JnNU69VcerEDftVe10NVJ6YN2e0yIal5Bo/XAjrB0n5fXTnzHrMwgX6gPhOCW9QOsW/Tw1WGp/b2cQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EbHAv5+DyQEvZ1HddA6aXB/WTUT1IxWjFvYfLPWrJOs=;
+ b=CYr25RgFxl1bex5mwzI1DhPXKEZvXjxMaAX4C55BE0mvu0ZSdxBE+ZIUbvQueo/aFA1pVgjOdlxZ5h8MBvY5vv5bEyd6k/0j2WjKleKTq7Kjacub3ecRKc0xEwIRDgMThBgH3kWNELFoLw0KbtMiBio0GvV0kSBtljj0UUBnJJcTXZDGfqAuUpaapewybZNA/xSgoh1ywGTnD0ZaloJXlcNDLUC2BGyyzbHjPl56UmrpXBHYITnCOSWd5FMULyx7FfQhiGVNges5Zl3Rfez3u21BF5yLd74CqRWYodzx3NxAkO5spmbf4P6/eECelgmNeWXOGqqDREFdv5MrlaX3bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.243) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EbHAv5+DyQEvZ1HddA6aXB/WTUT1IxWjFvYfLPWrJOs=;
+ b=KRyzG/ZilJm9CkgnJ0dIUpU7TOJNExPEVY4hsmmTcWEfwxSVGrl8HWYo52rq/c9N60Gam/OUWbl/V4PMq59hyvpqhcuW9aEOsmjiSTQB88PsJ1y2lhzli2CoGczoclYbWsV0Lap06HOU2nNEG74ayPVV8JMJXOFrAPplNhgWP3E=
+Received: from DM6PR17CA0016.namprd17.prod.outlook.com (2603:10b6:5:1b3::29)
+ by BY5PR07MB7330.namprd07.prod.outlook.com (2603:10b6:a03:203::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
+ 2020 09:39:07 +0000
+Received: from DM6NAM12FT067.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:5:1b3:cafe::f8) by DM6PR17CA0016.outlook.office365.com
+ (2603:10b6:5:1b3::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend
+ Transport; Tue, 25 Feb 2020 09:39:07 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.243 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.243; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.243) by
+ DM6NAM12FT067.mail.protection.outlook.com (10.13.179.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.6 via Frontend Transport; Tue, 25 Feb 2020 09:39:06 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 01P9d2qT127657
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 01:39:05 -0800
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Tue, 25 Feb 2020 10:39:02 +0100
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 25 Feb 2020 10:39:02 +0100
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 01P9d10A007387;
+        Tue, 25 Feb 2020 10:39:02 +0100
+Received: (from dkangude@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 01P9d1lD007386;
+        Tue, 25 Feb 2020 10:39:01 +0100
+From:   Dhananjay Kangude <dkangude@cadence.com>
+To:     <linux-edac@vger.kernel.org>
+CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
+        <james.morse@arm.com>, <linux-kernel@vger.kernel.org>,
+        <mparab@cadence.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Dhananjay Kangude <dkangude@cadence.com>
+Subject: [PATCH 2/2] dt-bindings: edac: Add cadence ddr mc support
+Date:   Tue, 25 Feb 2020 10:38:56 +0100
+Message-ID: <20200225093856.7328-3-dkangude@cadence.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200225093856.7328-1-dkangude@cadence.com>
+References: <20200225093856.7328-1-dkangude@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <ec545462-54ed-9e23-049e-1807d24ec084@cogentembedded.com>
-Content-Type: multipart/mixed;
-        boundary="------------A266F512431D32413D4D0BF3"
-Content-Language: en-US
-X-Originating-IP: [10.34.222.178]
-X-Brightmail-Tracker: H4sIAAAAAAAAA21TfUwTdxjmd73Sa8e560HltSKERrLEOCzqtkYX3D9zTZZFM82WMMGVcaUd
-        0GJbnLAv2AJiRT6GgBQsG6uToI2EzYE6Hal1sYwBUzYYH4KEDSiIHwRlImN3XLFNtn/ePL/n
-        fZ/n/bgcIaAnCDmhN1gYk0GTrgiW4JJtznXP907uTVKWFSBVXdUxXFXn7hSqbl6sDVadn5zB
-        VHn3/xCpjvw0hVRDt67jqo7GftErhHqkYglTdzucweqSRaX6YUcZrp5tjtwtTJC8nMKk6w8y
-        pk3x70p0BdZiLLPhjUMPB4rxXOTZaUViAqitMHmuJdiKJARNVWHw26MSEf+4gqD47je+x2kE
-        3950CDhJKBUP0/kFQg6HUSoYyqvHuSIBtYTg3oVCxCv+xOBc07CIqwqmXoQphw1xmKR2wI2G
-        XIzDOBUDVV1Ty1hGJUJfdSHG10jBUz3GuhKEmNoJLQMxHC2gdsPtvxpEPA6H/rE6jN8hGs4P
-        HReVIqktQG0LkNgCJDxWQXVdF+JxFLTcqRXwOBM67k0LeRwNx4/e9mnfh/HefB8+AP0FV7H/
-        1nwCRZcLhV+iZxqRTMsoD2bEvbRVGWtKZsw5yrjY94wZzYj/ymGtaMGldSGMQC70AoEpZCQa
-        2ZtEr0o2pmTrNGbdflNWOmNWyMlPp48k0qFPaXNWcobebNYbDS60nu042nSmG8lxg9HAKMLI
-        19GbSTSZosnOYUxG3sKF1hK4IpxMJXbto6lUjYVJY5hMxrSS3U4QCiAHJ9jmUhOTyhzS6tMt
-        K2nFOhIFBQXRqwMzgSNghNiFthAhbO+iUdaCNGdqMsz6VJ98DS+nV1i/tB29Q0w7HfUC4s5y
-        dJ88xcaCW0NsPMxFenkneTh5NoP1pTgHXZbh6WTyCNJOs8vKAhJ+dy/qQwRShJKJ3F4h7C/m
-        nwnIXO6kUh/pF212sBrqAgn2z0zgHfYgWLg8iMDeOoegz1sqgB7nrwKwdZ3EwfNzMw7uS5VC
-        6J9vEsK1szMs8hSJ4MZFmwjmBttEUP5DOQH2+W4xjD6YEUPN1w/EUHuqNASuVC6EQFPNExLm
-        R75/FrxL5RS42gqlMDhbJoW5S600uCt6aZj80R0GJ1pPA8x81boWPD31EZD/S0mkl703xt77
-        zJM93L0tGsv/3NvH+peT5yKX0ij7Dotoe63zat7m3z/oxXQnNiZEz/2zuLhqg9rafm04ZmFf
-        1I7OdkNao7hyPOtj5+ED9mNbsJQP3x5fQ6n/nrVWrk54HCm3tCTj15/7oqYUbd//uaUHv5vz
-        1key+qNj8/clVn3N+j3batI3PtIujby6Keqx1ikYSMuumDDOxMbnKnCzThO3QWAya/4FVm96
-        CPsEAAA=
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:64.207.220.243;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(136003)(346002)(199004)(189003)(36092001)(86362001)(70206006)(4326008)(5660300002)(966005)(2906002)(70586007)(107886003)(36756003)(54906003)(316002)(36906005)(1076003)(42186006)(356004)(8936002)(336012)(6666004)(81156014)(478600001)(81166006)(8676002)(2616005)(6916009)(26005)(186003)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR07MB7330;H:wcmailrelayl01.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:unused.mynethost.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 05e6ecd7-38a6-4677-7943-08d7b9d68ed4
+X-MS-TrafficTypeDiagnostic: BY5PR07MB7330:
+X-Microsoft-Antispam-PRVS: <BY5PR07MB73307EC8A8FAEDCF068ADA6ACDED0@BY5PR07MB7330.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0324C2C0E2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7iD1jr72qxVUjFEmAOz9pevZLm7A2b47wXlZ6g0jL9LFsdsCFA5jqxHZ8WpamyxHgaklLSUyAKLH2gJL+MwlLY5OwjmwcxfJz/XgYRebsMwxdmF8f03hPvdo/+5VF6edipazTUKOdFLNwlJ0pOfNSZnTXM+j4f7RpyIbjcM3KcD9g8sPZlgrf0n++hwrZp4jDWmCkCZ6TojGM8o/qU8MypfrqhYAqYEf5dV8JoJWRUUNRwRDVN8DJBBodqdD/Gx8rmrrHvNVs79UbVf09GTMwLUjAoh4JCUXNqkD+EcldUTZcSLB/yEh+Nb45XJ+TPJs+V+a/eM0BpV4jiK7Jfw/moCuAHhhPHfG4MM4sAexSV2hxyokjaWJzOmgeG4PdhTnbaISEIDRfVoEnoxeBRu7hL22yC9HdpQe6d9S49EfU4jmliPUmnm/afv7pP9tCgwd1HOzQZ1KOuA+FfNnqRCoR0EO163Pdd0sB7PDGDm9vG+SD9mHwYnMpVzt3d7+Y8Zc6oP/EePVfEG2i9BAtAIcmk5EXdMG2M+koKLUvNySmieQxxXbqYNpQeLRzzyewnjJ
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 09:39:06.5544
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05e6ecd7-38a6-4677-7943-08d7b9d68ed4
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.243];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB7330
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-25_02:2020-02-21,2020-02-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxlogscore=937
+ mlxscore=0 clxscore=1015 malwarescore=0 suspectscore=1 phishscore=0
+ bulkscore=0 spamscore=0 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002250078
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---------------A266F512431D32413D4D0BF3
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Add documentation for cadence ddr memory controller EDAC DTS bindings
 
-On 24.02.2020 19:59, Sergei Shtylyov wrote:
->>>>   From d72b805cc461ab1e9747c973e9be84e7abb8f828 Mon Sep 17 00:00:00 2001
->>>> From: Dirk Behme <dirk.behme@de.bosch.com>
->>>> Date: Tue, 4 Feb 2020 08:39:31 +0100
->>>> Subject: [PATCH] memory: renesas-rpc-if: Correct the STRTIM and some other
->>>>    clean up
->>>>
->>>> This is required to make the driver work correctly in my M3 environment.
->>>>
->>>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
->>>> ---
->>>>    drivers/memory/renesas-rpc-if.c | 42 ++++++++++++++++++++-------------
->>>>    1 file changed, 25 insertions(+), 17 deletions(-)
->>>>
->>>> diff --git a/drivers/memory/renesas-rpc-if.c b/drivers/memory/renesas-rpc-if.c
->>>> index 04be92b64bfa..f4356b066384 100644
->>>> --- a/drivers/memory/renesas-rpc-if.c
->>>> +++ b/drivers/memory/renesas-rpc-if.c
->>> [...]
->>>> @@ -513,19 +525,15 @@ ssize_t rpcif_dirmap_read(struct rpcif *rpc, u64 offs, size_t len, void *buf)
->>>>        pm_runtime_get_sync(rpc->dev);
->>>>
->>>>        regmap_update_bits(rpc->regmap, RPCIF_CMNCR, RPCIF_CMNCR_MD, 0);
->>>> -    regmap_write(rpc->regmap, RPCIF_DRCR,
->>>> -             RPCIF_DRCR_RBURST(32) | RPCIF_DRCR_RBE);
->>>> -    regmap_write(rpc->regmap, RPCIF_DRCMR, rpc->command);
->>>> -    regmap_write(rpc->regmap, RPCIF_DREAR,
->>>> -             RPCIF_DREAR_EAV(offs >> 25) | RPCIF_DREAR_EAC(1));
->>>> -    regmap_write(rpc->regmap, RPCIF_DROPR, rpc->option);
->>>> -    regmap_write(rpc->regmap, RPCIF_DRENR,
->>>> -             rpc->enable & ~RPCIF_SMENR_SPIDE(0xF));
->>>> -    regmap_write(rpc->regmap, RPCIF_DRDMCR, rpc->dummy);
->>>> -    regmap_write(rpc->regmap, RPCIF_DRDRENR, rpc->ddr);
->>>
->>>      The driver somehow works only with this left in place (with 2 bytes eaten
->>> as before), otherwise all the flash reads all 0xff (via dirmap).
->>
->>
->> Do you boot from hyperflash?
-> 
->     No, I have arewto say 'cpld write 30 1' in U-Boot before a boot a kernel.
-> Normally, the V3x Starter Kit boards are wired for the QSPI flash chips.
-> 
->> The system I'm using for testing boots from hyperflash. So most probably all registers
->> I don't touch in the driver are put into a reasonable state by the boot code, already.
->> If you don't boot from hyperflash, that at least would explain our different behavior.
-> 
->     Yes. Mind dumping the registers and sending to me?
+Signed-off-by: Dhananjay Kangude <dkangude@cadence.com>
+---
+ .../devicetree/bindings/edac/cdns,ddr-edac.yaml    |   56 ++++++++++++++++++++
+ 1 files changed, 56 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
 
+diff --git a/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+new file mode 100644
+index 0000000..df70647
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/edac/cdns,ddr-edac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cadence DDR IP with ECC support (EDAC)
++
++description:
++  This binding describes the Cadence DDR/LPDDR IP with ECC feature enabled
++  to detect and correct CE/UE errors.
++
++maintainers:
++  - Dhananjay Kangdue <dkangude@cadence.com>
++
++properties:
++  compatible:
++    enum:
++      - cdns,cadence-ddr4-mc-edac
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 1
++
++  reg:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description:
++          Register block of DDR/LPDDR apb registers up to mapped area.
++          Mapped area contains the register set for memory controller,
++          phy and PI module register set doesn't part of this mapping.
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    edac: edac@fd100000 {
++        compatible = "cdns,cadence-ddr4-mc-edac";
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges;
++        reg = <0xfd100000 0x4000>;
++        interrupts = <0x00 0x01 0x04>;
++        };
++...
+-- 
+1.7.1
 
-Using the attached debug patch 
-(0001-memory-renesas-rpc-if-DEBUG-Dump-register-content.patch) on a 
-r8a7796 system booting from Hyperflash with above register dropping 
-reverted (i.e. including touching these registers) I get
-
-Before:
-RPCIF_DRCR:    0x00000000
-RPCIF_DRCMR:   0x00a00000
-RPCIF_DREAR:   0x00000000
-RPCIF_DROPR:   0x00000000
-RPCIF_DRENR:   0xa222d400
-RPCIF_DRDMCR:  0x0000000e
-RPCIF_DRDRENR: 0x00005101
-
-After:
-RPCIF_DRCR:    0x001f0100
-RPCIF_DRCMR:   0x00a00000
-RPCIF_DREAR:   0x00010001
-RPCIF_DROPR:   0x00000000
-RPCIF_DRENR:   0xa202d400
-RPCIF_DRDMCR:  0x0000000e
-RPCIF_DRDRENR: 0x00005101
-
-Comparing that, just 3 registers are different between my working 
-version ("Before") and the version which shows the 2-byte offset 
-("After"): RPCIF_DRCR, RPCIF_DREAR and RPCIF_DRENR. With try & error, at 
-least in my setup, I was able to reduce this to just RPCIF_DRCR. 
-Dropping the burst mode I was able to 'fix' the two byte offset issue.
-
-Do you like to give the attached 
-0001-memory-renesas-rpc-if-Don-t-use-burst-mode-on-read.patch a try in 
-your setup?
-
-Best regards
-
-Dirk
-
-
---------------A266F512431D32413D4D0BF3
-Content-Type: text/plain; charset="UTF-8";
-	name="0001-memory-renesas-rpc-if-DEBUG-Dump-register-content.patch"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
-	filename="0001-memory-renesas-rpc-if-DEBUG-Dump-register-content.patch"
-
-RnJvbSA4OTQyYzc3MWY4ZWE4OTU3YTE0ZmM2ZjZlNDQ0MzY3NWM0YjZiMjYwIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBEaXJrIEJlaG1lIDxkaXJrLmJlaG1lQGRlLmJvc2No
-LmNvbT4KRGF0ZTogVHVlLCAyNSBGZWIgMjAyMCAwNzo1NzoxMiArMDEwMApTdWJqZWN0OiBb
-UEFUQ0hdIG1lbW9yeTogcmVuZXNhcy1ycGMtaWY6IERFQlVHOiBEdW1wIHJlZ2lzdGVyIGNv
-bnRlbnQKCkR1bXAgcmVnaXN0ZXIgY29udGVudCBiZWZvcmUgYW5kIGFmdGVyIGJlaW5nIG1v
-ZGlmaWVkIGJ5IHRoZSBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiBEaXJrIEJlaG1lIDxkaXJr
-LmJlaG1lQGRlLmJvc2NoLmNvbT4KLS0tCiBkcml2ZXJzL21lbW9yeS9yZW5lc2FzLXJwYy1p
-Zi5jIHwgMjEgKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMjEgaW5z
-ZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVtb3J5L3JlbmVzYXMtcnBjLWlm
-LmMgYi9kcml2ZXJzL21lbW9yeS9yZW5lc2FzLXJwYy1pZi5jCmluZGV4IDQ4NTNlN2Y3ODk4
-NS4uNDQ4NmRlMGI1MTdiIDEwMDY0NAotLS0gYS9kcml2ZXJzL21lbW9yeS9yZW5lc2FzLXJw
-Yy1pZi5jCisrKyBiL2RyaXZlcnMvbWVtb3J5L3JlbmVzYXMtcnBjLWlmLmMKQEAgLTUxNywx
-MiArNTE3LDIzIEBAIHNzaXplX3QgcnBjaWZfZGlybWFwX3JlYWQoc3RydWN0IHJwY2lmICpy
-cGMsIHU2NCBvZmZzLCBzaXplX3QgbGVuLCB2b2lkICpidWYpCiB7CiAJbG9mZl90IGZyb20g
-PSBvZmZzICYgKFJQQ0lGX0RJUk1BUF9TSVpFIC0gMSk7CiAJc2l6ZV90IHNpemUgPSBSUENJ
-Rl9ESVJNQVBfU0laRSAtIGZyb207CisJdTMyIGRhdGE7CiAKIAlpZiAobGVuID4gc2l6ZSkK
-IAkJbGVuID0gc2l6ZTsKIAogCXBtX3J1bnRpbWVfZ2V0X3N5bmMocnBjLT5kZXYpOwogCisJ
-cHJfZXJyKCJCZWZvcmU6XG4iKTsKKwlyZWdtYXBfcmVhZChycGMtPnJlZ21hcCwgUlBDSUZf
-Q01OQ1IsICZkYXRhKTsgICBwcl9lcnIoIlJQQ0lGX0NNTkNSOiAgIDB4JTA4eFxuIiwgZGF0
-YSk7CisJcmVnbWFwX3JlYWQocnBjLT5yZWdtYXAsIFJQQ0lGX0RSQ1IsICZkYXRhKTsgICAg
-cHJfZXJyKCJSUENJRl9EUkNSOiAgICAweCUwOHhcbiIsIGRhdGEpOworCXJlZ21hcF9yZWFk
-KHJwYy0+cmVnbWFwLCBSUENJRl9EUkNNUiwgJmRhdGEpOyAgIHByX2VycigiUlBDSUZfRFJD
-TVI6ICAgMHglMDh4XG4iLCBkYXRhKTsKKwlyZWdtYXBfcmVhZChycGMtPnJlZ21hcCwgUlBD
-SUZfRFJFQVIsICZkYXRhKTsgICBwcl9lcnIoIlJQQ0lGX0RSRUFSOiAgIDB4JTA4eFxuIiwg
-ZGF0YSk7CisJcmVnbWFwX3JlYWQocnBjLT5yZWdtYXAsIFJQQ0lGX0RST1BSLCAmZGF0YSk7
-ICAgcHJfZXJyKCJSUENJRl9EUk9QUjogICAweCUwOHhcbiIsIGRhdGEpOworCXJlZ21hcF9y
-ZWFkKHJwYy0+cmVnbWFwLCBSUENJRl9EUkVOUiwgJmRhdGEpOyAgIHByX2VycigiUlBDSUZf
-RFJFTlI6ICAgMHglMDh4XG4iLCBkYXRhKTsKKwlyZWdtYXBfcmVhZChycGMtPnJlZ21hcCwg
-UlBDSUZfRFJETUNSLCAmZGF0YSk7ICBwcl9lcnIoIlJQQ0lGX0RSRE1DUjogIDB4JTA4eFxu
-IiwgZGF0YSk7CisJcmVnbWFwX3JlYWQocnBjLT5yZWdtYXAsIFJQQ0lGX0RSRFJFTlIsICZk
-YXRhKTsgcHJfZXJyKCJSUENJRl9EUkRSRU5SOiAweCUwOHhcbiIsIGRhdGEpOworCiAJcmVn
-bWFwX3VwZGF0ZV9iaXRzKHJwYy0+cmVnbWFwLCBSUENJRl9DTU5DUiwgUlBDSUZfQ01OQ1Jf
-TUQsIDApOwogCXJlZ21hcF93cml0ZShycGMtPnJlZ21hcCwgUlBDSUZfRFJDUiwKIAkJICAg
-ICBSUENJRl9EUkNSX1JCVVJTVCgzMikgfCBSUENJRl9EUkNSX1JCRSk7CkBAIC01MzUsNiAr
-NTQ2LDE2IEBAIHNzaXplX3QgcnBjaWZfZGlybWFwX3JlYWQoc3RydWN0IHJwY2lmICpycGMs
-IHU2NCBvZmZzLCBzaXplX3QgbGVuLCB2b2lkICpidWYpCiAJcmVnbWFwX3dyaXRlKHJwYy0+
-cmVnbWFwLCBSUENJRl9EUkRNQ1IsIHJwYy0+ZHVtbXkpOwogCXJlZ21hcF93cml0ZShycGMt
-PnJlZ21hcCwgUlBDSUZfRFJEUkVOUiwgcnBjLT5kZHIpOwogCisJcHJfZXJyKCJBZnRlcjpc
-biIpOworCXJlZ21hcF9yZWFkKHJwYy0+cmVnbWFwLCBSUENJRl9DTU5DUiwgJmRhdGEpOyAg
-IHByX2VycigiUlBDSUZfQ01OQ1I6ICAgMHglMDh4XG4iLCBkYXRhKTsKKwlyZWdtYXBfcmVh
-ZChycGMtPnJlZ21hcCwgUlBDSUZfRFJDUiwgJmRhdGEpOyAgICBwcl9lcnIoIlJQQ0lGX0RS
-Q1I6ICAgIDB4JTA4eFxuIiwgZGF0YSk7CisJcmVnbWFwX3JlYWQocnBjLT5yZWdtYXAsIFJQ
-Q0lGX0RSQ01SLCAmZGF0YSk7ICAgcHJfZXJyKCJSUENJRl9EUkNNUjogICAweCUwOHhcbiIs
-IGRhdGEpOworCXJlZ21hcF9yZWFkKHJwYy0+cmVnbWFwLCBSUENJRl9EUkVBUiwgJmRhdGEp
-OyAgIHByX2VycigiUlBDSUZfRFJFQVI6ICAgMHglMDh4XG4iLCBkYXRhKTsKKwlyZWdtYXBf
-cmVhZChycGMtPnJlZ21hcCwgUlBDSUZfRFJPUFIsICZkYXRhKTsgICBwcl9lcnIoIlJQQ0lG
-X0RST1BSOiAgIDB4JTA4eFxuIiwgZGF0YSk7CisJcmVnbWFwX3JlYWQocnBjLT5yZWdtYXAs
-IFJQQ0lGX0RSRU5SLCAmZGF0YSk7ICAgcHJfZXJyKCJSUENJRl9EUkVOUjogICAweCUwOHhc
-biIsIGRhdGEpOworCXJlZ21hcF9yZWFkKHJwYy0+cmVnbWFwLCBSUENJRl9EUkRNQ1IsICZk
-YXRhKTsgIHByX2VycigiUlBDSUZfRFJETUNSOiAgMHglMDh4XG4iLCBkYXRhKTsKKwlyZWdt
-YXBfcmVhZChycGMtPnJlZ21hcCwgUlBDSUZfRFJEUkVOUiwgJmRhdGEpOyBwcl9lcnIoIlJQ
-Q0lGX0RSRFJFTlI6IDB4JTA4eFxuIiwgZGF0YSk7CisKIAltZW1jcHlfZnJvbWlvKGJ1Ziwg
-cnBjLT5kaXJtYXAgKyBmcm9tLCBsZW4pOwogCiAJcG1fcnVudGltZV9wdXQocnBjLT5kZXYp
-OwotLSAKMi4yMC4wCgo=
---------------A266F512431D32413D4D0BF3
-Content-Type: text/plain; charset="UTF-8";
-	name="0001-memory-renesas-rpc-if-Don-t-use-burst-mode-on-read.patch"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
-	filename*0="0001-memory-renesas-rpc-if-Don-t-use-burst-mode-on-read.patc";
-	filename*1="h"
-
-RnJvbSAxODlkMzBhOGU5NjcwZjFhNWExZTlkM2IyNTdmMTRiN2RmN2JjMTcyIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBEaXJrIEJlaG1lIDxkaXJrLmJlaG1lQGRlLmJvc2No
-LmNvbT4KRGF0ZTogVHVlLCAyNSBGZWIgMjAyMCAwODo0MTowNiArMDEwMApTdWJqZWN0OiBb
-UEFUQ0hdIG1lbW9yeTogcmVuZXNhcy1ycGMtaWY6IERvbid0IHVzZSBidXJzdCBtb2RlIG9u
-IHJlYWQKClRlc3Rpbmcgc2hvd3MgdGhhdCBlbmFibGluZyB0aGUgYnVyc3QgbW9kZSByZXN1
-bHRzIGluIGEgIjItYnl0ZSBvZmZzZXQiCmluIHJlYWQgZGF0YS4gRHJvcHBpbmcgdGhlIGJ1
-cnN0IG1vZGUgc2VlbXMgdG8gZml4IHRoaXMuCgpTaWduZWQtb2ZmLWJ5OiBEaXJrIEJlaG1l
-IDxkaXJrLmJlaG1lQGRlLmJvc2NoLmNvbT4KLS0tCiBkcml2ZXJzL21lbW9yeS9yZW5lc2Fz
-LXJwYy1pZi5jIHwgMyArLS0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBk
-ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lbW9yeS9yZW5lc2FzLXJwYy1p
-Zi5jIGIvZHJpdmVycy9tZW1vcnkvcmVuZXNhcy1ycGMtaWYuYwppbmRleCA0ODUzZTdmNzg5
-ODUuLjJkNzdlY2E3YWFhNSAxMDA2NDQKLS0tIGEvZHJpdmVycy9tZW1vcnkvcmVuZXNhcy1y
-cGMtaWYuYworKysgYi9kcml2ZXJzL21lbW9yeS9yZW5lc2FzLXJwYy1pZi5jCkBAIC01MjQs
-OCArNTI0LDcgQEAgc3NpemVfdCBycGNpZl9kaXJtYXBfcmVhZChzdHJ1Y3QgcnBjaWYgKnJw
-YywgdTY0IG9mZnMsIHNpemVfdCBsZW4sIHZvaWQgKmJ1ZikKIAlwbV9ydW50aW1lX2dldF9z
-eW5jKHJwYy0+ZGV2KTsKIAogCXJlZ21hcF91cGRhdGVfYml0cyhycGMtPnJlZ21hcCwgUlBD
-SUZfQ01OQ1IsIFJQQ0lGX0NNTkNSX01ELCAwKTsKLQlyZWdtYXBfd3JpdGUocnBjLT5yZWdt
-YXAsIFJQQ0lGX0RSQ1IsCi0JCSAgICAgUlBDSUZfRFJDUl9SQlVSU1QoMzIpIHwgUlBDSUZf
-RFJDUl9SQkUpOworCXJlZ21hcF93cml0ZShycGMtPnJlZ21hcCwgUlBDSUZfRFJDUiwgMCk7
-CiAJcmVnbWFwX3dyaXRlKHJwYy0+cmVnbWFwLCBSUENJRl9EUkNNUiwgcnBjLT5jb21tYW5k
-KTsKIAlyZWdtYXBfd3JpdGUocnBjLT5yZWdtYXAsIFJQQ0lGX0RSRUFSLAogCQkgICAgIFJQ
-Q0lGX0RSRUFSX0VBVihvZmZzID4+IDI1KSB8IFJQQ0lGX0RSRUFSX0VBQygxKSk7Ci0tIAoy
-LjIwLjAKCg==
---------------A266F512431D32413D4D0BF3--
