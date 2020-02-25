@@ -2,325 +2,141 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6715C35E0D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5695C35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9386520CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jQVflpTe"
+	by mail.kernel.org (Postfix) with ESMTP id C1B4B21927
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582656921;
+	bh=GcAOngsNc42gcovvY3uUGpbwLfTEWg8qiIiv3HckXOU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gLFJ5mkFc8ZXq/9KVVaZhXUIH2GRg/WgBPYXWIvCD81tEnvEWh2Q1t0Mh5yrpAKeV
+	 Nu7XQTXXcFtAjlPnjrjgZzysHUnXhn7pZA7i5cl31k9uzTb6NwMbhkaSVFX99Ra5ZY
+	 iTZGDTant6dDuDYHpBkpVwejxHe9NsXXJb/qVTZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbgBYSwT (ORCPT
+        id S1731241AbgBYSzV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:52:19 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:57236 "EHLO mail.skyhub.de"
+        Tue, 25 Feb 2020 13:55:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727624AbgBYSwT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:52:19 -0500
-Received: from zn.tnic (p200300EC2F07AB0030A629139D299034.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:ab00:30a6:2913:9d29:9034])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728051AbgBYSzV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 13:55:21 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A8E531EC0CD9;
-        Tue, 25 Feb 2020 19:52:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582656736;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=n9C2V9/aZydusth37WA93xbi/LRpYRsdtulxt8mmBXE=;
-        b=jQVflpTeQVE1EW0E5VwWqhbAvMZA+BkF85lmJe2f1oscptj/qaVXlci7mOTyFmGvwwvYcL
-        X/NJGlj6bgj1ZQ1+eiV0fOMb0JQdDSK4DHC2Tvt7anmf9mshTzPmzEM33vffPd6xDhZfk4
-        YaZ9oVnGlbk0a/dxhJOTqgdprrtEoH0=
-Date:   Tue, 25 Feb 2020 19:52:11 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
-        rrichter@marvell.com, robh+dt@kernel.org, frowand.list@gmail.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        devicetree@vger.kernel.org, dwmw@amazon.co.uk, benh@amazon.com,
-        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com, barakw@amazon.com
-Subject: Re: [PATCH v9 1/3] edac: Add support for Amazon's Annapurna Labs L1
- EDAC
-Message-ID: <20200225185211.GB5457@zn.tnic>
-References: <20200129195016.956-1-hhhawa@amazon.com>
- <20200129195016.956-2-hhhawa@amazon.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 43B0524656;
+        Tue, 25 Feb 2020 18:55:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582656920;
+        bh=GcAOngsNc42gcovvY3uUGpbwLfTEWg8qiIiv3HckXOU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wiHIZtal8u4HE4RLq3R2aMVKuvHeuLy4NZ5EfCWymWev2oUMeVYxCmBgnf5YhVchV
+         iTaVNzQtwydoDEuJtvEdXGE6BqmJ2X7hEZnl8t+p/3unNU3UkiSxruywLdcUoSaDeX
+         SAM2LR6raG9nKiUpALVKgYocAemKbkqQWtJ4ONWo=
+Received: by mail-qk1-f176.google.com with SMTP id o28so185780qkj.9;
+        Tue, 25 Feb 2020 10:55:20 -0800 (PST)
+X-Gm-Message-State: APjAAAWDVPuPn+zONg7D7ioIwxxViYAx9wCp8lb1nVKB7CfZSs/KHPLp
+        b0H20/vdpeOYoonZGEFNQ0TrvR4Xp/lE/QD2Rw==
+X-Google-Smtp-Source: APXvYqwNHK4+Y1yIBWKMojOKtY7ghpPbDHqnF8yS97h6Zmcgig7EivjliFmXOITvj7XfHi/v0Mg41/i8G2/gEn8VQok=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr322658qkg.152.1582656919408;
+ Tue, 25 Feb 2020 10:55:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200129195016.956-2-hhhawa@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org> <1582223216-23459-3-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1582223216-23459-3-git-send-email-jcrouse@codeaurora.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 25 Feb 2020 12:55:08 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+NLhw4mfNd7=4ADz63G15WATPpGbz3HxxV1QJqPVQwjw@mail.gmail.com>
+Message-ID: <CAL_Jsq+NLhw4mfNd7=4ADz63G15WATPpGbz3HxxV1QJqPVQwjw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: display: msm: Add required dma-range property
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 09:50:14PM +0200, Hanna Hawa wrote:
+On Thu, Feb 20, 2020 at 12:27 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> The GMU node now requires a specific dma-range property so that the driver
 
-> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
-> report L1 errors.
+s/dma-range/dma-ranges/ here and the subject.
 
-You don't add support for a driver - you either add a driver or you add
-support for HW...
+> can use the DMA API to do the few memory allocations required by the GMU.
+> This sets the IOMMU iova allocator to match the 'uncached' part of the
+> GMU virtual address space.
 
-> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
-> new file mode 100644
-> index 000000000000..723b35b18f5b
-> --- /dev/null
-> +++ b/drivers/edac/al_l1_edac.c
-> @@ -0,0 +1,207 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> + */
-> +
-> +#include <asm/sysreg.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/smp.h>
+Sounds like a bunch of kernel things and this is a binding.
 
-asm/ includes go after linux/ includes.
+>
+> v2: Fix the dma-ranges tag. The third pair should be the size.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  Documentation/devicetree/bindings/display/msm/gmu.yaml | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> index 776ff92..d11a073 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> +++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> @@ -83,6 +83,13 @@ properties:
+>        Phandle to the OPP table for the available GMU frequencies. Refer to
+>        ../../opp/opp.txt for more information.
+>
+> +  dma-ranges:
 
-> +
-> +#include "edac_device.h"
-> +#include "edac_module.h"
-> +
-> +#define DRV_NAME				"al_l1_edac"
-> +
-> +/* Same bit assignments of CPUMERRSR_EL1 in ARM CA57/CA72 */
-> +#define ARM_CA57_CPUMERRSR_EL1			sys_reg(3, 1, 15, 2, 2)
-> +#define ARM_CA57_CPUMERRSR_RAM_ID		GENMASK(30, 24)
-> +#define  ARM_CA57_L1_I_TAG_RAM			0x00
-> +#define  ARM_CA57_L1_I_DATA_RAM			0x01
-> +#define  ARM_CA57_L1_D_TAG_RAM			0x08
-> +#define  ARM_CA57_L1_D_DATA_RAM			0x09
-> +#define  ARM_CA57_L2_TLB_RAM			0x18
-> +#define ARM_CA57_CPUMERRSR_VALID		BIT(31)
-> +#define ARM_CA57_CPUMERRSR_REPEAT		GENMASK_ULL(39, 32)
-> +#define ARM_CA57_CPUMERRSR_OTHER		GENMASK_ULL(47, 40)
-> +#define ARM_CA57_CPUMERRSR_FATAL		BIT_ULL(63)
-> +
-> +#define AL_L1_EDAC_MSG_MAX			256
-> +
-> +static void al_l1_edac_cpumerrsr_read_status(void *arg)
+dma-ranges is a bus property and doesn't go in device nodes (that
+don't implement a bus like PCI host for example). This would not have
+even worked a few kernel versions back because the kernel would only
+start looking for dma-ranges in a parent node.
 
-This is a static function so you don't really need a function prefix of
-"al_l1_edac_". Use those chars to make its name more descriptive. Ditto
-for the rest of the static functions in that file.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description:
+> +      Describe the dma-address range for the device. This should always
+> +      describe the range between 0x60000000 and 0x80000000 which represents
 
-> +{
-> +	struct edac_device_ctl_info *edac_dev = arg;
-> +	int cpu, space, count;
-> +	u32 ramid, repeat, other, fatal;
-> +	u64 val;
-> +	char msg[AL_L1_EDAC_MSG_MAX];
-> +	char *p;
-> +	spinlock_t *lock;
+If this is always the region, then why does it need to be in DT? Just
+set your dma_mask which drivers should be doing if they want anything
+other than (2^32 - 1). dma-ranges sets the bus_dma_mask.
 
-Please sort function local variables declaration in a reverse christmas
-tree order:
-
-	<type A> longest_variable_name;
-	<type B> shorter_var_name;
-	<type C> even_shorter;
-	<type D> i;
-
+> +      the uncached region of the GMU address space.
 > +
-> +	val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
-> +	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
-> +		return;
+>  required:
+>    - compatible
+>    - reg
+> @@ -95,6 +102,7 @@ required:
+>    - power-domain-names
+>    - iommus
+>    - operating-points-v2
+> +  - dma-ranges
+>
+>  examples:
+>   - |
+> @@ -127,4 +135,6 @@ examples:
+>
+>          iommus = <&adreno_smmu 5>;
+>          operating-points-v2 = <&gmu_opp_table>;
 > +
-> +	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
-> +
-> +	cpu = smp_processor_id();
-> +	ramid = FIELD_GET(ARM_CA57_CPUMERRSR_RAM_ID, val);
-> +	repeat = FIELD_GET(ARM_CA57_CPUMERRSR_REPEAT, val);
-> +	other = FIELD_GET(ARM_CA57_CPUMERRSR_OTHER, val);
-> +	fatal = FIELD_GET(ARM_CA57_CPUMERRSR_FATAL, val);
-> +
-> +	space = sizeof(msg);
-> +	p = msg;
-> +	count = scnprintf(p, space, "CPU%d L1 %serror detected", cpu,
-> +			  (fatal) ? "Fatal " : "");
-> +	p += count;
-> +	space -= count;
-> +
-> +	switch (ramid) {
-> +	case ARM_CA57_L1_I_TAG_RAM:
-> +		count = scnprintf(p, space, " RAMID='L1-I Tag RAM'");
-> +		break;
-> +	case ARM_CA57_L1_I_DATA_RAM:
-> +		count = scnprintf(p, space, " RAMID='L1-I Data RAM'");
-> +		break;
-> +	case ARM_CA57_L1_D_TAG_RAM:
-> +		count = scnprintf(p, space, " RAMID='L1-D Tag RAM'");
-> +		break;
-> +	case ARM_CA57_L1_D_DATA_RAM:
-> +		count = scnprintf(p, space, " RAMID='L1-D Data RAM'");
-> +		break;
-> +	case ARM_CA57_L2_TLB_RAM:
-> +		count = scnprintf(p, space, " RAMID='L2 TLB RAM'");
-> +		break;
-> +	default:
-> +		count = scnprintf(p, space, " RAMID='unknown'");
-> +		break;
-> +	}
-> +
-> +	p += count;
-> +	space -= count;
-> +	count = scnprintf(p, space,
-> +			  " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
-> +			  repeat, other, val);
-> +
-> +	lock = edac_dev->pvt_info;
-
-That sure looks funky - why not use a proper private struct like the
-rest of the drivers?
-
-> +	spin_lock(lock);
-> +	if (fatal)
-> +		edac_device_handle_ue_count(edac_dev, repeat, 0, 0, msg);
-> +	else
-> +		edac_device_handle_ce_count(edac_dev, repeat, 0, 0, msg);
-> +	spin_unlock(lock);
-> +}
-> +
-> +static void al_l1_edac_check(struct edac_device_ctl_info *edac_dev)
-> +{
-> +	on_each_cpu(al_l1_edac_cpumerrsr_read_status, edac_dev, 1);
-> +}
-> +
-> +static int al_l1_edac_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edac_dev;
-> +	struct device *dev = &pdev->dev;
-> +	spinlock_t *lock;
-> +	int ret;
-> +
-> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*lock), DRV_NAME, 1, "L",
-> +					      1, 1, NULL, 0,
-> +					      edac_device_alloc_index());
-> +	if (!edac_dev)
-> +		return -ENOMEM;
-> +
-> +	edac_dev->edac_check = al_l1_edac_check;
-> +	edac_dev->dev = dev;
-> +	edac_dev->mod_name = DRV_NAME;
-> +	edac_dev->dev_name = dev_name(dev);
-> +	edac_dev->ctl_name = "L1_cache";
-> +	platform_set_drvdata(pdev, edac_dev);
-> +	lock = edac_dev->pvt_info;
-> +
-> +	spin_lock_init(lock);
-> +
-> +	ret = edac_device_add_device(edac_dev);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add L1 edac device (%d)\n", ret);
-> +		edac_device_free_ctl_info(edac_dev);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int al_l1_edac_remove(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-> +
-> +	edac_device_del_device(edac_dev->dev);
-> +	edac_device_free_ctl_info(edac_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id al_l1_edac_of_match[] = {
-> +	/*
-> +	 * "al,alpine-v2", and "amazon,al-alpine-v3" are machine compatible
-> +	 * strings which have Cortex-A57/A72 configured with this support,
-> +	 * and access to CPUMERRSR_EL1 register is enabled in firmware.
-> +	 */
-> +	{ .compatible = "al,alpine-v2" },
-
-Err, checkpatch says:
-
-WARNING: DT compatible string "al,alpine-v2" appears un-documented -- check ./Documentation/devicetree/bindings/
-#236: FILE: drivers/edac/al_l1_edac.c:151:
-+       { .compatible = "al,alpine-v2" },
-
-
-Do you need a devicetree addition? I usually get such with the ARM EDAC
-drivers...
-
-> +	{ .compatible = "amazon,al-alpine-v3" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, al_l1_edac_of_match);
-> +
-> +static struct platform_driver al_l1_edac_driver = {
-> +	.probe = al_l1_edac_probe,
-> +	.remove = al_l1_edac_remove,
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +	},
-> +};
-> +
-> +static struct platform_device *edac_l1_device;
-
-Please move to the top of the file.
-
-> +
-> +static int __init al_l1_init(void)
-> +{
-> +	struct device_node *root;
-> +	int ret;
-> +
-> +	root = of_find_node_by_path("/");
-> +	if (!root) {
-> +		pr_debug("Can't find root node!\n");
-> +		return 0;
-> +	}
-> +
-> +	if (!of_match_node(al_l1_edac_of_match, root))
-> +		return 0;
-> +
-> +	ret = platform_driver_register(&al_l1_edac_driver);
-> +	if (ret) {
-> +		pr_err("Failed to register %s (%d)\n", DRV_NAME, ret);
-> +		return ret;
-> +	}
-> +
-> +	edac_l1_device = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
-> +	if (IS_ERR(edac_l1_device)) {
-> +		pr_err("Failed to register EDAC AL L1 platform device\n");
-
-		platform_driver_unregister() ?
-
-> +		return PTR_ERR(edac_l1_device);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit al_l1_exit(void)
-> +{
-> +	platform_device_unregister(edac_l1_device);
-> +	platform_driver_unregister(&al_l1_edac_driver);
-> +}
-> +
-> +late_initcall(al_l1_init);
-
-Why not module_init() ?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> +        dma-ranges = <0 0x60000000 0 0x60000000 0 0x20000000>;
+>     };
+> --
+> 2.7.4
+>
