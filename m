@@ -2,192 +2,120 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F723C35E04
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE349C35E01
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8216020CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925A3222C2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582662919;
+	bh=IlMHPJZoi6qlavWG4Ahbm3IprtnpXIxML8X3NnRiesw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PGF++gF8eA6p1Ya/b/aTpl+a6XQ8+IDNDfK800CjOnNimucxEayGPemtjSby38+eT
+	 ufJ6Lc9f7PcriYB83eE/U5RUGw57dfVFbsCvNeff+Ic+G2lzo9ZTCQv7CvcPETjjvN
+	 h0gwPJa9vKWvbybbRbLB/+DrPpGckFZxtLj1ExCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgBYUOc (ORCPT
+        id S1728806AbgBYUfT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:14:32 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11382 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728224AbgBYUOc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:14:32 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PK92St058083;
-        Tue, 25 Feb 2020 15:14:21 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yax398vum-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 15:14:21 -0500
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01PK9OCR059563;
-        Tue, 25 Feb 2020 15:14:21 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yax398vu6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 15:14:21 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01PKDExb023589;
-        Tue, 25 Feb 2020 20:14:19 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma02wdc.us.ibm.com with ESMTP id 2yaux6ps3m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 20:14:19 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PKEIoF29032860
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 20:14:18 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2A8D6A058;
-        Tue, 25 Feb 2020 20:14:18 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B0C86A051;
-        Tue, 25 Feb 2020 20:14:18 +0000 (GMT)
-Received: from MSBARTH-P50.rch.stglabs.ibm.com (unknown [9.10.99.26])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Feb 2020 20:14:18 +0000 (GMT)
-From:   Matthew Barth <msbarth@linux.ibm.com>
-To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Brandon Wyman <bjwyman@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>
-Cc:     Matthew Barth <msbarth@linux.ibm.com>
-Subject: [PATCH v2] ARM: dts: rainier: Set PCA9552 pin types
-Date:   Tue, 25 Feb 2020 14:14:15 -0600
-Message-Id: <20200225201415.431668-1-msbarth@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 25 Feb 2020 15:35:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728471AbgBYUfS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:35:18 -0500
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BFD7222C2;
+        Tue, 25 Feb 2020 20:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582662918;
+        bh=IlMHPJZoi6qlavWG4Ahbm3IprtnpXIxML8X3NnRiesw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M/zmMhCkKG5ZR2aALAAcDqwXx55QaZ79a6R/kP7ncLhvfpPHN14IL07ANpCOk/KqL
+         osvvkEIyAzlIUNoWzB9MFSu4Mzp/XQ0NZA31wZHfw19OqWb3jgSh+XeQHJsnDnOcTS
+         kP8Q5MyOjKWvQsQjsJ4mhFk7dYdaIU4SDmwTej1w=
+Received: by mail-qt1-f171.google.com with SMTP id n17so639642qtv.2;
+        Tue, 25 Feb 2020 12:35:18 -0800 (PST)
+X-Gm-Message-State: APjAAAX1TllHXwqZ854CKUUURj5Y1mwvS1MphfaBl0YTkxR+I5G+6ERy
+        ZUJsqVg6At8emjo32/T1hkz6J7oH2uZToZHifA==
+X-Google-Smtp-Source: APXvYqxghQYLQ6PnllHaIfdR/E6y+DaIAu6c0wU88JtyBWhTwo7n81Ke2zCDhWVpQ1z8bFO/Ygmz9cAyLAvnFp0aF5U=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr568504qtj.300.1582662917307;
+ Tue, 25 Feb 2020 12:35:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_08:2020-02-25,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=987 priorityscore=1501
- lowpriorityscore=0 clxscore=1011 phishscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002250139
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+In-Reply-To: <20200207052627.130118-1-drinkcat@chromium.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 25 Feb 2020 14:35:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJb2aFHKcVdD-FM2To71iRUJ2nMniw7aZUVXmPmBkazNw@mail.gmail.com>
+Message-ID: <CAL_JsqJb2aFHKcVdD-FM2To71iRUJ2nMniw7aZUVXmPmBkazNw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-All 16 pins of the PCA9552 at 7-bit address 0x61 should be set as type
-GPIO.
+On Thu, Feb 6, 2020 at 11:26 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> Hi!
+>
+> Follow-up on the v3: https://patchwork.kernel.org/cover/11331343/.
+>
+> The main purpose of this series is to upstream the dts change and the
+> binding document, but I wanted to see how far I could probe the GPU, to
+> check that the binding is indeed correct. The rest of the patches are
+> RFC/work-in-progress, but I think some of them could already be picked up.
+>
+> So this is tested on MT8183 with a chromeos-4.19 kernel, and a ton of
+> backports to get the latest panfrost driver (I should probably try on
+> linux-next at some point but this was the path of least resistance).
+>
+> I tested it as a module as it's more challenging (originally probing would
+> work built-in, on boot, but not as a module, as I didn't have the power
+> domain changes, and all power domains are on by default during boot).
+>
+> Probing logs looks like this, currently. They look sane.
+> [  501.319728] panfrost 13040000.gpu: clock rate = 511999970
+> [  501.320041] panfrost 13040000.gpu: Linked as a consumer to regulator.14
+> [  501.320102] panfrost 13040000.gpu: Linked as a consumer to regulator.31
+> [  501.320651] panfrost 13040000.gpu: Linked as a consumer to genpd:0:13040000.gpu
+> [  501.320954] panfrost 13040000.gpu: Linked as a consumer to genpd:1:13040000.gpu
+> [  501.321062] panfrost 13040000.gpu: Linked as a consumer to genpd:2:13040000.gpu
+> [  501.321734] panfrost 13040000.gpu: mali-g72 id 0x6221 major 0x0 minor 0x3 status 0x0
+> [  501.321741] panfrost 13040000.gpu: features: 00000000,13de77ff, issues: 00000000,00000400
+> [  501.321747] panfrost 13040000.gpu: Features: L2:0x07120206 Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
+> [  501.321752] panfrost 13040000.gpu: shader_present=0x7 l2_present=0x1
+> [  501.324951] [drm] Initialized panfrost 1.1.0 20180908 for 13040000.gpu on minor 2
+>
+> Some more changes are still required to get devfreq working, and of course
+> I do not have a userspace driver to test this with.
+>
+> I believe at least patches 1, 2, and 3 can be merged. 4 and 5 are mostly
+> useful in conjunction with 6 and 7 (which are not ready yet), so I'll let
+> maintainers decide.
 
-Signed-off-by: Matthew Barth <msbarth@linux.ibm.com>
----
-v2: Added leds-pca955x.h include
-    Added upstream to patch
----
----
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+I've applied 3, 4, and 5 to drm-misc-next. Patch 2 should go via Mediatek tree.
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-index c63cefce636d..d9fa9fd48058 100644
---- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-@@ -4,6 +4,7 @@
- 
- #include "aspeed-g6.dtsi"
- #include <dt-bindings/gpio/aspeed-gpio.h>
-+#include <dt-bindings/leds/leds-pca955x.h>
- 
- / {
- 	model = "Rainier";
-@@ -351,66 +352,82 @@
- 
- 		gpio@0 {
- 			reg = <0>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@1 {
- 			reg = <1>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@2 {
- 			reg = <2>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@3 {
- 			reg = <3>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@4 {
- 			reg = <4>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@5 {
- 			reg = <5>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@6 {
- 			reg = <6>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@7 {
- 			reg = <7>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@8 {
- 			reg = <8>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@9 {
- 			reg = <9>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@10 {
- 			reg = <10>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@11 {
- 			reg = <11>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@12 {
- 			reg = <12>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@13 {
- 			reg = <13>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@14 {
- 			reg = <14>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@15 {
- 			reg = <15>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 	};
- 
--- 
-2.24.1
-
+Rob
