@@ -4,255 +4,193 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56B1C35E04
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0A4C35E01
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3D92082F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 349532082F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582655053;
-	bh=yNlfOmQR9+nRAaGFNlH/Ji35iqnG0we1hXWVC5J6quo=;
+	s=default; t=1582655239;
+	bh=i1yg1xPJBmlch6h7zTLYvs8nZ9w2RgI0yT9/1+6BSO4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ABpLcugQKhV5o44N3c3ViD8v0VUBv7082DyQp3gQvA3WCLj1ktbmFgavzl9QpIHmK
-	 UWrBWYkMX2PBYR1suJX4oclHewLJIxcah6YbpO/fEibH1tHARjYLLRKr9ojIUMBW5e
-	 DuVK/KhKal6rb3hT/K3VHJYrf5LixBRNXNsjtJus=
+	b=kDAaXI04MUnuXqN8Fd7c1zbu33wOEq5LoTYewq4I8POGFPiR6bvsu7ZWRoii4lqz4
+	 PWvXRtG5a04Lt48ElXT0gxE+xDC357MKudgFx/CGLNAL+JTfmwKXg/MV/m7BbOSW5o
+	 VNmSt3tCWpv8FhxKxlYbc1IM01NERt7eweemHjaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgBYSYN (ORCPT
+        id S1731550AbgBYS1S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:24:13 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39784 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728367AbgBYSYN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:24:13 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 18so262881oij.6;
-        Tue, 25 Feb 2020 10:24:12 -0800 (PST)
+        Tue, 25 Feb 2020 13:27:18 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37745 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731549AbgBYS1S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:27:18 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b3so450092otp.4
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 10:27:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zyUEcnd6mf3xDLs58H/+znKVsIUHaN8BT7T15bn5I/4=;
-        b=eAtzbSrvXHIlj+DIXE5B+cX9N1ysawIUYTjdEbHQca6Zf4J55Mj5rdHaLUbso4WIte
-         OHNqE1DJBJ+jm9Hgr8TELLP+/jzCfpaYlMmAWQ0Bz1p6f+bjZ9qjrwOBVDtShaCCVIjF
-         8pYD4CHtj7PrNRwsLrWMhSEtiBxFedkbngN4UyKt8a2d0DILztME+V2jW9CzuZCotcUO
-         +Wk8Kt49QJhF7clzotAHLZ1CI5YTtiVu/BzCd67AvLIia+S/Y5JR8Xl1A+s9Fhpm8weF
-         RtjeLr5mk5L04qgsTHhpl4qpJNew2axJ+FnbnlcvbqLLVjY1WTmj7IODjDWXOfy59ftF
-         NJBw==
-X-Gm-Message-State: APjAAAUejYKEP4qpg3/o+bd/gxbUJVLfO+vrhiNhBnHxldLWqr8aS0FF
-        ++uNXLCB6JEUQqRw3SWQqg==
-X-Google-Smtp-Source: APXvYqy2YFi/Z/AQYaFr+0YJAOKBBXw2YKbb14sGV3IuzdQIEB+ZE6Mmn4i6K3FgKLi1IMdYd8+R/w==
-X-Received: by 2002:a05:6808:251:: with SMTP id m17mr190704oie.15.1582655052039;
-        Tue, 25 Feb 2020 10:24:12 -0800 (PST)
+        bh=016DmzNNKDwWzCKl+kLxw6qleocdBsFXd77n9wh8My4=;
+        b=LnpkJcNytN0vBD5J2/q5KezJaOTKDOiBfOYGLys1a0bTn3AcYegm4QReqfhHEwRfBw
+         7GqYnAvrOBVZ7WXUA9auGvOc5jRWgWXyyi1/4nV+HDCCp08gXQNgaFfo/MVNxzIg9jLV
+         pgnbsziXCgC9R/WuJkb2np1w93JFJJ/7I4mWzL8XGAV+ux5/id98REnjydKp9GCKyaWO
+         j+Us+3IoQ3FwNzSyJSzY1nUXFmNLOkZ2rliJh42wk/FwIXtx77VtKWCpBZHMJ+1n1kVE
+         AriBShD7q7kFXOuDs1Nt8ckSeuA+57EgXzrrj9VDc+/FkKUSguqY2oi+y00PLS12IBR3
+         fxJw==
+X-Gm-Message-State: APjAAAVj4ejVnGQIF8dZo3iTqkM3B5IGmfAEGo4ZFvJW3DvaAF8ZSjYc
+        yWMSd5fVRr+ITfLULffLzQ==
+X-Google-Smtp-Source: APXvYqwxZLzRKtNOKmCbw6lHWxLrCECB+yaLs8zN+D/tIPlJctyrFDXB3ZDuMnBN7k5zJ4Dd1iJvMA==
+X-Received: by 2002:a9d:66d1:: with SMTP id t17mr47730503otm.233.1582655237357;
+        Tue, 25 Feb 2020 10:27:17 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n27sm5572706oie.18.2020.02.25.10.24.11
+        by smtp.gmail.com with ESMTPSA id q9sm1063197otl.53.2020.02.25.10.27.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:24:11 -0800 (PST)
-Received: (nullmailer pid 14462 invoked by uid 1000);
-        Tue, 25 Feb 2020 18:24:10 -0000
-Date:   Tue, 25 Feb 2020 12:24:10 -0600
+        Tue, 25 Feb 2020 10:27:16 -0800 (PST)
+Received: (nullmailer pid 19009 invoked by uid 1000);
+        Tue, 25 Feb 2020 18:27:15 -0000
+Date:   Tue, 25 Feb 2020 12:27:15 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 88/89] dt-bindings: display: vc4: hdmi: Add BCM2711 HDMI
- controllers bindings
-Message-ID: <20200225182410.GA7661@bogus>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <4c21dda4f0b73977de1e54d408d7bf6bf3b6d238.1582533919.git-series.maxime@cerno.tech>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/5 v2] dt-bindings: arm: Add Integrator YAML schema
+Message-ID: <20200225182715.GA15214@bogus>
+References: <20200225084627.24825-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c21dda4f0b73977de1e54d408d7bf6bf3b6d238.1582533919.git-series.maxime@cerno.tech>
+In-Reply-To: <20200225084627.24825-1-linus.walleij@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 10:07:30AM +0100, Maxime Ripard wrote:
-> The HDMI controllers found in the BCM2711 SoC need some adjustments to the
-> bindings, especially since the registers have been shuffled around in more
-> register ranges.
+On Tue, Feb 25, 2020 at 09:46:23AM +0100, Linus Walleij wrote:
+> This implements the top-level schema for the ARM Integrator
+> platforms.
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml | 118 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 109 insertions(+), 9 deletions(-)
+> ChangeLog v1->v2:
+> - Collapse the compatible three items with two const in each to an
+>   enum with three possible values and a const syscon
+> - Add reg with maxItems: 1 for syscon
+> - Add reg as a required property of syscon
+> - Make syscon a patternProperty and make sure it has a unit address
+> - Add reg with maxItems: 1 for the core module
+> - Require core module to be @10000000 and have all three compatibles.
+> ---
+>  .../bindings/arm/arm,integrator.yaml          | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/arm,integrator.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
-> index 52b3cdac0bdf..a9d24e1cf684 100644
-> --- a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
-> +++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
-> @@ -11,24 +11,58 @@ maintainers:
->  
->  properties:
->    compatible:
-> -    const: brcm,bcm2835-hdmi
-> +    enum:
-> +      - brcm,bcm2835-hdmi
-> +      - brcm,bcm2711-hdmi0
-> +      - brcm,bcm2711-hdmi1
->  
->    reg:
+> diff --git a/Documentation/devicetree/bindings/arm/arm,integrator.yaml b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
+> new file mode 100644
+> index 000000000000..2690491c1294
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/arm,integrator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM Integrator Boards Device Tree Bindings
+> +
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
+> +
+> +description: |+
+> +  These were the first ARM platforms officially supported by ARM Ltd.
+> +  They are ARMv4, ARMv5 and ARMv6-capable using different core tiles,
+> +  so the system is modular and can host a variety of CPU tiles called
+> +  "core tiles" and referred to in the device tree as "core modules".
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
 > +    oneOf:
-> +      - items:
-> +        - description: HDMI register range
-> +        - description: HD register range
+> +      - description: ARM Integrator Application Platform, this board has a PCI
+> +          host and several PCI slots, as well as a number of slots for logical
+> +          expansion modules, it is referred to as an "ASIC Development
+> +          Motherboard" and is extended with custom FPGA and is intended for
+> +          rapid prototyping. See ARM DUI 0098B. This board can physically come
+> +          pre-packaged in a PC Tower form factor called Integrator/PP1 or a
+> +          special metal fixture called Integrator/PP2, see ARM DUI 0169A.
+> +        items:
+> +          - const: arm,integrator-ap
+> +      - description: ARM Integrator Compact Platform (HBI-0086), this board has
+> +          a compact form factor and mainly consists of the bare minimum
+> +          peripherals to make use of the core module. See ARM DUI 0159B.
+> +        items:
+> +          - const: arm,integrator-cp
+> +      - description: ARM Integrator Standard Development Board (SDB) Platform,
+> +          this board is a PCI-based board conforming to the Microsoft SDB
+> +          (HARP) specification. See ARM DUI 0099A.
+> +        items:
+> +          - const: arm,integrator-sp
 > +
-> +      - items:
-> +        - description: HDMI controller register range
-> +        - description: DVP register range
-> +        - description: HDMI PHY register range
-> +        - description: Rate Manager register range
-> +        - description: Packet RAM register range
-> +        - description: Metadata RAM register range
-> +        - description: CSC register range
-> +        - description: CEC register range
-> +        - description: HD register range
+> +  core-module@10000000:
+> +    type: object
+> +    description: the root node in the Integrator platforms must contain
+> +      a core module child node. They are always at physical address
+> +      0x10000000 in all the Integrator variants.
+> +    properties:
+> +      compatible:
+> +        items:
+> +          - const: arm,core-module-integrator
+> +          - const: syscon
+> +          - const: simple-mfd
+> +      reg:
+> +        maxItems: 1
 > +
-> +  reg-names:
->      items:
-> -      - description: HDMI register range
-> -      - description: HD register range
-> +      - const: hdmi
-> +      - const: dvp
-> +      - const: phy
-> +      - const: rm
-> +      - const: packet
-> +      - const: metadata
-> +      - const: csc
-> +      - const: cec
-> +      - const: hd
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +patternProperties:
+> +  "^syscon@[0-9a-f]+$":
+> +    description: All Integrator boards must provide a system controller as a
+> +      node in the root of the device tree.
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        items:
+> +          - enum:
+> +            - arm,integrator-ap-syscon
+> +            - arm,integrator-cp-syscon
+> +            - arm,integrator-sp-syscon
+> +          - const: syscon
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +
+> +required:
+> +  - compatible
+> +  - syscon
 
-Don't you want 'hd' 2nd or need to define the 2 entry case separately?
+This will fail to match anything if you have 'syscon@...' Unfortunately, 
+not yet any way to have required patterns in json-schema, though that is 
+being discussed.
 
-Really, I think this should be 2 files. All but interrupts and ddc have 
-a difference.
+With that dropped,
 
->  
->    interrupts:
->      minItems: 2
->  
->    clocks:
-> -    items:
-> -      - description: The pixel clock
-> -      - description: The HDMI state machine clock
-> +    oneOf:
-> +      - items:
-> +        - description: The pixel clock
-> +        - description: The HDMI state machine clock
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +  - core-module@10000000
 > +
-> +      - items:
-> +        - description: The HDMI state machine clock
->  
->    clock-names:
-> -    items:
-> -      - const: pixel
-> +    oneOf:
-> +      - items:
-> +        - const: pixel
-> +        - const: hdmi
-> +
->        - const: hdmi
->  
->    ddc:
-> @@ -51,15 +85,54 @@ properties:
->    dma-names:
->      const: audio-rx
->  
-> +  resets:
-> +    maxItems: 1
-> +
->  required:
->    - compatible
->    - reg
-> -  - interrupts
->    - clocks
->    - ddc
->  
->  additionalProperties: false
->  
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - brcm,bcm2711-hdmi0
-> +          - brcm,bcm2711-hdmi1
-> +
-> +then:
-> +  properties:
-> +    reg:
-> +      minItems: 9
-> +
-> +    clocks:
-> +      maxItems: 1
-> +
-> +    clock-names:
-> +      maxItems: 1
-> +
-> +  required:
-> +    - reg-names
-> +    - resets
-> +
-> +else:
-> +  properties:
-> +    reg:
-> +      maxItems: 2
-> +
-> +    clocks:
-> +      minItems: 2
-> +
-> +    clock-names:
-> +      minItems: 2
-> +
-> +  required:
-> +    - interrupts
-> +
->  examples:
->    - |
->      #include <dt-bindings/clock/bcm2835.h>
-> @@ -77,4 +150,31 @@ examples:
->          clock-names = "pixel", "hdmi";
->      };
->  
-> +  - |
-> +    hdmi0: hdmi@7ef00700 {
-> +        compatible = "brcm,bcm2711-hdmi0";
-> +        reg = <0x7ef00700 0x300>,
-> +              <0x7ef00300 0x200>,
-> +              <0x7ef00f00 0x80>,
-> +              <0x7ef00f80 0x80>,
-> +              <0x7ef01b00 0x200>,
-> +              <0x7ef01f00 0x400>,
-> +              <0x7ef00200 0x80>,
-> +              <0x7ef04300 0x100>,
-> +              <0x7ef20000 0x100>;
-> +        reg-names = "hdmi",
-> +                    "dvp",
-> +                    "phy",
-> +                    "rm",
-> +                    "packet",
-> +                    "metadata",
-> +                    "csc",
-> +                    "cec",
-> +                    "hd";
-> +        clocks = <&firmware_clocks 13>;
-> +        clock-names = "hdmi";
-> +        resets = <&dvp 0>;
-> +        ddc = <&ddc0>;
-> +    };
-> +
->  ...
+> +...
 > -- 
-> git-series 0.9.1
+> 2.24.1
+> 
