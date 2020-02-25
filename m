@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE168C35E04
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CD8C35E01
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB3E2084E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54AA24653
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d+TgHQXB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qJIcjNpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbgBYRxe (ORCPT
+        id S1731346AbgBYRxn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:53:34 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33961 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730919AbgBYRxe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 12:53:34 -0500
-Received: by mail-pl1-f195.google.com with SMTP id j7so104998plt.1
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 09:53:33 -0800 (PST)
+        Tue, 25 Feb 2020 12:53:43 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53749 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730051AbgBYRxm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 12:53:42 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n96so17865pjc.3
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 09:53:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WAV7i9DpkYyptymNiUj/uooXSddOTDPzEmF8/rLdzNA=;
-        b=d+TgHQXBZ2fj6XhsaxC9E2hoQsUCLxnFHPnwEo6sgOuLEXduum3xsPaooFFHauzSVB
-         muhHv3f59kZsioiKtKmx5BRfHkHXJyTdZRHpVxZ0FqMHIz5qfIjPSCghyork9+f68w7/
-         5WBA0U7TdBf5Uw1ljyMHMHCHGBdWJ32oZY10Fn3dR4CIEWP/aAPkDNvyWwU8/zCUGEuS
-         8pBdp/I3O1ffy7TvB71P13R4S4SC6BT6hkFRm/+jr/XAUPKqMFLgkie0omQjiaWtohy4
-         JVHQnr7i2nEMB/5Mj/HVPN2ZkluthJFBCR5sQYygn8fQofWWo3wWY3mGwioSMWLInJCO
-         xMGA==
+        bh=BvrsPeqWN8PtkcsNQt8nmKsbCOyaPIU6nwAu5WHHWq8=;
+        b=qJIcjNpq7sNoGonrSyBwsUENY6YaoKkRyUf20hxq8GnBbV3M27SCu0TVozV1KzZdlM
+         8VBOe1y43XOXOxUEvDB+W7bWNdMDQgS3/Tstdgx/URb7qasOfRM4L+T6OTFEUKIksSZb
+         Y8095fEto0/TFnclle7yDkOmHXwf+D7G95FlABoJfmhlv/oRE2KYDjFdLynf90Mu57c0
+         /03xXJeFOzwv383EhjYytugA4QmBO9KJmPRVnVqEKk0jGojepBVvWUzwxQNBe5usWNUa
+         HMterUg597cX+SsY3MY78kRiB7g6NRJUlVW0sEtn+8DRWhN1mni7MzBb95i+SVj8eOBV
+         nxqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=WAV7i9DpkYyptymNiUj/uooXSddOTDPzEmF8/rLdzNA=;
-        b=NJS+c3oRAaWsWv9+vxP2tP2KKiQ3K4IRqPxRait6snykZFfRuSmfWhAu39ANTpS1/y
-         gH2oV9RDz9uSvEYKEPxAO7z5kFaVKpSpAw2taAfUe4m3Zvp84KqVo6dETF2t2VfhfuPq
-         1jatbcpVhkhRxRz+B3c7dwmzvW3M/enh0TNkSUGwdkrq4maaBLLlKWLMifL8Nxsnjln4
-         LUELVgQ5A156OxOz1EdumjLQL7YDR/w1NTrayKwUGgvW+IZqNtKmm+DFp+Eh9y6c82Bm
-         y52pR8ckQgkYw1cGBnyC0ki2l0DfatmdIYtEGY0ZtnAC7DnmZEUgDYqqdYYd5DBZYaim
-         QJ9w==
-X-Gm-Message-State: APjAAAXKBq0j8C/R2Q6QbnHjnytN5NXHvB+VpVEaYrFtngE2S6LboIpf
-        q54eruqVaOn4bXJVlGo5NW1quQ==
-X-Google-Smtp-Source: APXvYqyqzh2Wh9kpkkh4/o+bVTS4si3nFIOu+ZMfqBQGNOyilHJUHwQZkihm64jlso6bjaZZmtzQiQ==
-X-Received: by 2002:a17:902:8549:: with SMTP id d9mr54945952plo.153.1582653213518;
-        Tue, 25 Feb 2020 09:53:33 -0800 (PST)
+        bh=BvrsPeqWN8PtkcsNQt8nmKsbCOyaPIU6nwAu5WHHWq8=;
+        b=f9KP6NE1YQDcW1zdbh6cQEY1m+9Vptanb2zoxOnLvPQ6s9/oB7UnwlLQO1GAk1+gqr
+         YNnAofPKP8r4Ban+PPATiGVJKCRn7R/ex1HLw6+4jJnT6JGYJJM/FkA5+Pokek9Pri3e
+         /ZRLUzmQxQjp7gDl1eo1lLnlvDpYVj0tyrdLFKRb28fCAVnKJSAy6ZGXQD/unp1QJ3Jy
+         OF29jNlh4UpaC6tOjzLu5N49NSMnksCYn79peY/nG/y9EQm5mwOulFyPZDalxQ6bT20/
+         43/6RDMbcZMF9VRygIFxrDQGGHrzsmXqJjx3B22XiiMeJmMMr2yTdJcIKfZybtQ6ZiBf
+         QjLA==
+X-Gm-Message-State: APjAAAXN00bEJb4VhJPY2ofdt0NZ6tgkKp69OI7u/Vf3lk5aqupsO+XR
+        DLvzJwCtnz3Q87gWeN7ku/VDhA==
+X-Google-Smtp-Source: APXvYqyuKIgv1526C84JiSsSOclqQi0aMoZtQERj2XWo+5FnwHBWcbSGK4675peuZbzUFDL4AF5KFg==
+X-Received: by 2002:a17:90a:9284:: with SMTP id n4mr123696pjo.69.1582653221195;
+        Tue, 25 Feb 2020 09:53:41 -0800 (PST)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id v8sm18013291pgt.52.2020.02.25.09.53.20
+        by smtp.gmail.com with ESMTPSA id v8sm18013291pgt.52.2020.02.25.09.53.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 09:53:33 -0800 (PST)
+        Tue, 25 Feb 2020 09:53:40 -0800 (PST)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Yu Chen <chenyu56@huawei.com>,
+Cc:     John Stultz <john.stultz@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,7 +64,7 @@ Cc:     Yu Chen <chenyu56@huawei.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Jun Li <lijun.kernel@gmail.com>,
@@ -72,11 +72,10 @@ Cc:     Yu Chen <chenyu56@huawei.com>,
         Guillaume Gardet <Guillaume.Gardet@arm.com>,
         Jack Pham <jackp@codeaurora.org>,
         Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v8 1/6] usb: dwc3: Registering a role switch in the DRD code.
-Date:   Tue, 25 Feb 2020 17:52:59 +0000
-Message-Id: <20200225175304.36406-2-john.stultz@linaro.org>
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v8 2/6] dt-bindings: usb: generic: Add role-switch-default-mode binding
+Date:   Tue, 25 Feb 2020 17:53:00 +0000
+Message-Id: <20200225175304.36406-3-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200225175304.36406-1-john.stultz@linaro.org>
 References: <20200225175304.36406-1-john.stultz@linaro.org>
@@ -85,12 +84,8 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
-
-The Type-C drivers use USB role switch API to inform the
-system about the negotiated data role, so registering a role
-switch in the DRD code in order to support platforms with
-USB Type-C connectors.
+Add binding to configure the default role the controller
+assumes is host mode when the usb role is USB_ROLE_NONE.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -110,159 +105,31 @@ Cc: Jack Pham <jackp@codeaurora.org>
 Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 Cc: linux-usb@vger.kernel.org
 Cc: devicetree@vger.kernel.org
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v2: Fix role_sw and role_switch_default_mode descriptions as
-    reported by kbuild test robot <lkp@intel.com>
-
-v3: Split out the role-switch-default-host logic into its own
-    patch
-
-v5: Drop selecting CONFIG_USB_ROLE_SWITCH & ifdef dependent code
-
-v6: Fix build issue Reported-by: kbuild test robot <lkp@intel.com>
-
-v7: Minor fix for CONFIG_USB_ROLE_SWITCH=m case not building
-    the role switch handling code, reported by
-    Guillaume Gardet <Guillaume.Gardet@arm.com>
+v5: Switch to string rather then a bool
 ---
- drivers/usb/dwc3/core.h |  3 ++
- drivers/usb/dwc3/drd.c  | 77 ++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 79 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/generic.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 77c4a9abe365..a99e57636172 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -25,6 +25,7 @@
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
- #include <linux/usb/otg.h>
-+#include <linux/usb/role.h>
- #include <linux/ulpi/interface.h>
+diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+index e6790d2a4da9..67c51759a642 100644
+--- a/Documentation/devicetree/bindings/usb/generic.txt
++++ b/Documentation/devicetree/bindings/usb/generic.txt
+@@ -35,6 +35,12 @@ Optional properties:
+ 			the USB data role (USB host or USB device) for a given
+ 			USB connector, such as Type-C, Type-B(micro).
+ 			see connector/usb-connector.txt.
++ - role-switch-default-mode: indicating if usb-role-switch is enabled, the
++			device default operation mode of controller while usb
++			role is USB_ROLE_NONE. Valid arguments are "host" and
++			"peripheral". Defaults to "peripheral" if not
++			specified.
++
  
- #include <linux/phy/phy.h>
-@@ -953,6 +954,7 @@ struct dwc3_scratchpad_array {
-  * @hsphy_mode: UTMI phy mode, one of following:
-  *		- USBPHY_INTERFACE_MODE_UTMI
-  *		- USBPHY_INTERFACE_MODE_UTMIW
-+ * @role_sw: usb_role_switch handle
-  * @usb2_phy: pointer to USB2 PHY
-  * @usb3_phy: pointer to USB3 PHY
-  * @usb2_generic_phy: pointer to USB2 PHY
-@@ -1086,6 +1088,7 @@ struct dwc3 {
- 	struct extcon_dev	*edev;
- 	struct notifier_block	edev_nb;
- 	enum usb_phy_interface	hsphy_mode;
-+	struct usb_role_switch	*role_sw;
+ This is an attribute to a USB controller such as:
  
- 	u32			fladj;
- 	u32			irq_gadget;
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index c946d64142ad..331c6e997f0c 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -476,6 +476,73 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
- 	return edev;
- }
- 
-+#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
-+#define ROLE_SWITCH 1
-+static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-+{
-+	struct dwc3 *dwc = dev_get_drvdata(dev);
-+	u32 mode;
-+
-+	switch (role) {
-+	case USB_ROLE_HOST:
-+		mode = DWC3_GCTL_PRTCAP_HOST;
-+		break;
-+	case USB_ROLE_DEVICE:
-+		mode = DWC3_GCTL_PRTCAP_DEVICE;
-+		break;
-+	default:
-+		mode = DWC3_GCTL_PRTCAP_DEVICE;
-+		break;
-+	}
-+
-+	dwc3_set_mode(dwc, mode);
-+	return 0;
-+}
-+
-+static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
-+{
-+	struct dwc3 *dwc = dev_get_drvdata(dev);
-+	unsigned long flags;
-+	enum usb_role role;
-+
-+	spin_lock_irqsave(&dwc->lock, flags);
-+	switch (dwc->current_dr_role) {
-+	case DWC3_GCTL_PRTCAP_HOST:
-+		role = USB_ROLE_HOST;
-+		break;
-+	case DWC3_GCTL_PRTCAP_DEVICE:
-+		role = USB_ROLE_DEVICE;
-+		break;
-+	case DWC3_GCTL_PRTCAP_OTG:
-+		role = dwc->current_otg_role;
-+		break;
-+	default:
-+		role = USB_ROLE_DEVICE;
-+		break;
-+	}
-+	spin_unlock_irqrestore(&dwc->lock, flags);
-+	return role;
-+}
-+
-+static int dwc3_setup_role_switch(struct dwc3 *dwc)
-+{
-+	struct usb_role_switch_desc dwc3_role_switch = {NULL};
-+
-+	dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
-+	dwc3_role_switch.set = dwc3_usb_role_switch_set;
-+	dwc3_role_switch.get = dwc3_usb_role_switch_get;
-+	dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
-+	if (IS_ERR(dwc->role_sw))
-+		return PTR_ERR(dwc->role_sw);
-+
-+	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
-+	return 0;
-+}
-+#else
-+#define ROLE_SWITCH 0
-+#define dwc3_setup_role_switch(x) 0
-+#endif
-+
- int dwc3_drd_init(struct dwc3 *dwc)
- {
- 	int ret, irq;
-@@ -484,7 +551,12 @@ int dwc3_drd_init(struct dwc3 *dwc)
- 	if (IS_ERR(dwc->edev))
- 		return PTR_ERR(dwc->edev);
- 
--	if (dwc->edev) {
-+	if (ROLE_SWITCH &&
-+	    device_property_read_bool(dwc->dev, "usb-role-switch")) {
-+		ret = dwc3_setup_role_switch(dwc);
-+		if (ret < 0)
-+			return ret;
-+	} else if (dwc->edev) {
- 		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
- 		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
- 					       &dwc->edev_nb);
-@@ -531,6 +603,9 @@ void dwc3_drd_exit(struct dwc3 *dwc)
- {
- 	unsigned long flags;
- 
-+	if (dwc->role_sw)
-+		usb_role_switch_unregister(dwc->role_sw);
-+
- 	if (dwc->edev)
- 		extcon_unregister_notifier(dwc->edev, EXTCON_USB_HOST,
- 					   &dwc->edev_nb);
 -- 
 2.17.1
 
