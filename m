@@ -2,120 +2,231 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDC2C35E01
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70619C35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3085220CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3865921744
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kz5vmBt0"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="PQPl17Lo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbgBYQVf (ORCPT
+        id S1730315AbgBYQXE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:21:35 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55338 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgBYQVf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 11:21:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=J3p3P1Xs0O9vBplWiDfg1XuROWQome6tzfHEzwiApJU=; b=Kz5vmBt0G2YWRfEPqm9mUBVMss
-        cPiRtJ23JAwKdJiDWEcQn6d9h7UzBhbjjgDJPBXzpxPD5zPKnkixFabpBou2UJGkwQgOMDFvX432+
-        Jy0ogOtBMxdji+YUDDm4EREXv5uLplk7GBPmOYpM+JQwTauVHYCUovkLaUV+7DbnKbN3gDgIU0f4I
-        lohHkNFlNlsdqekU+IG+wMdRQWgYVVGlZ0CwscvUWxDO8ITwsrWA7uL7NNOo+dB2Ru/AnYeTD6Rwn
-        WVS6KlYp7cyECY4cbvgwFXRwQ+ccyRBY6iMychwLSb2vvFzHr4nDnPelXTtgxC0u4N2aaiDaPb3k7
-        r40hwkmQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6cxi-0003cc-4t; Tue, 25 Feb 2020 16:21:34 +0000
-Subject: Re: [PATCH v4 9/9] power: supply: Support ROHM bd99954 charger
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 25 Feb 2020 11:23:04 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41066 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgBYQXE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 11:23:04 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y17so7088415lfe.8
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 08:23:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=5Dk67v+npqu0EQERfbIuN+7my2CbgWhjf5DbNvAyZJ0=;
+        b=PQPl17Loc0S6TpTVmab3H2e6w0TiVNEnHmIkGPYF+kKwGu10CsKsu8PPDzZkj1qpPB
+         WgkOj1YrAr4JCItxUhh6iIq3PlfkOmzOQHKn4ZQx7scePHR2/8z+6QOrbUCdhJtKmTSJ
+         x82mQHhjQyupbzRiC7i1z6YUvdjrggn8SRCKpu9weHqEzTyJu18KJ8wqmAgHPmICXjdZ
+         AwNUh6tljWrSquO9C4BXzhsmcyiDxUWxqpq+q9/3+FzpQpOGjlEScI5c5oR15LmF64Yh
+         QAn5Nde9PUiGRt0VtxD1tqMRd+oNf3Zz/L26OImabzA5dfr92Tx9gtvJhVFuRZhjMnzn
+         1s1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=5Dk67v+npqu0EQERfbIuN+7my2CbgWhjf5DbNvAyZJ0=;
+        b=c2K5cMa9CGJMAbFJLAwHIIajx+hS8p8NhF07e5smm2aLbxPH3IBxMWAyGNM60C5ttV
+         KCSJ52XcBm5Qr00fKJZrt8FLJOFB5/7w6R7asqy7tfwWP3NnJkQRTpT0cRFFIFudSlAu
+         UAwKAp5GkGbaTNSKNp+l6UH8ZVJurRpUJwn/BQ/RDMp667G/LwCKtZ9PfskzOx0yDvTn
+         gv6Q+1hhmHTiNbAXvHa+kqPJ54aCjfZL4b58rgEIw3YNvOX4b1q0fKZLsAex+SXhSAbK
+         62y94iyon1DLymMXvAsQ4u3Qc2bTc0Pgl4brlNXlBkij15vkqLSEwgZguUtiWxwQ3WK+
+         OTEw==
+X-Gm-Message-State: APjAAAVXNMqX0PNje6HzNmc4ZI5ruM1diEgnVovdQLfmJ43Wb70oW0qy
+        /rRbllWGDJ19JYliNUmbCZFrCA==
+X-Google-Smtp-Source: APXvYqwPW6h1QKilPwRuqWez6A/erb4CBWnOzO1OLK96UKtW/skgBTn+ro2I0LdsmGFEs+G3Ox+z1Q==
+X-Received: by 2002:a05:6512:1109:: with SMTP id l9mr1441299lfg.62.1582647781108;
+        Tue, 25 Feb 2020 08:23:01 -0800 (PST)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id z3sm8134562ljh.83.2020.02.25.08.23.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 08:23:00 -0800 (PST)
+Date:   Tue, 25 Feb 2020 17:22:59 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
- <529dd6298be245051f333ab4d9264902bf889aa6.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c187bb77-e804-93bd-64db-9418be58f191@infradead.org>
-Date:   Tue, 25 Feb 2020 08:21:33 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: ata: rcar-sata: Convert to json-schema
+Message-ID: <20200225162259.GC3165317@oden.dyn.berto.se>
+References: <20200219154146.11230-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <529dd6298be245051f333ab4d9264902bf889aa6.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200219154146.11230-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/25/20 12:55 AM, Matti Vaittinen wrote:
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index 8781c674ed07..0b3bad6fc736 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -702,6 +702,16 @@ config CHARGER_BD70528
->  	 information and altering charger configurations from charger
->  	 block of the ROHM BD70528 Power Management IC.
->  
+Hi Geert,
 
-Hi,
+Thanks for your work.
 
-> +config CHARGER_BD99954
-> +	tristate "ROHM bd99954 charger driver"
-> +	depends on I2C
-> +	select LINEAR_RANGES
-> +	default n
+On 2020-02-19 16:41:46 +0100, Geert Uytterhoeven wrote:
+> Convert the Renesas R-Car Serial-ATA Device Tree binding documentation
+> to json-schema.
+> 
+> While at it:
+>   - Remove the deprecated "renesas,rcar-sata" compatible value,
+>   - Add "iommus", "power-domains", and "resets" properties,
+>   - Update the example.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Drop the "default n", since it is already the default.
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-> +	help
-> +	 Say Y here to enable support for getting battery and charger
-> +	 information and altering charger configurations from the ROHM
-> +	 BD99954 charger IC.
-
-Please indent the 3 lines of help text with one additional space (2 total).
-See Documentation/process/coding-style.rst:
-
-10) Kconfig configuration files
--------------------------------
-
-For all of the Kconfig* configuration files throughout the source tree,
-the indentation is somewhat different.  Lines under a ``config`` definition
-are indented with one tab, while help text is indented an additional two
-spaces.  Example::
-
-  config AUDIT
-	bool "Auditing support"
-	depends on NET
-	help
-	  Enable auditing infrastructure that can be used with another
-	  kernel subsystem, such as SELinux (which requires this for
-	  logging of avc messages output).  Does not do system-call
-	  auditing without CONFIG_AUDITSYSCALL.
-
+> ---
+> Not having to care about the deprecated value simplifies the
+> jscon-schema.
+> ---
+>  .../bindings/ata/renesas,rcar-sata.yaml       | 71 +++++++++++++++++++
+>  .../devicetree/bindings/ata/sata_rcar.txt     | 36 ----------
+>  2 files changed, 71 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml b/Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml
+> new file mode 100644
+> index 0000000000000000..7b69831060d8b9c5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml
+> @@ -0,0 +1,71 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/ata/renesas,rcar-sata.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
->  config CHARGER_WILCO
->  	tristate "Wilco EC based charger for ChromeOS"
->  	depends on WILCO_EC
+> +title: Renesas R-Car Serial-ATA Interface
+> +
+> +maintainers:
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - renesas,sata-r8a7779      # R-Car H1
+> +      - items:
+> +          - enum:
+> +              - renesas,sata-r8a7790-es1  # R-Car H2 ES1
+> +              - renesas,sata-r8a7790      # R-Car H2 other than ES1
+> +              - renesas,sata-r8a7791      # R-Car M2-W
+> +              - renesas,sata-r8a7793      # R-Car M2-N
+> +          - const: renesas,rcar-gen2-sata # generic R-Car Gen2
+> +      - items:
+> +          - enum:
+> +              - renesas,sata-r8a774b1     # RZ/G2N
+> +              - renesas,sata-r8a7795      # R-Car H3
+> +              - renesas,sata-r8a77965     # R-Car M3-N
+> +          - const: renesas,rcar-gen3-sata # generic R-Car Gen3 or RZ/G2
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  iommus:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/r8a7791-sysc.h>
+> +
+> +    sata@ee300000 {
+> +            compatible = "renesas,sata-r8a7791", "renesas,rcar-gen2-sata";
+> +            reg = <0xee300000 0x200000>;
+> +            interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&cpg CPG_MOD 815>;
+> +            power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+> +            resets = <&cpg 815>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> deleted file mode 100644
+> index a2fbdc91570d0f7c..0000000000000000
+> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> +++ /dev/null
+> @@ -1,36 +0,0 @@
+> -* Renesas R-Car SATA
+> -
+> -Required properties:
+> -- compatible		: should contain one or more of the following:
+> -			  - "renesas,sata-r8a774b1" for RZ/G2N
+> -			  - "renesas,sata-r8a7779" for R-Car H1
+> -			  - "renesas,sata-r8a7790-es1" for R-Car H2 ES1
+> -			  - "renesas,sata-r8a7790" for R-Car H2 other than ES1
+> -			  - "renesas,sata-r8a7791" for R-Car M2-W
+> -			  - "renesas,sata-r8a7793" for R-Car M2-N
+> -			  - "renesas,sata-r8a7795" for R-Car H3
+> -			  - "renesas,sata-r8a77965" for R-Car M3-N
+> -			  - "renesas,rcar-gen2-sata" for a generic R-Car Gen2
+> -			     compatible device
+> -			  - "renesas,rcar-gen3-sata" for a generic R-Car Gen3 or
+> -			     RZ/G2 compatible device
+> -			  - "renesas,rcar-sata" is deprecated
+> -
+> -			  When compatible with the generic version nodes
+> -			  must list the SoC-specific version corresponding
+> -			  to the platform first followed by the generic
+> -			  version.
+> -
+> -- reg			: address and length of the SATA registers;
+> -- interrupts		: must consist of one interrupt specifier.
+> -- clocks		: must contain a reference to the functional clock.
+> -
+> -Example:
+> -
+> -sata0: sata@ee300000 {
+> -	compatible = "renesas,sata-r8a7791", "renesas,rcar-gen2-sata";
+> -	reg = <0 0xee300000 0 0x2000>;
+> -	interrupt-parent = <&gic>;
+> -	interrupts = <0 105 IRQ_TYPE_LEVEL_HIGH>;
+> -	clocks = <&mstp8_clks R8A7791_CLK_SATA0>;
+> -};
+> -- 
+> 2.17.1
+> 
 
-thanks.
 -- 
-~Randy
-
+Regards,
+Niklas Söderlund
