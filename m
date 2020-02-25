@@ -2,365 +2,117 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9280C35E0E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB74C35E17
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6160120675
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582666850;
-	bh=TftBLvKEFetwlgKhsoNxzYwUjtBkanrg7x9ZivS0FiU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dhZ8c1bIYtfTQLnhbo/TcZnEK6dNuClZDPeoLaE97YDxo9B0BYwdepYDFh2+mJGgk
-	 /iy3FUEygSzKvc/anX+pJpz96aljJKWCspco18ZATVPSyIHSSJhx8YgQCdNh0wxWCO
-	 LVGkXYVzer+tTj34A6BIphJTKYczfKPBlhGDyprA=
+	by mail.kernel.org (Postfix) with ESMTP id 1BF9E2467A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=easyb-ch.20150623.gappssmtp.com header.i=@easyb-ch.20150623.gappssmtp.com header.b="oveJUVfN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgBYVkt (ORCPT
+        id S1729080AbgBYVnE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:40:49 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46311 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBYVkt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 16:40:49 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a22so807931oid.13;
-        Tue, 25 Feb 2020 13:40:49 -0800 (PST)
+        Tue, 25 Feb 2020 16:43:04 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36243 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729016AbgBYVnE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 16:43:04 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so845129wma.1
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 13:43:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=easyb-ch.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=kEVJ1n2NxQ1glfbZ9e15foebWC3MxMe0p/5A/jyD6H0=;
+        b=oveJUVfN4mGmIby/KrplpWvi32NOCpmb1Fej6u+eU25j1sso9bxSCmnS1HYlP5k+TS
+         MN55kLyOOXTrI5QiCGtP00bRnkJxE6q+aUpqdFsAsXwQh0dvu55FS/TXrAVS/ae6mu1l
+         NAlvopKlSspPGtPCVj0mdTNuFv+ZfhgIinLqRNatsNKvQI8KxR0B1VAiDYp321L4gtUZ
+         g8u+mkFIDr2NdhUV2f4JbQ3BTA7fhSsIoCINRAOSYNlefs7F0PuxzSG5YkiVtBklT+fO
+         oaD/MUhWA0PqDh9MWO9s+RAgppI/P3ICunuQwVb2PDrJVH31q6jq8+vTKG+aECdrMlUL
+         Kc9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pq6KjnYyjtVvdZ0G9IoZ9/4Ig379m2ZLWE1UG91hNxM=;
-        b=rBaF+Ufq0w4z1M1/mp7SHfi6tp7vLOljRZ4yRjg8Ard5ZFSrNKkR2y9WhfKoThZQVP
-         +cugl2lb+WakKwECoRlxs4JSDUXEfP88mx6f11apscOOOFsVLEkLfa7sJQa7ffK7S1cF
-         DzwyPKVCTbvpWNX4j/1JBOAU/TPOKoInbPf35MdC0jFM3EwjKBVeIJDetC1oJCH0uJiR
-         0z3ZpA2IUaN3YvlrTMuzZUK62m8jEcq+8nvpdyGMSLKxKccmQun6pxrkWpNlMFg2clUV
-         AIqMILJ1aPQDxx2Xkef1kZrwD65Czb/S36ugt0XErJDSh2aPdEZ8nFjjHFZavrysIvyv
-         O1dQ==
-X-Gm-Message-State: APjAAAVDaJUGdptL/QScpzBpqAGXFojoIUGVorMO45FH8nXKJz/6nhK2
-        p9Z0Ipz2CDtGmUARID3aqAIttVU=
-X-Google-Smtp-Source: APXvYqzrnEPiVnmmb35aHkxOurmIbFHVolllpv1fxLfyhS6Y+v3X4odtxO3A5CcQcb8UdsK+9XyT1g==
-X-Received: by 2002:aca:1704:: with SMTP id j4mr719880oii.12.1582666848408;
-        Tue, 25 Feb 2020 13:40:48 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id n16sm6079792otk.25.2020.02.25.13.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 13:40:47 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     linux-input@vger.kernel.org
-Cc:     devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v2] dt-bindings: input: Convert gpio-keys bindings to schema
-Date:   Tue, 25 Feb 2020 15:40:47 -0600
-Message-Id: <20200225214047.12021-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=kEVJ1n2NxQ1glfbZ9e15foebWC3MxMe0p/5A/jyD6H0=;
+        b=NYuVUXB2INAGopw4nPXMIrtWJrPgBSbu8HXkaBR6MbupgPEskvYBD5hv8LnTpl4130
+         hAy/bCjL/rrU3fwtnb1IzEVRoQZ4UBZV4DgDahuRmZFMYc0+neD1suy4UYDStr2sAi0B
+         bZK2RVz+6J6fB091D5TGzMnavTeG4ZXThv6eQA/B2ZwcsIbi4kkeP6AYtN4YQQVf/Kbf
+         vbjafjKLWKtcWN+nTU2RmQo67jZiE/qeffh8UvgzHQddXOY+lFKhx7TnsXxv/niS3sxR
+         Ya/t+F2fFYVdwyE8M/ltGyePswUZzhjtuZdqja0Vs18wVBraG62EbOEdKEKlaR5juTNH
+         gZjg==
+X-Gm-Message-State: APjAAAVE1fd/DXJfKEcatqxBMz1XIYXnTZKFPmnaQSQNiySUumMvaYtO
+        AjuxbiX0GX0AG/dF9m70WvOX0w==
+X-Google-Smtp-Source: APXvYqzT6vU3uivqK3LFISSNim+ES8rBV5I3PSPpMQoyPtAT6binkjIz4QcxUjjxxm7ATqtLrWgIdA==
+X-Received: by 2002:a1c:7ec5:: with SMTP id z188mr1188559wmc.52.1582666980570;
+        Tue, 25 Feb 2020 13:43:00 -0800 (PST)
+Received: from ?IPv6:2001:1715:4e22:c580:ed96:156f:9663:e7e4? ([2001:1715:4e22:c580:ed96:156f:9663:e7e4])
+        by smtp.gmail.com with ESMTPSA id f1sm212602wro.85.2020.02.25.13.42.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 13:43:00 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
+ TM1628/FD628/AiP1618 LED controllers
+From:   Ezra Buehler <ezra@easyb.ch>
+In-Reply-To: <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
+Date:   Tue, 25 Feb 2020 22:42:57 +0100
+Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
+        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        csd@princeton.com.tw, devicetree@vger.kernel.org, sales@fdhisi.com,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, zypeng@titanmec.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, Dan Murphy <dmurphy@ti.com>,
+        linux-rockchip@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E33E27B9-D33C-4182-A5B1-C72FA40470BC@easyb.ch>
+References: <20191212033952.5967-1-afaerber@suse.de>
+ <7110806f-ddbd-f055-e107-7a1f7e223102@arm.com>
+ <c86c6bc0-b0e5-c46e-da87-9d910b95f9f3@suse.de>
+ <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+X-Mailer: Apple Mail (2.3445.9.1)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the gpio-keys and gpio-keys-polled bindings to a DT schema. As
-both bindings are almost the same, combine them into a single schema.
+Hi Robin,
+Hi Andreas,
 
-The binding said 'interrupts' was required, but testing on dts files
-showed that it isn't required.
+> On 13 Dec 2019, at 15:07, Robin Murphy <robin.murphy@arm.com> wrote:
+>=20
+> I also have one of the H96 Max boxes (which I picked up out of =
+curiosity
+> for the mysterious RK3318) with an FD6551, although I've not attacked
+> that one with the logic analyser yet to see how similar it is.
 
-'linux,input-value' was only documented for gpio-keys-polled, but there
-doesn't seem to be any reason for it to be specific to that. It can work
-for gpio-keys too if the GPIO line(s) are available.
+I have a T9 (RK3328) TV box with the same chip in it. The FD6551 uses an
+I2C-like protocol. Every digit (and the symbols) have an I2C address,
+but, the display does not signal ACK. AFAIK the FD650 and FD655 which
+are used in other boxes (Amlogic) are very similar.
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v2:
- - Make 'gpios' a dependency of 'linux,input-value'
----
- .../bindings/input/gpio-keys-polled.txt       |  45 ------
- .../devicetree/bindings/input/gpio-keys.txt   |  58 -------
- .../devicetree/bindings/input/gpio-keys.yaml  | 152 ++++++++++++++++++
- 3 files changed, 152 insertions(+), 103 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/gpio-keys-polled.txt
- delete mode 100644 Documentation/devicetree/bindings/input/gpio-keys.txt
- create mode 100644 Documentation/devicetree/bindings/input/gpio-keys.yaml
+So far, I have whipped up a proof-of-cocept driver that uses i2c-gpio.
+The digits seem to be rotated by 180 degrees. So, in order to use
+map_to_7segment.h I had to define the BIT_SEG7_* constants differently.
+My display also has multiple symbols (WIFI, network, pause, play, USB,
+alarm) that are controlled by writing to the same address as for the
+colon.
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys-polled.txt b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
-deleted file mode 100644
-index 4d9a3717eaaf..000000000000
---- a/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--Device-Tree bindings for input/gpio_keys_polled.c keyboard driver
--
--Required properties:
--	- compatible = "gpio-keys-polled";
--	- poll-interval: Poll interval time in milliseconds
--
--Optional properties:
--	- autorepeat: Boolean, Enable auto repeat feature of Linux input
--	  subsystem.
--
--Each button (key) is represented as a sub-node of "gpio-keys-polled":
--Subnode properties:
--
--	- gpios: OF device-tree gpio specification.
--	- label: Descriptive name of the key.
--	- linux,code: Key / Axis code to emit.
--
--Optional subnode-properties:
--	- linux,input-type: Specify event type this button/key generates.
--	  If not specified defaults to <1> == EV_KEY.
--	- linux,input-value: If linux,input-type is EV_ABS or EV_REL then this
--	  value is sent for events this button generates when pressed.
--	  EV_ABS/EV_REL axis will generate an event with a value of 0 when
--	  all buttons with linux,input-type == type and linux,code == axis
--	  are released. This value is interpreted as a signed 32 bit value,
--	  e.g. to make a button generate a value of -1 use:
--	  linux,input-value = <0xffffffff>; /* -1 */
--	- debounce-interval: Debouncing interval time in milliseconds.
--	  If not specified defaults to 5.
--	- wakeup-source: Boolean, button can wake-up the system.
--			 (Legacy property supported: "gpio-key,wakeup")
--
--Example nodes:
--
--	gpio_keys_polled {
--			compatible = "gpio-keys-polled";
--			poll-interval = <100>;
--			autorepeat;
--
--			button21 {
--				label = "GPIO Key UP";
--				linux,code = <103>;
--				gpios = <&gpio1 0 1>;
--			};
--			...
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
-deleted file mode 100644
-index 7cccc49b6bea..000000000000
---- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-+++ /dev/null
-@@ -1,58 +0,0 @@
--Device-Tree bindings for input/keyboard/gpio_keys.c keyboard driver
--
--Required properties:
--	- compatible = "gpio-keys";
--
--Optional properties:
--	- autorepeat: Boolean, Enable auto repeat feature of Linux input
--	  subsystem.
--	- label: String, name of the input device.
--
--Each button (key) is represented as a sub-node of "gpio-keys":
--Subnode properties:
--
--	- gpios: OF device-tree gpio specification.
--	- interrupts: the interrupt line for that input.
--	- label: Descriptive name of the key.
--	- linux,code: Keycode to emit.
--
--Note that either "interrupts" or "gpios" properties can be omitted, but not
--both at the same time. Specifying both properties is allowed.
--
--Optional subnode-properties:
--	- linux,input-type: Specify event type this button/key generates.
--	  If not specified defaults to <1> == EV_KEY.
--	- debounce-interval: Debouncing interval time in milliseconds.
--	  If not specified defaults to 5.
--	- wakeup-source: Boolean, button can wake-up the system.
--			 (Legacy property supported: "gpio-key,wakeup")
--	- wakeup-event-action: Specifies whether the key should wake the
--	  system when asserted, when deasserted, or both. This property is
--	  only valid for keys that wake up the system (e.g., when the
--	  "wakeup-source" property is also provided).
--	  Supported values are defined in linux-event-codes.h:
--		EV_ACT_ASSERTED		- asserted
--		EV_ACT_DEASSERTED	- deasserted
--		EV_ACT_ANY		- both asserted and deasserted
--	- linux,can-disable: Boolean, indicates that button is connected
--	  to dedicated (not shared) interrupt which can be disabled to
--	  suppress events from the button.
--
--Example nodes:
--
--	gpio-keys {
--			compatible = "gpio-keys";
--			autorepeat;
--
--			up {
--				label = "GPIO Key UP";
--				linux,code = <103>;
--				gpios = <&gpio1 0 1>;
--			};
--
--			down {
--				label = "GPIO Key DOWN";
--				linux,code = <108>;
--				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
--			};
--			...
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys.yaml b/Documentation/devicetree/bindings/input/gpio-keys.yaml
-new file mode 100644
-index 000000000000..c0b389572340
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/gpio-keys.yaml
-@@ -0,0 +1,152 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/gpio-keys.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Device-Tree bindings for GPIO attached keys
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - gpio-keys
-+      - gpio-keys-polled
-+
-+patternProperties:
-+  ".*":
-+    if:
-+      type: object
-+    then:
-+      allOf:
-+        - $ref: input.yaml#
-+
-+      properties:
-+        gpios:
-+          maxItems: 1
-+
-+        interrupts:
-+          maxItems: 1
-+
-+        label:
-+          description: Descriptive name of the key.
-+
-+        linux,code:
-+          description: Key / Axis code to emit.
-+          $ref: /schemas/types.yaml#definitions/uint32
-+
-+        linux,input-type:
-+          description:
-+            Specify event type this button/key generates. If not specified defaults to
-+            <1> == EV_KEY.
-+          allOf:
-+            - $ref: /schemas/types.yaml#definitions/uint32
-+          default: 1
-+
-+        linux,input-value:
-+          description: |
-+            If linux,input-type is EV_ABS or EV_REL then this
-+            value is sent for events this button generates when pressed.
-+            EV_ABS/EV_REL axis will generate an event with a value of 0
-+            when all buttons with linux,input-type == type and
-+            linux,code == axis are released. This value is interpreted
-+            as a signed 32 bit value, e.g. to make a button generate a
-+            value of -1 use:
-+
-+            linux,input-value = <0xffffffff>; /* -1 */
-+
-+          allOf:
-+            - $ref: /schemas/types.yaml#definitions/uint32
-+
-+        debounce-interval:
-+          description:
-+            Debouncing interval time in milliseconds. If not specified defaults to 5.
-+          allOf:
-+            - $ref: /schemas/types.yaml#definitions/uint32
-+          default: 5
-+
-+        wakeup-source:
-+          description: Button can wake-up the system.
-+
-+        wakeup-event-action:
-+          description: |
-+            Specifies whether the key should wake the system when asserted, when
-+            deasserted, or both. This property is only valid for keys that wake up the
-+            system (e.g., when the "wakeup-source" property is also provided).
-+
-+            Supported values are defined in linux-event-codes.h:
-+
-+              EV_ACT_ANY        - both asserted and deasserted
-+              EV_ACT_ASSERTED   - asserted
-+              EV_ACT_DEASSERTED - deasserted
-+          allOf:
-+            - $ref: /schemas/types.yaml#definitions/uint32
-+          enum: [ 0, 1, 2 ]
-+
-+        linux,can-disable:
-+          description:
-+            Indicates that button is connected to dedicated (not shared) interrupt
-+            which can be disabled to suppress events from the button.
-+          type: boolean
-+
-+        pinctrl-0:
-+          maxItems: 1
-+
-+        pinctrl-names:
-+          maxItems: 1
-+
-+      required:
-+        - linux,code
-+
-+      anyOf:
-+        - required:
-+            - interrupts
-+        - required:
-+            - gpios
-+
-+      dependencies:
-+        wakeup-event-action: [ wakeup-source ]
-+        linux,input-value: [ gpios ]
-+
-+      unevaluatedProperties: false
-+
-+if:
-+  properties:
-+    compatible:
-+      const: gpio-keys-polled
-+then:
-+  properties:
-+    poll-interval:
-+      description:
-+        Poll interval time in milliseconds
-+      $ref: /schemas/types.yaml#definitions/uint32
-+
-+  required:
-+    - poll-interval
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    gpio-keys {
-+        compatible = "gpio-keys";
-+        autorepeat;
-+
-+        up {
-+            label = "GPIO Key UP";
-+            linux,code = <103>;
-+            gpios = <&gpio1 0 1>;
-+        };
-+
-+        down {
-+            label = "GPIO Key DOWN";
-+            linux,code = <108>;
-+            interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+        };
-+    };
-+
-+...
--- 
-2.20.1
+I=E2=80=99d love to work on a driver (similar to Andreas=E2=80=99 SPI =
+based driver) for
+these I2C connected chips.
+
+Cheers,
+Ezra.
 
