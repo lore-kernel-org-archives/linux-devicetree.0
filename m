@@ -2,120 +2,198 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE349C35E01
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FACC35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925A3222C2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582662919;
-	bh=IlMHPJZoi6qlavWG4Ahbm3IprtnpXIxML8X3NnRiesw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PGF++gF8eA6p1Ya/b/aTpl+a6XQ8+IDNDfK800CjOnNimucxEayGPemtjSby38+eT
-	 ufJ6Lc9f7PcriYB83eE/U5RUGw57dfVFbsCvNeff+Ic+G2lzo9ZTCQv7CvcPETjjvN
-	 h0gwPJa9vKWvbybbRbLB/+DrPpGckFZxtLj1ExCs=
+	by mail.kernel.org (Postfix) with ESMTP id 5345121744
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:41:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="J0Lq4tpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbgBYUfT (ORCPT
+        id S1729051AbgBYUlv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:35:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgBYUfS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:35:18 -0500
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BFD7222C2;
-        Tue, 25 Feb 2020 20:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582662918;
-        bh=IlMHPJZoi6qlavWG4Ahbm3IprtnpXIxML8X3NnRiesw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M/zmMhCkKG5ZR2aALAAcDqwXx55QaZ79a6R/kP7ncLhvfpPHN14IL07ANpCOk/KqL
-         osvvkEIyAzlIUNoWzB9MFSu4Mzp/XQ0NZA31wZHfw19OqWb3jgSh+XeQHJsnDnOcTS
-         kP8Q5MyOjKWvQsQjsJ4mhFk7dYdaIU4SDmwTej1w=
-Received: by mail-qt1-f171.google.com with SMTP id n17so639642qtv.2;
-        Tue, 25 Feb 2020 12:35:18 -0800 (PST)
-X-Gm-Message-State: APjAAAX1TllHXwqZ854CKUUURj5Y1mwvS1MphfaBl0YTkxR+I5G+6ERy
-        ZUJsqVg6At8emjo32/T1hkz6J7oH2uZToZHifA==
-X-Google-Smtp-Source: APXvYqxghQYLQ6PnllHaIfdR/E6y+DaIAu6c0wU88JtyBWhTwo7n81Ke2zCDhWVpQ1z8bFO/Ygmz9cAyLAvnFp0aF5U=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr568504qtj.300.1582662917307;
- Tue, 25 Feb 2020 12:35:17 -0800 (PST)
+        Tue, 25 Feb 2020 15:41:51 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46569 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729183AbgBYUlv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 15:41:51 -0500
+Received: by mail-lj1-f195.google.com with SMTP id x14so353648ljd.13
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 12:41:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:references:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f1wxzQHgzbozsllzgNDGZLVCDjLuH9+6YSKgsfnh4N0=;
+        b=J0Lq4tpycMq9o8u1bSrvUCSf0FdOD2Nyvd3Uo9ooIZeu3cp8b0a+4H56oOncPBS1R7
+         GOw5V3B9Wt5Tn3PA/+5Y5Nw2El7pOACROliHYypQ2usaadr00To1fDV+i9SaaBPq8KF9
+         JnLOYV2nhi7LSFyFMQGJZASywoO+ZoZa0qUB4jDWDyVWKuz8s5syYf4/3ASmAzLLMLGl
+         2XBkjNhxfl4ATAYxSjNFijwCURknw0D0Eq3rjhgqAPpORoXGk/M6dd+Pfb+I2kA7bUV9
+         z6Ho8xi5Wm3Q5qSVPjiqkTE+HPGGKN5NYjpnnQEsD5o969WyJ/RkywxbNHjHFmN694ta
+         nyRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=f1wxzQHgzbozsllzgNDGZLVCDjLuH9+6YSKgsfnh4N0=;
+        b=kHnJjOPtfNNpisA337W1l/zjO7Rbl4+VLX1el8LiTr7EqvAPHeG47Hxzjus75ED6am
+         refL300Dw+B2hiQXMp+cIku4dxwuLJLZoOd1LUBmLXiYNJC2oac+SNv4KezhXfSvPesW
+         LZlWEN0JSkcVWFr/Dn9IVwBa6/O7lzMe7nV0rzkNRlL9pw4ssWxAVZMCFcDHa4UHST5d
+         B3Jt6FBWDNwEDsLEUjhmxRI4BA1fbqGv9U1oz7Xj1nnknnxVe84JwkC7ajVqq6h1XFgw
+         /+I+TaiqiiR0KWxr5X/8q6G7GOJkhI/TN3FMx2fcdSknw17F3AOpwf/1sRLF5xDngq0Z
+         xG1w==
+X-Gm-Message-State: APjAAAW7fqh2VchV97a27LlZXr+gyrLSVBaKYbNC62kSPCWlupwz4mB5
+        kNKoCp/ZECRb/RoyQmU2GwVB6Q==
+X-Google-Smtp-Source: ADFU+vsMS3caqJMbwRsF+MEpr24wt3YBnbgXGcWdeW2WuNzdWjviBCz6CpLXlq5tWMkXPS/oSyZFgw==
+X-Received: by 2002:a2e:5854:: with SMTP id x20mr453488ljd.287.1582663307339;
+        Tue, 25 Feb 2020 12:41:47 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:2ac:dee3:544c:cd2b:7405:7aec])
+        by smtp.gmail.com with ESMTPSA id f14sm4247328lfh.40.2020.02.25.12.41.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 12:41:46 -0800 (PST)
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
+To:     "Behme Dirk (CM/ESO2)" <dirk.behme@de.bosch.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
+ <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
+ <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
+ <5603f393-554d-e2a8-c2d8-6bafc20f4169@cogentembedded.com>
+ <cba1e2ec-4896-23ef-ef7b-0f80d4310127@de.bosch.com>
+ <ec545462-54ed-9e23-049e-1807d24ec084@cogentembedded.com>
+ <3a182ac7-8d41-cdc7-2b87-7c503f68a426@de.bosch.com>
+Organization: Cogent Embedded
+Message-ID: <f21a9444-9541-6558-f5f5-ca0b733768ff@cogentembedded.com>
+Date:   Tue, 25 Feb 2020 23:41:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
-In-Reply-To: <20200207052627.130118-1-drinkcat@chromium.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 25 Feb 2020 14:35:05 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJb2aFHKcVdD-FM2To71iRUJ2nMniw7aZUVXmPmBkazNw@mail.gmail.com>
-Message-ID: <CAL_JsqJb2aFHKcVdD-FM2To71iRUJ2nMniw7aZUVXmPmBkazNw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3a182ac7-8d41-cdc7-2b87-7c503f68a426@de.bosch.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 11:26 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> Hi!
->
-> Follow-up on the v3: https://patchwork.kernel.org/cover/11331343/.
->
-> The main purpose of this series is to upstream the dts change and the
-> binding document, but I wanted to see how far I could probe the GPU, to
-> check that the binding is indeed correct. The rest of the patches are
-> RFC/work-in-progress, but I think some of them could already be picked up.
->
-> So this is tested on MT8183 with a chromeos-4.19 kernel, and a ton of
-> backports to get the latest panfrost driver (I should probably try on
-> linux-next at some point but this was the path of least resistance).
->
-> I tested it as a module as it's more challenging (originally probing would
-> work built-in, on boot, but not as a module, as I didn't have the power
-> domain changes, and all power domains are on by default during boot).
->
-> Probing logs looks like this, currently. They look sane.
-> [  501.319728] panfrost 13040000.gpu: clock rate = 511999970
-> [  501.320041] panfrost 13040000.gpu: Linked as a consumer to regulator.14
-> [  501.320102] panfrost 13040000.gpu: Linked as a consumer to regulator.31
-> [  501.320651] panfrost 13040000.gpu: Linked as a consumer to genpd:0:13040000.gpu
-> [  501.320954] panfrost 13040000.gpu: Linked as a consumer to genpd:1:13040000.gpu
-> [  501.321062] panfrost 13040000.gpu: Linked as a consumer to genpd:2:13040000.gpu
-> [  501.321734] panfrost 13040000.gpu: mali-g72 id 0x6221 major 0x0 minor 0x3 status 0x0
-> [  501.321741] panfrost 13040000.gpu: features: 00000000,13de77ff, issues: 00000000,00000400
-> [  501.321747] panfrost 13040000.gpu: Features: L2:0x07120206 Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
-> [  501.321752] panfrost 13040000.gpu: shader_present=0x7 l2_present=0x1
-> [  501.324951] [drm] Initialized panfrost 1.1.0 20180908 for 13040000.gpu on minor 2
->
-> Some more changes are still required to get devfreq working, and of course
-> I do not have a userspace driver to test this with.
->
-> I believe at least patches 1, 2, and 3 can be merged. 4 and 5 are mostly
-> useful in conjunction with 6 and 7 (which are not ready yet), so I'll let
-> maintainers decide.
+On 02/25/2020 12:33 PM, Behme Dirk (CM/ESO2) wrote:
 
-I've applied 3, 4, and 5 to drm-misc-next. Patch 2 should go via Mediatek tree.
+>>>>>   From d72b805cc461ab1e9747c973e9be84e7abb8f828 Mon Sep 17 00:00:00 2001
+>>>>> From: Dirk Behme <dirk.behme@de.bosch.com>
+>>>>> Date: Tue, 4 Feb 2020 08:39:31 +0100
+>>>>> Subject: [PATCH] memory: renesas-rpc-if: Correct the STRTIM and some other
+>>>>>    clean up
+>>>>>
+>>>>> This is required to make the driver work correctly in my M3 environment.
+>>>>>
+>>>>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+>>>>> ---
+>>>>>    drivers/memory/renesas-rpc-if.c | 42 ++++++++++++++++++++-------------
+>>>>>    1 file changed, 25 insertions(+), 17 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/memory/renesas-rpc-if.c b/drivers/memory/renesas-rpc-if.c
+>>>>> index 04be92b64bfa..f4356b066384 100644
+>>>>> --- a/drivers/memory/renesas-rpc-if.c
+>>>>> +++ b/drivers/memory/renesas-rpc-if.c
+>>>> [...]
+>>>>> @@ -513,19 +525,15 @@ ssize_t rpcif_dirmap_read(struct rpcif *rpc, u64 offs, size_t len, void *buf)
+>>>>>        pm_runtime_get_sync(rpc->dev);
+>>>>>
+>>>>>        regmap_update_bits(rpc->regmap, RPCIF_CMNCR, RPCIF_CMNCR_MD, 0);
+>>>>> -    regmap_write(rpc->regmap, RPCIF_DRCR,
+>>>>> -             RPCIF_DRCR_RBURST(32) | RPCIF_DRCR_RBE);
+>>>>> -    regmap_write(rpc->regmap, RPCIF_DRCMR, rpc->command);
+>>>>> -    regmap_write(rpc->regmap, RPCIF_DREAR,
+>>>>> -             RPCIF_DREAR_EAV(offs >> 25) | RPCIF_DREAR_EAC(1));
+>>>>> -    regmap_write(rpc->regmap, RPCIF_DROPR, rpc->option);
+>>>>> -    regmap_write(rpc->regmap, RPCIF_DRENR,
+>>>>> -             rpc->enable & ~RPCIF_SMENR_SPIDE(0xF));
+>>>>> -    regmap_write(rpc->regmap, RPCIF_DRDMCR, rpc->dummy);
+>>>>> -    regmap_write(rpc->regmap, RPCIF_DRDRENR, rpc->ddr);
+>>>>
+>>>>      The driver somehow works only with this left in place (with 2 bytes eaten
+>>>> as before), otherwise all the flash reads all 0xff (via dirmap).
+>>>
+>>>
+>>> Do you boot from hyperflash?
+>>
+>>     No, I have arewto say 'cpld write 30 1' in U-Boot before a boot a kernel.
 
-Rob
+   s/arewto/to/. :-)
+
+>> Normally, the V3x Starter Kit boards are wired for the QSPI flash chips.
+>>
+>>> The system I'm using for testing boots from hyperflash. So most probably all registers
+>>> I don't touch in the driver are put into a reasonable state by the boot code, already.
+>>> If you don't boot from hyperflash, that at least would explain our different behavior.
+>>
+>>     Yes. Mind dumping the registers and sending to me?
+> 
+> Using the attached debug patch (0001-memory-renesas-rpc-if-DEBUG-Dump-register-
+> content.patch) on a r8a7796 system booting from Hyperflash with above register
+dropping reverted (i.e. including touching these registers) I get
+> 
+> Before:
+> RPCIF_DRCR:    0x00000000
+> RPCIF_DRCMR:   0x00a00000
+> RPCIF_DREAR:   0x00000000
+> RPCIF_DROPR:   0x00000000
+> RPCIF_DRENR:   0xa222d400
+> RPCIF_DRDMCR:  0x0000000e
+> RPCIF_DRDRENR: 0x00005101
+> 
+> After:
+> RPCIF_DRCR:    0x001f0100
+> RPCIF_DRCMR:   0x00a00000
+> RPCIF_DREAR:   0x00010001
+> RPCIF_DROPR:   0x00000000
+> RPCIF_DRENR:   0xa202d400
+> RPCIF_DRDMCR:  0x0000000e
+> RPCIF_DRDRENR: 0x00005101
+> 
+> Comparing that, just 3 registers are different between my working version ("Before") and the version which shows the 2-byte offset ("After"): RPCIF_DRCR, RPCIF_DREAR and RPCIF_DRENR. With try & error, at least in my setup, I was able to reduce this to just RPCIF_DRCR. Dropping the burst mode I was able to 'fix' the two byte offset issue.
+
+   ACK! Thanks a lot for finding it! :-)
+   That's what I get on the first dirmap read:
+
+Before:
+RPCIF_CMNCR:   0x81fff301
+RPCIF_DRCR:    0x00000000
+RPCIF_DRCMR:   0x00030000
+RPCIF_DREAR:   0x00000000
+RPCIF_DROPR:   0x00000000
+RPCIF_DRENR:   0x00004700
+RPCIF_DRDMCR:  0x00000000
+RPCIF_DRDRENR: 0x00000000
+
+After:                                                                          
+RPCIF_CMNCR:   0x01fff301                                                       
+RPCIF_DRCR:    0x001f0100                                                       
+RPCIF_DRCMR:   0x00800000                                                       
+RPCIF_DREAR:   0x00000001                                                       
+RPCIF_DROPR:   0x00000000                                                       
+RPCIF_DRENR:   0xa202d400                                                       
+RPCIF_DRDMCR:  0x0000000e                                                       
+RPCIF_DRDRENR: 0x00005101                                                       
+
+> Do you like to give the attached 0001-memory-renesas-rpc-if-Don-t-use-burst-mode-on-read.patch a try in your setup?
+
+   Works like charm! :-)
+   Unfortunately, the SPI dirmap and/or writes are still broken.
+
+> Best regards
+> 
+> Dirk
+
+MBR, Sergei
