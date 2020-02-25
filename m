@@ -2,92 +2,82 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD19C35E04
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8C8C35E0C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCFC21927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582654756;
-	bh=TjmAFMon2BGDMooyYsbidRPBajR4JZkiXXFa8LGhUoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AQ6IpG5xdhbT4Y84coJ76Latku22WlfCj95z78AVBgnBNl9KKiRqolSaVV21tYw/m
-	 IGAfOHldK1TdKQ31pVe2+i8eZkG5osCkmzGdDd7vvPEVfi+GBuQMWyiqupFVbPdr0A
-	 nVl0HPZZrkqK+xfgwUqfD2VlFxQk/02XqATxjgs8=
+	by mail.kernel.org (Postfix) with ESMTP id AB3012176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:20:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JwVcQCUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgBYSTP (ORCPT
+        id S1731506AbgBYSU6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:19:15 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44910 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbgBYSTP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:19:15 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so213837oia.11;
-        Tue, 25 Feb 2020 10:19:14 -0800 (PST)
+        Tue, 25 Feb 2020 13:20:58 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37687 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731505AbgBYSU6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:20:58 -0500
+Received: by mail-pl1-f195.google.com with SMTP id q4so130084pls.4
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 10:20:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=hLhapTDfld6iYI26Uu6G+l7v9cDuHGrJIIJjSJQbaF0=;
+        b=JwVcQCUPFlIUvWpdOmzQ8TWSzcPecioUjGp6wuHwhYsuzyG4T2wTKmoMS+zgE8OZUp
+         eB6hqXY7/01wMsuCD/Py+7SA3imsfiVDKSUnX/JqS6Y4lmYTswLbXV0ZDVc0vlMIFpL4
+         mKUI+5C9c9n6rvb+ts/lABP89VoluYjZ5+cJA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iSNFodvA5lKumKKqhkZzGA6DFgZu/Be6kzIV2/+7uvI=;
-        b=nIz9f7tdSxDlTZ3LbgaPeAJ1yf0oD+3kxtisbsGlTWzVTpkKrUrwfZyxAFeViLaBe5
-         oSabcOL7rCIDdeshzHmb6lnSdvOrRwLeok9ozLMp3aBPcN7Aj4LEHc0SlRcuqG97ooAi
-         3Z/v8wmoE2YzpL24N6Qy9jhPq2RkMYlDqu5c2Sm0Qz2S5VBNf49eC0f4TQb0hQd8AS7P
-         hGrgByN3eSg6S2L2b45bZM8lr52XooB+hawoscAQjOp/g/tv4ML1yf5PGSz+WIX3yEIs
-         2WGxWZXzyYz+aaI9griXRnK6IbBi77D1I8ETlGbI3alNNP/9+SAfKvSYnXG7TIa1mMsu
-         B8dg==
-X-Gm-Message-State: APjAAAW3iGjKe3xGNnxMnFj//o7XEhKcb/N3rwOmjeWlZYsf0v7F2Zb8
-        zffOIvovTZYtZxvp7RwQXg==
-X-Google-Smtp-Source: APXvYqylGxOIYQjx7oEtM4f5L4ZlqydvtMZMW3lXsVUQ+Cx55CgvSY6HFR33P45JatrRLi9lFN5i7w==
-X-Received: by 2002:aca:d544:: with SMTP id m65mr158319oig.177.1582654754520;
-        Tue, 25 Feb 2020 10:19:14 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y6sm5921513oti.44.2020.02.25.10.19.13
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=hLhapTDfld6iYI26Uu6G+l7v9cDuHGrJIIJjSJQbaF0=;
+        b=h6Y/k9Pv3nNOgii1UXjQDjGWKVg3xoisxbm0q1zdsOX6joscphDmXLp1Br0PZxFw9j
+         bhnmyr7P6rAwgxuwhu8EZdD17FojF5F0W0X0qmNMNLtzdWl4ht26opyAUw/CW3R3XsTx
+         4pnLLGTnG4/GshwZoE5hWSUUBooYZiXsyhiTJNsK20fyIsoNkOr63DpEssln9Kk+c114
+         Zf+vBAgFTXUle+ueT3fhzQS8ITijSdWck2ltRKQd4PmWoqwBtr/fcvUTa9+Bb9RI8uqc
+         id/QxHwdnL370T647hyPtGF2nL4segKGT/+o4NiU2RNdUrltLs7o7C+J44/oVAwgzN1+
+         faqA==
+X-Gm-Message-State: APjAAAVWiE4VIc+l6DVCL+ZBkigaCaRX+hGKt7C1jF8u5DHoxKfnW+t1
+        +YRk9lzKUU0pCs4lWXq71sIjhw==
+X-Google-Smtp-Source: APXvYqw7MPpCUgHd0aakZ48hbazK/k6ob6ZjUXGFwU1wNp1VvIIRJhEPmczKQIjk0wSyeSfyNcREjw==
+X-Received: by 2002:a17:90a:f88:: with SMTP id 8mr331916pjz.72.1582654856135;
+        Tue, 25 Feb 2020 10:20:56 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id c15sm8175668pgk.66.2020.02.25.10.20.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:19:14 -0800 (PST)
-Received: (nullmailer pid 7582 invoked by uid 1000);
-        Tue, 25 Feb 2020 18:19:13 -0000
-Date:   Tue, 25 Feb 2020 12:19:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 59/89] dt-bindings: display: vc4: pv: Add BCM2711 pixel
- valves
-Message-ID: <20200225181913.GA7531@bogus>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <4a3c6e3cad10eeff93fafbc512c35b0c69dd1c68.1582533919.git-series.maxime@cerno.tech>
+        Tue, 25 Feb 2020 10:20:55 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a3c6e3cad10eeff93fafbc512c35b0c69dd1c68.1582533919.git-series.maxime@cerno.tech>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1581932212-19469-2-git-send-email-akashast@codeaurora.org>
+References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org> <1581932212-19469-2-git-send-email-akashast@codeaurora.org>
+Subject: Re: [PATCH V4 1/3] dt-bindings: geni-se: Convert QUP geni-se bindings to YAML
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org,
+        Akash Asthana <akashast@codeaurora.org>
+To:     Akash Asthana <akashast@codeaurora.org>, agross@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Date:   Tue, 25 Feb 2020 10:20:54 -0800
+Message-ID: <158265485474.177367.9818999192157425774@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2020 10:07:01 +0100, Maxime Ripard wrote:
-> The BCM2711 comes with other pixelvalves that have different requirements
-> and capabilities. Let's document their compatible.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Quoting Akash Asthana (2020-02-17 01:36:50)
+> Convert QUP geni-se bindings to DT schema format using json-schema.
+>=20
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
