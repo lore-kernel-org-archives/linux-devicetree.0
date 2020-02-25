@@ -2,76 +2,131 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C57C35DE1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 13:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E88C35DE1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 13:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074A821927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 13:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D1321927
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 13:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582638994;
+	bh=HsjJvbTH+q59fYeim5ErNffTAszwiuMCgtA22AZPS8Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zBA9/bThMZE9ZhHEkfCSBUlSOUjCoYyt2xtbuA6lWdt4h+7hFLFfKKd7zP5HyQZgP
+	 kEwclyquopdljbw3qgCPXuGPV3dLk0kLiYwiaMwr3OZ5YUt+xu9Sna/udFw6MB85HK
+	 8KRcN1g1BeWangOxKL1n75ROlRuzHZmCUiHnTjro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgBYNyn (ORCPT
+        id S1729602AbgBYN4e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:54:43 -0500
-Received: from 5.mo2.mail-out.ovh.net ([87.98.181.248]:51879 "EHLO
-        5.mo2.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729680AbgBYNyn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 08:54:43 -0500
-X-Greylist: delayed 3601 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Feb 2020 08:54:42 EST
-Received: from player714.ha.ovh.net (unknown [10.110.103.177])
-        by mo2.mail-out.ovh.net (Postfix) with ESMTP id D50501CC5C8
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 13:39:08 +0100 (CET)
-Received: from armadeus.com (lfbn-str-1-551-177.w90-126.abo.wanadoo.fr [90.126.248.177])
-        (Authenticated sender: sebastien.szymanski@armadeus.com)
-        by player714.ha.ovh.net (Postfix) with ESMTPSA id 6C474FAC9294;
-        Tue, 25 Feb 2020 12:39:05 +0000 (UTC)
-From:   =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-To:     devicetree@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 1/1] dt-bindings: arm: fsl: fix APF6Dev compatible
-Date:   Tue, 25 Feb 2020 13:39:04 +0100
-Message-Id: <20200225123904.14723-1-sebastien.szymanski@armadeus.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 25 Feb 2020 08:56:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729287AbgBYN4e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 08:56:34 -0500
+Received: from localhost (unknown [122.167.120.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14BBC218AC;
+        Tue, 25 Feb 2020 13:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582638992;
+        bh=HsjJvbTH+q59fYeim5ErNffTAszwiuMCgtA22AZPS8Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HyufZEX6mJzQQ2vyo28R4iOHwTgc0pv8EAHYQTNtjGO44+qp3Nxhoa+Ku9yap4mA9
+         SQyzxEqPclvtceqUOlyz3nWTCs8/6LkNvYArUGMMe//cvZIvTHDSzYFUuP4rGm2zxD
+         tvvcHlC5eYRKSusIbkPuSzIfwIdXtSbSF1pQbaao=
+Date:   Tue, 25 Feb 2020 19:26:28 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
+        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: tsens: Add entry for sc7180
+ tsens to binding
+Message-ID: <20200225135628.GP2618@vkoul-mobl>
+References: <cover.1582632110.git.amit.kucheria@linaro.org>
+ <3e760279e7152825d56f8b35160a9a55a5083ce1.1582632110.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 1543608776279807065
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrledvgdegudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofggtgfgsehtkeertdertdejnecuhfhrohhmpefurogsrghsthhivghnucfuiiihmhgrnhhskhhiuceoshgvsggrshhtihgvnhdrshiihihmrghnshhkihesrghrmhgruggvuhhsrdgtohhmqeenucfkpheptddrtddrtddrtddpledtrdduvdeirddvgeekrddujeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjedugedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsvggsrghsthhivghnrdhsiiihmhgrnhhskhhisegrrhhmrgguvghushdrtghomhdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e760279e7152825d56f8b35160a9a55a5083ce1.1582632110.git.amit.kucheria@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-APF6 Dev compatible is armadeus,imx6dl-apf6dev and not
-armadeus,imx6dl-apf6dldev.
+On 25-02-20, 17:38, Amit Kucheria wrote:
+> The qcom-tsens binding requires a SoC-specific and a TSENS
+> family-specific binding to be specified in the compatible string.
+> 
+> Since qcom,sc7180-tsens is not listed in the YAML binding, we see the
+> following warnings in 'make dtbs_check'. Fix them.
+> 
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible: ['qcom,sc7180-tsens',
+> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
+> causes of the failure):
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v0_1' was expected
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v1' was expected
+> 
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible: ['qcom,sc7180-tsens',
+> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
+> causes of the failure):
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v0_1' was expected
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v1' was expected
 
-Fixes: 3d735471d066 ("dt-bindings: arm: Document Armadeus SoM and Dev boards devicetree binding")
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index a8e0b4a813ed..0e17e1f6fb80 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -160,7 +160,7 @@ properties:
-         items:
-           - enum:
-               - armadeus,imx6dl-apf6      # APF6 (Solo) SoM
--              - armadeus,imx6dl-apf6dldev # APF6 (Solo) SoM on APF6Dev board
-+              - armadeus,imx6dl-apf6dev   # APF6 (Solo) SoM on APF6Dev board
-               - eckelmann,imx6dl-ci4x10
-               - emtrion,emcon-mx6         # emCON-MX6S or emCON-MX6DL SoM
-               - emtrion,emcon-mx6-avari   # emCON-MX6S or emCON-MX6DL SoM on Avari Base
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> index eef13b9446a8..13e294328932 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> @@ -39,6 +39,7 @@ properties:
+>                - qcom,msm8996-tsens
+>                - qcom,msm8998-tsens
+>                - qcom,sdm845-tsens
+> +              - qcom,sc7180-tsens
+>            - const: qcom,tsens-v2
+>  
+>    reg:
+> -- 
+> 2.20.1
+
 -- 
-2.24.1
-
+~Vinod
