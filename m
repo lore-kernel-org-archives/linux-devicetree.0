@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8C8C35E0C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5858C35E01
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3012176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A257D2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JwVcQCUP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MVwL4tMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbgBYSU6 (ORCPT
+        id S1731518AbgBYSVN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:20:58 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37687 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731505AbgBYSU6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:20:58 -0500
-Received: by mail-pl1-f195.google.com with SMTP id q4so130084pls.4
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 10:20:56 -0800 (PST)
+        Tue, 25 Feb 2020 13:21:13 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37413 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727983AbgBYSVN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:21:13 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so7621592pfn.4
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 10:21:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=hLhapTDfld6iYI26Uu6G+l7v9cDuHGrJIIJjSJQbaF0=;
-        b=JwVcQCUPFlIUvWpdOmzQ8TWSzcPecioUjGp6wuHwhYsuzyG4T2wTKmoMS+zgE8OZUp
-         eB6hqXY7/01wMsuCD/Py+7SA3imsfiVDKSUnX/JqS6Y4lmYTswLbXV0ZDVc0vlMIFpL4
-         mKUI+5C9c9n6rvb+ts/lABP89VoluYjZ5+cJA=
+        bh=iC5nzqy2saMeKutgvDrEBEpuv4q4qMVR1i8BRvTShFQ=;
+        b=MVwL4tMZMEEl2E6apD+vt9gHqTB4aVqv4Q/HjRlSH7fMKmhannrm5E9vIkZWY2DoaP
+         8syBXB8r64JQsGc1kp+v2kTU+8tHIDDpkRr9Le1VGRdqO2al35oYvUIZKsxK5jtZrfNQ
+         Kogo6PvroMVJQlEheMKrYR5XgJERai0cYo4QE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=hLhapTDfld6iYI26Uu6G+l7v9cDuHGrJIIJjSJQbaF0=;
-        b=h6Y/k9Pv3nNOgii1UXjQDjGWKVg3xoisxbm0q1zdsOX6joscphDmXLp1Br0PZxFw9j
-         bhnmyr7P6rAwgxuwhu8EZdD17FojF5F0W0X0qmNMNLtzdWl4ht26opyAUw/CW3R3XsTx
-         4pnLLGTnG4/GshwZoE5hWSUUBooYZiXsyhiTJNsK20fyIsoNkOr63DpEssln9Kk+c114
-         Zf+vBAgFTXUle+ueT3fhzQS8ITijSdWck2ltRKQd4PmWoqwBtr/fcvUTa9+Bb9RI8uqc
-         id/QxHwdnL370T647hyPtGF2nL4segKGT/+o4NiU2RNdUrltLs7o7C+J44/oVAwgzN1+
-         faqA==
-X-Gm-Message-State: APjAAAVWiE4VIc+l6DVCL+ZBkigaCaRX+hGKt7C1jF8u5DHoxKfnW+t1
-        +YRk9lzKUU0pCs4lWXq71sIjhw==
-X-Google-Smtp-Source: APXvYqw7MPpCUgHd0aakZ48hbazK/k6ob6ZjUXGFwU1wNp1VvIIRJhEPmczKQIjk0wSyeSfyNcREjw==
-X-Received: by 2002:a17:90a:f88:: with SMTP id 8mr331916pjz.72.1582654856135;
-        Tue, 25 Feb 2020 10:20:56 -0800 (PST)
+        bh=iC5nzqy2saMeKutgvDrEBEpuv4q4qMVR1i8BRvTShFQ=;
+        b=rR3/PQDk90Z9YrT3+kX3hR5qxKmZyBNDS7y3gE1SCCOySZ3VHyYqJr5dMhduQ4sR+t
+         w84UDCVEgBmeHk5I5Oup47yjtKG3au/DoigFa8MH8IHznfOSUiWftGgChGq8SZBKh+uI
+         Z+9uzJJB9DqvPZUQFdIJ6p1Zd9zM1niJXduVBT74/+vs/mpSlZgo0NoSORdJST3TTLpK
+         tFcrnrN2hD731LS32VXZFNAMoQt431wUR2ex/fWy9nVFTRBkc302OIXypuU4tjCDK69B
+         ySk6nhuliJyEqFm2/vSnqA/SU061T4dzl2KhBYu6mgl8epJnZnhGMMrW/eJQezoniUhf
+         Kokg==
+X-Gm-Message-State: APjAAAUn2RXQAQ4MywBRQe51pocgczec58lxP16hzO/PZr4ZGNuXVWCh
+        ONx05S19SWKFho49Io2Xybbihw==
+X-Google-Smtp-Source: APXvYqxRFmacFI+CAN2B515JEZN59wcYjLYX/Z/txp5nfpEfz9dqhyREK3lF14hQ/tQEQsNO5Vg7Bw==
+X-Received: by 2002:a63:5124:: with SMTP id f36mr20811504pgb.288.1582654872451;
+        Tue, 25 Feb 2020 10:21:12 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id c15sm8175668pgk.66.2020.02.25.10.20.55
+        by smtp.gmail.com with ESMTPSA id fz21sm4057444pjb.15.2020.02.25.10.21.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:20:55 -0800 (PST)
+        Tue, 25 Feb 2020 10:21:12 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1581932212-19469-2-git-send-email-akashast@codeaurora.org>
-References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org> <1581932212-19469-2-git-send-email-akashast@codeaurora.org>
-Subject: Re: [PATCH V4 1/3] dt-bindings: geni-se: Convert QUP geni-se bindings to YAML
+In-Reply-To: <1581932212-19469-3-git-send-email-akashast@codeaurora.org>
+References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org> <1581932212-19469-3-git-send-email-akashast@codeaurora.org>
+Subject: Re: [PATCH V4 2/3] dt-bindings: geni-se: Add interconnect binding for GENI QUP
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
@@ -66,16 +66,17 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         Akash Asthana <akashast@codeaurora.org>
 To:     Akash Asthana <akashast@codeaurora.org>, agross@kernel.org,
         mark.rutland@arm.com, robh+dt@kernel.org
-Date:   Tue, 25 Feb 2020 10:20:54 -0800
-Message-ID: <158265485474.177367.9818999192157425774@swboyd.mtv.corp.google.com>
+Date:   Tue, 25 Feb 2020 10:21:11 -0800
+Message-ID: <158265487123.177367.16475123402427047498@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Akash Asthana (2020-02-17 01:36:50)
-> Convert QUP geni-se bindings to DT schema format using json-schema.
+Quoting Akash Asthana (2020-02-17 01:36:51)
+> Add documentation for the interconnect and interconnect-names properties
+> for the GENI QUP.
 >=20
 > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
 > ---
