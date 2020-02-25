@@ -2,117 +2,137 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB74C35E17
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B7BC35E15
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF9E2467A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B994220675
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=easyb-ch.20150623.gappssmtp.com header.i=@easyb-ch.20150623.gappssmtp.com header.b="oveJUVfN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qEa2RI30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgBYVnE (ORCPT
+        id S1727227AbgBYVqS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:43:04 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36243 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgBYVnE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 16:43:04 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so845129wma.1
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 13:43:01 -0800 (PST)
+        Tue, 25 Feb 2020 16:46:18 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40521 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgBYVqS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 16:46:18 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a142so861678oii.7
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 13:46:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=easyb-ch.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=kEVJ1n2NxQ1glfbZ9e15foebWC3MxMe0p/5A/jyD6H0=;
-        b=oveJUVfN4mGmIby/KrplpWvi32NOCpmb1Fej6u+eU25j1sso9bxSCmnS1HYlP5k+TS
-         MN55kLyOOXTrI5QiCGtP00bRnkJxE6q+aUpqdFsAsXwQh0dvu55FS/TXrAVS/ae6mu1l
-         NAlvopKlSspPGtPCVj0mdTNuFv+ZfhgIinLqRNatsNKvQI8KxR0B1VAiDYp321L4gtUZ
-         g8u+mkFIDr2NdhUV2f4JbQ3BTA7fhSsIoCINRAOSYNlefs7F0PuxzSG5YkiVtBklT+fO
-         oaD/MUhWA0PqDh9MWO9s+RAgppI/P3ICunuQwVb2PDrJVH31q6jq8+vTKG+aECdrMlUL
-         Kc9g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OaHhaeQJNk3b1iGwrho9OQW7vTtILFRlnGdHwBGHiXA=;
+        b=qEa2RI30+eu6y+QG1RZcKaHE63SwriP8FaoGgwhahp/jQ21rAuyfZyhnI39ZaQZPTK
+         x+hjX7xFI4kZoMYbClW5pfDwOlru9laun8LG52dDvbs36nVfcRIuXJFMcetpsWABJkwy
+         joYb3JrrYXZ548+Zal0Q8PMlSZGWpJ8BEpfeWWDdjA3JtgPwNzcOW3qFf8maZZdozYQU
+         ux2WYmwTQB3ZIWRqlN5rqV5Jog6VUM0bEhy9mjUk2yD89nAIT8/dEbYlqT+pKaj4U2Dn
+         0bRx+Fv2YVyzelsP/9ttTUm4knli3ewZHxsXIwT+oFehxZ9gsP9iP/b8vez+UUdwDQE0
+         +OFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=kEVJ1n2NxQ1glfbZ9e15foebWC3MxMe0p/5A/jyD6H0=;
-        b=NYuVUXB2INAGopw4nPXMIrtWJrPgBSbu8HXkaBR6MbupgPEskvYBD5hv8LnTpl4130
-         hAy/bCjL/rrU3fwtnb1IzEVRoQZ4UBZV4DgDahuRmZFMYc0+neD1suy4UYDStr2sAi0B
-         bZK2RVz+6J6fB091D5TGzMnavTeG4ZXThv6eQA/B2ZwcsIbi4kkeP6AYtN4YQQVf/Kbf
-         vbjafjKLWKtcWN+nTU2RmQo67jZiE/qeffh8UvgzHQddXOY+lFKhx7TnsXxv/niS3sxR
-         Ya/t+F2fFYVdwyE8M/ltGyePswUZzhjtuZdqja0Vs18wVBraG62EbOEdKEKlaR5juTNH
-         gZjg==
-X-Gm-Message-State: APjAAAVE1fd/DXJfKEcatqxBMz1XIYXnTZKFPmnaQSQNiySUumMvaYtO
-        AjuxbiX0GX0AG/dF9m70WvOX0w==
-X-Google-Smtp-Source: APXvYqzT6vU3uivqK3LFISSNim+ES8rBV5I3PSPpMQoyPtAT6binkjIz4QcxUjjxxm7ATqtLrWgIdA==
-X-Received: by 2002:a1c:7ec5:: with SMTP id z188mr1188559wmc.52.1582666980570;
-        Tue, 25 Feb 2020 13:43:00 -0800 (PST)
-Received: from ?IPv6:2001:1715:4e22:c580:ed96:156f:9663:e7e4? ([2001:1715:4e22:c580:ed96:156f:9663:e7e4])
-        by smtp.gmail.com with ESMTPSA id f1sm212602wro.85.2020.02.25.13.42.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 13:43:00 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
- TM1628/FD628/AiP1618 LED controllers
-From:   Ezra Buehler <ezra@easyb.ch>
-In-Reply-To: <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
-Date:   Tue, 25 Feb 2020 22:42:57 +0100
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        csd@princeton.com.tw, devicetree@vger.kernel.org, sales@fdhisi.com,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, zypeng@titanmec.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Dan Murphy <dmurphy@ti.com>,
-        linux-rockchip@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E33E27B9-D33C-4182-A5B1-C72FA40470BC@easyb.ch>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <7110806f-ddbd-f055-e107-7a1f7e223102@arm.com>
- <c86c6bc0-b0e5-c46e-da87-9d910b95f9f3@suse.de>
- <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-X-Mailer: Apple Mail (2.3445.9.1)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OaHhaeQJNk3b1iGwrho9OQW7vTtILFRlnGdHwBGHiXA=;
+        b=kxCTKWhCZEDWeunkjasfM2cQ8qVE8KlgD72P078aQunsmGUAPCKHZaTm57wwKM774F
+         wzePDRJmB3IAIbAsE2d2l3dCkc6gcrbtD2rcWpxUfY5dNFMpH5gHIIqtwC3B7qRxUOrN
+         ADQfjFzcG9CCnY6uVTcQHmtxBjmvlcLuYNzubnl7B3Vx7FipuU1icVYIcAo703AD7ZnU
+         LAVOBEgE9PRjbiej/t/6Dle/EJiTND3na8HXijOMnciMaQ+k8dbp857pGNrAoqyEj93E
+         zZjbadIlbPHbu/MwTdwiwLYokBDIslNFdtXrz0Qh/QGLkMUYsiQKlSIfpDFXtB5Rsl3h
+         HOAg==
+X-Gm-Message-State: APjAAAXwlP8Z9cfh5iUEAg13w6igWizCPY+MxIYdF+aC3ksi+eoE2HXt
+        BLr71E49+o94SuJfg+EjDGe9rw7UstXXG4/06HtMZg==
+X-Google-Smtp-Source: APXvYqzYfJMSifN7KgTz+K+MGlTU91tf+QULFSdmvn4DI2zL4yI7bwfwIGxnV/JfXP88xbSYOEqcTpG9Tgu9zHpTakg=
+X-Received: by 2002:aca:ea43:: with SMTP id i64mr786584oih.30.1582667177181;
+ Tue, 25 Feb 2020 13:46:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20200220055250.196456-1-saravanak@google.com> <CANcMJZBQe5F=gbj6V2ybF-dK=kRsGZT2BX9CBJiBFoK=5Hg-kA@mail.gmail.com>
+ <CAGETcx88H+aFTt=Vp8Q1KVOZYEaD3D6=i5WN8tWmnBAs1YdY1g@mail.gmail.com>
+In-Reply-To: <CAGETcx88H+aFTt=Vp8Q1KVOZYEaD3D6=i5WN8tWmnBAs1YdY1g@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 25 Feb 2020 13:45:41 -0800
+Message-ID: <CAGETcx_n=fZYaY5q6yZRJR9daTXm2Ryz5frfZr3n1BKf-pXCEQ@mail.gmail.com>
+Subject: Re: [PATCH v1] of: property: Add device link support for
+ power-domains and hwlocks
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin,
-Hi Andreas,
+On Thu, Feb 20, 2020 at 3:30 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Thu, Feb 20, 2020 at 3:26 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Wed, Feb 19, 2020 at 9:53 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > Add support for creating device links out of more DT properties.
+> > >
+> > > To: lkml <linux-kernel@vger.kernel.org>
+> > > To: John Stultz <john.stultz@linaro.org>
+> > > To: Rob Herring <robh@kernel.org>
+> >
+> > Just as a heads up, git-send-email doesn't seem to pick up these To:
+> > lines, so I had to dig this out of an archive.
+>
+> Weird! Left out the main person who'd care about this patch.
+>
+> >
+> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > Cc: Kevin Hilman <khilman@kernel.org>
+> > > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > Cc: Len Brown <len.brown@intel.com>
+> > > Cc: Todd Kjos <tkjos@google.com>
+> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Cc: Liam Girdwood <lgirdwood@gmail.com>
+> > > Cc: Mark Brown <broonie@kernel.org>
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: linux-pm@vger.kernel.org
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/of/property.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> >
+> > This does seem to work for me, allowing various clk drivers to be used
+> > as modules! This removes the functional need for my recent driver core
+> > patch series around the deferred_probe_timeout (though the cleanup
+> > bits in there may still be worth while).
+> >
+> > Tested-by: John Stultz <john.stultz@linaro.org>
+> >
+> > Thanks for sending it out!
+>
+> Thanks for the Tested-by!
+>
+> Rob,
+>
+> Can you pick this up for the next rc?
 
-> On 13 Dec 2019, at 15:07, Robin Murphy <robin.murphy@arm.com> wrote:
->=20
-> I also have one of the H96 Max boxes (which I picked up out of =
-curiosity
-> for the mysterious RK3318) with an FD6551, although I've not attacked
-> that one with the logic analyser yet to see how similar it is.
+Friendly reminder.
 
-I have a T9 (RK3328) TV box with the same chip in it. The FD6551 uses an
-I2C-like protocol. Every digit (and the symbols) have an I2C address,
-but, the display does not signal ACK. AFAIK the FD650 and FD655 which
-are used in other boxes (Amlogic) are very similar.
-
-So far, I have whipped up a proof-of-cocept driver that uses i2c-gpio.
-The digits seem to be rotated by 180 degrees. So, in order to use
-map_to_7segment.h I had to define the BIT_SEG7_* constants differently.
-My display also has multiple symbols (WIFI, network, pause, play, USB,
-alarm) that are controlled by writing to the same address as for the
-colon.
-
-I=E2=80=99d love to work on a driver (similar to Andreas=E2=80=99 SPI =
-based driver) for
-these I2C connected chips.
-
-Cheers,
-Ezra.
-
+-Saravana
