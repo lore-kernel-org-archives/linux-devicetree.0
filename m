@@ -2,134 +2,94 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4875CC35DF9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 10:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE140C35DFB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 10:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F95B218AC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 10:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582625782;
-	bh=xhugCcXsdvxmy9hj5XGYrT1xM/LDjkFC5Qq8nX+dKIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FCOtOCUPnRU/DM1bB0g2UE4AOG+qJmBMWjZtVl0RcLHBOviU1eAwGkwDR9Ufx5j+L
-	 0o1+3Jf2nEBxeGQbSMeOoAB55t/fAUR6gYO90DpKs6Z6e/zROAI+3d4T/5DAHR7Khi
-	 HTkdvckoaLNvE9SJlorHee3CvW7pJko/YbM//jNk=
+	by mail.kernel.org (Postfix) with ESMTP id 9736421927
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 10:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgBYKQV (ORCPT
+        id S1729593AbgBYKTi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:16:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729702AbgBYKQV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:16:21 -0500
-Received: from localhost (unknown [122.167.120.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9062121556;
-        Tue, 25 Feb 2020 10:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582625780;
-        bh=xhugCcXsdvxmy9hj5XGYrT1xM/LDjkFC5Qq8nX+dKIs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KwZAkaiSP/Br/sdl4/u9ZJClNk6MnLu9FyxNTiCesQcjS+dpDBmMt3I6zuxlr1gKJ
-         GB95oUUG/U90zRpBYQbeDmcvN78yrD752Xux8kUDorEjy0Y6GzkYgyhokB1MwIa1j1
-         BGcTW1j2iPmDjPic8M5mNpyfFCKIXhBvQ2Gj+nvw=
-Date:   Tue, 25 Feb 2020 15:46:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] dt-bindings: thermal: tsens: Make dtbs_check pass
- for sc7180 tsens
-Message-ID: <20200225101614.GN2618@vkoul-mobl>
-References: <cover.1582615616.git.amit.kucheria@linaro.org>
- <0f506cfdd8eb9d50b5eb43c9dca510284ac8ded1.1582615616.git.amit.kucheria@linaro.org>
+        Tue, 25 Feb 2020 05:19:38 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:37870 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728958AbgBYKTi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 05:19:38 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2897A1C0411; Tue, 25 Feb 2020 11:19:36 +0100 (CET)
+Date:   Tue, 25 Feb 2020 11:19:35 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/9] leds: lm3692x: Allow to set ovp and brigthness
+ mode
+Message-ID: <20200225101935.GA16252@amd>
+References: <cover.1578134779.git.agx@sigxcpu.org>
+ <20200105234708.GA7598@amd>
+ <20200106094443.GB13043@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
 Content-Disposition: inline
-In-Reply-To: <0f506cfdd8eb9d50b5eb43c9dca510284ac8ded1.1582615616.git.amit.kucheria@linaro.org>
+In-Reply-To: <20200106094443.GB13043@bogon.m.sigxcpu.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 25-02-20, 13:01, Amit Kucheria wrote:
-> Fixes the following warnings:
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible: ['qcom,sc7180-tsens',
-> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
-> causes of the failure):
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v0_1' was expected
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v1' was expected
 
-I think the patch title should be "add qcom,sc7180-tsens to  qcom-tsens.yaml"
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-and it would be great to see explanation on how adding it fixes these
-warns.
+Hi!
 
-Relooking at series I think this applies to rest of the series too :)
+> > > Patches are against next-20191220.
+> >=20
+> > I applied everything but the "exponential" changes and the last
+> > one. I'll apply the last one if I get version that applies on top of
+> > leds tree.
+>=20
+> Thanks! Can I do anything to get the exponential part in? Is it because
+> you want the exponential mode to move to the backlight binding?
 
-Thanks
+You'd have to do some serious convincing, explaining why we absolutely
+need the exponential stuff.
 
+Most devices today use linear brightness, and userspace needs to know
+the relation, especially for RGB stuff.
 
-> 
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible: ['qcom,sc7180-tsens',
-> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
-> causes of the failure):
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v0_1' was expected
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v1' was expected
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> index eef13b9446a8..13e294328932 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> @@ -39,6 +39,7 @@ properties:
->                - qcom,msm8996-tsens
->                - qcom,msm8998-tsens
->                - qcom,sdm845-tsens
-> +              - qcom,sc7180-tsens
->            - const: qcom,tsens-v2
->  
->    reg:
-> -- 
-> 2.20.1
+You can set bigger max-brightness, and then do in-driver conversion to
+use full dynamic brightness range...?
 
--- 
-~Vinod
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl5U9LcACgkQMOfwapXb+vKmQwCeMlzPn+Eem1SMNkD3mahWvCZt
+NMAAn0xlajNgoP4SO6bIQu8nJ4+2vhUo
+=oqTC
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
