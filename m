@@ -2,181 +2,165 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D66C35DF2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 04:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F802C35DF8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 05:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949F52467B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 04:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474FC24694
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 05:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lRKk+qOV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MfzMx3Oo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgBYE4M (ORCPT
+        id S1726642AbgBYFQu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Feb 2020 23:56:12 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55192 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbgBYE4L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Feb 2020 23:56:11 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01P4u4rJ005344;
-        Mon, 24 Feb 2020 22:56:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582606564;
-        bh=Hi3alq/PW0I95g8l0i49IRWre9otN2P6q1NyxVUBRIM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lRKk+qOVCrAFp2ZUgV9fdGqiLAneXtVAgGjDSU8tVxnLiNJsv2AiCuO39r+xqwvW/
-         B0gqdYxfL+sN0NQywS0W8wwx/ryYigAvqzUufIHOYBvwpSLY0S6Ny8EQKa3xkh7ODA
-         hYLtFFlCXV/7/R/+EPy4pOcuncOrWCvhNtFKLubs=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01P4u4X1051429
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Feb 2020 22:56:04 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
- Feb 2020 22:56:03 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 24 Feb 2020 22:56:03 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01P4u01w018889;
-        Mon, 24 Feb 2020 22:56:01 -0600
-Subject: Re: [PATCH v2 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in
- Cadence platform to DT schema
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200217111519.29163-1-kishon@ti.com>
- <20200217111519.29163-3-kishon@ti.com> <20200219203205.GA14068@bogus>
- <2b927c66-d640-fb11-878a-c69a459a28f8@ti.com>
- <CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <9be3291f-b0a8-a30f-57ad-f38bc7a8197c@ti.com>
-Date:   Tue, 25 Feb 2020 10:29:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 25 Feb 2020 00:16:50 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33840 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBYFQu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 00:16:50 -0500
+Received: by mail-pj1-f68.google.com with SMTP id f2so640160pjq.1
+        for <devicetree@vger.kernel.org>; Mon, 24 Feb 2020 21:16:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ka0sLhQPFaXTwv3tDELStRrEtg68nriJ9HVXgH82wMY=;
+        b=MfzMx3OoAyEtSqpOZ0WtdfDaIjNPNeuyzCbpqjIHCgRZgMdnb82+zNuqvO6REVU3Iz
+         o+3zenb5smKGh3pixYR+Th7xOVONXMP31NIJZl757/wtxGpCjkDfZ4NUgK1hIosRnjwv
+         MHyju43+Ea0LICvpxU2VsKsh0K5P+E5xBE/ehqeDUd06hWz3g+VuMRdGemx5p9pnMFhD
+         /1599Z4dFSIqEqyA5RkpiSdFKbiDLUMeavkbuhE6aWYllSUgVgsqCHV5ML0pToE/OKAI
+         UNtCr8UEjxEPce8u3sf5Lk0XrmZy6+7fHf4CLiFctxKfHk+/zeXH/1VF6oRpWHxlgtzc
+         oU/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ka0sLhQPFaXTwv3tDELStRrEtg68nriJ9HVXgH82wMY=;
+        b=KeTtyEA+gwkAJsT5M69Ag1ukxmzppIFTukf8tyPGzqK78TcK/eigCDiM2rPCR4ZHVY
+         J1uVd3tjZVlXYbGqPOhtU+isHPTU2aYj3cUv+8tYcCmOBpgunhvlTeEBH7cphU+dUEpw
+         lJihieuyc5Un5tPt9gz2dMpPOQbZamuAar1QgODT7JxfXTWTmO5YIuN/fY0PhOVJ+Zrm
+         HW+ONR1AARjAN5doHGygFis41Q6Tn11dNzDMSpYCwkQsL5zPJAUW1VqLW6HVWbaGv669
+         vDueyifVil7y/YTGc1dVPyzPzby7c8q4vh1qh7dsn36kVSBNLMeB3GSccABhxDP2CSAC
+         1goA==
+X-Gm-Message-State: APjAAAWi3pjzA64obvuqag5srO3HbP4xgXOu5aUuRE0TgcBnnpF4eoSv
+        jRp2reOh5mT3lhaXPY9rU2/1/w==
+X-Google-Smtp-Source: APXvYqwE3DS3Lo/dEPP82F1RYKX99PIFmYhZi/GdGxhG2n/gVblaUuZg64+xGY3KaryvIrqLQbTarw==
+X-Received: by 2002:a17:902:7048:: with SMTP id h8mr54903891plt.64.1582607808882;
+        Mon, 24 Feb 2020 21:16:48 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c184sm15092223pfa.39.2020.02.24.21.16.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 21:16:47 -0800 (PST)
+Date:   Mon, 24 Feb 2020 21:16:45 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     georgi.djakov@linaro.org
+Cc:     Sibi Sankar <sibis@codeaurora.org>, robh+dt@kernel.org,
+        evgreen@chromium.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        daidavid1@codeaurora.org, saravanak@google.com, mka@chromium.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 0/6]     Split SDM845 interconnect nodes and
+ consolidate RPMh support
+Message-ID: <20200225051645.GX3948@builder>
+References: <20200209183411.17195-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200209183411.17195-1-sibis@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob,
+On Sun 09 Feb 10:34 PST 2020, Sibi Sankar wrote:
 
-On 24/02/20 8:56 pm, Rob Herring wrote:
-> On Mon, Feb 24, 2020 at 4:14 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Rob,
->>
->> On 20/02/20 2:02 am, Rob Herring wrote:
->>> On Mon, Feb 17, 2020 at 04:45:19PM +0530, Kishon Vijay Abraham I wrote:
->>>> Include Cadence core DT schema and define the Cadence platform DT schema
->>>> for both Host and Endpoint mode. Note: The Cadence core DT schema could
->>>> be included for other platforms using Cadence PCIe core.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
->>>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
->>>>  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
->>>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
->>>>  MAINTAINERS                                   |  2 +-
->>>>  5 files changed, 125 insertions(+), 94 deletions(-)
->>>>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
->>>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->>>>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
->>>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>
->>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>> new file mode 100644
->>>> index 000000000000..2f605297f862
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>> @@ -0,0 +1,76 @@
->>>> +# SPDX-License-Identifier: GPL-2.0-only
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Cadence PCIe host controller
->>>> +
->>>> +maintainers:
->>>> +  - Tom Joseph <tjoseph@cadence.com>
->>>> +
->>>> +allOf:
->>>> +  - $ref: /schemas/pci/pci-bus.yaml#
->>>> +  - $ref: "cdns-pcie-host.yaml#"
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: cdns,cdns-pcie-host
->>>> +
->>>> +  reg:
->>>> +    maxItems: 3
->>>> +
->>>> +  reg-names:
->>>> +    items:
->>>> +      - const: reg
->>>> +      - const: cfg
->>>> +      - const: mem
->>>> +
->>>> +  msi-parent: true
->>>> +
->>>> +required:
->>>> +  - reg
->>>> +  - reg-names
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    bus {
->>>> +        #address-cells = <2>;
->>>> +        #size-cells = <2>;
->>>> +
->>>> +        pcie@fb000000 {
->>>> +            compatible = "cdns,cdns-pcie-host";
->>>> +            device_type = "pci";
->>>> +            #address-cells = <3>;
->>>> +            #size-cells = <2>;
->>>> +            bus-range = <0x0 0xff>;
->>>> +            linux,pci-domain = <0>;
->>>> +            cdns,max-outbound-regions = <16>;
->>>> +            cdns,no-bar-match-nbits = <32>;
->>>
->>>> +            vendor-id = /bits/ 16 <0x17cd>;
->>>> +            device-id = /bits/ 16 <0x0200>;
->>>
->>> Please make these 32-bit as that is what the spec says.
->>
->> Can you clarify this is mentioned in which spec? PCI spec has both of
->> these 16 bits and I checked the PCI binding doc but couldn't spot the
->> size of these fields.
->>
->> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+Hi Georgi,
+
+Will you pick up the bindings and driver patches for v5.7? So that I can
+apply the dts patches.
+
+Regards,
+Bjorn
+
+> While there are no current consumers of the SDM845 interconnect device in
+> devicetree, take this opportunity to redefine the interconnect device nodes
+> as the previous definitions of using a single child node under the apps_rsc
+> device did not accurately capture the description of the hardware.
+> The Network-On-Chip (NoC) interconnect devices should be represented in a
+> manner akin to QCS404 platforms[1] where there is a separation of NoC devices
+> and its RPM/RPMh counterparts.
 > 
-> Section 4.1.2.1. The key point is the type is 'encode-int' which means
-> 32-bit. Keep in mind, that 16-bits was not a defined type when this
-> spec was written. We added that for FDT.
+> The bcm-voter devices are representing the RPMh devices that the interconnect
+> providers need to communicate with and there can be more than one instance of
+> the Bus Clock Manager (BCM) which can live under different instances of Resource
+> State Coordinators (RSC). There are display use cases where consumers may need
+> to target a different bcm-voter (Some display specific RSC) than the default,
+> and there needs to be a way to represent this connection in devicetree.
 > 
-> Also, look at other instances of reading 'vendor-id' in the kernel.
-
-Thanks for clarifying.
-
-Regards
-Kishon
+> This patches series extends the discussions[2][3] involving the SDM845
+> interconnect bindings by adding accompanying driver implementations
+> using the split NoC devices. Some of the code used to support the SDM845
+> provider driver are refactored into common modules that can used by other
+> RPMh based interconnect providers such as SC7180[4]. This patch series also
+> updates existing sdm845 binding documentation to DT schema format using
+> json-schema.
+> 
+> v3:
+> - Picked up Robs R-b for patch 1 
+> - Fixup qcom,bcm-voter.yaml. comments (Rob)
+> - Use qcom,bcm-voter instead of SoC specific compatible for
+>   SDM845 and SC7180 (Odelu/Sibi)
+> - Fixup bindings check failures for qcom,sdm845.yaml
+> - Fixup the misc bugs. comments (Evan/Sibi)
+> - Fixup reg size for aggre1/2_noc
+> 
+> v2: 
+> - Reorganized dt-binding patches
+> - Fixed a bug that adds duplicate BCM node to voter (Georgi)
+> - Addressed misc. comments (Georgi)
+> 
+> v1: https://lkml.org/lkml/2019/12/16/15
+> 
+> [1]: https://lkml.org/lkml/2019/6/13/143
+> [2]: https://lkml.org/lkml/2019/7/19/1063
+> [3]: https://lkml.org/lkml/2019/10/16/1793
+> [4]: https://lkml.org/lkml/2019/11/26/389
+> 
+> David Dai (6):
+>   dt-bindings: interconnect: Convert qcom,sdm845 to DT schema
+>   dt-bindings: interconnect: Add YAML schemas for QCOM bcm-voter
+>   dt-bindings: interconnect: Update Qualcomm SDM845 DT bindings
+>   interconnect: qcom: Consolidate interconnect RPMh support
+>   interconnect: qcom: sdm845: Split qnodes into their respective NoCs
+>   arm64: dts: sdm845: Redefine interconnect provider DT nodes
+> 
+>  .../bindings/interconnect/qcom,bcm-voter.yaml |   45 +
+>  .../bindings/interconnect/qcom,sdm845.txt     |   24 -
+>  .../bindings/interconnect/qcom,sdm845.yaml    |   74 +
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   65 +-
+>  drivers/interconnect/qcom/Kconfig             |   13 +-
+>  drivers/interconnect/qcom/Makefile            |    4 +
+>  drivers/interconnect/qcom/bcm-voter.c         |  366 +++++
+>  drivers/interconnect/qcom/bcm-voter.h         |   27 +
+>  drivers/interconnect/qcom/icc-rpmh.c          |  147 ++
+>  drivers/interconnect/qcom/icc-rpmh.h          |  149 +++
+>  drivers/interconnect/qcom/sdm845.c            | 1185 +++++++----------
+>  .../dt-bindings/interconnect/qcom,sdm845.h    |  263 ++--
+>  12 files changed, 1516 insertions(+), 846 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+>  create mode 100644 drivers/interconnect/qcom/bcm-voter.c
+>  create mode 100644 drivers/interconnect/qcom/bcm-voter.h
+>  create mode 100644 drivers/interconnect/qcom/icc-rpmh.c
+>  create mode 100644 drivers/interconnect/qcom/icc-rpmh.h
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
