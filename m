@@ -2,76 +2,60 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70619C35E04
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E11C35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3865921744
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:23:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="PQPl17Lo"
+	by mail.kernel.org (Postfix) with ESMTP id 1DC2A21744
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbgBYQXE (ORCPT
+        id S1729839AbgBYQoZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:23:04 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41066 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgBYQXE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 11:23:04 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y17so7088415lfe.8
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 08:23:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=5Dk67v+npqu0EQERfbIuN+7my2CbgWhjf5DbNvAyZJ0=;
-        b=PQPl17Loc0S6TpTVmab3H2e6w0TiVNEnHmIkGPYF+kKwGu10CsKsu8PPDzZkj1qpPB
-         WgkOj1YrAr4JCItxUhh6iIq3PlfkOmzOQHKn4ZQx7scePHR2/8z+6QOrbUCdhJtKmTSJ
-         x82mQHhjQyupbzRiC7i1z6YUvdjrggn8SRCKpu9weHqEzTyJu18KJ8wqmAgHPmICXjdZ
-         AwNUh6tljWrSquO9C4BXzhsmcyiDxUWxqpq+q9/3+FzpQpOGjlEScI5c5oR15LmF64Yh
-         QAn5Nde9PUiGRt0VtxD1tqMRd+oNf3Zz/L26OImabzA5dfr92Tx9gtvJhVFuRZhjMnzn
-         1s1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5Dk67v+npqu0EQERfbIuN+7my2CbgWhjf5DbNvAyZJ0=;
-        b=c2K5cMa9CGJMAbFJLAwHIIajx+hS8p8NhF07e5smm2aLbxPH3IBxMWAyGNM60C5ttV
-         KCSJ52XcBm5Qr00fKJZrt8FLJOFB5/7w6R7asqy7tfwWP3NnJkQRTpT0cRFFIFudSlAu
-         UAwKAp5GkGbaTNSKNp+l6UH8ZVJurRpUJwn/BQ/RDMp667G/LwCKtZ9PfskzOx0yDvTn
-         gv6Q+1hhmHTiNbAXvHa+kqPJ54aCjfZL4b58rgEIw3YNvOX4b1q0fKZLsAex+SXhSAbK
-         62y94iyon1DLymMXvAsQ4u3Qc2bTc0Pgl4brlNXlBkij15vkqLSEwgZguUtiWxwQ3WK+
-         OTEw==
-X-Gm-Message-State: APjAAAVXNMqX0PNje6HzNmc4ZI5ruM1diEgnVovdQLfmJ43Wb70oW0qy
-        /rRbllWGDJ19JYliNUmbCZFrCA==
-X-Google-Smtp-Source: APXvYqwPW6h1QKilPwRuqWez6A/erb4CBWnOzO1OLK96UKtW/skgBTn+ro2I0LdsmGFEs+G3Ox+z1Q==
-X-Received: by 2002:a05:6512:1109:: with SMTP id l9mr1441299lfg.62.1582647781108;
-        Tue, 25 Feb 2020 08:23:01 -0800 (PST)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id z3sm8134562ljh.83.2020.02.25.08.23.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 08:23:00 -0800 (PST)
-Date:   Tue, 25 Feb 2020 17:22:59 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: ata: rcar-sata: Convert to json-schema
-Message-ID: <20200225162259.GC3165317@oden.dyn.berto.se>
-References: <20200219154146.11230-1-geert+renesas@glider.be>
+        Tue, 25 Feb 2020 11:44:25 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:35367 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729536AbgBYQoZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:44:25 -0500
+Received: from [109.168.11.45] (port=34196 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1j6dJm-00DP57-MU; Tue, 25 Feb 2020 17:44:22 +0100
+Subject: Re: [DT-OVERLAY PATCH] of: overlay: print the offending node name on
+ fixup failure
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200225104223.30891-1-luca@lucaceresoli.net>
+ <CAMuHMdVuk_BcFH16eBQYeQxREAF9VPz+R_sBKQpG0jQ8JDLn0w@mail.gmail.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <85a2e5a3-1872-d1db-5eb7-0f02265220a3@lucaceresoli.net>
+Date:   Tue, 25 Feb 2020 17:44:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219154146.11230-1-geert+renesas@glider.be>
+In-Reply-To: <CAMuHMdVuk_BcFH16eBQYeQxREAF9VPz+R_sBKQpG0jQ8JDLn0w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -79,154 +63,62 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Geert,
 
-Thanks for your work.
+thanks for the very prompt review!
 
-On 2020-02-19 16:41:46 +0100, Geert Uytterhoeven wrote:
-> Convert the Renesas R-Car Serial-ATA Device Tree binding documentation
-> to json-schema.
+On 25/02/20 12:10, Geert Uytterhoeven wrote:
+> Hi Luca,
 > 
-> While at it:
->   - Remove the deprecated "renesas,rcar-sata" compatible value,
->   - Add "iommus", "power-domains", and "resets" properties,
->   - Update the example.
+> On Tue, Feb 25, 2020 at 11:42 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>> When a DT overlay has a fixup node that is not present in the base DT
+>> __symbols__, this error is printed:
+>>
+>>   OF: resolver: overlay phandle fixup failed: -22
+>>   create_overlay: Failed to create overlay (err=-22)
+>>
+>> which does not help much in finding the node that caused the problem.
+>>
+>> Add a debug print with the name of the fixup node that caused the
+>> error. The new output is:
+>>
+>>   OF: resolver: node gpio9 not found in base DT, fixup failed
+>>   OF: resolver: overlay phandle fixup failed: -22
+>>   create_overlay: Failed to create overlay (err=-22)
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Thanks for your patch!
+> 
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+>> NOTE: this patch is not for mainline!
+> 
+> Why not?
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Because I'm dumb. As I'm using the non-mainlined configfs interface I
+tend to consider the entire overlay code as non-mainlined too. Sending
+v2 without this comment.
 
-> ---
-> Not having to care about the deprecated value simplifies the
-> jscon-schema.
-> ---
->  .../bindings/ata/renesas,rcar-sata.yaml       | 71 +++++++++++++++++++
->  .../devicetree/bindings/ata/sata_rcar.txt     | 36 ----------
->  2 files changed, 71 insertions(+), 36 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml
->  delete mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
+>> --- a/drivers/of/resolver.c
+>> +++ b/drivers/of/resolver.c
+>> @@ -321,8 +321,11 @@ int of_resolve_phandles(struct device_node *overlay)
+>>
+>>                 err = of_property_read_string(tree_symbols,
+>>                                 prop->name, &refpath);
+>> -               if (err)
+>> +               if (err) {
+>> +                       pr_err("node %s not found in base DT, fixup failed",
+>> +                              prop->name);
+>>                         goto out;
+>> +               }
+>>
+>>                 refnode = of_find_node_by_path(refpath);
+>>                 if (!refnode) {
 > 
-> diff --git a/Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml b/Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml
-> new file mode 100644
-> index 0000000000000000..7b69831060d8b9c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/ata/renesas,rcar-sata.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Renesas R-Car Serial-ATA Interface
-> +
-> +maintainers:
-> +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - renesas,sata-r8a7779      # R-Car H1
-> +      - items:
-> +          - enum:
-> +              - renesas,sata-r8a7790-es1  # R-Car H2 ES1
-> +              - renesas,sata-r8a7790      # R-Car H2 other than ES1
-> +              - renesas,sata-r8a7791      # R-Car M2-W
-> +              - renesas,sata-r8a7793      # R-Car M2-N
-> +          - const: renesas,rcar-gen2-sata # generic R-Car Gen2
-> +      - items:
-> +          - enum:
-> +              - renesas,sata-r8a774b1     # RZ/G2N
-> +              - renesas,sata-r8a7795      # R-Car H3
-> +              - renesas,sata-r8a77965     # R-Car M3-N
-> +          - const: renesas,rcar-gen3-sata # generic R-Car Gen3 or RZ/G2
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/r8a7791-sysc.h>
-> +
-> +    sata@ee300000 {
-> +            compatible = "renesas,sata-r8a7791", "renesas,rcar-gen2-sata";
-> +            reg = <0xee300000 0x200000>;
-> +            interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-> +            clocks = <&cpg CPG_MOD 815>;
-> +            power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
-> +            resets = <&cpg 815>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> deleted file mode 100644
-> index a2fbdc91570d0f7c..0000000000000000
-> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -* Renesas R-Car SATA
-> -
-> -Required properties:
-> -- compatible		: should contain one or more of the following:
-> -			  - "renesas,sata-r8a774b1" for RZ/G2N
-> -			  - "renesas,sata-r8a7779" for R-Car H1
-> -			  - "renesas,sata-r8a7790-es1" for R-Car H2 ES1
-> -			  - "renesas,sata-r8a7790" for R-Car H2 other than ES1
-> -			  - "renesas,sata-r8a7791" for R-Car M2-W
-> -			  - "renesas,sata-r8a7793" for R-Car M2-N
-> -			  - "renesas,sata-r8a7795" for R-Car H3
-> -			  - "renesas,sata-r8a77965" for R-Car M3-N
-> -			  - "renesas,rcar-gen2-sata" for a generic R-Car Gen2
-> -			     compatible device
-> -			  - "renesas,rcar-gen3-sata" for a generic R-Car Gen3 or
-> -			     RZ/G2 compatible device
-> -			  - "renesas,rcar-sata" is deprecated
-> -
-> -			  When compatible with the generic version nodes
-> -			  must list the SoC-specific version corresponding
-> -			  to the platform first followed by the generic
-> -			  version.
-> -
-> -- reg			: address and length of the SATA registers;
-> -- interrupts		: must consist of one interrupt specifier.
-> -- clocks		: must contain a reference to the functional clock.
-> -
-> -Example:
-> -
-> -sata0: sata@ee300000 {
-> -	compatible = "renesas,sata-r8a7791", "renesas,rcar-gen2-sata";
-> -	reg = <0 0xee300000 0 0x2000>;
-> -	interrupt-parent = <&gic>;
-> -	interrupts = <0 105 IRQ_TYPE_LEVEL_HIGH>;
-> -	clocks = <&mstp8_clks R8A7791_CLK_SATA0>;
-> -};
-> -- 
-> 2.17.1
-> 
+> Probably you want to print a helpful message here, too?
+
+I'm doing even more. In v2 I added a specific error message for each
+error path that does not have one yet, and removed the generic message
+at the end.
 
 -- 
-Regards,
-Niklas Söderlund
+Luca
