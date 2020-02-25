@@ -2,114 +2,98 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BDFC35DF2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 05:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFBAC35DF2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 06:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FAF222C2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 05:49:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tp9GC9E2"
+	by mail.kernel.org (Postfix) with ESMTP id BEEEB2082F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 06:15:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbgBYFtV (ORCPT
+        id S1728983AbgBYGPw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:49:21 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:30477 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726130AbgBYFtU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:49:20 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582609760; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=TJy12gozjFJPHYs+99/ImfG0WnY9iUGm1r5o3HJf61M=; b=tp9GC9E2v04yzO27x8Z2u3/AVome4qaeL6sLzhIUSgIJ5TBZenntrqN6Obl07YWX65W+RfJ4
- BTUYRtvljZkbGVYO/SwS7hug0memloIp4+gDo0HQtQQ9ha4CeAsr6MQw1IUDVLHIjHUPTK93
- 6wz9LaY1POc7GSsoUbRMx1ghipA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e54b55a.7f0e0e956650-smtp-out-n03;
- Tue, 25 Feb 2020 05:49:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3A08FC447A2; Tue, 25 Feb 2020 05:49:14 +0000 (UTC)
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 25 Feb 2020 01:15:52 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:40592 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgBYGPw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 01:15:52 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ED895C43383;
-        Tue, 25 Feb 2020 05:49:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ED895C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v5 3/5] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh+dt@kernel.org
-References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
- <1582540703-6328-4-git-send-email-tdas@codeaurora.org>
- <20200224184201.GA6030@bogus>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <eec22330-2bf4-f4f5-3d28-6b69aa71f992@codeaurora.org>
-Date:   Tue, 25 Feb 2020 11:19:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 4DB6B80509;
+        Tue, 25 Feb 2020 07:15:45 +0100 (CET)
+Date:   Tue, 25 Feb 2020 07:15:43 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        intel-gfx-trybot@lists.freedesktop.org, kernel@collabora.com,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v10 08/12] drm/bridge: lvds-codec: Implement basic bus
+ format negotiation
+Message-ID: <20200225061543.GA9944@ravnborg.org>
+References: <20200128135514.108171-1-boris.brezillon@collabora.com>
+ <20200128135514.108171-9-boris.brezillon@collabora.com>
+ <20200224230322.GE16163@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20200224184201.GA6030@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224230322.GE16163@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=juKz5vNY0a5tetdafiUA:9 a=CjuIK1q_8ugA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Boris/Laurent.
 
-On 2/25/2020 12:12 AM, Rob Herring wrote:
-
+> > +
+> > +	err = of_property_read_u32(np, "bus-width", &input_bus_width);
+> > +	of_node_put(np);
+> > +
+> > +	if (err) {
+> > +		lvds_codec->input_fmt = MEDIA_BUS_FMT_FIXED;
+> > +	} else if (input_bus_width == 18) {
+> > +		lvds_codec->input_fmt = MEDIA_BUS_FMT_RGB666_1X18;
+> > +	} else if (input_bus_width == 24) {
+> > +		lvds_codec->input_fmt = MEDIA_BUS_FMT_RGB888_1X24;
+> > +	} else {
+> > +		dev_dbg(dev, "unsupported bus-width value %u on port 0\n",
+> > +			input_bus_width);
+> > +		return -ENOTSUPP;
 > 
-> My bot found errors running 'make dt_binding_check' on your patch:
+> ENOTSUPP is "Operation not supported", I'd go for -EINVAL.
 > 
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> Error: Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dts:21.26-27 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml] Error 1
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
+> > +	}
 > 
-> See https://patchwork.ozlabs.org/patch/1242999
-> Please check and re-submit.
-> 
+> Doesn't this apply to LVDS encoders only ? For LVDS decoders I don't
+> think we want to report an RGB format on the input.
 
-The error shows syntax error at line 21, below is the example.dts from 
-my tree and would compile for me as I have the dependency of the include 
-file when I compile.
+In panel-lvds we use the property "data-mapping" for the same purpose.
+To specify the MEDIA_BUS format.
 
-Please guide how to go about.
+It would be good to standardize on the same property, and maybe have the
+same binding descriptions for all.
 
-+#define GCC_MSS_MFAB_AXIS_CLK					126
+And "data-mapping" is a text string, which gives us more flexibility
+than just a number, that for MEDIA_BUS_FMT seems required.
 
-  17 #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-  18         clock-controller@41a8000 {
-  19           compatible = "qcom,sc7180-mss";
-  20           reg = <0 0x041a8000 0 0x8000>;
-  21           clocks = <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+	Sam
