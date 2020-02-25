@@ -2,205 +2,154 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DBFC35DF5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71F2C35DF9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306EA20637
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:11:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gkTk2rb6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NMiDvNMa"
+	by mail.kernel.org (Postfix) with ESMTP id 708F821927
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbgBYJLB (ORCPT
+        id S1726916AbgBYJOA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:11:01 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:53333 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbgBYJLB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 04:11:01 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 0BAF57BFE;
-        Tue, 25 Feb 2020 04:11:00 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 25 Feb 2020 04:11:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=2vqTwRAj8rKUQI5FEi3ykYXRB1k
-        4zegHIlQuKg4fomE=; b=gkTk2rb6Z/D8ORisKTkhB1y+SH06kgCf5Pq2c476/O9
-        IyltflJ/+Dq1fp8678f7e0wjFdNroQdoEQfkWrZ7jkhee54vE0VgFRSGgVwZNWK/
-        hYA8P/IBn2LNbe/E/VjX+XE1jz62u6aNeki0I314o2eF08T3uzJXuFZ1ZzPnrkB1
-        NlxT0bqCry1qAf1Sn39Na0uag9CHe2raGK8OSdHZeRuYpC6yjm4FwLo+mOluDtdW
-        afnbMbWMf4sFzgZFB4lmqKlsFRkVgrqpotkYUAh/zF8Ddj5EBxHnYhwXjsGHHZr2
-        +cZvHITZW2+R3OddfyYrAaoPGZ3AClo39aO+q0Q/EKg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=2vqTwR
-        Aj8rKUQI5FEi3ykYXRB1k4zegHIlQuKg4fomE=; b=NMiDvNMajHaTcmhNhHJDRJ
-        LxoRolymMSLrRfnC6Zfe/tdjtSgorGcRt1KUNOWEg4u15nFEsCcFtE4ewc3ogqL/
-        /YYDfhOep/u7JiXTdaCLcXTZQR3JN/kegTt1PRz/EYH+DkX3DkTcRaaAxj0oCT5G
-        sJulfl9NbYp35pwmTNBMdN1TpxWWN/K36nu9tJ9XJWBPfZs0HoaR9MACuL60h+7G
-        Wm3f8epOGNHXg0IRoulAKrt0c3sZpHM9rpcJm5gjSbP0K9ym3e58a0ySCOqymwz1
-        h90IrxnC5daRJ707E3rPtzRO3VF5wOdicWVwDQbJF/y4Os0VMUmbGCqZPM4V6G+g
-        ==
-X-ME-Sender: <xms:oeRUXrAI_D5lMyeQrh8Y3PI5agSSN74a1OXVEw6YYsKhXaM1zzQ5zQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledvgddtudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
-    gtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:oeRUXpPp_tWwjZ5pBvF__9IjfA7_SYFMb_fJkhiPTMNqcPYv5Z1Vyg>
-    <xmx:oeRUXoyVlVMIhiKZ2a7RhVmWsEvryuZPI8XFgXhn9RlgLUovu5sL2A>
-    <xmx:oeRUXsf5xQiPAdVua7pKGb6rMMxFptU4NPlbe0O8ISHJTfAaJfrrjg>
-    <xmx:pORUXsDYLuWCdLiFjcC3j_NZSInmV5T-JKOadfkUFxS16bPHqlZLdw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BE2CB328005D;
-        Tue, 25 Feb 2020 04:10:56 -0500 (EST)
-Date:   Tue, 25 Feb 2020 10:10:55 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Tue, 25 Feb 2020 04:14:00 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37018 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgBYJN7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 04:13:59 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D636828FF0F;
+        Tue, 25 Feb 2020 09:13:56 +0000 (GMT)
+Date:   Tue, 25 Feb 2020 10:13:54 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        intel-gfx-trybot@lists.freedesktop.org, kernel@collabora.com,
         Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] dt-bindings: soc: document LiteX SoC Controller
- bindings
-Message-ID: <20200225091055.ubm5r3p6r4ydchyh@gilmour.lan>
-References: <20200225094437.4170502-0-mholenko@antmicro.com>
- <20200225094437.4170502-2-mholenko@antmicro.com>
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v10 09/12] dt-bindings: display: bridge: lvds-codec: Add
+ new bus-width prop
+Message-ID: <20200225101354.5f621ccb@collabora.com>
+In-Reply-To: <20200224223139.GA29578@pendragon.ideasonboard.com>
+References: <20200128135514.108171-1-boris.brezillon@collabora.com>
+        <20200128135514.108171-10-boris.brezillon@collabora.com>
+        <20200224223139.GA29578@pendragon.ideasonboard.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7qlwsrkwbcxhj43j"
-Content-Disposition: inline
-In-Reply-To: <20200225094437.4170502-2-mholenko@antmicro.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, 25 Feb 2020 00:31:39 +0200
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
---7qlwsrkwbcxhj43j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Hi Boris,
+> 
+> Thank you for the patch.
+> 
+> On Tue, Jan 28, 2020 at 02:55:11PM +0100, Boris Brezillon wrote:
+> > Add the bus-width property to describe the input bus format.
+> > 
+> > v10:
+> > * Add changelog to the commit message
+> > * Add Rob's R-b
+> > 
+> > v8 -> v9:
+> > * No changes
+> > 
+> > v7:
+> > * Rebase on top of lvds-codec changes
+> > * Drop the data-mapping property
+> > 
+> > v4 -> v6:
+> > * Not part of the series
+> > 
+> > v3:
+> > * New patch
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/display/bridge/lvds-codec.yaml    | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > index 8f373029f5d2..7c4e42f4de61 100644
+> > --- a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > +++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > @@ -55,6 +55,14 @@ properties:
+> >          description: |
+> >            For LVDS encoders, port 0 is the parallel input
+> >            For LVDS decoders, port 0 is the LVDS input
+> > +        properties:
+> > +          bus-width:
+> > +            allOf:
+> > +              - $ref: /schemas/types.yaml#/definitions/uint32
+> > +              - enum: [18, 24]
+> > +              - default: 24
+> > +          description:
+> > +            Number of data lines used to transmit the RGB data.  
+> 
+> This is a bit unclear. First of all, depending on whether the node is an
+> LVDS encoder or decoder, port@0 is either a parallel input or an LVDS
+> input. The property mentiones RGB data, does it mean it apply to LVDS
+> encoders only ? Or should it be in port@1 for LVDS decoders ?
 
-Hi Mateusz,
+Right, I only considered the encoder case here. For the decoder case, we
+don't need a bus-width prop yet, as the bus format output is currently
+enforced by the bus format input of the next component in the chain
+(panel/next-bridge), but that might change if we start dealing with
+panel/bridges supporting several input formats and expecting the LVDS
+encoder/decoder to select one. What we do need for the decoder case
+though, is a data-mapping prop, otherwise this LVDS bridge exposes a
+FIXED in-format and the previous element in the chain has to use its
+'default' output format (which might not be appropriate).
 
-On Tue, Feb 25, 2020 at 09:46:45AM +0100, Mateusz Holenko wrote:
-> From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
->
-> Add documentation for LiteX SoC Controller bindings.
->
-> Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-> ---
->
-> Notes:
->     This commit has been introduced in v3 of the patchset.
->
->  .../soc/litex/litex,soc_controller.yaml       | 46 +++++++++++++++++++
->  MAINTAINERS                                   |  6 +++
->  2 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
->
-> diff --git a/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml b/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
-> new file mode 100644
-> index 000000000000..039894265319
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
-> @@ -0,0 +1,46 @@
-> +PDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/litex/litex,soc_controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LiteX SoC Controller driver
-> +
-> +description: |
-> +  This is the SoC Controller driver for the LiteX SoC Builder.
-> +  It's purpose is to verify LiteX CSR (Control&Status Register) access
-> +  operations and provide function for other drivers to read/write CSRs
-> +  and to check if those accessors are ready to use.
-> +
-> +maintainers:
-> +  - Karol Gugala <kgugala@antmicro.com>
-> +  - Mateusz Holenko <mholenko@antmicro.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: litex,soc_controller
+Maybe we should go for Sam's approach and expose a data-mapping prop
+on both ends of the bridge (that implies describing RGB/DPI bus width
+using the data-mapping prop), this way we wouldn't have to distinguish
+the encoder/decoder case.
 
-Usually compatible will use dash as separators, not underscores.
+> 
+> Then, I'm not sure what the property describes. Is it the number of data
+> lanes that the chip has ? Or the number of lanes routed on the board ?
 
-> +  reg:
-> +    description: Base address and length of the register space
+It's the number of lanes routed on the board. I'll clarify that.
 
-This is usually removed since it's what's expected from the property
-anyway. However, what you should really test for in the number of
-address/size couples being set, and you can do that using maxItems: 1
+> Should it be specified only if the number of lanes on the board is
+> different than the maximum number of lanes of the hardware ?
 
-> +  status:
-> +    description: |
-> +      disables or enables node
-> +
-> +    const: "okay"
+You mean default number of lanes (24)? Well, I guess defining it
+explicitly is not a bad thing, so, even if the default is already 24,
+I don't see a problem setting bus-width = <24>. Actually, maybe that's
+even better if we force new users to explicitly define the number of
+lanes exposed on the DPI interface, but we definitely need this default
+value if we want to keep things backward compatible. Not sure how to
+express that (it's not mandatory, it's not optional, it's recommended
+:-)).
 
-This is added automatically by the tooling, so you can leave it out.
+> A more
+> detailed description is needed.
+> 
+> Updating the example would also be useful.
 
-> +required:
-> +  - compatible
-> +  - reg
-> +  - status
-
-And in general, status is not required. Leaving status out is
-equivalent to status = "okay"
-
-> +examples:
-> +  - |
-> +
-> +  soc_ctrl0: soc_controller@f0000000 {
-> +			compatible = "litex,soc_controller";
-> +			reg = <0x0 0xf0000000 0x0 0xC>;
-> +			status = "okay";
-> +  };
-
-The indentation looks weird here?
-
-Maxime
-
---7qlwsrkwbcxhj43j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlTknwAKCRDj7w1vZxhR
-xTU6AQD8Cy+uoGwSrrpsJlekRlGK1bt9y8kmOWrOWFI/wEg4sgEA1FuWrfWI4m9J
-4Mg4k4q9o4wFx3JoZnsWCNziqQYXugU=
-=agyM
------END PGP SIGNATURE-----
-
---7qlwsrkwbcxhj43j--
+I can do that too.
