@@ -2,181 +2,207 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7988DC35E01
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A09AC35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F74520CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:59:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="F0r6WWZH"
+	by mail.kernel.org (Postfix) with ESMTP id 19EF220CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582654277;
+	bh=tEJS1m9BrK4aNMQ076SuSdVUaSVPfb+7PVuvHZl1Erg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XgG10rxYYU+SEsaQxPqo2wpkh+gIgpzhUzQsECDpY9SIpB9yup2ZbcSCvR0M1h9JK
+	 6HhoQ9h3YYclfavyBMTRWlrSvXLL056AoZWbAdGow1GtLd9Esm1EMT5G+Oavwe1dha
+	 3Svz+8HrO3pmpb9uGFvxmCd6s20fGX7wuAqmK8C8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgBYR6z (ORCPT
+        id S1728476AbgBYSLQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:58:55 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:39815 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731248AbgBYR6r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 12:58:47 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E04E323059;
-        Tue, 25 Feb 2020 18:58:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582653525;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X+cE7/ATdYUr32XspEcbhvNydKCX9kBGmSCPvglvjs8=;
-        b=F0r6WWZHqU3eG2ijJgPOL1KCn8tb5abVKJywGF3x2qz1Qis9dWCMe7dcZ5uk2112cY+QOb
-        Gy978UuLAvOsSSrZIkXpKoRIAj5PAACwqCTPIeZ6C50jUc1fnalLJd/Ni4UKJilMbvGRpT
-        c3fFXVNMozSxYySclei5UGIYMxZyiEc=
-From:   Michael Walle <michael@walle.cc>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, Michael Walle <michael@walle.cc>
-Subject: [PATCH 3/3] arm64: dts: ls1028a: sl28: add support for variant 2
-Date:   Tue, 25 Feb 2020 18:57:56 +0100
-Message-Id: <20200225175756.29508-4-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200225175756.29508-1-michael@walle.cc>
-References: <20200225175756.29508-1-michael@walle.cc>
+        Tue, 25 Feb 2020 13:11:16 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42537 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgBYSLQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:11:16 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so375902otd.9
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 10:11:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kLYxrjCSIrvwr8R9F0r9sUCzkoOdlkpR4nvrMhQsxSk=;
+        b=M8AbAX5WG0ESWTw8JOBDnAtW4NXa3JkYQg/HmpGz0V6uvW+X4GKtV6QtBXDUCiTmwR
+         Lwa494nduEhPSC6U1jpw5+1McpYVh0ws+4ufqWuJr+YBQGLUW5y0/kOw5W65Lk+7462E
+         4/HLKnU9au8NRdiijrQ9+fPmdavcp10BnADx+t/q5Zue8yLXdGzCJctV7lPvlVIp23bI
+         RJ3gu/Xeb66lRc88xerQ6vzW5RWOuCUh1EZPp2RJJntopTvO4n0aYqn/mbczONUMTign
+         bwU3iISjxlLf5vdzuvyThQ+UVL1dx/0bxIEctEpMdY593T6SSe5mNBZBIWcE5ykhd/bF
+         I6Ng==
+X-Gm-Message-State: APjAAAUhROsjNnnGmkDia00jcYR0zvURnpC1Qg+NIeVHaUeTVjW0g1PI
+        nh4I9dm2B1F4WKoMo0g1Iw==
+X-Google-Smtp-Source: APXvYqyc+26w8sK7Uzc0BxJvFH3kWVvKtOCAA09eVdjhDvUtHWVC6pi5Gw40zaZKtvYwrirh3AJMjA==
+X-Received: by 2002:a9d:7410:: with SMTP id n16mr47046974otk.23.1582654275254;
+        Tue, 25 Feb 2020 10:11:15 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 32sm5906620ott.38.2020.02.25.10.11.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 10:11:14 -0800 (PST)
+Received: (nullmailer pid 26920 invoked by uid 1000);
+        Tue, 25 Feb 2020 18:11:14 -0000
+Date:   Tue, 25 Feb 2020 12:11:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 1/2 v2] bus: Add DT bindings for Integrator/AP logic
+ modules
+Message-ID: <20200225181114.GA16296@bogus>
+References: <20200219150833.126058-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: E04E323059
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         NEURAL_SPAM(0.00)[0.968];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.4:email,0.0.0.5:email];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219150833.126058-1-linus.walleij@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that there is support for the Felix switch this variant can also be
-added. It features two external ports ethernet ports which are connected
-to the internal switch core. No direct connection to any of the enetc's
-is supported.
+On Wed, Feb 19, 2020 at 04:08:33PM +0100, Linus Walleij wrote:
+> This adds YAML device tree bindings for the Integrator/AP
+> logic modules. These are plug-in tiles used typically for
+> FPGA prototyping.
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v1->v2:
+> - Fix Logical->Logic spelling error
+> - Set generic names for bus and serial
+> - Just map the addresses 1:1 and use empty ranges, as the
+>   LM's don't really translate the address.
+> - Provide proper DMA ranges: the LM modules see the RAM at
+>   the system-wide alias @80000000 rather than 1:1.
+> - Drop the reg from the bus node (we just need the ranges)
+> - Make the regexp for the bus node such that @address is
+>   optional, as we don't require any reg on the node
+> ---
+>  .../bindings/bus/arm,integrator-ap-lm.yaml    | 83 +++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml b/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
+> new file mode 100644
+> index 000000000000..5db5267410a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bus/arm,integrator-ap-lm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Integrator/AP Logic Module extension bus
+> +
+> +maintainers:
+> +  - Linus Walleij <linusw@kernel.org>
+> +
+> +description: The Integrator/AP is a prototyping platform and as such has a
+> +  site for stacking up to four logic modules (LM) designed specifically for
+> +  use with this platform. A special system controller register can be read to
+> +  determine if a logic module is connected at index 0, 1, 2 or 3. The logic
+> +  module connector is described in this binding. The logic modules per se
+> +  then have their own specific per-module bindings and they will be described
+> +  as subnodes under this logic module extension bus.
+> +
+> +properties:
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  compatible:
+> +    items:
+> +      - const: arm,integrator-ap-lm
+> +
+> +  ranges: true
+> +  dma-ranges: true
+> +
+> +patternProperties:
+> +  "^bus(@[0-9a-f]*)?$":
+> +    description: Nodes on the Logic Module bus represent logic modules
+> +      and are named with bus. The first module is at 0xc0000000, the second
+> +      at 0xd0000000 and so on until the top of the memory of the system at
+> +      0xffffffff. All information about the memory used by the module is
+> +      in ranges and dma-ranges.
+> +    type: object
+> +
+> +    required:
+> +      - compatible
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    bus@c0000000 {
+> +      compatible = "arm,integrator-ap-lm";
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges;
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- arch/arm64/boot/dts/freescale/Makefile        |  1 +
- .../fsl-ls1028a-kontron-sl28-var2.dts         | 68 +++++++++++++++++++
- 2 files changed, 69 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
+ranges = <0xc0000000 0xc0000000 0x10000000>;
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 0d36c6e64574..c04bfa72d83e 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-kbox-a-230-ls.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-sl28.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-sl28-var2.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-sl28-var3-ads2.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-sl28-var4.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
-new file mode 100644
-index 000000000000..0a34ff682027
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
-@@ -0,0 +1,68 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Device Tree file for the Kontron SMARC-sAL28 board.
-+ *
-+ * This is for the network variant 2 which has two ethernet ports. These
-+ * ports are connected to the internal switch.
-+ *
-+ * Copyright (C) 2020 Michael Walle <michael@walle.cc>
-+ *
-+ */
-+
-+/dts-v1/;
-+#include "fsl-ls1028a-kontron-sl28.dts"
-+
-+/ {
-+	model = "Kontron SMARC-sAL28 (TSN-on-module)";
-+	compatible = "kontron,sl28-var2", "kontron,sl28", "fsl,ls1028a";
-+};
-+
-+&enetc_mdio_pf3 {
-+	phy0: ethernet-phy@5 {
-+		reg = <0x5>;
-+		eee-broken-1000t;
-+		eee-broken-100tx;
-+	};
-+
-+	phy1: ethernet-phy@4 {
-+		reg = <0x4>;
-+		eee-broken-1000t;
-+		eee-broken-100tx;
-+	};
-+};
-+
-+&enetc_port0 {
-+	status = "disabled";
-+	/*
-+	 * In the base device tree the PHY was registered in the mdio
-+	 * subnode as it is PHY for this port. On this module this PHY
-+	 * is connected to a switch port instead and registered above.
-+	 * Therefore, delete the mdio subnode as well as the phy-handle
-+	 * property here.
-+	 */
-+	/delete-property/ phy-handle;
-+	/delete-node/ mdio;
-+};
-+
-+&enetc_port2 {
-+	status = "okay";
-+};
-+
-+&mscc_felix_port0 {
-+	label = "gbe0";
-+	phy-handle = <&phy0>;
-+	phy-mode = "sgmii";
-+	status = "okay";
-+};
-+
-+&mscc_felix_port1 {
-+	label = "gbe1";
-+	phy-handle = <&phy1>;
-+	phy-mode = "sgmii";
-+	status = "okay";
-+};
-+
-+&mscc_felix_port4 {
-+	ethernet = <&enetc_port2>;
-+	status = "okay";
-+};
--- 
-2.20.1
+Because you have a unit-address.
 
+> +      dma-ranges;
+> +
+> +      bus {
+
+bus@c0000000
+
+Though, now I'm wondering this shouldn't just be 1 level with:
+
+compatible = "arm,integrator-ap-lm", "simple-bus";
+
+> +        compatible = "simple-bus";
+> +        ranges = <0x00000000 0xc0000000 0x10000000>;
+> +        /* The Logic Modules sees the Core Module 0 RAM @80000000 */
+> +        dma-ranges = <0x00000000 0x80000000 0x10000000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        serial@00100000 {
+
+Drop leading 0s.
+
+> +          compatible = "arm,pl011", "arm,primecell";
+> +          reg = <0x00100000 0x1000>;
+> +          interrupts-extended = <&impd1_vic 1>;
+> +        };
+> +
+> +        impd1_vic: interrupt-controller@03000000 {
+
+Drop leading 0s.
+
+Try 'make W=1 dt_binding_check' as that will warn on all these things.
+
+> +          compatible = "arm,pl192-vic";
+> +          interrupt-controller;
+> +          #interrupt-cells = <1>;
+> +          reg = <0x03000000 0x1000>;
+> +          valid-mask = <0x00000bff>;
+> +          interrupts-extended = <&pic 9>;
+> +        };
+> +      };
+> +    };
+> +
+> +additionalProperties: false
+> -- 
+> 2.24.1
+> 
