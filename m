@@ -2,92 +2,214 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA3BC35E04
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 15:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF2DC35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090F92072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 15:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB552072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:01:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dEg2opxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgBYPxK (ORCPT
+        id S1730875AbgBYQBP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:53:10 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:48852 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730309AbgBYPxK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:53:10 -0500
-X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Feb 2020 10:53:10 EST
-Received: from sapphire.tkos.co.il (unknown [192.168.100.188])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 25 Feb 2020 11:01:15 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12966 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730638AbgBYQBP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:01:15 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582646474; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Jt+IAVS9xM4+4RfW6VNL2gtvTWM4sE89zEqE8H9YrCc=; b=dEg2opxCA7NoWyk/a941qNiIBWi/Y9D3ZgU+5HN0gej/qW1ICLnfkhbnoGOJYOH4IKwcmv54
+ Ds1aLh+yuM+3t0hcdlqXwg4cqPFAEfr8D11LDD811kVAuMM/cFYhkxNLxAyZEKgpUWecIASm
+ w/RSnvK5nFAMmO72k8Cqcs2gTqo=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e554496.7f8d2debeae8-smtp-out-n02;
+ Tue, 25 Feb 2020 16:00:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D200AC447A3; Tue, 25 Feb 2020 16:00:20 +0000 (UTC)
+Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id E92B9440869;
-        Tue, 25 Feb 2020 17:43:21 +0200 (IST)
-Date:   Tue, 25 Feb 2020 17:43:20 +0200
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        (Authenticated sender: okukatla)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9764BC447A3;
+        Tue, 25 Feb 2020 16:00:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9764BC447A3
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
+From:   Odelu Kukatla <okukatla@codeaurora.org>
+To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: clearfog-gt-8k: set gigabit PHY reset
- deassert delay
-Message-ID: <20200225154320.rvmidavleu7ar4km@sapphire.tkos.co.il>
-References: <E1j6YeG-00026g-08@rmk-PC.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E1j6YeG-00026g-08@rmk-PC.armlinux.org.uk>
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-pm@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: [V4, 3/3] arm64: dts: sc7180: Add interconnect provider DT nodes
+Date:   Tue, 25 Feb 2020 21:29:44 +0530
+Message-Id: <1582646384-1458-4-git-send-email-okukatla@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
+References: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Russell,
+Add the DT nodes for the network-on-chip interconnect buses found
+on sc7180-based platforms.
 
-On Tue, Feb 25, 2020 at 11:45:12AM +0000, Russell King wrote:
-> If the mv88e6xxx DSA driver is built as a module, it causes the
-> ethernet driver to re-probe when it's loaded. This in turn causes
-> the gigabit PHY to be momentarily reset and reprogrammed. However,
-> we attempt to reprogram the PHY immediately after deasserting reset,
-> and the PHY ignores the writes.
-> 
-> This results in the PHY operating in the wrong mode, and the copper
-> link states down.
-> 
-> Set a reset deassert delay of 10ms for the gigabit PHY to avoid this.
-> 
-> Fixes: babc5544c293 ("arm64: dts: clearfog-gt-8k: 1G eth PHY reset signal")
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 95 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-Acked-by: Baruch Siach <baruch@tkos.co.il>
-
-Thanks,
-baruch
-
-> ---
->  arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-> index bd881497b872..dc531d136273 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-> @@ -367,6 +367,7 @@
->  		pinctrl-0 = <&cp0_copper_eth_phy_reset>;
->  		reset-gpios = <&cp0_gpio2 11 GPIO_ACTIVE_LOW>;
->  		reset-assert-us = <10000>;
-> +		reset-deassert-us = <10000>;
->  	};
->  
->  	switch0: switch0@4 {
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index cc5a94f..3e28f34 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -748,6 +748,69 @@
+ 			};
+ 		};
+ 
++		config_noc: interconnect@1500000 {
++			compatible = "qcom,sc7180-config-noc";
++			reg = <0 0x01500000 0 0x28000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		system_noc: interconnect@1620000 {
++			compatible = "qcom,sc7180-system-noc";
++			reg = <0 0x01620000 0 0x17080>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		mc_virt: interconnect@1638000 {
++			compatible = "qcom,sc7180-mc-virt";
++			reg = <0 0x01638000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		qup_virt: interconnect@1650000 {
++			compatible = "qcom,sc7180-qup-virt";
++			reg = <0 0x01650000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		aggre1_noc: interconnect@16e0000 {
++			compatible = "qcom,sc7180-aggre1-noc";
++			reg = <0 0x016e0000 0 0x15080>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		aggre2_noc: interconnect@1705000 {
++			compatible = "qcom,sc7180-aggre2-noc";
++			reg = <0 0x01705000 0 0x9000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		compute_noc: interconnect@170e000 {
++			compatible = "qcom,sc7180-compute-noc";
++			reg = <0 0x0170e000 0 0x6000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		mmss_noc: interconnect@1740000 {
++			compatible = "qcom,sc7180-mmss-noc";
++			reg = <0 0x01740000 0 0x1c100>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		ipa_virt: interconnect@1e00000 {
++			compatible = "qcom,sc7180-ipa-virt";
++			reg = <0 0x01e00000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
+ 		tcsr_mutex_regs: syscon@1f40000 {
+ 			compatible = "syscon";
+ 			reg = <0 0x01f40000 0 0x40000>;
+@@ -1103,6 +1166,13 @@
+ 			};
+ 		};
+ 
++		dc_noc: interconnect@9160000 {
++			compatible = "qcom,sc7180-dc-noc";
++			reg = <0 0x09160000 0 0x03200>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
+ 		system-cache-controller@9200000 {
+ 			compatible = "qcom,sc7180-llcc";
+ 			reg = <0 0x09200000 0 0x200000>, <0 0x09600000 0 0x50000>;
+@@ -1110,6 +1180,20 @@
+ 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		gem_noc: interconnect@9680000 {
++			compatible = "qcom,sc7180-gem-noc";
++			reg = <0 0x09680000 0 0x3e200>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		npu_noc: interconnect@9990000 {
++			compatible = "qcom,sc7180-npu-noc";
++			reg = <0 0x09990000 0 0x1600>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
+ 		usb_1: usb@a6f8800 {
+ 			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
+ 			reg = <0 0x0a6f8800 0 0x400>;
+@@ -1154,6 +1238,13 @@
+ 			};
+ 		};
+ 
++		camnoc_virt: interconnect@ac00000 {
++			compatible = "qcom,sc7180-camnoc-virt";
++			reg = <0 0x0ac00000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
+@@ -1481,6 +1572,10 @@
+ 					};
+ 				};
+ 			};
++
++			apps_bcm_voter: bcm_voter {
++				compatible = "qcom,bcm-voter";
++			};
+ 		};
+ 
+ 		cpufreq_hw: cpufreq@18323000 {
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
