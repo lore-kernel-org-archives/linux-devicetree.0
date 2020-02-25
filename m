@@ -2,628 +2,270 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C4FC35DF9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 08:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1772DC35DFB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 08:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863F221556
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 08:47:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="kUSN1bEe"
+	by mail.kernel.org (Postfix) with ESMTP id E3E94218AC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 08:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbgBYIr0 (ORCPT
+        id S1729712AbgBYIvx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:47:26 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45834 "EHLO
+        Tue, 25 Feb 2020 03:51:53 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46386 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729912AbgBYIr0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 03:47:26 -0500
-Received: by mail-lj1-f193.google.com with SMTP id e18so13058006ljn.12
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 00:47:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=C3JKBvMjVCf4pBsc0ONVydf6Qx2xHK00ZE+7AVbWaSg=;
-        b=kUSN1bEesPySJ82tVu5dOkYHMgZ81kCuF8Yx2f2A6g28REtUHIOiG70iEvXJWDwjlo
-         c7szA6Wv2uyE0Kt7Xyr47dw5GChRB4inee9effWk03QqH6BD5g5cLpZb6BZNRXYiEvds
-         lSkpfD5U+1NjBEdamLt/Si3Y6WPAAL5XhW0ko=
+        with ESMTP id S1729205AbgBYIvx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 03:51:53 -0500
+Received: by mail-lj1-f193.google.com with SMTP id x14so13060855ljd.13;
+        Tue, 25 Feb 2020 00:51:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C3JKBvMjVCf4pBsc0ONVydf6Qx2xHK00ZE+7AVbWaSg=;
-        b=tJ3v7SL3H5ORB77RMadY5jqaMglunJfDXVvoajfwBPCSye1+tHOwimSSlrD/loEp75
-         CXgvaOUtch1UEmDIPBksecEJ3zbCdvH2ldHMW0/nJFHkh72r2WPvp23emp3U68p0PUFX
-         ryRFEZVGjGwyTKPEzOwbUGCvvFU+qM4GHu+t6SD8GPLBiEq2YCXqjLNiSuXb0jLRl+gE
-         Xnu5v+gT6IbKFOGLhO6uuERC0hB1gTYxETVyDC7zbxpXF8ghE1c2A8VlFB1IU2Kyvtjf
-         grZm95BVS669vA4kn4Oay2VERsp+84WvuOnrnSfVgNZrWIoSkm34deYM0lDa03oQuPyh
-         rdNw==
-X-Gm-Message-State: APjAAAV3WI7QEAg6K8sAbpUkArZ3+Um1imwOac5a0yyY7h59JzMqzV0O
-        AVGV3RCrjF/PHxk2w1EjgKP+aw==
-X-Google-Smtp-Source: APXvYqxV9ccmJsEnhDB2aifoaewPJPti5EWFaBOS1EzXb4+Y70sdr7Ie94mAX4QQ9waymsthiyMhow==
-X-Received: by 2002:a2e:7e11:: with SMTP id z17mr33042672ljc.279.1582620443044;
-        Tue, 25 Feb 2020 00:47:23 -0800 (PST)
-Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
-        by smtp.gmail.com with ESMTPSA id q10sm7402338ljj.60.2020.02.25.00.47.21
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Kvje0WIw7KFHi5eXdBrKsbSHw9Uloy6b5E6xrY+Sd2Y=;
+        b=lRZUa9Kb6gO9KF75mdpX7XpLp+8KEQbH5WR5dCLu1CfYrlcEVvM8YADmF8ZWof/2dP
+         10Ah5WEbHcUsbdrJdYciM/+1l7OwzEy5yXTPvSolOkqcBQx5hUex9Cj63dYsdxeLT2eM
+         IL4FZ46crP4nSXLU8sSgNyR2ORpn1LQq6ktr2rQ/o2h4ObbkzkvodxeGAbVDDckVqPj9
+         FD67Wxq2Qd4gvVx8e48XY6k6CpEMNXQTx00/CsRuLglyBGqH88kOPumcgDDikGhP0VR0
+         CNu3/eGaBHunSG5YFFeLLsPe3xH+KTafSFcr0MKScRGztTJydOT1InngEtDeBldVJbOV
+         dDtw==
+X-Gm-Message-State: APjAAAXwk55lA7FELf0qPU7ACsTgQompkxs8b4cy4FpOT9zlind2r+iQ
+        FFCY0PhZibYwf8qqGaSmU6U=
+X-Google-Smtp-Source: APXvYqz7uZdBXFV64Wz9Uhk6CHJuqHjdgYBSYtnPSe438XEGhZW7urMt4TKhbEmaDjed40LoEOMtSQ==
+X-Received: by 2002:a2e:9d0f:: with SMTP id t15mr32683526lji.171.1582620710301;
+        Tue, 25 Feb 2020 00:51:50 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id q10sm7408725ljj.60.2020.02.25.00.51.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 00:47:22 -0800 (PST)
-Date:   Tue, 25 Feb 2020 09:47:18 +0100
-From:   Mateusz Holenko <mholenko@antmicro.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Tue, 25 Feb 2020 00:51:49 -0800 (PST)
+Date:   Tue, 25 Feb 2020 10:51:36 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Cc:     Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/5] drivers/tty/serial: add LiteUART driver
-Message-ID: <20200225094437.4170502-5-mholenko@antmicro.com>
-References: <20200225094437.4170502-0-mholenko@antmicro.com>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrei Stefanescu <andrei.stefanescu@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-pm@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: [PATCH v4 0/9] Support ROHM BD99954 charger IC
+Message-ID: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225094437.4170502-0-mholenko@antmicro.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Filip Kokosinski <fkokosinski@antmicro.com>
+Support ROHM BD99954 Battery Management IC
 
-This commit adds driver for the FPGA-based LiteUART serial controller
-from LiteX SoC builder.
+ROHM BD99954 is a Battery Management IC for 1-4 cell Lithium-Ion
+secondary battery. BD99954 is intended to be used in space-constraint
+equipment such as Low profile Notebook PC, Tablets and other
+applications.
 
-The current implementation supports LiteUART configured
-for 32 bit data width and 8 bit CSR bus width.
+Series extracts a "linear ranges" helper out of the regulator
+framework. Linear ranges helper is intended to help converting
+real-world values to register values when conversion is linear. I
+suspect this is useful also for power subsystem and possibly for clk.
 
-It does not support IRQ.
+This version of series introduces new battry DT binding entries and
+adds the parsing in power_supply_get_battery_info().
 
-Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
-Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+Please note that regulator drivers have been compile tested (but not
+linked) after patch 5.
+
+Please also note that only the BD71847 based regulator testing has
+been performed after the patch 6 - all testing is highly appreciated.
+
+Changelog v4:
+ generic:
+   - rebase and drop RFC.
+ DT-bindings:
+   - add I2C node address-cells and size-cells to fix yaml check errors
+   - uncomment multipleOf:
+ bd70528:
+   - add patch which renames driver internal linear_range struct to
+     avoid collision when regulator/driver.h (which gets included from
+     rohm generic header) introduces the linear_range struct.
+ regulators:
+   - rebase to v5.6-rc2 and convert also the two newly introduced
+     drivers to use linear_range struct instead of
+     regulator_linear_range.
+ linear_ranges:
+   - Fix kerneldoc.
+
+Changelog RFC-v3:
+ DT-bindings:
+   - fix the BD99954 binding (the *-microvolt Vs. *-microvolts issue is
+     still there. Not sure which one is correct)
+   - renabe tricklecharge-* binding to trickle-charge-* as suggested by
+     Rob.
+ - drop the linear-ranges helper which was written for BD70528 and
+   extract the linear-range code from regulator framework instead.
+ - refactor regulator framework to utilize extracted linear-ranges
+   code.
+ - change the struct regulator_linear_range to linear_range from
+   regulator drivers.
+ - refactor BD70528 to use regulator framework originated
+   linear-ranges code.
+ - change BD99954 to use linear-ranges code from regulator framework
+
+Changelog RFC-v2:
+ DT-bindings:
+   - Used the battery parameters described in battery.txt
+   - Added few new parameters to battery.txt
+   - Added ASCII art charging profile chart for BD99954 to explain
+     states and limits.
+ Linear ranges:
+   - Fixed division by zero error from linear-ranges code if step 0 is
+     used.
+ Power-supply core:
+   - Added parsing of new battery parameters.
+ BD99954 driver:
+   - converted to use battery parameters from battery node
+   - Added step 0 ranges for reg values which do not change voltage
+   - added dt-node to psy-config
+
+Patch 1:
+	DT binding docs for the new battery parameters
+Patch 2:
+	BD99954 charger DT binding docs
+Patch 3:
+	Linear ranges helpers
+Patch 4:
+	Rename driver internal struct linear_range from bd70528-power
+Patch 5:
+	Rename struct regulator_linear_range to struct linear_range and
+	convert regulator drivers to use renamed struct
+Patch 6:
+	Use linear-ranges helpers in regulator framework
+Patch 7:
+	Use linear-ranges helpers in bd70528 driver
+Patch 8:
+	Parsing of new battery parameters
+Patch 9:
+	ROHM BD99954 charger IC driver
+
 ---
 
-Notes:
-    Changes in v3:
-    - aliases made optional
-    - used litex_get_reg/litex_set_reg functions instead of macros
-    - SERIAL_LITEUART_NR_PORTS renamed to SERIAL_LITEUART_MAX_PORTS
-    - PORT_LITEUART changed from 122 to 123
-    - added dependency on LITEX_SOC_CONTROLLER
-    - patch number changed from 4 to 5
-    
-    No changes in v2.
+Matti Vaittinen (9):
+  dt-bindings: battery: add new battery parameters
+  dt_bindings: ROHM BD99954 Charger
+  drivers: base: add linear ranges helpers
+  power: supply: bd70528: rename linear_range to avoid collision
+  regulator: rename regulator_linear_range to linear_range
+  regulator: use linear_ranges helper
+  power: supply: bd70528: use linear ranges
+  power: supply: add battery parameters
+  power: supply: Support ROHM bd99954 charger
 
- MAINTAINERS                      |   1 +
- drivers/tty/serial/Kconfig       |  32 ++-
- drivers/tty/serial/Makefile      |   1 +
- drivers/tty/serial/liteuart.c    | 411 +++++++++++++++++++++++++++++++
- include/uapi/linux/serial_core.h |   3 +
- 5 files changed, 447 insertions(+), 1 deletion(-)
- create mode 100644 drivers/tty/serial/liteuart.c
+ .../bindings/power/supply/battery.txt         |    6 +
+ .../bindings/power/supply/rohm,bd9995x.yaml   |  155 +++
+ drivers/base/Kconfig                          |    3 +
+ drivers/base/Makefile                         |    1 +
+ drivers/base/linear_ranges.c                  |  246 ++++
+ drivers/power/supply/Kconfig                  |   11 +
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bd70528-charger.c        |  140 +-
+ drivers/power/supply/bd99954-charger.c        | 1171 +++++++++++++++++
+ drivers/power/supply/power_supply_core.c      |    8 +
+ drivers/regulator/88pg86x.c                   |    4 +-
+ drivers/regulator/88pm800-regulator.c         |    4 +-
+ drivers/regulator/Kconfig                     |    1 +
+ drivers/regulator/act8865-regulator.c         |    4 +-
+ drivers/regulator/act8945a-regulator.c        |    2 +-
+ drivers/regulator/arizona-ldo1.c              |    2 +-
+ drivers/regulator/arizona-micsupp.c           |    4 +-
+ drivers/regulator/as3711-regulator.c          |    6 +-
+ drivers/regulator/as3722-regulator.c          |    4 +-
+ drivers/regulator/axp20x-regulator.c          |   16 +-
+ drivers/regulator/bcm590xx-regulator.c        |    8 +-
+ drivers/regulator/bd70528-regulator.c         |    8 +-
+ drivers/regulator/bd71828-regulator.c         |   10 +-
+ drivers/regulator/bd718x7-regulator.c         |   26 +-
+ drivers/regulator/da903x.c                    |    2 +-
+ drivers/regulator/helpers.c                   |  130 +-
+ drivers/regulator/hi6421-regulator.c          |    4 +-
+ drivers/regulator/lochnagar-regulator.c       |    4 +-
+ drivers/regulator/lp873x-regulator.c          |    4 +-
+ drivers/regulator/lp87565-regulator.c         |    2 +-
+ drivers/regulator/lp8788-buck.c               |    2 +-
+ drivers/regulator/max77650-regulator.c        |    2 +-
+ drivers/regulator/mcp16502.c                  |    4 +-
+ drivers/regulator/mp8859.c                    |    2 +-
+ drivers/regulator/mt6323-regulator.c          |    6 +-
+ drivers/regulator/mt6358-regulator.c          |    8 +-
+ drivers/regulator/mt6380-regulator.c          |    6 +-
+ drivers/regulator/mt6397-regulator.c          |    6 +-
+ drivers/regulator/palmas-regulator.c          |    4 +-
+ drivers/regulator/qcom-rpmh-regulator.c       |    2 +-
+ drivers/regulator/qcom_rpm-regulator.c        |   14 +-
+ drivers/regulator/qcom_smd-regulator.c        |   70 +-
+ drivers/regulator/rk808-regulator.c           |   10 +-
+ drivers/regulator/s2mps11.c                   |   14 +-
+ drivers/regulator/sky81452-regulator.c        |    2 +-
+ drivers/regulator/stpmic1_regulator.c         |   18 +-
+ drivers/regulator/tps65086-regulator.c        |   10 +-
+ drivers/regulator/tps65217-regulator.c        |    4 +-
+ drivers/regulator/tps65218-regulator.c        |    6 +-
+ drivers/regulator/tps65912-regulator.c        |    4 +-
+ drivers/regulator/twl-regulator.c             |    4 +-
+ drivers/regulator/twl6030-regulator.c         |    2 +-
+ drivers/regulator/wm831x-dcdc.c               |    2 +-
+ drivers/regulator/wm831x-ldo.c                |    4 +-
+ drivers/regulator/wm8350-regulator.c          |    2 +-
+ drivers/regulator/wm8400-regulator.c          |    2 +-
+ include/linux/linear_range.h                  |   48 +
+ include/linux/power/bd99954-charger.h         | 1075 +++++++++++++++
+ include/linux/power_supply.h                  |    4 +
+ include/linux/regulator/driver.h              |   27 +-
+ 60 files changed, 3007 insertions(+), 344 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+ create mode 100644 drivers/base/linear_ranges.c
+ create mode 100644 drivers/power/supply/bd99954-charger.c
+ create mode 100644 include/linux/linear_range.h
+ create mode 100644 include/linux/power/bd99954-charger.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 22a67514ace3..9b294f083640 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9732,6 +9732,7 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/*/litex,*.yaml
- F:	drivers/soc/litex/litex_soc_ctrl.c
- F:	include/linux/litex.h
-+F:	drivers/tty/serial/liteuart.c
- 
- LIVE PATCHING
- M:	Josh Poimboeuf <jpoimboe@redhat.com>
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 52eaac21ff9f..577c088b9feb 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -529,7 +529,7 @@ config SERIAL_IMX_CONSOLE
- 
- config SERIAL_UARTLITE
- 	tristate "Xilinx uartlite serial port support"
--	depends on HAS_IOMEM
-+	depends on HAS_IOMEM && LITEX_SOC_CONTROLLER
- 	select SERIAL_CORE
- 	help
- 	  Say Y here if you want to use the Xilinx uartlite serial controller.
-@@ -1572,6 +1572,36 @@ config SERIAL_MILBEAUT_USIO_CONSOLE
- 	  receives all kernel messages and warnings and which allows logins in
- 	  single user mode).
- 
-+config SERIAL_LITEUART
-+	tristate "LiteUART serial port support"
-+	depends on HAS_IOMEM
-+	depends on OF
-+	select SERIAL_CORE
-+	help
-+	  This driver is for the FPGA-based LiteUART serial controller from LiteX
-+	  SoC builder.
-+
-+	  Say 'Y' here if you wish to use the LiteUART serial controller.
-+	  Otherwise, say 'N'.
-+
-+config SERIAL_LITEUART_MAX_PORTS
-+	int "Maximum number of LiteUART ports"
-+	depends on SERIAL_LITEUART
-+	default "1"
-+	help
-+	  Set this to the maximum number of serial ports you want the driver
-+	  to support.
-+
-+config SERIAL_LITEUART_CONSOLE
-+	bool "LiteUART serial port console support"
-+	depends on SERIAL_LITEUART=y
-+	select SERIAL_CORE_CONSOLE
-+	help
-+	  Say 'Y' here if you wish to use the FPGA-based LiteUART serial controller
-+	  from LiteX SoC builder as the system console (the system console is the
-+	  device which receives all kernel messages and warnings and which allows
-+	  logins in single user mode). Otherwise, say 'N'.
-+
- endmenu
- 
- config SERIAL_MCTRL_GPIO
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index d056ee6cca33..9f8ba419ff3b 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -89,6 +89,7 @@ obj-$(CONFIG_SERIAL_OWL)	+= owl-uart.o
- obj-$(CONFIG_SERIAL_RDA)	+= rda-uart.o
- obj-$(CONFIG_SERIAL_MILBEAUT_USIO) += milbeaut_usio.o
- obj-$(CONFIG_SERIAL_SIFIVE)	+= sifive.o
-+obj-$(CONFIG_SERIAL_LITEUART) += liteuart.o
- 
- # GPIOLIB helpers for modem control lines
- obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+= serial_mctrl_gpio.o
-diff --git a/drivers/tty/serial/liteuart.c b/drivers/tty/serial/liteuart.c
-new file mode 100644
-index 000000000000..184ecb9f51f3
---- /dev/null
-+++ b/drivers/tty/serial/liteuart.c
-@@ -0,0 +1,411 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * LiteUART serial controller (LiteX) Driver
-+ *
-+ * Copyright (C) 2019 - 2020 Antmicro <www.antmicro.com>
-+ */
-+
-+#include <linux/console.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/serial.h>
-+#include <linux/serial_core.h>
-+#include <linux/timer.h>
-+#include <linux/tty_flip.h>
-+#include <linux/litex.h>
-+
-+/* module-related defines */
-+#define DRIVER_NAME	"liteuart"
-+#define DRIVER_MAJOR	0
-+#define DRIVER_MINOR	0
-+#define DEV_NAME	"ttyLXU"
-+
-+/*
-+ * CSRs definitions
-+ * (base address offsets + width)
-+ *
-+ * The definitions below are true for
-+ * LiteX SoC configured for
-+ * 8-bit CSR Bus, 32-bit aligned.
-+ *
-+ * Supporting other configurations
-+ * might require new definitions
-+ * or a more generic way of indexing
-+ * the LiteX CSRs.
-+ *
-+ * For more details on how CSRs
-+ * are defined and handled in LiteX,
-+ * see comments in the LiteX SoC Driver:
-+ * drivers/soc/litex/litex_soc_ctrl.c
-+ */
-+#define OFF_RXTX	0x00
-+#define SIZE_RXTX	1
-+#define OFF_TXFULL	0x04
-+#define SIZE_TXFULL	1
-+#define OFF_RXEMPTY	0x08
-+#define SIZE_RXEMPTY	1
-+#define OFF_EV_STATUS	0x0c
-+#define SIZE_EV_STATUS	1
-+#define OFF_EV_PENDING	0x10
-+#define SIZE_EV_PENDING	1
-+#define OFF_EV_ENABLE	0x14
-+#define SIZE_EV_ENABLE	1
-+
-+/* events */
-+#define EV_TX		0x1
-+#define EV_RX		0x2
-+
-+struct liteuart_port {
-+	struct uart_port port;
-+	struct timer_list timer;
-+};
-+
-+#define to_liteuart_port(port)	container_of(port, struct liteuart_port, port)
-+
-+static struct liteuart_port liteuart_ports[CONFIG_SERIAL_LITEUART_MAX_PORTS];
-+static DECLARE_BITMAP(liteuart_ports_in_use, CONFIG_SERIAL_LITEUART_MAX_PORTS);
-+
-+#ifdef CONFIG_SERIAL_LITEUART_CONSOLE
-+static struct console liteuart_console;
-+#endif
-+
-+static struct uart_driver liteuart_driver = {
-+	.owner = THIS_MODULE,
-+	.driver_name = DRIVER_NAME,
-+	.dev_name = DEV_NAME,
-+	.major = DRIVER_MAJOR,
-+	.minor = DRIVER_MINOR,
-+	.nr = CONFIG_SERIAL_LITEUART_MAX_PORTS,
-+#ifdef CONFIG_SERIAL_LITEUART_CONSOLE
-+	.cons = &liteuart_console,
-+#endif
-+};
-+
-+static void liteuart_timer(struct timer_list *t)
-+{
-+	struct liteuart_port *uart = from_timer(uart, t, timer);
-+	struct uart_port *port = &uart->port;
-+	unsigned char __iomem *membase = port->membase;
-+	unsigned int flg = TTY_NORMAL;
-+	int ch;
-+	unsigned long status;
-+
-+	while ((status = !litex_get_reg(membase + OFF_RXEMPTY,
-+			SIZE_RXEMPTY)) == 1) {
-+		ch = litex_get_reg(membase + OFF_RXTX, SIZE_RXTX);
-+		port->icount.rx++;
-+
-+		/* necessary for RXEMPTY to refresh its value */
-+		litex_set_reg(membase + OFF_EV_PENDING,
-+			SIZE_EV_PENDING, EV_TX | EV_RX);
-+
-+		/* no overflow bits in status */
-+		if (!(uart_handle_sysrq_char(port, ch)))
-+			uart_insert_char(port, status, 0, ch, flg);
-+
-+		tty_flip_buffer_push(&port->state->port);
-+	}
-+
-+	mod_timer(&uart->timer, jiffies + uart_poll_timeout(port));
-+}
-+
-+static void liteuart_putchar(struct uart_port *port, int ch)
-+{
-+	while (litex_get_reg(port->membase + OFF_TXFULL, SIZE_TXFULL))
-+		cpu_relax();
-+
-+	litex_set_reg(port->membase + OFF_RXTX, SIZE_RXTX, ch);
-+}
-+
-+static unsigned int liteuart_tx_empty(struct uart_port *port)
-+{
-+	/* not really tx empty, just checking if tx is not full */
-+	if (!litex_get_reg(port->membase + OFF_TXFULL, SIZE_TXFULL))
-+		return TIOCSER_TEMT;
-+
-+	return 0;
-+}
-+
-+static void liteuart_set_mctrl(struct uart_port *port, unsigned int mctrl)
-+{
-+	/* modem control register is not present in LiteUART */
-+}
-+
-+static unsigned int liteuart_get_mctrl(struct uart_port *port)
-+{
-+	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
-+}
-+
-+static void liteuart_stop_tx(struct uart_port *port)
-+{
-+}
-+
-+static void liteuart_start_tx(struct uart_port *port)
-+{
-+	struct circ_buf *xmit = &port->state->xmit;
-+	unsigned char ch;
-+
-+	if (unlikely(port->x_char)) {
-+		litex_set_reg(port->membase + OFF_RXTX,
-+			SIZE_RXTX, port->x_char);
-+		port->icount.tx++;
-+		port->x_char = 0;
-+	} else if (!uart_circ_empty(xmit)) {
-+		while (xmit->head != xmit->tail) {
-+			ch = xmit->buf[xmit->tail];
-+			xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-+			port->icount.tx++;
-+			liteuart_putchar(port, ch);
-+		}
-+	}
-+
-+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-+		uart_write_wakeup(port);
-+}
-+
-+static void liteuart_stop_rx(struct uart_port *port)
-+{
-+	struct liteuart_port *uart = to_liteuart_port(port);
-+
-+	/* just delete timer */
-+	del_timer(&uart->timer);
-+}
-+
-+static void liteuart_break_ctl(struct uart_port *port, int break_state)
-+{
-+	/* LiteUART doesn't support sending break signal */
-+}
-+
-+static int liteuart_startup(struct uart_port *port)
-+{
-+	struct liteuart_port *uart = to_liteuart_port(port);
-+
-+	/* disable events */
-+	litex_set_reg(port->membase + OFF_EV_ENABLE, SIZE_EV_ENABLE, 0);
-+
-+	/* prepare timer for polling */
-+	timer_setup(&uart->timer, liteuart_timer, 0);
-+	mod_timer(&uart->timer, jiffies + uart_poll_timeout(port));
-+
-+	return 0;
-+}
-+
-+static void liteuart_shutdown(struct uart_port *port)
-+{
-+}
-+
-+static void liteuart_set_termios(struct uart_port *port, struct ktermios *new,
-+				 struct ktermios *old)
-+{
-+	unsigned int baud;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&port->lock, flags);
-+
-+	/* update baudrate */
-+	baud = uart_get_baud_rate(port, new, old, 0, 460800);
-+	uart_update_timeout(port, new->c_cflag, baud);
-+
-+	spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
-+static const char *liteuart_type(struct uart_port *port)
-+{
-+	return (port->type == PORT_LITEUART) ? DRIVER_NAME : NULL;
-+}
-+
-+static void liteuart_release_port(struct uart_port *port)
-+{
-+}
-+
-+static int liteuart_request_port(struct uart_port *port)
-+{
-+	return 0;
-+}
-+
-+static void liteuart_config_port(struct uart_port *port, int flags)
-+{
-+	if (flags & UART_CONFIG_TYPE)
-+		port->type = PORT_LITEUART;
-+}
-+
-+static int liteuart_verify_port(struct uart_port *port,
-+				struct serial_struct *ser)
-+{
-+	if (port->type != PORT_UNKNOWN && ser->type != PORT_LITEUART)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static const struct uart_ops liteuart_ops = {
-+	.tx_empty	= liteuart_tx_empty,
-+	.set_mctrl	= liteuart_set_mctrl,
-+	.get_mctrl	= liteuart_get_mctrl,
-+	.stop_tx	= liteuart_stop_tx,
-+	.start_tx	= liteuart_start_tx,
-+	.stop_rx	= liteuart_stop_rx,
-+	.break_ctl	= liteuart_break_ctl,
-+	.startup	= liteuart_startup,
-+	.shutdown	= liteuart_shutdown,
-+	.set_termios	= liteuart_set_termios,
-+	.type		= liteuart_type,
-+	.release_port	= liteuart_release_port,
-+	.request_port	= liteuart_request_port,
-+	.config_port	= liteuart_config_port,
-+	.verify_port	= liteuart_verify_port,
-+};
-+
-+static int liteuart_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct liteuart_port *uart;
-+	struct uart_port *port;
-+	int dev_id;
-+
-+	if (!litex_check_accessors())
-+		return -EPROBE_DEFER;
-+
-+	/* no device tree */
-+	if (!np)
-+		return -ENODEV;
-+
-+	/* look for aliases; auto-enumerate for free index if not found */
-+	dev_id = of_alias_get_id(np, "serial");
-+	if (dev_id < 0)
-+		dev_id = find_first_zero_bit(liteuart_ports_in_use,
-+					     CONFIG_SERIAL_LITEUART_MAX_PORTS);
-+
-+	if (dev_id >= CONFIG_SERIAL_LITEUART_MAX_PORTS)
-+		return -ENODEV;
-+
-+	if (test_and_set_bit(dev_id, liteuart_ports_in_use))
-+		return -EBUSY;
-+
-+	uart = &liteuart_ports[dev_id];
-+	port = &uart->port;
-+
-+	/* get {map,mem}base */
-+	port->mapbase = platform_get_resource(pdev, IORESOURCE_MEM, 0)->start;
-+	port->membase = of_iomap(np, 0);
-+	if (!port->membase)
-+		return -ENXIO;
-+
-+	/* values not from device tree */
-+	port->dev = &pdev->dev;
-+	port->iotype = UPIO_MEM;
-+	port->flags = UPF_BOOT_AUTOCONF;
-+	port->ops = &liteuart_ops;
-+	port->regshift = 2;
-+	port->fifosize = 16;
-+	port->iobase = 1;
-+	port->type = PORT_UNKNOWN;
-+	port->line = dev_id;
-+
-+	return uart_add_one_port(&liteuart_driver,
-+				 &liteuart_ports[dev_id].port);
-+}
-+
-+static int liteuart_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static const struct of_device_id liteuart_of_match[] = {
-+	{ .compatible = "litex,liteuart" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, liteuart_of_match);
-+
-+static struct platform_driver liteuart_platform_driver = {
-+	.probe = liteuart_probe,
-+	.remove = liteuart_remove,
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.of_match_table = of_match_ptr(liteuart_of_match),
-+	},
-+};
-+
-+#ifdef CONFIG_SERIAL_LITEUART_CONSOLE
-+
-+static void liteuart_console_write(struct console *co, const char *s,
-+	unsigned int count)
-+{
-+	struct uart_port *port = &liteuart_ports[co->index].port;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&port->lock, flags);
-+	uart_console_write(port, s, count, liteuart_putchar);
-+	spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
-+static int liteuart_console_setup(struct console *co, char *options)
-+{
-+	struct uart_port *port;
-+	int baud = 115200;
-+	int bits = 8;
-+	int parity = 'n';
-+	int flow = 'n';
-+
-+	port = &liteuart_ports[co->index].port;
-+	if (!port->membase)
-+		return -ENODEV;
-+
-+	if (options)
-+		uart_parse_options(options, &baud, &parity, &bits, &flow);
-+
-+	return uart_set_options(port, co, baud, parity, bits, flow);
-+}
-+
-+static struct console liteuart_console = {
-+	.name = DRIVER_NAME,
-+	.write = liteuart_console_write,
-+	.device = uart_console_device,
-+	.setup = liteuart_console_setup,
-+	.flags = CON_PRINTBUFFER,
-+	.index = -1,
-+	.data = &liteuart_driver,
-+};
-+
-+static int __init liteuart_console_init(void)
-+{
-+	register_console(&liteuart_console);
-+
-+	return 0;
-+}
-+
-+console_initcall(liteuart_console_init);
-+#endif /* CONFIG_SERIAL_LITEUART_CONSOLE */
-+
-+static int __init liteuart_init(void)
-+{
-+	int res;
-+
-+	res = uart_register_driver(&liteuart_driver);
-+	if (res)
-+		return res;
-+
-+	res = platform_driver_register(&liteuart_platform_driver);
-+	if (res) {
-+		uart_unregister_driver(&liteuart_driver);
-+		return res;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit liteuart_exit(void)
-+{
-+	platform_driver_unregister(&liteuart_platform_driver);
-+	uart_unregister_driver(&liteuart_driver);
-+}
-+
-+module_init(liteuart_init);
-+module_exit(liteuart_exit);
-+
-+MODULE_AUTHOR("Antmicro <www.antmicro.com>");
-+MODULE_DESCRIPTION("LiteUART serial driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" DRIVER_NAME);
-diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
-index 8ec3dd742ea4..449b8fe9273c 100644
---- a/include/uapi/linux/serial_core.h
-+++ b/include/uapi/linux/serial_core.h
-@@ -293,4 +293,7 @@
- /* Freescale LINFlexD UART */
- #define PORT_LINFLEXUART	122
- 
-+/* LiteUART */
-+#define PORT_LITEUART	123
-+
- #endif /* _UAPILINUX_SERIAL_CORE_H */
+
+base-commit 11a48a5a18c6 ("Linux 5.6-rc2")
 -- 
-2.25.0
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
