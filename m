@@ -2,137 +2,183 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A22C35E01
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B555C35E01
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54BA12051A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D4E2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582649834;
+	bh=90JBCZvuUwjkSs1Hnc3LpN1N/kPAIDcqYTB1iAObgdY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZFOZ5Veu7RXSa5umkHR/btqHXbra3ArHZXmlZY6R3X6TsDCLho7QxH9BcVqMxGJT6
+	 DIUVmGrz3MlQw0jxotwvhJSamOEx6hEA9LvNpr5TCVLB18rzTE3ePQEHgX9PBNUrc2
+	 svfsmY2o/ee6rXx/Ly/rDVsFl+4WqDg5crtlKLOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbgBYQpz (ORCPT
+        id S1731030AbgBYQ5O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:45:55 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:41069 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731203AbgBYQpy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:45:54 -0500
-Received: from [109.168.11.45] (port=37076 helo=pc-ceresoli.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1j6dLD-00DPYO-Q0; Tue, 25 Feb 2020 17:45:51 +0100
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2] of: overlay: log the error cause on resolver failure
-Date:   Tue, 25 Feb 2020 17:45:40 +0100
-Message-Id: <20200225164540.4520-1-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.25.0
+        Tue, 25 Feb 2020 11:57:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727983AbgBYQ5N (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:57:13 -0500
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B664C21927;
+        Tue, 25 Feb 2020 16:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582649832;
+        bh=90JBCZvuUwjkSs1Hnc3LpN1N/kPAIDcqYTB1iAObgdY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2OT1bZXD227lBlfGSt2jsJ3rPt6z/gNKbLuKbylKTau3IUc7jhdLumNvYIIHHYJDq
+         i6YDuBL/cysZRA31xcnYBbQO4vvATKpFxNsLrndeYJtf5zqLIlEwxoNSpU5EeTNjtA
+         TNoO1adeYDCBYlu7+PdEgXhJOI/a6sF/0axR8Tf4=
+Received: by mail-qt1-f172.google.com with SMTP id d9so96461qte.12;
+        Tue, 25 Feb 2020 08:57:12 -0800 (PST)
+X-Gm-Message-State: APjAAAU3RjHl+H/RQcjTIL09oKRc0kQxC+GUlD7glqe7N8TjZpoy6Ecc
+        V5nk/AomzA6E5j5Y+7CN0y+oYRu1/NsbsXVnFw==
+X-Google-Smtp-Source: APXvYqynQGVCaS6vsUSmY1psEfHgy4a65Fy7HlLUFGmtipR1MpihYRNwkGCOJdMOtj5iyqJoT2+ascR04bYI1hr352c=
+X-Received: by 2002:ac8:5513:: with SMTP id j19mr54927970qtq.143.1582649831805;
+ Tue, 25 Feb 2020 08:57:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20200224211035.16897-1-ansuelsmth@gmail.com> <20200224211035.16897-2-ansuelsmth@gmail.com>
+In-Reply-To: <20200224211035.16897-2-ansuelsmth@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 25 Feb 2020 10:57:00 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
+Message-ID: <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] Documentation: devictree: Add ipq806x mdio bindings
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For some of its error paths, of_resolve_phandles() only logs a very generic
-error which does not help much in finding the origin of the problem:
+On Mon, Feb 24, 2020 at 3:10 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>
 
-  OF: resolver: overlay phandle fixup failed: -22
+typo in the subject. Use 'dt-bindings: net: ...' for the subject prefix.
 
-Add error messages for all the error paths that don't have one. Now a
-specific message is always emitted, thus also remove the generic catch-all
-message emitted before returning.
+> Add documentations for ipq806x mdio driver.
+>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+> Changes in v7:
+> - Fix dt_binding_check problem
 
-For example, in case a DT overlay has a fixup node that is not present in
-the base DT __symbols__, this error is now logged:
+Um, no you didn't...
 
-  OF: resolver: node gpio9 not found in base DT, fixup failed
+>
+>  .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> new file mode 100644
+> index 000000000000..3178cbfdc661
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
----
+Dual license new bindings please:
 
-I don't know in detail the meaning of the adjust_local_phandle_references()
-and update_usages_of_a_phandle_reference() error paths, thus I have put
-pretty generic messages. Any suggestion on better wording would be welcome.
+(GPL-2.0-only OR BSD-2-Clause)
 
-Changed in v2:
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x MDIO bus controller
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description: |+
 
- - add a message for each error path that does not have one yet
----
- drivers/of/resolver.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Don't need '|+' unless you need specific formatting.
 
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 83c766233181..a80d673621bc 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -291,8 +291,10 @@ int of_resolve_phandles(struct device_node *overlay)
- 			break;
- 
- 	err = adjust_local_phandle_references(local_fixups, overlay, phandle_delta);
--	if (err)
-+	if (err) {
-+		pr_err("cannot adjust local phandle references\n");
- 		goto out;
-+	}
- 
- 	overlay_fixups = NULL;
- 
-@@ -321,11 +323,15 @@ int of_resolve_phandles(struct device_node *overlay)
- 
- 		err = of_property_read_string(tree_symbols,
- 				prop->name, &refpath);
--		if (err)
-+		if (err) {
-+			pr_err("node %s not found in base DT, fixup failed\n",
-+			       prop->name);
- 			goto out;
-+		}
- 
- 		refnode = of_find_node_by_path(refpath);
- 		if (!refnode) {
-+			pr_err("cannot find node for %s\n", refpath);
- 			err = -ENOENT;
- 			goto out;
- 		}
-@@ -334,13 +340,14 @@ int of_resolve_phandles(struct device_node *overlay)
- 		of_node_put(refnode);
- 
- 		err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
--		if (err)
-+		if (err) {
-+			pr_err("cannot update usages of a phandle reference (%s)\n",
-+				prop->name);
- 			break;
-+		}
- 	}
- 
- out:
--	if (err)
--		pr_err("overlay phandle fixup failed: %d\n", err);
- 	of_node_put(tree_symbols);
- 
- 	return err;
--- 
-2.25.0
+> +  The ipq806x soc have a MDIO dedicated controller that is
+> +  used to comunicate with the gmac phy conntected.
+> +  Child nodes of this MDIO bus controller node are standard
+> +  Ethernet PHY device nodes as described in
+> +  Documentation/devicetree/bindings/net/phy.txt
+> +
+> +allOf:
+> +  - $ref: "mdio.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq8064-mdio
 
+blank line between properties please.
+
+> +  reg:
+> +    maxItems: 1
+> +    description: address and length of the register set for the device
+
+That's every 'reg', you can drop this.
+
+> +  clocks:
+> +    maxItems: 1
+> +    description: A reference to the clock supplying the MDIO bus controller
+
+That's every 'clocks', you can drop this.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    mdio0: mdio@37000000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        compatible = "qcom,ipq8064-mdio", "syscon";
+
+'syscon' doesn't match the schema and is wrong.
+
+> +        reg = <0x37000000 0x200000>;
+
+> +        resets = <&gcc GMAC_CORE1_RESET>;
+> +        reset-names = "stmmaceth";
+
+Not documented.
+
+> +        clocks = <&gcc GMAC_CORE1_CLK>;
+
+You need to include the header for these defines.
+
+> +
+> +        switch@10 {
+> +            compatible = "qca,qca8337";
+> +            /* ... */
+> +        };
+> +    };
+> --
+> 2.25.0
+>
