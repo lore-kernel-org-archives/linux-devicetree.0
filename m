@@ -2,83 +2,257 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5858C35E01
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56B1C35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A257D2176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:21:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MVwL4tMZ"
+	by mail.kernel.org (Postfix) with ESMTP id BB3D92082F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:24:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582655053;
+	bh=yNlfOmQR9+nRAaGFNlH/Ji35iqnG0we1hXWVC5J6quo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ABpLcugQKhV5o44N3c3ViD8v0VUBv7082DyQp3gQvA3WCLj1ktbmFgavzl9QpIHmK
+	 UWrBWYkMX2PBYR1suJX4oclHewLJIxcah6YbpO/fEibH1tHARjYLLRKr9ojIUMBW5e
+	 DuVK/KhKal6rb3hT/K3VHJYrf5LixBRNXNsjtJus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731518AbgBYSVN (ORCPT
+        id S1728845AbgBYSYN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:21:13 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37413 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbgBYSVN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:21:13 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p14so7621592pfn.4
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 10:21:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=iC5nzqy2saMeKutgvDrEBEpuv4q4qMVR1i8BRvTShFQ=;
-        b=MVwL4tMZMEEl2E6apD+vt9gHqTB4aVqv4Q/HjRlSH7fMKmhannrm5E9vIkZWY2DoaP
-         8syBXB8r64JQsGc1kp+v2kTU+8tHIDDpkRr9Le1VGRdqO2al35oYvUIZKsxK5jtZrfNQ
-         Kogo6PvroMVJQlEheMKrYR5XgJERai0cYo4QE=
+        Tue, 25 Feb 2020 13:24:13 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39784 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgBYSYN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:24:13 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 18so262881oij.6;
+        Tue, 25 Feb 2020 10:24:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=iC5nzqy2saMeKutgvDrEBEpuv4q4qMVR1i8BRvTShFQ=;
-        b=rR3/PQDk90Z9YrT3+kX3hR5qxKmZyBNDS7y3gE1SCCOySZ3VHyYqJr5dMhduQ4sR+t
-         w84UDCVEgBmeHk5I5Oup47yjtKG3au/DoigFa8MH8IHznfOSUiWftGgChGq8SZBKh+uI
-         Z+9uzJJB9DqvPZUQFdIJ6p1Zd9zM1niJXduVBT74/+vs/mpSlZgo0NoSORdJST3TTLpK
-         tFcrnrN2hD731LS32VXZFNAMoQt431wUR2ex/fWy9nVFTRBkc302OIXypuU4tjCDK69B
-         ySk6nhuliJyEqFm2/vSnqA/SU061T4dzl2KhBYu6mgl8epJnZnhGMMrW/eJQezoniUhf
-         Kokg==
-X-Gm-Message-State: APjAAAUn2RXQAQ4MywBRQe51pocgczec58lxP16hzO/PZr4ZGNuXVWCh
-        ONx05S19SWKFho49Io2Xybbihw==
-X-Google-Smtp-Source: APXvYqxRFmacFI+CAN2B515JEZN59wcYjLYX/Z/txp5nfpEfz9dqhyREK3lF14hQ/tQEQsNO5Vg7Bw==
-X-Received: by 2002:a63:5124:: with SMTP id f36mr20811504pgb.288.1582654872451;
-        Tue, 25 Feb 2020 10:21:12 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id fz21sm4057444pjb.15.2020.02.25.10.21.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zyUEcnd6mf3xDLs58H/+znKVsIUHaN8BT7T15bn5I/4=;
+        b=eAtzbSrvXHIlj+DIXE5B+cX9N1ysawIUYTjdEbHQca6Zf4J55Mj5rdHaLUbso4WIte
+         OHNqE1DJBJ+jm9Hgr8TELLP+/jzCfpaYlMmAWQ0Bz1p6f+bjZ9qjrwOBVDtShaCCVIjF
+         8pYD4CHtj7PrNRwsLrWMhSEtiBxFedkbngN4UyKt8a2d0DILztME+V2jW9CzuZCotcUO
+         +Wk8Kt49QJhF7clzotAHLZ1CI5YTtiVu/BzCd67AvLIia+S/Y5JR8Xl1A+s9Fhpm8weF
+         RtjeLr5mk5L04qgsTHhpl4qpJNew2axJ+FnbnlcvbqLLVjY1WTmj7IODjDWXOfy59ftF
+         NJBw==
+X-Gm-Message-State: APjAAAUejYKEP4qpg3/o+bd/gxbUJVLfO+vrhiNhBnHxldLWqr8aS0FF
+        ++uNXLCB6JEUQqRw3SWQqg==
+X-Google-Smtp-Source: APXvYqy2YFi/Z/AQYaFr+0YJAOKBBXw2YKbb14sGV3IuzdQIEB+ZE6Mmn4i6K3FgKLi1IMdYd8+R/w==
+X-Received: by 2002:a05:6808:251:: with SMTP id m17mr190704oie.15.1582655052039;
+        Tue, 25 Feb 2020 10:24:12 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n27sm5572706oie.18.2020.02.25.10.24.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:21:12 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 25 Feb 2020 10:24:11 -0800 (PST)
+Received: (nullmailer pid 14462 invoked by uid 1000);
+        Tue, 25 Feb 2020 18:24:10 -0000
+Date:   Tue, 25 Feb 2020 12:24:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 88/89] dt-bindings: display: vc4: hdmi: Add BCM2711 HDMI
+ controllers bindings
+Message-ID: <20200225182410.GA7661@bogus>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <4c21dda4f0b73977de1e54d408d7bf6bf3b6d238.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1581932212-19469-3-git-send-email-akashast@codeaurora.org>
-References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org> <1581932212-19469-3-git-send-email-akashast@codeaurora.org>
-Subject: Re: [PATCH V4 2/3] dt-bindings: geni-se: Add interconnect binding for GENI QUP
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org,
-        Akash Asthana <akashast@codeaurora.org>
-To:     Akash Asthana <akashast@codeaurora.org>, agross@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Date:   Tue, 25 Feb 2020 10:21:11 -0800
-Message-ID: <158265487123.177367.16475123402427047498@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c21dda4f0b73977de1e54d408d7bf6bf3b6d238.1582533919.git-series.maxime@cerno.tech>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Akash Asthana (2020-02-17 01:36:51)
-> Add documentation for the interconnect and interconnect-names properties
-> for the GENI QUP.
->=20
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+On Mon, Feb 24, 2020 at 10:07:30AM +0100, Maxime Ripard wrote:
+> The HDMI controllers found in the BCM2711 SoC need some adjustments to the
+> bindings, especially since the registers have been shuffled around in more
+> register ranges.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml | 118 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 109 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+> index 52b3cdac0bdf..a9d24e1cf684 100644
+> --- a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+> +++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+> @@ -11,24 +11,58 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    const: brcm,bcm2835-hdmi
+> +    enum:
+> +      - brcm,bcm2835-hdmi
+> +      - brcm,bcm2711-hdmi0
+> +      - brcm,bcm2711-hdmi1
+>  
+>    reg:
+> +    oneOf:
+> +      - items:
+> +        - description: HDMI register range
+> +        - description: HD register range
+> +
+> +      - items:
+> +        - description: HDMI controller register range
+> +        - description: DVP register range
+> +        - description: HDMI PHY register range
+> +        - description: Rate Manager register range
+> +        - description: Packet RAM register range
+> +        - description: Metadata RAM register range
+> +        - description: CSC register range
+> +        - description: CEC register range
+> +        - description: HD register range
+> +
+> +  reg-names:
+>      items:
+> -      - description: HDMI register range
+> -      - description: HD register range
+> +      - const: hdmi
+> +      - const: dvp
+> +      - const: phy
+> +      - const: rm
+> +      - const: packet
+> +      - const: metadata
+> +      - const: csc
+> +      - const: cec
+> +      - const: hd
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Don't you want 'hd' 2nd or need to define the 2 entry case separately?
+
+Really, I think this should be 2 files. All but interrupts and ddc have 
+a difference.
+
+>  
+>    interrupts:
+>      minItems: 2
+>  
+>    clocks:
+> -    items:
+> -      - description: The pixel clock
+> -      - description: The HDMI state machine clock
+> +    oneOf:
+> +      - items:
+> +        - description: The pixel clock
+> +        - description: The HDMI state machine clock
+> +
+> +      - items:
+> +        - description: The HDMI state machine clock
+>  
+>    clock-names:
+> -    items:
+> -      - const: pixel
+> +    oneOf:
+> +      - items:
+> +        - const: pixel
+> +        - const: hdmi
+> +
+>        - const: hdmi
+>  
+>    ddc:
+> @@ -51,15 +85,54 @@ properties:
+>    dma-names:
+>      const: audio-rx
+>  
+> +  resets:
+> +    maxItems: 1
+> +
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupts
+>    - clocks
+>    - ddc
+>  
+>  additionalProperties: false
+>  
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - brcm,bcm2711-hdmi0
+> +          - brcm,bcm2711-hdmi1
+> +
+> +then:
+> +  properties:
+> +    reg:
+> +      minItems: 9
+> +
+> +    clocks:
+> +      maxItems: 1
+> +
+> +    clock-names:
+> +      maxItems: 1
+> +
+> +  required:
+> +    - reg-names
+> +    - resets
+> +
+> +else:
+> +  properties:
+> +    reg:
+> +      maxItems: 2
+> +
+> +    clocks:
+> +      minItems: 2
+> +
+> +    clock-names:
+> +      minItems: 2
+> +
+> +  required:
+> +    - interrupts
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/clock/bcm2835.h>
+> @@ -77,4 +150,31 @@ examples:
+>          clock-names = "pixel", "hdmi";
+>      };
+>  
+> +  - |
+> +    hdmi0: hdmi@7ef00700 {
+> +        compatible = "brcm,bcm2711-hdmi0";
+> +        reg = <0x7ef00700 0x300>,
+> +              <0x7ef00300 0x200>,
+> +              <0x7ef00f00 0x80>,
+> +              <0x7ef00f80 0x80>,
+> +              <0x7ef01b00 0x200>,
+> +              <0x7ef01f00 0x400>,
+> +              <0x7ef00200 0x80>,
+> +              <0x7ef04300 0x100>,
+> +              <0x7ef20000 0x100>;
+> +        reg-names = "hdmi",
+> +                    "dvp",
+> +                    "phy",
+> +                    "rm",
+> +                    "packet",
+> +                    "metadata",
+> +                    "csc",
+> +                    "cec",
+> +                    "hd";
+> +        clocks = <&firmware_clocks 13>;
+> +        clock-names = "hdmi";
+> +        resets = <&dvp 0>;
+> +        ddc = <&ddc0>;
+> +    };
+> +
+>  ...
+> -- 
+> git-series 0.9.1
