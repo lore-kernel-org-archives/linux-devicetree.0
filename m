@@ -2,341 +2,157 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0800EC35E01
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC7FC35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDCE2072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:01:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="altxtuow"
+	by mail.kernel.org (Postfix) with ESMTP id EE0BD2084E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 16:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbgBYQBQ (ORCPT
+        id S1730600AbgBYQMG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:01:16 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:28701 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730422AbgBYQBQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:01:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582646475; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=zvao9QwjNuld6femRd5qmfHH4dLsz5VX2JdoSaRTyBQ=; b=altxtuowShd1cVl+nHECs2CINJcrFUcQmFfnGBa4g/GsYsV7AySzw6F90/hA2wLbxPDALi1y
- jKXjV+afqeXXD5v5oO8RgLQOt0Gv41sgPWR1fkLS15OAUVwcR801kdfHDp48b8KPC5VQflaI
- E/9HjlVAVYiBYy0g6Lwq1h8+0bs=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e55448b.7fde1b0bb5a8-smtp-out-n02;
- Tue, 25 Feb 2020 16:00:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C1ACFC4479D; Tue, 25 Feb 2020 16:00:09 +0000 (UTC)
-Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: okukatla)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 41E79C433A2;
-        Tue, 25 Feb 2020 16:00:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 41E79C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
-From:   Odelu Kukatla <okukatla@codeaurora.org>
-To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@google.com,
-        Andy Gross <agross@kernel.org>,
+        Tue, 25 Feb 2020 11:12:06 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40239 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729206AbgBYQMG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 11:12:06 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so3713545wmi.5;
+        Tue, 25 Feb 2020 08:12:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g6DQBCL1J6m7CoP9ENl+OA6l5n10vKz1KQp1E0CCoWY=;
+        b=sRciTubcIEThZ+RT5lykhenWNNSKXJxdptKckXJNiyMWkzy+iJSlzCVPwHZQr6nWM+
+         9hJVEl6NlnZ4iLv+a2bpHBABvfsJ2K//ZR8PH/Jpa9wosMRjh+KvnF1jyzsPke+0/92o
+         YH9frIGUBdp5AD0+x1cTrtMfKdUru+Kn3HIDJSHPEKBMBzQybr7dAEInRIXSnIzMLL86
+         oqbybIkTGK/uUH9nAHmsecbpF4HjPFY1ialbZ+EORUBx3XSjYcuZHOAEKF2K2aXor84I
+         GIk7hEP0xpFPUEHz71MBS66uGPnpY9bH0JBezpjau9zwghggzGWfsLOwbhWU+pDIoW8U
+         Y+QA==
+X-Gm-Message-State: APjAAAVB7sHGtFBLJXfKoqXZ8sB8vHl9BOQmsdEG3Lt9bcoPIBx4cLN/
+        NfM97FdD3EiD7SGOp0Y2F1VG+bXYfXw=
+X-Google-Smtp-Source: APXvYqz2GddcSqaJtZUCCRWuAVNSfLkFf7wKPo8DHL8CvjqQTROqeO/fxgFpdv9+VIUsyHizZWLqZQ==
+X-Received: by 2002:a05:600c:1009:: with SMTP id c9mr30312wmc.162.1582647124463;
+        Tue, 25 Feb 2020 08:12:04 -0800 (PST)
+Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id h10sm4757339wml.18.2020.02.25.08.12.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 08:12:03 -0800 (PST)
+From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
-        elder@linaro.org, linux-arm-msm-owner@vger.kernel.org,
-        Odelu Kukatla <okukatla@codeaurora.org>
-Subject: [V4, 1/3] dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
-Date:   Tue, 25 Feb 2020 21:29:42 +0530
-Message-Id: <1582646384-1458-2-git-send-email-okukatla@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
-References: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>, linux-crypto@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-input@vger.kernel.org
+Subject: [PATCH v2 1/6] dt-bindings: crypto: fsl-sec4: add snvs clock to pwrkey
+Date:   Tue, 25 Feb 2020 16:11:56 +0000
+Message-Id: <20200225161201.1975-1-git@andred.net>
+X-Mailer: git-send-email 2.23.0.rc1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Qualcomm SC7180 platform has several bus fabrics that could be
-controlled and tuned dynamically according to the bandwidth demand.
+On i.MX7 and i.MX8M, the SNVS requires a clock. This is similar to the
+clock bound to the SNVS RTC node, but if the SNVS RTC driver isn't
+enabled, then SNVS doesn't work, and as such the pwrkey driver doesn't
+work (i.e. hangs the kernel, as the clock isn't enabled).
 
-Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Also see commit ec2a844ef7c1
+("ARM: dts: imx7s: add snvs rtc clock")
+for a similar fix.
+
+Signed-off-by: André Draszik <git@andred.net>
+Acked-by: Rob Herring <robh@kernel.org>
+Cc: "Horia Geantă" <horia.geanta@nxp.com>
+Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Anson Huang <Anson.Huang@nxp.com>
+Cc: Robin Gong <yibin.gong@nxp.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-input@vger.kernel.org
+
 ---
- .../bindings/interconnect/qcom,sc7180.yaml         |  85 +++++++++++
- include/dt-bindings/interconnect/qcom,sc7180.h     | 161 +++++++++++++++++++++
- 2 files changed, 246 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
- create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
+v2:
+* split documentation and i.MX7 dts update into two patches
+* remove stray RTC references from documentation (copy/paste error)
+---
+ .../devicetree/bindings/crypto/fsl-sec4.txt     | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-new file mode 100644
-index 0000000..2cb7d4e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+index 2fe245ca816a..a73722c58fab 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+@@ -449,6 +449,19 @@ System ON/OFF key driver
+       Value type: <phandle>
+       Definition: this is phandle to the register map node.
+ 
++   - clocks
++      Usage: optional, required if SNVS LP requires explicit
++          enablement of clocks
++      Value type: <prop_encoded-array>
++      Definition:  a clock specifier describing the clock required for
++          enabling and disabling SNVS LP.
 +
-+title:  Qualcomm SC7180 Network-On-Chip Interconnect
++   - clock-names
++      Usage: optional, required if SNVS LP requires explicit
++          enablement of clocks
++      Value type: <string>
++      Definition: clock name string should be "snvs-pwrkey".
 +
-+maintainers:
-+  - Georgi Djakov <georgi.djakov@linaro.org>
-+
-+description: |
-+   SC7180 interconnect providers support system bandwidth requirements through
-+   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
-+   able to communicate with the BCM through the Resource State Coordinator (RSC)
-+   associated with each execution environment. Provider nodes must point to at
-+   least one RPMh device child node pertaining to their RSC and each provider
-+   can map to multiple RPMh resources.
-+
-+properties:
-+  reg:
-+    maxItems: 1
-+
-+  compatible:
-+    enum:
-+      - qcom,sc7180-aggre1-noc
-+      - qcom,sc7180-aggre2-noc
-+      - qcom,sc7180-camnoc-virt
-+      - qcom,sc7180-compute-noc
-+      - qcom,sc7180-config-noc
-+      - qcom,sc7180-dc-noc
-+      - qcom,sc7180-gem-noc
-+      - qcom,sc7180-ipa-virt
-+      - qcom,sc7180-mc-virt
-+      - qcom,sc7180-mmss-noc
-+      - qcom,sc7180-npu-noc
-+      - qcom,sc7180-qup-virt
-+      - qcom,sc7180-system-noc
-+
-+  '#interconnect-cells':
-+    const: 1
-+
-+  qcom,bcm-voters:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      List of phandles to qcom,bcm-voter nodes that are required by
-+      this interconnect to send RPMh commands.
-+
-+  qcom,bcm-voter-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: |
-+      Names for each of the qcom,bcm-voters specified.
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#interconnect-cells'
-+  - qcom,bcm-voters
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+      #include <dt-bindings/interconnect/qcom,sc7180.h>
-+
-+      config_noc: interconnect@1500000 {
-+            compatible = "qcom,sc7180-config-noc";
-+            reg = <0 0x01500000 0 0x28000>;
-+            #interconnect-cells = <1>;
-+            qcom,bcm-voters = <&apps_bcm_voter>;
-+      };
-+
-+      system_noc: interconnect@1620000 {
-+            compatible = "qcom,sc7180-system-noc";
-+            reg = <0 0x01620000 0 0x17080>;
-+            #interconnect-cells = <1>;
-+            qcom,bcm-voters = <&apps_bcm_voter>;
-+      };
-+
-+      mmss_noc: interconnect@1740000 {
-+            compatible = "qcom,sc7180-mmss-noc";
-+            reg = <0 0x01740000 0 0x1c100>;
-+            #interconnect-cells = <1>;
-+            qcom,bcm-voters = <&apps_bcm_voter>;
-+      };
-diff --git a/include/dt-bindings/interconnect/qcom,sc7180.h b/include/dt-bindings/interconnect/qcom,sc7180.h
-new file mode 100644
-index 0000000..f9970f6
---- /dev/null
-+++ b/include/dt-bindings/interconnect/qcom,sc7180.h
-@@ -0,0 +1,161 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Qualcomm SC7180 interconnect IDs
-+ *
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
-+#define __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
-+
-+#define MASTER_A1NOC_CFG			0
-+#define MASTER_QSPI			1
-+#define MASTER_QUP_0			2
-+#define MASTER_SDCC_2			3
-+#define MASTER_EMMC			4
-+#define MASTER_UFS_MEM			5
-+#define SLAVE_A1NOC_SNOC			6
-+#define SLAVE_SERVICE_A1NOC			7
-+
-+#define MASTER_A2NOC_CFG			0
-+#define MASTER_QDSS_BAM			1
-+#define MASTER_QUP_1			2
-+#define MASTER_USB3			3
-+#define MASTER_CRYPTO			4
-+#define MASTER_IPA			5
-+#define MASTER_QDSS_ETR			6
-+#define SLAVE_A2NOC_SNOC			7
-+#define SLAVE_SERVICE_A2NOC			8
-+
-+#define MASTER_CAMNOC_HF0_UNCOMP			0
-+#define MASTER_CAMNOC_HF1_UNCOMP			1
-+#define MASTER_CAMNOC_SF_UNCOMP			2
-+#define SLAVE_CAMNOC_UNCOMP			3
-+
-+#define MASTER_NPU			0
-+#define MASTER_NPU_PROC			1
-+#define SLAVE_CDSP_GEM_NOC			2
-+
-+#define MASTER_SNOC_CNOC			0
-+#define MASTER_QDSS_DAP			1
-+#define SLAVE_A1NOC_CFG			2
-+#define SLAVE_A2NOC_CFG			3
-+#define SLAVE_AHB2PHY_SOUTH			4
-+#define SLAVE_AHB2PHY_CENTER			5
-+#define SLAVE_AOP			6
-+#define SLAVE_AOSS			7
-+#define SLAVE_BOOT_ROM			8
-+#define SLAVE_CAMERA_CFG				9
-+#define SLAVE_CAMERA_NRT_THROTTLE_CFG			10
-+#define SLAVE_CAMERA_RT_THROTTLE_CFG			11
-+#define SLAVE_CLK_CTL			12
-+#define SLAVE_RBCPR_CX_CFG			13
-+#define SLAVE_RBCPR_MX_CFG			14
-+#define SLAVE_CRYPTO_0_CFG			15
-+#define SLAVE_DCC_CFG			16
-+#define SLAVE_CNOC_DDRSS			17
-+#define SLAVE_DISPLAY_CFG			18
-+#define SLAVE_DISPLAY_RT_THROTTLE_CFG			19
-+#define SLAVE_DISPLAY_THROTTLE_CFG			20
-+#define SLAVE_EMMC_CFG			21
-+#define SLAVE_GLM					22
-+#define SLAVE_GFX3D_CFG			23
-+#define SLAVE_IMEM_CFG			24
-+#define SLAVE_IPA_CFG			25
-+#define SLAVE_CNOC_MNOC_CFG			26
-+#define SLAVE_CNOC_MSS			27
-+#define SLAVE_NPU_CFG			28
-+#define SLAVE_NPU_DMA_BWMON_CFG			29
-+#define SLAVE_NPU_PROC_BWMON_CFG			30
-+#define SLAVE_PDM			31
-+#define SLAVE_PIMEM_CFG			32
-+#define SLAVE_PRNG			33
-+#define SLAVE_QDSS_CFG			34
-+#define SLAVE_QM_CFG			35
-+#define SLAVE_QM_MPU_CFG			36
-+#define SLAVE_QSPI_0			37
-+#define SLAVE_QUP_0			38
-+#define SLAVE_QUP_1			39
-+#define SLAVE_SDCC_2			40
-+#define SLAVE_SECURITY			41
-+#define SLAVE_SNOC_CFG			42
-+#define SLAVE_TCSR			43
-+#define SLAVE_TLMM_WEST			44
-+#define SLAVE_TLMM_NORTH			45
-+#define SLAVE_TLMM_SOUTH			46
-+#define SLAVE_UFS_MEM_CFG			47
-+#define SLAVE_USB3			48
-+#define SLAVE_VENUS_CFG			49
-+#define SLAVE_VENUS_THROTTLE_CFG			50
-+#define SLAVE_VSENSE_CTRL_CFG			51
-+#define SLAVE_SERVICE_CNOC			52
-+
-+#define MASTER_CNOC_DC_NOC			0
-+#define SLAVE_GEM_NOC_CFG			1
-+#define SLAVE_LLCC_CFG			2
-+
-+#define MASTER_APPSS_PROC		0
-+#define MASTER_SYS_TCU			1
-+#define MASTER_GEM_NOC_CFG			2
-+#define MASTER_COMPUTE_NOC			3
-+#define MASTER_MNOC_HF_MEM_NOC			4
-+#define MASTER_MNOC_SF_MEM_NOC			5
-+#define MASTER_SNOC_GC_MEM_NOC			6
-+#define MASTER_SNOC_SF_MEM_NOC			7
-+#define MASTER_GFX3D			8
-+#define SLAVE_MSS_PROC_MS_MPU_CFG			9
-+#define SLAVE_GEM_NOC_SNOC			10
-+#define SLAVE_LLCC			11
-+#define SLAVE_SERVICE_GEM_NOC			12
-+
-+#define MASTER_IPA_CORE			0
-+#define SLAVE_IPA_CORE			1
-+
-+#define MASTER_LLCC			0
-+#define SLAVE_EBI1			1
-+
-+#define MASTER_CNOC_MNOC_CFG			0
-+#define MASTER_CAMNOC_HF0			1
-+#define MASTER_CAMNOC_HF1			2
-+#define MASTER_CAMNOC_SF			3
-+#define MASTER_MDP0			4
-+#define MASTER_ROTATOR			5
-+#define MASTER_VIDEO_P0			6
-+#define MASTER_VIDEO_PROC			7
-+#define SLAVE_MNOC_HF_MEM_NOC			8
-+#define SLAVE_MNOC_SF_MEM_NOC			9
-+#define SLAVE_SERVICE_MNOC			10
-+
-+#define MASTER_NPU_SYS			0
-+#define MASTER_NPU_NOC_CFG			1
-+#define SLAVE_NPU_CAL_DP0			2
-+#define SLAVE_NPU_CP			3
-+#define SLAVE_NPU_INT_DMA_BWMON_CFG			4
-+#define SLAVE_NPU_DPM			5
-+#define SLAVE_ISENSE_CFG			6
-+#define SLAVE_NPU_LLM_CFG			7
-+#define SLAVE_NPU_TCM			8
-+#define SLAVE_NPU_COMPUTE_NOC			9
-+#define SLAVE_SERVICE_NPU_NOC			10
-+
-+#define MASTER_QUP_CORE_0			0
-+#define MASTER_QUP_CORE_1			1
-+#define SLAVE_QUP_CORE_0			2
-+#define SLAVE_QUP_CORE_1			3
-+
-+#define MASTER_SNOC_CFG			0
-+#define MASTER_A1NOC_SNOC			1
-+#define MASTER_A2NOC_SNOC			2
-+#define MASTER_GEM_NOC_SNOC			3
-+#define MASTER_PIMEM			4
-+#define SLAVE_APPSS			5
-+#define SLAVE_SNOC_CNOC			6
-+#define SLAVE_SNOC_GEM_NOC_GC			7
-+#define SLAVE_SNOC_GEM_NOC_SF			8
-+#define SLAVE_IMEM			9
-+#define SLAVE_PIMEM			10
-+#define SLAVE_SERVICE_SNOC			11
-+#define SLAVE_QDSS_STM			12
-+#define SLAVE_TCU			13
-+
-+#endif
+ EXAMPLE:
+ 	snvs-pwrkey@020cc000 {
+ 		compatible = "fsl,sec-v4.0-pwrkey";
+@@ -456,6 +469,8 @@ EXAMPLE:
+ 		interrupts = <0 4 0x4>
+ 	        linux,keycode = <116>; /* KEY_POWER */
+ 		wakeup-source;
++		clocks = <&clks IMX7D_SNVS_CLK>;
++		clock-names = "snvs-pwrkey";
+ 	};
+ 
+ =====================================================================
+@@ -547,6 +562,8 @@ FULL EXAMPLE
+ 			interrupts = <0 4 0x4>;
+ 			linux,keycode = <116>; /* KEY_POWER */
+ 			wakeup-source;
++			clocks = <&clks IMX7D_SNVS_CLK>;
++			clock-names = "snvs-pwrkey";
+ 		};
+ 	};
+ 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.23.0.rc1
+
