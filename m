@@ -7,89 +7,91 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D01C35E0E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861D1C35E01
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC5121D7E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4990120732
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 17:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582650347;
-	bh=LmEtabuWA+G1o/Km9fDBvyPnHYAElQUP7NnN/WyUgIg=;
+	s=default; t=1582650656;
+	bh=sL3A5dTa8CoK1C3BOJe8PnrhUUsGjKfqIqHkSZSurZo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l3XheWlHhpJZWudaH3gYgEEGU51fdXAHjKpS1lACflaDwMaGevnnkSTzzoU0emyl0
-	 /I7XfSebeAto4r0jN5KhJAOHfatny6z40IZf7XtsyyVhfWcVHT3Vb+bhlw9DGsxOvI
-	 F/dqPrWS4+LvRfRQIwzZLVsZEAmsHS512f/IKxdc=
+	b=Y5yqHEnaE6/vlGDG8BtDVIsfTXrSL4UvdVsv83dGiIKZLrqVQSZ+tLfD1P1qJN51B
+	 +9dusCjYJFcaowKhm15uRia5zVR/qVCQzyEXaiqRXbtkc5c+xU+svx0Biktt4ZUnJd
+	 R5tjNiTxrJqOLX10llF6NzWFvJDcSoBsYfciZOEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbgBYRFo (ORCPT
+        id S1730462AbgBYRKz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:05:44 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33636 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730784AbgBYRFo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 12:05:44 -0500
-Received: by mail-oi1-f194.google.com with SMTP id q81so49607oig.0;
-        Tue, 25 Feb 2020 09:05:43 -0800 (PST)
+        Tue, 25 Feb 2020 12:10:55 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46993 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730174AbgBYRKz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 12:10:55 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a22so13235335oid.13;
+        Tue, 25 Feb 2020 09:10:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MIUvkNpZ4/9BpxRsrF2+jh3yva+cnan5AW3vpCSNlt0=;
-        b=Koad/aNnW3tuI02oldKDf8Ixbjh7Ffe1wfTSTjdriOzqemDwwFnUEK5GTLlNkDhpHG
-         p10OVrMdYP7FwXYfU8uFV5qPcK6hq7N5wM6SaZLRynI6ZHAniqpdocINAPLDfcemJjds
-         GUD0sNWHBIWJeQjmAs+5sEIl8JpIEK06amzwQ91XGvAql0RC4Ok0HlkivCmf7oIoULdX
-         rlytDv26oT9IugnpAeZD8Jjg/NIBbxZIsYBgzydjUZApZblPwwYfy145vw2siB3fgg9z
-         ih+K5lHtCvOlu4vf3QUJ875jMgRSz5UoSWT3+Klxjhu/5vVebJ7Sg7+85vT+A+7SVh5w
-         yUag==
-X-Gm-Message-State: APjAAAWg0/S6siV71glktoVMs7gY+xKaSNpEvuY8CYKq63zOuxAzqA3p
-        2QbRx5on94gZVhufObT7+g==
-X-Google-Smtp-Source: APXvYqxUftqdCZmNNSVgMwJqXatm40QiTX+fuppmG+ulElKyDpEyKa1buI+YUnzc03U4OvwCz379Zw==
-X-Received: by 2002:aca:dd05:: with SMTP id u5mr4334323oig.91.1582650343127;
-        Tue, 25 Feb 2020 09:05:43 -0800 (PST)
+        bh=WxYxKuDCjw2ta/VcYxfG6H2pyMpZknzieLnpy09W8ak=;
+        b=JZqrBW2dcCONZpZqDyHizIPFtqY7uailyKcnNYnUjBtUv9xHwnEe1TZ5XI0809wfOW
+         cP022neZfnRW78v+30xIPdX/aMr9uJ+VTi8FPyRkbZAy5kLIY+2xgSNBAocbdyBYKu1O
+         eNJUjLCXE8y5duspEf9cGyswbU4TZfduGQIepZcqLiPOSOxS03Va4hLURdECCZ6Mpls8
+         h0uSTue36K1UH04fN3PN6JeXyNLzWeW7cHjzxGbvqsIqPPG0Y1bzKTaKM5vmO00KpN3r
+         LMF+097RDXnphB58wiluOAt1V++hUGPXBarUctz4iWaqTKtvrzie1u8wP/vGv7NKuSsj
+         fOAw==
+X-Gm-Message-State: APjAAAVvqiVuX5AC4WOtnnEeDOKa/QNeU5dI+NUWTpeEJe5dXWPGsbOv
+        imiPdjlT6XVd4Ru7Ej/ILw==
+X-Google-Smtp-Source: APXvYqyNZeSueBjr4b/f5cuT3NJLbY2PjOkM3NiotToiEr0JE4LRnFFXTwEwBP5qHj5CvNRnu0FATA==
+X-Received: by 2002:aca:c401:: with SMTP id u1mr9332oif.62.1582650654724;
+        Tue, 25 Feb 2020 09:10:54 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e21sm5465089oib.16.2020.02.25.09.05.41
+        by smtp.gmail.com with ESMTPSA id m18sm5830700otf.6.2020.02.25.09.10.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 09:05:42 -0800 (PST)
-Received: (nullmailer pid 30199 invoked by uid 1000);
-        Tue, 25 Feb 2020 17:05:41 -0000
-Date:   Tue, 25 Feb 2020 11:05:41 -0600
+        Tue, 25 Feb 2020 09:10:53 -0800 (PST)
+Received: (nullmailer pid 6373 invoked by uid 1000);
+        Tue, 25 Feb 2020 17:10:52 -0000
+Date:   Tue, 25 Feb 2020 11:10:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, vnkgutta@codeaurora.org
-Subject: Re: [PATCH v4 4/5] dt-bindings: clock: Add SM8250 GCC clock bindings
-Message-ID: <20200225170541.GA28897@bogus>
-References: <20200224045003.3783838-1-vkoul@kernel.org>
- <20200224045003.3783838-5-vkoul@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH v8 2/7] dt-bindings: display: mediatek: update dpi
+ supported chips
+Message-ID: <20200225171052.GA6002@bogus>
+References: <20200225094057.120144-1-jitao.shi@mediatek.com>
+ <20200225094057.120144-3-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224045003.3783838-5-vkoul@kernel.org>
+In-Reply-To: <20200225094057.120144-3-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 10:20:02AM +0530, Vinod Koul wrote:
-> From: Taniya Das <tdas@codeaurora.org>
+On Tue, 25 Feb 2020 17:40:52 +0800, Jitao Shi wrote:
+> Add descriptions about supported chips, including MT2701 & MT8173 &
+> mt8183
 > 
-> Add device tree bindings for global clock controller on SM8250 SoCs.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
->  .../bindings/clock/qcom,gcc-sm8250.yaml       |  72 +++++
->  include/dt-bindings/clock/qcom,gcc-sm8250.h   | 271 ++++++++++++++++++
->  2 files changed, 343 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8250.yaml
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-sm8250.h
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt        | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
