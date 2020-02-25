@@ -2,88 +2,213 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636BCC35E01
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 385F2C35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CB020732
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582655487;
-	bh=cvlleMILxfrIDkXIEvUhnuZbpZe6+/NnM/r6wEj3sVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YQ9UJdiJcggXGPGsyl4sRTAeQAHo+MSdygCAAftov4XeS+JAiYJQCTMUAAClvKVaN
-	 9frLyhNqMlCjZR2DZQyv2wySjg8RUQYYOTWbCFAdGbN1uMH6ekSQMZpx5n+HoGeA4v
-	 CkuYNHePy9+MtkoD7t3FotBxBY/Qv4mVMwR3jghc=
+	by mail.kernel.org (Postfix) with ESMTP id 10CBA21556
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyHv0N8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbgBYSb0 (ORCPT
+        id S1728753AbgBYSkE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:31:26 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38101 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731421AbgBYSb0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:31:26 -0500
-Received: by mail-oi1-f196.google.com with SMTP id r137so293492oie.5
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 10:31:25 -0800 (PST)
+        Tue, 25 Feb 2020 13:40:04 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35123 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731502AbgBYSkE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:40:04 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m3so264080wmi.0;
+        Tue, 25 Feb 2020 10:40:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=feAL21K5KyQooD4Dct/J2LgVGWzU4vdAa6CeFCmcjfo=;
+        b=eyHv0N8X4mYVdB/JLOAbKaWUiTwdA1GhsnRxkfBZnYkw7AtaMhL7rqrajCubVKn7ny
+         3BDX09hTwlqazgI7AUtjqmj09Pn9IoohJaA+GYE3iYx3FwCt66bsHOPxM+ag9/fAEOwi
+         BDe3exw4DenI7EmRulnRSmeCWHZT4zdgMD4Hui18X1nlLRsBZVXaTNSr3U22p4Nrsl6/
+         WjeF56LmWzh62DKceeMyGjZDUcfHQaVSt8LQscuJeVXOxywOX8yPaLZpNywrocUyeiKP
+         AhCoLqHrndHV8RK6ajFPOnRnWBkfO/ynztO6nCEayUxA1vJDtN0OPm/uyUmgkypbyLjI
+         UB8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mF071uqYq+IBnnj/TupDNeQmYwHD8Ux7HxDE1nqu4I4=;
-        b=J9cD6gkWwuR1kzLHByK8UvZnWtAIf7ebRVv41DxWY1diJ4N30dADFD9NnEWCHEBm50
-         dR0Un+DDZfNj4vRIcNHfAUtr6Vl8Dn5S+iVIQ+zzf3ggUPXqWkxxGPLl0MdUHZoE8w3l
-         MYGnYVk5lN3jeuVk91KiZisgYkRC3iMLzVVPYMScpa9PvWBDKEnIerF1JQmjhQsHVXcw
-         0sSLmKMRHnZURAvv/Kq87/ShL0RwbQMcNZZwHb3NTYayCX7ChAwGL9vVUxk/Ravf7Fwj
-         tGiuytvJKK6CU6pJeW0Lz4h1e6GKV+Xci5ys/1wkQIEtM5l1CuYmlWD7r9I3QMDYpeti
-         NsUA==
-X-Gm-Message-State: APjAAAV9mvYVXRF7OcPsm0p2TTjcfSkcUezrayt47izqu3EzWuRZbclC
-        1En8vHzNE3pI9s6KX0bHoA==
-X-Google-Smtp-Source: APXvYqwaauke2KbAeQ5bi9ntwobNE58vnjz82V2XZ78WRUDQpBblByrsUUcH1YTciMvenIIClEAyIw==
-X-Received: by 2002:aca:ab52:: with SMTP id u79mr182330oie.145.1582655484692;
-        Tue, 25 Feb 2020 10:31:24 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n2sm5450894oia.58.2020.02.25.10.31.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:31:24 -0800 (PST)
-Received: (nullmailer pid 24745 invoked by uid 1000);
-        Tue, 25 Feb 2020 18:31:23 -0000
-Date:   Tue, 25 Feb 2020 12:31:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 3/5 v2] dt-bindings: arm: Add RealView YAML schema
-Message-ID: <20200225183123.GA24686@bogus>
-References: <20200225084627.24825-1-linus.walleij@linaro.org>
- <20200225084627.24825-3-linus.walleij@linaro.org>
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=feAL21K5KyQooD4Dct/J2LgVGWzU4vdAa6CeFCmcjfo=;
+        b=hQ9bduo8w1T82ToMHjKcVDqEgm0LEt5DakFaLHsBBrOord7tNNOWO//dhSDNnGRadp
+         IyGsFuGGEzuaZMHzsD/jobCG5+g+6soT9sIoirwCdGntA5acNTC+fu+50hmM/xmU+pcQ
+         Ap1dA4sW8gAmN/0ZLetDV5zho6/SQB1hzkSnbmec5x4MXVvjvUF4Aq3Wyb3dP0JBH6b5
+         ZdrqnCtBEYcghZdaetj5cbiSO5NMVjtX993dNHTj+MZwWGwtXWgYmLxfQ6+z6j8NIAPx
+         aaXdbMRAAEv8rzQmZPoTDyJ6xSOr5k+9bMAb3kXFpqhNv2lWLVXj6/2CLwWyyU72L/z8
+         6thw==
+X-Gm-Message-State: APjAAAWuzDP0eMOKYKcvkZRO1hcj2f9+O5wPhAzF5ADT3Cvu7DsZlmVN
+        G2pWiX5FT9MxDCrv0iafc8E=
+X-Google-Smtp-Source: APXvYqxkUbC3nFV7VQ8Rme8IvHtqfkWKRCuZgFFg5eoAcloLZmRp5cJ0Askhj8hpJax4US6yo8+V/Q==
+X-Received: by 2002:a1c:3803:: with SMTP id f3mr587833wma.134.1582656000717;
+        Tue, 25 Feb 2020 10:40:00 -0800 (PST)
+Received: from AnsuelXPS (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.gmail.com with ESMTPSA id x7sm24416640wrq.41.2020.02.25.10.39.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 10:39:59 -0800 (PST)
+From:   <ansuelsmth@gmail.com>
+To:     "'Rob Herring'" <robh+dt@kernel.org>
+Cc:     "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Andrew Lunn'" <andrew@lunn.ch>,
+        "'Florian Fainelli'" <f.fainelli@gmail.com>,
+        "'Heiner Kallweit'" <hkallweit1@gmail.com>,
+        "'Russell King'" <linux@armlinux.org.uk>,
+        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>,
+        "'netdev'" <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200224211035.16897-1-ansuelsmth@gmail.com> <20200224211035.16897-2-ansuelsmth@gmail.com> <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
+In-Reply-To: <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
+Subject: R: [PATCH v7 2/2] Documentation: devictree: Add ipq806x mdio bindings
+Date:   Tue, 25 Feb 2020 19:39:59 +0100
+Message-ID: <007601d5ec0a$fc80df70$f5829e50$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225084627.24825-3-linus.walleij@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQMEm6ZQ0XHBfC/w6iKFBoKEX66FxAGLDSBGAdvCRiqls6b/QA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Feb 2020 09:46:25 +0100, Linus Walleij wrote:
-> This implements the top-level schema for the ARM RealView
-> platforms.
+> On Mon, Feb 24, 2020 at 3:10 PM Ansuel Smith <ansuelsmth@gmail.com>
+> wrote:
+> >
 > 
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v1->v2:
-> - No changes
-> ---
->  .../devicetree/bindings/arm/arm,realview.yaml | 123 ++++++++++++++++++
->  1 file changed, 123 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/arm,realview.yaml
+> typo in the subject. Use 'dt-bindings: net: ...' for the subject prefix.
+> 
+> > Add documentations for ipq806x mdio driver.
+> >
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> > Changes in v7:
+> > - Fix dt_binding_check problem
+> 
+> Um, no you didn't...
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Does make dt_check_binding still gives errors? 
+If yes can you give me some advice on how to test only this since it gives me
+errors on checking other upstream Documentation ? 
+I will fix the other problem in v8. Sorry for the mess and thanks.
+
+> >
+> >  .../bindings/net/qcom,ipq8064-mdio.yaml       | 55
+> +++++++++++++++++++
+> >  1 file changed, 55 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-
+> mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-
+> mdio.yaml
+> > new file mode 100644
+> > index 000000000000..3178cbfdc661
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-
+> mdio.yaml
+> > @@ -0,0 +1,55 @@
+> > +# SPDX-License-Identifier: GPL-2.0-or-later
+> 
+> Dual license new bindings please:
+> 
+> (GPL-2.0-only OR BSD-2-Clause)
+> 
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm ipq806x MDIO bus controller
+> > +
+> > +maintainers:
+> > +  - Ansuel Smith <ansuelsmth@gmail.com>
+> > +
+> > +description: |+
+> 
+> Don't need '|+' unless you need specific formatting.
+> 
+> > +  The ipq806x soc have a MDIO dedicated controller that is
+> > +  used to comunicate with the gmac phy conntected.
+> > +  Child nodes of this MDIO bus controller node are standard
+> > +  Ethernet PHY device nodes as described in
+> > +  Documentation/devicetree/bindings/net/phy.txt
+> > +
+> > +allOf:
+> > +  - $ref: "mdio.yaml#"
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: qcom,ipq8064-mdio
+> 
+> blank line between properties please.
+> 
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: address and length of the register set for the device
+> 
+> That's every 'reg', you can drop this.
+> 
+> > +  clocks:
+> > +    maxItems: 1
+> > +    description: A reference to the clock supplying the MDIO bus
+> controller
+> 
+> That's every 'clocks', you can drop this.
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +
+> > +examples:
+> > +  - |
+> > +    mdio0: mdio@37000000 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        compatible = "qcom,ipq8064-mdio", "syscon";
+> 
+> 'syscon' doesn't match the schema and is wrong.
+> 
+> > +        reg = <0x37000000 0x200000>;
+> 
+> > +        resets = <&gcc GMAC_CORE1_RESET>;
+> > +        reset-names = "stmmaceth";
+> 
+> Not documented.
+> 
+> > +        clocks = <&gcc GMAC_CORE1_CLK>;
+> 
+> You need to include the header for these defines.
+> 
+> > +
+> > +        switch@10 {
+> > +            compatible = "qca,qca8337";
+> > +            /* ... */
+> > +        };
+> > +    };
+> > --
+> > 2.25.0
+> >
+
