@@ -2,101 +2,140 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9699C35DF5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 13:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD78C35E01
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 14:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E877222C2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 13:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4178E222C2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 14:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582639112;
-	bh=t6y4ed1PLF1YCpiLXkMfIss2UpXqGJbG2hojsdADI9g=;
+	s=default; t=1582639390;
+	bh=4qn639jYpkdf96gHfdgJKSoL+lKpXNE16GpYcCHFXTM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o+uD4EzRIWmypBLi/TU3o+ExufsraYt3Ncqz1qxZ5hYALkoNREOQ70TbRCx0v7Xi7
-	 SAhJD4MnNB8vsXajMob8RxsbLtd/Im5gU3ofxLrDqk6joB6mCIk4XX8xpU4BKqxS5G
-	 B5eA0yH9b5xUIy5qiWle+1mXnq2mNZNUUv9BuoHQ=
+	b=Zh4QlF17fL1xUXccLq+XON4HOsd8n6YK9P2weu+lucGXaHXZn44xpPfSPlk4rKSVu
+	 +jhKlJsL9xGgWrNzGA0mkJFx09FxXv9rgwAAFMXBt08NIcu+J2S6DrV/a0liAP1cbU
+	 XIsNuwJDNVsNcWLbIdxyi9gRjQrEe38OcsuuGCrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730148AbgBYN6c (ORCPT
+        id S1730109AbgBYODJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:58:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37172 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 09:03:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729253AbgBYN6c (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:58:32 -0500
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        id S1729952AbgBYODJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 09:03:09 -0500
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BB8424676;
-        Tue, 25 Feb 2020 13:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 304F3222C2;
+        Tue, 25 Feb 2020 14:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582639111;
-        bh=t6y4ed1PLF1YCpiLXkMfIss2UpXqGJbG2hojsdADI9g=;
+        s=default; t=1582639388;
+        bh=4qn639jYpkdf96gHfdgJKSoL+lKpXNE16GpYcCHFXTM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f32zw9C0HfAdsMFNkR/SSZgTMMd51Yox8rfhODv5V66ybbzFYX82uNSO9d8WnnZOW
-         jroenNy7iLx1B2AIc/gPxv3Vo4wHCTw8ivpk4ssE2LEYAXVY5LPULd7Ersj6VQTrmg
-         8efTrJSNPey+Gan+KmEaUudMJEQZ8NEr2FCyPF8I=
-Received: by mail-qk1-f178.google.com with SMTP id j8so11934784qka.11;
-        Tue, 25 Feb 2020 05:58:31 -0800 (PST)
-X-Gm-Message-State: APjAAAXA3S0rBc2BzCVM0eAKlRq7a2efW21V9kx0vSWkHOTSl2mVew/D
-        2rPSmNQG7aDUA7d6F2vhe/E8yWYQtwRbXg5Zqw==
-X-Google-Smtp-Source: APXvYqycr1cIrkZDL636h3Say9Q5rIeytzoWFbqhPQujtpYITXrOa2jNW6Rhb9XWTsPBcgeSvBtiMfIR22F5FTfDteY=
-X-Received: by 2002:a05:620a:1237:: with SMTP id v23mr39928955qkj.223.1582639110486;
- Tue, 25 Feb 2020 05:58:30 -0800 (PST)
+        b=sqaAjA+1J37y6usfnHDwA4/OPvt8xEEcMGoo7tGxh/P0Vae37EDc4g8FeFQ734fso
+         ujnVJrGDk7kz88ouzyl4RZj7pyWvILr85MF/rZsmxEpQDWYfMHPagkvnTe4Bvmfi6c
+         +ZMYg64fbo2gpCPpTf/D5pugasetDk/eo77dBmBM=
+Received: by mail-qt1-f176.google.com with SMTP id p34so9083679qtb.6;
+        Tue, 25 Feb 2020 06:03:08 -0800 (PST)
+X-Gm-Message-State: APjAAAXs5FRU0HuEtJQiGxCQYniLbIicK3XZno69ZKtiXGjBUPvtd6K0
+        dJho0kJKKaRlJwC0OC/2AJjR0Y7SOZlZx2rmQg==
+X-Google-Smtp-Source: APXvYqyY0f8YCsY0KVybyegDUL7R6z4tio3DOIbnu6bhfP9ELYYo0gmY/zYUsN5JJ1tibdP6DSvSpwzCZG6i3yyhwsE=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr54944784qtg.110.1582639387281;
+ Tue, 25 Feb 2020 06:03:07 -0800 (PST)
 MIME-Version: 1.0
-References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
- <1582540703-6328-4-git-send-email-tdas@codeaurora.org> <20200224184201.GA6030@bogus>
- <eec22330-2bf4-f4f5-3d28-6b69aa71f992@codeaurora.org>
-In-Reply-To: <eec22330-2bf4-f4f5-3d28-6b69aa71f992@codeaurora.org>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <bf8aa2deea50cc3599caeb9ed1a07556353415df.1582533919.git-series.maxime@cerno.tech>
+ <20200224184107.GA4189@bogus> <20200225115447.yntzkh3vfnw67ial@gilmour.lan>
+In-Reply-To: <20200225115447.yntzkh3vfnw67ial@gilmour.lan>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 25 Feb 2020 07:58:19 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKRr3aOpcbPOtkArxnnJOBd-XaUGRVesR_CnA11pFHYXQ@mail.gmail.com>
-Message-ID: <CAL_JsqKRr3aOpcbPOtkArxnnJOBd-XaUGRVesR_CnA11pFHYXQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+Date:   Tue, 25 Feb 2020 08:02:55 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+kBNkTApDoyQ55gwW2WpHo7ywJ-UJ=-vGmWYsvshRijw@mail.gmail.com>
+Message-ID: <CAL_Jsq+kBNkTApDoyQ55gwW2WpHo7ywJ-UJ=-vGmWYsvshRijw@mail.gmail.com>
+Subject: Re: [PATCH 29/89] dt-bindings: display: Convert VC4 bindings to schemas
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:49 PM Taniya Das <tdas@codeaurora.org> wrote:
+On Tue, Feb 25, 2020 at 5:54 AM Maxime Ripard <maxime@cerno.tech> wrote:
 >
 > Hi Rob,
 >
-> On 2/25/2020 12:12 AM, Rob Herring wrote:
->
+> On Mon, Feb 24, 2020 at 12:41:07PM -0600, Rob Herring wrote:
+> > On Mon, 24 Feb 2020 10:06:31 +0100, Maxime Ripard wrote:
+> > > The BCM283x SoCs have a display pipeline composed of several controllers
+> > > with device tree bindings that are supported by Linux.
+> > >
+> > > Now that we have the DT validation in place, let's split into separate
+> > > files and convert the device tree bindings for those controllers to
+> > > schemas.
+> > >
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > > ---
+> > >  Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt              | 174 +------------------------------------------------------------------------
+> > >  Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml         |  66 +++++++++++++++++++++++++++-
+> > >  Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml        |  73 ++++++++++++++++++++++++++++++-
+> > >  Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml        |  75 +++++++++++++++++++++++++++++++-
+> > >  Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml         |  37 +++++++++++++++-
+> > >  Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml |  40 +++++++++++++++++-
+> > >  Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml         |  37 +++++++++++++++-
+> > >  Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml         |  42 +++++++++++++++++-
+> > >  Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml         |  34 ++++++++++++++-
+> > >  Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml         |  44 ++++++++++++++++++-
+> > >  MAINTAINERS                                                             |   2 +-
+> > >  11 files changed, 449 insertions(+), 175 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml
+> > >
 > >
 > > My bot found errors running 'make dt_binding_check' on your patch:
 > >
+> > warning: no schema found in file: Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml: ignoring, error in schema: properties
 > > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> > Error: Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dts:21.26-27 syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml' failed
-> > make[1]: *** [Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml] Error 1
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml: properties: '#clock-cells' is a dependency of 'clock-output-names'
+> > Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.example.dts' failed
+> > make[1]: *** [Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.example.dts] Error 1
 > > Makefile:1263: recipe for target 'dt_binding_check' failed
 > > make: *** [dt_binding_check] Error 2
 > >
-> > See https://patchwork.ozlabs.org/patch/1242999
+> > See https://patchwork.ozlabs.org/patch/1242907
 > > Please check and re-submit.
-> >
 >
-> The error shows syntax error at line 21, below is the example.dts from
-> my tree and would compile for me as I have the dependency of the include
-> file when I compile.
+> Yeah, that was fixed in patch 31 ("dt-bindings: display: vc4: dsi: Add
+> missing clock properties"). I'm not quite sure what the preferred
+> approach here would be: I did a conversion as is of the binding, and
+> then fixed it, or do you prefer having it all in the same patch?
 
-The header should be part of this patch if possible.
+A note in this patch should be enough. I do review these before
+sending them. I was puzzled having one from you fail.
 
 Rob
