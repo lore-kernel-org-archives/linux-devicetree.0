@@ -2,95 +2,85 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF83C35E01
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 15:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02FFC35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 15:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6DF21744
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 15:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582644793;
-	bh=CD8/SSUn/fUOuvnQtg9vFEVoTSFY+NVJ9uBpbKvZs+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DSUblHqdXgZ0S199/e+VknDq9qBjFJOBS7mg4gjHAIxenz8xyp6Dv5yQrDsGugjve
-	 vusvDlqmr1S93l0oa+ip3sYX6JwW7qgC+gbw05buwGyqJTNHg7OGRmGsGPkX+GWNaY
-	 l+rGTxlVj8QrP8CruGYjAh5QRJLk1/t3HzGjD+Nc=
+	by mail.kernel.org (Postfix) with ESMTP id BAE1F21744
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 15:49:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GSHezwUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbgBYPdM (ORCPT
+        id S1731073AbgBYPtF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:33:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:52226 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731106AbgBYPdM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:33:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9253F1FB;
-        Tue, 25 Feb 2020 07:33:11 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1317C3F703;
-        Tue, 25 Feb 2020 07:33:10 -0800 (PST)
-Date:   Tue, 25 Feb 2020 15:33:09 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "rafael@kernel.org" <rafael@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v3 5/8] regulator: use linear_ranges helper
-Message-ID: <20200225153309.GE4633@sirena.org.uk>
-References: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
- <ba2eb2d7363b386136a546a769a6e2d077558094.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
- <20200224115751.GE6215@sirena.org.uk>
- <d5e63ea6935991d855e2ae12915b3b4614e8f3aa.camel@fi.rohmeurope.com>
+        Tue, 25 Feb 2020 10:49:05 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:62505 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730340AbgBYPtF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 10:49:05 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582645744; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=K8JRAAUqIiBv8eRLCyrJkO1Q8E5vnb4MRUaWxR0NqEE=;
+ b=GSHezwUoFQorBOgeqTx+9MFmfkMe8t5YNyhz2e75V+j63OOMdwie8NNaImr0O+KRNbcSJ0Zg
+ 41+IwpJKXeD0nKiGdQzkTn5lRm7m3S+RbmiPekYtzDHdoCdaNlKVFAEzyj0qPYdJNC9aKL1R
+ +JREIVG0ByNNwctXQN9p1PnOEso=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5541ea.7fb06ae4d810-smtp-out-n01;
+ Tue, 25 Feb 2020 15:48:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E4F34C447A2; Tue, 25 Feb 2020 15:48:57 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: okukatla)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 52814C447A0;
+        Tue, 25 Feb 2020 15:48:57 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="PGNNI9BzQDUtgA2J"
-Content-Disposition: inline
-In-Reply-To: <d5e63ea6935991d855e2ae12915b3b4614e8f3aa.camel@fi.rohmeurope.com>
-X-Cookie: Booths for two or more.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 25 Feb 2020 21:18:57 +0530
+From:   okukatla@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sboyd@kernel.org,
+        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-pm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [V3, 3/3] dt-bindings: interconnect: Add Qualcomm SC7180 DT
+ bindings
+In-Reply-To: <20200221194012.GF24720@google.com>
+References: <1582277450-27382-1-git-send-email-okukatla@codeaurora.org>
+ <1582277450-27382-4-git-send-email-okukatla@codeaurora.org>
+ <20200221194012.GF24720@google.com>
+Message-ID: <3baf11a2cbdb649d6e850aa15665d28f@codeaurora.org>
+X-Sender: okukatla@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 2020-02-22 01:10, Matthias Kaehlcke wrote:
+> Hi Odelu,
+> 
+>> Subject: dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
+> 
+> This patch doesn't add a binding, but DT entries for SC7180.
+> 
+> The subject of v2 was "arm64: dts: sc7180: Add interconnect provider
+> DT nodes", please go back to that or something similar.
 
---PGNNI9BzQDUtgA2J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Feb 25, 2020 at 06:23:31AM +0000, Vaittinen, Matti wrote:
-
-> Only change required on individual regulator drivers should be renaming
-> the struct regulator_linear_range to linear_range. Rest of the changes
-> should be internal to regulator framework, right?
-
-Right, it's that type replacement that should be done atomically.
-
---PGNNI9BzQDUtgA2J
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5VPjQACgkQJNaLcl1U
-h9DV+Af/YLPOCGPhEgq/4DLBacyUVBBMzshszyl+1OhweGApumy620sSGDV2XqMt
-et1IK21GhwqVae3/qawujyX3lsyQX8lX/w17bHzr5MLEemCDvUp4luJaIlRKZS2p
-5h0Qbt0ioaL7RDQ3+a/YtXgZqIR6EKGWUtIdW4wUk4K2VF1+9xUqvQNVeDFjxoUr
-S9IBP/rMQJS3pgn0R1EtSZmFqqb7BBi+Cl1k/Qkbw5Ym/PukYHzFbnJXxTyxlrBX
-OSbUPWd5YlhaGXcm+95hkzePuUbEiJBGUrAwwqSRCeTpzcIseDa0YtzMWUu+aP7/
-vYpzdbT1DjswwI6XKO/JfgD0kKhmhw==
-=fCzU
------END PGP SIGNATURE-----
-
---PGNNI9BzQDUtgA2J--
+Thanks for the review!
+Noticed this later, i will address this in next patch.
