@@ -2,94 +2,104 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE140C35DFB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 10:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5123DC35DF5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 10:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9736421927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 10:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2514D21927
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 10:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgBYKTi (ORCPT
+        id S1730126AbgBYKmg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:19:38 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37870 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728958AbgBYKTi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 05:19:38 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2897A1C0411; Tue, 25 Feb 2020 11:19:36 +0100 (CET)
-Date:   Tue, 25 Feb 2020 11:19:35 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/9] leds: lm3692x: Allow to set ovp and brigthness
- mode
-Message-ID: <20200225101935.GA16252@amd>
-References: <cover.1578134779.git.agx@sigxcpu.org>
- <20200105234708.GA7598@amd>
- <20200106094443.GB13043@bogon.m.sigxcpu.org>
+        Tue, 25 Feb 2020 05:42:36 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:33380 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729417AbgBYKmg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:42:36 -0500
+Received: from [109.168.11.45] (port=34904 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1j6Xfd-00B8cq-Ha; Tue, 25 Feb 2020 11:42:33 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Luca Ceresoli <luca@lucaceresoli.net>
+Subject: [DT-OVERLAY PATCH] of: overlay: print the offending node name on fixup failure
+Date:   Tue, 25 Feb 2020 11:42:23 +0100
+Message-Id: <20200225104223.30891-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Content-Disposition: inline
-In-Reply-To: <20200106094443.GB13043@bogon.m.sigxcpu.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+When a DT overlay has a fixup node that is not present in the base DT
+__symbols__, this error is printed:
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  OF: resolver: overlay phandle fixup failed: -22
+  create_overlay: Failed to create overlay (err=-22)
 
-Hi!
+which does not help much in finding the node that caused the problem.
 
-> > > Patches are against next-20191220.
-> >=20
-> > I applied everything but the "exponential" changes and the last
-> > one. I'll apply the last one if I get version that applies on top of
-> > leds tree.
->=20
-> Thanks! Can I do anything to get the exponential part in? Is it because
-> you want the exponential mode to move to the backlight binding?
+Add a debug print with the name of the fixup node that caused the
+error. The new output is:
 
-You'd have to do some serious convincing, explaining why we absolutely
-need the exponential stuff.
+  OF: resolver: node gpio9 not found in base DT, fixup failed
+  OF: resolver: overlay phandle fixup failed: -22
+  create_overlay: Failed to create overlay (err=-22)
 
-Most devices today use linear brightness, and userspace needs to know
-the relation, especially for RGB stuff.
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-You can set bigger max-brightness, and then do in-driver conversion to
-use full dynamic brightness range...?
+---
 
-Best regards,
+NOTE: this patch is not for mainline!
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+It applies on top of the runtime overlay patches at
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git on
+branch topic/overlays, currently based on v5.6-rc1. This looked like the
+most up-to-date version of the overlay patches. Should there be a better
+place, please let me know.
+---
+ drivers/of/resolver.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 83c766233181..ade817407b78 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -321,8 +321,11 @@ int of_resolve_phandles(struct device_node *overlay)
+ 
+ 		err = of_property_read_string(tree_symbols,
+ 				prop->name, &refpath);
+-		if (err)
++		if (err) {
++			pr_err("node %s not found in base DT, fixup failed",
++			       prop->name);
+ 			goto out;
++		}
+ 
+ 		refnode = of_find_node_by_path(refpath);
+ 		if (!refnode) {
+-- 
+2.25.0
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl5U9LcACgkQMOfwapXb+vKmQwCeMlzPn+Eem1SMNkD3mahWvCZt
-NMAAn0xlajNgoP4SO6bIQu8nJ4+2vhUo
-=oqTC
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
