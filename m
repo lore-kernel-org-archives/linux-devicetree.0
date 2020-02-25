@@ -2,202 +2,99 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62332C35E15
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C8CC35E15
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326F221D7E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ETpzN5aN"
+	by mail.kernel.org (Postfix) with ESMTP id 332632176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582664913;
+	bh=3es8V6fUrYVM+iZIUY/IWNaP1qhHHLlybmCtZyRpMik=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rzjl+frbCvzGBryYd8KwSMfYH2QFNjTrZi+ZlPaWbHu8j9m8aRLSYtMcdDGr2nrCw
+	 ACunqSsOxUUofq1dQY6sTYussH0DapaJceUFN3KMOF+juob0khgnO0mcIQL0PTV+tI
+	 Gtqb50weDrkhm3LXlxqHHpUBJ8i4AGEkPM5/Gm9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgBYUrq (ORCPT
+        id S1726953AbgBYVIc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:47:46 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42472 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbgBYUq6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 15:46:58 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PKkuX0088220;
-        Tue, 25 Feb 2020 14:46:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582663616;
-        bh=o8slxYM1QhLjUyeJve1zrqkh0SfEPrjIONEDdLMtEtY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ETpzN5aNlJb91JG3rJ83qwTjvnmS6HjP86Ysjh+avhnshRDwzHOLJYySjHXT/KeZA
-         BttMRiGar7i0/+POUaClveFLVKMteiq1pN5IQfCh+2+gh53z6ZWeSnmkik87cCFQwH
-         0FYZq2oWk8T1Zaj4K8+DlzDUmW6Yfx3JJk2UZN/Y=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PKku4x033119;
-        Tue, 25 Feb 2020 14:46:56 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
- Feb 2020 14:46:56 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 25 Feb 2020 14:46:56 -0600
-Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PKkucW059192;
-        Tue, 25 Feb 2020 14:46:56 -0600
-Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 01PKkumV025473;
-        Tue, 25 Feb 2020 14:46:56 -0600
-From:   Suman Anna <s-anna@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 05/12] ARM: dts: dra7: Add PRU-ICSS interconnect target-module nodes
-Date:   Tue, 25 Feb 2020 14:46:42 -0600
-Message-ID: <20200225204649.28220-6-s-anna@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200225204649.28220-1-s-anna@ti.com>
-References: <20200225204649.28220-1-s-anna@ti.com>
+        Tue, 25 Feb 2020 16:08:32 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38254 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgBYVIc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 16:08:32 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z9so894279oth.5;
+        Tue, 25 Feb 2020 13:08:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YcXK2d/HNObTwr0I3OOYmF2ixmUF+zbcJyMaSLcYMLI=;
+        b=K/eLoDPIfmh/Ql/YsDqioYbvcmUyXbe0gXafPjbcgXbyRTVWE+XvjWfW6ZB6FN3IWx
+         NWCQSzqwKcev6H4XM1fOB6hVkDyPJ73H8tsz5gzkYZg/t5nXD8hEaWRa7hBayrv/qR+1
+         WTZVADyEetn1Y7I8G1tZ2HcgiAo6HKGYHjrdmSEzpTYedmVD4QYygibh06cp+1URJ1+S
+         dRidn6mBpFV11Y0WB7lAg23h9MHZdlHhTQELiOick45sZHk7eXnh9g1w+L/jq2LrOOzC
+         K0yh06l5OrJbbQclp/gHpxOpzP+GkcttRxSELO3OffIdeHd4JmXRIugzRp4ACYddQuqU
+         HoEw==
+X-Gm-Message-State: APjAAAVZQ7kPFfUMYd7NKlmi+oXK8ESMGnSW5Hux2iCKc/nrR2ANu/xt
+        7oNn1m9of1ZX6zLQ//oZmlLX0pw=
+X-Google-Smtp-Source: APXvYqwKnMmf0Icu7p/ThX9TbfyLhc/rH2s+Hnl3NlaO+1ryh7LNYdLP1osM+tNj+tl8U5W0+UOwQQ==
+X-Received: by 2002:a9d:7c81:: with SMTP id q1mr408456otn.112.1582664911711;
+        Tue, 25 Feb 2020 13:08:31 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h15sm6095843otq.67.2020.02.25.13.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 13:08:31 -0800 (PST)
+Received: (nullmailer pid 31660 invoked by uid 1000);
+        Tue, 25 Feb 2020 21:08:30 -0000
+Date:   Tue, 25 Feb 2020 15:08:30 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>
+Cc:     robh+dt@kernel.org, frowand.list@gmail.com,
+        Patrick Daly <pdaly@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lmark@codeaurora.org, pratikp@codeaurora.org,
+        kernel-team@android.com,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>
+Subject: Re: [PATCH] of: of_reserved_mem: Increase limit on number of
+ reserved regions
+Message-ID: <20200225210830.GA31602@bogus>
+References: <1582567352-4664-1-git-send-email-isaacm@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582567352-4664-1-git-send-email-isaacm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The AM57xx family of SoCs contains two identical PRU-ICSS instances
-that have a very unique SYSC register. The IPs do not have any
-PRCM reset lines unlike those on AM33xx/AM437x SoCs. Add the PRUSS
-interconnect target-module nodes with all the required properties.
+On Mon, 24 Feb 2020 10:02:32 -0800, "Isaac J. Manjarres" wrote:
+> From: Patrick Daly <pdaly@codeaurora.org>
+> 
+> Certain SoCs need to support a large amount of reserved memory
+> regions. For example, Qualcomm's SM8150 SoC requires that 20
+> regions of memory be reserved for a variety of reasons (e.g.
+> loading a peripheral subsystem's firmware image into a
+> particular space).
+> 
+> When adding more reserved memory regions to cater to different
+> usecases, the remaining number of reserved memory regions--12
+> to be exact--becomes too small. Thus, double the existing
+> limit of reserved memory regions.
+> 
+> Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
+> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+> ---
+>  drivers/of/of_reserved_mem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Each of the PRUSS devices themselves shall be added as child nodes
-to the corresponding interconnect node in the future. The PRU-ICSS
-instances are only available on AM57xx family of SoCs and are not
-supported on DRA7xx family of SoCs in general, so the target module
-nodes are added in a separate dtsi file. This new dtsi file is
-included in all the AM57xx SoC dtsi files, so the nodes are
-automatically inherited and enabled on all AM57xx boards.
+Applied, thanks.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/am57-pruss.dtsi | 50 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/am5718.dtsi     |  1 +
- arch/arm/boot/dts/am5728.dtsi     |  1 +
- arch/arm/boot/dts/am5748.dtsi     |  1 +
- arch/arm/boot/dts/dra7.dtsi       |  2 +-
- 5 files changed, 54 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/am57-pruss.dtsi
-
-diff --git a/arch/arm/boot/dts/am57-pruss.dtsi b/arch/arm/boot/dts/am57-pruss.dtsi
-new file mode 100644
-index 000000000000..b1c583dee10b
---- /dev/null
-+++ b/arch/arm/boot/dts/am57-pruss.dtsi
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * Common PRUSS data for TI AM57xx platforms
-+ */
-+
-+&ocp {
-+	pruss1_tm: target-module@4b226000 {
-+		compatible = "ti,sysc-pruss", "ti,sysc";
-+		reg = <0x4b226000 0x4>,
-+		      <0x4b226004 0x4>;
-+		reg-names = "rev", "sysc";
-+		ti,sysc-mask = <(SYSC_PRUSS_STANDBY_INIT |
-+				 SYSC_PRUSS_SUB_MWAIT)>;
-+		ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+				<SYSC_IDLE_NO>,
-+				<SYSC_IDLE_SMART>;
-+		ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+				<SYSC_IDLE_NO>,
-+				<SYSC_IDLE_SMART>;
-+		/* Domains (P, C): coreaon_pwrdm, l4per2_clkdm */
-+		clocks = <&l4per2_clkctrl DRA7_L4PER2_PRUSS1_CLKCTRL 0>;
-+		clock-names = "fck";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x4b200000 0x80000>;
-+	};
-+
-+	pruss2_tm: target-module@4b2a6000 {
-+		compatible = "ti,sysc-pruss", "ti,sysc";
-+		reg = <0x4b2a6000 0x4>,
-+		      <0x4b2a6004 0x4>;
-+		reg-names = "rev", "sysc";
-+		ti,sysc-mask = <(SYSC_PRUSS_STANDBY_INIT |
-+				 SYSC_PRUSS_SUB_MWAIT)>;
-+		ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+				<SYSC_IDLE_NO>,
-+				<SYSC_IDLE_SMART>;
-+		ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+				<SYSC_IDLE_NO>,
-+				<SYSC_IDLE_SMART>;
-+		/* Domains (P, C): coreaon_pwrdm, l4per2_clkdm */
-+		clocks = <&l4per2_clkctrl DRA7_L4PER2_PRUSS2_CLKCTRL 0>;
-+		clock-names = "fck";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x4b280000 0x80000>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/am5718.dtsi b/arch/arm/boot/dts/am5718.dtsi
-index d51007c3e8c4..a80c2e3eee2e 100644
---- a/arch/arm/boot/dts/am5718.dtsi
-+++ b/arch/arm/boot/dts/am5718.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include "dra72x.dtsi"
-+#include "am57-pruss.dtsi"
- 
- / {
- 	compatible = "ti,am5718", "ti,dra7";
-diff --git a/arch/arm/boot/dts/am5728.dtsi b/arch/arm/boot/dts/am5728.dtsi
-index 82e5427ef6a9..9a3810f5adcc 100644
---- a/arch/arm/boot/dts/am5728.dtsi
-+++ b/arch/arm/boot/dts/am5728.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include "dra74x.dtsi"
-+#include "am57-pruss.dtsi"
- 
- / {
- 	compatible = "ti,am5728", "ti,dra7";
-diff --git a/arch/arm/boot/dts/am5748.dtsi b/arch/arm/boot/dts/am5748.dtsi
-index 5e129759d04a..2b65317b1513 100644
---- a/arch/arm/boot/dts/am5748.dtsi
-+++ b/arch/arm/boot/dts/am5748.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include "dra76x.dtsi"
-+#include "am57-pruss.dtsi"
- 
- / {
- 	compatible = "ti,am5748", "ti,dra762", "ti,dra7";
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index d78b684e7fca..f2e44c0dcd1e 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -143,7 +143,7 @@
- 	 * the moment, just use a fake OCP bus entry to represent the whole bus
- 	 * hierarchy.
- 	 */
--	ocp {
-+	ocp: ocp {
- 		compatible = "ti,dra7-l3-noc", "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-2.23.0
-
+Rob
