@@ -2,137 +2,120 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B7BC35E15
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42E1C4BA00
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 22:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B994220675
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qEa2RI30"
+	by mail.kernel.org (Postfix) with ESMTP id AA43421927
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 22:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582668128;
+	bh=ASA6axefWklSU78pWejTSwer0ZOaWKFTnH47gYDjOZA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PrD9+roUBcP//vDRDVK4QOco3QuLGldyV9BgMvwfJRHKahoXUQvqJ9jQJEh+6XT13
+	 r8VpLFVzfdUetz7Uhy94BrC+BVPksPklkUUMhZ/BGalZ3W1+bDhRpGf/XEKFtZFY0g
+	 TOk9DzEhaF6uI0F8/aqoakGof0kAQWd0Ccyolyk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgBYVqS (ORCPT
+        id S1728162AbgBYWCI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:46:18 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40521 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgBYVqS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 16:46:18 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a142so861678oii.7
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 13:46:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OaHhaeQJNk3b1iGwrho9OQW7vTtILFRlnGdHwBGHiXA=;
-        b=qEa2RI30+eu6y+QG1RZcKaHE63SwriP8FaoGgwhahp/jQ21rAuyfZyhnI39ZaQZPTK
-         x+hjX7xFI4kZoMYbClW5pfDwOlru9laun8LG52dDvbs36nVfcRIuXJFMcetpsWABJkwy
-         joYb3JrrYXZ548+Zal0Q8PMlSZGWpJ8BEpfeWWDdjA3JtgPwNzcOW3qFf8maZZdozYQU
-         ux2WYmwTQB3ZIWRqlN5rqV5Jog6VUM0bEhy9mjUk2yD89nAIT8/dEbYlqT+pKaj4U2Dn
-         0bRx+Fv2YVyzelsP/9ttTUm4knli3ewZHxsXIwT+oFehxZ9gsP9iP/b8vez+UUdwDQE0
-         +OFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OaHhaeQJNk3b1iGwrho9OQW7vTtILFRlnGdHwBGHiXA=;
-        b=kxCTKWhCZEDWeunkjasfM2cQ8qVE8KlgD72P078aQunsmGUAPCKHZaTm57wwKM774F
-         wzePDRJmB3IAIbAsE2d2l3dCkc6gcrbtD2rcWpxUfY5dNFMpH5gHIIqtwC3B7qRxUOrN
-         ADQfjFzcG9CCnY6uVTcQHmtxBjmvlcLuYNzubnl7B3Vx7FipuU1icVYIcAo703AD7ZnU
-         LAVOBEgE9PRjbiej/t/6Dle/EJiTND3na8HXijOMnciMaQ+k8dbp857pGNrAoqyEj93E
-         zZjbadIlbPHbu/MwTdwiwLYokBDIslNFdtXrz0Qh/QGLkMUYsiQKlSIfpDFXtB5Rsl3h
-         HOAg==
-X-Gm-Message-State: APjAAAXwlP8Z9cfh5iUEAg13w6igWizCPY+MxIYdF+aC3ksi+eoE2HXt
-        BLr71E49+o94SuJfg+EjDGe9rw7UstXXG4/06HtMZg==
-X-Google-Smtp-Source: APXvYqzYfJMSifN7KgTz+K+MGlTU91tf+QULFSdmvn4DI2zL4yI7bwfwIGxnV/JfXP88xbSYOEqcTpG9Tgu9zHpTakg=
-X-Received: by 2002:aca:ea43:: with SMTP id i64mr786584oih.30.1582667177181;
- Tue, 25 Feb 2020 13:46:17 -0800 (PST)
+        Tue, 25 Feb 2020 17:02:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbgBYWCH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 17:02:07 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BABEF2467B;
+        Tue, 25 Feb 2020 22:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582668126;
+        bh=ASA6axefWklSU78pWejTSwer0ZOaWKFTnH47gYDjOZA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CTCD9kg9XuK/5B5/i8D8A/5G6NN6eG+R/lePr4JYYbypdV7FZygukNX4N2vScKNMR
+         AcowiA3TsPtPrp9pjfqln0aJMCgno1iOeRyF4hIx8g2f5Ai/mJTN4X1rrllv43N8WQ
+         yeXIAeDINI5iDpqzRb+S/V40752h2KdAmsoPsWz0=
+Received: by mail-qk1-f182.google.com with SMTP id 11so763049qkd.1;
+        Tue, 25 Feb 2020 14:02:06 -0800 (PST)
+X-Gm-Message-State: APjAAAXovnpnqOnxO6TIMLj1I1Q7o6ie4wdbK3YAQfHoY7wP6QY/+mQF
+        ty23BTDM2NQtFgs0W1Isrn4f1OKezLZdVWydnw==
+X-Google-Smtp-Source: APXvYqw5XKZGdHCXY9u0tVRDbjlPaa0iutz4jC8T9d3E9Z8AVXYJLUY39qJiOoxuGit3bif1zq9Awqp6HaEj5QU++i0=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr1310560qkg.152.1582668125762;
+ Tue, 25 Feb 2020 14:02:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20200220055250.196456-1-saravanak@google.com> <CANcMJZBQe5F=gbj6V2ybF-dK=kRsGZT2BX9CBJiBFoK=5Hg-kA@mail.gmail.com>
- <CAGETcx88H+aFTt=Vp8Q1KVOZYEaD3D6=i5WN8tWmnBAs1YdY1g@mail.gmail.com>
-In-Reply-To: <CAGETcx88H+aFTt=Vp8Q1KVOZYEaD3D6=i5WN8tWmnBAs1YdY1g@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 25 Feb 2020 13:45:41 -0800
-Message-ID: <CAGETcx_n=fZYaY5q6yZRJR9daTXm2Ryz5frfZr3n1BKf-pXCEQ@mail.gmail.com>
-Subject: Re: [PATCH v1] of: property: Add device link support for
- power-domains and hwlocks
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
+References: <20200218171321.30990-1-robh@kernel.org> <20200218171321.30990-7-robh@kernel.org>
+ <20200218172000.GF1133@willie-the-truck>
+In-Reply-To: <20200218172000.GF1133@willie-the-truck>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 25 Feb 2020 16:01:54 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJn1kG6gah+4318NQfJ4PaS3x3woWEUh08+OTfOcD+1MQ@mail.gmail.com>
+Message-ID: <CAL_JsqJn1kG6gah+4318NQfJ4PaS3x3woWEUh08+OTfOcD+1MQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 06/11] iommu: arm-smmu: Remove Calxeda secure mode quirk
+To:     Will Deacon <will@kernel.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        James Morse <james.morse@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        kvm@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 3:30 PM Saravana Kannan <saravanak@google.com> wrote:
+On Tue, Feb 18, 2020 at 11:20 AM Will Deacon <will@kernel.org> wrote:
 >
-> On Thu, Feb 20, 2020 at 3:26 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Wed, Feb 19, 2020 at 9:53 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Add support for creating device links out of more DT properties.
-> > >
-> > > To: lkml <linux-kernel@vger.kernel.org>
-> > > To: John Stultz <john.stultz@linaro.org>
-> > > To: Rob Herring <robh@kernel.org>
-> >
-> > Just as a heads up, git-send-email doesn't seem to pick up these To:
-> > lines, so I had to dig this out of an archive.
+> On Tue, Feb 18, 2020 at 11:13:16AM -0600, Rob Herring wrote:
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Robin Murphy <robin.murphy@arm.com>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: iommu@lists.linux-foundation.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > Do not apply yet.
 >
-> Weird! Left out the main person who'd care about this patch.
+> Pleeeeease? ;)
 >
-> >
-> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > Cc: Kevin Hilman <khilman@kernel.org>
-> > > Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > Cc: Len Brown <len.brown@intel.com>
-> > > Cc: Todd Kjos <tkjos@google.com>
-> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > Cc: Liam Girdwood <lgirdwood@gmail.com>
-> > > Cc: Mark Brown <broonie@kernel.org>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: linux-pm@vger.kernel.org
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  drivers/of/property.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> >
-> > This does seem to work for me, allowing various clk drivers to be used
-> > as modules! This removes the functional need for my recent driver core
-> > patch series around the deferred_probe_timeout (though the cleanup
-> > bits in there may still be worth while).
-> >
-> > Tested-by: John Stultz <john.stultz@linaro.org>
-> >
-> > Thanks for sending it out!
+> >  drivers/iommu/arm-smmu-impl.c | 43 -----------------------------------
+> >  1 file changed, 43 deletions(-)
 >
-> Thanks for the Tested-by!
+> Yes, I'm happy to get rid of this. Sadly, I don't think we can remove
+> anything from 'struct arm_smmu_impl' because most implementations fall
+> just short of perfect.
 >
-> Rob,
->
-> Can you pick this up for the next rc?
+> Anyway, let me know when I can push the button and I'll queue this in
+> the arm-smmu tree.
 
-Friendly reminder.
+Seems we're leaving the platform support for now, but I think we never
+actually enabled SMMU support. It's not in the dts either in mainline
+nor the version I have which should be close to what shipped in
+firmware. So as long as Andre agrees, this one is good to apply.
 
--Saravana
+Rob
