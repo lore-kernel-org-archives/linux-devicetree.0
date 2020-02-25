@@ -2,106 +2,125 @@ Return-Path: <SRS0=49W1=4N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F07C35DF9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A25C35DFB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD8021927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B413F2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 09:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="lQKlfzSB"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mNh/y5Q5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dfnhGt4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbgBYJAe (ORCPT
+        id S1729584AbgBYJEj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:00:34 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37688 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgBYJAe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 04:00:34 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a6so2253568wme.2
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 01:00:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vn4rZGzk+IAH+nxFswZJCGBxbGSA0YI3EXXacsRbD08=;
-        b=lQKlfzSBMr6+Iyq1U8QB2M4CNB9uvrNtci+HBZTL/I4Qo5menq2+zDW4TqHl+cCY0w
-         54CAtPTyp7TR3wF8P++z1IuSs/tnTuKvLgn70iWfxef1owUQQepqcJOx4zNTwe3jWdK0
-         OzZ+M5wZOReDYecL9wivW1Tin+NDEI1Z6IlXimgglU9IInF6Ebq0wRekEPMu04dgy3Vk
-         V/2RTYH2Qs1W4tMcx401cHUxJ2E11fUelpmH69e6+ZKfskNyocFde7WA7WiaqNmW1sdw
-         KtHPUTeRHCg8t4hSVA55LfZdTBayB+aA8QGwpCucpRRBZ0JhRJiU1P0M/uV5h2gBvBK5
-         s5Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=vn4rZGzk+IAH+nxFswZJCGBxbGSA0YI3EXXacsRbD08=;
-        b=D4eJxWJOKzszALGA8El3uDmFmE/5QYKbVdZeugXwucYfWTX69520tWWbeV6g8KIWjg
-         Fs5HTH0dbgCdxhWSohXJQRp5+0Gs65S248DFXA+9nL+aTWgzjVnBBZfhdldIAH9seRWM
-         DCNLc1dHjKRDHAzMj2bqWKGEmqfxsEG7U9tYDQFgpuiR37MG0i5AjuoGJvtrLsunxK8L
-         LSum5oCGveyr61FcUNu4wI3bSLpuNCQJtg0Uevp3wfiDcMi3YmJmhJeK3Vo3TxPmMMR8
-         kYGIojlanueOLNRqURn8xhvNy5wmx4m5RrS/XmOhecn3AByU2mc7/CSfto3CclRoc1aA
-         oz/A==
-X-Gm-Message-State: APjAAAUYTM7H8vcP2OE/yBISI7tBhkpDUIvGqw1e+tJ8L6C51g1DaqJy
-        05945A4mUiZg/QKMQf2PYVU5CQ==
-X-Google-Smtp-Source: APXvYqwnbRU6uWCX1oIuC5o2BD9NzbI9iIQCmIV4naL5tZmKiHJH+4Za2QhGieEJuOCl5HIpwSNrhQ==
-X-Received: by 2002:a1c:3906:: with SMTP id g6mr4241872wma.49.1582621232288;
-        Tue, 25 Feb 2020 01:00:32 -0800 (PST)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id x10sm22346431wrv.60.2020.02.25.01.00.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Feb 2020 01:00:31 -0800 (PST)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-arm-kernel@lists.infradead.org, git@xilinx.com
-Cc:     Durga Challa <vnsl.durga.challa@xilinx.com>,
-        Manish Narani <manish.narani@xilinx.com>,
+        Tue, 25 Feb 2020 04:04:39 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:35025 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729153AbgBYJEj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 04:04:39 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id EF26521EBC;
+        Tue, 25 Feb 2020 04:04:37 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 25 Feb 2020 04:04:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=2uAmNfXp/nheDUf7m8Ia1NiqBIQ
+        3V0NGUD9iv59hcp4=; b=mNh/y5Q5V+86oXAGiuYeZGyl+cz1NeKGf87d3IWOPuX
+        1mcIvKqtuB54mFf+guwXj3Vzgd5tYu3z68DpW3+kvlW8AR0hM6J75bWzsRekEvzi
+        honPhHYUQ4R1cODry3KIGz7ZT3eVBgY4I2apfXVs+dqqyFlJvuCsye6ETz8RQjRS
+        ZYkqPzRFrBckAqYJ4Pzl3uNNE1rggJrbtVYn/KjDws9UadCnlRSfiq30VDZhHNM+
+        UogALCSNTRN2cLQI/+RZ1r4lsfTomU9Fhbuni03Jg/4gnUQP1nUmAOOZenO2vzRP
+        RpjyJ8H/zBVhZ/Ms2HbeWjGiccHM2dVJojOqZB/8bjw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=2uAmNf
+        Xp/nheDUf7m8Ia1NiqBIQ3V0NGUD9iv59hcp4=; b=dfnhGt4viOhr0msPYsbcQG
+        xXsa8gS83w1IXfAHqqr30p+DTcfYz05K3XdnKwWkXEsg8w63OCoHa6ita2hSuEjp
+        XRQLaxiOYciSnwcJLdUyqBOlPaZtepjuBUO9BXEZaZUZWOyPVEdZY7o7QGdA/qC5
+        z+Pl9xhAV4vU8tnYIvcxvBjjZOGbx43bpGFh9+40qg0z0bbgDYOoJbZVTzstcnXU
+        W6IFFOq6ONzwSZsi7VHJD7fZ0G/04Z3t29cnyAxj3rujrc2uZg9xHTI2BfU58vv8
+        UUj7fTvVlOdcCU34lD15/gnFh927GboKnb9B9AUHBAwP8DSgpo0Hsagx3EIEOT2A
+        ==
+X-ME-Sender: <xms:JeNUXrs5YgpmXGtb0xXXAElj8Qk55Y-aAOiJRDgrrxKwpEUASQ5OKQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledugdduvdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:JeNUXvZ4yM6zyMkpw137PUbeSSFlcpLfIgQ78HK8f2cDck0hEjS9vg>
+    <xmx:JeNUXiLsniPtUUmOpwjwEUfDddgf_R7tgkCa5c-ZVdEUAtfmulLsrA>
+    <xmx:JeNUXhsDmPiSHHKx-N2khh8XQIFw3dEQR96EYtNT9Srqe8lBeR6uCg>
+    <xmx:JeNUXvtgDT0RHboTZzj-O4yTQb28Xc-3HjQYNfFV54YyRc92pINBtQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 376A33060F09;
+        Tue, 25 Feb 2020 04:04:37 -0500 (EST)
+Date:   Tue, 25 Feb 2020 10:04:35 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Tretter <m.tretter@pengutronix.de>,
-        Nava kishore Manne <nava.manne@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: zynqmp: Fix GIC compatible property
-Date:   Tue, 25 Feb 2020 10:00:26 +0100
-Message-Id: <a50412fbb520954e4602f274f19a7ffbd1154ead.1582621224.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.25.1
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i-h3: Add thermal trip points/cooling
+ maps
+Message-ID: <20200225090435.63licyt55thlievi@gilmour.lan>
+References: <20200224165446.334712-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ef37cxbs77ojiiit"
+Content-Disposition: inline
+In-Reply-To: <20200224165446.334712-1-megous@megous.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-dtbs_check is showing warning around GIC compatible property as
-interrupt-controller@f9010000: compatible: ['arm,gic-400', 'arm,cortex-a15-gic']
-is not valid under any of the given schemas
 
-Similar change has been done also by commit 5400cdc1410b
-("ARM: dts: sunxi: Fix GIC compatible")
+--ef37cxbs77ojiiit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+On Mon, Feb 24, 2020 at 05:54:46PM +0100, Ondrej Jirman wrote:
+> This enables passive cooling by down-regulating CPU voltage
+> and frequency.
+>
+> For trip points, I used a slightly lowered values from the BSP
+> code. The critical temperature of 110=B0C from BSP code seemed
+> like a lot, so I rounded it off to 100=B0C.
+>
+> The critical trip point value is 30=B0C above the maximum recommended
+> ambient temperature (70=B0C) for the SoC from the datasheet, so there's
+> some headroom even at such a high ambient temperature.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thanks
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 1ebb540624de..cde6025b7e24 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -233,7 +233,7 @@ amba_apu: amba-apu@0 {
- 		ranges = <0 0 0 0 0xffffffff>;
- 
- 		gic: interrupt-controller@f9010000 {
--			compatible = "arm,gic-400", "arm,cortex-a15-gic";
-+			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
- 			reg = <0x0 0xf9010000 0x10000>,
- 			      <0x0 0xf9020000 0x20000>,
--- 
-2.25.1
+Maxime
 
+--ef37cxbs77ojiiit
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlTjIwAKCRDj7w1vZxhR
+xdrDAPiY7uUqle4oy7ZfhyvwkJMp0IoCHkzpKm/956C+OumXAQCLjcgwO1IKcKvQ
++/R56Jp7e0RC+a7+tovDO/hPn153Dg==
+=vEfK
+-----END PGP SIGNATURE-----
+
+--ef37cxbs77ojiiit--
