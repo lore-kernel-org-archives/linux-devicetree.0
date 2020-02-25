@@ -7,96 +7,99 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A9DC35E04
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB905C35E04
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4100F20CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71B020CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582654373;
-	bh=FBvvn/7KAbWXgP4qUw0eEf2QDsd+2xCLqKekfhW2Cic=;
+	s=default; t=1582654466;
+	bh=BAnMiNQI121vaCx/PHVGPK17MkXRXqwJghLVg6GFS9s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xEztskR8QtYgAR5xHwOVWOIva9Fob5YZ5a7W1NxHSbMeDyqsM9bWfb1b8a1tvqr3o
-	 EzBT8e8/vbjfzneBhMWB//TK8I9OmBzexyMm8/IN+7MX5UUmAuxRTbVMqrsOD29d4v
-	 D5i7+6GFS6/gQvH0GOFjSCnLunybQHyIvAbZ1mJM=
+	b=h785RdL6nhSUOPFjOgAu0LKqaqtp+vYNs6JM7dHj0tBT6vBw5i2I3oY2/Yf2a4B7G
+	 vclLJWZG9rMApaacAfaxeT5It/CG5+lBmQ7JljEU9C/ejiXxaMqEckBMrD5/WO6VZI
+	 c1T6OevO5Wnzivd7FMkJnfQBl8U951njMNbD7vSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731239AbgBYSMx (ORCPT
+        id S1730436AbgBYSO0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:12:53 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41179 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730017AbgBYSMw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:12:52 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r27so386059otc.8
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 10:12:52 -0800 (PST)
+        Tue, 25 Feb 2020 13:14:26 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41345 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgBYSO0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:14:26 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r27so390626otc.8;
+        Tue, 25 Feb 2020 10:14:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AS7kSS/iqLKzluPfp1yYbu9JOTEV5k+vqjiHSYnpBvI=;
-        b=mG6+uEiunaU0tmoYpAyi3XTwtJOibci9BwsFeKRad5hCpWSU9Guo8nGXmGae8XPBVV
-         Kpo1zo5u9CLaxXceueSFiWXDLXIjpWzV3JoJVPurdEZp1o/59BPixQsDOy1bXUiWwkUH
-         rBweqlWXpZQd/Fufvm4cIn6mtn8lD7ygBYHL0FFqv3CraZjpSfxcAJ5YiQvUn2YTMb2F
-         CIjLhWEafJMJLe1A6K1YTb1I3OTbaoc8ZdVrCyRyCq05yxrbENwGBtWHyOwOTcBRewsU
-         E8SQVYpURym5tAsHDZy0Zj3w3hyXRSQijH/9t5edTjBhNaEl42PS51JQ089/ia7YmngC
-         hm3A==
-X-Gm-Message-State: APjAAAWE5NkfSo70600Aomn0rCSfyN2Lf8hEWmxlqjtEzY5LLLRHAjtL
-        ioamjWDndKznKaXK0/uNUA==
-X-Google-Smtp-Source: APXvYqzaRLTYii3nkDojyPbV178KGbB2P+XQwbj2nlCdlEq+3mr3I5oDWMhdY8xQvu7D06fbfbzTIQ==
-X-Received: by 2002:a9d:6b06:: with SMTP id g6mr45424470otp.93.1582654372101;
-        Tue, 25 Feb 2020 10:12:52 -0800 (PST)
+        bh=fzMstvFQHtiY1mtNKEHbS1tBWH2f5ubsJc5MbGcMIgE=;
+        b=HyNQ+Mnlx2OA+FSb4OCPVzkfovoiW/VFmg6F0lyRHN+TkeLoNil7ruYFCt+LBXkyG4
+         PQa3Ow43Ax5WZw6zb07cWOkFS60N1C6EpKpJZ/b2x/ZtOOPD9IvKWy2q047H34TxU4l+
+         lI+SrvUXV6HQHcsxRvjM2yZ2zTfJ1xWD+LNtED6hNbpZK3vvPaNT+HWa58uw7Ys2EqF5
+         5QLA80P+zcLJCCNn9wG0Hqydnx4xN+RzHeAK1xg6mv1O1MP+CFaZRFZwi9AXsS+V/cdV
+         Bp/sRUuJFNTCsY973ybCjNBtJTkiNQYXu9luqbTbeZRYgDzc9LU0WIA2yd12UPxziXVB
+         COww==
+X-Gm-Message-State: APjAAAWGUnqnCg9XlWTW+6ggonv30CM16BT87Mp8BUFsm/L0BzwuukKa
+        1vyIKq4tWBPhTTpXOeUyVw==
+X-Google-Smtp-Source: APXvYqyGKyCpS5QVH0RlgQkGwt+azhBTDZOJ39HMNdZPpnFpagNcBAnEczZ6ez53W17xGffq9mb+tQ==
+X-Received: by 2002:a05:6830:4c7:: with SMTP id s7mr45097888otd.359.1582654463904;
+        Tue, 25 Feb 2020 10:14:23 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n25sm5528659oic.6.2020.02.25.10.12.51
+        by smtp.gmail.com with ESMTPSA id o1sm5881508otl.49.2020.02.25.10.14.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:12:51 -0800 (PST)
-Received: (nullmailer pid 29791 invoked by uid 1000);
-        Tue, 25 Feb 2020 18:12:51 -0000
-Date:   Tue, 25 Feb 2020 12:12:51 -0600
+        Tue, 25 Feb 2020 10:14:23 -0800 (PST)
+Received: (nullmailer pid 32082 invoked by uid 1000);
+        Tue, 25 Feb 2020 18:14:22 -0000
+Date:   Tue, 25 Feb 2020 12:14:22 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/3 v2] drm/panel: Add DT bindings for Novatek
- NT35510-based panels
-Message-ID: <20200225181251.GA29735@bogus>
-References: <20200223121841.26836-1-linus.walleij@linaro.org>
- <20200223121841.26836-2-linus.walleij@linaro.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-i2c@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH 01/89] dt-bindings: i2c: brcmstb: Convert the BRCMSTB
+ binding  to a schema
+Message-ID: <20200225181422.GA32044@bogus>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <6649111e9c585f267762bb6c6dd96128e5cfb4ba.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200223121841.26836-2-linus.walleij@linaro.org>
+In-Reply-To: <6649111e9c585f267762bb6c6dd96128e5cfb4ba.1582533919.git-series.maxime@cerno.tech>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 23 Feb 2020 13:18:40 +0100, Linus Walleij wrote:
-> This adds device tree bindings for the Novatek NT35510-based
-> family of panels. Since several such panels are in existence
-> we define bindings common for all, and define the compatible
-> string for one certain panel (Hydis HVA40WV1).
+On Mon, 24 Feb 2020 10:06:03 +0100, Maxime Ripard wrote:
+> Switch the DT binding to a YAML schema to enable the DT validation.
 > 
-> As other panels are discovered and investigated, we can add
-> more compatibles to the binding using oneOf constructions.
-> 
-> Cc: Stephan Gerhold <stephan@gerhold.net>
+> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-i2c@vger.kernel.org
 > Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
-> ChangeLog v1->v2:
-> - Rename file to novatek,nt35510,yaml to match the first
->   compatible.
-> - Require both the specific display manufacturer compatible
->   and the novatek,nt35510 compatible in strict sequence.
-> ---
->  .../display/panel/novatek,nt35510.yaml        | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
+>  Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 59 +++++++-
+>  Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt       | 26 +---
+>  MAINTAINERS                                                 |  2 +-
+>  3 files changed, 60 insertions(+), 27 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
