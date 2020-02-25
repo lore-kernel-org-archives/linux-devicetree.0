@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C282C35E01
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A719C35E0C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1513221927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1739D20CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Feb 2020 18:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582654676;
-	bh=DQ2bscNnB2HQpKsEm6GkMcGWiEn/O2+gl3WjJY0L5Dw=;
+	s=default; t=1582654693;
+	bh=7wTKYKgLd21a59P/h8EhYIzp8jRCp62jS1nZIeNfrCM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MmCzuH8YCZyUqnWphuquQhi1RrWskSsu3l2wYN5hKuR3XYMDInI8BRR090Xh0y6X9
-	 WiLlqXPa9Kn/TP8hrjpl1IrQPmS268m6YEBgODpaFW6VrLLImpJQ4L7WhOalFuH59T
-	 EYpYnauVpuMprfr7WOfdY85jvC0dR3QO2bHUppDY=
+	b=OT0rE8GMhwJVc5kZHEiT8Y32L014o5ZJDiBfl68umDiij6FthaRt9Zgo6/Mr4qC+s
+	 1WIY2vaAj87swYIvaAmDTNMjNW92EdQJj3ZBGUKODj9V71JV5DWeaxg5W9qLt373Ua
+	 ghxYpVDrOVeXw+UMUSv6iqoWl4ts2O61+hj/2BKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731330AbgBYSRz (ORCPT
+        id S1730999AbgBYSSM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:17:55 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37826 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbgBYSRz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:17:55 -0500
-Received: by mail-ot1-f65.google.com with SMTP id b3so423520otp.4;
-        Tue, 25 Feb 2020 10:17:54 -0800 (PST)
+        Tue, 25 Feb 2020 13:18:12 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40298 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727983AbgBYSSM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 13:18:12 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a142so239756oii.7;
+        Tue, 25 Feb 2020 10:18:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cfeiAYk0sz6jKgpfGcPq2AbGtANcSLd4G7ZU9zGmlGY=;
-        b=NmRi6OLJpg7FgHexfIZhflfTbirfKyBTu+m47QX04VINa9MBHL8WNqa/0Ko/IZg7EZ
-         9G1Dyn/cQzXKrO+h5IQp8WlR1iPUgRrt5zoCkqbrsW+VPvRtiyoqgwLM7Kql0iz/KY4y
-         CoCw5cru9I85oPUqlOqXS4gsvST07UAF24H5XjMssTR3W7cIU3fTJ3VbIJiJp8OblGbw
-         EgRPCdv0hcC9/nmzEiWp/ZTbykbnRtAllqemMm0mkj4/MBIM4PZQwr+LBePZKJCoAjZq
-         3Sb1cN9b758rroSGluC+0SSKefNw95Xk4BRa3Il5MWlYGPJHYh7nLyatAOpu/DFKzt9D
-         vdKA==
-X-Gm-Message-State: APjAAAVpJw01e9+0aGGtZnqoOPm/EYnX7MUGtMTRT6iqyf5dUzIWAps3
-        HAPYZf1iQXzFJxF/ZE2Ydg==
-X-Google-Smtp-Source: APXvYqyfQgGOrT9ThsnJbQjUHaKtSnLHIPJhsBT8XMy6vzVDDAHDLigOB2OIEY8iBbOVlcXyZ2O+tw==
-X-Received: by 2002:a05:6830:1657:: with SMTP id h23mr2287541otr.299.1582654674415;
-        Tue, 25 Feb 2020 10:17:54 -0800 (PST)
+        bh=yiMVySvuuBlNCELv1IEvGZ2avIS4ux6UUmlN6NsgO3k=;
+        b=e2WgiWcgZhzr9zbBfq8UPQuZqiLBkpX4zRkeWk40ZVntNWR1YRHXYMdfoI5ih/nGYL
+         lJXJpS1qsb8Zfd3Xq/3jRCyzzGF7hmGyftNVRzHTYdbBSBWg21/wQO6l/pa7UN6/PyRZ
+         Y1AMIvoYzU/drlaoclpGTZ5aHibF+a0OhiOIqxgpZIHn4VaanEn6++hbUlVndnqKYgF4
+         Y1WPPiXU6DISr4vpje45yPsyIBQ7q8LRaYKWvnwrRupWrtYPhqUf11WNr3xWO0lxnFc+
+         47Ft5U7vgkURSLLPIv+PoTNfd0WzAp93U4oAp+uovkztpoiIgZx59hh9k6GPr6x1V102
+         1n1g==
+X-Gm-Message-State: APjAAAWA/5hm0pU69NKQws2e/xPP5uWw4Qorh5XGmcwHfKGY2Ss0m4aE
+        jKCAej4b83P/6tJOqTVmmg==
+X-Google-Smtp-Source: APXvYqw28xdyGvjSdjDarHW2s0Fb+onlANDW5taKELi+Efvfv9JYUmEAg2FjeRAIn4sbu4cnKvc/jA==
+X-Received: by 2002:aca:2803:: with SMTP id 3mr177830oix.162.1582654690275;
+        Tue, 25 Feb 2020 10:18:10 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i7sm5569162oib.42.2020.02.25.10.17.53
+        by smtp.gmail.com with ESMTPSA id i7sm5569443oib.42.2020.02.25.10.18.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:17:53 -0800 (PST)
-Received: (nullmailer pid 5252 invoked by uid 1000);
-        Tue, 25 Feb 2020 18:17:53 -0000
-Date:   Tue, 25 Feb 2020 12:17:53 -0600
+        Tue, 25 Feb 2020 10:18:09 -0800 (PST)
+Received: (nullmailer pid 5749 invoked by uid 1000);
+        Tue, 25 Feb 2020 18:18:08 -0000
+Date:   Tue, 25 Feb 2020 12:18:08 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Maxime Ripard <maxime@cerno.tech>
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
@@ -63,31 +63,32 @@ Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 30/89] dt-bindings: display: vc4: dpi: Add missing
- clock-names property
-Message-ID: <20200225181753.GA5213@bogus>
+Subject: Re: [PATCH 31/89] dt-bindings: display: vc4: dsi: Add missing clock
+ properties
+Message-ID: <20200225181808.GA5699@bogus>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <042c8f676d3d863b55092bb58c1f15db95370782.1582533919.git-series.maxime@cerno.tech>
+ <2d7aaa0bdf3f0cb66d14700fb77348453b3cd29a.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <042c8f676d3d863b55092bb58c1f15db95370782.1582533919.git-series.maxime@cerno.tech>
+In-Reply-To: <2d7aaa0bdf3f0cb66d14700fb77348453b3cd29a.1582533919.git-series.maxime@cerno.tech>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2020 10:06:32 +0100, Maxime Ripard wrote:
-> While the device tree and the driver expected a clock-names property, it
-> wasn't explicitly documented in the previous binding. Make sure it is now.
+On Mon, 24 Feb 2020 10:06:33 +0100, Maxime Ripard wrote:
+> While the device tree and the driver expected a clock-names and a
+> clock-cells properties, it wasn't explicitly documented in the previous
+> binding. Make sure it is now.
 > 
 > Cc: Rob Herring <robh+dt@kernel.org>
 > Cc: devicetree@vger.kernel.org
 > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
->  Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml | 11 +++++++-
+>  1 file changed, 11 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
