@@ -2,114 +2,85 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527F8C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9C3C4BA21
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E2521D7E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA712467B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582753002;
-	bh=P4wqZ/G/RRozD3/33SDHyrWrXUAr2WpACya0jZ2Nj4Y=;
+	s=default; t=1582753045;
+	bh=WGQ6NUV/Nq5CEhlta/6kB+OE4mCNdRqPyY/dZRNpOEo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NMZqJcXGvkD6DALZy8EKJ8Sfc4cXnrxCfEKhe+yJCefdn6GsZpz8I2hJxx6CevS7C
-	 90BH5B/eyt5UyTa+biESPU7Twz2/h0q1LBt/H/upJlwdaCmTZTmh5d+cKOsmF7Caen
-	 fGOs6/1F0dnCFk2+XJ2Sl/q4W0uDOX1DaI4zwJt0=
+	b=OPaCsZf6Y6YiNRoJGiv+VGLKe7n8dolPMPVLvFYtbHQv/MuJxzNe6xp6aGKbV23m/
+	 UGBSS2RIeakZeNASpHYaha8cLDso/Bi/S7AoVY93T8YE+JHoybWPX/3Lr4kE59Skvh
+	 tHW6ruMgyZpOna7jlaeDMAjdXUK3GSzuK7eN0jm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgBZVgl (ORCPT
+        id S1727576AbgBZVhW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:36:41 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43917 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbgBZVgl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:36:41 -0500
-Received: by mail-oi1-f193.google.com with SMTP id p125so1066515oif.10;
-        Wed, 26 Feb 2020 13:36:40 -0800 (PST)
+        Wed, 26 Feb 2020 16:37:22 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41068 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727581AbgBZVhW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:37:22 -0500
+Received: by mail-ot1-f66.google.com with SMTP id v19so893729ote.8;
+        Wed, 26 Feb 2020 13:37:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k5x7wgpT9UNOStLpFcvf/lxLcJwiRX3Kcmib1RAv6/M=;
-        b=d+2AofRWv8QAiUgbtoAahOBYJdwKBIBMfkkkCQkvyop8fmBkJ49LW0hIij28e4bXwf
-         eZEjdBXatQmHdXgv0EwBu/WZm0Jh5lOcQfp5zyOcI99HIOtRPTMS8/Y52hr7OFmJLkG6
-         /oF3Lz5wNRqhTzO5JTsptaD9gUqXrIL+Ar9+Yy7/m6+0BTx29jDidmhmDy6eZmivmfcK
-         ePmmXPR5c2w0UBhMDjnQHz+r4TYFx4vYfxwQx1bhHH/bpJunUgr+uOqFHGAKy9AdhbM1
-         cRpgeMfDP2fSZwCuozAV0V/kkNatAtO+GATUu6ewBFgu1JMDa88dLHxWzmtnyLzqsUlK
-         R49Q==
-X-Gm-Message-State: APjAAAUEmMn94oMH5p19EQ7/sQqwrpHFfRKetX4BErnblP8WRoicgvQi
-        cZ3MzXkxRajtY8h7EgG7WZp0DLc=
-X-Google-Smtp-Source: APXvYqzxoFXD4QTUBqV8b6x0l6zhopTqR/fPvOEI2ik/K8lV5JkYOHYqWljuXlRDRwmfMDVD4du2+g==
-X-Received: by 2002:aca:f05:: with SMTP id 5mr880691oip.140.1582753000384;
-        Wed, 26 Feb 2020 13:36:40 -0800 (PST)
+        bh=BUfZ3V0xBDGwOALHfUr9ZrS1JEBM9H8lpVzraU/a970=;
+        b=BTW9sNY+psCns7vZRgSILOpJBXpUKeT8ftQVSs9u/Bpvp6AAwXMGUmz+HI8YqsrYZ6
+         1ro+qVdvYpR6xx8v0DbwVXoeUGj0Onn+gTOu6b4LuhWm3lulI8jJcCehxF0DzD2LWdID
+         rcgq9/L88KUMyde3Z4eROHuN9OBTEVBd68NjGH2jyz6aeqmqXtWAJ4f9DAxWo10RDVzu
+         a/lWoMO1675sppjszh6v+EQpdEicuCUmxhKBs031NVqHB649IyFt2OO+lk84Y1o6zLuU
+         tVETxAtB1+XiNT8PiRDWBm+gsz0wAMxqU78+JpoFdDNomUOZeDis2pgY5yitwF+QrPPM
+         JXsg==
+X-Gm-Message-State: APjAAAVDnAxxricPubRG+Kih2BGQKLgau9Tk6WPmerjKjIUpSPDBf3+Z
+        9RwJphdNCHBZg8Z8z6fmyStkhqI=
+X-Google-Smtp-Source: APXvYqwVcJhepVheqsHg5PUb4PEPVIuEdNpHnqGYdfi/G+PyJBA9spLO6DGQPJWkCR7g20EWo5LDMQ==
+X-Received: by 2002:a9d:5885:: with SMTP id x5mr704064otg.132.1582753039707;
+        Wed, 26 Feb 2020 13:37:19 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 7sm1250313oin.5.2020.02.26.13.36.38
+        by smtp.gmail.com with ESMTPSA id k18sm1209704oiw.44.2020.02.26.13.37.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 13:36:39 -0800 (PST)
-Received: (nullmailer pid 1736 invoked by uid 1000);
-        Wed, 26 Feb 2020 21:36:38 -0000
-Date:   Wed, 26 Feb 2020 15:36:38 -0600
+        Wed, 26 Feb 2020 13:37:19 -0800 (PST)
+Received: (nullmailer pid 2770 invoked by uid 1000);
+        Wed, 26 Feb 2020 21:37:18 -0000
+Date:   Wed, 26 Feb 2020 15:37:18 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
-        Ian Lepore <ian@freebsd.org>
-Subject: Re: [RFC PATCH v2 2/4] of: fdt: print dtb build information
-Message-ID: <20200226213638.GA29417@bogus>
-References: <20200221161418.20225-1-alexandre.torgue@st.com>
- <20200221161418.20225-3-alexandre.torgue@st.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Li Yang <leoyang.li@nxp.com>, Jiri Slaby <jslaby@suse.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v2 5/9] dt-bindings: serial: lpuart: add ls1028a
+ compatibility
+Message-ID: <20200226213718.GA2712@bogus>
+References: <20200221174754.5295-1-michael@walle.cc>
+ <20200221174754.5295-6-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221161418.20225-3-alexandre.torgue@st.com>
+In-Reply-To: <20200221174754.5295-6-michael@walle.cc>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 05:14:16PM +0100, Alexandre Torgue wrote:
-> This commit prints out DTB build information (build time, dts source
-> version used, ...) if "Build-info" property exists in DTB root node.
-
-/Build/build/
-
+On Fri, 21 Feb 2020 18:47:50 +0100, Michael Walle wrote:
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  .../devicetree/bindings/serial/fsl-lpuart.txt          | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 2cdf64d2456f..aa5989039746 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -1224,9 +1224,18 @@ bool __init early_init_dt_scan(void *params)
->   */
->  void __init unflatten_device_tree(void)
->  {
-> +	const char *build_info;
-> +	unsigned long dt_root;
-> +
->  	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
->  				early_init_dt_alloc_memory_arch, false);
->  
-> +	/* If available, provide dtb build information */
-> +	dt_root = of_get_flat_dt_root();
-> +	build_info = of_get_flat_dt_prop(dt_root, "build-info", NULL);
 
-We just unflattened the tree, why are we using the flat dt functions?
-
-> +	if (build_info)
-> +		pr_info("%s\n", build_info);
-> +
->  	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
->  	of_alias_scan(early_init_dt_alloc_memory_arch);
->  
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
