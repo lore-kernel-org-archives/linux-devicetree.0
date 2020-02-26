@@ -2,121 +2,93 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDFCC4BA0B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7B2C4BA0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDDA2084E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F92724650
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FrduCwNs"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Bp6LWZeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgBZIND (ORCPT
+        id S1727317AbgBZIkk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:13:03 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:44698 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727314AbgBZINC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 03:13:02 -0500
-X-UUID: 5db3d9db1ab84951a9bbb42ff4760adb-20200226
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=noxquxXfq+6mXpmYdqPQhbsR120SnaVrynFCGzYug/4=;
-        b=FrduCwNsqTc82igR71qirzITQlHEg0jpki5wYi/J0KOAA3P23LOsbUYlIkcs+Ndw0JEqr/6qWjJrfp3ptbCqN7xBg9vyTbGPVreVIk/L6R/nCwna4Mbj1Q4qEgq8jwerPKbv5gu8hE9CKjGko4U/GeUY72vfJX5FkLDQ2uGbSXQ=;
-X-UUID: 5db3d9db1ab84951a9bbb42ff4760adb-20200226
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 805123605; Wed, 26 Feb 2020 16:12:59 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 26 Feb 2020 16:11:04 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 26 Feb 2020 16:13:05 +0800
-Message-ID: <1582704777.11957.1.camel@mtksdaap41>
-Subject: Re: [PATCH v9 5/5] drm/mediatek: set dpi pin mode to gpio low to
- avoid leakage current
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Wed, 26 Feb 2020 03:40:40 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:48523 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727267AbgBZIkk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 03:40:40 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01Q8ckpw015436;
+        Wed, 26 Feb 2020 09:40:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=qYNCz7bGkBTTaNO03CNPss3EnrpQ6PC4YPTkV05TJOM=;
+ b=Bp6LWZeUbDd9/bjJiGIWsKryeSmrlLTP2fafPjXcT7aN+tjxBggpXGZGWspFxamZ6RfQ
+ m27AcW+IxkOOZNtVkOxrSAuEwpLT6MWfMYq1by0Bjz8lsFhnki+xSCo6LuruVekSUH42
+ jpjl/360ynLmkp9m92Xesb9v45xZuFmosJsM+NniCidYkvAWY/6deH4Z8I6ja0xPJchg
+ mqPV+6TrHaepw9Z5b+qBOT6NdoGugev5i+KaNUbgG48d8FXTxnhCeS7irPHGrlIFrVOq
+ 6AZBi1THuUtTsi9XwSEo4dviPrq9OxZJ9rNXucFl60kOXXebHWegQEHpYrS147GajNkD ig== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ydcnj2h2a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Feb 2020 09:40:23 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 02F9910003B;
+        Wed, 26 Feb 2020 09:40:17 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E67DB2AC906;
+        Wed, 26 Feb 2020 09:40:16 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb 2020 09:40:16
+ +0100
+From:   Ludovic Barre <ludovic.barre@st.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <stonea168@163.com>,
-        <huijuan.xie@mediatek.com>
-Date:   Wed, 26 Feb 2020 16:12:57 +0800
-In-Reply-To: <20200226053238.31646-6-jitao.shi@mediatek.com>
-References: <20200226053238.31646-1-jitao.shi@mediatek.com>
-         <20200226053238.31646-6-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: [PATCH 0/4] mmc: mmci_sdmmc: fixes and improvements
+Date:   Wed, 26 Feb 2020 09:40:10 +0100
+Message-ID: <20200226084014.5242-1-ludovic.barre@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_02:2020-02-25,2020-02-26 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIEppdGFvOg0KDQpPbiBXZWQsIDIwMjAtMDItMjYgYXQgMTM6MzIgKzA4MDAsIEppdGFvIFNo
-aSB3cm90ZToNCj4gQ29uZmlnIGRwaSBwaW5zIG1vZGUgdG8gb3V0cHV0IGFuZCBwdWxsIGxvdyB3
-aGVuIGRwaSBpcyBkaXNhYmxlZC4NCj4gQW92aWQgbGVha2FnZSBjdXJyZW50IGZyb20gc29tZSBk
-cGkgcGlucyAoSHN5bmMgVnN5bmMgREUgLi4uICkuDQo+IA0KDQpSZXZpZXdlZC1ieTogQ0sgSHUg
-PGNrLmh1QG1lZGlhdGVrLmNvbT4NCg0KPiBTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFv
-LnNoaUBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcGkuYyB8IDMxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNo
-YW5nZWQsIDMxIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RwaS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcGku
-Yw0KPiBpbmRleCBkYjMyNzJmN2E0YzQuLmFlNGM2MzA4YmI2OCAxMDA2NDQNCj4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RwaS5jDQo+IEBAIC0xMCw3ICsxMCw5IEBADQo+ICAjaW5jbHVkZSA8bGlu
-dXgva2VybmVsLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4gICNpbmNsdWRlIDxsaW51
-eC9vZl9kZXZpY2UuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9vZl9ncGlvLmg+DQo+ICAjaW5jbHVk
-ZSA8bGludXgvb2ZfZ3JhcGguaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9waW5jdHJsL2NvbnN1bWVy
-Lmg+DQo+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ICAjaW5jbHVkZSA8
-bGludXgvdHlwZXMuaD4NCj4gIA0KPiBAQCAtNzQsNiArNzYsOSBAQCBzdHJ1Y3QgbXRrX2RwaSB7
-DQo+ICAJZW51bSBtdGtfZHBpX291dF95Y19tYXAgeWNfbWFwOw0KPiAgCWVudW0gbXRrX2RwaV9v
-dXRfYml0X251bSBiaXRfbnVtOw0KPiAgCWVudW0gbXRrX2RwaV9vdXRfY2hhbm5lbF9zd2FwIGNo
-YW5uZWxfc3dhcDsNCj4gKwlzdHJ1Y3QgcGluY3RybCAqcGluY3RybDsNCj4gKwlzdHJ1Y3QgcGlu
-Y3RybF9zdGF0ZSAqcGluc19ncGlvOw0KPiArCXN0cnVjdCBwaW5jdHJsX3N0YXRlICpwaW5zX2Rw
-aTsNCj4gIAlpbnQgcmVmY291bnQ7DQo+ICAJdTMyIHBjbGtfc2FtcGxlOw0KPiAgfTsNCj4gQEAg
-LTM4Nyw2ICszOTIsOSBAQCBzdGF0aWMgdm9pZCBtdGtfZHBpX3Bvd2VyX29mZihzdHJ1Y3QgbXRr
-X2RwaSAqZHBpKQ0KPiAgCWlmICgtLWRwaS0+cmVmY291bnQgIT0gMCkNCj4gIAkJcmV0dXJuOw0K
-PiAgDQo+ICsJaWYgKGRwaS0+cGluY3RybCAmJiBkcGktPnBpbnNfZ3BpbykNCj4gKwkJcGluY3Ry
-bF9zZWxlY3Rfc3RhdGUoZHBpLT5waW5jdHJsLCBkcGktPnBpbnNfZ3Bpbyk7DQo+ICsNCj4gIAlt
-dGtfZHBpX2Rpc2FibGUoZHBpKTsNCj4gIAljbGtfZGlzYWJsZV91bnByZXBhcmUoZHBpLT5waXhl
-bF9jbGspOw0KPiAgCWNsa19kaXNhYmxlX3VucHJlcGFyZShkcGktPmVuZ2luZV9jbGspOw0KPiBA
-QCAtNDExLDYgKzQxOSw5IEBAIHN0YXRpYyBpbnQgbXRrX2RwaV9wb3dlcl9vbihzdHJ1Y3QgbXRr
-X2RwaSAqZHBpKQ0KPiAgCQlnb3RvIGVycl9waXhlbDsNCj4gIAl9DQo+ICANCj4gKwlpZiAoZHBp
-LT5waW5jdHJsICYmIGRwaS0+cGluc19kcGkpDQo+ICsJCXBpbmN0cmxfc2VsZWN0X3N0YXRlKGRw
-aS0+cGluY3RybCwgZHBpLT5waW5zX2RwaSk7DQo+ICsNCj4gIAltdGtfZHBpX2VuYWJsZShkcGkp
-Ow0KPiAgCXJldHVybiAwOw0KPiAgDQo+IEBAIC03MTksNiArNzMwLDI2IEBAIHN0YXRpYyBpbnQg
-bXRrX2RwaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCW9mX3Byb3Bl
-cnR5X3JlYWRfdTMyX2luZGV4KGRldi0+b2Zfbm9kZSwgInBjbGstc2FtcGxlIiwgMSwNCj4gIAkJ
-CQkgICAmZHBpLT5wY2xrX3NhbXBsZSk7DQo+ICANCj4gKwlkcGktPnBpbmN0cmwgPSBkZXZtX3Bp
-bmN0cmxfZ2V0KCZwZGV2LT5kZXYpOw0KPiArCWlmIChJU19FUlIoZHBpLT5waW5jdHJsKSkgew0K
-PiArCQlkcGktPnBpbmN0cmwgPSBOVUxMOw0KPiArCQlkZXZfZGJnKCZwZGV2LT5kZXYsICJDYW5u
-b3QgZmluZCBwaW5jdHJsIVxuIik7DQo+ICsJfQ0KPiArCWlmIChkcGktPnBpbmN0cmwpIHsNCj4g
-KwkJZHBpLT5waW5zX2dwaW8gPSBwaW5jdHJsX2xvb2t1cF9zdGF0ZShkcGktPnBpbmN0cmwsICJn
-cGlvbW9kZSIpOw0KPiArCQlpZiAoSVNfRVJSKGRwaS0+cGluc19ncGlvKSkgew0KPiArCQkJZHBp
-LT5waW5zX2dwaW8gPSBOVUxMOw0KPiArCQkJZGV2X2RiZygmcGRldi0+ZGV2LCAiQ2Fubm90IGZp
-bmQgcGluY3RybCBncGlvbW9kZSFcbiIpOw0KPiArCQl9DQo+ICsJCWlmIChkcGktPnBpbnNfZ3Bp
-bykNCj4gKwkJCXBpbmN0cmxfc2VsZWN0X3N0YXRlKGRwaS0+cGluY3RybCwgZHBpLT5waW5zX2dw
-aW8pOw0KPiArDQo+ICsJCWRwaS0+cGluc19kcGkgPSBwaW5jdHJsX2xvb2t1cF9zdGF0ZShkcGkt
-PnBpbmN0cmwsICJkcGltb2RlIik7DQo+ICsJCWlmIChJU19FUlIoZHBpLT5waW5zX2RwaSkpIHsN
-Cj4gKwkJCWRwaS0+cGluc19kcGkgPSBOVUxMOw0KPiArCQkJZGV2X2RiZygmcGRldi0+ZGV2LCAi
-Q2Fubm90IGZpbmQgcGluY3RybCBkcGltb2RlIVxuIik7DQo+ICsJCX0NCj4gKwl9DQo+ICAJbWVt
-ID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCj4gIAlk
-cGktPnJlZ3MgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCBtZW0pOw0KPiAgCWlmIChJU19F
-UlIoZHBpLT5yZWdzKSkgew0KDQo=
+This patch series fixes some problems:
+-dma api debug warning to segment size check.
+-dma_unmap_sg missing on not prepared request.
+-Clear busyd0end irq flag when a R1B busy is completed.
+-Initialize pwr|clk|datactrl_reg with their hardware values at probe.
+
+Ludovic Barre (4):
+  mmc: mmci_sdmmc: fix DMA API warning max segment size
+  mmc: mmci_sdmmc: fix DMA API warning overlapping mappings
+  mmc: mmci_sdmmc: fix clear busyd0end irq flag
+  mmc: mmci: initialize pwr|clk|datactrl_reg with their hardware values
+
+ drivers/mmc/host/mmci.c             |  4 ++++
+ drivers/mmc/host/mmci_stm32_sdmmc.c | 21 +++++++++++++--------
+ 2 files changed, 17 insertions(+), 8 deletions(-)
+
+-- 
+2.17.1
 
