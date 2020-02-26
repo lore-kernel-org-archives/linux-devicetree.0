@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181D4C4BA29
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998F7C4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C97FD222C4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF09222C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="JyNYIs8e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="biKRRS3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgBZTNP (ORCPT
+        id S1727434AbgBZTNU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:13:15 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:8033 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727327AbgBZTNP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 14:13:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582744392;
+        Wed, 26 Feb 2020 14:13:20 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:35283 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727497AbgBZTNU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 14:13:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582744398;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=2EvwvmMzOKZtUZJLHlIF1SJL85vzPp9aE2EFoN3J+us=;
-        b=JyNYIs8eJF3enx4BQ0lLSgQ4ZtsIZ48STigs58bKZrZyRG99cGbOuRsqKLSDrwQ7e1
-        4nvLsna6naCL/FuMDOOsbU2whqLMT7U2Kbz6sdWFkl4cbtdGs20qIBSA1isVRmdi3P9Z
-        Bj807aTMXezrkAFI142tVBJan2KdcgDyiAIVcENldEP9mgLnJLpGvRgV0p030Z7NsReu
-        BtkWM4f8aHP7nZBk0/Zh8tjCW0Pgtyap+JCYOJ5S+g8yLkd8pQUXrb3sArubDbmVnLp4
-        ABV4pZLsG9ZlnCng7B1QqVFI/O9y+kv5+dEBL6bmEckST5EsBobfDOpWKCfQltXCugnk
-        mIsg==
+        bh=rmAyGFH2w0GQdDqcolLuvQb3bXwl+Mlnr1aULm9Zmtc=;
+        b=biKRRS3dxnZ2gWZXq4Wxhu/ZGWhZfJ4x/idUbOGxce+LpsqYgTgCSQHMgx8oooURKq
+        E7RyH/mhiK2JKm3D2IojrPC7sR9kUwTr9FsE/bhxVrt10/81+J6QllCpH+uUItWWIsUY
+        g2c9KJ22QfL85zEQOdkygmnTqBweniAA/2ZEOW6AvVWJduXkWt/4vkn3rhMzWLKv6e/y
+        ooX+zK4po6kkcBerVLJls6fTxjxh180xECz0IETkvpRL6f4adD3d49oqz3HuxeQj7lXx
+        reHNW5OZ057sRrHsU0ayK7eVbA25kVD7uEkWT+6fB8qxA70k5lbB8tzGjF7/IhoxJ+21
+        AZTA==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1QJD56bP
+        with ESMTPSA id U06217w1QJD16bK
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Wed, 26 Feb 2020 20:13:05 +0100 (CET)
+        Wed, 26 Feb 2020 20:13:01 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -59,10 +59,10 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com,
-        "H . Nikolaus Schaller" <hns@goldelico.com>
-Subject: [RFC 6/8] MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
-Date:   Wed, 26 Feb 2020 20:12:58 +0100
-Message-Id: <fc8b92092f9e4ecdba86df973455ff06e836b349.1582744379.git.hns@goldelico.com>
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [RFC 1/8] dt-bindings: video: Add jz4780-lcd binding
+Date:   Wed, 26 Feb 2020 20:12:53 +0100
+Message-Id: <d7dd7c52a9f6cb4e31bce69bb6879e46bfba530c.1582744379.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1582744379.git.hns@goldelico.com>
 References: <cover.1582744379.git.hns@goldelico.com>
@@ -73,59 +73,61 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Paul Boddie <paul@boddie.org.uk>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
-A specialisation of the generic Synopsys HDMI driver is employed for JZ4780
-HDMI support. This requires a new driver, plus device tree and configuration
-modifications.
+Add DT bindings for the LCD controller on the jz4780 SoC
 
-Signed-off-by: Paul Boddie <paul@boddie.org.uk>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 ---
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 32 ++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../bindings/display/ingenic-jz4780-lcd.txt   | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329b034b..391d4e1efd35 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -433,4 +433,36 @@
- 
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt
+new file mode 100644
+index 000000000000..8512ce3f93df
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt
+@@ -0,0 +1,39 @@
++Bindings for Ingenic JZ4780 LCD Controller
 +
-+	hdmi: hdmi@10180000 {
-+		compatible = "ingenic,jz4780-dw-hdmi";
-+		reg = <0x10180000 0x8000>;
-+		reg-io-width = <4>;
++LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
 +
-+		clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
-+		clock-names = "isfr" , "iahb";
++Required properties:
++- compatible: should be "ingenic,jz4780-lcd"
++- reg: Should contain the address & size of the LCD controller registers.
++- interrupts: Should specify the interrupt provided by parent.
++- clocks: Should contain two clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK.
++- clock-names : Must be "lcd_clk", "lcd_pixclk";
++- port: A port node with endpoint definitions as defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
 +
-+		assigned-clocks = <&cgu JZ4780_CLK_HDMI>;
-+		assigned-clock-rates = <27000000>;
++Optional properties:
++- interrupt-parent: phandle to parent interrupt controller
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <3>;
++Example:
 +
-+		/* ddc-i2c-bus = <&i2c4>; */
++lcd: jz4780-lcdk@0x13050000 {
++	compatible = "ingenic,jz4780-lcd";
++	reg = <0x13050000 0x1800>;
 +
-+		status = "disabled";
-+	};
++	clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
++	clock-names = "lcd_clk", "lcd_pixclk";
 +
-+	lcd: lcd@13050000 {
-+		compatible = "ingenic,jz4740-lcd";
-+		reg = <0x13050000 0x1800>;
++	interrupt-parent = <&intc>;
++	interrupts = <31>;
 +
-+		clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
-+		clock-names = "lcd", "lcd_pclk";
++	jz4780_lcd_out: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <31>;
++			jz4780_out_hdmi: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hdmi_in_lcd>;
++			};
++		};
 +
-+		status = "disabled";
-+	};
- };
++};
 -- 
 2.23.0
 
