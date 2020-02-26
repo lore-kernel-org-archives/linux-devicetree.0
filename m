@@ -2,125 +2,145 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AD6C4BA0E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F3C4BA10
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3005724656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:09:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CEG0EYD0"
+	by mail.kernel.org (Postfix) with ESMTP id C9F2421556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbgBZJJQ (ORCPT
+        id S1727040AbgBZJTr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:09:16 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33844 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbgBZJJQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 04:09:16 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q98kPl100212;
-        Wed, 26 Feb 2020 03:08:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582708126;
-        bh=715M2fEsQcQ9pGCNA+WdZUDo8i9Ym6s9zxFMk/XbQHM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=CEG0EYD07SZfu0ZemKPihOoI30dStRLAC+bcraQqR//LNHsqF4Akstjvlb/UI5lY4
-         54RSGgkjvojx/j0Cf2rAAZ2SD0nnTwpy+54VZG5VizfndJzvMQ2MKGcdIWrbBqX6Ll
-         KlzqFMqsNnWT1ohsOhwZI4DsDIr00JJUYoGGAPHU=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q98kCs075706
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Feb 2020 03:08:46 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 03:08:46 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 03:08:45 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01Q98fuI103976;
-        Wed, 26 Feb 2020 03:08:41 -0600
-Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
- transceiver regulator
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Rob Herring <robh@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
- <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
- <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
- <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
-Date:   Wed, 26 Feb 2020 14:40:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 26 Feb 2020 04:19:47 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:52854 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726679AbgBZJTr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 04:19:47 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 81E501A713E;
+        Wed, 26 Feb 2020 10:19:44 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 880D11A70CB;
+        Wed, 26 Feb 2020 10:19:38 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6CA9640246;
+        Wed, 26 Feb 2020 17:19:31 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/4] dt-bindings: reset: imx7: Add support for i.MX8MN
+Date:   Wed, 26 Feb 2020 17:13:48 +0800
+Message-Id: <1582708431-14161-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marc,
+i.MX8MN can reuse i.MX8MQ's reset driver, update the compatible
+property and related info to support i.MX8MN.
 
-On 21/02/20 2:01 pm, Marc Kleine-Budde wrote:
-> On 2/21/20 9:31 AM, Faiz Abbas wrote:
->> Hi Rob,
->>
->> On 20/02/20 2:05 am, Rob Herring wrote:
->>> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
->>>> Some CAN transceivers have a standby line that needs to be asserted
->>>> before they can be used. Model this GPIO lines as an optional
->>>> fixed-regulator node. Document bindings for the same.
->>>>
->>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
->>>>  1 file changed, 3 insertions(+)
->>>
->>> This has moved to DT schema in my tree, so please adjust it and resend.
->>
->> Ok.
->>>
->>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
->>>> index ed614383af9c..f17e2a5207dc 100644
->>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
->>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
->>>> @@ -48,6 +48,9 @@ Optional Subnode:
->>>>  			  that can be used for CAN/CAN-FD modes. See
->>>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
->>>>  			  for details.
->>>> +
->>>> +- xceiver-supply: Regulator that powers the CAN transceiver.
->>>
->>> The supply for a transceiver should go in the transceiver node.
->>>
->>
->> Marc, while I have you here, do you agree with this?
-> 
-> I'll look into the details later today.
-> 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/reset/fsl,imx7-src.txt     |  4 +-
+ include/dt-bindings/reset/imx8mq-reset.h           | 56 +++++++++++-----------
+ 2 files changed, 31 insertions(+), 29 deletions(-)
 
-Sure. Be sure to take another look at my attempt to use the transceiver
-with a phy driver some time ago.
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+index c2489e4..38ac251 100644
+--- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
++++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
+ 	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
+ 	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
++	- For i.MX8MN SoCs should be "fsl,imx8mn-src", "fsl,imx8mq-src", "syscon"
+ - reg: should be register base and length as documented in the
+   datasheet
+ - interrupts: Should contain SRC interrupt
+@@ -49,4 +50,5 @@ Example:
+ For list of all valid reset indices see
+ <dt-bindings/reset/imx7-reset.h> for i.MX7,
+ <dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM
++<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM and
++<dt-bindings/reset/imx8mq-reset.h> for i.MX8MN
+diff --git a/include/dt-bindings/reset/imx8mq-reset.h b/include/dt-bindings/reset/imx8mq-reset.h
+index 9a30108..a5b5707 100644
+--- a/include/dt-bindings/reset/imx8mq-reset.h
++++ b/include/dt-bindings/reset/imx8mq-reset.h
+@@ -28,36 +28,36 @@
+ #define IMX8MQ_RESET_A53_L2RESET		17
+ #define IMX8MQ_RESET_SW_NON_SCLR_M4C_RST	18
+ #define IMX8MQ_RESET_OTG1_PHY_RESET		19
+-#define IMX8MQ_RESET_OTG2_PHY_RESET		20
+-#define IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N	21
+-#define IMX8MQ_RESET_MIPI_DSI_RESET_N		22
+-#define IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N	23
+-#define IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N	24
+-#define IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N	25
+-#define IMX8MQ_RESET_PCIEPHY			26
+-#define IMX8MQ_RESET_PCIEPHY_PERST		27
+-#define IMX8MQ_RESET_PCIE_CTRL_APPS_EN		28
+-#define IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF	29
+-#define IMX8MQ_RESET_HDMI_PHY_APB_RESET		30	/* i.MX8MM does NOT support */
++#define IMX8MQ_RESET_OTG2_PHY_RESET		20	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N	21	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_DSI_RESET_N		22	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N	23	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N	24	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N	25	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_PCIEPHY			26	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_PCIEPHY_PERST		27	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_PCIE_CTRL_APPS_EN		28	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF	29	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_HDMI_PHY_APB_RESET		30	/* i.MX8MM/i.MX8MN does NOT support */
+ #define IMX8MQ_RESET_DISP_RESET			31
+ #define IMX8MQ_RESET_GPU_RESET			32
+-#define IMX8MQ_RESET_VPU_RESET			33
+-#define IMX8MQ_RESET_PCIEPHY2			34	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_PCIEPHY2_PERST		35	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_PCIE2_CTRL_APPS_EN		36	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF	37	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_MIPI_CSI1_CORE_RESET	38	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET	39	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_MIPI_CSI1_ESC_RESET	40	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_MIPI_CSI2_CORE_RESET	41	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET	42	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_MIPI_CSI2_ESC_RESET	43	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_DDRC1_PRST			44
+-#define IMX8MQ_RESET_DDRC1_CORE_RESET		45
+-#define IMX8MQ_RESET_DDRC1_PHY_RESET		46
+-#define IMX8MQ_RESET_DDRC2_PRST			47	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_DDRC2_CORE_RESET		48	/* i.MX8MM does NOT support */
+-#define IMX8MQ_RESET_DDRC2_PHY_RESET		49	/* i.MX8MM does NOT support */
++#define IMX8MQ_RESET_VPU_RESET			33	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_PCIEPHY2			34	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_PCIEPHY2_PERST		35	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_PCIE2_CTRL_APPS_EN		36	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF	37	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_CSI1_CORE_RESET	38	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET	39	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_CSI1_ESC_RESET	40	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_CSI2_CORE_RESET	41	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET	42	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_MIPI_CSI2_ESC_RESET	43	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_DDRC1_PRST			44	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_DDRC1_CORE_RESET		45	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_DDRC1_PHY_RESET		46	/* i.MX8MN does NOT support */
++#define IMX8MQ_RESET_DDRC2_PRST			47	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_DDRC2_CORE_RESET		48	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_DDRC2_PHY_RESET		49	/* i.MX8MM/i.MX8MN does NOT support */
+ 
+ #define IMX8MQ_RESET_NUM			50
+ 
+-- 
+2.7.4
 
-https://lore.kernel.org/patchwork/patch/1006238/
-
-Thanks,
-Faiz
