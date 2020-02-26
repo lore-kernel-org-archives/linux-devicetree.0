@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557A7C4BA0B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D92C4BA10
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2317324653
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22AD20732
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xvFFzasO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K6EPpPzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgBZJhs (ORCPT
+        id S1727880AbgBZJhh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:37:48 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45656 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727964AbgBZJhs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 04:37:48 -0500
+        Wed, 26 Feb 2020 04:37:37 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40056 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgBZJhh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 04:37:37 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bUa4048417;
-        Wed, 26 Feb 2020 03:37:30 -0600
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bHK2087084;
+        Wed, 26 Feb 2020 03:37:17 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582709850;
-        bh=M3mm3Cf772cMZOC46yELya0QzB+JBMYTKpNqzbT5+78=;
+        s=ti-com-17Q1; t=1582709837;
+        bh=/RvMu+KBpcqEDFVBnIWtjiFPQ2qCDkAs2AiQIuWdFws=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xvFFzasOWP5kbWdXgaHp6613afsmoL1nMzqiYCdfAt0AYbuS8r61IEN4iH686RyXj
-         h91btSsp318UeCUo/7LFmtADBwsG6c6JdstMquFUoQUgeI+gfzZPpilvG/hBz3pwBH
-         Mw4LOoS0RWfQHCknYpSr0F1TvIbz0/DEFY1ItCS4=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q9bUM3118977
+        b=K6EPpPzRPSk4gsirOoI1fBp5truy0/o8R/d1P37k3XGPD9cbcVIhzmmEkU8XA4UO8
+         XCt4AtdJCY4rouVI64SzqfNU6w30qSYbkkVpf11Yo8Xoyi855W2yZMYDaIwCCOGMQc
+         wJ/3zOV6EfUHDvbLVapgTz2frUoo/TmTXEqezsNI=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q9bHVR118717
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Feb 2020 03:37:30 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 26 Feb 2020 03:37:17 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 03:37:30 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 03:37:17 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 03:37:30 -0600
+ Frontend Transport; Wed, 26 Feb 2020 03:37:17 -0600
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4AA110613;
-        Wed, 26 Feb 2020 03:37:26 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4A7110613;
+        Wed, 26 Feb 2020 03:37:13 -0600
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -58,9 +58,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v2 05/11] spi: cadence-quadspi: Add support for octal DTR flashes
-Date:   Wed, 26 Feb 2020 15:06:57 +0530
-Message-ID: <20200226093703.19765-6-p.yadav@ti.com>
+Subject: [PATCH v2 02/11] spi: set mode bits for "spi-rx-dtr" and "spi-tx-dtr"
+Date:   Wed, 26 Feb 2020 15:06:54 +0530
+Message-ID: <20200226093703.19765-3-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200226093703.19765-1-p.yadav@ti.com>
 References: <20200226093703.19765-1-p.yadav@ti.com>
@@ -73,401 +73,60 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Set up opcode extension and enable/disable DTR mode based on whether the
-command is DTR or not.
-
-xSPI flashes can have a 4-byte dummy address associated with some
-commands like the Read Status Register command in octal DTR mode. Since
-the flash does not support sending the dummy address, we can not use
-automatic write completion polling in DTR mode. Further, no write
-completion polling makes it impossible to use DAC mode for DTR writes.
-In that mode, the controller does not know beforehand how long a write
-will be and so it can de-assert Chip Select (CS#) at any time. Once CS#
-is de-assert, the flash will go into burning phase. But since the
-controller does not do write completion polling, it does not know when
-the flash is busy and might send in writes while the flash is not ready.
-
-So, disable write completion polling and make writes go through indirect
-mode for DTR writes and let spi-mem take care of polling the SR.
+These two DT properties express DTR receive and transmit capabilities of
+a SPI flash and controller. Introduce two new mode bits: SPI_RX_DTR and
+SPI_TX_DTR which correspond to the new DT properties. Set these bits
+when the two corresponding properties are present in the device tree.
+Also update the detection of unsupported mode bits to include the new
+bits.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/spi/spi-cadence-quadspi.c | 247 ++++++++++++++++++++++++++----
- 1 file changed, 214 insertions(+), 33 deletions(-)
+ drivers/spi/spi.c       | 10 +++++++++-
+ include/linux/spi/spi.h |  2 ++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-index 000f01c18c87..d43bf30e1cde 100644
---- a/drivers/spi/spi-cadence-quadspi.c
-+++ b/drivers/spi/spi-cadence-quadspi.c
-@@ -52,6 +52,7 @@ struct cqspi_flash_pdata {
- 	u8		inst_width;
- 	u8		addr_width;
- 	u8		data_width;
-+	bool		is_dtr;
- 	u8		cs;
- 	bool		registered;
- };
-@@ -111,6 +112,8 @@ struct cqspi_driver_platdata {
- #define CQSPI_REG_CONFIG_CHIPSELECT_LSB		10
- #define CQSPI_REG_CONFIG_DMA_MASK		BIT(15)
- #define CQSPI_REG_CONFIG_BAUD_LSB		19
-+#define CQSPI_REG_CONFIG_DTR_PROTO		BIT(24)
-+#define CQSPI_REG_CONFIG_DUAL_OPCODE		BIT(30)
- #define CQSPI_REG_CONFIG_IDLE_LSB		31
- #define CQSPI_REG_CONFIG_CHIPSELECT_MASK	0xF
- #define CQSPI_REG_CONFIG_BAUD_MASK		0xF
-@@ -217,6 +220,14 @@ struct cqspi_driver_platdata {
- #define CQSPI_REG_CMDWRITEDATALOWER		0xA8
- #define CQSPI_REG_CMDWRITEDATAUPPER		0xAC
- 
-+#define CQSPI_REG_POLLING_STATUS		0xB0
-+#define CQSPI_REG_POLLING_STATUS_DUMMY_LSB	16
-+
-+#define CQSPI_REG_OP_EXT_LOWER			0xE0
-+#define CQSPI_REG_OP_EXT_READ_LSB		24
-+#define CQSPI_REG_OP_EXT_WRITE_LSB		16
-+#define CQSPI_REG_OP_EXT_STIG_LSB		0
-+
- /* Interrupt status bits */
- #define CQSPI_REG_IRQ_MODE_ERR			BIT(0)
- #define CQSPI_REG_IRQ_UNDERFLOW			BIT(1)
-@@ -291,6 +302,69 @@ static unsigned int cqspi_calc_rdreg(struct cqspi_flash_pdata *f_pdata)
- 	return rdreg;
- }
- 
-+static int cqspi_set_protocol(struct cqspi_flash_pdata *f_pdata,
-+			      const struct spi_mem_op *op)
-+{
-+	f_pdata->inst_width = CQSPI_INST_TYPE_SINGLE;
-+	f_pdata->addr_width = CQSPI_INST_TYPE_SINGLE;
-+	f_pdata->data_width = CQSPI_INST_TYPE_SINGLE;
-+	f_pdata->is_dtr = op->data.is_dtr && op->cmd.is_dtr && op->addr.is_dtr;
-+
-+	switch (op->data.buswidth) {
-+	case 0:
-+		break;
-+	case 1:
-+		f_pdata->data_width = CQSPI_INST_TYPE_SINGLE;
-+		break;
-+	case 2:
-+		f_pdata->data_width = CQSPI_INST_TYPE_DUAL;
-+		break;
-+	case 4:
-+		f_pdata->data_width = CQSPI_INST_TYPE_QUAD;
-+		break;
-+	case 8:
-+		f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	/* Right now we only support 8-8-8 DTR mode. */
-+	if (f_pdata->is_dtr) {
-+		switch (op->cmd.buswidth) {
-+		case 0:
-+			break;
-+		case 8:
-+			f_pdata->inst_width = CQSPI_INST_TYPE_OCTAL;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		switch (op->addr.buswidth) {
-+		case 0:
-+			break;
-+		case 8:
-+			f_pdata->addr_width = CQSPI_INST_TYPE_OCTAL;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		switch (op->data.buswidth) {
-+		case 0:
-+			break;
-+		case 8:
-+			f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int cqspi_wait_idle(struct cqspi_st *cqspi)
- {
- 	const unsigned int poll_idle_retry = 3;
-@@ -348,6 +422,60 @@ static int cqspi_exec_flash_cmd(struct cqspi_st *cqspi, unsigned int reg)
- 	return cqspi_wait_idle(cqspi);
- }
- 
-+static int cqspi_setup_opcode_ext(struct cqspi_flash_pdata *f_pdata,
-+				  const struct spi_mem_op *op,
-+				  unsigned int shift)
-+{
-+	struct cqspi_st *cqspi = f_pdata->cqspi;
-+	void __iomem *reg_base = cqspi->iobase;
-+	int ret;
-+	unsigned int reg;
-+	u8 ext;
-+
-+	ret = spi_mem_get_cmd_ext(op, &ext);
-+	if (ret)
-+		return ret;
-+	reg = readl(reg_base + CQSPI_REG_OP_EXT_LOWER);
-+	reg &= ~(0xff << shift);
-+	reg |= ext << shift;
-+	writel(reg, reg_base + CQSPI_REG_OP_EXT_LOWER);
-+
-+	return 0;
-+}
-+
-+static int cqspi_enable_dtr(struct cqspi_flash_pdata *f_pdata,
-+			    const struct spi_mem_op *op, unsigned int shift,
-+			    bool enable)
-+{
-+	struct cqspi_st *cqspi = f_pdata->cqspi;
-+	void __iomem *reg_base = cqspi->iobase;
-+	unsigned int reg;
-+	int ret;
-+
-+	reg = readl(reg_base + CQSPI_REG_CONFIG);
-+
-+	/*
-+	 * We enable dual byte opcode here. The callers have to set up the
-+	 * extension opcode based on which type of operation it is.
-+	 */
-+	if (enable) {
-+		reg |= CQSPI_REG_CONFIG_DTR_PROTO;
-+		reg |= CQSPI_REG_CONFIG_DUAL_OPCODE;
-+
-+		/* Set up command opcode extension. */
-+		ret = cqspi_setup_opcode_ext(f_pdata, op, shift);
-+		if (ret)
-+			return ret;
-+	} else {
-+		reg &= ~CQSPI_REG_CONFIG_DTR_PROTO;
-+		reg &= ~CQSPI_REG_CONFIG_DUAL_OPCODE;
-+	}
-+
-+	writel(reg, reg_base + CQSPI_REG_CONFIG);
-+
-+	return cqspi_wait_idle(cqspi);
-+}
-+
- static int cqspi_command_read(struct cqspi_flash_pdata *f_pdata,
- 			      const struct spi_mem_op *op)
- {
-@@ -361,6 +489,15 @@ static int cqspi_command_read(struct cqspi_flash_pdata *f_pdata,
- 	size_t read_len;
- 	int status;
- 
-+	status = cqspi_set_protocol(f_pdata, op);
-+	if (status)
-+		return status;
-+
-+	status = cqspi_enable_dtr(f_pdata, op, CQSPI_REG_OP_EXT_STIG_LSB,
-+				  f_pdata->is_dtr);
-+	if (status)
-+		return status;
-+
- 	if (!n_rx || n_rx > CQSPI_STIG_DATA_LEN_MAX || !rxbuf) {
- 		dev_err(&cqspi->pdev->dev,
- 			"Invalid input argument, len %zu rxbuf 0x%p\n",
-@@ -410,6 +547,16 @@ static int cqspi_command_write(struct cqspi_flash_pdata *f_pdata,
- 	unsigned int reg;
- 	unsigned int data;
- 	size_t write_len;
-+	int ret;
-+
-+	ret = cqspi_set_protocol(f_pdata, op);
-+	if (ret)
-+		return ret;
-+
-+	ret = cqspi_enable_dtr(f_pdata, op, CQSPI_REG_OP_EXT_STIG_LSB,
-+			       f_pdata->is_dtr);
-+	if (ret)
-+		return ret;
- 
- 	if (n_tx > CQSPI_STIG_DATA_LEN_MAX || (n_tx && !txbuf)) {
- 		dev_err(&cqspi->pdev->dev,
-@@ -418,6 +565,9 @@ static int cqspi_command_write(struct cqspi_flash_pdata *f_pdata,
- 		return -EINVAL;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 38b4c78df506..25c8ed9343f9 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1927,6 +1927,13 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+ 		}
  	}
  
-+	reg = cqspi_calc_rdreg(f_pdata);
-+	writel(reg, reg_base + CQSPI_REG_RD_INSTR);
++	/* Device DTR mode. */
++	if (of_property_read_bool(nc, "spi-tx-dtr"))
++		spi->mode |= SPI_TX_DTR;
 +
- 	reg = opcode << CQSPI_REG_CMDCTRL_OPCODE_LSB;
- 
- 	if (op->addr.nbytes) {
-@@ -456,16 +606,25 @@ static int cqspi_read_setup(struct cqspi_flash_pdata *f_pdata,
- 	void __iomem *reg_base = cqspi->iobase;
- 	unsigned int dummy_clk = 0;
- 	unsigned int reg;
-+	int ret;
++	if (of_property_read_bool(nc, "spi-rx-dtr"))
++		spi->mode |= SPI_RX_DTR;
 +
-+	ret = cqspi_enable_dtr(f_pdata, op, CQSPI_REG_OP_EXT_READ_LSB,
-+			       f_pdata->is_dtr);
-+	if (ret)
-+		return ret;
- 
- 	reg = op->cmd.opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
- 	reg |= cqspi_calc_rdreg(f_pdata);
- 
- 	/* Setup dummy clock cycles */
--	dummy_clk = op->dummy.nbytes * 8;
-+	dummy_clk = op->dummy.nbytes * (8 / op->dummy.buswidth);
-+	if (f_pdata->is_dtr)
-+		dummy_clk /= 2;
-+
- 	if (dummy_clk > CQSPI_DUMMY_CLKS_MAX)
- 		dummy_clk = CQSPI_DUMMY_CLKS_MAX;
- 
--	if (dummy_clk / 8)
-+	if (dummy_clk)
- 		reg |= (dummy_clk & CQSPI_REG_RD_INSTR_DUMMY_MASK)
- 		       << CQSPI_REG_RD_INSTR_DUMMY_LSB;
- 
-@@ -575,15 +734,38 @@ static int cqspi_write_setup(struct cqspi_flash_pdata *f_pdata,
- 			     const struct spi_mem_op *op)
- {
- 	unsigned int reg;
-+	int ret;
- 	struct cqspi_st *cqspi = f_pdata->cqspi;
- 	void __iomem *reg_base = cqspi->iobase;
- 
-+	ret = cqspi_enable_dtr(f_pdata, op, CQSPI_REG_OP_EXT_WRITE_LSB,
-+			       f_pdata->is_dtr);
-+	if (ret)
-+		return ret;
-+
- 	/* Set opcode. */
- 	reg = op->cmd.opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
-+	reg |= f_pdata->data_width << CQSPI_REG_WR_INSTR_TYPE_DATA_LSB;
-+	reg |= f_pdata->addr_width << CQSPI_REG_WR_INSTR_TYPE_ADDR_LSB;
- 	writel(reg, reg_base + CQSPI_REG_WR_INSTR);
- 	reg = cqspi_calc_rdreg(f_pdata);
- 	writel(reg, reg_base + CQSPI_REG_RD_INSTR);
- 
-+	/* Set up the command opcode extension. */
-+	if (f_pdata->is_dtr) {
-+		/*
-+		 * Some flashes like the cypress Semper flash expect a 4-byte
-+		 * dummy address with the Read SR command in DTR mode, but this
-+		 * controller does not support sending address with the Read SR
-+		 * command. So, disable write completion polling on the
-+		 * controller's side. spi-nor will take care of polling the
-+		 * status register.
-+		 */
-+		reg = readl(reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+		reg |= CQSPI_REG_WR_DISABLE_AUTO_POLL;
-+		writel(reg, reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+	}
-+
- 	reg = readl(reg_base + CQSPI_REG_SIZE);
- 	reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
- 	reg |= (op->addr.nbytes - 1);
-@@ -833,35 +1015,6 @@ static void cqspi_configure(struct cqspi_flash_pdata *f_pdata,
- 		cqspi_controller_enable(cqspi, 1);
- }
- 
--static int cqspi_set_protocol(struct cqspi_flash_pdata *f_pdata,
--			      const struct spi_mem_op *op)
--{
--	f_pdata->inst_width = CQSPI_INST_TYPE_SINGLE;
--	f_pdata->addr_width = CQSPI_INST_TYPE_SINGLE;
--	f_pdata->data_width = CQSPI_INST_TYPE_SINGLE;
--
--	if (op->data.dir == SPI_MEM_DATA_IN) {
--		switch (op->data.buswidth) {
--		case 1:
--			f_pdata->data_width = CQSPI_INST_TYPE_SINGLE;
--			break;
--		case 2:
--			f_pdata->data_width = CQSPI_INST_TYPE_DUAL;
--			break;
--		case 4:
--			f_pdata->data_width = CQSPI_INST_TYPE_QUAD;
--			break;
--		case 8:
--			f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
--			break;
--		default:
--			return -EINVAL;
--		}
--	}
--
--	return 0;
--}
--
- static ssize_t cqspi_write(struct cqspi_flash_pdata *f_pdata,
- 			   const struct spi_mem_op *op)
- {
-@@ -879,7 +1032,16 @@ static ssize_t cqspi_write(struct cqspi_flash_pdata *f_pdata,
- 	if (ret)
- 		return ret;
- 
--	if (cqspi->use_dac_mode && ((to + len) <= cqspi->ahb_size)) {
-+	/*
-+	 * Some flashes like the Cypress Semper flash expect a dummy 4-byte
-+	 * address (all 0s) with the read status register command in DTR mode.
-+	 * But this controller does not support sending dummy address bytes to
-+	 * the flash when it is polling the write completion register in DTR
-+	 * mode. So, we can not use direct mode when in DTR mode for writing
-+	 * data.
-+	 */
-+	if (!f_pdata->is_dtr && cqspi->use_dac_mode
-+	    && ((to + len) <= cqspi->ahb_size)) {
- 		memcpy_toio(cqspi->ahb_base + to, buf, len);
- 		return cqspi_wait_idle(cqspi);
- 	}
-@@ -1006,6 +1168,23 @@ static int cqspi_exec_mem_op(struct spi_mem *mem, const struct spi_mem_op *op)
- 	return ret;
- }
- 
-+static bool cqspi_supports_mem_op(struct spi_mem *mem,
-+				 const struct spi_mem_op *op)
-+{
-+	bool all_true, all_false;
-+
-+	all_true = op->cmd.is_dtr && op->addr.is_dtr && op->dummy.is_dtr &&
-+		   op->data.is_dtr;
-+	all_false = !op->cmd.is_dtr && !op->addr.is_dtr && !op->dummy.is_dtr &&
-+		    !op->data.is_dtr;
-+
-+	/* Mixed DTR modes not supported. */
-+	if (!(all_true || all_false))
-+		return false;
-+
-+	return spi_mem_default_supports_op(mem, op);
-+}
-+
- static int cqspi_of_get_flash_pdata(struct platform_device *pdev,
- 				    struct cqspi_flash_pdata *f_pdata,
- 				    struct device_node *np)
-@@ -1136,6 +1315,7 @@ static int cqspi_request_mmap_dma(struct cqspi_st *cqspi)
- 
- static const struct spi_controller_mem_ops cqspi_mem_ops = {
- 	.exec_op = cqspi_exec_mem_op,
-+	.supports_op = cqspi_supports_mem_op,
- };
- 
- static int cqspi_setup_flash(struct cqspi_st *cqspi)
-@@ -1187,7 +1367,8 @@ static int cqspi_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "spi_alloc_master failed\n");
- 		return -ENOMEM;
- 	}
--	master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL;
-+	master->mode_bits = SPI_RX_OCTAL | SPI_TX_OCTAL | SPI_RX_QUAD |
-+			    SPI_TX_DUAL | SPI_RX_DUAL | SPI_RX_DTR | SPI_TX_DTR;
- 	master->mem_ops = &cqspi_mem_ops;
- 	master->dev.of_node = pdev->dev.of_node;
- 
+ 	if (spi_controller_is_slave(ctlr)) {
+ 		if (!of_node_name_eq(nc, "slave")) {
+ 			dev_err(&ctlr->dev, "%pOF is not called 'slave'\n",
+@@ -3252,7 +3259,8 @@ int spi_setup(struct spi_device *spi)
+ 		bad_bits &= ~SPI_CS_HIGH;
+ 	ugly_bits = bad_bits &
+ 		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL |
+-		     SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL);
++		     SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL |
++		     SPI_TX_DTR  | SPI_RX_DTR);
+ 	if (ugly_bits) {
+ 		dev_warn(&spi->dev,
+ 			 "setup: ignoring unsupported mode bits %x\n",
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 6d16ba01ff5a..bf1108318389 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -183,6 +183,8 @@ struct spi_device {
+ #define	SPI_TX_OCTAL	0x2000			/* transmit with 8 wires */
+ #define	SPI_RX_OCTAL	0x4000			/* receive with 8 wires */
+ #define	SPI_3WIRE_HIZ	0x8000			/* high impedance turnaround */
++#define SPI_RX_DTR	0x10000			/* receive in DTR mode */
++#define SPI_TX_DTR	0x20000			/* transmit in DTR mode */
+ 	int			irq;
+ 	void			*controller_state;
+ 	void			*controller_data;
 -- 
 2.25.0
 
