@@ -2,692 +2,353 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD7FC4BA10
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255F3C4BA12
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1F021D7E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68B621D7E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgBZOiz (ORCPT
+        id S1727362AbgBZOls (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:38:55 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36163 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727741AbgBZOiz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 09:38:55 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1j6xpb-0000a7-Cv; Wed, 26 Feb 2020 15:38:35 +0100
-Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1j6xpa-0001BI-1l; Wed, 26 Feb 2020 15:38:34 +0100
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-To:     linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] ARM: dts: stm32: add STM32MP1-based Linux Automation MC-1 board
-Date:   Wed, 26 Feb 2020 15:38:24 +0100
-Message-Id: <20200226143826.1146-2-a.fatoum@pengutronix.de>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200226143826.1146-1-a.fatoum@pengutronix.de>
-References: <20200226143826.1146-1-a.fatoum@pengutronix.de>
+        Wed, 26 Feb 2020 09:41:48 -0500
+Received: from mga09.intel.com ([134.134.136.24]:15113 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726974AbgBZOls (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:41:48 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 06:41:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
+   d="scan'208";a="350403644"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 06:41:45 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1j6xsh-004wzF-3T; Wed, 26 Feb 2020 16:41:47 +0200
+Date:   Wed, 26 Feb 2020 16:41:47 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+Subject: Re: [PATCH v3 3/3] phy: intel: Add driver support for Combophy
+Message-ID: <20200226144147.GQ10400@smile.fi.intel.com>
+References: <cover.1582709320.git.eswara.kota@linux.intel.com>
+ <48dbbe705a1f22fb9e088827ca0be149e8fbcd85.1582709320.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: afa@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48dbbe705a1f22fb9e088827ca0be149e8fbcd85.1582709320.git.eswara.kota@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Linux Automation MC-1 is a SBC built around the Octavo Systems
-OSD32MP15x SiP. The SiP features up to 1 GB DDR3 RAM, EEPROM and
-a PMIC. The board has eMMC and a SD slot for storage and GbE
-for both connectivity and power.
+On Wed, Feb 26, 2020 at 06:09:53PM +0800, Dilip Kota wrote:
+> Combophy subsystem provides PHYs for various
+> controllers like PCIe, SATA and EMAC.
 
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
----
- arch/arm/boot/dts/Makefile                |   3 +-
- arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts | 367 ++++++++++++++++++++++
- arch/arm/boot/dts/stm32mp15xx-osd32.dtsi  | 229 ++++++++++++++
- 3 files changed, 598 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
- create mode 100644 arch/arm/boot/dts/stm32mp15xx-osd32.dtsi
+Thanks for an update, my comments below.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d6546d2676b9..47db736ec4aa 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1018,7 +1018,8 @@ dtb-$(CONFIG_ARCH_STM32) += \
- 	stm32mp157a-dk1.dtb \
- 	stm32mp157c-dk2.dtb \
- 	stm32mp157c-ed1.dtb \
--	stm32mp157c-ev1.dtb
-+	stm32mp157c-ev1.dtb \
-+	stm32mp157c-lxa-mc1.dtb
- dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-a1000.dtb \
- 	sun4i-a10-ba10-tvbox.dtb \
-diff --git a/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
-new file mode 100644
-index 000000000000..70fad7a2f2af
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
-@@ -0,0 +1,367 @@
-+/* SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-3-Clause) */
-+/*
-+ * Copyright (C) 2020 STMicroelectronics - All Rights Reserved
-+ * Copyright (C) 2020 Ahmad Fatoum, Pengutronix
-+ */
-+
-+/dts-v1/;
-+
-+#include "stm32mp157.dtsi"
-+#include "stm32mp15xx-osd32.dtsi"
-+#include "stm32mp15xxac-pinctrl.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
-+
-+/ {
-+	model = "Linux Automation MC-1 board";
-+	compatible = "lxa,stm32mp157c-mc1", "st,stm32mp157";
-+
-+	aliases {
-+		ethernet0 = &ethernet0;
-+		mmc0 = &sdmmc1;
-+		mmc1 = &sdmmc2;
-+		serial0 = &uart4;
-+	};
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&backlight_pwm 1 100000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <0 31 63 95 127 159 191 223 255>;
-+		default-brightness-level = <7>;
-+		power-supply = <&reg_5v2>; /* 3V3_BACKLIGHT */
-+	};
-+
-+	chosen {
-+		stdout-path = &uart4;
-+	};
-+
-+	led-act {
-+		compatible = "gpio-leds";
-+
-+		led-green {
-+			label = "mc1:green:act";
-+			gpios = <&gpioa 13 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+	};
-+
-+	led-rgb {
-+		compatible = "pwm-leds";
-+
-+		led-red {
-+			label = "mc1:red:rgb";
-+			pwms = <&leds_pwm 1 1000000 0>;
-+			max-brightness = <255>;
-+			active-low;
-+		};
-+
-+		led-green {
-+			label = "mc1:green:rgb";
-+			pwms = <&leds_pwm 2 1000000 0>;
-+			max-brightness = <255>;
-+			active-low;
-+		};
-+
-+		led-blue {
-+			label = "mc1:blue:rgb";
-+			pwms = <&leds_pwm 3 1000000 0>;
-+			max-brightness = <255>;
-+			active-low;
-+		};
-+	};
-+
-+	panel: panel {
-+		compatible = "edt,etm0700g0edh6", "simple-panel";
-+		backlight = <&backlight>;
-+		enable-gpios = <&gpiod 4 GPIO_ACTIVE_HIGH>;
-+		power-supply = <&reg_3v3>;
-+
-+		port {
-+			panel_input: endpoint {
-+				remote-endpoint = <&ltdc_ep0_out>;
-+			};
-+		};
-+	};
-+
-+	reg_3v3: regulator_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		vin-supply = <&v3v3>;
-+	};
-+
-+	/* supplied by either debug board or PoE */
-+	reg_5v2: regulator_5v2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5V2";
-+		regulator-min-microvolt = <5200000>;
-+		regulator-max-microvolt = <5200000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&gpioz {
-+	gpio-line-names = "HWID0", "HWID1", "HWID2", "HWID3", "", "",
-+			  "HWID4", "HWID5";
-+};
-+
-+&gpu {
-+	status = "okay";
-+};
-+
-+&ethernet0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eth_rgmii_pins>;
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethphy>;
-+	status = "okay";
-+
-+	mdio0 {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy: ethernet-phy@3 { /* KSZ9031RN */
-+			reg = <3>;
-+			reset-gpios = <&gpiog 0 GPIO_ACTIVE_LOW>; /* ETH_RST# */
-+			interrupt-parent = <&gpioa>;
-+			interrupts = <6 IRQ_TYPE_EDGE_FALLING>; /* ETH_MDINT# */
-+			rxc-skew-ps = <1860>;
-+			txc-skew-ps = <1860>;
-+			reset-assert-us = <10000>;
-+			reset-deassert-us = <300>;
-+			micrel,force-master;
-+		};
-+	};
-+};
-+
-+&i2c5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c5_pins>;
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	touchscreen@38 {
-+		compatible = "edt,edt-ft5x06";
-+		interrupt-parent = <&gpiod>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>; /* TOUCH_INT# */
-+		vcc-supply = <&reg_3v3>;
-+		reg = <0x38>;
-+		reset-gpios = <&gpiof 8 GPIO_ACTIVE_LOW>; /* TOUCH_RESET# */
-+		touchscreen-size-x = <1792>;
-+		touchscreen-size-y = <1024>;
-+		wakeup-source;
-+	};
-+};
-+
-+&ltdc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ltdc_pins>;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ltdc_ep0_out: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&panel_input>;
-+		};
-+	};
-+};
-+
-+&pmic {
-+	regulators {
-+		buck4-supply = <&reg_5v2>;	/* VIN */
-+		ldo2-supply = <&reg_5v2>;	/* PMIC_LDO25IN */
-+		ldo5-supply = <&reg_5v2>;	/* PMIC_LDO25IN */
-+		boost-supply = <&reg_5v2>;	/* PMIC_BSTIN */
-+		pwr_sw2-supply = <&bst_out>;    /* PMIC_SWIN */
-+	};
-+};
-+
-+&sdmmc1 {
-+	pinctrl-names = "default", "opendrain";
-+	pinctrl-0 = <&sdmmc1_b4_pu_pins_a>;
-+	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpioh 3 GPIO_ACTIVE_LOW>;
-+	disable-wp;
-+	no-1-8-v;
-+	st,neg-edge;
-+	vmmc-supply = <&reg_3v3>;
-+	status = "okay";
-+};
-+
-+&sdmmc2 {
-+	pinctrl-names = "default", "opendrain";
-+	pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_b>;
-+	pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_b>;
-+	bus-width = <8>;
-+	no-1-8-v;
-+	no-sd;
-+	no-sdio;
-+	non-removable;
-+	st,neg-edge;
-+	vmmc-supply = <&reg_3v3>;
-+	status = "okay";
-+};
-+
-+&timers3 {
-+	status = "okay";
-+
-+	backlight_pwm: pwm {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tim3_pwm_pins>;
-+		status = "okay";
-+	};
-+};
-+
-+&timers5 {
-+	status = "okay";
-+
-+	leds_pwm: pwm {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tim5_pwm_pins>;
-+		status = "okay";
-+	};
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_pins_a>;
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	eth_rgmii_pins: eth_rgmii {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('G',  5, AF11)>, /* ETH_CLK125 */
-+				 <STM32_PINMUX('G',  4, AF11)>, /* ETH_GTX_CLK */
-+				 <STM32_PINMUX('G', 13, AF11)>, /* ETH_TXD0 */
-+				 <STM32_PINMUX('G', 14, AF11)>, /* ETH_TXD1 */
-+				 <STM32_PINMUX('C',  2, AF11)>, /* ETH_TXD2 */
-+				 <STM32_PINMUX('E',  2, AF11)>, /* ETH_TXD3 */
-+				 <STM32_PINMUX('B', 11, AF11)>, /* ETH_TX_CTL */
-+				 <STM32_PINMUX('C',  1, AF11)>; /* ETH_MDC */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <2>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('C', 4, AF11)>, /* ETH_RXD0 */
-+				 <STM32_PINMUX('C', 5, AF11)>, /* ETH_RXD1 */
-+				 <STM32_PINMUX('H', 6, AF11)>, /* ETH_RXD2 */
-+				 <STM32_PINMUX('H', 7, AF11)>, /* ETH_RXD3 */
-+				 <STM32_PINMUX('A', 1, AF11)>, /* ETH_RX_CLK */
-+				 <STM32_PINMUX('A', 7, AF11)>; /* ETH_RX_CTL */
-+				 bias-disable;
-+		};
-+		pins3 {
-+			pinmux = <STM32_PINMUX('A', 2, AF11)>; /* ETH_MDIO */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+	};
-+
-+	i2c5_pins: i2c5 {
-+		pins {
-+			pinmux = <STM32_PINMUX('D', 0, AF4)>, /* TOUCH_SDA */
-+			         <STM32_PINMUX('D', 1, AF4)>; /* TOUCH_SCL */
-+			bias-disable;
-+			drive-open-drain;
-+			slew-rate = <0>;
-+		};
-+	};
-+
-+	ltdc_pins: ltdc {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('B',  1, AF9)>,  /* LTDC_R6 */
-+				 <STM32_PINMUX('B',  9, AF14)>, /* LTDC_B7 */
-+				 <STM32_PINMUX('C',  0, AF14)>, /* LTDC_R5 */
-+				 <STM32_PINMUX('D',  3, AF14)>, /* LTDC_G7 */
-+				 <STM32_PINMUX('D',  6, AF14)>, /* LTDC_B2 */
-+				 <STM32_PINMUX('D', 10, AF14)>, /* LTDC_B3 */
-+				 <STM32_PINMUX('E', 11, AF14)>, /* LTDC_G3 */
-+				 <STM32_PINMUX('E', 12, AF14)>, /* LTDC_B4 */
-+				 <STM32_PINMUX('E', 13, AF14)>, /* LTDC_DE */
-+				 <STM32_PINMUX('E', 15, AF14)>, /* LTDC_R7 */
-+				 <STM32_PINMUX('H',  4, AF9)>,  /* LTDC_G5 */
-+				 <STM32_PINMUX('H',  8, AF14)>, /* LTDC_R2 */
-+				 <STM32_PINMUX('H',  9, AF14)>, /* LTDC_R3 */
-+				 <STM32_PINMUX('H', 10, AF14)>, /* LTDC_R4 */
-+				 <STM32_PINMUX('H', 13, AF14)>, /* LTDC_G2 */
-+				 <STM32_PINMUX('H', 15, AF14)>, /* LTDC_G4 */
-+				 <STM32_PINMUX('I',  1, AF14)>, /* LTDC_G6 */
-+				 <STM32_PINMUX('I',  5, AF14)>, /* LTDC_B5 */
-+				 <STM32_PINMUX('I',  6, AF14)>, /* LTDC_B6 */
-+				 <STM32_PINMUX('I',  9, AF14)>, /* LTDC_VSYNC */
-+				 <STM32_PINMUX('I', 10, AF14)>; /* LTDC_HSYNC */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('E', 14, AF14)>; /* LTDC_CLK */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <1>;
-+		};
-+	};
-+
-+	sdmmc1_b4_pu_pins_a: sdmmc1-pu-b4-0 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('C',  8, AF12)>, /* SDMMC1_D0 */
-+				 <STM32_PINMUX('C',  9, AF12)>, /* SDMMC1_D1 */
-+				 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
-+				 <STM32_PINMUX('C', 11, AF12)>, /* SDMMC1_D3 */
-+				 <STM32_PINMUX('D',  2, AF12)>; /* SDMMC1_CMD */
-+			slew-rate = <1>;
-+			drive-push-pull;
-+			bias-pull-up;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
-+			slew-rate = <2>;
-+			drive-push-pull;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	sdmmc2_d47_pins_b: sdmmc2-d47-1 {
-+		pins {
-+			pinmux = <STM32_PINMUX('A', 8, AF9)>,  /* eMMC_D4 */
-+				 <STM32_PINMUX('A', 9, AF10)>, /* eMMC_D5 */
-+				 <STM32_PINMUX('C', 6, AF10)>, /* eMMC_D6 */
-+				 <STM32_PINMUX('C', 7, AF10)>; /* eMMC_D7 */
-+			slew-rate = <1>;
-+			drive-push-pull;
-+			bias-disable;
-+		};
-+	};
-+
-+	tim3_pwm_pins: tim3_pwm {
-+		pins {
-+			pinmux = <STM32_PINMUX('B', 5, AF2)>; /* TIM3_CH2 */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+	};
-+
-+	tim5_pwm_pins: tim5_pwm {
-+		pins {
-+			pinmux = <STM32_PINMUX('H', 11, AF2)>, /* TIM5_CH2 */
-+				 <STM32_PINMUX('H', 12, AF2)>, /* TIM5_CH3 */
-+				 <STM32_PINMUX('I',  0, AF2)>; /* TIM5_CH4 */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi b/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi
-new file mode 100644
-index 000000000000..70ee1c9aa8ec
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi
-@@ -0,0 +1,229 @@
-+/* SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-3-Clause) */
-+/*
-+ * Copyright (C) 2020 STMicroelectronics - All Rights Reserved
-+ * Copyright (C) 2020 Ahmad Fatoum, Pengutronix
-+ */
-+
-+#include "stm32mp15-pinctrl.dtsi"
-+
-+#include <dt-bindings/mfd/st,stpmic1.h>
-+
-+/ {
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		mcuram2: mcuram2@10000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10000000 0x40000>;
-+			no-map;
-+		};
-+
-+		vdev0vring0: vdev0vring0@10040000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10040000 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev0vring1: vdev0vring1@10041000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10041000 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev0buffer: vdev0buffer@10042000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10042000 0x4000>;
-+			no-map;
-+		};
-+
-+		mcuram: mcuram@30000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x30000000 0x40000>;
-+			no-map;
-+		};
-+
-+		retram: retram@38000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x38000000 0x10000>;
-+			no-map;
-+		};
-+	};
-+
-+	reg_sip_eeprom: regulator_eeprom {
-+		compatible = "regulator-fixed";
-+		regulator-name = "sip_eeprom";
-+		regulator-always-on;
-+	};
-+};
-+
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_pins_a>;
-+	clock-frequency = <400000>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+
-+	pmic: stpmic@33 {
-+		compatible = "st,stpmic1";
-+		reg = <0x33>;
-+		interrupts-extended = <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		regulators {
-+			compatible = "st,stpmic1-regulators";
-+
-+			ldo1-supply = <&v3v3>;
-+			ldo6-supply = <&v3v3>;
-+			pwr_sw1-supply = <&bst_out>;
-+
-+			vddcore: buck1 {
-+				regulator-name = "vddcore";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_ddr: buck2 {
-+				regulator-name = "vdd_ddr";
-+				regulator-min-microvolt = <1350000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd: buck3 {
-+				regulator-name = "vdd";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				st,mask-reset;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			v3v3: buck4 {
-+				regulator-name = "v3v3";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+				regulator-initial-mode = <0>;
-+			};
-+
-+			v1v8_audio: ldo1 {
-+				regulator-name = "v1v8_audio";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				interrupts = <IT_CURLIM_LDO1 0>;
-+
-+			};
-+
-+			v3v3_hdmi: ldo2 {
-+				regulator-name = "v3v3_hdmi";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				interrupts = <IT_CURLIM_LDO2 0>;
-+
-+			};
-+
-+			vtt_ddr: ldo3 {
-+				regulator-name = "vtt_ddr";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <750000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_usb: ldo4 {
-+				regulator-name = "vdd_usb";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				interrupts = <IT_CURLIM_LDO4 0>;
-+			};
-+
-+			vdda: ldo5 {
-+				regulator-name = "vdda";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				interrupts = <IT_CURLIM_LDO5 0>;
-+				regulator-boot-on;
-+			};
-+
-+			v1v2_hdmi: ldo6 {
-+				regulator-name = "v1v2_hdmi";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+				interrupts = <IT_CURLIM_LDO6 0>;
-+
-+			};
-+
-+			vref_ddr: vref_ddr {
-+				regulator-name = "vref_ddr";
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			bst_out: boost {
-+				regulator-name = "bst_out";
-+				interrupts = <IT_OCP_BOOST 0>;
-+			};
-+
-+			vbus_otg: pwr_sw1 {
-+				regulator-name = "vbus_otg";
-+				interrupts = <IT_OCP_OTG 0>;
-+				regulator-active-discharge;
-+			};
-+
-+			vbus_sw: pwr_sw2 {
-+				regulator-name = "vbus_sw";
-+				interrupts = <IT_OCP_SWOUT 0>;
-+				regulator-active-discharge;
-+			};
-+		};
-+
-+		onkey {
-+			compatible = "st,stpmic1-onkey";
-+			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
-+			interrupt-names = "onkey-falling", "onkey-rising";
-+		};
-+
-+		pmic_watchdog: watchdog {
-+			compatible = "st,stpmic1-wdt";
-+			status = "disabled";
-+		};
-+	};
-+
-+	sip_eeprom: eeprom@50 {
-+		compatible = "atmel,24c32";
-+		vcc-supply = <&reg_sip_eeprom>;
-+		reg = <0x50>;
-+	};
-+};
-+
-+&ipcc {
-+	status = "okay";
-+};
-+
-+&rng1 {
-+	status = "okay";
-+};
-+
-+&m4_rproc {
-+	memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
-+			<&vdev0vring1>, <&vdev0buffer>;
-+	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
-+	mbox-names = "vq0", "vq1", "shutdown";
-+	interrupt-parent = <&exti>;
-+	interrupts = <68 1>;
-+	status = "okay";
-+};
+...
+
+> +config PHY_INTEL_COMBO
+> +	bool "Intel Combo PHY driver"
+
+> +	depends on OF && HAS_IOMEM && (X86 || COMPILE_TEST)
+
+I guess it would be better to have like this:
+
+	depends on X86 || COMPILE_TEST
+	depends on OF && HAS_IOMEM
+
+But do you still have a dependency to OF?
+
+> +	select MFD_SYSCON
+> +	select GENERIC_PHY
+> +	select REGMAP
+
+...
+
+> + * Copyright (C) 2019 Intel Corporation.
+
+2019-2020
+
+...
+
+> +static const unsigned long intel_iphy_clk_rates[] = {
+> +	CLK_100MHZ, CLK_156_25MHZ, CLK_100MHZ
+
+It's good to have comma at the end since this might potentially be extended in
+the future.
+
+> +};
+> +
+> +enum {
+> +	PHY_0,
+> +	PHY_1,
+
+> +	PHY_MAX_NUM,
+
+But here we don't need it since it's a terminator line.
+Ditto for the rest of enumerators with a terminator / max entry.
+
+> +};
+
+...
+
+> +/*
+> + * Clock register bitfields to enable clocks
+> + * for ComboPhy according to the mode
+
+For multi-line comments use proper English punctuation.
+
+> + */
+
+...
+
+> +static int intel_cbphy_pcie_refclk_cfg(struct intel_cbphy_iphy *iphy, bool set)
+> +{
+> +	struct intel_combo_phy *cbphy = iphy->parent;
+> +	u32 mask = BIT(cbphy->id * 2 + iphy->id);
+
+> +	const u32 pad_dis_cfg_off = 0x174;
+
+This has to be defined in the top.
+
+> +	u32 val;
+> +
+> +	/* Register: 0 is enable, 1 is disable */
+> +	val = set ? 0 : mask;
+> +
+> +	return regmap_update_bits(cbphy->syscfg, pad_dis_cfg_off, mask, val);
+> +}
+
+...
+
+> +	ret = phy_cfg(sphy);
+> +
+> +	return ret;
+
+	return phy_cfg();
+
+...
+
+> +	/*
+> +	 * No way to identify gen1/2/3/4 for mppla and mpplb, just delay
+> +	 * for stable plla(gen1/gen2) or pllb(gen3/gen4)
+> +	 */
+
+Use proper abbreviation rules, i.e. capitalize appropriately. (I think at least
+PLL is quite common way to do it, the rest depends to the documentation / your
+intentions).
+
+
+...
+
+> +	ret = reset_control_assert(iphy->app_rst);
+> +	if (ret) {
+> +		dev_err(dev, "PHY(%u:%u) core assert failed!\n",
+> +			COMBO_PHY_ID(iphy), PHY_ID(iphy));
+> +		return ret;
+> +	}
+> +
+> +	ret = intel_cbphy_iphy_enable(iphy, false);
+> +	if (ret) {
+> +		dev_err(dev, "Failed disabling Phy core\n");
+
+Phy -> PHY for sake of the consistency
+
+> +		return ret;
+> +	}
+
+...
+
+> +	/* Wait RX adaptation to finish */
+> +	ret = readl_poll_timeout(cr_base + CR_ADDR(PCS_XF_RX_ADAPT_ACK, id),
+> +				 val, val & RX_ADAPT_ACK_BIT, 10, 5000);
+> +	if (ret)
+> +		dev_err(dev, "RX Adaptation failed!\n");
+> +	else
+
+> +		dev_info(dev, "RX Adaptation success!\n");
+
+Sounds more likely like dev_dbg().
+
+...
+
+> +static int intel_cbphy_iphy_dt_parse(struct intel_combo_phy *cbphy,
+
+dt -> fwnode
+Ditto for other similar function names.
+
+> +				     struct fwnode_handle *fwnode, int idx)
+> +{
+
+> +	dev = get_dev_from_fwnode(fwnode);
+
+I don't see where you drop reference count to the struct device object.
+
+> +}
+
+...
+
+> +	if (!iphy0->enable && !iphy1->enable) {
+
+	if (!(iphy0->enable || iphy1->enable)) {
+
+?
+
+> +		dev_err(cbphy->dev, "CBPHY%u both PHY disabled!\n", cbphy->id);
+
+> +		return -EINVAL;
+
+-ENODEV ?
+
+> +	}
+> +
+> +	if (cbphy->aggr_mode == PHY_DL_MODE &&
+> +	    (!iphy0->enable || !iphy1->enable)) {
+
+	if (cbphy->aggr_mode == PHY_DL_MODE && !(iphy0->enable && iphy1->enable)) {
+
+?
+
+> +		dev_err(cbphy->dev,
+> +			"Dual lane mode but lane0: %s, lane1: %s\n",
+> +			iphy0->enable ? "on" : "off",
+> +			iphy1->enable ? "on" : "off");
+> +		return -EINVAL;
+> +	}
+
+...
+
+> +	struct fwnode_reference_args ref;
+> +	struct device *dev = cbphy->dev;
+> +	struct fwnode_handle *fwnode;
+> +	struct platform_device *pdev;
+> +	int i, ret;
+> +	u32 prop;
+
+I guess the following would be better:
+
+	struct device *dev = cbphy->dev;
+	struct platform_device *pdev = to_platform_device(dev);
+	struct fwnode_handle *fwnode = dev_fwnode(dev);
+	struct fwnode_reference_args ref;
+	int i, ret;
+	u32 prop;
+
+> +	pdev = to_platform_device(dev);
+
+See above.
+
+> +	fwnode = dev_fwnode(dev);
+
+See above.
+
+> +	ret = fwnode_property_read_u32_array(fwnode, "intel,phy-mode", &prop, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (prop >= PHY_MAX_MODE) {
+> +		dev_err(dev, "Invalid phy mode: %u\n", prop);
+> +		return -EINVAL;
+> +	}
+> +
+> +	cbphy->phy_mode = prop;
+
+I don't see why you need temporary variable at all?
+
+
+...
+
+> +	i = 0;
+> +	fwnode_for_each_available_child_node(dev_fwnode(dev), fwnode) {
+
+> +		if (i >= PHY_MAX_NUM) {
+> +			fwnode_handle_put(fwnode);
+> +			dev_err(dev, "Error: DT child number larger than %d\n",
+> +				PHY_MAX_NUM);
+> +			return -EINVAL;
+> +		}
+
+Logically this part is better to put after i++; line...
+
+> +		ret = intel_cbphy_iphy_dt_parse(cbphy, fwnode, i);
+> +		if (ret) {
+> +			fwnode_handle_put(fwnode);
+> +			return ret;
+> +		}
+> +
+
+> +		i++;
+
+...here.
+
+> +	}
+> +
+> +	return intel_cbphy_dt_sanity_check(cbphy);
+> +}
+
+...
+
+> +	.init =		intel_cbphy_init,
+> +	.exit =		intel_cbphy_exit,
+> +	.calibrate =	intel_cbphy_calibrate,
+> +	.owner =	THIS_MODULE,
+
+Usual way is to format by =, i.e.
+
+	.init		= intel_cbphy_init,
+	.exit		= intel_cbphy_exit,
+	.calibrate	= intel_cbphy_calibrate,
+	.owner		= THIS_MODULE,
+
+...
+
+> +	for (i = 0; i < PHY_MAX_NUM; i++) {
+> +		iphy = &cbphy->iphy[i];
+
+> +		if (iphy->enable) {
+
+		if (!iphy->enable)
+			continue;
+
+?
+
+> +			ret = intel_cbphy_iphy_create(iphy);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +	}
+
+...
+
+> +	platform_set_drvdata(pdev, cbphy);
+
+I guess it makes sense a bit later to do...
+
+> +	ret = intel_cbphy_dt_parse(cbphy);
+> +	if (ret)
+> +		return ret;
+
+...here?
+
+> +
+> +	return intel_cbphy_create(cbphy);
+
 -- 
-2.25.0
+With Best Regards,
+Andy Shevchenko
+
 
