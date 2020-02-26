@@ -2,109 +2,140 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7A0C4BA0A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACDDC4BA09
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1033B20732
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MyRXyQ29"
+	by mail.kernel.org (Postfix) with ESMTP id 3994924656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582676436;
+	bh=INgY5gIlHr53sxSgKS3G6uBLIe2jvapkukMmWoDkebM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=r9XQKATXIVyoGQ/j6SMLXiPgMNX2RBlbcKvqkZw9Xx9yMaTxbhD0F0ugmruSMAtJI
+	 7+HikVWEao1IoTTs582qiaetHAmFafcRNddgU+j+62/FLvNL2AS/OJz37yMt+DSVCe
+	 Em7PjuEmd2GH3Ml9wx5ngJFxeipHsCesAseWRh1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgBZAP6 (ORCPT
+        id S1729170AbgBZAUf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:15:58 -0500
-Received: from mail-vk1-f169.google.com ([209.85.221.169]:40152 "EHLO
-        mail-vk1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729277AbgBZAPz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 19:15:55 -0500
-Received: by mail-vk1-f169.google.com with SMTP id c129so289738vkh.7
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 16:15:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oTRomC2W+BSThGwAQZ4mFHuy58uAWVt5delRT81IvjU=;
-        b=MyRXyQ29K/5rD2ii3vJTRTLOQGj7HhOiybWmpSn7wQARePsB21oMCNPqUfbw9IaLkk
-         fEjTnM0c2DDcQCOnKybAVQGg6IvEpPJl+yg2p7SHDkweG+05yI8+cKr/gCSIP1gB7R1F
-         2uI0P2Q2CK/LKaq2R3M3UpOFhAR122qdsb7KQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oTRomC2W+BSThGwAQZ4mFHuy58uAWVt5delRT81IvjU=;
-        b=onM/BDnElKYN89HpSRRyW4+sO+s6pFcILrVi0NbGn98N3QrPIpwrKqAHce+OKOFE4H
-         sxPq8zVP9oheUacg+/SqNoG1P2+1+dYjm/TZnOKWRn/A2tLeCfgPFmRMYe75jGhNXhj5
-         G/9N0aZ1cIZjU/zLLVDM4MixZhp2ijNImA9cUZEOHKhFfNpN+56XD4B9Y23QKW7nMHT6
-         te2XAGfSyOVYEf1dQDyUYOzmllBQIBXGoHFYnVuh68PpjUtws2Fcg4ilyehcZvlqgfQW
-         m+ZlyLZet1gcUGbe9wXoHKw/WTJCTlREQQZE5xViIPZ3w6ZUjmLJqGR2JVJu0XM5HsmB
-         vKIw==
-X-Gm-Message-State: APjAAAVHIlsblQ0m3jXVDCNjMIZsEe+WTjiC5rZ5aGPaA9evPwFVKMAU
-        dppol/iGXNWdQaPMjJPwsBgSnjDaiEA=
-X-Google-Smtp-Source: APXvYqxxlXQ034G+/pNgnlezUG40m7TTtiRMFEA/fgDPN7JuBRVOM9qgcMeX+SZKM2lu+y1VBE+YjA==
-X-Received: by 2002:a1f:ac57:: with SMTP id v84mr1654005vke.90.1582676152615;
-        Tue, 25 Feb 2020 16:15:52 -0800 (PST)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id b12sm105776vsh.5.2020.02.25.16.15.50
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 16:15:51 -0800 (PST)
-Received: by mail-vs1-f47.google.com with SMTP id m4so653316vsa.12
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 16:15:50 -0800 (PST)
-X-Received: by 2002:a67:f541:: with SMTP id z1mr1739800vsn.70.1582676150352;
- Tue, 25 Feb 2020 16:15:50 -0800 (PST)
+        Tue, 25 Feb 2020 19:20:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728989AbgBZAUf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 19:20:35 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93E3F24656;
+        Wed, 26 Feb 2020 00:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582676434;
+        bh=INgY5gIlHr53sxSgKS3G6uBLIe2jvapkukMmWoDkebM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=wUFeTDFzUC990SUndKt7nkejf0qsoHLJyv7ZTU2Rvfzz75sxVlIvy594esmrmyJP9
+         zpVwNsv0EMUbrfWw0Y3P0A6iion2GkjAOqfknsZrlhuke0f9slhAbVL5br0PxSUcyb
+         QDCUYyDy4hIvPUHP2lwnQh8uR1o0pOPY6KMXNRSY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200221053802.70716-1-evanbenn@chromium.org> <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
-From:   Evan Benn <evanbenn@chromium.org>
-Date:   Wed, 26 Feb 2020 11:15:24 +1100
-X-Gmail-Original-Message-ID: <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com>
-Message-ID: <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Julius Werner <jwerner@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582540703-6328-6-git-send-email-tdas@codeaurora.org>
+References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org> <1582540703-6328-6-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v5 5/5] clk: qcom: Add modem clock controller driver for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Tue, 25 Feb 2020 16:20:33 -0800
+Message-ID: <158267643373.177367.14343331439641557635@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks Rob
+Quoting Taniya Das (2020-02-24 02:38:23)
+> diff --git a/drivers/clk/qcom/mss-sc7180.c b/drivers/clk/qcom/mss-sc7180.c
+> new file mode 100644
+> index 0000000..993749e
+> --- /dev/null
+> +++ b/drivers/clk/qcom/mss-sc7180.c
+> @@ -0,0 +1,143 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
 
-> This should be a child of some Mediatek firmware node. I assume
-> watchdog is not the *only* function.
+Is this used?
 
-I am not quite sure what you mean, do you intend this:
+> +#include <linux/pm_clock.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/qcom,mss-sc7180.h>
+> +
+> +#include "clk-regmap.h"
+> +#include "clk-branch.h"
+> +#include "common.h"
+> +
+> +static struct clk_branch mss_axi_nav_clk =3D {
+> +       .halt_reg =3D 0x20bc,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x20bc,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "mss_axi_nav_clk",
+> +                       .parent_data =3D &(const struct clk_parent_data){
+> +                               .fw_name =3D "gcc_mss_nav_axi_clk",
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch mss_axi_crypto_clk =3D {
+> +       .halt_reg =3D 0x20cc,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x20cc,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "mss_axi_crypto_clk",
+> +                       .parent_data =3D &(const struct clk_parent_data){
+> +                               .fw_name =3D "gcc_mss_mfab_axis_clk",
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static const struct regmap_config mss_regmap_config =3D {
+> +       .reg_bits       =3D 32,
+> +       .reg_stride     =3D 4,
+> +       .val_bits       =3D 32,
+> +       .fast_io        =3D true,
 
- firmware {
-   watchdog {
-     ...
-   }
-}
+What is the max register?
 
-I do not have a deep understanding of devicetree yet, can you point me
-to anything that will help me understand
-the consequences of that change?
-
-Thanks
-
-Evan
+> +};
+> +
+> +static struct clk_regmap *mss_sc7180_clocks[] =3D {
+> +       [MSS_AXI_CRYPTO_CLK] =3D &mss_axi_crypto_clk.clkr,
+> +       [MSS_AXI_NAV_CLK] =3D &mss_axi_nav_clk.clkr,
+> +};
