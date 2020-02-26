@@ -2,173 +2,141 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E15C4BA0A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 06:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089ECC4BA0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 07:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6370324653
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 06:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582699624;
-	bh=dDJbRXLqJpypI/z+Vf+XskAsJXHyrxLuka4Lu27xsRQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ugd+c85f4ZifdqFR6S3J9XQpXVLkWH+zUhbCblyUMES9Cxl9yWelaqTE+odvbHV15
-	 rOcnjNERDiAe5kv+oqaZKvkMh1fJPhqlfrA0Osk8T+0O/00271/uoM5vWMR+i4aDp6
-	 jmY2aocPg2bRKJscXSwIQYRkabm89NVcFSQPAnkc=
+	by mail.kernel.org (Postfix) with ESMTP id C4BE121556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 07:18:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="K3snKtXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgBZGrD (ORCPT
+        id S1727129AbgBZHS6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 01:47:03 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:58785 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgBZGrD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 01:47:03 -0500
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 01Q6kp4P019600;
-        Wed, 26 Feb 2020 15:46:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 01Q6kp4P019600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582699612;
-        bh=2VfJIOCvZH0NY/dmW/3ZDhtzj0Q1UN635jNbPpjGUr4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Jd5pA8iRcjCYKKrF3kgDrZanUYxXyWnIGkH8aWK1zVz+hOhh5UuIc28UrLYFjAflt
-         y62ne42vRqsltkLP5ktMoipKgdRhCwepMx8ru4XYHN52FfsmLDKrVn3Im1vBGbtnpw
-         7j380mcPGbIyOjTiDs8v3kZGpyacRgQv7uWaI1mhyS0nE818GDI9QPPAKAZiEIY124
-         KwNTPcfflqDai2cpBzdWOqaHFV55nQ0ZPLELDaN7iLVKDfT9/6kPKidaHbmrQUT+Jr
-         CGpohC7LXixtKupCEa3Wb70aPbN7TAmZrjGf71GYQ0gNtOv008kp+yXs4/6pntXOFz
-         tyAguIycaYenA==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id x123so1134533vsc.2;
-        Tue, 25 Feb 2020 22:46:52 -0800 (PST)
-X-Gm-Message-State: APjAAAXtBYA0/g5dJV4g1J8YZ71mtXZPoz/7rBm3UG/xHMv/ftTggx5T
-        C7hPljBxc5wDmJsZx5aFW9fY8+A1w0mYsOs1/cU=
-X-Google-Smtp-Source: APXvYqwkW77CBgQ1pHwOq8iqy4JwoPCgSKHrG7tUDS7YsQUWfdeloJMDAwvhYvtwEDKhmGNtwpbc+CI4rGqKqE3AHTQ=
-X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr2881251vsh.179.1582699611202;
- Tue, 25 Feb 2020 22:46:51 -0800 (PST)
+        Wed, 26 Feb 2020 02:18:58 -0500
+Received: from mail-am6eur05on2086.outbound.protection.outlook.com ([40.107.22.86]:39456
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726823AbgBZHS6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:18:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mLda447KvSPNgeWzGXFTMDVzHjv67J+ntjLCEHyZ/1lmv6ajWTvzS0jzXXAxiwBnKdKmsrkHm9Z3xYCrGnJd4alsfF+PWeS8mLTPBoo5jujnfxXoy4hpwVMXwErqMlha1ADSauHDwXOlSys6mR7oy/jyWGCFhxauLnZiKUixxoSWmS8/9x35cd20LjSkp+naenh0uhacCdt26VXz49YJSOnUVvWhaa96GP4d8xf/hpKfMwfl1otF8fAuHIhlin8p9nZvgKveza9IWTWcZqqfQ+/EL/yQfTCiimpfl81oVXU16YYNdr0igfph97p6IX9eoxKKLZ/CpDWnkvOkDhjgxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nk8GoFSDbRtszFiYYHcBQ6IlTKuNv5lqKoyhWO6HQGk=;
+ b=hPnGmCDjeJQiBTz8CpM/7B3Kt6sIusuYUJ3VAnfErtJwKL7BoTRqtknTBZBPyKumJy3ZEvWLOpWisEdkqkSuA6w9GbIkvE21y/kFSv4MCwF/OgiAB4VJl0stmOerAX+wCe5nJeZDm1qJTvDZvYgVe7zEZAzm0jpK6+OA3UA0hmhr5Eioayp6wk/tdozWucm/vgfpvlWokZ933y32TXyvO8GPVoM7Tmt/V+KnLN29P0cfjJc3y08pSyu44RzcyiW8CnFmUOrfn84lqepZHBsZbYCYazjkKhCsGuYd5KV2ja2Y7ag05kAM5yQWyXtCPytRJ6xM9cndONPJ1hY2GqRilQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nk8GoFSDbRtszFiYYHcBQ6IlTKuNv5lqKoyhWO6HQGk=;
+ b=K3snKtXa78m2PxQ0npp5k7UyZTQSaaIZ5utOglItV6zEc6hb31zbU3Y8zuAYBNC3oqsEEpvJmzHruaj+l5+kRO4whD8WPYmTKZVn+L8vGHyYzdy1PR0vgsCm+0mgp2AdcktYTTvwVhBVj5XWNU+PPMYcu+vU+Wl1CXu10CLqZ+Q=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6819.eurprd04.prod.outlook.com (52.132.212.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Wed, 26 Feb 2020 07:18:54 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
+ 07:18:54 +0000
+From:   peng.fan@nxp.com
+To:     sudeep.holla@arm.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        robh@kernel.org
+Cc:     viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andre.przywara@arm.com,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3 0/2] firmware: arm_scmi: add smc/hvc transports support
+Date:   Wed, 26 Feb 2020 15:12:49 +0800
+Message-Id: <1582701171-26842-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0131.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:40::35) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-References: <20200222190435.11767-1-masahiroy@kernel.org> <20200222190435.11767-5-masahiroy@kernel.org>
-In-Reply-To: <20200222190435.11767-5-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 26 Feb 2020 15:46:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT14XvMLp+CFJk4QdgvYCTanXz8KPQ=5C90N+VCOYPu1g@mail.gmail.com>
-Message-ID: <CAK7LNAT14XvMLp+CFJk4QdgvYCTanXz8KPQ=5C90N+VCOYPu1g@mail.gmail.com>
-Subject: Re: [PATCH 5/5] kbuild: allow to run dt_binding_check and dtbs_check
- in a single command
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR01CA0131.apcprd01.prod.exchangelabs.com (2603:1096:4:40::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 07:18:50 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b15bc919-5b95-4401-9900-08d7ba8c22a0
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6819:|AM0PR04MB6819:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB681997D767C5D208FA6E3C2588EA0@AM0PR04MB6819.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0325F6C77B
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(376002)(136003)(366004)(199004)(189003)(186003)(2906002)(6512007)(36756003)(966005)(52116002)(6486002)(69590400006)(5660300002)(478600001)(316002)(16526019)(4326008)(9686003)(86362001)(81156014)(81166006)(66556008)(7416002)(8936002)(26005)(956004)(2616005)(6506007)(66946007)(8676002)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6819;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2GFMILwS39nRDDurBqyxC1z5DAE6bTHZWG9gtBkGZwgtDG9MOHiGnmcYrDhpEHVBXysyGpoKx8z0RhzG/dC6bw/NoG+8hqAuMy4OzsRcfDy7mffqczWthfd70OTVczy/23GsJCCPvmLz9zpHd9I+HDGju69QG5fs8KEFbGuxrRh88EDHO2TyGnB/15WADQ4LV+X1AmbzuSt2ddY/ZKyF7F081zaQomsQqzFN10OKJQ58bKobbXAJM5utlkaN/wRnFHFi90O/dCVL/9DPdS0EzXZ6bPtDcJzbuBTauOtD3Nra/9EgjO2gR5OAP+tLOpEFZbCi71XYguENhHxBhG5xH6JnHm7uvEjlShYrFdsmj9Yqw6ZAsgp9/WPXT3Xl6iRH5Jo9SDp8TPSQ4cJPQEUbr6lO5Q+8HtuPjFMSx5s9uOP642qusmd0PT4FxgnY7MW/S5HaGyL9D+/fgxU5wwiW/4WHNt+nIAmUUfsWK5BP2gVsdfWp5IyegrJDOn2Zaxa5coiMeeBCpHcQFG4MinsCT4dJS4FN3qV8V8sDRdThyVtweqvUMJjATut7qa+/qASsdv4poIYwft8+dNu4MxbACLXrgiQ/g1geBD/mjE0SaofztuVn7tdJNHB8keojQcov
+X-MS-Exchange-AntiSpam-MessageData: h2iyqcuYSyTSINsJCE5YWrbcPfexuSvWVR2uYbe3ycf2LjxfijWQ+9w+eLWTn1L3Z4yaWgv5vUV/9w00r4dWfalfH4DdvsDIzsoeuBf980WxJ8sVLxNORaTedhjnw/mg3bOP34uWb5jJHYIwk1aj9A==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b15bc919-5b95-4401-9900-08d7ba8c22a0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 07:18:53.7701
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OPe6m7Nr/SJ6LQ1GVHJVNnABGEz6Svg/0ua14XZDtwfJ5FJHql25wpD8uNb4TPmrFGmEiUX/+qOJJA4xa6/1qg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6819
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 4:04 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Since commit 93512dad334d ("dt-bindings: Improve validation build error
-> handling"), 'make dtbs_check' does not validate the schema fully.
->
-> If you want to check everything, you need to run two commands.
->
->   $ make ARCH=arm dt_binding_check
->   $ make ARCH=arm dtbs_check
->
-> You cannot do:
->
->   $ make ARCH=arm dt_binding_check dtbs_check
->
-> Because CHECK_DTBS is set, dt-doc-validate and dt-extract-example
-> are skipped.
->
-> Making it work will be useful for schema writers.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+From: Peng Fan <peng.fan@nxp.com>
 
+V3:
+ Add back arm,scmi-smc compatible string
+ Change smc-id to arm,smc-id
+ Directly use arm_smccc_1_1_invoke
+ Add prot_id in scmi_chan_info for per protocol shmem usage.
 
+V2:
+ patch 1/2: only add smc-id property
+ patch 2/2: Parse smc/hvc from psci node
+	    Use prot_id as 2nd arg when issue smc/hvc
+	    Differentiate tranports using mboxes or smc-id property
+https://lore.kernel.org/patchwork/cover/1193435/
 
-Sorry, I take back this patch.
+This is to add smc/hvc transports support, based on Viresh's v6.
+SCMI firmware could be implemented in EL3, S-EL1, NS-EL2 or other
+A core exception level. Then smc/hvc could be used. And for vendor
+specific firmware, a wrapper layer could added in EL3, S-EL1,
+NS-EL2 and etc to translate SCMI calls to vendor specific firmware calls.
 
-'make dtbs_check dt_binding_chec' does not work.
+A new compatible string arm,scmi-smc is added. arm,scmi is still for
+mailbox transports.
 
+All protocol share same smc/hvc id, the protocol id will be take as
+2nd arg when issue smc/hvc.
+Each protocol could use its own shmem or share the same shmem
+Per smc/hvc, only Tx supported.
 
+Peng Fan (2):
+  dt-bindings: arm: arm,scmi: add smc/hvc transport
+  firmware: arm_scmi: add smc/hvc transport
 
->
->  Documentation/devicetree/bindings/Makefile  | 6 ++----
->  Documentation/devicetree/writing-schema.rst | 4 ++++
->  Makefile                                    | 8 +++++---
->  3 files changed, 11 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-> index 646cb3525373..6efa2094b95e 100644
-> --- a/Documentation/devicetree/bindings/Makefile
-> +++ b/Documentation/devicetree/bindings/Makefile
-> @@ -25,10 +25,8 @@ DT_DOCS = $(shell \
->
->  DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
->
-> -ifeq ($(CHECK_DTBS),)
-> -extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
-> -extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
-> -endif
-> +extra-$(CHECK_DT_BINDING) += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
-> +extra-$(CHECK_DT_BINDING) += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
->
->  $(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
->         $(call if_changed,mk_schema)
-> diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
-> index 7635ab230456..220cf464ed77 100644
-> --- a/Documentation/devicetree/writing-schema.rst
-> +++ b/Documentation/devicetree/writing-schema.rst
-> @@ -147,6 +147,10 @@ Note that ``dtbs_check`` will skip any binding schema files with errors. It is
->  necessary to use ``dt_binding_check`` to get all the validation errors in the
->  binding schema files.
->
-> +It is possible to run both in a single command::
-> +
-> +    make dt_binding_check dtbs_check
-> +
->  It is also possible to run checks with a single schema file by setting the
->  ``DT_SCHEMA_FILES`` variable to a specific schema file.
->
-> diff --git a/Makefile b/Makefile
-> index 83f9b8f6fbaf..59dd768a1c1e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1243,7 +1243,7 @@ dtbs dtbs_check: include/config/kernel.release scripts_dtc
->         $(Q)$(MAKE) $(build)=$(dtstree)
->
->  dtbs_check: export CHECK_DTBS=1
-> -dtbs_check: dt_binding_check
-> +dtbs_check: __dt_binding_check
->
->  dtbs_install:
->         $(Q)$(MAKE) $(dtbinst)=$(dtstree)
-> @@ -1258,8 +1258,10 @@ PHONY += scripts_dtc
->  scripts_dtc: scripts_basic
->         $(Q)$(MAKE) $(build)=scripts/dtc
->
-> -PHONY += dt_binding_check
-> -dt_binding_check: scripts_dtc
-> +PHONY += dt_binding_check __dt_binding_check
-> +dt_binding_check: export CHECK_DT_BINDING=y
-> +dt_binding_check: __dt_binding_check
-> +__dt_binding_check: scripts_dtc
->         $(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
->
->  # ---------------------------------------------------------------------------
-> --
-> 2.17.1
->
-
+ Documentation/devicetree/bindings/arm/arm,scmi.txt |   3 +-
+ drivers/firmware/arm_scmi/Makefile                 |   2 +-
+ drivers/firmware/arm_scmi/common.h                 |   3 +
+ drivers/firmware/arm_scmi/driver.c                 |   2 +
+ drivers/firmware/arm_scmi/smc.c                    | 146 +++++++++++++++++++++
+ 5 files changed, 154 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/smc.c
 
 -- 
-Best Regards
-Masahiro Yamada
+2.16.4
+
