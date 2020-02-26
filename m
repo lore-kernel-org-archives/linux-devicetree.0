@@ -2,99 +2,240 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79811C4BA15
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE24C4BA13
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52232206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9423E206E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582734657;
-	bh=Yjfv3vEeeM6oMcrZPjmkEgk/4Z8UtEfA6ZcAKmN5n3g=;
+	s=default; t=1582734825;
+	bh=K/0b0iuJYo4oZt1f734dFYPpXmagB5MKcKdJqNjGBUw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Cmp9vs/sYiHBEptRYujQ3Qqk/LeSW6ESKoG90nINlx98+JkMhDxnAjYGEXw3TJIv
-	 INpLVE+IN+F6pNJ9+6as/VCAN9qBvwheae/NxsUIL4UxCJXi5S4AzhyZgd6BENVvkG
-	 RLLfF8vB9HCzpjiyH6h3LZHhqHEme56UJ53qoaaw=
+	b=TZj0CRFGq5hWQWac2JNFoWgjr7aaYuUJhvGcnCwYv0lCpr+DL0UDSHg0mUzMwVdTl
+	 sjNhVz4qgVsf1rtr3J1oIfD9/jEx5vSbxq8cKr39XRqIH080Nr+Hj91P1b1o0FD/Ty
+	 PZJxhkLxDq1eW7hA1nxJQA6iv5aVg21es1YhQHuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgBZQa4 (ORCPT
+        id S1727262AbgBZQdp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:30:56 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40833 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZQa4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:30:56 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a142so79450oii.7;
-        Wed, 26 Feb 2020 08:30:56 -0800 (PST)
+        Wed, 26 Feb 2020 11:33:45 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44961 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgBZQdp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:33:45 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h9so3484525otj.11;
+        Wed, 26 Feb 2020 08:33:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ACI9a0q/BgBWalLw0K2YIrmMcsUsmnK2gwfSs/vtPsM=;
-        b=a4uMtxyJ8IeuixiuhCZfXkR5LESIy/KizK7mCbkMPvJuS08MHSVWMX/OG34Ojl8FPz
-         7IaRWLRWp4kqROXlyQ6BPvgID46inDRzrlYtIKhd3yRI9/XwWsYhqNyeXWvNGglUkdGz
-         Jiotf9/+iHBMWdyu3oK/Qk6+th6Ph2fqHSjenDN3ipEwhWVwjELABY5Cs7EtXgBIn5zR
-         W513jzd9KSAvAEq1Fh6bxOfnApYezJ3srghIp644RADyhcTYBJd2lODVFfJHhE3rn/wu
-         idab83vrmCQJWz/I5vn/KmrNbZWDeYddC67xEswzOSom4E+ha95g8oF+VnSXzRWIFIU2
-         mDjQ==
-X-Gm-Message-State: APjAAAVj0hZkkrN77P4Xtw08YI0CzEstEcMkFmqSb4agMrorIjmDlrAF
-        h3dGWbmXjE107GXTOhwkfaTUpOSt7g==
-X-Google-Smtp-Source: APXvYqwK0Rc7BM7k+hjejM3j3aYFkebquxvpYKt0YbE8+SJreIg9fwmtnodQ6siCckcxVnFX0VTn2g==
-X-Received: by 2002:aca:4d06:: with SMTP id a6mr3839205oib.27.1582734655656;
-        Wed, 26 Feb 2020 08:30:55 -0800 (PST)
+        bh=lbFvo5HuT3obVT0xk8fNIbu0p3dI4t+br6icB8M92zo=;
+        b=lq1hcc27//EHILMiQihpJH943Ti1+3StL/a9MLJbF71YcpcYzbqXCNxO7Zazorl3h7
+         9I9KVkMWujkf1lgAMhisB6iI5JBUFdIMXZyfW4gTgcyZ7bQ84EABln3ETze6v4R9oyWb
+         Q7fCUapMgvX0dc9M6S1sDRc4OxagDE6xMF0OzI88p7/gOfh9RPZsWyOHKAeEFeUc3x0Y
+         65m5/TtD7yVviw2G0VBhzL7PFaoVcuimBuepY7cOCuN/Lh5HjAmw9tmApLbpnxbKvbAI
+         rsXqRaW1w9YVBM/PSTncFTSCCStWOd+OJKnzgBTFjOjQ84cePy/P/MhZvsk9m315bHQK
+         MmNw==
+X-Gm-Message-State: APjAAAWjWXUp7t0GThvesLRHi1o2HbXVjPoLYNUajVUkkUytthj5Odvq
+        Ok+eY7xP7CJUtUHevFRUuQ==
+X-Google-Smtp-Source: APXvYqxAh2WjxmOlqFeKqAx/quOrMLgdoA8tQvbTL8tmC9NEpFZlnmrg8hnVq+U0peeFAT+su5Ug4A==
+X-Received: by 2002:a9d:7c95:: with SMTP id q21mr1668568otn.278.1582734823559;
+        Wed, 26 Feb 2020 08:33:43 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n19sm951525oig.57.2020.02.26.08.30.54
+        by smtp.gmail.com with ESMTPSA id i7sm970117oib.42.2020.02.26.08.33.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:30:55 -0800 (PST)
-Received: (nullmailer pid 26591 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:30:54 -0000
-Date:   Wed, 26 Feb 2020 10:30:54 -0600
+        Wed, 26 Feb 2020 08:33:42 -0800 (PST)
+Received: (nullmailer pid 30554 invoked by uid 1000);
+        Wed, 26 Feb 2020 16:33:42 -0000
+Date:   Wed, 26 Feb 2020 10:33:42 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Re: [RFC PATCH 3/7] i2c: allow DT nodes without 'compatible'
-Message-ID: <20200226163054.GA26533@bogus>
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
- <20200220172403.26062-4-wsa+renesas@sang-engineering.com>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
+        John Stultz <john.stultz@linaro.org>,
+        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 1/4] dt-bindings: display: msm: Convert GMU bindings
+ to YAML
+Message-ID: <20200226163342.GA26694@bogus>
+References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
+ <1582223216-23459-2-git-send-email-jcrouse@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220172403.26062-4-wsa+renesas@sang-engineering.com>
+In-Reply-To: <1582223216-23459-2-git-send-email-jcrouse@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Feb 2020 18:23:59 +0100, Wolfram Sang wrote:
-> Sometimes, we have unknown devices in a system and still want to block
-> their address. For that, we allow DT nodes with only a 'reg' property.
-> These devices will be bound to the "dummy" driver but with the name
-> "reserved". That way, we can distinguish them and even hand them over to
-> the "dummy" driver later when they are really requested using
-> i2c_new_ancillary_device().
+On Thu, Feb 20, 2020 at 11:26:53AM -0700, Jordan Crouse wrote:
+> Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
+> text bindings.
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 1 -
->  Documentation/devicetree/bindings/i2c/i2c.txt        | 4 +++-
->  drivers/i2c/i2c-core-base.c                          | 1 +
->  drivers/i2c/i2c-core-of.c                            | 8 +++-----
->  drivers/i2c/i2c-core.h                               | 1 +
->  5 files changed, 8 insertions(+), 7 deletions(-)
 > 
+>  .../devicetree/bindings/display/msm/gmu.txt        | 116 ------------------
+>  .../devicetree/bindings/display/msm/gmu.yaml       | 130 +++++++++++++++++++++
+>  2 files changed, 130 insertions(+), 116 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> new file mode 100644
+> index 0000000..776ff92
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> @@ -0,0 +1,130 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# Copyright 2019-2020, The Linux Foundation, All Rights Reserved
+> +%YAML 1.2
+> +---
+> +
+> +$id: "http://devicetree.org/schemas/display/msm/gmu.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Devicetree bindings for the GMU attached to certain Adreno GPUs
+> +
+> +maintainers:
+> +  - Rob Clark <robdclark@gmail.com>
+> +
+> +description: |
+> +  These bindings describe the Graphics Management Unit (GMU) that is attached
+> +  to members of the Adreno A6xx GPU family. The GMU provides on-device power
+> +  management and support to improve power efficiency and reduce the load on
+> +  the CPU.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - qcom,adreno-gmu-630.2
+> +      - const: qcom,adreno-gmu
+> +
+> +  reg:
+> +    items:
+> +      - description: Core GMU registers
+> +      - description: GMU PDC registers
+> +      - description: GMU PDC sequence registers
+> +
+> +  reg-names:
+> +    items:
+> +      - const: gmu
+> +      - const: gmu_pdc
+> +      - const: gmu_pdc_seq
+> +
+> +  clocks:
+> +    items:
+> +     - description: GMU clock
+> +     - description: GPU CX clock
+> +     - description: GPU AXI clock
+> +     - description: GPU MEMNOC clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: gmu
+> +      - const: cxo
+> +      - const: axi
+> +      - const: memnoc
+> +
+> +  interrupts:
+> +    items:
+> +     - description: GMU HFI interrupt
+> +     - description: GMU interrupt
+> +
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: hfi
+> +      - const: gmu
+> +
+> +  power-domains:
+> +     items:
+> +       - description: CX power domain
+> +       - description: GX power domain
+> +
+> +  power-domain-names:
+> +     items:
+> +       - const: cx
+> +       - const: gx
+> +
+> +  iommus:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+
+Already has a type. Just need to define how many entries (maxItems).
+
+> +    description:
+> +       Phandle to a IOMMU device and stream ID. Refer to ../../iommu/iommu.txt
+> +       for more information.
+
+Drop. That's all iommus entries.
+
+> +
+> +  operating-points-v2:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the OPP table for the available GMU frequencies. Refer to
+> +      ../../opp/opp.txt for more information.
+
+Just 'true' is enough here.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - power-domains
+> +  - power-domain-names
+> +  - iommus
+> +  - operating-points-v2
+> +
+> +examples:
+> + - |
+> +   #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
+> +   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +   #include <dt-bindings/interrupt-controller/irq.h>
+> +   #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +   gmu: gmu@506a000 {
+> +        compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
+> +
+> +        reg = <0x506a000 0x30000>,
+> +              <0xb280000 0x10000>,
+> +              <0xb480000 0x10000>;
+> +        reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
+> +
+> +        clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+> +                 <&gpucc GPU_CC_CXO_CLK>,
+> +                 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
+> +                 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
+> +        clock-names = "gmu", "cxo", "axi", "memnoc";
+> +
+> +        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "hfi", "gmu";
+> +
+> +        power-domains = <&gpucc GPU_CX_GDSC>,
+> +                        <&gpucc GPU_GX_GDSC>;
+> +        power-domain-names = "cx", "gx";
+> +
+> +        iommus = <&adreno_smmu 5>;
+> +        operating-points-v2 = <&gmu_opp_table>;
+> +   };
+> -- 
+> 2.7.4
+> 
