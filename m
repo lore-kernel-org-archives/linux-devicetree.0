@@ -2,94 +2,110 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAFEC4BA0A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 02:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E98C4BA09
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 02:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C30621D7E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 02:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343D721744
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 02:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAxTeZYs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Moy0oe77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgBZCQX (ORCPT
+        id S1729982AbgBZCzo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 21:16:23 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:54156 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbgBZCQX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 21:16:23 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n96so579858pjc.3;
-        Tue, 25 Feb 2020 18:16:22 -0800 (PST)
+        Tue, 25 Feb 2020 21:55:44 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38403 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728989AbgBZCzo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 21:55:44 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p7so669734pli.5;
+        Tue, 25 Feb 2020 18:55:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Y8tea9QEMr0iNCjcooNustc07FFjz5OLLARL8p+OKU0=;
-        b=AAxTeZYs7StrnRAz7zTUOcTj/eVOM8S5GJpuv2sfSKJvdowIHcle/pyJgBKWzO4k1k
-         253V7sTzYfxtmLIWstH6rR7ykht8aVTV4hfdc5s2x3BwDxUPq4iNwH9Lfa5CrQz+bdRB
-         gnRaBrj3RnNZBRgO0gU/kRKMc2bhRe7BzCdWAL32M+hrRU24cJX+TAa4Fx2HlKGUYsm4
-         fFO2rd/EkDAEqQGos59MItNM1iOJOzBQ0bAGGNYGwS9JIvggLqkaQ/GVs5YHupn0OvQ6
-         uHbxcbRga6MEa/CxLmrrsYznqfLeNawiFKSuEqPpNTkTkVbVbJAQUZbxuSL5yTPehR+t
-         9Cfg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bfSVMJ6Zntz6A9BJaM12dNm4EQGGybEoHbVncbTsUMA=;
+        b=Moy0oe77F1nP33WomY+/yVeQF9YOUm9A+K2Dmya3vWO3y1gDf7kXx+ARQoGIqJsbcn
+         sPDlocDXHhiYZjO+XyXUp5tQV8BJw2C7x+2ghY8gYyPWFQ7qduGfKCkjbgpdinZcGNjB
+         WxhCMHnCKG0c8t5hywtULwpBqj4C0bP6PHBAoxnZH9WUICVJuyrYV1mqj2wAShGjfCs6
+         tIJzuV4Fe3jr6nyPLQ/HjFbLHYzt3rgUTWbLX8hMswIRiB57T3uJgkHbl/XIWiXtE5Fv
+         PNehsU30K6Pj2wGG2X6MPSgieuIgHYhU1Oya8m/3JHtMlRpQXMzTlhwP7/IXW+Pi/+xR
+         gauw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Y8tea9QEMr0iNCjcooNustc07FFjz5OLLARL8p+OKU0=;
-        b=kcrx8z0TM6GkgEW+vFKHqTdiI4b6y23d4lH4+n3twPmpKEFXKqfb8ybqVFPmCLG9m9
-         b7ete2UE2ondJGs6aEaktfneIIb+R1ytemdNYWBF5e8jHA634DXM1WgwcHYNqZyDi69V
-         TwqljVUCia4Mv5Z9FNLsxIuhiQJwIPlpOywJfNk9hcp7Pw2P27UEWZIy5NbZ0fFOqU4j
-         N0XOxUw/RBO2cvGH1jPW319Dn6HamZRAWlzN/p8juqGnDQT5WcQZbOS35+bCit1Mvo/5
-         9jEvODfwl6+54IV2x3btmnh7gbEifn5ecP3fQVTxkAFrKKg0AkC5iU1izblYqlPp+pPA
-         DKrA==
-X-Gm-Message-State: APjAAAXRFw3d0wlilcWEWpBq4hscZ23K3LuVAGY14sBKzzH4j6Z/st3l
-        /0s4SoCccpPQ05vXtfPvTFhcqVxQ
-X-Google-Smtp-Source: APXvYqwN64XLm4UBZIiSsolCHUzAopIGIZIYT9ipIlQaRoboFPbd6+E2cEjuKJ3Wp0RDIBQIhs6DXg==
-X-Received: by 2002:a17:90a:e996:: with SMTP id v22mr2390374pjy.53.1582683381992;
-        Tue, 25 Feb 2020 18:16:21 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a36sm302764pga.32.2020.02.25.18.16.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 18:16:21 -0800 (PST)
-Subject: Re: [PATCH 3/3] hwmon: (ina2xx) Add support for ina260
-To:     Franz Forstmayr <forstmayr.franz@gmail.com>
-Cc:     Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <20200224232647.29213-1-forstmayr.franz@gmail.com>
- <20200224232647.29213-3-forstmayr.franz@gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <a78bbb40-9a0c-8acc-841e-7a51447d4dbc@roeck-us.net>
-Date:   Tue, 25 Feb 2020 18:16:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bfSVMJ6Zntz6A9BJaM12dNm4EQGGybEoHbVncbTsUMA=;
+        b=p6PhwdoPvYhil7uwcUiyDhj5j4tHyq5dQrRnqoyHVa/7S+0aQnqcVeIkCDZQ3sXDD+
+         QqN5R5QgPd2bKb89fOEF/dAD1dOcAFvjioy1d76ncB8bLuHoSNJ/wfkus1kzmviYQgxp
+         YuDIRYMIbDQzad61PB3Aw3SYyisHCpHAIHgezonQl+LeoqOECpSkNJQK5Rk4fBLCm80J
+         MJJShjqvGfR7k26/VQZcC73fXeVTxV4HsbWn8vajvRIv+9y9MNKu3UhVuQO7N3CkGB36
+         A4h+VnhnNwkhOk3AKFbC6qdnXsvOtzaUFtKg4AFoGM8IyGiA63M3rz1gMWPay2WyPfPZ
+         WyFw==
+X-Gm-Message-State: APjAAAVtGVJvA5DV3E1gxt8PuWR6ImdURGWh4IM8FxxUEpj4qaiSOJ/j
+        9k88X3XVkeNOFXivL6j1B/67paZijCk=
+X-Google-Smtp-Source: APXvYqxX5rlyRMCuaRBBYuYMduxdjpm5x24xmrS5n9R3CJux7Jc4o6x9N7kxgP+pNGY/fDI9hDV73g==
+X-Received: by 2002:a17:902:9f88:: with SMTP id g8mr1790693plq.100.1582685743306;
+        Tue, 25 Feb 2020 18:55:43 -0800 (PST)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id l13sm444798pjq.23.2020.02.25.18.55.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Feb 2020 18:55:43 -0800 (PST)
+Date:   Tue, 25 Feb 2020 18:55:40 -0800
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] ASoC: fsl_easrc: Add EASRC ASoC CPU DAI and
+ platform drivers
+Message-ID: <20200226025540.GA22445@Asurada-Nvidia.nvidia.com>
+References: <VE1PR04MB6479BCA376502F6F1251602BE3EC0@VE1PR04MB6479.eurprd04.prod.outlook.com>
+ <20200225080350.GA11332@Asurada>
+ <CAA+D8AMFzDs8uXiR-N8harRVmhC+3i8p9HdO2CgxOCX8WVfXAw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200224232647.29213-3-forstmayr.franz@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA+D8AMFzDs8uXiR-N8harRVmhC+3i8p9HdO2CgxOCX8WVfXAw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/24/20 3:26 PM, Franz Forstmayr wrote:
-> Add initial support for INA260 power monitor with integrated shunt.
-> Registers are different from other INA2xx devices, that's why a small
-> translation table is used.
+On Wed, Feb 26, 2020 at 09:51:39AM +0800, Shengjiu Wang wrote:
+> > > > > +static const struct regmap_config fsl_easrc_regmap_config = {
+> > > > > +     .readable_reg = fsl_easrc_readable_reg,
+> > > > > +     .volatile_reg = fsl_easrc_volatile_reg,
+> > > > > +     .writeable_reg = fsl_easrc_writeable_reg,
+> > > >
+> > > > Can we use regmap_range and regmap_access_table?
+> > > >
+> > >
+> > > Can the regmap_range support discontinuous registers?  The
+> > > reg_stride = 4.
+> >
+> > I think it does. Giving an example here:
+> > https://github.com/torvalds/linux/blob/master/drivers/mfd/da9063-i2c.c
 > 
-> Signed-off-by: Franz Forstmayr <forstmayr.franz@gmail.com>
+> The register in this i2c driver are continuous,  from 0x00, 0x01, 0x02...
+> 
+> But our case is 0x00, 0x04, 0x08, does it work?
 
-I think the chip is sufficiently different to other chips that a separate
-driver would make much more sense than adding support to the existing driver.
-There is no calibration, registers are different, the retry logic is
-not needed. A new driver could use the with_info API and would be much
-simpler while at the same time not messing up the existing driver.
-
-Guenter
+Ah...I see your point now. I am not very sure -- have only used
+in I2C drivers. You can ignore if it doesn't likely work for us.
