@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F8FC4BA20
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCB7C4BA18
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5F424670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F8124670
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Snb74y/d";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IZfzZzHI"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="c7+W49bu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OYHFGe+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgBZSYg (ORCPT
+        id S1727168AbgBZSZl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:24:36 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:44069 "EHLO
+        Wed, 26 Feb 2020 13:25:41 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:48297 "EHLO
         new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726789AbgBZSYg (ORCPT
+        by vger.kernel.org with ESMTP id S1726789AbgBZSZl (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:24:36 -0500
+        Wed, 26 Feb 2020 13:25:41 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 935E761D8;
-        Wed, 26 Feb 2020 13:24:34 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 26 Feb 2020 13:24:34 -0500
+        by mailnew.nyi.internal (Postfix) with ESMTP id A03BA5DE4;
+        Wed, 26 Feb 2020 13:25:39 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 26 Feb 2020 13:25:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=gV1crvvxr36zMBtfehWsFeB8WGj
-        6uZV2sTGpY7aRnRQ=; b=Snb74y/dbC1RNmGdmuhKjwow+8MomytmQE9KgfEaCgr
-        DTEx6wcMLuoGUo950JpAQZk7aNoWChFmkJfb8tbwQy2J9pxWw2U3wW4oReh6Ny0c
-        0avg0AKB0oA/uR0qvAo7XW4/3KJF90gC/YRidB4j0NeySKkQcVe3K6tgxKq+3af8
-        rnkIvP26k/KdRkeEPK0XJ3WVDLg+g0gv0yAf7X/NnvwXFnTi7XUlEONPZOnvQNQV
-        xykuMf2GaRWX3qlrJxVIY9dUWho/wkMlePM/7J+np4HOj1nrC2bx9l2XQecZItsT
-        3aOede4cweZnPRo8EuchHv3ETOes+lMiMhQ4cLgVppQ==
+        :content-type:in-reply-to; s=fm2; bh=bgkHWQTmHEiViwvr869uqRi6nVM
+        rcwasF+PgK3ShVG4=; b=c7+W49bus2wIQgGp34JAJIonDWp7s4fejaT21E6cE2U
+        rblPKtjCnfsKPTwzUMXX/HisuSXeWLAWhpdKT1l1BdiPzF8f6nvhq1SFnrUnE3mf
+        RKalhrtRmtWMfT2yQRE36oIHlzf7GiAaY3cgCdL53917J1w9bIjPuBwtr14XTkr6
+        M7UdikY8wjbYUN5lRAj+xcNNJEd0ng1VzNYDr8/BQqCZ7ANLrHO7r1fO/I+E7KOe
+        QlGT+Tokw2JI21e6/TYt+DSxDFOxLmPF/GjMYVib63BBNI4wR2w5d1iLc4bLWBVZ
+        xkR9FAI7gGeSIkZuDaZXRojuN2yalGz895Lb4O9Iivg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=gV1crv
-        vxr36zMBtfehWsFeB8WGj6uZV2sTGpY7aRnRQ=; b=IZfzZzHIfEKvQOzjVxhv6k
-        Qwi4loNtwZZTn8bXnWCScAXmj4sbwH8nK3G2YAItTS1cdy7qtMunMvHfq5hSdKZM
-        z+h3M1QzTmDzGamuazRI306gUMTXkVajqY9jZxvqQ0Dk2UHicC+6H60MVGb/fIvu
-        kEDkk+/k8zcEg/rb5i9Hfg/bPIm+hJiyD3BPFOYQHPIoRH6Lj7Vp+xH2mA365BmX
-        JXRHVUdXHbnID6fHZVz+YlHH+awoYLsOn0AFPIsaeSIkveN5UaiJaitm2OiLdFm0
-        WqqszslwQ0Yrt/syzpApPZfaPVFDU/MpPWtX0uZtf/vK+e8mTvIZeYZmoAJvkBtw
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=bgkHWQ
+        TmHEiViwvr869uqRi6nVMrcwasF+PgK3ShVG4=; b=OYHFGe+8SGnpweNTbI2IpL
+        FX5hgcYHi+iDJW1ktg8Y3wC2k+UZ0/NgQQxIWKt3y3SpilehRHAcVH64J4+h+aiU
+        uw6OuQfn93vMTS60tGQBERITm+rL4TyhSx64sac0AhrjWUn/GCFhXKiUDUmQuuuk
+        9bq3/DSGWnBbNhksU0IBj1LcySxJTkbJYqLC9RfzRpQxBqwm2ebsgyZbV1qoLvGW
+        HNGEuF+PR8BC9WdTqZzHp1pJ/CSI7yuZJnAoRpyGTclRLpxicOHezLxggP0CnSY8
+        boQnTxPQNMVCbuXybO3MJSGBt3TDTzwHuqKuArgeleMu4xpixBawCOVTdjQcJVNQ
         ==
-X-ME-Sender: <xms:4bdWXiDs2cUGG-tf-gFQkg4d6E5I_HnsWhS5kZfPRXtXEkzTixGnjA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeggdduudefucetufdoteggodetrfdotf
+X-ME-Sender: <xms:IbhWXlBstt-bP_Nt4XrNRmjDX6tgf5SlPf_kSrfdScT_PNhjO2QTXQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeggdduudegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
@@ -58,14 +58,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeggdduudefucetufdoteggod
     hnpeguvghvihgtvghtrhgvvgdrohhrghdpghhithhhuhgsrdgtohhmnecukfhppeeltddr
     keelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
     hfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:4bdWXj9BQCe5GnYNTRgl8K918CEqwQCHYkME02c_85ZO1fNnsIyvzA>
-    <xmx:4bdWXi9qjG3-ou-Gf481UUek3utSlsOFAXPLYLF7WtFmHNJ9UgIQNA>
-    <xmx:4bdWXqfzTVouAebt0tTNz01vnzH7u4dpgiDCCvfZ19zwqMo1s4tonA>
-    <xmx:4rdWXhRY1M7h650ph0r505zfVFyjhDWtpaJWUe0Qq0l-sSy0ZDDkQg>
+X-ME-Proxy: <xmx:IbhWXqf_TlmSNf4SDHddw9Ci3NQy_br5uurW3Dj6WiibjLXvdRzJkw>
+    <xmx:IbhWXnCPBwzMKUa8q8P8ko9euyui-Oqc6NU0u3HImzjdFEQEV-7ajw>
+    <xmx:IbhWXuS7yYZGea6tqrSAbdLwINrTguJ8fdwfUxDCCrGNUGl2hSLaJg>
+    <xmx:I7hWXuBhG7AHoaSXyrHIe106JrUPuLxnzTnxsZv2q1fDDzHiyXumUQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 39B363060D1A;
-        Wed, 26 Feb 2020 13:24:33 -0500 (EST)
-Date:   Wed, 26 Feb 2020 19:24:31 +0100
+        by mail.messagingengine.com (Postfix) with ESMTPA id BB150328005D;
+        Wed, 26 Feb 2020 13:25:36 -0500 (EST)
+Date:   Wed, 26 Feb 2020 19:25:34 +0100
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Andre Przywara <andre.przywara@arm.com>
 Cc:     Rob Herring <robh@kernel.org>,
@@ -76,130 +76,180 @@ Cc:     Rob Herring <robh@kernel.org>,
         Eric Auger <eric.auger@redhat.com>,
         Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Subject: Re: [PATCH 05/13] dt-bindings: clock: Convert Calxeda clock bindings
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH 06/13] dt-bindings: sata: Convert Calxeda SATA controller
  to json-schema
-Message-ID: <20200226182431.xmmgbtxsa6qovnsv@gilmour.lan>
+Message-ID: <20200226182534.rjdzoam4zdyduvos@gilmour.lan>
 References: <20200226180901.89940-1-andre.przywara@arm.com>
- <20200226180901.89940-6-andre.przywara@arm.com>
+ <20200226180901.89940-7-andre.przywara@arm.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oxpe5iexw42u333m"
+        protocol="application/pgp-signature"; boundary="avyufeofezvwvp7g"
 Content-Disposition: inline
-In-Reply-To: <20200226180901.89940-6-andre.przywara@arm.com>
+In-Reply-To: <20200226180901.89940-7-andre.przywara@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---oxpe5iexw42u333m
+--avyufeofezvwvp7g
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Feb 26, 2020 at 06:08:53PM +0000, Andre Przywara wrote:
-> Convert the Calxeda clock bindings to DT schema format using json-schema.
->
-> This just covers the actual PLL and divider clock nodes. In the actual
-> DTs they are somewhat unconnected (no ranges or bus compatible) children
-> of the sregs node, but for the actual clock bindings this is not
-> relevant.
->
-> One oddity is that the addresses are relative to the parent node,
-> without that being pronounced using a ranges property.
-> But this is too late to fix now.
+On Wed, Feb 26, 2020 at 06:08:54PM +0000, Andre Przywara wrote:
+> Convert the Calxeda Highbank SATA controller binding to DT schema format
+> using json-schema.
 >
 > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
->
+> Cc: Jens Axboe <axboe@kernel.dk>
 > ---
->  .../devicetree/bindings/clock/calxeda.txt     | 17 ----
->  .../devicetree/bindings/clock/calxeda.yaml    | 83 +++++++++++++++++++
->  2 files changed, 83 insertions(+), 17 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/calxeda.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/calxeda.yaml
+>  .../devicetree/bindings/ata/sata_highbank.txt | 44 ---------
+>  .../bindings/ata/sata_highbank.yaml           | 96 +++++++++++++++++++
+>  2 files changed, 96 insertions(+), 44 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
+>  create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/clock/calxeda.txt b/Documentation/devicetree/bindings/clock/calxeda.txt
+> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
 > deleted file mode 100644
-> index 0a6ac1bdcda1..000000000000
-> --- a/Documentation/devicetree/bindings/clock/calxeda.txt
+> index aa83407cb7a4..000000000000
+> --- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
 > +++ /dev/null
-> @@ -1,17 +0,0 @@
-> -Device Tree Clock bindings for Calxeda highbank platform
+> @@ -1,44 +0,0 @@
+> -* Calxeda AHCI SATA Controller
 > -
-> -This binding uses the common clock binding[1].
-> -
-> -[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -SATA nodes are defined to describe on-chip Serial ATA controllers.
+> -The Calxeda SATA controller mostly conforms to the AHCI interface
+> -with some special extensions to add functionality.
+> -Each SATA controller should have its own node.
 > -
 > -Required properties:
-> -- compatible : shall be one of the following:
-> -	"calxeda,hb-pll-clock" - for a PLL clock
-> -	"calxeda,hb-a9periph-clock" - The A9 peripheral clock divided from the
-> -		A9 clock.
-> -	"calxeda,hb-a9bus-clock" - The A9 bus clock divided from the A9 clock.
-> -	"calxeda,hb-emmc-clock" - Divided clock for MMC/SD controller.
-> -- reg : shall be the control register offset from SYSREGs base for the clock.
-> -- clocks : shall be the input parent clock phandle for the clock. This is
-> -	either an oscillator or a pll output.
-> -- #clock-cells : from common clock binding; shall be set to 0.
-> diff --git a/Documentation/devicetree/bindings/clock/calxeda.yaml b/Documentation/devicetree/bindings/clock/calxeda.yaml
+> -- compatible        : compatible list, contains "calxeda,hb-ahci"
+> -- interrupts        : <interrupt mapping for SATA IRQ>
+> -- reg               : <registers mapping>
+> -
+> -Optional properties:
+> -- dma-coherent      : Present if dma operations are coherent
+> -- calxeda,port-phys : phandle-combophy and lane assignment, which maps each
+> -			SATA port to a combophy and a lane within that
+> -			combophy
+> -- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
+> -			which indicates that the driver supports SGPIO
+> -			indicator lights using the indicated GPIOs
+> -- calxeda,led-order : a u32 array that map port numbers to offsets within the
+> -			SGPIO bitstream.
+> -- calxeda,tx-atten  : a u32 array that contains TX attenuation override
+> -			codes, one per port. The upper 3 bytes are always
+> -			0 and thus ignored.
+> -- calxeda,pre-clocks : a u32 that indicates the number of additional clock
+> -			cycles to transmit before sending an SGPIO pattern
+> -- calxeda,post-clocks: a u32 that indicates the number of additional clock
+> -			cycles to transmit after sending an SGPIO pattern
+> -
+> -Example:
+> -        sata@ffe08000 {
+> -		compatible = "calxeda,hb-ahci";
+> -		reg = <0xffe08000 0x1000>;
+> -		interrupts = <115>;
+> -		dma-coherent;
+> -		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
+> -					&combophy0 2 &combophy0 3>;
+> -		calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
+> -		calxeda,led-order = <4 0 1 2 3>;
+> -		calxeda,tx-atten = <0xff 22 0xff 0xff 23>;
+> -		calxeda,pre-clocks = <10>;
+> -		calxeda,post-clocks = <0>;
+> -        };
+> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.yaml b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
 > new file mode 100644
-> index 000000000000..0ad66af0eb0c
+> index 000000000000..392a3efc9833
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/calxeda.yaml
-> @@ -0,0 +1,83 @@
+> +++ b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
+> @@ -0,0 +1,96 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/clock/calxeda.yaml#
+> +$id: http://devicetree.org/schemas/ata/sata_highbank.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Device Tree Clock bindings for Calxeda highbank platform
+> +title: Calxeda AHCI SATA Controller
 > +
 > +description: |
-> +  This binding covers the Calxeda SoC internal peripheral and bus clocks
-> +  as used by peripherals. The clocks live inside the "system register"
-> +  region of the SoC, so are typically presented as children of an
-> +  "hb-sregs" node.
+> +  The Calxeda SATA controller mostly conforms to the AHCI interface
+> +  with some special extensions to add functionality, to map GPIOs for
+> +  activity LEDs and for mapping the ComboPHYs.
 > +
 > +maintainers:
 > +  - Andre Przywara <andre.przywara@arm.com>
 > +
 > +properties:
-> +  "#clock-cells":
-> +    const: 0
-> +
 > +  compatible:
-> +    enum:
-> +      - calxeda,hb-pll-clock
-> +      - calxeda,hb-a9periph-clock
-> +      - calxeda,hb-a9bus-clock
-> +      - calxeda,hb-emmc-clock
+> +    const: calxeda,hb-ahci
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +  clocks:
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  dma-coherent: true
+> +
+> +  calxeda,pre-clocks:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Indicates the number of additional clock cycles to transmit before
+> +      sending an SGPIO pattern.
+> +
+> +  calxeda,post-clocks:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Indicates the number of additional clock cycles to transmit after
+> +      sending an SGPIO pattern.
+> +
+> +  calxeda,led-order:
+> +    description: Maps port numbers to offsets within the SGPIO bitstream.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - minItems: 1
+> +        maxItems: 8
+> +
+> +  calxeda,port-phys:
+> +    description: |
+> +      phandle-combophy and lane assignment, which maps each SATA port to a
+> +      combophy and a lane within that combophy
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+> +      - minItems: 1
+> +        maxItems: 8
+> +
+> +  calxeda,tx-atten:
+> +    description: |
+> +      Contains TX attenuation override codes, one per port.
+> +      The upper 24 bits of each entry are always 0 and thus ignored.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - minItems: 1
+> +        maxItems: 8
+> +
+> +  calxeda,sgpio-gpio:
 > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      phandle-gpio bank, bit offset, and default on or off, which indicates
+> +      that the driver supports SGPIO indicator lights using the indicated
+> +      GPIOs.
 
-There's no need to specify the type, it's already checked by a schemas
-there:
-https://github.com/devicetree-org/dt-schema/blob/master/schemas/clock/clock.yaml
+Ditto, this is being checked already:
+https://github.com/devicetree-org/dt-schema/blob/master/schemas/gpio/gpio.yaml#L37
 
-Maxime
-
---oxpe5iexw42u333m
+--avyufeofezvwvp7g
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXla33wAKCRDj7w1vZxhR
-xVCCAP9FAtviN9vMSzmOMnEaf0clsEnPEWJoqlOFffHEYfYkVQD+PsaFiKiidYgC
-Vj9cjeIjaMRIA5EoTsMzHLWl1v8W6A8=
-=mtDo
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXla4HgAKCRDj7w1vZxhR
+xXwXAP9E9Nhzi9/iGC+DcEi2dO3dN9AdHfN5WZ299wBfbz7logD9FWasp+ZIwAPI
+gZzzMwdkwUcsGs8WM6shA0zZiW2XNg0=
+=oHQS
 -----END PGP SIGNATURE-----
 
---oxpe5iexw42u333m--
+--avyufeofezvwvp7g--
