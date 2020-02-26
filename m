@@ -2,108 +2,126 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB4AC4BA13
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797EBC4BA13
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5723520637
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8872467B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582732259;
-	bh=4mj4Lhuk39hWvXQSeFd33euISt6wOckDzm5sWFrW6bc=;
+	s=default; t=1582732701;
+	bh=S72rfz4e7ofEv8qXcE2vMF6gMBDU4uQEXEeYcNVqqV4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=emJp9ZpGW9gfiz5gr28/ieWbH4kfZkIQObXlyxTGSQmcFqT9bgJb8Nu5qDDwirvVU
-	 Ekg89qlQngugwiU6K/y2j8OQQo1530LZ3WOZqf9cKHXPPlf3Hce8rfl/gjkPa9QE2+
-	 mCXU87uLincnH315nMwmEUbPOLXhxahsUG1E/+9k=
+	b=kA9SmGQaiDe/a+Vty29oeMPWlZHs75t7w/fviHv+r2gjM8MXQG9wqer8GYgxri0Fv
+	 C6ZZM0fKgyk5MxpF6D0hrgws1ft9nHR1LHlmSi1j/7lulKSmtaYdmee2xRmFNub4CW
+	 JXNsD4yUumEK5OARcCVMFagdAv7yWTpJTW18yplY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgBZPu6 (ORCPT
+        id S1728968AbgBZP6R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:50:58 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45205 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgBZPu6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 10:50:58 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so3327329otp.12;
-        Wed, 26 Feb 2020 07:50:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XLG/HcpDoefwlDbSA6KkLlzoOTV7gKxlBKi85al1w9c=;
-        b=ELz6ZMZr0rtKQ2d7fLzJdm1LmTURZt4Azsc0C2oDviJpliY1ved5qP4QJBBXa9s4Z7
-         buTzqKGcciVBE5NuCzxLfhR+8fPaNz+MTJ+oHEj/K5RKc+JS9SyVDmlxjub7nMAwijLs
-         +xq3U7FAAZo3l0RNuAnubvyzjWH0fDt9pRzEz0dhe5ubJb45tpwW22LJIPm2aR3v4H9D
-         ZBCkt/+dcFjUSvxNW4o/9P0Hk9BOq+FF/k/yaJeGiqYZNo/HN7g+ypmj/HrzDgiEHBpy
-         Ewrq9wMv97A2Ow7lgFOjzoHjOaCDD7ViH73TsHO2zWr6V2tBRB1E/x5+KEnqbg84yKcx
-         JOOA==
-X-Gm-Message-State: APjAAAUMH5x0duMm5wo8HtiWwAqutEXIZMf/3vwRq2DLD91DlYtprq82
-        rXCueEX6jfwxIUOvqlH53g==
-X-Google-Smtp-Source: APXvYqzz9bkQxK085SBSKbtINgYFodulsnBaryzAcNMdYU2j6sh2uVsRdP6BGe4x3hIwiFVgNwCLpg==
-X-Received: by 2002:a05:6830:1e6b:: with SMTP id m11mr3726402otr.293.1582732257205;
-        Wed, 26 Feb 2020 07:50:57 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s128sm923004oia.4.2020.02.26.07.50.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:50:56 -0800 (PST)
-Received: (nullmailer pid 3525 invoked by uid 1000);
-        Wed, 26 Feb 2020 15:50:55 -0000
-Date:   Wed, 26 Feb 2020 09:50:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, kernel-team@android.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] of: property: Add device link support for
- power-domains  and hwlocks
-Message-ID: <20200226155055.GA3403@bogus>
-References: <20200220055250.196456-1-saravanak@google.com>
+        Wed, 26 Feb 2020 10:58:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728551AbgBZP6R (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:58:17 -0500
+Received: from localhost (unknown [171.76.87.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7D30222C2;
+        Wed, 26 Feb 2020 15:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582732696;
+        bh=S72rfz4e7ofEv8qXcE2vMF6gMBDU4uQEXEeYcNVqqV4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kWq5EKgKjQr9M7KGd8TjaGP1qxy1nmbn8wwUsuIcWNPmUQ80mNhYluJz74ZUz98+M
+         2m0SdrGy86ZG/S1gI6wZc02UzMotgkBtTN8bUtEfTf9JDmxI8OlwWGX/kNxDGGnN3y
+         vLC9nysbnEcQDEr9iRHYDUs/acr0H0X11p60dexk=
+Date:   Wed, 26 Feb 2020 21:28:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
+        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] dt-bindings: thermal: tsens: Add qcom,tsens-v2 to
+ msm8996.dtsi compatible
+Message-ID: <20200226155808.GY2618@vkoul-mobl>
+References: <cover.1582705101.git.amit.kucheria@linaro.org>
+ <4e337c4a4194bb15f9efec67821f38504de1704c.1582705101.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220055250.196456-1-saravanak@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4e337c4a4194bb15f9efec67821f38504de1704c.1582705101.git.amit.kucheria@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2020 21:52:50 -0800, Saravana Kannan wrote:
-> Add support for creating device links out of more DT properties.
+On 26-02-20, 15:01, Amit Kucheria wrote:
+> The qcom-tsens binding requires a SoC-specific and a TSENS
+> family-specific binding to be specified in the compatible string.
 > 
-> To: lkml <linux-kernel@vger.kernel.org>
-> To: John Stultz <john.stultz@linaro.org>
-> To: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Since them family-specific binding is not listed in the .dtsi file, we
+> see the following warnings in 'make dtbs_check'. Fix them.
+> 
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is not valid
+> under any of the given schemas (Possible causes of the failure):
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is too short
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> 
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is not valid
+> under any of the given schemas (Possible causes of the failure):
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is too short
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
->  drivers/of/property.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 7ae082ea14ea..f157cd4f53b4 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -446,7 +446,7 @@
+>  		};
+>  
+>  		tsens0: thermal-sensor@4a9000 {
+> -			compatible = "qcom,msm8996-tsens";
+> +			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
+>  			reg = <0x004a9000 0x1000>, /* TM */
+>  			      <0x004a8000 0x1000>; /* SROT */
+>  			#qcom,sensors = <13>;
+> @@ -457,7 +457,7 @@
+>  		};
+>  
+>  		tsens1: thermal-sensor@4ad000 {
+> -			compatible = "qcom,msm8996-tsens";
+> +			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
+>  			reg = <0x004ad000 0x1000>, /* TM */
+>  			      <0x004ac000 0x1000>; /* SROT */
+>  			#qcom,sensors = <8>;
+> -- 
+> 2.20.1
 
-Applied, thanks.
-
-Rob
+-- 
+~Vinod
