@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACDDC4BA09
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADA6C4BA06
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3994924656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A382465D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582676436;
-	bh=INgY5gIlHr53sxSgKS3G6uBLIe2jvapkukMmWoDkebM=;
+	s=default; t=1582676942;
+	bh=2PMEOSSd91WtZ6aS0URgU5NbJ9Ejg3d9n7C6UiZLmBU=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=r9XQKATXIVyoGQ/j6SMLXiPgMNX2RBlbcKvqkZw9Xx9yMaTxbhD0F0ugmruSMAtJI
-	 7+HikVWEao1IoTTs582qiaetHAmFafcRNddgU+j+62/FLvNL2AS/OJz37yMt+DSVCe
-	 Em7PjuEmd2GH3Ml9wx5ngJFxeipHsCesAseWRh1g=
+	b=Ri076WKfKsupFiDvr1P4FcJoKf7mfVcTNpZz+3+PWE/+q32sv4+a4nReznS4tz47m
+	 xhvNGxGqFOVTX4Bq9oZXSTT5RxgbutfF4nIVBQde3upS7+wvbTZ+iWiJKC69hMnmaa
+	 Pf6/LdkIOh6Qoyemg9ejR6BnOySbe2qPS8FE7LRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgBZAUf (ORCPT
+        id S1729336AbgBZA26 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:20:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41078 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 19:28:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728989AbgBZAUf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:20:35 -0500
+        id S1728756AbgBZA26 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 19:28:58 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93E3F24656;
-        Wed, 26 Feb 2020 00:20:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2019820732;
+        Wed, 26 Feb 2020 00:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582676434;
-        bh=INgY5gIlHr53sxSgKS3G6uBLIe2jvapkukMmWoDkebM=;
+        s=default; t=1582676937;
+        bh=2PMEOSSd91WtZ6aS0URgU5NbJ9Ejg3d9n7C6UiZLmBU=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=wUFeTDFzUC990SUndKt7nkejf0qsoHLJyv7ZTU2Rvfzz75sxVlIvy594esmrmyJP9
-         zpVwNsv0EMUbrfWw0Y3P0A6iion2GkjAOqfknsZrlhuke0f9slhAbVL5br0PxSUcyb
-         QDCUYyDy4hIvPUHP2lwnQh8uR1o0pOPY6KMXNRSY=
+        b=LtLktzcKehUJvc6+0v1YUFa4Se6RgBxz1Wp13t1JWE18AE67Fe/UKLi1Eg5JpBmR0
+         YEMO0rugrNApDEY3tlTWSXfE7cigFe/0xHajqBYZIqpY7nM3/BBR5nrokIGN99Z5Z4
+         uvjFmlG0OCGwjsNb9Z86fjXuSZYjuKp6hwSqibkk=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -54,8 +54,8 @@ Cc:     David Brown <david.brown@linaro.org>,
         Taniya Das <tdas@codeaurora.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Taniya Das <tdas@codeaurora.org>
-Date:   Tue, 25 Feb 2020 16:20:33 -0800
-Message-ID: <158267643373.177367.14343331439641557635@swboyd.mtv.corp.google.com>
+Date:   Tue, 25 Feb 2020 16:28:56 -0800
+Message-ID: <158267693624.177367.14912476991395295437@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -78,9 +78,6 @@ Quoting Taniya Das (2020-02-24 02:38:23)
 > +#include <linux/platform_device.h>
 > +#include <linux/module.h>
 > +#include <linux/of_address.h>
-
-Is this used?
-
 > +#include <linux/pm_clock.h>
 > +#include <linux/pm_runtime.h>
 > +#include <linux/regmap.h>
@@ -101,6 +98,9 @@ Is this used?
 > +                       .name =3D "mss_axi_nav_clk",
 > +                       .parent_data =3D &(const struct clk_parent_data){
 > +                               .fw_name =3D "gcc_mss_nav_axi_clk",
+
+Drop _clk from here.
+
 > +                       },
 > +                       .num_parents =3D 1,
 > +                       .ops =3D &clk_branch2_ops,
@@ -118,6 +118,9 @@ Is this used?
 > +                       .name =3D "mss_axi_crypto_clk",
 > +                       .parent_data =3D &(const struct clk_parent_data){
 > +                               .fw_name =3D "gcc_mss_mfab_axis_clk",
+
+And here, so that it matches the binding.
+
 > +                       },
 > +                       .num_parents =3D 1,
 > +                       .ops =3D &clk_branch2_ops,
@@ -125,17 +128,3 @@ Is this used?
 > +       },
 > +};
 > +
-> +static const struct regmap_config mss_regmap_config =3D {
-> +       .reg_bits       =3D 32,
-> +       .reg_stride     =3D 4,
-> +       .val_bits       =3D 32,
-> +       .fast_io        =3D true,
-
-What is the max register?
-
-> +};
-> +
-> +static struct clk_regmap *mss_sc7180_clocks[] =3D {
-> +       [MSS_AXI_CRYPTO_CLK] =3D &mss_axi_crypto_clk.clkr,
-> +       [MSS_AXI_NAV_CLK] =3D &mss_axi_nav_clk.clkr,
-> +};
