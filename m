@@ -2,122 +2,142 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1347C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 20:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC8CC4BA29
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 20:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A4724656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 20:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5372C24653
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 20:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PsTVQeVK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UOGFjBTh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBZUgr (ORCPT
+        id S1727338AbgBZUkk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:36:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42274 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbgBZUgr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 15:36:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=+p7EsunDyckvjnn7uoUOj7IyahAxbevV9+nP47iItWU=; b=PsTVQeVK5MMB5wwRjEYrExEWaA
-        1lEsqABgpcezNBGgPT1p7GOolDKy0OflU9a6BzxaKrNhGcfWVbAN6xuZ11bBOYm4Ne6KrWK2phYqy
-        tT4mHwvThQUKuRisFlycbecA8yKIxpJenV5wWUXfKFgN6mzHck8Pb1obpiYTfjigldNarKpYQ6Y/q
-        0Z4W9T7xOEW0hD8vIEH9Qc7ixTMkJ6lLXpXApqRCp/irhgXWyAxQmLO6De5lFOb6DHCgo/ueJqwNk
-        eG303bUmPxpNS/6ZxLaujBeY10d2wFSRHssTX7ISCsPVyrFYm6Bw0M3HFYKFZfASOcJrwGS62J9Zj
-        0cu+ombA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j73QB-00062V-Dw; Wed, 26 Feb 2020 20:36:43 +0000
-Subject: Re: [PATCH v9 3/4] soc: mediatek: Move mt8173 MMSYS to platform
- driver
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20200226105419.632771-1-enric.balletbo@collabora.com>
- <20200226105419.632771-4-enric.balletbo@collabora.com>
- <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
- <da1b0908ddac65d370609f35c78d4a618ac70268.camel@collabora.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <470ab4e2-ab10-19bd-aea4-9b081c9978a8@infradead.org>
-Date:   Wed, 26 Feb 2020 12:36:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 15:40:40 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44088 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgBZUkj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 15:40:39 -0500
+Received: by mail-vs1-f66.google.com with SMTP id p6so300461vsj.11
+        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 12:40:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X38dp+xI/8/bQebYRzfnOr8kxspwiuDhfXc+NQs++Fs=;
+        b=UOGFjBTh5wpqU9crrLKX2C788sZCcOcl87LvIZspmck+EOvU07D2ISbpfvUCNzdHWi
+         1stD0H0A8F7rx8IqDWd+/8UAVCJ5yAGOWoyk2smT6wGRiGUo/2SAnB+XTvn3sEcSsMZd
+         oPs2f1h5a3+7nQxbgt7ZjU0L/ziLobpX/4WvI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X38dp+xI/8/bQebYRzfnOr8kxspwiuDhfXc+NQs++Fs=;
+        b=C0W/Euez/nw0fzfSvRgSbKVSrPQvHwWQjbo6AKkA7DPE2TVfmtvsYhJyz0W5PG7ynG
+         y+znzvH03qlgrQvxkWBoLN3kvhKtp4SXRE1RhTI8gVxi/YXkwG2zYP2hKXwoPfAZGfY4
+         y/C7RxM2kWpT+sJbv2oWTlocWvTce4cE5Z2oWc5rGDuw0/UhagDwZzmewVCVnyty7VNu
+         2+eTzuJ1VPX5hdSjbsjuHvqbLR3Iu0xC0ghUfNNFyYOPcWBOjhT+lYukYGiLBFSgwG/B
+         7FPt08AuYs8s7eqKrjTQwsg7zvcDopOhmKCvNpQM/TB68umpwbKOfWuXSQIBSK0Oufcj
+         d/pw==
+X-Gm-Message-State: APjAAAWQ6r/nYgQ9gh5zollm0YchEqO/su8Ip0mNRIlMInbrnjG1WhbZ
+        PSJ5cS7T2lO7ElbNUgjfaY8rugyHOz4=
+X-Google-Smtp-Source: APXvYqzHy6Spp9yHdkInpBKBKcUzCTcpyVqiM37mMCQCdKP6X/epVTK21TuNKCzYKssw+R45CkSK0Q==
+X-Received: by 2002:a67:eecb:: with SMTP id o11mr546944vsp.227.1582749636722;
+        Wed, 26 Feb 2020 12:40:36 -0800 (PST)
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com. [209.85.221.177])
+        by smtp.gmail.com with ESMTPSA id n10sm1246466vsm.0.2020.02.26.12.40.36
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 12:40:36 -0800 (PST)
+Received: by mail-vk1-f177.google.com with SMTP id c129so81123vkh.7
+        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 12:40:36 -0800 (PST)
+X-Received: by 2002:ac5:c807:: with SMTP id y7mr667987vkl.92.1582749635551;
+ Wed, 26 Feb 2020 12:40:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <da1b0908ddac65d370609f35c78d4a618ac70268.camel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200226114017.1.I15e0f7eff0c67a2b49d4992f9d80fc1d2fdadf63@changeid>
+In-Reply-To: <20200226114017.1.I15e0f7eff0c67a2b49d4992f9d80fc1d2fdadf63@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 26 Feb 2020 12:40:23 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UMptkb9ni0KFWp96BycU32kchYs9+uS-7H+Q9ounHy2g@mail.gmail.com>
+Message-ID: <CAD=FV=UMptkb9ni0KFWp96BycU32kchYs9+uS-7H+Q9ounHy2g@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: sc7180: Move venus node to the correct position
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/26/20 12:29 PM, Ezequiel Garcia wrote:
-> On Wed, 2020-02-26 at 07:40 -0800, Randy Dunlap wrote:
->> On 2/26/20 2:54 AM, Enric Balletbo i Serra wrote:
->>> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
->>> index 2114b563478c..dcd6481a14d0 100644
->>> --- a/drivers/soc/mediatek/Kconfig
->>> +++ b/drivers/soc/mediatek/Kconfig
->>> @@ -44,4 +44,11 @@ config MTK_SCPSYS
->>>  	  Say yes here to add support for the MediaTek SCPSYS power domain
->>>  	  driver.
->>>  
->>> +config MT8173_MMSYS
->>> +	bool "MediaTek MT8173 MMSYS Support"
->>
->> Hi,
->> Can this be tristate instead of bool?
->>
-> 
-> Wouldn't that conflict with
-> the driver being a builtin_platform_driver,
-> or am I just confusing things badly?
+Hi,
 
-OK, it probably would conflict.
+On Wed, Feb 26, 2020 at 11:40 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Per convention device nodes for SC7180 should be ordered by address.
+> This is currently not the case for the venus node, move it to the
+> correct position.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 52 ++++++++++++++--------------
+>  1 file changed, 26 insertions(+), 26 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 253274d5f04c..5f97945e16a4 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1332,6 +1332,32 @@ system-cache-controller@9200000 {
+>                         interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+>                 };
+>
+> +               venus: video-codec@aa00000 {
+> +                       compatible = "qcom,sc7180-venus";
+> +                       reg = <0 0x0aa00000 0 0xff000>;
+> +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +                       power-domains = <&videocc VENUS_GDSC>,
+> +                                       <&videocc VCODEC0_GDSC>;
+> +                       power-domain-names = "venus", "vcodec0";
+> +                       clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +                                <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +                                <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> +                                <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +                                <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> +                       clock-names = "core", "iface", "bus",
+> +                                     "vcodec0_core", "vcodec0_bus";
+> +                       iommus = <&apps_smmu 0x0c00 0x60>;
+> +                       memory-region = <&venus_mem>;
+> +
+> +                       video-decoder {
+> +                               compatible = "venus-decoder";
+> +                       };
+> +
+> +                       video-encoder {
+> +                               compatible = "venus-encoder";
+> +                       };
+> +               };
+> +
+>                 usb_1: usb@a6f8800 {
+>                         compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
+>                         reg = <0 0x0a6f8800 0 0x400>;
 
-Thanks.
+Maybe try one more time?
 
->> +	depends on COMMON_CLK_MT8173
->>> +	help
->>> +	  Say yes here to add support for the MediaTek MT8173 Multimedia
->>> +	  Subsystem (MMSYS).
->>> +
->>>  endmenu
+>>> print [hex(x) for x in sorted([0x0aa00000, 0x0a6f8800])]
+['0xa6f8800', '0xaa00000']
 
+...makes me convinced that the codec should come _after_ the USB node, no?
 
--- 
-~Randy
-
+-Doug
