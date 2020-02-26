@@ -2,214 +2,140 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCD4C4BA0A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ADAC4BA0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 04:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5576A21D7E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6093424656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 04:00:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ent5dnpk"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="u3e8N9Wi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgBZDxr (ORCPT
+        id S1726277AbgBZEAR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 22:53:47 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:41299 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgBZDxr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 22:53:47 -0500
-Received: by mail-yw1-f66.google.com with SMTP id l22so1862846ywc.8;
-        Tue, 25 Feb 2020 19:53:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=exTa4V5GT58+3zXWxZHPQae7jPzZ97tMG3gr3P5XvQo=;
-        b=ent5dnpkhIONW4+hFnA6fcEibNW0RC5xdbTbqNvOc/wpujsZnK2j+Aujr798Na7+1E
-         GRTLSyTggVio39H9XH2t1zfCE0ux0sau00Ln0ykDWJjQm9/xri/aZUG+Ug9aEmmjW6cp
-         PwHp0YE0oOWSTaKsDWEoabJTSI/5EqcEaDJjLuh5ou8a+GelJGupXRIMXEXY28xEVN+R
-         TqZ/GqDklP/76V3GLpy78BAQTEhMRAZb7nz8artxCr99SGm+rmJMcEhjmE2b/q/B6N4k
-         RMfamEXPMlnfSsxsJuioCQJ8ZhJWM30hTksZpMSONuUX5N6nTnXg5hpV6UTqyDyXaEPH
-         /amQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=exTa4V5GT58+3zXWxZHPQae7jPzZ97tMG3gr3P5XvQo=;
-        b=ZszfkdvrRsCrt51hFZZlTMfREZk8VhUmp2kcXD9fN/A9ekIyVUme8J0Qw17TKLMb+/
-         f6aVResJKdecYqPt4Pzjaf3b1GqN8qxEbkHbfiAuenHKM456tMuie3PMZaq1nM+rrUQ+
-         ErlpNJ3XAjJeHK4a12Yrz96EuSy/t56DdtSWKnd2Mi6EvrbCg3xZjIdejXxla7P29YsW
-         0DBSsRWkmzdJeQFZcjj9BrMmlPrNlRpIM8Q1JM3Olr7CN7PmqX91DD1HUf1awlOOo6W3
-         VH7r1C/J+1iW48UIoNjDIgB0OwPks2ajwma4Y1m2733CC/donK6t6RLT+P/ii//DS8fn
-         6jSA==
-X-Gm-Message-State: APjAAAXgNNhrqcftdm/eRw9TRc66vlhERBWMfvFEk+wy5qhYwh+MITR1
-        QMu94aLCKY1AIs6QW50IkGQ=
-X-Google-Smtp-Source: APXvYqxT3IY1l3lBhJM0K0zYKZpVpCSmM6Wu0GrQ+TKgAgdVO8v5WhL+KvOW4O9/vtGeFF+MWdPsmQ==
-X-Received: by 2002:a25:4f42:: with SMTP id d63mr2782165ybb.236.1582689226074;
-        Tue, 25 Feb 2020 19:53:46 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id w15sm397709ywg.1.2020.02.25.19.53.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 19:53:45 -0800 (PST)
-Subject: Re: [PATCH v2] of: overlay: log the error cause on resolver failure
-To:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20200225164540.4520-1-luca@lucaceresoli.net>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <f9565679-5892-bcf0-f751-bfcac87670a8@gmail.com>
-Date:   Tue, 25 Feb 2020 21:53:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200225164540.4520-1-luca@lucaceresoli.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Feb 2020 23:00:17 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:18549 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBZEAR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 23:00:17 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 01Q3xIwx016581;
+        Wed, 26 Feb 2020 12:59:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 01Q3xIwx016581
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582689558;
+        bh=XDrBIXByfZ2yAmtZPGX/C8p4s5ZOw7AEPyyzLDKdN2A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=u3e8N9Wii46h8XMIwcPQOR1pfajS6bTdVu5PoDLvzg84URiIenjUiy+I7fGvBb2FJ
+         bi/Mg+Ry9pNIRD7AwVWYqpkFhHt7wRer8RayCdZL2c4Xwkbc1+b4LAOzikYvh5YPQc
+         uJ+/WBeZsq1bdEK97F92wYEVkfZ57y0pxPFomSqRdnJeSlgq3+DZpWMcdQlB9m9B8/
+         fNcwZHdhAYccn4yA4cK2nb1CF1C96nmr8yzQeXIWSgQfmKjseZGIoDFLLMlmhgOdeh
+         Js3L2JXwWhPIeS/zJdO01aRzzFwo3/aO6wimrP6X02dF5rHnU5VhRzcg/UnXDeXAyh
+         uTagRccc8RuAQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: uniphier: rename NAND node names to follow json-schema
+Date:   Wed, 26 Feb 2020 12:59:13 +0900
+Message-Id: <20200226035914.23582-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/25/20 10:45 AM, Luca Ceresoli wrote:
-> For some of its error paths, of_resolve_phandles() only logs a very generic
-> error which does not help much in finding the origin of the problem:
-> 
->   OF: resolver: overlay phandle fixup failed: -22
-> 
-> Add error messages for all the error paths that don't have one. Now a
-> specific message is always emitted, thus also remove the generic catch-all
-> message emitted before returning.
-> 
-> For example, in case a DT overlay has a fixup node that is not present in
-> the base DT __symbols__, this error is now logged:
-> 
->   OF: resolver: node gpio9 not found in base DT, fixup failed
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
-> 
-> I don't know in detail the meaning of the adjust_local_phandle_references()
-> and update_usages_of_a_phandle_reference() error paths, thus I have put
-> pretty generic messages. Any suggestion on better wording would be welcome.
+Follow the standard nodename pattern "^nand-controller(@.*)?" defined
+in Documentation/devicetree/bindings/mtd/nand-controller.yaml
 
-If you have not read the code to understand what the meaning of
-the errors are, you should not be suggesting changes to the error
-messages.
+Otherwise, after the dt-binding is converted to json-schema,
+'make ARCH=arm dtbs_check' will show a warning like this:
 
-Only one of the issues detected as errors can possibly be something
-other than an error either in the resolver.c code or the dtc
-compiler -- a missing symbol in the live devicetree.  This may
-be because of failing to compile the base devicetree without
-symbols, depending on a symbol from another overlay where the
-other overlay has not been applied, or depending on a symbol
-from another overlay where the other overlay is applied but
-the overlay was not compiled with symbols.  (Not meant to be
-an exhaustive list, but it might be.)  Thus the missing
-symbol problem might be fixable without a fix to kernel
-code.  The error message philosophy for overlay related
-errors is to minimize error messages that help diagnose
-the precise cause of a kernel code bug, with the intent
-of keeping the code more compact and readable.  When a
-bug occurs, debugging messages can be added for the
-debug session.
+  nand@68000000: $nodename:0: 'nand@68000000' does not match '^nand-controller(@.*)?'
 
-Following this philosophy, only the message in the second
-patch chunk is ok.  I will include an example of more
-precise error messages in the other locations, just for
-education on what is going wrong at those points.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+ arch/arm/boot/dts/uniphier-ld4.dtsi  | 2 +-
+ arch/arm/boot/dts/uniphier-pro4.dtsi | 2 +-
+ arch/arm/boot/dts/uniphier-pro5.dtsi | 2 +-
+ arch/arm/boot/dts/uniphier-pxs2.dtsi | 2 +-
+ arch/arm/boot/dts/uniphier-sld8.dtsi | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-> 
-> Changed in v2:
-> 
->  - add a message for each error path that does not have one yet
-> ---
->  drivers/of/resolver.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 83c766233181..a80d673621bc 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -291,8 +291,10 @@ int of_resolve_phandles(struct device_node *overlay)
->  			break;
->  
->  	err = adjust_local_phandle_references(local_fixups, overlay, phandle_delta);
-> -	if (err)
-> +	if (err) {
-> +		pr_err("cannot adjust local phandle references\n");
->  		goto out;
-> +	}
-
-Delete this message.  But if there was a message, it could be:
-
-"invalid overlay, adjust local phandle references failed\n"
-
-
->  
->  	overlay_fixups = NULL;
->  
-> @@ -321,11 +323,15 @@ int of_resolve_phandles(struct device_node *overlay)
->  
->  		err = of_property_read_string(tree_symbols,
->  				prop->name, &refpath);
-> -		if (err)
-> +		if (err) {
-> +			pr_err("node %s not found in base DT, fixup failed\n",
-> +			       prop->name);
-
-"symbol '%s' not found in live devicetree symbols table\n",
-       prop->name
-
-
->  			goto out;
-> +		}
->  
->  		refnode = of_find_node_by_path(refpath);
->  		if (!refnode) {
-> +			pr_err("cannot find node for %s\n", refpath);
->  			err = -ENOENT;
->  			goto out;
->  		}
-> @@ -334,13 +340,14 @@ int of_resolve_phandles(struct device_node *overlay)
->  		of_node_put(refnode);
->  
->  		err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
-> -		if (err)
-> +		if (err) {
-> +			pr_err("cannot update usages of a phandle reference (%s)\n",
-> +				prop->name);
->  			break;
-> +		}
-
-Delete this message.  But if there was a message, it could be:
-
-"invalid fixup for symbol '%s'\n", prop->name
-
-
->  	}
->  
->  out:
-> -	if (err)
-> -		pr_err("overlay phandle fixup failed: %d\n", err);
-
-Do not remove this message.  The other messages do not explain that phandle fixup
-failed - they provide a more detailed description of a specific reason _why_ the
-phandle fixup failed.
-
-
->  	of_node_put(tree_symbols);
->  
->  	return err;
-> 
+diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
+index 23b8fd627c00..197bee7d8b7f 100644
+--- a/arch/arm/boot/dts/uniphier-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
+@@ -398,7 +398,7 @@
+ 			};
+ 		};
+ 
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5a";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+index eb06c353970f..b02bc8a6346b 100644
+--- a/arch/arm/boot/dts/uniphier-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+@@ -588,7 +588,7 @@
+ 			};
+ 		};
+ 
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5a";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+index c95eb44c816d..f84a43a10f38 100644
+--- a/arch/arm/boot/dts/uniphier-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+@@ -453,7 +453,7 @@
+ 			};
+ 		};
+ 
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5b";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+index c054d0175df9..989b2a241822 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
++++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+@@ -761,7 +761,7 @@
+ 			};
+ 		};
+ 
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5b";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
+index a05061038e78..fbfd25050a04 100644
+--- a/arch/arm/boot/dts/uniphier-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
+@@ -402,7 +402,7 @@
+ 			};
+ 		};
+ 
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5a";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+-- 
+2.17.1
 
