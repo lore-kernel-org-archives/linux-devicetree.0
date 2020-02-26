@@ -2,163 +2,114 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E96AC4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527F8C4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4AF924672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b1h+jw5x"
+	by mail.kernel.org (Postfix) with ESMTP id 21E2521D7E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582753002;
+	bh=P4wqZ/G/RRozD3/33SDHyrWrXUAr2WpACya0jZ2Nj4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NMZqJcXGvkD6DALZy8EKJ8Sfc4cXnrxCfEKhe+yJCefdn6GsZpz8I2hJxx6CevS7C
+	 90BH5B/eyt5UyTa+biESPU7Twz2/h0q1LBt/H/upJlwdaCmTZTmh5d+cKOsmF7Caen
+	 fGOs6/1F0dnCFk2+XJ2Sl/q4W0uDOX1DaI4zwJt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgBZVFB (ORCPT
+        id S1727637AbgBZVgl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:05:01 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38725 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727501AbgBZVFB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:05:01 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p7so188725pli.5
-        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 13:05:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ACUPnfRs+B0AixBhqicJFirvOfw04PSorPFO08K1XPM=;
-        b=b1h+jw5xvLfpwa+81eovYYEJi6VmH4SIolSQZvYhQZRZvv3SjNbBbraaGJCnRspqlT
-         ubFVcKmj4Whh7g1ABpck2L0sOj+vXO3iwj/pwgLpkwBzXo8W6YLDk0ulLFNDkNowBLcF
-         oPWR35l4uwxwSsfVVZW7xk5m8Ng8SO4NREIus=
+        Wed, 26 Feb 2020 16:36:41 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43917 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727581AbgBZVgl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:36:41 -0500
+Received: by mail-oi1-f193.google.com with SMTP id p125so1066515oif.10;
+        Wed, 26 Feb 2020 13:36:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ACUPnfRs+B0AixBhqicJFirvOfw04PSorPFO08K1XPM=;
-        b=e5Bb4br0aEgNCsHeksJjZccUm5K3U/NSTvMRej4FXZAQ3Yzc8D3xabLnnFDP5eTWoL
-         Jj3FeDajPeNkuFsDzmdO+hv3jhfOPm4b93RR6UeqUPrQItsyuuy5j/PCbY1gcXr8GhNh
-         alL9JiPspb/K1Ko2WU00MflnuCfnQzvBQJP2/2rZiM79iINulnbz+8aNkl/skbe+NGvN
-         +DbjMBqQIjxCWrIVFQL3rPp3uaTPUohoXMDOCQKaeY+GXkdmeQXb81+1NGe/kSVF55xX
-         4h3fNSTqaIqh/A5Za0xr1x8dHHab5bYKWB0Dx3XqUB6CGRh3DUa+YWiG0Vw27T5tJT/L
-         6DoA==
-X-Gm-Message-State: APjAAAWAFPeIf6wZJmUVeqqrDJlDZqcXUt37HtNZkevNBE7LdzdOURIo
-        z58je7qTR5jBpzyr1DS5C6x1Iw==
-X-Google-Smtp-Source: APXvYqz5OZ/7iJEwlyyHRvnBC50QVZ4cl/O+psBc+djXwLFf/hH1Nx+qFYROeCDiSB4p8GzYotV3mQ==
-X-Received: by 2002:a17:902:528:: with SMTP id 37mr1205955plf.322.1582751100330;
-        Wed, 26 Feb 2020 13:05:00 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id v29sm3636477pgc.72.2020.02.26.13.04.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 13:04:58 -0800 (PST)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dikshita Agarwal <dikshita@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2] arm64: dts: sc7180: Move venus node to the correct position
-Date:   Wed, 26 Feb 2020 13:04:55 -0800
-Message-Id: <20200226130438.v2.1.I15e0f7eff0c67a2b49d4992f9d80fc1d2fdadf63@changeid>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k5x7wgpT9UNOStLpFcvf/lxLcJwiRX3Kcmib1RAv6/M=;
+        b=d+2AofRWv8QAiUgbtoAahOBYJdwKBIBMfkkkCQkvyop8fmBkJ49LW0hIij28e4bXwf
+         eZEjdBXatQmHdXgv0EwBu/WZm0Jh5lOcQfp5zyOcI99HIOtRPTMS8/Y52hr7OFmJLkG6
+         /oF3Lz5wNRqhTzO5JTsptaD9gUqXrIL+Ar9+Yy7/m6+0BTx29jDidmhmDy6eZmivmfcK
+         ePmmXPR5c2w0UBhMDjnQHz+r4TYFx4vYfxwQx1bhHH/bpJunUgr+uOqFHGAKy9AdhbM1
+         cRpgeMfDP2fSZwCuozAV0V/kkNatAtO+GATUu6ewBFgu1JMDa88dLHxWzmtnyLzqsUlK
+         R49Q==
+X-Gm-Message-State: APjAAAUEmMn94oMH5p19EQ7/sQqwrpHFfRKetX4BErnblP8WRoicgvQi
+        cZ3MzXkxRajtY8h7EgG7WZp0DLc=
+X-Google-Smtp-Source: APXvYqzxoFXD4QTUBqV8b6x0l6zhopTqR/fPvOEI2ik/K8lV5JkYOHYqWljuXlRDRwmfMDVD4du2+g==
+X-Received: by 2002:aca:f05:: with SMTP id 5mr880691oip.140.1582753000384;
+        Wed, 26 Feb 2020 13:36:40 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 7sm1250313oin.5.2020.02.26.13.36.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 13:36:39 -0800 (PST)
+Received: (nullmailer pid 1736 invoked by uid 1000);
+        Wed, 26 Feb 2020 21:36:38 -0000
+Date:   Wed, 26 Feb 2020 15:36:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        david@gibson.dropbear.id.au, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Ian Lepore <ian@freebsd.org>
+Subject: Re: [RFC PATCH v2 2/4] of: fdt: print dtb build information
+Message-ID: <20200226213638.GA29417@bogus>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-3-alexandre.torgue@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221161418.20225-3-alexandre.torgue@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Per convention device nodes for SC7180 should be ordered by address.
-This is currently not the case for the venus node, move it to the
-correct position.
+On Fri, Feb 21, 2020 at 05:14:16PM +0100, Alexandre Torgue wrote:
+> This commit prints out DTB build information (build time, dts source
+> version used, ...) if "Build-info" property exists in DTB root node.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Excuses for sending v2 so shortly after v1, it seems ok in this case
-since v1 is obviously wrong and the patch is not likely to be
-controversial otherwise.
+/Build/build/
 
-Changes in v2:
-- insert the venus node *after* the usb@a6f8800 node, not before
+> 
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 2cdf64d2456f..aa5989039746 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -1224,9 +1224,18 @@ bool __init early_init_dt_scan(void *params)
+>   */
+>  void __init unflatten_device_tree(void)
+>  {
+> +	const char *build_info;
+> +	unsigned long dt_root;
+> +
+>  	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
+>  				early_init_dt_alloc_memory_arch, false);
+>  
+> +	/* If available, provide dtb build information */
+> +	dt_root = of_get_flat_dt_root();
+> +	build_info = of_get_flat_dt_prop(dt_root, "build-info", NULL);
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 52 ++++++++++++++--------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
+We just unflattened the tree, why are we using the flat dt functions?
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 253274d5f04c..5f97945e16a4 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1332,6 +1332,32 @@ system-cache-controller@9200000 {
- 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		venus: video-codec@aa00000 {
-+			compatible = "qcom,sc7180-venus";
-+			reg = <0 0x0aa00000 0 0xff000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&videocc VENUS_GDSC>,
-+					<&videocc VCODEC0_GDSC>;
-+			power-domain-names = "venus", "vcodec0";
-+			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-+				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-+			clock-names = "core", "iface", "bus",
-+				      "vcodec0_core", "vcodec0_bus";
-+			iommus = <&apps_smmu 0x0c00 0x60>;
-+			memory-region = <&venus_mem>;
-+
-+			video-decoder {
-+				compatible = "venus-decoder";
-+			};
-+
-+			video-encoder {
-+				compatible = "venus-encoder";
-+			};
-+		};
-+
- 		usb_1: usb@a6f8800 {
- 			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
- 			reg = <0 0x0a6f8800 0 0x400>;
-@@ -1538,32 +1564,6 @@ dispcc: clock-controller@af00000 {
- 			#power-domain-cells = <1>;
- 		};
- 
--		venus: video-codec@aa00000 {
--			compatible = "qcom,sc7180-venus";
--			reg = <0 0x0aa00000 0 0xff000>;
--			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
--			power-domains = <&videocc VENUS_GDSC>,
--					<&videocc VCODEC0_GDSC>;
--			power-domain-names = "venus", "vcodec0";
--			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
--				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
--				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
--				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
--				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
--			clock-names = "core", "iface", "bus",
--				      "vcodec0_core", "vcodec0_bus";
--			iommus = <&apps_smmu 0x0c00 0x60>;
--			memory-region = <&venus_mem>;
--
--			video-decoder {
--				compatible = "venus-decoder";
--			};
--
--			video-encoder {
--				compatible = "venus-encoder";
--			};
--		};
--
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
--- 
-2.25.1.481.gfbce0eb801-goog
-
+> +	if (build_info)
+> +		pr_info("%s\n", build_info);
+> +
+>  	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+>  	of_alias_scan(early_init_dt_alloc_memory_arch);
+>  
+> -- 
+> 2.17.1
+> 
