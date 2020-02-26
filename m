@@ -2,118 +2,92 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB42C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A69C4BA2D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5019924653
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B43B24679
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582756236;
-	bh=gxcK7NC8mWWE3VCjrPfzyZOs52KChYzwYsl0P1qijkI=;
+	s=default; t=1582756315;
+	bh=HenfX4c1PyjmTSnPieyypzgM+8LQrirWy3hZQJ5EUk8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SM09xxVYcCV4d3wdXXDq2WMQDoOtYZvkuHlBOn4Iq0RfX4ZA/t1MDkmkB6+qjlibB
-	 H6PWrVRLaeXiJPQzJ5YpOjmHfVBjZ0ZRR7ToORvWy2zH9oJDyTIevVZPRsfjVIFSym
-	 isPImkPhnLznIYt60hTV7TTL0HQahlCkYQ6+v+UE=
+	b=vBdPVr+CFE6RxdVwBV/eQ5TqPk6glSL5ZuXlHYOheRjvRrZuyI9zu5D/FaUcAYkAP
+	 ++LgsV2cLlpq5NpYrm3U3jcw+5KvTuQvdQgHhujE4Qnv/lDgJmvxCoyhw3vW1gPG4S
+	 6YBaqJW9DvwdJ6vqWh7pxvws2o6LW0Pi9f3RK+oA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBZWaf (ORCPT
+        id S1727832AbgBZWby (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:30:35 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36532 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbgBZWaf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 17:30:35 -0500
-Received: by mail-oi1-f193.google.com with SMTP id c16so1265421oic.3;
-        Wed, 26 Feb 2020 14:30:35 -0800 (PST)
+        Wed, 26 Feb 2020 17:31:54 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40594 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbgBZWby (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 17:31:54 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a142so1242898oii.7;
+        Wed, 26 Feb 2020 14:31:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZIlPjifus7WfeBj0gGi82kKOzq1wYnOIRClo35MBZc0=;
-        b=qxSRF0lhqypbaR4C2wgyFsDfMNKzmpIzykKyVqJUSM8JtDX70FJa1nWggYgc+b3qyi
-         /6OyHKV8TVgctdEq1crg4l0I6rIHomV9CfmnC3QUlqn0nLaHFnNZF7M1RrzchBvWTP4F
-         M8c4RKoKJO9LNHe3ejdvas2KVgEIAxGFzzq2sJVlXTMoA/wrcU9wMOxYCuXPp0qnLkCC
-         m1RXKylkAwvXFgLUTFsStbiNoWxNfKIyOHeD/spmfM6aKd18DSpOpqYhvNu25tFRESfq
-         qkyamb5eLJ9WE5XyvO3tUOCgKQHABpPulEm28hg8zcgAC/Vx92GdhVyBfpKf5cyX4zE5
-         bZqg==
-X-Gm-Message-State: APjAAAVE/QRTMbUPieYRnVwO+elD8Zq3hOAascninidBjIlqGMdtEmqa
-        AgDNEQvK6qG0xWzp5Um3Fg==
-X-Google-Smtp-Source: APXvYqxN8VRIZzGbJK5F6l4YjpqWBlSf2rbUDYu4nFqKC0CNhTmORVGaCz6j9VvqOV0Qu90LztjjPg==
-X-Received: by 2002:aca:7591:: with SMTP id q139mr787618oic.54.1582756234681;
-        Wed, 26 Feb 2020 14:30:34 -0800 (PST)
+        bh=rTUAqhPmK+qIf2l5k1SuT6H7Tq4pnUlwcojSvmo0cfw=;
+        b=EGrHZVoa7CffO+2OtPLmjx14q9jvAuCIgdKofwQbIwrOx8hWQrL+JeveMMdfVneOMw
+         iKy1QfrO1Se1nvde0Te3ZcYClAsinmZ2/RrR4Aow3Sk0ur25x/kDLKNisfF1AWuNzs1o
+         GeGniAgsZMC4SpkquNH3GoX7sUoNLg6bn6anQGb937H4DSDfd7sfbANiiB6Ysymzc8f0
+         dx33OIrzMx1WgikPC2aTB03n/twkdLTIpt0VlcIIThFdiH0uSrnJGcB6u7h9HwHFi7Xq
+         IuVcH4aTLUy2ccd2oeqfAT4Ovz6sMsDJB3g0i6GiKCYwl+QM8yJIXUvTx/333AsipUWv
+         6Z6Q==
+X-Gm-Message-State: APjAAAUUx+npbAA/7vaFCwBCNt22hrij7UMm2TDl8ebmQzTSsjLmZY3/
+        kHu85HsNvjMxoDk9/vtrjw==
+X-Google-Smtp-Source: APXvYqz4Q/TiEhVDfkVrM9F8s2F7tiaSAWB7KSFDKSdZapJSp9W6VGyFqddUm9OUZR088Uvlwll1Vg==
+X-Received: by 2002:a54:468b:: with SMTP id k11mr1016759oic.134.1582756313012;
+        Wed, 26 Feb 2020 14:31:53 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h15sm1236359otq.67.2020.02.26.14.30.33
+        by smtp.gmail.com with ESMTPSA id q5sm1297178oia.21.2020.02.26.14.31.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:30:33 -0800 (PST)
-Received: (nullmailer pid 19907 invoked by uid 1000);
-        Wed, 26 Feb 2020 22:30:32 -0000
-Date:   Wed, 26 Feb 2020 16:30:32 -0600
+        Wed, 26 Feb 2020 14:31:52 -0800 (PST)
+Received: (nullmailer pid 21822 invoked by uid 1000);
+        Wed, 26 Feb 2020 22:31:51 -0000
+Date:   Wed, 26 Feb 2020 16:31:51 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Ondrej Jirman <megous@megous.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/4] dt-bindings: leds: Add a binding for AXP813 charger
- led
-Message-ID: <20200226223032.GA13404@bogus>
-References: <20200223131435.681620-1-megous@megous.com>
- <20200223131435.681620-2-megous@megous.com>
+        Corentin Labbe <clabbe@baylibre.com>,
+        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>, Icenowy Zheng <icenowy@aosc.io>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: arm: sunxi: Add PinePhone 1.0 and 1.1
+ bindings
+Message-ID: <20200226223151.GA21764@bogus>
+References: <20200223172916.843379-1-megous@megous.com>
+ <20200223172916.843379-3-megous@megous.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200223131435.681620-2-megous@megous.com>
+In-Reply-To: <20200223172916.843379-3-megous@megous.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 02:14:32PM +0100, Ondrej Jirman wrote:
-> The AXP813 PMIC can control one LED. Add binding to represent the LED.
+On Sun, 23 Feb 2020 18:29:15 +0100, Ondrej Jirman wrote:
+> Document board compatible names for Pine64 PinePhone:
+> 
+> - 1.0 - Developer variant
+> - 1.1 - Braveheart variant
 > 
 > Signed-off-by: Ondrej Jirman <megous@megous.com>
 > ---
->  .../devicetree/bindings/leds/leds-axp20x.yaml | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.yaml
+>  Documentation/devicetree/bindings/arm/sunxi.yaml | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-axp20x.yaml b/Documentation/devicetree/bindings/leds/leds-axp20x.yaml
-> new file mode 100644
-> index 0000000000000..79282d55764bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-axp20x.yaml
-> @@ -0,0 +1,24 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Dual license new bindings please:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-axp20x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LED driver for AXP813 PMIC from X-Powers.
-> +
-> +maintainers:
-> +  - Ondrej Jirman <megous@megous.com>
-> +
-> +description: |
-> +  This module is part of the AXP20x MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/axp20x.txt.
-
-Really, we should convert this first as this should either just be 
-referenced from the MFD schema or just directly put into it.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
