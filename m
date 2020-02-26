@@ -2,114 +2,289 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B18DC4BA0A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 04:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824CAC4BA0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 04:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F49421927
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 04:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43042222C2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 04:49:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="L60+bemg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qCpI9+Zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725788AbgBZEAS (ORCPT
+        id S1726112AbgBZEtu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 23:00:18 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:18619 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgBZEAS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 23:00:18 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 01Q3xIx0016581;
-        Wed, 26 Feb 2020 12:59:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 01Q3xIx0016581
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582689559;
-        bh=DxG0zADp8KolfWngeax0Hh9tmHwKWNQ5hpD9lSOxcV4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L60+bemgBLH64lI+ORU8zKNbWZm7G9LYBG2MlvGo2QxmclJF9wkzpVW0u+jhJUXzm
-         l/qaENwHhD/NWc9IfAwbmZe8n09OtEKSUF+TuhXxDYsWkuOIyh6qtbIDlAx1IJb9rL
-         11ltu0+9WEbyS30B7zQQmv2yGetw4zomRL9J6fUg7iEmy9sC5WdToSUh++h7BbdXV1
-         RtI1L8oX0v/yRxl2J/tlrIS+f2v2Gz5W4+aBrjhHn9ttnrzQO5z1/cJ/sOiuOuYsSv
-         OLP9nlR2iLhP5wEk7z9NaEEddhTEjXoTv3Iz8ZS9Dikvft8rppHonUScOCFTcbJzfd
-         6+p4+dmF/5xdw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: uniphier: rename NAND node names to follow json-schema
-Date:   Wed, 26 Feb 2020 12:59:14 +0900
-Message-Id: <20200226035914.23582-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200226035914.23582-1-yamada.masahiro@socionext.com>
-References: <20200226035914.23582-1-yamada.masahiro@socionext.com>
+        Tue, 25 Feb 2020 23:49:50 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8458 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgBZEtu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 23:49:50 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e55f8de0000>; Tue, 25 Feb 2020 20:49:34 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 25 Feb 2020 20:49:48 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 25 Feb 2020 20:49:48 -0800
+Received: from [10.2.163.212] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb
+ 2020 04:49:47 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <821f0878-56da-9b51-425a-9d6fb65d2e0c@nvidia.com>
+Date:   Tue, 25 Feb 2020 20:49:46 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582692574; bh=Bv83nIVhE0DgqB7FO17S5t98nsvMOJ3o/2ZyNDehyzg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=qCpI9+Zp92w5sb+wPXYm6kDoU/UAG+tyk7dFkGCQzzVCQIUtGGKhLpjXutodBltSl
+         7ZoYNR8D7mMrg6SjNhw2Urtko4+qrNfIOVXqY4jVI+yA9fhuEGUu76bbC5+gJjqNHY
+         sHacgJ1ce69XAGPZk7W/nK0je9hqQ5l/8Df/+XV6/rVVljvbKcRLy0KiJbOztY1jRR
+         2VnUX3ULKBy4IoCuY9fL5+imgciq4So+HN1uQI7LAg2WYREwdghIa3DIiGXcgGWPQd
+         4gUeJrRyBymLJuB0ngoM0xhqUqY56nEFUoIX/VlqB4VMXH00P5few/kw5mC0bnwbxn
+         YgpCAoV4yumOw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Follow the standard nodename pattern "^nand-controller(@.*)?" defined
-in Documentation/devicetree/bindings/mtd/nand-controller.yaml
 
-Otherwise, after the dt-binding is converted to json-schema,
-'make ARCH=arm64 dtbs_check' will show a warning like this:
+On 2/20/20 4:44 AM, Hans Verkuil wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Hi Sowjanya,
+>
+> Some code review comments below:
+>
+> On 2/14/20 7:23 PM, Sowjanya Komatineni wrote:
+>> Tegra210 contains a powerful Video Input (VI) hardware controller
+>> which can support up to 6 MIPI CSI camera sensors.
+>>
+>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+>> capture from an external camera sensor connected to CSI or from
+>> built-in test pattern generator.
+>>
+>> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>
+>> This patch adds a V4L2 media controller and capture driver support
+>> for Tegra210 built-in CSI to VI test pattern generator.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/staging/media/Kconfig              |    2 +
+>>   drivers/staging/media/Makefile             |    1 +
+>>   drivers/staging/media/tegra/Kconfig        |   10 +
+>>   drivers/staging/media/tegra/Makefile       |    8 +
+>>   drivers/staging/media/tegra/TODO           |   10 +
+>>   drivers/staging/media/tegra/tegra-common.h |  239 +++++++
+>>   drivers/staging/media/tegra/tegra-csi.c    |  374 ++++++++++
+>>   drivers/staging/media/tegra/tegra-csi.h    |  115 ++++
+>>   drivers/staging/media/tegra/tegra-vi.c     | 1019 ++++++++++++++++++++++++++++
+>>   drivers/staging/media/tegra/tegra-vi.h     |   79 +++
+>>   drivers/staging/media/tegra/tegra-video.c  |  118 ++++
+>>   drivers/staging/media/tegra/tegra-video.h  |   32 +
+>>   drivers/staging/media/tegra/tegra210.c     |  767 +++++++++++++++++++++
+>>   drivers/staging/media/tegra/tegra210.h     |  190 ++++++
+>>   14 files changed, 2964 insertions(+)
+>>   create mode 100644 drivers/staging/media/tegra/Kconfig
+>>   create mode 100644 drivers/staging/media/tegra/Makefile
+>>   create mode 100644 drivers/staging/media/tegra/TODO
+>>   create mode 100644 drivers/staging/media/tegra/tegra-common.h
+>>   create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+>>   create mode 100644 drivers/staging/media/tegra/tegra-csi.h
+>>   create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+>>   create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+>>   create mode 100644 drivers/staging/media/tegra/tegra-video.c
+>>   create mode 100644 drivers/staging/media/tegra/tegra-video.h
+>>   create mode 100644 drivers/staging/media/tegra/tegra210.c
+>>   create mode 100644 drivers/staging/media/tegra/tegra210.h
+>>
 
-  nand@68000000: $nodename:0: 'nand@68000000' does not match '^nand-controller(@.*)?'
+>> +static int chan_capture_kthread_done(void *data)
+>> +{
+>> +     struct tegra_vi_channel *chan = data;
+>> +     struct tegra_channel_buffer *buf;
+>> +
+>> +     set_freezable();
+>> +
+>> +     while (1) {
+>> +             try_to_freeze();
+>> +
+>> +             wait_event_interruptible(chan->done_wait,
+>> +                                      !list_empty(&chan->done) ||
+>> +                                      kthread_should_stop());
+>> +
+>> +             if (kthread_should_stop())
+>> +                     break;
+> I think it makes more sense if this test is moved to the end...
+>
+>> +
+>> +             buf = dequeue_buf_done(chan);
+>> +             if (!buf)
+>> +                     continue;
+> ... and this becomes:
+>
+>                  if (buf)
+>> +                     tegra_channel_capture_done(chan, buf);
+> This change simplifies stop_streaming (see below).
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+With kthread_should_stop check at end, I see sometimes outstanding 
+buffer in done queue by the time threads are stopped during stream stop.
 
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 2 +-
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 2 +-
- arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+When I run compliance stream io tests continuously in loop, depending on 
+time of stream stop request capture thread terminated after initiating 
+frame capture and moving buffer to done queue while done thread was 
+still in wait for previous MW_ACK and on seeing kthread_should_stop done 
+thread terminated with last buffer left in done queue.
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index 2e53daca9f5c..d61da3a62712 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -621,7 +621,7 @@
- 			};
- 		};
- 
--		nand: nand@68000000 {
-+		nand: nand-controller@68000000 {
- 			compatible = "socionext,uniphier-denali-nand-v5b";
- 			status = "disabled";
- 			reg-names = "nand_data", "denali_reg";
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index be984200a70e..98f0f4eb0649 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -925,7 +925,7 @@
- 			socionext,syscon = <&soc_glue>;
- 		};
- 
--		nand: nand@68000000 {
-+		nand: nand-controller@68000000 {
- 			compatible = "socionext,uniphier-denali-nand-v5b";
- 			status = "disabled";
- 			reg-names = "nand_data", "denali_reg";
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-index 994fea7b12c1..4c6cd3ec541d 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-@@ -783,7 +783,7 @@
- 			socionext,syscon = <&soc_glue>;
- 		};
- 
--		nand: nand@68000000 {
-+		nand: nand-controller@68000000 {
- 			compatible = "socionext,uniphier-denali-nand-v5b";
- 			status = "disabled";
- 			reg-names = "nand_data", "denali_reg";
--- 
-2.17.1
+So looks like we need to keep checking for outstanding buffer and handle 
+it during stop streaming like in v3.
 
+
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +int tegra210_vi_start_streaming(struct vb2_queue *vq, u32 count)
+>> +{
+>> +     struct tegra_vi_channel *chan = vb2_get_drv_priv(vq);
+>> +     struct media_pipeline *pipe = &chan->video.pipe;
+>> +     int ret = 0;
+>> +
+>> +     tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, VI_CG_2ND_LEVEL_EN);
+>> +
+>> +     /* clear errors */
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_ERROR_STATUS, 0xFFFFFFFF);
+>> +
+>> +     /*
+>> +      * Sync point FIFO full stalls the host interface.
+>> +      * Setting NO_STALL will drop INCR_SYNCPT methods when fifos are
+>> +      * full and the corresponding condition bits in INCR_SYNCPT_ERROR
+>> +      * register will be set.
+>> +      * This allows SW to process error recovery.
+>> +      */
+>> +     tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYNCPT_CNTRL,
+>> +                    TEGRA_VI_CFG_VI_INCR_SYNCPT_NO_STALL);
+>> +
+>> +     /* start the pipeline */
+>> +     ret = media_pipeline_start(&chan->video.entity, pipe);
+>> +     if (ret < 0)
+>> +             goto error_pipeline_start;
+>> +
+>> +     /* program VI registers after TPG, sensors and CSI streaming */
+>> +     ret = tegra_channel_set_stream(chan, true);
+>> +     if (ret < 0)
+>> +             goto error_set_stream;
+>> +
+>> +     tegra_channel_capture_setup(chan);
+>> +
+>> +     chan->sequence = 0;
+>> +
+>> +     /* start kthreads to capture data to buffer and return them */
+>> +     chan->kthread_capture_done = kthread_run(chan_capture_kthread_done,
+>> +                                              chan, "%s:1",
+>> +                                              chan->video.name);
+>> +     if (IS_ERR(chan->kthread_capture_done)) {
+>> +             ret = PTR_ERR(chan->kthread_capture_done);
+>> +             chan->kthread_capture_done = NULL;
+>> +             dev_err(&chan->video.dev,
+>> +                     "failed capture done kthread: %d\n", ret);
+>> +             goto error_kthread_done;
+>> +     }
+>> +
+>> +     chan->kthread_capture_start = kthread_run(chan_capture_kthread_start,
+>> +                                               chan, "%s:0",
+>> +                                               chan->video.name);
+>> +     if (IS_ERR(chan->kthread_capture_start)) {
+>> +             ret = PTR_ERR(chan->kthread_capture_start);
+>> +             chan->kthread_capture_start = NULL;
+>> +             dev_err(&chan->video.dev,
+>> +                     "failed capture start kthread: %d\n", ret);
+>> +             goto error_kthread_start;
+>> +     }
+>> +
+>> +     return 0;
+>> +
+>> +error_kthread_start:
+>> +     kthread_stop(chan->kthread_capture_done);
+>> +error_kthread_done:
+>> +     tegra_channel_set_stream(chan, false);
+>> +error_set_stream:
+>> +     media_pipeline_stop(&chan->video.entity);
+>> +error_pipeline_start:
+>> +     vq->start_streaming_called = 0;
+>> +     tegra_channel_release_queued_buffers(chan, VB2_BUF_STATE_QUEUED);
+>> +     return ret;
+>> +}
+>> +
+>> +void tegra210_vi_stop_streaming(struct vb2_queue *vq)
+>> +{
+>> +     struct tegra_vi_channel *chan = vb2_get_drv_priv(vq);
+>> +     struct tegra_channel_buffer *buf;
+>> +
+>> +     if (!chan->kthread_capture_start || !chan->kthread_capture_done)
+>> +             return;
+>> +
+>> +     kthread_stop(chan->kthread_capture_start);
+>> +     chan->kthread_capture_start = NULL;
+>> +     kthread_stop(chan->kthread_capture_done);
+>> +     chan->kthread_capture_done = NULL;
+>> +
+> With the change in chan_capture_kthread_done() as described above you can
+> drop the next 4 lines since that's guaranteed to be done by the thread.
+>
+>> +     /* wait for last frame MW_ACK_DONE */
+>> +     buf = dequeue_buf_done(chan);
+>> +     if (buf)
+>> +             tegra_channel_capture_done(chan, buf);
+>> +
+>> +     tegra_channel_release_queued_buffers(chan, VB2_BUF_STATE_ERROR);
+>> +
+>> +     tegra_channel_set_stream(chan, false);
+>> +
+>> +     /* disable clock gating to enable continuous clock */
+>> +     tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, 0);
+>> +
+>> +     /* reset VI MCIF, PF, SENSORCTL, and SHADOW logic */
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0xF);
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0x0);
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_IMAGE_DEF, 0);
+>> +
+>> +     /* enable clock gating so VI can be clock gated if necessary */
+>> +     tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, VI_CG_2ND_LEVEL_EN);
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_ERROR_STATUS, 0xFFFFFFFF);
+>> +
+>> +     media_pipeline_stop(&chan->video.entity);
+>> +}
+>> +
+>> +void tegra210_csi_error_recover(struct tegra_csi_channel *csi_chan)
+>
+> Regards,
+>
+>          Hans
