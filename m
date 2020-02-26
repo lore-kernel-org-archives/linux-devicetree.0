@@ -2,143 +2,100 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F993C4BA0B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E05EC4BA10
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53ED720838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F0D24688
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pm5HWF73"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vo8zTNll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgBZMY6 (ORCPT
+        id S1726682AbgBZMcA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:24:58 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33477 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgBZMY6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 07:24:58 -0500
-Received: by mail-wm1-f65.google.com with SMTP id m10so4460428wmc.0;
-        Wed, 26 Feb 2020 04:24:56 -0800 (PST)
+        Wed, 26 Feb 2020 07:32:00 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44249 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgBZMcA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 07:32:00 -0500
+Received: by mail-qk1-f196.google.com with SMTP id f140so1776345qke.11;
+        Wed, 26 Feb 2020 04:31:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IvhXItdd4X1YXydMqRqD+tdcTcMEd0LYsl8PcoH++pk=;
-        b=Pm5HWF73aJ9VZcK/5Zlg1TkuMduL1Z0xp2H7Tf54k04xSGZJJXLHLvKQeMdHL+zJYr
-         pPiwRu+UndJu3ZSYNetFEJdoMpn2fyL8aufv0VPRtbL3/nvBusVWG+5yztsop2Dv+UU3
-         AoeyskahRt+cDZAxIsfHiT8TbsUPrhERZ0kK0iBKH0iWuILF0PbKXDlODXyBTmFYTH8F
-         zy/4nUoxWO0igZl95eYU2cbPiOZSSbL543ND5gG+xJo+CCZv1YY8iFW0gGJfpYzPCrnB
-         0T9KuaH6iqs9hgFnT3hqGoAy9nSzJi0M3gsFxzE3eLM2t1zv2yTU2VUgy2A2wNWWGehp
-         llGA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0MRsXhRp3E6rh2+qvZmIeFVHR93AAhtRNYB0tmbFEVY=;
+        b=Vo8zTNllfC4o6nND7kLPoDV7V03+PGLD04JqV7MNWSx0oObQWxHlaEfGIBrdyHaRvJ
+         ww2vSmC4bRv8i6hcU8VBeY2YhfMDKdaS6MfQUPq1T7fZxrXW5NTcxlG8C521XtoJJQOx
+         AlBGmyqtGt3YFgb2TnObOZnHZNWjm9XEp7X9sF25doQduHp62/V02ifg2v+zkJGjLGie
+         X240XCgFRjloBM3RFAwEtFylPsHPRhwNYVxOXI3L4Uz4qTKOe116ebQmBoaKfuWsL/+e
+         cjoSbJV9c9LPLH4pAIgZn619ZEH4FQ8oRR3Ud3Vo+NF1ywIf8ZBsAIOqEb9XriCWX05L
+         N/Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IvhXItdd4X1YXydMqRqD+tdcTcMEd0LYsl8PcoH++pk=;
-        b=kJjHxbc2xQhfs8n3fo+seIMK2oBJOY5kATJc/y+ALYztquS2EOOruVkKktrvpA4j1w
-         /OriLlTqgi3gH4n7TbrfKPChykewp2ecOblKFFW06HpDU8GvTfo1kCp1qFjWOCbhCQ22
-         QbJHcb3v2Eb7Uz+s/u0IBHLe07n03ILiuhLd+Fa05/E8yUvpuDlDFEIgUJvjXVamsl7P
-         O2bd6rpptsTn7mJtlxP15tNekhhNHRbCPOpOccJARqyB00CBSq1cmutBByZSRoHuY8JQ
-         BoFRKu3ogNYnxj0iLfmJK85vXEnr0W1+wFgOdmPIlNrNnrnbdvYwcK5Lxmp2fgAT/0Ji
-         MQJQ==
-X-Gm-Message-State: APjAAAXUP7Ykdq/CsKJ/J2ErADzxxK/+FVrzpbnPTZ3NYiBM+yfdcJEj
-        Ta26ChQsex/MKaXGF8F0Qcw=
-X-Google-Smtp-Source: APXvYqzyTzyUPRQdIy8Rfhx8ubVi+C6umoNFwiXeFqS0v+Ld0G8ObmhzMOrwd3BzwL6ZjxmlWPhcrg==
-X-Received: by 2002:a1c:7718:: with SMTP id t24mr5311847wmi.119.1582719896307;
-        Wed, 26 Feb 2020 04:24:56 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g14sm3226354wrv.58.2020.02.26.04.24.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 04:24:55 -0800 (PST)
-To:     ezequiel@collabora.com
-Cc:     boris.brezillon@collabora.com, devicetree@vger.kernel.org,
-        heiko@sntech.de, hverkuil@xs4all.nl, jonas@kwiboo.se,
-        kernel@collabora.com, laurent.pinchart@ideasonboard.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, nicolas@ndufresne.ca,
-        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
-        sakari.ailus@iki.fi, tfiga@chromium.org
-References: <20200220163016.21708-7-ezequiel@collabora.com>
-Subject: Re: [PATCH v6 6/6] arm64: dts: rockchip: rk3399: Define the rockchip
- Video Decoder node
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <817821e3-bc51-8037-b9b9-e429c5eeb280@gmail.com>
-Date:   Wed, 26 Feb 2020 13:24:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0MRsXhRp3E6rh2+qvZmIeFVHR93AAhtRNYB0tmbFEVY=;
+        b=iogNJU8fTzrdz78Xczh7Hvi/BUO1Y6/TTBfZsEO3j/Pape5YAvGSkVm8/MpmF4x6rm
+         bVk5Yh0ifKXdCseQKZsDPwE3f92f0Bqj+a0klaNfFZMzcuxReHRERwGIWzYLD5rXuSdK
+         TT4DB3UXSvs86BoScprvpQDkhTf+k8qLfCZLjwE28peZDt8FSfoWz0jmHKKQMYaegEjD
+         35NzqKjSnWEeb4Da5nSQ7syWr30Mv1jmhHX/W2cafXDJKNYSsrpm7vLzSgFgn9Emv0+D
+         /ouK14rFjc7lIwZiiVhJXUW9SocsdFR94FrYginoeKNj673oDgAaXoWWGMnt5lok4JpA
+         uEig==
+X-Gm-Message-State: APjAAAUD9vLATiCzM3AZSOvB3wEYQPkbWU225g0MaDtKiZA33UUuWR4w
+        3s7vcHLNNGhSXq+ADgjZydRuD2Egtzp6nYSD8B2/Rzso
+X-Google-Smtp-Source: APXvYqzT0QOBpKRKbC4kcg/YNxuLy3cnTrGuXc9LH9ek2oNBn/hVko38x0Hlgj0xhIw5szgawcSuZNLgT142188LFQs=
+X-Received: by 2002:a37:a8c3:: with SMTP id r186mr5306087qke.37.1582720319288;
+ Wed, 26 Feb 2020 04:31:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200220163016.21708-7-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1582007379.git.shengjiu.wang@nxp.com> <a02af544c73914fe3a5ab2f35eb237ef68ee29e7.1582007379.git.shengjiu.wang@nxp.com>
+ <20200219203706.GA25618@bogus>
+In-Reply-To: <20200219203706.GA25618@bogus>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Wed, 26 Feb 2020 20:31:48 +0800
+Message-ID: <CAA+D8AMrHHZ3U66z+jroZqLK8pnn7xF0A9MCzxAqdqDfUHxf2A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+To:     Rob Herring <robh@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi
 
-Dtsi nodes are sort on address.
-The vdec node is now inserted between:
+On Thu, Feb 20, 2020 at 4:38 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Feb 18, 2020 at 02:39:36PM +0800, Shengjiu Wang wrote:
+> > EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
+> > IP module found on i.MX8MN.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  .../devicetree/bindings/sound/fsl,easrc.txt   | 57 +++++++++++++++++++
+> >  1 file changed, 57 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.txt
+>
+> Bindings are now in DT schema format. See
+> Documentation/devicetree/writing-schema.rst.
+>
+Thanks, will switch to .yaml format.
 
-vdec_mmu: iommu       @ff660480
-vdec    : video-codec @ff660000
-iep_mmu : iommu       @ff670800
-
-This should be:
-
-vpu_mmu : iommu       @ff650800
-vdec    : video-codec @ff660000
-vdec_mmu: iommu       @ff660480
-
-
-
-> From: Boris Brezillon <boris.brezillon at collabora.com>
-> 
-> RK3399 has a Video decoder, define the node in the dtsi. We also add
-> the missing power-domain in mmu node and enable the block.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon at collabora.com>
-> Signed-off-by: Ezequiel Garcia <ezequiel at collabora.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 33cc21fcf4c1..a07f857df12f 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1285,8 +1285,20 @@ vdec_mmu: iommu at ff660480 {
->  		interrupt-names = "vdec_mmu";
->  		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>;
->  		clock-names = "aclk", "iface";
-> +		power-domains = <&power RK3399_PD_VDU>;
->  		#iommu-cells = <0>;
-> -		status = "disabled";
-> +	};
-> +
-> +	vdec: video-codec at ff660000 {
-> +		compatible = "rockchip,rk3399-vdec";
-> +		reg = <0x0 0xff660000 0x0 0x400>;
-> +		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		interrupt-names = "vdpu";
-> +		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>,
-> +			 <&cru SCLK_VDU_CA>, <&cru SCLK_VDU_CORE>;
-> +		clock-names = "axi", "ahb", "cabac", "core";
-> +		power-domains = <&power RK3399_PD_VDU>;
-> +		iommus = <&vdec_mmu>;
->  	};
->  
->  	iep_mmu: iommu at ff670800 {
-> -- 
-> 2.25.0
-
-
-
+best regards
+wang shengjiu
