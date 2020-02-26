@@ -2,330 +2,214 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D59EC4BA09
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCD4C4BA0A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7464422464
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5576A21D7E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JMqqLXXd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ent5dnpk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgBZDKi (ORCPT
+        id S1726024AbgBZDxr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 22:10:38 -0500
-Received: from mail-pf1-f170.google.com ([209.85.210.170]:44302 "EHLO
-        mail-pf1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728989AbgBZDKi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 22:10:38 -0500
-Received: by mail-pf1-f170.google.com with SMTP id y5so654674pfb.11
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 19:10:37 -0800 (PST)
+        Tue, 25 Feb 2020 22:53:47 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:41299 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgBZDxr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 22:53:47 -0500
+Received: by mail-yw1-f66.google.com with SMTP id l22so1862846ywc.8;
+        Tue, 25 Feb 2020 19:53:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZOVDf2cfnyC0v+3gtlmyMf276AJH5zfo1llXk1BdAfY=;
-        b=JMqqLXXdiM2EB0OzopVIZ1OdSarmbVggpxnOOFdVm4lOa7t8Btc5s7xVKlYQNPEyod
-         UsuyUXpKy7eBfxyiFu3rjQ+go9yOtrRdevKQydAubSEZPrRUtR3DdMssU/9Ipnp4c2N9
-         DdTwn9KxosTaJeMDbvmVUcFoOBn/ObPkQ3v8M=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=exTa4V5GT58+3zXWxZHPQae7jPzZ97tMG3gr3P5XvQo=;
+        b=ent5dnpkhIONW4+hFnA6fcEibNW0RC5xdbTbqNvOc/wpujsZnK2j+Aujr798Na7+1E
+         GRTLSyTggVio39H9XH2t1zfCE0ux0sau00Ln0ykDWJjQm9/xri/aZUG+Ug9aEmmjW6cp
+         PwHp0YE0oOWSTaKsDWEoabJTSI/5EqcEaDJjLuh5ou8a+GelJGupXRIMXEXY28xEVN+R
+         TqZ/GqDklP/76V3GLpy78BAQTEhMRAZb7nz8artxCr99SGm+rmJMcEhjmE2b/q/B6N4k
+         RMfamEXPMlnfSsxsJuioCQJ8ZhJWM30hTksZpMSONuUX5N6nTnXg5hpV6UTqyDyXaEPH
+         /amQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ZOVDf2cfnyC0v+3gtlmyMf276AJH5zfo1llXk1BdAfY=;
-        b=c9gw4xMNT9SA/5A5hlswC6niO308/z8It2ihhs/3ysO2MJ8fncSQ/5siDH9y7enQPU
-         y0jkCCAhQ1+ykijTmwYTt0zHZ53+D5o1Hw8Pjtq0/UDfFGZzSQxciaw6RPe/FmoB5RGn
-         Hzy7+rNGW2JO+Gcj3ZCNI8MWf/SGbf5uhn53NX9Zfru0+Sp0qFukIsCqD9lpDhvZ9DcE
-         HsBVuAdn655sNT2RRuTNsg9PFr3FsAEtajXhyEU2OwIISlnVVTTgFxMmYpbTdv0JuboV
-         PNuhnKy1j0d7QW6vHU+IEdzjKZQ8MRXVOVNm2D7UVZ8e9ztsxGZHXg7xBOO1VRBysmwI
-         Xnew==
-X-Gm-Message-State: APjAAAWvVA6sAf8yqwLffaw+y2TikUKOfjw4EJ6jr943l9injWF+3pkO
-        DzSaj4t/6iCiaa25Xk9krrRa+cj7I7R+ZA==
-X-Google-Smtp-Source: APXvYqwZ7+1GtOpKixpQZac9ZFaWWdFQjrXAwirQ5B3VRhL/Y0kDcFoNpSAQaTur8cou0rw3G5zk0w==
-X-Received: by 2002:a63:354b:: with SMTP id c72mr1425435pga.99.1582686636759;
-        Tue, 25 Feb 2020 19:10:36 -0800 (PST)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
-        by smtp.gmail.com with ESMTPSA id z4sm487885pfn.42.2020.02.25.19.10.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 19:10:36 -0800 (PST)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     devicetree@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        linux-input@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH v5] dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
-Date:   Wed, 26 Feb 2020 11:10:09 +0800
-Message-Id: <20200226031009.164703-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+        bh=exTa4V5GT58+3zXWxZHPQae7jPzZ97tMG3gr3P5XvQo=;
+        b=ZszfkdvrRsCrt51hFZZlTMfREZk8VhUmp2kcXD9fN/A9ekIyVUme8J0Qw17TKLMb+/
+         f6aVResJKdecYqPt4Pzjaf3b1GqN8qxEbkHbfiAuenHKM456tMuie3PMZaq1nM+rrUQ+
+         ErlpNJ3XAjJeHK4a12Yrz96EuSy/t56DdtSWKnd2Mi6EvrbCg3xZjIdejXxla7P29YsW
+         0DBSsRWkmzdJeQFZcjj9BrMmlPrNlRpIM8Q1JM3Olr7CN7PmqX91DD1HUf1awlOOo6W3
+         VH7r1C/J+1iW48UIoNjDIgB0OwPks2ajwma4Y1m2733CC/donK6t6RLT+P/ii//DS8fn
+         6jSA==
+X-Gm-Message-State: APjAAAXgNNhrqcftdm/eRw9TRc66vlhERBWMfvFEk+wy5qhYwh+MITR1
+        QMu94aLCKY1AIs6QW50IkGQ=
+X-Google-Smtp-Source: APXvYqxT3IY1l3lBhJM0K0zYKZpVpCSmM6Wu0GrQ+TKgAgdVO8v5WhL+KvOW4O9/vtGeFF+MWdPsmQ==
+X-Received: by 2002:a25:4f42:: with SMTP id d63mr2782165ybb.236.1582689226074;
+        Tue, 25 Feb 2020 19:53:46 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id w15sm397709ywg.1.2020.02.25.19.53.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 19:53:45 -0800 (PST)
+Subject: Re: [PATCH v2] of: overlay: log the error cause on resolver failure
+To:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20200225164540.4520-1-luca@lucaceresoli.net>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <f9565679-5892-bcf0-f751-bfcac87670a8@gmail.com>
+Date:   Tue, 25 Feb 2020 21:53:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225164540.4520-1-luca@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the ChromeOS EC bindings to json-schema.
+On 2/25/20 10:45 AM, Luca Ceresoli wrote:
+> For some of its error paths, of_resolve_phandles() only logs a very generic
+> error which does not help much in finding the origin of the problem:
+> 
+>   OF: resolver: overlay phandle fixup failed: -22
+> 
+> Add error messages for all the error paths that don't have one. Now a
+> specific message is always emitted, thus also remove the generic catch-all
+> message emitted before returning.
+> 
+> For example, in case a DT overlay has a fixup node that is not present in
+> the base DT __symbols__, this error is now logged:
+> 
+>   OF: resolver: node gpio9 not found in base DT, fixup failed
+> 
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
+> 
+> I don't know in detail the meaning of the adjust_local_phandle_references()
+> and update_usages_of_a_phandle_reference() error paths, thus I have put
+> pretty generic messages. Any suggestion on better wording would be welcome.
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
----
-v5: unset additionalProperties
-v4: text reflows, add type references, and fix examples
-v3: node name changed in rpmsg example
-v2: cleanup description, fix typos, remove LPC, and add RPMSG example
+If you have not read the code to understand what the meaning of
+the errors are, you should not be suggesting changes to the error
+messages.
 
-some properties defined under allOf/if/compatible/google,cros-ec-spi
-are recongnized as additional properties by dt-validate.
+Only one of the issues detected as errors can possibly be something
+other than an error either in the resolver.c code or the dtc
+compiler -- a missing symbol in the live devicetree.  This may
+be because of failing to compile the base devicetree without
+symbols, depending on a symbol from another overlay where the
+other overlay has not been applied, or depending on a symbol
+from another overlay where the other overlay is applied but
+the overlay was not compiled with symbols.  (Not meant to be
+an exhaustive list, but it might be.)  Thus the missing
+symbol problem might be fixable without a fix to kernel
+code.  The error message philosophy for overlay related
+errors is to minimize error messages that help diagnose
+the precise cause of a kernel code bug, with the intent
+of keeping the code more compact and readable.  When a
+bug occurs, debugging messages can be added for the
+debug session.
 
-Is there more cleaner ways to handle this? (property depending on
-another one)
----
- .../devicetree/bindings/mfd/cros-ec.txt       |  76 ----------
- .../devicetree/bindings/mfd/cros-ec.yaml      | 140 ++++++++++++++++++
- 2 files changed, 140 insertions(+), 76 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
+Following this philosophy, only the message in the second
+patch chunk is ok.  I will include an example of more
+precise error messages in the other locations, just for
+education on what is going wrong at those points.
 
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-deleted file mode 100644
-index 4860eabd0f72..000000000000
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ /dev/null
-@@ -1,76 +0,0 @@
--ChromeOS Embedded Controller
--
--Google's ChromeOS EC is a Cortex-M device which talks to the AP and
--implements various function such as keyboard and battery charging.
--
--The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
--compatible string used depends on the interface. Each connection method has
--its own driver which connects to the top level interface-agnostic EC driver.
--Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
--the top-level driver.
--
--Required properties (I2C):
--- compatible: "google,cros-ec-i2c"
--- reg: I2C slave address
--
--Required properties (SPI):
--- compatible: "google,cros-ec-spi"
--- reg: SPI chip select
--
--Required properties (RPMSG):
--- compatible: "google,cros-ec-rpmsg"
--
--Optional properties (SPI):
--- google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
--  time to wake up from sleep before they can receive SPI transfers at a high
--  clock rate. This property specifies the delay, in usecs, between the
--  assertion of the CS to the start of the first clock pulse.
--- google,cros-ec-spi-msg-delay: Some implementations of the EC require some
--  additional processing time in order to accept new transactions. If the delay
--  between transactions is not long enough the EC may not be able to respond
--  properly to subsequent transactions and cause them to hang. This property
--  specifies the delay, in usecs, introduced between transactions to account
--  for the time required by the EC to get back into a state in which new data
--  can be accepted.
--
--Required properties (LPC):
--- compatible: "google,cros-ec-lpc"
--- reg: List of (IO address, size) pairs defining the interface uses
--
--Optional properties (all):
--- google,has-vbc-nvram: Some implementations of the EC include a small
--  nvram space used to store verified boot context data. This boolean flag
--  is used to specify whether this nvram is present or not.
--
--Example for I2C:
--
--i2c@12ca0000 {
--	cros-ec@1e {
--		reg = <0x1e>;
--		compatible = "google,cros-ec-i2c";
--		interrupts = <14 0>;
--		interrupt-parent = <&wakeup_eint>;
--		wakeup-source;
--	};
--
--
--Example for SPI:
--
--spi@131b0000 {
--	ec@0 {
--		compatible = "google,cros-ec-spi";
--		reg = <0x0>;
--		interrupts = <14 0>;
--		interrupt-parent = <&wakeup_eint>;
--		wakeup-source;
--		spi-max-frequency = <5000000>;
--		controller-data {
--		cs-gpio = <&gpf0 3 4 3 0>;
--		samsung,spi-cs;
--		samsung,spi-feedback-delay = <2>;
--		};
--	};
--};
--
--
--Example for LPC is not supplied as it is not yet implemented.
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.yaml b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
-new file mode 100644
-index 000000000000..8416a1299321
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
-@@ -0,0 +1,140 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/cros-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ChromeOS Embedded Controller
-+
-+maintainers:
-+  - Benson Leung <bleung@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+  - Guenter Roeck <groeck@chromium.org>
-+
-+description:
-+  Google's ChromeOS EC is a microcontroller which talks to the AP and
-+  implements various functions such as keyboard and battery charging.
-+  The EC can be connected through various interfaces (I2C, SPI, and others)
-+  and the compatible string specifies which interface is being used.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description:
-+          For implementations of the EC is connected through I2C.
-+        const: google,cros-ec-i2c
-+      - description:
-+          For implementations of the EC is connected through SPI.
-+        const: google,cros-ec-spi
-+      - description:
-+          For implementations of the EC is connected through RPMSG.
-+        const: google,cros-ec-rpmsg
-+
-+  google,has-vbc-nvram:
-+    description:
-+      Some implementations of the EC include a small nvram space used to
-+      store verified boot context data. This boolean flag is used to specify
-+      whether this nvram is present or not.
-+    type: boolean
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          const: google,cros-ec-i2c
-+    then:
-+      properties:
-+        reg:
-+          description: I2C slave address
-+          maxItems: 1
-+
-+      required:
-+        - reg
-+  - if:
-+      properties:
-+        compatible:
-+          const: google,cros-ec-spi
-+    then:
-+      properties:
-+        reg:
-+          description: SPI chip select
-+          maxItems: 1
-+
-+        google,cros-ec-spi-pre-delay:
-+          description:
-+            This property specifies the delay in usecs between the
-+            assertion of the CS and the first clock pulse.
-+          allOf:
-+            - $ref: /schemas/types.yaml#/definitions/uint32
-+            - default: 0
-+            - minimum: 0
-+
-+        google,cros-ec-spi-msg-delay:
-+          description:
-+            This property specifies the delay in usecs between messages.
-+          allOf:
-+            - $ref: /schemas/types.yaml#/definitions/uint32
-+            - default: 0
-+            - minimum: 0
-+
-+      required:
-+        - reg
-+
-+# FIXME: spi-related properties are not additional properties
-+#additionalProperties: false
-+
-+examples:
-+  # Example for I2C
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cros-ec@1e {
-+            compatible = "google,cros-ec-i2c";
-+            reg = <0x1e>;
-+            interrupts = <6 0>;
-+            interrupt-parent = <&gpio0>;
-+        };
-+    };
-+
-+  # Example for SPI
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0x0>;
-+            google,cros-ec-spi-msg-delay = <30>;
-+            google,cros-ec-spi-pre-delay = <10>;
-+            interrupts = <99 0>;
-+            interrupt-parent = <&gpio7>;
-+            spi-max-frequency = <5000000>;
-+        };
-+    };
-+
-+  # Example for RPMSG
-+  - |
-+    scp0 {
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-rpmsg";
-+        };
-+    };
-+...
--- 
-2.25.0.265.gbab2e86ba0-goog
+
+> 
+> Changed in v2:
+> 
+>  - add a message for each error path that does not have one yet
+> ---
+>  drivers/of/resolver.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> index 83c766233181..a80d673621bc 100644
+> --- a/drivers/of/resolver.c
+> +++ b/drivers/of/resolver.c
+> @@ -291,8 +291,10 @@ int of_resolve_phandles(struct device_node *overlay)
+>  			break;
+>  
+>  	err = adjust_local_phandle_references(local_fixups, overlay, phandle_delta);
+> -	if (err)
+> +	if (err) {
+> +		pr_err("cannot adjust local phandle references\n");
+>  		goto out;
+> +	}
+
+Delete this message.  But if there was a message, it could be:
+
+"invalid overlay, adjust local phandle references failed\n"
+
+
+>  
+>  	overlay_fixups = NULL;
+>  
+> @@ -321,11 +323,15 @@ int of_resolve_phandles(struct device_node *overlay)
+>  
+>  		err = of_property_read_string(tree_symbols,
+>  				prop->name, &refpath);
+> -		if (err)
+> +		if (err) {
+> +			pr_err("node %s not found in base DT, fixup failed\n",
+> +			       prop->name);
+
+"symbol '%s' not found in live devicetree symbols table\n",
+       prop->name
+
+
+>  			goto out;
+> +		}
+>  
+>  		refnode = of_find_node_by_path(refpath);
+>  		if (!refnode) {
+> +			pr_err("cannot find node for %s\n", refpath);
+>  			err = -ENOENT;
+>  			goto out;
+>  		}
+> @@ -334,13 +340,14 @@ int of_resolve_phandles(struct device_node *overlay)
+>  		of_node_put(refnode);
+>  
+>  		err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
+> -		if (err)
+> +		if (err) {
+> +			pr_err("cannot update usages of a phandle reference (%s)\n",
+> +				prop->name);
+>  			break;
+> +		}
+
+Delete this message.  But if there was a message, it could be:
+
+"invalid fixup for symbol '%s'\n", prop->name
+
+
+>  	}
+>  
+>  out:
+> -	if (err)
+> -		pr_err("overlay phandle fixup failed: %d\n", err);
+
+Do not remove this message.  The other messages do not explain that phandle fixup
+failed - they provide a more detailed description of a specific reason _why_ the
+phandle fixup failed.
+
+
+>  	of_node_put(tree_symbols);
+>  
+>  	return err;
+> 
 
