@@ -6,76 +6,89 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5A5C4BA13
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6040C4BA13
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB17F24680
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B87206E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582731331;
-	bh=28vmu0q7quSW0cR3UaCZfSXIlNoCjY1z4Jo+FpqhCAY=;
+	s=default; t=1582731433;
+	bh=f0BL/DhAZuN0HkOUt5NyWhFM1DFOxLm5iXX5AcBXCZM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1zyXFNA9pLvIjWEJnz1+XYViF5wjvROFVIt19DbHTIRUfKSrk7c+xZa0HddmL0Dvd
-	 AnhhqIn56iDCBEuSq6IvpsHNQ6ipVYP/gJlm3Ty8ZB2pTEGLCGZ949NrNESj3vE4zJ
-	 mLHOtpfE74MvJR9toA+KpUhM8JyRGETadUgojQ3A=
+	b=v72PSVTQ4Ks7qIzvhseoiouUI2ywK3L6my4QtA3/9XqS8ES2s5Bro/oZ0UNeytXJ8
+	 BunmAS9/y297/4XDZBOlAc57ALGrCYNh/z8ypZfdKxReLW37LYBGWwMpTOx1vhLGV0
+	 RjIe5ZEyK9s4bLti8CFFcCvPF4TCNylNbXFl8Zi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgBZPfb (ORCPT
+        id S1728266AbgBZPhN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:35:31 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:32854 "EHLO
+        Wed, 26 Feb 2020 10:37:13 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33054 "EHLO
         mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgBZPfa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 10:35:30 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w6so3357077otk.0
-        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 07:35:29 -0800 (PST)
+        with ESMTP id S1728172AbgBZPhM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 10:37:12 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w6so3363006otk.0;
+        Wed, 26 Feb 2020 07:37:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XnGLG9clIiWVR/UEx5xVvFVa9crmP5Vx5u2Nhw9fzTE=;
-        b=XBhhNd8Mo3o09tQo9CbIeIWasgJ9ghShvR6XYekNCPhAlaKs1IVouDKpidGr5Ep/vK
-         XT4VixzyOUUh8PAY/5cpWUXK/PpX1A+SCZp/7YxbD/934RNYXuS3uxZLpaoNTT99t2UD
-         M4OtdOqca+Cpv1mDPIDnPN15iSPcJD19KLeLFldA1OnWP2+0YjMBYHPeXykG34RM29Ug
-         /9juaB11X7/uUGdRONylP6rSaCrKomjPvLdo9YIvZsW8BYjctPA6pFMfYSmteZ3WTn7Z
-         6sRmB+EHXbu95sFqOA/7xuJZZ8BSjktt+zq/XW6EYiIxOK2iAVMjuUrw9MfhU4eFjwHw
-         oVdg==
-X-Gm-Message-State: APjAAAWPIuOULxjUR+AXQcnoannJ/gMKA4T+DW3w9pzc0924OkSyW6Rp
-        tt0cW8YFjUJrOjQWbrqoZw==
-X-Google-Smtp-Source: APXvYqztgZrCoeheCIXvoWgscE51bHbHwWzAnlkPocT/ozf1zBU286if5/WIVhLFDKLOxqkXBmaTMw==
-X-Received: by 2002:a9d:754e:: with SMTP id b14mr3466160otl.59.1582731329132;
-        Wed, 26 Feb 2020 07:35:29 -0800 (PST)
+        bh=hcKIlqG1W7ZtjQY5cPEhLrynFiA6MCXILdK27XGgexo=;
+        b=huMkTQdYKQqMrvzWe8x79/t6GsTzR5VTHAOVtl6yiaROw5KbAWvN5wl7JWYUZugdy6
+         DP5vpC2VaL9U9wSQhJikw7sT3+Sue85uabXcg+PT7Q7qwweK+YfirGaxcp9GFArMegHK
+         sDiyKMihOrvRWUGOuc0QBt1tWDL9JGzPewaJS551DbleMhmM2VsbtjM8ID2hkSIoh3da
+         Dktj5owGpFDWOno4ay7HLZZyHjFUZbT6ceYBTiRGHxukTAmMp/gLj+OaFpqdHmgIwUN3
+         +sNhtdUh5DjmWdvr0SPKjdLfLTRfjxUZqLGCpRw8bLvQJf+8V8EN3ul79varXgc/1Hz0
+         O0IA==
+X-Gm-Message-State: APjAAAUPTpma7v2DwSDD+X63+baRFMpdOVomZas0XztjIn1gSYpy2OWd
+        VohxiAYxu+zi4ld1BcqZMw==
+X-Google-Smtp-Source: APXvYqxp0SJ3SlDcqPsMyMYHwLhfGDRtCAb5+Y3EhiDh2PSejqz1Wa1ZH5aChoreYGJmX0t0CiahJw==
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr3493743otk.145.1582731431908;
+        Wed, 26 Feb 2020 07:37:11 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e21sm917688oib.16.2020.02.26.07.35.28
+        by smtp.gmail.com with ESMTPSA id t20sm899316oij.19.2020.02.26.07.37.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:35:28 -0800 (PST)
-Received: (nullmailer pid 13898 invoked by uid 1000);
-        Wed, 26 Feb 2020 15:35:27 -0000
-Date:   Wed, 26 Feb 2020 09:35:27 -0600
+        Wed, 26 Feb 2020 07:37:10 -0800 (PST)
+Received: (nullmailer pid 16730 invoked by uid 1000);
+        Wed, 26 Feb 2020 15:37:10 -0000
+Date:   Wed, 26 Feb 2020 09:37:10 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+Cc:     Jens Axboe <axboe@kernel.dk>, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: example-schema: Drop double quotes around
- URLs
-Message-ID: <20200226153527.GA13766@bogus>
-References: <20200219153745.10922-1-geert+renesas@glider.be>
+Subject: Re: [PATCH] dt-bindings: ata: rcar-sata: Convert to json-schema
+Message-ID: <20200226153710.GA16620@bogus>
+References: <20200219154146.11230-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219153745.10922-1-geert+renesas@glider.be>
+In-Reply-To: <20200219154146.11230-1-geert+renesas@glider.be>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2020 16:37:45 +0100, Geert Uytterhoeven wrote:
-> It is no longer needed to wrap URLs in double quotes.
+On Wed, 19 Feb 2020 16:41:46 +0100, Geert Uytterhoeven wrote:
+> Convert the Renesas R-Car Serial-ATA Device Tree binding documentation
+> to json-schema.
+> 
+> While at it:
+>   - Remove the deprecated "renesas,rcar-sata" compatible value,
+>   - Add "iommus", "power-domains", and "resets" properties,
+>   - Update the example.
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  Documentation/devicetree/bindings/example-schema.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Not having to care about the deprecated value simplifies the
+> jscon-schema.
+> ---
+>  .../bindings/ata/renesas,rcar-sata.yaml       | 71 +++++++++++++++++++
+>  .../devicetree/bindings/ata/sata_rcar.txt     | 36 ----------
+>  2 files changed, 71 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
 > 
 
 Applied, thanks.
