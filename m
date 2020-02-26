@@ -2,134 +2,110 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A3AC4BA0E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FECC4BA0E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A352084E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C757720732
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgBZIpN (ORCPT
+        id S1726408AbgBZJBt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:45:13 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44650 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725872AbgBZIpN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:45:13 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 730B97C1AE6C45ED5204;
-        Wed, 26 Feb 2020 16:44:54 +0800 (CST)
-Received: from [127.0.0.1] (10.67.101.242) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Feb 2020
- 16:44:53 +0800
-Subject: Re: [PATCH v4 23/26] iommu/arm-smmu-v3: Add stall support for
- platform devices
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-24-jean-philippe@linaro.org>
-CC:     <mark.rutland@arm.com>, <kevin.tian@intel.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        <catalin.marinas@arm.com>, <robin.murphy@arm.com>,
-        <robh+dt@kernel.org>, <zhangfei.gao@linaro.org>, <will@kernel.org>,
-        <christian.koenig@amd.com>
-From:   Xu Zaibo <xuzaibo@huawei.com>
-Message-ID: <db6fc8c2-2ff3-631f-2294-c1b49acd27aa@huawei.com>
-Date:   Wed, 26 Feb 2020 16:44:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 26 Feb 2020 04:01:49 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37775 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgBZJBt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 04:01:49 -0500
+Received: by mail-oi1-f194.google.com with SMTP id q84so2299860oic.4;
+        Wed, 26 Feb 2020 01:01:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=macTDBjGsJBFAkzTEbnQgMgA+V2t6di5RYgPeZ4V0yA=;
+        b=hTWUuvBZps7CewVa9mBfqWRcqnS9pZNCBGDqzJTgDsCB9yt4urdSUod4478a2L2yqZ
+         NL/ANKdG3GjbN1syU6LYLEGvHfDoNEiu/VCNkkEcLZiLZ+Ms88tUg8Lz2g6w15SGsRrV
+         i/y7vX0buGyOARcLoEUQDeG6w/RbJr3XaiYjYL+/vWiqi5U6IstDor7pPu72vpNmFdB6
+         Pk6Ux1E431wdVU9W1mJzItQfw93CqrsoyS+DiJ9ZvrLMq1w6hgrpvcU6YG6dhmB8isos
+         CycrcHQg1a02iCJmX/VoA3XnjFxmbjzAHXNUHnNFLcDlXfb2F23jBKounGGkwVus0wHS
+         WU6Q==
+X-Gm-Message-State: APjAAAXRIukChcEIEsgR9w92TGrKDQT7P+RLbXR8NQ9OOoRB2IphkwOp
+        FDcseQgD/BG1VLtMAb4jJPv4VuGq4NZNSRggtow=
+X-Google-Smtp-Source: APXvYqxuvWrnnimHmJRDmJnHdfeLfZFnSg6/2kwxH/4IHrPk6O5KDZUWT9JQpCHHVSAThSVnnkmQH3FUUZDcTvnskKc=
+X-Received: by 2002:aca:c4d2:: with SMTP id u201mr2289731oif.54.1582707708187;
+ Wed, 26 Feb 2020 01:01:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200224182401.353359-24-jean-philippe@linaro.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.242]
-X-CFilter-Loop: Reflected
+References: <1582567352-4664-1-git-send-email-isaacm@codeaurora.org>
+In-Reply-To: <1582567352-4664-1-git-send-email-isaacm@codeaurora.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 26 Feb 2020 10:01:37 +0100
+Message-ID: <CAMuHMdU-dHU2cjfGHS1c1p-mEfHWb70Ltm697up=ej8-jET=fg@mail.gmail.com>
+Subject: Re: [PATCH] of: of_reserved_mem: Increase limit on number of reserved regions
+To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Patrick Daly <pdaly@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lmark@codeaurora.org, Pratik Patel <pratikp@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Isaac,
 
-
-On 2020/2/25 2:23, Jean-Philippe Brucker wrote:
-> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+On Mon, Feb 24, 2020 at 7:03 PM Isaac J. Manjarres
+<isaacm@codeaurora.org> wrote:
+> From: Patrick Daly <pdaly@codeaurora.org>
 >
-> The SMMU provides a Stall model for handling page faults in platform
-> devices. It is similar to PCI PRI, but doesn't require devices to have
-> their own translation cache. Instead, faulting transactions are parked and
-> the OS is given a chance to fix the page tables and retry the transaction.
+> Certain SoCs need to support a large amount of reserved memory
+> regions. For example, Qualcomm's SM8150 SoC requires that 20
+> regions of memory be reserved for a variety of reasons (e.g.
+> loading a peripheral subsystem's firmware image into a
+> particular space).
 >
-> Enable stall for devices that support it (opt-in by firmware). When an
-> event corresponds to a translation error, call the IOMMU fault handler. If
-> the fault is recoverable, it will call us back to terminate or continue
-> the stall.
+> When adding more reserved memory regions to cater to different
+> usecases, the remaining number of reserved memory regions--12
+> to be exact--becomes too small. Thus, double the existing
+> limit of reserved memory regions.
 >
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->   drivers/iommu/arm-smmu-v3.c | 271 ++++++++++++++++++++++++++++++++++--
->   drivers/iommu/of_iommu.c    |   5 +-
->   include/linux/iommu.h       |   2 +
->   3 files changed, 269 insertions(+), 9 deletions(-)
+> Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
+> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+
+Thanks for your patch!
+
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -22,7 +22,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/memblock.h>
 >
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 6a5987cce03f..da5dda5ba26a 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -374,6 +374,13 @@
->   #define CMDQ_PRI_1_GRPID		GENMASK_ULL(8, 0)
->   #define CMDQ_PRI_1_RESP			GENMASK_ULL(13, 12)
->   
-[...]
-> +static int arm_smmu_page_response(struct device *dev,
-> +				  struct iommu_fault_event *unused,
-> +				  struct iommu_page_response *resp)
-> +{
-> +	struct arm_smmu_cmdq_ent cmd = {0};
-> +	struct arm_smmu_master *master = dev_iommu_fwspec_get(dev)->iommu_priv;
-Here can use 'dev_to_master' ?
+> -#define MAX_RESERVED_REGIONS   32
+> +#define MAX_RESERVED_REGIONS   64
+>  static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+>  static int reserved_mem_count;
 
-Cheers,
-Zaibo
+This increases the size of reserved_mem[] by 896 (32-bit), 1280 (32-bit LPAE),
+or 1792 (64-bit) bytes. While some systems don't need reserved memory
+regions at all, and may be RAM-limited.
 
-.
-> +	int sid = master->streams[0].id;
-> +
-> +	if (master->stall_enabled) {
-> +		cmd.opcode		= CMDQ_OP_RESUME;
-> +		cmd.resume.sid		= sid;
-> +		cmd.resume.stag		= resp->grpid;
-> +		switch (resp->code) {
-> +		case IOMMU_PAGE_RESP_INVALID:
-> +		case IOMMU_PAGE_RESP_FAILURE:
-> +			cmd.resume.resp = CMDQ_RESUME_0_RESP_ABORT;
-> +			break;
-> +		case IOMMU_PAGE_RESP_SUCCESS:
-> +			cmd.resume.resp = CMDQ_RESUME_0_RESP_RETRY;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	} else {
-> +		/* TODO: insert PRI response here */
-> +		return -ENODEV;
-> +	}
-> +
-> +	arm_smmu_cmdq_issue_cmd(master->smmu, &cmd);
-> +	/*
-> +	 * Don't send a SYNC, it doesn't do anything for RESUME or PRI_RESP.
-> +	 * RESUME consumption guarantees that the stalled transaction will be
-> +	 * terminated... at some point in the future. PRI_RESP is fire and
-> +	 * forget.
-> +	 */
-> +
-> +	return 0;
-> +}
-> +
-[...]
+Perhaps this array can be replaced by some dynamically increasing
+structure?
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
