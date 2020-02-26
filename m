@@ -2,242 +2,97 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C6CC4BA10
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB40C4BA10
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A052624683
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CJlgzOGL"
+	by mail.kernel.org (Postfix) with ESMTP id 531F52467D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:34:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582727650;
+	bh=cSeb/7OP0qIGCqurmVCFUiuRZAbhfJ7k+1e0bkEwtGY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pOShisnZJzq96NkpeatjnFTx+VhgOT+15cjxK/Z/EJN04KEsw25Mwsj0KrX4iGalI
+	 yQg36RG8wFyP4yIIEvQ73g6cRssw5FyKHBqAfocFtmPycbQG+P0tGAdeAiFM1ovhdf
+	 P6CyM8sCKgRYna1hgo1rND8wZ8baS/K7BI5+T3Ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgBZOdk (ORCPT
+        id S1727823AbgBZOeG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:33:40 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38762 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbgBZOdj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 09:33:39 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a9so3358152wmj.3
-        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 06:33:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Y4urQS/1di8YmhdYz7EDXbcoOguLI1Co0XJrTjZXktY=;
-        b=CJlgzOGLmX7eVpdAJh7haQvpLpyvdibkSRs5pb/rbeu2iGcr72Qv/yi+2ZglMHwn1Z
-         iZbnUUHf6aSBAQgSMODO9BOL/I8/RqAO0G/lROpCr572B3kWc7T3RFlWCkKaOB1INTLx
-         2ICl/7P1d0XrgGpgNzto5LMEWk8oqSzal+7bg5xQc/g/9U6qHguu6ohVoi0+bDWGFv3O
-         SowwHKpyj1Zb5SXNF8ypvpd7EDL/JwGky9u+V3SU3+SvbPVVDAML8uMfHL8UflZoUMhf
-         JbgM5/O2ZZR6P2yWn7I1hNNelv9QC+ynXj08W+t+TZCBH0N6DtWVLI6kbcQeV9ANMFc9
-         yo8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Y4urQS/1di8YmhdYz7EDXbcoOguLI1Co0XJrTjZXktY=;
-        b=b8/mneIrp+CQyFrNAaeixwDtSjQGOo3taFLuxonGcK9OI/mZjfHtv4N0V5jmdBmbaC
-         Wvtt/DWNXqu4YyS7sWu3K5s80II0mlDeUHgBlvaceVEEdS5KnipdUscpkqHdHXrak/0j
-         bwOAD1icgqy6kYk0SLbsZCXFXk9xSk9J1nZY4FQqMnIVBfx7OkHuGYX1lBLxx61r7dKC
-         wGovTcZO3q8VzvjKmzxA4i3BZaS6KoIHtAPsVy/9puhLSOyN7ayEVcxFb9YtEAtudHP0
-         XHuDnn+S6CNV/KCUrVVLXWyyrcGJY6ljU39/oVQqQBuG2jn5IJgtGG1vhI26a2UE7JEr
-         iXDw==
-X-Gm-Message-State: APjAAAX/D299Xh78sBUcULsXO5NwvHwiBYJ1VmHhOFkr5QZlu3qWhtyr
-        IIrI2rfLTyJTIwJuT+NulUHd1Q==
-X-Google-Smtp-Source: APXvYqzZhzXkPXkp4kcfqNuTKsJrGYg75KuvuO5nb9ej/GtIo7tvL1eIrRG8KbF4CKK5or8tgGV4OQ==
-X-Received: by 2002:a05:600c:217:: with SMTP id 23mr5868713wmi.124.1582727616685;
-        Wed, 26 Feb 2020 06:33:36 -0800 (PST)
-Received: from nbelin-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h10sm3204198wml.18.2020.02.26.06.33.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 26 Feb 2020 06:33:36 -0800 (PST)
-From:   Nicolas Belin <nbelin@baylibre.com>
-To:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        devicetree@vger.kernel.org
-Cc:     baylibre-upstreaming@groups.io, Nicolas Belin <nbelin@baylibre.com>
-Subject: [PATCH RFC v2 2/3] dt-bindings: leds: Shiji Lighting APA102C LED driver
-Date:   Wed, 26 Feb 2020 15:33:11 +0100
-Message-Id: <1582727592-4510-3-git-send-email-nbelin@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
-References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
+        Wed, 26 Feb 2020 09:34:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727459AbgBZOeG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:34:06 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95F6C2467D;
+        Wed, 26 Feb 2020 14:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582727645;
+        bh=cSeb/7OP0qIGCqurmVCFUiuRZAbhfJ7k+1e0bkEwtGY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zJuOqIMIDAfRRIhLJkghYWtXK0gr2o3uClFKZ7g5RU4dv2idQTdXaBjJkBLLLV8Ah
+         P/FU3qUG67jF/VGsL6nI0ARTmCtdhFOTZ67Y19gOyMRdf8dz4n4ncbbj1Eq42wwA2V
+         k7aalkOtNybRZX6/n2x9CnQ1+9zotjPpSaXHeCEk=
+Received: by mail-qk1-f170.google.com with SMTP id m2so1137164qka.7;
+        Wed, 26 Feb 2020 06:34:05 -0800 (PST)
+X-Gm-Message-State: APjAAAW+et0VAvGY1vUpu12Mx3tYfk+otC74NQdJYLV0N0PFHMqadq7+
+        mFpXcZ4dPDZ7hsNaZffJ0CYUnDCTSpSq0DVRCQ==
+X-Google-Smtp-Source: APXvYqxF1n1ezucAucxSMjTGsOoyu906lkDp/t3rDwiUT3lf64Vd7QDwncmsJhlHvgESuk6pwqSFVCNKXABjurrn7mU=
+X-Received: by 2002:a37:a750:: with SMTP id q77mr5797388qke.119.1582727644756;
+ Wed, 26 Feb 2020 06:34:04 -0800 (PST)
+MIME-Version: 1.0
+References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
+ <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
+ <20200220203509.GA14697@bogus> <6a7c1f39-a85f-4a99-fed3-71001bdb6128@codeaurora.org>
+In-Reply-To: <6a7c1f39-a85f-4a99-fed3-71001bdb6128@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 26 Feb 2020 08:33:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKVNENPZKbCy4FrGRO=D79hBL3keuE-U2tTwDVViCrdPQ@mail.gmail.com>
+Message-ID: <CAL_JsqKVNENPZKbCy4FrGRO=D79hBL3keuE-U2tTwDVViCrdPQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>, dri-devel@freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document Shiji Lighting APA102C LED driver device tree bindings.
+On Wed, Feb 26, 2020 at 5:17 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>
+>
+> On 2/21/2020 2:05 AM, Rob Herring wrote:
+> > On Thu, 20 Feb 2020 13:42:22 +0530, Sharat Masetty wrote:
+> >> This patch adds a clock definition needed for powering on the GPU TBUs
+> >> and the GPU TCU.
+> >>
+> >> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> >> ---
+> >>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
+> >>   1 file changed, 3 insertions(+)
+> >>
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clock-names: ['bus', 'iface'] is too short
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clocks: [[4294967295, 123], [4294967295, 124]] is too short
+> >
+> > See https://patchwork.ozlabs.org/patch/1241297
+> > Please check and re-submit.
+> Hi Rob, These issues seem to be from the original code and not related
+> to my patch. Are these going to be blocking errors?
 
-Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
----
- .../devicetree/bindings/leds/leds-apa102c.yaml     | 154 +++++++++++++++++++++
- 1 file changed, 154 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-apa102c.yaml
+There are no errors in this binding in mainline. You've added a 3rd
+clock when all the existing users have exactly 2 clocks.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-apa102c.yaml b/Documentation/devicetree/bindings/leds/leds-apa102c.yaml
-new file mode 100644
-index 000000000000..90c827ab5a5a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-apa102c.yaml
-@@ -0,0 +1,154 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-apa102c.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LED driver for Shiji Lighting - APA102C
-+
-+maintainers:
-+  - Nicolas Belin <nbelin@baylibre.com>
-+
-+description:
-+  Each RGB LED is represented as a multi-led sub-node of the leds-apa102c
-+  device.  Each LED
-+  is a three color rgb LED with 32 levels brightness adjustment that can be
-+  cascaded so that multiple LEDs can be set with a single command.
-+
-+properties:
-+  compatible:
-+    const: shiji,apa102c
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 1000000
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^multi-led@[0-9]+$":
-+    type: object
-+    description: |
-+      Properties for an array of connected LEDs.
-+
-+    properties:
-+      reg:
-+        description: |
-+          This property corresponds to the led index. It has to be between 0
-+          and the number of managed leds minus 1
-+        maxItems: 1
-+
-+      label:
-+        description: |
-+          This property corresponds to the name of the led. If not set,
-+          the led index will be used to create the led name instead
-+        maxItems: 1
-+
-+      color:
-+        const: 8
-+
-+      linux,default-trigger: true
-+
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      "^led@[0-9]+$":
-+        type: object
-+        description: |
-+          Properties for the LED color components.
-+
-+        properties:
-+          reg:
-+            maxItems: 1
-+
-+          color:
-+            oneOf:
-+              - enum: [ 1, 2, 3 ]
-+
-+        required:
-+          - reg
-+          - color
-+
-+    required:
-+      - reg
-+      - color
-+      - '#address-cells'
-+      - '#size-cells'
-+
-+required:
-+  - compatible
-+  - reg
-+  - spi-max-frequency
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+examples:
-+  - |
-+
-+    #include <dt-bindings/leds/common.h>
-+
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        led-controller@0 {
-+            compatible = "shiji,apa102c";
-+            reg = <0>;
-+            spi-max-frequency = <1000000>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            multi-led@0 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                reg = <0>;
-+                color = <LED_COLOR_ID_MULTI>;
-+                label = "rgb_led1";
-+
-+                led@0 {
-+                reg = <0>;
-+                color = <LED_COLOR_ID_RED>;
-+                };
-+
-+                led@1 {
-+                reg = <1>;
-+                color = <LED_COLOR_ID_GREEN>;
-+                };
-+
-+                led@2 {
-+                reg = <2>;
-+                color = <LED_COLOR_ID_BLUE>;
-+                };
-+            };
-+            multi-led@1 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                reg = <1>;
-+                color = <LED_COLOR_ID_MULTI>;
-+                label = "rgb_led2";
-+
-+                led@3 {
-+                reg = <3>;
-+                color = <LED_COLOR_ID_RED>;
-+                };
-+
-+                led@4 {
-+                reg = <4>;
-+                color = <LED_COLOR_ID_GREEN>;
-+                };
-+
-+                led@5 {
-+                reg = <5>;
-+                color = <LED_COLOR_ID_BLUE>;
-+                };
-+            };
-+        };
-+    };
--- 
-2.7.4
-
+Rob
