@@ -2,97 +2,76 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB40C4BA10
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4365DC4BA14
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 531F52467D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582727650;
-	bh=cSeb/7OP0qIGCqurmVCFUiuRZAbhfJ7k+1e0bkEwtGY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pOShisnZJzq96NkpeatjnFTx+VhgOT+15cjxK/Z/EJN04KEsw25Mwsj0KrX4iGalI
-	 yQg36RG8wFyP4yIIEvQ73g6cRssw5FyKHBqAfocFtmPycbQG+P0tGAdeAiFM1ovhdf
-	 P6CyM8sCKgRYna1hgo1rND8wZ8baS/K7BI5+T3Ws=
+	by mail.kernel.org (Postfix) with ESMTP id 18DD224690
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgBZOeG (ORCPT
+        id S1727714AbgBZOil (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:34:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727459AbgBZOeG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:34:06 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95F6C2467D;
-        Wed, 26 Feb 2020 14:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582727645;
-        bh=cSeb/7OP0qIGCqurmVCFUiuRZAbhfJ7k+1e0bkEwtGY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zJuOqIMIDAfRRIhLJkghYWtXK0gr2o3uClFKZ7g5RU4dv2idQTdXaBjJkBLLLV8Ah
-         P/FU3qUG67jF/VGsL6nI0ARTmCtdhFOTZ67Y19gOyMRdf8dz4n4ncbbj1Eq42wwA2V
-         k7aalkOtNybRZX6/n2x9CnQ1+9zotjPpSaXHeCEk=
-Received: by mail-qk1-f170.google.com with SMTP id m2so1137164qka.7;
-        Wed, 26 Feb 2020 06:34:05 -0800 (PST)
-X-Gm-Message-State: APjAAAW+et0VAvGY1vUpu12Mx3tYfk+otC74NQdJYLV0N0PFHMqadq7+
-        mFpXcZ4dPDZ7hsNaZffJ0CYUnDCTSpSq0DVRCQ==
-X-Google-Smtp-Source: APXvYqxF1n1ezucAucxSMjTGsOoyu906lkDp/t3rDwiUT3lf64Vd7QDwncmsJhlHvgESuk6pwqSFVCNKXABjurrn7mU=
-X-Received: by 2002:a37:a750:: with SMTP id q77mr5797388qke.119.1582727644756;
- Wed, 26 Feb 2020 06:34:04 -0800 (PST)
+        Wed, 26 Feb 2020 09:38:41 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54485 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbgBZOil (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 09:38:41 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1j6xpb-0000a8-Ci; Wed, 26 Feb 2020 15:38:35 +0100
+Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1j6xpa-0001GH-HZ; Wed, 26 Feb 2020 15:38:34 +0100
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+To:     linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Cc:     kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] dt-bindings: arm: stm32: document lxa,stm32mp157c-mc1 compatible
+Date:   Wed, 26 Feb 2020 15:38:25 +0100
+Message-Id: <20200226143826.1146-3-a.fatoum@pengutronix.de>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200226143826.1146-1-a.fatoum@pengutronix.de>
+References: <20200226143826.1146-1-a.fatoum@pengutronix.de>
 MIME-Version: 1.0
-References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
- <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
- <20200220203509.GA14697@bogus> <6a7c1f39-a85f-4a99-fed3-71001bdb6128@codeaurora.org>
-In-Reply-To: <6a7c1f39-a85f-4a99-fed3-71001bdb6128@codeaurora.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 26 Feb 2020 08:33:53 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKVNENPZKbCy4FrGRO=D79hBL3keuE-U2tTwDVViCrdPQ@mail.gmail.com>
-Message-ID: <CAL_JsqKVNENPZKbCy4FrGRO=D79hBL3keuE-U2tTwDVViCrdPQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>, dri-devel@freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: afa@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 5:17 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
->
->
-> On 2/21/2020 2:05 AM, Rob Herring wrote:
-> > On Thu, 20 Feb 2020 13:42:22 +0530, Sharat Masetty wrote:
-> >> This patch adds a clock definition needed for powering on the GPU TBUs
-> >> and the GPU TCU.
-> >>
-> >> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> >> ---
-> >>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
-> >>   1 file changed, 3 insertions(+)
-> >>
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clock-names: ['bus', 'iface'] is too short
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clocks: [[4294967295, 123], [4294967295, 124]] is too short
-> >
-> > See https://patchwork.ozlabs.org/patch/1241297
-> > Please check and re-submit.
-> Hi Rob, These issues seem to be from the original code and not related
-> to my patch. Are these going to be blocking errors?
+Document the STM32MP157 based Linux Automation MC-1 device tree
+compatible.
 
-There are no errors in this binding in mainline. You've added a 3rd
-clock when all the existing users have exactly 2 clocks.
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+---
+ Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+index 1fcf306bd2d1..71ea3f04ab9c 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+@@ -38,6 +38,7 @@ properties:
+       - items:
+           - enum:
+               - arrow,stm32mp157a-avenger96 # Avenger96
++              - lxa,stm32mp157c-mc1
+               - st,stm32mp157c-ed1
+               - st,stm32mp157a-dk1
+               - st,stm32mp157c-dk2
+-- 
+2.25.0
+
