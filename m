@@ -2,152 +2,97 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D02C4BA21
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80492C4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB2A220714
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582742905;
-	bh=5S2ySSO2YGstRcBEX5a0T4f3Q9mr1AZpTazW4T0b14Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=WHACFCbpaEWabFhr3KUtmNUzfsu49mT+v047TJ4qtQMEQQt+lv6/C6XHVKrKaNeZ5
-	 uosq4DxH6l+Cqitg7jo5VF1/y58AA8T876nxmujxe6Swy0ZixiG5o+CvbOAF02vreQ
-	 tgtQZkWsizL/et/giJvCV/aEpjAxEWBJJ4Ua8MNg=
+	by mail.kernel.org (Postfix) with ESMTP id 4DE022465D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:05:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="H+X9nT83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbgBZSsY (ORCPT
+        id S1727127AbgBZTFZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:48:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:41414 "EHLO foss.arm.com"
+        Wed, 26 Feb 2020 14:05:25 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:56394 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727308AbgBZSsX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:48:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C752430E;
-        Wed, 26 Feb 2020 10:48:22 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E3BF3F881;
-        Wed, 26 Feb 2020 10:48:22 -0800 (PST)
-Date:   Wed, 26 Feb 2020 18:48:20 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Adrian Panella <ianchi74@outlook.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "regulator: add smb208 support" to the regulator tree
-In-Reply-To:  <20200219163711.479-1-ansuelsmth@gmail.com>
-Message-Id:  <applied-20200219163711.479-1-ansuelsmth@gmail.com>
-X-Patchwork-Hint: ignore
+        id S1727113AbgBZTFZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 14:05:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hNBxo3WruCWru8MJuOpnvDdHkmmTti3FR1KFZs6vrOo=; b=H+X9nT83LljdzHtsJTKC76zeHc
+        zHkQK1Ekt2Li0xZUDniP7DBZFCO5HrdB76i0io04/+7BoAjZbQFDuNWeT3irWMtFH+IuEwyKgR+C6
+        CogO3wj0vH4JReDu1lP5A64/VYpM9buFmMeWcF1yhBPexSpeKrxukf17z7B/7Q4/V03A=;
+Received: from p200300ccff0a4d00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0a:4d00:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j71zl-0007jX-2d; Wed, 26 Feb 2020 20:05:21 +0100
+Received: from andi by eeepc with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j71zk-0001h6-Ij; Wed, 26 Feb 2020 20:05:20 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org, GNUtoo@cyberdimension.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH RESEND v5 1/5] dt-bindings: mfd: rn5t618: Document optional property interrupts
+Date:   Wed, 26 Feb 2020 20:05:00 +0100
+Message-Id: <20200226190504.6467-2-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200226190504.6467-1-andreas@kemnade.info>
+References: <20200226190504.6467-1-andreas@kemnade.info>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+These chips use interrupts for various things like RTC alarm.
 
-   regulator: add smb208 support
-
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From b5f25304aece9f2e7eaab275bbb5461c666bf38c Mon Sep 17 00:00:00 2001
-From: Ansuel Smith <ansuelsmth@gmail.com>
-Date: Wed, 19 Feb 2020 17:37:11 +0100
-Subject: [PATCH] regulator: add smb208 support
-
-Smb208 regulators are used on some ipq806x soc.
-Add support for it to make it avaiable on some routers
-that use it.
-
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Signed-off-by: Adrian Panella <ianchi74@outlook.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Link: https://lore.kernel.org/r/20200219163711.479-1-ansuelsmth@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++++
- drivers/regulator/qcom_rpm-regulator.c             | 9 +++++++++
- 2 files changed, 13 insertions(+)
+Changes in v4: add refernce to interrupt binding
+documentation
+ Documentation/devicetree/bindings/mfd/rn5t618.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-index 3c91ad430eea..b823b8625243 100644
---- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-+++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-@@ -61,6 +61,7 @@ Regulator nodes are identified by their compatible:
- 		    "qcom,rpm-pm8901-regulators"
- 		    "qcom,rpm-pm8921-regulators"
- 		    "qcom,rpm-pm8018-regulators"
-+		    "qcom,rpm-smb208-regulators"
+diff --git a/Documentation/devicetree/bindings/mfd/rn5t618.txt b/Documentation/devicetree/bindings/mfd/rn5t618.txt
+index b74e5e94d1cb..16778ea00dbc 100644
+--- a/Documentation/devicetree/bindings/mfd/rn5t618.txt
++++ b/Documentation/devicetree/bindings/mfd/rn5t618.txt
+@@ -15,6 +15,8 @@ Required properties:
+  - reg: the I2C slave address of the device
  
- - vdd_l0_l1_lvs-supply:
- - vdd_l2_l11_l12-supply:
-@@ -171,6 +172,9 @@ pm8018:
- 	s1, s2, s3, s4, s5, , l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
- 	l12, l14, lvs1
+ Optional properties:
++ - interrupts: interrupt mapping for IRQ
++   See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+  - system-power-controller:
+    See Documentation/devicetree/bindings/power/power-controller.txt
  
-+smb208:
-+	s1a, s1b, s2a, s2b
-+
- The content of each sub-node is defined by the standard binding for regulators -
- see regulator.txt - with additional custom properties described below:
+@@ -32,6 +34,8 @@ Example:
+ 	pmic@32 {
+ 		compatible = "ricoh,rn5t618";
+ 		reg = <0x32>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+ 		system-power-controller;
  
-diff --git a/drivers/regulator/qcom_rpm-regulator.c b/drivers/regulator/qcom_rpm-regulator.c
-index 7407cd5a1b74..7fc97f23fcf4 100644
---- a/drivers/regulator/qcom_rpm-regulator.c
-+++ b/drivers/regulator/qcom_rpm-regulator.c
-@@ -925,12 +925,21 @@ static const struct rpm_regulator_data rpm_pm8921_regulators[] = {
- 	{ }
- };
- 
-+static const struct rpm_regulator_data rpm_smb208_regulators[] = {
-+	{ "s1a",  QCOM_RPM_SMB208_S1a, &smb208_smps, "vin_s1a" },
-+	{ "s1b",  QCOM_RPM_SMB208_S1b, &smb208_smps, "vin_s1b" },
-+	{ "s2a",  QCOM_RPM_SMB208_S2a, &smb208_smps, "vin_s2a" },
-+	{ "s2b",  QCOM_RPM_SMB208_S2b, &smb208_smps, "vin_s2b" },
-+	{ }
-+};
-+
- static const struct of_device_id rpm_of_match[] = {
- 	{ .compatible = "qcom,rpm-pm8018-regulators",
- 		.data = &rpm_pm8018_regulators },
- 	{ .compatible = "qcom,rpm-pm8058-regulators", .data = &rpm_pm8058_regulators },
- 	{ .compatible = "qcom,rpm-pm8901-regulators", .data = &rpm_pm8901_regulators },
- 	{ .compatible = "qcom,rpm-pm8921-regulators", .data = &rpm_pm8921_regulators },
-+	{ .compatible = "qcom,rpm-smb208-regulators", .data = &rpm_smb208_regulators },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, rpm_of_match);
+ 		regulators {
 -- 
-2.20.1
+2.11.0
 
