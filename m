@@ -2,97 +2,136 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2261C4BA18
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9F7C4BA18
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90342467B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D6E21556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582735723;
-	bh=7JYktPIyWf6YONapWD3xlC/B2o1cUD1UNvbX1uLibio=;
+	s=default; t=1582735937;
+	bh=8yGhxz/XD3kannD8QPb1Qmeb+vlauqEMrqSMvR8wg+E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JJB48OPspa3oMNV+C1k4foII75XjZ6KtY9ZMktJVUDrPb4U9ILJh+2cS4ePx5otyj
-	 V8FnSMl7AIQnl97158dfQ8ABQvhIj6uRQH4IAUtjmlst9/e4AKagO9NhnaoGLga1Dx
-	 G5CrCituTHSqCC/1pJnN8gEUGBjen4atY0rdt1g0=
+	b=heaMtJy35If1SHsI+UK+EiIX6EVk7VRfYbbMixwFf/1bIuJnnUFtrjlNoptiLjIo9
+	 oTzJ80IZc8jD4vnX0XJNSfmEMywqDc7JFPkojgahxvrZghV1XbU3Baeotzvw7LziQm
+	 1OZFxEZ+uUDTPoaZkRuKpcjoNwGMqk9YXccA/ruI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgBZQsn (ORCPT
+        id S1726682AbgBZQwO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:48:43 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37700 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgBZQsn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:48:43 -0500
-Received: by mail-oi1-f194.google.com with SMTP id q84so165779oic.4;
-        Wed, 26 Feb 2020 08:48:42 -0800 (PST)
+        Wed, 26 Feb 2020 11:52:14 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46096 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgBZQwO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:52:14 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a22so114718oid.13;
+        Wed, 26 Feb 2020 08:52:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jHw4ngjVXB8T2PU45eGKR13llpnjZ9TB1h6gXwWneRQ=;
-        b=jhNLElVZc699qbYoDEW6WoRA9wVUpDndXwlG6JeOUp3zTvv0Z8iIdKwXskBhI+Yq24
-         dueZYAQeHg39YkGBgf0yWwdtoX0VWO+HVsll28BWZ9agU1strllnJ9W5ub3QW6Y24vNM
-         qK9uUUqECY2ZYV06/DHnxYNzZylb3ms22sAkKfeDwWSIVyaw9FRXD0O6aO36pADXQYqW
-         9KHtHC6sMSGBDAsvl/t9JIQ6Bw+62N0x5bBphoYSU9aasQIOYXl7B8H0QKJ+gQaiHOXo
-         gsfcTav7/UjcMVMblQpTu6Oot7UM56g5aOswm7UEO7t6m3k3rmdOcKG5q2KnmJ+d0J1S
-         NnJg==
-X-Gm-Message-State: APjAAAXk++NltWLUEq7rxaHIzuT9bXLptgPdxMOfByB5+TKMmIpJS9h+
-        rvkirAszrGfv2aTrz3E7JQ==
-X-Google-Smtp-Source: APXvYqx18Z/v/4iN8R6CZrp92Er0P2zNbyeqssC0LiTbHDTS1rfusrMZHEu4FappFe1fTYPGsU/aeg==
-X-Received: by 2002:aca:fc0c:: with SMTP id a12mr3791106oii.118.1582735722218;
-        Wed, 26 Feb 2020 08:48:42 -0800 (PST)
+        bh=CT/DItuaw3l7e50kJnxY0hxdVtAyvWVe9vwmyIht9Vk=;
+        b=cLvf5gcfXl9dYhWCR+lSPdru8aPS2oppMuXJjqnTmRgfoNTN4PKCRE0wef1ayyJLVN
+         Eo+5Cehlxv6a9dBF3/M3zDz6Hl4TrYTHpo8QYWYLXCa+Wqw773ph8nfKu3/RH1O/CexJ
+         DMfFlaDVicUq2BDrhQmxeJfsRWEGAhAtW+7PT0EKq/d5NsVyafCtB9W2yfdZt6ZbMAcZ
+         bUapXyWzKxf/Uu7I6f5FDFhriTLuwbUek4vXoj3fRjcIfAtSEE3xGglM5/OGHgG9mXsR
+         mtMYN1G334SU2EVueZTdXC4RdnyDcZDa9ZClHcbHmrYnqGSlEwGQqrerSqAdym1gBbHq
+         uqZg==
+X-Gm-Message-State: APjAAAXR7lQXusVp7lDrZAZiPjlCKjCPBerkBsD4O7l0JcRcnw9Gg0sj
+        KlbhgXUv8D2AZc217nLavg==
+X-Google-Smtp-Source: APXvYqxEE7ByWeDuhPUb4V+kWugwfZsSqUl0AI3AjBihCF1X5fH3wv9zsrqmq9nmfmvQQ7aDM+oCSQ==
+X-Received: by 2002:aca:2307:: with SMTP id e7mr3849467oie.163.1582735933081;
+        Wed, 26 Feb 2020 08:52:13 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 15sm968900ois.20.2020.02.26.08.48.41
+        by smtp.gmail.com with ESMTPSA id u66sm975100oie.17.2020.02.26.08.52.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:48:41 -0800 (PST)
-Received: (nullmailer pid 20572 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:48:41 -0000
-Date:   Wed, 26 Feb 2020 10:48:41 -0600
+        Wed, 26 Feb 2020 08:52:12 -0800 (PST)
+Received: (nullmailer pid 25334 invoked by uid 1000);
+        Wed, 26 Feb 2020 16:52:11 -0000
+Date:   Wed, 26 Feb 2020 10:52:11 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        logan.shaw@alliedtelesis.co.nz,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v4 2/5] dt-bindings: hwmon: Document adt7475
- bypass-attenuator property
-Message-ID: <20200226164841.GA20519@bogus>
-References: <20200221041631.10960-1-chris.packham@alliedtelesis.co.nz>
- <20200221041631.10960-3-chris.packham@alliedtelesis.co.nz>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 07/10] dt-bindings: mips: Add loongson boards
+Message-ID: <20200226165211.GA20809@bogus>
+References: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
+ <20200221050942.507775-8-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221041631.10960-3-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200221050942.507775-8-jiaxun.yang@flygoat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2020 17:16:28 +1300, Chris Packham wrote:
+On Fri, Feb 21, 2020 at 01:09:22PM +0800, Jiaxun Yang wrote:
+> Prepare for later dts.
 > 
-> From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> 
-> Add documentation for the bypass-attenuator-in[0-4] property.
-> 
-> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
+>  .../bindings/mips/loongson/devices.yaml       | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
 > 
-> Notes:
->     Changes in v4:
->     - use $ref uint32 and enum
->     - add 'adi' vendor prefix
->     
->     Changes in v3:
->     - separated addition of new properties from conversion to yaml
-> 
->  .../devicetree/bindings/hwmon/adt7475.yaml          | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
+> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> new file mode 100644
+> index 000000000000..32bec784da87
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> @@ -0,0 +1,29 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson based Platforms Device Tree Bindings
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +description: |
+> +  Devices with a Loongson CPU shall have the following properties.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Perhaps some details about the platform.
+
+> +  Note that generic device is used for built-in dtbs and will be
+> +  patched during boot on firmware without OF support.
+
+That's a kernel detail that doesn't belong here. (BTW, built-in dtb 
+support is intended as a transition step for bootloaders without dtb 
+knowledge. It's not the recommended way and shouldn't be used on new 
+platforms).
+
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +
+> +      - description: Generic Loongson3 4Core + RS780E
+> +        items:
+> +          - const: loongson,loongson3-4core-rs780e
+> +
+> +      - description: Generic Loongson3 8Core + RS780E
+> +        items:
+> +          - const: loongson,loongson3-8core-rs780e
+> +...
+> -- 
+> 2.25.0
+> 
+> 
