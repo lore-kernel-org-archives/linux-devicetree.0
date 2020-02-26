@@ -2,105 +2,108 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E27CC4BA2F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D80C4BA21
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C582467A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kopismobile-com.20150623.gappssmtp.com header.i=@kopismobile-com.20150623.gappssmtp.com header.b="HaBgGRpH"
+	by mail.kernel.org (Postfix) with ESMTP id 6776024653
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582755889;
+	bh=utBCZfTn36KBym26hNMCRPLKzjQ4GLb5oB+eAEGEawc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gRG7YroMzse1AhslqYzyWsZn8LN+/5CmCrz5tlyUn+Zs98wgjBJywTi64dmU30ihj
+	 PLgX5Gt1n5u8vKgrkAulVqBm3bl0CcRezSDrygwIkBDtNzfB5NmF3twxrT9aTefKh1
+	 P8Vod4mU9VOBtl67GIldgd5rtmiP2ZdhcDs17Djc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbgBZWXf (ORCPT
+        id S1727740AbgBZWYt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:23:35 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40612 "EHLO
+        Wed, 26 Feb 2020 17:24:49 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35826 "EHLO
         mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727916AbgBZWXe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 17:23:34 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i6so1021336otr.7
-        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 14:23:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kopismobile-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Yb2q4X4Xx+glvFsWCo9267jdvni3P/dXk3VwL89q0Aw=;
-        b=HaBgGRpHQIdnP8pik4bwPj/b10/F8/6Sm2uGY3+Rm5uLMsi9tVdQT2CONFhpGlXClU
-         4J41WAL41R+Lek2oZcTAy/h0N0noZVPY9kZXBtj3RZYCa6xXhWegzSEd7CzNwPOBolCx
-         a+vjGx4CZk6p7FnH/MtNeWZ6kVJp1m+4NeN8YO01BbnmuQmuS7ih+qWJDHn/Fnq/LJ8d
-         Lc26HOuG6+uqp9oyEkvBg1YxZV/ZFJufr5ftjSaRLKy45vso/4hd9tjP1WYb5vLUZtwU
-         i8V2TWofH4WICz7iZKD+1nunUo0YtZeT4l09Du0ORprj14GpRBkh/bF9fEnBfMZuY5Dz
-         TwVg==
+        with ESMTP id S1727709AbgBZWYs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 17:24:48 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r16so1054452otd.2;
+        Wed, 26 Feb 2020 14:24:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Yb2q4X4Xx+glvFsWCo9267jdvni3P/dXk3VwL89q0Aw=;
-        b=nI9PjAQYzFmnVZQxMim1Ypktp8tZvAY1HRPiODiYs7sr4zx4UiQkeOWTcDR/+kKTNG
-         uPkk+kcMYeq3L3esYG4penrA5+yZDe0F0fZdpaDyki4Z+jBHh/zCuQXAHWjBEJMtmx4b
-         fsZZL5YXNYEBHQD0e7RSRzK/T16xCfxQMlFVSaewrWgouq2XsL9MZobwQeQHMVSSmFY5
-         vm0dKHslmjuRe0Y3VmFw/G1YPtJmKwD/uWugUtOlKZhP1ACdrrAwEo7OfeG3LFNd9LOM
-         XNnDdLOhN9B58a2oW4w1uRuZhFmRNpATxAdaWTS3tPWeijBLG9rgCSLHJiwiWhXnDjdw
-         z0cA==
-X-Gm-Message-State: APjAAAWR7Jpl/j8nHfU9DPohhwbNKAeGsw6OvfNl0ThjRgSk+TmFszjb
-        q1m+ocVZJUBTJp5cKwFV6Kbb9w==
-X-Google-Smtp-Source: APXvYqwhplybHXKtCb6GgbBzVooPdmL6iQu7bhv1LQ83CQ2U1wKBh6AYAM4FYPRPHnuItSRLxu1gPQ==
-X-Received: by 2002:a9d:730e:: with SMTP id e14mr836501otk.62.1582755813671;
-        Wed, 26 Feb 2020 14:23:33 -0800 (PST)
-Received: from farregard-ubuntu.kopismobile.org (c-73-177-17-21.hsd1.ms.comcast.net. [73.177.17.21])
-        by smtp.gmail.com with ESMTPSA id z21sm1237614oto.52.2020.02.26.14.23.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7Tc2pp6tfwt+3v34tpbOx19kPSdtNqYuqm/8GY/cfw4=;
+        b=ui0X/+wq3tOeJAS9wzI/U+gx79VRj7YYPEZB9pXU3E1IMe++89jfGJLvgCwt1uRSYl
+         Wb4l5zd1n6luzHCZaQUvJb/8iMZMQ19lKpPWCdEBBJKkz627ubPau2/0XOfYExWAzqoj
+         l8u4oUXQKOMejEaEAy6xHXuo5jcAa/GeJCPndUdom9WBHWbc9PYO6jdpG/1rdndmYoVq
+         yfaIc9Ac+GrdXDqcoLWZcemoXWl8NZt4zonSmz02av66wOd7rsi01/WRF9y6ZRxl8V5T
+         EW6WIiTp27Grg5xPxQR25TMogd9+xtglKIAfIcirKM4s0eoZMU+Sr3H/AS5BuW+QC286
+         T6qQ==
+X-Gm-Message-State: APjAAAVcJFzAdrh7B2GA3mfqpiZKnNhD6ZKHRyQKtAWdXxeKD39Dwdat
+        FwISw6eW0DR3GfahB/t1zw==
+X-Google-Smtp-Source: APXvYqxl4VG5brncJNWe6fMfCvBfkuDhRp8hGrhJHHYhzyTZwH2sy+iDxqHEY0c1dykRMxt3Vt/Phw==
+X-Received: by 2002:a05:6830:13da:: with SMTP id e26mr781681otq.97.1582755887742;
+        Wed, 26 Feb 2020 14:24:47 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b4sm1250798oie.55.2020.02.26.14.24.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:23:33 -0800 (PST)
-From:   George Hilliard <ghilliard@kopismobile.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     George Hilliard <ghilliard@kopismobile.com>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 1/2] dt-bindings: serial: document fsl,inverted-tx and -rx options
-Date:   Wed, 26 Feb 2020 16:23:18 -0600
-Message-Id: <20200226222319.18383-2-ghilliard@kopismobile.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200226222319.18383-1-ghilliard@kopismobile.com>
-References: <20200226222319.18383-1-ghilliard@kopismobile.com>
+        Wed, 26 Feb 2020 14:24:47 -0800 (PST)
+Received: (nullmailer pid 11405 invoked by uid 1000);
+        Wed, 26 Feb 2020 22:24:46 -0000
+Date:   Wed, 26 Feb 2020 16:24:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado 
+        <nfraprado@protonmail.com>
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        lkcamp@lists.libreplanetbr.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: rng: Convert BCM2835 to DT schema
+Message-ID: <20200226222446.GA11350@bogus>
+References: <20200222200037.3203931-1-nfraprado@protonmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200222200037.3203931-1-nfraprado@protonmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a description for the new fsl,inverted-tx and fsl,inverted-rx
-options for the i.MX UART peripheral.
+On Sat, 22 Feb 2020 20:00:59 +0000, =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= wrote:
+> Convert BCM2835/6368 Random number generator bindings to DT schema.
+> 
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
+> ---
+> 
+> Changes in v2:
+> - Remove description for common properties
+> - Drop label from example
+> 
+> This patch was tested with:
+> make ARCH=arm dt_binding_check
+> make ARCH=arm DT_SCHEMA_FILES=Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml dtbs_check
+> 
+> Thanks,
+> Nícolas
+> 
+>  .../devicetree/bindings/rng/brcm,bcm2835.txt  | 40 -------------
+>  .../devicetree/bindings/rng/brcm,bcm2835.yaml | 59 +++++++++++++++++++
+>  2 files changed, 59 insertions(+), 40 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
+>  create mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+> 
 
-Signed-off-by: George Hilliard <ghilliard@kopismobile.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v1..v2: Removed confidentiality spam
-v2..v4: No changes
+Applied, thanks.
 
- Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-index 35957cbf1571..c8d677f9491f 100644
---- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-@@ -8,6 +8,10 @@ Required properties:
- Optional properties:
- - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
-                   in DCE mode by default.
-+- fsl,inverted-tx , fsl,inverted-rx : Indicate that the hardware attached
-+  to the peripheral inverts the signal transmitted or received,
-+  respectively, and that the peripheral should invert its output/input
-+  using the INVT/INVR registers.
- - rs485-rts-delay, rs485-rts-active-low, rs485-rx-during-tx,
-   linux,rs485-enabled-at-boot-time: see rs485.txt. Note that for RS485
-   you must enable either the "uart-has-rtscts" or the "rts-gpios"
--- 
-2.25.0
-
+Rob
