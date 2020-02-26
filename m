@@ -6,55 +6,54 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C73EC4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40800C4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D6624670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1392321D7E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582753309;
-	bh=znesykQCMfOmSvul5VL4BFR4DGE42T2PfE3cNxDa1jE=;
+	s=default; t=1582753606;
+	bh=GUeAaFwF8pV8iiq7IjKyCqgn74IfWW9varP2zMWHIY8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hXaLYTSJkUcgC229woxcfL7OCkSv8rjmNZ6YJFME+YgIABmrd3OdrNkq3iIDLz4gX
-	 5QsVGqWuJrKE99CXs5nc1QGvWbTXp9shZX8dttiHQR8T/eXLbeMQH4BAL1ztnwv6K6
-	 eQwcoB7PJYyQvC8qLVHWPWSGXUugxs+ogUV/MzbY=
+	b=lHBIFuBcmylkq9w2lTHkiSj3ODfp72Cg3/pCgG6DpeHDXJDh+mkpODKpwgo8T7lYI
+	 2Pypruy6Ux/YW1psDZlHCjdDH4jCu2gtp/Ayqc6lt/4gRvhyqYSB+5OnXmv5rOfu86
+	 8XHBDDGAIlkplilLr5VIli55wPWOr8Qda2pUJ3Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBZVlt (ORCPT
+        id S1727552AbgBZVqp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:41:49 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43644 "EHLO
+        Wed, 26 Feb 2020 16:46:45 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35863 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbgBZVlt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:41:49 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p125so1081365oif.10;
-        Wed, 26 Feb 2020 13:41:48 -0800 (PST)
+        with ESMTP id S1727503AbgBZVqp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:46:45 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c16so1144840oic.3;
+        Wed, 26 Feb 2020 13:46:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=byAUrcii8a0AWXrs5vwsBsgaE4yUvZlmDVkZ5AzS35g=;
-        b=M9EqgLI00VTLWu8mGrGqxWNBXT9dyB2Uio7sAAp03z03RBhRK7YzqJX+mrfNoX278V
-         pe3i5lBlqDkKYTu0Xcupqvg0G1bQkUOIyqcNzXGo4QFTRQ4u3HhZYs2tiCOwQzqopuxJ
-         ZC/Xlf3/2u0oCsiQNLkGKTxzjuPit5cTlENH/tfKBtzziAEDoC4x/irAgQ1oQqSt418B
-         60GV9uO1OsX+Yv0OPWAdMwKOyuAwga1oOy5KExqW76n9wFGvdOi2VFZrby03bezaTJZC
-         tDjiiiNQL9LcT1QzEN/EUPh5mOTy3C8LFfQGHgnWw+d+N5jdDCAX+l4fuGedPrs4WjOw
-         PpPQ==
-X-Gm-Message-State: APjAAAUdxsls3XTK4UcGYKA+89wu/rTggI0gfkigZktn9EEyYEiDQ3PB
-        R8xossjGrx0T16oYffdndQ==
-X-Google-Smtp-Source: APXvYqxncRleU9XUmrQhPNUgmsgZz/wkWA+ajBRa/ZE/p/Nu2nfYhoCyBE4+zxhuQIdH65UenErb0A==
-X-Received: by 2002:a54:408f:: with SMTP id i15mr862375oii.64.1582753308418;
-        Wed, 26 Feb 2020 13:41:48 -0800 (PST)
+        bh=ykCghEU0HIKEVpuEfgJeanwDYTO0hdry6TeLSu7ZHuQ=;
+        b=e1gl/6T4Yox6DYhqAbi/poC/qRl43e4oWBhdJFIU/LieKXOaXbAUVmuDSKCFpqNQBP
+         zeKHOVx7sueLyb4rzmHHtoFfh8sIKSnhHSkTL5tJTOs+D/7K00Jo3PHMwSmwdVP9fVTe
+         Iylw8zRA9fvSo7TIEiG2jBGJ47zYeovuj24jcsPjwB8Fwex0FSJtF+Q4yEIcRde5hd4C
+         ahFc62YSQU4n1DE+TzmdxiCR1qN3CYjtF1/l6U54P6AsQ9bQbgIF8AGBWecgcqjnnHQq
+         snVaWn/WKL895gieQcJMTqv+zBhT22Fb6eIQhfZzszJWRNa/yKT7UbAMmhX67KUvk27+
+         QKBQ==
+X-Gm-Message-State: APjAAAURN4h6dIZVC5L0ZKarcgYKsY1iZTOmO2zSJB7qBCVm+9ndsozl
+        CeMFno5YmXCo+vv0YlXpzg==
+X-Google-Smtp-Source: APXvYqy39JBi19ty5lIMh3UAvPXf0/NW0hQi7cc8OYICFBXx/4X3dPhgCreZvPbuoUlB0Q+z0pE3TQ==
+X-Received: by 2002:aca:ec46:: with SMTP id k67mr844736oih.43.1582753604749;
+        Wed, 26 Feb 2020 13:46:44 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g25sm1213381otr.8.2020.02.26.13.41.47
+        by smtp.gmail.com with ESMTPSA id y6sm1202143oti.44.2020.02.26.13.46.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 13:41:47 -0800 (PST)
-Received: (nullmailer pid 9586 invoked by uid 1000);
-        Wed, 26 Feb 2020 21:41:46 -0000
-Date:   Wed, 26 Feb 2020 15:41:46 -0600
+        Wed, 26 Feb 2020 13:46:44 -0800 (PST)
+Received: (nullmailer pid 16588 invoked by uid 1000);
+        Wed, 26 Feb 2020 21:46:43 -0000
+Date:   Wed, 26 Feb 2020 15:46:43 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
         "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
@@ -63,36 +62,42 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v2 1/3] dt-bindings: arm: Convert UniPhier board/SoC
  bindings to json-schema
-Message-ID: <20200226214146.GA9521@bogus>
+Message-ID: <20200226214643.GA9729@bogus>
 References: <20200222060435.971-1-yamada.masahiro@socionext.com>
+ <20200226214146.GA9521@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200222060435.971-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20200226214146.GA9521@bogus>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 22 Feb 2020 15:04:33 +0900, Masahiro Yamada wrote:
-> Convert the Socionext UniPhier board/SoC binding to DT schema format.
+On Wed, Feb 26, 2020 at 03:41:46PM -0600, Rob Herring wrote:
+> On Sat, 22 Feb 2020 15:04:33 +0900, Masahiro Yamada wrote:
+> > Convert the Socionext UniPhier board/SoC binding to DT schema format.
+> > 
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> > 
+> > Changes in v2:
+> >   - Remove 'examples' because examples are fold into /example-0 node
+> >     and there is no way to meet
+> >       $nodename:
+> >          const: '/'
+> > 
+> >  .../bindings/arm/socionext/uniphier.txt       | 47 --------------
+> >  .../bindings/arm/socionext/uniphier.yaml      | 61 +++++++++++++++++++
+> >  MAINTAINERS                                   |  2 +-
+> >  3 files changed, 62 insertions(+), 48 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+> > 
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Changes in v2:
->   - Remove 'examples' because examples are fold into /example-0 node
->     and there is no way to meet
->       $nodename:
->          const: '/'
-> 
->  .../bindings/arm/socionext/uniphier.txt       | 47 --------------
->  .../bindings/arm/socionext/uniphier.yaml      | 61 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 62 insertions(+), 48 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
-> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+As this is all DT bindings, I'll apply the series.
+
+Rob
