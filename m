@@ -2,165 +2,166 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB943C4BA0A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F1AC4BA06
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 01:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA160222C2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 00:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884F920732
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 01:15:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y7BmXd6M"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lg7DwZRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgBZA4C (ORCPT
+        id S1729465AbgBZBP3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:56:02 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44757 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729450AbgBZA4C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 19:56:02 -0500
-Received: by mail-qt1-f195.google.com with SMTP id j23so1052652qtr.11
-        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 16:56:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KTr07x+ZuW+Wkx10CmLSTlKU+6ax9EaUyaBXKAF3OqM=;
-        b=Y7BmXd6Mfp+6AZ5v7tzuyEct+NldmkDhFbkaCIoOl6/SfR059Z2NK44rQkbVc+4j7t
-         n0RrGob1lJqy4jSvVTBHC3x7e53bCvZCs0af4K9zwmRDwcKU3x3vY+Goiu220sgiSxhg
-         LkPCOLYG0N6aE3fNLH+xw2IiIErd9z+gBVRxo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KTr07x+ZuW+Wkx10CmLSTlKU+6ax9EaUyaBXKAF3OqM=;
-        b=PLhIFKBez+dAyFj4dgyIvOapy4hfSiohB/UdgIRGjmp30ekx6ubG7OPibCtdvb98rU
-         p5G45lfs/0a3oJ8efOxVY422QNxjrCz61IoD4IJnqNa4axmgP9EJxMl6CRntqGUDA0xT
-         zRmxp1z++hokstQDL9iCTG0jv/Xlqkq/4y1DFa0vQHngp3tjjGiVEAEVSwpohy0ERn2G
-         oHFDNUzSuRAQ5ilMQRGnXFv/yqYRcNpHnc4p2GoT5FyXK4rRL2CI6JmZ/4S2l2l+uh7e
-         UPfTgkGnVGmilxTOX6QZUsCKoMfXLeoydw+HbW1E93EnGTDEq6xNwJEHMhTPq720V1p3
-         YUrw==
-X-Gm-Message-State: APjAAAULSmcB6o3f/oFN2O/Z8OpmZMsrjSzol8jZanEY9UKXXVaikfNO
-        qE41ja3+Tz65FYsT5KsvA4BP0wJt4qx1z5F2qURa7A==
-X-Google-Smtp-Source: APXvYqwn/doZ3Sl5MivNf7aeBY0i9IjKThPIXnCkYsjm6+vHV5atNhFSLqXf91LmG+mgvcdhqR+658LdmJfFTgy7fYc=
-X-Received: by 2002:ac8:72d6:: with SMTP id o22mr1774873qtp.174.1582678561028;
- Tue, 25 Feb 2020 16:56:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-2-drinkcat@chromium.org> <20200225171613.GA7063@bogus>
-In-Reply-To: <20200225171613.GA7063@bogus>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 26 Feb 2020 08:55:50 +0800
-Message-ID: <CANMq1KAVX4o5yC7c_88Wq_O=F+MaSN_V4uNcs1nzS3wBS6A5AA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
-To:     Rob Herring <robh@kernel.org>, Nick Fan <nick.fan@mediatek.com>,
-        Sj Huang <sj.huang@mediatek.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Tue, 25 Feb 2020 20:15:29 -0500
+Received: from mail-eopbgr20071.outbound.protection.outlook.com ([40.107.2.71]:15106
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729346AbgBZBP2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Feb 2020 20:15:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M4kTsX/8lPw23g2JEViK32KQgp1V9GKQdq4WgI2iybR0B7BoyizG1IWeYMP0BpxFBY3/6+6grnAOTJcMSKVvQDkJZcbLZkUnLBRj8pNnk/RAPDTAlzoBNjLJj8xmqQ9aoF29PJ1R2YR5ceDzviW+s5CfRtFeycQtyiShf/lGeLE+TnzHsF4CdHavjJ2MzEsr7NyKJzZr/6vMUGE1Zm/E3TlHDVfJ5Kbkg92Svdxr7/XnHbgRTAjQDRhuz1QpBI4QWmsDI8J/JL5rczIqAeadMWrRMpwNdCVGOyyTpjdSq8LUWMSMNfyC4EZrrpt9mTFr5gArbeSnMa3Xhhdq52Pm7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YGwBXjH65ANMue6vNN9DogQv5/N4MeZ6TOk1IlhLwDA=;
+ b=kDslWEY3qVd9BD6+Zm0rnGbAvZ08dQQJGCApLbHO8bbukDQqJWPYDfC8NSskX5LnsoVUBKN0MeoERg/YD4h3sLkxqDMnIBZ9rKLNnS2qecDAAzVjAMOsY+Ggb5HLsawrdgc/ZAoZ+wt2SKfW9FI5zS8Ks/C4J7vIGnkGnlVowBO9uGGqREJ7u5Y9igMbvweKZlyITi3ZMEdIe4onT1S3X+plRDRyR+zAxiEtjqXWIfqzC2ViU7mSrjRwVN1fdpcGbHc5uebuBTUjzVEIucrqk+dFAzCEh+mg7kPfegPW6AiP7PpCnPLrHRzRaACz/K5JE6rBvXMjX57zJSvZEfygcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YGwBXjH65ANMue6vNN9DogQv5/N4MeZ6TOk1IlhLwDA=;
+ b=lg7DwZROa9FZariLitQ1t4cknvEJJfDUW2utvenYPpUn9qiXhyYIBvdBGaq8iZy6tLXIgr12YRHfyZfIfo6Bnc/ph7I4860q3Gz6Rbf8zndll9tIAT+ZvTCLGqFreEqKPeRSDYfncPecYsT66xr1A0Y7/NfdDRssredzec7xeL4=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
+ VE1PR04MB6368.eurprd04.prod.outlook.com (20.179.232.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.22; Wed, 26 Feb 2020 01:15:23 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
+ 01:15:23 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     =?utf-8?B?QW5kcsOpIERyYXN6aWs=?= <git@andred.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Subject: RE: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
+ events
+Thread-Topic: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
+ events
+Thread-Index: AQHV6/ZVtFBmLLNhAkqJunTqxVUTUqgsqtgA
+Date:   Wed, 26 Feb 2020 01:15:23 +0000
+Message-ID: <VE1PR04MB66385DDED7C654AE2181E08E89EA0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20200225161201.1975-1-git@andred.net>
+ <20200225161201.1975-6-git@andred.net>
+In-Reply-To: <20200225161201.1975-6-git@andred.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [183.192.236.243]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cc10a075-ff00-41d4-2862-08d7ba595b11
+x-ms-traffictypediagnostic: VE1PR04MB6368:|VE1PR04MB6368:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB63684B6B47A524144CDB47AE89EA0@VE1PR04MB6368.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0325F6C77B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(189003)(199004)(55016002)(9686003)(86362001)(54906003)(110136005)(2906002)(7696005)(66556008)(7416002)(478600001)(81166006)(8676002)(4326008)(52536014)(64756008)(8936002)(316002)(33656002)(5660300002)(66946007)(66446008)(81156014)(186003)(26005)(6506007)(71200400001)(66476007)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6368;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: d7zUShpg7eyxbOvG8zAqJPMErvs+v0unSa80B6A7mOAtcu7O3ok53cMa2Ai31wULPC4XPf6MNxxQfGOLkQBvt6jYccR2XcY6GxfUfNHLW5XwvxaKFieF7q1dZ0Yu4UQJA5CaTA8NjWFNxmx8Mou3TA+xNJUEh8ffB0nrPWCFBTyOOHG/e/qpVeK3jHpLDq2SjxWY73yFlpCBzF70gT6vEjpVIPjDkrd6JxEjVr6VRBJ6pVLs0KYWzgWFvAqk/aNuf/bisZeU1mHQn4m6W4dda2g3uyz8zCURVgeWb/VIM3v71OiznCn8x7krgCq1aEsaPFcCWhEXsI22msjzTRIqgd0FcMqiryJ9GFvpiEZZq63+bLLg1M5xFdM3jPKCanV/EliwC18HkbkG32kXp+0DwURNW092MwRyLjv27dcxNBJEjUFjVDydyBoBejfUKrd0
+x-ms-exchange-antispam-messagedata: ehWTJuhuKV0HSGWJKqBx22dy/5otLAvoOmv95+LwIXI3EdnSDek0aDbi18ubuUOzDvSdfjnN/Hy8LAaYWXoXgZnh9cWxoSUjoxHTEZ5QArKrLy7EI4FPvBD+/NflVJ0xl7UTF0tUJMY/Ut8PuU8dJA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc10a075-ff00-41d4-2862-08d7ba595b11
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2020 01:15:23.7811
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: n2CfGAHRiJmFBrynKaiIDOS3hvtVcJXzfvZRVMO0K7/eM5QbIRdhu73tSPUjDL2yv+DZWVnYYKHl/BWN5A0WDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6368
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+Nick Fan +Sj Huang @ MTK
-
-On Wed, Feb 26, 2020 at 1:16 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Feb 07, 2020 at 01:26:21PM +0800, Nicolas Boichat wrote:
-> > Define a compatible string for the Mali Bifrost GPU found in
-> > Mediatek's MT8183 SoCs.
-> >
-> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-> > ---
-> >
-> > v4:
-> >  - Add power-domain-names description
-> >    (kept Alyssa's reviewed-by as the change is minor)
-> > v3:
-> >  - No change
-> >
-> >  .../bindings/gpu/arm,mali-bifrost.yaml        | 25 +++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> > index 4ea6a8789699709..0d93b3981445977 100644
-> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> > @@ -17,6 +17,7 @@ properties:
-> >      items:
-> >        - enum:
-> >            - amlogic,meson-g12a-mali
-> > +          - mediatek,mt8183-mali
-> >            - realtek,rtd1619-mali
-> >            - rockchip,px30-mali
-> >        - const: arm,mali-bifrost # Mali Bifrost GPU model/revision is fully discoverable
-> > @@ -62,6 +63,30 @@ allOf:
-> >            minItems: 2
-> >        required:
-> >          - resets
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: mediatek,mt8183-mali
-> > +    then:
-> > +      properties:
-> > +        sram-supply: true
-> > +        power-domains:
-> > +          description:
-> > +            List of phandle and PM domain specifier as documented in
-> > +            Documentation/devicetree/bindings/power/power_domain.txt
-> > +          minItems: 3
-> > +          maxItems: 3
-> > +        power-domain-names:
-> > +          items:
-> > +            - const: core0
-> > +            - const: core1
-> > +            - const: 2d
->
-> AFAIK, there's no '2d' block in bifrost GPUs. A power domain for each
-> core group is correct though.
-
-Good question... Hopefully Nick/SJ@MTK can comment, the non-upstream DTS has:
-gpu: mali@13040000 {
-compatible = "mediatek,mt8183-mali", "arm,mali-bifrost";
-power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>;
-...
-}
-
-gpu_core1: mali_gpu_core1 {
-compatible = "mediatek,gpu_core1";
-power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>;
-};
-
-gpu_core2: mali_gpu_core2 {
-compatible = "mediatek,gpu_core2";
-power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
-};
-
-So I picked core0/core1/2d as names, but looking at this, it's likely
-core2 is more appropriate (and MT8183_POWER_DOMAIN_MFG_2D might just
-be a internal/legacy name, if there is no real 2d domain).
-
-Thanks.
-
-> Rob
+T24gMjAyMC8wMi8yNiBBbmRyw6kgRHJhc3ppayA8Z2l0QGFuZHJlZC5uZXQ+IHdyb3RlOiANCj4g
+VGhlIHNudnNfcHdya2V5IHNoYXJlcyB0aGUgU05WUyBMUFNSIHN0YXR1cyByZWdpc3RlciB3aXRo
+IHRoZSBzbnZzX3J0Yy4NCj4gDQo+IFRoaXMgZHJpdmVyIGhlcmUgc2hvdWxkIG9ubHkgcmV0dXJu
+IElSUV9IQU5ETEVEIGlmIHRoZSBzdGF0dXMgcmVnaXN0ZXINCj4gaW5kaWNhdGVzIHRoYXQgdGhl
+IGV2ZW50IHdlJ3JlIGhhbmRsaW5nIGluIHRoZSBpcnEgaGFuZGxlciB3YXMgZ2VudWluZWx5DQo+
+IGludGVuZGVkIGZvciB0aGlzIGRyaXZlci4gT3RoZXJpd3NlIHRoZSBpbnRlcnJ1cHQgc3Vic3lz
+dGVtIHdpbGwgYXNzdW1lIHRoZQ0KPiBpbnRlcnJ1cHQgd2FzIGhhbmRsZWQgc3VjY2Vzc2Z1bGx5
+IGV2ZW4gdGhvdWdoIGl0IHdhc24ndCBhdCBhbGwuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbmRy
+w6kgRHJhc3ppayA8Z2l0QGFuZHJlZC5uZXQ+DQo+IENjOiAiSG9yaWEgR2VhbnTEgyIgPGhvcmlh
+LmdlYW50YUBueHAuY29tPg0KPiBDYzogQXltZW4gU2doYWllciA8YXltZW4uc2doYWllckBueHAu
+Y29tPg0KPiBDYzogSGVyYmVydCBYdSA8aGVyYmVydEBnb25kb3IuYXBhbmEub3JnLmF1Pg0KPiBD
+YzogIkRhdmlkIFMuIE1pbGxlciIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+DQo+IENjOiBSb2IgSGVy
+cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxh
+bmRAYXJtLmNvbT4NCj4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6
+IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4NCj4gQ2M6IFBlbmd1dHJvbml4
+IEtlcm5lbCBUZWFtIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+DQo+IENjOiBGYWJpbyBFc3RldmFt
+IDxmZXN0ZXZhbUBnbWFpbC5jb20+DQo+IENjOiBOWFAgTGludXggVGVhbSA8bGludXgtaW14QG54
+cC5jb20+DQo+IENjOiBEbWl0cnkgVG9yb2tob3YgPGRtaXRyeS50b3Jva2hvdkBnbWFpbC5jb20+
+DQo+IENjOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gQ2M6IFJvYmluIEdv
+bmcgPHlpYmluLmdvbmdAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LWNyeXB0b0B2Z2VyLmtlcm5lbC5v
+cmcNCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IENjOiBsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9y
+Zw0KPiANCj4gLS0tDQo+IHYyOg0KPiAqIG5vIGNoYW5nZXMNCj4gLS0tDQo+ICBkcml2ZXJzL2lu
+cHV0L2tleWJvYXJkL3NudnNfcHdya2V5LmMgfCAxMiArKysrKysrLS0tLS0NCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9zbnZzX3B3cmtleS5jDQo+IGIvZHJpdmVycy9pbnB1
+dC9rZXlib2FyZC9zbnZzX3B3cmtleS5jDQo+IGluZGV4IDM4MmQyYWU4MmM5Yi4uOTgwODY3ODg2
+YjM0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lucHV0L2tleWJvYXJkL3NudnNfcHdya2V5LmMN
+Cj4gKysrIGIvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9zbnZzX3B3cmtleS5jDQo+IEBAIC04Miw3
+ICs4Miw5IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBpbXhfc252c19wd3JrZXlfaW50ZXJydXB0KGlu
+dCBpcnEsIHZvaWQNCj4gKmRldl9pZCkNCj4gIAljbGtfZW5hYmxlKHBkYXRhLT5jbGspOw0KPiAN
+Cj4gIAlyZWdtYXBfcmVhZChwZGF0YS0+c252cywgU05WU19MUFNSX1JFRywgJmxwX3N0YXR1cyk7
+DQo+IC0JaWYgKGxwX3N0YXR1cyAmIFNOVlNfTFBTUl9TUE8pIHsNCj4gKwlscF9zdGF0dXMgJj0g
+U05WU19MUFNSX1NQTzsNCj4gKw0KPiArCWlmIChscF9zdGF0dXMpIHsNCj4gIAkJaWYgKHBkYXRh
+LT5taW5vcl9yZXYgPT0gMCkgew0KPiAgCQkJLyoNCj4gIAkJCSAqIFRoZSBmaXJzdCBnZW5lcmF0
+aW9uIGkuTVhbNnw3XSBTb0NzIG9ubHkgc2VuZCBhbiBAQCAtOTgsMTQNCj4gKzEwMCwxNCBAQCBz
+dGF0aWMgaXJxcmV0dXJuX3QgaW14X3NudnNfcHdya2V5X2ludGVycnVwdChpbnQgaXJxLCB2b2lk
+DQo+ICpkZXZfaWQpDQo+ICAJCQltb2RfdGltZXIoJnBkYXRhLT5jaGVja190aW1lciwNCj4gIAkJ
+CSAgICAgICAgICBqaWZmaWVzICsgbXNlY3NfdG9famlmZmllcyhERUJPVU5DRV9USU1FKSk7DQo+
+ICAJCX0NCj4gLQl9DQo+IA0KPiAtCS8qIGNsZWFyIFNQTyBzdGF0dXMgKi8NCj4gLQlyZWdtYXBf
+d3JpdGUocGRhdGEtPnNudnMsIFNOVlNfTFBTUl9SRUcsIFNOVlNfTFBTUl9TUE8pOw0KPiArCQkv
+KiBjbGVhciBTUE8gc3RhdHVzICovDQo+ICsJCXJlZ21hcF93cml0ZShwZGF0YS0+c252cywgU05W
+U19MUFNSX1JFRywgU05WU19MUFNSX1NQTyk7DQpCdXQgaXJxIHN0b3JtIHdpbGwgY29tZSBpbiBv
+bmNlIHRoZXJlIGlzIG90aGVyIGludGVycnVwdCB0cmlnZ2VyZWQgYXMgdW5leHBlY3RlZCwNCmFs
+dGhvdWdoIEkgbmV2ZXIgbWV0IGl0IGJlZm9yZS4gQ291bGQgd2UgZHJvcCB0aGlzIHBhdGNoIG5v
+dz8gT3RoZXJzIGFyZSBvayBmb3IgbWUuDQoNClJldmlld2VkLWJ5OiBSb2JpbiBHb25nIDx5aWJp
+bi5nb25nQG54cD4NCj4gKwl9DQo+IA0KPiAgCWNsa19kaXNhYmxlKHBkYXRhLT5jbGspOw0KPiAN
+Cj4gLQlyZXR1cm4gSVJRX0hBTkRMRUQ7DQo+ICsJcmV0dXJuIGxwX3N0YXR1cyA/IElSUV9IQU5E
+TEVEIDogSVJRX05PTkU7DQo+ICB9DQo+IA0KPiAgc3RhdGljIHZvaWQgaW14X3NudnNfcHdya2V5
+X2FjdCh2b2lkICpwZGF0YSkNCj4gLS0NCj4gMi4yMy4wLnJjMQ0KDQo=
