@@ -2,191 +2,134 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCB3C4BA18
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA48C4BA13
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1C120656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9eERp8Q"
+	by mail.kernel.org (Postfix) with ESMTP id BE11C2467B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582735331;
+	bh=jc1k6Lh9DHpyhVe+NcXxVMj2yFOca1PCTD1rjqLKTm0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jBccibIKl+Et7WvdXIV+z2EtY8Baae1HeAYG0IDwteqXq/Xo7NZzfINn4ZO1zxzI8
+	 B0EpEqdPu2m8nA0RPx5QQiaK0SEcOQOgXxq+Ugq4fm1PHI0BvQ3KA2LXR8Cao7GtIh
+	 BJaeQ5MhKXbaGgDHalC/iQYOzkuXbSNUmPlhHxbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgBZQio (ORCPT
+        id S1726631AbgBZQmL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:38:44 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:39885 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgBZQio (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:38:44 -0500
-Received: by mail-yw1-f66.google.com with SMTP id x184so3652646ywd.6;
-        Wed, 26 Feb 2020 08:38:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=erd2mUrd075M8oO2yPj+tKoxoFziTJnQdLvZCm0QgxY=;
-        b=X9eERp8QG/tuKn6AKY+yJvRNdFHoS9pG+JMlUdxyQYPYSOzXWyPyebgUOFwJQwTnVg
-         4WNiomgsGWrQ0M0jMCaVVWJs7dlZlXLR/eX/6C+oeoKyGLE+jhdN32JS4BYUFo/TxxkK
-         VBegQxaPBHScmsO2HL1l0CyID+cPVJodQeGAqj5sC/1pZ7I+lkj0InOF6xAJuJ5w4/CQ
-         yuksL+0Y/WfH+iSin0lVK6OjOtzg9JxNw5xV8nsH2FQyD2zTZ7iStRxS+zUfqMg59gED
-         V0q+EO0lQnMJdfUJfvaVZ+f23YaZ4eL1wOFDU0GtLKgB08EKzym3aLaNH4VXUidqgdX6
-         7vtw==
+        Wed, 26 Feb 2020 11:42:11 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38948 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgBZQmL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:42:11 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so13334oty.6;
+        Wed, 26 Feb 2020 08:42:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=erd2mUrd075M8oO2yPj+tKoxoFziTJnQdLvZCm0QgxY=;
-        b=EGt4nEDOoWLAuG/caYoSDp3At8m0XlT3XFSj0rcwuhaaRJ5wXRsIDMKObrPPhSFRPE
-         evjs7lnZsggmKiDhMfHtgAAkx9sByYp/Aul4BpeVcRdTqtc+dox9YfYqlKExDc2cnTJN
-         7IZ5oDJS5G6EobkhT5OvzWR0tqdL2kA//pgR/Att/Lz//gJ1KK4dFp5/As5bDSrwAKga
-         5YM4u+MBhtySafppba5QBHQQj3iqHHZPGErF7O/UMabrSec2mBGBE5W5AQkObvGA1jzu
-         Dkx6RmmVexFIsRuLpPt1rP79twmpWJeP3h2uDGTA7HQ+SwKH54zSfwA+d5ghCJmaA8+j
-         9gBw==
-X-Gm-Message-State: APjAAAUEWqeBvdkAeiTmRskfqKHmmRmHxCxkYSJ61XpmUeDV09RZiby4
-        SuXMLzcoI0jB3PjVdgI6Xyo=
-X-Google-Smtp-Source: APXvYqxaNdTjgfv+K7BVwRT1yKLRVTPxR1B/ytKhSJaZCvCJMVXm6o1MFHd3qCmgA1+T5cVjqweqxw==
-X-Received: by 2002:a81:1054:: with SMTP id 81mr35605ywq.57.1582735121692;
-        Wed, 26 Feb 2020 08:38:41 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id h139sm1127231ywa.35.2020.02.26.08.38.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Feb 2020 08:38:41 -0800 (PST)
-Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
- information
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Simon Glass <sjg@chromium.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Ian Lepore <ian@freebsd.org>
-References: <20200221161217.20069-1-alexandre.torgue@st.com>
- <20200221161217.20069-2-alexandre.torgue@st.com>
- <CAK7LNATmJN-U2GNe2Qd7fS=h5URswe=aFgVJRaBTZt7pi374wg@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <e0b65cba-6e37-8937-897d-ae82973f34e8@gmail.com>
-Date:   Wed, 26 Feb 2020 10:38:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3FWdu8yiFNXhep3Pm+PE/WEngzA4h1YnchL3v9C5QE0=;
+        b=PZpOaVbOKmfNUS1IQSKMatfNDgdRbWe7fLGJAeL3l6ayQQsHBdIaqyF8jz4bvPKKxp
+         ADIwNOLJm5AVtlxGS2HtO1K9w3HtEUEVYY68YuRbvxZByaIFeDlhd2I10FDV9pw888Al
+         LzXyLz62w5fHAfK+v9KDGIj6i0DAHwRabNEC2YYEBkUr5XkZEQmsCQ+/IGYhj9ksjFCP
+         7ybbce58scmATK4akqHO39RB9KWbN8NZ6iodv/xmW9NCXMTpMS2oncNA+0UmcdBTLOZh
+         0fhXiqUVs4f88e1lIVS8cAlbleKnxlYRW8+ZiSlRZp+ZvCO8WUWEfcjc8P0EiavyfX/+
+         mmBA==
+X-Gm-Message-State: APjAAAUif5nUoBf0jAFSDz9k8yBiNE9KGfv3NQJEHweTVOYVU16wzLUN
+        TNXIzxZOWifYglythKAhig==
+X-Google-Smtp-Source: APXvYqzRtuKvH4sv+x9a7HaS+KroxFh0h50n5jhX/nks32lhClZFnJ0nxWqVQusIHxFZ/SJLKI7JJg==
+X-Received: by 2002:a9d:7613:: with SMTP id k19mr2222391otl.144.1582735328617;
+        Wed, 26 Feb 2020 08:42:08 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b4sm946300oie.55.2020.02.26.08.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 08:42:07 -0800 (PST)
+Received: (nullmailer pid 10219 invoked by uid 1000);
+        Wed, 26 Feb 2020 16:42:06 -0000
+Date:   Wed, 26 Feb 2020 10:42:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     frowand.list@gmail.com
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH v2 1/2] of: unittest: add overlay gpio test to catch gpio
+ hog problem
+Message-ID: <20200226164206.GA10128@bogus>
+References: <1582224021-12827-1-git-send-email-frowand.list@gmail.com>
+ <1582224021-12827-2-git-send-email-frowand.list@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNATmJN-U2GNe2Qd7fS=h5URswe=aFgVJRaBTZt7pi374wg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582224021-12827-2-git-send-email-frowand.list@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alexandre,
-
-On 2/24/20 11:45 AM, Masahiro Yamada wrote:
-> Hi.
+On Thu, 20 Feb 2020 12:40:20 -0600, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 > 
-> On Sat, Feb 22, 2020 at 1:12 AM Alexandre Torgue
-> <alexandre.torgue@st.com> wrote:
->>
->> This commit adds a new script to create a file (in dts file directory) with
->> some information (date, Linux version, user). This file could then be used
->> to populate "build-info" property in every dts file that would use this
->> build information:
->>
->> Example:
->>
->> / {
->>         ...
->>         build-info = /incbin/("dtb-build.txt");
->>         ...
->> };
->>
->> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>
->> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
->> index bae62549e3d2..a5af84ef4ffc 100644
->> --- a/scripts/Makefile.lib
->> +++ b/scripts/Makefile.lib
->> @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
->>  # DTC
->>  # ---------------------------------------------------------------------------
->>  DTC ?= $(objtree)/scripts/dtc/dtc
->> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
->>
->>  # Disable noisy checks by default
->>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
->> @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->>
->>  quiet_cmd_dtc = DTC     $@
->>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
->> +       $(DTB_GEN_INFO) $(src) ; \
->>         $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
->>         $(DTC) -O $(2) -o $@ -b 0 \
->>                 $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
->> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
->> new file mode 100755
->> index 000000000000..0cd8bd98e410
->> --- /dev/null
->> +++ b/scripts/gen_dtb_build_info.sh
->> @@ -0,0 +1,10 @@
->> +#!/bin/bash
->> +# SPDX-License-Identifier: GPL-2.0
->> +
->> +set -o nounset
->> +
->> +DTB_DIR=$1
->> +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
->> +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
->> +
->> +printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
->> --
->> 2.17.1
->>
+> Geert reports that gpio hog nodes are not properly processed when
+> the gpio hog node is added via an overlay reply and provides an
+> RFC patch to fix the problem [1].
+> 
+> Add a unittest that shows the problem.  Unittest will report "1 failed"
+> test before applying Geert's RFC patch and "0 failed" after applying
+> Geert's RFC patch.
+> 
+> [1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
+> 
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+> 
+> changes since v1:
+>   - base on 5.6-rc1
+>   - fixed node names in overlays
+>   - removed unused fields from struct unittest_gpio_dev
+>   - of_unittest_overlay_gpio() cleaned up comments
+>   - of_unittest_overlay_gpio() moved saving global values into
+>     probe_pass_count and chip_request_count more tightly around
+>     test code expected to trigger changes in the global values
+> 
+> v1 of this patch incorrectly reported that it had made changes
+> since the RFC version, but it was mistakenly created from the
+> wrong branch.
+> 
+> There are checkpatch warnings.
+>   - New files are in a directory already covered by MAINTAINERS
+>   - The undocumented compatibles are restricted to use by unittest
+>     and should not be documented under Documentation
+>   - The printk() KERN_<LEVEL> warnings are false positives.  The level
+>     is supplied by a define parameter instead of a hard coded constant
+>   - The lines over 80 characters are consistent with unittest.c style
+> 
+> This unittest was also valuable in that it allowed me to explore
+> possible issues related to the proposed solution to the gpio hog
+> problem.
 > 
 > 
-> There are more than 1000 *.dts files
-> in arch/arm/boot/dts/.
-> 
-> So, with this patch, the build system will creates
-> arch/arm/boot/dts/dtb-build.txt 1000 times.
-> 
-> 
-> Does it work with parallel build ?
-> 
-> Think about what would happen
-> with 'make -j32 ARCH=arm  dtbs'
-> 
-> 
-> The 32 threads will write to
-> arch/arm/boot/dts/dtb-build.txt
-> at the same time.
-> 
-> Then, some of DTB would very likely to
-> include the broken dtb-build.txt
-> 
-> 
-> A list of missing parts in this approach:
-> 
->  - make it work with parallel build
->  - clean it up with 'make clean'
->  - add it .gitignore  (and Documentation/dontdiff)
-> 
-> 
+>  drivers/of/unittest-data/Makefile             |   8 +-
+>  drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +++
+>  drivers/of/unittest-data/overlay_gpio_02a.dts |  16 ++
+>  drivers/of/unittest-data/overlay_gpio_02b.dts |  16 ++
+>  drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +++
+>  drivers/of/unittest-data/overlay_gpio_04a.dts |  16 ++
+>  drivers/of/unittest-data/overlay_gpio_04b.dts |  16 ++
+>  drivers/of/unittest.c                         | 253 ++++++++++++++++++++++++++
+>  8 files changed, 370 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
+>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
+>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
+>  create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
+>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
+>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
 > 
 
-You might be able to rework script 'version_dtb_increment_once' from my
-previous attempt at this concept.  I do not know if the build system
-has changed since 2015 in a way that would make the script incorrect
-or if it is still valid.
+Applied, thanks.
 
-https://lore.kernel.org/linux-arm-kernel/550A44A8.9090302@gmail.com/
-
--Frank
+Rob
