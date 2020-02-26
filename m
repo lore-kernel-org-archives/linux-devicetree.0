@@ -6,97 +6,90 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09095C4BA13
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C6CC4BA12
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35E524680
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8A621D7E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbgBZOnO (ORCPT
+        id S1727322AbgBZOpl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:43:14 -0500
-Received: from muru.com ([72.249.23.125]:57640 "EHLO muru.com"
+        Wed, 26 Feb 2020 09:45:41 -0500
+Received: from mga01.intel.com ([192.55.52.88]:18305 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727362AbgBZOnO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:43:14 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id CB6A28022;
-        Wed, 26 Feb 2020 14:43:56 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 06:43:08 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.cz>, Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Rob Herring <robh@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] mfd: motmdm: Add Motorola TS 27.010 serdev modem
- driver for droid4
-Message-ID: <20200226144308.GM37466@atomide.com>
-References: <20200220195943.15314-1-tony@atomide.com>
- <20200220195943.15314-3-tony@atomide.com>
- <20200226115548.GO3494@dell>
+        id S1727916AbgBZOpl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:45:41 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 06:45:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
+   d="scan'208";a="230457861"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 26 Feb 2020 06:45:29 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1j6xwJ-004x21-02; Wed, 26 Feb 2020 16:45:31 +0200
+Date:   Wed, 26 Feb 2020 16:45:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+Subject: Re: [PATCH v3 3/3] phy: intel: Add driver support for Combophy
+Message-ID: <20200226144530.GR10400@smile.fi.intel.com>
+References: <cover.1582709320.git.eswara.kota@linux.intel.com>
+ <48dbbe705a1f22fb9e088827ca0be149e8fbcd85.1582709320.git.eswara.kota@linux.intel.com>
+ <20200226144147.GQ10400@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226115548.GO3494@dell>
+In-Reply-To: <20200226144147.GQ10400@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [200226 11:56]:
-> On Thu, 20 Feb 2020, Tony Lindgren wrote:
+On Wed, Feb 26, 2020 at 04:41:47PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 26, 2020 at 06:09:53PM +0800, Dilip Kota wrote:
+
+> > +	i = 0;
+> > +	fwnode_for_each_available_child_node(dev_fwnode(dev), fwnode) {
 > 
-> > Many Motorola phones are controlling the modem using a custom variant
-> > of TS 27.010 serial line discipline. Devices on these modems have a
-> > dedicated TS 27.010 channel for features like audio mixer, GNSS, voice
-> > modem, SIM card reader and so on.
-> > 
-> > This driver allows using various devices on the modem. In order to do
-> > that, we need to take care of the following three things:
-> > 
-> > 1. Provide /dev/motmdm* character devices for apps to use for talking
-> >    to the various devices on the modem
-> > 
-> > 2. Handle Motorola custom protocol over TS 27.010 to make the channels
-> >    usable for userspace
-> > 
-> > 3. Coordinate PM runtime with the USB PHY because of shared GPIO pins
-> >    with the USB PHY
-...
-> > ---
-> >  drivers/mfd/Kconfig        |    9 +
-> >  drivers/mfd/Makefile       |    1 +
-> >  drivers/mfd/motorola-mdm.c | 1200 ++++++++++++++++++++++++++++++++++++
+> > +		if (i >= PHY_MAX_NUM) {
+> > +			fwnode_handle_put(fwnode);
+> > +			dev_err(dev, "Error: DT child number larger than %d\n",
+> > +				PHY_MAX_NUM);
+> > +			return -EINVAL;
+> > +		}
 > 
-> I'm not even going to start reviewing this as I can see, without even
-> looking at the code, that this has too much functionality (stuff that
-> does stuff) contained.
+> Logically this part is better to put after i++; line...
+
+Ah, dismiss this, I forgot the fwnode_handle_put() part along with amount of
+accessible children.
+
+> > +		ret = intel_cbphy_iphy_dt_parse(cbphy, fwnode, i);
+> > +		if (ret) {
+> > +			fwnode_handle_put(fwnode);
+> > +			return ret;
+> > +		}
+> > +
 > 
-> Please move as much functionality out into the subsystems as
-> possible.  Ideally, MFDs should be responsible for obtaining and
-> registering shared resources and registering child devices.  Anything
-> else should be shifted out to an appropriate subsystem.
+> > +		i++;
 > 
-> MFD is not Misc.
+> ...here.
+> 
+> > +	}
+> > +
+> > +	return intel_cbphy_dt_sanity_check(cbphy);
+> > +}
 
-OK good point. So this is a serdev consumer driver that eventually will
-also provide serdev style access to few device drivers too for the
-device within the modem after decoding the Motorola specific protocol.
-No special need for this driver to be under drivers/mfd though.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-How about we add drivers/tty/serdev/protocol or similar directory for
-drivers like this?
 
-Naturally the all consumer device drivers should be in their subsystems
-like ALSA ASoC, GNSS and so on.
-
-Regards,
-
-Tony
