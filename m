@@ -2,152 +2,157 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C7FC4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94BFC4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5A024672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF02E24687
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:40:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZWGco+24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgBZTeb (ORCPT
+        id S1727287AbgBZTku (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:34:31 -0500
-Received: from mga18.intel.com ([134.134.136.126]:6427 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727238AbgBZTea (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:34:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 11:34:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="231514911"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga008.jf.intel.com with ESMTP; 26 Feb 2020 11:34:29 -0800
-Date:   Wed, 26 Feb 2020 11:39:59 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, yi.l.liu@intel.com,
-        zhangfei.gao@linaro.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 06/26] iommu/sva: Register page fault handler
-Message-ID: <20200226113959.62621098@jacob-builder>
-In-Reply-To: <20200224182401.353359-7-jean-philippe@linaro.org>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
-        <20200224182401.353359-7-jean-philippe@linaro.org>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 26 Feb 2020 14:40:50 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41227 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727277AbgBZTkt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 14:40:49 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b1so155624pgm.8
+        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 11:40:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xdxonaxq5cgaVyVSFlydOnK4js6i72Frs9eWxUe3hoU=;
+        b=ZWGco+24DWzp6T6iC7pzeOcrNs9WZCxdRz9U1mCJEoYzw/xp1ApHIVX6+9bZKK3JB9
+         671E148y7WlIei8+gAy1tEMGCOfqvBPkghIWrNeAMcWC2846jEkPXoAgLIXOkZVu+PaO
+         +k3bhEwopjUBDxa7HrmGbOSj1j+xzDM88VVbY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xdxonaxq5cgaVyVSFlydOnK4js6i72Frs9eWxUe3hoU=;
+        b=YtOEscVYRribBBvJBSEHUw8ru6uQMHruTarKVzNt1+obf0RfnbvbyGgL7Yn914fBYx
+         eOB/vGPv9OCRirn5USe8OAqZJqTtClq0+sau0A2V8gM6OWcD8rfoWvHbu3vi1KFBQAP2
+         dULP3+Bk1tuPSK+TovQxBtDKGANS/MNnRCHjyaJi8NKHDaxXxyyVfDZ7oxG8cx9zJWvR
+         HoeNOfCCpotL2mneljcFZTe/Wp4P5UE2r7MrTba5hlPUPuD3yCugzeG0Kh71JRUqOoRa
+         whz2PgyeGflenvshxsrFzWBvKu47oxPbPwT7TFtXH+dYZoCjprKGHZaew960eLoWmjsG
+         fRyQ==
+X-Gm-Message-State: APjAAAXkFErj6tgBebwWqGVFsYu9tHvcBk/4A15/LYRCJlCiRCU2SIHy
+        S0ovlCDR2R3V29u154/4TK8F1A==
+X-Google-Smtp-Source: APXvYqwhuC/pBQ8Wx2biij6V4vIbf21YokQ6iLCTfd7U6tWb2u8Ba+5PcksmfTfj//Loo+TgGcbWdA==
+X-Received: by 2002:a63:5b54:: with SMTP id l20mr414428pgm.324.1582746048314;
+        Wed, 26 Feb 2020 11:40:48 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id x190sm4039283pfb.96.2020.02.26.11.40.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 11:40:47 -0800 (PST)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dikshita Agarwal <dikshita@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] arm64: dts: sc7180: Move venus node to the correct position
+Date:   Wed, 26 Feb 2020 11:40:44 -0800
+Message-Id: <20200226114017.1.I15e0f7eff0c67a2b49d4992f9d80fc1d2fdadf63@changeid>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2020 19:23:41 +0100
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+Per convention device nodes for SC7180 should be ordered by address.
+This is currently not the case for the venus node, move it to the
+correct position.
 
-> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> 
-> When enabling SVA, register the fault handler. Device driver will
-> register an I/O page fault queue before or after calling
-> iommu_sva_enable. The fault queue must be flushed before any io_mm is
-> freed, to make sure that its PASID isn't used in any fault queue, and
-> can be reallocated. Add iopf_queue_flush() calls in a few strategic
-> locations.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->  drivers/iommu/Kconfig     |  1 +
->  drivers/iommu/iommu-sva.c | 16 ++++++++++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index e4a42e1708b4..211684e785ea 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -106,6 +106,7 @@ config IOMMU_DMA
->  config IOMMU_SVA
->  	bool
->  	select IOASID
-> +	select IOMMU_PAGE_FAULT
->  	select IOMMU_API
->  	select MMU_NOTIFIER
->  
-> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
-> index bfd0c477f290..494ca0824e4b 100644
-> --- a/drivers/iommu/iommu-sva.c
-> +++ b/drivers/iommu/iommu-sva.c
-> @@ -366,6 +366,8 @@ static void io_mm_release(struct mmu_notifier
-> *mn, struct mm_struct *mm) dev_WARN(dev, "possible leak of PASID %u",
->  				 io_mm->pasid);
->  
-> +		iopf_queue_flush_dev(dev, io_mm->pasid);
-> +
->  		/* unbind() frees the bond, we just detach it */
->  		io_mm_detach_locked(bond);
->  	}
-> @@ -442,11 +444,20 @@ static void iommu_sva_unbind_locked(struct
-> iommu_bond *bond) 
->  void iommu_sva_unbind_generic(struct iommu_sva *handle)
->  {
-> +	int pasid;
->  	struct iommu_param *param = handle->dev->iommu_param;
->  
->  	if (WARN_ON(!param))
->  		return;
->  
-> +	/*
-> +	 * Caller stopped the device from issuing PASIDs, now make
-> sure they are
-> +	 * out of the fault queue.
-> +	 */
-> +	pasid = iommu_sva_get_pasid_generic(handle);
-> +	if (pasid != IOMMU_PASID_INVALID)
-> +		iopf_queue_flush_dev(handle->dev, pasid);
-> +
-I have an ordering concern.
-The caller can only stop the device issuing page request but there will
-be in-flight request inside the IOMMU. If we flush here before clearing
-the PASID context, there might be new request coming in before the
-detach.
-How about detach first then flush? Then anything come after the detach
-would be faults. Flush will be clean.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
 
->  	mutex_lock(&param->sva_lock);
->  	mutex_lock(&iommu_sva_lock);
->  	iommu_sva_unbind_locked(to_iommu_bond(handle));
-> @@ -484,6 +495,10 @@ int iommu_sva_enable(struct device *dev, struct
-> iommu_sva_param *sva_param) goto err_unlock;
->  	}
->  
-> +	ret = iommu_register_device_fault_handler(dev,
-> iommu_queue_iopf, dev);
-> +	if (ret)
-> +		goto err_unlock;
-> +
->  	dev->iommu_param->sva_param = new_param;
->  	mutex_unlock(&param->sva_lock);
->  	return 0;
-> @@ -521,6 +536,7 @@ int iommu_sva_disable(struct device *dev)
->  		goto out_unlock;
->  	}
->  
-> +	iommu_unregister_device_fault_handler(dev);
->  	kfree(param->sva_param);
->  	param->sva_param = NULL;
->  out_unlock:
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 52 ++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-[Jacob Pan]
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 253274d5f04c..5f97945e16a4 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1332,6 +1332,32 @@ system-cache-controller@9200000 {
+ 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		venus: video-codec@aa00000 {
++			compatible = "qcom,sc7180-venus";
++			reg = <0 0x0aa00000 0 0xff000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&videocc VENUS_GDSC>,
++					<&videocc VCODEC0_GDSC>;
++			power-domain-names = "venus", "vcodec0";
++			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
++				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
++				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
++			clock-names = "core", "iface", "bus",
++				      "vcodec0_core", "vcodec0_bus";
++			iommus = <&apps_smmu 0x0c00 0x60>;
++			memory-region = <&venus_mem>;
++
++			video-decoder {
++				compatible = "venus-decoder";
++			};
++
++			video-encoder {
++				compatible = "venus-encoder";
++			};
++		};
++
+ 		usb_1: usb@a6f8800 {
+ 			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
+ 			reg = <0 0x0a6f8800 0 0x400>;
+@@ -1538,32 +1564,6 @@ dispcc: clock-controller@af00000 {
+ 			#power-domain-cells = <1>;
+ 		};
+ 
+-		venus: video-codec@aa00000 {
+-			compatible = "qcom,sc7180-venus";
+-			reg = <0 0x0aa00000 0 0xff000>;
+-			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&videocc VENUS_GDSC>,
+-					<&videocc VCODEC0_GDSC>;
+-			power-domain-names = "venus", "vcodec0";
+-			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+-				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+-				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+-				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+-				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+-			clock-names = "core", "iface", "bus",
+-				      "vcodec0_core", "vcodec0_bus";
+-			iommus = <&apps_smmu 0x0c00 0x60>;
+-			memory-region = <&venus_mem>;
+-
+-			video-decoder {
+-				compatible = "venus-decoder";
+-			};
+-
+-			video-encoder {
+-				compatible = "venus-encoder";
+-			};
+-		};
+-
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
+-- 
+2.25.1.481.gfbce0eb801-goog
+
