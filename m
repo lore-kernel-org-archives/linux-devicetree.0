@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B68C4BA11
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64786C4BA10
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921AB24653
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ADE124656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dGKYuUek"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="No0k3OIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgBZJhv (ORCPT
+        id S1728080AbgBZJiD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:37:51 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40660 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727996AbgBZJhu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 04:37:50 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bdv2019797;
-        Wed, 26 Feb 2020 03:37:39 -0600
+        Wed, 26 Feb 2020 04:38:03 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45698 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbgBZJiC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 04:38:02 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bpYG048469;
+        Wed, 26 Feb 2020 03:37:51 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582709859;
-        bh=y87/V7I5zHb8iyPROpfrmWQgIDTgx7YSXRab81S5ydQ=;
+        s=ti-com-17Q1; t=1582709872;
+        bh=f73KydanqCBfpggGnWafdMQaZ6wiesDHl1RvZlVeYSw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=dGKYuUekGnlAQmBS0P73h9oiGmCI1KzMzEY4yzwUFrV//cwZNz9fMNEI5+giZaotJ
-         gp6m/ODrSrxp4k5tqxEiKaFJ2zNt10UNGqvZPt87bf7E0psyI8LneSxjacf/LXq7ES
-         YVfdgzZ9NUgOWgFJTy05qV4kZ7BQxWK65kjouB2o=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bdo1086843;
-        Wed, 26 Feb 2020 03:37:39 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        b=No0k3OIxU014MkfBvJ/fgCEQgTU7Z/CIgPHeLbBZuNxg97HCQabtuGeyb9bWOr/+H
+         NBRwuOutUGuYTPlp9TIJ63sj5HHaz5l+8TMVBu76ri4gs1VS+EqUgVtcuc4F55DO+J
+         1sLHBaf1ZOvmd1rXzk0+7N8QkkBuz9qMjSA0Imuc=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q9bpPI119216
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 03:37:51 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 03:37:38 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 03:37:51 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 03:37:38 -0600
+ Frontend Transport; Wed, 26 Feb 2020 03:37:51 -0600
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4AC110613;
-        Wed, 26 Feb 2020 03:37:35 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4AF110613;
+        Wed, 26 Feb 2020 03:37:47 -0600
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -57,9 +58,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v2 07/11] mtd: spi-nor: get command opcode extension type from BFPT
-Date:   Wed, 26 Feb 2020 15:06:59 +0530
-Message-ID: <20200226093703.19765-8-p.yadav@ti.com>
+Subject: [PATCH v2 10/11] mtd: spi-nor: enable octal DTR mode when possible
+Date:   Wed, 26 Feb 2020 15:07:02 +0530
+Message-ID: <20200226093703.19765-11-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200226093703.19765-1-p.yadav@ti.com>
 References: <20200226093703.19765-1-p.yadav@ti.com>
@@ -72,77 +73,84 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some devices in DTR mode expect an extra command byte called the
-extension. The extension can either be same as the opcode, bitwise
-inverse of the opcode, or another additional byte forming a 16-byte
-opcode. Get the extension type from the BFPT. For now, only flashes with
-"repeat" and "inverse" extensions are supported.
-
-As of JESD216D.01, BFPT is 20 DWORDs, so update the table size to
-reflect that.
+Allow flashes to specify a hook to enable octal DTR mode. Use this hook
+whenever possible to get optimal transfer speeds.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c | 31 +++++++++++++++++++++++++++++++
+ include/linux/mtd/spi-nor.h   |  2 ++
+ 2 files changed, 33 insertions(+)
 
 diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 6102520550a1..c86c1537f76e 100644
+index 06cfc525260c..fdcc1b4abc3f 100644
 --- a/drivers/mtd/spi-nor/spi-nor.c
 +++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -79,11 +79,11 @@ struct sfdp_header {
- /* Basic Flash Parameter Table */
- 
- /*
-- * JESD216 rev B defines a Basic Flash Parameter Table of 16 DWORDs.
-- * They are indexed from 1 but C arrays are indexed from 0.
-+ * JESD216 rev D defines a Basic Flash Parameter Table of 20 DWORDs. They are
-+ * indexed from 1 but C arrays are indexed from 0.
-  */
- #define BFPT_DWORD(i)		((i) - 1)
--#define BFPT_DWORD_MAX		16
-+#define BFPT_DWORD_MAX		20
- 
- /* The first version of JESD216 defined only 9 DWORDs. */
- #define BFPT_DWORD_MAX_JESD216			9
-@@ -148,6 +148,12 @@ struct sfdp_header {
- #define BFPT_DWORD15_QER_SR2_BIT1_NO_RD		(0x4UL << 20)
- #define BFPT_DWORD15_QER_SR2_BIT1		(0x5UL << 20) /* Spansion */
- 
-+#define BFPT_DWORD18_CMD_EXT_MASK		GENMASK(30, 29)
-+#define BFPT_DWORD18_CMD_EXT_REP		(0x0UL << 29) /* Repeat */
-+#define BFPT_DWORD18_CMD_EXT_INV		(0x1UL << 29) /* Invert */
-+#define BFPT_DWORD18_CMD_EXT_RES		(0x2UL << 29) /* Reserved */
-+#define BFPT_DWORD18_CMD_EXT_16B		(0x3UL << 29) /* 16-bit opcode */
-+
- struct sfdp_bfpt {
- 	u32	dwords[BFPT_DWORD_MAX];
- };
-@@ -3867,6 +3873,24 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
- 		return -EINVAL;
- 	}
- 
-+	/* 8D-8D-8D command extension. */
-+	switch (bfpt.dwords[BFPT_DWORD(18)] & BFPT_DWORD18_CMD_EXT_MASK) {
-+	case BFPT_DWORD18_CMD_EXT_REP:
-+		nor->cmd_ext = SPI_MEM_EXT_REPEAT;
-+		break;
-+
-+	case BFPT_DWORD18_CMD_EXT_INV:
-+		nor->cmd_ext = SPI_MEM_EXT_INVERT;
-+		break;
-+
-+	case BFPT_DWORD18_CMD_EXT_RES:
-+		return -EINVAL;
-+
-+	case BFPT_DWORD18_CMD_EXT_16B:
-+		dev_err(nor->dev, "16-bit opcodes not supported\n");
-+		return -ENOTSUPP;
-+	}
-+
- 	return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt, params);
+@@ -5184,6 +5184,31 @@ static void spi_nor_init_params(struct spi_nor *nor)
+ 	spi_nor_late_init_params(nor);
  }
  
++/** spi_nor_octal_dtr_enable() - enable Octal DTR I/O if needed
++ * @nor:                 pointer to a 'struct spi_nor'
++ *
++ * Return: 0 on success, -errno otherwise.
++ */
++static int spi_nor_octal_dtr_enable(struct spi_nor *nor)
++{
++	int ret;
++
++	if (!nor->params.octal_dtr_enable)
++		return 0;
++
++	if (!(spi_nor_get_protocol_width(nor->read_proto) == 8 ||
++	      spi_nor_get_protocol_width(nor->write_proto) == 8))
++		return 0;
++
++	ret = nor->params.octal_dtr_enable(nor);
++	if (ret)
++		return ret;
++
++	nor->reg_proto = SNOR_PROTO_8_8_8_DTR;
++
++	return 0;
++}
++
+ /**
+  * spi_nor_quad_enable() - enable Quad I/O if needed.
+  * @nor:                pointer to a 'struct spi_nor'
+@@ -5223,6 +5248,12 @@ static int spi_nor_init(struct spi_nor *nor)
+ {
+ 	int err;
+ 
++	err = spi_nor_octal_dtr_enable(nor);
++	if (err) {
++		dev_dbg(nor->dev, "octal mode not supported\n");
++		return err;
++	}
++
+ 	err = spi_nor_quad_enable(nor);
+ 	if (err) {
+ 		dev_dbg(nor->dev, "quad mode not supported\n");
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index f54dbd0f86ab..c653f6713cfc 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -526,6 +526,7 @@ struct spi_nor_locking_ops {
+  *                      higher index in the array, the higher priority.
+  * @erase_map:		the erase map parsed from the SFDP Sector Map Parameter
+  *                      Table.
++ * @octal_dtr_enable:	enables SPI NOR octal DTR mode.
+  * @quad_enable:	enables SPI NOR quad mode.
+  * @set_4byte:		puts the SPI NOR in 4 byte addressing mode.
+  * @convert_addr:	converts an absolute address into something the flash
+@@ -549,6 +550,7 @@ struct spi_nor_flash_parameter {
+ 
+ 	struct spi_nor_erase_map        erase_map;
+ 
++	int (*octal_dtr_enable)(struct spi_nor *nor);
+ 	int (*quad_enable)(struct spi_nor *nor);
+ 	int (*set_4byte)(struct spi_nor *nor, bool enable);
+ 	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
 -- 
 2.25.0
 
