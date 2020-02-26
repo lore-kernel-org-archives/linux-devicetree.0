@@ -7,91 +7,91 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3DFC4BA18
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6399C4BA18
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA68924670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B294324670
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582735617;
-	bh=5OpPjbfOUoYkheZj1nQy9Vjfb+Ezcm54r1AV24If9Sk=;
+	s=default; t=1582735710;
+	bh=AyV+rEVApn0d86MUGYS3G+Ev4cJkOIvxqRx9o7bXNf4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WpqMfTCeDljMhjc/DydZFdyRhyXX6uhtUli10pieMRuD466QVK/BPL5TzKNHVRvfJ
-	 BhrT318jUWYdRu/efLUBc4/FVoAcCqkuXtvV6pS8yvYyHD53UHf+00OfFSffRsJJe4
-	 5DnbWYy7ShpsC/E9/aZjb8miQSjVWIx701m/DYFc=
+	b=olr70WL84shjsf4i7m2v1Co1xBQgNlxGEomkwc/jX2KRbQ0BFCV3cfXdoktKB4B3+
+	 B32CEJ7REYT6B12dv033yb5n70LT4ifRu6kAmjVtDLS34G5XNFUVstpDDVdANEb+3e
+	 B3RFKRpJA+in6rpbtUpCAcIXgULeDY0K+y7aB2DI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgBZQqx (ORCPT
+        id S1726366AbgBZQs1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:46:53 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44405 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbgBZQqx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:46:53 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h9so3528005otj.11;
-        Wed, 26 Feb 2020 08:46:52 -0800 (PST)
+        Wed, 26 Feb 2020 11:48:27 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41036 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgBZQs1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:48:27 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so135559oie.8;
+        Wed, 26 Feb 2020 08:48:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bPkNgrD0XTEQh+3xIosJggjfUocBUIxTPyEHiivVmyY=;
-        b=auh8ITFvOYAfhMX0LsCZDzppMl4SZu0U7dJ2/bqLjFoyTCRWabhQCL7Lg7k7lNDq4j
-         9SDU4h6L4ZSqk5HqRbLF5e68LHeiIGdMgIMzujiMoaDGv7O3itKxgzXri3ceEtUJrfDJ
-         gz2wOst91xmiGIJvjm2NG4CEr7h1N+Ux7rtu3uFiTP7hCxkQLtBndUJ7HeGzAoVzH0ix
-         hnikpk2pfSJYQEMGDO1sYoDUq3jyzDk2FgRTCUlUQ+2QYjQ0qYsM4pHMXBnoBQSZ1AbC
-         bLg645sK0mIWRrmHMkQsnnAhkhVlpMX7UPRf0wWuYsB2H8hPY1Z/M/Acv8F/9/YUSdeN
-         YZ7Q==
-X-Gm-Message-State: APjAAAXq49rCxVQ9/e5qeMDNwZiTeehHitou+sTA8rLBGUgij/pFxBQ5
-        gBdXixekXLGaAlWYBUwJtPsEyvNSrw==
-X-Google-Smtp-Source: APXvYqyOCcGsXxIhYjcUqRhhtA1NArKYIhwPJu9E5shGzCoArkou36oa+gAYqrwlQK0Yxez0Y7uH/w==
-X-Received: by 2002:a05:6830:134c:: with SMTP id r12mr3794075otq.126.1582735612311;
-        Wed, 26 Feb 2020 08:46:52 -0800 (PST)
+        bh=wYb2SPyfU9sT5dHwc2B+qBWDt2ccSquWhAdxVh14F+o=;
+        b=SXMlzPt4EBNdDzcLdHsSxdjqBlopqdyt42xwiO410qYBE+cAhq9LMmb3RC2vXB/QO5
+         i/mrj5dPD7DzymKLElX5r4PqDE9wf4iWBWOnT3AbOoTbkV3trxdSGChzAbwI8gkZFBHg
+         YwNLi1LzvcGVDYsw1956S49Os3V7ICIpARWFgOzhRoMMEhArKe0PawF8b+FC5x6q329O
+         meg7vXWrYgRZkuEVQPuXLLuGbUhUDc3XCG6jDBye1ViaA/iOkl/L1jTwpCNa/p+7ZWcK
+         FE1IYleCDMIArJ38mShEmbBjHjA3au4E4WwCkBj6xqzqUdJGg1GJ0utxro/CtNmqVAnM
+         IIrg==
+X-Gm-Message-State: APjAAAXVP8awnQRlec7K9kRkbHMfFNTkB/dQwgzjviFurOrAXPHK+ilG
+        XNRdLRdwaZPjJot116bfzQ==
+X-Google-Smtp-Source: APXvYqzqWkKvdNyvC73lIfPwrzjTstV2xUgnU7vLxawHZqyFVI4GcqFEaXpJ+Hms53LlnWG+uylBPA==
+X-Received: by 2002:a54:4f14:: with SMTP id e20mr3776108oiy.84.1582735706721;
+        Wed, 26 Feb 2020 08:48:26 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g5sm948027otp.10.2020.02.26.08.46.51
+        by smtp.gmail.com with ESMTPSA id k201sm978469oih.43.2020.02.26.08.48.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:46:51 -0800 (PST)
-Received: (nullmailer pid 17801 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:46:51 -0000
-Date:   Wed, 26 Feb 2020 10:46:51 -0600
+        Wed, 26 Feb 2020 08:48:26 -0800 (PST)
+Received: (nullmailer pid 20055 invoked by uid 1000);
+        Wed, 26 Feb 2020 16:48:25 -0000
+Date:   Wed, 26 Feb 2020 10:48:25 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-i2c@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] dt-bindings: i2c: Convert UniPhier FI2C controller
- to  json-schema
-Message-ID: <20200226164651.GA17752@bogus>
-References: <20200221025535.30311-1-yamada.masahiro@socionext.com>
- <20200221025535.30311-2-yamada.masahiro@socionext.com>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        logan.shaw@alliedtelesis.co.nz,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v4 1/5] dt-bindings: hwmon: Document adt7475 binding
+Message-ID: <20200226164825.GA19992@bogus>
+References: <20200221041631.10960-1-chris.packham@alliedtelesis.co.nz>
+ <20200221041631.10960-2-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221025535.30311-2-yamada.masahiro@socionext.com>
+In-Reply-To: <20200221041631.10960-2-chris.packham@alliedtelesis.co.nz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2020 11:55:34 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier FIFO-builtin I2C (a.k.a. FIFO) controller binding
-> to DT schema format.
+On Fri, 21 Feb 2020 17:16:27 +1300, Chris Packham wrote:
 > 
-> There are two types of I2C controllers used on the UniPhier platform.
-> This is the new one with FIFO support, which is used on the Pro4 SoC
-> or newer.
+> From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Add binding for adi,adt7475 and variants.
+> Remove from trivial-devices.
+> 
+> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
 > 
->  .../bindings/i2c/i2c-uniphier-f.txt           | 25 ----------
->  .../bindings/i2c/socionext,uniphier-fi2c.yaml | 50 +++++++++++++++++++
->  2 files changed, 50 insertions(+), 25 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-uniphier-f.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/socionext,uniphier-fi2c.yaml
+> Notes:
+>     Changes in v3:
+>     - split conversion to yaml from addition of new properties
+> 
+>  .../devicetree/bindings/hwmon/adt7475.yaml    | 57 +++++++++++++++++++
+>  .../devicetree/bindings/trivial-devices.yaml  |  8 ---
+>  2 files changed, 57 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
