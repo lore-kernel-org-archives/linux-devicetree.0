@@ -2,222 +2,125 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBDEC4BA0B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AD6C4BA0E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FDF222C2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3005724656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 09:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bt6GKp40"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CEG0EYD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgBZJEH (ORCPT
+        id S1727545AbgBZJJQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:04:07 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42055 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgBZJEH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 04:04:07 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 83so1361936lfh.9;
-        Wed, 26 Feb 2020 01:04:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9eHZsWhf/jI0CQUdI3eAEsrWZ3jvP1O0Z9niC9Xk7qU=;
-        b=Bt6GKp40/528dIego2DNE20IvNRKTqPzT65q2zEeWe8bApszPZNzCNzQHavKUIlb18
-         s+1muF3PFfBeFE+MaReQimvdA9Fv2waQG910ug5Ho5cAGCDy6s1muuOhbXZIEsqopIxo
-         ROAfEOa8ZKwhQtZuT4CQ4w+SaaefQl0ksiptXkiuVhdBcl1WSiZ1xoZCMn0cdLsJwXuU
-         SvNlaweTXadrtLfbr8GB0l4xqRRjhEhZ8u3KpWUPzj+Zv6ye1Un1ys9FbsGUgVVAs0UZ
-         aLf+tSIZfeTqGSun8S+4tCeQ+vZ9RZJfVXWOutLfH1ZgMsg6gIvldFORNJfo00O05Ibv
-         vFCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9eHZsWhf/jI0CQUdI3eAEsrWZ3jvP1O0Z9niC9Xk7qU=;
-        b=X1rKIS1khBrmy3bPxcwr6MFdtByKc0QFd2g3nf4yO74feBlBPySDkKNoe9qH5Z1/9S
-         J4pJtXkNwTU+ammGHir9olTi+nK8HW0mlOYKFXatapkI14htlrYftV1h8ZIirXG+illC
-         nQTUykdNoELnh7J9EWCZgQt4DP4Mwzg1y+veZfHayL437ZGOqAt9sRM8yiYNtadUKqvQ
-         N+9pTZkF3D8xLyE9F4//GM9oJkxe46cYZebdVVkdIuWaHIF4O/zEQ86wl1e0Aa9U7G1o
-         E+1UOeOkXGi6SiFdVlq2LyYhnRvfHOkHQg8Suif3BzvpEEaNZnbKqBEC4MX+IHexECIx
-         NTeA==
-X-Gm-Message-State: APjAAAV1v3ioq4iGfrF5jKcppAK8tSproH3XdCAKyMvawHYgR7ofsBjQ
-        hLymLezEEnYU2c+f9kc/OnA=
-X-Google-Smtp-Source: APXvYqwrbSOXZUu09UI9/5ecj+GU4pY2j83Euw++/lMlFFAzDz7ZkhK3fSH2SPIK4olLQspKKPsbDQ==
-X-Received: by 2002:a05:6512:3e5:: with SMTP id n5mr1887701lfq.55.1582707845096;
-        Wed, 26 Feb 2020 01:04:05 -0800 (PST)
-Received: from localhost.localdomain (dsl-trebng21-b048b1-221.dhcp.inet.fi. [176.72.177.221])
-        by smtp.googlemail.com with ESMTPSA id k1sm777927lji.43.2020.02.26.01.04.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 01:04:04 -0800 (PST)
-From:   =?UTF-8?q?Joni=20Lepist=C3=B6?= <joni.m.lepisto@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     =?UTF-8?q?Joni=20Lepist=C3=B6?= <joni.m.lepisto@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: zynq: Add support for Z-turn Lite board
-Date:   Wed, 26 Feb 2020 11:03:36 +0200
-Message-Id: <20200226090337.16065-1-joni.m.lepisto@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 26 Feb 2020 04:09:16 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33844 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgBZJJQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 04:09:16 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q98kPl100212;
+        Wed, 26 Feb 2020 03:08:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582708126;
+        bh=715M2fEsQcQ9pGCNA+WdZUDo8i9Ym6s9zxFMk/XbQHM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=CEG0EYD07SZfu0ZemKPihOoI30dStRLAC+bcraQqR//LNHsqF4Akstjvlb/UI5lY4
+         54RSGgkjvojx/j0Cf2rAAZ2SD0nnTwpy+54VZG5VizfndJzvMQ2MKGcdIWrbBqX6Ll
+         KlzqFMqsNnWT1ohsOhwZI4DsDIr00JJUYoGGAPHU=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q98kCs075706
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 03:08:46 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 03:08:46 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 03:08:45 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01Q98fuI103976;
+        Wed, 26 Feb 2020 03:08:41 -0600
+Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
+ transceiver regulator
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Rob Herring <robh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
+References: <20200217142836.23702-1-faiz_abbas@ti.com>
+ <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
+ <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
+ <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
+Date:   Wed, 26 Feb 2020 14:40:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a dts for MYIR Z-turn Lite and respective target in Makefile
-based on the existing Z-turn dts which is compatible except for
-memory size.
+Hi Marc,
 
-Signed-off-by: Joni Lepistö <joni.m.lepisto@gmail.com>
----
- arch/arm/boot/dts/Makefile            |   1 +
- arch/arm/boot/dts/zynq-zturn-lite.dts | 115 ++++++++++++++++++++++++++
- 2 files changed, 116 insertions(+)
- create mode 100644 arch/arm/boot/dts/zynq-zturn-lite.dts
+On 21/02/20 2:01 pm, Marc Kleine-Budde wrote:
+> On 2/21/20 9:31 AM, Faiz Abbas wrote:
+>> Hi Rob,
+>>
+>> On 20/02/20 2:05 am, Rob Herring wrote:
+>>> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
+>>>> Some CAN transceivers have a standby line that needs to be asserted
+>>>> before they can be used. Model this GPIO lines as an optional
+>>>> fixed-regulator node. Document bindings for the same.
+>>>>
+>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
+>>>>  1 file changed, 3 insertions(+)
+>>>
+>>> This has moved to DT schema in my tree, so please adjust it and resend.
+>>
+>> Ok.
+>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> index ed614383af9c..f17e2a5207dc 100644
+>>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> @@ -48,6 +48,9 @@ Optional Subnode:
+>>>>  			  that can be used for CAN/CAN-FD modes. See
+>>>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>>>>  			  for details.
+>>>> +
+>>>> +- xceiver-supply: Regulator that powers the CAN transceiver.
+>>>
+>>> The supply for a transceiver should go in the transceiver node.
+>>>
+>>
+>> Marc, while I have you here, do you agree with this?
+> 
+> I'll look into the details later today.
+> 
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d6546d2676b9..56b1bce92744 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1241,6 +1241,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
- 	zynq-zc770-xm013.dtb \
- 	zynq-zed.dtb \
- 	zynq-zturn.dtb \
-+	zynq-zturn-lite.dtb \
- 	zynq-zybo.dtb \
- 	zynq-zybo-z7.dtb
- dtb-$(CONFIG_MACH_ARMADA_370) += \
-diff --git a/arch/arm/boot/dts/zynq-zturn-lite.dts b/arch/arm/boot/dts/zynq-zturn-lite.dts
-new file mode 100644
-index 000000000000..96c0babe8267
---- /dev/null
-+++ b/arch/arm/boot/dts/zynq-zturn-lite.dts
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2015 Andrea Merello <adnrea.merello@gmail.com>
-+ *  Copyright (C) 2017 Alexander Graf <agraf@suse.de>
-+ *  Copyright (C) 2020 Joni Lepistö <joni.m.lepisto@gmail.com>
-+ *
-+ *  Based on zynq-zed.dts which is:
-+ *  Copyright (C) 2011 - 2014 Xilinx
-+ *  Copyright (C) 2012 National Instruments Corp.
-+ *
-+ */
-+
-+/dts-v1/;
-+/include/ "zynq-7000.dtsi"
-+
-+/ {
-+	model = "Zynq Z-Turn Lite MYIR Board";
-+	compatible = "myir,zynq-zturn-lite", "xlnx,zynq-7000";
-+
-+	aliases {
-+		ethernet0 = &gem0;
-+		serial0 = &uart1;
-+		serial1 = &uart0;
-+		mmc0 = &sdhci0;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x20000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		usr-led1 {
-+			label = "usr-led1";
-+			gpios = <&gpio0 0x0 0x1>;
-+			default-state = "off";
-+		};
-+
-+		usr-led2 {
-+			label = "usr-led2";
-+			gpios = <&gpio0 0x9 0x1>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+		K1 {
-+			label = "K1";
-+			gpios = <&gpio0 0x32 0x1>;
-+			linux,code = <0x66>;
-+			wakeup-source;
-+			autorepeat;
-+		};
-+	};
-+};
-+
-+&clkc {
-+	ps-clk-frequency = <33333333>;
-+};
-+
-+&gem0 {
-+	status = "okay";
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethernet_phy>;
-+
-+	ethernet_phy: ethernet-phy@0 {
-+		reg = <0x0>;
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&can0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	stlm75@49 {
-+		status = "okay";
-+		compatible = "lm75";
-+		reg = <0x49>;
-+	};
-+
-+	accelerometer@53 {
-+		compatible = "adi,adxl345", "adxl345", "adi,adxl34x", "adxl34x";
-+		reg = <0x53>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0x0 0x1e 0x4>;
-+	};
-+};
--- 
-2.20.1
+Sure. Be sure to take another look at my attempt to use the transceiver
+with a phy driver some time ago.
 
+https://lore.kernel.org/patchwork/patch/1006238/
+
+Thanks,
+Faiz
