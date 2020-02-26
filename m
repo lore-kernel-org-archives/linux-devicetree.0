@@ -6,153 +6,345 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59061C4BA0D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 05:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3509FC4BA0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 05:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A49B206E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 05:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B0D206E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 05:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgBZFmS (ORCPT
+        id S1727044AbgBZFqe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:42:18 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:40400 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgBZFmR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:42:17 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F0211216721;
-        Wed, 26 Feb 2020 06:42:15 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 63984216704;
-        Wed, 26 Feb 2020 06:42:08 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A32BE402CA;
-        Wed, 26 Feb 2020 13:41:59 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        l.stach@pengutronix.de, abel.vesa@nxp.com,
-        andrew.smirnov@gmail.com, agx@sigxcpu.org, angus@akkea.ca,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] ARM: dts: Make iomuxc node name generic
-Date:   Wed, 26 Feb 2020 13:36:18 +0800
-Message-Id: <1582695378-25461-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582695378-25461-1-git-send-email-Anson.Huang@nxp.com>
-References: <1582695378-25461-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 26 Feb 2020 00:46:34 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52781 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbgBZFqe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 00:46:34 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1j6pWe-00029i-1M; Wed, 26 Feb 2020 06:46:28 +0100
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1j6pWb-0003hy-DZ; Wed, 26 Feb 2020 06:46:25 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Chris Snook <chris.snook@gmail.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Subject: [PATCH v8 1/1] net: ag71xx: port to phylink
+Date:   Wed, 26 Feb 2020 06:46:24 +0100
+Message-Id: <20200226054624.14199-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Node name should be generic, use "pinctrl" instead of "iomuxc"
-for all i.MX6/7 SoCs.
+The port to phylink was done as close as possible to initial
+functionality.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx6dl.dtsi  | 2 +-
- arch/arm/boot/dts/imx6q.dtsi   | 2 +-
- arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
- arch/arm/boot/dts/imx6sl.dtsi  | 2 +-
- arch/arm/boot/dts/imx6sx.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul.dtsi  | 2 +-
- arch/arm/boot/dts/imx7s.dtsi   | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+changes v8:
+- set the autoneg bit
+- provide implementations for the mac_pcs_get_state and mac_an_restart
+  methods
+- do phylink_disconnect_phy() on _stop()
+- rename ag71xx_phy_setup() to ag71xx_phylink_setup() 
 
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 4b3a128..bba25d0 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -86,7 +86,7 @@
- 		};
+ drivers/net/ethernet/atheros/Kconfig  |   2 +-
+ drivers/net/ethernet/atheros/ag71xx.c | 150 +++++++++++++++++---------
+ 2 files changed, 98 insertions(+), 54 deletions(-)
+
+diff --git a/drivers/net/ethernet/atheros/Kconfig b/drivers/net/ethernet/atheros/Kconfig
+index 0058051ba925..2720bde5034e 100644
+--- a/drivers/net/ethernet/atheros/Kconfig
++++ b/drivers/net/ethernet/atheros/Kconfig
+@@ -20,7 +20,7 @@ if NET_VENDOR_ATHEROS
+ config AG71XX
+ 	tristate "Atheros AR7XXX/AR9XXX built-in ethernet mac support"
+ 	depends on ATH79
+-	select PHYLIB
++	select PHYLINK
+ 	help
+ 	  If you wish to compile a kernel for AR7XXX/91XXX and enable
+ 	  ethernet support, then you should always answer Y to this.
+diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
+index e95687a780fb..9692ae1734a8 100644
+--- a/drivers/net/ethernet/atheros/ag71xx.c
++++ b/drivers/net/ethernet/atheros/ag71xx.c
+@@ -32,6 +32,7 @@
+ #include <linux/of_mdio.h>
+ #include <linux/of_net.h>
+ #include <linux/of_platform.h>
++#include <linux/phylink.h>
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+ #include <linux/clk.h>
+@@ -314,6 +315,8 @@ struct ag71xx {
+ 	dma_addr_t stop_desc_dma;
  
- 		aips1: bus@2000000 {
--			iomuxc: iomuxc@20e0000 {
-+			iomuxc: pinctrl@20e0000 {
- 				compatible = "fsl,imx6dl-iomuxc";
- 			};
+ 	phy_interface_t phy_if_mode;
++	struct phylink *phylink;
++	struct phylink_config phylink_config;
  
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 0fad13f..907cf83 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -181,7 +181,7 @@
- 				};
- 			};
+ 	struct delayed_work restart_work;
+ 	struct timer_list oom_timer;
+@@ -845,24 +848,23 @@ static void ag71xx_hw_start(struct ag71xx *ag)
+ 	netif_wake_queue(ag->ndev);
+ }
  
--			iomuxc: iomuxc@20e0000 {
-+			iomuxc: pinctrl@20e0000 {
- 				compatible = "fsl,imx6q-iomuxc";
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 70fb8b5..8baad74 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -908,7 +908,7 @@
- 				};
- 			};
+-static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
++static void ag71xx_mac_config(struct phylink_config *config, unsigned int mode,
++			      const struct phylink_link_state *state)
+ {
+-	struct phy_device *phydev = ag->ndev->phydev;
++	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
+ 	u32 cfg2;
+ 	u32 ifctl;
+ 	u32 fifo5;
  
--			iomuxc: iomuxc@20e0000 {
-+			iomuxc: pinctrl@20e0000 {
- 				compatible = "fsl,imx6dl-iomuxc", "fsl,imx6q-iomuxc";
- 				reg = <0x20e0000 0x4000>;
- 			};
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index c8ec46f..0359902 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -728,7 +728,7 @@
- 				reg = <0x020e0000 0x38>;
- 			};
+-	if (!phydev->link && update) {
+-		ag71xx_hw_stop(ag);
++	if (phylink_autoneg_inband(mode))
+ 		return;
+-	}
  
--			iomuxc: iomuxc@20e0000 {
-+			iomuxc: pinctrl@20e0000 {
- 				compatible = "fsl,imx6sl-iomuxc";
- 				reg = <0x020e0000 0x4000>;
- 			};
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index e47d346..43e36e1 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -806,7 +806,7 @@
- 				};
- 			};
+ 	if (!ag71xx_is(ag, AR7100) && !ag71xx_is(ag, AR9130))
+ 		ag71xx_fast_reset(ag);
  
--			iomuxc: iomuxc@20e0000 {
-+			iomuxc: pinctrl@20e0000 {
- 				compatible = "fsl,imx6sx-iomuxc";
- 				reg = <0x020e0000 0x4000>;
- 			};
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index e1807e9..c53898b 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -693,7 +693,7 @@
- 				interrupt-parent = <&intc>;
- 			};
+ 	cfg2 = ag71xx_rr(ag, AG71XX_REG_MAC_CFG2);
+ 	cfg2 &= ~(MAC_CFG2_IF_1000 | MAC_CFG2_IF_10_100 | MAC_CFG2_FDX);
+-	cfg2 |= (phydev->duplex) ? MAC_CFG2_FDX : 0;
++	cfg2 |= (state->duplex) ? MAC_CFG2_FDX : 0;
  
--			iomuxc: iomuxc@20e0000 {
-+			iomuxc: pinctrl@20e0000 {
- 				compatible = "fsl,imx6ul-iomuxc";
- 				reg = <0x020e0000 0x4000>;
- 			};
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 196bbd6..6932600 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -490,7 +490,7 @@
- 				status = "disabled";
- 			};
+ 	ifctl = ag71xx_rr(ag, AG71XX_REG_MAC_IFCTL);
+ 	ifctl &= ~(MAC_IFCTL_SPEED);
+@@ -870,7 +872,7 @@ static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
+ 	fifo5 = ag71xx_rr(ag, AG71XX_REG_FIFO_CFG5);
+ 	fifo5 &= ~FIFO_CFG5_BM;
  
--			iomuxc: iomuxc@30330000 {
-+			iomuxc: pinctrl@30330000 {
- 				compatible = "fsl,imx7d-iomuxc";
- 				reg = <0x30330000 0x10000>;
- 			};
+-	switch (phydev->speed) {
++	switch (state->speed) {
+ 	case SPEED_1000:
+ 		cfg2 |= MAC_CFG2_IF_1000;
+ 		fifo5 |= FIFO_CFG5_BM;
+@@ -883,7 +885,6 @@ static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
+ 		cfg2 |= MAC_CFG2_IF_10_100;
+ 		break;
+ 	default:
+-		WARN(1, "not supported speed %i\n", phydev->speed);
+ 		return;
+ 	}
+ 
+@@ -897,58 +898,91 @@ static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
+ 	ag71xx_wr(ag, AG71XX_REG_MAC_CFG2, cfg2);
+ 	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG5, fifo5);
+ 	ag71xx_wr(ag, AG71XX_REG_MAC_IFCTL, ifctl);
++}
+ 
+-	ag71xx_hw_start(ag);
++static void ag71xx_mac_validate(struct phylink_config *config,
++			    unsigned long *supported,
++			    struct phylink_link_state *state)
++{
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
++
++	if (state->interface != PHY_INTERFACE_MODE_NA &&
++	    state->interface != PHY_INTERFACE_MODE_GMII &&
++	    state->interface != PHY_INTERFACE_MODE_MII) {
++		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
++		return;
++	}
++
++	phylink_set(mask, MII);
++
++	phylink_set(mask, Autoneg);
++	phylink_set(mask, 10baseT_Half);
++	phylink_set(mask, 10baseT_Full);
++	phylink_set(mask, 100baseT_Half);
++	phylink_set(mask, 100baseT_Full);
++
++	if (state->interface == PHY_INTERFACE_MODE_NA ||
++	    state->interface == PHY_INTERFACE_MODE_GMII) {
++		phylink_set(mask, 1000baseT_Full);
++		phylink_set(mask, 1000baseX_Full);
++	}
+ 
+-	if (update)
+-		phy_print_status(phydev);
++	bitmap_and(supported, supported, mask,
++		   __ETHTOOL_LINK_MODE_MASK_NBITS);
++	bitmap_and(state->advertising, state->advertising, mask,
++		   __ETHTOOL_LINK_MODE_MASK_NBITS);
+ }
+ 
+-static void ag71xx_phy_link_adjust(struct net_device *ndev)
++static void ag71xx_mac_pcs_get_state(struct phylink_config *config,
++				     struct phylink_link_state *state)
+ {
+-	struct ag71xx *ag = netdev_priv(ndev);
++	state->link = 0;
++}
+ 
+-	ag71xx_link_adjust(ag, true);
++static void ag71xx_mac_an_restart(struct phylink_config *config)
++{
++	/* Not Supported */
+ }
+ 
+-static int ag71xx_phy_connect(struct ag71xx *ag)
++static void ag71xx_mac_link_down(struct phylink_config *config,
++				 unsigned int mode, phy_interface_t interface)
+ {
+-	struct device_node *np = ag->pdev->dev.of_node;
+-	struct net_device *ndev = ag->ndev;
+-	struct device_node *phy_node;
+-	struct phy_device *phydev;
+-	int ret;
++	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
+ 
+-	if (of_phy_is_fixed_link(np)) {
+-		ret = of_phy_register_fixed_link(np);
+-		if (ret < 0) {
+-			netif_err(ag, probe, ndev, "Failed to register fixed PHY link: %d\n",
+-				  ret);
+-			return ret;
+-		}
++	ag71xx_hw_stop(ag);
++}
+ 
+-		phy_node = of_node_get(np);
+-	} else {
+-		phy_node = of_parse_phandle(np, "phy-handle", 0);
+-	}
++static void ag71xx_mac_link_up(struct phylink_config *config, unsigned int mode,
++			       phy_interface_t interface,
++			       struct phy_device *phy)
++{
++	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
+ 
+-	if (!phy_node) {
+-		netif_err(ag, probe, ndev, "Could not find valid phy node\n");
+-		return -ENODEV;
+-	}
++	ag71xx_hw_start(ag);
++}
+ 
+-	phydev = of_phy_connect(ag->ndev, phy_node, ag71xx_phy_link_adjust,
+-				0, ag->phy_if_mode);
++static const struct phylink_mac_ops ag71xx_phylink_mac_ops = {
++	.validate = ag71xx_mac_validate,
++	.mac_pcs_get_state = ag71xx_mac_pcs_get_state,
++	.mac_an_restart = ag71xx_mac_an_restart,
++	.mac_config = ag71xx_mac_config,
++	.mac_link_down = ag71xx_mac_link_down,
++	.mac_link_up = ag71xx_mac_link_up,
++};
+ 
+-	of_node_put(phy_node);
++static int ag71xx_phylink_setup(struct ag71xx *ag)
++{
++	struct phylink *phylink;
+ 
+-	if (!phydev) {
+-		netif_err(ag, probe, ndev, "Could not connect to PHY device\n");
+-		return -ENODEV;
+-	}
++	ag->phylink_config.dev = &ag->ndev->dev;
++	ag->phylink_config.type = PHYLINK_NETDEV;
+ 
+-	phy_attached_info(phydev);
++	phylink = phylink_create(&ag->phylink_config, ag->pdev->dev.fwnode,
++				 ag->phy_if_mode, &ag71xx_phylink_mac_ops);
++	if (IS_ERR(phylink))
++		return PTR_ERR(phylink);
+ 
++	ag->phylink = phylink;
+ 	return 0;
+ }
+ 
+@@ -1239,6 +1273,13 @@ static int ag71xx_open(struct net_device *ndev)
+ 	unsigned int max_frame_len;
+ 	int ret;
+ 
++	ret = phylink_of_phy_connect(ag->phylink, ag->pdev->dev.of_node, 0);
++	if (ret) {
++		netif_err(ag, link, ndev, "phylink_of_phy_connect filed with err: %i\n",
++			  ret);
++		goto err;
++	}
++
+ 	max_frame_len = ag71xx_max_frame_len(ndev->mtu);
+ 	ag->rx_buf_size =
+ 		SKB_DATA_ALIGN(max_frame_len + NET_SKB_PAD + NET_IP_ALIGN);
+@@ -1251,11 +1292,7 @@ static int ag71xx_open(struct net_device *ndev)
+ 	if (ret)
+ 		goto err;
+ 
+-	ret = ag71xx_phy_connect(ag);
+-	if (ret)
+-		goto err;
+-
+-	phy_start(ndev->phydev);
++	phylink_start(ag->phylink);
+ 
+ 	return 0;
+ 
+@@ -1268,8 +1305,8 @@ static int ag71xx_stop(struct net_device *ndev)
+ {
+ 	struct ag71xx *ag = netdev_priv(ndev);
+ 
+-	phy_stop(ndev->phydev);
+-	phy_disconnect(ndev->phydev);
++	phylink_stop(ag->phylink);
++	phylink_disconnect_phy(ag->phylink);
+ 	ag71xx_hw_disable(ag);
+ 
+ 	return 0;
+@@ -1414,13 +1451,14 @@ static void ag71xx_restart_work_func(struct work_struct *work)
+ {
+ 	struct ag71xx *ag = container_of(work, struct ag71xx,
+ 					 restart_work.work);
+-	struct net_device *ndev = ag->ndev;
+ 
+ 	rtnl_lock();
+ 	ag71xx_hw_disable(ag);
+ 	ag71xx_hw_enable(ag);
+-	if (ndev->phydev->link)
+-		ag71xx_link_adjust(ag, false);
++
++	phylink_stop(ag->phylink);
++	phylink_start(ag->phylink);
++
+ 	rtnl_unlock();
+ }
+ 
+@@ -1759,6 +1797,12 @@ static int ag71xx_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, ndev);
+ 
++	err = ag71xx_phylink_setup(ag);
++	if (err) {
++		netif_err(ag, probe, ndev, "failed to setup phylink (%d)\n", err);
++		goto err_mdio_remove;
++	}
++
+ 	err = register_netdev(ndev);
+ 	if (err) {
+ 		netif_err(ag, probe, ndev, "unable to register net device\n");
 -- 
-2.7.4
+2.25.0
 
