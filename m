@@ -2,117 +2,68 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B793BC4BA0E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 10:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70943C4BA11
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 10:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8894E206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 10:00:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="RoeEF8Ve"
+	by mail.kernel.org (Postfix) with ESMTP id 49FD024656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 10:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbgBZKAp (ORCPT
+        id S1727457AbgBZKKG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:00:45 -0500
-Received: from mail.kmu-office.ch ([178.209.48.109]:47948 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbgBZKAp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 05:00:45 -0500
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 7BC445C2BCF;
-        Wed, 26 Feb 2020 11:00:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1582711242;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ePmS7XO1+c6T51otcQraIoZVvQV4pOzpfHZOivGH1Ow=;
-        b=RoeEF8Ve+22KNPqaEf9qu9/4e6wKLg0KLscyhkoSR4oRsFxTu40avKIErXJqAPDAw2rela
-        XM+se4G3O6pIJJUC9f9N9bScqxRfA8+z4rrj633JD4ah3BjgHnrMdeE1QP1J02BFXuwfTd
-        cNuJxD5nmnTujmFM8Q/pMsvIm35G9FI=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Feb 2020 11:00:42 +0100
-From:   Stefan Agner <stefan@agner.ch>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/5] arm: dts: vf: toradex: re-license GPL-2.0+ to
- GPL-2.0
-In-Reply-To: <CAGgjyvHE+B-VCSfmR9MeO2-u6=dVCUCmCorEa1J+NG5vwQoRfA@mail.gmail.com>
-References: <1582565548-20627-1-git-send-email-igor.opaniuk@gmail.com>
- <1582565548-20627-5-git-send-email-igor.opaniuk@gmail.com>
- <CAGgjyvHE+B-VCSfmR9MeO2-u6=dVCUCmCorEa1J+NG5vwQoRfA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.1
-Message-ID: <8a33d75f0bdf10b0b15514ac790a248d@agner.ch>
-X-Sender: stefan@agner.ch
+        Wed, 26 Feb 2020 05:10:06 -0500
+Received: from mga18.intel.com ([134.134.136.126]:31619 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726927AbgBZKKG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 05:10:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 02:10:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,487,1574150400"; 
+   d="scan'208";a="231349699"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga008.jf.intel.com with ESMTP; 26 Feb 2020 02:10:03 -0800
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v3 0/3] Add Intel ComboPhy driver 
+Date:   Wed, 26 Feb 2020 18:09:50 +0800
+Message-Id: <cover.1582709320.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-02-26 10:29, Oleksandr Suvorov wrote:
-> On Mon, Feb 24, 2020 at 7:33 PM Igor Opaniuk <igor.opaniuk@gmail.com> wrote:
->>
->> From: Igor Opaniuk <igor.opaniuk@toradex.com>
->>
->> Specify explicitly that GPL-2.0 license can be used and not
->> GPL-2.0+ (which also includes next less permissive versions of GPL)
->> in Toradex Vybrid-based SoM device trees.
->>
->> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-> 
-> Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> 
-> And please ignore my note about copyright for the previous change of this file.
-> 
+This patch series adds Intel Combophy driver, respective yaml schemas
+and a kernel API fwnode_to_regmap().
+ComboPhy driver calls it to get regmap handle through firmware node.
 
-The Linux on Vybrids Cortex-M4 was an entirely private endeavour of me,
-so there is no Toradex Copyright here.
+Dilip Kota (3):
+  mfd: syscon: Add fwnode_to_regmap
+  dt-bindings: phy: Add YAML schemas for Intel Combophy
+  phy: intel: Add driver support for Combophy
 
-I agree on the License change.
+ .../devicetree/bindings/phy/intel,combo-phy.yaml   | 123 ++++
+ drivers/mfd/syscon.c                               |   8 +
+ drivers/phy/intel/Kconfig                          |  13 +
+ drivers/phy/intel/Makefile                         |   1 +
+ drivers/phy/intel/phy-intel-combo.c                | 672 +++++++++++++++++++++
+ include/dt-bindings/phy/phy-intel-combophy.h       |  10 +
+ include/linux/mfd/syscon.h                         |   6 +
+ 7 files changed, 833 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+ create mode 100644 drivers/phy/intel/phy-intel-combo.c
+ create mode 100644 include/dt-bindings/phy/phy-intel-combophy.h
 
-Acked-by: Stefan Agner <stefan@agner.ch>
+-- 
+2.11.0
 
---
-Stefan
-
->> ---
->>
->>  arch/arm/boot/dts/vf610m4-colibri.dts | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
->> index 2c2db47..75c6d82 100644
->> --- a/arch/arm/boot/dts/vf610m4-colibri.dts
->> +++ b/arch/arm/boot/dts/vf610m4-colibri.dts
->> @@ -1,7 +1,8 @@
->> -// SPDX-License-Identifier: GPL-2.0+ OR MIT
->> +// SPDX-License-Identifier: GPL-2.0 OR MIT
->>  /*
->>   * Device tree for Colibri VF61 Cortex-M4 support
->>   *
->> + * Copyright (C) 2020 Toradex AG
->>   * Copyright (C) 2015 Stefan Agner
->>   */
->>
->> --
->> 2.7.4
->>
