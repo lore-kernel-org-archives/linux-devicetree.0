@@ -2,90 +2,113 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC696C4BA13
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B4AC4BA1E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6557222C2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F081020801
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582738083;
-	bh=nQh/Bo/NBb5ljRBYa8nIGyLcht5dYXUQX4KXscm8GX8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J6dDKapxUDZgY9fyk+2g7bQRk8FhWFpug/+XT2Ht0Xqv/6zx6ktL+dnoJu7c7SVJN
-	 nuwU7OliOsD8HVld2C4LDmX6ykMbFqaum9uTT22XyCXsFZiEAKCgJHJpg1vdFS6zAi
-	 mgGdnpstAeEYtZGzd4Rd3t41ahnovqy+uLujroT8=
+	s=default; t=1582739286;
+	bh=fgXXmcy3p6J7HeRs7qw3qjSVUrD3Xh/4pPXjxkI9B/4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RbPV0nNEJLwDnQjAk/iy0booSO7MudxrDAnqCJuO9ECasFmykrWQYFCdykWlOpUJh
+	 HSigC7mR2a8Kse4H7I45iWL8cmtRUpvALsrUNz9wAZPiIg65cJnz9AhLPOL7/Tj13f
+	 KyTKTlZ2O/jI4lwiKwbDJssbg6Pdu5vAauihq94I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgBZR2D (ORCPT
+        id S1726925AbgBZRsF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:28:03 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34845 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgBZR2D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 12:28:03 -0500
-Received: by mail-oi1-f195.google.com with SMTP id b18so320428oie.2;
-        Wed, 26 Feb 2020 09:28:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t83+nB3W6oXdApXXRMLwz8oHqiI3quakZhUjW8Nn9Jk=;
-        b=R41L2VqiNyX3+m+mSoyCgp6ENq3oZAPp5TSB2pozKHwaFhYlfYEqrgX3z8RwEbS4Yy
-         QVEej2EX+Igyj1P7kJOhN0VQaq6XfAQ+tJmvRyML/Uac8y3syGBqv9Tv11VbF3EkzThF
-         0DKm8Q92/2AUv9ldHvZwm6QcgNED9KUNK8H2wjQ74PoIB23SfCrcVn4IZCwv/mmmPU4g
-         VzWFrDCjHuwwBbQt49uj5g3pUdxC+TkCGDsGqATwuMqKuOA3Td+gUEVZJrb/6EuFeLV5
-         xlSP+vgsZ7IEhfYyNXcj5hIfNYfFlhVyVlt0XsO6tTPC0t/JEnaW3TZk/8mZueC8HqKU
-         Z/ag==
-X-Gm-Message-State: APjAAAWMDZDeQyEsvVEiEa7CFQpiO/kLPsrx2msSdBlzQlnBtMWsYBId
-        +gixTDbYmUrt8XtSZaSGlg==
-X-Google-Smtp-Source: APXvYqxIZscytpwpjUEBs4aKZOxXofyE3s8jmDy1RE4Sc6pXr02J+2XwFazqn2VQDBxT94r/V+dHvw==
-X-Received: by 2002:a05:6808:aa8:: with SMTP id r8mr50338oij.7.1582738082288;
-        Wed, 26 Feb 2020 09:28:02 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v134sm1004026oia.38.2020.02.26.09.28.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 09:28:01 -0800 (PST)
-Received: (nullmailer pid 10384 invoked by uid 1000);
-        Wed, 26 Feb 2020 17:28:00 -0000
-Date:   Wed, 26 Feb 2020 11:28:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: dmaengine: Add UniPhier
- external DMA controller bindings
-Message-ID: <20200226172800.GA10328@bogus>
-References: <1582271550-3403-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1582271550-3403-2-git-send-email-hayashi.kunihiko@socionext.com>
+        Wed, 26 Feb 2020 12:48:05 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:59514 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgBZRsF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 12:48:05 -0500
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 01QHlrqU018829;
+        Thu, 27 Feb 2020 02:47:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 01QHlrqU018829
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582739274;
+        bh=SDaslj3im9eGGF3GWkYw29Ie5s/mrO4oXtYg61NAUmg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TSAmf5YiR59vvSP5hW7HsQsk+UuON9lPxv8ggMkzklgJ60ttDBLTs80cPREFkVoCo
+         aC1SepTe/mFTxqWwQLcwBJmWJq0OZBh0S4OfNZDiHAiQy9nJLm/LN8+IggTn0ZYTZn
+         fKeUAF/4aYs2AQyohWL1Nb/AwLTqqnz5oub1NMBC1omVGHBSFRc424t6vRqtfgdlKt
+         nEIsb0Ono4KNO6VBNmXA2k/CihTCFh6915uvoiak1KmfzgsYZFV4wkcVNfGjHIGrqe
+         sdumET83GL/sPurNTyUFRx+59OsexvWo8vnYUqRw9c3disajhKarkba2tEMjv2GgHq
+         bjGD44GtVm7LA==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id i4so1044069vkc.3;
+        Wed, 26 Feb 2020 09:47:54 -0800 (PST)
+X-Gm-Message-State: APjAAAVx71To1e0Pf6srG/mo5oE/3umRyVGvwn72FaEC1JpabV1lPHAK
+        RnRJzC7Dm8rP7qnSlBiwB1fZVoDWB2rUrgUylFE=
+X-Google-Smtp-Source: APXvYqzpehfk2yzFqtjIzlN57l6KrpJIDEr5QVAEBgcdOrwuouWmBqXYwTpOOjVHS2Vp3P09dydm2ACynKUaaC2vXyk=
+X-Received: by 2002:a1f:6344:: with SMTP id x65mr231703vkb.26.1582739273088;
+ Wed, 26 Feb 2020 09:47:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582271550-3403-2-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200222190435.11767-1-masahiroy@kernel.org> <20200224225253.GA27948@bogus>
+ <CAK7LNAS+iOAonhxN2BK4D8TSb8F-BqPxDGFU0AOv9fZ2So4iqA@mail.gmail.com>
+In-Reply-To: <CAK7LNAS+iOAonhxN2BK4D8TSb8F-BqPxDGFU0AOv9fZ2So4iqA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 27 Feb 2020 02:47:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS-Ozq8kwa4HixNQ=r8d3ToehFnsbh0F0TgAcnemXantA@mail.gmail.com>
+Message-ID: <CAK7LNAS-Ozq8kwa4HixNQ=r8d3ToehFnsbh0F0TgAcnemXantA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] kbuild: fix DT binding schema rule to detect command
+ line changes
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2020 16:52:29 +0900, Kunihiko Hayashi wrote:
-> Add devicetree binding documentation for external DMA controller
-> implemented on Socionext UniPhier SOCs.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 63 ++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> 
+On Tue, Feb 25, 2020 at 1:32 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Feb 25, 2020 at 7:52 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Sun, Feb 23, 2020 at 04:04:31AM +0900, Masahiro Yamada wrote:
+> > > This if_change_rule is not working; it cannot detect any command line
+> > > changes.
+> > >
+> > > The reason is because cmd-check in scripts/Kbuild.include compares
+> > > $(cmd_$@) and $(cmd_$1), but cmd_dtc_dt_yaml does not exist here.
+> > >
+> > > For if_change_rule to work properly, the stem part of cmd_* and rule_*
+> > > must match. Because this cmd_and_fixdep invokes cmd_dtc, this rule must
+> > > be named rule_dtc.
+> > >
+> > > Fixes: 4f0e3a57d6eb ("kbuild: Add support for DT binding schema checks")
+> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > ---
+> > >
+> > >  scripts/Makefile.lib | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > For the series,
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> >
+> > I'm assuming you will take these? If not, I can in the DT tree.
+>
+> Yes, I will queue these to kbuild tree.
+>
+>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+Applied with Rob's Ack.
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
