@@ -6,87 +6,137 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A986C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED28C4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6047F2072D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60A42072D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582754904;
-	bh=5VX8++U9y/LnJoeykKPpWd1u5XoTJOB1WK4xYT12u68=;
+	s=default; t=1582755208;
+	bh=77DYgHeZVhVX2ILtf2aQ/Hu/FiKPxj+mqYEd8Q8oPfI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=THPt0uMZjVgwOXzG/SoMobvqIEmMNm1JdF0ofYFHIOdCjBWu2S/8w66xGWroELLCS
-	 celQA/A2dCAXUSc31LHKJnkl5hcy5Pk0KyV4c6H/WpvmEo3vdVCs+ahWI6lOMOPOFz
-	 T0m4eejD1bZnW8Njtv0o8f/Nc+PwOjtxQJXBTFWQ=
+	b=jRu+/iVCtD7SWpp9cvqhTtxrFOpSbbBUy+h4MR1QKt/n/DeSO8AISHpTVxfbzNDsY
+	 iOq7gRc31Q0bvufrU0BdmDqdrQfzPbS8ThSfaff5O+5d0sjWl0CuWbqTzjXyr9w8ES
+	 iHRqcFo6quz8iLDXdGJIrX2+rZ/ioMlb4KJDzwo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgBZWIY (ORCPT
+        id S1727716AbgBZWN2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:08:24 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36783 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbgBZWIX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 17:08:23 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c16so1205740oic.3;
-        Wed, 26 Feb 2020 14:08:23 -0800 (PST)
+        Wed, 26 Feb 2020 17:13:28 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39071 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbgBZWN2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 17:13:28 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so1005415oty.6;
+        Wed, 26 Feb 2020 14:13:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5sk04Aa0osSD8HvD4zEQiuhG+Svc22FeYyxbfTqw7T0=;
-        b=Xtlr+JBS8WhwZSrDzxGiyA9amTUadjLza628BAe77Dj3tn4gVk10heI74dXuUE4uPX
-         3/rLCwHu/QkJ45wavFqPl4HFD/7kCwTJsfXTjXmHb7ir/Kmb7fYm9zhss9UeeBVDGWlg
-         +t7mse7AqXDkvE5hiiQ33U+HCeyWVID5wSyqBTVT6nDEl0PpRmp6a2UuIf63q2dy9nug
-         OO71iXYfRhGHtcPhyxvDRWKYaNprpdWD9XTvmMqzksfUFULIrzsXZ8Y1L27glxQz2NsK
-         dyqVF1QVuMU7GbPRJ3hKsWxTkle3X9Y+uOzOrhvCYXRWpl8gC/fdOEJDnCFRbxYP9bEz
-         lnDw==
-X-Gm-Message-State: APjAAAX+uCkZP6HVL7feXIk5abUdA/6M2tsUomlAbQcvGhQAwBaRmj3g
-        DRQFgcRgy7UdqQvsoIFoSYWW2a40vg==
-X-Google-Smtp-Source: APXvYqxd1SsKO6HCPpKNN3ewCCxV7z2W8Z76dRsKMhAF2AJ+0XISi4LTkCEmr5LiwzRxiH6hL8yI6A==
-X-Received: by 2002:a05:6808:3b2:: with SMTP id n18mr933712oie.146.1582754902605;
-        Wed, 26 Feb 2020 14:08:22 -0800 (PST)
+        bh=VADzarmrxahCNR8FX+Jii1uaWPHIPd0BL4EYC9qsa5g=;
+        b=uhckIdmUzIyw7CVjvy3KDxYz2Qr30DCBHCHUfEe01Oz6Ejuiy8Tj3x/QiLhbp96E7n
+         6KkNmPsnwxwBrjYxo9QvLSSD+ig2IddnNDMKzuevf9JZLfxKk8DE55cVFUVJnDypDV69
+         ZnR6hh/X0x5GyEim/MMpxfWgVhOMykv71ecd0NopDEdvnLX2Zg5hi4InkjhQG5fApefJ
+         8T6jKLyRPNkt/JLDQEF63R07t/mUT9FtC0JqD/JqXnxMPbVVcUp0UeDRT4XF6T1JX3Fr
+         N+22caQibtZI+BTM2ROmGph2SZZx8PEbXQSi+wRQ04PCCaJghqDkLwb++lBNwTieKwzC
+         xELQ==
+X-Gm-Message-State: APjAAAVNgxonM+oAjNiPnqEyKqZRMZyMYMWhEEkb9erjY4oDlaZ/Er0U
+        RPTbH2fYzgXzeLQmslVIiQ==
+X-Google-Smtp-Source: APXvYqyVYmNd9TzqdRK69Cf9KTihwGV0Co1KZ2Djifo2WvE+upUX9u8H7iL2I4n/LK1KC0WI9bHjwg==
+X-Received: by 2002:a9d:2264:: with SMTP id o91mr802190ota.328.1582755207398;
+        Wed, 26 Feb 2020 14:13:27 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m69sm1215131otc.78.2020.02.26.14.08.21
+        by smtp.gmail.com with ESMTPSA id w20sm1226848otj.21.2020.02.26.14.13.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:08:22 -0800 (PST)
-Received: (nullmailer pid 19698 invoked by uid 1000);
-        Wed, 26 Feb 2020 22:08:21 -0000
-Date:   Wed, 26 Feb 2020 16:08:21 -0600
+        Wed, 26 Feb 2020 14:13:26 -0800 (PST)
+Received: (nullmailer pid 26464 invoked by uid 1000);
+        Wed, 26 Feb 2020 22:13:25 -0000
+Date:   Wed, 26 Feb 2020 16:13:25 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] dt-bindings: bus: Convert UniPhier System Bus to
- json-schema
-Message-ID: <20200226220821.GA19595@bogus>
-References: <20200222061109.2021-1-yamada.masahiro@socionext.com>
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2] dt-bindings: interrupt-controller: Convert UniPhier
+ AIDET to json-schema
+Message-ID: <20200226221325.GA19817@bogus>
+References: <20200222110435.18772-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200222061109.2021-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20200222110435.18772-1-yamada.masahiro@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 22 Feb 2020 15:11:09 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier System Bus controller binding to DT schema format.
+On Sat, Feb 22, 2020 at 08:04:35PM +0900, Masahiro Yamada wrote:
+> Convert the UniPhier AIDET (ARM Interrupt Detector) binding to DT
+> schema format.
 > 
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Some qeustions:
+> 
+> I was wondering when 'additionalProperties: false' should be added.
+> 
+> If I add it to a bus controller device (e.g. I2C),
+> I see some schema warnings because various sub-nodes
+> are added depending on which device you connect.
+> 
+> On the other hand, the interrupt controller like this
+> does not have a subnode.
+> So, probably this is the case where we can add
+> 'additionalProperties: false'.
+> 
+> Is this correct?
+
+Yes.
+
+The problem with 'additionalProperties: false' is it doesn't include 
+what any $ref includes. There's a json-schema fix for this coming with 
+'unevaluatedProperties', but the json-schema python lib we use doesn't 
+yet support that.
+
+> 
+> One more thing.
+> 
+> There are multiple ways to do a similar thing:
+> 
+>    compatible:
+>      enum:
+>         - socionext,uniphier-ld4-aidet
+>         - socionext,uniphier-pro4-aidet
+>         ...
+> vs
+> 
+>    compatible:
+>      oneOf:
+>         - const: socionext,uniphier-ld4-aidet
+>         - const: socionext,uniphier-pro4-aidet
+>         ...
+> 
+> I adopted the former because I can save 'const'.
+> If there is a preferred way, I will follow it.
+
+I prefer the former.
+
+> 
+> END
+> 
 > ---
 > 
 > Changes in v2:
->   - Fix the build error in the example
+>   - fix the schema warning in the example
 > 
->  .../bus/socionext,uniphier-system-bus.yaml    | 96 +++++++++++++++++++
->  .../bindings/bus/uniphier-system-bus.txt      | 66 -------------
->  2 files changed, 96 insertions(+), 66 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
->  delete mode 100644 Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
-> 
+>  .../socionext,uniphier-aidet.txt              | 32 ----------
+>  .../socionext,uniphier-aidet.yaml             | 61 +++++++++++++++++++
+>  2 files changed, 61 insertions(+), 32 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.yaml
 
-Applied, thanks.
+It all looks fine, so I'll drop the questions and apply.
 
 Rob
