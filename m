@@ -7,80 +7,84 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9C3C4BA21
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39273C4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA712467B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047FF24679
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582753045;
-	bh=WGQ6NUV/Nq5CEhlta/6kB+OE4mCNdRqPyY/dZRNpOEo=;
+	s=default; t=1582753257;
+	bh=8r66nlawNRi7viwGZT+CztqVRc+7mDG7RHklqp3gfNI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OPaCsZf6Y6YiNRoJGiv+VGLKe7n8dolPMPVLvFYtbHQv/MuJxzNe6xp6aGKbV23m/
-	 UGBSS2RIeakZeNASpHYaha8cLDso/Bi/S7AoVY93T8YE+JHoybWPX/3Lr4kE59Skvh
-	 tHW6ruMgyZpOna7jlaeDMAjdXUK3GSzuK7eN0jm8=
+	b=Zv57Bt95FAfMzKnfiGbQ9OTPAGTpB269ruKreutZNRN7C+LAGCTl1yDLIEjDuFOuE
+	 t4vUhfo7HVXraELLzP01XJk7AoLX3MTECaHBK7nPKCN7W/S0m5uCmZWWSMXA2+KikF
+	 mZop8I+uNhlQubfd7XULq9V8tO2mq4pOskLfeG4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgBZVhW (ORCPT
+        id S1727656AbgBZVkx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:37:22 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41068 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbgBZVhW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:37:22 -0500
-Received: by mail-ot1-f66.google.com with SMTP id v19so893729ote.8;
-        Wed, 26 Feb 2020 13:37:20 -0800 (PST)
+        Wed, 26 Feb 2020 16:40:53 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39254 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727581AbgBZVkx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:40:53 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 18so1102921oij.6;
+        Wed, 26 Feb 2020 13:40:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BUfZ3V0xBDGwOALHfUr9ZrS1JEBM9H8lpVzraU/a970=;
-        b=BTW9sNY+psCns7vZRgSILOpJBXpUKeT8ftQVSs9u/Bpvp6AAwXMGUmz+HI8YqsrYZ6
-         1ro+qVdvYpR6xx8v0DbwVXoeUGj0Onn+gTOu6b4LuhWm3lulI8jJcCehxF0DzD2LWdID
-         rcgq9/L88KUMyde3Z4eROHuN9OBTEVBd68NjGH2jyz6aeqmqXtWAJ4f9DAxWo10RDVzu
-         a/lWoMO1675sppjszh6v+EQpdEicuCUmxhKBs031NVqHB649IyFt2OO+lk84Y1o6zLuU
-         tVETxAtB1+XiNT8PiRDWBm+gsz0wAMxqU78+JpoFdDNomUOZeDis2pgY5yitwF+QrPPM
-         JXsg==
-X-Gm-Message-State: APjAAAVDnAxxricPubRG+Kih2BGQKLgau9Tk6WPmerjKjIUpSPDBf3+Z
-        9RwJphdNCHBZg8Z8z6fmyStkhqI=
-X-Google-Smtp-Source: APXvYqwVcJhepVheqsHg5PUb4PEPVIuEdNpHnqGYdfi/G+PyJBA9spLO6DGQPJWkCR7g20EWo5LDMQ==
-X-Received: by 2002:a9d:5885:: with SMTP id x5mr704064otg.132.1582753039707;
-        Wed, 26 Feb 2020 13:37:19 -0800 (PST)
+        bh=iHvJZXfaFsdBwQaJk2vv6saQQi9sRm0B88DNe3HWc6U=;
+        b=O59y3k+amR+foCObRzCTtZXKHpg+4oSwKEjkMIDWoLrcE3S/PjnFKg+aR9nrTaZ2t2
+         XUB8PDKaKdzVbGqKQnaw0tcpWSZKiIzWKJvm9aWt0a9vVnSedhbLqAAFWNc3BMRuCG1l
+         DO8ccXrBJ4KeSMBkohe7ai3pPR2oX6ZFkJ9WNuzXnPZHQiD6+6YWAyw6KWAZFFxiLv1s
+         JDjwW8qfRmjfwZp4mHphZk6R8uXw+AfZI2qUaoszONWmsNOLbOVdgaxG3A0nfqcJBC3/
+         lcD63tseBWOJ1rJL9uFvr75pfFPqsJrqxnyp6lsl4XmE0DpVLPYiIhbjbM2uu1/XBy+Q
+         kA5Q==
+X-Gm-Message-State: APjAAAW1twytOomTMrOdnZoO0cUU/HxDzFPZsnIzVXa0Qpa0nReu29n0
+        nTXLdngmPT/pIZgt5iMR7A==
+X-Google-Smtp-Source: APXvYqxN4pJ97lfj17OYt1whimF+bYNAHeUpRu+ka34H+OLES7lZ4DVO98kdtzfHlvz+59DWiwBtAg==
+X-Received: by 2002:aca:ddc2:: with SMTP id u185mr919432oig.24.1582753252516;
+        Wed, 26 Feb 2020 13:40:52 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k18sm1209704oiw.44.2020.02.26.13.37.18
+        by smtp.gmail.com with ESMTPSA id q6sm1211721otn.73.2020.02.26.13.40.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 13:37:19 -0800 (PST)
-Received: (nullmailer pid 2770 invoked by uid 1000);
-        Wed, 26 Feb 2020 21:37:18 -0000
-Date:   Wed, 26 Feb 2020 15:37:18 -0600
+        Wed, 26 Feb 2020 13:40:51 -0800 (PST)
+Received: (nullmailer pid 8039 invoked by uid 1000);
+        Wed, 26 Feb 2020 21:40:51 -0000
+Date:   Wed, 26 Feb 2020 15:40:51 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Li Yang <leoyang.li@nxp.com>, Jiri Slaby <jslaby@suse.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 5/9] dt-bindings: serial: lpuart: add ls1028a
- compatibility
-Message-ID: <20200226213718.GA2712@bogus>
-References: <20200221174754.5295-1-michael@walle.cc>
- <20200221174754.5295-6-michael@walle.cc>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        kernel-team@android.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 4/5] of: property: Start using fw_devlink_get_flags()
+Message-ID: <20200226214051.GA7980@bogus>
+References: <20200222014038.180923-1-saravanak@google.com>
+ <20200222014038.180923-5-saravanak@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221174754.5295-6-michael@walle.cc>
+In-Reply-To: <20200222014038.180923-5-saravanak@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2020 18:47:50 +0100, Michael Walle wrote:
-> Signed-off-by: Michael Walle <michael@walle.cc>
+On Fri, 21 Feb 2020 17:40:37 -0800, Saravana Kannan wrote:
+> The fw_devlink_get_flags() provides the right flags to use when creating
+> mandatory device links derived from information provided by the
+> firmware. So, use that.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 > ---
->  .../devicetree/bindings/serial/fsl-lpuart.txt          | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+>  drivers/of/property.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
