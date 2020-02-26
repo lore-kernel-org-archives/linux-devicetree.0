@@ -4,89 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA974C4BA21
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC12C4BA21
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6FE2072D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81FC24653
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582755603;
-	bh=Do7HOuEYELFjEPC2NNzDtN9fzPyZEY1CW3EU9UNQ7xE=;
+	s=default; t=1582755708;
+	bh=y5enefhyCedh2Uk1vKBGr9aYqlVQ9UzgjfWZnZxtClY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IKtQXs3CbHlNVkptcrN8C74xMSk5oE+vQD9kfr/GID/jG3C0i5qbfVe9aoMSz/6Cu
-	 8m9bXgBIFr4Q7OuFvrerr8ppBUgw6cKOM/82CaavRFA5d4i6hHluJehtwzEgPbUaXs
-	 2rLoNsrFzbGB47SgElNmAp1+9/nQMd6+i4ZIHCXc=
+	b=VsUT7ahSaKAsB2gcUztuaaz/OG8FDhzZ4L9EtybLL0PfDpl/CMhHYF9GU2IDS5gBP
+	 aE8LGwanhd0FckztKUS/TqUFp82PGMXHH7L0Ay06iZhyntcLmh1GBhZJkPn3VFP261
+	 zs3Hpuv43arVKTl4l0y2wLFUHJSXNQ44y5wY25wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgBZWT7 (ORCPT
+        id S1727757AbgBZWVr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:19:59 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38880 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbgBZWT7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 17:19:59 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so1021870oth.5;
-        Wed, 26 Feb 2020 14:19:58 -0800 (PST)
+        Wed, 26 Feb 2020 17:21:47 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41875 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727736AbgBZWVr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 17:21:47 -0500
+Received: by mail-ot1-f68.google.com with SMTP id v19so1005622ote.8;
+        Wed, 26 Feb 2020 14:21:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=APzUm9Uqdb1AHoFIbybkkvfceWP8Qb3Vps+wDfO9Ixc=;
-        b=AKd+nZpvj1FLe7xAA674eqB2/r4NYLvwss7eL8uLyQZLaHdT48CsVm8WCLQyJLWtOK
-         U5JDKWTjY6vMN2wzhN4fROBspxx2J7O7Vj09EEXtnEbkueqCCg/+2oPSw7EJRH6uZwJV
-         AhzCiIvOzgQK3EKkl8y95k1rYMc3hEhI1pfmewBpBEGpd04ZdUrMb+M8JB3qXstGJfPe
-         rpFi2xCbCztHeMbPMKiMmrj+TxPwW7JJtXS1o4/P9illFMklhd4oXFpPmij8sNp1+O16
-         MEb/Jegc7AveIWG0GAajjXk6Ze5I3kh0q9tQ9BbJpdzScAUQdxWRgEEwTAjJGr2HSR04
-         Nszw==
-X-Gm-Message-State: APjAAAV/ZzBHPcfXJE6hBlOThNKFHATifWSO/vPMsavpDuscbY+1YM6c
-        4XxopJ5h6ZmEjSGGbPSzwA==
-X-Google-Smtp-Source: APXvYqzJ67z3QKNb5f0MEKdgKj5bNuL222LJdlX3AvANxrD0qrkW110WbpjtOgkTN1PvTjI4SZ10xA==
-X-Received: by 2002:a9d:638d:: with SMTP id w13mr862127otk.220.1582755598032;
-        Wed, 26 Feb 2020 14:19:58 -0800 (PST)
+        bh=pm+KRlKrRAlpkte58c3hWACvW9/7DnqTwr2mwwxPfyg=;
+        b=OEBBta5jol5bdse0pTiOJDIzF0m6qyAbGPeU6xVKexzQu9iZw4DDDrAnZNZ6GKOKLY
+         lhM7yc297xtRvPT7Ig5/CUYOEbqiWynT1zYjUIXmGA3i+eSBGoq9LMR4S9PP9qFUKywn
+         V0VvkahNdVA2CBz5RtHntEYm2SCZPbaVRjPmVsCCg3qllBeX+/1uRBmqImquLF8n3uIQ
+         5mqHAyqGnZgrITkfGwXyPL104KBnZ4y5mOtdxAe37r7u7ieTBgYKVGo0PVjUMlQA2U+U
+         9oAz9xWIjIl0kUAwqwanrT8i6ukaOoIiDviKJWv+FjHZLZJigcACZh5aSNsjG31tZsW+
+         rLaQ==
+X-Gm-Message-State: APjAAAXfHIeUmwB3aEznA6nIXQkWd16UNOrLoNTVqpjDK0MIQ4492zFu
+        BymapX7L4UXBseUbtmex7A==
+X-Google-Smtp-Source: APXvYqzqESskOaokNa5xJpO2bz/TvwXWpRKOLr9EGPeCRN81SZK39751YsyMrm8RnXZvtUdkdrwhVQ==
+X-Received: by 2002:a9d:7599:: with SMTP id s25mr844343otk.285.1582755705377;
+        Wed, 26 Feb 2020 14:21:45 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k18sm1246187oiw.44.2020.02.26.14.19.56
+        by smtp.gmail.com with ESMTPSA id m18sm1243415otf.6.2020.02.26.14.21.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:19:57 -0800 (PST)
-Received: (nullmailer pid 4045 invoked by uid 1000);
-        Wed, 26 Feb 2020 22:19:56 -0000
-Date:   Wed, 26 Feb 2020 16:19:56 -0600
+        Wed, 26 Feb 2020 14:21:44 -0800 (PST)
+Received: (nullmailer pid 6745 invoked by uid 1000);
+        Wed, 26 Feb 2020 22:21:43 -0000
+Date:   Wed, 26 Feb 2020 16:21:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [for-next PATCH 2/5] dt-bindings: phy: ti: gmii-sel: add support
- for am654x/j721e soc
-Message-ID: <20200226221956.GA3992@bogus>
-References: <20200222120358.10003-1-grygorii.strashko@ti.com>
- <20200222120358.10003-3-grygorii.strashko@ti.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masahiroy@kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: mtd: Convert Denali NAND controller to
+ json-schema
+Message-ID: <20200226222143.GA6682@bogus>
+References: <20200222141927.3868-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200222120358.10003-3-grygorii.strashko@ti.com>
+In-Reply-To: <20200222141927.3868-1-yamada.masahiro@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 22 Feb 2020 14:03:55 +0200, Grygorii Strashko wrote:
-> TI AM654x/J721E SoCs have the same PHY interface selection mechanism for
-> CPSWx subsystem as TI SoCs (AM3/4/5/DRA7), but registers and bit-fields
-> placement is different.
+On Sat, 22 Feb 2020 23:19:26 +0900, Masahiro Yamada wrote:
+> Convert the Denali NAND controller binding to DT schema format.
 > 
-> This patch adds corresponding compatible strings to enable support for TI
-> AM654x/J721E SoCs.
-> 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt | 1 +
->  1 file changed, 1 insertion(+)
+> 
+>  .../devicetree/bindings/mtd/denali,nand.yaml  | 149 ++++++++++++++++++
+>  .../devicetree/bindings/mtd/denali-nand.txt   |  61 -------
+>  2 files changed, 149 insertions(+), 61 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/denali,nand.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/denali-nand.txt
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
