@@ -2,328 +2,247 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632D6C4BA0B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 07:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1149C4BA0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 07:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2793521556
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 07:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB9E24653
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 07:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e6c6Iicb"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="XsgK3ZV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgBZHTF (ORCPT
+        id S1727129AbgBZH6b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:19:05 -0500
-Received: from mail-eopbgr40058.outbound.protection.outlook.com ([40.107.4.58]:2976
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        Wed, 26 Feb 2020 02:58:31 -0500
+Received: from mail-vi1eur05on2050.outbound.protection.outlook.com ([40.107.21.50]:6190
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726823AbgBZHTF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:19:05 -0500
+        id S1726587AbgBZH6b (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:58:31 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mWLHZSXfZ95QZ1JV3TFJgElHku8dmp7tl5+cB7soW2Gbp/KAPKAvOQ/q7ioXgSx2/61frRcnDmF2Qjm3XOUI5u+gy9//H3sczwjNVLtTAJhNN5qr57E+QLQP+hjIHrWYfp4qvpYcmg03n3ZXbBksJzyvTXwnnmvUhtU8T44jhkd7sbASmsWucf3/Fz+AjvWHsOg6iCkCaP+89/5UqJawZk0f86LXQk1vMu3KuromnlZ6h8oxz8MyKaWQRteL0QUAhO6CcgQtuqx5WPyn77kc4XIMjZwfVNYsp6whvnA/zqLvbH71BIeMmZuSNi4jJVU3GWP6mCj3TySg4WcG3Xdmpw==
+ b=mNdQaBvaEH6o+vSRlaOm4O2/aeb11nshQiTO9h1t4/LWZBC2ysZlAo4p/8w3rqy8DjYQaFmisv/mlhiSa5toEaL0zveasr+SotEQagdVvI6sbDGc4hinI/fAVf59x7HB9fKoR6vxC57xc9GSpLDhSHHrGeAduJlwZXqVXUtGc5YcX2x6P+a7vznaCyviqsBPRAtaW5VJ+A0Dx3y9HBLWPnVNHLCVbZSrAKvVxxlgg4F1nQkb8X55SrPKs1mrwJWtDbosdXAKooNB+th+BZz2KP9vGzv+46h2MGPtfw3VlQURrRjbW9Zsh+gnjQBzVBZbcU81KCpsbFLy/g/0IRW2JA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XC0MEAqHS1tsa7WkXuPcbgeDBkAmtuvCfNhMyoLlzR0=;
- b=UbMWu4HCvQcd1SLGtyF4eesZNNP/A2DFhuFmd05GuujBFhftDUx2ds55pfoBV13bTieBJEGO5bnsuYnB6XAqk0eaZxepU+/DxQ7dL465lRKXrqS3sIP8fvl6bKjoYEgwfo/FEbTKeGyDEakePl7e6VneaqKfoA5jTBqqjIwpbsCYqnN6AMTiYHmBOvl8LTkq2ojulZ5JqWjeZ57HF3UlzuksmuQkLkjfjnxGpg0yx2OLDYo4e/PzVWCcBGR534I/bqGQ2kcaOJ9Y9KgHjKIHc+ao6KDoPlcjNvgrr8Qibi9Vn5sholRKT/V2lqGeq4ldCvY4iy7mCDw4NpnZIO/oDQ==
+ bh=LhFb0ud6XCDs9DHZfgRnImIeWJ/Z4iG7EsTqihKvLFc=;
+ b=OZ4zesyeF0YG+GIWkvqvTGhsSZv11O85iuBsGDc1eA9d0jPh4A9/pKcqJJvGn+7tRtVOqJ6sxqXGsHJwp/Rle0AEmoFehxE17EohqUMPst1HhmDiV5tQ4WTLpl6H301MMcTb1mjZgm32Q7AjN+lHOUUrdr7sDGoB0SHl8n3EaBzF2NvMOgXExZExV9yxM+O+GJdURUa5klvVbaKXyqilsXhi8GfQmMCIv2dOdkTioGlqAN0znIrqUPEp9ux8ZBdlaS0VpidR0ImLgIAhHc+iz+fbsNCF4StN4C7MN4aRJr8HpkHln2iYnBMhc3W9GNV4rpPL7yvD8qk+J/Z1lOKppA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XC0MEAqHS1tsa7WkXuPcbgeDBkAmtuvCfNhMyoLlzR0=;
- b=e6c6IicbFn09HlUS1+lGOXT2+IXDhEc8nRA4LAAKRTIwtvx/Zm5R3efImNnyS40W/FArGXUNVM+LiK0pVBHi1r0vzOBNgWXXuzgdLmOA+dkdL4JbsSqbZYRVc0xsOiV4Jd1pIAH1hK25ZwE8/Ka0/vByobtbIdsk5PIV+uibRuY=
+ bh=LhFb0ud6XCDs9DHZfgRnImIeWJ/Z4iG7EsTqihKvLFc=;
+ b=XsgK3ZV0qZJ+YJdv6P/f8L5d0xrIaV4h2ULPBt/4IxPP2QavPfUVzhuL1apVdftdmU4v3NwU+807fcSZfYEEFlqewiHoyyVn1kphjrG9T6R4kI08mP/u+duyMtcsFT9DxirWfnubo1x9KaY/QDw7jfUXE9OMahTvWttsmvTuNdo=
 Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5506.eurprd04.prod.outlook.com (20.178.115.221) with Microsoft SMTP
+ smtp.mailfrom=laurentiu.palcu@oss.nxp.com; 
+Received: from AM6PR04MB5766.eurprd04.prod.outlook.com (20.179.2.143) by
+ AM6PR04MB4774.eurprd04.prod.outlook.com (20.177.33.85) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.22; Wed, 26 Feb 2020 07:19:01 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
- 07:19:01 +0000
-From:   peng.fan@nxp.com
-To:     sudeep.holla@arm.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        robh@kernel.org
-Cc:     viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andre.przywara@arm.com,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V3 2/2] firmware: arm_scmi: add smc/hvc transport
-Date:   Wed, 26 Feb 2020 15:12:51 +0800
-Message-Id: <1582701171-26842-3-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582701171-26842-1-git-send-email-peng.fan@nxp.com>
-References: <1582701171-26842-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0131.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::35) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+ 15.20.2750.22; Wed, 26 Feb 2020 07:58:26 +0000
+Received: from AM6PR04MB5766.eurprd04.prod.outlook.com
+ ([fe80::4c26:a809:e360:5864]) by AM6PR04MB5766.eurprd04.prod.outlook.com
+ ([fe80::4c26:a809:e360:5864%3]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
+ 07:58:26 +0000
+Date:   Wed, 26 Feb 2020 09:58:23 +0200
+From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, agx@sigxcpu.org, lukas@mntmn.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/4] dt-bindings: display: imx: add bindings for DCSS
+Message-ID: <20200226075823.rxaw75gsnpbrcalf@fsr-ub1864-141>
+References: <1575625964-27102-1-git-send-email-laurentiu.palcu@nxp.com>
+ <1575625964-27102-4-git-send-email-laurentiu.palcu@nxp.com>
+ <7716263db71ca07a52e5a562882f0ae7f35fee48.camel@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7716263db71ca07a52e5a562882f0ae7f35fee48.camel@pengutronix.de>
+User-Agent: NeoMutt/20171215
+X-ClientProxiedBy: LNXP265CA0028.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:5c::16) To AM6PR04MB5766.eurprd04.prod.outlook.com
+ (2603:10a6:20b:ab::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR01CA0131.apcprd01.prod.exchangelabs.com (2603:1096:4:40::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 07:18:58 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
+Received: from fsr-ub1864-141 (89.37.124.34) by LNXP265CA0028.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5c::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 07:58:25 +0000
+X-Originating-IP: [89.37.124.34]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9b4cf32e-d208-47f0-66bc-08d7ba8c2746
-X-MS-TrafficTypeDiagnostic: AM0PR04MB5506:|AM0PR04MB5506:
+X-MS-Office365-Filtering-Correlation-Id: f4815793-2f41-4f1d-dc0e-08d7ba91a8f5
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4774:|AM6PR04MB4774:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB5506BE7F16979ABB88110B6D88EA0@AM0PR04MB5506.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Microsoft-Antispam-PRVS: <AM6PR04MB477460B2D4AE4A6E230AD024BEEA0@AM6PR04MB4774.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-Forefront-PRVS: 0325F6C77B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(376002)(366004)(396003)(199004)(189003)(2906002)(6512007)(26005)(2616005)(16526019)(478600001)(8676002)(186003)(956004)(9686003)(8936002)(81156014)(6506007)(66946007)(66556008)(81166006)(6486002)(4326008)(7416002)(52116002)(36756003)(316002)(5660300002)(86362001)(66476007)(69590400006)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5506;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(366004)(39860400002)(199004)(189003)(54906003)(478600001)(4326008)(6916009)(316002)(81166006)(81156014)(6496006)(966005)(8676002)(52116002)(55016002)(8936002)(86362001)(186003)(9686003)(26005)(16526019)(1076003)(956004)(5660300002)(7416002)(66946007)(44832011)(33716001)(2906002)(66476007)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4774;H:AM6PR04MB5766.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Sa/UW5bntYAlpNrWRKKtNlDAYEeM0XNKV0dDYu/O5siu+WgaqWNtaJ6H+Bpgr550ut1djYX4Z2xU40gKYXYXnkTF6hUi4AwXx5LnLSwZ99jAEw/FcTPGovpjB5iqjwTUxvftgXz6e92Kaq1mXgbDGuWXobrDvR6ioCGvgOgy/l2wOqcEbSortAa2f9PgIbZz2ZKOY5WcJvx5mOejoMq1qHSboFHz76NHx+xQVLU8mvhLFi2qKZIJQIU/KlOaDHjYvJzel2Y8uZLgZEmYHo+vHLyz8aq7w7ZKS3DDccJQc0+N249+6lY2pOTRbFCBmU8zPgfq6CV7U9z1qESrZk4wH+lLl6SMExdpPLeY6s+zPakgYmzz1WYV5+XCN9ciW7BO+t1r1Rd+V/F2pLR+/0ub2DRRMb9DAYJgY/Lgdv422TUlqefDHcjMdKtBuFHMgm6E6rBfII7LH+CVu+hpbAO0KSc2KHDDYnYC9N6/tiqSgbotkp9IAEsXlSsahU5bdyqpUcEh1Uc4ptD3BD4nKn02HG6CHs2Jut1VFf2Vq0apgdc=
-X-MS-Exchange-AntiSpam-MessageData: rMRkIGyzWfGt2semLJzeuYDZCTBjZpClVbM+CFOdt6PO0O1B7aErSbgAejBpSRP9qpo2vu0MW/m4ttCmLLQX50K0mPNaz9M/yEEAWC582lQ+ZSfMDBMR1/cDQs3QHTyjs/3EUVI3aASlnJwaq2MfVg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b4cf32e-d208-47f0-66bc-08d7ba8c2746
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 07:19:01.6735
+X-Microsoft-Antispam-Message-Info: dfTmCWX5x7n7wkqGa7l6l7SaJesI1f5hCDSsaFxXlza7QJ54oeYO2Dmsu4pgHEGqUAkr6Rw7EubCjdtJXXbl1uLTQ/lY8qUqUgrit2kKS8ST0ojrVUUTRYEhmsXNtm9YmkLjLF929EeaT4sHiPAXVyZXv2AL9k3/5HoTJ2cAzuySuVvnxY7DlmaLouhOw4ub9JiTncC8co10YtD/gD16yNB1UbigW7zn235cSzEhpV9IBDKMeQaNUPrg8Sb6UoLfemjooqOdXW3qXJ/Q8PrKpc4Uf3kffLFudZa3ybzdNmMOCbjeIPxKZQyYRQQ1szJagjvkHinHR2C//Mz5aE+JRdrBCI3Uiq/O3weQwq69qhxcOoSh35Xm1b1RmTyN3W0nR8GEJdsL79ALVmLl1INXj5LoSREs14K6xdCLwKtwp14BGOdvc4ehSa8jEE4OsPvL/LoyGS6LMz3fbacs3bB2gJrHk1OINgzMaf8TchDFnErHBcWP9IxKTpgVBu1cZCH7fT1U7opaRIlsuAOCAWNPbQ==
+X-MS-Exchange-AntiSpam-MessageData: /f7SiSCnQRCaoi+jt5xBXhEKApykHk8nu//dmN5jFsy/m2Q480coUiqndwzZSMU9nGc7p2zeyaAv4J0jYpY8/1TZWieeuW+BH6nJJ9RztebunjmJjN8yEjyWYS8kXK8KiZ2L9wPWordlIqzsA8zPCQ==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4815793-2f41-4f1d-dc0e-08d7ba91a8f5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 07:58:26.5512
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: B4p+Sf+orIfu38unY4xYdPiF4ZkfAiGy2WbagmFmMaCwMFk/dSP5fJhxYa814HumnI0Irk5notqmmQsldaojIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5506
+X-MS-Exchange-CrossTenant-UserPrincipalName: D35gpFBZz+/vpJrieUvsIgy/ijqMs7nYnhlJC0ChPkYBPr9PuSYU/Hcdr+7BZVQzyjQI7DJf1hNcnVzOB12WkA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4774
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Hi Lucas,
 
-Take arm,smc-id as the 1st arg, and protocol id as the 2nd arg when
-issuing SMC/HVC. Since we need protocol id, so add this parameter
-to scmi_chan_info, then smc transport driver could directly use it.
-There is no Rx, only Tx because of smc/hvc not support Rx.
+On Mon, Feb 24, 2020 at 06:21:57PM +0100, Lucas Stach wrote:
+> On Fr, 2019-12-06 at 11:52 +0200, Laurentiu Palcu wrote:
+> > Add bindings for iMX8MQ Display Controller Subsystem.
+> > 
+> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml      | 86 ++++++++++++++++++++++
+> >  1 file changed, 86 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > new file mode 100644
+> > index 00000000..efd2494
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > @@ -0,0 +1,86 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +# Copyright 2019 NXP
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: iMX8MQ Display Controller Subsystem (DCSS)
+> > +
+> > +maintainers:
+> > +  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > +
+> > +description:
+> > +
+> > +  The DCSS (display controller sub system) is used to source up to three
+> > +  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
+> > +  2.2) or MIPI-DSI.
+> 
+> HDMI 2.0a and MIPI_DSI are not really properties of the DCSS, but
+> rather the connected bridges. Maybe just drop them here?
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/firmware/arm_scmi/Makefile |   2 +-
- drivers/firmware/arm_scmi/common.h |   3 +
- drivers/firmware/arm_scmi/driver.c |   2 +
- drivers/firmware/arm_scmi/smc.c    | 146 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 152 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/arm_scmi/smc.c
+I'm a bit confused... Drop what here?
 
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 6694d0d908d6..6b1b0d6c6d0e 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -2,6 +2,6 @@
- obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o scmi-transport.o
- scmi-bus-y = bus.o
- scmi-driver-y = driver.o
--scmi-transport-y = mailbox.o shmem.o
-+scmi-transport-y = mailbox.o shmem.o smc.o
- scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
- obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 5ac06469b01c..8cf330809e9e 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -162,11 +162,13 @@ int scmi_base_protocol_init(struct scmi_handle *h);
-  *	 channel
-  * @handle: Pointer to SCMI entity handle
-  * @transport_info: Transport layer related information
-+ * @prot_id: The id of the protocol that will use this channel
-  */
- struct scmi_chan_info {
- 	struct device *dev;
- 	struct scmi_handle *handle;
- 	void *transport_info;
-+	int prot_id;
- };
- 
- /**
-@@ -210,6 +212,7 @@ struct scmi_desc {
- };
- 
- extern const struct scmi_desc scmi_mailbox_desc;
-+extern const struct scmi_desc scmi_smc_desc;
- 
- void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr);
- void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id);
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index dbec767222e9..3715aecd0fc1 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -606,6 +606,7 @@ static int scmi_chan_setup(struct scmi_info *info, struct device *dev,
- 		return ret;
- 	}
- 
-+	cinfo->prot_id = prot_id;
- 	cinfo->handle = &info->handle;
- 	return 0;
- }
-@@ -827,6 +828,7 @@ ATTRIBUTE_GROUPS(versions);
- /* Each compatible listed below must have descriptor associated with it */
- static const struct of_device_id scmi_of_match[] = {
- 	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
-+	{ .compatible = "arm,scmi-smc", .data = &scmi_smc_desc},
- 	{ /* Sentinel */ },
- };
- 
-diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
-new file mode 100644
-index 000000000000..58d5f44fa77b
---- /dev/null
-+++ b/drivers/firmware/arm_scmi/smc.c
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * System Control and Management Interface (SCMI) Message SMC/HVC
-+ * Transport driver
-+ *
-+ * Copyright 2020 NXP
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+
-+#include "common.h"
-+
-+/**
-+ * struct scmi_smc - Structure representing a SCMI smc transport
-+ *
-+ * @cinfo: SCMI channel info
-+ * @shmem: Transmit/Receive shared memory area
-+ * @func_id: smc/hvc call function id
-+ */
-+
-+struct scmi_smc {
-+	struct scmi_chan_info *cinfo;
-+	struct scmi_shared_mem __iomem *shmem;
-+	u32 func_id;
-+};
-+
-+static bool smc_chan_available(struct device *dev, int idx)
-+{
-+	return true;
-+}
-+
-+static int smc_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
-+			  bool tx)
-+{
-+	struct device *cdev = cinfo->dev;
-+	struct scmi_smc *scmi_info;
-+	resource_size_t size;
-+	struct resource res;
-+	struct device_node *np;
-+	u32 func_id;
-+	int ret;
-+
-+	if (!tx)
-+		return -ENODEV;
-+
-+	scmi_info = devm_kzalloc(dev, sizeof(*scmi_info), GFP_KERNEL);
-+	if (!scmi_info)
-+		return -ENOMEM;
-+
-+	np = of_parse_phandle(cdev->of_node, "shmem", 0);
-+	if (!np)
-+		np = of_parse_phandle(dev->of_node, "shmem", 0);
-+	ret = of_address_to_resource(np, 0, &res);
-+	of_node_put(np);
-+	if (ret) {
-+		dev_err(cdev, "failed to get SCMI Tx shared memory\n");
-+		return ret;
-+	}
-+
-+	size = resource_size(&res);
-+	scmi_info->shmem = devm_ioremap(dev, res.start, size);
-+	if (!scmi_info->shmem) {
-+		dev_err(dev, "failed to ioremap SCMI Tx shared memory\n");
-+		return -EADDRNOTAVAIL;
-+	}
-+
-+	ret = of_property_read_u32(dev->of_node, "arm,smc-id", &func_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	scmi_info->func_id = func_id;
-+	scmi_info->cinfo = cinfo;
-+	cinfo->transport_info = scmi_info;
-+
-+	return 0;
-+}
-+
-+static int smc_chan_free(int id, void *p, void *data)
-+{
-+	struct scmi_chan_info *cinfo = p;
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+
-+	cinfo->transport_info = NULL;
-+	scmi_info->cinfo = NULL;
-+
-+	scmi_free_channel(cinfo, data, id);
-+
-+	return 0;
-+}
-+
-+static int smc_send_message(struct scmi_chan_info *cinfo,
-+			    struct scmi_xfer *xfer)
-+{
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+	struct arm_smccc_res res;
-+
-+	shmem_tx_prepare(scmi_info->shmem, xfer);
-+
-+	arm_smccc_1_1_invoke(scmi_info->func_id, cinfo->prot_id, 0, 0, 0,
-+			     0, 0, 0, &res);
-+	scmi_rx_callback(scmi_info->cinfo, shmem_read_header(scmi_info->shmem));
-+
-+	return res.a0;
-+}
-+
-+static void smc_mark_txdone(struct scmi_chan_info *cinfo, int ret)
-+{
-+}
-+
-+static void smc_fetch_response(struct scmi_chan_info *cinfo,
-+			       struct scmi_xfer *xfer)
-+{
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+
-+	shmem_fetch_response(scmi_info->shmem, xfer);
-+}
-+
-+static bool
-+smc_poll_done(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
-+{
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+
-+	return shmem_poll_done(scmi_info->shmem, xfer);
-+}
-+
-+static struct scmi_transport_ops scmi_smc_ops = {
-+	.chan_available = smc_chan_available,
-+	.chan_setup = smc_chan_setup,
-+	.chan_free = smc_chan_free,
-+	.send_message = smc_send_message,
-+	.mark_txdone = smc_mark_txdone,
-+	.fetch_response = smc_fetch_response,
-+	.poll_done = smc_poll_done,
-+};
-+
-+const struct scmi_desc scmi_smc_desc = {
-+	.ops = &scmi_smc_ops,
-+	.max_rx_timeout_ms = 30,
-+	.max_msg = 1,
-+	.max_msg_size = 128,
-+};
+> 
+> >  The DCSS is intended to support up to 4kp60 displays. HDR10
+> > +  image processing capabilities are included to provide a solution capable of
+> > +  driving next generation high dynamic range displays.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: nxp,imx8mq-dcss
+> > +
+> > +  reg:
+> > +    maxItems: 2
+> > +
+> > +  interrupts:
+> > +    maxItems: 3
+> > +    items:
+> > +      - description: Context loader completion and error interrupt
+> > +      - description: DTG interrupt used to signal context loader trigger time
+> > +      - description: DTG interrupt for Vblank
+> > +
+> > +  interrupt-names:
+> > +    maxItems: 3
+> > +    items:
+> > +      - const: ctx_ld
+> 
+> Can we make this just "ctxld" for a bit more consistency with the name
+> below?
+
+Fair enough. Will change.
+
+> 
+> > +      - const: ctxld_kick
+> > +      - const: vblank
+> > +
+> > +  clocks:
+> > +    maxItems: 5
+> > +    items:
+> > +      - description: Display APB clock for all peripheral PIO access interfaces
+> > +      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
+> > +      - description: RTRAM clock
+> > +      - description: Pixel clock, can be driver either by HDMI phy clock or MIPI
+> > +      - description: DTRC clock, needed by video decompressor
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: apb
+> > +      - const: axi
+> > +      - const: rtrm
+> > +      - const: pix
+> > +      - const: dtrc
+> > +
+> > +  port@0:
+> > +    type: object
+> > +    description: A port node pointing to a hdmi_in or mipi_in port node.
+> 
+> "A port node pointing to the input port of a HDMI/DP or MIPI display
+> bridge".
+
+Okay, your description's sounds better. I'll add it in the next revision.
+
+Thanks,
+laurentiu
+
+> 
+> > +
+> > +examples:
+> > +  - |
+> > +    dcss: display-controller@32e00000 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        compatible = "nxp,imx8mq-dcss";
+> > +        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
+> > +        interrupts = <6>, <8>, <9>;
+> > +        interrupt-names = "ctx_ld", "ctxld_kick", "vblank";
+> > +        interrupt-parent = <&irqsteer>;
+> > +        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
+> > +                 <&clk 254>,<&clk 122>;
+> > +        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
+> > +        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
+> > +        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
+> > +        assigned-clock-rates = <800000000>,
+> > +                               <400000000>;
+> > +        port@0 {
+> > +            dcss_out: endpoint {
+> > +                remote-endpoint = <&hdmi_in>;
+> > +            };
+> > +        };
+> > +    };
+> > +
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 -- 
-2.16.4
-
+Laurentiu
+NXP
