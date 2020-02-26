@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6399C4BA18
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2261C4BA18
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B294324670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90342467B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582735710;
-	bh=AyV+rEVApn0d86MUGYS3G+Ev4cJkOIvxqRx9o7bXNf4=;
+	s=default; t=1582735723;
+	bh=7JYktPIyWf6YONapWD3xlC/B2o1cUD1UNvbX1uLibio=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=olr70WL84shjsf4i7m2v1Co1xBQgNlxGEomkwc/jX2KRbQ0BFCV3cfXdoktKB4B3+
-	 B32CEJ7REYT6B12dv033yb5n70LT4ifRu6kAmjVtDLS34G5XNFUVstpDDVdANEb+3e
-	 B3RFKRpJA+in6rpbtUpCAcIXgULeDY0K+y7aB2DI=
+	b=JJB48OPspa3oMNV+C1k4foII75XjZ6KtY9ZMktJVUDrPb4U9ILJh+2cS4ePx5otyj
+	 V8FnSMl7AIQnl97158dfQ8ABQvhIj6uRQH4IAUtjmlst9/e4AKagO9NhnaoGLga1Dx
+	 G5CrCituTHSqCC/1pJnN8gEUGBjen4atY0rdt1g0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgBZQs1 (ORCPT
+        id S1727196AbgBZQsn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:48:27 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41036 "EHLO
+        Wed, 26 Feb 2020 11:48:43 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37700 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgBZQs1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:48:27 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so135559oie.8;
-        Wed, 26 Feb 2020 08:48:27 -0800 (PST)
+        with ESMTP id S1726151AbgBZQsn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:48:43 -0500
+Received: by mail-oi1-f194.google.com with SMTP id q84so165779oic.4;
+        Wed, 26 Feb 2020 08:48:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wYb2SPyfU9sT5dHwc2B+qBWDt2ccSquWhAdxVh14F+o=;
-        b=SXMlzPt4EBNdDzcLdHsSxdjqBlopqdyt42xwiO410qYBE+cAhq9LMmb3RC2vXB/QO5
-         i/mrj5dPD7DzymKLElX5r4PqDE9wf4iWBWOnT3AbOoTbkV3trxdSGChzAbwI8gkZFBHg
-         YwNLi1LzvcGVDYsw1956S49Os3V7ICIpARWFgOzhRoMMEhArKe0PawF8b+FC5x6q329O
-         meg7vXWrYgRZkuEVQPuXLLuGbUhUDc3XCG6jDBye1ViaA/iOkl/L1jTwpCNa/p+7ZWcK
-         FE1IYleCDMIArJ38mShEmbBjHjA3au4E4WwCkBj6xqzqUdJGg1GJ0utxro/CtNmqVAnM
-         IIrg==
-X-Gm-Message-State: APjAAAXVP8awnQRlec7K9kRkbHMfFNTkB/dQwgzjviFurOrAXPHK+ilG
-        XNRdLRdwaZPjJot116bfzQ==
-X-Google-Smtp-Source: APXvYqzqWkKvdNyvC73lIfPwrzjTstV2xUgnU7vLxawHZqyFVI4GcqFEaXpJ+Hms53LlnWG+uylBPA==
-X-Received: by 2002:a54:4f14:: with SMTP id e20mr3776108oiy.84.1582735706721;
-        Wed, 26 Feb 2020 08:48:26 -0800 (PST)
+        bh=jHw4ngjVXB8T2PU45eGKR13llpnjZ9TB1h6gXwWneRQ=;
+        b=jhNLElVZc699qbYoDEW6WoRA9wVUpDndXwlG6JeOUp3zTvv0Z8iIdKwXskBhI+Yq24
+         dueZYAQeHg39YkGBgf0yWwdtoX0VWO+HVsll28BWZ9agU1strllnJ9W5ub3QW6Y24vNM
+         qK9uUUqECY2ZYV06/DHnxYNzZylb3ms22sAkKfeDwWSIVyaw9FRXD0O6aO36pADXQYqW
+         9KHtHC6sMSGBDAsvl/t9JIQ6Bw+62N0x5bBphoYSU9aasQIOYXl7B8H0QKJ+gQaiHOXo
+         gsfcTav7/UjcMVMblQpTu6Oot7UM56g5aOswm7UEO7t6m3k3rmdOcKG5q2KnmJ+d0J1S
+         NnJg==
+X-Gm-Message-State: APjAAAXk++NltWLUEq7rxaHIzuT9bXLptgPdxMOfByB5+TKMmIpJS9h+
+        rvkirAszrGfv2aTrz3E7JQ==
+X-Google-Smtp-Source: APXvYqx18Z/v/4iN8R6CZrp92Er0P2zNbyeqssC0LiTbHDTS1rfusrMZHEu4FappFe1fTYPGsU/aeg==
+X-Received: by 2002:aca:fc0c:: with SMTP id a12mr3791106oii.118.1582735722218;
+        Wed, 26 Feb 2020 08:48:42 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k201sm978469oih.43.2020.02.26.08.48.25
+        by smtp.gmail.com with ESMTPSA id 15sm968900ois.20.2020.02.26.08.48.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:48:26 -0800 (PST)
-Received: (nullmailer pid 20055 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:48:25 -0000
-Date:   Wed, 26 Feb 2020 10:48:25 -0600
+        Wed, 26 Feb 2020 08:48:41 -0800 (PST)
+Received: (nullmailer pid 20572 invoked by uid 1000);
+        Wed, 26 Feb 2020 16:48:41 -0000
+Date:   Wed, 26 Feb 2020 10:48:41 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
 Cc:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
@@ -59,39 +58,41 @@ Cc:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         logan.shaw@alliedtelesis.co.nz,
         Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v4 1/5] dt-bindings: hwmon: Document adt7475 binding
-Message-ID: <20200226164825.GA19992@bogus>
+Subject: Re: [PATCH v4 2/5] dt-bindings: hwmon: Document adt7475
+ bypass-attenuator property
+Message-ID: <20200226164841.GA20519@bogus>
 References: <20200221041631.10960-1-chris.packham@alliedtelesis.co.nz>
- <20200221041631.10960-2-chris.packham@alliedtelesis.co.nz>
+ <20200221041631.10960-3-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221041631.10960-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200221041631.10960-3-chris.packham@alliedtelesis.co.nz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2020 17:16:27 +1300, Chris Packham wrote:
+On Fri, 21 Feb 2020 17:16:28 +1300, Chris Packham wrote:
 > 
 > From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 > 
-> Add binding for adi,adt7475 and variants.
-> Remove from trivial-devices.
+> Add documentation for the bypass-attenuator-in[0-4] property.
 > 
 > Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
 > 
 > Notes:
+>     Changes in v4:
+>     - use $ref uint32 and enum
+>     - add 'adi' vendor prefix
+>     
 >     Changes in v3:
->     - split conversion to yaml from addition of new properties
+>     - separated addition of new properties from conversion to yaml
 > 
->  .../devicetree/bindings/hwmon/adt7475.yaml    | 57 +++++++++++++++++++
->  .../devicetree/bindings/trivial-devices.yaml  |  8 ---
->  2 files changed, 57 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
+>  .../devicetree/bindings/hwmon/adt7475.yaml          | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
