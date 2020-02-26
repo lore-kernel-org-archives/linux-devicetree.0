@@ -2,88 +2,152 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55211C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C7FC4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2BA24692
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:31:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dWcCF8s4"
+	by mail.kernel.org (Postfix) with ESMTP id 5C5A024672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgBZTbD (ORCPT
+        id S1727258AbgBZTeb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:31:03 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39697 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727219AbgBZTbD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 14:31:03 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so416335ioh.6
-        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 11:31:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5MFxJeomCczgXDzeNV9Xn+RHt64mPvJ12qZr3RbPrbU=;
-        b=dWcCF8s4J9A+iP2iXoWcm3srPwjEatU3HdSYDIVsbNOiHHd7MtnwyuiE9mCNcHaGU0
-         qwCoH2p/6/qrCzG/i3ueu4EZqypRCXV4NQTLYaswGjHLOJWyjjeUM9SXiYcQxeTrcELD
-         ACUWcICt+Ximqv6VZnywYGgK6FeUCdHP4Ttig=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5MFxJeomCczgXDzeNV9Xn+RHt64mPvJ12qZr3RbPrbU=;
-        b=T4DirmZBhgAZd8R2BPnOS8wXKCgDHFmr9pK3ZyKiRMefxZGg8W25IuSAJAYqH6wL+x
-         v0yj+osQSfm+pRwa64/8SnVclVN3G8LqN3SNXK8KYlq7G0RdfH76WFbbua+T+O1PoaSX
-         kw1J0EmeL7e3x9xOsdKIAN9J7a5k32rz/krMd4hKYdhYLGJL3dquuFsBQN2Ta4MdLnVh
-         bExrU+LAPUcwDP/P4turo6HH2yr40/81KOBJOSIR3vLQ5cAzJFxvSELGYHR1RlPNzWW1
-         TEIiXV/pzwUOtytp7ygDMIP2GMcO87HBFVIFpIsfaW2YOE2sZpeNhmLLymtBtHL03/LL
-         9aoA==
-X-Gm-Message-State: APjAAAVskHDZffeoiTDE10aWvdzXlEfEC7xjO8R306BSLV4dbjIrCJ2F
-        ATB/7m1hDAW9ed6EGwtupqwzm+ipmajUuoAm+jicZw==
-X-Google-Smtp-Source: APXvYqwm7wEEXPS3MuEPhTwwGRUEbcd/4WOJm2XgfK0kRKisj4w+h5pA1wDFpztH3aEcTh+AhwR4v0v1+qCPqLGRK8w=
-X-Received: by 2002:a5d:8955:: with SMTP id b21mr146927iot.41.1582745462529;
- Wed, 26 Feb 2020 11:31:02 -0800 (PST)
+        Wed, 26 Feb 2020 14:34:31 -0500
+Received: from mga18.intel.com ([134.134.136.126]:6427 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727238AbgBZTea (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 14:34:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 11:34:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
+   d="scan'208";a="231514911"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga008.jf.intel.com with ESMTP; 26 Feb 2020 11:34:29 -0800
+Date:   Wed, 26 Feb 2020 11:39:59 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, yi.l.liu@intel.com,
+        zhangfei.gao@linaro.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 06/26] iommu/sva: Register page fault handler
+Message-ID: <20200226113959.62621098@jacob-builder>
+In-Reply-To: <20200224182401.353359-7-jean-philippe@linaro.org>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+        <20200224182401.353359-7-jean-philippe@linaro.org>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200221053802.70716-1-evanbenn@chromium.org> <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
- <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com> <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
-In-Reply-To: <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
-From:   Julius Werner <jwerner@chromium.org>
-Date:   Wed, 26 Feb 2020 11:30:51 -0800
-Message-ID: <CAODwPW_FR0gHO_=yfCPwETXvKG9CvgvPddX-EOT=OXDPEkp_Kg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Evan Benn <evanbenn@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Julius Werner <jwerner@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Not quite. /firmware is generic container. I'd expect another layer in
-> the middle for the overall set of Mediatek firmware behind smc calls.
-> Look at 'xlnx,zynqmp-firmware' for an example.
+On Mon, 24 Feb 2020 19:23:41 +0100
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-There are no other MediaTek firmware interfaces described in the
-device tree on those platforms. Is it okay if we just call it
-/firmware/watchdog in that case?
+> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> 
+> When enabling SVA, register the fault handler. Device driver will
+> register an I/O page fault queue before or after calling
+> iommu_sva_enable. The fault queue must be flushed before any io_mm is
+> freed, to make sure that its PASID isn't used in any fault queue, and
+> can be reallocated. Add iopf_queue_flush() calls in a few strategic
+> locations.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  drivers/iommu/Kconfig     |  1 +
+>  drivers/iommu/iommu-sva.c | 16 ++++++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index e4a42e1708b4..211684e785ea 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -106,6 +106,7 @@ config IOMMU_DMA
+>  config IOMMU_SVA
+>  	bool
+>  	select IOASID
+> +	select IOMMU_PAGE_FAULT
+>  	select IOMMU_API
+>  	select MMU_NOTIFIER
+>  
+> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+> index bfd0c477f290..494ca0824e4b 100644
+> --- a/drivers/iommu/iommu-sva.c
+> +++ b/drivers/iommu/iommu-sva.c
+> @@ -366,6 +366,8 @@ static void io_mm_release(struct mmu_notifier
+> *mn, struct mm_struct *mm) dev_WARN(dev, "possible leak of PASID %u",
+>  				 io_mm->pasid);
+>  
+> +		iopf_queue_flush_dev(dev, io_mm->pasid);
+> +
+>  		/* unbind() frees the bond, we just detach it */
+>  		io_mm_detach_locked(bond);
+>  	}
+> @@ -442,11 +444,20 @@ static void iommu_sva_unbind_locked(struct
+> iommu_bond *bond) 
+>  void iommu_sva_unbind_generic(struct iommu_sva *handle)
+>  {
+> +	int pasid;
+>  	struct iommu_param *param = handle->dev->iommu_param;
+>  
+>  	if (WARN_ON(!param))
+>  		return;
+>  
+> +	/*
+> +	 * Caller stopped the device from issuing PASIDs, now make
+> sure they are
+> +	 * out of the fault queue.
+> +	 */
+> +	pasid = iommu_sva_get_pasid_generic(handle);
+> +	if (pasid != IOMMU_PASID_INVALID)
+> +		iopf_queue_flush_dev(handle->dev, pasid);
+> +
+I have an ordering concern.
+The caller can only stop the device issuing page request but there will
+be in-flight request inside the IOMMU. If we flush here before clearing
+the PASID context, there might be new request coming in before the
+detach.
+How about detach first then flush? Then anything come after the detach
+would be faults. Flush will be clean.
+
+>  	mutex_lock(&param->sva_lock);
+>  	mutex_lock(&iommu_sva_lock);
+>  	iommu_sva_unbind_locked(to_iommu_bond(handle));
+> @@ -484,6 +495,10 @@ int iommu_sva_enable(struct device *dev, struct
+> iommu_sva_param *sva_param) goto err_unlock;
+>  	}
+>  
+> +	ret = iommu_register_device_fault_handler(dev,
+> iommu_queue_iopf, dev);
+> +	if (ret)
+> +		goto err_unlock;
+> +
+>  	dev->iommu_param->sva_param = new_param;
+>  	mutex_unlock(&param->sva_lock);
+>  	return 0;
+> @@ -521,6 +536,7 @@ int iommu_sva_disable(struct device *dev)
+>  		goto out_unlock;
+>  	}
+>  
+> +	iommu_unregister_device_fault_handler(dev);
+>  	kfree(param->sva_param);
+>  	param->sva_param = NULL;
+>  out_unlock:
+
+[Jacob Pan]
