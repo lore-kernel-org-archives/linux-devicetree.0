@@ -2,285 +2,138 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E05C4BA12
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 10:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F266C4BA0E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 10:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A3C24689
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 10:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157DA24683
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 10:56:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="giOc/T0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgBZKyd (ORCPT
+        id S1727590AbgBZK4N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:54:33 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50770 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgBZKyd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 05:54:33 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 4E17D293540
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>, rdunlap@infradead.org,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v9 1/4] drm/mediatek: Use regmap for register access
-Date:   Wed, 26 Feb 2020 11:54:16 +0100
-Message-Id: <20200226105419.632771-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200226105419.632771-1-enric.balletbo@collabora.com>
-References: <20200226105419.632771-1-enric.balletbo@collabora.com>
+        Wed, 26 Feb 2020 05:56:13 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38863 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgBZK4N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 05:56:13 -0500
+Received: by mail-qt1-f196.google.com with SMTP id i23so1909649qtr.5;
+        Wed, 26 Feb 2020 02:56:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z3j9UKE4CU10RkojeSW3IlQzPeeFXpX/sxvomC4elck=;
+        b=giOc/T0TXl+iIxlOUYfUQ+tWKJrb3RxKjhDveWCkvkLIVtnsOdxkcnt0ESXCKSc1TS
+         FiRS/OcFWkNbN6ZZbnISyj+Gcaq5JHAlfQbkSUkEMT/fl1OcnIu7vgqbMCuNMug80vmL
+         2PWczE+el7IRqrtvshhUbc5PCoiYZhO9GfaNw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z3j9UKE4CU10RkojeSW3IlQzPeeFXpX/sxvomC4elck=;
+        b=QWMe8gzpbX46W/bxvfxqStb91a0x6en+6L2NfsiULecyz0/gVj8x0rRo3K+ED9pxAJ
+         CtpBnxhyN8TRrQ6U6pCO21zKTYZqM5m6iyvKnF+7DSq6EXWF1oAH0vngkVNf5TJe0ej8
+         0iCS2wiIsXsl0q5uQK9+TQmdcXrhlmEI2piH+7XLl6aIPzRTuQE8koG4IGDcj502YQV2
+         35cX7O5ysotcWYaJj0hAPwAMzCQhVJai860MoHAx+4oBVBNB0347O3ooLa9Zp+y8oeri
+         ficTy342EKLQ0zDtJEkqOZgMGPrH16u1g4eSs2CwMbDMFv1ybvncMngcuwW+70M9CX0v
+         s/sw==
+X-Gm-Message-State: APjAAAXZ94T/MUcLiAG5oPTFspBRGAx/+PHPFyNfxBX2Ixb78el+51OQ
+        CcTBAGBwx1+Qm14zqMp1xWtMMfKib2K6EVkC47E=
+X-Google-Smtp-Source: APXvYqzIPt5oXV3k/5jmxtXuEfikPuiPbXvjlG9fRqNJ2BaeGuQJX0lMhbp46aXUXmxRSrxBf1S4ddt08lc8oggcF+8=
+X-Received: by 2002:ac8:1ac1:: with SMTP id h1mr4525735qtk.255.1582714570954;
+ Wed, 26 Feb 2020 02:56:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200220055255.22809-1-Ben_Pai@wistron.com>
+In-Reply-To: <20200220055255.22809-1-Ben_Pai@wistron.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 26 Feb 2020 10:55:59 +0000
+Message-ID: <CACPK8Xf=t+PY42qxF9jProYGGZZJONb=H1D4xZJc7teFWJ2FrA@mail.gmail.com>
+Subject: Re: [PATCH v1] ARM: dts: mihawk: Change the name of mihawk led
+To:     Ben Pai <Ben_Pai@wistron.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        wangat@tw.ibm.com, Claire_Ku@wistron.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+On Thu, 20 Feb 2020 at 05:53, Ben Pai <Ben_Pai@wistron.com> wrote:
+>
+> 1.Change the name of power, fault and rear-id.
+> 2.Remove the two leds.
 
-The mmsys memory space is shared between the drm and the
-clk driver. Use regmap to access it.
+The patch looks okay. Why do you remove the other two leds?
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-Changes in v9: None
-Changes in v8:
-- Select REGMAP and MFD_SYSCON (Randy Dunlap)
-
-Changes in v7:
-- Add R-by from CK
-
- drivers/gpu/drm/mediatek/Kconfig        |  2 +
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  4 +-
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 50 +++++++++++--------------
- drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |  4 +-
- drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 13 ++-----
- drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  2 +-
- 6 files changed, 32 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-index fa5ffc4fe823..89e18a473cb5 100644
---- a/drivers/gpu/drm/mediatek/Kconfig
-+++ b/drivers/gpu/drm/mediatek/Kconfig
-@@ -10,8 +10,10 @@ config DRM_MEDIATEK
- 	select DRM_KMS_HELPER
- 	select DRM_MIPI_DSI
- 	select DRM_PANEL
-+	select MFD_SYSCON
- 	select MEMORY
- 	select MTK_SMI
-+	select REGMAP
- 	select VIDEOMODE_HELPERS
- 	help
- 	  Choose this option if you have a Mediatek SoCs.
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 5ee74d7ce35c..a236499123aa 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -28,7 +28,7 @@
-  * @enabled: records whether crtc_enable succeeded
-  * @planes: array of 4 drm_plane structures, one for each overlay plane
-  * @pending_planes: whether any plane has pending changes to be applied
-- * @config_regs: memory mapped mmsys configuration register space
-+ * @config_regs: regmap mapped mmsys configuration register space
-  * @mutex: handle to one of the ten disp_mutex streams
-  * @ddp_comp_nr: number of components in ddp_comp
-  * @ddp_comp: array of pointers the mtk_ddp_comp structures used by this crtc
-@@ -50,7 +50,7 @@ struct mtk_drm_crtc {
- 	u32				cmdq_event;
- #endif
- 
--	void __iomem			*config_regs;
-+	struct regmap			*config_regs;
- 	struct mtk_disp_mutex		*mutex;
- 	unsigned int			ddp_comp_nr;
- 	struct mtk_ddp_comp		**ddp_comp;
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 13035c906035..302753744cc6 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -383,61 +383,53 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
- 	return value;
- }
- 
--static void mtk_ddp_sout_sel(void __iomem *config_regs,
-+static void mtk_ddp_sout_sel(struct regmap *config_regs,
- 			     enum mtk_ddp_comp_id cur,
- 			     enum mtk_ddp_comp_id next)
- {
- 	if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
--		writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
--			       config_regs + DISP_REG_CONFIG_OUT_SEL);
-+		regmap_write(config_regs, DISP_REG_CONFIG_OUT_SEL,
-+				BLS_TO_DSI_RDMA1_TO_DPI1);
- 	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
--		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
--			       config_regs + DISP_REG_CONFIG_OUT_SEL);
--		writel_relaxed(DSI_SEL_IN_RDMA,
--			       config_regs + DISP_REG_CONFIG_DSI_SEL);
--		writel_relaxed(DPI_SEL_IN_BLS,
--			       config_regs + DISP_REG_CONFIG_DPI_SEL);
-+		regmap_write(config_regs, DISP_REG_CONFIG_OUT_SEL,
-+				BLS_TO_DPI_RDMA1_TO_DSI);
-+		regmap_write(config_regs, DISP_REG_CONFIG_DSI_SEL,
-+				DSI_SEL_IN_RDMA);
-+		regmap_write(config_regs, DISP_REG_CONFIG_DPI_SEL,
-+				DPI_SEL_IN_BLS);
- 	}
- }
- 
--void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
-+void mtk_ddp_add_comp_to_path(struct regmap *config_regs,
- 			      enum mtk_ddp_comp_id cur,
- 			      enum mtk_ddp_comp_id next)
- {
--	unsigned int addr, value, reg;
-+	unsigned int addr, value;
- 
- 	value = mtk_ddp_mout_en(cur, next, &addr);
--	if (value) {
--		reg = readl_relaxed(config_regs + addr) | value;
--		writel_relaxed(reg, config_regs + addr);
--	}
-+	if (value)
-+		regmap_update_bits(config_regs, addr, value, value);
- 
- 	mtk_ddp_sout_sel(config_regs, cur, next);
- 
- 	value = mtk_ddp_sel_in(cur, next, &addr);
--	if (value) {
--		reg = readl_relaxed(config_regs + addr) | value;
--		writel_relaxed(reg, config_regs + addr);
--	}
-+	if (value)
-+		regmap_update_bits(config_regs, addr, value, value);
- }
- 
--void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
-+void mtk_ddp_remove_comp_from_path(struct regmap *config_regs,
- 				   enum mtk_ddp_comp_id cur,
- 				   enum mtk_ddp_comp_id next)
- {
--	unsigned int addr, value, reg;
-+	unsigned int addr, value;
- 
- 	value = mtk_ddp_mout_en(cur, next, &addr);
--	if (value) {
--		reg = readl_relaxed(config_regs + addr) & ~value;
--		writel_relaxed(reg, config_regs + addr);
--	}
-+	if (value)
-+		regmap_update_bits(config_regs, addr, value, 0);
- 
- 	value = mtk_ddp_sel_in(cur, next, &addr);
--	if (value) {
--		reg = readl_relaxed(config_regs + addr) & ~value;
--		writel_relaxed(reg, config_regs + addr);
--	}
-+	if (value)
-+		regmap_update_bits(config_regs, addr, value, 0);
- }
- 
- struct mtk_disp_mutex *mtk_disp_mutex_get(struct device *dev, unsigned int id)
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
-index 827be424a148..01ff8b68881f 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
-@@ -12,10 +12,10 @@ struct regmap;
- struct device;
- struct mtk_disp_mutex;
- 
--void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
-+void mtk_ddp_add_comp_to_path(struct regmap *config_regs,
- 			      enum mtk_ddp_comp_id cur,
- 			      enum mtk_ddp_comp_id next);
--void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
-+void mtk_ddp_remove_comp_from_path(struct regmap *config_regs,
- 				   enum mtk_ddp_comp_id cur,
- 				   enum mtk_ddp_comp_id next);
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 0563c6813333..b68837ea02b3 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/component.h>
- #include <linux/iommu.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of_platform.h>
-@@ -425,7 +426,6 @@ static int mtk_drm_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct mtk_drm_private *private;
--	struct resource *mem;
- 	struct device_node *node;
- 	struct component_match *match = NULL;
- 	int ret;
-@@ -437,14 +437,9 @@ static int mtk_drm_probe(struct platform_device *pdev)
- 
- 	private->data = of_device_get_match_data(dev);
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	private->config_regs = devm_ioremap_resource(dev, mem);
--	if (IS_ERR(private->config_regs)) {
--		ret = PTR_ERR(private->config_regs);
--		dev_err(dev, "Failed to ioremap mmsys-config resource: %d\n",
--			ret);
--		return ret;
--	}
-+	private->config_regs = syscon_node_to_regmap(dev->of_node);
-+	if (IS_ERR(private->config_regs))
-+		return PTR_ERR(private->config_regs);
- 
- 	/* Iterate over sibling DISP function blocks */
- 	for_each_child_of_node(dev->of_node->parent, node) {
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-index 17bc99b9f5d4..03201080688d 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-@@ -39,7 +39,7 @@ struct mtk_drm_private {
- 
- 	struct device_node *mutex_node;
- 	struct device *mutex_dev;
--	void __iomem *config_regs;
-+	struct regmap *config_regs;
- 	struct device_node *comp_node[DDP_COMPONENT_ID_MAX];
- 	struct mtk_ddp_comp *ddp_comp[DDP_COMPONENT_ID_MAX];
- 	const struct mtk_mmsys_driver_data *data;
--- 
-2.25.0
-
+>
+> Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+> ---
+>  arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 17 +++--------------
+>  1 file changed, 3 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+> index e55cc454b17f..6c11854b9006 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+> @@ -120,35 +120,24 @@
+>         leds {
+>                 compatible = "gpio-leds";
+>
+> -               fault {
+> +               front-fault {
+>                         retain-state-shutdown;
+>                         default-state = "keep";
+>                         gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_LOW>;
+>                 };
+>
+> -               power {
+> +               power-button {
+>                         retain-state-shutdown;
+>                         default-state = "keep";
+>                         gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_LOW>;
+>                 };
+>
+> -               rear-id {
+> +               front-id {
+>                         retain-state-shutdown;
+>                         default-state = "keep";
+>                         gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_LOW>;
+>                 };
+>
+> -               rear-g {
+> -                       retain-state-shutdown;
+> -                       default-state = "keep";
+> -                       gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_LOW>;
+> -               };
+> -
+> -               rear-ok {
+> -                       retain-state-shutdown;
+> -                       default-state = "keep";
+> -                       gpios = <&gpio ASPEED_GPIO(Y, 0) GPIO_ACTIVE_LOW>;
+> -               };
+>
+>                 fan0 {
+>                         retain-state-shutdown;
+> --
+> 2.17.1
+>
+>
+> ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+> This email contains confidential or legally privileged information and is for the sole use of its intended recipient.
+> Any unauthorized review, use, copying or distribution of this email or the content of this email is strictly prohibited.
+> If you are not the intended recipient, you may reply to the sender and should delete this e-mail immediately.
+> ---------------------------------------------------------------------------------------------------------------------------------------------------------------
