@@ -2,45 +2,44 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7BCC4BA25
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548C2C4BA21
 	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC78C222C4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3032467D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="a3j6DMoH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="W+KwYSL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgBZTNp (ORCPT
+        id S1727368AbgBZTNN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:13:45 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.101]:28202 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbgBZTNN (ORCPT
+        Wed, 26 Feb 2020 14:13:13 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:34487 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbgBZTNN (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 14:13:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582744391;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582744390;
         s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0KwFWogrkYd3WbP4B9tFSDqdj5/ZkSqbBbEVxlZwGEA=;
-        b=a3j6DMoHnyFV5JohDO304EjH+kmJqX6FaYH5XNaYMFXdMvHq6JuEDM8JRr6G49R54U
-        ETepDUDRMHGKp5+Hib2Fn1N91+jZ4OM5ye8e2BCsBO7IA3+/vVU3+3cg9EIyJ/JKQEZO
-        p/fb/aW+6yfMqz5cmTkJZGJ0wXgbjVS8sD/ni8pXJgxZoAd/xmwOfXjZZnPFItubV90B
-        5Rii1ZUgbdlXZyZyxEpSkqJMmEA2caYj8prxnko814fn9fq5UlP4LFN3Kz3603i93lNq
-        5fcr6c2hc2hlAI1IiqTypiMY9JALpOqOBTSqeNPry39V5MHMXO5TBkkm3wyMncSv4V6K
-        54JA==
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=Vdb7nlCxfqY9kDUQ+U3Vms96RRuZQL4A0e+CPRkPLwo=;
+        b=W+KwYSL5yaeIIKCaL2Tp11ufJA0OsTYPWOQVGuuD0sXvCOQPiTHX/p7D8gSjD3RI+y
+        3zy+BRo2F4aW2q4WOr/1xxspcEmpbPztp142wDxcRa+lxXshzn3b4n5KKOYKdkRsxret
+        xmO6zMb7BoZ2yIkuNkFyywiaMbMmEmfQWuqr57PZ5kqNW1seWbX36oAQwIPKxUcwXt3J
+        OLhTo21fATVcKEWrn0aVeNNQWk2fCTGCAKgtuyWheLpF5cTAM+fI9jBeuBviHTgRKd/K
+        twgDsMveqRsBaYblHzv0OGvha4rJ59O9CcYM94NNfiy10Sv6xqfxtFJg9MxPcTv5yPNP
+        LlTQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1QJD26bM
+        with ESMTPSA id U06217w1QJD06bJ
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Wed, 26 Feb 2020 20:13:02 +0100 (CET)
+        Wed, 26 Feb 2020 20:13:00 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -60,12 +59,10 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com,
         "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [RFC 3/8] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-Date:   Wed, 26 Feb 2020 20:12:55 +0100
-Message-Id: <d59ba39a17f052b6d3ca1947bd62467224fac2d0.1582744379.git.hns@goldelico.com>
+Subject: [RFC 0/8] MIPS: CI20: add HDMI out support 
+Date:   Wed, 26 Feb 2020 20:12:52 +0100
+Message-Id: <cover.1582744379.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1582744379.git.hns@goldelico.com>
-References: <cover.1582744379.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -73,27 +70,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-so that the driver can load by matching the device tree
-if compiled as module.
+This patch series adds HDMI output to the jz4780/CI20 board.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpu/drm/ingenic/ingenic-drm.c | 2 ++
- 1 file changed, 2 insertions(+)
+It is based on taking the old 3.18 vendor kernel and trying
+to achieve the same with modern DTS setup and new/modified
+drivers.
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index 6d47ef7b148c..d8617096dd8e 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -844,6 +844,8 @@ static const struct of_device_id ingenic_drm_of_match[] = {
- 	{ /* sentinel */ },
- };
- 
-+MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
-+
- static struct platform_driver ingenic_drm_driver = {
- 	.driver = {
- 		.name = "ingenic-drm",
+Unfortunately, in this first RFC, only EDID and creation of
+/dev/fb0 are working. Also, HDMI hot plugging is detected.
+
+But there is no HDMI output signal. So some tiny piece seems
+to be missing to enable/configure the Synposys HDMI controller.
+
+We need help from the community to fix this.
+
+Note: device tree bindings are from 2015 and still seem to
+fit - except they are not in yaml format.
+
+Original authors of most patches are
+* Paul Boddie <paul@boddie.org.uk>
+* Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+
+
+H. Nikolaus Schaller (2):
+  drm: ingenic-drm: add MODULE_DEVICE_TABLE
+  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
+
+Paul Boddie (4):
+  drm: ingenic: add jz4780 Synopsys HDMI driver.
+  pinctrl: ingenic: add hdmi-ddc pin control group
+  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
+  MIPS: DTS: CI20: add HDMI setup
+
+Zubair Lutfullah Kakakhel (2):
+  dt-bindings: video: Add jz4780-lcd binding
+  dt-bindings: video: Add jz4780-hdmi binding
+
+ .../bindings/display/ingenic-jz4780-hdmi.txt  |  41 ++++++
+ .../bindings/display/ingenic-jz4780-lcd.txt   |  39 ++++++
+ arch/mips/boot/dts/ingenic/ci20.dts           |  64 ++++++++++
+ arch/mips/boot/dts/ingenic/jz4780.dtsi        |  32 +++++
+ arch/mips/configs/ci20_defconfig              |   3 +
+ drivers/gpu/drm/ingenic/Kconfig               |   8 ++
+ drivers/gpu/drm/ingenic/Makefile              |   1 +
+ drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c      | 120 ++++++++++++++++++
+ drivers/gpu/drm/ingenic/ingenic-drm.c         |   2 +
+ drivers/pinctrl/pinctrl-ingenic.c             |   7 +
+ 10 files changed, 317 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt
+ create mode 100644 drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
+
 -- 
 2.23.0
 
