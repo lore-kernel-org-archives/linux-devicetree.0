@@ -2,123 +2,95 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0840AC4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2C6C4BA21
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 20:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDC020838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:55:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gpONdCEP"
+	by mail.kernel.org (Postfix) with ESMTP id E7EF924679
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 20:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582747540;
+	bh=ay2gtdzTIg0s3GvyL3AHawuz/h9BXOjZIl4ZqD1wLZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lbl2eXKTMqJXfp1XtM/UlwLCDHuGlsFL5XtQOKdO3V7srA6tKCo68mfRQ2qpJofmD
+	 F9hE5BhtiG57TzgT6ch8xD4yzkS6isg2JZ8XuTGgxNOpzVg+PIopvnT0TzIJeys0WP
+	 WzR/p+GLC42xcp1KzzOo+X7KVa4Le1irmDgHzR28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbgBZTz0 (ORCPT
+        id S1727308AbgBZUFj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:55:26 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:38590 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727244AbgBZTz0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 14:55:26 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QJrUCL006843;
-        Wed, 26 Feb 2020 19:55:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=obe41J39gr3+hCoSli7HOYpO1kiS2+KFKSLxGy0JLdk=;
- b=gpONdCEPR/ZndEU1/LFtbAKuFpUWUMRn+eLahfvWMfMCs0JiRZTEr0+539R69NARSKyw
- yo0B0jTvPEtmUuEGw/O0d7ImjZI9woH/pLK2F6Zh4XHmJfiMTgPFjFq1/+l7y5I57O7u
- s2Q8/eJ17MR7EM1p03n1etCw8x9k4ZosJOFTtGYZ9CQHtbAwyx0pXcAM38yyeIAHcfie
- 3tIltLetU1JrA4xUH6oZjiqZ9mYsl0fcUgJ5I7CCeIjQPrd3Rf7tK06AcBiFtVxZbH9b
- TdP0VGRMKkcGoO7SJBxxbIEAz4gP/p8TlEZfXJtAsQfpgE4kFwTnyIDm+qW5q9wH25ud Qw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2ydcsne0na-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 19:55:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QJiNqO116685;
-        Wed, 26 Feb 2020 19:55:18 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2ydcs2yfc0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 19:55:18 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01QJtHtY028983;
-        Wed, 26 Feb 2020 19:55:17 GMT
-Received: from [10.209.227.41] (/10.209.227.41)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Feb 2020 11:55:17 -0800
-Subject: Re: [PATCH 0/5] ARM: OMAP2+: Introduce cpuidle for am335x/am437x
-To:     Tony Lindgren <tony@atomide.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-References: <20191213030755.16096-1-d-gerlach@ti.com>
- <20191213150344.GJ35479@atomide.com> <20200226184328.GY37466@atomide.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <5d775a75-3013-fac2-91e3-ac1967b0f698@oracle.com>
-Date:   Wed, 26 Feb 2020 11:55:16 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Wed, 26 Feb 2020 15:05:39 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37197 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbgBZUFj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 15:05:39 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b3so667829otp.4;
+        Wed, 26 Feb 2020 12:05:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rfooh7DJ/puEMePfWhIF847RRO14nrehO8VpW6u2dqc=;
+        b=saiVxvDFo8hVZnGsp9NWUNR5ptFExf6k5XWMDC4wQwUaijB/pfKbejBnCF+/PzSC4j
+         k2PYmbjwpE2Qe4YRet1jM/CGt6vVLCBhAnL8CyLgoPm51eS8zot+ondip5Tfa99Go17T
+         8EA7Dm9JMq3BgUgGbC2qDqjfeN0FTv2XvlJhN6IOyp+FqoH8xT67uYhrc8cpHArMLKaZ
+         otkXPK4e4pxh2AGNIpB2qycvnKs51kQZPG8lM6Ml+Wd2la4PNoRsO87jJCKt3R05AWCm
+         onzuY6eeIWhGzyJrsg9UhvBpKRFNwWio9T9fM1D8us7rlHwsKx2itdLTl2LvYstTbIou
+         cwTw==
+X-Gm-Message-State: APjAAAUIovUJq9nW7dsOab25PUN8SMZLdD0Y7IGHBivT1h3Im2sJZnlv
+        xMwLFX2SUJ8symUhAuLwog==
+X-Google-Smtp-Source: APXvYqwoExQts8kyL6ACiX7nqlcfseb2jryno1PV9+/zcCxooXzFpJaL6Shdc1qByEDsFjYB/p3G5A==
+X-Received: by 2002:a05:6830:1e37:: with SMTP id t23mr439632otr.16.1582747538082;
+        Wed, 26 Feb 2020 12:05:38 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n2sm1133092oia.58.2020.02.26.12.05.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 12:05:37 -0800 (PST)
+Received: (nullmailer pid 31917 invoked by uid 1000);
+        Wed, 26 Feb 2020 20:05:35 -0000
+Date:   Wed, 26 Feb 2020 14:05:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+        devicetree@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Introduce soc sleep stats bindings
+ for Qualcomm SoCs
+Message-ID: <20200226200535.GA31824@bogus>
+References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
+ <1582274986-17490-2-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200226184328.GY37466@atomide.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=801 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002260120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=861 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002260120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582274986-17490-2-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/26/20 10:43 AM, Tony Lindgren wrote:
-> Santosh,
+On Fri, 21 Feb 2020 14:19:43 +0530, Maulik Shah wrote:
+> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
 > 
-> * Tony Lindgren <tony@atomide.com> [191213 15:04]:
->> * Dave Gerlach <d-gerlach@ti.com> [191212 19:07]:
->>> Hi,
->>> This series adds support for cpuidle on am335x and am437x using the
->>> cpuidle_arm driver. When testing on am335x-evm and am437x-gp-evm the
->>> follow power consumption reductions are seen on v5.5-rc1 baseline:
->>>
->>>
->>> Idling at command line, CPUFreq userspace governor to 300MHz:
->>>    am335x-evm:
->>>      VDD_MPU: 48 mW -> 5 mW
->>>
->>>    am437x-gp-evm:
->>>      VDD_MPU: 32 mW -> 3 mW
->>>
->>>
->>> Idling at command line, CPUFreq userspace governor to 1GHz:
->>>    am335x-evm:
->>>      VDD_MPU: 313 mW -> 18 mW
->>>
->>>    am437x-gp-evm:
->>>      VDD_MPU: 208 mW -> 10 mW
->>
->> Hey this is great! A beverage on me when we get a chance :)
->>
->> For merging, looks like I should take the series after folks are happy
->> with it. Santosh, care to review and ack if it looks OK?
+> Add device binding documentation for Qualcomm Technology Inc's (QTI)
+> SoC sleep stats driver. The driver is used for displaying SoC sleep
+> statistic maintained by Always On Processor or Resource Power Manager.
 > 
-> Looks like this series of changes is still pending. Care
-> to ack?
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  .../bindings/soc/qcom/soc-sleep-stats.yaml         | 47 ++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
 > 
-Was scanning this series today. It looks good to me Tony.
 
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
