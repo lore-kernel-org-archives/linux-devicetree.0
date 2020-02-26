@@ -2,59 +2,60 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A137C4BA0B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDA9C4BA0E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA3020714
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936D124653
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1GsoxC1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBrP0h2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgBZIKn (ORCPT
+        id S1727532AbgBZIKs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:10:43 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42379 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbgBZIKm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 03:10:42 -0500
-Received: by mail-pg1-f194.google.com with SMTP id h8so917474pgs.9;
-        Wed, 26 Feb 2020 00:10:42 -0800 (PST)
+        Wed, 26 Feb 2020 03:10:48 -0500
+Received: from mail-pg1-f171.google.com ([209.85.215.171]:43893 "EHLO
+        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727267AbgBZIKr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 03:10:47 -0500
+Received: by mail-pg1-f171.google.com with SMTP id u12so914294pgb.10;
+        Wed, 26 Feb 2020 00:10:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WxwmrpsEvSIHCqKyrbgIWagGPaBeap74xZ38jQnYjMI=;
-        b=G1GsoxC1VQuC2LzKxNIiH8WzlN8FWR5TNjYvsUrS4EpNTF67B0l7m+ux8gBd/URe9K
-         Ni169aQfWICKEdDaOovkUoQ6TY8mp7LlZHJZ6Pyh12jXifWrBo6wNpwH+hDAl0UCJeuO
-         diXFcso+LmH8SDxwSQYp2Us4VaL3d/8PrHxIwh2BO6zrCkCl4rlWXND2PaGmhmv5LO4g
-         866z8wbTQDg9ADpDehmo7RnXIdslb/fXtfj9fH8aEqt6k6VmU5ypu3ND+wnwX7yes9a/
-         ikkRFE+xAnlAyVqjNEsi4c/y7zzELDSiseyApg0HTDvw+Sq7rIIHJHhwIduufFULCSHo
-         khfg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UNDrMK3Cuph8hAawynxP4ClnMYdwocSlmGrvdp+XI7U=;
+        b=TBrP0h2wisco9iwCPRUPdbzfKPQaem8N0CCbkufM0ubNMvNGPVi7J4OrKi6XaCKbH6
+         hh3Y+bgMR/KAzZy3SJxpHSn/W55kTsTGse062SF7bXdc1s6lOwPqxkWqbnhYBTrOOQRL
+         P5UEoGPV5IsF76w8fyduRaTE03AV7RIeG3tdyzE6dWtIWMgpvpx224lpnK6HQOTLFKGx
+         8NN0VzAznR0u0zIR0NAXJZCtJ32GmXNwAp/DudApysZdxoB5XwxmgmLNpboYi0ogxMJL
+         H4NuemzoK00dffBEXYJVCaGEH3TCcpoSWqSDpn+UxmqlsA7Meikom5RyLGooaap33bAj
+         PsSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WxwmrpsEvSIHCqKyrbgIWagGPaBeap74xZ38jQnYjMI=;
-        b=LUOoL7tb73MlKOhue8R1RrY7n0lg759DPeTKwRfN7v5szJvknFY0M0ebUUqRPLUk3/
-         gpYr3br/mVRC/CUmZo712+3wAsX2p315DhLqkH3f6IEn5rs4ZGhXBgVuobEGg8fYUR2K
-         LzwjbN+nQllqHfxQIOqw60EGfyixN4PZZVF814iPqP5ImoWzrXvbNfPluGhpV62RKA1z
-         HmDtEXRHlb/sIrpsc9y+FIxuouh80tOoHMNnqUyiTgn4xtlir7EbRqlvlStsPtGDyOq/
-         aVy9XiqrZcjVPxifKD7zBp+ob6IeDM1UQbYFkNBb5JyloOLRYnIFZs6RNzElS3VUCPFy
-         k7+Q==
-X-Gm-Message-State: APjAAAVVHolOhPoV/YetIa3VUDPPViMcHTM3nUc6egPrutPb5eqcCd2y
-        ZixC8ywKIy43N0QkSSWe4v8=
-X-Google-Smtp-Source: APXvYqxua5ZCZ8hYefxJVw0Z7sASanab3iVfMHAfLgUosQmXYzmdnZdSqWeV1lPWXafRXfEHEpPlMw==
-X-Received: by 2002:aa7:9a96:: with SMTP id w22mr3010770pfi.210.1582704641739;
-        Wed, 26 Feb 2020 00:10:41 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UNDrMK3Cuph8hAawynxP4ClnMYdwocSlmGrvdp+XI7U=;
+        b=dIp/KxCVRW33bX72PodaeDJoLE8FwV6+sNyz/dKhN83q+fOGmKQ9rh0x7zScDM7/aD
+         nJ50i0F0qrpDMcZYoxlBQ4TPxMOQM1pfu5lGhyj6xoh+vXVWmzYV2Zy5jSFdHacRQPdr
+         XET30f4r3ylJ5rAU2KnY9D3CdEIGZ/0GAeJeWoOCcALwVzqlt9Z+WWNCXz/kU1tqA1GA
+         71dEHJPUt0X+TWAPeTPMiOXIP0jr9XlrCLRnjyUuyWgDlE7G+YPHGNz7bxLSNaWBYC0Q
+         vm6W11PDCbXgARCK+0smwOeOn3odKfEfcGnCFTOun1a1MR7ht7bKg+2BP0VPdo/DqaQK
+         CWHw==
+X-Gm-Message-State: APjAAAXki+dAGpDWHfHHcPfUw+YzdKSb155ZgO7xezBaIkhruUqVrCxT
+        O1VdOVZeFMnEaqtFOYoN8nU=
+X-Google-Smtp-Source: APXvYqx16ATSH0Ri7QydUSr5etiFpP7VXGwv2ajzCwfEDuf3Fsc6V5gruuHjTDm3C4cjgRnxu80rnQ==
+X-Received: by 2002:a63:42c2:: with SMTP id p185mr2844380pga.268.1582704646751;
+        Wed, 26 Feb 2020 00:10:46 -0800 (PST)
 Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id v7sm1679230pfn.61.2020.02.26.00.10.40
+        by smtp.gmail.com with ESMTPSA id v7sm1679230pfn.61.2020.02.26.00.10.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 00:10:40 -0800 (PST)
+        Wed, 26 Feb 2020 00:10:46 -0800 (PST)
 From:   Vasily Khoruzhick <anarsoul@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -77,11 +78,14 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Samuel Holland <samuel@sholland.org>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v2 0/6] Add LCD support for Pine64 Pinebook 1080p
-Date:   Wed, 26 Feb 2020 00:10:05 -0800
-Message-Id: <20200226081011.1347245-1-anarsoul@gmail.com>
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v2 4/6] dt-bindings: display: simple: Add NewEast Optoelectronics WJFH116008A compatible
+Date:   Wed, 26 Feb 2020 00:10:09 -0800
+Message-Id: <20200226081011.1347245-5-anarsoul@gmail.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200226081011.1347245-1-anarsoul@gmail.com>
+References: <20200226081011.1347245-1-anarsoul@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -89,55 +93,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since ANX6345 driver has been merged we can add support for Pinebook LCD
+This commit adds compatible for NewEast Optoelectronics WJFH116008A panel
+to panel-simple binding
 
-This is a follow up on [1] which attempted to add support for all the
-A64-based Pinebooks.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+---
+ .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Since patches for 768p were dropped we don't need edp-connector binding
-discussed in [1] and its earlier versions and we can use panel-simple
-binding as everyone else does.
-
-If we ever going to add support for 768p we can do it through dt-overlay
-with appropriate panel node or by teaching bootloader to patch dtb with
-correct panel compatible.
-
-Similar approach was chosen in [2]
-
-[1] https://patchwork.kernel.org/cover/10814169/
-[2] https://patchwork.kernel.org/patch/11277765/
-
-v2:
-  - Collect r-b tags
-  - Don't print devm_regulator_get() error only if it is -EPROBE_DEFER
-  - Keep compatibles alphabetically sorted in panel-simple.yaml
-  - Properly indent new panel modes
-  - Drop #address-cells, #size-cells properties and @0 suffix
-    of endpoints in sun50i-a64-pinebook.dts
-
-Icenowy Zheng (1):
-  arm64: allwinner: a64: enable LCD-related hardware for Pinebook
-
-Samuel Holland (1):
-  drm/bridge: anx6345: Fix getting anx6345 regulators
-
-Vasily Khoruzhick (4):
-  drm/bridge: anx6345: don't print error message if regulator is not
-    ready
-  dt-bindings: Add Guangdong Neweast Optoelectronics CO. LTD vendor
-    prefix
-  dt-bindings: display: simple: Add NewEast Optoelectronics WJFH116008A
-    compatible
-  drm/panel: simple: Add NewEast Optoelectronics CO., LTD WJFH116008A
-    panel support
-
- .../bindings/display/panel/panel-simple.yaml  |  2 +
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
- .../dts/allwinner/sun50i-a64-pinebook.dts     | 61 ++++++++++++++++++-
- .../drm/bridge/analogix/analogix-anx6345.c    | 12 ++--
- drivers/gpu/drm/panel/panel-simple.c          | 48 +++++++++++++++
- 5 files changed, 120 insertions(+), 5 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index 8fe60ee2531c..0e5d01ac32e1 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -39,6 +39,8 @@ properties:
+       - boe,nv140fhmn49
+         # GiantPlus GPM940B0 3.0" QVGA TFT LCD panel
+       - giantplus,gpm940b0
++        # NewEast Optoelectronics CO., LTD WJFH116008A eDP TFT LCD panel
++      - neweast,wjfh116008a
+         # Satoz SAT050AT40H12R2 5.0" WVGA TFT LCD panel
+       - satoz,sat050at40h12r2
+         # Sharp LS020B1DD01D 2.0" HQVGA TFT LCD panel
 -- 
 2.25.0
 
