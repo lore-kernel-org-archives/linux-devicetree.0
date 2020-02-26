@@ -4,511 +4,574 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA0AC4BA15
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2711FC4BA15
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C597C21556
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C5C21556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 16:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582732976;
-	bh=Kp/w0cfVM+L20gzsBMf82ZPd2YC1zSvWU4qFDcd2ap8=;
+	s=default; t=1582733968;
+	bh=NE7yKnTw83HmYS6DxVW7FolpL38gDgsrF1SNtqB/zVI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dRyibTtAFieFLgntvl/yo0B8OBJ4Khhc2yBdZv+8b1X7oMHWF2bGJfb71bPMugwKN
-	 VKLXBQ/Wd0qlC/cdQlAp5CIL7qPXHVZNdwW/abImrwty2J2I5DyjX0kjqLrfE2B6Cf
-	 fYmiv+10UZhHs67d6L2ygT24aE2sWAtG2qiQ3Hxg=
+	b=I5snqTTZaypEv9Nyv1ztW/k+oMgrfqz+FRUkeF1xk/XzCuaaO5ucgi4rcUkG/8bZa
+	 4JqhQmcQoOQc/ALSgQbl2/Bi/ZtzJAExPVZhecLWZwXiscA9Ul+pONKlIC71Yiby9T
+	 eDKEBVbuxmBrX3OXJ+Q1S3kivPPH+Ko/3+i3WiK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgBZQC4 (ORCPT
+        id S1726778AbgBZQTX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:02:56 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37093 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgBZQCz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:02:55 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q84so3538895oic.4;
-        Wed, 26 Feb 2020 08:02:55 -0800 (PST)
+        Wed, 26 Feb 2020 11:19:23 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39484 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbgBZQTX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 11:19:23 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so3466859oty.6;
+        Wed, 26 Feb 2020 08:19:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wLmw0G4mFTlo+pxwfHpS7rtH5YxtUBFtFesPEcoJstg=;
-        b=Cpu6s0c6cQkpcE9ksU3FjQ/VYWTE/3un4oS0eNybj9CJGcNxjQHyw5px2gJ4iqId3N
-         13N3jaaWYVqacNIeR+89Pi2+MvL29jABZ2i84teSZpqhJRJR6qA8onCLQw5UY/XnN0gL
-         GDHgOPCAkGoNMLkWNhsIEWPSYoVyuyWU9EptAEOS6eJQ50bKIRqunptZcuiWGZtg/W7y
-         AKNiwyxnrnRopcWl23O2HtmzMNL+NBXYFyUeUqeer545lZhf0RN288JTG06YQ8i/aA9T
-         GYoixdol7jhm28z9oj2dIRsafaJKnAlIu5EnKFGd+a4EkwrXpdXxtJzkayZwhFRZhdp4
-         QdAw==
-X-Gm-Message-State: APjAAAU6aLq8A5uJhtYDm3Ky/iDUHik8abk+ncF6Z2cOkleqNmf//Kp7
-        5cyJyZsSfsqqOIO7ho2cdw==
-X-Google-Smtp-Source: APXvYqxvM7VilUPX6YwtqSvgwo1M/YWANWs8cXAUpbHnWfVJRo1zwHtoIEvYX0LvvtfTtFcfpyP3Lw==
-X-Received: by 2002:aca:cdd0:: with SMTP id d199mr3686599oig.49.1582732974610;
-        Wed, 26 Feb 2020 08:02:54 -0800 (PST)
+        bh=iq1gbUbicwWjZGTfSmd7O+55owgAT9WeI6nbk/c4HNk=;
+        b=C+XFzZzPkyt9q4sa/8fUmJynJ6UTHrSKg2h036Waiz/G29HWf2q1QLurGxkc0yeNmo
+         31He1yk9fcK+SduR4qnkgGUY/+u7T1zXyzhk8xL7Q7WZYvJ89DNpYdr9/Xql+5VsE2eL
+         WDt1GBfUNBj/6eTfprlAYDlGxeV6Zws38VbN6/tNY/XJ7zQ/D8pdI6pbpoLT8pPp9agA
+         xtxjgx9dNksiagHQHIlhUnUSKS3dKVwU3RwwhS4dkxGdoDp1XchGr/msL3ozu4t1mDrL
+         PzAAr5+IXyeuT1skRnMZmJs+17s7CS8dTZvbKKmKspHn4Wz5U+XfcPp+4Jt/SGyEXvFc
+         YvaA==
+X-Gm-Message-State: APjAAAU++pW2LfNjx6bm6qAXkI9cpyG4ROw2P5Aqe8CbhY3/k6WeRXyG
+        8GV9CF56h0Pi5X1JcTFdcQ==
+X-Google-Smtp-Source: APXvYqyHR0NUP/7cSA5BfCo4uueH3BGt5OoMOAwQVuY/hW6rWJffHJ3vOqNCOa5we8s17VfHesLB1w==
+X-Received: by 2002:a9d:1c1:: with SMTP id e59mr1217368ote.150.1582733962049;
+        Wed, 26 Feb 2020 08:19:22 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f142sm925865oig.48.2020.02.26.08.02.53
+        by smtp.gmail.com with ESMTPSA id n22sm936425otj.36.2020.02.26.08.19.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:02:53 -0800 (PST)
-Received: (nullmailer pid 20197 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:02:52 -0000
-Date:   Wed, 26 Feb 2020 10:02:52 -0600
+        Wed, 26 Feb 2020 08:19:21 -0800 (PST)
+Received: (nullmailer pid 10533 invoked by uid 1000);
+        Wed, 26 Feb 2020 16:19:20 -0000
+Date:   Wed, 26 Feb 2020 10:19:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     perex@perex.cz, tiwai@suse.com, broonie@kernel.org,
-        lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, digetx@gmail.com,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
-        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
-Subject: Re: [PATCH v3 01/10] dt-bindings: sound: tegra: add DT binding for
- AHUB
-Message-ID: <20200226160252.GA3671@bogus>
-References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
- <1582180492-25297-2-git-send-email-spujar@nvidia.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     dmitry.torokhov@gmail.com, mark.rutland@arm.com,
+        lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        wim@linux-watchdog.org, linux@roeck-us.net, p.paillet@st.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stpmic1 bindings to
+ json-schema
+Message-ID: <20200226161920.GA22995@bogus>
+References: <20200220152831.18614-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582180492-25297-2-git-send-email-spujar@nvidia.com>
+In-Reply-To: <20200220152831.18614-1-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 12:04:43PM +0530, Sameer Pujar wrote:
-> Audio Hub (AHUB) comprises a collection of hardware accelerators for audio
-> pre-processing and post-processing and a programmable full crossbar for
-> audio routing across these accelerators. This patch adds YAML schema for DT
-> binding of AHUB and few of its following components. These devices will be
-> registered as ASoC components.
->  * ADMAIF
->  * I2S
->  * DMIC
->  * DSPK
+On Thu, Feb 20, 2020 at 04:28:31PM +0100, Benjamin Gaignard wrote:
+> Convert stpmic1 bindings to json-schema.
 > 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  .../bindings/sound/nvidia,tegra186-dspk.yaml       |  88 +++++++++++
->  .../bindings/sound/nvidia,tegra210-admaif.yaml     | 163 +++++++++++++++++++++
->  .../bindings/sound/nvidia,tegra210-ahub.yaml       | 110 ++++++++++++++
->  .../bindings/sound/nvidia,tegra210-dmic.yaml       |  88 +++++++++++
->  .../bindings/sound/nvidia,tegra210-i2s.yaml        | 101 +++++++++++++
->  5 files changed, 550 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+> version 3:
+> - put $erf under allOf keyword
+> - for each regulator node add the list of supported regulator properties
+>  .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 --
+>  .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ----
+>  .../devicetree/bindings/mfd/st,stpmic1.yaml        | 354 +++++++++++++++++++++
+>  .../bindings/regulator/st,stpmic1-regulator.txt    |  64 ----
+>  .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 -
+>  5 files changed, 354 insertions(+), 164 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+> diff --git a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+> deleted file mode 100644
+> index eb8e83736c02..000000000000
+> --- a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+> +++ /dev/null
+> @@ -1,28 +0,0 @@
+> -STMicroelectronics STPMIC1 Onkey
+> -
+> -Required properties:
+> -
+> -- compatible = "st,stpmic1-onkey";
+> -- interrupts: interrupt line to use
+> -- interrupt-names = "onkey-falling", "onkey-rising"
+> -	onkey-falling: happens when onkey is pressed; IT_PONKEY_F of pmic
+> -	onkey-rising: happens when onkey is released; IT_PONKEY_R of pmic
+> -
+> -Optional properties:
+> -
+> -- st,onkey-clear-cc-flag: onkey is able power on after an
+> -  over-current shutdown event.
+> -- st,onkey-pu-inactive: onkey pull up is not active
+> -- power-off-time-sec: Duration in seconds which the key should be kept
+> -        pressed for device to power off automatically (from 1 to 16 seconds).
+> -        see See Documentation/devicetree/bindings/input/input.yaml
+> -
+> -Example:
+> -
+> -onkey {
+> -	compatible = "st,stpmic1-onkey";
+> -	interrupt-parent = <&pmic>;
+> -	interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+> -	interrupt-names = "onkey-falling", "onkey-rising";
+> -	power-off-time-sec = <10>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+> deleted file mode 100644
+> index afd45c089585..000000000000
+> --- a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+> +++ /dev/null
+> @@ -1,61 +0,0 @@
+> -* STMicroelectronics STPMIC1 Power Management IC
+> -
+> -Required properties:
+> -- compatible:		: "st,stpmic1"
+> -- reg:			: The I2C slave address for the STPMIC1 chip.
+> -- interrupts:		: The interrupt line the device is connected to.
+> -- #interrupt-cells:	: Should be 1.
+> -- interrupt-controller:	: Marks the device node as an interrupt controller.
+> -			    Interrupt numbers are defined at
+> -			    dt-bindings/mfd/st,stpmic1.h.
+> -
+> -STPMIC1 consists in a varied group of sub-devices.
+> -Each sub-device binding is be described in own documentation file.
+> -
+> -Device			 Description
+> -------			------------
+> -st,stpmic1-onkey	: Power on key, see ../input/st,stpmic1-onkey.txt
+> -st,stpmic1-regulators	: Regulators, see ../regulator/st,stpmic1-regulator.txt
+> -st,stpmic1-wdt		: Watchdog, see ../watchdog/st,stpmic1-wdt.txt
+> -
+> -Example:
+> -
+> -#include <dt-bindings/mfd/st,stpmic1.h>
+> -
+> -pmic: pmic@33 {
+> -	compatible = "st,stpmic1";
+> -	reg = <0x33>;
+> -	interrupt-parent = <&gpioa>;
+> -	interrupts = <0 2>;
+> -
+> -	interrupt-controller;
+> -	#interrupt-cells = <2>;
+> -
+> -	onkey {
+> -		compatible = "st,stpmic1-onkey";
+> -		interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+> -		interrupt-names = "onkey-falling", "onkey-rising";
+> -		power-off-time-sec = <10>;
+> -	};
+> -
+> -	watchdog {
+> -		compatible = "st,stpmic1-wdt";
+> -	};
+> -
+> -	regulators {
+> -		compatible = "st,stpmic1-regulators";
+> -
+> -		vdd_core: buck1 {
+> -			regulator-name = "vdd_core";
+> -			regulator-boot-on;
+> -			regulator-min-microvolt = <700000>;
+> -			regulator-max-microvolt = <1200000>;
+> -		};
+> -		vdd: buck3 {
+> -			regulator-name = "vdd";
+> -			regulator-min-microvolt = <3300000>;
+> -			regulator-max-microvolt = <3300000>;
+> -			regulator-boot-on;
+> -			regulator-pull-down;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
 > new file mode 100644
-> index 0000000..79c720d
+> index 000000000000..92b0ac8ddfde
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-> @@ -0,0 +1,88 @@
+> +++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+> @@ -0,0 +1,354 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/sound/nvidia,tegra186-dspk.yaml#
+> +$id: http://devicetree.org/schemas/mfd/st,stpmic1.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Tegra186 DSPK Controller Device Tree Bindings
+> +title: STMicroelectonics STPMIC1 Power Management IC bindings
 > +
-> +description: |
-> +  The Digital Speaker Controller (DSPK) can be viewed as a Pulse
-> +  Density Modulation (PDM) transmitter that up-samples the input to
-> +  the desired sampling rate by interpolation and then converts the
-> +  over sampled Pulse Code Modulation (PCM) input to the desired 1-bit
-> +  output via Delta Sigma Modulation (DSM).
+> +description: STMicroelectronics STPMIC1 Power Management IC
 > +
 > +maintainers:
-> +  - Jon Hunter <jonathanh@nvidia.com>
-> +  - Sameer Pujar <spujar@nvidia.com>
+> +  - pascal Paillet <p.paillet@st.com>
 > +
 > +properties:
-> +  $nodename:
-> +    pattern: "^dspk@[0-9a-f]*$"
-> +
 > +  compatible:
-> +    oneOf:
-> +      - const: nvidia,tegra186-dspk
-> +      - items:
-> +          - const: nvidia,tegra194-dspk
-> +          - const: nvidia,tegra186-dspk
+> +    const: st,stpmic1
 > +
 > +  reg:
+> +    const: 0x33
+> +
+> +  interrupts:
 > +    maxItems: 1
 > +
-> +  clocks:
-> +    description: DSPK interface clock
-
-Needs: 
-
-maxItems: 1
-
-I'd drop the description too. It's pretty generic...
-
+> +  "#interrupt-cells":
+> +    const: 2
 > +
-> +  clock-names:
-> +    const: dspk
+> +  interrupt-controller: true
 > +
-
-> +  assigned-clocks:
-> +    description: DSPK interface clock
+> +  onkey:
+> +    type: object
 > +
-> +  assigned-clock-parents:
-> +    description: Parent for DSPK interface clock
-> +
-> +  assigned-clock-rates:
-> +    description: Initial rate of DSPK interface clock
-
-maxItems: 1 for these 3.
-
-> +
-> +  "#sound-dai-cells":
-> +    const: 1
-> +
-> +  sound-name-prefix:
-> +    pattern: "^DSPK[1-9]$"
 > +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/string
-> +    description:
-> +      Used as prefix for sink/source names of the component. Must be a
-> +      unique string among multiple instances of the same component.
-> +      The name can be "DSPK1" or "DSPKx", where x depends on the maximum
-> +      available instances on a Tegra SoC.
+> +      - $ref: ../input/input.yaml
+> +
+> +    properties:
+> +      compatible:
+> +        const: st,stpmic1-onkey
+> +
+> +      interrupts:
+> +        items:
+> +          - description: onkey-falling, happens when onkey is pressed. IT_PONKEY_F of pmic
+> +          - description: onkey-rising, happens when onkey is released. IT_PONKEY_R of pmic
+> +
+> +      interrupt-names:
+> +        items:
+> +          - const: onkey-falling
+> +          - const: onkey-rising
+> +
+> +      st,onkey-clear-cc-flag:
+> +        description: onkey is able power on after an over-current shutdown event.
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +      st,onkey-pu-inactive:
+> +        description: onkey pull up is not active
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +      power-off-time-sec:
+> +        minimum: 1
+> +        maximum: 16
+> +
+> +    required:
+> +      - compatible
+> +      - interrupts
+> +      - interrupt-names
+> +
+> +    additionalProperties: false
+> +
+> +  watchdog:
+> +    type: object
+> +
+> +    allOf:
+> +      - $ref: ../watchdog/watchdog.yaml
+> +
+> +    properties:
+> +      compatible:
+> +        const: st,stpmic1-wdt
+> +
+> +      timeout-sec: true
+> +
+> +    required:
+> +      - compatible
+> +
+> +    additionalProperties: false
+> +
+> +  regulators:
+> +    type: object
+> +
+> +    description: |
+> +      Available Regulators in STPMIC1 device are:
+> +        - buck1 for Buck BUCK1
+> +        - buck2 for Buck BUCK2
+> +        - buck3 for Buck BUCK3
+> +        - buck4 for Buck BUCK4
+> +        - ldo1 for LDO LDO1
+> +        - ldo2 for LDO LDO2
+> +        - ldo3 for LDO LDO3
+> +        - ldo4 for LDO LDO4
+> +        - ldo5 for LDO LDO5
+> +        - ldo6 for LDO LDO6
+> +        - vref_ddr for LDO Vref DDR
+> +        - boost for Buck BOOST
+> +        - pwr_sw1 for VBUS_OTG switch
+> +        - pwr_sw2 for SW_OUT switch
+> +      Switches are fixed voltage regulators with only enable/disable capability.
+> +
+> +    properties:
+> +      compatible:
+> +        const: st,stpmic1-regulators
+> +
+> +    patternProperties:
+> +      "^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])-supply$":
+> +        description: STPMIC1 voltage regulators supplies
+> +
+> +      "^(ldo[1-2,5-6])$":
+
+No need for the ().
+
+> +        type: object
+> +
+> +        allOf:
+> +          - $ref: ../regulator/regulator.yaml
+
+These can be moved to the previous pattern prop and removed from each 
+entry.
+
+> +
+> +        properties:
+> +          st,mask-reset:
+> +            description: mask reset for this regulator,
+> +                         the regulator configuration is maintained during pmic reset.
+> +            $ref: /schemas/types.yaml#/definitions/flag
+
+And this. And then just do 'st,mask-reset: true'.
+
+> +
+> +          interrupts:
+> +            maxItems: 1
+> +
+> +          regulator-name: true
+> +          regulator-boot-on: true
+> +          regulator-always-on: true
+> +          regulator-min-microvolt: true
+> +          regulator-max-microvolt: true
+> +          regulator-over-current-protection: true
+> +          regulator-enable-ramp-delay: true
+> +
+> +        additionalProperties: false
+> +
+> +      "^(ldo3)$":
+
+Fixed string, not a pattern.
+
+> +        type: object
+> +
+> +        allOf:
+> +          - $ref: ../regulator/regulator.yaml
+> +
+> +        properties:
+> +          st,mask-reset:
+> +            description: mask reset for this regulator,
+> +                         the regulator configuration is maintained during pmic reset.
+> +            $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +          interrupts:
+> +            maxItems: 1
+> +
+> +          regulator-name: true
+> +          regulator-boot-on: true
+> +          regulator-always-on: true
+> +          regulator-min-microvolt: true
+> +          regulator-max-microvolt: true
+> +          regulator-allow-bypass: true
+> +          regulator-over-current-protection: true
+
+Not sure this is worth its own entry just to exclude 
+'regulator-enable-ramp-delay'.
+
+> +
+> +        additionalProperties: false
+> +
+> +      "^(ldo4)$":
+> +        type: object
+> +
+> +        allOf:
+> +          - $ref: ../regulator/regulator.yaml
+> +
+> +        properties:
+> +          st,mask-reset:
+> +            description: mask reset for this regulator,
+> +                         the regulator configuration is maintained during pmic reset.
+> +            $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +          interrupts:
+> +            maxItems: 1
+> +
+> +          regulator-name: true
+> +          regulator-boot-on: true
+> +          regulator-always-on: true
+> +          regulator-over-current-protection: true
+> +
+> +        additionalProperties: false
+> +
+> +      "^(buck[1-4])$":
+> +        type: object
+> +
+> +        allOf:
+> +          - $ref: ../regulator/regulator.yaml
+> +
+> +        properties:
+> +          st,mask-reset:
+> +            description: mask reset for this regulator,
+> +                         the regulator configuration is maintained during pmic reset.
+> +            $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +          interrupts:
+> +            maxItems: 1
+> +
+> +          regulator-name: true
+> +          regulator-boot-on: true
+> +          regulator-always-on: true
+> +          regulator-min-microvolt: true
+> +          regulator-max-microvolt: true
+> +          regulator-initial-mode: true
+> +          regulator-pull-down: true
+> +          regulator-over-current-protection: true
+> +          regulator-enable-ramp-delay: true
+> +
+> +        additionalProperties: false
+> +
+> +      "^(vref_ddr)$":
+> +        type: object
+> +
+> +        allOf:
+> +          - $ref: ../regulator/regulator.yaml
+> +
+> +        properties:
+> +          st,mask-reset:
+> +            description: mask reset for this regulator,
+> +                         the regulator configuration is maintained during pmic reset.
+> +            $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +          interrupts:
+> +            maxItems: 1
+> +
+> +          regulator-name: true
+> +          regulator-boot-on: true
+> +          regulator-always-on: true
+> +
+> +        additionalProperties: false
+> +
+> +      "^(boost)$":
+> +        type: object
+> +
+> +        allOf:
+> +          - $ref: ../regulator/regulator.yaml
+> +
+> +        properties:
+> +          st,mask-reset:
+> +            description: mask reset for this regulator,
+> +                         the regulator configuration is maintained during pmic reset.
+> +            $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +          interrupts:
+> +            maxItems: 1
+> +
+> +          regulator-name: true
+> +          regulator-boot-on: true
+> +          regulator-always-on: true
+> +          regulator-over-current-protection: true
+> +
+> +        additionalProperties: false
+> +
+> +      "^(pwr_sw[1-2])$":
+> +        type: object
+> +
+> +        allOf:
+> +          - $ref: ../regulator/regulator.yaml
+> +
+> +        properties:
+> +          interrupts:
+> +            maxItems: 1
+> +
+> +          regulator-name: true
+> +          regulator-boot-on: true
+> +          regulator-always-on: true
+> +          regulator-over-current-protection: true
+> +          regulator-active-discharge: true
+> +
+> +        additionalProperties: false
+> +
+> +    required:
+> +      - compatible
+> +
+> +    additionalProperties: false
+> +
+> +additionalProperties: false
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - assigned-clocks
-> +  - assigned-clock-parents
-> +  - "#sound-dai-cells"
-> +  - sound-name-prefix
+> +  - interrupts
+> +  - "#interrupt-cells"
+> +  - interrupt-controller
 > +
 > +examples:
 > +  - |
-> +    #include<dt-bindings/clock/tegra186-clock.h>
+> +    #include <dt-bindings/mfd/st,stpmic1.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    i2c@0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      pmic@33 {
+> +        compatible = "st,stpmic1";
+> +        reg = <0x33>;
+> +        interrupt-parent = <&gpioa>;
+> +        interrupts = <0 2>;
 > +
-> +    dspk@2905000 {
-> +        compatible = "nvidia,tegra186-dspk";
-> +        reg = <0x2905000 0x100>;
-> +        clocks = <&bpmp TEGRA186_CLK_DSPK1>;
-> +        clock-names = "dspk";
-> +        assigned-clocks = <&bpmp TEGRA186_CLK_DSPK1>;
-> +        assigned-clock-parents = <&bpmp TEGRA186_CLK_PLL_A_OUT0>;
-> +        assigned-clock-rates = <12288000>;
-> +        #sound-dai-cells = <1>;
-> +        sound-name-prefix = "DSPK1";
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +
+> +        onkey {
+> +          compatible = "st,stpmic1-onkey";
+> +          interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+> +          interrupt-names = "onkey-falling", "onkey-rising";
+> +          power-off-time-sec = <10>;
+> +        };
+> +
+> +        watchdog {
+> +          compatible = "st,stpmic1-wdt";
+> +        };
+> +
+> +        regulators {
+> +          compatible = "st,stpmic1-regulators";
+> +
+> +          ldo6-supply = <&v3v3>;
+
+Not documented. And didn't warn because an 'additionalProperties: false' 
+is missing.
+
+> +
+> +          buck1 {
+> +            regulator-name = "vdd_core";
+> +            interrupts = <IT_CURLIM_BUCK1 0>;
+> +            st,mask-reset;
+> +            regulator-boot-on;
+> +            regulator-min-microvolt = <700000>;
+> +            regulator-max-microvolt = <1200000>;
+> +          };
+> +
+> +          buck3 {
+> +            regulator-name = "vdd";
+> +            regulator-min-microvolt = <3300000>;
+> +            regulator-max-microvolt = <3300000>;
+> +            regulator-boot-on;
+> +            regulator-pull-down;
+> +          };
+> +
+> +          buck4 {
+> +            regulator-name = "v3v3";
+> +            interrupts = <IT_CURLIM_BUCK4 0>;
+> +            regulator-min-microvolt = <3300000>;
+> +            regulator-max-microvolt = <3300000>;
+> +          };
+> +
+> +          ldo6 {
+> +            regulator-name = "v1v8";
+> +            regulator-min-microvolt = <1800000>;
+> +            regulator-max-microvolt = <1800000>;
+> +            regulator-over-current-protection;
+> +          };
+> +        };
+> +      };
 > +    };
 > +
 > +...
-> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
-> new file mode 100644
-> index 0000000..46637c6a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
-> @@ -0,0 +1,163 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/nvidia,tegra210-admaif.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Tegra210 ADMAIF Device Tree Bindings
-> +
-> +description: |
-> +  ADMAIF is the interface between ADMA and AHUB. Each ADMA channel
-> +  that sends/receives data to/from AHUB must interface through an
-> +  ADMAIF channel. ADMA channel sending data to AHUB pairs with ADMAIF
-> +  Tx channel and ADMA channel receiving data from AHUB pairs with
-> +  ADMAIF Rx channel.
-> +
-> +maintainers:
-> +  - Jon Hunter <jonathanh@nvidia.com>
-> +  - Sameer Pujar <spujar@nvidia.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^admaif@[0-9a-f]*$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - nvidia,tegra210-admaif
-> +          - nvidia,tegra186-admaif
-> +      - items:
-> +          - const: nvidia,tegra194-admaif
-> +          - const: nvidia,tegra186-admaif
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  dmas: true
-> +
-> +  dma-names: true
-> +
-> +  "#sound-dai-cells":
-> +    const: 1
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: nvidia,tegra210-admaif
-> +
-> +then:
-> +  properties:
-> +    dmas:
-> +      description:
-> +        DMA channel specifiers, equally divided for Tx and Rx.
-> +      minItems: 1
-> +      maxItems: 20
-> +    dma-names:
-> +      items:
-> +        pattern: "^[rt]x(10|[1-9])$"
-> +      description:
-> +        Should be "rx1", "rx2" ... "rx10" for DMA Rx channel
-> +        Should be "tx1", "tx2" ... "tx10" for DMA Tx channel
-> +      minItems: 1
-> +      maxItems: 20
-> +
-> +else:
-> +  properties:
-> +    dmas:
-> +      description:
-> +        DMA channel specifiers, equally divided for Tx and Rx.
-> +      minItems: 1
-> +      maxItems: 40
-> +    dma-names:
-> +      items:
-> +        pattern: "^[rt]x(1[0-9]|[1-9]|20)$"
-> +      description:
-> +        Should be "rx1", "rx2" ... "rx20" for DMA Rx channel
-> +        Should be "tx1", "tx2" ... "tx20" for DMA Tx channel
-> +      minItems: 1
-> +      maxItems: 40
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - dmas
-> +  - dma-names
-> +  - "#sound-dai-cells"
-> +
-> +examples:
-> +  - |
-> +    admaif@702d0000 {
-> +        compatible = "nvidia,tegra210-admaif";
-> +        reg = <0x702d0000 0x800>;
-> +        dmas = <&adma 1>,  <&adma 1>,
-> +               <&adma 2>,  <&adma 2>,
-> +               <&adma 3>,  <&adma 3>,
-> +               <&adma 4>,  <&adma 4>,
-> +               <&adma 5>,  <&adma 5>,
-> +               <&adma 6>,  <&adma 6>,
-> +               <&adma 7>,  <&adma 7>,
-> +               <&adma 8>,  <&adma 8>,
-> +               <&adma 9>,  <&adma 9>,
-> +               <&adma 10>, <&adma 10>;
-> +        dma-names = "rx1",  "tx1",
-> +                    "rx2",  "tx2",
-> +                    "rx3",  "tx3",
-> +                    "rx4",  "tx4",
-> +                    "rx5",  "tx5",
-> +                    "rx6",  "tx6",
-> +                    "rx7",  "tx7",
-> +                    "rx8",  "tx8",
-> +                    "rx9",  "tx9",
-> +                    "rx10", "tx10";
-> +        #sound-dai-cells = <1>;
-> +    };
-> +
-> +  - |
-> +    admaif@290f000 {
-> +        compatible = "nvidia,tegra186-admaif";
-> +        reg = <0x0290f000 0x1000>;
-> +        dmas = <&adma 1>, <&adma 1>,
-> +               <&adma 2>, <&adma 2>,
-> +               <&adma 3>, <&adma 3>,
-> +               <&adma 4>, <&adma 4>,
-> +               <&adma 5>, <&adma 5>,
-> +               <&adma 6>, <&adma 6>,
-> +               <&adma 7>, <&adma 7>,
-> +               <&adma 8>, <&adma 8>,
-> +               <&adma 9>, <&adma 9>,
-> +               <&adma 10>, <&adma 10>,
-> +               <&adma 11>, <&adma 11>,
-> +               <&adma 12>, <&adma 12>,
-> +               <&adma 13>, <&adma 13>,
-> +               <&adma 14>, <&adma 14>,
-> +               <&adma 15>, <&adma 15>,
-> +               <&adma 16>, <&adma 16>,
-> +               <&adma 17>, <&adma 17>,
-> +               <&adma 18>, <&adma 18>,
-> +               <&adma 19>, <&adma 19>,
-> +               <&adma 20>, <&adma 20>;
-> +        dma-names = "rx1", "tx1",
-> +                    "rx2", "tx2",
-> +                    "rx3", "tx3",
-> +                    "rx4", "tx4",
-> +                    "rx5", "tx5",
-> +                    "rx6", "tx6",
-> +                    "rx7", "tx7",
-> +                    "rx8", "tx8",
-> +                    "rx9", "tx9",
-> +                    "rx10", "tx10",
-> +                    "rx11", "tx11",
-> +                    "rx12", "tx12",
-> +                    "rx13", "tx13",
-> +                    "rx14", "tx14",
-> +                    "rx15", "tx15",
-> +                    "rx16", "tx16",
-> +                    "rx17", "tx17",
-> +                    "rx18", "tx18",
-> +                    "rx19", "tx19",
-> +                    "rx20", "tx20";
-> +        #sound-dai-cells = <1>;
-> +    };
-
-I don't see a lot of value in having 2 examples.
-
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
-> new file mode 100644
-> index 0000000..5f3e1ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
-
-Same prior comments apply here.
-
-> @@ -0,0 +1,110 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/nvidia,tegra210-ahub.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Tegra210 AHUB Device Tree Bindings
-> +
-> +description: |
-> +  The Audio Hub (AHUB) comprises a collection of hardware accelerators
-> +  for audio pre-processing, post-processing and a programmable full
-> +  crossbar for routing audio data across these accelerators. It has
-> +  external interfaces such as I2S, DMIC, DSPK. It interfaces with ADMA
-> +  engine through ADMAIF.
-> +
-> +maintainers:
-> +  - Jon Hunter <jonathanh@nvidia.com>
-> +  - Sameer Pujar <spujar@nvidia.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^ahub@[0-9a-f]*$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - nvidia,tegra210-ahub
-> +          - nvidia,tegra186-ahub
-> +      - items:
-> +          - const: nvidia,tegra194-ahub
-> +          - const: nvidia,tegra186-ahub
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: AHUB module clock
-> +
-> +  clock-names:
-> +    const: ahub
-> +
-> +  assigned-clocks:
-> +    description: AHUB module clock
-> +
-> +  assigned-clock-parents:
-> +    description: parent for AHUB module clock
-> +
-> +  assigned-clock-rates:
-> +    description: AHUB module clock rate
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +  ranges:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-
-ranges already has a type.
-
-> +    description: Specify address range for the node and its children
-
-Drop. That's every 'ranges'.
-
-> +    minItems: 1
-> +
-> +  "#sound-dai-cells":
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - assigned-clocks
-> +  - assigned-clock-parents
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
-> +  - "#sound-dai-cells"
-> +
-> +examples:
-> +  - |
-> +    #include<dt-bindings/clock/tegra210-car.h>
-> +
-> +    ahub@702d0800 {
-> +        compatible = "nvidia,tegra210-ahub";
-> +        reg = <0x702d0800 0x800>;
-> +        clocks = <&tegra_car TEGRA210_CLK_D_AUDIO>;
-> +        clock-names = "ahub";
-> +        assigned-clocks = <&tegra_car TEGRA210_CLK_D_AUDIO>;
-> +        assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_A_OUT0>;
-
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges = <0x702d0000 0x702d0000 0x0000e400>;
-
-These properties imply you have child nodes, but none are defined.
-
-> +        #sound-dai-cells = <1>;
-> +    };
-> +
-> +  - |
-> +    #include<dt-bindings/clock/tegra186-clock.h>
-> +
-> +    ahub@2900800 {
-> +        compatible = "nvidia,tegra186-ahub";
-> +        reg = <0x02900800 0x800>;
-> +        clocks = <&bpmp TEGRA186_CLK_AHUB>;
-> +        clock-names = "ahub";
-> +        assigned-clocks = <&bpmp TEGRA186_CLK_AHUB>;
-> +        assigned-clock-parents = <&bpmp TEGRA186_CLK_PLL_A_OUT0>;
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges = <0x02900800 0x02900800 0x11800>;
-> +        #sound-dai-cells = <1>;
-> +    };
-
-Really need 2 examples?
-
-> +
-> +...
-
-Same comments apply to the rest.
