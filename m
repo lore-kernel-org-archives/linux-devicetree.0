@@ -2,63 +2,62 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9344BC4BA12
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A10DC4BA10
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6565B21927
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3650521927
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQ1YXDo6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJAIwt3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgBZMnC (ORCPT
+        id S1726388AbgBZMqO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:43:02 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41770 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgBZMnB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 07:43:01 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so2923646ljc.8;
-        Wed, 26 Feb 2020 04:43:00 -0800 (PST)
+        Wed, 26 Feb 2020 07:46:14 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33728 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgBZMqO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 07:46:14 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y6so2978023lji.0;
+        Wed, 26 Feb 2020 04:46:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=naHmwMkEZlsq2F2BdV78t7a2n6KXkH4cArO0DzqKw9s=;
-        b=oQ1YXDo6+jB9aH9a05GU0xwO2NeTx0pZ2jpQW5sC7FObezAamb9GLR1j9y80Vd7PW4
-         5XEffKqjS2T8VLrsMUL0B2r14bi6hf7ak0FjH/qafJEHkGVUiPpOwEC2K/SotBZqNBdT
-         I+xDbdHSXNJZgX2OTKDz5Vc3iMPuXVCPpvMLeAy3NPWzFm1nmue6F3HMibuTpfGnayE+
-         SyzzsNrJ6YpQLC0V2Bkc85eHEJ8Yu/7h9Bj3XtOnkGKqumkYA9Zv2fUGZW4rRP7XZJG1
-         HxEaYpF9FFJMrft2C6sK5HsayCuwHzrqHHWgJ8KAOXTKT0rjr9T+KJL5lwtaAOtbpBc5
-         7TkA==
+        bh=qgJPSpfwkB4wpHwVPaSt8tJmm/cC07E5aTtE/ZGtNew=;
+        b=hJAIwt3XqcA6vdQYlW5DN1YmEqE1lXwSUL3D9lMIL4oTQ7g/Q+sMxozuu5BCwAIyXC
+         fhi9rbfJsXmquyo1vwBRXfm2gwf/M0mMzhFe9uO/CFpITOf4artAjfPx4sbGj4W8hleM
+         MJ48U6K3xxgtdkGcRBgifFExebZTmpC4sEy+2rWNtahDhyvJWx2JR8ckHSASBcef/fdi
+         yvlAoM6IgumqA7T1upMmzuC5zMxU/5VCAfVYp0MCElHeH5VHFbBh1ogjysPJtu8WqhRK
+         OOfuAwOnM7TWmV2/O6u/dLAw6LWaGj487oyJyQ/JJM8kRHSeqPQCVVO/qo8qgUtmr8Ga
+         2jNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=naHmwMkEZlsq2F2BdV78t7a2n6KXkH4cArO0DzqKw9s=;
-        b=EtxSzbmchcmJjktcb4SoSENIZxGQPTQyT8gfAQt+AaA84jxHSfb4421fachBs/J2rx
-         DvKDPyKAuUb2O+tQ8t/YPm97r2A/EWsrKjX/NERI85V1omFPpzwnyatxtA0IT7dP4OEA
-         3GF2FWSFfMPJSC/cPV1ca6KwKaI6EPuTbAZAxfxJ2MWLlgVX+OuBF5o57EBKtdCgxrdt
-         xP3LDGZCgX0jnlDjnoaRvvfKehf2J5uIzW3FLjzjkKcedLdJn/rKNUdcdxU6cOLr2dAm
-         Y5IBCoe6Icq/s75vllkhDOXKrmd0Gy4pfmTRA+Ap7kd85ASVEaI1+sDNGFAyKqz32EUi
-         QgJg==
-X-Gm-Message-State: APjAAAUu7ntuq4HjmiF5nJnG5eToRTDBiGTwdDzfwsBAdL/G8IRD5Nur
-        VViM816/jg3rDqPN2LsG3BdnQVb/NSaeX5YSvwA=
-X-Google-Smtp-Source: ADFU+vtwr9qHZQRp7nOQn9p0PoE3msDjcGJRvRyC8H+RwcRzDCO3GQIm5dNAC1Bue/fML340D2kMrue/X63xSXz+WfQ=
-X-Received: by 2002:a05:651c:d4:: with SMTP id 20mr2838816ljr.269.1582720979846;
- Wed, 26 Feb 2020 04:42:59 -0800 (PST)
+        bh=qgJPSpfwkB4wpHwVPaSt8tJmm/cC07E5aTtE/ZGtNew=;
+        b=Oszo+MRO9mI9hAm6oa02gQ8lgjElR7otptitAh5mjEYUunlXpYuX5C9UmyoEQpUdei
+         Afg8FTP8NEBA4+VPNqvK5d32Zq/DbjeRDa6g9xevzqEBqri11aMOwi6jsucLFoEzk3OW
+         GdXSSHyr5iz4CRiDMaghjHgDovJVtdJQvFJYVkz+5B18pql1cNm15CZocMnXXLkdsOX4
+         miQwVCrcTWZ+tclp/KepX3LZOpjOr2IB7/H9rTPNE3Zc9Xx5dQIjQAXNf0F4SogTVhZN
+         6fVkOvYHCQ2Rac4MY6fCuQFM5ONL3UwHuG2QZkLdI+JMFlFN+vIJ3mVR2LvKeRiapxgX
+         h4fw==
+X-Gm-Message-State: APjAAAX+DL7o7ENslAP7yc/uMfOfTtAhKltbzmMWpQIS20SEH824I5Os
+        QOfEcoCPFke71LQNUvc3zV8PqAm/ZDvwzMPytaSxLA==
+X-Google-Smtp-Source: APXvYqzaHbc9A2c9xE2edfnUWxJTjRVKLCIJGvlkTyklIyTN06zsZhz4ISWpDA1VVtf7NNjiq/hDCBcwaUp3aSzRtyE=
+X-Received: by 2002:a2e:2e11:: with SMTP id u17mr2865444lju.117.1582721172264;
+ Wed, 26 Feb 2020 04:46:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20200224062917.4895-1-martin.kepplinger@puri.sm> <20200224062917.4895-2-martin.kepplinger@puri.sm>
-In-Reply-To: <20200224062917.4895-2-martin.kepplinger@puri.sm>
+References: <20200224062917.4895-1-martin.kepplinger@puri.sm> <20200224062917.4895-5-martin.kepplinger@puri.sm>
+In-Reply-To: <20200224062917.4895-5-martin.kepplinger@puri.sm>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 26 Feb 2020 09:42:49 -0300
-Message-ID: <CAOMZO5BxS-+1=NVgZ4nJcneVGMr7B8sLL+gYidXfgrvPSRB0JQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/8] arm64: dts: librem5-devkit: enable sai2 and sai6
- audio interface
+Date:   Wed, 26 Feb 2020 09:46:01 -0300
+Message-ID: <CAOMZO5DV9JY=7Vg3RL_T4W_8yb1DnLThmS_LWM45uWAAgeXwQA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/8] arm64: dts: librem5-devkit: add a vbus supply to usb0
 To:     Martin Kepplinger <martin.kepplinger@puri.sm>
 Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Shawn Guo <shawnguo@kernel.org>,
@@ -85,15 +84,13 @@ On Mon, Feb 24, 2020 at 3:31 AM Martin Kepplinger
 >
 > From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 >
-> Add missing sai2 and sai6 audio interface and pinctrl definitions for the
-> Librem 5 devkit.
->
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> Without a VBUS supply the dwc3 driver won't go into otg mode.
 
-Maybe you could rearrange patches 1 and 2 like this:
+Since this is a bug fix, it would be better to put it as the first
+patch of the series, with a Fixes tag and Cc stable, so that it could
+be backported to stable trees.
 
-Add simcom 7100 modem support
-Add sgtl5000 support
+Please rearrange the series and put all bug fixes first with Fixes tag
+and Cc stable.
 
-This way it is clearer where SAI2 and SAI6 ports are actually used.
+Thanks
