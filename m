@@ -2,134 +2,124 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EDAC4BA0B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95C9C4BA0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 927222084E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D25F24656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 08:43:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fqUdeqGf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E/4gv4fd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgBZIkm (ORCPT
+        id S1727362AbgBZInB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:40:42 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55832 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726425AbgBZIkl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:40:41 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01Q8crEg027973;
-        Wed, 26 Feb 2020 09:40:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=UTNAbP13GzjPHqEdVThO2cR89yJ3a5MfyLKzDHxgcvU=;
- b=fqUdeqGfpujOuJ5oG07BCO06VytcD3iFDMOqKGVbRyskAC6UTHv1Mx2mpZXQc6FLnEjT
- xxyqXNo5Y0LOEEwoFK6JQSAxwP1rKDyBjcQibV86Ehx5riqHYdBxFNql1gl9aXBu1Crd
- 5QXCQPvLQHzcjxEVvL0NS2CWK/9GjG6eFuxaz8l+rvl0QMpuRfg9syvyDI/LN3vqICLR
- ZlM5teH5joaqQsi8fQHqQTSeWrEGq8nmAJwWXQB9x+orAh064a/dV1AZ6Qn2a6LTg8oY
- XaOckX9s+fH7yV/SMNC8TE3GozA8gsl1HG3emwfXeEnZ92vcL4TxV7WkONl7GGy+EISA ZA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ydcpgagsv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Feb 2020 09:40:23 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 33994100038;
-        Wed, 26 Feb 2020 09:40:19 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 26AB02AC906;
-        Wed, 26 Feb 2020 09:40:19 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb 2020 09:40:18
- +0100
-From:   Ludovic Barre <ludovic.barre@st.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH 2/4] mmc: mmci_sdmmc: fix DMA API warning overlapping mappings
-Date:   Wed, 26 Feb 2020 09:40:12 +0100
-Message-ID: <20200226084014.5242-3-ludovic.barre@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200226084014.5242-1-ludovic.barre@st.com>
-References: <20200226084014.5242-1-ludovic.barre@st.com>
+        Wed, 26 Feb 2020 03:43:01 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58810 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgBZInA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 03:43:00 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q8gwVW092872;
+        Wed, 26 Feb 2020 02:42:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582706578;
+        bh=fbCYjN5xQhrCGo+fxGqzm3lDzWo/n0qXKgvniwZl8JU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=E/4gv4fdmC2c1rMJduSHT8cUhu8huepnhandJQh4AMhcUv/BZe76TNVfw25RG3GDM
+         PXy/znwbYcN7Te7yGh20fuiwJVtp2W36KlMD14lLdAYmBliH5UkcNW7jA8ZGcUdsQO
+         REc6L0rz3hG8Rb55L6kcqRD+tV3w8HJHam5Ao5/4=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q8gwUQ003311;
+        Wed, 26 Feb 2020 02:42:58 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 02:42:57 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 02:42:57 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01Q8gt8r058762;
+        Wed, 26 Feb 2020 02:42:56 -0600
+Subject: Re: [PATCH 01/12] dt-bindings: bus: ti-sysc: Add support for PRUSS
+ SYSC type
+To:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
+CC:     Tero Kristo <t-kristo@ti.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200225204649.28220-1-s-anna@ti.com>
+ <20200225204649.28220-2-s-anna@ti.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <96ec493b-3615-e84d-ba30-cabbf750c874@ti.com>
+Date:   Wed, 26 Feb 2020 10:42:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_02:2020-02-25,2020-02-26 signatures=0
+In-Reply-To: <20200225204649.28220-2-s-anna@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Turning on CONFIG_DMA_API_DEBUG_SG results in the following warning:
-WARNING: CPU: 1 PID: 20 at kernel/dma/debug.c:500 add_dma_entry+0x16c/0x17c
-DMA-API: exceeded 7 overlapping mappings of cacheline 0x031d2645
-Modules linked in:
-CPU: 1 PID: 20 Comm: kworker/1:1 Not tainted 5.5.0-rc2-00021-gdeda30999c2b-dirty #49
-Hardware name: STM32 (Device Tree Support)
-Workqueue: events_freezable mmc_rescan
-[<c03138c0>] (unwind_backtrace) from [<c030d760>] (show_stack+0x10/0x14)
-[<c030d760>] (show_stack) from [<c0f2eb28>] (dump_stack+0xc0/0xd4)
-[<c0f2eb28>] (dump_stack) from [<c034a14c>] (__warn+0xd0/0xf8)
-[<c034a14c>] (__warn) from [<c034a530>] (warn_slowpath_fmt+0x94/0xb8)
-[<c034a530>] (warn_slowpath_fmt) from [<c03bca0c>] (add_dma_entry+0x16c/0x17c)
-[<c03bca0c>] (add_dma_entry) from [<c03bdf54>] (debug_dma_map_sg+0xe4/0x3d4)
-[<c03bdf54>] (debug_dma_map_sg) from [<c0d09244>] (sdmmc_idma_prep_data+0x94/0xf8)
-[<c0d09244>] (sdmmc_idma_prep_data) from [<c0d05a2c>] (mmci_prep_data+0x2c/0xb0)
-[<c0d05a2c>] (mmci_prep_data) from [<c0d073ec>] (mmci_start_data+0x134/0x2f0)
-[<c0d073ec>] (mmci_start_data) from [<c0d078d0>] (mmci_request+0xe8/0x154)
-[<c0d078d0>] (mmci_request) from [<c0cecb44>] (mmc_start_request+0x94/0xbc)
+Hi Suman,
 
-DMA api debug brings to light leaking dma-mappings, dma_map_sg and
-dma_unmap_sg are not correctly balanced.
+On 25/02/2020 22:46, Suman Anna wrote:
+> From: Roger Quadros <rogerq@ti.com>
+> 
+> The PRUSS module has a SYSCFG which is unique. The SYSCFG
+> has two additional unique fields called STANDBY_INIT and
+> SUB_MWAIT in addition to regular IDLE_MODE and STANDBY_MODE
+> fields. Add the bindings for this new sysc type.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>   Documentation/devicetree/bindings/bus/ti-sysc.txt | 1 +
+>   include/dt-bindings/bus/ti-sysc.h                 | 4 ++++
+>   2 files changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> index 233eb8294204..c984143d08d2 100644
+> --- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> +++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> @@ -38,6 +38,7 @@ Required standard properties:
+>   		"ti,sysc-dra7-mcasp"
+>   		"ti,sysc-usb-host-fs"
+>   		"ti,sysc-dra7-mcan"
+> +		"ti,sysc-pruss"
+>   
+>   - reg		shall have register areas implemented for the interconnect
+>   		target module in question such as revision, sysc and syss
+> diff --git a/include/dt-bindings/bus/ti-sysc.h b/include/dt-bindings/bus/ti-sysc.h
 
-If a request is prepared, the dma_map/unmap are done in asynchronous
-call pre_req (prep_data) and post_req (unprep_data). In this case
-the dma-mapping is right balanced.
+Did you intentionally leave this here? It should be part of 2nd patch?
 
-But if the request was not prepared, the data->host_cookie is
-define to zero and the dma_map/unmap must be done in the request.
-The dma_map is called by mmci_dma_start (prep_data), but there is
-no dma_unmap in this case.
+> index babd08a1d226..76b07826ed05 100644
+> --- a/include/dt-bindings/bus/ti-sysc.h
+> +++ b/include/dt-bindings/bus/ti-sysc.h
+> @@ -18,6 +18,10 @@
+>   
+>   #define SYSC_DRA7_MCAN_ENAWAKEUP	(1 << 4)
+>   
+> +/* PRUSS sysc found on AM33xx/AM43xx/AM57xx */
+> +#define SYSC_PRUSS_SUB_MWAIT		(1 << 5)
+> +#define SYSC_PRUSS_STANDBY_INIT		(1 << 4)
+> +
+>   /* SYSCONFIG STANDBYMODE/MIDLEMODE/SIDLEMODE supported by hardware */
+>   #define SYSC_IDLE_FORCE			0
+>   #define SYSC_IDLE_NO			1
+> 
 
-This patch adds dma_unmap_sg when the dma is finalized and
-the data cookie is zero (request not prepared).
-
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/mmc/host/mmci_stm32_sdmmc.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-index 56d9ad7f523e..7b781c897346 100644
---- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-+++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-@@ -190,6 +190,9 @@ static int sdmmc_idma_start(struct mmci_host *host, unsigned int *datactrl)
- static void sdmmc_idma_finalize(struct mmci_host *host, struct mmc_data *data)
- {
- 	writel_relaxed(0, host->base + MMCI_STM32_IDMACTRLR);
-+
-+	if (!data->host_cookie)
-+		sdmmc_idma_unprep_data(host, data, 0);
- }
- 
- static void mmci_sdmmc_set_clkreg(struct mmci_host *host, unsigned int desired)
 -- 
-2.17.1
-
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
