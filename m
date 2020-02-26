@@ -4,94 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA95C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718E8C4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32CB02467A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4275621D7E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 21:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582754199;
-	bh=GMb0pFKuJD8eamc1LOmXrmucjV8IEey7X54UNjLcyxY=;
+	s=default; t=1582754255;
+	bh=3nSSsgJb7wE32/AOOKbfpLf2HqTv8vEAlEPB1uCHz6g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f8YfMTWIi36WdIwCiUfo3pgw97EwszREq8w8WTNUYKPh1io/k2aMvk1I5MdzF4ifS
-	 dcRv++GBe0kwUkF3vvgd+NGQLG1pV9qNFW0LGrQQfHOsEGchD68ybWNT62C5Slw/2s
-	 6t7yXW14aJowTaYfF1QND7wA1oNLUz0bLlPftKU0=
+	b=hLj17ZgxlT18JQLZ8Co4q2hXsNHBbNPb8Myb0Ai9xKsKnPClrIRu7wP1JfgI6E8yB
+	 diq5vQvLoRNwAOc/p9J3T0HOsGit3DM2pXVuLOS5+1TLUbKjz9i2wuW3liyXzcZOIe
+	 kgDzHpSVUqEVMavGMg0wx7LFyxMEmuMziLKc8K4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbgBZV4f (ORCPT
+        id S1727657AbgBZV5e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:56:35 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46157 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727584AbgBZV4f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:56:35 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a22so1104866oid.13;
-        Wed, 26 Feb 2020 13:56:35 -0800 (PST)
+        Wed, 26 Feb 2020 16:57:34 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35626 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727584AbgBZV5e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 16:57:34 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r16so987403otd.2;
+        Wed, 26 Feb 2020 13:57:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W4BX9Auu8o01WTrJq32cfiMhmljuxjW/fjyXmcSHWTU=;
-        b=MEqhjFEHBaJs9HucxcgH1qo0xcZGmot10t+AxW45PxPw9WJcxTjRml6UEiwE7qQMIi
-         3QMjjor2PFEwhPpMzV8FqGvSa5PRvu+3T3RsTv6F4b5OthVYzDrhR1KXIrK3IfoCQZMY
-         wEz/N+OHSi7fkR5ufGsaRkSEsU82OuLGDvYcM+U372BwcYRMQAg0g2x6XHVTmQMGHSaj
-         UMBONWCvnPktC8Uew9J9egLkEnWdM+H92SspQMCFVY+/fxL+BphI94Cj6WWkpe/NFwvk
-         bIMcuwdYujHvJ5JpHaufdkoQrD65Ao9iryDFN5v+K38Nwt+2Ut33GRvWLWdCutR7zncH
-         xjHw==
-X-Gm-Message-State: APjAAAUxj/4CVyMVpXZBl864JSBhwqSYGYF6w/9+YbXJdGzp5lhkww6K
-        Jl2q+yEvr2KOnvQcR3KvZA==
-X-Google-Smtp-Source: APXvYqws1PYPwS1qIlnOlXd8Ptqpulqo05xSrU6w8Ew1XswmUcuyfnWvsmKpxnrrYAr0zE674FvP8g==
-X-Received: by 2002:aca:d68a:: with SMTP id n132mr958886oig.40.1582754194758;
-        Wed, 26 Feb 2020 13:56:34 -0800 (PST)
+        bh=VtcV+TLcp6fap4GZT+cz5YJ4UwaOUmy6z1le/e7vBJo=;
+        b=lmM/s101FWwYRiFu3E7xJVmr/1IR5XbYnmYpNuZJS56T74eXYvk7LHOcv2Sb64OH/u
+         wcGmF0grFM8wUPBIhzBnVWYC9N2VNhi7fdxgFq0qjdhRGapKReA+GPRutQIzj+NgROcI
+         BLyGyfER0Dx7UkXB7mzbsuLOcfkAShXx/zGlp5IPj0hzH1e/hm+MV6k2b0z+GuuP6ix1
+         xDIyxqLaXOCpUXDjrNrGLQDiHJkJCoh26ta7mFPj8I+JPOT+2m3k/mwvgT82dregaGkA
+         avOhME7KczNMcfhY82OkKmG0S84DzwmmfjUunx8iwM2/xJc9oQtYEAFJZvJTaTGbw34p
+         slgw==
+X-Gm-Message-State: APjAAAUujAmyTzffPWE4GgywnLHZw/RbHnSQe0ql8y9ijj132lIVFC+C
+        4jDO8EG0sm0X6muoFS5BEw==
+X-Google-Smtp-Source: APXvYqwk/c050OlotHglNYXwW95n1Qe5jSUGzkQ3Gnvc0yR11liQIvvZW7tdL2ZRSj87SItSSbYjfg==
+X-Received: by 2002:a9d:7a47:: with SMTP id z7mr737694otm.179.1582754253690;
+        Wed, 26 Feb 2020 13:57:33 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y6sm1210156oti.44.2020.02.26.13.56.33
+        by smtp.gmail.com with ESMTPSA id 17sm1234725oty.48.2020.02.26.13.57.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 13:56:34 -0800 (PST)
-Received: (nullmailer pid 32209 invoked by uid 1000);
-        Wed, 26 Feb 2020 21:56:33 -0000
-Date:   Wed, 26 Feb 2020 15:56:33 -0600
+        Wed, 26 Feb 2020 13:57:33 -0800 (PST)
+Received: (nullmailer pid 1255 invoked by uid 1000);
+        Wed, 26 Feb 2020 21:57:32 -0000
+Date:   Wed, 26 Feb 2020 15:57:32 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Belin <nbelin@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io,
-        Nicolas Belin <nbelin@baylibre.com>
-Subject: Re: [PATCH RFC v2 2/3] dt-bindings: leds: Shiji Lighting APA102C LED
- driver
-Message-ID: <20200226215633.GA20374@bogus>
-References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
- <1582727592-4510-3-git-send-email-nbelin@baylibre.com>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Robert Richter <rric@kernel.org>,
+        soc@kernel.org, Jon Loeliger <jdl@jdl.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 12/13] dt-bindings: arm: Add Calxeda system registers
+ json-schema binding
+Message-ID: <20200226215732.GA32486@bogus>
+References: <20200226180901.89940-1-andre.przywara@arm.com>
+ <20200226180901.89940-13-andre.przywara@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582727592-4510-3-git-send-email-nbelin@baylibre.com>
+In-Reply-To: <20200226180901.89940-13-andre.przywara@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 26 Feb 2020 15:33:11 +0100, Nicolas Belin wrote:
-> Document Shiji Lighting APA102C LED driver device tree bindings.
+On Wed, 26 Feb 2020 18:09:00 +0000, Andre Przywara wrote:
+> The Calxeda system registers are a collection of MMIO register
+> controlling several more general aspects of the SoC.
+> Beside for some power management tasks this node is also somewhat
+> abused as the container for the clock nodes.
 > 
-> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+> Add a binding in DT schema format using json-schema.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 > ---
->  .../devicetree/bindings/leds/leds-apa102c.yaml     | 154 +++++++++++++++++++++
->  1 file changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-apa102c.yaml
+>  .../bindings/arm/calxeda/hb-sregs.yaml        | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
+warning: no schema found in file: Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml: ignoring, error in schema: properties: clocks
 Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Error: Documentation/devicetree/bindings/leds/leds-apa102c.example.dts:33.30-31 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/leds/leds-apa102c.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/leds/leds-apa102c.example.dt.yaml] Error 1
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml: properties:clocks: {'type': 'object'} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml: properties:clocks: 'maxItems' is a required property
+
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/arm/calxeda/hb-sregs.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/arm/calxeda/hb-sregs.example.dts] Error 1
 Makefile:1263: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1245095
+See https://patchwork.ozlabs.org/patch/1245261
 Please check and re-submit.
