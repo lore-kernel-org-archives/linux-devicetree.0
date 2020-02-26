@@ -2,157 +2,123 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94BFC4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0840AC4BA24
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF02E24687
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDC020838
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 19:55:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZWGco+24"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gpONdCEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgBZTku (ORCPT
+        id S1727253AbgBZTz0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:40:50 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41227 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727277AbgBZTkt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 14:40:49 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b1so155624pgm.8
-        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 11:40:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Xdxonaxq5cgaVyVSFlydOnK4js6i72Frs9eWxUe3hoU=;
-        b=ZWGco+24DWzp6T6iC7pzeOcrNs9WZCxdRz9U1mCJEoYzw/xp1ApHIVX6+9bZKK3JB9
-         671E148y7WlIei8+gAy1tEMGCOfqvBPkghIWrNeAMcWC2846jEkPXoAgLIXOkZVu+PaO
-         +k3bhEwopjUBDxa7HrmGbOSj1j+xzDM88VVbY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Xdxonaxq5cgaVyVSFlydOnK4js6i72Frs9eWxUe3hoU=;
-        b=YtOEscVYRribBBvJBSEHUw8ru6uQMHruTarKVzNt1+obf0RfnbvbyGgL7Yn914fBYx
-         eOB/vGPv9OCRirn5USe8OAqZJqTtClq0+sau0A2V8gM6OWcD8rfoWvHbu3vi1KFBQAP2
-         dULP3+Bk1tuPSK+TovQxBtDKGANS/MNnRCHjyaJi8NKHDaxXxyyVfDZ7oxG8cx9zJWvR
-         HoeNOfCCpotL2mneljcFZTe/Wp4P5UE2r7MrTba5hlPUPuD3yCugzeG0Kh71JRUqOoRa
-         whz2PgyeGflenvshxsrFzWBvKu47oxPbPwT7TFtXH+dYZoCjprKGHZaew960eLoWmjsG
-         fRyQ==
-X-Gm-Message-State: APjAAAXkFErj6tgBebwWqGVFsYu9tHvcBk/4A15/LYRCJlCiRCU2SIHy
-        S0ovlCDR2R3V29u154/4TK8F1A==
-X-Google-Smtp-Source: APXvYqwhuC/pBQ8Wx2biij6V4vIbf21YokQ6iLCTfd7U6tWb2u8Ba+5PcksmfTfj//Loo+TgGcbWdA==
-X-Received: by 2002:a63:5b54:: with SMTP id l20mr414428pgm.324.1582746048314;
-        Wed, 26 Feb 2020 11:40:48 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id x190sm4039283pfb.96.2020.02.26.11.40.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 11:40:47 -0800 (PST)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dikshita Agarwal <dikshita@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] arm64: dts: sc7180: Move venus node to the correct position
-Date:   Wed, 26 Feb 2020 11:40:44 -0800
-Message-Id: <20200226114017.1.I15e0f7eff0c67a2b49d4992f9d80fc1d2fdadf63@changeid>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        Wed, 26 Feb 2020 14:55:26 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:38590 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727244AbgBZTz0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 14:55:26 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QJrUCL006843;
+        Wed, 26 Feb 2020 19:55:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=obe41J39gr3+hCoSli7HOYpO1kiS2+KFKSLxGy0JLdk=;
+ b=gpONdCEPR/ZndEU1/LFtbAKuFpUWUMRn+eLahfvWMfMCs0JiRZTEr0+539R69NARSKyw
+ yo0B0jTvPEtmUuEGw/O0d7ImjZI9woH/pLK2F6Zh4XHmJfiMTgPFjFq1/+l7y5I57O7u
+ s2Q8/eJ17MR7EM1p03n1etCw8x9k4ZosJOFTtGYZ9CQHtbAwyx0pXcAM38yyeIAHcfie
+ 3tIltLetU1JrA4xUH6oZjiqZ9mYsl0fcUgJ5I7CCeIjQPrd3Rf7tK06AcBiFtVxZbH9b
+ TdP0VGRMKkcGoO7SJBxxbIEAz4gP/p8TlEZfXJtAsQfpgE4kFwTnyIDm+qW5q9wH25ud Qw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ydcsne0na-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 19:55:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QJiNqO116685;
+        Wed, 26 Feb 2020 19:55:18 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2ydcs2yfc0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 19:55:18 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01QJtHtY028983;
+        Wed, 26 Feb 2020 19:55:17 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Feb 2020 11:55:17 -0800
+Subject: Re: [PATCH 0/5] ARM: OMAP2+: Introduce cpuidle for am335x/am437x
+To:     Tony Lindgren <tony@atomide.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+References: <20191213030755.16096-1-d-gerlach@ti.com>
+ <20191213150344.GJ35479@atomide.com> <20200226184328.GY37466@atomide.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <5d775a75-3013-fac2-91e3-ac1967b0f698@oracle.com>
+Date:   Wed, 26 Feb 2020 11:55:16 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200226184328.GY37466@atomide.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=801 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=861 phishscore=0 spamscore=0 adultscore=0
+ suspectscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260120
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Per convention device nodes for SC7180 should be ordered by address.
-This is currently not the case for the venus node, move it to the
-correct position.
+On 2/26/20 10:43 AM, Tony Lindgren wrote:
+> Santosh,
+> 
+> * Tony Lindgren <tony@atomide.com> [191213 15:04]:
+>> * Dave Gerlach <d-gerlach@ti.com> [191212 19:07]:
+>>> Hi,
+>>> This series adds support for cpuidle on am335x and am437x using the
+>>> cpuidle_arm driver. When testing on am335x-evm and am437x-gp-evm the
+>>> follow power consumption reductions are seen on v5.5-rc1 baseline:
+>>>
+>>>
+>>> Idling at command line, CPUFreq userspace governor to 300MHz:
+>>>    am335x-evm:
+>>>      VDD_MPU: 48 mW -> 5 mW
+>>>
+>>>    am437x-gp-evm:
+>>>      VDD_MPU: 32 mW -> 3 mW
+>>>
+>>>
+>>> Idling at command line, CPUFreq userspace governor to 1GHz:
+>>>    am335x-evm:
+>>>      VDD_MPU: 313 mW -> 18 mW
+>>>
+>>>    am437x-gp-evm:
+>>>      VDD_MPU: 208 mW -> 10 mW
+>>
+>> Hey this is great! A beverage on me when we get a chance :)
+>>
+>> For merging, looks like I should take the series after folks are happy
+>> with it. Santosh, care to review and ack if it looks OK?
+> 
+> Looks like this series of changes is still pending. Care
+> to ack?
+> 
+Was scanning this series today. It looks good to me Tony.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 52 ++++++++++++++--------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 253274d5f04c..5f97945e16a4 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1332,6 +1332,32 @@ system-cache-controller@9200000 {
- 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		venus: video-codec@aa00000 {
-+			compatible = "qcom,sc7180-venus";
-+			reg = <0 0x0aa00000 0 0xff000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&videocc VENUS_GDSC>,
-+					<&videocc VCODEC0_GDSC>;
-+			power-domain-names = "venus", "vcodec0";
-+			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-+				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-+			clock-names = "core", "iface", "bus",
-+				      "vcodec0_core", "vcodec0_bus";
-+			iommus = <&apps_smmu 0x0c00 0x60>;
-+			memory-region = <&venus_mem>;
-+
-+			video-decoder {
-+				compatible = "venus-decoder";
-+			};
-+
-+			video-encoder {
-+				compatible = "venus-encoder";
-+			};
-+		};
-+
- 		usb_1: usb@a6f8800 {
- 			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
- 			reg = <0 0x0a6f8800 0 0x400>;
-@@ -1538,32 +1564,6 @@ dispcc: clock-controller@af00000 {
- 			#power-domain-cells = <1>;
- 		};
- 
--		venus: video-codec@aa00000 {
--			compatible = "qcom,sc7180-venus";
--			reg = <0 0x0aa00000 0 0xff000>;
--			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
--			power-domains = <&videocc VENUS_GDSC>,
--					<&videocc VCODEC0_GDSC>;
--			power-domain-names = "venus", "vcodec0";
--			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
--				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
--				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
--				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
--				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
--			clock-names = "core", "iface", "bus",
--				      "vcodec0_core", "vcodec0_bus";
--			iommus = <&apps_smmu 0x0c00 0x60>;
--			memory-region = <&venus_mem>;
--
--			video-decoder {
--				compatible = "venus-decoder";
--			};
--
--			video-encoder {
--				compatible = "venus-encoder";
--			};
--		};
--
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
--- 
-2.25.1.481.gfbce0eb801-goog
-
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
