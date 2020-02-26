@@ -4,93 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6040C4BA13
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE63C4BA12
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B87206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D8D206E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582731433;
-	bh=f0BL/DhAZuN0HkOUt5NyWhFM1DFOxLm5iXX5AcBXCZM=;
+	s=default; t=1582731462;
+	bh=+qylfP2svw3GzUbhdzwhFg/ECBTAJnouwsutnI92lf0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v72PSVTQ4Ks7qIzvhseoiouUI2ywK3L6my4QtA3/9XqS8ES2s5Bro/oZ0UNeytXJ8
-	 BunmAS9/y297/4XDZBOlAc57ALGrCYNh/z8ypZfdKxReLW37LYBGWwMpTOx1vhLGV0
-	 RjIe5ZEyK9s4bLti8CFFcCvPF4TCNylNbXFl8Zi0=
+	b=xW0KTzeLJWOxd2prm95/CIcxp+Uku6rX+YXVmvOUEnoYl6oc6JoP85yl+pePzqkvX
+	 OtzNzVxAFy7ibOrvBOCFnh+2NkHVu0FmEfv0CZfzyKV5PAeHbMujm4Ni6xb5qhxIC0
+	 SAFJGqaZ/3fq/XusIXUvUwuwR9pWX+63T4vohWoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgBZPhN (ORCPT
+        id S1728117AbgBZPhi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:37:13 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33054 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbgBZPhM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 10:37:12 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w6so3363006otk.0;
-        Wed, 26 Feb 2020 07:37:12 -0800 (PST)
+        Wed, 26 Feb 2020 10:37:38 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45827 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbgBZPhi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 10:37:38 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 59so3282550otp.12;
+        Wed, 26 Feb 2020 07:37:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hcKIlqG1W7ZtjQY5cPEhLrynFiA6MCXILdK27XGgexo=;
-        b=huMkTQdYKQqMrvzWe8x79/t6GsTzR5VTHAOVtl6yiaROw5KbAWvN5wl7JWYUZugdy6
-         DP5vpC2VaL9U9wSQhJikw7sT3+Sue85uabXcg+PT7Q7qwweK+YfirGaxcp9GFArMegHK
-         sDiyKMihOrvRWUGOuc0QBt1tWDL9JGzPewaJS551DbleMhmM2VsbtjM8ID2hkSIoh3da
-         Dktj5owGpFDWOno4ay7HLZZyHjFUZbT6ceYBTiRGHxukTAmMp/gLj+OaFpqdHmgIwUN3
-         +sNhtdUh5DjmWdvr0SPKjdLfLTRfjxUZqLGCpRw8bLvQJf+8V8EN3ul79varXgc/1Hz0
-         O0IA==
-X-Gm-Message-State: APjAAAUPTpma7v2DwSDD+X63+baRFMpdOVomZas0XztjIn1gSYpy2OWd
-        VohxiAYxu+zi4ld1BcqZMw==
-X-Google-Smtp-Source: APXvYqxp0SJ3SlDcqPsMyMYHwLhfGDRtCAb5+Y3EhiDh2PSejqz1Wa1ZH5aChoreYGJmX0t0CiahJw==
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr3493743otk.145.1582731431908;
-        Wed, 26 Feb 2020 07:37:11 -0800 (PST)
+        bh=6FzyO6AECYlm7QMzzyrk9pWi96fxzU1V5qZ0EPieTIk=;
+        b=NOjztxD6+tbu0i7MJz9NepMaYts6hrnhEl2klJYPTiCa+rdo33kKIu3N7ZD9lNfrB1
+         qWbaxGKZD04fa8rdr6x/aXPPurtDZ68P1M4hJcTU+FDLb20pTvsn8eYq7vSu9jk6xtee
+         RRqAP/xy+QsMtIzrzQEl8tiEGBxLLdYtL7SO83VsScpFVW43dZTzNDII+zajh81Okow5
+         VQ5chuangHVyXWuatYQZV5tnK9o078brASxGTKcaRR/pzX0gJlO7/wsaWddmDWHiotKo
+         R+pgufLD84dukBW6hhwc4wVzWsYb+qiCBgS7G4KBOD3acbDbgg8eEUqhKG8uUWLa3zv3
+         SpIw==
+X-Gm-Message-State: APjAAAVQjgKo0/2KfzTnKFZy6bRlWKikclYiAMz35tTY3+cRE9PHPLp8
+        2dIsqvuPB6fOQ9RJgZwLwg==
+X-Google-Smtp-Source: APXvYqyLgpMB7D/d5PMJHvcv2asfZGnuMiD3nzHW0Qu43FA9IBj88j6MyezXGcYeLRBnE0xJV0LiHg==
+X-Received: by 2002:a05:6830:10d7:: with SMTP id z23mr3555808oto.114.1582731456203;
+        Wed, 26 Feb 2020 07:37:36 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm899316oij.19.2020.02.26.07.37.10
+        by smtp.gmail.com with ESMTPSA id q9sm878846otl.53.2020.02.26.07.37.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:37:10 -0800 (PST)
-Received: (nullmailer pid 16730 invoked by uid 1000);
-        Wed, 26 Feb 2020 15:37:10 -0000
-Date:   Wed, 26 Feb 2020 09:37:10 -0600
+        Wed, 26 Feb 2020 07:37:35 -0800 (PST)
+Received: (nullmailer pid 17418 invoked by uid 1000);
+        Wed, 26 Feb 2020 15:37:34 -0000
+Date:   Wed, 26 Feb 2020 09:37:34 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Jens Axboe <axboe@kernel.dk>, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: ata: rcar-sata: Convert to json-schema
-Message-ID: <20200226153710.GA16620@bogus>
-References: <20200219154146.11230-1-geert+renesas@glider.be>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Adrian Panella <ianchi74@outlook.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: add smb208 support
+Message-ID: <20200226153734.GA17365@bogus>
+References: <20200219163711.479-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219154146.11230-1-geert+renesas@glider.be>
+In-Reply-To: <20200219163711.479-1-ansuelsmth@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2020 16:41:46 +0100, Geert Uytterhoeven wrote:
-> Convert the Renesas R-Car Serial-ATA Device Tree binding documentation
-> to json-schema.
+On Wed, 19 Feb 2020 17:37:11 +0100, Ansuel Smith wrote:
+> Smb208 regulators are used on some ipq806x soc.
+> Add support for it to make it avaiable on some routers
+> that use it.
 > 
-> While at it:
->   - Remove the deprecated "renesas,rcar-sata" compatible value,
->   - Add "iommus", "power-domains", and "resets" properties,
->   - Update the example.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Adrian Panella <ianchi74@outlook.com>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
-> Not having to care about the deprecated value simplifies the
-> jscon-schema.
-> ---
->  .../bindings/ata/renesas,rcar-sata.yaml       | 71 +++++++++++++++++++
->  .../devicetree/bindings/ata/sata_rcar.txt     | 36 ----------
->  2 files changed, 71 insertions(+), 36 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/ata/renesas,rcar-sata.yaml
->  delete mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
+>  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++++
+>  drivers/regulator/qcom_rpm-regulator.c             | 9 +++++++++
+>  2 files changed, 13 insertions(+)
 > 
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
