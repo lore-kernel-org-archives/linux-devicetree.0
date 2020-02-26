@@ -2,136 +2,143 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564ABC4BA10
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F993C4BA0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C43C24684
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53ED720838
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 12:25:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dsitri.de header.i=@dsitri.de header.b="KiR0lpv5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pm5HWF73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbgBZMWD (ORCPT
+        id S1726440AbgBZMY6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:22:03 -0500
-Received: from mo4-p05-ob.smtp.rzone.de ([85.215.255.132]:22321 "EHLO
-        mo4-p05-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgBZMWD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 07:22:03 -0500
-X-Greylist: delayed 709 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Feb 2020 07:22:02 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582719721;
-        s=strato-dkim-0002; d=dsitri.de;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=vDoUQW8f00C/Wg/EJeX1UisXIv2pOpI4xutNj0UlVGo=;
-        b=KiR0lpv5XSp8+8lDVJXatTvrPlNAtFcM3yQ/BfimH6gnR+EdmTBK6v+kxF3/VdN4bw
-        LKibEP3+PHUk5kWoN89/SVqq+tKfgz6u5QynpD5TnK7+8wOKq0TqdK9zFOjvtHW33GXT
-        sjt0WeIjJ+HbQ1ahHIC/DBaW+ZwQWSpJRykwgT06jdhWXkjkWIeIz0JO+8m5kOEUD4M3
-        jXGrYWgvxWNUPJcATCXrLaKsiPSMUIoX7NXYiBD4kgy4xfrN2kVD3NgphiBFY8hABYFB
-        aGPIBYi9m9easfPOzCBPYccKvygrlXcXIIUxMjSqJwM4nkDhSuj8zOshGTB+h6Ww5P1n
-        IoYw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAjw43pUzk="
-X-RZG-CLASS-ID: mo05
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1QC9x4Ut
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 26 Feb 2020 13:09:59 +0100 (CET)
-Subject: Re: [PATCH v5 0/5] Add rtc support for rn5t618 mfd
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@computer.org>
-In-Reply-To: <20191220122416.31881-1-andreas@kemnade.info>
-Date:   Wed, 26 Feb 2020 13:09:58 +0100
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6FE7F4B7-7D81-4005-A765-2B447B757B53@computer.org>
-References: <20191220122416.31881-1-andreas@kemnade.info>
-To:     lee.jones@linaro.org
-X-Mailer: Apple Mail (2.3124)
+        Wed, 26 Feb 2020 07:24:58 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33477 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgBZMY6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 07:24:58 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m10so4460428wmc.0;
+        Wed, 26 Feb 2020 04:24:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IvhXItdd4X1YXydMqRqD+tdcTcMEd0LYsl8PcoH++pk=;
+        b=Pm5HWF73aJ9VZcK/5Zlg1TkuMduL1Z0xp2H7Tf54k04xSGZJJXLHLvKQeMdHL+zJYr
+         pPiwRu+UndJu3ZSYNetFEJdoMpn2fyL8aufv0VPRtbL3/nvBusVWG+5yztsop2Dv+UU3
+         AoeyskahRt+cDZAxIsfHiT8TbsUPrhERZ0kK0iBKH0iWuILF0PbKXDlODXyBTmFYTH8F
+         zy/4nUoxWO0igZl95eYU2cbPiOZSSbL543ND5gG+xJo+CCZv1YY8iFW0gGJfpYzPCrnB
+         0T9KuaH6iqs9hgFnT3hqGoAy9nSzJi0M3gsFxzE3eLM2t1zv2yTU2VUgy2A2wNWWGehp
+         llGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IvhXItdd4X1YXydMqRqD+tdcTcMEd0LYsl8PcoH++pk=;
+        b=kJjHxbc2xQhfs8n3fo+seIMK2oBJOY5kATJc/y+ALYztquS2EOOruVkKktrvpA4j1w
+         /OriLlTqgi3gH4n7TbrfKPChykewp2ecOblKFFW06HpDU8GvTfo1kCp1qFjWOCbhCQ22
+         QbJHcb3v2Eb7Uz+s/u0IBHLe07n03ILiuhLd+Fa05/E8yUvpuDlDFEIgUJvjXVamsl7P
+         O2bd6rpptsTn7mJtlxP15tNekhhNHRbCPOpOccJARqyB00CBSq1cmutBByZSRoHuY8JQ
+         BoFRKu3ogNYnxj0iLfmJK85vXEnr0W1+wFgOdmPIlNrNnrnbdvYwcK5Lxmp2fgAT/0Ji
+         MQJQ==
+X-Gm-Message-State: APjAAAXUP7Ykdq/CsKJ/J2ErADzxxK/+FVrzpbnPTZ3NYiBM+yfdcJEj
+        Ta26ChQsex/MKaXGF8F0Qcw=
+X-Google-Smtp-Source: APXvYqzyTzyUPRQdIy8Rfhx8ubVi+C6umoNFwiXeFqS0v+Ld0G8ObmhzMOrwd3BzwL6ZjxmlWPhcrg==
+X-Received: by 2002:a1c:7718:: with SMTP id t24mr5311847wmi.119.1582719896307;
+        Wed, 26 Feb 2020 04:24:56 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id g14sm3226354wrv.58.2020.02.26.04.24.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 04:24:55 -0800 (PST)
+To:     ezequiel@collabora.com
+Cc:     boris.brezillon@collabora.com, devicetree@vger.kernel.org,
+        heiko@sntech.de, hverkuil@xs4all.nl, jonas@kwiboo.se,
+        kernel@collabora.com, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, nicolas@ndufresne.ca,
+        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
+        sakari.ailus@iki.fi, tfiga@chromium.org
+References: <20200220163016.21708-7-ezequiel@collabora.com>
+Subject: Re: [PATCH v6 6/6] arm64: dts: rockchip: rk3399: Define the rockchip
+ Video Decoder node
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <817821e3-bc51-8037-b9b9-e429c5eeb280@gmail.com>
+Date:   Wed, 26 Feb 2020 13:24:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200220163016.21708-7-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Boris,
 
-> Am 20.12.2019 um 13:24 schrieb Andreas Kemnade <andreas@kemnade.info>:
->=20
-> In the variant RC5T619 the mfd has an RTC. This patchset adds
-> support for it. To do so it adds the missing register defines in=20
-> rn5t618.h and general irq handling for that.
-> It seems that the irq definitions are the same except missing RTC
-> but due to missing ability to test that I do not add them here.
->=20
-> The rtc driver itself is based on=20
-> =
-https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kerne=
-l.tar.bz2
-> but heavily reworked.
->=20
-> It was tested on the Kobo Clara HD.
->=20
-> For cleaning up there is a separate off-topic patch:
-> mfd: rn5t618: cleanup i2c_device_id
->=20
-> Changes in v5:
-> - static rn5t618_irq_init
-> - PLATFORM_DEVID_NONE
-> - added some Acked-Bys
->=20
-> Changes in v4:
-> - use macros for IRQ definitions
-> - merge rn5t618-core.c and rn5t618-irq.c
->=20
-> Changes in v3:
-> - alignment cleanup
-> - output cleanup, remove useless toggling of alarm flag in rtc probe
-> - updated bindings description, so patch 1/5 becomes 2/6 and so on
->=20
-> Changes in v2:
-> - no dead code in irq code
-> - various improvements and cleanups in rtc driver itself
->=20
-> Andreas Kemnade (5):
->  dt-bindings: mfd: rn5t618: Document optional property interrupts
->  mfd: rn5t618: add IRQ support
->  mfd: rn5t618: add RTC related registers
->  mfd: rn5t618: add more subdevices
->  rtc: rc5t619: add ricoh rc5t619 RTC driver
+Dtsi nodes are sort on address.
+The vdec node is now inserted between:
 
-what has happened to this series?
-It looks like something got lost so that it has not yet arrived in =
-linux-next.
+vdec_mmu: iommu       @ff660480
+vdec    : video-codec @ff660000
+iep_mmu : iommu       @ff670800
 
-BR and thanks,
-Nikolaus Schaller
+This should be:
 
->=20
-> Documentation/devicetree/bindings/mfd/rn5t618.txt |   4 +
-> drivers/mfd/Kconfig                               |   1 +
-> drivers/mfd/rn5t618.c                             | 109 +++++-
-> drivers/rtc/Kconfig                               |  10 +
-> drivers/rtc/Makefile                              |   1 +
-> drivers/rtc/rtc-rc5t619.c                         | 444 =
-++++++++++++++++++++++
-> include/linux/mfd/rn5t618.h                       |  26 ++
-> 7 files changed, 593 insertions(+), 2 deletions(-)
-> create mode 100644 drivers/rtc/rtc-rc5t619.c
->=20
-> --=20
-> 2.11.0
+vpu_mmu : iommu       @ff650800
+vdec    : video-codec @ff660000
+vdec_mmu: iommu       @ff660480
+
+
+
+> From: Boris Brezillon <boris.brezillon at collabora.com>
+> 
+> RK3399 has a Video decoder, define the node in the dtsi. We also add
+> the missing power-domain in mmu node and enable the block.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon at collabora.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel at collabora.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 33cc21fcf4c1..a07f857df12f 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -1285,8 +1285,20 @@ vdec_mmu: iommu at ff660480 {
+>  		interrupt-names = "vdec_mmu";
+>  		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>;
+>  		clock-names = "aclk", "iface";
+> +		power-domains = <&power RK3399_PD_VDU>;
+>  		#iommu-cells = <0>;
+> -		status = "disabled";
+> +	};
+> +
+> +	vdec: video-codec at ff660000 {
+> +		compatible = "rockchip,rk3399-vdec";
+> +		reg = <0x0 0xff660000 0x0 0x400>;
+> +		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		interrupt-names = "vdpu";
+> +		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>,
+> +			 <&cru SCLK_VDU_CA>, <&cru SCLK_VDU_CORE>;
+> +		clock-names = "axi", "ahb", "cabac", "core";
+> +		power-domains = <&power RK3399_PD_VDU>;
+> +		iommus = <&vdec_mmu>;
+>  	};
+>  
+>  	iep_mmu: iommu at ff670800 {
+> -- 
+> 2.25.0
+
+
 
