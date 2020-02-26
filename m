@@ -2,89 +2,107 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE63C4BA12
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E461BC4BA12
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D8D206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582731462;
-	bh=+qylfP2svw3GzUbhdzwhFg/ECBTAJnouwsutnI92lf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xW0KTzeLJWOxd2prm95/CIcxp+Uku6rX+YXVmvOUEnoYl6oc6JoP85yl+pePzqkvX
-	 OtzNzVxAFy7ibOrvBOCFnh+2NkHVu0FmEfv0CZfzyKV5PAeHbMujm4Ni6xb5qhxIC0
-	 SAFJGqaZ/3fq/XusIXUvUwuwR9pWX+63T4vohWoI=
+	by mail.kernel.org (Postfix) with ESMTP id B73C52468B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QZiWhKFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgBZPhi (ORCPT
+        id S1728373AbgBZPkb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:37:38 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45827 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbgBZPhi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 10:37:38 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so3282550otp.12;
-        Wed, 26 Feb 2020 07:37:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6FzyO6AECYlm7QMzzyrk9pWi96fxzU1V5qZ0EPieTIk=;
-        b=NOjztxD6+tbu0i7MJz9NepMaYts6hrnhEl2klJYPTiCa+rdo33kKIu3N7ZD9lNfrB1
-         qWbaxGKZD04fa8rdr6x/aXPPurtDZ68P1M4hJcTU+FDLb20pTvsn8eYq7vSu9jk6xtee
-         RRqAP/xy+QsMtIzrzQEl8tiEGBxLLdYtL7SO83VsScpFVW43dZTzNDII+zajh81Okow5
-         VQ5chuangHVyXWuatYQZV5tnK9o078brASxGTKcaRR/pzX0gJlO7/wsaWddmDWHiotKo
-         R+pgufLD84dukBW6hhwc4wVzWsYb+qiCBgS7G4KBOD3acbDbgg8eEUqhKG8uUWLa3zv3
-         SpIw==
-X-Gm-Message-State: APjAAAVQjgKo0/2KfzTnKFZy6bRlWKikclYiAMz35tTY3+cRE9PHPLp8
-        2dIsqvuPB6fOQ9RJgZwLwg==
-X-Google-Smtp-Source: APXvYqyLgpMB7D/d5PMJHvcv2asfZGnuMiD3nzHW0Qu43FA9IBj88j6MyezXGcYeLRBnE0xJV0LiHg==
-X-Received: by 2002:a05:6830:10d7:: with SMTP id z23mr3555808oto.114.1582731456203;
-        Wed, 26 Feb 2020 07:37:36 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q9sm878846otl.53.2020.02.26.07.37.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:37:35 -0800 (PST)
-Received: (nullmailer pid 17418 invoked by uid 1000);
-        Wed, 26 Feb 2020 15:37:34 -0000
-Date:   Wed, 26 Feb 2020 09:37:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Adrian Panella <ianchi74@outlook.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: add smb208 support
-Message-ID: <20200226153734.GA17365@bogus>
-References: <20200219163711.479-1-ansuelsmth@gmail.com>
+        Wed, 26 Feb 2020 10:40:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41560 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbgBZPkb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 10:40:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=RdfI8zcYUbYtVeFuEktgZYpmdsO2bxZo0zxF/fSi1ho=; b=QZiWhKFyhqE4wOJ4Fc2qb1NIjh
+        +aCjkUnk6fdzX+rGLHwqwjOJ+6bxSaXFwf9Kl5W13iavOwYJu15WkjT+FRP9+8j1dlpP6+w1TjFkb
+        l0KX7scOeP1gS6U0jzc4RTX9aMchaKjhHg00bVZv0j2+t9865z+c/u4otvCYk25mD576+3nVoAD53
+        8reA1R6AD5lLyP+dykIdyV9K4AcNU6zV0ID4tLfSyVLPcXzZDCcP6lj+/O18BdoN69QwxFGcxefhi
+        JsRx6aDf5Jc9A1XlpCtpHNdfuvIuJa1BXqtgkmmPgmJhscCnvmWd3X+Zm1f7o8h7o9sEd1Fut96kG
+        a5cuJNdw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6ynR-0001q6-Qg; Wed, 26 Feb 2020 15:40:25 +0000
+Subject: Re: [PATCH v9 3/4] soc: mediatek: Move mt8173 MMSYS to platform
+ driver
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        linux-clk@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        sean.wang@mediatek.com, frank-w@public-files.de,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20200226105419.632771-1-enric.balletbo@collabora.com>
+ <20200226105419.632771-4-enric.balletbo@collabora.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
+Date:   Wed, 26 Feb 2020 07:40:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219163711.479-1-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200226105419.632771-4-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2020 17:37:11 +0100, Ansuel Smith wrote:
-> Smb208 regulators are used on some ipq806x soc.
-> Add support for it to make it avaiable on some routers
-> that use it.
-> 
-> Signed-off-by: Adrian Panella <ianchi74@outlook.com>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++++
->  drivers/regulator/qcom_rpm-regulator.c             | 9 +++++++++
->  2 files changed, 13 insertions(+)
-> 
+On 2/26/20 2:54 AM, Enric Balletbo i Serra wrote:
+> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> index 2114b563478c..dcd6481a14d0 100644
+> --- a/drivers/soc/mediatek/Kconfig
+> +++ b/drivers/soc/mediatek/Kconfig
+> @@ -44,4 +44,11 @@ config MTK_SCPSYS
+>  	  Say yes here to add support for the MediaTek SCPSYS power domain
+>  	  driver.
+>  
+> +config MT8173_MMSYS
+> +	bool "MediaTek MT8173 MMSYS Support"
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hi,
+Can this be tristate instead of bool?
+
+> +	depends on COMMON_CLK_MT8173
+> +	help
+> +	  Say yes here to add support for the MediaTek MT8173 Multimedia
+> +	  Subsystem (MMSYS).
+> +
+>  endmenu
+
+thanks.
+-- 
+~Randy
+
