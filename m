@@ -2,75 +2,127 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409EFC4BA24
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C0CC4BA2D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 23:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C79321D7E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 22:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C4862467B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 23:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiIqG1tK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgBZWjY (ORCPT
+        id S1727181AbgBZXED (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:39:24 -0500
-Received: from muru.com ([72.249.23.125]:57922 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727761AbgBZWjY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:39:24 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 1CD8A8022;
-        Wed, 26 Feb 2020 22:40:09 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 14:39:21 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 06/12] ARM: dts: am335x-bone-common: Enable PRU-ICSS
- interconnect node
-Message-ID: <20200226223921.GB37466@atomide.com>
-References: <20200225204649.28220-1-s-anna@ti.com>
- <20200225204649.28220-7-s-anna@ti.com>
- <20200226182924.GU37466@atomide.com>
- <af3965db-54b2-3e4f-414f-d27ca4b5ced1@ti.com>
- <20200226223745.GA37466@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226223745.GA37466@atomide.com>
+        Wed, 26 Feb 2020 18:04:03 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35962 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgBZXED (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 18:04:03 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i13so391549pfe.3;
+        Wed, 26 Feb 2020 15:04:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Bk/8S/Z3TX6gpAJL/01qav03pWjPrUS9+WLbM4tWfRA=;
+        b=iiIqG1tKiFmSLw8ypVAFtG0a/VX8gxPi1TjGNgkgCIZ5Z7qjWdPW9+8K3J2U1skLnT
+         XriD3Zl2Sxh5mVPXYsOttA2tMrRBEKKQxeTDuVOrlhQiU6sySvO9bd8fq52EStONOHlq
+         C52UbmdpekyXeSt/SIj6TUrMBDVWXxhXdzSm+uaDVzREEtUjyyLy2AyWdJpSvRgR6Lnb
+         6Ilh/TDwkwoYBgXez0mR4sZfU+EELlY/vwrUDkjPmHy0LTkn0AHP+zGzsBQ3JchD8hmQ
+         oH6cSIRBmiA6O31pnf9/q4rzMBFON1tzp8jO/Rx/QxqMaWVEZdp5K7TaNqlwL6fuWZ1g
+         vrEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Bk/8S/Z3TX6gpAJL/01qav03pWjPrUS9+WLbM4tWfRA=;
+        b=W2/sxuUNNaPZ5g+nN/HqTSM8nN8iYgpDztKxDWPVYP3LApHzBcliB6kgJt3ShhDAbF
+         AsikI8a+owQ5GLFCl7eHAaypbth9/2hp0QFvoJsRNXnsOp0b7KVNTVA7HkUnp8q2l2qs
+         5P5YvCQ707D4JOZD9KCQ8Qk4ZVlC8pbXXvTLzi6lHVwLML094r4aztxkmAtYzvdPBb4I
+         CSAMIEGTgWgghU/R4Ium4ml+rlgfxXqrWCe2IBT74H2EeOMsUlY71gWmUYBVdF33GB6T
+         q0Y/oItSM1lnzAE5BpZc6EPMAED4IAijqB0vFe3zDkGuGNUyMGstiW6PmSGdnfCyPFvG
+         aGrA==
+X-Gm-Message-State: APjAAAWw5usw9Lg8WydqipnmR9w7+yifi/DDqHnSNQx5fUUpI51HfHOx
+        VGG/KDNQruUfQq0MTmpCKpg=
+X-Google-Smtp-Source: APXvYqxd8CY0HsAxhIMeDYkypalVr2YKiVsFuVI43/dN5ulZeTbimHEV3k5WocbbHPlR9VinUUrMDQ==
+X-Received: by 2002:a63:b347:: with SMTP id x7mr1087976pgt.275.1582758240225;
+        Wed, 26 Feb 2020 15:04:00 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:500::7:5ebf])
+        by smtp.gmail.com with ESMTPSA id 3sm3912621pjg.27.2020.02.26.15.03.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 15:03:59 -0800 (PST)
+From:   rentao.bupt@gmail.com
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH v4 0/7] aspeed-g6: enable usb support
+Date:   Wed, 26 Feb 2020 15:03:39 -0800
+Message-Id: <20200226230346.672-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200226 22:38]:
-> * Suman Anna <s-anna@ti.com> [200226 20:35]:
-> > On 2/26/20 12:29 PM, Tony Lindgren wrote:
-> > > * Suman Anna <s-anna@ti.com> [200225 20:47]:
-> > >> The PRU-ICSS target module node was left in disabled state in the base
-> > >> am33xx-l4.dtsi file. Enable this node on all the AM335x beaglebone
-> > >> boards as they mostly use a AM3358 or a AM3359 SoC which do contain
-> > >> the PRU-ICSS IP.
-> > > 
-> > > Just get rid of the top level status = "disabled". The default
-> > > is enabled, and the device is there for sure inside the SoC.
-> > > And then there's no need for pointless status = "okay" tinkering
-> > > in the board specific dts files so no need for this patch.
-> > 
-> > The IP is not available on all SoCs, and there are about 40 different
-> > board files atm across AM33xx and AM437x, and am not sure what SoCs they
-> > are actually using.
-> 
-> Oh that issue again.. Maybe take a look at patch "[PATCH 2/3] bus: ti-sysc:
-> Detect display subsystem related devices" if you can add runtime
-> detection for the accelerators there similar to what I hadded for omap3.
-> acclerators.
+From: Tao Ren <rentao.bupt@gmail.com>
 
-Sorry I meant instead patch "[PATCH 6/7] bus: ti-sysc: Implement SoC
-revision handling".
+The patch series aims at enabling USB Host and Gadget support on AST2600
+platforms.
 
-Regards,
+Patch #1 includes vhub's usb descriptors in struct "ast_vhub": all usb
+descriptor changes will go to the per-vhub instance instead of touching
+the global default descriptors.
 
-Tony
+Patch #2 replaces hardcoded vhub port/endpoint number with device tree
+properties, so that it's more convenient to add support for ast2600-vhub
+which provides more downstream ports and endpoints.
+
+Patch #3 enables ast2600 support in aspeed-vhub usb gadget driver.
+
+Patch #4 adds USB devices and according pin groups in aspeed-g6 dtsi.
+
+Patch #5 and #6 add vhub port/endpoint properties into aspeed-g4 and
+aspeed-g5 dtsi.
+
+Patch #7 adds device tree binding document for aspeed usb-vhub driver.
+
+Tao Ren (7):
+  usb: gadget: aspeed: support per-vhub usb descriptors
+  usb: gadget: aspeed: read vhub properties from device tree
+  usb: gadget: aspeed: add ast2600 vhub support
+  ARM: dts: aspeed-g6: add usb functions
+  ARM: dts: aspeed-g5: add vhub port and endpoint properties
+  ARM: dts: aspeed-g4: add vhub port and endpoint properties
+  dt-bindings: usb: add documentation for aspeed usb-vhub
+
+ .../bindings/usb/aspeed,usb-vhub.yaml         | 71 +++++++++++++++++++
+ arch/arm/boot/dts/aspeed-g4.dtsi              |  2 +
+ arch/arm/boot/dts/aspeed-g5.dtsi              |  2 +
+ arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi      | 25 +++++++
+ arch/arm/boot/dts/aspeed-g6.dtsi              | 45 ++++++++++++
+ drivers/usb/gadget/udc/aspeed-vhub/Kconfig    |  4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/core.c     | 71 ++++++++++++-------
+ drivers/usb/gadget/udc/aspeed-vhub/dev.c      | 30 +++++---
+ drivers/usb/gadget/udc/aspeed-vhub/epn.c      |  4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/hub.c      | 58 ++++++++++-----
+ drivers/usb/gadget/udc/aspeed-vhub/vhub.h     | 43 +++++++----
+ 11 files changed, 284 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+
+-- 
+2.17.1
+
