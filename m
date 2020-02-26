@@ -2,95 +2,100 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE46C4BA12
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E52C4BA10
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5656724685
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582727413;
-	bh=FTavrhRvD3/cAi6dtPOZfJq/yT2BV2F/rKEuNXloXiw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tYWXWSIr6sDc4+l8xp2g0DKdVIBatVdZVD9AGIPxF1Oi4bHm5YgJN1qZyZcPffNu4
-	 NN/GlAWsa72bc87fYojTqxGksafaMeCJHxYVut/Qe+PDxeyrokGMKYlGo0PZbk/GgP
-	 PlQkqD2Ke+rIC5zt3Pfv91kS1SO0J9JfUX8afufE=
+	by mail.kernel.org (Postfix) with ESMTP id 48AB624680
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="g0A0bJhB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgBZOaK (ORCPT
+        id S1727590AbgBZOdg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:30:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbgBZOaK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:30:10 -0500
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FAED2468C;
-        Wed, 26 Feb 2020 14:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582727409;
-        bh=FTavrhRvD3/cAi6dtPOZfJq/yT2BV2F/rKEuNXloXiw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UgKEAOVPqCjEnalnG/MJpctIDGJWpzc2VZ3liqn3FBmTSyRcGR6x0QQxl+hDA8K7m
-         0N/mJRIgoKmlNj5OsWGP15UXTpGPisYFxZ62tjsvVR5qzCWQS5DYFn4Ij5KrMu0G8J
-         JQK2IWg89VZASe7ljBjnu5MKAJcRa0Sws1CB9+HQ=
-Received: by mail-qk1-f176.google.com with SMTP id h4so2816941qkm.0;
-        Wed, 26 Feb 2020 06:30:09 -0800 (PST)
-X-Gm-Message-State: APjAAAVnxsmKLYfK6kHpNmMTtA6LikaK31ybVHrrTy9ybTp8MNsGxrm8
-        qICUM2RJNUhyWxM7TsC8MB1xUBai9I8ea1pf0A==
-X-Google-Smtp-Source: APXvYqx8P7fHvCOhAoSOWA8DnUwX4yyOHQiABO8b/bbXdZCaWKAxi3z6qQ+ITbxwwNfVk+W8jZLhM9/ZJQIl6x+NuTM=
-X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr2439558qki.254.1582727408199;
- Wed, 26 Feb 2020 06:30:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20200221053802.70716-1-evanbenn@chromium.org> <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com> <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com>
-In-Reply-To: <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 26 Feb 2020 08:29:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
-Message-ID: <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
-To:     Evan Benn <evanbenn@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Julius Werner <jwerner@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 26 Feb 2020 09:33:36 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44228 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727069AbgBZOdg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 09:33:36 -0500
+Received: by mail-wr1-f66.google.com with SMTP id m16so3269287wrx.11
+        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 06:33:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=zlZyK3svN4WBZKEOPHCSggdPRdTBurhSqa9+zLUZBzs=;
+        b=g0A0bJhBhkX0HoST7bDkms4BVbZ6uw0t+zDPrWtG5s9fvzviAZAx24pvQFm+c4Ydri
+         weN0d3ghPwndlSDWzGF34jUm7esyVBfKUH1nY69vY8cy5YuPRkwVuRD+Gznxk5+hLfF0
+         hwU/cBvK/mENqL3Wd2IYVybWA2u9e9NISQ9HhN9FL9OkXUEsJHeNb78shv/YpV57bXTT
+         oviTbv+1R5I+CAwPY0JPPIRucAkbKNRX+FP+5FsipVal4uwAlkyRvoC4nSIROTn0uHi1
+         YEtwOJ31y5VMFux/k2iqbak7/bRx/lLFKOvvaWB8UinfBfrQSOuDpD3wzWVB/eVbv9qp
+         0Pvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zlZyK3svN4WBZKEOPHCSggdPRdTBurhSqa9+zLUZBzs=;
+        b=OrTEaN9SDiJDRAZyHy6CO4ArY0zxoV6QHeFxdoQatJtTDjNQjwwn4/uevwo66vx8U/
+         PruQ5a1w+b9qBDY9+vmSD1qZRomTRV91zM1FnfIF/VSkuLI+F8+/XMb//ZiRaXDr8txt
+         0qO4EsUUpA/xZx+FoKWw6HuT4YuJmgg5CyeupHdMQaG5X3oEo260/tNKzfImuT3HdgoV
+         hvO4IjuSTHZK1tEneGJ8m6lWheYWdisEXqAmLODlNiy99RcDoCJhDpudlBtTRQpr84mY
+         XIEKuyEXuVxaJdf2N8mQKxQS7/tAoxsq1X7wkSIaqX1Ss9Idlb6X/LE6vGNhtZHc90ZY
+         0nMw==
+X-Gm-Message-State: APjAAAUIQy6rHg0jXLvEc2HzAnya9EXyyI1Oulsm9SXetYqQfDG7t6gC
+        +1fJQljk6DLnmOHZjb2ACt89hg==
+X-Google-Smtp-Source: APXvYqzoa1aSdZQU0DPuoUSUZIdqy4ht2oFqWEkDi4IRjOwzpFDAmZ4HCqS1k5yoVlbtQ6fA8k4/Mw==
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr6118603wrv.358.1582727614391;
+        Wed, 26 Feb 2020 06:33:34 -0800 (PST)
+Received: from nbelin-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h10sm3204198wml.18.2020.02.26.06.33.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 26 Feb 2020 06:33:33 -0800 (PST)
+From:   Nicolas Belin <nbelin@baylibre.com>
+To:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        devicetree@vger.kernel.org
+Cc:     baylibre-upstreaming@groups.io, Nicolas Belin <nbelin@baylibre.com>
+Subject: [PATCH RFC v2 0/3] leds: add support for apa102c leds
+Date:   Wed, 26 Feb 2020 15:33:09 +0100
+Message-Id: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 6:15 PM Evan Benn <evanbenn@chromium.org> wrote:
->
-> Thanks Rob
->
-> > This should be a child of some Mediatek firmware node. I assume
-> > watchdog is not the *only* function.
->
-> I am not quite sure what you mean, do you intend this:
->
->  firmware {
->    watchdog {
+This patch series adds the driver and its related documentation 
+for the APA102C RGB Leds. It is based on the Multicolor Framework and
+must be applied on top of the Multicolor framework patches located at
+https://lore.kernel.org/patchwork/project/lkml/list/?series=427513 .
 
-Not quite. /firmware is generic container. I'd expect another layer in
-the middle for the overall set of Mediatek firmware behind smc calls.
-Look at 'xlnx,zynqmp-firmware' for an example.
+Patch 1 adds the APA102C led manufacturer to the vendor-prefixes list.
 
-Rob
+Patch 2 Documents the APA102C led driver.
+
+Patch 3 contains the actual driver code and modifications in the Kconfig 
+and the Makefile.
+
+Updates since v1:
+- Moved the apa102c line in the Makefile to the LED SPI Drivers part
+- The driver is now based on the Multicolor Framework.
+
+Nicolas Belin (3):
+  dt-bindings: Document shiji vendor-prefix
+  dt-bindings: leds: Shiji Lighting APA102C LED driver
+  drivers: leds: add support for apa102c leds
+
+ .../devicetree/bindings/leds/leds-apa102c.yaml     | 154 +++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ drivers/leds/Kconfig                               |   7 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-apa102c.c                        | 291 +++++++++++++++++++++
+ 5 files changed, 455 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-apa102c.yaml
+ create mode 100644 drivers/leds/leds-apa102c.c
+
+-- 
+2.7.4
+
