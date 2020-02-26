@@ -2,108 +2,90 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DF2C4BA13
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC696C4BA13
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC0312467D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6557222C2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582738025;
-	bh=zxkfAFuFcuFYWcJ/CPRBobLjhx2su4Us0R27C2oTCnk=;
+	s=default; t=1582738083;
+	bh=nQh/Bo/NBb5ljRBYa8nIGyLcht5dYXUQX4KXscm8GX8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jHn0/zV0WKW+CyttEd+ANhdnCymmc1oU/D5y36LABbxcj49EVSvu+ppgRxQ8uH/qg
-	 GJmWe5PQWNwwtzf3w6kOOfQXErcXxjX56+xRgRWC3hBfj9OIbRmOiVHSr4PwnL3JB6
-	 1L3/xZqs23guyPOub8cB/hdBaw8U/UNIL3S08vTw=
+	b=J6dDKapxUDZgY9fyk+2g7bQRk8FhWFpug/+XT2Ht0Xqv/6zx6ktL+dnoJu7c7SVJN
+	 nuwU7OliOsD8HVld2C4LDmX6ykMbFqaum9uTT22XyCXsFZiEAKCgJHJpg1vdFS6zAi
+	 mgGdnpstAeEYtZGzd4Rd3t41ahnovqy+uLujroT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgBZR1F (ORCPT
+        id S1726744AbgBZR2D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:27:05 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45665 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgBZR1F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 12:27:05 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 59so126747otp.12;
-        Wed, 26 Feb 2020 09:27:04 -0800 (PST)
+        Wed, 26 Feb 2020 12:28:03 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34845 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgBZR2D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 12:28:03 -0500
+Received: by mail-oi1-f195.google.com with SMTP id b18so320428oie.2;
+        Wed, 26 Feb 2020 09:28:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=raaW8UBTeCl4evHlw1MVNiVxN6E05aGpaOJ0r7dkarw=;
-        b=EUmVOTinWhcE9Vo90E14bDpfc0ePxs0KVUSHg7Jhk1NXVY4p/CMJL6SDs4dD3bpICB
-         SmeJO8J2nEVNbgM3Z3vGw9/lGdVA8H5FM5xQlM3szzEXX+K6Azmi/iL6wcvq1riN+BcP
-         WQ2hwm0yl27vPCgoEprH/amt0gtF5IemtdzrAGoFMgFWMRphtNNFK0265y9TloW6Bo4U
-         oFZybBxlPg00DSfgMelyeXyEmT4xsyNC81FIXPKycNc6esQsufQESyRtINkENN5MsUg7
-         1uIhBLn1UneV/RZ3JmuuZXT2zQb593P8i0pw+h9FCksuVONLIOFON/1YNsVaZQArqIf7
-         zNOQ==
-X-Gm-Message-State: APjAAAXFDwQhQ0zYvwuqLFabLUfQ2+LXB1yd2MyMHqraCBdxaseWaxaP
-        KHf4PYfyOZBl8Vc2oDaNXg==
-X-Google-Smtp-Source: APXvYqyJLt87oV1yskOgQe0FSJ7KzvncCI5vqnD6mIV6msd8sw1SY760epbuw7pYEkmK5A60+XsYPg==
-X-Received: by 2002:a9d:1928:: with SMTP id j40mr4012476ota.68.1582738023444;
-        Wed, 26 Feb 2020 09:27:03 -0800 (PST)
+        bh=t83+nB3W6oXdApXXRMLwz8oHqiI3quakZhUjW8Nn9Jk=;
+        b=R41L2VqiNyX3+m+mSoyCgp6ENq3oZAPp5TSB2pozKHwaFhYlfYEqrgX3z8RwEbS4Yy
+         QVEej2EX+Igyj1P7kJOhN0VQaq6XfAQ+tJmvRyML/Uac8y3syGBqv9Tv11VbF3EkzThF
+         0DKm8Q92/2AUv9ldHvZwm6QcgNED9KUNK8H2wjQ74PoIB23SfCrcVn4IZCwv/mmmPU4g
+         VzWFrDCjHuwwBbQt49uj5g3pUdxC+TkCGDsGqATwuMqKuOA3Td+gUEVZJrb/6EuFeLV5
+         xlSP+vgsZ7IEhfYyNXcj5hIfNYfFlhVyVlt0XsO6tTPC0t/JEnaW3TZk/8mZueC8HqKU
+         Z/ag==
+X-Gm-Message-State: APjAAAWMDZDeQyEsvVEiEa7CFQpiO/kLPsrx2msSdBlzQlnBtMWsYBId
+        +gixTDbYmUrt8XtSZaSGlg==
+X-Google-Smtp-Source: APXvYqxIZscytpwpjUEBs4aKZOxXofyE3s8jmDy1RE4Sc6pXr02J+2XwFazqn2VQDBxT94r/V+dHvw==
+X-Received: by 2002:a05:6808:aa8:: with SMTP id r8mr50338oij.7.1582738082288;
+        Wed, 26 Feb 2020 09:28:02 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n27sm1019370oie.18.2020.02.26.09.27.02
+        by smtp.gmail.com with ESMTPSA id v134sm1004026oia.38.2020.02.26.09.28.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 09:27:02 -0800 (PST)
-Received: (nullmailer pid 8906 invoked by uid 1000);
-        Wed, 26 Feb 2020 17:27:02 -0000
-Date:   Wed, 26 Feb 2020 11:27:02 -0600
+        Wed, 26 Feb 2020 09:28:01 -0800 (PST)
+Received: (nullmailer pid 10384 invoked by uid 1000);
+        Wed, 26 Feb 2020 17:28:00 -0000
+Date:   Wed, 26 Feb 2020 11:28:00 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Victor Wan <victor.wan@amlogic.com>
-Subject: Re: [PATCH] dt-bindings: power: Fix dt_binding_check error
-Message-ID: <20200226172702.GA6632@bogus>
-References: <1582269169-17557-1-git-send-email-jianxin.pan@amlogic.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: dmaengine: Add UniPhier
+ external DMA controller bindings
+Message-ID: <20200226172800.GA10328@bogus>
+References: <1582271550-3403-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1582271550-3403-2-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582269169-17557-1-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <1582271550-3403-2-git-send-email-hayashi.kunihiko@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 03:12:48PM +0800, Jianxin Pan wrote:
-> Missing ';' in the end of secure-monitor example node.
+On Fri, 21 Feb 2020 16:52:29 +0900, Kunihiko Hayashi wrote:
+> Add devicetree binding documentation for external DMA controller
+> implemented on Socionext UniPhier SOCs.
 > 
-> Fixes: f50b4108ede1 ("dt-bindings: power: add Amlogic secure power domains bindings")
-> Reported-by: Rob Herring<robh+dt@kernel.org>
-
-space                     ^
-
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-This error isn't in my tree, so make sure it's applied where the 
-referenced commit is.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
+>  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 63 ++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> index af32209..bc4e037 100644
-> --- a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> @@ -36,5 +36,5 @@ examples:
->              compatible = "amlogic,meson-a1-pwrc";
->              #power-domain-cells = <1>;
->          };
-> -    }
-> +    };
->  
-> -- 
-> 2.7.4
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
