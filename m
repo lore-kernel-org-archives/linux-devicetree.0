@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77A3C4BA1E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F3AC4BA20
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8513424672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483F62465D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgBZSJY (ORCPT
+        id S1727312AbgBZSJc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:09:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:40486 "EHLO foss.arm.com"
+        Wed, 26 Feb 2020 13:09:32 -0500
+Received: from foss.arm.com ([217.140.110.172]:40552 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbgBZSJW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:09:22 -0500
+        id S1727262AbgBZSJb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:09:31 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6E9630E;
-        Wed, 26 Feb 2020 10:09:21 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B75ED30E;
+        Wed, 26 Feb 2020 10:09:30 -0800 (PST)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E469D3F881;
-        Wed, 26 Feb 2020 10:09:19 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 315803F881;
+        Wed, 26 Feb 2020 10:09:29 -0800 (PST)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Rob Herring <robh@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -34,12 +34,10 @@ Cc:     Robert Richter <rric@kernel.org>, soc@kernel.org,
         Mark Langsdorf <mlangsdo@redhat.com>,
         Eric Auger <eric.auger@redhat.com>,
         Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH 05/13] dt-bindings: clock: Convert Calxeda clock bindings to json-schema
-Date:   Wed, 26 Feb 2020 18:08:53 +0000
-Message-Id: <20200226180901.89940-6-andre.przywara@arm.com>
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 10/13] dt-bindings: memory-controllers: convert Calxeda DDR to json-schema
+Date:   Wed, 26 Feb 2020 18:08:58 +0000
+Message-Id: <20200226180901.89940-11-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200226180901.89940-1-andre.przywara@arm.com>
 References: <20200226180901.89940-1-andre.przywara@arm.com>
@@ -48,141 +46,89 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Calxeda clock bindings to DT schema format using json-schema.
-
-This just covers the actual PLL and divider clock nodes. In the actual
-DTs they are somewhat unconnected (no ranges or bus compatible) children
-of the sregs node, but for the actual clock bindings this is not
-relevant.
-
-One oddity is that the addresses are relative to the parent node,
-without that being pronounced using a ranges property.
-But this is too late to fix now.
+Convert the Calxeda DDR memory controller binding to DT schema format
+using json-schema.
+Although this technically covers the whole DRAM controller, the
+intention to use it only for error reporting and mapping fault addresses
+to DRAM chips.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org
-
 ---
- .../devicetree/bindings/clock/calxeda.txt     | 17 ----
- .../devicetree/bindings/clock/calxeda.yaml    | 83 +++++++++++++++++++
- 2 files changed, 83 insertions(+), 17 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/calxeda.txt
- create mode 100644 Documentation/devicetree/bindings/clock/calxeda.yaml
+ .../memory-controllers/calxeda-ddr-ctrlr.txt  | 16 --------
+ .../memory-controllers/calxeda-ddr-ctrlr.yaml | 41 +++++++++++++++++++
+ 2 files changed, 41 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.yaml
 
-diff --git a/Documentation/devicetree/bindings/clock/calxeda.txt b/Documentation/devicetree/bindings/clock/calxeda.txt
+diff --git a/Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt b/Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt
 deleted file mode 100644
-index 0a6ac1bdcda1..000000000000
---- a/Documentation/devicetree/bindings/clock/calxeda.txt
+index 049675944b78..000000000000
+--- a/Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt
 +++ /dev/null
-@@ -1,17 +0,0 @@
--Device Tree Clock bindings for Calxeda highbank platform
+@@ -1,16 +0,0 @@
+-Calxeda DDR memory controller
 -
--This binding uses the common clock binding[1].
+-Properties:
+-- compatible : Should be:
+-  - "calxeda,hb-ddr-ctrl" for ECX-1000
+-  - "calxeda,ecx-2000-ddr-ctrl" for ECX-2000
+-- reg : Address and size for DDR controller registers.
+-- interrupts : Interrupt for DDR controller.
 -
--[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+-Example:
 -
--Required properties:
--- compatible : shall be one of the following:
--	"calxeda,hb-pll-clock" - for a PLL clock
--	"calxeda,hb-a9periph-clock" - The A9 peripheral clock divided from the
--		A9 clock.
--	"calxeda,hb-a9bus-clock" - The A9 bus clock divided from the A9 clock.
--	"calxeda,hb-emmc-clock" - Divided clock for MMC/SD controller.
--- reg : shall be the control register offset from SYSREGs base for the clock.
--- clocks : shall be the input parent clock phandle for the clock. This is
--	either an oscillator or a pll output.
--- #clock-cells : from common clock binding; shall be set to 0.
-diff --git a/Documentation/devicetree/bindings/clock/calxeda.yaml b/Documentation/devicetree/bindings/clock/calxeda.yaml
+-	memory-controller@fff00000 {
+-		compatible = "calxeda,hb-ddr-ctrl";
+-		reg = <0xfff00000 0x1000>;
+-		interrupts = <0 91 4>;
+-	};
+diff --git a/Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.yaml b/Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.yaml
 new file mode 100644
-index 000000000000..0ad66af0eb0c
+index 000000000000..c5153127e722
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/calxeda.yaml
-@@ -0,0 +1,83 @@
++++ b/Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.yaml
+@@ -0,0 +1,41 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/clock/calxeda.yaml#
++$id: http://devicetree.org/schemas/memory-controllers/calxeda-ddr-ctrlr.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Device Tree Clock bindings for Calxeda highbank platform
++title: Calxeda DDR memory controller binding
 +
 +description: |
-+  This binding covers the Calxeda SoC internal peripheral and bus clocks
-+  as used by peripherals. The clocks live inside the "system register"
-+  region of the SoC, so are typically presented as children of an
-+  "hb-sregs" node.
++  The Calxeda DDR memory controller is initialised and programmed by the
++  firmware, but an OS might want to read its registers for error reporting
++  purposes and to learn about the DRAM topology.
 +
 +maintainers:
 +  - Andre Przywara <andre.przywara@arm.com>
 +
 +properties:
-+  "#clock-cells":
-+    const: 0
-+
 +  compatible:
-+    enum:
-+      - calxeda,hb-pll-clock
-+      - calxeda,hb-a9periph-clock
-+      - calxeda,hb-a9bus-clock
-+      - calxeda,hb-emmc-clock
++    items:
++    - enum:
++        - calxeda,hb-ddr-ctrl
++        - calxeda,ecx-2000-ddr-ctrl
 +
 +  reg:
 +    maxItems: 1
 +
-+  clocks:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
++  interrupts:
 +    maxItems: 1
 +
 +required:
-+  - "#clock-cells"
 +  - compatible
-+  - clocks
 +  - reg
-+
-+additionalProperties: false
++  - interrupts
 +
 +examples:
 +  - |
-+    sregs@3fffc000 {
-+        compatible = "calxeda,hb-sregs";
-+        reg = <0x3fffc000 0x1000>;
-+
-+        clocks {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            osc: oscillator {
-+                #clock-cells = <0>;
-+                compatible = "fixed-clock";
-+                clock-frequency = <33333000>;
-+            };
-+
-+            ddrpll: ddrpll {
-+                #clock-cells = <0>;
-+                compatible = "calxeda,hb-pll-clock";
-+                clocks = <&osc>;
-+                reg = <0x108>;
-+            };
-+
-+            a9pll: a9pll {
-+                #clock-cells = <0>;
-+                compatible = "calxeda,hb-pll-clock";
-+                clocks = <&osc>;
-+                reg = <0x100>;
-+            };
-+
-+            a9periphclk: a9periphclk {
-+                #clock-cells = <0>;
-+                compatible = "calxeda,hb-a9periph-clock";
-+                clocks = <&a9pll>;
-+                reg = <0x104>;
-+            };
-+        };
++    memory-controller@fff00000 {
++        compatible = "calxeda,hb-ddr-ctrl";
++        reg = <0xfff00000 0x1000>;
++        interrupts = <0 91 4>;
 +    };
-+
-+...
 -- 
 2.17.1
 
