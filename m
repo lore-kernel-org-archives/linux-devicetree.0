@@ -2,29 +2,29 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4771C4BA1E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC0BC4BA18
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43F824656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E5624650
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgBZSJN (ORCPT
+        id S1727097AbgBZSJT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:09:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:40418 "EHLO foss.arm.com"
+        Wed, 26 Feb 2020 13:09:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:40464 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbgBZSJN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:09:13 -0500
+        id S1727173AbgBZSJS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:09:18 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A437330E;
-        Wed, 26 Feb 2020 10:09:12 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA8C430E;
+        Wed, 26 Feb 2020 10:09:17 -0800 (PST)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C8563F881;
-        Wed, 26 Feb 2020 10:09:11 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63BA83F881;
+        Wed, 26 Feb 2020 10:09:16 -0800 (PST)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Rob Herring <robh@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -35,100 +35,90 @@ Cc:     Robert Richter <rric@kernel.org>, soc@kernel.org,
         Eric Auger <eric.auger@redhat.com>,
         Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 00/13] arm: calxeda: update DTS, bindings and MAINTAINERS
-Date:   Wed, 26 Feb 2020 18:08:48 +0000
-Message-Id: <20200226180901.89940-1-andre.przywara@arm.com>
+Subject: [PATCH 03/13] arm: dts: calxeda: Fix interrupt grouping
+Date:   Wed, 26 Feb 2020 18:08:51 +0000
+Message-Id: <20200226180901.89940-4-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200226180901.89940-1-andre.przywara@arm.com>
+References: <20200226180901.89940-1-andre.przywara@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Currently multiple interrupts for some devices are written as one array
+instead of using the DT grouping notation (<0 42 4>, <0 23 4>).
+This ends up in the same binary representation in the .dtb, but is
+semantically not equivalent. The yaml schema checks will stumble over
+this, so lets fix that first.
 
-this series is an answer to the attempt [1] of removing the Calxeda
-Highbank platform support from the kernel. Apart from the pending removal
-of ARM32 host KVM support from the kernel, the lack of proper DT schema
-bindings was another major reason for Rob's series.
+I refrained from using the symbolic names for GIC_SPI/GIC_PPI and
+IRQ_TYPE_LEVEL_HIGH, mostly because it increases the delta between the
+original DTS files and the mainline versions, so it's just additional
+churn.
 
-This series addresses this. The first four patches adjust the .dts files
-to pass the existing (mostly generic) DT schema binding checks. Those
-changes should not affect the functionality.
-The following eight patches then convert the "prose" DT binding
-documentation to the json-schema format, so that the automatic checking
-actually does something useful.
-After those patches "make dtbs_check" comes back clean for the two .dts
-files in the kernel, and "dt_validate -m" reports only those three
-not-covered nodes (on Highbank, only the last one on Midway):
-arm,cortex-a9-twd-timer
-arm,cortex-a9-twd-wdt
-calxeda,hb-sdhci
-The first two are generic ARM devices, for which the binding doc just
-does not have been converted yet. The SDHCI controller is actually
-disabled in the DTs, and the SD slot is populated on very few special
-systems only, also there has never been a driver in the kernel for
-this device anyway.
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+---
+ arch/arm/boot/dts/ecx-2000.dts    | 2 +-
+ arch/arm/boot/dts/ecx-common.dtsi | 4 ++--
+ arch/arm/boot/dts/highbank.dts    | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-The final patch then changes the MAINTAINERS file to hand over the
-maintainership to me. I have a working machine under my desk and have
-some interest in keeping this platform support alive.
-
-Cheers,
-Andre.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20200218171321.30990-1-robh@kernel.org/
-
-Andre Przywara (13):
-  arm: dts: calxeda: Basic DT file fixes
-  arm: dts: calxeda: Provide UART clock
-  arm: dts: calxeda: Fix interrupt grouping
-  arm: dts: calxeda: Group port-phys and sgpio-gpio items
-  dt-bindings: clock: Convert Calxeda clock bindings to json-schema
-  dt-bindings: sata: Convert Calxeda SATA controller to json-schema
-  dt-bindings: net: Convert Calxeda Ethernet binding to json-schema
-  dt-bindings: phy: Convert Calxeda ComboPHY binding to json-schema
-  dt-bindings: arm: Convert Calxeda L2 cache controller to json-schema
-  dt-bindings: memory-controllers: convert Calxeda DDR to json-schema
-  dt-bindings: ipmi: Convert IPMI-SMIC bindings to json-schema
-  dt-bindings: arm: Add Calxeda system registers json-schema binding
-  MAINTAINERS: Update Calxeda Highbank maintainership
-
- .../bindings/arm/calxeda/hb-sregs.yaml        | 47 +++++++++
- .../devicetree/bindings/arm/calxeda/l2ecc.txt | 15 ---
- .../bindings/arm/calxeda/l2ecc.yaml           | 36 +++++++
- .../devicetree/bindings/ata/sata_highbank.txt | 44 ---------
- .../bindings/ata/sata_highbank.yaml           | 96 +++++++++++++++++++
- .../devicetree/bindings/clock/calxeda.txt     | 17 ----
- .../devicetree/bindings/clock/calxeda.yaml    | 83 ++++++++++++++++
- .../devicetree/bindings/ipmi/ipmi-smic.txt    | 25 -----
- .../devicetree/bindings/ipmi/ipmi-smic.yaml   | 56 +++++++++++
- .../memory-controllers/calxeda-ddr-ctrlr.txt  | 16 ----
- .../memory-controllers/calxeda-ddr-ctrlr.yaml | 41 ++++++++
- .../devicetree/bindings/net/calxeda-xgmac.txt | 18 ----
- .../bindings/net/calxeda-xgmac.yaml           | 47 +++++++++
- .../bindings/phy/calxeda-combophy.txt         | 17 ----
- .../bindings/phy/calxeda-combophy.yaml        | 47 +++++++++
- MAINTAINERS                                   |  2 +-
- arch/arm/boot/dts/ecx-2000.dts                |  5 +-
- arch/arm/boot/dts/ecx-common.dtsi             | 17 ++--
- arch/arm/boot/dts/highbank.dts                | 11 +--
- 19 files changed, 468 insertions(+), 172 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
- create mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.yaml
- delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
- create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/calxeda.txt
- create mode 100644 Documentation/devicetree/bindings/clock/calxeda.yaml
- delete mode 100644 Documentation/devicetree/bindings/ipmi/ipmi-smic.txt
- create mode 100644 Documentation/devicetree/bindings/ipmi/ipmi-smic.yaml
- delete mode 100644 Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.txt
- create mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/calxeda-combophy.txt
- create mode 100644 Documentation/devicetree/bindings/phy/calxeda-combophy.yaml
-
+diff --git a/arch/arm/boot/dts/ecx-2000.dts b/arch/arm/boot/dts/ecx-2000.dts
+index 81eb382b4c23..93cdd020637b 100644
+--- a/arch/arm/boot/dts/ecx-2000.dts
++++ b/arch/arm/boot/dts/ecx-2000.dts
+@@ -92,7 +92,7 @@
+ 
+ 		pmu {
+ 			compatible = "arm,cortex-a9-pmu";
+-			interrupts = <0 76 4  0 75 4  0 74 4  0 73 4>;
++			interrupts = <0 76 4>, <0 75 4>, <0 74 4>, <0 73 4>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/ecx-common.dtsi b/arch/arm/boot/dts/ecx-common.dtsi
+index f819e3328a9e..b7e74a357471 100644
+--- a/arch/arm/boot/dts/ecx-common.dtsi
++++ b/arch/arm/boot/dts/ecx-common.dtsi
+@@ -202,14 +202,14 @@
+ 		ethernet@fff50000 {
+ 			compatible = "calxeda,hb-xgmac";
+ 			reg = <0xfff50000 0x1000>;
+-			interrupts = <0 77 4  0 78 4  0 79 4>;
++			interrupts = <0 77 4>, <0 78 4>, <0 79 4>;
+ 			dma-coherent;
+ 		};
+ 
+ 		ethernet@fff51000 {
+ 			compatible = "calxeda,hb-xgmac";
+ 			reg = <0xfff51000 0x1000>;
+-			interrupts = <0 80 4  0 81 4  0 82 4>;
++			interrupts = <0 80 4>, <0 81 4>, <0 82 4>;
+ 			dma-coherent;
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
+index 9e34d1bd7994..b6b0225a769e 100644
+--- a/arch/arm/boot/dts/highbank.dts
++++ b/arch/arm/boot/dts/highbank.dts
+@@ -142,14 +142,14 @@
+ 
+ 		pmu {
+ 			compatible = "arm,cortex-a9-pmu";
+-			interrupts = <0 76 4  0 75 4  0 74 4  0 73 4>;
++			interrupts = <0 76 4>, <0 75 4>, <0 74 4>, <0 73 4>;
+ 		};
+ 
+ 
+ 		sregs@fff3c200 {
+ 			compatible = "calxeda,hb-sregs-l2-ecc";
+ 			reg = <0xfff3c200 0x100>;
+-			interrupts = <0 71 4  0 72 4>;
++			interrupts = <0 71 4>, <0 72 4>;
+ 		};
+ 
+ 	};
 -- 
 2.17.1
 
