@@ -2,79 +2,152 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F00FC4BA25
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D02C4BA21
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D3E20714
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2A220714
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582742905;
+	bh=5S2ySSO2YGstRcBEX5a0T4f3Q9mr1AZpTazW4T0b14Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=WHACFCbpaEWabFhr3KUtmNUzfsu49mT+v047TJ4qtQMEQQt+lv6/C6XHVKrKaNeZ5
+	 uosq4DxH6l+Cqitg7jo5VF1/y58AA8T876nxmujxe6Swy0ZixiG5o+CvbOAF02vreQ
+	 tgtQZkWsizL/et/giJvCV/aEpjAxEWBJJ4Ua8MNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgBZSnb (ORCPT
+        id S1727359AbgBZSsY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:43:31 -0500
-Received: from muru.com ([72.249.23.125]:57876 "EHLO muru.com"
+        Wed, 26 Feb 2020 13:48:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:41414 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgBZSnb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:43:31 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2841A8022;
-        Wed, 26 Feb 2020 18:44:16 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 10:43:28 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Dave Gerlach <d-gerlach@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/5] ARM: OMAP2+: Introduce cpuidle for am335x/am437x
-Message-ID: <20200226184328.GY37466@atomide.com>
-References: <20191213030755.16096-1-d-gerlach@ti.com>
- <20191213150344.GJ35479@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213150344.GJ35479@atomide.com>
+        id S1727308AbgBZSsX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:48:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C752430E;
+        Wed, 26 Feb 2020 10:48:22 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E3BF3F881;
+        Wed, 26 Feb 2020 10:48:22 -0800 (PST)
+Date:   Wed, 26 Feb 2020 18:48:20 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Adrian Panella <ianchi74@outlook.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "regulator: add smb208 support" to the regulator tree
+In-Reply-To:  <20200219163711.479-1-ansuelsmth@gmail.com>
+Message-Id:  <applied-20200219163711.479-1-ansuelsmth@gmail.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Santosh,
+The patch
 
-* Tony Lindgren <tony@atomide.com> [191213 15:04]:
-> * Dave Gerlach <d-gerlach@ti.com> [191212 19:07]:
-> > Hi,
-> > This series adds support for cpuidle on am335x and am437x using the
-> > cpuidle_arm driver. When testing on am335x-evm and am437x-gp-evm the
-> > follow power consumption reductions are seen on v5.5-rc1 baseline:
-> > 
-> > 
-> > Idling at command line, CPUFreq userspace governor to 300MHz:
-> >   am335x-evm:
-> >     VDD_MPU: 48 mW -> 5 mW
-> > 
-> >   am437x-gp-evm:
-> >     VDD_MPU: 32 mW -> 3 mW
-> > 
-> > 
-> > Idling at command line, CPUFreq userspace governor to 1GHz:
-> >   am335x-evm:
-> >     VDD_MPU: 313 mW -> 18 mW
-> > 
-> >   am437x-gp-evm:
-> >     VDD_MPU: 208 mW -> 10 mW
-> 
-> Hey this is great! A beverage on me when we get a chance :)
-> 
-> For merging, looks like I should take the series after folks are happy
-> with it. Santosh, care to review and ack if it looks OK?
+   regulator: add smb208 support
 
-Looks like this series of changes is still pending. Care
-to ack?
+has been applied to the regulator tree at
 
-Regards,
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-Tony
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From b5f25304aece9f2e7eaab275bbb5461c666bf38c Mon Sep 17 00:00:00 2001
+From: Ansuel Smith <ansuelsmth@gmail.com>
+Date: Wed, 19 Feb 2020 17:37:11 +0100
+Subject: [PATCH] regulator: add smb208 support
+
+Smb208 regulators are used on some ipq806x soc.
+Add support for it to make it avaiable on some routers
+that use it.
+
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Adrian Panella <ianchi74@outlook.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Link: https://lore.kernel.org/r/20200219163711.479-1-ansuelsmth@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++++
+ drivers/regulator/qcom_rpm-regulator.c             | 9 +++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+index 3c91ad430eea..b823b8625243 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+@@ -61,6 +61,7 @@ Regulator nodes are identified by their compatible:
+ 		    "qcom,rpm-pm8901-regulators"
+ 		    "qcom,rpm-pm8921-regulators"
+ 		    "qcom,rpm-pm8018-regulators"
++		    "qcom,rpm-smb208-regulators"
+ 
+ - vdd_l0_l1_lvs-supply:
+ - vdd_l2_l11_l12-supply:
+@@ -171,6 +172,9 @@ pm8018:
+ 	s1, s2, s3, s4, s5, , l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
+ 	l12, l14, lvs1
+ 
++smb208:
++	s1a, s1b, s2a, s2b
++
+ The content of each sub-node is defined by the standard binding for regulators -
+ see regulator.txt - with additional custom properties described below:
+ 
+diff --git a/drivers/regulator/qcom_rpm-regulator.c b/drivers/regulator/qcom_rpm-regulator.c
+index 7407cd5a1b74..7fc97f23fcf4 100644
+--- a/drivers/regulator/qcom_rpm-regulator.c
++++ b/drivers/regulator/qcom_rpm-regulator.c
+@@ -925,12 +925,21 @@ static const struct rpm_regulator_data rpm_pm8921_regulators[] = {
+ 	{ }
+ };
+ 
++static const struct rpm_regulator_data rpm_smb208_regulators[] = {
++	{ "s1a",  QCOM_RPM_SMB208_S1a, &smb208_smps, "vin_s1a" },
++	{ "s1b",  QCOM_RPM_SMB208_S1b, &smb208_smps, "vin_s1b" },
++	{ "s2a",  QCOM_RPM_SMB208_S2a, &smb208_smps, "vin_s2a" },
++	{ "s2b",  QCOM_RPM_SMB208_S2b, &smb208_smps, "vin_s2b" },
++	{ }
++};
++
+ static const struct of_device_id rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-pm8018-regulators",
+ 		.data = &rpm_pm8018_regulators },
+ 	{ .compatible = "qcom,rpm-pm8058-regulators", .data = &rpm_pm8058_regulators },
+ 	{ .compatible = "qcom,rpm-pm8901-regulators", .data = &rpm_pm8901_regulators },
+ 	{ .compatible = "qcom,rpm-pm8921-regulators", .data = &rpm_pm8921_regulators },
++	{ .compatible = "qcom,rpm-smb208-regulators", .data = &rpm_smb208_regulators },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rpm_of_match);
+-- 
+2.20.1
+
