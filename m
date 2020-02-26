@@ -2,97 +2,137 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3502DC4BA13
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3F5C4BA18
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A22A20838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:17:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="KPTIuJ6h"
+	by mail.kernel.org (Postfix) with ESMTP id 79ADA20838
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgBZRRd (ORCPT
+        id S1726872AbgBZRWZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:17:33 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38831 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgBZRRd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 12:17:33 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a9so55081wmj.3
-        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 09:17:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D5NgFvpvyGD2NAkidGgia/jVmr0ryRkNn23SZkfip3U=;
-        b=KPTIuJ6hOKN4eNm6446oV+ufMfdLlLPWUE/tcfYlDyTvUttjmb4fzCSa0EzUQQTqQd
-         4A6Lk8gDTE75gNGQNVL7pThfh+KOKigyKwqXaZmiVC0p6B4Tvs0pwoFlJ7elicCo8hrn
-         WchqZZ8SHT/si1iGF31t/ZKMIEwvTsxHMUqr43GAELsgjrORQeYSKwABRgw02f/xA3Zw
-         4vK0eYbFLJal+Ic4ZjMmDqgc9per9KH3xgnJeg3epqAhAdt8fRkPfoAZryfDW+Ev5n59
-         K+UKrDlgGf+BZdmaLwxciFqLtwmoDJVZAHZVRhIt2/WIglamTAcdGRk9VzdwR1vk003J
-         rk1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D5NgFvpvyGD2NAkidGgia/jVmr0ryRkNn23SZkfip3U=;
-        b=qB20+va77MRbkcsCdyMHCCZZCmRiL0uOgSKGsWW+BnPQ9wS46FCB6/WYNgzrzFyl2o
-         3KajDADaZNaUmIAjbyCBzgytf1bKXzni57NjlKWf9sbQJlSeueDITKC+swfPBnbZFnH1
-         MN7CySD/gpYRgvbsDg4HM6earycRYOTEnyohXSNsxoTR77K2KKYOTKBC3Sg7k1Nqwye5
-         6jyimtRn610p69+s69Nadhsq0V41uQ/hs8zDFLRp8wrDmJnZaXvV/ochdDyoIanItrsF
-         DKTE7rlfyLR6BugK7bgXQUbo/CMS19v0lebgm5eAIMVUY6+wOQGPgdzZ0jvfZ6RdIe4o
-         e5Dg==
-X-Gm-Message-State: APjAAAV0Hp862MeYnwbWH2MPKHb62YrzEGl5A6pVfAvziHKj1MKiIrBx
-        U6Euff/iSheyMmGg2lCAwit+LQ==
-X-Google-Smtp-Source: APXvYqxrttVIAUjGEZgZ4W32J3SfMG1F9ArDXDphkR2AMS3TDMpZqL7cqVnwvPG+nsAXG0VspMUfLw==
-X-Received: by 2002:a05:600c:299:: with SMTP id 25mr6704261wmk.68.1582737451052;
-        Wed, 26 Feb 2020 09:17:31 -0800 (PST)
-Received: from ?IPv6:2a00:1098:3142:14:a5b1:f6ea:e382:15d7? ([2a00:1098:3142:14:a5b1:f6ea:e382:15d7])
-        by smtp.gmail.com with ESMTPSA id z21sm3719210wml.5.2020.02.26.09.17.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 09:17:30 -0800 (PST)
-Subject: Re: [PATCH] ARM: dts: bcm2711: Add pcie0 alias
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     phil@raspberrypi.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200226164601.20150-1-nsaenzjulienne@suse.de>
-From:   Phil Elwell <phil@raspberrypi.com>
-Message-ID: <51e9f945-b047-eb66-28c0-54d467ce51a7@raspberrypi.com>
-Date:   Wed, 26 Feb 2020 17:17:30 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 12:22:25 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55228 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbgBZRWZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 12:22:25 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id CB83A295797
+Message-ID: <8b63465c795bb0c8243eb377106138c83e0dfffe.camel@collabora.com>
+Subject: Re: [PATCH v6 6/6] arm64: dts: rockchip: rk3399: Define the
+ rockchip Video Decoder node
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Johan Jonker <jbx6244@gmail.com>
+Cc:     boris.brezillon@collabora.com, devicetree@vger.kernel.org,
+        hverkuil@xs4all.nl, jonas@kwiboo.se, kernel@collabora.com,
+        laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        nicolas@ndufresne.ca, paul.kocialkowski@bootlin.com,
+        robh+dt@kernel.org, sakari.ailus@iki.fi, tfiga@chromium.org
+Date:   Wed, 26 Feb 2020 14:22:11 -0300
+In-Reply-To: <3584403.hvncmGE4DP@phil>
+References: <20200220163016.21708-7-ezequiel@collabora.com>
+         <817821e3-bc51-8037-b9b9-e429c5eeb280@gmail.com> <3584403.hvncmGE4DP@phil>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200226164601.20150-1-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nicolas,
+Hi Heiko, Johan,
 
-On 26/02/2020 16:46, Nicolas Saenz Julienne wrote:
-> Some bcm2711 revisions have different DMA constraints on the their PCIE
-> bus. The lower common denominator, being able to access the lower 3GB of
-> memory, is the default setting for now. Newer SoC revisions are able to
-> access the whole memory space.
+Thanks for pointing this out.
+
+On Wed, 2020-02-26 at 14:21 +0100, Heiko Stuebner wrote:
+> Am Mittwoch, 26. Februar 2020, 13:24:53 CET schrieb Johan Jonker:
+> > Hi Boris,
+> > 
+> > Dtsi nodes are sort on address.
+> > The vdec node is now inserted between:
+> > 
+> > vdec_mmu: iommu       @ff660480
+> > vdec    : video-codec @ff660000
+> > iep_mmu : iommu       @ff670800
+> > 
+> > This should be:
+> > 
+> > vpu_mmu : iommu       @ff650800
+> > vdec    : video-codec @ff660000
+> > vdec_mmu: iommu       @ff660480
+> > 
 > 
-> Raspberry Pi 4's firmware is aware of this limitation and will correct
-> the PCIE's dma-ranges property if a pcie0 alias is available. So add
-> it.
+> Simple things like this I can (and do) fix when applying.
+> 
+> The interesting question would be, did patches 1-5 get applied yet?
+> As I only remember seing Hans' mail from v5, but didn't get any
+> applied mail for v6 so far.
+> 
 
-I can confirm that this is exactly what the firmware is looking for, so
+Hans sent a pull request to include rkvdec driver in v5.7:
 
-Reviewed-by: Phil Elwell <phil@raspberrypi.com>
+https://lore.kernel.org/linux-media/d4cc12b2-3d24-95db-102b-e5091c067e76@xs4all.nl/T/#t
 
-Phil
+It doesn't include the devicetree changes though,
+which I just noticed.
+
+Would you be so kind to pick this patch and sort the node?
+
+Thanks!
+Ezequiel
+
+> 
+> Heiko
+> 
+> > > From: Boris Brezillon <boris.brezillon at collabora.com>
+> > > 
+> > > RK3399 has a Video decoder, define the node in the dtsi. We also add
+> > > the missing power-domain in mmu node and enable the block.
+> > > 
+> > > Signed-off-by: Boris Brezillon <boris.brezillon at collabora.com>
+> > > Signed-off-by: Ezequiel Garcia <ezequiel at collabora.com>
+> > > ---
+> > >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 14 +++++++++++++-
+> > >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > index 33cc21fcf4c1..a07f857df12f 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > @@ -1285,8 +1285,20 @@ vdec_mmu: iommu at ff660480 {
+> > >  		interrupt-names = "vdec_mmu";
+> > >  		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>;
+> > >  		clock-names = "aclk", "iface";
+> > > +		power-domains = <&power RK3399_PD_VDU>;
+> > >  		#iommu-cells = <0>;
+> > > -		status = "disabled";
+> > > +	};
+> > > +
+> > > +	vdec: video-codec at ff660000 {
+> > > +		compatible = "rockchip,rk3399-vdec";
+> > > +		reg = <0x0 0xff660000 0x0 0x400>;
+> > > +		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>;
+> > > +		interrupt-names = "vdpu";
+> > > +		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>,
+> > > +			 <&cru SCLK_VDU_CA>, <&cru SCLK_VDU_CORE>;
+> > > +		clock-names = "axi", "ahb", "cabac", "core";
+> > > +		power-domains = <&power RK3399_PD_VDU>;
+> > > +		iommus = <&vdec_mmu>;
+> > >  	};
+> > >  
+> > >  	iep_mmu: iommu at ff670800 {
+> > 
+> > 
+> > 
+> 
+> 
+> 
+
+
