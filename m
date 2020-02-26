@@ -2,99 +2,133 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC87C4BA18
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4771C4BA1E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54082206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 17:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582739647;
-	bh=HeL99YkP84SQU9WU4HdYHLRJ87AOQUvFs/jgX+ENtbU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Fv4OVpmjGjY2VXrVu69mbfOE6qkp+CSBlxknuhJ+KgLtcoTQljY5/ixgop+NQgnJu
-	 MNFCDdpppBKU8jj3jYZkhM61SEswfX3O+Wyi60rQOwSu/Px3x993hmGG79tqDTMS+N
-	 af63z0hSP1/4d9YJDM/lhSE8bcMFEkCwRP3G8ieg=
+	by mail.kernel.org (Postfix) with ESMTP id C43F824656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgBZRyE (ORCPT
+        id S1727009AbgBZSJN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:54:04 -0500
-Received: from conuserg-09.nifty.com ([210.131.2.76]:24983 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgBZRyD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 12:54:03 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 01QHrREQ000886;
-        Thu, 27 Feb 2020 02:53:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01QHrREQ000886
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582739608;
-        bh=0ukicgoAH0jaOd0t0OEOCVvWpsosXabrsOxj2/s/m/Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FV6VqWeJkHiy/cD9Lp2Vq00Ga6v7Swe1AYfnm5CSR/6PmKr6ug1wD1/MiNzW0MD8v
-         LWP6p9Yx6sbwVVNdB5+FkuE9+4WIWlL5zh04GgS4Dfl7GSXc71T9MK0VCSuWxiYxfd
-         woG8YYkOdhlcQuHmFmAWdJ0r38fIw4Ay1cl7pWLG4OLgSwwJSI+aIQ02IEtnM0O/TA
-         Vqdl9qbgZ2b9eb8LgQIv5MTiu41hhLvOfuNofncs8wk5nn/u1al4d1RqYr9p2XjPcA
-         YAFJMIETZgs4Ccq0M8mrLxs57PHXHs4/b3lUgnV/ZyEJScrfoDLKMu+zEIn2XHAZvd
-         R/mQFoKDFtwPQ==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [PATCH] kbuild: remove trailing slash from devicetree/binding/ for descending
-Date:   Thu, 27 Feb 2020 02:53:25 +0900
-Message-Id: <20200226175325.8787-1-masahiroy@kernel.org>
+        Wed, 26 Feb 2020 13:09:13 -0500
+Received: from foss.arm.com ([217.140.110.172]:40418 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726810AbgBZSJN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:09:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A437330E;
+        Wed, 26 Feb 2020 10:09:12 -0800 (PST)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C8563F881;
+        Wed, 26 Feb 2020 10:09:11 -0800 (PST)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Robert Richter <rric@kernel.org>, soc@kernel.org,
+        Jon Loeliger <jdl@jdl.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 00/13] arm: calxeda: update DTS, bindings and MAINTAINERS
+Date:   Wed, 26 Feb 2020 18:08:48 +0000
+Message-Id: <20200226180901.89940-1-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-obj-* needs a trailing slash for a directory, but subdir-* does not
-because it already implies a directory.
+Hi,
 
-Also, change subdir-y to subdir- to ensure this is effective only
-for cleaning targets.
+this series is an answer to the attempt [1] of removing the Calxeda
+Highbank platform support from the kernel. Apart from the pending removal
+of ARM32 host KVM support from the kernel, the lack of proper DT schema
+bindings was another major reason for Rob's series.
 
-This makes the cleaning log consistent. (no trailing slash)
+This series addresses this. The first four patches adjust the .dts files
+to pass the existing (mostly generic) DT schema binding checks. Those
+changes should not affect the functionality.
+The following eight patches then convert the "prose" DT binding
+documentation to the json-schema format, so that the automatic checking
+actually does something useful.
+After those patches "make dtbs_check" comes back clean for the two .dts
+files in the kernel, and "dt_validate -m" reports only those three
+not-covered nodes (on Highbank, only the last one on Midway):
+arm,cortex-a9-twd-timer
+arm,cortex-a9-twd-wdt
+calxeda,hb-sdhci
+The first two are generic ARM devices, for which the binding doc just
+does not have been converted yet. The SDHCI controller is actually
+disabled in the DTs, and the SD slot is populated on very few special
+systems only, also there has never been a driver in the kernel for
+this device anyway.
 
-Before:
+The final patch then changes the MAINTAINERS file to hand over the
+maintainership to me. I have a working machine under my desk and have
+some interest in keeping this platform support alive.
 
-  $ make clean
-  CLEAN   Documentation/devicetree/bindings/
+Cheers,
+Andre.
 
-After:
+[1] https://lore.kernel.org/linux-arm-kernel/20200218171321.30990-1-robh@kernel.org/
 
-  $ make clean
-  CLEAN   Documentation/devicetree/bindings
+Andre Przywara (13):
+  arm: dts: calxeda: Basic DT file fixes
+  arm: dts: calxeda: Provide UART clock
+  arm: dts: calxeda: Fix interrupt grouping
+  arm: dts: calxeda: Group port-phys and sgpio-gpio items
+  dt-bindings: clock: Convert Calxeda clock bindings to json-schema
+  dt-bindings: sata: Convert Calxeda SATA controller to json-schema
+  dt-bindings: net: Convert Calxeda Ethernet binding to json-schema
+  dt-bindings: phy: Convert Calxeda ComboPHY binding to json-schema
+  dt-bindings: arm: Convert Calxeda L2 cache controller to json-schema
+  dt-bindings: memory-controllers: convert Calxeda DDR to json-schema
+  dt-bindings: ipmi: Convert IPMI-SMIC bindings to json-schema
+  dt-bindings: arm: Add Calxeda system registers json-schema binding
+  MAINTAINERS: Update Calxeda Highbank maintainership
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+ .../bindings/arm/calxeda/hb-sregs.yaml        | 47 +++++++++
+ .../devicetree/bindings/arm/calxeda/l2ecc.txt | 15 ---
+ .../bindings/arm/calxeda/l2ecc.yaml           | 36 +++++++
+ .../devicetree/bindings/ata/sata_highbank.txt | 44 ---------
+ .../bindings/ata/sata_highbank.yaml           | 96 +++++++++++++++++++
+ .../devicetree/bindings/clock/calxeda.txt     | 17 ----
+ .../devicetree/bindings/clock/calxeda.yaml    | 83 ++++++++++++++++
+ .../devicetree/bindings/ipmi/ipmi-smic.txt    | 25 -----
+ .../devicetree/bindings/ipmi/ipmi-smic.yaml   | 56 +++++++++++
+ .../memory-controllers/calxeda-ddr-ctrlr.txt  | 16 ----
+ .../memory-controllers/calxeda-ddr-ctrlr.yaml | 41 ++++++++
+ .../devicetree/bindings/net/calxeda-xgmac.txt | 18 ----
+ .../bindings/net/calxeda-xgmac.yaml           | 47 +++++++++
+ .../bindings/phy/calxeda-combophy.txt         | 17 ----
+ .../bindings/phy/calxeda-combophy.yaml        | 47 +++++++++
+ MAINTAINERS                                   |  2 +-
+ arch/arm/boot/dts/ecx-2000.dts                |  5 +-
+ arch/arm/boot/dts/ecx-common.dtsi             | 17 ++--
+ arch/arm/boot/dts/highbank.dts                | 11 +--
+ 19 files changed, 468 insertions(+), 172 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml
+ delete mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
+ create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/calxeda.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/calxeda.yaml
+ delete mode 100644 Documentation/devicetree/bindings/ipmi/ipmi-smic.txt
+ create mode 100644 Documentation/devicetree/bindings/ipmi/ipmi-smic.yaml
+ delete mode 100644 Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.txt
+ create mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/calxeda-combophy.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/calxeda-combophy.yaml
 
- Documentation/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index d77bb607aea4..39569a2e1953 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -2,7 +2,8 @@
- # Makefile for Sphinx documentation
- #
- 
--subdir-y := devicetree/bindings/
-+# for cleaning
-+subdir- := devicetree/bindings
- 
- # Check for broken documentation file references
- ifeq ($(CONFIG_WARN_MISSING_DOCUMENTS),y)
 -- 
 2.17.1
 
