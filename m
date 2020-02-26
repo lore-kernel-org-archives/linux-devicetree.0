@@ -2,98 +2,330 @@ Return-Path: <SRS0=+O1R=4O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 288DDC4BA09
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D59EC4BA09
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC3721927
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7464422464
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Feb 2020 03:10:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JMqqLXXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgBZDFZ (ORCPT
+        id S1727880AbgBZDKi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Feb 2020 22:05:25 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57092 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727880AbgBZDFZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Feb 2020 22:05:25 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 782DE46488E95C5DEB79;
-        Wed, 26 Feb 2020 11:05:22 +0800 (CST)
-Received: from [127.0.0.1] (10.67.101.242) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Feb 2020
- 11:05:19 +0800
-Subject: Re: [PATCH v4 03/26] iommu: Add a page fault handler
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-4-jean-philippe@linaro.org>
- <cb8b5a85-7f1a-8eb7-85bd-db2f553f066d@huawei.com>
- <20200225092519.GC375953@myrica>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>,
-        <mark.rutland@arm.com>, <kevin.tian@intel.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        <catalin.marinas@arm.com>, <robin.murphy@arm.com>,
-        <robh+dt@kernel.org>, <zhangfei.gao@linaro.org>, <will@kernel.org>,
-        <christian.koenig@amd.com>, <tj@kernel.org>
-From:   Xu Zaibo <xuzaibo@huawei.com>
-Message-ID: <0c2b29ad-d09a-89db-8540-5909751b1972@huawei.com>
-Date:   Wed, 26 Feb 2020 11:05:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Tue, 25 Feb 2020 22:10:38 -0500
+Received: from mail-pf1-f170.google.com ([209.85.210.170]:44302 "EHLO
+        mail-pf1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728989AbgBZDKi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Feb 2020 22:10:38 -0500
+Received: by mail-pf1-f170.google.com with SMTP id y5so654674pfb.11
+        for <devicetree@vger.kernel.org>; Tue, 25 Feb 2020 19:10:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZOVDf2cfnyC0v+3gtlmyMf276AJH5zfo1llXk1BdAfY=;
+        b=JMqqLXXdiM2EB0OzopVIZ1OdSarmbVggpxnOOFdVm4lOa7t8Btc5s7xVKlYQNPEyod
+         UsuyUXpKy7eBfxyiFu3rjQ+go9yOtrRdevKQydAubSEZPrRUtR3DdMssU/9Ipnp4c2N9
+         DdTwn9KxosTaJeMDbvmVUcFoOBn/ObPkQ3v8M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZOVDf2cfnyC0v+3gtlmyMf276AJH5zfo1llXk1BdAfY=;
+        b=c9gw4xMNT9SA/5A5hlswC6niO308/z8It2ihhs/3ysO2MJ8fncSQ/5siDH9y7enQPU
+         y0jkCCAhQ1+ykijTmwYTt0zHZ53+D5o1Hw8Pjtq0/UDfFGZzSQxciaw6RPe/FmoB5RGn
+         Hzy7+rNGW2JO+Gcj3ZCNI8MWf/SGbf5uhn53NX9Zfru0+Sp0qFukIsCqD9lpDhvZ9DcE
+         HsBVuAdn655sNT2RRuTNsg9PFr3FsAEtajXhyEU2OwIISlnVVTTgFxMmYpbTdv0JuboV
+         PNuhnKy1j0d7QW6vHU+IEdzjKZQ8MRXVOVNm2D7UVZ8e9ztsxGZHXg7xBOO1VRBysmwI
+         Xnew==
+X-Gm-Message-State: APjAAAWvVA6sAf8yqwLffaw+y2TikUKOfjw4EJ6jr943l9injWF+3pkO
+        DzSaj4t/6iCiaa25Xk9krrRa+cj7I7R+ZA==
+X-Google-Smtp-Source: APXvYqwZ7+1GtOpKixpQZac9ZFaWWdFQjrXAwirQ5B3VRhL/Y0kDcFoNpSAQaTur8cou0rw3G5zk0w==
+X-Received: by 2002:a63:354b:: with SMTP id c72mr1425435pga.99.1582686636759;
+        Tue, 25 Feb 2020 19:10:36 -0800 (PST)
+Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
+        by smtp.gmail.com with ESMTPSA id z4sm487885pfn.42.2020.02.25.19.10.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 19:10:36 -0800 (PST)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     devicetree@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        linux-input@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH v5] dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
+Date:   Wed, 26 Feb 2020 11:10:09 +0800
+Message-Id: <20200226031009.164703-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-In-Reply-To: <20200225092519.GC375953@myrica>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.242]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-On 2020/2/25 17:25, Jean-Philippe Brucker wrote:
-> Hi Zaibo,
->
-> On Tue, Feb 25, 2020 at 11:30:05AM +0800, Xu Zaibo wrote:
->>> +struct iopf_queue *
->>> +iopf_queue_alloc(const char *name, iopf_queue_flush_t flush, void *cookie)
->>> +{
->>> +	struct iopf_queue *queue;
->>> +
->>> +	queue = kzalloc(sizeof(*queue), GFP_KERNEL);
->>> +	if (!queue)
->>> +		return NULL;
->>> +
->>> +	/*
->>> +	 * The WQ is unordered because the low-level handler enqueues faults by
->>> +	 * group. PRI requests within a group have to be ordered, but once
->>> +	 * that's dealt with, the high-level function can handle groups out of
->>> +	 * order.
->>> +	 */
->>> +	queue->wq = alloc_workqueue("iopf_queue/%s", WQ_UNBOUND, 0, name);
->> Should this workqueue use 'WQ_HIGHPRI | WQ_UNBOUND' or some flags like this
->> to decrease the unexpected
->> latency of I/O PageFault here? Or maybe, workqueue will show an uncontrolled
->> latency, even in a busy system.
-> I'll investigate the effect of these flags. So far I've only run on
-> completely idle systems but it would be interesting to add some
-> workqueue-heavy load in my tests.
->
-I'm not sure, just my concern. Hopefully, Tejun Heo can give us some 
-hints. :)
+Convert the ChromeOS EC bindings to json-schema.
 
-+cc  Tejun Heo <tj@kernel.org>
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+---
+v5: unset additionalProperties
+v4: text reflows, add type references, and fix examples
+v3: node name changed in rpmsg example
+v2: cleanup description, fix typos, remove LPC, and add RPMSG example
 
-Cheers,
-Zaibo
+some properties defined under allOf/if/compatible/google,cros-ec-spi
+are recongnized as additional properties by dt-validate.
 
-.
-> .
->
+Is there more cleaner ways to handle this? (property depending on
+another one)
+---
+ .../devicetree/bindings/mfd/cros-ec.txt       |  76 ----------
+ .../devicetree/bindings/mfd/cros-ec.yaml      | 140 ++++++++++++++++++
+ 2 files changed, 140 insertions(+), 76 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
 
+diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+deleted file mode 100644
+index 4860eabd0f72..000000000000
+--- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
++++ /dev/null
+@@ -1,76 +0,0 @@
+-ChromeOS Embedded Controller
+-
+-Google's ChromeOS EC is a Cortex-M device which talks to the AP and
+-implements various function such as keyboard and battery charging.
+-
+-The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
+-compatible string used depends on the interface. Each connection method has
+-its own driver which connects to the top level interface-agnostic EC driver.
+-Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
+-the top-level driver.
+-
+-Required properties (I2C):
+-- compatible: "google,cros-ec-i2c"
+-- reg: I2C slave address
+-
+-Required properties (SPI):
+-- compatible: "google,cros-ec-spi"
+-- reg: SPI chip select
+-
+-Required properties (RPMSG):
+-- compatible: "google,cros-ec-rpmsg"
+-
+-Optional properties (SPI):
+-- google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
+-  time to wake up from sleep before they can receive SPI transfers at a high
+-  clock rate. This property specifies the delay, in usecs, between the
+-  assertion of the CS to the start of the first clock pulse.
+-- google,cros-ec-spi-msg-delay: Some implementations of the EC require some
+-  additional processing time in order to accept new transactions. If the delay
+-  between transactions is not long enough the EC may not be able to respond
+-  properly to subsequent transactions and cause them to hang. This property
+-  specifies the delay, in usecs, introduced between transactions to account
+-  for the time required by the EC to get back into a state in which new data
+-  can be accepted.
+-
+-Required properties (LPC):
+-- compatible: "google,cros-ec-lpc"
+-- reg: List of (IO address, size) pairs defining the interface uses
+-
+-Optional properties (all):
+-- google,has-vbc-nvram: Some implementations of the EC include a small
+-  nvram space used to store verified boot context data. This boolean flag
+-  is used to specify whether this nvram is present or not.
+-
+-Example for I2C:
+-
+-i2c@12ca0000 {
+-	cros-ec@1e {
+-		reg = <0x1e>;
+-		compatible = "google,cros-ec-i2c";
+-		interrupts = <14 0>;
+-		interrupt-parent = <&wakeup_eint>;
+-		wakeup-source;
+-	};
+-
+-
+-Example for SPI:
+-
+-spi@131b0000 {
+-	ec@0 {
+-		compatible = "google,cros-ec-spi";
+-		reg = <0x0>;
+-		interrupts = <14 0>;
+-		interrupt-parent = <&wakeup_eint>;
+-		wakeup-source;
+-		spi-max-frequency = <5000000>;
+-		controller-data {
+-		cs-gpio = <&gpf0 3 4 3 0>;
+-		samsung,spi-cs;
+-		samsung,spi-feedback-delay = <2>;
+-		};
+-	};
+-};
+-
+-
+-Example for LPC is not supplied as it is not yet implemented.
+diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.yaml b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
+new file mode 100644
+index 000000000000..8416a1299321
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
+@@ -0,0 +1,140 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/cros-ec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ChromeOS Embedded Controller
++
++maintainers:
++  - Benson Leung <bleung@chromium.org>
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++  - Guenter Roeck <groeck@chromium.org>
++
++description:
++  Google's ChromeOS EC is a microcontroller which talks to the AP and
++  implements various functions such as keyboard and battery charging.
++  The EC can be connected through various interfaces (I2C, SPI, and others)
++  and the compatible string specifies which interface is being used.
++
++properties:
++  compatible:
++    oneOf:
++      - description:
++          For implementations of the EC is connected through I2C.
++        const: google,cros-ec-i2c
++      - description:
++          For implementations of the EC is connected through SPI.
++        const: google,cros-ec-spi
++      - description:
++          For implementations of the EC is connected through RPMSG.
++        const: google,cros-ec-rpmsg
++
++  google,has-vbc-nvram:
++    description:
++      Some implementations of the EC include a small nvram space used to
++      store verified boot context data. This boolean flag is used to specify
++      whether this nvram is present or not.
++    type: boolean
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          const: google,cros-ec-i2c
++    then:
++      properties:
++        reg:
++          description: I2C slave address
++          maxItems: 1
++
++      required:
++        - reg
++  - if:
++      properties:
++        compatible:
++          const: google,cros-ec-spi
++    then:
++      properties:
++        reg:
++          description: SPI chip select
++          maxItems: 1
++
++        google,cros-ec-spi-pre-delay:
++          description:
++            This property specifies the delay in usecs between the
++            assertion of the CS and the first clock pulse.
++          allOf:
++            - $ref: /schemas/types.yaml#/definitions/uint32
++            - default: 0
++            - minimum: 0
++
++        google,cros-ec-spi-msg-delay:
++          description:
++            This property specifies the delay in usecs between messages.
++          allOf:
++            - $ref: /schemas/types.yaml#/definitions/uint32
++            - default: 0
++            - minimum: 0
++
++      required:
++        - reg
++
++# FIXME: spi-related properties are not additional properties
++#additionalProperties: false
++
++examples:
++  # Example for I2C
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        cros-ec@1e {
++            compatible = "google,cros-ec-i2c";
++            reg = <0x1e>;
++            interrupts = <6 0>;
++            interrupt-parent = <&gpio0>;
++        };
++    };
++
++  # Example for SPI
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        cros-ec@0 {
++            compatible = "google,cros-ec-spi";
++            reg = <0x0>;
++            google,cros-ec-spi-msg-delay = <30>;
++            google,cros-ec-spi-pre-delay = <10>;
++            interrupts = <99 0>;
++            interrupt-parent = <&gpio7>;
++            spi-max-frequency = <5000000>;
++        };
++    };
++
++  # Example for RPMSG
++  - |
++    scp0 {
++        cros-ec@0 {
++            compatible = "google,cros-ec-rpmsg";
++        };
++    };
++...
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
