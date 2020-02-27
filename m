@@ -2,282 +2,194 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FB7C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668CEC4BA3B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92CC2468F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AFD24697
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgB0LMt (ORCPT
+        id S1728910AbgB0LsY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:12:49 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40289 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbgB0LMs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 06:12:48 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a142so2885183oii.7;
-        Thu, 27 Feb 2020 03:12:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BRZl22qTx+n0iXrkM4uPLZmiGijPZu3bo/mxnerKIoY=;
-        b=foY6N/WtfbG3ju7wmgF6gkWQnGfByIF8s3affJFIAwB5LfaFZN9TgsqKbQ+fz8YmUG
-         qOAJh2MOYBuCCmssD+q2+psaQ30Qoj1sTwHRZEsQGQjbvpTMnRICSE2HM2oe+OTtp9y4
-         kEeHSNdwvSVpXuI6c5umuAQidwjpCbmTHogmonfygLmPT7YtaFBrlx0wG6WwU5sVmgsn
-         HYsG3HOXxiOMlbj9nf5DgX+fmI4AlSOUFervTJQjahg9pwwZl0oC8Spto/aT+fK0yz58
-         cHQ3l/YYWLn/aPkGnwNlzasYlQiDTLYNYt1QgE+8ZVAAO+WjCf7VqQEiONKR/mN6jvlj
-         CfGQ==
-X-Gm-Message-State: APjAAAWl2JeTSa0u+0aYzXWjpE1TcCnyntT4BGFrKRwGXbSyuqRRrwkU
-        8aZ3OPgr9nyKeguAL8VEB3kEOiMDvjFhZqNOnRc=
-X-Google-Smtp-Source: APXvYqx8JkPWGFyKwQUC6fADauIojDD6kegNTwPJ5zzR2R+qSvbkUfWUOMyceK8YtlC6zWYKWbJr1kxzVs8QLn2+vbQ=
-X-Received: by 2002:aca:b4c3:: with SMTP id d186mr2732342oif.131.1582801967331;
- Thu, 27 Feb 2020 03:12:47 -0800 (PST)
+        Thu, 27 Feb 2020 06:48:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:49094 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728904AbgB0LsY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 06:48:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05CAB1FB;
+        Thu, 27 Feb 2020 03:48:24 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 025253F73B;
+        Thu, 27 Feb 2020 03:48:21 -0800 (PST)
+Date:   Thu, 27 Feb 2020 11:48:16 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 5/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20200227114816.GA11443@e121166-lin.cambridge.arm.com>
+References: <20200113181411.32743-1-vidyas@nvidia.com>
+ <20200113181411.32743-6-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <20200224152640.1318-1-geert+renesas@glider.be> <158265013473.177367.4512247165308399202@swboyd.mtv.corp.google.com>
-In-Reply-To: <158265013473.177367.4512247165308399202@swboyd.mtv.corp.google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 27 Feb 2020 12:12:36 +0100
-Message-ID: <CAMuHMdUDjWKYaQ_MN+AvYg8vimZKMcck3SdHUSg8tPCCAEieJQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: clock: renesas: cpg-mssr: Convert to json-schema
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113181411.32743-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Mon, Jan 13, 2020 at 11:44:11PM +0530, Vidya Sagar wrote:
+> Add support for the endpoint mode of Synopsys DesignWare core based
+> dual mode PCIe controllers present in Tegra194 SoC.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V3:
+> * Addressed Thierry's review comments
 
-Thanks for your comments!
+I need his ACK to merge this series.
 
-On Tue, Feb 25, 2020 at 6:02 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting Geert Uytterhoeven (2020-02-24 07:26:40)
-> > diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-> > new file mode 100644
-> > index 0000000000000000..dfbd1933f1bc56de
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-> > @@ -0,0 +1,204 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/clock/renesas,cpg-mssr.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: Renesas Clock Pulse Generator / Module Standby and Software Reset
-> > +
-> > +maintainers:
-> > +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> > +
-> > +description: |
-> > +  On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
-> > +  and MSSR (Module Standby and Software Reset) blocks are intimately connected,
-> > +  and share the same register block.
-> > +
-> > +  They provide the following functionalities:
-> > +    - The CPG block generates various core clocks,
-> > +    - The MSSR block provides two functions:
-> > +        1. Module Standby, providing a Clock Domain to control the clock supply
-> > +           to individual SoC devices,
-> > +        2. Reset Control, to perform a software reset of individual SoC devices.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - renesas,r7s9210-cpg-mssr  # RZ/A2
-> > +      - renesas,r8a7743-cpg-mssr  # RZ/G1M
-> > +      - renesas,r8a7744-cpg-mssr  # RZ/G1N
-> > +      - renesas,r8a7745-cpg-mssr  # RZ/G1E
-> > +      - renesas,r8a77470-cpg-mssr # RZ/G1C
-> > +      - renesas,r8a774a1-cpg-mssr # RZ/G2M
-> > +      - renesas,r8a774b1-cpg-mssr # RZ/G2N
-> > +      - renesas,r8a774c0-cpg-mssr # RZ/G2E
-> > +      - renesas,r8a7790-cpg-mssr  # R-Car H2
-> > +      - renesas,r8a7791-cpg-mssr  # R-Car M2-W
-> > +      - renesas,r8a7792-cpg-mssr  # R-Car V2H
-> > +      - renesas,r8a7793-cpg-mssr  # R-Car M2-N
-> > +      - renesas,r8a7794-cpg-mssr  # R-Car E2
-> > +      - renesas,r8a7795-cpg-mssr  # R-Car H3
-> > +      - renesas,r8a7796-cpg-mssr  # R-Car M3-W
-> > +      - renesas,r8a77961-cpg-mssr # R-Car M3-W+
-> > +      - renesas,r8a77965-cpg-mssr # R-Car M3-N
-> > +      - renesas,r8a77970-cpg-mssr # R-Car V3M
-> > +      - renesas,r8a77980-cpg-mssr # R-Car V3H
-> > +      - renesas,r8a77990-cpg-mssr # R-Car E3
-> > +      - renesas,r8a77995-cpg-mssr # R-Car D3
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    maxItems: 2
->
-> Do we need this here and also below? Why can't it just be below with the
-> more specific constraints?
+[...]
 
-With the above removed:
+> +static int tegra_pcie_ep_work_thread(void *p)
+> +{
+> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
+> +	u32 event;
+> +
+> +	while (true) {
+> +		wait_event_interruptible(pcie->wq,
+> +					 !kfifo_is_empty(&pcie->event_fifo));
+> +
+> +		if (kthread_should_stop())
+> +			break;
+> +
+> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
+> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
+> +			continue;
+> +		}
+> +
+> +		switch (event) {
+> +		case EP_PEX_RST_DEASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
+> +			pex_ep_event_pex_rst_deassert(pcie);
+> +			break;
+> +
+> +		case EP_PEX_RST_ASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
+> +			pex_ep_event_pex_rst_assert(pcie);
+> +			break;
+> +
+> +		case EP_HOT_RST_DONE:
+> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
+> +			pex_ep_event_hot_rst_done(pcie);
+> +			break;
+> +
+> +		case EP_BME_CHANGE:
+> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
+> +			pex_ep_event_bme_change(pcie);
+> +			break;
+> +
+> +		case EP_EVENT_EXIT:
+> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
+> +			return 0;
+> +
+> +		default:
+> +			dev_warn(pcie->dev, "Invalid PCIe EP event: %u\n",
+> +				 event);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t tegra_pcie_ep_pex_rst_irq(int irq, void *arg)
+> +{
+> +	struct tegra_pcie_dw *pcie = arg;
+> +
+> +	if (gpiod_get_value(pcie->pex_rst_gpiod)) {
+> +		if (!kfifo_put(&pcie->event_fifo, EP_PEX_RST_ASSERT)) {
+> +			dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +			return IRQ_HANDLED;
+> +		}
+> +	} else {
+> +		if (!kfifo_put(&pcie->event_fifo, EP_PEX_RST_DEASSERT)) {
+> +			dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +			return IRQ_HANDLED;
+> +		}
+> +	}
+> +
+> +	wake_up(&pcie->wq);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
 
-    Documentation/devicetree/bindings/clock/renesas,cpg-mssr.example.dt.yaml:
-clock-controller@e6150000: 'clock-names', 'clocks' do not match any of
-the regexes: 'pinctrl-[0-9]+'
+[...]
 
-while the "if" below overriding minItems did trigger, as removing entries from
-clocks/clock-names in the example causes more errors.
+> +static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
+> +				struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci = &pcie->pci;
+> +	struct device *dev = pcie->dev;
+> +	struct dw_pcie_ep *ep;
+> +	struct resource *res;
+> +	char *name;
+> +	int ret;
+> +
+> +	ep = &pci->ep;
+> +	ep->ops = &pcie_ep_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	ep->phys_base = res->start;
+> +	ep->addr_size = resource_size(res);
+> +	ep->page_size = SZ_64K;
+> +
+> +	ret = gpiod_set_debounce(pcie->pex_rst_gpiod, PERST_DEBOUNCE_TIME);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to set PERST GPIO debounce time: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = gpiod_to_irq(pcie->pex_rst_gpiod);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to get IRQ for PERST GPIO: %d\n", ret);
+> +		return ret;
+> +	}
+> +	pcie->pex_rst_irq = (unsigned int)ret;
+> +
+> +	name = devm_kasprintf(dev, GFP_KERNEL, "tegra_pcie_%u_pex_rst_irq",
+> +			      pcie->cid);
+> +	if (!name) {
+> +		dev_err(dev, "Failed to create PERST IRQ string\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	irq_set_status_flags(pcie->pex_rst_irq, IRQ_NOAUTOEN);
+> +
+> +	ret = devm_request_irq(dev, pcie->pex_rst_irq,
+> +			       tegra_pcie_ep_pex_rst_irq,
+> +			       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+> +			       name, (void *)pcie);
 
-So it seems all properties must be listed in the main, unconditional,
-properties section at the top.
+I have the impression that a threaded IRQ is what you need, which
+will also remove some boilerplate in the process. Any reason why
+you can't use a threaded IRQ instead of a standalone kthread ?
 
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          items:
-> > +            enum:
-> > +              - renesas,r7s9210-cpg-mssr
-> > +              - renesas,r8a774c0-cpg-mssr
-> > +              - renesas,r8a7792-cpg-mssr
-> > +              - renesas,r8a77990-cpg-mssr
-> > +              - renesas,r8a77995-cpg-mssr
-> > +
-> > +    then:
-> > +      properties:
-> > +        clock:
-> > +          maxItems: 1
-> > +        clock-names:
-> > +          maxItems: 1
-> > +          items:
-> > +            - const: extal
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - renesas,r8a7743-cpg-mssr
-> > +              - renesas,r8a7744-cpg-mssr
-> > +              - renesas,r8a7745-cpg-mssr
-> > +              - renesas,r8a77470-cpg-mssr
-> > +              - renesas,r8a7790-cpg-mssr
-> > +              - renesas,r8a7791-cpg-mssr
-> > +              - renesas,r8a7793-cpg-mssr
-> > +              - renesas,r8a7794-cpg-mssr
-> > +
-> > +    then:
-> > +      properties:
-> > +        clock:
-> > +          minItems: 2
-> > +        clock-names:
-> > +          minItems: 2
-> > +          items:
-> > +            - const: extal
-> > +            - const: usb_extal
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          items:
-> > +            enum:
-> > +              - renesas,r8a774a1-cpg-mssr
-> > +              - renesas,r8a774b1-cpg-mssr
-> > +              - renesas,r8a7795-cpg-mssr
-> > +              - renesas,r8a7796-cpg-mssr
-> > +              - renesas,r8a77961-cpg-mssr
-> > +              - renesas,r8a77965-cpg-mssr
-> > +              - renesas,r8a77970-cpg-mssr
-> > +              - renesas,r8a77980-cpg-mssr
-> > +
-> > +    then:
-> > +      properties:
-> > +        clock:
-> > +          minItems: 2
-> > +        clock-names:
-> > +          minItems: 2
-> > +          items:
-> > +            - const: extal
-> > +            - const: extalr
-> > +
-> > +  - if:
-> > +      not:
-> > +        properties:
-> > +          compatible:
-> > +            items:
-> > +              enum:
-> > +                - renesas,r7s9210-cpg-mssr
-> > +    then:
-> > +      required:
-> > +        - '#reset-cells'
->
-> It may make sense to split this binding up into multiple bindings so
-> that we don't have deeply nested if/else/then.
-
-Note that the above is not a nested if, but the yaml-equivalent of a switch()
-statement.
-
-If this is to be split, how to split it?
-Each if contains SoCs from multiple families, and each family of SoCs is
-split across multiple ifs.
-
-> > +examples:
-> > +  - |
-> > +    // CPG device node:
-> > +
-> > +    cpg: clock-controller@e6150000 {
-> > +            compatible = "renesas,r8a7795-cpg-mssr";
-> > +            reg = <0xe6150000 0x1000>;
-> > +            clocks = <&extal_clk>, <&extalr_clk>;
-> > +            clock-names = "extal", "extalr";
-> > +            #clock-cells = <2>;
-> > +            #power-domain-cells = <0>;
-> > +            #reset-cells = <1>;
-> > +    };
-> > +
-> > +  - |
-> > +    // CPG/MSSR Clock Domain member device node:
-> > +    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +    scif2: serial@e6e88000 {
-> > +            compatible = "renesas,scif-r8a7795", "renesas,rcar-gen3-scif",
-> > +                         "renesas,scif";
-> > +            reg = <0xe6e88000 64>;
-> > +            interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
-> > +            clocks = <&cpg CPG_MOD 310>, <&cpg CPG_CORE R8A7795_CLK_S3D1>,
-> > +                     <&scif_clk>;
-> > +            clock-names = "fck";
-> > +            dmas = <&dmac1 0x13>, <&dmac1 0x12>, <&dmac2 0x13>, <&dmac2 0x12>;
-> > +            dma-names = "tx", "rx", "tx", "rx";
-> > +            power-domains = <&cpg>;
-> > +            resets = <&cpg 310>;
-> > +    };
->
-> I'm not sure we need this in the example.
-
-OK, the second example can be removed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Lorenzo
