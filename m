@@ -2,141 +2,175 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C049C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B89AC11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342C32468A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:58:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="md6NOEcH"
+	by mail.kernel.org (Postfix) with ESMTP id E7E06246A4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732949AbgB0O6S (ORCPT
+        id S1729966AbgB0PMW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:58:18 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:43690 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730000AbgB0O6R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 09:58:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582815495; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pGG3QA/MuTy/BE1KaedN0lIF6lHb9h2nDV465fY0RG8=;
-        b=md6NOEcH7wtfylojV61kM1Up4IZ1tc8mCF17PXGNsMNFm4cc/2TFk2TYRpWiqLey9bsH2K
-        LeqVHH9fdOIs6zI40UTIJAf+MvBQm4IEIGfn4wD/n3InleORa0ptOVWvJ/ZHAl2Yw+ZTei
-        CEzWkuRP23LE5odTDjn2JKspv+3W1hU=
-Date:   Thu, 27 Feb 2020 11:57:52 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v6 5/6] MIPS: DTS: JZ4780: define node for JZ4780 efuse
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 27 Feb 2020 10:12:22 -0500
+Received: from mga06.intel.com ([134.134.136.31]:7443 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729584AbgB0PMW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:12:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 07:12:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,492,1574150400"; 
+   d="scan'208";a="350704878"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 27 Feb 2020 07:12:17 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 27 Feb 2020 17:12:16 +0200
+Date:   Thu, 27 Feb 2020 17:12:16 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
+        bleung@chromium.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Message-Id: <1582815472.3.4@crapouillou.net>
-In-Reply-To: <c6177ff663b6f8e16dc41169a76ba5dac091e7bd.1582715761.git.hns@goldelico.com>
-References: <cover.1582715761.git.hns@goldelico.com>
-        <c6177ff663b6f8e16dc41169a76ba5dac091e7bd.1582715761.git.hns@goldelico.com>
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: Add cros-ec Type C port driver
+Message-ID: <20200227151216.GA18240@kuha.fi.intel.com>
+References: <20200220003102.204480-1-pmalani@chromium.org>
+ <20200220003102.204480-2-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220003102.204480-2-pmalani@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nikolaus,
+Hi,
 
-
-Le mer., f=E9vr. 26, 2020 at 12:16, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
-> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->=20
-> This patch brings support for the JZ4780 efuse. Currently it only=20
-> exposes
-> a read only access to the entire 8K bits efuse memory and the
-> ethernet mac address for the davicom dm9000 chip on the CI20 board.
->=20
-> It also changes the nemc reg range to avoid overlap.
->=20
-> Tested-by: Mathieu Malaterre <malat@debian.org>
-> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+On Wed, Feb 19, 2020 at 04:30:55PM -0800, Prashant Malani wrote:
+> Some Chrome OS devices with Embedded Controllers (EC) can read and
+> modify Type C port state.
+> 
+> Add an entry in the DT Bindings documentation that lists out the logical
+> device and describes the relevant port information, to be used by the
+> corresponding driver.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 > ---
->  arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
-> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> index f928329b034b..1e266be28096 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> @@ -358,7 +358,7 @@
->=20
->  	nemc: nemc@13410000 {
->  		compatible =3D "ingenic,jz4780-nemc";
-> -		reg =3D <0x13410000 0x10000>;
-> +		reg =3D <0x13410000 0x4c>;
-
-This is wrong, the real size of the register area is 1x15c.
-
->  		#address-cells =3D <2>;
->  		#size-cells =3D <1>;
->  		ranges =3D <1 0 0x1b000000 0x1000000
-> @@ -373,6 +373,21 @@
->  		status =3D "disabled";
->  	};
->=20
-> +	efuse: efuse@134100d0 {
-> +		compatible =3D "ingenic,jz4780-efuse";
-> +		reg =3D <0x134100d0 0x2c>;
+> 
+> Changes in v3:
+> - Fixed license identifier.
+> - Renamed "port" to "connector".
+> - Made "connector" be a "usb-c-connector" compatible property.
+> - Updated port-number description to explain min and max values,
+>   and removed $ref which was causing dt_binding_check errors.
+> - Fixed power-role, data-role and try-power-role details to make
+>   dt_binding_check pass.
+> - Fixed example to include parent EC SPI DT Node.
+> 
+> Changes in v2:
+> - No changes. Patch first introduced in v2 of series.
+> 
+>  .../bindings/chrome/google,cros-ec-typec.yaml | 86 +++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> new file mode 100644
+> index 00000000000000..97fd982612f120
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +		clocks =3D <&cgu JZ4780_CLK_AHB2>;
-> +		clock-names =3D "ahb2";
-
-As explained in my response to the other patch, 'clock-names' can go=20
-away.
-
-Cheers,
--Paul
-
+> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
 > +
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
+> +maintainers:
+> +  - Benson Leung <bleung@chromium.org>
+> +  - Prashant Malani <pmalani@chromium.org>
 > +
-> +		eth0_addr: eth-mac-addr@0x22 {
-> +			reg =3D <0x22 0x6>;
-> +		};
-> +	};
+> +description:
+> +  Chrome OS devices have an Embedded Controller(EC) which has access to
+> +  Type C port state. This node is intended to allow the host to read and
+> +  control the Type C ports. The node for this device should be under a
+> +  cros-ec node like google,cros-ec-spi.
 > +
->  	dma: dma@13420000 {
->  		compatible =3D "ingenic,jz4780-dma";
->  		reg =3D <0x13420000 0x400
-> --
-> 2.23.0
->=20
+> +properties:
+> +  compatible:
+> +    const: google,cros-ec-typec
+> +
+> +  connector:
+> +    description: A node that represents a physical Type C connector port
+> +      on the device.
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        const: usb-c-connector
+> +      port-number:
+> +        description: The number used by the Chrome OS EC to identify
+> +          this type C port. Valid values are 0 - (EC_USB_PD_MAX_PORTS - 1).
+> +      power-role:
+> +        description: Determines the power role that the Type C port will
+> +          adopt.
+> +        maxItems: 1
+> +        contains:
+> +          enum:
+> +            - sink
+> +            - source
+> +            - dual
+> +      data-role:
+> +        description: Determines the data role that the Type C port will
+> +          adopt.
+> +        maxItems: 1
+> +        contains:
+> +          enum:
+> +            - host
+> +            - device
+> +            - dual
+> +      try-power-role:
+> +        description: Determines the preferred power role of the Type C port.
+> +        maxItems: 1
+> +        contains:
+> +          enum:
+> +            - sink
+> +            - source
+> +            - dual
+> +
+> +    required:
+> +      - port-number
+> +      - power-role
+> +      - data-role
+> +      - try-power-role
 
-=
+Do you really need to redefine those?
 
+I think you just need to mention that there is a required sub-node
+"connector", and the place where it's described. So something
+like this:
+
+        Required sub-node:
+        - connector : The "usb-c-connector". The bindings of the
+          connector node are specified in:
+
+                Documentation/devicetree/bindings/connector/usb-connector.txt
+
+
+Then you just need to define the Chrome OS EC specific properties, so
+I guess just the "port-number".
+
+
+thanks,
+
+-- 
+heikki
