@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8A6C4BA2D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F02C4BA3B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C30246A0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D1D2469F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgB0NSM (ORCPT
+        id S1729221AbgB0NSB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:18:12 -0500
-Received: from comms.puri.sm ([159.203.221.185]:39914 "EHLO comms.puri.sm"
+        Thu, 27 Feb 2020 08:18:01 -0500
+Received: from comms.puri.sm ([159.203.221.185]:39788 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbgB0NSL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:18:11 -0500
+        id S1729210AbgB0NR7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:17:59 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 4E3EADFD84;
-        Thu, 27 Feb 2020 05:18:11 -0800 (PST)
+        by comms.puri.sm (Postfix) with ESMTP id 23444DFD30;
+        Thu, 27 Feb 2020 05:17:59 -0800 (PST)
 Received: from comms.puri.sm ([127.0.0.1])
         by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hKoThQI50WXp; Thu, 27 Feb 2020 05:18:10 -0800 (PST)
+        with ESMTP id B4fOomCxCS8C; Thu, 27 Feb 2020 05:17:58 -0800 (PST)
 From:   Martin Kepplinger <martin.kepplinger@puri.sm>
 To:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com
 Cc:     linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
         kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v4 8/8] arm64: dts: librem5-devkit: add lsm9ds1 mount matrix
-Date:   Thu, 27 Feb 2020 14:17:33 +0100
-Message-Id: <20200227131733.4228-9-martin.kepplinger@puri.sm>
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH v4 4/8] arm64: dts: librem5-devkit: allow modem to wake the system from suspend
+Date:   Thu, 27 Feb 2020 14:17:29 +0100
+Message-Id: <20200227131733.4228-5-martin.kepplinger@puri.sm>
 In-Reply-To: <20200227131733.4228-1-martin.kepplinger@puri.sm>
 References: <20200227131733.4228-1-martin.kepplinger@puri.sm>
 Content-Transfer-Encoding: 8bit
@@ -44,36 +44,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The IMU chip on the librem5-devkit is not mounted at the "natural" place
-that would match normal phone orientation (see the documentation for the
-details about what that is).
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-Since the lsm9ds1 driver supports providing a mount matrix, we can describe
-the orientation on the board in the dts:
+Connect the WoWWAN signal to a gpio key to wake up the system from suspend.
 
-Create a right-handed coordinate system (x * -1; see the datasheet for the
-axis) and rotate 180 degrees around the y axis because the device sits on
-the back side from the display.
-
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ .../arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 72c622ffe6de..10eca94194be 100644
+index 84443e4857d5..823d5c60a8fa 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -539,6 +539,9 @@
- 		reg = <0x6a>;
- 		vdd-supply = <&reg_3v3_p>;
- 		vddio-supply = <&reg_3v3_p>;
-+		mount-matrix =  "1",  "0",  "0",
-+				"0",  "1",  "0",
-+				"0",  "0", "-1";
+@@ -55,6 +55,15 @@
+ 			wakeup-source;
+ 			linux,code = <KEY_HP>;
+ 		};
++
++		wwan-wake {
++			label = "WWAN_WAKE";
++			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;
++			interrupt-parent = <&gpio3>;
++			interrupts = <8 GPIO_ACTIVE_LOW>;
++			wakeup-source;
++			linux,code = <KEY_PHONE>;
++		};
  	};
- };
+ 
+ 	leds {
+@@ -576,6 +585,7 @@
+ 			MX8MQ_IOMUXC_SAI2_RXFS_GPIO4_IO21	0x16
+ 			MX8MQ_IOMUXC_SAI2_RXC_GPIO4_IO22	0x16
+ 			MX8MQ_IOMUXC_SAI5_RXC_GPIO3_IO20	0x180  /* HP_DET */
++			MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8	0x80   /* nWoWWAN */
+ 		>;
+ 	};
  
 -- 
 2.20.1
