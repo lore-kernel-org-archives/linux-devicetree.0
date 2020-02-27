@@ -7,78 +7,83 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAADAC11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFE2C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72BBA24691
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2246524692
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDH9LWjt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0bRD9FL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbgB0T3c (ORCPT
+        id S1729418AbgB0T3w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:29:32 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37571 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbgB0T3b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 14:29:31 -0500
-Received: by mail-pj1-f67.google.com with SMTP id m13so215227pjb.2
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 11:29:31 -0800 (PST)
+        Thu, 27 Feb 2020 14:29:52 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44865 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbgB0T3w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 14:29:52 -0500
+Received: by mail-wr1-f67.google.com with SMTP id m16so157982wrx.11;
+        Thu, 27 Feb 2020 11:29:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4mWZOWxqMqFGYlHgC20I5f45kMQOVBGxRXWZS5VDQhw=;
-        b=eDH9LWjtmUJgPL0c9WBmAAAXhY6qd3GY+VcEe7pf7LaSunJ+DqiVoKI/Ee7Ko1GqXH
-         wh9M8ju5a6QSzz1OzPeBDYISXzYKmK/9u9BC1S4WHjqHBsK2vAkPLbBE6FtubofEYisN
-         /fBRCOkiivszv1So2YCfE18J9Y8fgJGHsObmsWP9RB487DcVW4kjzS4y+xFlys4qrlZZ
-         EPJX4DzCjs2jxxr9gHbVY32jxyXGS/B1LRlfU4NC2shxoeuVb53EZkU21N58Sui1nnRN
-         f80H6fdB0ubC4+qkKsOzzT/BP4if7h1vmsQuda7eohxdcVAcQJSlN4V60ZVoSQ0jxAzN
-         GRsg==
+        bh=Ts+uSIKuoMAT4GVlY0xYp++rOG/WfuZn269REQF9/WI=;
+        b=I0bRD9FLZLEifaJVygPjHYFoM6s4ZauKp9Ur7rpMtb+um53Ml9hWW6QBx0T9PyWyOG
+         IrmX+XF0avqqEzPJV+/uk+sCByBtJup1kJeD4lGT+mlD7d2Ve66sOUjYX6OiuAX323u6
+         MaMM5Yu2RjvjZJ7DvCyZGgVVCxiZs2RMYzvu/lb80503mtE+kvzZ+gKbkG4xswTaFkec
+         LMhRlbaIEU2R7dX2Pw1AYM7pNwyPO7JFSW0whRCY1SVJUye5UYz2hvfQOdUpWnxH9xGO
+         Ip/l2oFQW0BIa3tySzEzBnmWwugGaU8NSv4nVaFJT0l/FOHF42xwRXajRxHuA5Pv2FN6
+         A3Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4mWZOWxqMqFGYlHgC20I5f45kMQOVBGxRXWZS5VDQhw=;
-        b=AiuGzqwnKgvfcBaa4Oj4o7UI7GSROLE50BQpC5Sv10A8xJfXqsXoxpQAk+kiWj9ups
-         Mx4nZMDmXgA8RmdlWPZnBl64a6wsH1mHiKOAuNBrQpAoR6DsglRUNitTXApq7F/0jB7z
-         OmnToMwqZHFVoy9CfnmKrOR2nPCWnh3m+DVFQeXl8EQb9IR7HpVJ0Qc81M4W3HzoAx9y
-         Dk/wSJZe4CnlZl77ucgcSkf1G3YBcI20sz4vvNj/6Xs3L0JuCvFh/AErS4sKT1/zcGRs
-         T0k/X5VYm5APcJSD/IFDLdahU0yfWjl5VQU4/XsKe2e/JTuX+kvuGKbVl8DxV5sHbixI
-         PPcg==
-X-Gm-Message-State: APjAAAX++tOPjf6r/RRY3V/ZCVp2Yr1Dhrr2huLYemA6J3oayIJ11X2C
-        FyY1wWJRBXExaql/YY8Lrww=
-X-Google-Smtp-Source: APXvYqxB30WhiAHOsoGPX3m9tyF7Kcyg2lSUuN3QRYUdLa+GfTKuywjBgV50zz2I2xegy/CaGHbmMQ==
-X-Received: by 2002:a17:902:7009:: with SMTP id y9mr329848plk.254.1582831770959;
-        Thu, 27 Feb 2020 11:29:30 -0800 (PST)
+        bh=Ts+uSIKuoMAT4GVlY0xYp++rOG/WfuZn269REQF9/WI=;
+        b=HOdNVdXIyKOQ3odiObU64S9xuezkU8Svi81NinCpGA/Z9ptNo+kq3ibPvMcNgi135w
+         8U9lzWRoY+mMawyLDQRLzt4dcJ3MYfD6sMhH0fKqG+ZsSLMvZwXv3jCIzPAJROaeKP/R
+         Bk/CBkZx+mrI2Zh7T2LUZ5tTfWvpK00nHUoQxOWDhtcxzLiS+VZOi4j1n6qCbK2SaX9p
+         /Z7F7PAhfDxQ97xgUFvPpZLOCzhrzTzctaihiEaDPnsNLFNEpqQYee4HypbOs5H/SypM
+         3aLi+fsbb0BgbptpG29N02vE6Znbd+6856saiMcWNaqk4N/26kE8p7k8YF7+vpzrDYKl
+         OBWw==
+X-Gm-Message-State: APjAAAXJ9WqNIsSZAc089YBoLgoees+0NbIGsSmU7X/Zm9HsC6/1M6YB
+        ss0xqc0iMzsS20w98Ij68iI=
+X-Google-Smtp-Source: APXvYqy1BlYk+WSVAjCb5Zo9RSyLM0W4u08H4uBOcKJqmwQRQm5P/RkPigt4t2fNyrvLi+/GS/Toxg==
+X-Received: by 2002:a05:6000:1246:: with SMTP id j6mr357729wrx.233.1582831790230;
+        Thu, 27 Feb 2020 11:29:50 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id t65sm8220450pfd.178.2020.02.27.11.29.29
+        by smtp.gmail.com with ESMTPSA id w1sm8878013wmc.11.2020.02.27.11.29.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 11:29:30 -0800 (PST)
+        Thu, 27 Feb 2020 11:29:49 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <stefan.wahren@i2se.com>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: bcm283x: Add missing properties to the PWR LED
-Date:   Thu, 27 Feb 2020 11:29:29 -0800
-Message-Id: <20200227192929.17214-1-f.fainelli@gmail.com>
+        Rob Herring <robh+dt@kernel.org>
+Cc:     phil@raspberrypi.org, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: bcm2711: Add pcie0 alias
+Date:   Thu, 27 Feb 2020 11:29:46 -0800
+Message-Id: <20200227192946.17328-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <1582480985-6773-1-git-send-email-stefan.wahren@i2se.com>
-References: <1582480985-6773-1-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <20200226164601.20150-1-nsaenzjulienne@suse.de>
+References: <20200226164601.20150-1-nsaenzjulienne@suse.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 23 Feb 2020 19:03:05 +0100, Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> This adds the missing properties to the PWR LED for the RPi 3 & 4 boards,
-> which are already set for the other boards. Without them we will lose
-> the LED state after suspend.
+On Wed, 26 Feb 2020 17:46:00 +0100, Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
+> Some bcm2711 revisions have different DMA constraints on the their PCIE
+> bus. The lower common denominator, being able to access the lower 3GB of
+> memory, is the default setting for now. Newer SoC revisions are able to
+> access the whole memory space.
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Raspberry Pi 4's firmware is aware of this limitation and will correct
+> the PCIE's dma-ranges property if a pcie0 alias is available. So add
+> it.
+> 
+> Fixes: d5c8dc0d4c88 ("ARM: dts: bcm2711: Enable PCIe controller")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > ---
 
 Applied to devicetree/fixes, thanks!
