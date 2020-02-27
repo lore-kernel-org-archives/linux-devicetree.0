@@ -2,130 +2,104 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0B6C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0170FC11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 946AC246B6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D781E246A1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgB0NR6 (ORCPT
+        id S1729153AbgB0NTV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:17:58 -0500
-Received: from comms.puri.sm ([159.203.221.185]:39728 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729182AbgB0NR4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:17:56 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id D9018E01B5;
-        Thu, 27 Feb 2020 05:17:55 -0800 (PST)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xoAh7AvDkITZ; Thu, 27 Feb 2020 05:17:55 -0800 (PST)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com
-Cc:     linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
-        kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH v4 3/8] arm64: dts: librem5-devkit: add the simcom 7100 modem and audio
-Date:   Thu, 27 Feb 2020 14:17:28 +0100
-Message-Id: <20200227131733.4228-4-martin.kepplinger@puri.sm>
-In-Reply-To: <20200227131733.4228-1-martin.kepplinger@puri.sm>
-References: <20200227131733.4228-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Feb 2020 08:19:21 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37653 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729088AbgB0NTV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 08:19:21 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b3so2862357otp.4;
+        Thu, 27 Feb 2020 05:19:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YePo/5+OupClG7tl254SG+Sd9H1J2DdTDdubCfX50zk=;
+        b=VuZL9kH9wdUUdI8gqTk+vhVqcaiI+Kr2PkyHBEBZrX+QfflTZ+8nppViqrKZpQLJ5E
+         Rp29VzppGgao4jh1pvPhJVvlY5RI3LZiPcaVC2hMwLqCJ0VXqQRatqalUf6H+BZbJIeh
+         wIIcegYUkD0tG/p5v6uBXkqjJ5gRLUD0TfQHTNSIcuFxYZ9xA8j9Z0Q4/9VWWAHLnHql
+         AhZyn2VY+j4cnOR1ZS6VbwBrakwAwi/GG63qKxqCPjH/khm8XXhdSY55hNat9mn5rN4q
+         L0u4eHg6UPEUZtJhkA0lOHkRohzvV7edivVJlmYhtx3ysQi9F8MneHl45TAulgIC7GEw
+         uuxw==
+X-Gm-Message-State: APjAAAVPu1i/yyVonQ0RHj0qAb6+may94MyEf9G8gCO7S1wHyv5GCsvn
+        GwG7/bXqh2zW7YfbGc2qrpO8PSa21lWBVe00Wtc=
+X-Google-Smtp-Source: APXvYqxlakM84HpX6mtOTLlzf/aUmaxXKcQuhByOC31CfixFsFpUGvgh2GKp9b1xNPCPOiFZ3JDf1Fi9ELJIb2+KkRw=
+X-Received: by 2002:a05:6830:10e:: with SMTP id i14mr3275826otp.39.1582809559240;
+ Thu, 27 Feb 2020 05:19:19 -0800 (PST)
+MIME-Version: 1.0
+References: <20200227130323.15327-1-geert+renesas@glider.be> <20200227130937.qvrjyxcwim7rfum7@gilmour.lan>
+In-Reply-To: <20200227130937.qvrjyxcwim7rfum7@gilmour.lan>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 27 Feb 2020 14:19:08 +0100
+Message-ID: <CAMuHMdUVW_51dqMK=ziz_JVT3LuXX7vOF3-Ei-aHiiBuSepGpg@mail.gmail.com>
+Subject: Re: [PATCH] spi: dt-bindings: spi-controller: Fix #address-cells for
+ slave mode
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Hi Maxime,
 
-Add the simcom SIM7100 modem and the sai6 interface that connects it.
+On Thu, Feb 27, 2020 at 2:09 PM Maxime Ripard <maxime@cerno.tech> wrote:
+> On Thu, Feb 27, 2020 at 02:03:23PM +0100, Geert Uytterhoeven wrote:
+> > Currently, the DT bindings for an SPI controller specify that
+> > "#address-cells" must be fixed to one.  However, that applies to an SPI
+> > controller in master mode only.  When running in SPI slave mode,
+> > "#address-cells" should be zero.
+> >
+> > Fix this making the value of "#address-cells" dependent on the presence
+> > of "spi-slave".
+> >
+> > Fixes: 0a1b929356830257 ("spi: Add YAML schemas for the generic SPI options")
+> > Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
----
- .../dts/freescale/imx8mq-librem5-devkit.dts   | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+> > --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> > +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index c829e4579540..84443e4857d5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -148,6 +148,11 @@
- 		regulator-always-on;
- 	};
- 
-+	wwan_codec: sound-wwan-codec {
-+		compatible = "option,gtm601";
-+		#sound-dai-cells = <0>;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "sgtl5000";
-@@ -176,6 +181,22 @@
- 		};
- 	};
- 
-+	sound-wwan {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "SIMCom SIM7100";
-+		simple-audio-card,format = "dsp_a";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&sai6>;
-+		};
-+
-+		telephony_link_master: simple-audio-card,codec {
-+			sound-dai = <&wwan_codec>;
-+			frame-master;
-+			bitclock-master;
-+		};
-+	};
-+
- 	vibrator {
- 		compatible = "gpio-vibrator";
- 		pinctrl-names = "default";
-@@ -618,6 +639,15 @@
- 		>;
- 	};
- 
-+	pinctrl_sai6: sai6grp {
-+		fsl,pins = <
-+			MX8MQ_IOMUXC_SAI1_RXD5_SAI6_RX_DATA0	0xd6
-+			MX8MQ_IOMUXC_SAI1_RXD6_SAI6_RX_SYNC	0xd6
-+			MX8MQ_IOMUXC_SAI1_TXD4_SAI6_RX_BCLK     0xd6
-+			MX8MQ_IOMUXC_SAI1_TXD5_SAI6_TX_DATA0	0xd6
-+		>;
-+	};
-+
- 	pinctrl_typec: typecgrp {
- 		fsl,pins = <
- 			MX8MQ_IOMUXC_NAND_DATA06_GPIO3_IO12		0x16
-@@ -802,6 +832,16 @@
- 	status = "okay";
- };
- 
-+&sai6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai6>;
-+	assigned-clocks = <&clk IMX8MQ_CLK_SAI6>;
-+	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <24576000>;
-+	fsl,sai-synchronous-rx;
-+	status = "okay";
-+};
-+
- &uart1 { /* console */
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
+> > @@ -52,6 +53,18 @@ properties:
+> >      description:
+> >        The SPI controller acts as a slave, instead of a master.
+> >
+> > +if:
+> > +  required:
+> > +    [ spi-slave ]
+>
+> Nit: Usually, that notation is when you would do it on the same line,
+> if you want to go to a new line, it would make more sense to use -
+
+Sorry, being a poor yaml-by-example programmer, I don't understand what
+you mean.  Which part do you refer to by "that notation"?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
