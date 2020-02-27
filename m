@@ -2,209 +2,245 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55897C3F2C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37B0C3F2C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 213952469F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:02:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qcTMvEgn"
+	by mail.kernel.org (Postfix) with ESMTP id 9FA1C246A1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582841111;
+	bh=0ihjnXhr5rAzfNmh4KEWjS21hSY9s9S2m9nhLlMYXeU=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=CfqMX6dJCsrlCv2BhuqSgj+m8gA2Z4WlHMRL8kmfFH1XGLaTt4OoQvtC7z0dw5cn1
+	 b5A9qbdvXpi015lSngP8w9PPN9sS9vfNUtwKo2cgzuuh2ON3+mF/8CHzjh9MCBHcFT
+	 tmQhC/YL0gypQkTcgakJxQvDwqPPM0VLSwdP5su8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbgB0WB6 (ORCPT
+        id S1729720AbgB0WFL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:01:58 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39115 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbgB0WB6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:01:58 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so1092188wme.4;
-        Thu, 27 Feb 2020 14:01:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=DZXI7uvvOw0fNdSg04a7D3gbzl4O/eHHrwdgk0aaqJE=;
-        b=qcTMvEgnxEKV4piO6AHz5L7oRN0JLeSuOXxP106XCYDKH09gIrroqn7rSfi287p0Wi
-         D4FnP5B3QV+mcghGyJNUbZXS1rbfCkppw2DtmlnQTCC2eAufS+i8q/1hFKOKlqGzKGOW
-         1IVKGWdjTZfSHTDMGqqTaIPqcpwa2bTTy0zU3gQoTPZuffAmZEToLTVFl8ivGLL7B+Jh
-         3MSUc/c6EAC8wJXc2B8Z/AB/aVwj36MrkGh7J0FrjMAh277nOhpy5ZupXbCTBq1/NhRf
-         WN6mKmsR5Tsl335zKCvdVL4llYeh7rdgyI4bhhjG+XE6eBv1Klc6GEw4F+l5aqRsRwXB
-         NSDA==
+        Thu, 27 Feb 2020 17:05:11 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46516 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729501AbgB0WFL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:05:11 -0500
+Received: by mail-ot1-f68.google.com with SMTP id g96so672730otb.13;
+        Thu, 27 Feb 2020 14:05:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=DZXI7uvvOw0fNdSg04a7D3gbzl4O/eHHrwdgk0aaqJE=;
-        b=Hr7mZ035tS76RLMQ0TXU9xtSB8Mnj1TgpmSQ6WWeCPCMBqJLu0HFVoigB49WAZuHUv
-         q+pNIV3yn4gMW01Vs+SALCKwOO22bDq/2yNTvfJh3eCwqgAngRe+P/Wy893Pw21As+dG
-         dVb8rGoDFArGzJRMi2L3/1rsIg/LkQR6MqdkV6vFSV736atk52Dxltud+f25Rz534Yws
-         TP8rilKhQejv4BYW/QN1HGNt3LxnX8tSZ8ZgTIzFnqU5JSj9ochC7sC28gKq/jpt38Et
-         h1EV+fUayKcJikqx/rdsnb0mXBohYUWqr9y9eC9J+VvFMagckp3bFxdueAnKWTccIwbA
-         2Hxw==
-X-Gm-Message-State: APjAAAUV4obIQ6XRidc0GVGJK4t4IklcfukkxbdZDsy+utMXGmgeF08h
-        b37KYJHLJWiF3wBi00nWDwY=
-X-Google-Smtp-Source: APXvYqxOIbpdZLQdoCOz/7kFY829F0PDjAgwYtPnuzYix4T1+T8HFSPqEhciJa4khjnAvg8dEheDFg==
-X-Received: by 2002:a1c:4805:: with SMTP id v5mr884862wma.80.1582840915478;
-        Thu, 27 Feb 2020 14:01:55 -0800 (PST)
-Received: from AnsuelXPS (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.gmail.com with ESMTPSA id z2sm3443814wrq.95.2020.02.27.14.01.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Feb 2020 14:01:54 -0800 (PST)
-From:   <ansuelsmth@gmail.com>
-To:     "'Rob Herring'" <robh@kernel.org>
-Cc:     "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Andrew Lunn'" <andrew@lunn.ch>,
-        "'Florian Fainelli'" <f.fainelli@gmail.com>,
-        "'Heiner Kallweit'" <hkallweit1@gmail.com>,
-        "'Russell King'" <linux@armlinux.org.uk>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <andrew@lunn.ch> <20200227011050.11106-1-ansuelsmth@gmail.com> <20200227011050.11106-2-ansuelsmth@gmail.com> <20200227172340.GA19136@bogus>
-In-Reply-To: <20200227172340.GA19136@bogus>
-Subject: R: [PATCH v8 2/2] dt-bindings: net: Add ipq806x mdio bindings
-Date:   Thu, 27 Feb 2020 23:01:51 +0100
-Message-ID: <005401d5edb9$84fd8ec0$8ef8ac40$@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5LDNhNs7r6soPU3FC796GU50umB+K7uQ7Dt/MTOuohM=;
+        b=cDmp48yucSO/eKm3wLSXPyHpa9hv7ZCs0xp76Oc4wm8d6MnTbi/yyr+l4NNVXDRTjN
+         4OtZ1x0lMPSBgebTlc6BVCodDQowAXGPzoQoECzUQqee40omoNWy/dYe+64gz1xekH9c
+         j5eOsX+IjfDjRfYLDJbS+OKzceiVTw98s3zZdLKOfQjdv+T3f1qT7qOADBvR+nuyfRqU
+         qngUCaQzudvSXsxxB8bmZxjwPmpmQh+TxZ+YjxfqSdGLQHN10/cYuEvyXsFu/tX8H8rL
+         uihlnxRAdJzIv7xwIStNQKXal8yXJ5I9DYahBzN3GbK4DRwKdzysfelox8t0IEqWt2HI
+         DOgQ==
+X-Gm-Message-State: APjAAAXCzig/Rkx6e3DseIkKMUJnsO8xnF55UES/iJACTQbTjCJfXe9d
+        WnwJI72IsfOxcBmGl9c+ig==
+X-Google-Smtp-Source: APXvYqz483UTkmhXETzVPut22diHPjpIUjyvi6kkf0SgJXjG53JFOHWMPBWFSUslFGRMSY5ZATtrVQ==
+X-Received: by 2002:a9d:6e02:: with SMTP id e2mr876041otr.194.1582841109953;
+        Thu, 27 Feb 2020 14:05:09 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x17sm1291122oia.0.2020.02.27.14.05.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 14:05:09 -0800 (PST)
+Received: (nullmailer pid 1161 invoked by uid 1000);
+        Thu, 27 Feb 2020 22:05:08 -0000
+Date:   Thu, 27 Feb 2020 16:05:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Robert Richter <rric@kernel.org>, soc@kernel.org,
+        Jon Loeliger <jdl@jdl.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v2 06/13] dt-bindings: sata: Convert Calxeda SATA
+ controller to json-schema
+Message-ID: <20200227220508.GE26010@bogus>
+References: <20200227182210.89512-1-andre.przywara@arm.com>
+ <20200227182210.89512-7-andre.przywara@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQK3MMxYfxrxN4e01t227dGot2VmuAEzaQ9BAnacW3QBIS/lwaZGtj5w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227182210.89512-7-andre.przywara@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> On Thu, Feb 27, 2020 at 02:10:46AM +0100, Ansuel Smith wrote:
-> > Add documentations for ipq806x mdio driver.
-> >
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> > Changes in v8:
-> > - Fix error in dtb check
-> > - Remove not needed reset definition from example
-> > - Add include header for ipq806x clocks
-> > - Fix wrong License type
-> >
-> > Changes in v7:
-> > - Fix dt_binding_check problem
-> >
-> >  .../bindings/net/qcom,ipq8064-mdio.yaml       | 61
-> +++++++++++++++++++
-> >  1 file changed, 61 insertions(+)
-> >  create mode 100644
-> Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-
-> mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-
-> mdio.yaml
-> > new file mode 100644
-> > index 000000000000..4334a415f23c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-
-> mdio.yaml
-> > @@ -0,0 +1,61 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
+On Thu, Feb 27, 2020 at 06:22:03PM +0000, Andre Przywara wrote:
+> Convert the Calxeda Highbank SATA controller binding to DT schema format
+> using json-schema.
 > 
-> Dual license new bindings please:
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> ---
+>  .../devicetree/bindings/ata/sata_highbank.txt | 44 ---------
+>  .../bindings/ata/sata_highbank.yaml           | 95 +++++++++++++++++++
+>  2 files changed, 95 insertions(+), 44 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
+>  create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.yaml
 > 
-> (GPL-2.0-only OR BSD-2-Clause)
-> 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm ipq806x MDIO bus controller
-> > +
-> > +maintainers:
-> > +  - Ansuel Smith <ansuelsmth@gmail.com>
-> > +
-> > +description:
-> > +  The ipq806x soc have a MDIO dedicated controller that is
-> > +  used to comunicate with the gmac phy conntected.
-> 
-> 2 typos
-> 
-> > +  Child nodes of this MDIO bus controller node are standard
-> > +  Ethernet PHY device nodes as described in
-> > +  Documentation/devicetree/bindings/net/phy.txt
-> 
-> You might want to read what that file says now.
-> 
-> > +
-> > +allOf:
-> > +  - $ref: "mdio.yaml#"
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +        - const: qcom,ipq8064-mdio
-> > +        - const: syscon
-> 
-> Why is this a 'syscon'? Does it have more than 1 function?
->
- 
-Since the code use syscon_node_to_regmap, the syscon compatible
-is need or the driver fails to load. (since the reg is used also for the 
-gmac node) 
+> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
+> deleted file mode 100644
+> index aa83407cb7a4..000000000000
+> --- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
+> +++ /dev/null
+> @@ -1,44 +0,0 @@
+> -* Calxeda AHCI SATA Controller
+> -
+> -SATA nodes are defined to describe on-chip Serial ATA controllers.
+> -The Calxeda SATA controller mostly conforms to the AHCI interface
+> -with some special extensions to add functionality.
+> -Each SATA controller should have its own node.
+> -
+> -Required properties:
+> -- compatible        : compatible list, contains "calxeda,hb-ahci"
+> -- interrupts        : <interrupt mapping for SATA IRQ>
+> -- reg               : <registers mapping>
+> -
+> -Optional properties:
+> -- dma-coherent      : Present if dma operations are coherent
+> -- calxeda,port-phys : phandle-combophy and lane assignment, which maps each
+> -			SATA port to a combophy and a lane within that
+> -			combophy
+> -- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
+> -			which indicates that the driver supports SGPIO
+> -			indicator lights using the indicated GPIOs
+> -- calxeda,led-order : a u32 array that map port numbers to offsets within the
+> -			SGPIO bitstream.
+> -- calxeda,tx-atten  : a u32 array that contains TX attenuation override
+> -			codes, one per port. The upper 3 bytes are always
+> -			0 and thus ignored.
+> -- calxeda,pre-clocks : a u32 that indicates the number of additional clock
+> -			cycles to transmit before sending an SGPIO pattern
+> -- calxeda,post-clocks: a u32 that indicates the number of additional clock
+> -			cycles to transmit after sending an SGPIO pattern
+> -
+> -Example:
+> -        sata@ffe08000 {
+> -		compatible = "calxeda,hb-ahci";
+> -		reg = <0xffe08000 0x1000>;
+> -		interrupts = <115>;
+> -		dma-coherent;
+> -		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
+> -					&combophy0 2 &combophy0 3>;
+> -		calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
+> -		calxeda,led-order = <4 0 1 2 3>;
+> -		calxeda,tx-atten = <0xff 22 0xff 0xff 23>;
+> -		calxeda,pre-clocks = <10>;
+> -		calxeda,post-clocks = <0>;
+> -        };
+> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.yaml b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
+> new file mode 100644
+> index 000000000000..6dcf91e1bac0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/ata/sata_highbank.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Calxeda AHCI SATA Controller
+> +
+> +description: |
+> +  The Calxeda SATA controller mostly conforms to the AHCI interface
+> +  with some special extensions to add functionality, to map GPIOs for
+> +  activity LEDs and for mapping the ComboPHYs.
+> +
+> +maintainers:
+> +  - Andre Przywara <andre.przywara@arm.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: calxeda,hb-ahci
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  dma-coherent: true
+> +
+> +  calxeda,pre-clocks:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Indicates the number of additional clock cycles to transmit before
+> +      sending an SGPIO pattern.
+> +
+> +  calxeda,post-clocks:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Indicates the number of additional clock cycles to transmit after
+> +      sending an SGPIO pattern.
+> +
+> +  calxeda,led-order:
+> +    description: Maps port numbers to offsets within the SGPIO bitstream.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - minItems: 1
+> +        maxItems: 8
+> +
+> +  calxeda,port-phys:
+> +    description: |
+> +      phandle-combophy and lane assignment, which maps each SATA port to a
+> +      combophy and a lane within that combophy
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+> +      - minItems: 1
+> +        maxItems: 8
+> +
+> +  calxeda,tx-atten:
+> +    description: |
+> +      Contains TX attenuation override codes, one per port.
+> +      The upper 24 bits of each entry are always 0 and thus ignored.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - minItems: 1
+> +        maxItems: 8
+> +
+> +  calxeda,sgpio-gpio:
+> +    description: |
+> +      phandle-gpio bank, bit offset, and default on or off, which indicates
+> +      that the driver supports SGPIO indicator lights using the indicated
+> +      GPIOs.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    sata@ffe08000 {
+> +        compatible = "calxeda,hb-ahci";
+> +        reg = <0xffe08000 0x1000>;
+> +        interrupts = <115>;
+> +        dma-coherent;
+> +        calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
+> +                             &combophy0 2 &combophy0 3>;
+> +        calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
 
-Again sorry for the mess as I misread the email... Will fix all in v9 
+Need to fix the bracketing here too.
 
-> > +
-> > +  reg:
-> > +    description: address and length of the register set for the device
-> 
-> Drop this and you need to state how many (maxItems).
-> 
-> > +
-> > +  clocks:
-> > +    description: A reference to the clock supplying the MDIO bus
-> controller
-> 
-> Same here.
-> 
-> > +
-> > +  clock-names:
-> > +    const: master
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> > +
-> > +    mdio0: mdio@37000000 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        compatible = "qcom,ipq8064-mdio", "syscon";
-> > +        reg = <0x37000000 0x200000>;
-> > +
-> > +        clocks = <&gcc GMAC_CORE1_CLK>;
-> > +
-> > +        switch@10 {
-> > +            compatible = "qca,qca8337";
-> > +            /* ... */
-> > +        };
-> > +    };
-> > --
-> > 2.25.0
-> >
+BTW, no system ever shipped with SGPIO support, so all this could just 
+be removed.
 
+Rob
