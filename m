@@ -2,114 +2,124 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A59C35E15
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A654C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC2724695
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB2B246BA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:59:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fMUfXa74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729608AbgB0SpO (ORCPT
+        id S1729657AbgB0S7S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:45:14 -0500
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:48863 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728028AbgB0SpO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 13:45:14 -0500
-Received: from uucp by smtp.tuxdriver.com with local-rmail (Exim 4.63)
-        (envelope-from <linville@tuxdriver.com>)
-        id 1j7O9m-0003W9-7k; Thu, 27 Feb 2020 13:45:11 -0500
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by localhost.localdomain (8.15.2/8.14.6) with ESMTP id 01RIePji012877;
-        Thu, 27 Feb 2020 13:40:25 -0500
-Received: (from linville@localhost)
-        by localhost.localdomain (8.15.2/8.15.2/Submit) id 01RIePWF012876;
-        Thu, 27 Feb 2020 13:40:25 -0500
-Date:   Thu, 27 Feb 2020 13:40:25 -0500
-From:   "John W. Linville" <linville@tuxdriver.com>
-To:     "Singh, Varunpratap" <Varunpratap.Singh@smartwirelesscompute.com>
-Cc:     "grant.likely@linaro.org" <grant.likely@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Nagaraj, Vinay" <Vinay.Nagaraj@smartwirelesscompute.com>
-Subject: Re: Query: CNSS WLAN.
-Message-ID: <20200227184025.GB3353@tuxdriver.com>
-References: <SN6PR04MB4142AB972E7046A24F1F911394EB0@SN6PR04MB4142.namprd04.prod.outlook.com>
+        Thu, 27 Feb 2020 13:59:18 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:42478 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729564AbgB0S7S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 13:59:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ipj4drtt9yzUNbt5mpWG89wO/mNsc6SsP6BNeTVfgy0=; b=fMUfXa742omMNQws8oySsIIDI
+        TjQapdNKe/wrMtclzDd8CINdU8envubSiWuwUVaxKFuOpgutYuHbp1G8sk3GCjTsmuzu0ncPNdjda
+        Pn3/869OO+QVgf8n2RFi8wntpl58LiAOVirHAOaHfctxfF9FVR6joa3CSERy49L7egSYODsLuk/Im
+        ka3EmaB0hWddqvGSfESDfOMNjLdyyidtiNU8HN3lDD9OrVYFxni8OzDP+bxj4wYjwoYWTf5CNCkRI
+        MqqHwnW0qRx2Ynp7G0CL09nXb/ophZZkoGvGYIiED7Xbz5JJUB/xFinqHMEHGcOZKKquCkiD/Ls2s
+        verluUx3g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57726)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j7ONI-0007U7-FA; Thu, 27 Feb 2020 18:59:08 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j7ONE-0001CS-MC; Thu, 27 Feb 2020 18:59:04 +0000
+Date:   Thu, 27 Feb 2020 18:59:04 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH net-next 1/3] dt-bindings: net: add dt bindings for
+ marvell10g driver
+Message-ID: <20200227185904.GQ25745@shell.armlinux.org.uk>
+References: <20200227095159.GJ25745@shell.armlinux.org.uk>
+ <E1j7FqO-0003sv-Ho@rmk-PC.armlinux.org.uk>
+ <1bcb9a92-d739-6406-6414-783b19bfb66e@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR04MB4142AB972E7046A24F1F911394EB0@SN6PR04MB4142.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1bcb9a92-d739-6406-6414-783b19bfb66e@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Varun,
+On Thu, Feb 27, 2020 at 09:44:35AM -0800, Florian Fainelli wrote:
+> On 2/27/20 1:52 AM, Russell King wrote:
+> > Add a DT bindings document for the Marvell 10G driver, which will
+> > augment the generic ethernet PHY binding by having LED mode
+> > configuration.
+> > 
+> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> 
+> We have been kicking the ball for way too long but there really ought to
+> be a standardized binding to configure LED modes for a PHY. Something
+> that we previously discussed here without making much progress because
+> the LED maintainer was not involved:
+> 
+> http://patchwork.ozlabs.org/patch/1146609/
+> http://patchwork.ozlabs.org/patch/1146610/
+> http://patchwork.ozlabs.org/patch/1146611/
+> http://patchwork.ozlabs.org/patch/1146612/
+> 
+> What you are proposing here is just a plain configuration interface via
+> Device Tree, which is really borderline. It gets the job done, and it is
+> extremely easy to maintain and use because people just stick in their
+> register value in there, but boy, what a poor abstraction that is.
+> 
+> Maybe you can resume where Matthias left and improve upon his patch
+> series, if nothing else for the binding and PHY layer integration?
 
-Unfortunately, your questions is well outside of my areas of skill and
-expertise. Hopefully Grant or someone else in your distribution list
-will be more helpful.
+That series is way too simplistic, and would not allow for a
+usable configuration for a four-speed PHY such as this one.
 
-Best regards!
+The proposed binding in those patches makes the assumption that
+the only time that a LED shall blink is when there is traffic.
 
-John
+LED configuration is highly PHY specific.
 
-On Thu, Feb 27, 2020 at 03:25:16PM +0000, Singh, Varunpratap wrote:
-> Hi John,
-> 
-> I am trying to bring up two wifi-modules simultaneously, on Qualcomm Snapdragon SD820 processor and the Kernel version is 3.18.
-> I connected the modules on PCIe_0 & PCIe_1.
-> 
-> As per my understanding the following device tree structure is responsible for driver probing.
-> qcom,cnss {
->         compatible = "qcom,cnss";
->         wlan-bootstrap-gpio = <&tlmm 46 0>;
->         vdd-wlan-en-supply = <&wlan_en_vreg>;
->         vdd-wlan-supply = <&rome_vreg>;
->         vdd-wlan-io-supply = <&pm8994_s4>;
->         vdd-wlan-xtal-supply = <&pm8994_l30>;
->         vdd-wlan-core-supply = <&pm8994_s3>;
->         wlan-ant-switch-supply = <&pm8994_l18_pin_ctrl>;
->         qcom,wlan-en-vreg-support;
->         qcom,enable-bootstrap-gpio;
->         qcom,notify-modem-status;
->         pinctrl-names = "bootstrap_active", "bootstrap_sleep";
->         pinctrl-0 = <&cnss_bootstrap_active>;
->         pinctrl-1 = <&cnss_bootstrap_sleep>;
->         qcom,wlan-rc-num = <0>;
->         qcom,wlan-ramdump-dynamic = <0x200000>;
-> 
->         qcom,msm-bus,name = "msm-cnss";
->         qcom,msm-bus,num-cases = <4>;
->         qcom,msm-bus,num-paths = <1>;
->         qcom,msm-bus,vectors-KBps =
->         /* No vote */
->                 <45 512 0 0>,
->                 /* Up to 200 Mbps */
->                 <45 512 41421 1520000>,
->                 /* Up to 400 Mbps */
->                 <45 512 96650 1520000>,
->                 /* Up to 800 Mbps */
->                 <45 512 207108 14432000>;
-> };
-> 
-> Currently if I change the "qcom,wlan-rc-num = <0>;" to "qcom,wlan-rc-num = <1>;" the module connected on PCIe_1 will start working and vice-versa. But as per the requirement we need two probe getting succeeded i.e both the modules should be registered. Please, suggest how can I create two different nodes under cnss structure.
-> 
-> Any suggestion will be valuable.
-> 
-> 
-> 
-> With Regards,
-> Varun Pratap Singh
-> Software Engineer.
+For the 88x3310, we have around 31 different conditions that the LED
+can blink for, or be solid for, the blink rate, and the polarity -
+each LED is controlled by 13 bits in total, and then there's the "dual"
+modes for bi-color LEDs which cause other of the LED configuration
+registers to be ignored.  In other words, it's rather complex.
+
+We could choose to limit the complexity, but then that risks making
+it useless for certain boards - such as the Macchiatobin board, where
+the dual modes can't be used due to the way the LEDs are wired - see
+the last patch, where I describe how the LEDs are configured to
+behave, which is the sanest organisation I could come up with which
+doesn't result in mixing up various modes.
+
+
+In any case, I do not wish to add to my patch backlog right now.  Maybe
+when the backlog is smaller, I'll consider it, but not before.
 
 -- 
-John W. Linville		Someday the world will need a hero, and you
-linville@tuxdriver.com			might be all we have.  Be ready.
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
