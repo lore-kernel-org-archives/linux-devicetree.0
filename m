@@ -2,510 +2,98 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBF4C35677
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC0EC11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E359246A0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:05:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i2eDaNp+"
+	by mail.kernel.org (Postfix) with ESMTP id A164A246A0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbgB0RFr (ORCPT
+        id S1729172AbgB0RHD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:05:47 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46638 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbgB0RFr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 12:05:47 -0500
-Received: by mail-io1-f65.google.com with SMTP id e7so185561ioe.13
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 09:05:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Pfg0bi+sFcPndADzUkLpjWKHkAlDvMR2dE5gD9tiHQM=;
-        b=i2eDaNp+Eszd+9W1ID672YkO3fMeyDiOws+pb7XKxfMz5/yaw2FJlsK8ei3fzatqtm
-         4L4L7cX2nCCqrouDM937z8zRqFPgESFhKdDeV6fhKQP9r7zk3tvNVPASH7pru1WgOIdN
-         IpJHyporpGJkLSz8AiughI2xAz39cGKiwta1enlQuvMg3Ng+bXTrtfJyDBWfa4q6HcJ4
-         DCwXnwY+6D+O1HBkAXYakyCs1xZcWV8Qde4g0fAx+EJlRG90lTvtVlbsOcJWsGxVJfdC
-         ZNiecRyC4kXEVjvyFOZc7zkOGg5RxGkXljkHNPhkH82u7BcLJAK3OY3ITZiW4k70Qolu
-         GSCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pfg0bi+sFcPndADzUkLpjWKHkAlDvMR2dE5gD9tiHQM=;
-        b=BRGNsPjjsJpLPgrv28iQ0uJJISWNCyYefB0XbwVsG+4+3oHMKYu4SSyu5zLM2djiuF
-         yteYtcRw6LECTg+ooxCNL9lnGc0tcmCv+InrmNPHteMNbRgGVz1Q6tSZj0yik0+N9lRS
-         Rfl1nxQTdH2WOY8b7sPKP0+jKiRbER2UhjfBRkPi4BLprWCh1TOfu0uzU0jJsXM1QLBl
-         Ma3XCe5MMWslF2hZUKNjL67qvChkn+mSQSQ26MixrRz8NxSZBcSBOIYKNde2femE7Q2A
-         J+g9kFywq+Lv3JlUFcGZ2Jd1KSSRLGJs9XfZVxnXl1x6eRHd+k7I5SBkdOva7f2+09do
-         Uqvw==
-X-Gm-Message-State: APjAAAXYiaKfz5x1UqNpsEFztM8Bj0jWUDOaSjDWcIqXI+wYHsYcGcEL
-        ouhsIOCwUP+8Zb2lKhmFQF1fs9nUDqQa8rNNqcJc6Q==
-X-Google-Smtp-Source: APXvYqzShgva7+6pxk0ORMXPxyHT6xrvSZzjtnV0ZVz1cO3EyYEvWyhXwYyjFkEdjhqv39UnsG98JlbbBdnLillQiHw=
-X-Received: by 2002:a5e:d616:: with SMTP id w22mr213500iom.57.1582823145050;
- Thu, 27 Feb 2020 09:05:45 -0800 (PST)
+        Thu, 27 Feb 2020 12:07:03 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40094 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbgB0RHD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 12:07:03 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 68AEA296385;
+        Thu, 27 Feb 2020 17:07:01 +0000 (GMT)
+Date:   Thu, 27 Feb 2020 18:06:58 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Pratyush Yadav <p.yadav@ti.com>
+Subject: Re: [PATCH v2 01/11] dt-bindings: spi: allow expressing DTR
+ capability
+Message-ID: <20200227180658.58633141@collabora.com>
+In-Reply-To: <20200227164425.GF4062@sirena.org.uk>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+        <20200226093703.19765-2-p.yadav@ti.com>
+        <20200227171147.32cc6fcf@collabora.com>
+        <20200227162842.GE4062@sirena.org.uk>
+        <CAMuHMdWMCDzQm0tjpybJZyHy4imbC9NqRXP5d4C0xgxQx-Pf8g@mail.gmail.com>
+        <20200227164425.GF4062@sirena.org.uk>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200225234611.11067-1-mike.leach@linaro.org> <20200225234611.11067-12-mike.leach@linaro.org>
-In-Reply-To: <20200225234611.11067-12-mike.leach@linaro.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 27 Feb 2020 10:05:34 -0700
-Message-ID: <CANLsYkw81si3_cAA1QQWCTGLYS22AMnZGUh9uNgfuK6GXSTKtg@mail.gmail.com>
-Subject: Re: [PATCH v10 11/15] dt-bindings: arm: Juno platform - add CTI
- entries to device tree
-To:     Mike Leach <mike.leach@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, maxime@cerno.tech,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andy Gross <agross@kernel.org>, Jon Corbet <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 16:46, Mike Leach <mike.leach@linaro.org> wrote:
->
-> Add in CTI entries for Juno r0, r1 and r2 to device tree entries.
->
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+On Thu, 27 Feb 2020 16:44:25 +0000
+Mark Brown <broonie@kernel.org> wrote:
 
-Sudeep, please consider adding to your next tree.
+> On Thu, Feb 27, 2020 at 05:40:31PM +0100, Geert Uytterhoeven wrote:
+> > On Thu, Feb 27, 2020 at 5:28 PM Mark Brown <broonie@kernel.org> wrote:  
+> 
+> > > It's what we do for other properties, and if this is anything like the
+> > > other things adding extra wiring you can't assume that the ability to
+> > > use the feature for TX implies RX.  
+> 
+> > Double Transfer Rate uses the same wire.  
+> 
+> But is it still on either the TX or RX signals?
 
-Thanks,
-Mathieu
+There's no separate RX/TX pins when using xD-xD-xD modes (pins switch
+from RX to TX) and I doubt DTR will ever be used on single SPI.
 
-> ---
->  arch/arm64/boot/dts/arm/juno-base.dtsi    | 162 +++++++++++++++++++++-
->  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi |  37 ++++-
->  arch/arm64/boot/dts/arm/juno-r1.dts       |  25 ++++
->  arch/arm64/boot/dts/arm/juno-r2.dts       |  25 ++++
->  arch/arm64/boot/dts/arm/juno.dts          |  25 ++++
->  5 files changed, 269 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> index 1f3c80aafbd7..fffd75cd2fd9 100644
-> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> @@ -119,7 +119,7 @@
->          * The actual size is just 4K though 64K is reserved. Access to the
->          * unmapped reserved region results in a DECERR response.
->          */
-> -       etf@20010000 { /* etf0 */
-> +       etf_sys0: etf@20010000 { /* etf0 */
->                 compatible = "arm,coresight-tmc", "arm,primecell";
->                 reg = <0 0x20010000 0 0x1000>;
->
-> @@ -143,7 +143,7 @@
->                 };
->         };
->
-> -       tpiu@20030000 {
-> +       tpiu_sys: tpiu@20030000 {
->                 compatible = "arm,coresight-tpiu", "arm,primecell";
->                 reg = <0 0x20030000 0 0x1000>;
->
-> @@ -196,7 +196,7 @@
->                 };
->         };
->
-> -       etr@20070000 {
-> +       etr_sys: etr@20070000 {
->                 compatible = "arm,coresight-tmc", "arm,primecell";
->                 reg = <0 0x20070000 0 0x1000>;
->                 iommus = <&smmu_etr 0>;
-> @@ -214,7 +214,7 @@
->                 };
->         };
->
-> -       stm@20100000 {
-> +       stm_sys: stm@20100000 {
->                 compatible = "arm,coresight-stm", "arm,primecell";
->                 reg = <0 0x20100000 0 0x1000>,
->                       <0 0x28000000 0 0x1000000>;
-> @@ -291,6 +291,18 @@
->                 };
->         };
->
-> +       cti0: cti@22020000 {
-> +               compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +                            "arm,primecell";
-> +               reg = <0 0x22020000 0 0x1000>;
-> +
-> +               clocks = <&soc_smc50mhz>;
-> +               clock-names = "apb_pclk";
-> +               power-domains = <&scpi_devpd 0>;
-> +
-> +               arm,cs-dev-assoc = <&etm0>;
-> +       };
-> +
->         funnel@220c0000 { /* cluster0 funnel */
->                 compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
->                 reg = <0 0x220c0000 0 0x1000>;
-> @@ -351,6 +363,18 @@
->                 };
->         };
->
-> +       cti1: cti@22120000 {
-> +               compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +                            "arm,primecell";
-> +               reg = <0 0x22120000 0 0x1000>;
-> +
-> +               clocks = <&soc_smc50mhz>;
-> +               clock-names = "apb_pclk";
-> +               power-domains = <&scpi_devpd 0>;
-> +
-> +               arm,cs-dev-assoc = <&etm1>;
-> +       };
-> +
->         cpu_debug2: cpu-debug@23010000 {
->                 compatible = "arm,coresight-cpu-debug", "arm,primecell";
->                 reg = <0x0 0x23010000 0x0 0x1000>;
-> @@ -376,6 +400,18 @@
->                 };
->         };
->
-> +       cti2: cti@23020000 {
-> +               compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +                            "arm,primecell";
-> +               reg = <0 0x23020000 0 0x1000>;
-> +
-> +               clocks = <&soc_smc50mhz>;
-> +               clock-names = "apb_pclk";
-> +               power-domains = <&scpi_devpd 0>;
-> +
-> +               arm,cs-dev-assoc = <&etm2>;
-> +       };
-> +
->         funnel@230c0000 { /* cluster1 funnel */
->                 compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
->                 reg = <0 0x230c0000 0 0x1000>;
-> @@ -448,6 +484,18 @@
->                 };
->         };
->
-> +       cti3: cti@23120000 {
-> +               compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +                            "arm,primecell";
-> +               reg = <0 0x23120000 0 0x1000>;
-> +
-> +               clocks = <&soc_smc50mhz>;
-> +               clock-names = "apb_pclk";
-> +               power-domains = <&scpi_devpd 0>;
-> +
-> +               arm,cs-dev-assoc = <&etm3>;
-> +       };
-> +
->         cpu_debug4: cpu-debug@23210000 {
->                 compatible = "arm,coresight-cpu-debug", "arm,primecell";
->                 reg = <0x0 0x23210000 0x0 0x1000>;
-> @@ -473,6 +521,18 @@
->                 };
->         };
->
-> +       cti4: cti@23220000 {
-> +               compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +                            "arm,primecell";
-> +               reg = <0 0x23220000 0 0x1000>;
-> +
-> +               clocks = <&soc_smc50mhz>;
-> +               clock-names = "apb_pclk";
-> +               power-domains = <&scpi_devpd 0>;
-> +
-> +               arm,cs-dev-assoc = <&etm4>;
-> +       };
-> +
->         cpu_debug5: cpu-debug@23310000 {
->                 compatible = "arm,coresight-cpu-debug", "arm,primecell";
->                 reg = <0x0 0x23310000 0x0 0x1000>;
-> @@ -498,6 +558,100 @@
->                 };
->         };
->
-> +       cti5: cti@23320000 {
-> +               compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +                            "arm,primecell";
-> +               reg = <0 0x23320000 0 0x1000>;
-> +
-> +               clocks = <&soc_smc50mhz>;
-> +               clock-names = "apb_pclk";
-> +               power-domains = <&scpi_devpd 0>;
-> +
-> +               arm,cs-dev-assoc = <&etm5>;
-> +       };
-> +
-> +       cti@20020000 { /* sys_cti_0 */
-> +               compatible = "arm,coresight-cti", "arm,primecell";
-> +               reg = <0 0x20020000 0 0x1000>;
-> +
-> +               clocks = <&soc_smc50mhz>;
-> +               clock-names = "apb_pclk";
-> +               power-domains = <&scpi_devpd 0>;
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               trig-conns@0 {
-> +                       reg = <0>;
-> +                       arm,trig-in-sigs=<2 3>;
-> +                       arm,trig-in-types=<SNK_FULL SNK_ACQCOMP>;
-> +                       arm,trig-out-sigs=<0 1>;
-> +                       arm,trig-out-types=<SNK_FLUSHIN SNK_TRIGIN>;
-> +                       arm,cs-dev-assoc = <&etr_sys>;
-> +               };
-> +
-> +               trig-conns@1 {
-> +                       reg = <1>;
-> +                       arm,trig-in-sigs=<0 1>;
-> +                       arm,trig-in-types=<SNK_FULL SNK_ACQCOMP>;
-> +                       arm,trig-out-sigs=<7 6>;
-> +                       arm,trig-out-types=<SNK_FLUSHIN SNK_TRIGIN>;
-> +                       arm,cs-dev-assoc = <&etf_sys0>;
-> +               };
-> +
-> +               trig-conns@2 {
-> +                       reg = <2>;
-> +                       arm,trig-in-sigs=<4 5 6 7>;
-> +                       arm,trig-in-types=<STM_TOUT_SPTE STM_TOUT_SW
-> +                                          STM_TOUT_HETE STM_ASYNCOUT>;
-> +                       arm,trig-out-sigs=<4 5>;
-> +                       arm,trig-out-types=<STM_HWEVENT STM_HWEVENT>;
-> +                       arm,cs-dev-assoc = <&stm_sys>;
-> +               };
-> +
-> +               trig-conns@3 {
-> +                       reg = <3>;
-> +                       arm,trig-out-sigs=<2 3>;
-> +                       arm,trig-out-types=<SNK_FLUSHIN SNK_TRIGIN>;
-> +                       arm,cs-dev-assoc = <&tpiu_sys>;
-> +               };
-> +       };
-> +
-> +       cti@20110000 { /* sys_cti_1 */
-> +               compatible = "arm,coresight-cti", "arm,primecell";
-> +               reg = <0 0x20110000 0 0x1000>;
-> +
-> +               clocks = <&soc_smc50mhz>;
-> +               clock-names = "apb_pclk";
-> +               power-domains = <&scpi_devpd 0>;
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               trig-conns@0 {
-> +                       reg = <0>;
-> +                       arm,trig-in-sigs=<0>;
-> +                       arm,trig-in-types=<GEN_INTREQ>;
-> +                       arm,trig-out-sigs=<0>;
-> +                       arm,trig-out-types=<GEN_HALTREQ>;
-> +                       arm,trig-conn-name = "sys_profiler";
-> +               };
-> +
-> +               trig-conns@1 {
-> +                       reg = <1>;
-> +                       arm,trig-out-sigs=<2 3>;
-> +                       arm,trig-out-types=<GEN_HALTREQ GEN_RESTARTREQ>;
-> +                       arm,trig-conn-name = "watchdog";
-> +               };
-> +
-> +               trig-conns@2 {
-> +                       reg = <2>;
-> +                       arm,trig-out-sigs=<1 6>;
-> +                       arm,trig-out-types=<GEN_HALTREQ GEN_RESTARTREQ>;
-> +                       arm,trig-conn-name = "g_counter";
-> +               };
-> +       };
-> +
->         gpu: gpu@2d000000 {
->                 compatible = "arm,juno-mali", "arm,mali-t624";
->                 reg = <0 0x2d000000 0 0x10000>;
-> diff --git a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-> index eda3d9e18af6..752b05f8bf31 100644
-> --- a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-> @@ -23,7 +23,7 @@
->                 };
->         };
->
-> -       etf@20140000 { /* etf1 */
-> +       etf_sys1: etf@20140000 { /* etf1 */
->                 compatible = "arm,coresight-tmc", "arm,primecell";
->                 reg = <0 0x20140000 0 0x1000>;
->
-> @@ -82,4 +82,39 @@
->
->                 };
->         };
-> +
-> +       cti@20160000 { /* sys_cti_2 */
-> +               compatible = "arm,coresight-cti", "arm,primecell";
-> +               reg = <0 0x20160000 0 0x1000>;
-> +
-> +               clocks = <&soc_smc50mhz>;
-> +               clock-names = "apb_pclk";
-> +               power-domains = <&scpi_devpd 0>;
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               trig-conns@0 {
-> +                       reg = <0>;
-> +                       arm,trig-in-sigs=<0 1>;
-> +                       arm,trig-in-types=<SNK_FULL SNK_ACQCOMP>;
-> +                       arm,trig-out-sigs=<0 1>;
-> +                       arm,trig-out-types=<SNK_FLUSHIN SNK_TRIGIN>;
-> +                       arm,cs-dev-assoc = <&etf_sys1>;
-> +               };
-> +
-> +               trig-conns@1 {
-> +                       reg = <1>;
-> +                       arm,trig-in-sigs=<2 3 4>;
-> +                       arm,trig-in-types=<ELA_DBGREQ ELA_TSTART ELA_TSTOP>;
-> +                       arm,trig-conn-name = "ela_clus_0";
-> +               };
-> +
-> +               trig-conns@2 {
-> +                       reg = <2>;
-> +                       arm,trig-in-sigs=<5 6 7>;
-> +                       arm,trig-in-types=<ELA_DBGREQ ELA_TSTART ELA_TSTOP>;
-> +                       arm,trig-conn-name = "ela_clus_1";
-> +               };
-> +       };
->  };
-> diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
-> index 5f290090b0cf..02aa51eb311d 100644
-> --- a/arch/arm64/boot/dts/arm/juno-r1.dts
-> +++ b/arch/arm64/boot/dts/arm/juno-r1.dts
-> @@ -9,6 +9,7 @@
->  /dts-v1/;
->
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/arm/coresight-cti-dt.h>
->  #include "juno-base.dtsi"
->  #include "juno-cs-r1r2.dtsi"
->
-> @@ -309,3 +310,27 @@
->  &cpu_debug5 {
->         cpu = <&A53_3>;
->  };
-> +
-> +&cti0 {
-> +       cpu = <&A57_0>;
-> +};
-> +
-> +&cti1 {
-> +       cpu = <&A57_1>;
-> +};
-> +
-> +&cti2 {
-> +       cpu = <&A53_0>;
-> +};
-> +
-> +&cti3 {
-> +       cpu = <&A53_1>;
-> +};
-> +
-> +&cti4 {
-> +       cpu = <&A53_2>;
-> +};
-> +
-> +&cti5 {
-> +       cpu = <&A53_3>;
-> +};
-> diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
-> index 305300dd521c..75bb27c2d4dc 100644
-> --- a/arch/arm64/boot/dts/arm/juno-r2.dts
-> +++ b/arch/arm64/boot/dts/arm/juno-r2.dts
-> @@ -9,6 +9,7 @@
->  /dts-v1/;
->
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/arm/coresight-cti-dt.h>
->  #include "juno-base.dtsi"
->  #include "juno-cs-r1r2.dtsi"
->
-> @@ -315,3 +316,27 @@
->  &cpu_debug5 {
->         cpu = <&A53_3>;
->  };
-> +
-> +&cti0 {
-> +       cpu = <&A72_0>;
-> +};
-> +
-> +&cti1 {
-> +       cpu = <&A72_1>;
-> +};
-> +
-> +&cti2 {
-> +       cpu = <&A53_0>;
-> +};
-> +
-> +&cti3 {
-> +       cpu = <&A53_1>;
-> +};
-> +
-> +&cti4 {
-> +       cpu = <&A53_2>;
-> +};
-> +
-> +&cti5 {
-> +       cpu = <&A53_3>;
-> +};
-> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-> index f00cffbd032c..dbc22e70b62c 100644
-> --- a/arch/arm64/boot/dts/arm/juno.dts
-> +++ b/arch/arm64/boot/dts/arm/juno.dts
-> @@ -9,6 +9,7 @@
->  /dts-v1/;
->
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/arm/coresight-cti-dt.h>
->  #include "juno-base.dtsi"
->
->  / {
-> @@ -295,3 +296,27 @@
->  &cpu_debug5 {
->         cpu = <&A53_3>;
->  };
-> +
-> +&cti0 {
-> +       cpu = <&A57_0>;
-> +};
-> +
-> +&cti1 {
-> +       cpu = <&A57_1>;
-> +};
-> +
-> +&cti2 {
-> +       cpu = <&A53_0>;
-> +};
-> +
-> +&cti3 {
-> +       cpu = <&A53_1>;
-> +};
-> +
-> +&cti4 {
-> +       cpu = <&A53_2>;
-> +};
-> +
-> +&cti5 {
-> +       cpu = <&A53_3>;
-> +};
-> --
-> 2.17.1
->
+> 
+> > But as you sample at both the rising and the falling edges of the clock, this
+> > makes the cpha setting meaningless for such transfers, I think ;-)  
+> 
+> Might affect what the first bit is possibly?
+> 
+> > However, as the future may bring us QDR, perhaps this should not be a
+> > boolean flag, but an integer value?
+> > Cfr. spi-tx-bus-width vs. the original spi-tx-dual/spi-tx-quad proposal.  
+> 
+> > What would be a good name (as we only need one)? spi-data-phases?  
+> 
+> Sounds reasonable, apart from the increasingly vague connection with
+> something that's recognizably SPI :P
+
+Or maybe we should refrain from adding a new flag and wait a bit to see
+if this DTR mode is actually used for regular SPI transfers (AKA not
+spi-mem) :-).
