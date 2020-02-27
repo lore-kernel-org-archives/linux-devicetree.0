@@ -2,97 +2,170 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58366C4BA35
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 02:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E98C4BA37
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 02:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF5324650
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 02:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E182467B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 02:19:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NmTxK+hD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgB0CHR (ORCPT
+        id S1728289AbgB0CT6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 21:07:17 -0500
-Received: from muru.com ([72.249.23.125]:58004 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728229AbgB0CHR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Feb 2020 21:07:17 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A340F8022;
-        Thu, 27 Feb 2020 02:08:01 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 18:07:13 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 06/12] ARM: dts: am335x-bone-common: Enable PRU-ICSS
- interconnect node
-Message-ID: <20200227020713.GE37466@atomide.com>
-References: <20200225204649.28220-1-s-anna@ti.com>
- <20200225204649.28220-7-s-anna@ti.com>
- <20200226182924.GU37466@atomide.com>
- <af3965db-54b2-3e4f-414f-d27ca4b5ced1@ti.com>
- <20200226223745.GA37466@atomide.com>
- <20200226223921.GB37466@atomide.com>
- <b1fe18b5-f779-aea5-8c66-41c0de66c39f@ti.com>
+        Wed, 26 Feb 2020 21:19:58 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:63792 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728178AbgB0CT5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 21:19:57 -0500
+X-UUID: 23464d44001a40d2a641030f2d998ab9-20200227
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=K4gGve8y0GjmB4JegJVgO+MM4WVhEqGsHCW/PaLyMBE=;
+        b=NmTxK+hDuJjB44uoqb2qj3OW6lWT6qKXjcslPrTxOlIjF0M6JmpTjx6/+1GSZcRWXz2ieI61kB8O2o3jmaM2Xhl7yJkCPBZq3evrfs8aXvNYGaJelcUFHPCpWDL4WtaOyIiQj0StsM5tyJBAdSWjb1An2aFmO9KplErdHO3WmFo=;
+X-UUID: 23464d44001a40d2a641030f2d998ab9-20200227
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 141035688; Thu, 27 Feb 2020 10:19:47 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 27 Feb 2020 10:18:53 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 27 Feb 2020 10:19:51 +0800
+Message-ID: <1582769985.20746.10.camel@mtksdaap41>
+Subject: Re: [PATCH v9 0/4] arm64: mediatek: Fix mt8173 mmsys device probing
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <ulrich.hecht+renesas@gmail.com>,
+        <laurent.pinchart@ideasonboard.com>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        <dri-devel@lists.freedesktop.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        <linux-clk@vger.kernel.org>, Weiyi Lu <weiyi.lu@mediatek.com>,
+        <wens@csie.org>, <linux-arm-kernel@lists.infradead.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <frank-w@public-files.de>, Seiya Wang <seiya.wang@mediatek.com>,
+        <sean.wang@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>, <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <rdunlap@infradead.org>, <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, <matthias.bgg@kernel.org>
+Date:   Thu, 27 Feb 2020 10:19:45 +0800
+In-Reply-To: <20200226105419.632771-1-enric.balletbo@collabora.com>
+References: <20200226105419.632771-1-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1fe18b5-f779-aea5-8c66-41c0de66c39f@ti.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [200227 00:59]:
-> Hi Tony,
-> 
-> On 2/26/20 4:39 PM, Tony Lindgren wrote:
-> > * Tony Lindgren <tony@atomide.com> [200226 22:38]:
-> >> * Suman Anna <s-anna@ti.com> [200226 20:35]:
-> >>> On 2/26/20 12:29 PM, Tony Lindgren wrote:
-> >>>> * Suman Anna <s-anna@ti.com> [200225 20:47]:
-> >>>>> The PRU-ICSS target module node was left in disabled state in the base
-> >>>>> am33xx-l4.dtsi file. Enable this node on all the AM335x beaglebone
-> >>>>> boards as they mostly use a AM3358 or a AM3359 SoC which do contain
-> >>>>> the PRU-ICSS IP.
-> >>>>
-> >>>> Just get rid of the top level status = "disabled". The default
-> >>>> is enabled, and the device is there for sure inside the SoC.
-> >>>> And then there's no need for pointless status = "okay" tinkering
-> >>>> in the board specific dts files so no need for this patch.
-> >>>
-> >>> The IP is not available on all SoCs, and there are about 40 different
-> >>> board files atm across AM33xx and AM437x, and am not sure what SoCs they
-> >>> are actually using.
-> >>
-> >> Oh that issue again.. Maybe take a look at patch "[PATCH 2/3] bus: ti-sysc:
-> >> Detect display subsystem related devices" if you can add runtime
-> >> detection for the accelerators there similar to what I hadded for omap3.
-> >> acclerators.
-> > 
-> > Sorry I meant instead patch "[PATCH 6/7] bus: ti-sysc: Implement SoC
-> > revision handling".
-> 
-> OK, looked down that path a bit more and looking through mach-omap2/id.c
->  and soc.h, I see some of the part number infrastructure build on top of
-> DEV_FEATURE bits for some SoCs. The DEVICE_ID registers only have the
-> generic family and the Silicon Revision number for AM33xx and AM437x and
-> we currently do not have any infrastructure around exact SoC
-> identification for AM33xx and AM437x atleast.
-> 
-> Do you have the bit-field split for the DEV_FEATURE bits somewhere,
-> because I couldn't find any in either the DM or the TRM. On AM437x,
-> there is no difference between AM4372 and AM4376 DEV_FEATURE value even
-> though the former doesn't have the PRUSS. On AM335x, may be bit 0
-> signifies the presence of PRUSS??
+SGksIEVucmljOg0KDQpJIHdvdWxkIGxpa2UgeW91IHRvIG1vZGlmeSBtbXN5cyBiaW5kaW5nIGRv
+Y3VtZW50LiBJbiBjdXJyZW50IGRvY3VtZW50LA0KbW1zeXMgaXMgYSBjbG9jayBjb250cm9sbGVy
+LCBidXQgSSB0aGluayBpdCdzIGEgc3lzdGVtIGNvbnRyb2xsZXINCmluY2x1ZGluZyBjbG9jayBj
+b250cm9sLCByb3V0aW5nIGNvbnRyb2wsIGFuZCBtaXNjZWxsYW5lb3VzIGNvbnRyb2wgaW4NCm1t
+c3lzIHBhcnRpdGlvbi4NCg0KUmVnYXJkcywNCkNLDQoNCk9uIFdlZCwgMjAyMC0wMi0yNiBhdCAx
+MTo1NCArMDEwMCwgRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSB3cm90ZToNCj4gRGVhciBhbGwsDQo+
+IA0KPiBUaG9zZSBwYXRjaGVzIGFyZSBpbnRlbmRlZCB0byBzb2x2ZSBhbiBvbGQgc3RhbmRpbmcg
+aXNzdWUgb24gc29tZQ0KPiBNZWRpYXRlayBkZXZpY2VzIChtdDgxNzMsIG10MjcwMSBhbmQgbXQy
+NzEyKS4NCj4gDQo+IFVwIHRvIG5vdyBib3RoIGRyaXZlcnMsIGNsb2NrIGFuZCBkcm0gYXJlIHBy
+b2JlZCB3aXRoIHRoZSBzYW1lIGRldmljZSB0cmVlDQo+IGNvbXBhdGlibGUuIEJ1dCBvbmx5IHRo
+ZSBmaXJzdCBkcml2ZXIgZ2V0cyBwcm9iZWQsIHdoaWNoIGluIGVmZmVjdCBicmVha3MNCj4gZ3Jh
+cGhpY3Mgb24gdGhvc2UgZGV2aWNlcy4NCj4gDQo+IFRoZSBNTVNZUyAoTXVsdGltZWRpYSBzdWJz
+eXN0ZW0pIGluIE1lZGlhdGVrIFNvQ3MgaGFzIHNvbWUgcmVnaXN0ZXJzIHRvDQo+IGNvbnRyb2wg
+Y2xvY2sgZ2F0ZXMgKHdoaWNoIGlzIHVzZWQgaW4gdGhlIGNsayBkcml2ZXIpIGFuZCBzb21lIHJl
+Z2lzdGVycw0KPiB0byBzZXQgdGhlIHJvdXRpbmcgYW5kIGVuYWJsZSB0aGUgZGlmZmVybmV0IGJs
+b2NrcyBvZiB0aGUgZGlzcGxheQ0KPiBhbmQgTURQIChNZWRpYSBEYXRhIFBhdGgpIHN1YnN5c3Rl
+bS4gT24gdGhpcyBzZXJpZXMgdGhlIGNsayBkcml2ZXIgaXMNCj4gbm90IGEgcHVyZSBjbG9jayBj
+b250cm9sbGVyIGJ1dCBhIHN5c3RlbSBjb250cm9sbGVyIHRoYXQgY2FuIHByb3ZpZGUNCj4gYWNj
+ZXNzIHRvIHRoZSBzaGFyZWQgcmVnaXN0ZXJzIGJldHdlZW4gdGhlIGRpZmZlcmVudCBkcml2ZXJz
+IHRoYXQgbmVlZA0KPiBpdCAobWVkaWF0ZWstZHJtIGFuZCBtZWRpYXRlay1tZHApLiBIZW5jZSB0
+aGUgTU1TWVMgY2xrIGRyaXZlciB3YXMgbW92ZWQNCj4gdG8gZHJpdmVycy9zb2MvbWVkaWF0ZWsg
+YW5kIGlzIHRoZSBlbnRyeSBwb2ludCAocGFyZW50KSB3aGljaCB3aWxsIHRyaWdnZXINCj4gdGhl
+IHByb2JlIG9mIHRoZSBjb3JyZXNwb25kaW5nIG1lZGlhdGVrLWRybSBkcml2ZXIuDQo+IA0KPiAq
+KklNUE9SVEFOVCoqIFRoaXMgc2VyaWVzIG9ubHkgZml4ZXMgdGhlIGlzc3VlIG9uIG10ODE3MyB0
+byBtYWtlIGl0DQo+IHNpbXBsZSBhbmQgYXMgaXMgdGhlIG9ubHkgcGxhdGZvcm0gSSBjYW4gdGVz
+dC4gU2ltaWxhciBjaGFuZ2VzIHNob3VsZCBiZQ0KPiBhcHBsaWVkIGZvciBtdDI3MDEgYW5kIG10
+MjcxMiB0byBoYXZlIGRpc3BsYXkgd29ya2luZy4NCj4gDQo+IEZvciByZWZlcmVuY2UsIGhlcmUg
+YXJlIHRoZSBsaW5rcyB0byB0aGUgb2xkIGRpc2N1c3Npb25zOg0KPiAqIHY4OiBodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtbWVkaWF0ZWsvbGlzdC8/c2VyaWVzPTI0
+NDg5MQ0KPiAqIHY3OiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgt
+bWVkaWF0ZWsvbGlzdC8/c2VyaWVzPTI0MTIxNw0KPiAqIHY2OiBodHRwczovL3BhdGNod29yay5r
+ZXJuZWwub3JnL3Byb2plY3QvbGludXgtbWVkaWF0ZWsvbGlzdC8/c2VyaWVzPTIxMzIxOQ0KPiAq
+IHY1OiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtbWVkaWF0ZWsv
+bGlzdC8/c2VyaWVzPTQ0MDYzDQo+ICogdjQ6DQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJu
+ZWwub3JnL3BhdGNoLzEwNTMwODcxLw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
+Zy9wYXRjaC8xMDUzMDg4My8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
+Y2gvMTA1MzA4ODUvDQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEw
+NTMwOTExLw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDUzMDkx
+My8NCj4gKiB2MzoNCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAz
+Njc4NTcvDQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODYx
+Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDM2Nzg3Ny8NCj4g
+ICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAzNjc4NzUvDQo+ICAgKiBo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODg1Lw0KPiAgICogaHR0cHM6
+Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDM2Nzg4My8NCj4gICAqIGh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAzNjc4ODkvDQo+ICAgKiBodHRwczovL3BhdGNod29y
+ay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3OTA3Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC8xMDM2NzkwOS8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvcGF0Y2gvMTAzNjc5MDUvDQo+ICogdjI6IE5vIHJlbGV2YW50IGRpc2N1c3Npb24sIHNlZSB2
+Mw0KPiAqIHYxOg0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDAx
+NjQ5Ny8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAwMTY0OTkv
+DQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMDE2NTA1Lw0KPiAg
+ICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDAxNjUwNy8NCj4gDQo+IEJl
+c3QgcmVnYXJkcywNCj4gIEVucmljDQo+IA0KPiBDaGFuZ2VzIGluIHY5Og0KPiAtIE1vdmUgbW1z
+eXMgdG8gZHJpdmVycy9zb2MvbWVkaWF0ZWsgKENLKQ0KPiAtIERvIG5vdCBtb3ZlIHRoZSBkaXNw
+bGF5IHJvdXRpbmcgZnJvbSB0aGUgZHJtIGRyaXZlciAoQ0spDQo+IC0gUmVtb3ZlZCBmcm9tIHRo
+aXMgc2VyaWVzIGJlY2F1c2UgYXJlIG5vdCBuZWVkZWQ6DQo+ICAgKiBbUEFUQ0ggdjggNS82XSBk
+cm0vbWVkaWF0ZWs6IE1vdmUgTU1TWVMgY29uZmlndXJhdGlvbiB0byBpbmNsdWRlL2xpbnV4L3Bs
+YXRmb3JtX2RhdGENCj4gLSBSZW1vdmVkIGZyb20gdGhpcyBzZXJpZXMgYmVjYXVzZSBhcmUgYXBw
+bGllZDoNCj4gICAqIFtQQVRDSCB2OCAzLzZdIG1lZGlhOiBtdGstbWRwOiBDaGVjayByZXR1cm4g
+dmFsdWUgb2Ygb2ZfY2xrX2dldC4NCj4gDQo+IENoYW5nZXMgaW4gdjg6DQo+IC0gU2VsZWN0IFJF
+R01BUCBhbmQgTUZEX1NZU0NPTiAoUmFuZHkgRHVubGFwKQ0KPiAtIEJlIGEgYnVpbHRpbl9wbGF0
+Zm9ybV9kcml2ZXIgbGlrZSBvdGhlciBtZWRpYXRlayBtbXN5cyBkcml2ZXJzLg0KPiAtIE5ldyBw
+YXRjaCBpbnRyb2R1Y2VkIGluIHRoaXMgc2VyaWVzLg0KPiANCj4gQ2hhbmdlcyBpbiB2NzoNCj4g
+LSBBZGQgUi1ieSBmcm9tIENLDQo+IC0gRnJlZSBjbGtfZGF0YS0+Y2xrcyBhcyB3ZWxsDQo+IC0g
+R2V0IHJpZCBvZiBwcml2YXRlIGRhdGEgc3RydWN0dXJlDQo+IA0KPiBFbnJpYyBCYWxsZXRibyBp
+IFNlcnJhICgxKToNCj4gICBkcm0vbWVkaWF0ZWs6IEZpeCBtZWRpYXRlay1kcm0gZGV2aWNlIHBy
+b2JpbmcNCj4gDQo+IE1hdHRoaWFzIEJydWdnZXIgKDMpOg0KPiAgIGRybS9tZWRpYXRlazogVXNl
+IHJlZ21hcCBmb3IgcmVnaXN0ZXIgYWNjZXNzDQo+ICAgZHJtL21lZGlhdGVrOiBPbWl0IHdhcm5p
+bmcgb24gcHJvYmUgZGVmZXJzDQo+ICAgc29jOiBtZWRpYXRlazogTW92ZSBtdDgxNzMgTU1TWVMg
+dG8gcGxhdGZvcm0gZHJpdmVyDQo+IA0KPiAgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3
+My5jICAgICAgICAgfCAxMDQgLS0tLS0tLS0tLS0tLS0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL0tjb25maWcgICAgICAgICAgfCAgIDIgKw0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kaXNwX2NvbG9yLmMgfCAgIDUgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZGlzcF9vdmwuYyAgIHwgICA1ICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2Rpc3BfcmRtYS5jICB8ICAgNSArLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcGkuYyAgICAgICAgfCAgMTIgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2NydGMuYyAgIHwgICA0ICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kZHAuYyAgICB8ICA1MyArKysrLS0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fZGRwLmggICAgfCAgIDQgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2Rydi5jICAgIHwgIDQ1ICsrKystLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2Rydi5oICAgIHwgICAyICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2RzaS5jICAgICAgICB8ICAgOCArLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19o
+ZG1pLmMgICAgICAgfCAgIDQgKy0NCj4gIGRyaXZlcnMvc29jL21lZGlhdGVrL0tjb25maWcgICAg
+ICAgICAgICAgIHwgICA3ICsrDQo+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9NYWtlZmlsZSAgICAg
+ICAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdDgxNzMtbW1zeXMuYyAg
+ICAgICB8IDE0MyArKysrKysrKysrKysrKysrKysrKysrDQo+ICAxNiBmaWxlcyBjaGFuZ2VkLCAy
+MzMgaW5zZXJ0aW9ucygrKSwgMTcxIGRlbGV0aW9ucygtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvc29jL21lZGlhdGVrL210ODE3My1tbXN5cy5jDQo+IA0KDQo=
 
-OK not sure how that could be detected. Maybe check the efuses on
-the newer SoCs?
-
-Regards,
-
-Tony
