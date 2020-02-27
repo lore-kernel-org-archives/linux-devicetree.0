@@ -2,176 +2,101 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AEAC3F2C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB07C3F2C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB292469F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CF42469F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:59:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KAkHE4e8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TMG5VflR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgB0Vyh (ORCPT
+        id S1729817AbgB0V7F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:54:37 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35168 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbgB0Vyh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 16:54:37 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 7so380728pgr.2
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:54:35 -0800 (PST)
+        Thu, 27 Feb 2020 16:59:05 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34255 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729776AbgB0V7F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 16:59:05 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dm3so920214edb.1
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:59:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+0IYi++vwthLQ5uajPvjEjpHHtTOH92Ozi2ToC54VL0=;
-        b=KAkHE4e8tQ+bi2Skwt3+5etnTno6Zh5gXipu+VdnG6pVHAWRgIr1UQpOhGFWHPDieP
-         7WtmzuwYqbtIeDybrv00r26KF6Mcbe36zp7sT6go8JEuId7dZudVR66c/tDhgq7e7gQC
-         bODwYmOTz1WWVOk7VjZx8O6ju4TZGOz45T15k=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=akb/fqWb9RAKIbbLYDDh8qkuoGYS5G+iOCImBrzoF9o=;
+        b=TMG5VflR3I+CGPW+mSXF7fJBlkIgbvu1pHHgkcCLliyNx/65WX4EateAFJ+aYYIZTw
+         c3laEpZS9R7qXtce7smYE4n1H0nZi18snVj03jIXMRsHgoFOyMPcwQBWb+g9rcCNCD28
+         PdCGEoz3ivKvIuWNhKqTW1465oIKHlXJl+83w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+0IYi++vwthLQ5uajPvjEjpHHtTOH92Ozi2ToC54VL0=;
-        b=TvIAIM6+ah0NQWYDmdeM3KqCkRY8ufrQM7eAj8/ZJsw286Zd360PtUowV1HGt19I5o
-         /eR21DgEeg4AD5pJMpj+v0U1oKZZE6LuRu0PgYOox5vVykRnFvzj3JvKMVy4XIzJVe0Y
-         WNtpD2gFUDHXtny5bSs/zumRm8Ndgx6NSIsf1TfGWr8AYcJCO2dGHO5bsmtcH5UhEtDt
-         4y4wHBeTdyMwQVRxkBuVVyv14FFBGtfu8MhDI0e+JYuVmIji05QrQbV3mMMcVDmsRO3m
-         ZXCPE8FwhAgEgHam69v6i84gsWJWorxt6t/jh95bKzYMHJUm8VVV0jjViARtSLqiO0ra
-         PE6Q==
-X-Gm-Message-State: APjAAAX2lCC8fV9qWFcHHr5YiHs/SJpAnmB5OZ5pKUvH4Fp/M+Gh3gbm
-        qyjVKZRohdaqGO3e/+4D638hkw==
-X-Google-Smtp-Source: APXvYqyLnLDusW3NGVjQNpS9d9K/5/oRkpDv3IJt5GsUJhMBBZuHwD5k1HpU1eYbxibVTOyx0XoRaA==
-X-Received: by 2002:a63:2cd6:: with SMTP id s205mr1332761pgs.258.1582840474892;
-        Thu, 27 Feb 2020 13:54:34 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id d69sm9088008pfd.72.2020.02.27.13.54.33
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=akb/fqWb9RAKIbbLYDDh8qkuoGYS5G+iOCImBrzoF9o=;
+        b=f+Au/ajIvybIX3DM0d1uUN208n0nG3/qNFHCBEhT2k3AbLWzc3OW9oAK9H329LA+dZ
+         b99p+hmDhm8ONDIo1M7WKuJa2FdfBWKhRnJVbPXYhUh58TvlbOLKn5E2ZowmBYEX+2IT
+         dpyG8J7i90grKt1XeRdRyAcUxpE6nWGLHhogerYvC+Uvl6sjR/0j/Wey3xOkQGDWMxaK
+         I4ddWh3akmt+8PrZxLma3Sf4ZkLTOLWuGyhFaoo3RsYP3ROMG8ylLcttHdJukgPt8/LH
+         hfdiF+tonmh0Z48CSTnkwJ/00vLa6Gbz3pPDU7xz0FS77bMljX352JhwQSYIsHU6vXoK
+         s6HQ==
+X-Gm-Message-State: APjAAAWhlzsqVUpJZwj+WOwsEJEzqAH8dwm8jYdg6oUpgjvWwTluP6Lc
+        mqEa8L1D3ftf65/OzZM1DJsivaRxeMM=
+X-Google-Smtp-Source: APXvYqzTdHOOtG8/+dJs86xtr2SApQ2xtUMqDPZ+Nu5mskKNKbWaKIK35sccxs7j5SehjLxXIl/EpQ==
+X-Received: by 2002:a17:906:af84:: with SMTP id mj4mr1046479ejb.341.1582840742890;
+        Thu, 27 Feb 2020 13:59:02 -0800 (PST)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
+        by smtp.gmail.com with ESMTPSA id x12sm331861eje.52.2020.02.27.13.59.02
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 13:54:34 -0800 (PST)
-Date:   Thu, 27 Feb 2020 13:54:33 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Chandan Uddaraju <chandanu@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, seanpaul@chromium.org,
-        abhinavk@codeaurora.org, hoegsberg@google.com,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [DPU PATCH v3 3/5] drm/msm/dp: add displayPort driver support
-Message-ID: <20200227215433.GK24720@google.com>
-References: <1575294437-6129-1-git-send-email-chandanu@codeaurora.org>
- <0101016ec6df0e54-2af1f4a6-8f72-4799-89e0-0ff87b514eb2-000000@us-west-2.amazonses.com>
+        Thu, 27 Feb 2020 13:59:02 -0800 (PST)
+Received: by mail-wr1-f49.google.com with SMTP id e8so677421wrm.5
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:59:02 -0800 (PST)
+X-Received: by 2002:a05:651c:1a2:: with SMTP id c2mr734150ljn.79.1582840398185;
+ Thu, 27 Feb 2020 13:53:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0101016ec6df0e54-2af1f4a6-8f72-4799-89e0-0ff87b514eb2-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200209183411.17195-1-sibis@codeaurora.org> <20200209183411.17195-6-sibis@codeaurora.org>
+In-Reply-To: <20200209183411.17195-6-sibis@codeaurora.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Thu, 27 Feb 2020 13:52:41 -0800
+X-Gmail-Original-Message-ID: <CAE=gft755hYH7ue=fv2jvofejoWHZaguji6D-M1qHup-3SJTwQ@mail.gmail.com>
+Message-ID: <CAE=gft755hYH7ue=fv2jvofejoWHZaguji6D-M1qHup-3SJTwQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] interconnect: qcom: sdm845: Split qnodes into
+ their respective NoCs
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Matthias Kaehlcke <mka@chromium.org>, linux-pm@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 01:48:57PM +0000, Chandan Uddaraju wrote:
-> Add the needed displayPort files to enable DP driver
-> on msm target.
-> 
-> "dp_display" module is the main module that calls into
-> other sub-modules. "dp_drm" file represents the interface
-> between DRM framework and DP driver.
-> 
-> changes in v2:
-> -- Update copyright markings on all relevant files.
-> -- Change pr_err() to DRM_ERROR()
-> -- Use APIs directly instead of function pointers.
-> -- Use drm_display_mode structure to store link parameters in the driver.
-> -- Use macros for register definitions instead of hardcoded values.
-> -- Replace writel_relaxed/readl_relaxed with writel/readl
->    and remove memory barriers.
-> -- Remove unnecessary NULL checks.
-> -- Use drm helper functions for dpcd read/write.
-> -- Use DRM_DEBUG_DP for debug msgs.
-> 
-> changes in V3:
-> -- Removed changes in dpu_io_util.[ch]
-> -- Added locking around "is_connected" flag and removed atomic_set()
-> -- Removed the argument validation checks in all the static functions
->    except initialization functions and few API calls across msm/dp files
-> -- Removed hardcoded values for register reads/writes
-> -- Removed vreg related generic structures.
-> -- Added return values where ever necessary.
-> -- Updated dp_ctrl_on function.
-> -- Calling the ctrl specific catalog functions directly instead of
->    function pointers.
-> -- Added seperate change that adds standard value in drm_dp_helper file.
-> -- Added separate change in this list that is used to initialize
->    displayport in DPU driver.
-> -- Added change to use drm_dp_get_adjust_request_voltage() function.
-> 
-> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
-> ---
-> +++ b/drivers/gpu/drm/msm/dp/dp_power.c
+On Sun, Feb 9, 2020 at 10:35 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> ...
+> From: David Dai <daidavid1@codeaurora.org>
 >
-> +int dp_power_init(struct dp_power *dp_power, bool flip)
-> +{
-> +	int rc = 0;
-> +	struct dp_power_private *power;
-> +
-> +	if (!dp_power) {
-> +		DRM_ERROR("invalid power data\n");
-> +		rc = -EINVAL;
-> +		goto exit;
-> +	}
+> In order to better represent the hardware and its different Network-On-Chip
+> devices, split the sdm845 provider driver into NoC specific providers.
+> Remove duplicate functionality already provided by the icc rpmh and
+> bcm voter drivers to calculate and commit bandwidth requests to hardware.
+>
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-drive-by comment:
-
-this would lead to calling 'pm_runtime_put_sync(&power->pdev->dev)'
-below with 'power' being NULL, which doesn't seem a good idea.
-
-It is probably sane to expect that 'dp_power' is not NULL, if that's
-the case the check can be removed. Otherwise the function should just
-return -EINVAL instead of jumping to 'exit'.
-
-> +
-> +	power = container_of(dp_power, struct dp_power_private, dp_power);
-> +
-> +	pm_runtime_get_sync(&power->pdev->dev);
-> +	rc = dp_power_regulator_enable(power);
-> +	if (rc) {
-> +		DRM_ERROR("failed to enable regulators, %d\n", rc);
-> +		goto exit;
-> +	}
-> +
-> +	rc = dp_power_pinctrl_set(power, true);
-> +	if (rc) {
-> +		DRM_ERROR("failed to set pinctrl state, %d\n", rc);
-> +		goto err_pinctrl;
-> +	}
-> +
-> +	rc = dp_power_config_gpios(power, flip);
-> +	if (rc) {
-> +		DRM_ERROR("failed to enable gpios, %d\n", rc);
-> +		goto err_gpio;
-> +	}
-> +
-> +	rc = dp_power_clk_enable(dp_power, DP_CORE_PM, true);
-> +	if (rc) {
-> +		DRM_ERROR("failed to enable DP core clocks, %d\n", rc);
-> +		goto err_clk;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_clk:
-> +	dp_power_disable_gpios(power);
-> +err_gpio:
-> +	dp_power_pinctrl_set(power, false);
-> +err_pinctrl:
-> +	dp_power_regulator_disable(power);
-> +exit:
-> +	pm_runtime_put_sync(&power->pdev->dev);
-> +	return rc;
-> +}
+Reviewed-by: Evan Green <evgreen@chromium.org>
