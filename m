@@ -2,118 +2,330 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC35C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 00:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB7EC4BA35
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 01:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E752467B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 00:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9760208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 01:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mgqjvqni"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwH59bbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgB0A6s (ORCPT
+        id S1728095AbgB0BLJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 19:58:48 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47034 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727967AbgB0A6s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 19:58:48 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01R0wjm8048772;
-        Wed, 26 Feb 2020 18:58:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582765125;
-        bh=u1rXOvIC3GPIMqY9jvYvgjAjNqT5aBjPiGZUX6d07dE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MgqjvqniF19IPGUJXSED/2TMJA8Ptl42WvQn2/JQJOgbccAOt7b0ha8dFIkP3l0VX
-         EYfCY5BXeoHlsVaa1/UM0eE8UcnCO2lLBXUW+/c//O0cgicBOyxxpa1ER/FlMM7G0Z
-         kqQ024e7fblbQ2dQfX9VlEoSFqnbTeDwI51wt1E0=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01R0wjJL019321
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Feb 2020 18:58:45 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 18:58:44 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 18:58:44 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01R0witd077641;
-        Wed, 26 Feb 2020 18:58:44 -0600
-Subject: Re: [PATCH 06/12] ARM: dts: am335x-bone-common: Enable PRU-ICSS
- interconnect node
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200225204649.28220-1-s-anna@ti.com>
- <20200225204649.28220-7-s-anna@ti.com> <20200226182924.GU37466@atomide.com>
- <af3965db-54b2-3e4f-414f-d27ca4b5ced1@ti.com>
- <20200226223745.GA37466@atomide.com> <20200226223921.GB37466@atomide.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <b1fe18b5-f779-aea5-8c66-41c0de66c39f@ti.com>
-Date:   Wed, 26 Feb 2020 18:58:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 26 Feb 2020 20:11:09 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35929 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727973AbgB0BLJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 20:11:09 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so1517341wma.1;
+        Wed, 26 Feb 2020 17:11:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4bInzMmSe0SQFhuJPffFbwCkWE3FgBh8teIvX/3Nphg=;
+        b=MwH59bbGsZwowI5YrIA9G0QAR8miEE7Gf9TqE0ugY1HPV2TuNK16bIbrl7Ft00En4F
+         lPy+30gX4uWSIEeAJxoccMt1Tf7w9iVVYfBXDNAEaIhqsGYNilu//ScyyzomqD/oBHEY
+         K3bywwzp5CB7BwgIJ0Fb3bEHnnHRoY+VH2I+xyfI5ZGGF3CmerWjG8iH/3WkZ23AYqr8
+         AbyDgdS9I4ewtu4Z9fuL9nmAJ4Q4yvb2QcK2p5rrf1hgsvLFzHuD3RjHSxjDOWxkh5xi
+         295J6D4fnkmK3O22jJCMXLc7ceGJBFaK5U/P5+wUXSyipVXB5QvJi6MOz+sM6lca+ERj
+         jvxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4bInzMmSe0SQFhuJPffFbwCkWE3FgBh8teIvX/3Nphg=;
+        b=QBOcEuvkRyjLkbifaND1Z6BdOuU6aB6RdbNA97elLr/b7fujIX2YzdgP8UX01w6665
+         hWWWFdBTzo8N6Zf9c1JlfkarxToAILOhdaPNpOWT8V4ZZhUoNq92+YdArfEe9aqEcIhF
+         s9H/FOG6jiFxZ/jmp/aWsNm563s4ruQEUzlveD62IrdcXZKM4J7zeNWXwkkG9E1dWMfl
+         G2DR1vCXFqeKTRkvaXDej/VrXABKagDqpr6J9c1VGvGBNsmWotg5RlnlOlmeeCyJE2mv
+         ngG3Fsz4nBhquftYMuqI0U480s0Rx/iYDbPZOYlQfQUJCCil5zap55D1kVgbpxCxu+7X
+         lZJQ==
+X-Gm-Message-State: APjAAAU6YvjzVem03U9nb5wYopPXegAxuxCNG7Rgv6/yQDsaAxqaMSzI
+        5OSidn9H0MrWm36+3EkYCLI=
+X-Google-Smtp-Source: APXvYqxwpS2Z+OI2QhcZ+ksAMqTah3unWBCz1xawb8SBMc3mMLpPXtHL2AwYawfFpJyP9asXntBAOw==
+X-Received: by 2002:a05:600c:24b:: with SMTP id 11mr1713398wmj.1.1582765865992;
+        Wed, 26 Feb 2020 17:11:05 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id s5sm3509507wru.39.2020.02.26.17.11.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 17:11:05 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v8 1/2] net: mdio: add ipq8064 mdio driver
+Date:   Thu, 27 Feb 2020 02:10:45 +0100
+Message-Id: <20200227011050.11106-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <andrew@lunn.ch>
+References: <andrew@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20200226223921.GB37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tony,
+Currently ipq806x soc use generic bitbang driver to
+comunicate with the gmac ethernet interface.
+Add a dedicated driver created by chunkeey to fix this.
 
-On 2/26/20 4:39 PM, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [200226 22:38]:
->> * Suman Anna <s-anna@ti.com> [200226 20:35]:
->>> On 2/26/20 12:29 PM, Tony Lindgren wrote:
->>>> * Suman Anna <s-anna@ti.com> [200225 20:47]:
->>>>> The PRU-ICSS target module node was left in disabled state in the base
->>>>> am33xx-l4.dtsi file. Enable this node on all the AM335x beaglebone
->>>>> boards as they mostly use a AM3358 or a AM3359 SoC which do contain
->>>>> the PRU-ICSS IP.
->>>>
->>>> Just get rid of the top level status = "disabled". The default
->>>> is enabled, and the device is there for sure inside the SoC.
->>>> And then there's no need for pointless status = "okay" tinkering
->>>> in the board specific dts files so no need for this patch.
->>>
->>> The IP is not available on all SoCs, and there are about 40 different
->>> board files atm across AM33xx and AM437x, and am not sure what SoCs they
->>> are actually using.
->>
->> Oh that issue again.. Maybe take a look at patch "[PATCH 2/3] bus: ti-sysc:
->> Detect display subsystem related devices" if you can add runtime
->> detection for the accelerators there similar to what I hadded for omap3.
->> acclerators.
-> 
-> Sorry I meant instead patch "[PATCH 6/7] bus: ti-sysc: Implement SoC
-> revision handling".
+Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+Changes in v8:
+- Drop syscon_regmap_lookup_by_phandle and make
+  clock definition in dts mandatory
 
-OK, looked down that path a bit more and looking through mach-omap2/id.c
- and soc.h, I see some of the part number infrastructure build on top of
-DEV_FEATURE bits for some SoCs. The DEVICE_ID registers only have the
-generic family and the Silicon Revision number for AM33xx and AM437x and
-we currently do not have any infrastructure around exact SoC
-identification for AM33xx and AM437x atleast.
+Changes in v7:
+- Add myself as module author and copyright
+- Reduced usleep_range to 8-10 as suggested by chunkeey
 
-Do you have the bit-field split for the DEV_FEATURE bits somewhere,
-because I couldn't find any in either the DM or the TRM. On AM437x,
-there is no difference between AM4372 and AM4376 DEV_FEATURE value even
-though the former doesn't have the PRUSS. On AM335x, may be bit 0
-signifies the presence of PRUSS??
+Changes in v6:
+- Fix error in commit description
+- Add co-developed tag
 
-regards
-Suman
+Changes in v5:
+- Rename define to more rappresentative name
+
+Changes in v4:
+- Fix wrong print value in dev_err
+
+Changes in v3:
+- Fix wrong return logic on error
+
+Changes in v2:
+- Use regmap_read_poll_timeout
+- Reject clause 45
+
+ drivers/net/phy/Kconfig        |   8 ++
+ drivers/net/phy/Makefile       |   1 +
+ drivers/net/phy/mdio-ipq8064.c | 166 +++++++++++++++++++++++++++++++++
+ 3 files changed, 175 insertions(+)
+ create mode 100644 drivers/net/phy/mdio-ipq8064.c
+
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9dabe03a668c..ec2a5493a7e8 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -157,6 +157,14 @@ config MDIO_I2C
+ 
+ 	  This is library mode.
+ 
++config MDIO_IPQ8064
++	tristate "Qualcomm IPQ8064 MDIO interface support"
++	depends on HAS_IOMEM && OF_MDIO
++	depends on MFD_SYSCON
++	help
++	  This driver supports the MDIO interface found in the network
++	  interface units of the IPQ8064 SoC
++
+ config MDIO_MOXART
+ 	tristate "MOXA ART MDIO interface support"
+ 	depends on ARCH_MOXART || COMPILE_TEST
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fe5badf13b65..8f02bd2089f3 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+ obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+ obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
++obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+ obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
+new file mode 100644
+index 000000000000..575db9068283
+--- /dev/null
++++ b/drivers/net/phy/mdio-ipq8064.c
+@@ -0,0 +1,166 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Qualcomm IPQ8064 MDIO interface driver
++ *
++ * Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
++ * Copyright (C) 2020 Ansuel Smith <ansuelsmth@gmail.com>
++ */
++
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++
++/* MII address register definitions */
++#define MII_ADDR_REG_ADDR                       0x10
++#define MII_BUSY                                BIT(0)
++#define MII_WRITE                               BIT(1)
++#define MII_CLKRANGE_60_100M                    (0 << 2)
++#define MII_CLKRANGE_100_150M                   (1 << 2)
++#define MII_CLKRANGE_20_35M                     (2 << 2)
++#define MII_CLKRANGE_35_60M                     (3 << 2)
++#define MII_CLKRANGE_150_250M                   (4 << 2)
++#define MII_CLKRANGE_250_300M                   (5 << 2)
++#define MII_CLKRANGE_MASK			GENMASK(4, 2)
++#define MII_REG_SHIFT				6
++#define MII_REG_MASK				GENMASK(10, 6)
++#define MII_ADDR_SHIFT				11
++#define MII_ADDR_MASK				GENMASK(15, 11)
++
++#define MII_DATA_REG_ADDR                       0x14
++
++#define MII_MDIO_DELAY_USEC                     (1000)
++#define MII_MDIO_RETRY_MSEC                     (10)
++
++struct ipq8064_mdio {
++	struct regmap *base; /* NSS_GMAC0_BASE */
++};
++
++static int
++ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
++{
++	u32 busy;
++
++	return regmap_read_poll_timeout(priv->base, MII_ADDR_REG_ADDR, busy,
++					!(busy & MII_BUSY), MII_MDIO_DELAY_USEC,
++					MII_MDIO_RETRY_MSEC * USEC_PER_MSEC);
++}
++
++static int
++ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
++{
++	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 ret_val;
++	int err;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(8, 10);
++
++	err = ipq8064_mdio_wait_busy(priv);
++	if (err)
++		return err;
++
++	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
++	return (int)ret_val;
++}
++
++static int
++ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
++{
++	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
++	struct ipq8064_mdio *priv = bus->priv;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(8, 10);
++
++	return ipq8064_mdio_wait_busy(priv);
++}
++
++static int
++ipq8064_mdio_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct ipq8064_mdio *priv;
++	struct mii_bus *bus;
++	int ret;
++
++	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = "ipq8064_mdio_bus";
++	bus->read = ipq8064_mdio_read;
++	bus->write = ipq8064_mdio_write;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
++	bus->parent = &pdev->dev;
++
++	priv = bus->priv;
++	priv->base = syscon_node_to_regmap(np);
++	if (IS_ERR(priv->base)) {
++		if (priv->base == ERR_PTR(-EPROBE_DEFER))
++			return -EPROBE_DEFER;
++
++		dev_err(&pdev->dev, "error getting syscon regmap, error=%pe\n",
++			priv->base);
++		return PTR_ERR(priv->base);
++	}
++
++	ret = of_mdiobus_register(bus, np);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, bus);
++	return 0;
++}
++
++static int
++ipq8064_mdio_remove(struct platform_device *pdev)
++{
++	struct mii_bus *bus = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(bus);
++
++	return 0;
++}
++
++static const struct of_device_id ipq8064_mdio_dt_ids[] = {
++	{ .compatible = "qcom,ipq8064-mdio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
++
++static struct platform_driver ipq8064_mdio_driver = {
++	.probe = ipq8064_mdio_probe,
++	.remove = ipq8064_mdio_remove,
++	.driver = {
++		.name = "ipq8064-mdio",
++		.of_match_table = ipq8064_mdio_dt_ids,
++	},
++};
++
++module_platform_driver(ipq8064_mdio_driver);
++
++MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
++MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
++MODULE_AUTHOR("Ansuel Smith <ansuelsmth@gmail.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.25.0
+
