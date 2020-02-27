@@ -2,331 +2,212 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10553C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691B4C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70DB2469F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B42124692
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:44:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MzmN2H5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbgB0Rn6 (ORCPT
+        id S1730734AbgB0Roo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:43:58 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2473 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729601AbgB0Rn6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:43:58 -0500
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id A81A29B4C24BC137BA60;
-        Thu, 27 Feb 2020 17:43:55 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 27 Feb 2020 17:43:55 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 27 Feb
- 2020 17:43:54 +0000
-Date:   Thu, 27 Feb 2020 17:43:51 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>,
-        <joro@8bytes.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <robin.murphy@arm.com>, <kevin.tian@intel.com>,
-        <baolu.lu@linux.intel.com>, <jacob.jun.pan@linux.intel.com>,
-        <christian.koenig@amd.com>, <yi.l.liu@intel.com>,
-        <zhangfei.gao@linaro.org>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v4 07/26] arm64: mm: Pin down ASIDs for sharing mm with
- devices
-Message-ID: <20200227174351.00004d0d@Huawei.com>
-In-Reply-To: <20200224182401.353359-8-jean-philippe@linaro.org>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
-        <20200224182401.353359-8-jean-philippe@linaro.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Thu, 27 Feb 2020 12:44:44 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36543 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730707AbgB0Rom (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 12:44:42 -0500
+Received: by mail-ed1-f65.google.com with SMTP id j17so72942edp.3;
+        Thu, 27 Feb 2020 09:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vN4LAevYUXgR/zeHryxyZWF34rkf9QisD87DT7VXpik=;
+        b=MzmN2H5vmBTYdKDibAeWGqpCQCe6Z2o3Y3bf5tydUfVm4A3D/k4DZVdfmrtXW8RouG
+         dpUM+SYkUFgmrGWzeKCwsVF9moheAC338dfB0OH9CbsatEE6rNolXPLdf0qMtBAJJW11
+         M1OSp0A7hpVRPA6sOWPTWaP3P6zpncj426Rfo0O4Po25giw0SsFyLSsfjozZXQXDEyDJ
+         ijb0gzfwUOc8OQCliNsi4mkFKmI/phbSB5lUdRF21chW5F2DGMBu7R2J4fJCokB27O7M
+         GBo8VYhvHbOMJ3+/e5wFi0hy+Sq7eHe8H62Q8/v/bh42ZhYdxL8ADn12qv+POaJkf1FE
+         q5bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vN4LAevYUXgR/zeHryxyZWF34rkf9QisD87DT7VXpik=;
+        b=Plo1xrdhuez0Mtp+Pv13UN6yGVQ4htT1hGw4HUJL7T5bAgnS1BIEg89P+lGBeTNoxU
+         lwnttjyMFF0Ixf5M71vF60FgWDdH6eoBVcfghjzolPHPJV0bDA8rW/AlLUwP3kRvOJsy
+         vjxFdDOT1WhqFl1Xh4cLGfpq0vNTspWnOPPv60QXI/DdN12Elg2E9Jpr4mUl0C8pj/3n
+         sAOTQi9Rtykjn6TVaCMU0WVL1Qm7amo83weNnMJnqebIW8Bj6co6FYUMCjpU2qo8b33o
+         /yPJiJBkKwz6s85r723u1U79iF7Oo/JIiqo9VqXgUB9YcevPFHwXAGnSGKJPLjUbYibP
+         FVKw==
+X-Gm-Message-State: APjAAAVIsbV3ipIUUI5QvtlA4syCk7vN7eqID0jsPSFXDNIqvV1CUplV
+        vuuSb1LCWsPnxMmp4nBQBds=
+X-Google-Smtp-Source: APXvYqyrJ3zhGETgW4hEQ9ZRCb/P4RcERojU1JvvH4X6zB57je/Pwvx/fze30TGbjXuooRpLllAQNg==
+X-Received: by 2002:a17:906:7c9:: with SMTP id m9mr190311ejc.243.1582825480096;
+        Thu, 27 Feb 2020 09:44:40 -0800 (PST)
+Received: from [10.67.50.18] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id l11sm394908edi.28.2020.02.27.09.44.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 09:44:39 -0800 (PST)
+Subject: Re: [PATCH net-next 1/3] dt-bindings: net: add dt bindings for
+ marvell10g driver
+To:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+References: <20200227095159.GJ25745@shell.armlinux.org.uk>
+ <E1j7FqO-0003sv-Ho@rmk-PC.armlinux.org.uk>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <1bcb9a92-d739-6406-6414-783b19bfb66e@gmail.com>
+Date:   Thu, 27 Feb 2020 09:44:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+In-Reply-To: <E1j7FqO-0003sv-Ho@rmk-PC.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2020 19:23:42 +0100
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+On 2/27/20 1:52 AM, Russell King wrote:
+> Add a DT bindings document for the Marvell 10G driver, which will
+> augment the generic ethernet PHY binding by having LED mode
+> configuration.
+> 
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> 
-> To enable address space sharing with the IOMMU, introduce mm_context_get()
-> and mm_context_put(), that pin down a context and ensure that it will keep
-> its ASID after a rollover. Export the symbols to let the modular SMMUv3
-> driver use them.
-> 
-> Pinning is necessary because a device constantly needs a valid ASID,
-> unlike tasks that only require one when running. Without pinning, we would
-> need to notify the IOMMU when we're about to use a new ASID for a task,
-> and it would get complicated when a new task is assigned a shared ASID.
-> Consider the following scenario with no ASID pinned:
-> 
-> 1. Task t1 is running on CPUx with shared ASID (gen=1, asid=1)
-> 2. Task t2 is scheduled on CPUx, gets ASID (1, 2)
-> 3. Task tn is scheduled on CPUy, a rollover occurs, tn gets ASID (2, 1)
->    We would now have to immediately generate a new ASID for t1, notify
->    the IOMMU, and finally enable task tn. We are holding the lock during
->    all that time, since we can't afford having another CPU trigger a
->    rollover. The IOMMU issues invalidation commands that can take tens of
->    milliseconds.
-> 
-> It gets needlessly complicated. All we wanted to do was schedule task tn,
-> that has no business with the IOMMU. By letting the IOMMU pin tasks when
-> needed, we avoid stalling the slow path, and let the pinning fail when
-> we're out of shareable ASIDs.
-> 
-> After a rollover, the allocator expects at least one ASID to be available
-> in addition to the reserved ones (one per CPU). So (NR_ASIDS - NR_CPUS -
-> 1) is the maximum number of ASIDs that can be shared with the IOMMU.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-A few more trivial points.
+We have been kicking the ball for way too long but there really ought to
+be a standardized binding to configure LED modes for a PHY. Something
+that we previously discussed here without making much progress because
+the LED maintainer was not involved:
 
-Thanks,
+http://patchwork.ozlabs.org/patch/1146609/
+http://patchwork.ozlabs.org/patch/1146610/
+http://patchwork.ozlabs.org/patch/1146611/
+http://patchwork.ozlabs.org/patch/1146612/
 
-Jonathan
+What you are proposing here is just a plain configuration interface via
+Device Tree, which is really borderline. It gets the job done, and it is
+extremely easy to maintain and use because people just stick in their
+register value in there, but boy, what a poor abstraction that is.
+
+Maybe you can resume where Matthias left and improve upon his patch
+series, if nothing else for the binding and PHY layer integration?
 
 > ---
-> v2->v4: handle KPTI
-> ---
->  arch/arm64/include/asm/mmu.h         |   1 +
->  arch/arm64/include/asm/mmu_context.h |  11 ++-
->  arch/arm64/mm/context.c              | 103 +++++++++++++++++++++++++--
->  3 files changed, 109 insertions(+), 6 deletions(-)
+>  .../devicetree/bindings/net/marvell,10g.yaml  | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/marvell,10g.yaml
 > 
-> diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-> index e4d862420bb4..70ac3d4cbd3e 100644
-> --- a/arch/arm64/include/asm/mmu.h
-> +++ b/arch/arm64/include/asm/mmu.h
-> @@ -18,6 +18,7 @@
->  
->  typedef struct {
->  	atomic64_t	id;
-> +	unsigned long	pinned;
->  	void		*vdso;
->  	unsigned long	flags;
->  } mm_context_t;
-> diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-> index 3827ff4040a3..70715c10c02a 100644
-> --- a/arch/arm64/include/asm/mmu_context.h
-> +++ b/arch/arm64/include/asm/mmu_context.h
-> @@ -175,7 +175,13 @@ static inline void cpu_replace_ttbr1(pgd_t *pgdp)
->  #define destroy_context(mm)		do { } while(0)
->  void check_and_switch_context(struct mm_struct *mm, unsigned int cpu);
->  
-> -#define init_new_context(tsk,mm)	({ atomic64_set(&(mm)->context.id, 0); 0; })
-> +static inline int
-> +init_new_context(struct task_struct *tsk, struct mm_struct *mm)
-> +{
-> +	atomic64_set(&mm->context.id, 0);
-> +	mm->context.pinned = 0;
-> +	return 0;
-> +}
->  
->  #ifdef CONFIG_ARM64_SW_TTBR0_PAN
->  static inline void update_saved_ttbr0(struct task_struct *tsk,
-> @@ -248,6 +254,9 @@ switch_mm(struct mm_struct *prev, struct mm_struct *next,
->  void verify_cpu_asid_bits(void);
->  void post_ttbr_update_workaround(void);
->  
-> +unsigned long mm_context_get(struct mm_struct *mm);
-> +void mm_context_put(struct mm_struct *mm);
+> diff --git a/Documentation/devicetree/bindings/net/marvell,10g.yaml b/Documentation/devicetree/bindings/net/marvell,10g.yaml
+> new file mode 100644
+> index 000000000000..da597fc5314d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/marvell,10g.yaml
+> @@ -0,0 +1,31 @@
+> +# SPDX-License-Identifier: GPL-2.0+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/marvell,10g.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  #endif /* !__ASSEMBLY__ */
->  
->  #endif /* !__ASM_MMU_CONTEXT_H */
-> diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
-> index 121aba5b1941..5558de88b67d 100644
-> --- a/arch/arm64/mm/context.c
-> +++ b/arch/arm64/mm/context.c
-> @@ -26,6 +26,10 @@ static DEFINE_PER_CPU(atomic64_t, active_asids);
->  static DEFINE_PER_CPU(u64, reserved_asids);
->  static cpumask_t tlb_flush_pending;
->  
-> +static unsigned long max_pinned_asids;
-> +static unsigned long nr_pinned_asids;
-> +static unsigned long *pinned_asid_map;
+> +title: Marvell Alaska X family Ethernet PHYs
 > +
->  #define ASID_MASK		(~GENMASK(asid_bits - 1, 0))
->  #define ASID_FIRST_VERSION	(1UL << asid_bits)
->  
-> @@ -73,6 +77,9 @@ void verify_cpu_asid_bits(void)
->  
->  static void set_kpti_asid_bits(void)
->  {
-> +	unsigned int k;
-> +	u8 *dst = (u8 *)asid_map;
-> +	u8 *src = (u8 *)pinned_asid_map;
->  	unsigned int len = BITS_TO_LONGS(NUM_USER_ASIDS) * sizeof(unsigned long);
->  	/*
->  	 * In case of KPTI kernel/user ASIDs are allocated in
-> @@ -80,7 +87,8 @@ static void set_kpti_asid_bits(void)
->  	 * is set, then the ASID will map only userspace. Thus
->  	 * mark even as reserved for kernel.
->  	 */
-> -	memset(asid_map, 0xaa, len);
-> +	for (k = 0; k < len; k++)
-> +		dst[k] = src[k] | 0xaa;
->  }
->  
->  static void set_reserved_asid_bits(void)
-> @@ -88,9 +96,12 @@ static void set_reserved_asid_bits(void)
->  	if (arm64_kernel_unmapped_at_el0())
->  		set_kpti_asid_bits();
->  	else
-> -		bitmap_clear(asid_map, 0, NUM_USER_ASIDS);
-> +		bitmap_copy(asid_map, pinned_asid_map, NUM_USER_ASIDS);
->  }
->  
-> +#define asid_gen_match(asid) \
-> +	(!(((asid) ^ atomic64_read(&asid_generation)) >> asid_bits))
+> +maintainers:
+> +  - Russell King <rmk+kernel@armlinux.org.uk>
 > +
-
-I'd have slightly preferred this bit of refactoring as a precursor patch.
-
->  static void flush_context(void)
->  {
->  	int i;
-> @@ -161,6 +172,14 @@ static u64 new_context(struct mm_struct *mm)
->  		if (check_update_reserved_asid(asid, newasid))
->  			return newasid;
->  
-> +		/*
-> +		 * If it is pinned, we can keep using it. Note that reserved
-> +		 * takes priority, because even if it is also pinned, we need to
-> +		 * update the generation into the reserved_asids.
-> +		 */
-> +		if (mm->context.pinned)
-> +			return newasid;
+> +allOf:
+> +  - $ref: ethernet-phy.yaml#
 > +
->  		/*
->  		 * We had a valid ASID in a previous life, so try to re-use
->  		 * it if possible.
-> @@ -219,8 +238,7 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
->  	 *   because atomic RmWs are totally ordered for a given location.
->  	 */
->  	old_active_asid = atomic64_read(&per_cpu(active_asids, cpu));
-> -	if (old_active_asid &&
-> -	    !((asid ^ atomic64_read(&asid_generation)) >> asid_bits) &&
-> +	if (old_active_asid && asid_gen_match(asid) &&
->  	    atomic64_cmpxchg_relaxed(&per_cpu(active_asids, cpu),
->  				     old_active_asid, asid))
->  		goto switch_mm_fastpath;
-> @@ -228,7 +246,7 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
->  	raw_spin_lock_irqsave(&cpu_asid_lock, flags);
->  	/* Check that our ASID belongs to the current generation. */
->  	asid = atomic64_read(&mm->context.id);
-> -	if ((asid ^ atomic64_read(&asid_generation)) >> asid_bits) {
-> +	if (!asid_gen_match(asid)) {
->  		asid = new_context(mm);
->  		atomic64_set(&mm->context.id, asid);
->  	}
-> @@ -251,6 +269,68 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
->  		cpu_switch_mm(mm->pgd, mm);
->  }
->  
-> +unsigned long mm_context_get(struct mm_struct *mm)
-> +{
-> +	unsigned long flags;
-> +	u64 asid;
+> +properties:
+> +  marvell,led-mode:
+> +    description: |
+> +      An array of one to four 16-bit integers to write to the PHY LED
+> +      configuration registers.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint16-array
+> +      - minItems: 1
+> +        maxItems: 4
 > +
-> +	raw_spin_lock_irqsave(&cpu_asid_lock, flags);
-> +
-> +	asid = atomic64_read(&mm->context.id);
-> +
-> +	if (mm->context.pinned) {
-> +		mm->context.pinned++;
-> +		asid &= ~ASID_MASK;
-> +		goto out_unlock;
-> +	}
-> +
-> +	if (nr_pinned_asids >= max_pinned_asids) {
-> +		asid = 0;
-> +		goto out_unlock;
-> +	}
-> +
-> +	if (!asid_gen_match(asid)) {
-> +		/*
-> +		 * We went through one or more rollover since that ASID was
-> +		 * used. Ensure that it is still valid, or generate a new one.
-> +		 */
-> +		asid = new_context(mm);
-> +		atomic64_set(&mm->context.id, asid);
-> +	}
-> +
-> +	asid &= ~ASID_MASK;
-> +
-> +	nr_pinned_asids++;
-> +	__set_bit(asid2idx(asid), pinned_asid_map);
-> +	mm->context.pinned++;
-> +
-> +out_unlock:
-> +	raw_spin_unlock_irqrestore(&cpu_asid_lock, flags);
-> +
-> +	/* Set the equivalent of USER_ASID_BIT */
-> +	if (asid && IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0))
-> +		asid |= 1;
-> +
-> +	return asid;
-> +}
-> +EXPORT_SYMBOL_GPL(mm_context_get);
-> +
-> +void mm_context_put(struct mm_struct *mm)
-> +{
-> +	unsigned long flags;
-> +	u64 asid = atomic64_read(&mm->context.id) & ~ASID_MASK;
-> +
-> +	raw_spin_lock_irqsave(&cpu_asid_lock, flags);
-> +
-> +	if (--mm->context.pinned == 0) {
-> +		__clear_bit(asid2idx(asid), pinned_asid_map);
-> +		nr_pinned_asids--;
-> +	}
-> +
-> +	raw_spin_unlock_irqrestore(&cpu_asid_lock, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(mm_context_put);
-> +
->  /* Errata workaround post TTBRx_EL1 update. */
->  asmlinkage void post_ttbr_update_workaround(void)
->  {
-> @@ -279,6 +359,19 @@ static int asids_init(void)
->  		panic("Failed to allocate bitmap for %lu ASIDs\n",
->  		      NUM_USER_ASIDS);
->  
-> +	pinned_asid_map = kcalloc(BITS_TO_LONGS(NUM_USER_ASIDS),
-> +				  sizeof(*pinned_asid_map), GFP_KERNEL);
-> +	if (!pinned_asid_map)
-> +		panic("Failed to allocate pinned bitmap\n");
-Perhaps "Failed to allocate pinnned asid bitmap\n"
-> +
-> +	/*
-> +	 * We assume that an ASID is always available after a rollover. This
-> +	 * means that even if all CPUs have a reserved ASID, there still is at
-> +	 * least one slot available in the asid map.
-> +	 */
-> +	max_pinned_asids = num_available_asids - num_possible_cpus() - 1;
-> +	nr_pinned_asids = 0;
-> +
->  	/*
->  	 * We cannot call set_reserved_asid_bits() here because CPU
->  	 * caps are not finalized yet, so it is safer to assume KPTI
+> +examples:
+> +  - |
+> +    ethernet-phy@0 {
+> +        reg = <0>;
+> +        compatible = "ethernet-phy-ieee802.3-c45";
+> +        marvell,led-mode = /bits/ 16 <0x0129 0x095d 0x0855>;
+> +    };
+> 
 
 
+-- 
+Florian
