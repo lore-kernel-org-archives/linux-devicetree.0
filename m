@@ -8,32 +8,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB8CC11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E99EC11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0349224688
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79012469C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GAmPCODl"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="d+HtWXCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgB0PzL (ORCPT
+        id S1729809AbgB0QFc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:55:11 -0500
-Received: from mout.gmx.net ([212.227.17.22]:43099 "EHLO mout.gmx.net"
+        Thu, 27 Feb 2020 11:05:32 -0500
+Received: from mout.gmx.net ([212.227.15.19]:60517 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbgB0PzL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:55:11 -0500
+        id S1729134AbgB0QFc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:05:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582818906;
-        bh=uz3K9c2PLjXXAjs7VIHhAKs/DKNEOPy9W/ZUL2a3dYM=;
+        s=badeba3b8450; t=1582819527;
+        bh=eWtVTwa1th7imei13HiGdPvoztRW0QEQEO0StELpaQk=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=GAmPCODlUofoGf1zXNSSse0Eep6DLrspmPNZXPE45vZoCvH6GQyQ2pz0CIQALoS6+
-         a9XxElpeULgiiH1Py9TkOIZS/KKHOjUqZbJJgsjtK5adm6vm5Tl2e7JNsuZEdGeaJq
-         9+t9hjVlq6IjF+buwOw0wIvT2sVbEVuPjdKY3YR4=
+        b=d+HtWXCNUAi3CZGJK9aNSrgaENvpX7uPKj9Af+PmU5hZ/rAkkCW3M584V56PE47nC
+         xz+6+iD8zMU1MN3UUDIQSq6ZNQXV2iiaeAMPK9BIG1gGLF8JBhNLf861rixZrpBIxL
+         UFfVjvX7LQXfgoSu3oz4pwcbSUo66LTQgeKpuu4c=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.148]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MgesG-1jd80k0lSO-00h3y4; Thu, 27
- Feb 2020 16:55:06 +0100
+Received: from longitude ([5.146.194.148]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MF3DW-1jDvFn09Ky-00FUlX; Thu, 27
+ Feb 2020 17:05:27 +0100
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     devicetree@vger.kernel.org
 Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
@@ -41,36 +41,36 @@ Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: mfd: zii,rave-sp: Fix a typo ("onborad")
-Date:   Thu, 27 Feb 2020 16:55:00 +0100
-Message-Id: <20200227155500.13594-1-j.neuschaefer@gmx.net>
+Subject: [PATCH] dt-bindings: mfd: tps65910: Improve grammar
+Date:   Thu, 27 Feb 2020 17:05:21 +0100
+Message-Id: <20200227160522.17582-1-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TAnyNNRRa0UrUguVmUQWAyzZu2q1PADVFm+uOtEAljT4RXqDRmc
- oNOW+7yIHE+HsZGIOgorTjVEBnO/1XsRwzpZkKdZHYg2+pOTiLIQakPdajwyn9dlBO+TwQB
- pTmtONZUw1FCYLWM2hPtXTANC4J9CVjBlDshlRu1PhgUiRe1Mb8IUuKQujCb8EpbnNI8wQ4
- Fcx991Q1Qpxdc1OpnwWsg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/WtQ1vt0gRI=:5XQk1RqrG5NEZyzAvoJnf6
- HxFg9y9MdH/pyEvoNiaGAsJDwxIEWoaGM7w2XgGrzhjC9NxPG5ffh8pdbkGQrpJRJSL618qhF
- WwcNb8wH6G6ygKZ7hMnzNSQ76Ye/Xijt9/UlohMjlK1C+8vt8NUiIu0XES2Vs1An+YtyrAdSy
- A3+cxApRzxA0rmHcZ7UXGOgTCPRpPod5LcxEvt6xSa7sjMHQsBxRjuAogXKbBP0Pap8Ju7W/B
- RNrRApwFDg6Iv8aBPbU0TDXT+4zJqY7XBaiCkBcbUezwHH27SdGvy2QJ3HEW60La0UuTy5KbQ
- tFNgGm+vh9rWe1bpB+n4rspiBP0/QQy592U6HCiblaD6+L7RY/3aqtfSg8VDvazJgJPCGSq1w
- qRr8ssh971HseoisakhWIOEZL3M7gUYmrheHgfDLQzru2BXemv/I9O6CMtupgCBbqin7YP9qV
- Itgn8e4OSX5AKrNEwlZiN9RtxsTCSfKJpZ1+ufbLaOX8LNCxpggswWY8KQSBtw3S0AOAcW1U4
- l3tLlhOLyOo/fKnhqgaW+27khhO5dcT/0HjQ2QzBXgm94yMMWQSyS6p2jRVT1T5Z8nGxzLgUv
- oJWJcIMcfY3Nbe6qGlgNokuYui0sJAk3GY+nEo39J0GsVse6jKyjWwfgs+kOEt3ysWu9XzCd3
- fVT5y/fUrpPjqgc8Ws03jM2oHmqfHCrH0mx1yPC9lD4lIH2R8ysHwE7bj2oEDLeBq6h/jqjnL
- raAgAkmiLNY1La3FOMtRQLSJKjl8KfXRMEKZ51cpzjDleqPxmp9NmEmzaH2PgMlbzSuy+cZin
- c0NIoW5CWkHKBA+zgMZiX65g9toHPZ8dwwIyN+okbMU2ftx/AGh5QXTGrMOJe6byXtb3+znTv
- 8NNh9Z/ff1OKr7mnGd2CGeX8kqdlMjmMtDYF6vvHess6dtcTihFLm2G6GqK8Ug1el4PZwFmoU
- 1Ek4VDh8umEj4SbhsmedFOWwdl/+Ms6KnowBBKmnagxZe1pnfDciX7EK2lVJCRayfe8uapMR6
- wrPr5xoZMKtytfgelkI1R2qXeGbFdD3H7f7jnMHSKJ8NceCgp97HqSAZiQmphlGzGwqvSzAoh
- vshUyTWoEVZ5rDuIYs34mxmZimVSlHIpCTfHeGYo99ghgG6BuPjoUUYw/4OOF89dBMStcu/1Y
- FSTXwNrulWs/qpNReIYfvqt6pm7qfAyEo0mujJ3onBTxb5wEg87cIrGxj5FytivzY3KujMR7j
- vVJJx33SQC9S5EPC6
+X-Provags-ID: V03:K1:zPc9krwbnc26FIFGxqw464VWx4CGeOTSxHzZVRxdjjCbFkGxwf1
+ LuMRkl/p9EEACIl8yy5z/DhEvEoGJpWeGWhDYEdDJ7AdNiru2BpCLPy4gdunbcTVL8LnTIr
+ k3X1mdqaEYyjUeyd8byhw4O70W1vVMb193X3V6+jkca67sPbRbF2wDGDH/0yQ6BKmgirxC6
+ 4vBJ/ZWaLwqoET+vbKXyg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9EOg5/1GM1Q=:mQOiaxLiwsvUT53LiglLrt
+ qthwv7B6MKJLBegv4s6JBK0KxBy+BDC0Q4xTgs4pFQ7rCct3MVFTt0FJWShtaMTkTFvMNLunG
+ 3sgK6fKN7h6qBP6NJixnKl5Di6GTFVV5M07UZhlwJTIzw/wiHkoDXDBVDDWE7Ee7Ukb69PXI2
+ P8Oc7ltQNtv1+NkDiy58RSnxR/2xR1LBr+udyTPYFDuyIWeNqSzw0mA9Jqqw5et1aYkQe6U8l
+ THqXxIL7Jtq2Vbk6zHfu5c3EE6mvDEAJXiCmATgSKdwun8v6x4GWD/oXAGvW+QWwfhB8gBXwb
+ DyQnhuLSYGlmnry+RfOU558ZSL78yKwrNHGJMHZD0IjEHkfoz1CAR8brnYhuVCHUQl3Hb3Epq
+ CdVbqm2YskMsUuJoBlE2iriI5Tvj4S8fizmqM7g+Dg7enkLKTTrtU6nnINYLGy6OCYmiCez0n
+ fAxXWBC8+ToBk4knznHSY4MiNCinLeMmPM/A25W+dME9ruhtpgjNBXXyYJYlviik/5cEYIcbY
+ XHDOm0G14sqO1aTe7bFFaQwhI4hORj/6WKI0OovsT2mV/9+s2Ex63Y1jfIHG9qAxlmfIhknEf
+ MnGX9dojPcjQoK/jap8Q2h3v5+LPKgkUuhmeUk/95hlZiY5zBaEP0Sm6METjHstaGxCiJ3exY
+ kCJY4r/JfL6yTk+mTZzdQU7QO3WaIyVRYy3SPhqpu5ReOgRisfgSuzkCCdqnHVUSf7+hEz/aF
+ iHN+iaabTh0+o/b3mgdrlvLruwFWQ5UDgZ+sCzFVo/R6/5wr8LZwK08gaghEUeKOGAiY3nJsf
+ KJ2NvrBAm4LQmltd1mX9oHzmNjQPNdVT7DZJPIie2yE3ySk6sgvLIjNuz4BOBeyaXZE36SeQi
+ 6MM4a7H9u48QSgU1nF1Z6l2Zt/7pjuYdflO6CrqCXm6Pvh+AaMRSRGlTJNJAPNheDg3gVTVOQ
+ SHjAixUo0ppHw7mrb2+al5mxtTvbDVUHyIp8QIsLwLu0VIgvzJ/eOxxj1JEGSS30T4dnTHiDo
+ TSs3PL2Yow57dNyHUzwvnyNf1SNhAcs3dnHISR/ICIkkaA2cV1AX5xmJg/vBJXOxXIewwh/RI
+ T8DAOaZWcP/FwsvtZk0VKAYPIo9lnduK9E/LVQq8pMMK6fSk506u3Ey2cEEyQl3doaKbSUv3q
+ MrkTXFG3uCKv11f09Sf6vCx5BTGB+Nun7RR0dbJQtsf6uJ0C0Oz0joRJuv7N6aWJBeizMMD55
+ uefSV7U0sFOQgyV4V
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -78,23 +78,29 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
- Documentation/devicetree/bindings/mfd/zii,rave-sp.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mfd/tps65910.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Docum=
-entation/devicetree/bindings/mfd/zii,rave-sp.txt
-index 088eff9ddb78..e0f901edc063 100644
-=2D-- a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-+++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-@@ -20,7 +20,7 @@ RAVE SP consists of the following sub-devices:
- Device				 Description
- ------				 -----------
- rave-sp-wdt			: Watchdog
--rave-sp-nvmem			: Interface to onborad EEPROM
-+rave-sp-nvmem			: Interface to onboard EEPROM
- rave-sp-backlight		: Display backlight
- rave-sp-hwmon			: Interface to onboard hardware sensors
- rave-sp-leds			: Interface to onboard LEDs
+diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Document=
+ation/devicetree/bindings/mfd/tps65910.txt
+index 4f62143afd24..a5ced46bbde9 100644
+=2D-- a/Documentation/devicetree/bindings/mfd/tps65910.txt
++++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
+@@ -26,8 +26,8 @@ Required properties:
+             ldo6, ldo7, ldo8
+
+ - xxx-supply: Input voltage supply regulator.
+-  These entries are require if regulators are enabled for a device. Missi=
+ng of these
+-  properties can cause the regulator registration fails.
++  These entries are required if regulators are enabled for a device. Miss=
+ing these
++  properties can cause the regulator registration to fail.
+   If some of input supply is powered through battery or always-on supply =
+then
+   also it is require to have these parameters with proper node handle of =
+always
+   on power supply.
 =2D-
 2.20.1
 
