@@ -4,116 +4,186 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CB0C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF34C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9D02469B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2980246A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582823948;
-	bh=kl/04uM+7lf6zfg55PDxvBrsVB2mcSqNhD3IZxQZju4=;
+	s=default; t=1582824235;
+	bh=cdHW6tjJ764YaHY3iAyqV8/R6TI6ivK3tqQeS+dnQGc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kdiK3N+XZPVLreZHrvNXHB68qw8VARejFRS+4yw4WMlB7kDpSPvwDSs657k4bvPTy
-	 5MH2f4XTUVtHQ5hWy556A7E1/dG/yTCKNgR7/ZSKcmmqYeKQezEeQ6EJMD1+pgDALQ
-	 UKSMtk3LmAqElrOdnXUwvLz1nOiD+mTOKBMRtzXY=
+	b=oVGgGYPRM032E6iEevG+qQ+9pA86vPsjxDzXOgnH5ihPVgc5VKhtjMM908wKJn0IS
+	 iRcoRt+vkTH83zFHAlIKRUZ6sm05ydhfof8qAIFI4DdR2xuc+tdN/oTthVpTWVKQ8q
+	 ZLqikiJ8nvgVJ8ZDiMP6R6VMPNtA/G1x7214Q9HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbgB0RTH (ORCPT
+        id S1730245AbgB0RXn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:19:07 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38177 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgB0RTH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 12:19:07 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 2so2919244oiz.5;
-        Thu, 27 Feb 2020 09:19:06 -0800 (PST)
+        Thu, 27 Feb 2020 12:23:43 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35344 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730208AbgB0RXn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 12:23:43 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r16so3693773otd.2;
+        Thu, 27 Feb 2020 09:23:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EEa7ye+4SNg6W5sroyNYrJMOxOtx09zWUa0ioGPqjd8=;
-        b=b4t1XujXYCvJF1sKtgq/7eqiTpLx0mWszbbBBKagF+vED6KvsrZ3+SS7OdUWBQlCzi
-         1gfcU+sMVU4BF1vodnfPeXcxoFamUgxfRasCyajIe0Wv8U4WzEMa/tyAVVB+mlCiip66
-         jk4QgaO1E8qlCP5kzxpcMEgxZ5YUItbUri64MeS/I870Rre/z78z8xNqdD9+WyKmrmuD
-         9q3a9t4t93bKbirgPRlhd42jFX3EbWc5oH+qwU6Sjz1C+LVV29xDXB8FlYvjsMDrg5aw
-         4OD2AGmTib8Ukca1juQn1PzluG2TM34wul9jQ20vCX0fKTz+yT5YiTMZUr0rMcg5k4om
-         k3OQ==
-X-Gm-Message-State: APjAAAU1mdiRano1xCKOJBoiIP4ayJCA0vHSlQE90Lca5ImeeEPXHcyO
-        itBUrxJCOTbKXtz5TfbEDw==
-X-Google-Smtp-Source: APXvYqyivrbnGPADBq2gCXjpZ0Ulx7DPwJxfGsdNrYwEE5j4rbjAGXZ2yhl3jW4hSxNtdbA1D1ycUA==
-X-Received: by 2002:aca:3857:: with SMTP id f84mr58985oia.150.1582823946480;
-        Thu, 27 Feb 2020 09:19:06 -0800 (PST)
+        bh=3SQrHH3RldHlDSPXSXXFbHJRaEJs4Lzh1Ap0ZS/UfRI=;
+        b=aRjxPVhp94sh8Wceqco7uWbuHpFWvMGd+OKcY/bJXk1Ap3Sto1SduoJQSBIKx1yd71
+         sn9asVH+JylFCDolbKJxOcK4hM0uNpNNxUxCyD4+6jx2h83LquL1Z6SmvERaWD7I6s66
+         F1i2cKQtnzWoMQwJeSKHMPF+olfE+h+AfNZ5jOnlyUh0AlPdggRrND1UXqb2ZrOEPGAr
+         g+LAcAEAOCSjo6lRe9Z1vEjv04aWRtJSjTRhTXIadv1LmhTTe3h8jS2OBVY/V0RJB+kS
+         x3kO5DsyoyZCxqiELCiyRbI4qgfm3v3JJU8xtIlYGpEKnjSxmwo6Fb08gQxTKixmTyUm
+         NT6w==
+X-Gm-Message-State: APjAAAUGCICABXruWAfXxcrO9vn7Ul/Cb95uT30KrIeUc3lE2/Fx0nKG
+        2OST3umDIi8pVit8gFQ9gA==
+X-Google-Smtp-Source: APXvYqzW64cJcps6+Kk6SHemjadYsuL6hjnqtoSPNHPfFBrAfn+8QW46IsbbWEnrIhKEW1l666/RPw==
+X-Received: by 2002:a9d:6212:: with SMTP id g18mr659180otj.187.1582824222587;
+        Thu, 27 Feb 2020 09:23:42 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k201sm2165169oih.43.2020.02.27.09.19.05
+        by smtp.gmail.com with ESMTPSA id y13sm2122714otk.40.2020.02.27.09.23.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 09:19:06 -0800 (PST)
-Received: (nullmailer pid 18856 invoked by uid 1000);
-        Thu, 27 Feb 2020 17:19:04 -0000
-Date:   Thu, 27 Feb 2020 11:19:04 -0600
+        Thu, 27 Feb 2020 09:23:41 -0800 (PST)
+Received: (nullmailer pid 24337 invoked by uid 1000);
+        Thu, 27 Feb 2020 17:23:40 -0000
+Date:   Thu, 27 Feb 2020 11:23:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v9 3/5] dt-bindings: display: mediatek: dpi sample data
- in dual edge support
-Message-ID: <20200227171904.GA17829@bogus>
-References: <20200226053238.31646-1-jitao.shi@mediatek.com>
- <20200226053238.31646-4-jitao.shi@mediatek.com>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/2] dt-bindings: net: Add ipq806x mdio bindings
+Message-ID: <20200227172340.GA19136@bogus>
+References: <andrew@lunn.ch>
+ <20200227011050.11106-1-ansuelsmth@gmail.com>
+ <20200227011050.11106-2-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226053238.31646-4-jitao.shi@mediatek.com>
+In-Reply-To: <20200227011050.11106-2-ansuelsmth@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 01:32:36PM +0800, Jitao Shi wrote:
-> Add property "pclk-sample" to config the dpi sample on falling (0),
-> rising (1), both falling and rising (2).
+On Thu, Feb 27, 2020 at 02:10:46AM +0100, Ansuel Smith wrote:
+> Add documentations for ipq806x mdio driver.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
->  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt       | 2 ++
->  1 file changed, 2 insertions(+)
+> Changes in v8:
+> - Fix error in dtb check
+> - Remove not needed reset definition from example
+> - Add include header for ipq806x clocks
+> - Fix wrong License type
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> index a7b1b8bfb65e..4299aa1adf45 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> @@ -20,6 +20,7 @@ Required properties:
->  Optional properties:
->  - pinctrl-names: Contain "gpiomode" and "dpimode".
->    pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
-> +- pclk-sample: refer Documentation/devicetree/bindings/media/video-interfaces.txt.
->  
->  Example:
->  
-> @@ -37,6 +38,7 @@ dpi0: dpi@1401d000 {
->  
->  	port {
->  		dpi0_out: endpoint {
-> +			pclk-sample = 0;
+> Changes in v7:
+> - Fix dt_binding_check problem
+> 
+>  .../bindings/net/qcom,ipq8064-mdio.yaml       | 61 +++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> new file mode 100644
+> index 000000000000..4334a415f23c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-Not valid dts syntax: <0>
+Dual license new bindings please:
 
->  			remote-endpoint = <&hdmi0_in>;
->  		};
->  	};
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x MDIO bus controller
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  The ipq806x soc have a MDIO dedicated controller that is
+> +  used to comunicate with the gmac phy conntected.
+
+2 typos
+
+> +  Child nodes of this MDIO bus controller node are standard
+> +  Ethernet PHY device nodes as described in
+> +  Documentation/devicetree/bindings/net/phy.txt
+
+You might want to read what that file says now.
+
+> +
+> +allOf:
+> +  - $ref: "mdio.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +        - const: qcom,ipq8064-mdio
+> +        - const: syscon
+
+Why is this a 'syscon'? Does it have more than 1 function?
+
+> +
+> +  reg:
+> +    description: address and length of the register set for the device
+
+Drop this and you need to state how many (maxItems).
+
+> +
+> +  clocks:
+> +    description: A reference to the clock supplying the MDIO bus controller
+
+Same here.
+
+> +
+> +  clock-names:
+> +    const: master
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    mdio0: mdio@37000000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        compatible = "qcom,ipq8064-mdio", "syscon";
+> +        reg = <0x37000000 0x200000>;
+> +
+> +        clocks = <&gcc GMAC_CORE1_CLK>;
+> +
+> +        switch@10 {
+> +            compatible = "qca,qca8337";
+> +            /* ... */
+> +        };
+> +    };
 > -- 
-> 2.21.0
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 2.25.0
+> 
