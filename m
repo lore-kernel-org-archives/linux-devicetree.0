@@ -2,183 +2,213 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53063C54FDF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14583C52D2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A5524688
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813315;
-	bh=A82Y9A3U3/P7mYTp+rSrNOhL2WJfvMTsvO8YMvEjdtk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KaBqk6fN6nyvwXo1IDD5ED1uK3Kbtnb9q6NeTqJVhxBeAw1Hbkk/CutAlHyutrqci
-	 WiHw34kbxaVfV2Y41MekfgPCTN1jMZQ6OEeWOz8xJQ3wQu5UEMCF0DsIuXLML5cDKE
-	 zeIOjwgD2TI9DzQa/nyQK8yJbs7iS+ug6NcCmT9Y=
+	by mail.kernel.org (Postfix) with ESMTP id DED0624697
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="QofFa8xo";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P77kFJG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389510AbgB0OVu (ORCPT
+        id S1730260AbgB0OZ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:21:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389485AbgB0OQV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2482469F;
-        Thu, 27 Feb 2020 14:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812980;
-        bh=A82Y9A3U3/P7mYTp+rSrNOhL2WJfvMTsvO8YMvEjdtk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y0gd5iGwQNI5jynl7KeijZ4g1eGd5j5qSF5Mp8HbExmLQEPe4saPrSoMRPKgqtTlX
-         krZVdYH7RgZF2mKWi9P02IVlBEvNqe/4mho7FyTaUqVU1jDBP1jcIQ5cGrukoA30y7
-         50qqx21/LKOFAXN2AEZ7l0iXurdo4YJvqsEG9YuA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 27 Feb 2020 09:25:27 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:39459 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388698AbgB0OZ0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:25:26 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 82F7477BB;
+        Thu, 27 Feb 2020 09:25:25 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Thu, 27 Feb 2020 09:25:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=8k8ifdUwFDmcr1ArdIrV0k+L0po
+        RQVFUQt0Z3XT5bwI=; b=QofFa8xonDt6zn0DF9+ivYYHTiwYYcNzFwfQv9IYx1H
+        lQVTqGC6T9MYDQ5wgkVkBxpD+CfQESTGyKq+V8UjmweYx4jSXfEEpzLw+siiUijR
+        GFRQpqTYRU+9m0qTFUMjZDhgKaFHGZxOcauggtDnu15HdauSPn+VPerHAuJsNX4o
+        KfMykFLM2N+gBE2C6RvMPdLXQKPgqnSb/UHIWw+/S738HNMLlGCsjNTeV8CPk1KD
+        cszgujYUd5+ZKA1ogTfhafm7b+IXsrYo/jEPOvr0tNlXMBiT4NnJ4x1NR8AnTNOh
+        P9iUipa8bUgP9hKSBpO9MX0GVcXn9f2UKIQUJ+g2obA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=8k8ifd
+        UwFDmcr1ArdIrV0k+L0poRQVFUQt0Z3XT5bwI=; b=P77kFJG49ME2EtAi4y+kF/
+        znLlZmgqZEwYmB2IMRBbSfIHUUdmqbyOvR/EbbLSXwBjDin9Rog+/X/Rt04qH4LV
+        /VtU1ujfW40A10O7h9vF4/f55KRO3ZXVdZxwsHCrj3pzNpHk4xJXDI/Y52qw5fsp
+        pwg/ACaFJuO4dc+GU0Skj2rMCzyi61mZvtkG/ttEkcyaBIIO/Zraz5XBDYzGX84+
+        gmdF98c0g6MW4qJvZfj35HQ65Xy78qiFKLU5Sqxmg7w4O2wFdUPoQL0mo0ztE099
+        Jszd9z4WO51ocbXwLw8Y4p2Z+OpgpR+OmK/SgLX2Iel7Itck+IzdRmdt5ysLlrdg
+        ==
+X-ME-Sender: <xms:U9FXXqc_jC4dXhKJjYPY0SwqkKXkwg4bFqI9w6OA63FuIsfkqJDcdQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeigdeihecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrieekrdejieenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrh
+    hnohdrthgvtghh
+X-ME-Proxy: <xmx:U9FXXocZAPRdGoI3AMrdQIC_SExy12PCYkDXuEvfgdE8OkX3U75uCQ>
+    <xmx:U9FXXmgVGVeMNDJbNivPAomv_gMVHz70RTnLzv_VqngHyaJxHlnAmA>
+    <xmx:U9FXXsSWyJkG--YI-yWI5SIBGxb0Lhb200UYZocpUsk0DnhJ5ci3_A>
+    <xmx:VdFXXgO_BqyPBRPSX6zOnzDJR0pVYDwjNmKtOyHQsGZjZWT5NPMgkw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5CBCD3280066;
+        Thu, 27 Feb 2020 09:25:23 -0500 (EST)
+Date:   Thu, 27 Feb 2020 15:25:21 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
-        Zhou Yanjie <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 5.5 063/150] MIPS: ingenic: DTS: Fix watchdog nodes
-Date:   Thu, 27 Feb 2020 14:36:40 +0100
-Message-Id: <20200227132242.322641300@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
-References: <20200227132232.815448360@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: display: sun4i-tcon: Add LVDS Dual Link
+ property
+Message-ID: <20200227142521.vtmcwbwxjddphjf2@gilmour.lan>
+References: <20200214123244.109300-1-maxime@cerno.tech>
+ <20200214131025.GI4831@pendragon.ideasonboard.com>
+ <20200214154405.f5zuicm6uhhiczfs@gilmour.lan>
+ <20200214154953.GJ4831@pendragon.ideasonboard.com>
+ <20200217174253.mj53us4bb7h2lyca@gilmour.lan>
+ <20200217181006.GE4830@pendragon.ideasonboard.com>
+ <20200220175307.qool442lm7qjqb5h@gilmour.lan>
+ <20200220191339.GJ4998@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ubhaez32phxyobwo"
+Content-Disposition: inline
+In-Reply-To: <20200220191339.GJ4998@pendragon.ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
 
-commit 11479e8e3cd896673a15af21cd0f145a4752f01a upstream.
+--ubhaez32phxyobwo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The devicetree ABI was broken on purpose by commit 6d532143c915
-("watchdog: jz4740: Use regmap provided by TCU driver"), and
-commit 1d9c30745455 ("watchdog: jz4740: Use WDT clock provided
-by TCU driver"). The commit message of the latter explains why the ABI
-was broken.
+On Thu, Feb 20, 2020 at 09:13:39PM +0200, Laurent Pinchart wrote:
+> Hi Maxime,
+>
+> On Thu, Feb 20, 2020 at 06:53:07PM +0100, Maxime Ripard wrote:
+> > On Mon, Feb 17, 2020 at 08:10:06PM +0200, Laurent Pinchart wrote:
+> > > On Mon, Feb 17, 2020 at 06:42:53PM +0100, Maxime Ripard wrote:
+> > >> On Fri, Feb 14, 2020 at 05:49:53PM +0200, Laurent Pinchart wrote:
+> > >>> On Fri, Feb 14, 2020 at 04:44:05PM +0100, Maxime Ripard wrote:
+> > >>>> On Fri, Feb 14, 2020 at 03:10:25PM +0200, Laurent Pinchart wrote:
+> > >>>>> On Fri, Feb 14, 2020 at 01:32:43PM +0100, Maxime Ripard wrote:
+> > >>>>>> SoCs that have multiple TCONs can use the two set of pins on the first TCON
+> > >>>>>> to drive a dual-link display. Add a property to enable the dual link.
+> > >>>>>>
+> > >>>>>> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > >>>>>> ---
+> > >>>>>>  .../bindings/display/allwinner,sun4i-a10-tcon.yaml         | 7 +++++++
+> > >>>>>>  1 file changed, 7 insertions(+)
+> > >>>>>>
+> > >>>>>> diff --git a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+> > >>>>>> index 86ad617d2327..aa6dd8409dbc 100644
+> > >>>>>> --- a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+> > >>>>>> +++ b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+> > >>>>>> @@ -105,6 +105,13 @@ properties:
+> > >>>>>>          - const: edp
+> > >>>>>>          - const: lvds
+> > >>>>>>
+> > >>>>>> +  allwinner,lvds-dual-link:
+> > >>>>>> +    type: boolean
+> > >>>>>> +    description: |
+> > >>>>>> +      On a SoC with two TCON with LVDS support, the first TCON can
+> > >>>>>> +      operate over both pins sets to output in a dual-link setup. This
+> > >>>>>> +      will be triggered by setting this property.
+> > >>>>>
+> > >>>>> Could you maybe provide an example of how this property is supposed to
+> > >>>>> be used ? I'm especially wondering what ports are used in that case and
+> > >>>>> how they're connected.
+> > >>>>
+> > >>>> It's pretty trivial to support, it's only a property to set on the
+> > >>>> encoder node itself.
+> > >>>>
+> > >>>> I'm not really sure what you meant by your question with the ports
+> > >>>> though :/
+> > >>>
+> > >>> I assume that, in the single-link case, you have two TCON instances that
+> > >>> operate independently, each of them with one port that models an LVDS
+> > >>> connection to a panel.
+> > >>
+> > >> Indeed,
+> > >>
+> > >>> In the dual-link mode, how does that look like ? Does the TCON
+> > >>> instance that operate in dual-link mode have two ports in DT ? There
+> > >>> are two physical ports, so I think it makes sense to always have two
+> > >>> ports in DT. That's what we're doing for the LVDS encoders on R-Car
+> > >>> Gen3, in order to specify in DT which LVDS input of the dual-link
+> > >>> panel is connected to which LVDS output of the SoC. That allows
+> > >>> configuring the LVDS encoder to send the even and odd pixels on the
+> > >>> right port.
+> > >>
+> > >> As far as I can tell, you can't control that in our TCON. It just on
+> > >> more lanes, that's it. Also, we currently have multiple ports, to map
+> > >> another feature of the TCON, which is that it can drive directly a
+> > >> panel, or will send its output to the HDMI / TV encoders. Adding
+> > >> another port in that will break the current binding we have.
+> > >
+> > > This will create one issue though, in that the dual-link sinks are
+> > > supposed to have two input ports, in order to expose the odd and even
+> > > pixels ordering. If you have a single ouput port in your TCON, how will
+> > > you interface with such sinks ?
+> >
+> > I guess we could create multiple endpoints in the same port? That's
+> > not going to be trivial either though given the current binding we
+> > have :/
+>
+> That's however not really how endpoints are supposed to be used.
+>
+> Let's try to find a solution. Could you show me a DT example that
+> explains why having two ports would create backward-compatibility issues
+> ?
 
-However, the current devicetree files were not updated to the new ABI
-described in Documentation/devicetree/bindings/timer/ingenic,tcu.txt,
-so the watchdog driver would not probe.
+Sure, here is what the DT looks like for the SoC this patch was
+relevant for (but we have the issue on multiple SoCs, all sharing
+pretty much the same binding as far as ports go):
+https://elixir.bootlin.com/linux/v5.6-rc3/source/arch/arm/boot/dts/sun7i-a20.dtsi#L406
 
-Fix this problem by updating the watchdog nodes to comply with the new
-ABI.
+And here is the binding part:
+https://elixir.bootlin.com/linux/v5.6-rc3/source/arch/arm/boot/dts/sun7i-a20.dtsi#L406
 
-Fixes: 6d532143c915 ("watchdog: jz4740: Use regmap provided by TCU driver")
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Cc: od@zcrc.me
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: <stable@vger.kernel.org> # v5.5+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+As you can see, in that binding, ports were used to differentiate
+between output and input, each of the output being an endpoint (since
+we can't have the TCON driving multiple output at once).
 
----
- arch/mips/boot/dts/ingenic/jz4740.dtsi |   17 +++++++++--------
- arch/mips/boot/dts/ingenic/jz4780.dtsi |   17 +++++++++--------
- 2 files changed, 18 insertions(+), 16 deletions(-)
+Adding multiple ports would kind of break that, and would break the
+general idea behind that binding (and the rest of the display
+pipeline).
 
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4740-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -45,14 +46,6 @@
- 		#clock-cells = <1>;
- 	};
- 
--	watchdog: watchdog@10002000 {
--		compatible = "ingenic,jz4740-watchdog";
--		reg = <0x10002000 0x10>;
--
--		clocks = <&cgu JZ4740_CLK_RTC>;
--		clock-names = "rtc";
--	};
--
- 	tcu: timer@10002000 {
- 		compatible = "ingenic,jz4740-tcu", "simple-mfd";
- 		reg = <0x10002000 0x1000>;
-@@ -73,6 +66,14 @@
- 
- 		interrupt-parent = <&intc>;
- 		interrupts = <23 22 21>;
-+
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4740-watchdog";
-+			reg = <0x0 0xc>;
-+
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
- 	};
- 
- 	rtc_dev: rtc@10003000 {
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4780-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/dma/jz4780-dma.h>
- 
- / {
-@@ -67,6 +68,14 @@
- 
- 		interrupt-parent = <&intc>;
- 		interrupts = <27 26 25>;
-+
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4780-watchdog";
-+			reg = <0x0 0xc>;
-+
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
- 	};
- 
- 	rtc_dev: rtc@10003000 {
-@@ -348,14 +357,6 @@
- 		status = "disabled";
- 	};
- 
--	watchdog: watchdog@10002000 {
--		compatible = "ingenic,jz4780-watchdog";
--		reg = <0x10002000 0x10>;
--
--		clocks = <&cgu JZ4780_CLK_RTCLK>;
--		clock-names = "rtc";
--	};
--
- 	nemc: nemc@13410000 {
- 		compatible = "ingenic,jz4780-nemc";
- 		reg = <0x13410000 0x10000>;
+Maxime
 
+--ubhaez32phxyobwo
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlfRUQAKCRDj7w1vZxhR
+xc0PAP9zjDzXT9CNGe6TSoSpsnFcO7r6DJ3ynEyYRcoX7uy9zQD/ZURcSADOTd+8
+9E6zrb7rrCuTN42+4NccjG1sXpHlego=
+=Vvge
+-----END PGP SIGNATURE-----
+
+--ubhaez32phxyobwo--
