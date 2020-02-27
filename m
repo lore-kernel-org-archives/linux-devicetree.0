@@ -2,57 +2,59 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C778C3F2C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9D9C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49D22469B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EBF324699
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3uxW57B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bO5AUqx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgB0XFR (ORCPT
+        id S1730385AbgB0XF3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:05:17 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43838 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729656AbgB0XFR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 18:05:17 -0500
-Received: by mail-pg1-f194.google.com with SMTP id u12so442841pgb.10;
-        Thu, 27 Feb 2020 15:05:16 -0800 (PST)
+        Thu, 27 Feb 2020 18:05:29 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51586 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730374AbgB0XF3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 18:05:29 -0500
+Received: by mail-pj1-f67.google.com with SMTP id fa20so433373pjb.1;
+        Thu, 27 Feb 2020 15:05:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Bk/8S/Z3TX6gpAJL/01qav03pWjPrUS9+WLbM4tWfRA=;
-        b=D3uxW57B0O2ZCS13ox+7bG3kfYJ5dm/5SQnmvP4FvWhMrFCseDKD7aHRX77YVxLIeK
-         QmXQXLgi+BnIuBKkThmncjPPcuDErTVpgwIJInw2WrOKFBUl74O14clRUCo0uKUasRG2
-         jHFO9WNnbVQI5EgXyYuRbBazh7hxKpeywV9Pewb4YiMMN3rsNkp3XDAXHVyhCAFV0b/J
-         HkE3e7EbQif7P6K7MEumvanCMAPKGqR7osu4IrHNXTFkYZUgtnm6eDQA9i0SF0BaiHuF
-         umwDNdSfJi8ud1Yac4Hu2BOp6j2iWu8BmIrGqz9CXAgOBxaG3LPsdKXZWCRQRhJMU7aj
-         kBfg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=FOie+PWiSZiMJEo9veE/haA09vAP/gyvQzP/mDUUeLo=;
+        b=bO5AUqx1exL98VPqoOr9m2rBzqwx+JG6jnpcqWyILDxgpHRf9ZyyeJMEyJ9U1ayxHn
+         9juw1tR+uimsqKeNkLWZuoxdjCnRpdAjgKZfrwPUgSd+sxyGs9W67TF9JHGJgL//k3e+
+         i6kdkjOemNfRQI0DiVYX0rtXpXnRdhkChqzzyZQjz+Oa4TfRtJ05kgvekhiUc8x5n4Rf
+         Rqckjln5HiyBQJ66PntsPedMg052N+nOwUDKD1ormFdLCA3PxkXbNymHnJOmuxF7mNit
+         JKAN2R4bzJqsRyGmZ3366Dy0WF9zIUmbqXuEVJd5eQ7OHKECLEktI90Rd1v/zXQQHffG
+         TUew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Bk/8S/Z3TX6gpAJL/01qav03pWjPrUS9+WLbM4tWfRA=;
-        b=DEhascdTjvS1ytbfMw8zRWZL3NhIxMyrFF7yB/KZRBxd+ShlGNPwRK1ZBL2/okI+Jv
-         b1NUMBYoyyQV+us53wx+of3++gLaNQqKJbhDhocrmjZUcLG0BrSfkodmAiNviNyMmPHy
-         EEIe8BPV2MRv3kxIdwqvK27wry4nKxK+JwasABdCCrTkyPRf40taAVPhWpcYytCDolCq
-         KpeFSrzVg4AYvC7jxisXJqIrMYavr6OqqOddIwXSKXd+ObNNtGF97jjVGl+H/zDlxzGV
-         qkw4X2BLRXn59MG7tEHlYGFAWS4qB8zRbZZrg0/vCZQ2/cMtzdeMLmc+fsxC2J22ngzG
-         wwfQ==
-X-Gm-Message-State: APjAAAVnKUECtFSn6s9rbhXYYigIsIG4WB8hJOG2MoIPBQR/WiR2Ii2I
-        BelNOBC8cWrrC0KawPY48IgXJDKlv1w=
-X-Google-Smtp-Source: APXvYqyDK8WIIeHKpc/60SN35zdliyQ2V/wsC3lesIYegLPHI6ky6j9GatyILA/aeOM6XAgy1Jjrng==
-X-Received: by 2002:a63:5fd5:: with SMTP id t204mr1541214pgb.265.1582844715754;
-        Thu, 27 Feb 2020 15:05:15 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=FOie+PWiSZiMJEo9veE/haA09vAP/gyvQzP/mDUUeLo=;
+        b=c91UwM9rsyGlIpv59BFhOmtm2+/KNnV5i3+lBwfuouKDwON659umgPckK5qPdSLEmq
+         73PvbpcOwVb6iFzBVZUlu007/oX1aUVZ6h5jRMnS0L4tSHB65PVWEmN3wzvd833ejU/q
+         DvL1REABlSOrsgPcQJG2TLDSh1ffWtxHbntiRXDSce6K7C/I1h3McH5WnfPlorOIWuHl
+         QC7Dw3BldznmwGfOROPXD+7kY0grq51vlCTmXsFk0j3MgLaYXWcZ/Gt2E5s/AClUttRr
+         AbZX5tt6fyznUEGzNgU4RB7uhX4H5K5lUjr8tXCzo1q3lTHzRInDpx3UoLd1g7krZEsO
+         I4uA==
+X-Gm-Message-State: APjAAAU+/Pn56syFKDXZ5bWjfSNyERvC4GtBDxq0raeqDh9YGBsH4NzB
+        0e7nxE3B7VuJXVcwJfGEMv8=
+X-Google-Smtp-Source: APXvYqxiM0Y8rvFyRXJfym2JxQVAYv9iF3d+OIytDy03RQI9STBUoMnSgqGcf++mM8Q/F4ywJd9n0Q==
+X-Received: by 2002:a17:902:6504:: with SMTP id b4mr1072914plk.291.1582844727819;
+        Thu, 27 Feb 2020 15:05:27 -0800 (PST)
 Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:500::4:d8f5])
-        by smtp.gmail.com with ESMTPSA id w2sm8275975pfw.43.2020.02.27.15.05.13
+        by smtp.gmail.com with ESMTPSA id w2sm8275975pfw.43.2020.02.27.15.05.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 15:05:15 -0800 (PST)
+        Thu, 27 Feb 2020 15:05:27 -0800 (PST)
 From:   rentao.bupt@gmail.com
 To:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -69,10 +71,12 @@ To:     Felipe Balbi <balbi@kernel.org>,
         linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
         taoren@fb.com
 Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v5 0/7] aspeed-g6: enable usb support
-Date:   Thu, 27 Feb 2020 15:05:00 -0800
-Message-Id: <20200227230507.8682-1-rentao.bupt@gmail.com>
+Subject: [PATCH v5 7/7] dt-bindings: usb: add documentation for aspeed usb-vhub
+Date:   Thu, 27 Feb 2020 15:05:07 -0800
+Message-Id: <20200227230507.8682-8-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200227230507.8682-1-rentao.bupt@gmail.com>
+References: <20200227230507.8682-1-rentao.bupt@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -80,49 +84,99 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-The patch series aims at enabling USB Host and Gadget support on AST2600
-platforms.
+Add device tree binding documentation for the Aspeed USB 2.0 Virtual HUb
+Controller.
 
-Patch #1 includes vhub's usb descriptors in struct "ast_vhub": all usb
-descriptor changes will go to the per-vhub instance instead of touching
-the global default descriptors.
-
-Patch #2 replaces hardcoded vhub port/endpoint number with device tree
-properties, so that it's more convenient to add support for ast2600-vhub
-which provides more downstream ports and endpoints.
-
-Patch #3 enables ast2600 support in aspeed-vhub usb gadget driver.
-
-Patch #4 adds USB devices and according pin groups in aspeed-g6 dtsi.
-
-Patch #5 and #6 add vhub port/endpoint properties into aspeed-g4 and
-aspeed-g5 dtsi.
-
-Patch #7 adds device tree binding document for aspeed usb-vhub driver.
-
-Tao Ren (7):
-  usb: gadget: aspeed: support per-vhub usb descriptors
-  usb: gadget: aspeed: read vhub properties from device tree
-  usb: gadget: aspeed: add ast2600 vhub support
-  ARM: dts: aspeed-g6: add usb functions
-  ARM: dts: aspeed-g5: add vhub port and endpoint properties
-  ARM: dts: aspeed-g4: add vhub port and endpoint properties
-  dt-bindings: usb: add documentation for aspeed usb-vhub
+Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+---
+ Changes in v5:
+   - updated maintainer to Ben.
+   - refined patch description per Joel's suggestion.
+ No change in v2/v3/v4:
+   - the patch is added to the patch series since v4.
 
  .../bindings/usb/aspeed,usb-vhub.yaml         | 71 +++++++++++++++++++
- arch/arm/boot/dts/aspeed-g4.dtsi              |  2 +
- arch/arm/boot/dts/aspeed-g5.dtsi              |  2 +
- arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi      | 25 +++++++
- arch/arm/boot/dts/aspeed-g6.dtsi              | 45 ++++++++++++
- drivers/usb/gadget/udc/aspeed-vhub/Kconfig    |  4 +-
- drivers/usb/gadget/udc/aspeed-vhub/core.c     | 71 ++++++++++++-------
- drivers/usb/gadget/udc/aspeed-vhub/dev.c      | 30 +++++---
- drivers/usb/gadget/udc/aspeed-vhub/epn.c      |  4 +-
- drivers/usb/gadget/udc/aspeed-vhub/hub.c      | 58 ++++++++++-----
- drivers/usb/gadget/udc/aspeed-vhub/vhub.h     | 43 +++++++----
- 11 files changed, 284 insertions(+), 71 deletions(-)
+ 1 file changed, 71 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
 
+diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+new file mode 100644
+index 000000000000..b8b1700c2423
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2020 Facebook Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/aspeed,usb-vhub.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ASPEED USB 2.0 Virtual Hub Controller
++
++maintainers:
++  - Benjamin Herrenschmidt <benh@kernel.crashing.org>
++
++description: |+
++  The ASPEED USB 2.0 Virtual Hub Controller implements 1 set of USB Hub
++  register and several sets of Device and Endpoint registers to support
++  the Virtual Hub's downstream USB devices.
++
++  Supported number of devices and endpoints vary depending on hardware
++  revisions. AST2400 and AST2500 Virtual Hub supports 5 downstream devices
++  and 15 generic endpoints, while AST2600 Virtual Hub supports 7 downstream
++  devices and 21 generic endpoints.
++
++properties:
++  compatible:
++    enum:
++      - aspeed,ast2400-usb-vhub
++      - aspeed,ast2500-usb-vhub
++      - aspeed,ast2600-usb-vhub
++
++  reg:
++    maxItems: 1
++    description: Common configuration registers
++
++  clocks:
++    maxItems: 1
++    description: The Virtual Hub Controller clock gate
++
++  interrupts:
++    maxItems: 1
++
++  aspeed,vhub-downstream-ports:
++    description: Number of downstream ports supported by the Virtual Hub
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++
++  aspeed,vhub-generic-endpoints:
++    description: Number of generic endpoints supported by the Virtual Hub
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++  - aspeed,vhub-downstream-ports
++  - aspeed,vhub-generic-endpoints
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/aspeed-clock.h>
++    vhub: usb-vhub@1e6a0000 {
++            compatible = "aspeed,ast2500-usb-vhub";
++            reg = <0x1e6a0000 0x300>;
++            interrupts = <5>;
++            clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
++            pinctrl-names = "default";
++            pinctrl-0 = <&pinctrl_usb2ad_default>;
++    };
 -- 
 2.17.1
 
