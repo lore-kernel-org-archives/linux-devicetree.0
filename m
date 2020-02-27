@@ -2,127 +2,98 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D84FC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30632C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E48AF246A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:42:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qn+7NLia"
+	by mail.kernel.org (Postfix) with ESMTP id 10127246A1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbgB0Wm4 (ORCPT
+        id S1729850AbgB0WtH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:42:56 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37999 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729722AbgB0Wm4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:42:56 -0500
-Received: by mail-pg1-f196.google.com with SMTP id d6so432595pgn.5;
-        Thu, 27 Feb 2020 14:42:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eC6XULGo71DkkbKYMEVa3CebZbR3YIk7hU1LZdfvH4Y=;
-        b=qn+7NLiaVpezukxBzFBwfG+epP+sfl+YlsORRJxCCoojrQj/h+YkBxM3i6YDE0AQJs
-         P7T7DFMTB9R1RXIaeliDZ/dyWhM6CuLv2kO/sytHwO7bES5aZttcq2BrppClH47OLbih
-         8glkk1PmO0wSymairAZIAQPbdboYTf0jc9+6madbyvW0p84zWN/JxZ4udBJCDn6mRfqt
-         jd9n5MmIClzXAQ9CHp/v1tEiTBrPm4tZ7i/cyZuEmoDelTi8Iz9b5FAUMOXDPMbqEEX7
-         ODi3nQW4+kEH1AhkrhqS4TXIZWBBmPcmnkuQblEIuHdpsioRqGi/GZZCFJdDdpOtidJT
-         pm8Q==
+        Thu, 27 Feb 2020 17:49:07 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39296 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgB0WtH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:49:07 -0500
+Received: by mail-oi1-f196.google.com with SMTP id r16so953578oie.6;
+        Thu, 27 Feb 2020 14:49:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eC6XULGo71DkkbKYMEVa3CebZbR3YIk7hU1LZdfvH4Y=;
-        b=b7aYEwX4WDGDY/hP/9piEacxS6zPH951CkLkqdCdqtPjMLF8Z/sveErZQhDiyN4Pu0
-         GntDIpl8+knW/fE40Iy3xPMU/AIW+tCQoVmHhd25uEDmKU5OCsqSid7K4fGPKGkihjxq
-         3IYN98my5W8Lqx3x0/qbgDfHR8eLkN5mOXw1wJFHop7D2lAyTTxAyjlbsIJgjr/qTFw/
-         M3736BGPUiPs13Zf+Me7Rpe0WLRe+JLJl6N8ZDxOhVQ+EJdrEhHpe2ydHoMaBgdxw4Xy
-         kL/KwmX8xna482aQSXVtq9Ndl/eBeaelG+6XjSSxqZ9sYLDsKNy3zYRwkgDzbrR4XZ/j
-         wDpw==
-X-Gm-Message-State: APjAAAUpMUgUFs7Nd8vQej6EzztBlsZWpkMk4gm3FB7//9jSJhYCDA2Y
-        kY2c8FlYcsYmjMxQUTs9OCk=
-X-Google-Smtp-Source: APXvYqzGTM6O1kzlusq2+UBm7XJw4SAY63lpqMM/UumlDNsXPcBi96eO1OrkgnLHxCGovebuWsNzJg==
-X-Received: by 2002:a63:990a:: with SMTP id d10mr1562744pge.63.1582843374849;
-        Thu, 27 Feb 2020 14:42:54 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:500::4:d8f5])
-        by smtp.gmail.com with ESMTPSA id a22sm8278610pfk.108.2020.02.27.14.42.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Feb 2020 14:42:54 -0800 (PST)
-Date:   Thu, 27 Feb 2020 14:42:51 -0800
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Subject: Re: [PATCH v4 7/7] dt-bindings: usb: add documentation for aspeed
- usb-vhub
-Message-ID: <20200227224250.GC29420@taoren-ubuntu-R90MNF91>
-References: <20200226230346.672-1-rentao.bupt@gmail.com>
- <20200226230346.672-8-rentao.bupt@gmail.com>
- <20200227165504.GA26955@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qrt5LAslHCMpZZk+1bFnZB1hkmKt9afE9QUzznOIIn4=;
+        b=kkk5YPWWktEuu8H0UZD1PlKmpLPT1sBXpdkYPvE68ooL/mYn6bRUmkPCVuIcetMOjX
+         qKgiUVbx8acQMRBrgABTPGK/rm9oiU9pgEVhny0ozfbcDIEPF6PSiTw/gnaMDifNMSxg
+         QPqgiLPel/dMlCxGdecXStBIxkUUbLceXJLcwZfxTJQGCkwDurJ9YR4AVnwCBpALYHEV
+         CJJoueBjkekD+dyOmEwnNXFLCg7EM/0FS7hZFFEc2SKMjIp9XaMkaoExY/B/Z3yZcbp2
+         KLdE4oABAWA6K4ePyyoR6QU5swhUl4vXrmUfjKkd+BA9PuZtva9tZ686W4dWBPT7gPTP
+         wc+A==
+X-Gm-Message-State: APjAAAWyRaABHf3OYY8cuKaVwtKGu1wjpjQMnkXz8VhZ3IUwoNIb/Acp
+        nT5JxjUOX+t7uyP9PwF+Q5FdWDeo
+X-Google-Smtp-Source: APXvYqytrr7sXI8/ORwW3w1WJBltPaUj5Vk6Zc295697nPlBcBzHRpbBPGsqcCZ1z/giQlhX+C40zQ==
+X-Received: by 2002:aca:d0a:: with SMTP id 10mr1009456oin.50.1582843745837;
+        Thu, 27 Feb 2020 14:49:05 -0800 (PST)
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com. [209.85.210.42])
+        by smtp.gmail.com with ESMTPSA id g8sm2431795otq.19.2020.02.27.14.49.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 14:49:05 -0800 (PST)
+Received: by mail-ot1-f42.google.com with SMTP id r16so844674otd.2;
+        Thu, 27 Feb 2020 14:49:05 -0800 (PST)
+X-Received: by 2002:a05:6830:1184:: with SMTP id u4mr892613otq.221.1582843745073;
+ Thu, 27 Feb 2020 14:49:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227165504.GA26955@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200221174754.5295-1-michael@walle.cc> <20200221174754.5295-4-michael@walle.cc>
+ <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
+In-Reply-To: <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Thu, 27 Feb 2020 16:48:54 -0600
+X-Gmail-Original-Message-ID: <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
+Message-ID: <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Michael Walle <michael@walle.cc>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Feb 27, 2020 at 4:35 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, Feb 21, 2020 at 11:48 AM Michael Walle <michael@walle.cc> wrote:
+> >
+> > The DMA channel might not be available at the first probe time. This is
+> > esp. the case if the DMA controller has an IOMMU mapping.
+> >
+> > Use the new dma_request_chan() API and handle EPROBE_DEFER errors. Also
+> > reorder the code a bit, so that we don't prepare the whole UART just to
+> > determine that the DMA channel is not ready yet and we have to undo all
+> > the stuff. Try to map the DMA channels earlier.
+>
+> Changing this means you never probe successfully if you boot a kernel
+> with the DMA driver disabled (or it's IOMMU disabled). Some other
+> drivers request DMA in open() and can work either way.
 
-On Thu, Feb 27, 2020 at 10:55:04AM -0600, Rob Herring wrote:
-> On Wed, 26 Feb 2020 15:03:46 -0800, rentao.bupt@gmail.com wrote:
-> > From: Tao Ren <rentao.bupt@gmail.com>
-> > 
-> > Add device tree binding documentation for aspeed usb-vhub driver.
-> > 
-> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> > ---
-> >  No change in v2/v3/v4:
-> >    - the patch is added to the patch series since v4.
-> > 
-> >  .../bindings/usb/aspeed,usb-vhub.yaml         | 71 +++++++++++++++++++
-> >  1 file changed, 71 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.example.dt.yaml: usb-vhub@1e6a0000: 'aspeed,vhub-downstream-ports' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.example.dt.yaml: usb-vhub@1e6a0000: 'aspeed,vhub-generic-endpoints' is a required property
-> 
-> See https://patchwork.ozlabs.org/patch/1245388
-> Please check and re-submit.
+We got this exact issue previously with another driver.  When the
+required DMA driver is disabled, the DMA framework cannot figure out
+this situation and keeps returning EPROBE_DEFER.  I'm wondering if we
+should update the DMA framework to use your deferred probe timeout
+mechanism.  Is it still only used for debug purpose?
 
-I ran "make dt_binding_check" in my local environment and don't see the
-failures. The 2 properties are introduced in this patch set and I add
-the properties in aspeed-g4/5/6 dtsi files (patch #4, #5 and #6): am I
-missing something?
-
-Sorry I forgot to add you when including the dt-binding document to the
-series v4: will add you and all dt binding maintainers in v5 soon.
-
-
-Cheers,
-
-Tao
+Regards,
+Leo
