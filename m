@@ -2,90 +2,164 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFE2C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD408C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2246524692
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4EC2468E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0bRD9FL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vg4eJJf5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgB0T3w (ORCPT
+        id S1729835AbgB0Tas (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:29:52 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44865 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbgB0T3w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 14:29:52 -0500
-Received: by mail-wr1-f67.google.com with SMTP id m16so157982wrx.11;
-        Thu, 27 Feb 2020 11:29:50 -0800 (PST)
+        Thu, 27 Feb 2020 14:30:48 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:41781 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729727AbgB0Tas (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 14:30:48 -0500
+Received: by mail-yw1-f66.google.com with SMTP id h6so693046ywc.8;
+        Thu, 27 Feb 2020 11:30:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ts+uSIKuoMAT4GVlY0xYp++rOG/WfuZn269REQF9/WI=;
-        b=I0bRD9FLZLEifaJVygPjHYFoM6s4ZauKp9Ur7rpMtb+um53Ml9hWW6QBx0T9PyWyOG
-         IrmX+XF0avqqEzPJV+/uk+sCByBtJup1kJeD4lGT+mlD7d2Ve66sOUjYX6OiuAX323u6
-         MaMM5Yu2RjvjZJ7DvCyZGgVVCxiZs2RMYzvu/lb80503mtE+kvzZ+gKbkG4xswTaFkec
-         LMhRlbaIEU2R7dX2Pw1AYM7pNwyPO7JFSW0whRCY1SVJUye5UYz2hvfQOdUpWnxH9xGO
-         Ip/l2oFQW0BIa3tySzEzBnmWwugGaU8NSv4nVaFJT0l/FOHF42xwRXajRxHuA5Pv2FN6
-         A3Lw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ms7ngyPWar2qTVrk3JwekzFVpUj9g8rYLZFTYitG1L4=;
+        b=Vg4eJJf52nV/QEaLGfoy/7pOMlXMCzJV6BDXgLP+8pOfYvE3LNy/3H/PfrcDKy7q36
+         u7cwhlZEJJX+7kbyJg2/1DSKsNeuLzw246fD6Knxztsjj8Bf4o0tSEHvVZA6qF0WMeoW
+         93hpdvMTbKjXeHyc4PVdVHNQWl9pQDquQD0SxKCGIiP2Y0KnPjhfAhYX03LPLQDSGVdP
+         PV9PuPJwl3RHxy0nE5YjVq7St/atqZZzLBkALhdtZBDlQAtzkeLcwNpPxfkHjZ5xveoG
+         P3W4DSI9RBGAa8CjbZd6p1QcwAM1IOzLzgSZdbQqjnYT/ZScv2ym+Q/vvAf/QPfuwcQS
+         N4hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Ts+uSIKuoMAT4GVlY0xYp++rOG/WfuZn269REQF9/WI=;
-        b=HOdNVdXIyKOQ3odiObU64S9xuezkU8Svi81NinCpGA/Z9ptNo+kq3ibPvMcNgi135w
-         8U9lzWRoY+mMawyLDQRLzt4dcJ3MYfD6sMhH0fKqG+ZsSLMvZwXv3jCIzPAJROaeKP/R
-         Bk/CBkZx+mrI2Zh7T2LUZ5tTfWvpK00nHUoQxOWDhtcxzLiS+VZOi4j1n6qCbK2SaX9p
-         /Z7F7PAhfDxQ97xgUFvPpZLOCzhrzTzctaihiEaDPnsNLFNEpqQYee4HypbOs5H/SypM
-         3aLi+fsbb0BgbptpG29N02vE6Znbd+6856saiMcWNaqk4N/26kE8p7k8YF7+vpzrDYKl
-         OBWw==
-X-Gm-Message-State: APjAAAXJ9WqNIsSZAc089YBoLgoees+0NbIGsSmU7X/Zm9HsC6/1M6YB
-        ss0xqc0iMzsS20w98Ij68iI=
-X-Google-Smtp-Source: APXvYqy1BlYk+WSVAjCb5Zo9RSyLM0W4u08H4uBOcKJqmwQRQm5P/RkPigt4t2fNyrvLi+/GS/Toxg==
-X-Received: by 2002:a05:6000:1246:: with SMTP id j6mr357729wrx.233.1582831790230;
-        Thu, 27 Feb 2020 11:29:50 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id w1sm8878013wmc.11.2020.02.27.11.29.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 11:29:49 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     phil@raspberrypi.org, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: bcm2711: Add pcie0 alias
-Date:   Thu, 27 Feb 2020 11:29:46 -0800
-Message-Id: <20200227192946.17328-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200226164601.20150-1-nsaenzjulienne@suse.de>
-References: <20200226164601.20150-1-nsaenzjulienne@suse.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ms7ngyPWar2qTVrk3JwekzFVpUj9g8rYLZFTYitG1L4=;
+        b=V1IgvmsINcmul4rgKzg2kXMdX5l8NUALZodiwW155MaEshBLVlLyOvhmZWOnds/eBJ
+         4ingF4B1V4bpSZDYH6JbZPTOXONNQ2SaOMksYrWMRfrpDCZmzn8cDvOmpceYraKrUSzY
+         7EhUmbnk0mCDsLGwCOUnysfnNCL2jeiRje3YV0dgxJMti51GtbjWVHby17F98QOlftjb
+         DoEj51CEutmDC7OHvIXRNHcmyaauYqV4XS2Gcg4nU3bXLqdIVsJXZ+I8DoqfOwEg9g35
+         wCI1iXtFDoBn43WGuI+cBv4QSWkNAGeZJaWtxPwsmvidDUAhKLguGmhOHNo7h/CzlyPm
+         qmug==
+X-Gm-Message-State: APjAAAUyE5kWK0cby7x+TiiwScV59SU6Cfw1Bm3ERuMRHscrfFG8CO30
+        5tbx/+lP+1ls3DG8DhQiQ5c=
+X-Google-Smtp-Source: APXvYqy+WY0jHqtqjj8JxepUNnPEWKjf5VaeZerNTq74HfE9WncKQwQXPKW8OPgcFRvjWBnQOfVcOA==
+X-Received: by 2002:a81:5305:: with SMTP id h5mr953870ywb.31.1582831846997;
+        Thu, 27 Feb 2020 11:30:46 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id q16sm2846732ywa.110.2020.02.27.11.30.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 11:30:46 -0800 (PST)
+Subject: Re: [PATCH v2] of: overlay: log the error cause on resolver failure
+To:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20200225164540.4520-1-luca@lucaceresoli.net>
+ <f9565679-5892-bcf0-f751-bfcac87670a8@gmail.com>
+ <40fdf0f2-85a4-9f84-6994-a59b7b56cec4@lucaceresoli.net>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <efcb22be-7fb4-908d-d54f-6a22f1c62ec5@gmail.com>
+Date:   Thu, 27 Feb 2020 13:30:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <40fdf0f2-85a4-9f84-6994-a59b7b56cec4@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 26 Feb 2020 17:46:00 +0100, Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
-> Some bcm2711 revisions have different DMA constraints on the their PCIE
-> bus. The lower common denominator, being able to access the lower 3GB of
-> memory, is the default setting for now. Newer SoC revisions are able to
-> access the whole memory space.
+On 2/27/20 2:11 AM, Luca Ceresoli wrote:
+> Hi Frank,
 > 
-> Raspberry Pi 4's firmware is aware of this limitation and will correct
-> the PCIE's dma-ranges property if a pcie0 alias is available. So add
-> it.
+> On 26/02/20 04:53, Frank Rowand wrote:
+>> On 2/25/20 10:45 AM, Luca Ceresoli wrote:
+>>> For some of its error paths, of_resolve_phandles() only logs a very generic
+>>> error which does not help much in finding the origin of the problem:
+>>>
+>>>   OF: resolver: overlay phandle fixup failed: -22
+>>>
+>>> Add error messages for all the error paths that don't have one. Now a
+>>> specific message is always emitted, thus also remove the generic catch-all
+>>> message emitted before returning.
+>>>
+>>> For example, in case a DT overlay has a fixup node that is not present in
+>>> the base DT __symbols__, this error is now logged:
+>>>
+>>>   OF: resolver: node gpio9 not found in base DT, fixup failed
+>>>
+>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+>>> ---
+>>>
+>>> I don't know in detail the meaning of the adjust_local_phandle_references()
+>>> and update_usages_of_a_phandle_reference() error paths, thus I have put
+>>> pretty generic messages. Any suggestion on better wording would be welcome.
+>>
+>> If you have not read the code to understand what the meaning of
+>> the errors are, you should not be suggesting changes to the error
+>> messages.
+>>
+>> Only one of the issues detected as errors can possibly be something
+>> other than an error either in the resolver.c code or the dtc
+>> compiler -- a missing symbol in the live devicetree.  This may
+>> be because of failing to compile the base devicetree without
+>> symbols, depending on a symbol from another overlay where the
+>> other overlay has not been applied, or depending on a symbol
+>> from another overlay where the other overlay is applied but
+>> the overlay was not compiled with symbols.  (Not meant to be
+>> an exhaustive list, but it might be.)  Thus the missing
+>> symbol problem might be fixable without a fix to kernel
+>> code.  The error message philosophy for overlay related
+>> errors is to minimize error messages that help diagnose
+>> the precise cause of a kernel code bug, with the intent
+>> of keeping the code more compact and readable.  When a
+>> bug occurs, debugging messages can be added for the
+>> debug session.
 > 
-> Fixes: d5c8dc0d4c88 ("ARM: dts: bcm2711: Enable PCIe controller")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
+> Got it, sorry about that.
+> 
+>> Following this philosophy, only the message in the second
+>> patch chunk is ok.
+> 
+> Then I think you can apply the v1 patch which only contains the message
+> about the problem I experienced, and which was caused by an incorrect DTO:
+> 
+> https://patchwork.ozlabs.org/patch/1243987/
+> 
+> Just ignore the note saying the patch is not for mainline, it's wrong.
+> 
 
-Applied to devicetree/fixes, thanks!
---
-Florian
+Mostly yes, v1 contains the one place a message should be added.
+
+Let me bike shed a little bit though.
+
+I suggested a different wording for the message in v2, but I
+do not think my attempt at wording was precise enough.  I
+would instead suggest:
+
+  "node label '%s' not found in live devicetree symbols table\n"
+
+Some subtle differences.
+  - It is a node label, not a node name.
+  - If multiple overlays are applied, then the intention may have
+    been to supply the node label via a previously applied overlay
+    instead of from the base devicetree.  So specifying the live
+    devicetree is more accurate.
+
+Please submit v3 for mainline.
+
+Thanks,
+
+Frank
