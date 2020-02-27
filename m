@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38F1C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 10:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8C6C4BA24
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 10:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9427824697
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 10:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BA52469D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 10:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="avbii/hs"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NwqhLU14"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgB0K5d (ORCPT
+        id S1728990AbgB0K5f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:57:33 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:17149 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728874AbgB0K5c (ORCPT
+        Thu, 27 Feb 2020 05:57:35 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12690 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728762AbgB0K5e (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:57:32 -0500
+        Thu, 27 Feb 2020 05:57:34 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582801052; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1582801054; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=sjA8xjgdSuzT+3bcqBAE9RgoMUeLbDLPxtAnZ/QtR2E=; b=avbii/hsjJD9K4oM2kSh/EWpO0ok1nIVkt1jXn20ZjmfohabMSmr3skdnK9ZWc3N6kIFrtA+
- PGf3opw7DR5ZmDmLDREqK37fjxCPzhbyz9f4s+Lr6SeGElF9pHlovoUv8HtmeY8xKktZFm17
- 5DCL0p4wXq2inlmBkgSdkP0pbRU=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ Sender; bh=sM+W2Nc7DPEL6NoqIWgydj9LZlnUkC9GPD/SJlw3K2k=; b=NwqhLU14xje/6rQ0hFLRBFh0eFgSI1Bxvu/2Jurp9tVSMQxRo1jyWbMABvxLhSP8jojANpMe
+ JTAxSGEhGiCuFVz57KvT0EZ4W1YLXrOZeVOIlJT7godvUgFJRA6+CU7p15rqwoxQ6iO6LhtP
+ Nu+OE4k+nMXAdS2Cy2HCvlN3IPQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e57a08d.7f8aa3e3c880-smtp-out-n02;
- Thu, 27 Feb 2020 10:57:17 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e57a091.7f8e7c2eea40-smtp-out-n02;
+ Thu, 27 Feb 2020 10:57:21 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BAF37C43383; Thu, 27 Feb 2020 10:57:14 +0000 (UTC)
+        id F1259C447AB; Thu, 27 Feb 2020 10:57:19 +0000 (UTC)
 Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CC45AC447A0;
-        Thu, 27 Feb 2020 10:57:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CC45AC447A0
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D0B5C447A6;
+        Thu, 27 Feb 2020 10:57:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D0B5C447A6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -52,9 +52,9 @@ Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
         linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
         saravanak@google.com, viresh.kumar@linaro.org,
         okukatla@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v5 6/7] arm64: dts: qcom: sdm845: Add OSM L3 interconnect provider
-Date:   Thu, 27 Feb 2020 16:26:30 +0530
-Message-Id: <20200227105632.15041-7-sibis@codeaurora.org>
+Subject: [PATCH v5 7/7] arm64: dts: qcom: sc7180: Add OSM L3 interconnect provider
+Date:   Thu, 27 Feb 2020 16:26:31 +0530
+Message-Id: <20200227105632.15041-8-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200227105632.15041-1-sibis@codeaurora.org>
 References: <20200227105632.15041-1-sibis@codeaurora.org>
@@ -65,32 +65,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Operation State Manager (OSM) L3 interconnect provider on SDM845 SoCs.
+Add Operation State Manager (OSM) L3 interconnect provider on SC7180 SoCs.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 11 +++++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 11 +++++++++++
  1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index ae7d6617d8b87..8105532f6fbde 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/clock/qcom,lpass-sdm845.h>
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 3e28f340fa3e6..6997467608107 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -7,6 +7,7 @@
+ 
+ #include <dt-bindings/clock/qcom,gcc-sc7180.h>
  #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/clock/qcom,videocc-sdm845.h>
 +#include <dt-bindings/interconnect/qcom,osm-l3.h>
- #include <dt-bindings/interconnect/qcom,sdm845.h>
  #include <dt-bindings/interrupt-controller/arm-gic.h>
  #include <dt-bindings/phy/phy-qcom-qusb2.h>
-@@ -3323,6 +3324,16 @@ frame@17d10000 {
+ #include <dt-bindings/power/qcom-aoss-qmp.h>
+@@ -1578,6 +1579,16 @@ apps_bcm_voter: bcm_voter {
  			};
  		};
  
-+		osm_l3: interconnect@17d41000 {
-+			compatible = "qcom,sdm845-osm-l3";
-+			reg = <0 0x17d41000 0 0x1400>;
++		osm_l3: interconnect@18321000 {
++			compatible = "qcom,sc7180-osm-l3";
++			reg = <0 0x18321000 0 0x1400>;
 +
 +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
 +			clock-names = "xo", "alternate";
@@ -98,9 +98,9 @@ index ae7d6617d8b87..8105532f6fbde 100644
 +			#interconnect-cells = <1>;
 +		};
 +
- 		cpufreq_hw: cpufreq@17d43000 {
+ 		cpufreq_hw: cpufreq@18323000 {
  			compatible = "qcom,cpufreq-hw";
- 			reg = <0 0x17d43000 0 0x1400>, <0 0x17d45800 0 0x1400>;
+ 			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
