@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3901C11D3D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3D2C35E1D
 	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 20:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86443246A0
+	by mail.kernel.org (Postfix) with ESMTP id AFA76246A8
 	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 20:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="tcjbM6ns"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="o1WmDQ8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbgB0UiX (ORCPT
+        id S1726793AbgB0UiX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 27 Feb 2020 15:38:23 -0500
-Received: from gateway32.websitewelcome.com ([192.185.145.122]:27275 "EHLO
+Received: from gateway32.websitewelcome.com ([192.185.145.122]:33146 "EHLO
         gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726793AbgB0UiW (ORCPT
+        by vger.kernel.org with ESMTP id S1729421AbgB0UiW (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
         Thu, 27 Feb 2020 15:38:22 -0500
-X-Greylist: delayed 1315 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Feb 2020 15:38:21 EST
 Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id CF75747121
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 14:16:25 -0600 (CST)
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 9FEEB488A3
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 14:16:30 -0600 (CST)
 Received: from br164.hostgator.com.br ([192.185.176.180])
         by cmsmtp with SMTP
-        id 7Pa5jbcXwSl8q7Pa5jFpIA; Thu, 27 Feb 2020 14:16:25 -0600
+        id 7PaAjbcfwSl8q7PaAjFpPt; Thu, 27 Feb 2020 14:16:30 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=qoO2qsaKDDkITqEnriWbR9MEmzTrNQCsMHlNkFBYJ7c=; b=tcjbM6nsjXMnB1U50YJqJ0Xpq+
-        qnb6sizE41zDg6WWUl6+PgNcBLucBF18ilJ0ekjStyF0ZK+qs9laPZeAs4HULnEnQJAPcUYmJhJh3
-        iNANGLYl0YuK6SGCRzH2kwFqTtzFPqn065TDn2wj+R8SSpz9sqOrctyNxJ7dlKjIGHuo/lxgZJ7gW
-        4QE368So677rBzP33fUqD1UHd+Z5E1rOKM1ck0LnzvKzZWMkTYPLf2n/ieBR1K0zTtFiUfv6wle1v
-        dp+OsSgF9hYl1BG91kGTsc5PPX0iJg/vbfN2VOy0Txc/DcxMMZxqGE8gjOwKZQLcNBPMf5yjUSZCA
-        mj2+zzYA==;
+        bh=dli9kbZ6lD/nnDirr7aZdMn36VuNaUx+QZ+TACIU/tA=; b=o1WmDQ8Ul7jha4hCTy8IB94VwD
+        EJKa0915/vQCGn7dbSlMGMck6hiMPesVVtxejSyJ3zWgWRuAMUBFXPb9dWMa3m5200gVkD+dFdEh0
+        7CBttQ89CyWYYlfb4IYCMTIFPDpqhinZQRnOQvDttvA+JmbU9vm0ejWlNBvmEwDvAnxiDfW+Yh0mU
+        Xmf9WLa36EE1M0EdXowscfXwmiedtGUnl8MaFNnw/8e9RGlv4BB1Fa3J3zmq/VS54qy7AqRSnpsMq
+        dTLgmsAUpbN0zULww6DGP9CJJcXwuWDhxdSa9cVq3SWgd75d3Er5uKWKdSnAl1ANhAgeK0mSjFZb2
+        8AdnyFOg==;
 Received: from [191.31.195.84] (port=40030 helo=castello.castello)
         by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <matheus@castello.eng.br>)
-        id 1j7Pa4-002xJo-Nh; Thu, 27 Feb 2020 17:16:25 -0300
+        id 1j7Pa9-002xJo-TL; Thu, 27 Feb 2020 17:16:30 -0300
 From:   Matheus Castello <matheus@castello.eng.br>
 To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
         mark.rutland@arm.com, robh+dt@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v1 1/2] dt-bindings: arm: actions: Document Caninos Loucos Labrador
-Date:   Thu, 27 Feb 2020 17:15:56 -0300
-Message-Id: <20200227201557.368533-2-matheus@castello.eng.br>
+Subject: [PATCH v1 2/2] ARM: dts: Add Caninos Loucos Labrador
+Date:   Thu, 27 Feb 2020 17:15:57 -0300
+Message-Id: <20200227201557.368533-3-matheus@castello.eng.br>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200227201557.368533-1-matheus@castello.eng.br>
 References: <20200227201557.368533-1-matheus@castello.eng.br>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
@@ -70,13 +70,13 @@ X-AntiAbuse: Sender Address Domain - castello.eng.br
 X-BWhitelist: no
 X-Source-IP: 191.31.195.84
 X-Source-L: No
-X-Exim-ID: 1j7Pa4-002xJo-Nh
+X-Exim-ID: 1j7Pa9-002xJo-TL
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
 X-Source-Sender: (castello.castello) [191.31.195.84]:40030
 X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 11
+X-Email-Count: 19
 X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
 X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
@@ -84,44 +84,98 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the documentation to add the Caninos Loucos Labrador
-vendor-prefix and items that were included in the device tree files.
+Add Device Trees for Caninos Loucos Labrador SoM and base board.
+Based on the work of Andreas Färber on Lemaker Guitar device tree.
 
 Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 ---
- Documentation/devicetree/bindings/arm/actions.yaml     | 5 +++++
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 2 files changed, 7 insertions(+)
+ arch/arm/boot/dts/Makefile                  |  3 +-
+ arch/arm/boot/dts/owl-s500-labrador-bb.dts  | 33 +++++++++++++++++++++
+ arch/arm/boot/dts/owl-s500-labrador-v2.dtsi | 21 +++++++++++++
+ 3 files changed, 56 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/owl-s500-labrador-bb.dts
+ create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-index ace3fdaa8396..1b131ceb884a 100644
---- a/Documentation/devicetree/bindings/arm/actions.yaml
-+++ b/Documentation/devicetree/bindings/arm/actions.yaml
-@@ -24,6 +24,11 @@ properties:
-               - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
-           - const: lemaker,guitar
-           - const: actions,s500
-+      - items:
-+          - enum:
-+              - caninos,labrador-bb # Caninos Loucos Labrador Base Board
-+          - const: caninos,labrador
-+          - const: actions,s500
-
-       # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
-       - items:
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9e67944bec9c..3e974dd563cf 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -167,6 +167,8 @@ patternProperties:
-     description: Calxeda
-   "^capella,.*":
-     description: Capella Microsystems, Inc
-+  "^caninos,.*":
-+    description: Caninos Loucos LSI-TEC NPO
-   "^cascoda,.*":
-     description: Cascoda, Ltd.
-   "^catalyst,.*":
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d6546d2676b9..acdf65ef3236 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -842,7 +842,8 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
+ dtb-$(CONFIG_ARCH_ACTIONS) += \
+ 	owl-s500-cubieboard6.dtb \
+ 	owl-s500-guitar-bb-rev-b.dtb \
+-	owl-s500-sparky.dtb
++	owl-s500-sparky.dtb \
++	owl-s500-labrador-bb.dtb
+ dtb-$(CONFIG_ARCH_PRIMA2) += \
+ 	prima2-evb.dtb
+ dtb-$(CONFIG_ARCH_PXA) += \
+diff --git a/arch/arm/boot/dts/owl-s500-labrador-bb.dts b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
+new file mode 100644
+index 000000000000..1e821804da30
+--- /dev/null
++++ b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019-2020 Matheus Castello
++ */
++
++/dts-v1/;
++
++#include "owl-s500-labrador-v2.dtsi"
++#include <dt-bindings/leds/common.h>
++
++/ {
++	compatible = "caninos,labrador-bb", "caninos,labrador", "actions,s500";
++	model = "Caninos Labrador Base Board M v1.0";
++
++	aliases {
++		serial3 = &uart3;
++	};
++
++	chosen {
++		stdout-path = "serial3:115200n8";
++	};
++
++	uart3_clk: uart3-clk {
++		compatible = "fixed-clock";
++		clock-frequency = <921600>;
++		#clock-cells = <0>;
++	};
++};
++
++&uart3 {
++	status = "okay";
++	clocks = <&uart3_clk>;
++};
+diff --git a/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+new file mode 100644
+index 000000000000..ee079f02b5dd
+--- /dev/null
++++ b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Caninos Labrador SoM V2
++ *
++ * Copyright (c) 2019-2020 Matheus Castello
++ */
++
++#include "owl-s500.dtsi"
++
++/ {
++	compatible = "caninos,labrador", "actions,s500";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x80000000>;
++	};
++};
++
++&timer {
++	clocks = <&hosc>;
++};
 --
 2.25.0
 
