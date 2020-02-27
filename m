@@ -2,128 +2,178 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1419C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 07:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B4AC4BA06
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 07:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66012072D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 07:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D8E24687
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 07:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbgB0HTb (ORCPT
+        id S1728445AbgB0H0F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 02:19:31 -0500
-Received: from mga12.intel.com ([192.55.52.136]:22237 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726999AbgB0HTb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 02:19:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 23:19:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,491,1574150400"; 
-   d="scan'208";a="238310161"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 26 Feb 2020 23:19:30 -0800
-Received: from [10.226.38.56] (unknown [10.226.38.56])
-        by linux.intel.com (Postfix) with ESMTP id 50F62580544;
-        Wed, 26 Feb 2020 23:19:27 -0800 (PST)
-Subject: Re: [PATCH v5 2/2] clk: intel: Add CGU clock driver for a new SoC
-To:     Randy Dunlap <rdunlap@infradead.org>, mturquette@baylibre.com,
-        sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com,
-        linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        rtanwar <rahul.tanwar@intel.com>
-References: <cover.1582096982.git.rahul.tanwar@linux.intel.com>
- <6148b5b25d4a6833f0a72801d569ed97ac6ca55b.1582096982.git.rahul.tanwar@linux.intel.com>
- <e8259928-cb2a-a453-8f2a-1b57c8abdb8c@infradead.org>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <4fb7a643-cbe1-da82-2629-2dbd0c0d143b@linux.intel.com>
-Date:   Thu, 27 Feb 2020 15:19:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <e8259928-cb2a-a453-8f2a-1b57c8abdb8c@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Thu, 27 Feb 2020 02:26:05 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:16292 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726999AbgB0H0F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 02:26:05 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 27 Feb 2020 12:55:59 +0530
+Received: from mkrishn-linux.qualcomm.com ([10.204.66.35])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 27 Feb 2020 12:55:39 +0530
+Received: by mkrishn-linux.qualcomm.com (Postfix, from userid 438394)
+        id 6A84B443D; Thu, 27 Feb 2020 12:55:38 +0530 (IST)
+From:   Krishna Manikandan <mkrishn@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: [v1 1/2] msm: disp: dpu1: add DP support for sc7180 target
+Date:   Thu, 27 Feb 2020 12:55:31 +0530
+Message-Id: <1582788332-7282-1-git-send-email-mkrishn@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add the required changes to support Display Port
+for sc7180 target.
 
-Hi Randy,
+Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
 
-On 19/2/2020 3:59 PM, Randy Dunlap wrote:
-> On 2/18/20 11:40 PM, Rahul Tanwar wrote:
->> From: rtanwar <rahul.tanwar@intel.com>
->>
->> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
->> Intel network processor SoC named Lightning Mountain(LGM). It provides
->> programming interfaces to control & configure all CPU & peripheral clocks.
->> Add common clock framework based clock controller driver for CGU.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  drivers/clk/Kconfig           |   1 +
->>  drivers/clk/x86/Kconfig       |   8 +
->>  drivers/clk/x86/Makefile      |   1 +
->>  drivers/clk/x86/clk-cgu-pll.c | 156 +++++++++++
->>  drivers/clk/x86/clk-cgu.c     | 636 ++++++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/x86/clk-cgu.h     | 335 ++++++++++++++++++++++
->>  drivers/clk/x86/clk-lgm.c     | 492 ++++++++++++++++++++++++++++++++
->>  7 files changed, 1629 insertions(+)
->>  create mode 100644 drivers/clk/x86/Kconfig
->>  create mode 100644 drivers/clk/x86/clk-cgu-pll.c
->>  create mode 100644 drivers/clk/x86/clk-cgu.c
->>  create mode 100644 drivers/clk/x86/clk-cgu.h
->>  create mode 100644 drivers/clk/x86/clk-lgm.c
->>
->> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
->> index bcb257baed06..43dab257e7aa 100644
->> --- a/drivers/clk/Kconfig
->> +++ b/drivers/clk/Kconfig
->> @@ -360,6 +360,7 @@ source "drivers/clk/sunxi-ng/Kconfig"
->>  source "drivers/clk/tegra/Kconfig"
->>  source "drivers/clk/ti/Kconfig"
->>  source "drivers/clk/uniphier/Kconfig"
->> +source "drivers/clk/x86/Kconfig"
->>  source "drivers/clk/zynqmp/Kconfig"
->>  
->>  endmenu
-> Hi,
->
->> diff --git a/drivers/clk/x86/Kconfig b/drivers/clk/x86/Kconfig
->> new file mode 100644
->> index 000000000000..2e2b9730541f
->> --- /dev/null
->> +++ b/drivers/clk/x86/Kconfig
->> @@ -0,0 +1,8 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +config CLK_LGM_CGU
->> +	depends on (OF && HAS_IOMEM) || COMPILE_TEST
-> This "depends on" looks problematic to me. I guess we shall see when
-> all the build bots get to it.
+This patch has dependency on DP driver changes in
+https://patchwork.kernel.org/patch/11269169/
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c    |  6 ++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |  3 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |  4 ++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c    | 12 ++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c     |  4 ++++
+ 5 files changed, 28 insertions(+), 1 deletion(-)
 
-At the moment, i am not able to figure out possible problems in this..
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index f8ac3bf..136e4d0 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -1109,6 +1109,12 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
+ 	}
+ 
+ 	if (dpu_enc->cur_master->hw_mdptop &&
++		(dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_TMDS) &&
++			dpu_enc->cur_master->hw_mdptop->ops.intf_audio_select)
++		dpu_enc->cur_master->hw_mdptop->ops.intf_audio_select(
++			dpu_enc->cur_master->hw_mdptop);
++
++	if (dpu_enc->cur_master->hw_mdptop &&
+ 			dpu_enc->cur_master->hw_mdptop->ops.reset_ubwc)
+ 		dpu_enc->cur_master->hw_mdptop->ops.reset_ubwc(
+ 				dpu_enc->cur_master->hw_mdptop,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index c567917..60f350f 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -109,8 +109,9 @@
+ 	{
+ 	.name = "top_0", .id = MDP_TOP,
+ 	.base = 0x0, .len = 0x494,
+-	.features = 0,
++	.features = BIT(DPU_MDP_DP_PHY_SEL),
+ 	.highest_bank_bit = 0x3,
++	.dp_phy_intf_sel = 0x41,
+ 	.clk_ctrls[DPU_CLK_CTRL_VIG0] = {
+ 		.reg_off = 0x2AC, .bit_off = 0},
+ 	.clk_ctrls[DPU_CLK_CTRL_DMA0] = {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+index 09df7d8..fbcf14b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+@@ -77,6 +77,7 @@ enum {
+  * @DPU_MDP_UBWC_1_0,      This chipsets supports Universal Bandwidth
+  *                         compression initial revision
+  * @DPU_MDP_UBWC_1_5,      Universal Bandwidth compression version 1.5
++ * @DPU_MDP_DP_PHY_SEL     DP PHY interface select for controller
+  * @DPU_MDP_MAX            Maximum value
+ 
+  */
+@@ -86,6 +87,7 @@ enum {
+ 	DPU_MDP_BWC,
+ 	DPU_MDP_UBWC_1_0,
+ 	DPU_MDP_UBWC_1_5,
++	DPU_MDP_DP_PHY_SEL,
+ 	DPU_MDP_MAX
+ };
+ 
+@@ -421,6 +423,7 @@ struct dpu_clk_ctrl_reg {
+  * @highest_bank_bit:  UBWC parameter
+  * @ubwc_static:       ubwc static configuration
+  * @ubwc_swizzle:      ubwc default swizzle setting
++ * @dp_phy_intf_sel:   dp phy interface select for controller
+  * @clk_ctrls          clock control register definition
+  */
+ struct dpu_mdp_cfg {
+@@ -428,6 +431,7 @@ struct dpu_mdp_cfg {
+ 	u32 highest_bank_bit;
+ 	u32 ubwc_static;
+ 	u32 ubwc_swizzle;
++	u32 dp_phy_intf_sel;
+ 	struct dpu_clk_ctrl_reg clk_ctrls[DPU_CLK_CTRL_MAX];
+ };
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+index efe9a57..ae96ede 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+@@ -144,10 +144,22 @@ static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *ctx,
+ 	hsync_ctl = (hsync_period << 16) | p->hsync_pulse_width;
+ 	display_hctl = (hsync_end_x << 16) | hsync_start_x;
+ 
++	if (ctx->cap->type == INTF_DP) {
++		active_h_start = hsync_start_x;
++		active_h_end = active_h_start + p->xres - 1;
++		active_v_start = display_v_start;
++		active_v_end = active_v_start + (p->yres * hsync_period) - 1;
++		active_hctl = (active_h_end << 16) | active_h_start;
++		display_hctl = active_hctl;
++	}
++
+ 	den_polarity = 0;
+ 	if (ctx->cap->type == INTF_HDMI) {
+ 		hsync_polarity = p->yres >= 720 ? 0 : 1;
+ 		vsync_polarity = p->yres >= 720 ? 0 : 1;
++	} else if (ctx->cap->type == INTF_DP) {
++		hsync_polarity = p->hsync_polarity;
++		vsync_polarity = p->vsync_polarity;
+ 	} else {
+ 		hsync_polarity = 0;
+ 		vsync_polarity = 0;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
+index f9af52a..9591d42 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
+@@ -41,6 +41,7 @@
+ #define MDP_WD_TIMER_4_CTL                0x440
+ #define MDP_WD_TIMER_4_CTL2               0x444
+ #define MDP_WD_TIMER_4_LOAD_VALUE         0x448
++#define DP_PHY_INTF_SEL                   0x460
+ 
+ #define MDP_TICK_COUNT                    16
+ #define XO_CLK_RATE                       19200
+@@ -275,6 +276,9 @@ static void dpu_hw_intf_audio_select(struct dpu_hw_mdp *mdp)
+ 	c = &mdp->hw;
+ 
+ 	DPU_REG_WRITE(c, HDMI_DP_CORE_SELECT, 0x1);
++
++	if (mdp->caps->features & BIT(DPU_MDP_DP_PHY_SEL))
++		DPU_REG_WRITE(c, DP_PHY_INTF_SEL, mdp->caps->dp_phy_intf_sel);
+ }
+ 
+ static void _setup_mdp_ops(struct dpu_hw_mdp_ops *ops,
+-- 
+1.9.1
 
->> +	select OF_EARLY_FLATTREE
-> If OF is not set and HAS_IOMEM is not set, but COMPILE_TEST is set,
-> I expect that this should not be attempting to select OF_EARLY_FLATTREE.
->
-> Have you tried such a config combination?
-
-Agree, that would be a problem. I will change it to
-
-select OF_EARLY_FLATTREE if OF
-
-Thanks.
-
-Regards,
-Rahul
