@@ -2,146 +2,90 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD78C4BA3B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 12:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F6EC4BA3B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 12:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3566024698
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 12:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D502B2469C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 12:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="c2wVMIZT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGoCE1Pu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgB0M5M (ORCPT
+        id S1729112AbgB0M5q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:57:12 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:16197 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbgB0M5M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 07:57:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582808229;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=EHgVmvZBm7FfOuRidNTu7QhYG4ewtZHDd8hCpQzwN2Q=;
-        b=c2wVMIZTfqD2nSvBfByPStDh8GB9l6h/fSUPzIguOqBArUUUg6DJNI0MK378VPNOrb
-        vKxq1AMza6s3e96demUW0X8AAZuJElKKWwcRa+JIWIjOGRx6QuLpIKEzzcKfz3oNQ9nD
-        A0OR5rMfqAq3IZ2IoEUOoNzcthusMRUg1XYZy24yRtgsVjxMTKTMo3NLpP5rUDRqJ5xD
-        MopDATaaEO4UdIaJx2ljDd3hrAlAVVfSESc9VQEL0M2ATZivvgiO5emV4LnDnizSmkkD
-        NrkDDPzBor3odLbO/cfV7D/SR+WZWgst9CERkMmU4eN4Joy4b344C6Eq7W4ELUVBYsDG
-        cElA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCygV4+2OGxpoAr2x7EvFYqujh1U+3K41Uc/x8xM"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:2655:a800:8035:ee61:8f08:2eb7]
-        by smtp.strato.de (RZmta 46.1.12 AUTH)
-        with ESMTPSA id U06217w1RCuoAsJ
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 27 Feb 2020 13:56:50 +0100 (CET)
-Subject: Re: [RFC 0/8] MIPS: CI20: add HDMI out support
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200227122325.GA7587@ravnborg.org>
-Date:   Thu, 27 Feb 2020 13:56:56 +0100
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 27 Feb 2020 07:57:46 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46871 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729075AbgB0M5p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 07:57:45 -0500
+Received: by mail-lj1-f194.google.com with SMTP id w19so3249230lje.13
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 04:57:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qPHGYMWXhRCjMw8nub6othNeVZMlmf1o3qpvhzZTWP4=;
+        b=IGoCE1Pu3APJ3EgCMizw96kVnO8vfe8DEBfP/o7uYSZiBmffgujZ9ZjJYlgpXDZ/vK
+         lphT5Z4Z6/56y+52goiTUoaD51hTNd12sexKA8onoOx6rpppiiTj2Gx+w8ISVJDvKISc
+         WpMUIUP5l+3f9R34NBhl+5gjsQT/6swCYRZL/iGwAqxM+3dpsk/rWY/4MjznnGvvIywt
+         SA8YCS/hduuxbD4a5CqD+byHGm9F1fAJgSQePGzQ9qWjIZNXWA99HS3T0cX7jA+2pr+B
+         PW91AmgfwpmU0NfqYHm6VDFLpup95oUgYHz34D47IfQvv4AEkYdmImzsQgou63Dr0k0v
+         73LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qPHGYMWXhRCjMw8nub6othNeVZMlmf1o3qpvhzZTWP4=;
+        b=ZQeH3sSTpFOEtPUNTWWimbLpWFqsw336vxfkvyNa1SBZQus7GCEqeI3ND++R374xgI
+         S6yn8NxOS/Ub7f7pW3R4YnqJEjw4ebsamlrQGBcGJ6beWvZy+HmyRH+iRQ/O8DWNIDzZ
+         5byGI8Nx5ZTDmuhGw+fRgfKvU6O97oDHmzyd+BOoyiCKA539e9rjGT67Or6Rogitm1Dl
+         EFsqEViY07X/XvIY/hHvW+lJ/p/1MSg+CEsGosd0fRiwyHxU+hIaRVKW0Qwylvc4DDr7
+         1UPRihQAjeJQZMZSWK6UJJMXDaHUhWKowY5z/nCqzZm32qxsH1WmXn9k68YB0gBflF+u
+         lA2Q==
+X-Gm-Message-State: ANhLgQ0MWVWH7zKdrm4hrSy5QCcNnAyrDL32r4PPRT7u1qCh40AOKbRS
+        TZ1tthADXxCHLhgh9iYZ/qgVx8IhG6KFfLQNaYE=
+X-Google-Smtp-Source: ADFU+vtH81bmx540dWe9YXVHht1EBT4kZQqIAFzMb39QR1G4ruYs6oEq8tXvhWekr9qSWRvMH4g/SmsT4T62564KGOo=
+X-Received: by 2002:a2e:7818:: with SMTP id t24mr2717287ljc.195.1582808263182;
+ Thu, 27 Feb 2020 04:57:43 -0800 (PST)
+MIME-Version: 1.0
+References: <E1j7I7v-0004dS-5u@rmk-PC.armlinux.org.uk>
+In-Reply-To: <E1j7I7v-0004dS-5u@rmk-PC.armlinux.org.uk>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 27 Feb 2020 09:57:40 -0300
+Message-ID: <CAOMZO5A6os4myE41ZLBvW639bjRudg8Tax4yBa5JOyY5+oJW+g@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sr-som-ti: indicate powering off wifi
+ is safe
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kernel@pyra-handheld.com,
-        letux-kernel@openphoenux.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com>
-References: <cover.1582744379.git.hns@goldelico.com> <20200227122325.GA7587@ravnborg.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-X-Mailer: Apple Mail (2.3124)
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
+Hi Russell,
 
-> Am 27.02.2020 um 13:23 schrieb Sam Ravnborg <sam@ravnborg.org>:
-> 
-> Hi Nikolaus.
-> 
-> On Wed, Feb 26, 2020 at 08:12:52PM +0100, H. Nikolaus Schaller wrote:
->> This patch series adds HDMI output to the jz4780/CI20 board.
->> 
->> It is based on taking the old 3.18 vendor kernel and trying
->> to achieve the same with modern DTS setup and new/modified
->> drivers.
->> 
->> Unfortunately, in this first RFC, only EDID and creation of
->> /dev/fb0 are working. Also, HDMI hot plugging is detected.
->> 
->> But there is no HDMI output signal. So some tiny piece seems
->> to be missing to enable/configure the Synposys HDMI controller.
->> 
->> We need help from the community to fix this.
->> 
->> Note: device tree bindings are from 2015 and still seem to
->> fit - except they are not in yaml format.
->> 
->> Original authors of most patches are
->> * Paul Boddie <paul@boddie.org.uk>
->> * Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
->> 
->> 
->> H. Nikolaus Schaller (2):
->>  drm: ingenic-drm: add MODULE_DEVICE_TABLE
->>  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
->> 
->> Paul Boddie (4):
->>  drm: ingenic: add jz4780 Synopsys HDMI driver.
->>  pinctrl: ingenic: add hdmi-ddc pin control group
->>  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
->>  MIPS: DTS: CI20: add HDMI setup
->> 
->> Zubair Lutfullah Kakakhel (2):
->>  dt-bindings: video: Add jz4780-lcd binding
->>  dt-bindings: video: Add jz4780-hdmi binding
->> 
->> .../bindings/display/ingenic-jz4780-hdmi.txt  |  41 ++++++
->> .../bindings/display/ingenic-jz4780-lcd.txt   |  39 ++++++
-> New bindings in DT Schema format please...
-> We want to have then in a formal launguage so we can use these
-> to verify the DT files.
+On Thu, Feb 27, 2020 at 9:19 AM Russell King <rmk+kernel@armlinux.org.uk> wrote:
+>
+> We need to indicate that powering off the TI WiFi is safe, to avoid:
+>
+> wl18xx_driver wl18xx.2.auto: Unbalanced pm_runtime_enable!
+> wl1271_sdio mmc0:0001:2: wl12xx_sdio_power_on: failed to get_sync(-13)
+>
+> which prevents the WiFi being functional.
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-Yes, I know. And I fully support the goal.
-
-But I personally do not have the time to learn the (IMHO brain-twisting)
-way the Schema format is working. Especially, I am not interested
-in becoming volunteer translator for .txt based schemas developed
-by someone else.
-
-So I hope that someone from the community can and is willing to do
-that.
-
-Or that there will appear good tools soon. E.g. some GUI
-based editor tool would be very helpful so that you don't have
-to fight with the yaml indentation rules. Like there are XML
-and DTD editors. And even HTML is rarely written manually any more.
-
-IMHO such tools should have been developed and in place *before*
-the rule to provide DT schemata is enforced.
-
-Anyways, I have requested for comments (and did expect this one).
-
-BR and thanks,
-Nikolaus
-
+Shouldn't this have a Fixes tag so that it can be backported to stable kernels?
