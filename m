@@ -2,71 +2,176 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2D3C3F2C4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AEAC3F2C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44AE32469F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582840418;
-	bh=pE0iFAjtz0v62aQ2IQZkiSdXMpqZmipAhFJswD3P2DU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=LKyidHyQ5iw4ZXxrLSZxJKPvqaF+knBhq7AMzjHY8fEaO6oGr7MZRT/uROWnIDrYP
-	 tRcAyv1r1vcT+FLNlWIGbakC2w92MH4ECORBes92VIIINrALpR98oxbZYydb+1ln2g
-	 TJqqPzKprBkG/al0dvF+7rJ0muOaOy+bpgUUvi7Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1EB292469F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:54:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KAkHE4e8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbgB0Vxh (ORCPT
+        id S1729805AbgB0Vyh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:53:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729991AbgB0Vxh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:53:37 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EA7B246A3;
-        Thu, 27 Feb 2020 21:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582840417;
-        bh=pE0iFAjtz0v62aQ2IQZkiSdXMpqZmipAhFJswD3P2DU=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=iMCXKHAcjaj2YE6GGZfEH7d5VfBzv60Nev1FjVnxX8AlgttIQVPBzrnq8yPFFRFyl
-         2SspFDzkR/jDztBEjjj97OsG31O2viOTanufQxhTdgZ8fslCQBJWgLJ7ehSF84krzq
-         8a0ZlM1wrL7BTBoifwrZEQnOWYq9/w/WmfLQ4Des=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 27 Feb 2020 16:54:37 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35168 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbgB0Vyh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 16:54:37 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 7so380728pgr.2
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:54:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+0IYi++vwthLQ5uajPvjEjpHHtTOH92Ozi2ToC54VL0=;
+        b=KAkHE4e8tQ+bi2Skwt3+5etnTno6Zh5gXipu+VdnG6pVHAWRgIr1UQpOhGFWHPDieP
+         7WtmzuwYqbtIeDybrv00r26KF6Mcbe36zp7sT6go8JEuId7dZudVR66c/tDhgq7e7gQC
+         bODwYmOTz1WWVOk7VjZx8O6ju4TZGOz45T15k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+0IYi++vwthLQ5uajPvjEjpHHtTOH92Ozi2ToC54VL0=;
+        b=TvIAIM6+ah0NQWYDmdeM3KqCkRY8ufrQM7eAj8/ZJsw286Zd360PtUowV1HGt19I5o
+         /eR21DgEeg4AD5pJMpj+v0U1oKZZE6LuRu0PgYOox5vVykRnFvzj3JvKMVy4XIzJVe0Y
+         WNtpD2gFUDHXtny5bSs/zumRm8Ndgx6NSIsf1TfGWr8AYcJCO2dGHO5bsmtcH5UhEtDt
+         4y4wHBeTdyMwQVRxkBuVVyv14FFBGtfu8MhDI0e+JYuVmIji05QrQbV3mMMcVDmsRO3m
+         ZXCPE8FwhAgEgHam69v6i84gsWJWorxt6t/jh95bKzYMHJUm8VVV0jjViARtSLqiO0ra
+         PE6Q==
+X-Gm-Message-State: APjAAAX2lCC8fV9qWFcHHr5YiHs/SJpAnmB5OZ5pKUvH4Fp/M+Gh3gbm
+        qyjVKZRohdaqGO3e/+4D638hkw==
+X-Google-Smtp-Source: APXvYqyLnLDusW3NGVjQNpS9d9K/5/oRkpDv3IJt5GsUJhMBBZuHwD5k1HpU1eYbxibVTOyx0XoRaA==
+X-Received: by 2002:a63:2cd6:: with SMTP id s205mr1332761pgs.258.1582840474892;
+        Thu, 27 Feb 2020 13:54:34 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id d69sm9088008pfd.72.2020.02.27.13.54.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 13:54:34 -0800 (PST)
+Date:   Thu, 27 Feb 2020 13:54:33 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Chandan Uddaraju <chandanu@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, seanpaul@chromium.org,
+        abhinavk@codeaurora.org, hoegsberg@google.com,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [DPU PATCH v3 3/5] drm/msm/dp: add displayPort driver support
+Message-ID: <20200227215433.GK24720@google.com>
+References: <1575294437-6129-1-git-send-email-chandanu@codeaurora.org>
+ <0101016ec6df0e54-2af1f4a6-8f72-4799-89e0-0ff87b514eb2-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200227125615.4727-1-sibis@codeaurora.org>
-References: <20200227125615.4727-1-sibis@codeaurora.org>
-Subject: Re: [PATCH] soc: qcom: cmd-db: Fix compilation error when CMD_DB is disabled
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     georgi.djakov@linaro.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-To:     Sibi Sankar <sibis@codeaurora.org>, agross@kernel.org,
-        arnd@arndb.de, bjorn.andersson@linaro.org
-Date:   Thu, 27 Feb 2020 13:53:36 -0800
-Message-ID: <158284041627.4688.10612652730097090229@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0101016ec6df0e54-2af1f4a6-8f72-4799-89e0-0ff87b514eb2-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sibi Sankar (2020-02-27 04:56:15)
-> If CONFIG_QCOM_COMMAND_DB=3Dn the following compilation errors will be
-> seen. Fix this by including the appropriate linux headers.
->=20
-> ./include/soc/qcom/cmd-db.h: In function \u2018cmd_db_read_aux_data\u2019:
-> ./include/soc/qcom/cmd-db.h: error: implicit declaration of function \u20=
-18ERR_PTR\u2019;
->=20
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+On Mon, Dec 02, 2019 at 01:48:57PM +0000, Chandan Uddaraju wrote:
+> Add the needed displayPort files to enable DP driver
+> on msm target.
+> 
+> "dp_display" module is the main module that calls into
+> other sub-modules. "dp_drm" file represents the interface
+> between DRM framework and DP driver.
+> 
+> changes in v2:
+> -- Update copyright markings on all relevant files.
+> -- Change pr_err() to DRM_ERROR()
+> -- Use APIs directly instead of function pointers.
+> -- Use drm_display_mode structure to store link parameters in the driver.
+> -- Use macros for register definitions instead of hardcoded values.
+> -- Replace writel_relaxed/readl_relaxed with writel/readl
+>    and remove memory barriers.
+> -- Remove unnecessary NULL checks.
+> -- Use drm helper functions for dpcd read/write.
+> -- Use DRM_DEBUG_DP for debug msgs.
+> 
+> changes in V3:
+> -- Removed changes in dpu_io_util.[ch]
+> -- Added locking around "is_connected" flag and removed atomic_set()
+> -- Removed the argument validation checks in all the static functions
+>    except initialization functions and few API calls across msm/dp files
+> -- Removed hardcoded values for register reads/writes
+> -- Removed vreg related generic structures.
+> -- Added return values where ever necessary.
+> -- Updated dp_ctrl_on function.
+> -- Calling the ctrl specific catalog functions directly instead of
+>    function pointers.
+> -- Added seperate change that adds standard value in drm_dp_helper file.
+> -- Added separate change in this list that is used to initialize
+>    displayport in DPU driver.
+> -- Added change to use drm_dp_get_adjust_request_voltage() function.
+> 
+> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
 > ---
+> +++ b/drivers/gpu/drm/msm/dp/dp_power.c
+>
+> ...
+>
+> +int dp_power_init(struct dp_power *dp_power, bool flip)
+> +{
+> +	int rc = 0;
+> +	struct dp_power_private *power;
+> +
+> +	if (!dp_power) {
+> +		DRM_ERROR("invalid power data\n");
+> +		rc = -EINVAL;
+> +		goto exit;
+> +	}
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+drive-by comment:
+
+this would lead to calling 'pm_runtime_put_sync(&power->pdev->dev)'
+below with 'power' being NULL, which doesn't seem a good idea.
+
+It is probably sane to expect that 'dp_power' is not NULL, if that's
+the case the check can be removed. Otherwise the function should just
+return -EINVAL instead of jumping to 'exit'.
+
+> +
+> +	power = container_of(dp_power, struct dp_power_private, dp_power);
+> +
+> +	pm_runtime_get_sync(&power->pdev->dev);
+> +	rc = dp_power_regulator_enable(power);
+> +	if (rc) {
+> +		DRM_ERROR("failed to enable regulators, %d\n", rc);
+> +		goto exit;
+> +	}
+> +
+> +	rc = dp_power_pinctrl_set(power, true);
+> +	if (rc) {
+> +		DRM_ERROR("failed to set pinctrl state, %d\n", rc);
+> +		goto err_pinctrl;
+> +	}
+> +
+> +	rc = dp_power_config_gpios(power, flip);
+> +	if (rc) {
+> +		DRM_ERROR("failed to enable gpios, %d\n", rc);
+> +		goto err_gpio;
+> +	}
+> +
+> +	rc = dp_power_clk_enable(dp_power, DP_CORE_PM, true);
+> +	if (rc) {
+> +		DRM_ERROR("failed to enable DP core clocks, %d\n", rc);
+> +		goto err_clk;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_clk:
+> +	dp_power_disable_gpios(power);
+> +err_gpio:
+> +	dp_power_pinctrl_set(power, false);
+> +err_pinctrl:
+> +	dp_power_regulator_disable(power);
+> +exit:
+> +	pm_runtime_put_sync(&power->pdev->dev);
+> +	return rc;
+> +}
