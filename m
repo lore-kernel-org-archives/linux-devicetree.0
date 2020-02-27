@@ -2,129 +2,97 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E95C4BA38
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 01:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58366C4BA35
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 02:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC2A20838
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 01:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fotHPoKl"
+	by mail.kernel.org (Postfix) with ESMTP id 1FF5324650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 02:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgB0B67 (ORCPT
+        id S1728266AbgB0CHR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 20:58:59 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:49499 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbgB0B66 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 20:58:58 -0500
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 01R1wrhO007970;
-        Thu, 27 Feb 2020 10:58:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01R1wrhO007970
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582768734;
-        bh=f0RtcMm91pUvRhf0tWvY0RBgrv1rYufzVOjyf6MfCfg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fotHPoKlYAO5kpyEqqKLQOXS4F/trfYkFriNsEWjC86UpYW6cQasCHv2DFLLr1D0J
-         H7orBEvT3m+1md0mVNi8XrLewttMhYJ0XAV7schvaPn4q0//2tvN3lF/jzee8DsVJp
-         H3dvA8ewfQDfOm1iKOzIjECi2kuBadKwrrZ/iBcYx/5j4yDxBpQDRWdqHBNjnc8M+Z
-         dir83QBiVumV71W01EbLyqnTiAnaDLZ09EOmNYQbrYv6IKpDgO1tXQgVe4V5fecItU
-         RXehyFhUWWVHMYjmUzUduwaa2PVppj4rF3ld9qZZZZgrdPCXU7kwsnbN1onAvDvJyS
-         9wamCJyToPgqA==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id n27so841634vsa.0;
-        Wed, 26 Feb 2020 17:58:54 -0800 (PST)
-X-Gm-Message-State: APjAAAWMlOrgox3Pwt1leB+LY97Y8u2BE474V94Vvmqr34dLT42XJueG
-        tNhI0N6hfBL0inFhDS0fEvj3Mx2lDC64hjIR6nU=
-X-Google-Smtp-Source: APXvYqxS/NpYKxdzB2PqcLVxTMrbA3ernXND+XDm0KOzE5cfpSGY5b+4SUxf9m2c26wWKmdvddCFLKtYmXd2gSO7fhk=
-X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr1183258vsh.179.1582768733281;
- Wed, 26 Feb 2020 17:58:53 -0800 (PST)
+        Wed, 26 Feb 2020 21:07:17 -0500
+Received: from muru.com ([72.249.23.125]:58004 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728229AbgB0CHR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Feb 2020 21:07:17 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id A340F8022;
+        Thu, 27 Feb 2020 02:08:01 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 18:07:13 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 06/12] ARM: dts: am335x-bone-common: Enable PRU-ICSS
+ interconnect node
+Message-ID: <20200227020713.GE37466@atomide.com>
+References: <20200225204649.28220-1-s-anna@ti.com>
+ <20200225204649.28220-7-s-anna@ti.com>
+ <20200226182924.GU37466@atomide.com>
+ <af3965db-54b2-3e4f-414f-d27ca4b5ced1@ti.com>
+ <20200226223745.GA37466@atomide.com>
+ <20200226223921.GB37466@atomide.com>
+ <b1fe18b5-f779-aea5-8c66-41c0de66c39f@ti.com>
 MIME-Version: 1.0
-References: <20200222141927.3868-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20200222141927.3868-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 27 Feb 2020 10:58:17 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQmzYzK_A4iF6b-LxTT-o5Ut2=TyBeRQPSfCdj7FHhgBQ@mail.gmail.com>
-Message-ID: <CAK7LNAQmzYzK_A4iF6b-LxTT-o5Ut2=TyBeRQPSfCdj7FHhgBQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: mtd: Convert Denali NAND controller to json-schema
-To:     Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1fe18b5-f779-aea5-8c66-41c0de66c39f@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+* Suman Anna <s-anna@ti.com> [200227 00:59]:
+> Hi Tony,
+> 
+> On 2/26/20 4:39 PM, Tony Lindgren wrote:
+> > * Tony Lindgren <tony@atomide.com> [200226 22:38]:
+> >> * Suman Anna <s-anna@ti.com> [200226 20:35]:
+> >>> On 2/26/20 12:29 PM, Tony Lindgren wrote:
+> >>>> * Suman Anna <s-anna@ti.com> [200225 20:47]:
+> >>>>> The PRU-ICSS target module node was left in disabled state in the base
+> >>>>> am33xx-l4.dtsi file. Enable this node on all the AM335x beaglebone
+> >>>>> boards as they mostly use a AM3358 or a AM3359 SoC which do contain
+> >>>>> the PRU-ICSS IP.
+> >>>>
+> >>>> Just get rid of the top level status = "disabled". The default
+> >>>> is enabled, and the device is there for sure inside the SoC.
+> >>>> And then there's no need for pointless status = "okay" tinkering
+> >>>> in the board specific dts files so no need for this patch.
+> >>>
+> >>> The IP is not available on all SoCs, and there are about 40 different
+> >>> board files atm across AM33xx and AM437x, and am not sure what SoCs they
+> >>> are actually using.
+> >>
+> >> Oh that issue again.. Maybe take a look at patch "[PATCH 2/3] bus: ti-sysc:
+> >> Detect display subsystem related devices" if you can add runtime
+> >> detection for the accelerators there similar to what I hadded for omap3.
+> >> acclerators.
+> > 
+> > Sorry I meant instead patch "[PATCH 6/7] bus: ti-sysc: Implement SoC
+> > revision handling".
+> 
+> OK, looked down that path a bit more and looking through mach-omap2/id.c
+>  and soc.h, I see some of the part number infrastructure build on top of
+> DEV_FEATURE bits for some SoCs. The DEVICE_ID registers only have the
+> generic family and the Silicon Revision number for AM33xx and AM437x and
+> we currently do not have any infrastructure around exact SoC
+> identification for AM33xx and AM437x atleast.
+> 
+> Do you have the bit-field split for the DEV_FEATURE bits somewhere,
+> because I couldn't find any in either the DM or the TRM. On AM437x,
+> there is no difference between AM4372 and AM4376 DEV_FEATURE value even
+> though the former doesn't have the PRUSS. On AM335x, may be bit 0
+> signifies the presence of PRUSS??
 
+OK not sure how that could be detected. Maybe check the efuses on
+the newer SoCs?
 
-This was applied, but I just noticed one stupid mistake.
+Regards,
 
-
-
-On Sat, Feb 22, 2020 at 11:20 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Convert the Denali NAND controller binding to DT schema format.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
->  .../devicetree/bindings/mtd/denali,nand.yaml  | 149 ++++++++++++++++++
->  .../devicetree/bindings/mtd/denali-nand.txt   |  61 -------
->  2 files changed, 149 insertions(+), 61 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/denali,nand.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mtd/denali-nand.txt
->
-> diff --git a/Documentation/devicetree/bindings/mtd/denali,nand.yaml b/Documentation/devicetree/bindings/mtd/denali,nand.yaml
-> new file mode 100644
-> index 000000000000..b41b7e4bfe78
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/denali,nand.yaml
-> @@ -0,0 +1,149 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mtd/denali,nand.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Denali NAND controller
-> +
-> +maintainers:
-> +  - Masahiro Yamada <yamada.masahiro@socionext.com>
-> +
-> +properties:
-> +  compatible:
-> +    description: version 2.91, 3.1, 3.1.1, respectively
-
-
-Please delete this description.
-
-This is a copy-paste mistake, which
-came from my other patch
-"dt-bindings: mmc: Convert UniPhier SD controller to json-schema"
-
-
-
-
-> +    enum:
-> +      - altr,socfpga-denali-nand
-> +      - socionext,uniphier-denali-nand-v5a
-> +      - socionext,uniphier-denali-nand-v5b
-> +
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Tony
