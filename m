@@ -2,104 +2,96 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0170FC11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFEFC3F34E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D781E246A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC67246A1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lcOqOT23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgB0NTV (ORCPT
+        id S1730427AbgB0Npq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:19:21 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37653 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729088AbgB0NTV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 08:19:21 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b3so2862357otp.4;
-        Thu, 27 Feb 2020 05:19:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YePo/5+OupClG7tl254SG+Sd9H1J2DdTDdubCfX50zk=;
-        b=VuZL9kH9wdUUdI8gqTk+vhVqcaiI+Kr2PkyHBEBZrX+QfflTZ+8nppViqrKZpQLJ5E
-         Rp29VzppGgao4jh1pvPhJVvlY5RI3LZiPcaVC2hMwLqCJ0VXqQRatqalUf6H+BZbJIeh
-         wIIcegYUkD0tG/p5v6uBXkqjJ5gRLUD0TfQHTNSIcuFxYZ9xA8j9Z0Q4/9VWWAHLnHql
-         AhZyn2VY+j4cnOR1ZS6VbwBrakwAwi/GG63qKxqCPjH/khm8XXhdSY55hNat9mn5rN4q
-         L0u4eHg6UPEUZtJhkA0lOHkRohzvV7edivVJlmYhtx3ysQi9F8MneHl45TAulgIC7GEw
-         uuxw==
-X-Gm-Message-State: APjAAAVPu1i/yyVonQ0RHj0qAb6+may94MyEf9G8gCO7S1wHyv5GCsvn
-        GwG7/bXqh2zW7YfbGc2qrpO8PSa21lWBVe00Wtc=
-X-Google-Smtp-Source: APXvYqxlakM84HpX6mtOTLlzf/aUmaxXKcQuhByOC31CfixFsFpUGvgh2GKp9b1xNPCPOiFZ3JDf1Fi9ELJIb2+KkRw=
-X-Received: by 2002:a05:6830:10e:: with SMTP id i14mr3275826otp.39.1582809559240;
- Thu, 27 Feb 2020 05:19:19 -0800 (PST)
-MIME-Version: 1.0
-References: <20200227130323.15327-1-geert+renesas@glider.be> <20200227130937.qvrjyxcwim7rfum7@gilmour.lan>
-In-Reply-To: <20200227130937.qvrjyxcwim7rfum7@gilmour.lan>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 27 Feb 2020 14:19:08 +0100
-Message-ID: <CAMuHMdUVW_51dqMK=ziz_JVT3LuXX7vOF3-Ei-aHiiBuSepGpg@mail.gmail.com>
-Subject: Re: [PATCH] spi: dt-bindings: spi-controller: Fix #address-cells for
- slave mode
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
+        Thu, 27 Feb 2020 08:45:46 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38122 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730417AbgB0Npp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 08:45:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wzbm8z2w8lQwjT+cEZt8LsICkOgQZEtFslCYrByO1PA=; b=lcOqOT23MeMio9e+fPoJWSHYO
+        mAtPRvqbFRnOr1YYkRXttSzf4smONYPf66/BR00oeVmMIhDCTPvOLvGdRGsIoEOjfJsCd4y27oPvM
+        FVTJOoLznwVFx7NNR87S9nSu5g1ohp+FeEy2oaE1MUSv2XeCua/NeaQDWZWkzji9mlw0h0krYkazJ
+        27P2WyJtOigVoTQ+kR819AvfqphApQ5VsRHf9fkPcqiTGxb8JReJkmWMfhkSxlGUAtzDyyE2yBpK7
+        rU7KWd2iVGFgic9aPuJQ9Otpter8v97DlCNuAsNrei0nRt8Fe/qRLrsdM84bpnPu/4LkCbvPX7hOY
+        yOrsFWbNA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:45978)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j7JTw-0005rx-CM; Thu, 27 Feb 2020 13:45:40 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j7JTv-00011J-4T; Thu, 27 Feb 2020 13:45:39 +0000
+Date:   Thu, 27 Feb 2020 13:45:39 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux-renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sr-som-ti: indicate powering off wifi
+ is safe
+Message-ID: <20200227134538.GK25745@shell.armlinux.org.uk>
+References: <E1j7I7v-0004dS-5u@rmk-PC.armlinux.org.uk>
+ <CAOMZO5A6os4myE41ZLBvW639bjRudg8Tax4yBa5JOyY5+oJW+g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5A6os4myE41ZLBvW639bjRudg8Tax4yBa5JOyY5+oJW+g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Thu, Feb 27, 2020 at 2:09 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> On Thu, Feb 27, 2020 at 02:03:23PM +0100, Geert Uytterhoeven wrote:
-> > Currently, the DT bindings for an SPI controller specify that
-> > "#address-cells" must be fixed to one.  However, that applies to an SPI
-> > controller in master mode only.  When running in SPI slave mode,
-> > "#address-cells" should be zero.
+On Thu, Feb 27, 2020 at 09:57:40AM -0300, Fabio Estevam wrote:
+> Hi Russell,
+> 
+> On Thu, Feb 27, 2020 at 9:19 AM Russell King <rmk+kernel@armlinux.org.uk> wrote:
 > >
-> > Fix this making the value of "#address-cells" dependent on the presence
-> > of "spi-slave".
+> > We need to indicate that powering off the TI WiFi is safe, to avoid:
 > >
-> > Fixes: 0a1b929356830257 ("spi: Add YAML schemas for the generic SPI options")
-> > Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> > --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-
-> > @@ -52,6 +53,18 @@ properties:
-> >      description:
-> >        The SPI controller acts as a slave, instead of a master.
+> > wl18xx_driver wl18xx.2.auto: Unbalanced pm_runtime_enable!
+> > wl1271_sdio mmc0:0001:2: wl12xx_sdio_power_on: failed to get_sync(-13)
 > >
-> > +if:
-> > +  required:
-> > +    [ spi-slave ]
->
-> Nit: Usually, that notation is when you would do it on the same line,
-> if you want to go to a new line, it would make more sense to use -
+> > which prevents the WiFi being functional.
+> >
+> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> 
+> Shouldn't this have a Fixes tag so that it can be backported to stable kernels?
 
-Sorry, being a poor yaml-by-example programmer, I don't understand what
-you mean.  Which part do you refer to by "that notation"?
+If I knew where the breakage happened and what commit was responsible
+for it, then yes - but it used to work with earlier kernels (I don't
+know which) and at some point it broke.
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+The suggestion for how to fix it came from Jon Nettleton.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
