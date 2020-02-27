@@ -2,175 +2,211 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6D3C3F2C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30BFC3F2C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6564824677
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:07:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mo854CQy"
+	by mail.kernel.org (Postfix) with ESMTP id 5990D246A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582842108;
+	bh=LXgJgAigabr62zw11QachDyxGLhSRPzXrO4MxYJBWac=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=t/FwMFQfd4+lf82mQeTrP7tjN8Yx7qH0siqzOXc6msGlhsn3tX+3yrljhAMASeuU9
+	 bIbVk7yq2BojpEzOs8YG0H91DEeD+kGxZU3nUxUONtoueeUl8vyamuV6uAdaUaMozk
+	 eChmtw/XBcXCev6S+BYU6hb5AQNkC6OdZKX7xhCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729965AbgB0WH5 (ORCPT
+        id S1729718AbgB0WVs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:07:57 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39095 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729988AbgB0WH4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:07:56 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j15so386110pgm.6
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 14:07:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=TCgFgmnmVNoNLpKm+CzEz0ezwvXIfKf3HTcMqbhXQxI=;
-        b=Mo854CQy+qdEmlCyfOZBHwhAwruPIZeiGuFjrn4Yt8mri6b6FkhTr9oCotMZN3I1cr
-         EiJFlJhh+Uflhc6D9hlqxqnrAKtWPSz/qRfgKCs5EqKjoNCSM/KNUmrhUEzuemeC92bq
-         1P98mavtoTdWY8ga/VSSD2XNBc7zvGMC+ll7E=
+        Thu, 27 Feb 2020 17:21:48 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42063 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729434AbgB0WVr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:21:47 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l12so868982oil.9;
+        Thu, 27 Feb 2020 14:21:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=TCgFgmnmVNoNLpKm+CzEz0ezwvXIfKf3HTcMqbhXQxI=;
-        b=N5Ka+htfRBh/6atvMpW9LhUiG5eYD/BI2kwiKhyCt5FVyPBPAcHp3eFCSP/platZIi
-         f0KXGp5TEWMnoxKwh0ZGSOj/70T9fu+BQlVWvI3muAYPjCZl6P8457EtQaRJyLZAWGxt
-         x9VJMvKnjJ7pUaj24o+xi7ff4d5t3kDiNHEqjFOqa5srUVefkWu981opKT3gCi6ZWfwY
-         FvSVonNzI7Lohth0mngRvi6nhogrVcLrgGTA3yV6MZ18KibRwvoPFVbQRtIdj0I25NMM
-         icv50pYWd+eb/lKqPSArlw18pNkQKdV9SsWOXQzzBdMj/y2MK9JE4dK27T/4LdwcHQdZ
-         tIzQ==
-X-Gm-Message-State: APjAAAXG2/lutHCYdUblGN4ynen8UnW5Y8vExbt3n930xFFvlK69Zb5/
-        Tt6r++1la2O7iQL1O9HxTx0euA==
-X-Google-Smtp-Source: APXvYqw/tQi7tCabfCC+1nJEE/UWsXDGZsSLQlhSvUhM1EvK50NmXr0EwYj9QWrNPetplUxgNhVUqw==
-X-Received: by 2002:a65:63d1:: with SMTP id n17mr1285707pgv.298.1582841274953;
-        Thu, 27 Feb 2020 14:07:54 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a18sm8583066pfl.138.2020.02.27.14.07.54
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=du04IHx+HutirdW4IRyHgf7LAWxcnOztVFIEX1SqbB8=;
+        b=AZhUDwD07uw22lDCsg0y1t0G9jW/UNdcLwykDwF97xRkcigG03CiboGdtTTlXV7s4J
+         2OWiZcnQRgkrgecFZYdeQ/2rIlw2d7EZy2Eyx9tf5U2ECTje4i1MbMLZmwlBpIxrNWfW
+         FYoV9h3uThyzQuE2SgZhmzSfvh6Htd9fhMSgukOSF9ltnJxLB7EIk54prACtdH9+KNFZ
+         Pa2KvxuFU5UYUbXGF+GUc2kjdVOAvxrt33HJVFs4/p82SJqBEh1f6YKq6RRp3LxW7Uzc
+         9ffTYFyQ/+VYMIsELN64oZQxb2tkPI7W9k3evEIXPLBo+mW90+cfxCrCjloqfvcBaS5B
+         uOyw==
+X-Gm-Message-State: APjAAAUIn1/ZDHMXjR4luf5d7E4lsRWhybH2+gGUUvMAg5fRq6zjmaGM
+        KhwbOBndbFJ0Hb2QfFD8on8oFKA=
+X-Google-Smtp-Source: APXvYqyEkDcaG0j8dAL0P9PQF1fWf4H41MVvV6Cb5ceuV0GzrQuoqmkuHkhHkuOq7dxd45/LCQIhtw==
+X-Received: by 2002:a54:4106:: with SMTP id l6mr956240oic.76.1582842106769;
+        Thu, 27 Feb 2020 14:21:46 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j5sm2383610otl.71.2020.02.27.14.21.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 14:07:54 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 27 Feb 2020 14:21:46 -0800 (PST)
+Received: (nullmailer pid 24260 invoked by uid 1000);
+        Thu, 27 Feb 2020 22:21:45 -0000
+Date:   Thu, 27 Feb 2020 16:21:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Robert Richter <rric@kernel.org>, soc@kernel.org,
+        Jon Loeliger <jdl@jdl.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Corey Minyard <minyard@acm.org>,
+        openipmi-developer@lists.sourceforge.net
+Subject: Re: [PATCH v2 11/13] dt-bindings: ipmi: Convert IPMI-SMIC bindings
+ to json-schema
+Message-ID: <20200227222145.GF26010@bogus>
+References: <20200227182210.89512-1-andre.przywara@arm.com>
+ <20200227182210.89512-12-andre.przywara@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200227163825.GB18240@kuha.fi.intel.com>
-References: <20200220003102.204480-1-pmalani@chromium.org> <20200220003102.204480-2-pmalani@chromium.org> <158279287307.177367.4599344664477592900@swboyd.mtv.corp.google.com> <20200227163825.GB18240@kuha.fi.intel.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: Add cros-ec Type C port driver
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
-        bleung@chromium.org, devicetree@vger.kernel.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Date:   Thu, 27 Feb 2020 14:07:53 -0800
-Message-ID: <158284127336.4688.623067902277673206@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227182210.89512-12-andre.przywara@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Heikki Krogerus (2020-02-27 08:38:25)
-> Hi Stephen,
->=20
-> On Thu, Feb 27, 2020 at 12:41:13AM -0800, Stephen Boyd wrote:
-> > > +examples:
-> > > +  - |+
-> > > +    cros_ec: ec@0 {
-> > > +      compatible =3D "google,cros-ec-spi";
-> > > +
-> > > +      typec {
-> > > +        compatible =3D "google,cros-ec-typec";
-> > > +
-> > > +        usb_con: connector {
-> > > +          compatible =3D "usb-c-connector";
-> > > +          port-number =3D <0>;
-> > > +          power-role =3D "dual";
-> > > +          data-role =3D "dual";
-> > > +          try-power-role =3D "source";
-> > > +        };
-> >=20
-> > I thought that perhaps this would be done with the OF graph APIs instead
-> > of being a child of the ec node. I don't see how the usb connector is
-> > anything besides a child of the top-level root node because it's
-> > typically on the board. We put board level components at the root.
->=20
-> No.
->=20
-> The above follows the usb-connector bindings, so it is correct:
-> Documentation/devicetree/bindings/connector/usb-connector.txt
->=20
-> So the connector is always a child of the "CC controller" with the USB
-> Type-C connectors, which in this case is the EC (from operating systems
-> perspective). The "CC controller" controls connectors, and it doesn't
-> actually do anything else. So placing the connectors under the
-> "connector controller" is also logically correct.
+On Thu, Feb 27, 2020 at 06:22:08PM +0000, Andre Przywara wrote:
+> Convert the generic IPMI controller bindings to DT schema format
+> using json-schema.
+> 
+> I removed the formerly mandatory device-type property, since this
+> is deprecated in the DT spec, except for the legacy CPU and memory
+> nodes.
 
-Ah ok I see. The graph binding is for describing the data path, not the
-control path. Makes sense.=20
+Yes, but it is still used by the ipmi driver to match on, so we should 
+keep it.
 
->=20
-> > Yes, the connector is intimately involved with the EC here, but I would
-> > think that we would have an OF graph connection from the USB controller
-> > on the SoC to the USB connector, traversing through anything that may be
-> > in that path, such as a USB hub. Maybe the connector node itself can
-> > point to the EC type-c controller with some property like
->=20
-> I think your idea here is that there should be only a single node for
-> each connector that is then linked with every component that it is
-> physically connected to (right?), but please note that that is not
-> enough. Every component attached to the connector must have its own
-> child node that represents the "port" that is physically connected to
-> the USB Type-C connector.
->=20
-> So for example, the USB controller nodes have child nodes for every
-> USB2 port as well as for every USB3 port. Similarly, the GPU
-> controllers have child node for every DisplayPort, etc. And I believe
-> that is already how it has been done in DT (and also in ACPI).
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> Cc: Corey Minyard <minyard@acm.org>
+> Cc: openipmi-developer@lists.sourceforge.net
+> ---
+>  .../devicetree/bindings/ipmi/ipmi-smic.txt    | 25 ---------
+>  .../devicetree/bindings/ipmi/ipmi-smic.yaml   | 56 +++++++++++++++++++
+>  2 files changed, 56 insertions(+), 25 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/ipmi/ipmi-smic.txt
+>  create mode 100644 Documentation/devicetree/bindings/ipmi/ipmi-smic.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/ipmi/ipmi-smic.txt b/Documentation/devicetree/bindings/ipmi/ipmi-smic.txt
+> deleted file mode 100644
+> index d5f1a877ed3e..000000000000
+> --- a/Documentation/devicetree/bindings/ipmi/ipmi-smic.txt
+> +++ /dev/null
+> @@ -1,25 +0,0 @@
+> -IPMI device
+> -
+> -Required properties:
+> -- compatible: should be one of ipmi-kcs, ipmi-smic, or ipmi-bt
+> -- device_type: should be ipmi
+> -- reg: Address and length of the register set for the device
+> -
+> -Optional properties:
+> -- interrupts: The interrupt for the device.  Without this the interface
+> -	is polled.
+> -- reg-size - The size of the register.  Defaults to 1
+> -- reg-spacing - The number of bytes between register starts.  Defaults to 1
+> -- reg-shift - The amount to shift the registers to the right to get the data
+> -	into bit zero.
+> -
+> -Example:
+> -
+> -smic@fff3a000 {
+> -	compatible = "ipmi-smic";
+> -	device_type = "ipmi";
+> -	reg = <0xfff3a000 0x1000>;
+> -	interrupts = <0 24 4>;
+> -	reg-size = <4>;
+> -	reg-spacing = <4>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/ipmi/ipmi-smic.yaml b/Documentation/devicetree/bindings/ipmi/ipmi-smic.yaml
+> new file mode 100644
+> index 000000000000..c859e0e959b9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ipmi/ipmi-smic.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-It looks like perhaps you're conflating ports in USB spec with the OF
-graph port? I want there to be one node per type-c connector that I can
-physically see on the device. Is that not sufficient?
+Anything I wrote which should be most of the series, you can relicense 
+to:
 
-Are there any examples of the type-c connector in DT? I see some
-NXP/Freescale boards and one Renesas board so far. Maybe there are other
-discussions I can read up on?
+(GPL-2.0-only OR BSD-2-Clause)
 
->=20
-> Those "port" nodes then just need to be linked with the "connector"
-> node. I think for that the idea was to use OF graph, but I'm really
-> sceptical about that. The problem is that with the USB Type-C
-> connectors we have to be able to identify the connections, i.e. which
-> endpoint is the USB2 port, which is the DisplayPort and so on, and OF
-> graph does not give any means to do that on its own. We will have to
-> rely on separate device properties in order to do the identification.
-> Currently it is not documented anywhere which property should be used
-> for that.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/ipmi/ipmi-smic.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: IPMI device bindings
+> +
+> +description: IPMI device bindings
+> +
+> +maintainers:
+> +  - Corey Minyard <cminyard@mvista.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ipmi-kcs
+> +      - ipmi-smic
+> +      - ipmi-bt
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Interface is polled if this property is omitted.
+> +    maxItems: 1
+> +
+> +  reg-size:
+> +    description: The access width of the register in bytes. Defaults to 1.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [1, 2, 4, 8]
 
-I hope that this patch series can document this. Why can't that work by
-having multiple OF graph ports for USB2 port, DisplayPort, USB3 port,
-etc? The data path goes to the connector and we can attach more
-information to each port node to describe what type of endpoint is there
-like a DisplayPort capable type-c connector for example.
+Does 8 really work?
 
->=20
-> For ACPI we are going to propose that with every type of connection,
-> there should be a device property that returns a reference to the
-> appropriate port. That way there are no problems identifying the
-> connections. All we need to do is to define the property names for
-> every type of connection. "usb2-port" for the USB2 or high speed port,
-> "usb3-port" for USB3, etc.
->=20
+> +
+> +  reg-spacing:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: The number of bytes between register starts. Defaults to 1.
+> +
+> +  reg-shift:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      The amount of bits to shift the register content to the right to get
+> +      the data into bit zero.
 
-That sounds like something we should figure out now for DT firmwares
-too. For this particular binding, I don't know if we need to do anything
-besides figure out how to represent multiple connectors underneath the
-EC node. The other properties seem fairly generic and so I'd expect this
-series to migrate
-Documentation/devicetree/bindings/connector/usb-connector.txt to YAML
-and refine the binding with anything necessary, like a 'reg' property to
-allow multiple ports to exist underneath the "CC controller".
+either 24 or 56 would be the max, right?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    smic@fff3a000 {
+> +        compatible = "ipmi-smic";
+> +        reg = <0xfff3a000 0x1000>;
+> +        interrupts = <0 24 4>;
+> +        reg-size = <4>;
+> +        reg-spacing = <4>;
+> +    };
+> -- 
+> 2.17.1
+> 
