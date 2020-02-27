@@ -2,85 +2,141 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC36C35677
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C049C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DDD2468A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342C32468A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:58:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="md6NOEcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731278AbgB0Ozw (ORCPT
+        id S1732949AbgB0O6S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:55:52 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38204 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729930AbgB0Ozw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 09:55:52 -0500
-Received: from localhost.localdomain (p200300CB87166A00F93543D7CC014A8D.dip0.t-ipconnect.de [IPv6:2003:cb:8716:6a00:f935:43d7:cc01:4a8d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: dafna)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5A9772787E1;
-        Thu, 27 Feb 2020 14:55:50 +0000 (GMT)
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-To:     devicetree@vger.kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        dafna.hirschfeld@collabora.com, linux-kernel@vger.kernel.org,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com,
-        sebastian.reichel@collabora.com
-Subject: [PATCH v5 2/2] arm64: tegra: fix nodes names under i2c-tunnel
-Date:   Thu, 27 Feb 2020 15:55:28 +0100
-Message-Id: <20200227145528.8940-2-dafna.hirschfeld@collabora.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227145528.8940-1-dafna.hirschfeld@collabora.com>
-References: <20200227145528.8940-1-dafna.hirschfeld@collabora.com>
+        Thu, 27 Feb 2020 09:58:18 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:43690 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730000AbgB0O6R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 09:58:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582815495; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pGG3QA/MuTy/BE1KaedN0lIF6lHb9h2nDV465fY0RG8=;
+        b=md6NOEcH7wtfylojV61kM1Up4IZ1tc8mCF17PXGNsMNFm4cc/2TFk2TYRpWiqLey9bsH2K
+        LeqVHH9fdOIs6zI40UTIJAf+MvBQm4IEIGfn4wD/n3InleORa0ptOVWvJ/ZHAl2Yw+ZTei
+        CEzWkuRP23LE5odTDjn2JKspv+3W1hU=
+Date:   Thu, 27 Feb 2020 11:57:52 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v6 5/6] MIPS: DTS: JZ4780: define node for JZ4780 efuse
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1582815472.3.4@crapouillou.net>
+In-Reply-To: <c6177ff663b6f8e16dc41169a76ba5dac091e7bd.1582715761.git.hns@goldelico.com>
+References: <cover.1582715761.git.hns@goldelico.com>
+        <c6177ff663b6f8e16dc41169a76ba5dac091e7bd.1582715761.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Change the node names so that they match the class
-of the device and have a unit address.
-The changes are:
-bq24735 -> charger@9
-smart-battery -> battery@b
+Hi Nikolaus,
 
-This also fixes the warning:
-'bq24735', 'smart-battery' do not match any of the
-regexes: '^.*@[0-9a-f]+$', 'pinctrl-[0-9]+'
 
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
----
- arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Le mer., f=E9vr. 26, 2020 at 12:16, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>=20
+> This patch brings support for the JZ4780 efuse. Currently it only=20
+> exposes
+> a read only access to the entire 8K bits efuse memory and the
+> ethernet mac address for the davicom dm9000 chip on the CI20 board.
+>=20
+> It also changes the nemc reg range to avoid overlap.
+>=20
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index f928329b034b..1e266be28096 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -358,7 +358,7 @@
+>=20
+>  	nemc: nemc@13410000 {
+>  		compatible =3D "ingenic,jz4780-nemc";
+> -		reg =3D <0x13410000 0x10000>;
+> +		reg =3D <0x13410000 0x4c>;
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-index a0385a386a3f..4cd99dac541b 100644
---- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-@@ -767,7 +767,7 @@
- 
- 				google,remote-bus = <0>;
- 
--				charger: bq24735 {
-+				charger: charger@9 {
- 					compatible = "ti,bq24735";
- 					reg = <0x9>;
- 					interrupt-parent = <&gpio>;
-@@ -778,7 +778,7 @@
- 							GPIO_ACTIVE_HIGH>;
- 				};
- 
--				battery: smart-battery {
-+				battery: battery@b {
- 					compatible = "sbs,sbs-battery";
- 					reg = <0xb>;
- 					battery-name = "battery";
--- 
-2.17.1
+This is wrong, the real size of the register area is 1x15c.
+
+>  		#address-cells =3D <2>;
+>  		#size-cells =3D <1>;
+>  		ranges =3D <1 0 0x1b000000 0x1000000
+> @@ -373,6 +373,21 @@
+>  		status =3D "disabled";
+>  	};
+>=20
+> +	efuse: efuse@134100d0 {
+> +		compatible =3D "ingenic,jz4780-efuse";
+> +		reg =3D <0x134100d0 0x2c>;
+> +
+> +		clocks =3D <&cgu JZ4780_CLK_AHB2>;
+> +		clock-names =3D "ahb2";
+
+As explained in my response to the other patch, 'clock-names' can go=20
+away.
+
+Cheers,
+-Paul
+
+> +
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +
+> +		eth0_addr: eth-mac-addr@0x22 {
+> +			reg =3D <0x22 0x6>;
+> +		};
+> +	};
+> +
+>  	dma: dma@13420000 {
+>  		compatible =3D "ingenic,jz4780-dma";
+>  		reg =3D <0x13420000 0x400
+> --
+> 2.23.0
+>=20
+
+=
 
