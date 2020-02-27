@@ -2,115 +2,133 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A19C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1E9C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 20:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6812468E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 19:36:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6zJ2dbo"
+	by mail.kernel.org (Postfix) with ESMTP id 70FFE246A5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 20:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582834276;
+	bh=/V4ZNPA2xQ5WZrglexcKZ3ryVlngSvod+ozNFnSABns=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xmtwgRuM4XPbPCL27Ab9FEzYAAPe6BSAMV12KqCfTuULXQrl4N62URGA/nkFS1fgz
+	 4JFMwW121NkvZCJroVN7hB9db6tPCEPk6e/6WL8732er2DNZmTVNriPWGAytRfrpn9
+	 7w7hLJUplmBCUOzIvhgZ5wE3OWuk5PDT9P2NiALA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgB0TgM (ORCPT
+        id S1729468AbgB0ULQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:36:12 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:44070 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbgB0TgL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 14:36:11 -0500
-Received: by mail-yw1-f67.google.com with SMTP id t141so683911ywc.11;
-        Thu, 27 Feb 2020 11:36:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fLGX/xGabWa4DPdGXZZH2fnbI6egAflYqmbRP3wBoRk=;
-        b=N6zJ2dbom09soVKZBwSEaOkmzKuE9hdWdmiIjEcYZVzPz9j+3e6d88CVS6nQmZBD8/
-         Tml0iIR+Rhx2eY+1tFlqSuWldV448vR4/b6TP8KkK9V4WiJunu9CEWpjHd0c35VCm7Mv
-         NkL6ih3S4mLnQfbtdrEEh2CZvgm6q/z37WQUnqEmNjy6MYB7fQvIdf/5YE7Kp1SgrAjP
-         QMJFjkEz2X6TWRvUKnzq15JeC+Kt8UiUF4G8S9lucHY5kemnpsDdjz24+MEwC73MyCu+
-         zFEjGlQcXw9LcyIG8IUPC9Rqxu9/kmpzpIotofVaY3B79ZvLMpDC+fZPbL9wJY7r4Bwz
-         dEJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fLGX/xGabWa4DPdGXZZH2fnbI6egAflYqmbRP3wBoRk=;
-        b=XLPkn4SzM2LPqQC9KH7qyQp7xDJ87Z4oWAO4X/8w/HqkoxNd4PhCTM22BJTIs67NKM
-         y73XiI7bhTlpbWGhevhjfBnmHbWMUxFpcSWn9tyyM2qkdhbh2NvoDt4DiioOqDwNgJZ3
-         l+t9SZy4Rb2856ktkPo8TJMvAwz6AVI3BNK+FgnXXGSUkDtlQ2cqU4LjNqEdVvc2yMiR
-         ++c80+Y2ePrrreTVPslPeOEaJWVmQHR0gSbTxTTnaMjyhhqxUuanYQnA4Gr6a8dEMGDx
-         V/aqaKfJ841ohnd5gNjPErPELDhh+rZUU6Ayf+PeMT9PBjTQivCFdvmQJBcOIMEaOjga
-         Tr1Q==
-X-Gm-Message-State: APjAAAWGR6k0ahaiq24ptz5/gh4hw6BDtgDFreHwBq5gurCT6TMbYXaD
-        23djf3N9tTOC3pvkminfLL8=
-X-Google-Smtp-Source: APXvYqwJHOv7SS5SYnVNGRe2pOs7jGSn+gNuBZYYYSutQkryQ/8Kn0gzUQ+cNHliDnH7nPc6ndJYxg==
-X-Received: by 2002:a81:1fc2:: with SMTP id f185mr1016289ywf.241.1582832170706;
-        Thu, 27 Feb 2020 11:36:10 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id k8sm2434906ywa.4.2020.02.27.11.36.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Feb 2020 11:36:10 -0800 (PST)
-Subject: Re: linux-next: Tree for Feb 27 (drivers/of/unittest.c)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-References: <20200227152223.3d8442f0@canb.auug.org.au>
- <ed57c797-1d40-0786-2cdc-adae7047a86f@infradead.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <3b9459af-767a-0d6a-47c2-900e18acaa98@gmail.com>
-Date:   Thu, 27 Feb 2020 13:36:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 27 Feb 2020 15:11:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729767AbgB0ULP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 15:11:15 -0500
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEE36246A8;
+        Thu, 27 Feb 2020 20:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582834275;
+        bh=/V4ZNPA2xQ5WZrglexcKZ3ryVlngSvod+ozNFnSABns=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ry73YYDUU6a+qu0m24PnHNQMMyTm/Oqisoy1gIbMyQ4S/gXRFk/lX32mG+o0GoGLy
+         U/LUPngfIivXkoI3MJgTXxPYwCExt03l0fj7L4mmrLrsGDNIc/p2hWpP0ciio6yRxs
+         grtF67saFYGzJ8sJg8k7EsMktmwhX9nWAFAdzIwI=
+Received: by mail-qv1-f43.google.com with SMTP id o18so238297qvf.1;
+        Thu, 27 Feb 2020 12:11:14 -0800 (PST)
+X-Gm-Message-State: APjAAAU/kuIY+3Ka5xphGZ+lSmIUpPYlfufHsb6HLbL+ca7UXJeuow7Y
+        l/ebg5lnRjPRHzZo++clT73BNeylxyUH2tiPvg==
+X-Google-Smtp-Source: APXvYqw10L9aPY3JHOtOEWA+l413/PApGVC/bA/DbQT+3DNmSeNQPxk/mNpXUrWF2+Y6tEQzIey+4KphOmczloyeAYU=
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr659969qvv.85.1582834274034;
+ Thu, 27 Feb 2020 12:11:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <ed57c797-1d40-0786-2cdc-adae7047a86f@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200227095159.GJ25745@shell.armlinux.org.uk> <E1j7FqO-0003sv-Ho@rmk-PC.armlinux.org.uk>
+ <CAL_JsqK9SLJKZfGjWu3RCk9Wiof+YdUaMziwOrCw5ZxjMZAq_Q@mail.gmail.com>
+ <20200227172608.GO25745@shell.armlinux.org.uk> <20200227173636.GE5245@lunn.ch>
+In-Reply-To: <20200227173636.GE5245@lunn.ch>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 27 Feb 2020 14:11:02 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKPR7XpTZ=Sc=0OdD=b64xssE3F=QvpZs_NvQdBkuJLBQ@mail.gmail.com>
+Message-ID: <CAL_JsqKPR7XpTZ=Sc=0OdD=b64xssE3F=QvpZs_NvQdBkuJLBQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/3] dt-bindings: net: add dt bindings for
+ marvell10g driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        netdev <netdev@vger.kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/27/20 10:23 AM, Randy Dunlap wrote:
-> On 2/26/20 8:22 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20200226:
->>
-> 
-> on x86_64:
-> 
-> # CONFIG_GPIOLIB is not set
-> 
-> ../drivers/of/unittest.c: In function ‘unittest_gpio_probe’:
-> ../drivers/of/unittest.c:94:14: error: ‘struct gpio_chip’ has no member named ‘of_node’
->   devptr->chip.of_node = pdev->dev.of_node;
->               ^
-> In file included from ../include/linux/kernel.h:15:0,
->                  from ../include/asm-generic/bug.h:19,
->                  from ../arch/x86/include/asm/bug.h:83,
->                  from ../include/linux/bug.h:5,
->                  from ../include/linux/mmdebug.h:5,
->                  from ../include/linux/mm.h:9,
->                  from ../include/linux/memblock.h:13,
->                  from ../drivers/of/unittest.c:8:
-> ../drivers/of/unittest.c:103:73: error: ‘struct gpio_chip’ has no member named ‘of_node’
->     "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
->                                                                          ^
-> 
-> Full randconfig file is attached.
-> 
+On Thu, Feb 27, 2020 at 11:36 AM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > > > +    allOf:
+> > > > +      - $ref: /schemas/types.yaml#/definitions/uint16-array
+> > > > +      - minItems: 1
+> > > > +        maxItems: 4
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    ethernet-phy@0 {
+> > > > +        reg = <0>;
+> > >
+> > > This needs to be under an 'mdio' node with #address-cells and
+> > > #size-cells set correctly.
+> >
+> > I wish these things were documented somewhere... I'm pretty sure this
+> > passed validation when I wrote it.
+>
+> Documentation/devicetree/bindings/net/mdio.yaml
+>
+> Rob, is there a way to express the hierarchy between yaml files and
+> properties? Can we say that a phy, as defined by ethernet-phy.yaml
+> should always be inside an MDIO bus as defined in mdio.yaml?
 
-Thanks for the report!
+We can link a child schema into a parent schema, but not the other way
+around. So you can do something like this in mdio.yaml:
 
-Will fix.
+  "^ethernet-phy@[0-9a-f]+$":
+    type: object
+    allOf:
+      - $ref: ethernet-phy.yaml#
 
--Frank
+That happens to work in this case since there's a common compatible
+string for ethernet phys, but doesn't scale in the general case. Note
+that ethernet-phy.yaml would need a couple of changes too. Also, this
+should also be expanded to other possible node names like 'switch'.
+
+I've had some thoughts of defining a pseudo property '$parent' or
+something to be able to express constraints such as to what bus a
+device has to be on. Currently, we rely on the overlap of the bus
+schemas checking the bus specific aspects of the bus child nodes. I'm
+also not really convinced that putting say an I2C device under a SPI
+bus node is a problem we need to check for.
+
+
+I'm not sure how any of this would help on examples compiling and
+validating correctly. In example-schema.yaml, it mentions all the
+problems I see: dtc fails, validation fails, bus node requirements,
+and include file requirements:
+
+  # Examples are now compiled with dtc and validated against the schemas
+  #
+  # Examples have a default #address-cells and #size-cells value of 1. This can
+  # be overridden or an appropriate parent bus node should be shown (such as on
+  # i2c buses).
+  #
+  # Any includes used have to be explicitly included.
+
+Rob
