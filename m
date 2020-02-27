@@ -2,293 +2,180 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430EDC4BA24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 05:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD1DC4BA24
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 05:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CCE24656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 05:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458F324679
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 05:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k4zFf8OT"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="lShIY13V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgB0FfV (ORCPT
+        id S1725862AbgB0Fw1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:35:21 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45152 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB0FfV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 00:35:21 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01R5ZFKI114498;
-        Wed, 26 Feb 2020 23:35:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582781716;
-        bh=R1V1m9GrbruUza5i7esnpYgtknu49007IOG/hcZMdY0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=k4zFf8OTMkwyfRZjm3crZOtifVU38ZnnuXqx2U4EsPACj5PGPJvm+WbRzs/b3xzCR
-         sdsAi7oyufJHwh/kfjslKuEYMbch2EbyGjjk/nJFmQdos0pmWnVF4u4/h4ZJlt7bqd
-         2yqJV/PP8B64nAAyvKSiAVZ6gY3KnvgYOpuh/NCw=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01R5ZFmT059165;
-        Wed, 26 Feb 2020 23:35:15 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 23:35:15 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 23:35:15 -0600
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01R5Z6eg022834;
-        Wed, 26 Feb 2020 23:35:13 -0600
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH v4 2/2] clk: keystone: Add new driver to handle syscon based clocks
-Date:   Thu, 27 Feb 2020 11:05:29 +0530
-Message-ID: <20200227053529.16479-3-vigneshr@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227053529.16479-1-vigneshr@ti.com>
-References: <20200227053529.16479-1-vigneshr@ti.com>
+        Thu, 27 Feb 2020 00:52:27 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:39512 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB0Fw1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 00:52:27 -0500
+Received: by mail-qv1-f68.google.com with SMTP id y8so1006507qvk.6;
+        Wed, 26 Feb 2020 21:52:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sZQu+WBBvLP640mqKaU+qwV+X4smFrhhy0xX3FBTYWc=;
+        b=lShIY13VzpvHtTzPD6VrWaYV6473ZNIIuGmSg6PtSGvQ+II/6GxiDCcX538DTWsUgQ
+         sK0OOHwsYSLXqHQKkImNQ0CS09g2Pg2VezCrhHNnqEMZkoOLtV/p30D+MDGZeivvop1b
+         cRvcb+He1yh0TWeC3qySOQ0/O3n7jsDvRiZAs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sZQu+WBBvLP640mqKaU+qwV+X4smFrhhy0xX3FBTYWc=;
+        b=aT73ohXB5tlYWku/hq0xf4OFre0o79UxSdk+lC/t6PQNxuKK50TfSwTr3afXQsygtX
+         C1F/icjWCvUmLLYaukRnOrIqZ5VoPfPjb5u/Znh0zl0N91/d1nBa6fmWnODbXgaKUQnw
+         ViA70spLKS90HQpJNXXrT+frKs0yRnKyvuf+JF7++mqgbw1KNK8Hnk9strPPMH4lWd7h
+         Dy4FSL3oQOU4EeDTj/GZCBcOU2QTj04MyWBapaIwiN8vOZSQzEzMoUrB9uy0hZXU6/MH
+         9ZzYogE+I4dU4OcIzznxnwiT6sh+b2luSfgjVRpLKgtxxO6D3OERj11mx04Em/IlQfWZ
+         /rTA==
+X-Gm-Message-State: APjAAAUtOq9Zv44JnUX9rnm+U0pItTYNV/KlY5LlLoSwXDAOhYz+DmUW
+        CZtbM7yB97V99Mbe2ApKGFBgFt+ktMnF7FTP6WU=
+X-Google-Smtp-Source: APXvYqwy3wpzuLJo5yRO455kyQWeqLzrSaqVEDmh4g+F+ElnODT6EPqMVWP/Za8h8FVesx/hSV479+TkYYh+x6B/Hhk=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr3059012qvo.20.1582782744480;
+ Wed, 26 Feb 2020 21:52:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200226230346.672-1-rentao.bupt@gmail.com> <20200226230346.672-8-rentao.bupt@gmail.com>
+In-Reply-To: <20200226230346.672-8-rentao.bupt@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 27 Feb 2020 05:52:12 +0000
+Message-ID: <CACPK8XfSHSFG2vkHnosDvBUw-FvVFvGuTCiA_HwAzor-LJ-YhQ@mail.gmail.com>
+Subject: Re: [PATCH v4 7/7] dt-bindings: usb: add documentation for aspeed usb-vhub
+To:     Tao Ren <rentao.bupt@gmail.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tao Ren <taoren@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On TI's AM654/J721e SoCs, certain clocks can be gatemld/ungated by setting a
-single bit in SoC's System Control Module registers. Sometime more than
-one clock control can be in the same register.
-Add a driver to support such clocks using syscon framework.
-Driver currently supports controlling EHRPWM's TimeBase clock(TBCLK) for
-AM654 SoC.
+On Wed, 26 Feb 2020 at 23:04, <rentao.bupt@gmail.com> wrote:
+>
+> From: Tao Ren <rentao.bupt@gmail.com>
+>
+> Add device tree binding documentation for aspeed usb-vhub driver.
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/clk/keystone/Kconfig      |   8 ++
- drivers/clk/keystone/Makefile     |   1 +
- drivers/clk/keystone/syscon-clk.c | 172 ++++++++++++++++++++++++++++++
- 3 files changed, 181 insertions(+)
- create mode 100644 drivers/clk/keystone/syscon-clk.c
+A nitpick: the bindings are supposed to describe hardware, so we would
+say this patch adds documentation for the hardware
 
-diff --git a/drivers/clk/keystone/Kconfig b/drivers/clk/keystone/Kconfig
-index 38aeefb1e808..ab613f28b502 100644
---- a/drivers/clk/keystone/Kconfig
-+++ b/drivers/clk/keystone/Kconfig
-@@ -26,3 +26,11 @@ config TI_SCI_CLK_PROBE_FROM_FW
- 	  This is mostly only useful for debugging purposes, and will
- 	  increase the boot time of the device. If you want the clocks probed
- 	  from firmware, say Y. Otherwise, say N.
-+
-+config TI_SYSCON_CLK
-+	tristate "Syscon based clock driver for K2/K3 SoCs"
-+	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
-+	default ARCH_KEYSTONE || ARCH_K3
-+	help
-+	  This adds clock driver support for syscon based gate
-+	  clocks on TI's K2 and K3 SoCs.
-diff --git a/drivers/clk/keystone/Makefile b/drivers/clk/keystone/Makefile
-index d044de6f965c..0e426e648f7c 100644
---- a/drivers/clk/keystone/Makefile
-+++ b/drivers/clk/keystone/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_COMMON_CLK_KEYSTONE)	+= pll.o gate.o
- obj-$(CONFIG_TI_SCI_CLK)		+= sci-clk.o
-+obj-$(CONFIG_TI_SYSCON_CLK)		+= syscon-clk.o
-diff --git a/drivers/clk/keystone/syscon-clk.c b/drivers/clk/keystone/syscon-clk.c
-new file mode 100644
-index 000000000000..8d7dbea3bd30
---- /dev/null
-+++ b/drivers/clk/keystone/syscon-clk.c
-@@ -0,0 +1,172 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+struct ti_syscon_gate_clk_priv {
-+	struct clk_hw hw;
-+	struct regmap *regmap;
-+	u32 reg;
-+	u32 idx;
-+};
-+
-+struct ti_syscon_gate_clk_data {
-+	char *name;
-+	u32 offset;
-+	u32 bit_idx;
-+};
-+
-+static struct
-+ti_syscon_gate_clk_priv *to_ti_syscon_gate_clk_priv(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct ti_syscon_gate_clk_priv, hw);
-+}
-+
-+static int ti_syscon_gate_clk_enable(struct clk_hw *hw)
-+{
-+	struct ti_syscon_gate_clk_priv *priv = to_ti_syscon_gate_clk_priv(hw);
-+
-+	return regmap_write_bits(priv->regmap, priv->reg, priv->idx,
-+				 priv->idx);
-+}
-+
-+static void ti_syscon_gate_clk_disable(struct clk_hw *hw)
-+{
-+	struct ti_syscon_gate_clk_priv *priv = to_ti_syscon_gate_clk_priv(hw);
-+
-+	regmap_write_bits(priv->regmap, priv->reg, priv->idx, 0);
-+}
-+
-+static int ti_syscon_gate_clk_is_enabled(struct clk_hw *hw)
-+{
-+	unsigned int val;
-+	struct ti_syscon_gate_clk_priv *priv = to_ti_syscon_gate_clk_priv(hw);
-+
-+	regmap_read(priv->regmap, priv->reg, &val);
-+
-+	return !!(val & priv->idx);
-+}
-+
-+static const struct clk_ops ti_syscon_gate_clk_ops = {
-+	.enable		= ti_syscon_gate_clk_enable,
-+	.disable	= ti_syscon_gate_clk_disable,
-+	.is_enabled	= ti_syscon_gate_clk_is_enabled,
-+};
-+
-+static struct clk_hw
-+*ti_syscon_gate_clk_register(struct device *dev, struct regmap *regmap,
-+			     const struct ti_syscon_gate_clk_data *data)
-+{
-+	struct ti_syscon_gate_clk_priv *priv;
-+	struct clk_init_data init;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = data->name;
-+	init.ops = &ti_syscon_gate_clk_ops;
-+	init.parent_names = NULL;
-+	init.num_parents = 0;
-+	init.flags = 0;
-+
-+	priv->regmap = regmap;
-+	priv->reg = data->offset;
-+	priv->idx = BIT(data->bit_idx);
-+	priv->hw.init = &init;
-+
-+	ret = devm_clk_hw_register(dev, &priv->hw);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &priv->hw;
-+}
-+
-+static int ti_syscon_gate_clk_probe(struct platform_device *pdev)
-+{
-+	const struct ti_syscon_gate_clk_data *data, *p;
-+	struct clk_hw_onecell_data *hw_data;
-+	struct device *dev = &pdev->dev;
-+	struct regmap *regmap;
-+	int num_clks, i;
-+
-+	data = device_get_match_data(dev);
-+	if (!data)
-+		return -EINVAL;
-+
-+	regmap = syscon_node_to_regmap(dev->of_node);
-+	if (IS_ERR(regmap)) {
-+		if (PTR_ERR(regmap) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_err(dev, "failed to find parent regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	num_clks = 0;
-+	for (p = data; p->name; p++)
-+		num_clks++;
-+
-+	hw_data = devm_kzalloc(dev, struct_size(hw_data, hws, num_clks),
-+			       GFP_KERNEL);
-+	if (!hw_data)
-+		return -ENOMEM;
-+
-+	hw_data->num = num_clks;
-+
-+	for (i = 0; i < num_clks; i++) {
-+		hw_data->hws[i] = ti_syscon_gate_clk_register(dev, regmap,
-+							      &data[i]);
-+		if (IS_ERR(hw_data->hws[i]))
-+			dev_warn(dev, "failed to register %s\n",
-+				 data[i].name);
-+	}
-+
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-+					   hw_data);
-+}
-+
-+#define TI_SYSCON_CLK_GATE(_name, _offset, _bit_idx)	\
-+	{						\
-+		.name = _name,				\
-+		.offset = (_offset),			\
-+		.bit_idx = (_bit_idx),			\
-+	}
-+
-+static const struct ti_syscon_gate_clk_data am654_clk_data[] = {
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk0", 0x0, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk1", 0x4, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk2", 0x8, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk3", 0xc, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk4", 0x10, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk5", 0x14, 0),
-+	{ /* Sentinel */ },
-+};
-+
-+static const struct of_device_id ti_syscon_gate_clk_ids[] = {
-+	{
-+		.compatible = "ti,am654-ehrpwm-tbclk",
-+		.data = &am654_clk_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ti_syscon_gate_clk_ids);
-+
-+static struct platform_driver ti_syscon_gate_clk_driver = {
-+	.probe = ti_syscon_gate_clk_probe,
-+	.driver = {
-+		.name = "ti-syscon-gate-clk",
-+		.of_match_table = ti_syscon_gate_clk_ids,
-+	},
-+};
-+module_platform_driver(ti_syscon_gate_clk_driver);
-+
-+MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
-+MODULE_DESCRIPTION("Syscon backed gate-clock driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+>
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+
+> ---
+>  No change in v2/v3/v4:
+>    - the patch is added to the patch series since v4.
+>
+>  .../bindings/usb/aspeed,usb-vhub.yaml         | 71 +++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> new file mode 100644
+> index 000000000000..6ebae46641e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> @@ -0,0 +1,71 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# Copyright (c) 2020 Facebook Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/aspeed,usb-vhub.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ASPEED USB 2.0 Virtual Hub Controller
+> +
+> +maintainers:
+> +  - Felipe Balbi <balbi@kernel.org>
+> +
+> +description: |+
+> +  The ASPEED USB 2.0 Virtual Hub Controller implements 1 set of USB Hub
+> +  register and several sets of Device and Endpoint registers to support
+> +  the Virtual Hub's downstream USB devices.
+> +
+> +  Supported number of devices and endpoints vary depending on hardware
+> +  revisions. AST2400 and AST2500 Virtual Hub supports 5 downstream devices
+> +  and 15 generic endpoints, while AST2600 Virtual Hub supports 7 downstream
+> +  devices and 21 generic endpoints.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2400-usb-vhub
+> +      - aspeed,ast2500-usb-vhub
+> +      - aspeed,ast2600-usb-vhub
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: Common configuration registers
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: The Virtual Hub Controller clock gate
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  aspeed,vhub-downstream-ports:
+> +    description: Number of downstream ports supported by the Virtual Hub
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  aspeed,vhub-generic-endpoints:
+> +    description: Number of generic endpoints supported by the Virtual Hub
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - interrupts
+> +  - aspeed,vhub-downstream-ports
+> +  - aspeed,vhub-generic-endpoints
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/aspeed-clock.h>
+> +    vhub: usb-vhub@1e6a0000 {
+> +            compatible = "aspeed,ast2500-usb-vhub";
+> +            reg = <0x1e6a0000 0x300>;
+> +            interrupts = <5>;
+> +            clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&pinctrl_usb2ad_default>;
+> +    };
+> --
+> 2.17.1
+>
