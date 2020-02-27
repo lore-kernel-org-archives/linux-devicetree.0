@@ -2,161 +2,123 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0E6C4BA3C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 06:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C1DC4BA3B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 06:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7931C2468E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 06:28:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="azMSNv/F"
+	by mail.kernel.org (Postfix) with ESMTP id 7B8E224683
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 06:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgB0G2X (ORCPT
+        id S1727403AbgB0Gbk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 01:28:23 -0500
-Received: from mail-eopbgr60052.outbound.protection.outlook.com ([40.107.6.52]:50496
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726378AbgB0G2X (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 01:28:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eJCWcrXg7OxMMU7iRUr3TCBltreCITTQn1hPlOg1MbWvrqW8zl28cEFz8zUITqZd34NizT9gmsZrnsm3+Y5YP9dt/NKxE6KgbHQzM1apRRMdCVbdjEDBRWA79cfEipdg9PUhANV/ctn++0q5wGaSHHEO3CByceX3qcsx2XHkczFN8aUL/6ru5olmnlQ4y9dIAKJXbz5NbLGeQPNtvjWYqx6M5ioxCKchcYSiVoSljGnjRJHQChSLv79DsS4hM3Pot5vNLko0tLAC3kA1fE3pK3crFCeSKUztoJj15vbwaK9waeYcZLBET1PaXXQ0i93hVLEHaNC8xqQXvqMd1ypAfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n+XMI5bbbQuI/bprR+FINW45abi4NdkN7LnQYD0VQOI=;
- b=fsPGUdYUwx/dSj8mwe+h5M0bitGvP+wDtykEw8WQEcdSI2qU0qXBb5dOIOBMYCEVsmwlx2/q/O+t7JRZ1+iw63sLGCZ4LcjSmZ5JcSCnoaX4suwZdXh7rlrw51go0mdOkbZbFo6jJZjSfttW1RFd5dLLcCK9+h/RQ605zyOxs/MHkh1N0nXkVaNSX4trPjZl4FVcIJRUMyD6Wly+vBkKy3Jn+DmitMT50GmMRqkKbMGArj7yAhnw45njjfJgJGOHLSDmNHrdxzdEOizVxPzZiaz6wKeb1bYQz/gha0gwJRvx6r0LTUbYA8Tog5WinFF/9yhOep4fATPh3Dasii1n2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n+XMI5bbbQuI/bprR+FINW45abi4NdkN7LnQYD0VQOI=;
- b=azMSNv/F9yaCHP98QG0AlwI6vI9hlcPKRK2zuCOCzpKs3YZaOqISh7o+GN2YQgbBSQdvmquO1oS1t72l4CB4i6zaMVHqLSSEM2iYDKU519VTYBbyVYvGkTW5ZT3cjegJzUvly1dEepziptH2NScAyQxg0gsKPXJpsI3hW/lzzkI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB4653.eurprd04.prod.outlook.com (20.177.56.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Thu, 27 Feb 2020 06:28:17 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1%7]) with mapi id 15.20.2750.021; Thu, 27 Feb 2020
- 06:28:17 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     kishon@ti.com, robh+dt@kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-imx@nxp.com, aniljoy@cadence.com,
-        jun.li@nxp.com, devicetree@vger.kernel.org,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
-Date:   Thu, 27 Feb 2020 14:27:54 +0800
-Message-Id: <20200227062754.19131-2-peter.chen@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227062754.19131-1-peter.chen@nxp.com>
-References: <20200227062754.19131-1-peter.chen@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0193.apcprd06.prod.outlook.com (2603:1096:4:1::25)
- To VI1PR04MB5327.eurprd04.prod.outlook.com (2603:10a6:803:5c::23)
+        Thu, 27 Feb 2020 01:31:40 -0500
+Received: from segapp02.wistron.com ([103.200.3.19]:49879 "EHLO
+        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726005AbgB0Gbk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 01:31:40 -0500
+Received: from EXCHAPP03.whq.wistron (unverified [10.37.38.26]) by TWNHUMSW4.wistron.com
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Tdd93781158c0a816721818@TWNHUMSW4.wistron.com>;
+ Thu, 27 Feb 2020 14:31:31 +0800
+Received: from EXCHAPP02.whq.wistron (10.37.38.25) by EXCHAPP03.whq.wistron
+ (10.37.38.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 27 Feb
+ 2020 14:31:30 +0800
+Received: from EXCHAPP02.whq.wistron ([fe80::ecf3:5097:933e:61e6]) by
+ EXCHAPP02.whq.wistron ([fe80::ecf3:5097:933e:61e6%5]) with mapi id
+ 15.01.1713.004; Thu, 27 Feb 2020 14:31:30 +0800
+From:   <Ben_Pai@wistron.com>
+To:     <joel@jms.id.au>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <andrew@aj.id.au>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <wangat@tw.ibm.com>, <Claire_Ku@wistron.com>, <Ben_Pai@wistron.com>
+Subject: RE: [PATCH v1] ARM: dts: mihawk: Change the name of mihawk led
+Thread-Topic: [PATCH v1] ARM: dts: mihawk: Change the name of mihawk led
+Thread-Index: AQHV57IDUDu59Q0XzUS/X7KToe/Y4qgs0SeAgAG53kA=
+Date:   Thu, 27 Feb 2020 06:31:30 +0000
+Message-ID: <3633e9f58ab14118bf4c8df3f25ea0d2@wistron.com>
+References: <20200220055255.22809-1-Ben_Pai@wistron.com>
+ <CACPK8Xf=t+PY42qxF9jProYGGZZJONb=H1D4xZJc7teFWJ2FrA@mail.gmail.com>
+In-Reply-To: <CACPK8Xf=t+PY42qxF9jProYGGZZJONb=H1D4xZJc7teFWJ2FrA@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.37.38.230]
+x-tm-snts-smtp: 07E6559BC863661D5C7F457DA7AC36875EA80F0F8E96A4F5E8765A88B6AB6E272000:8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from b29397-desktop.ap.freescale.net (119.31.174.66) by SG2PR06CA0193.apcprd06.prod.outlook.com (2603:1096:4:1::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Thu, 27 Feb 2020 06:28:14 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 65e30daa-400f-476f-5b9f-08d7bb4e3b48
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4653:|VI1PR04MB4653:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB4653961C193720D4332B6DA88BEB0@VI1PR04MB4653.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1227;
-X-Forefront-PRVS: 03264AEA72
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(199004)(189003)(86362001)(5660300002)(16526019)(186003)(26005)(6506007)(44832011)(36756003)(6512007)(6486002)(52116002)(1076003)(66946007)(66476007)(2616005)(956004)(81156014)(81166006)(8676002)(478600001)(6666004)(8936002)(4326008)(316002)(2906002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4653;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bVLeovKXbHzfVZnSnSTkMJlP2UujvOb7wacbolrxSIdWWTZnnbMuCzNGiuyZEOm900LH0Hi92D9lHABhq451lda27Upgnw/tDpnwjQRK1+sF684NfWq5BkZMkC1c6LMDvKfk2ygepkQpzzVP84Bs4WqOe/YgH/ERFhfjAg7kQrSTaZ9aLBSbOHTQtmKGqxF1sGnVicqGQok6zTyxzwATb7lNWM7VzprLo2GdgswSLkk7T1dsGPahFkA/wx2nOYJ0qPP8aMfnUr5Eez9Pnm+soUDBIrjBOQDiwIqbI1yS/OUYJXqPM9Pr/re0+2VLaxIiNGsUvDXf5/tiI3p6jvbzlY8zMbFl4aOG1AwHHl581VwdikWzrkVzLC37httFJRHL4VvvU6C5ClgM7KX9A/Br7/xj7OWRTvSt4GDxhsjhg7C/+DaYyDSQNf0hbmedAQI93nC4hyojRm4wCJdVK0LX58jfSKv4LXyxSjcnpZBVhnlC9vqa3WwDqnM37gfXZxes5v/any4aNyZXnypd+/c0lg==
-X-MS-Exchange-AntiSpam-MessageData: jE5QilRY6IczOlAbX2BYIv1Yzg5McdOp47VUrTRvz/PMruRUlgf5DubFHKmpGPW8Qy4Oq8ILXw37Yv9h6vutoTCPU4Gp1i4NA0mNLg24wWoj6YOR7nGwwEFt8/08Ww7ce615ApdXCCB3JviVt40rZw==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65e30daa-400f-476f-5b9f-08d7bb4e3b48
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2020 06:28:17.5254
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QGU4nVPLH7rZilJHmhLF2hyORctwHQoA6ioy2Yc7n+5WgAMhFtmqLlkjUROadHnM0ckJw9Sh4P+ADZXYZw+pZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4653
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Cadence SALVO PHY binding doc, this PHY is a lagacy module,
-and is only used for USB3 and USB2.
-
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
- .../bindings/phy/cdns,salvo-phy.yaml          | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-
-diff --git a/Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml b/Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-new file mode 100644
-index 000000000000..f829f44c5e33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (c) 2020 NXP
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/cdns,salvo-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Cadence SALVO PHY
-+
-+maintainers:
-+  - Peter Chen <peter.chen@nxp.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nxp,salvo-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: salvo_phy_clk
-+
-+  "#phy-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usb3phy: usb3-phy {
-+	  compatible = "nxp,salvo-phy";
-+	  reg = <0x5B160000 0x40000>;
-+	  clocks = <&usb3_lpcg 4>;
-+	  clock-names = "salvo_phy_clk";
-+	  power-domains = <&pd IMX_SC_R_USB_2_PHY>;
-+	  #phy-cells = <0>;
-+};
--- 
-2.17.1
-
+TWloYXdrIHBsYXRmb3JtIG5vIGxvbmdlciBzdXBwb3J0cyB0aGVzZSB0d28gTEVEcywgc28gSSB0
+aGluayB0aGVzZSB0d28gTEVEcyBzaG91bGQgYmUgcmVtb3ZlZCBmcm9tIGR0cy4NCg0KU2lnbmVk
+LW9mZi1ieTogQmVuIFBhaSA8QmVuX1BhaUB3aXN0cm9uLmNvbT4NCg0KLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCkZyb206IEpvZWwgU3RhbmxleSA8am9lbEBqbXMuaWQuYXU+IA0KU2VudDog
+V2VkbmVzZGF5LCBGZWJydWFyeSAyNiwgMjAyMCA2OjU2IFBNDQpUbzogQmVuIFBhaS9XSFEvV2lz
+dHJvbiA8QmVuX1BhaUB3aXN0cm9uLmNvbT4NCkNjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJu
+ZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IEFuZHJldyBKZWZm
+ZXJ5IDxhbmRyZXdAYWouaWQuYXU+OyBkZXZpY2V0cmVlIDxkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZz47IExpbnV4IEFSTSA8bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsg
+bGludXgtYXNwZWVkIDxsaW51eC1hc3BlZWRAbGlzdHMub3psYWJzLm9yZz47IExpbnV4IEtlcm5l
+bCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyB3YW5nYXRAdHcu
+aWJtLmNvbTsgQ2xhaXJlIEt1L1dIUS9XaXN0cm9uIDxDbGFpcmVfS3VAd2lzdHJvbi5jb20+DQpT
+dWJqZWN0OiBSZTogW1BBVENIIHYxXSBBUk06IGR0czogbWloYXdrOiBDaGFuZ2UgdGhlIG5hbWUg
+b2YgbWloYXdrIGxlZA0KDQpPbiBUaHUsIDIwIEZlYiAyMDIwIGF0IDA1OjUzLCBCZW4gUGFpIDxC
+ZW5fUGFpQHdpc3Ryb24uY29tPiB3cm90ZToNCj4NCj4gMS5DaGFuZ2UgdGhlIG5hbWUgb2YgcG93
+ZXIsIGZhdWx0IGFuZCByZWFyLWlkLg0KPiAyLlJlbW92ZSB0aGUgdHdvIGxlZHMuDQoNClRoZSBw
+YXRjaCBsb29rcyBva2F5LiBXaHkgZG8geW91IHJlbW92ZSB0aGUgb3RoZXIgdHdvIGxlZHM/DQoN
+ClJldmlld2VkLWJ5OiBKb2VsIFN0YW5sZXkgPGpvZWxAam1zLmlkLmF1Pg0KDQo+DQo+IFNpZ25l
+ZC1vZmYtYnk6IEJlbiBQYWkgPEJlbl9QYWlAd2lzdHJvbi5jb20+DQo+IC0tLQ0KPiAgYXJjaC9h
+cm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtbWloYXdrLmR0cyB8IDE3ICsrKy0tLS0tLS0tLS0t
+LS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkN
+Cj4NCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLW1paGF3
+ay5kdHMgDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtbWloYXdrLmR0cw0K
+PiBpbmRleCBlNTVjYzQ1NGIxN2YuLjZjMTE4NTRiOTAwNiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtbWloYXdrLmR0cw0KPiArKysgYi9hcmNoL2FybS9i
+b290L2R0cy9hc3BlZWQtYm1jLW9wcC1taWhhd2suZHRzDQo+IEBAIC0xMjAsMzUgKzEyMCwyNCBA
+QA0KPiAgICAgICAgIGxlZHMgew0KPiAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJncGlv
+LWxlZHMiOw0KPg0KPiAtICAgICAgICAgICAgICAgZmF1bHQgew0KPiArICAgICAgICAgICAgICAg
+ZnJvbnQtZmF1bHQgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICByZXRhaW4tc3RhdGUtc2h1
+dGRvd247DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGRlZmF1bHQtc3RhdGUgPSAia2VlcCI7
+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGdwaW9zID0gPCZncGlvIEFTUEVFRF9HUElPKEFB
+LCAwKSBHUElPX0FDVElWRV9MT1c+Ow0KPiAgICAgICAgICAgICAgICAgfTsNCj4NCj4gLSAgICAg
+ICAgICAgICAgIHBvd2VyIHsNCj4gKyAgICAgICAgICAgICAgIHBvd2VyLWJ1dHRvbiB7DQo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgIHJldGFpbi1zdGF0ZS1zaHV0ZG93bjsNCj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgZGVmYXVsdC1zdGF0ZSA9ICJrZWVwIjsNCj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgZ3Bpb3MgPSA8JmdwaW8gQVNQRUVEX0dQSU8oQUEsIDEpIEdQSU9fQUNUSVZFX0xP
+Vz47DQo+ICAgICAgICAgICAgICAgICB9Ow0KPg0KPiAtICAgICAgICAgICAgICAgcmVhci1pZCB7
+DQo+ICsgICAgICAgICAgICAgICBmcm9udC1pZCB7DQo+ICAgICAgICAgICAgICAgICAgICAgICAg
+IHJldGFpbi1zdGF0ZS1zaHV0ZG93bjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZGVmYXVs
+dC1zdGF0ZSA9ICJrZWVwIjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb3MgPSA8Jmdw
+aW8gQVNQRUVEX0dQSU8oQUEsIDIpIEdQSU9fQUNUSVZFX0xPVz47DQo+ICAgICAgICAgICAgICAg
+ICB9Ow0KPg0KPiAtICAgICAgICAgICAgICAgcmVhci1nIHsNCj4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgcmV0YWluLXN0YXRlLXNodXRkb3duOw0KPiAtICAgICAgICAgICAgICAgICAgICAgICBk
+ZWZhdWx0LXN0YXRlID0gImtlZXAiOw0KPiAtICAgICAgICAgICAgICAgICAgICAgICBncGlvcyA9
+IDwmZ3BpbyBBU1BFRURfR1BJTyhBQSwgNCkgR1BJT19BQ1RJVkVfTE9XPjsNCj4gLSAgICAgICAg
+ICAgICAgIH07DQo+IC0NCj4gLSAgICAgICAgICAgICAgIHJlYXItb2sgew0KPiAtICAgICAgICAg
+ICAgICAgICAgICAgICByZXRhaW4tc3RhdGUtc2h1dGRvd247DQo+IC0gICAgICAgICAgICAgICAg
+ICAgICAgIGRlZmF1bHQtc3RhdGUgPSAia2VlcCI7DQo+IC0gICAgICAgICAgICAgICAgICAgICAg
+IGdwaW9zID0gPCZncGlvIEFTUEVFRF9HUElPKFksIDApIEdQSU9fQUNUSVZFX0xPVz47DQo+IC0g
+ICAgICAgICAgICAgICB9Ow0KPg0KPiAgICAgICAgICAgICAgICAgZmFuMCB7DQo+ICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJldGFpbi1zdGF0ZS1zaHV0ZG93bjsNCj4gLS0NCj4gMi4xNy4xDQo+
+DQo+DQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0tLS0tLS0tLS0tLS0t
+LS0tIFRoaXMgZW1haWwgY29udGFpbnMgY29uZmlkZW50aWFsIG9yIGxlZ2FsbHkgDQo+IHByaXZp
+bGVnZWQgaW5mb3JtYXRpb24gYW5kIGlzIGZvciB0aGUgc29sZSB1c2Ugb2YgaXRzIGludGVuZGVk
+IHJlY2lwaWVudC4NCj4gQW55IHVuYXV0aG9yaXplZCByZXZpZXcsIHVzZSwgY29weWluZyBvciBk
+aXN0cmlidXRpb24gb2YgdGhpcyBlbWFpbCBvciB0aGUgY29udGVudCBvZiB0aGlzIGVtYWlsIGlz
+IHN0cmljdGx5IHByb2hpYml0ZWQuDQo+IElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNp
+cGllbnQsIHlvdSBtYXkgcmVwbHkgdG8gdGhlIHNlbmRlciBhbmQgc2hvdWxkIGRlbGV0ZSB0aGlz
+IGUtbWFpbCBpbW1lZGlhdGVseS4NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+
+IC0tLS0tLS0tLS0tLS0tLS0tLS0NCg==
