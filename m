@@ -2,137 +2,101 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30928C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12CDC3567B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE01D2469B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D392469B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582823635;
-	bh=Av9+N9Sw/6yGgD2tCLI1uZRILU83lnh2H3xVVPQcEMs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cqYzT3+4KQ6A2hrebvjqIW+aNvLpibPN9TtYATsRuKlGZHKBJ+eDSC4VsLYDsTEgl
-	 a1SiWol+I9UyjcNhlOXguXTx0FH+LXlioezerIBOYUtqrqmdilTJU8F98eY1x+5Lp5
-	 L9QktwkKWXP7Q2ywyg5e5v/WJA2g4Mq1iL371KlI=
+	s=default; t=1582823672;
+	bh=USSkUKjCnNTbdB9s53ic3F5uX4VFSqTWznyMZgTyHbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xenTH4/Mj/f2MrxOM1xcTv8NppFPPvUETnzS0Xg+rRpB15rarj/Vi1fOETS9EmFcE
+	 htz2APszmv7S4Ee0XFHhRk0lpqNTf4saB71fzY0tdAanKrjGH9I5Aon61KNqMPCcNB
+	 2XRq0Br2snHSbN4wZkwfgFJ6rH/idbsO6G7KlhpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgB0RNy (ORCPT
+        id S1729360AbgB0RO3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:13:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729297AbgB0RNy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:13:54 -0500
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1481E246A2;
-        Thu, 27 Feb 2020 17:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582823633;
-        bh=Av9+N9Sw/6yGgD2tCLI1uZRILU83lnh2H3xVVPQcEMs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xiLIVol5DsJ7hut2N0EsAk8d6N/I7JonTjxI10tGT56ITL55xo6Wb7uGZp3rxlMYP
-         DMcA2dzJk5bCClMHADhaEnK26kS+Q3upTLYhHTxzGVB8h8gMN5/V4VKASrNud4h1jT
-         9lgVXLBPHMIRQXiU5Bzl9Vutrx1/3dNNvVPAT/qU=
-Received: by mail-qt1-f174.google.com with SMTP id g21so2810298qtq.10;
-        Thu, 27 Feb 2020 09:13:53 -0800 (PST)
-X-Gm-Message-State: APjAAAXPKCw4fpDFd8kxBhBtzkBcc6iNonFkWNxKwxZyEveOtYpe6wJq
-        ToeWVZ3KD7u8IOb7h+deLo7cXu7B/kEWCe8l/A==
-X-Google-Smtp-Source: APXvYqzWwqfR+SoJdd3pUrXUejrHZFu5fqFZ7jqlZyQ/GDLlYmrm1j7psEVj+D73QH5qwTr8ogrjBSus80zaAD3b6II=
-X-Received: by 2002:aed:2344:: with SMTP id i4mr202251qtc.136.1582823632167;
- Thu, 27 Feb 2020 09:13:52 -0800 (PST)
+        Thu, 27 Feb 2020 12:14:29 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35446 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729297AbgB0RO3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 12:14:29 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r16so3663463otd.2;
+        Thu, 27 Feb 2020 09:14:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xWFj6s6w7bzVI/mGXtzyUCX5BmjDePSa1uqHf99vqCI=;
+        b=KD0iw3+yKHhD8i+SQ8mlvcw6V/N2KqumGMU5e/AdB71x1t1KoCPPS4hRbbn/WGmSyr
+         GrZNJ1HAn6iSv3eiCencIc839Xoo9bnbJX5YuiXsHTi3yi637WzHdTThUBZ48Inb4dvz
+         3iMRfBVuQ4OPfzuY/bjrgI01UTG2Ag7TMy/dwK5Qrwnenj/ACCkbPrUsRhZADntGX9YD
+         vcnvdiRCg9jXRnwbLXRd+rANdT3xXO/5n45Mtq0/atEI6dmrpBldBnbgUMoUChEk3rOV
+         okYPbGLtlEfB1fmwSP7zPQ5OfZSzAYFYwH9fibAhDj4LjZoSqQUIuW6bx1r6lzXHAOXD
+         Q5Pg==
+X-Gm-Message-State: APjAAAXje96oWksElU148Y6QJQnuNiLGy3SN68nE4mwpFEwYn77lVwCI
+        kse7JR5wTKRUUcr/pIuMIw==
+X-Google-Smtp-Source: APXvYqwTG+xn4o2LpWGhvd4hqOiDLF81SPIXSvpynmWA8pJrvjrriOR+yhStFXxxalEncjTTMJPOTw==
+X-Received: by 2002:a05:6830:1385:: with SMTP id d5mr634228otq.61.1582823666913;
+        Thu, 27 Feb 2020 09:14:26 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t20sm2116210oij.19.2020.02.27.09.14.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 09:14:26 -0800 (PST)
+Received: (nullmailer pid 10578 invoked by uid 1000);
+        Thu, 27 Feb 2020 17:14:25 -0000
+Date:   Thu, 27 Feb 2020 11:14:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sivaprak@codeaurora.org
+Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
+ controller
+Message-ID: <20200227171425.GA4211@bogus>
+References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
+ <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-References: <20200227095159.GJ25745@shell.armlinux.org.uk> <E1j7FqO-0003sv-Ho@rmk-PC.armlinux.org.uk>
-In-Reply-To: <E1j7FqO-0003sv-Ho@rmk-PC.armlinux.org.uk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 27 Feb 2020 11:13:41 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK9SLJKZfGjWu3RCk9Wiof+YdUaMziwOrCw5ZxjMZAq_Q@mail.gmail.com>
-Message-ID: <CAL_JsqK9SLJKZfGjWu3RCk9Wiof+YdUaMziwOrCw5ZxjMZAq_Q@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/3] dt-bindings: net: add dt bindings for
- marvell10g driver
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        netdev <netdev@vger.kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 3:52 AM Russell King <rmk+kernel@armlinux.org.uk> wrote:
->
-> Add a DT bindings document for the Marvell 10G driver, which will
-> augment the generic ethernet PHY binding by having LED mode
-> configuration.
->
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+On Thu, 27 Feb 2020 15:25:17 +0530, Sivaprakash Murugesan wrote:
+> add dt-binding for ipq6018 apss clock controller
+> 
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > ---
->  .../devicetree/bindings/net/marvell,10g.yaml  | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/marvell,10g.yaml
->
-> diff --git a/Documentation/devicetree/bindings/net/marvell,10g.yaml b/Documentation/devicetree/bindings/net/marvell,10g.yaml
-> new file mode 100644
-> index 000000000000..da597fc5314d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/marvell,10g.yaml
-> @@ -0,0 +1,31 @@
-> +# SPDX-License-Identifier: GPL-2.0+
+>  .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
+>  2 files changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
+> 
 
-Dual license new bindings please:
+My bot found errors running 'make dt_binding_check' on your patch:
 
-(GPL-2.0-only OR BSD-2-Clause)
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Documentation/devicetree/bindings/clock/qcom,apsscc.example.dts:17:10: fatal error: dt-bindings/clock/qcom,gcc-ipq6018.h: No such file or directory
+ #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/clock/qcom,apsscc.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/clock/qcom,apsscc.example.dt.yaml] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/marvell,10g.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell Alaska X family Ethernet PHYs
-> +
-> +maintainers:
-> +  - Russell King <rmk+kernel@armlinux.org.uk>
-> +
-> +allOf:
-> +  - $ref: ethernet-phy.yaml#
-> +
-> +properties:
-> +  marvell,led-mode:
-> +    description: |
-> +      An array of one to four 16-bit integers to write to the PHY LED
-> +      configuration registers.
-
-This is for what to blink or turn on for? I thought we had something
-generic for configuring PHY LEDs specifically?
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint16-array
-> +      - minItems: 1
-> +        maxItems: 4
-> +
-> +examples:
-> +  - |
-> +    ethernet-phy@0 {
-> +        reg = <0>;
-
-This needs to be under an 'mdio' node with #address-cells and
-#size-cells set correctly.
-
-> +        compatible = "ethernet-phy-ieee802.3-c45";
-> +        marvell,led-mode = /bits/ 16 <0x0129 0x095d 0x0855>;
-> +    };
-> --
-> 2.20.1
->
+See https://patchwork.ozlabs.org/patch/1245691
+Please check and re-submit.
