@@ -2,155 +2,119 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21ABC3F2C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D48C3F2C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7418224697
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582842163;
-	bh=c3j+vRp0Lh7Ozt/xPptH346wW5138N1TD0vkBGoWdB4=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=YpWezkBriZBGpH1yuRwVUiavp+scjJ9f6YWs3RdwIqyKj8JHvzPcaYACTlyBLu711
-	 1inEKyPHXkKV89dtBkNQ7g4VBJY86Q/rTIXSCrF3VIrpeNXcYOTFR9P4xz0C9MrAYu
-	 tEDuYJeT606RXk3yxx7mTh87q93FASqjE+7dpiEQ=
+	by mail.kernel.org (Postfix) with ESMTP id 28F3C24697
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:28:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uBTsQBib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgB0WWm (ORCPT
+        id S1729913AbgB0W2s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:22:42 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43471 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729434AbgB0WWm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:22:42 -0500
-Received: by mail-ot1-f65.google.com with SMTP id p8so730361oth.10;
-        Thu, 27 Feb 2020 14:22:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Twand65sZdOLPd8mLMV5yo/gk50yR6BORm4y7JCU1Fs=;
-        b=hEzqBN6Mvj9KfgNlEKt9y8RJ6vQiLq0I9dOO5mn1uQgd4V3U9fxwAc/XodE9n439o9
-         gimQWAV+Gec6+PMph5xwuNfv2sfd3C2/3RQk/oatUzyzHNVwD7Lfax03IiD7oqBDfjeo
-         tosQ9Umx67gLIdhE+h9khbddjRR8k4LP0aXT9WmYjC2FdswndPh/v5UbkSI2OT/qGtk+
-         Yx3N+6EjbF16r3saggOOm3HCEjtnxfI28qFM9jqFNHpkGuNtqqOxW08GGRV0OI9jomRa
-         eOZCaRdWa17RiOxZccVkgAu9FsGF3SQG7AJzQD1puTNBQMzFmQtUi97aIt+EnNiBK760
-         05VQ==
-X-Gm-Message-State: APjAAAXdKaM0FNXGIEnSF3PVFgMCatPrk2lXV4yPBs6QdHwdtwLvIbN1
-        ALSnZfyRDYufTEOQWSPDrg==
-X-Google-Smtp-Source: APXvYqz5B7zZblz4z3k+XJtWJQ8eJGRpmeq7mhbk1IJZq3BK1sqHfVfQ2pt+9lrRhZUpnAzW5mSOdg==
-X-Received: by 2002:a9d:5e9:: with SMTP id 96mr871219otd.307.1582842161560;
-        Thu, 27 Feb 2020 14:22:41 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i6sm2396457oto.62.2020.02.27.14.22.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 14:22:41 -0800 (PST)
-Received: (nullmailer pid 25505 invoked by uid 1000);
-        Thu, 27 Feb 2020 22:22:40 -0000
-Date:   Thu, 27 Feb 2020 16:22:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Robert Richter <rric@kernel.org>, soc@kernel.org,
-        Jon Loeliger <jdl@jdl.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2 12/13] dt-bindings: arm: Add Calxeda system registers
- json-schema binding
-Message-ID: <20200227222240.GG26010@bogus>
-References: <20200227182210.89512-1-andre.przywara@arm.com>
- <20200227182210.89512-13-andre.przywara@arm.com>
+        Thu, 27 Feb 2020 17:28:48 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46698 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729868AbgB0W2s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:28:48 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RMSkPp006367;
+        Thu, 27 Feb 2020 16:28:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582842526;
+        bh=s7jUvbTC2OEhwx0oLYE8BMjbaCi0VVFONE8+mDlSIR0=;
+        h=From:To:CC:Subject:Date;
+        b=uBTsQBibe1yrWOJzmDtQJIRz1dKvG23lhN7EDl3DNBUiDlBkU7hixOlJUJvVjx6Vo
+         kT5TISNzQrdT13Ro5jee2G1j4NGqEa/nGav43iasaMJoGu7ymBFYYjiCsNoHoMKhas
+         g1gU2Oomp/BeSjJv2HU2kxHsxGIBvElOmAeAllX8=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RMSk2p056921;
+        Thu, 27 Feb 2020 16:28:46 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
+ Feb 2020 16:28:45 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 27 Feb 2020 16:28:46 -0600
+Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01RMSjrd116368;
+        Thu, 27 Feb 2020 16:28:45 -0600
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 01RMSj49086962;
+        Thu, 27 Feb 2020 16:28:45 -0600
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH v2 0/5] ti-sysc support for PRUSS
+Date:   Thu, 27 Feb 2020 16:28:32 -0600
+Message-ID: <20200227222837.7329-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227182210.89512-13-andre.przywara@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 06:22:09PM +0000, Andre Przywara wrote:
-> The Calxeda system registers are a collection of MMIO register
-> controlling several more general aspects of the SoC.
-> Beside for some power management tasks this node is also somewhat
-> abused as the container for the clock nodes.
-> 
-> Add a binding in DT schema format using json-schema.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  .../bindings/arm/calxeda/hb-sregs.yaml        | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml b/Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml
-> new file mode 100644
-> index 000000000000..4753e8dc5873
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/calxeda/hb-sregs.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Hi Tony,
 
-Dual license please.
+The following is a revised series of the ti-sysc support for PRUSS.
+Please refer to the original series cover-letter [1] for details.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/calxeda/hb-sregs.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Calxeda Highbank system registers
-> +
-> +description: |
-> +  The Calxeda Highbank system has a block of MMIO registers controlling
-> +  several generic system aspects. Those can be used to control some power
-> +  management, they also contain some gate and PLL clocks.
-> +
-> +maintainers:
-> +  - Andre Przywara <andre.przywara@arm.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: calxeda,hb-sregs
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    type: object
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    sregs@fff3c000 {
-> +        compatible = "calxeda,hb-sregs";
-> +        reg = <0xfff3c000 0x1000>;
-> +
-> +        clocks {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            osc: oscillator {
-> +                #clock-cells = <0>;
-> +                compatible = "fixed-clock";
-> +                clock-frequency = <33333000>;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
+Following are the main changes in v2:
+ - Drop the enabling of the interconnect nodes from various AM335x and
+   AM437x board dts files (last 7 patches from original series)
+ - Enable the target-module node for AM437x by default. None of the
+   current AM437x board dts files use AM4372, so there should not be
+   any regressions.
+
+We can drop the status=disabled in the am33xx.dtsi file once we add the
+SoC revision support for AM335x SoCs. This is already disabled before the
+series as well. I have identified a few boards which use the older SoCs
+that can disable the node in dts, but there were few others which can
+use any of the SoCs, so those will definitely require the SoC device
+match logic and an additional PRUSS disable quirk in the ti-sysc bus
+driver.
+
+regards
+Suman
+
+[1] https://patchwork.kernel.org/cover/11404569/
+
+Roger Quadros (1):
+  dt-bindings: bus: ti-sysc: Add support for PRUSS SYSC type
+
+Suman Anna (4):
+  bus: ti-sysc: Add support for PRUSS SYSC type
+  ARM: dts: AM33xx-l4: Update PRUSS interconnect target-module node
+  ARM: dts: AM4372: Add the PRU-ICSS interconnect target-module node
+  ARM: dts: dra7: Add PRU-ICSS interconnect target-module nodes
+
+ .../devicetree/bindings/bus/ti-sysc.txt       |  1 +
+ arch/arm/boot/dts/am33xx-l4.dtsi              | 21 ++++++--
+ arch/arm/boot/dts/am4372.dtsi                 | 22 ++++++++
+ arch/arm/boot/dts/am57-pruss.dtsi             | 50 +++++++++++++++++++
+ arch/arm/boot/dts/am5718.dtsi                 |  1 +
+ arch/arm/boot/dts/am5728.dtsi                 |  1 +
+ arch/arm/boot/dts/am5748.dtsi                 |  1 +
+ arch/arm/boot/dts/dra7.dtsi                   |  2 +-
+ drivers/bus/ti-sysc.c                         | 27 ++++++++++
+ include/dt-bindings/bus/ti-sysc.h             |  4 ++
+ include/linux/platform_data/ti-sysc.h         |  2 +
+ 11 files changed, 128 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/am57-pruss.dtsi
+
+-- 
+2.23.0
+
