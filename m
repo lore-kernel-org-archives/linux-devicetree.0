@@ -2,157 +2,154 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B579C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CBCC3F2C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE47B246A4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582845778;
-	bh=7+gTZW27aY4hf5vwBl9dT1mMM0XSUpttYHUYVSGA70c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mbZQvaM4LKlFuFMMxvrJR9VZXtOk1D/vyw+bzGTF7BkG5BxfsY9XunKxlJw+5LVDQ
-	 aMeg0kqfZ/ilrwIu7RIL8FQfTBg9/D3mgz7AtE1U0GGNrnfOSXdkangb2HoPrR2NQF
-	 WY819kk9MQloyVw1xx7023o+GRgW9xWg00mIvJDg=
+	by mail.kernel.org (Postfix) with ESMTP id D3FA72469C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:23:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mind.be header.i=@mind.be header.b="alW5i5CG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgB0XW6 (ORCPT
+        id S1729812AbgB0XXp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:22:58 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44407 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729391AbgB0XW6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 18:22:58 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h9so864768otj.11;
-        Thu, 27 Feb 2020 15:22:57 -0800 (PST)
+        Thu, 27 Feb 2020 18:23:45 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38061 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729391AbgB0XXp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 18:23:45 -0500
+Received: by mail-ed1-f68.google.com with SMTP id e25so1117660edq.5
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 15:23:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mind.be; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=maNRCkqEFToWwQhdLFKQW+0gZEdg0pLIXm9M/9EQEc8=;
+        b=alW5i5CGU2Oyt2HGnJiqm5ubDg89nvcuWHJP+uXRIv3WOaaetFbwi1pvEqXAFqzhjg
+         OmQhw7nP74oskjhkGUbP9XTZZwWy4Of588m7elc2t372EtgTorJdAIbwLQazxJCcneuD
+         qS3BmxEXAXo2lkG1jqaXeT3Kgx50e7MBZE6Wx5qg0wBOfnJUDcYTuSddJxK2bO8A9Xdt
+         2IBmEZJvMYuVIa56F7J2RC21pEtMqxZgs96Uj00HK1pRT6izgiBREYJ4u8QFNXZh2+yR
+         SATTS6nRerKP/BttGdvsgZV15iNpMiQDABnXj7Lxqpw8Dgup6yUmKta995MuKrmTiAKa
+         CK7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UkIj7Br6bPd7hbW7TV5UiV4FHsIuHQGX64PWFr24Elw=;
-        b=LDozMsfxXmeO1BiQO6QhIKiUwrhCYJRNJbGBaSS4YrE+tOAy8JMCAxDP4jEmLeAZer
-         2ak3VpM7+VUvgC5ZGwFsg5jwmqLNeCETnakCl9mU3oHd1jToKSrQkRTrnRWEGlB57CzZ
-         l6UvGTCypPphbR90zxvYf88xBEOQepNp/SGdiitzomX7jPJYVeA/lWWnQF2DQdDuTn6X
-         xyFrEwsxmhXka8DATyKj2LeFN/+n4huKOcWIqneUNiDRWITrdqLDd7XUO/v+X+a3o5f5
-         KlCETYzFLF0hfQs4nbPz8COBe4sN1QwYhPak81VWmMCKzR3Yaw9NIALhhEhxWbiVJQ6h
-         1ckA==
-X-Gm-Message-State: APjAAAUssXgeLi/3PxB6fttyvn1/EErMao5kcSIhAtAxd9lF5wagPJQe
-        a6srsyvTs3EO9O9eXeGM+w==
-X-Google-Smtp-Source: APXvYqwyoGSeOvDsr/b/4MBxlzKifGUIKH2KNXIq/Dsvt2qo0CMzRCuC3CpAFxDHEcT2vx8OeH8M/A==
-X-Received: by 2002:a9d:12a2:: with SMTP id g31mr1069694otg.283.1582845777179;
-        Thu, 27 Feb 2020 15:22:57 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n25sm2496905oic.6.2020.02.27.15.22.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=maNRCkqEFToWwQhdLFKQW+0gZEdg0pLIXm9M/9EQEc8=;
+        b=Nv/O8exM08Op+xc8gafunI1n4BZ1oyUDyzDB2W8WG6rB6huiyswr7TraB7bG3eYWdK
+         c6tYx0VeXYTYUG0PQqJCDBJTpNlv6RaXZzKGbCEJT6gfg6FNWPBPC9e1A6gIpT85Mjq4
+         crienqeYYWBsnDK5lHU0JGoRU8VVZjwjSYA8FFj13LkJjzttCBLj0CIeCgc6sVDWukWe
+         MGebAMOdtoRMtLolBZccvSIFIoa6GdPdJC3BfmV7AmyqwqhJzwks5TzbkchQqXaP0tDX
+         luyC0ajzmzzvbjgLW9Fp6O+jqZNjclcYQvS4vJ8qTAt3t12shOM921es84ZojgT2wgGU
+         o2fQ==
+X-Gm-Message-State: APjAAAVSv2c19XO8BLucp8GC+1JdLkrWWvBUsxWDsVq1J98wQx6gN76r
+        Px7K2I08Yf6eWiT3XiwAOZd5kg==
+X-Google-Smtp-Source: APXvYqxcbQ3j/ddNm1PVQJsPX2xZ4IlHzLT7KAL90l8pQoCHC3RcVgmN6UTcSqqNpp/r3cfQ8CSfYA==
+X-Received: by 2002:aa7:d2cf:: with SMTP id k15mr851197edr.299.1582845823518;
+        Thu, 27 Feb 2020 15:23:43 -0800 (PST)
+Received: from localhost.localdomain ([2a02:a03f:44b4:9700:886c:841d:dea2:ee2a])
+        by smtp.googlemail.com with ESMTPSA id d16sm468117eds.18.2020.02.27.15.23.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 15:22:55 -0800 (PST)
-Received: (nullmailer pid 15847 invoked by uid 1000);
-        Thu, 27 Feb 2020 23:22:53 -0000
-Date:   Thu, 27 Feb 2020 17:22:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alistair Delva <adelva@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kenny Root <kroot@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, devicetree@vger.kernel.org,
-        linux-nvdimm@lists.01.org, kernel-team@android.com
-Subject: Re: [PATCH v3 3/3] dt-bindings: pmem-region: Document memory-region
-Message-ID: <20200227232253.GA5966@bogus>
-References: <20200224021029.142701-1-adelva@google.com>
- <20200224021029.142701-3-adelva@google.com>
+        Thu, 27 Feb 2020 15:23:43 -0800 (PST)
+From:   Charles-Antoine Couret <charles-antoine.couret@mind.be>
+To:     alsa-devel@alsa-project.org
+Cc:     Charles-Antoine Couret <charles-antoine.couret@mind.be>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 2/2 V2] ASoC: tas5756m: Add DT binding document
+Date:   Fri, 28 Feb 2020 00:23:27 +0100
+Message-Id: <20200227232327.46309-3-charles-antoine.couret@mind.be>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200227232327.46309-1-charles-antoine.couret@mind.be>
+References: <20200227232327.46309-1-charles-antoine.couret@mind.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224021029.142701-3-adelva@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 06:10:29PM -0800, Alistair Delva wrote:
-> From: Kenny Root <kroot@google.com>
-> 
-> Add documentation and example for memory-region in pmem.
-> 
-> Signed-off-by: Kenny Root <kroot@google.com>
-> Signed-off-by: Alistair Delva <adelva@google.com>
-> Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-nvdimm@lists.01.org
-> Cc: kernel-team@android.com
-> ---
-> [v3: adelva: remove duplicate "From:"]
->  .../devicetree/bindings/pmem/pmem-region.txt  | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> index 5cfa4f016a00..0ec87bd034e0 100644
-> --- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> +++ b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> @@ -29,6 +29,18 @@ Required properties:
->  		in a separate device node. Having multiple address ranges in a
->  		node implies no special relationship between the two ranges.
->  
-> +		This property may be replaced or supplemented with a
-> +		memory-region property. Only one of reg or memory-region
-> +		properties is required.
-> +
-> +	- memory-region:
-> +		Reference to the reserved memory node. The reserved memory
-> +		node should be defined as per the bindings in
-> +		reserved-memory.txt
+Document the bindings for the tas5756m driver.
 
-Though we've never enforced it, but /reserved-memory should be within 
-the bounds of /memory node(s). Is that the intent here? If so, how does 
-that work? Wouldn't all the memory be persistent then? Or some other 
-system processor is preserving the contents?
+Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@mind.be>
+---
+ .../devicetree/bindings/sound/tas5756m.yaml   | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas5756m.yaml
 
-> +
-> +		This property may be replaced or supplemented with a reg
-> +		property. Only one of reg or memory-region is required.
-> +
->  Optional properties:
->  	- Any relevant NUMA assocativity properties for the target platform.
->  
-> @@ -63,3 +75,20 @@ Examples:
->  		volatile;
->  	};
->  
-> +
-> +	/*
-> +	 * This example uses a reserved-memory entry instead of
-> +	 * specifying the memory region directly in the node.
-> +	 */
-> +
-> +	reserved-memory {
-> +		pmem_1: pmem@5000 {
-> +			no-map;
+diff --git a/Documentation/devicetree/bindings/sound/tas5756m.yaml b/Documentation/devicetree/bindings/sound/tas5756m.yaml
+new file mode 100644
+index 000000000000..47be70f1633a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas5756m.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++
++$id: "http://devicetree.org/schemas/tas5756m.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: TAS5756M audio codec Device Tree Bindings
++
++maintainers:
++  - Charles-Antoine Couret <charles-antoine.couret@mind.be>
++
++description: |
++  You can read datasheets there:
++  http://www.ti.com/lit/ds/symlink/tas5754m.pdf
++  http://www.ti.com/lit/ds/symlink/tas5756m.pdf
++
++  TAS5754M datasheet has a more complete datasheet about register mapping
++  which is common with TAS5756M.
++
++  Those devices have a programmable DSP whith several modes named hybridflow.
++  More details about it there: http://www.ti.com/lit/ug/slau577a/slau577a.pdf
++
++properties:
++  compatible:
++    enum:
++      - "ti,tas5756m"
++      - "ti,tas5754m"
++
++  reg:
++    maxItems: 1
++    description: I2C slave address
++
++  "#sound-dai-cells":
++    const: 0
++
++  mute-gpios
++    maxItems: 1
++    description: GPIO wired to the mute pin.
++
++  ti,hybridflow
++    description: |
++      Select the HybridFlow DSP program.
++      If not supplied default DSP program is used instead.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [1, 2, 3, 4, 5, 6, 7, 8, 9]
++
++additionalProperties: false
++
++required:
++  - "#sound-dai-cells"
++  - compatible
++  - reg
++
++examples:
++  - |
++    tas5756m: tas5756m@4c {
++        compatible = "ti,tas5756m";
++        reg = <0x4c>;
++        #sound-dai-cells = <0>;
++
++        ti,hybridflow = <6>;
++        mute-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
++    };
+-- 
+2.24.1
 
-Just add 'compatible = "pmem-region";' here and be done with it. Why add 
-a layer of indirection?
-
-> +			reg = <0x00005000 0x00001000>;
-> +		};
-> +	};
-> +
-> +	pmem@1 {
-
-No 'reg', so shouldn't have a unit-address here.
-
-> +		compatible = "pmem-region";
-> +		memory-region = <&pmem_1>;
-> +	};
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
-> 
