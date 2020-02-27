@@ -2,103 +2,106 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93A4C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6BCC11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF782469F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oRLJ3DCL"
+	by mail.kernel.org (Postfix) with ESMTP id 572CC2469F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582822510;
+	bh=8tFv7ty4at8VD8BqQBZUEu3FQT7FLqyU0DmDiNypens=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p5D199k2/Bldn5IKXYgnihs0yEQ+TKYArFpnD0NKZ0wkfou8iVZSEkOx9Z4a5HsvD
+	 Y4iA25TRlAmO3Kto/jZ1l44mWJNXFIPsA+h74Ftw9TIlKkSwSUMF4i0w4d4Bf4TJtx
+	 52je3G21Ukgn6vACRvDBX1lSjMEaRBptKCGUDRcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbgB0Qwn (ORCPT
+        id S1730245AbgB0QzH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:52:43 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42107 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730245AbgB0Qwn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 11:52:43 -0500
-Received: by mail-ed1-f65.google.com with SMTP id n18so3777274edw.9;
-        Thu, 27 Feb 2020 08:52:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ivstkqAc2jBTEhbTH0moaUv+ywd1mANmLsnT4sGxaf4=;
-        b=oRLJ3DCLUdlQ8CO7KWH+bg60QqHSKOVPuWAk0vqDM5EdwmNloknnBn142+nMTNQoPm
-         b3p/S8pPec8UQukUYQhvGLDq0LfDQUFkVjE+P+mW2f2DJpWSRx0Y2jwbYHvu00LrH3Vo
-         AXhpY5mFgmqS3K5euSDd2b+8xwFk/XxLZoadkoig2Q5M1KkXtxCfhHU3aUeGbjp4yg0H
-         2gaZdORkbNCqiFRA4FDP+/kkCpvuJzSVtaVg1okPbuVvvlTMntUcSI6nrT05VqbvRKks
-         sibhYxGQAAYOA/StYtTXVn2DBl4XmQBhyiNxEZkjWfRRojQ3d4CeXXnltmXtfr68vnYN
-         +mZg==
+        Thu, 27 Feb 2020 11:55:07 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39518 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbgB0QzH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 11:55:07 -0500
+Received: by mail-ot1-f66.google.com with SMTP id x97so953835ota.6;
+        Thu, 27 Feb 2020 08:55:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ivstkqAc2jBTEhbTH0moaUv+ywd1mANmLsnT4sGxaf4=;
-        b=PD3uR38TBknSJrd/OMPEhUvv1iCC7eRs9HlPiUBknVJ8ushiL139KST6k5gDC7yU8S
-         yvJivitkd2IyyB7Gcag8hLfBmdL0+8hLi2Xw2B5Yah6000/EL7DcYCnzx+qxgs8iVNRl
-         mOlJ2o3/8mq780DQRM5e5P8ll4M0rIFapvpE77+exW+75icZmaqoZ5Rh1/sSEVGQKQiY
-         9AWwBhXLijnn6cs8CmEZAksCGweHj6cYmExz1Dzv+eb+yrazrl8Ta07qJIFzvlgtt2Wh
-         vx1HJFKcWRC7Tkd1buGSW8Zb3lTiub3kecif1Rv2zXRzLO8CBcRmDZ+ee5lT3nwmfRAr
-         IA3Q==
-X-Gm-Message-State: APjAAAXuUvzgofv3uwD+rxGom6oie0n1injwkWSWH0puBFonFyOFEWS6
-        Sr9YcUK1F30V0252G5qeqb0=
-X-Google-Smtp-Source: APXvYqwMntBRGuKgTGlUYF8FPtdnWphoE5YRSZavfhj8926aPLeCq19BiEK36bddRONndGmfKDXyvQ==
-X-Received: by 2002:aa7:c552:: with SMTP id s18mr5325160edr.331.1582822361093;
-        Thu, 27 Feb 2020 08:52:41 -0800 (PST)
-Received: from localhost.localdomain ([5.2.67.190])
-        by smtp.googlemail.com with ESMTPSA id f13sm388541edq.26.2020.02.27.08.52.39
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/jM1fH5xptzMBpP8MrWjvM0f+YCk8pWFrR+DV7+cjhQ=;
+        b=XTzRIPNFUxaHIaoL92Hc3GDM9cGlOmzyesQQZijsI8DE5JOrEmHHBEWEviwvt/utnZ
+         bv3DPY6PQykFTNeW5Vb9dkQzfcUGRm6hNyUaWU3Eeg/FcQEiJX6+npguFVYHHEWzdXg2
+         XDk25/OF+0btaSoIC+tQa/h8kM5o3LndfS29MM12S6yGmlKsJnImT6siEkrGcmUD6xiH
+         aX7JbS4I/zFqp4sNxpVLVmf0/Om22tTMtoa/9j6rAM8cT7Ee5rviB5Kh46yAC9GB5bb/
+         sTIWUnuZgpTR8cwSyAmaOd9X2fvneHln8IF/R12MZ3UY79hszT1sRHbrHfZ7LkGM8MHE
+         oKDw==
+X-Gm-Message-State: APjAAAWR66zURewIhDIHbP97Z88BtvpmX65Nl3spywoYDv2taboDzz2+
+        pC5yd+Upu2if2H4kHvhckQ==
+X-Google-Smtp-Source: APXvYqxUUYsXBRlfK0ElzZkJeLYyKOPBFssLLcfLZAR3mlJo/cftCdxWtn252vKiBhlDns37QVqKcg==
+X-Received: by 2002:a05:6830:20c2:: with SMTP id z2mr527059otq.228.1582822506104;
+        Thu, 27 Feb 2020 08:55:06 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k17sm2154899oic.45.2020.02.27.08.55.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 08:52:40 -0800 (PST)
-From:   Tomasz Maciej Nowak <tmn505@gmail.com>
-To:     jason@lakedaemon.net, andrew@lunn.ch,
-        sebastian.hesselbarth@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, gregory.clement@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: marvell: espressobin: add ethernet alias
-Date:   Thu, 27 Feb 2020 17:52:32 +0100
-Message-Id: <20200227165232.11263-1-tmn505@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 27 Feb 2020 08:55:05 -0800 (PST)
+Received: (nullmailer pid 19462 invoked by uid 1000);
+        Thu, 27 Feb 2020 16:55:04 -0000
+Date:   Thu, 27 Feb 2020 10:55:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     rentao.bupt@gmail.com
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com, Tao Ren <rentao.bupt@gmail.com>
+Subject: Re: [PATCH v4 7/7] dt-bindings: usb: add documentation for aspeed
+ usb-vhub
+Message-ID: <20200227165504.GA26955@bogus>
+References: <20200226230346.672-1-rentao.bupt@gmail.com>
+ <20200226230346.672-8-rentao.bupt@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226230346.672-8-rentao.bupt@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The maker of this board and its variants, stores MAC address in U-Boot
-environment. Add alias for bootloader to recognise, to which ethernet
-node inject the factory MAC address.
+On Wed, 26 Feb 2020 15:03:46 -0800, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> Add device tree binding documentation for aspeed usb-vhub driver.
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> ---
+>  No change in v2/v3/v4:
+>    - the patch is added to the patch series since v4.
+> 
+>  .../bindings/usb/aspeed,usb-vhub.yaml         | 71 +++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> 
 
-Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
----
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-index c8e2e993c69c..42e992f9c8a5 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-@@ -11,6 +11,12 @@
- #include "armada-372x.dtsi"
- 
- / {
-+	aliases {
-+		ethernet0 = &eth0;
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
--- 
-2.25.1
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.example.dt.yaml: usb-vhub@1e6a0000: 'aspeed,vhub-downstream-ports' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.example.dt.yaml: usb-vhub@1e6a0000: 'aspeed,vhub-generic-endpoints' is a required property
 
+See https://patchwork.ozlabs.org/patch/1245388
+Please check and re-submit.
