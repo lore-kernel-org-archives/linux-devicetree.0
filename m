@@ -2,161 +2,102 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CFCC34022
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9B7C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDBC246A5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EB7246A0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:28:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="M2CKpjb2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBxy9CAM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730974AbgB0P1K (ORCPT
+        id S1729208AbgB0P2r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:27:10 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:16051 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729832AbgB0P1K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 10:27:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582817227;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=bAd1P0HjpFgcq6KsUCB5hFZ1I7O7iOETD2tSpW+p9YI=;
-        b=M2CKpjb2day0QN23APkgSSOEl9reY8K+nTlrFhsHLvwrjc0FP3+SKQ/fAKYiAJ5l22
-        15B8431Pzcco/nlX0DJBp68m7slGb13g0Ivw0Gy547z4ZCbnV19fDqlMAbjMMXxlqTax
-        nFcqX9Z6clEmTnJKw/+TKCKb/eID1qVCLGPHsTkEMxgRbvw4Tq/OfjDntnQ9o+jbPW9z
-        cll6pUnkMecs8CQ4xkjvwCW7Ct18UOoUxtGgR2s/n6n08RKTStSwe1gNX8vFNZRx2XmX
-        zxrLgmYl6yjAxuvVB2/tjPfs86n5IgcRMh33u5QhLhnuMNuEAf7jTVOVUsrGWzEjFwv1
-        Sy8Q==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMhw47o15Y="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1RFQqBuJ
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 27 Feb 2020 16:26:52 +0100 (CET)
-Subject: Re: [PATCH v6 5/6] MIPS: DTS: JZ4780: define node for JZ4780 efuse
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1582815472.3.4@crapouillou.net>
-Date:   Thu, 27 Feb 2020 16:26:51 +0100
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Thu, 27 Feb 2020 10:28:47 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43283 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729174AbgB0P2q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 10:28:46 -0500
+Received: by mail-lf1-f66.google.com with SMTP id s23so2374440lfs.10
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 07:28:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PcDag5KjPfbMjNOieZ/TtsOewuHdYm2EO2ojNLOAuag=;
+        b=ZBxy9CAMLW+QGmiB06p3sBWXB9NP8ImNSQMEXiIuor8YO0FOLzLv4w8qUyfwhKAuoW
+         ttQzB+lRSARU0sCOm2CpEaqUFz8nqI0nMIphuZ+oWBXCPJ4s1qaqdi3Vc5zwHjyQZGKL
+         Ui2gyTOxL55SIZZJUzdsuWKROQVHYBPcqu86S0DIlw5n0jwJDZhhpVYueYhLxReyWXbz
+         i5hnvSreCYJo0qm3qnSXnWobXksK+7RiyP11J21B1trpMb1S5YDhAc9LXVlPKwsZdqRF
+         9hkwsTi+o9NBamj6ypbAUPdTz4Vuyzp0tdkbBEDjKrLsWEN627Yv8ippK/5+BNOFR0gp
+         m6Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PcDag5KjPfbMjNOieZ/TtsOewuHdYm2EO2ojNLOAuag=;
+        b=g9rXdd0J+3M/8E9aP8kZEL1E60MxpsLTp4RNRfTtvuCcUg1rjuupi6HTSqoKQa36Fx
+         FBTXwKWbfbGuE49rmliRk+WmfaOsQLZN/PkZ8smgYv8esvMh1FjgqbJKgD7KHDqZcidA
+         0QMPhkw6ri4+QSG+Go2ouczhGef+MVQp6B6awtKy0yYKoAX9kdnqYvrWB4/OTpkgDe2l
+         RFFV7iBupsF/gWRIh/W5A8OL9fm03XNhvF47ykeRPC/1oYfIHOOBHBMKoRk/ctYB3zgA
+         JwbJVUl7Pzlvsgpg1vyVD3L9ZnfUwZumr9ThoJonDyxb3Sn7ycoKRmJp5cjpj4afZgZk
+         AIZg==
+X-Gm-Message-State: ANhLgQ0XGR6gKDO5kR5d4fXd9rx2zWJJ3Ls4Rzu1eGp/NCeokxnwvF5/
+        2gkpcxeVgGb42EW4Dua6E0gBM8UCZlfcyUrjczLYPw==
+X-Google-Smtp-Source: ADFU+vvFL72KdrVEoPcoecFuP1zt7WatO+w7PswkNjLy3IGs+erHykMuhfeDGNw7vCNh1YdhsfVzSWjyKVwXCqERODY=
+X-Received: by 2002:a19:8b09:: with SMTP id n9mr89111lfd.7.1582817324693; Thu,
+ 27 Feb 2020 07:28:44 -0800 (PST)
+MIME-Version: 1.0
+References: <E1j7I7v-0004dS-5u@rmk-PC.armlinux.org.uk> <CAOMZO5A6os4myE41ZLBvW639bjRudg8Tax4yBa5JOyY5+oJW+g@mail.gmail.com>
+ <20200227134538.GK25745@shell.armlinux.org.uk> <20200227151738.GM25745@shell.armlinux.org.uk>
+In-Reply-To: <20200227151738.GM25745@shell.armlinux.org.uk>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 27 Feb 2020 12:28:42 -0300
+Message-ID: <CAOMZO5BJdpow6zLapGd3jvx2UZbviW44dqzH5H_RKc9kCrFsCA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sr-som-ti: indicate powering off wifi
+ is safe
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8CEAF117-8667-4616-B08D-211E2705B67B@goldelico.com>
-References: <cover.1582715761.git.hns@goldelico.com> <c6177ff663b6f8e16dc41169a76ba5dac091e7bd.1582715761.git.hns@goldelico.com> <1582815472.3.4@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+On Thu, Feb 27, 2020 at 12:17 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
 
-> Am 27.02.2020 um 15:57 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
->=20
-> Le mer., f=E9vr. 26, 2020 at 12:16, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->> This patch brings support for the JZ4780 efuse. Currently it only =
-exposes
->> a read only access to the entire 8K bits efuse memory and the
->> ethernet mac address for the davicom dm9000 chip on the CI20 board.
->> It also changes the nemc reg range to avoid overlap.
->> Tested-by: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: PrasannaKumar Muralidharan =
-<prasannatsmkumar@gmail.com>
->> Signed-off-by: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 ++++++++++++++++-
->> 1 file changed, 16 insertions(+), 1 deletion(-)
->> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi =
-b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->> index f928329b034b..1e266be28096 100644
->> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
->> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->> @@ -358,7 +358,7 @@
->> 	nemc: nemc@13410000 {
->> 		compatible =3D "ingenic,jz4780-nemc";
->> -		reg =3D <0x13410000 0x10000>;
->> +		reg =3D <0x13410000 0x4c>;
->=20
-> This is wrong, the real size of the register area is 1x15c.
+> Jon says:
+>
+> "It was changes to the mmc power handling.  Basically telling the
+> controller that the card should be able to wake it up from a sleep
+> state.
+>
+> "I think it has to do with the runtime PM addition.  This was added
+> to the TI driver in commit, 9b71578de08748defb3bcae3ce8ed1a75cb6a8d7
+> I don't know if that is what broke it, but that was the initial
+> integration.
+>
+> "That was added after changes to the MMC layer were done I believe."
+>
+> Jon thinks the idea for fixing it came from a post on one of the
+> mailing lists, but is unable to find it now.
+>
+> So, I think the cause is now lost in the mists of time.
 
-It should not overlap with the efuse reg range which is:
+Ok, thanks for checking:
 
-<0x134100d0 0x2c>
-
-If I look at JZ4780 Mobile Application Processor Programming Manual
-section 16.4.1 Register Description Table 16-4 Static Memory Interface =
-Registers,
-I see
-
-SMCR1 at 0x13410014 and
-SACR6 at 0x13410048 and all 32 bits wide. I.e. a total size of 0x4c.
-
-Ah, now I see. There is also Table 16-5 NAND Flash Interface Registers
-starting with NFCSR at 0x13410050 and ending with TGHH register at =
-0x13410154.
-
-Hm. With this we are probably at "go back and start over"...
-
-Either nemc must be separated into two drivers for Static Memory and one
-for NAND Flash. Or must become able to handle two register ranges.
-
-Or the e-fuse driver must become a part of the nemc driver.
-
-Well, another assumption is that there is no NAND driver. AFAIR it
-was even removed from the kernel because the maintainer did say
-it is not fixable (if I really remember correctly).
-
->=20
->> 		#address-cells =3D <2>;
->> 		#size-cells =3D <1>;
->> 		ranges =3D <1 0 0x1b000000 0x1000000
->> @@ -373,6 +373,21 @@
->> 		status =3D "disabled";
->> 	};
->> +	efuse: efuse@134100d0 {
->> +		compatible =3D "ingenic,jz4780-efuse";
->> +		reg =3D <0x134100d0 0x2c>;
->> +
->> +		clocks =3D <&cgu JZ4780_CLK_AHB2>;
->> +		clock-names =3D "ahb2";
->=20
-> As explained in my response to the other patch, 'clock-names' can go =
-away.
-
-Yes.
-
-BR,
-Nikolaus
-
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
