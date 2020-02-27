@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96D9C3567B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93A4C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF328246A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF782469F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mr9HQW5N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oRLJ3DCL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgB0Qs5 (ORCPT
+        id S1730343AbgB0Qwn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:48:57 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44808 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730194AbgB0Qs5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 11:48:57 -0500
-Received: by mail-ed1-f68.google.com with SMTP id g19so4010299eds.11;
-        Thu, 27 Feb 2020 08:48:55 -0800 (PST)
+        Thu, 27 Feb 2020 11:52:43 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42107 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730245AbgB0Qwn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 11:52:43 -0500
+Received: by mail-ed1-f65.google.com with SMTP id n18so3777274edw.9;
+        Thu, 27 Feb 2020 08:52:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=eyvg065g0/euNZVm3LdEpqtwEZkQRrm2w5Fpig4SXd4=;
-        b=Mr9HQW5NJWNHat6l1myE6wZLLZoDTDoOq8YyZclRM9kwFT4rVbP3k7sLI6QISjU3G4
-         4dBZDFPEkNhiOEBBrRxZ0EiGRtNfkaWJjaKkm+Y/7A9k0hqRybWrbBxQimdOhuOvPAmQ
-         fjUB7THLlrA7gdfOzfGw1lO8OW4wRV57zGg84DkX0rE80eb+Kip/7znycCuPEalEkx4B
-         XDJIiWy4S+sQKVHaa2oF3uddMdwHMHfzaSHZwQP9w18sy5LiJQiDUVx3VY3JLIlnn7xx
-         Lkoo6YMCsvQAL8BLTYUYyCtCwCFxGx5yIDBCptsnM31rlqEyDLEC+gq9ra2CeewiFR4N
-         BCqQ==
+        bh=ivstkqAc2jBTEhbTH0moaUv+ywd1mANmLsnT4sGxaf4=;
+        b=oRLJ3DCLUdlQ8CO7KWH+bg60QqHSKOVPuWAk0vqDM5EdwmNloknnBn142+nMTNQoPm
+         b3p/S8pPec8UQukUYQhvGLDq0LfDQUFkVjE+P+mW2f2DJpWSRx0Y2jwbYHvu00LrH3Vo
+         AXhpY5mFgmqS3K5euSDd2b+8xwFk/XxLZoadkoig2Q5M1KkXtxCfhHU3aUeGbjp4yg0H
+         2gaZdORkbNCqiFRA4FDP+/kkCpvuJzSVtaVg1okPbuVvvlTMntUcSI6nrT05VqbvRKks
+         sibhYxGQAAYOA/StYtTXVn2DBl4XmQBhyiNxEZkjWfRRojQ3d4CeXXnltmXtfr68vnYN
+         +mZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eyvg065g0/euNZVm3LdEpqtwEZkQRrm2w5Fpig4SXd4=;
-        b=kLuumIRA40eFmodw1NkDzd1OYwQs3LhdifO4GUKmFYYnrkQGZBuwvKjIJJYiajWm6J
-         YgyfjkGVw05D0PeUS3spmmHwl8Iaw7rwHH//7MFNkUSMBA5ysmUK+Om5jZgwNN+FtW7D
-         8ACV+5PMakmkQpIfMu6m93tvc1QkM5/AKZDUObqzt/1pDeLas4zM4vT3Sd82afrGltwO
-         2Y1UMJD2eR+CdOG2iVxbgMpYlo2F+EitCCkZPE+fE1GsanpGuZkGRf/iDOXreIGloq4v
-         FMmiGk/9HGkJnI10WD70VzsTmbfevqSN6N8D6qyHennb+arz7u6lQ+HMmfXyaGWZa1tV
-         GDWA==
-X-Gm-Message-State: APjAAAVC9MWT4aLewbasS2jm5VtQ80cXf6dQ7s6Pi3gdwbD5SwKi1JOO
-        P0e8ZcKb6nQX3Khbz29rYGZ/bBDfMCkzTw==
-X-Google-Smtp-Source: APXvYqzLLozlNz92t5BtswquB9rtniU6OhbYmfbX3YxneKTC3x1oqZdBOiYukUAl1LYuCO5rwHGalg==
-X-Received: by 2002:a17:906:5208:: with SMTP id g8mr21431ejm.104.1582822135185;
-        Thu, 27 Feb 2020 08:48:55 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ivstkqAc2jBTEhbTH0moaUv+ywd1mANmLsnT4sGxaf4=;
+        b=PD3uR38TBknSJrd/OMPEhUvv1iCC7eRs9HlPiUBknVJ8ushiL139KST6k5gDC7yU8S
+         yvJivitkd2IyyB7Gcag8hLfBmdL0+8hLi2Xw2B5Yah6000/EL7DcYCnzx+qxgs8iVNRl
+         mOlJ2o3/8mq780DQRM5e5P8ll4M0rIFapvpE77+exW+75icZmaqoZ5Rh1/sSEVGQKQiY
+         9AWwBhXLijnn6cs8CmEZAksCGweHj6cYmExz1Dzv+eb+yrazrl8Ta07qJIFzvlgtt2Wh
+         vx1HJFKcWRC7Tkd1buGSW8Zb3lTiub3kecif1Rv2zXRzLO8CBcRmDZ+ee5lT3nwmfRAr
+         IA3Q==
+X-Gm-Message-State: APjAAAXuUvzgofv3uwD+rxGom6oie0n1injwkWSWH0puBFonFyOFEWS6
+        Sr9YcUK1F30V0252G5qeqb0=
+X-Google-Smtp-Source: APXvYqwMntBRGuKgTGlUYF8FPtdnWphoE5YRSZavfhj8926aPLeCq19BiEK36bddRONndGmfKDXyvQ==
+X-Received: by 2002:aa7:c552:: with SMTP id s18mr5325160edr.331.1582822361093;
+        Thu, 27 Feb 2020 08:52:41 -0800 (PST)
 Received: from localhost.localdomain ([5.2.67.190])
-        by smtp.googlemail.com with ESMTPSA id d2sm107455edr.97.2020.02.27.08.48.53
+        by smtp.googlemail.com with ESMTPSA id f13sm388541edq.26.2020.02.27.08.52.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 08:48:54 -0800 (PST)
+        Thu, 27 Feb 2020 08:52:40 -0800 (PST)
 From:   Tomasz Maciej Nowak <tmn505@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com,
-        gregory.clement@bootlin.com, devicetree@vger.kernel.org,
+To:     jason@lakedaemon.net, andrew@lunn.ch,
+        sebastian.hesselbarth@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, gregory.clement@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: marvell: build ESPRESSObin variants
-Date:   Thu, 27 Feb 2020 17:48:42 +0100
-Message-Id: <20200227164842.11116-2-tmn505@gmail.com>
+Subject: [PATCH] arm64: dts: marvell: espressobin: add ethernet alias
+Date:   Thu, 27 Feb 2020 17:52:32 +0100
+Message-Id: <20200227165232.11263-1-tmn505@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227164842.11116-1-tmn505@gmail.com>
-References: <20200227164842.11116-1-tmn505@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -73,29 +73,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The commit adding ESPRESSObin variants didn't include those in Makefile to
-be built.
+The maker of this board and its variants, stores MAC address in U-Boot
+environment. Add alias for bootloader to recognise, to which ethernet
+node inject the factory MAC address.
 
-Fixes: 447b878935 ("arm64: dts: marvell: add ESPRESSObin variants")
 Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
 ---
- arch/arm64/boot/dts/marvell/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index f1b5127f0b89..3e5f2e7a040c 100644
---- a/arch/arm64/boot/dts/marvell/Makefile
-+++ b/arch/arm64/boot/dts/marvell/Makefile
-@@ -2,6 +2,9 @@
- # Mvebu SoC Family
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-emmc.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-v7.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-v7-emmc.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-turris-mox.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-uDPU.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+index c8e2e993c69c..42e992f9c8a5 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+@@ -11,6 +11,12 @@
+ #include "armada-372x.dtsi"
+ 
+ / {
++	aliases {
++		ethernet0 = &eth0;
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
 -- 
 2.25.1
 
