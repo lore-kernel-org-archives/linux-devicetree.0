@@ -2,108 +2,257 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B497EC4BA24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 03:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A397AC4BA3C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 03:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878D624680
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 03:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7684D2467A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 03:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmPw2xDs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jTEqC3T8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgB0DlZ (ORCPT
+        id S1728323AbgB0DzQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 22:41:25 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44412 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728273AbgB0DlZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 22:41:25 -0500
-Received: by mail-pl1-f193.google.com with SMTP id d9so546524plo.11;
-        Wed, 26 Feb 2020 19:41:24 -0800 (PST)
+        Wed, 26 Feb 2020 22:55:16 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46461 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728303AbgB0DzQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 22:55:16 -0500
+Received: by mail-qk1-f196.google.com with SMTP id u124so1814329qkh.13
+        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 19:55:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VUxAWoyzRwTi4XcElESOl4e7XyRqkwqcDDvJbUZpLIg=;
-        b=gmPw2xDsx9eKdgHlZEL2xC7Li/8YBXlNbCA+spXw9KKfoPRWYY0KhEEeVo4KC2o1UN
-         YrNfxZD2lybH9mVLDj+vW/MJcIbegJHj1PeRAO04tnf28Bv/GJDG5lEc0zPKDTubtW6+
-         N7IuMJPmP3mVcy8XVAlTdaqT1E2JxhEK5v/xdHjeyy807augrdOuYwNg+xDbcKfjDq9v
-         jHAcRGuwNzIN3Yw/yuXMpKSZYqA5MZXi+2ZxZzj23cJPP3h3/A246g+LJnfnF+zURjDt
-         uuHLQb7zdWVZ7jWWWGre5ezDmXMZasplcYWQ8/KYy346t8KZDjAG1MAvSBaQZYpcfvF7
-         BXIg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e3jEhRMyMSDPIgF2MXY+K+s017u3bzyL9y4ZxjVIXsc=;
+        b=jTEqC3T8CcQJPeSiwHCc/YZwirx3XPnoflpFRSjQZBUnVCcesZxb6Gwb67LaRk8RcS
+         WyAXXTXseAYgek5tbQRPqpQFhcHSrp0NFfYlZm7O4c8Xa+VtKCgZrT6xhoOIxmMjDZFR
+         1XOX6y1G35XkkzUulYH7lfDHrO9FN3TQhEm3o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VUxAWoyzRwTi4XcElESOl4e7XyRqkwqcDDvJbUZpLIg=;
-        b=Z537Q/JEEc3PjDQ0cEKF36+g/h6AMbgQXux1TS0qE+iWz+B44iHkSOBELS8VW3oNgy
-         6mEEi/qfMxVmCUSPugm3wPGQdJEXA9oiQVgL3JpsUhCrN6bdPEX3La8nTpqnwYLjRL3O
-         D4z9d6Hv6V4aY/7m3laSqU69UxNVFJgdj6aWbbcNKVdVxhtU1FJqV2tiI9looFJr6iQP
-         SHFCFYbCvmTqMjMYso3VMFKhUL2lqT4NeHF0mfNC/xAXHGDX91naeOu/cZfK3ipym0Yt
-         A8nnD5lyDjm4S+n3i44UHd38ZQ5odr0gu2iFObqL9pOrlxw8MkfG0ZosSUjTnAYF92so
-         RojA==
-X-Gm-Message-State: APjAAAXUngrtG4rjSGwN1Q6VsFzs6DUXERz/1bEnOmixz8FwXhxk0Ukx
-        f0DwmYqHzU824zuLBF1Bsb8=
-X-Google-Smtp-Source: APXvYqwu67NFja14RMtsEQ5nHb9nwgFD7snOj2gBrL1Jp1A8X2Zh72CwRRaPQ6P9a1KCWadgsyQGaQ==
-X-Received: by 2002:a17:902:7b94:: with SMTP id w20mr2521900pll.257.1582774883581;
-        Wed, 26 Feb 2020 19:41:23 -0800 (PST)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id e1sm4658282pff.188.2020.02.26.19.41.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Feb 2020 19:41:23 -0800 (PST)
-Date:   Wed, 26 Feb 2020 19:41:21 -0800
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] ASoC: fsl_asrc: Change asrc_width to asrc_format
-Message-ID: <20200227034121.GA20540@Asurada-Nvidia.nvidia.com>
-References: <cover.1582770784.git.shengjiu.wang@nxp.com>
- <ffd5ff2fd0e8ad03a97f6a640630cff767d73fa7.1582770784.git.shengjiu.wang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e3jEhRMyMSDPIgF2MXY+K+s017u3bzyL9y4ZxjVIXsc=;
+        b=Eh4lbD2BBrV2uiE5MiK6PRqoi8zR4cdo97jVYZRw7S42U9bd8Imyed2eokAiTNdf2P
+         wnmrNhK3WGfpQO4eM9f6hZpL381xLrggSqTYcVI3vXvCFdmZhzv6AZ/4Sd+eSMsA1xlB
+         oaMFADuD7YaXeeXuyYwdL9B1WxGBjgiJvstteTkiBEr9/4PjC4g0R14KTA4XcgprYgpA
+         dHEEA8rd53Z1pIxoaBF4m/iFgzFedYZgWSihHDTxZTX3kHo56ZjxzQ802RW0KFfY64SR
+         AK1CawuAcV2qxxRNHWJvv9uamzPp2bNTKg3EQUPZNPKzACu/qh03fDT8s8vHHDTlSeb3
+         mSfA==
+X-Gm-Message-State: APjAAAWW1j71krXz+V8ImQdakgk3vPbrbi1/hRQizSC/DI9lEbPt3Qej
+        JlMEdJoIKDxOf1YJws9l0b6/Ft+f9N3lM7dlA8ynTg==
+X-Google-Smtp-Source: APXvYqzq8jjaKKWzzTwUgKRVwAcuPnPzaoB4MtCOHKcEOOOAccafOg+X3EgaiSchf6kPph/ll1rJMnKFKvKFXXgpvME=
+X-Received: by 2002:a05:620a:1435:: with SMTP id k21mr2787955qkj.299.1582775713747;
+ Wed, 26 Feb 2020 19:55:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ffd5ff2fd0e8ad03a97f6a640630cff767d73fa7.1582770784.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200107070154.1574-1-roger.lu@mediatek.com> <20200107070154.1574-2-roger.lu@mediatek.com>
+ <20200108203829.GA18987@bogus> <CANMq1KBu-gFy701BgFcjEwyhV9GgCCU2mkT9c8LviOJKBF30UA@mail.gmail.com>
+ <CAL_JsqLnVEhvAh_8DfGWRZa+MdPRpXc9sWEQ6-3HQAeUfvkOSg@mail.gmail.com> <1581406566.14120.46.camel@mtksdaap41>
+In-Reply-To: <1581406566.14120.46.camel@mtksdaap41>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 27 Feb 2020 11:55:02 +0800
+Message-ID: <CANMq1KBVs7ZucNu9pTxXGZ0__E6tyxd1+mm2Zui81G=xQNtShA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: soc: add mtk svs dt-bindings
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        =?UTF-8?B?SGVucnlDIENoZW4gKOmZs+W7uuixqik=?= 
+        <HenryC.Chen@mediatek.com>,
+        =?UTF-8?B?WVQgTGVlICjmnY7ku7Dlk7Ip?= <yt.lee@mediatek.com>,
+        =?UTF-8?B?WGlhb3FpbmcgTGl1ICjliJjmmZPluoYp?= 
+        <Xiaoqing.Liu@mediatek.com>,
+        =?UTF-8?B?Q2hhcmxlcyBZYW5nICjmpYrkuo7pgLIp?= 
+        <Charles.Yang@mediatek.com>,
+        =?UTF-8?B?QW5ndXMgTGluICjmnpfnkZvosaop?= <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 10:41:55AM +0800, Shengjiu Wang wrote:
-> asrc_format is more inteligent variable, which is align
-> with the alsa definition snd_pcm_format_t.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  sound/soc/fsl/fsl_asrc.c     | 23 +++++++++++------------
->  sound/soc/fsl/fsl_asrc.h     |  4 ++--
->  sound/soc/fsl/fsl_asrc_dma.c |  2 +-
->  3 files changed, 14 insertions(+), 15 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> index 0dcebc24c312..2b6a1643573c 100644
-> --- a/sound/soc/fsl/fsl_asrc.c
-> +++ b/sound/soc/fsl/fsl_asrc.c
+Hi Rob,
 
-> @@ -600,11 +599,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
->  
->  	pair->config = &config;
->  
-> -	if (asrc_priv->asrc_width == 16)
-> -		format = SNDRV_PCM_FORMAT_S16_LE;
-> -	else
-> -		format = SNDRV_PCM_FORMAT_S24_LE;
+On Tue, Feb 11, 2020 at 3:36 PM Roger Lu <roger.lu@mediatek.com> wrote:
+>
+> Hi Rob & Nicolas,
+>
+> Sorry for the late reply.
+>
+> On Mon, 2020-01-13 at 23:50 +0800, Rob Herring wrote:
+> > On Mon, Jan 13, 2020 at 12:44 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > >
+> > > On Thu, Jan 9, 2020 at 4:38 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Tue, Jan 07, 2020 at 03:01:52PM +0800, Roger Lu wrote:
+> > > > > Document the binding for enabling mtk svs on MediaTek SoC.
+> > > > >
+> > > > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> > > > > ---
+> > > > >  .../devicetree/bindings/power/mtk-svs.txt     | 76 +++++++++++++++++++
+> > > > >  1 file changed, 76 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > new file mode 100644
+> > > > > index 000000000000..9a3e81b9e1d2
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > @@ -0,0 +1,76 @@
+> > > > > +* Mediatek Smart Voltage Scaling (MTK SVS)
+> > > > > +
+> > > > > +This describes the device tree binding for the MTK SVS controller (bank)
+> > > > > +which helps provide the optimized CPU/GPU/CCI voltages. This device also
+> > > > > +needs thermal data to calculate thermal slope for accurately compensate
+> > > > > +the voltages when temperature change.
+> > > > > +
+> > > > > +Required properties:
+> > > > > +- compatible:
+> > > > > +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
+> > > > > +- reg: Address range of the MTK SVS controller.
+> > > > > +- interrupts: IRQ for the MTK SVS controller.
+> > > > > +- clocks, clock-names: Clocks needed for the svs hardware. required
+> > > > > +                       clocks are:
+> > > > > +                    "main": Main clock for svs controller to work.
+> > > > > +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
+> > > > > +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
+> > > > > +
+> > > > > +Subnodes:
+> > > > > +- svs-cpu-little: SVS bank device node of little CPU
+> > > > > +  compatible: "mediatek,mt8183-svs-cpu-little"
+> > > > > +  operating-points-v2: OPP table hooked by SVS little CPU bank.
+> > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > +  vcpu-little-supply: PMIC buck of little CPU
+> > > > > +- svs-cpu-big: SVS bank device node of big CPU
+> > > > > +  compatible: "mediatek,mt8183-svs-cpu-big"
+> > > > > +  operating-points-v2: OPP table hooked by SVS big CPU bank.
+> > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > +  vcpu-big-supply: PMIC buck of big CPU
+> > > > > +- svs-cci: SVS bank device node of CCI
+> > > > > +  compatible: "mediatek,mt8183-svs-cci"
+> > > > > +  operating-points-v2: OPP table hooked by SVS CCI bank.
+> > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > +  vcci-supply: PMIC buck of CCI
+> > > > > +- svs-gpu: SVS bank device node of GPU
+> > > > > +  compatible: "mediatek,mt8183-svs-gpu"
+> > > > > +  operating-points-v2: OPP table hooked by SVS GPU bank.
+> > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > +  vgpu-supply: PMIC buck of GPU
+> > > > > +
+> > > > > +Example:
+> > > > > +
+> > > > > +     svs: svs@1100b000 {
+> > > > > +             compatible = "mediatek,mt8183-svs";
+> > > > > +             reg = <0 0x1100b000 0 0x1000>;
+> > > > > +             interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
+> > > > > +             clocks = <&infracfg CLK_INFRA_THERM>;
+> > > > > +             clock-names = "main_clk";
+> > > > > +             nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
+> > > > > +             nvmem-cell-names = "svs-calibration-data", "calibration-data";
+> > > > > +
+> > > > > +             svs_cpu_little: svs-cpu-little {
+> > > > > +                     compatible = "mediatek,mt8183-svs-cpu-little";
+> > > > > +                     operating-points-v2 = <&cluster0_opp>;
+> > > > > +                     vcpu-little-supply = <&mt6358_vproc12_reg>;
+> > > > > +             };
+> > > >
+> > > > I don't think this is a good binding. This information already exists
+> > > > elsewhere in the DT, so your driver should just look in those nodes.
+> > > > For example the regulator can be in the cpu nodes or the OPP table
+> > > > itself.
+> > >
+> > > Roger, if that helps, without changing any other binding, on 8183,
+> > > basically you could have:
+> > >  - svs-cpu-little: Add a handle to &cpu0 and get the regulator/opp
+> > > table from it.
+> > >  - svs-cpu-big: Handle to &cpu4
+> >
+> > Why do you need those? Use the compatible of the cpus to determine big
+> > and little cores. Or there's the cpu capacity property that could be
+> > used instead.
+> >
+> > >  - svs-cci: Handle to &cci
+> >
+> > Is there more than 1 CCI? Just retrieve the node by the compatible.
+> > There's no need to have nodes that simply serve as a collection of
+> > data for some driver.
+> >
+> > >  - svs-gpu: Handle to &gpu (BTW, it is expected that SVS would only
+> > > apply to vgpu/mali regulator, and not vsram regulator?)
+>
+> svs-gpu depends on vgpu power on for init (don't care vgpu_sram). After
+> svs-gpu init is done, it doesn't need vgpu power on anymore. (vgpu can
+> be turned off)
+>
+> Please allows me to introduce more about what svs-gpu device needs.
+> 1. It needs gpu opp table from "gpu node" and gpu_core2 power-domains
+> from "gpu_core2 node". When svs-gpu has those resources, it turns on
+> gpu_core2 power-domain for svs-gpu-hw to have power (for calculating)
+> and svs-gpu-sw will update gpu opp table voltages' part.
+> 2. Therefore, if I retrieve gpu-related node from phandle or compatible,
+> it means svs-gpu device in driver needs to attach two different gpu
+> nodes for attaining gpu opp table and gpu_core2 power-domains. I think
+> this architecture of svs-gpu confuses maintainer why it attaches two
+> different nodes instead of having a device to describe what it needs.
 
-It feels better to me that we have format settings in hw_params().
+> 3. Is it acceptable to have a Linux device attaching two different
+> nodes? If yes, could you guide us some APIs for one device to attach two
+> nodes? I don't know how to implement it. Thanks.
 
-Why not let fsl_easrc align with this? Any reason that I'm missing?
+I'm also trying to understand how that would work. The way the code
+works now (https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/power/avs/mtk_svs.c#1388):
+
+The SVS driver creates a platform device for each sub-node, find the
+sub-node that matches the compatible (pdev->dev.of_node):
+for_each_child_of_node(svs->dev->of_node, np) {
+  if (of_device_is_compatible(np, svsb->of_compatible)) {
+    pdev->dev.of_node = np;
+    break;
+  }
+}
+
+Then, thanks to that, the 2 functions dev_pm_opp_of_add_table and
+devm_regulator_get_optional "just work", as the get the opp table and
+regulator from the device tree node.
+
+So what you suggest is basically something like this:
+pdev->dev.of_node = of_find_compatible_node(NULL, NULL, "mediatek,mt8183-cci");
+
+I came up with a (very dirty) prototype here:
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2076718
+... and it doesn't really work
+(https://gist.github.com/drinkcat/61e50eedbdc301d418c9cee3ee5b6b06, I
+think the kernel is probing more than it should, like the DMA mask
+errors should not happen...)
+
+Before I dig further... I have the same concern as Roger, is it ok to
+have 2 devices bound to the same device tree node/compatible? My
+understanding was also that it's not.
+
+> > >
+> > > I'm not too sure how we'd fetch the right regulator name, however (for
+> > > the first 3 the name is "proc", for the last one it's "mali"), maybe
+> > > add a regulator-name list in the DT?
+> >
+> > To put this another way, write an SoC specific driver that understands
+> > to some extent what exists in the SoC (and DT). I doubt something like
+> > this is going to be generic across more than a few SoCs at most.
+>
+> >
+> > Rob
+>
