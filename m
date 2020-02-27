@@ -7,64 +7,65 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E46C3F2C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9382C3F2C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE525246A2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE92D246A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J2HlgJvo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R9wmRG8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgB0VxP (ORCPT
+        id S1730149AbgB0Vxe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:53:15 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34547 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729661AbgB0VxO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 16:53:14 -0500
-Received: by mail-lj1-f193.google.com with SMTP id x7so999059ljc.1
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:53:12 -0800 (PST)
+        Thu, 27 Feb 2020 16:53:34 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38848 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729947AbgB0Vxe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 16:53:34 -0500
+Received: by mail-lf1-f67.google.com with SMTP id r14so559427lfm.5
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:53:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OBxG5p3NtRm8vJZ9SrWGbyvBMMrZfbcd6sEkh872Wpk=;
-        b=J2HlgJvotRvArCBanF+nmCfWdRF8pDW66BdmQms7zfNgyS7lRauYT3bDS5OboDi2DM
-         ifdOo7gJ8d+ZZyQcHW2Fg38xWkUDpHzNNzVJKJHCx5P3h/fPWvAmbJsxP/jGHk9JHs8h
-         efR20upDTYOd5dbP0XxRZK/5y/3u0AYyvc+eQ=
+        bh=TciHlSTKGVGSwBjPpE6GdszVZvGGFdsKopsqP1eqA44=;
+        b=R9wmRG8Zsj0hupJPPywP6/bpn+fXxWpBBjyuLdxnZKe76Pvx+79KpCZfPuJ6m9zgIB
+         83dRXWqAbdH8mdUA2m5R6w1L5Jt/Nectudrnnm3VTIY8OxyPthplqvxqfFcG5SmgXxwL
+         hEhb8GB0mIoGzRzN/dD6W9G//QmE5GgVN2PmE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OBxG5p3NtRm8vJZ9SrWGbyvBMMrZfbcd6sEkh872Wpk=;
-        b=cUHS9ERaylFvPgvzKeu3FF58skJILYannsdFf5ZWwFM9I2mj9rfdvKfCjtyz+rfKPJ
-         4P8cGpvDspvjB6LaugAem4lktX+eD4D9E4Mx98Dhfhj+F7zKpL+OcvfaOe3oqWFiqWDu
-         A8T4JSVxVMicAQy7X3XRgpL7s54kW2jNXx6beo+SbqUKpFUYJw6tqJp3mJrMoXmFwEuh
-         2OvBexd3BdbmPti4EWLlTSItdE+/hj0GuwfBPQWZLkJliZ+YkUnmQeOz/umtBQlAuvZy
-         HtXBTjOxy4z4Gvr0Lj18LF3Qp5vvAwculdStusOSNtB0NIRITgnELA0w8uuOXPuuRcyh
-         WBlg==
-X-Gm-Message-State: ANhLgQ3Amr2NQ/bReZ9ptVePNDlxYlcC4Pxp+9F+omrVUTkyZEP6aAl+
-        L5Hy2Y3XsGIqrCqc3K1ToaoZXw85Tqc=
-X-Google-Smtp-Source: ADFU+vvZZhAU/HnfU5fKIns6/dEKunm2YGgT7yfzFaGQSc33c5gb9NnBq6nHvdncS1JdeRMF5GfhCQ==
-X-Received: by 2002:a2e:9809:: with SMTP id a9mr716474ljj.196.1582840391647;
-        Thu, 27 Feb 2020 13:53:11 -0800 (PST)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id a8sm4054956ljb.38.2020.02.27.13.53.10
+        bh=TciHlSTKGVGSwBjPpE6GdszVZvGGFdsKopsqP1eqA44=;
+        b=qqETGhAkxXSZL1PzWIDvKixL3dJgMh0SstLrMsEk3TNmNu6TwsE9RSw6c79Vb94Bvj
+         kDkFQxDmADHCuHVqWWloAtYhGSm3v3tc71E2w3RoBvDbPTOpDnCKhFauXsqXCP822yp2
+         9y7URCsnwsHsu/xX4LwaKXz7J7mv5BGZK53qxcZgutrwRxDb5EGjCIbJYGOzI43X8QCF
+         CSYUiy5PitXqjXY6NvRhcGyyDWRWSrhn5XLXKDe1i5KW7tNE0g8Yjg1LryH8OZPQ3/kW
+         z0pLFUtKrsmLNE2mJLFarCdDfxyFr0O9odCsq1F93oaT5rPtQ3Ixph6ms7gL8cL22WaN
+         uhNw==
+X-Gm-Message-State: ANhLgQ0UbaGQ1a6W5IDO55DFN3+mcDEvY0TXPmfXNoi5Fo4dkUFJtal+
+        GaptiQFsh0nJ4ZyR2KXS/PqFiHBvHI0=
+X-Google-Smtp-Source: ADFU+vuNjvhh9N2isCMLWkjP4iJ1okJ0pU/urR08yKqZC4uRJsMlNUibSwbg4cTqWgGYdvRTc5NeQQ==
+X-Received: by 2002:a19:6445:: with SMTP id b5mr743566lfj.187.1582840412290;
+        Thu, 27 Feb 2020 13:53:32 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id s10sm4417795ljp.35.2020.02.27.13.53.31
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 13:53:10 -0800 (PST)
-Received: by mail-lf1-f52.google.com with SMTP id b15so565640lfc.4
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:53:10 -0800 (PST)
-X-Received: by 2002:ac2:5226:: with SMTP id i6mr725638lfl.99.1582840389628;
- Thu, 27 Feb 2020 13:53:09 -0800 (PST)
+        Thu, 27 Feb 2020 13:53:31 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id q8so932011ljj.11
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:53:31 -0800 (PST)
+X-Received: by 2002:a2e:8702:: with SMTP id m2mr734336lji.278.1582840410701;
+ Thu, 27 Feb 2020 13:53:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20200209183411.17195-1-sibis@codeaurora.org> <20200209183411.17195-5-sibis@codeaurora.org>
-In-Reply-To: <20200209183411.17195-5-sibis@codeaurora.org>
+References: <20200209183411.17195-1-sibis@codeaurora.org> <20200209183411.17195-7-sibis@codeaurora.org>
+In-Reply-To: <20200209183411.17195-7-sibis@codeaurora.org>
 From:   Evan Green <evgreen@chromium.org>
-Date:   Thu, 27 Feb 2020 13:52:33 -0800
-X-Gmail-Original-Message-ID: <CAE=gft5OOQVKe9ow2ApbEAjmgqRc05hHVxUi4os+4-gvpMh4Yg@mail.gmail.com>
-Message-ID: <CAE=gft5OOQVKe9ow2ApbEAjmgqRc05hHVxUi4os+4-gvpMh4Yg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] interconnect: qcom: Consolidate interconnect RPMh support
+Date:   Thu, 27 Feb 2020 13:52:54 -0800
+X-Gmail-Original-Message-ID: <CAE=gft5YrX9idSOgam5JR3m_R8OZ0ZG6KKe-w6GmtmxY83OPnQ@mail.gmail.com>
+Message-ID: <CAE=gft5YrX9idSOgam5JR3m_R8OZ0ZG6KKe-w6GmtmxY83OPnQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] arm64: dts: sdm845: Redefine interconnect provider
+ DT nodes
 To:     Sibi Sankar <sibis@codeaurora.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Georgi Djakov <georgi.djakov@linaro.org>,
@@ -85,21 +86,16 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 9, 2020 at 10:34 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+On Sun, Feb 9, 2020 at 10:35 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
 > From: David Dai <daidavid1@codeaurora.org>
 >
-> Add bcm voter driver and add support for RPMh specific interconnect
-> providers which implements the set and aggregate functionalities that
-> translates bandwidth requests into RPMh messages. These modules provide
-> a common set of functionalities for all Qualcomm RPMh based interconnect
-> providers and should help reduce code duplication when adding new
-> providers.
+> Add the DT nodes for each of the Network-On-Chip interconnect
+> buses found on SDM845 based platform and redefine the rsc_hlos
+> child node as a bcm-voter device to better represent the hardware.
 >
 > Signed-off-by: David Dai <daidavid1@codeaurora.org>
 > Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
 > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-
-Assuming Georgi's comments get addressed:
 
 Reviewed-by: Evan Green <evgreen@chromium.org>
