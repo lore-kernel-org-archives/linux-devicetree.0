@@ -2,108 +2,305 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3A1C4BA3B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 09:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DAFC4BA3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 09:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE482467F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 09:53:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZwsjtKIX"
+	by mail.kernel.org (Postfix) with ESMTP id 60193222C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 09:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgB0JxI (ORCPT
+        id S1728743AbgB0Jz3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:53:08 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34930 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728454AbgB0JxI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 04:53:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
-        In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4Dp7mkcUtdW2tERi+jH4BIpeVDMyk4miuASJrf/8YYI=; b=ZwsjtKIX0ZT+IcOxljKyal2CwR
-        C2FUBo2NgHHukysc80HVUWJ7AAd4iq/azt/ArgcRFaSGvYASo5/n12o5x1NYWFcOxv0USnb9auRbZ
-        3aIJEi01oPcGdIu6G4pym/r2+fDYHVwTY2FBHtsJRaJVVPzh1L4LnOmTnuOK2HGuUcyImrcUFVhhg
-        pvIll5zpXLaozd6Ap9ya1LnQZtdDwd49NVlgkDJCzJff5E1+b9YG0dLCeCrlwW9GRgv3xdNVe9K0q
-        v7iipUkxTBrA4gbc9RY8fzcFpvwo+Xko5N1vsfqlMK3f8XXlSvAnBo/sWM35zmPe2W0Ks8L4COSbx
-        f96g2NiA==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([2001:4d48:ad52:3201:222:68ff:fe15:37dd]:57842 helo=rmk-PC.armlinux.org.uk)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1j7Fqc-0004kL-5v; Thu, 27 Feb 2020 09:52:50 +0000
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1j7FqZ-0003tI-2A; Thu, 27 Feb 2020 09:52:47 +0000
-In-Reply-To: <20200227095159.GJ25745@shell.armlinux.org.uk>
-References: <20200227095159.GJ25745@shell.armlinux.org.uk>
-From:   Russell King <rmk+kernel@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>
-Subject: [PATCH net-next 3/3] arm64: dts: configure Macchiatobin 10G PHY LED
- modes
-MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1j7FqZ-0003tI-2A@rmk-PC.armlinux.org.uk>
-Date:   Thu, 27 Feb 2020 09:52:47 +0000
+        Thu, 27 Feb 2020 04:55:29 -0500
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:52167 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728454AbgB0Jz2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 04:55:28 -0500
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 27 Feb 2020 01:55:27 -0800
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 27 Feb 2020 01:55:24 -0800
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id B9CBA2150A; Thu, 27 Feb 2020 15:25:22 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     sivaprak@codeaurora.org
+Subject: [PATCH 2/2] clk: qcom: Add ipq6018 apss clock controller
+Date:   Thu, 27 Feb 2020 15:25:18 +0530
+Message-Id: <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
+References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Configure the Macchiatobin 10G PHY LED modes to correct their polarity.
-We keep the existing LED behaviours, but switch their polarity to
-reflect how they are connected. Tweak the LED modes as well to be:
+This patch adds the support for apss clock controller found on ipq6018
+devices.
 
-left:  off          = no link
-       solid green  = RJ45 link up (not SFP+ cage)
-       flash green  = traffic
-right: off          = no link
-       solid green  = 10G
-       solid yellow = 1G
-       flash green  = 100M
-       flash yellow = 10M
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/qcom/Kconfig        |   8 ++
+ drivers/clk/qcom/Makefile       |   1 +
+ drivers/clk/qcom/apss-ipq6018.c | 210 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 219 insertions(+)
+ create mode 100644 drivers/clk/qcom/apss-ipq6018.c
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-index d06f5ab7ddab..87a3149a4261 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-@@ -21,12 +21,14 @@
- 		compatible = "ethernet-phy-ieee802.3-c45";
- 		reg = <0>;
- 		sfp = <&sfp_eth0>;
-+		marvell,led-mode = /bits/ 16 <0x0129 0x095d 0x0855>;
- 	};
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 15cdcdc..37e4ce2 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -89,6 +89,14 @@ config APQ_MMCC_8084
+ 	  Say Y if you want to support multimedia devices such as display,
+ 	  graphics, video encode/decode, camera, etc.
  
- 	phy8: ethernet-phy@8 {
- 		compatible = "ethernet-phy-ieee802.3-c45";
- 		reg = <8>;
- 		sfp = <&sfp_eth1>;
-+		marvell,led-mode = /bits/ 16 <0x0129 0x095d 0x0855>;
- 	};
- };
- 
++config IPQ_APSS_6018
++	tristate "IPQ6018 APSS Clock Controller"
++	select IPQ_GCC_6018
++	help
++	  Support for APSS clock controller on ipq6018 devices. The
++	  APSS clock controller supports frequencies higher than 800Mhz.
++	  Say Y if you want to support higher frequencies on ipq6018 devices.
++
+ config IPQ_GCC_4019
+ 	tristate "IPQ4019 Global Clock Controller"
+ 	help
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index 656a87e..2b61715 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -19,6 +19,7 @@ clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
+ # Keep alphabetically sorted by config
+ obj-$(CONFIG_APQ_GCC_8084) += gcc-apq8084.o
+ obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
++obj-$(CONFIG_IPQ_APSS_6018) += apss-ipq6018.o
+ obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
+ obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
+ obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
+diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6018.c
+new file mode 100644
+index 0000000..04b8962
+--- /dev/null
++++ b/drivers/clk/qcom/apss-ipq6018.c
+@@ -0,0 +1,210 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/kernel.h>
++#include <linux/err.h>
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/clk-provider.h>
++#include <linux/regmap.h>
++
++#include <linux/reset-controller.h>
++#include <dt-bindings/clock/qcom,apss-ipq6018.h>
++
++#include "common.h"
++#include "clk-regmap.h"
++#include "clk-pll.h"
++#include "clk-rcg.h"
++#include "clk-branch.h"
++#include "clk-alpha-pll.h"
++#include "clk-regmap-divider.h"
++#include "clk-regmap-mux.h"
++#include "reset.h"
++
++#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
++
++enum {
++	P_XO,
++	P_GPLL0,
++	P_GPLL2,
++	P_GPLL4,
++	P_APSS_PLL_EARLY,
++	P_APSS_PLL
++};
++
++const u8 apss_pll_offsets[] = {
++	[PLL_OFF_L_VAL] = 0x08,
++	[PLL_OFF_ALPHA_VAL] = 0x10,
++	[PLL_OFF_USER_CTL] = 0x18,
++	[PLL_OFF_CONFIG_CTL] = 0x20,
++	[PLL_OFF_CONFIG_CTL_U] = 0x24,
++	[PLL_OFF_STATUS] = 0x28,
++	[PLL_OFF_TEST_CTL] = 0x30,
++	[PLL_OFF_TEST_CTL_U] = 0x34,
++};
++
++static struct clk_alpha_pll apss_pll_early = {
++	.offset = 0x4ff4,
++	.regs = apss_pll_offsets,
++	.flags = SUPPORTS_DYNAMIC_UPDATE,
++	.clkr = {
++		.enable_reg = 0x4ff4,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "apss_pll_early",
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "xo",
++			},
++			.num_parents = 1,
++			.ops = &clk_alpha_pll_huayra_ops,
++		},
++	},
++};
++
++static struct clk_alpha_pll_postdiv apss_pll = {
++	.offset = 0x4ff4,
++	.regs = apss_pll_offsets,
++	.width = 2,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "apss_pll",
++		.parent_hws = (const struct clk_hw *[]){
++					&apss_pll_early.clkr.hw },
++		.num_parents = 1,
++		.ops = &clk_alpha_pll_postdiv_ro_ops,
++	},
++};
++
++static const struct clk_parent_data parents_apcs_alias0_clk_src[] = {
++	{ .fw_name = "xo" },
++	{ .fw_name = "gpll0"},
++	{ .fw_name = "gpll2"},
++	{ .fw_name = "gpll4"},
++	{ .hw = &apss_pll.clkr.hw },
++	{ .hw = &apss_pll_early.clkr.hw },
++};
++
++static const struct parent_map parents_apcs_alias0_clk_src_map[] = {
++	{ P_XO, 0 },
++	{ P_GPLL0, 4 },
++	{ P_GPLL2, 2 },
++	{ P_GPLL4, 1 },
++	{ P_APSS_PLL, 3 },
++	{ P_APSS_PLL_EARLY, 5 },
++};
++
++static const struct freq_tbl ftbl_apcs_alias0_clk_src[] = {
++	F(24000000, P_XO, 1, 0, 0),
++	F(864000000, P_APSS_PLL_EARLY, 1, 0, 0),
++	F(1056000000, P_APSS_PLL_EARLY, 1, 0, 0),
++	F(1200000000, P_APSS_PLL_EARLY, 1, 0, 0),
++	F(1320000000, P_APSS_PLL_EARLY, 1, 0, 0),
++	F(1440000000, P_APSS_PLL_EARLY, 1, 0, 0),
++	F(1608000000, P_APSS_PLL_EARLY, 1, 0, 0),
++	F(1800000000, P_APSS_PLL_EARLY, 1, 0, 0),
++	{ }
++};
++
++static struct clk_rcg2 apcs_alias0_clk_src = {
++	.cmd_rcgr = 0x0044,
++	.freq_tbl = ftbl_apcs_alias0_clk_src,
++	.hid_width = 5,
++	.parent_map = parents_apcs_alias0_clk_src_map,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "apcs_alias0_clk_src",
++		.parent_data = parents_apcs_alias0_clk_src,
++		.num_parents = 6,
++		.ops = &clk_rcg2_ops,
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_branch apcs_alias0_core_clk = {
++	.halt_reg = 0x004c,
++	.clkr = {
++		.enable_reg = 0x004c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "apcs_alias0_core_clk",
++			.parent_hws = (const struct clk_hw *[]){
++				&apcs_alias0_clk_src.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_regmap *apss_ipq6018_clks[] = {
++	[APSS_PLL_EARLY] = &apss_pll_early.clkr,
++	[APSS_PLL] = &apss_pll.clkr,
++	[APCS_ALIAS0_CLK_SRC] = &apcs_alias0_clk_src.clkr,
++	[APCS_ALIAS0_CORE_CLK] = &apcs_alias0_core_clk.clkr,
++};
++
++static const struct alpha_pll_config apss_pll_config = {
++	.l = 0x37,
++	.config_ctl_val = 0x04141200,
++	.config_ctl_hi_val = 0x0,
++	.early_output_mask = BIT(3),
++	.main_output_mask = BIT(0),
++};
++
++static const struct of_device_id apss_ipq6018_match_table[] = {
++	{ .compatible = "qcom,apss-ipq6018" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, apss_ipq6018_match_table);
++
++static const struct regmap_config apss_ipq6018_regmap_config = {
++	.reg_bits       = 32,
++	.reg_stride     = 4,
++	.val_bits       = 32,
++	.max_register   = 0x5ffc,
++	.fast_io        = true,
++};
++
++static const struct qcom_cc_desc apss_ipq6018_desc = {
++	.config = &apss_ipq6018_regmap_config,
++	.clks = apss_ipq6018_clks,
++	.num_clks = ARRAY_SIZE(apss_ipq6018_clks),
++};
++
++static int apss_ipq6018_probe(struct platform_device *pdev)
++{
++	struct regmap *regmap;
++
++	regmap = qcom_cc_map(pdev, &apss_ipq6018_desc);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	clk_alpha_pll_configure(&apss_pll_early, regmap, &apss_pll_config);
++
++	return qcom_cc_really_probe(pdev, &apss_ipq6018_desc, regmap);
++}
++
++static struct platform_driver apss_ipq6018_driver = {
++	.probe = apss_ipq6018_probe,
++	.driver = {
++		.name   = "qcom,apss-ipq6018",
++		.of_match_table = apss_ipq6018_match_table,
++	},
++};
++
++static int __init apss_ipq6018_init(void)
++{
++	return platform_driver_register(&apss_ipq6018_driver);
++}
++core_initcall(apss_ipq6018_init);
++
++static void __exit apss_ipq6018_exit(void)
++{
++	platform_driver_unregister(&apss_ipq6018_driver);
++}
++module_exit(apss_ipq6018_exit);
++
++MODULE_DESCRIPTION("QCA APSS IPQ6018 Driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.20.1
+2.7.4
 
