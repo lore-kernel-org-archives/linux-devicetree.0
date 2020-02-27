@@ -2,257 +2,220 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A397AC4BA3C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 03:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544B4C4BA24
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 04:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7684D2467A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 03:55:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jTEqC3T8"
+	by mail.kernel.org (Postfix) with ESMTP id 2D4C024685
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 04:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgB0DzQ (ORCPT
+        id S1728273AbgB0ECw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Feb 2020 22:55:16 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46461 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbgB0DzQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 22:55:16 -0500
-Received: by mail-qk1-f196.google.com with SMTP id u124so1814329qkh.13
-        for <devicetree@vger.kernel.org>; Wed, 26 Feb 2020 19:55:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e3jEhRMyMSDPIgF2MXY+K+s017u3bzyL9y4ZxjVIXsc=;
-        b=jTEqC3T8CcQJPeSiwHCc/YZwirx3XPnoflpFRSjQZBUnVCcesZxb6Gwb67LaRk8RcS
-         WyAXXTXseAYgek5tbQRPqpQFhcHSrp0NFfYlZm7O4c8Xa+VtKCgZrT6xhoOIxmMjDZFR
-         1XOX6y1G35XkkzUulYH7lfDHrO9FN3TQhEm3o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e3jEhRMyMSDPIgF2MXY+K+s017u3bzyL9y4ZxjVIXsc=;
-        b=Eh4lbD2BBrV2uiE5MiK6PRqoi8zR4cdo97jVYZRw7S42U9bd8Imyed2eokAiTNdf2P
-         wnmrNhK3WGfpQO4eM9f6hZpL381xLrggSqTYcVI3vXvCFdmZhzv6AZ/4Sd+eSMsA1xlB
-         oaMFADuD7YaXeeXuyYwdL9B1WxGBjgiJvstteTkiBEr9/4PjC4g0R14KTA4XcgprYgpA
-         dHEEA8rd53Z1pIxoaBF4m/iFgzFedYZgWSihHDTxZTX3kHo56ZjxzQ802RW0KFfY64SR
-         AK1CawuAcV2qxxRNHWJvv9uamzPp2bNTKg3EQUPZNPKzACu/qh03fDT8s8vHHDTlSeb3
-         mSfA==
-X-Gm-Message-State: APjAAAWW1j71krXz+V8ImQdakgk3vPbrbi1/hRQizSC/DI9lEbPt3Qej
-        JlMEdJoIKDxOf1YJws9l0b6/Ft+f9N3lM7dlA8ynTg==
-X-Google-Smtp-Source: APXvYqzq8jjaKKWzzTwUgKRVwAcuPnPzaoB4MtCOHKcEOOOAccafOg+X3EgaiSchf6kPph/ll1rJMnKFKvKFXXgpvME=
-X-Received: by 2002:a05:620a:1435:: with SMTP id k21mr2787955qkj.299.1582775713747;
- Wed, 26 Feb 2020 19:55:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20200107070154.1574-1-roger.lu@mediatek.com> <20200107070154.1574-2-roger.lu@mediatek.com>
- <20200108203829.GA18987@bogus> <CANMq1KBu-gFy701BgFcjEwyhV9GgCCU2mkT9c8LviOJKBF30UA@mail.gmail.com>
- <CAL_JsqLnVEhvAh_8DfGWRZa+MdPRpXc9sWEQ6-3HQAeUfvkOSg@mail.gmail.com> <1581406566.14120.46.camel@mtksdaap41>
-In-Reply-To: <1581406566.14120.46.camel@mtksdaap41>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 27 Feb 2020 11:55:02 +0800
-Message-ID: <CANMq1KBVs7ZucNu9pTxXGZ0__E6tyxd1+mm2Zui81G=xQNtShA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: soc: add mtk svs dt-bindings
-To:     Roger Lu <roger.lu@mediatek.com>
-Cc:     Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
-        =?UTF-8?B?SGVucnlDIENoZW4gKOmZs+W7uuixqik=?= 
-        <HenryC.Chen@mediatek.com>,
-        =?UTF-8?B?WVQgTGVlICjmnY7ku7Dlk7Ip?= <yt.lee@mediatek.com>,
-        =?UTF-8?B?WGlhb3FpbmcgTGl1ICjliJjmmZPluoYp?= 
-        <Xiaoqing.Liu@mediatek.com>,
-        =?UTF-8?B?Q2hhcmxlcyBZYW5nICjmpYrkuo7pgLIp?= 
-        <Charles.Yang@mediatek.com>,
-        =?UTF-8?B?QW5ndXMgTGluICjmnpfnkZvosaop?= <Angus.Lin@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nishanth Menon <nm@ti.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        James Liao <jamesjj.liao@mediatek.com>
+        Wed, 26 Feb 2020 23:02:52 -0500
+Received: from kernel.crashing.org ([76.164.61.194]:36468 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728252AbgB0ECw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Feb 2020 23:02:52 -0500
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01R41lA3022351
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 26 Feb 2020 22:01:51 -0600
+Message-ID: <e76edda178cd83c4aa5d0282c481425c34653f5e.camel@kernel.crashing.org>
+Subject: Re: [PATCH v4 1/7] usb: gadget: aspeed: support per-vhub usb
+ descriptors
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Date:   Thu, 27 Feb 2020 15:01:47 +1100
+In-Reply-To: <20200226230346.672-2-rentao.bupt@gmail.com>
+References: <20200226230346.672-1-rentao.bupt@gmail.com>
+         <20200226230346.672-2-rentao.bupt@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, 2020-02-26 at 15:03 -0800, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> This patch store vhub's standard usb descriptors in struct "ast_vhub"
+> so
+> it's more convenient to customize descriptors and potentially support
+> multiple vhub instances in the future.
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 
-On Tue, Feb 11, 2020 at 3:36 PM Roger Lu <roger.lu@mediatek.com> wrote:
->
-> Hi Rob & Nicolas,
->
-> Sorry for the late reply.
->
-> On Mon, 2020-01-13 at 23:50 +0800, Rob Herring wrote:
-> > On Mon, Jan 13, 2020 at 12:44 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
-> > >
-> > > On Thu, Jan 9, 2020 at 4:38 AM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > On Tue, Jan 07, 2020 at 03:01:52PM +0800, Roger Lu wrote:
-> > > > > Document the binding for enabling mtk svs on MediaTek SoC.
-> > > > >
-> > > > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> > > > > ---
-> > > > >  .../devicetree/bindings/power/mtk-svs.txt     | 76 +++++++++++++++++++
-> > > > >  1 file changed, 76 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> > > > > new file mode 100644
-> > > > > index 000000000000..9a3e81b9e1d2
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> > > > > @@ -0,0 +1,76 @@
-> > > > > +* Mediatek Smart Voltage Scaling (MTK SVS)
-> > > > > +
-> > > > > +This describes the device tree binding for the MTK SVS controller (bank)
-> > > > > +which helps provide the optimized CPU/GPU/CCI voltages. This device also
-> > > > > +needs thermal data to calculate thermal slope for accurately compensate
-> > > > > +the voltages when temperature change.
-> > > > > +
-> > > > > +Required properties:
-> > > > > +- compatible:
-> > > > > +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
-> > > > > +- reg: Address range of the MTK SVS controller.
-> > > > > +- interrupts: IRQ for the MTK SVS controller.
-> > > > > +- clocks, clock-names: Clocks needed for the svs hardware. required
-> > > > > +                       clocks are:
-> > > > > +                    "main": Main clock for svs controller to work.
-> > > > > +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
-> > > > > +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
-> > > > > +
-> > > > > +Subnodes:
-> > > > > +- svs-cpu-little: SVS bank device node of little CPU
-> > > > > +  compatible: "mediatek,mt8183-svs-cpu-little"
-> > > > > +  operating-points-v2: OPP table hooked by SVS little CPU bank.
-> > > > > +                    SVS will optimze this OPP table voltage part.
-> > > > > +  vcpu-little-supply: PMIC buck of little CPU
-> > > > > +- svs-cpu-big: SVS bank device node of big CPU
-> > > > > +  compatible: "mediatek,mt8183-svs-cpu-big"
-> > > > > +  operating-points-v2: OPP table hooked by SVS big CPU bank.
-> > > > > +                    SVS will optimze this OPP table voltage part.
-> > > > > +  vcpu-big-supply: PMIC buck of big CPU
-> > > > > +- svs-cci: SVS bank device node of CCI
-> > > > > +  compatible: "mediatek,mt8183-svs-cci"
-> > > > > +  operating-points-v2: OPP table hooked by SVS CCI bank.
-> > > > > +                    SVS will optimze this OPP table voltage part.
-> > > > > +  vcci-supply: PMIC buck of CCI
-> > > > > +- svs-gpu: SVS bank device node of GPU
-> > > > > +  compatible: "mediatek,mt8183-svs-gpu"
-> > > > > +  operating-points-v2: OPP table hooked by SVS GPU bank.
-> > > > > +                    SVS will optimze this OPP table voltage part.
-> > > > > +  vgpu-supply: PMIC buck of GPU
-> > > > > +
-> > > > > +Example:
-> > > > > +
-> > > > > +     svs: svs@1100b000 {
-> > > > > +             compatible = "mediatek,mt8183-svs";
-> > > > > +             reg = <0 0x1100b000 0 0x1000>;
-> > > > > +             interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
-> > > > > +             clocks = <&infracfg CLK_INFRA_THERM>;
-> > > > > +             clock-names = "main_clk";
-> > > > > +             nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
-> > > > > +             nvmem-cell-names = "svs-calibration-data", "calibration-data";
-> > > > > +
-> > > > > +             svs_cpu_little: svs-cpu-little {
-> > > > > +                     compatible = "mediatek,mt8183-svs-cpu-little";
-> > > > > +                     operating-points-v2 = <&cluster0_opp>;
-> > > > > +                     vcpu-little-supply = <&mt6358_vproc12_reg>;
-> > > > > +             };
-> > > >
-> > > > I don't think this is a good binding. This information already exists
-> > > > elsewhere in the DT, so your driver should just look in those nodes.
-> > > > For example the regulator can be in the cpu nodes or the OPP table
-> > > > itself.
-> > >
-> > > Roger, if that helps, without changing any other binding, on 8183,
-> > > basically you could have:
-> > >  - svs-cpu-little: Add a handle to &cpu0 and get the regulator/opp
-> > > table from it.
-> > >  - svs-cpu-big: Handle to &cpu4
-> >
-> > Why do you need those? Use the compatible of the cpus to determine big
-> > and little cores. Or there's the cpu capacity property that could be
-> > used instead.
-> >
-> > >  - svs-cci: Handle to &cci
-> >
-> > Is there more than 1 CCI? Just retrieve the node by the compatible.
-> > There's no need to have nodes that simply serve as a collection of
-> > data for some driver.
-> >
-> > >  - svs-gpu: Handle to &gpu (BTW, it is expected that SVS would only
-> > > apply to vgpu/mali regulator, and not vsram regulator?)
->
-> svs-gpu depends on vgpu power on for init (don't care vgpu_sram). After
-> svs-gpu init is done, it doesn't need vgpu power on anymore. (vgpu can
-> be turned off)
->
-> Please allows me to introduce more about what svs-gpu device needs.
-> 1. It needs gpu opp table from "gpu node" and gpu_core2 power-domains
-> from "gpu_core2 node". When svs-gpu has those resources, it turns on
-> gpu_core2 power-domain for svs-gpu-hw to have power (for calculating)
-> and svs-gpu-sw will update gpu opp table voltages' part.
-> 2. Therefore, if I retrieve gpu-related node from phandle or compatible,
-> it means svs-gpu device in driver needs to attach two different gpu
-> nodes for attaining gpu opp table and gpu_core2 power-domains. I think
-> this architecture of svs-gpu confuses maintainer why it attaches two
-> different nodes instead of having a device to describe what it needs.
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+> ---
+>  No change in v2/v3/v4:
+>    - the patch is added to the patch series since v4.
+> 
+>  drivers/usb/gadget/udc/aspeed-vhub/hub.c  | 43 ++++++++++++++++-----
+> --
+>  drivers/usb/gadget/udc/aspeed-vhub/vhub.h | 15 ++++++++
+>  2 files changed, 46 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/hub.c
+> b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
+> index 19b3517e04c0..9c3027306b15 100644
+> --- a/drivers/usb/gadget/udc/aspeed-vhub/hub.c
+> +++ b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
+> @@ -93,11 +93,7 @@ static void ast_vhub_patch_dev_desc_usb1(struct
+> usb_device_descriptor *desc)
+>  				 USB_DT_INTERFACE_SIZE + \
+>  				 USB_DT_ENDPOINT_SIZE)
+>  
+> -static const struct ast_vhub_full_cdesc {
+> -	struct usb_config_descriptor	cfg;
+> -	struct usb_interface_descriptor intf;
+> -	struct usb_endpoint_descriptor	ep;
+> -} __attribute__ ((packed)) ast_vhub_conf_desc = {
+> +static const struct ast_vhub_full_cdesc ast_vhub_conf_desc = {
+>  	.cfg = {
+>  		.bLength		= USB_DT_CONFIG_SIZE,
+>  		.bDescriptorType	= USB_DT_CONFIG,
+> @@ -266,6 +262,7 @@ static int ast_vhub_rep_desc(struct ast_vhub_ep
+> *ep,
+>  			     u8 desc_type, u16 len)
+>  {
+>  	size_t dsize;
+> +	struct ast_vhub *vhub = ep->vhub;
+>  
+>  	EPDBG(ep, "GET_DESCRIPTOR(type:%d)\n", desc_type);
+>  
+> @@ -281,20 +278,20 @@ static int ast_vhub_rep_desc(struct ast_vhub_ep
+> *ep,
+>  	switch(desc_type) {
+>  	case USB_DT_DEVICE:
+>  		dsize = USB_DT_DEVICE_SIZE;
+> -		memcpy(ep->buf, &ast_vhub_dev_desc, dsize);
+> -		BUILD_BUG_ON(dsize > sizeof(ast_vhub_dev_desc));
+> +		memcpy(ep->buf, &vhub->vhub_dev_desc, dsize);
+> +		BUILD_BUG_ON(dsize > sizeof(vhub->vhub_dev_desc));
+>  		BUILD_BUG_ON(USB_DT_DEVICE_SIZE >=
+> AST_VHUB_EP0_MAX_PACKET);
+>  		break;
+>  	case USB_DT_CONFIG:
+>  		dsize = AST_VHUB_CONF_DESC_SIZE;
+> -		memcpy(ep->buf, &ast_vhub_conf_desc, dsize);
+> -		BUILD_BUG_ON(dsize > sizeof(ast_vhub_conf_desc));
+> +		memcpy(ep->buf, &vhub->vhub_conf_desc, dsize);
+> +		BUILD_BUG_ON(dsize > sizeof(vhub->vhub_conf_desc));
+>  		BUILD_BUG_ON(AST_VHUB_CONF_DESC_SIZE >=
+> AST_VHUB_EP0_MAX_PACKET);
+>  		break;
+>  	case USB_DT_HUB:
+>  		dsize = AST_VHUB_HUB_DESC_SIZE;
+> -		memcpy(ep->buf, &ast_vhub_hub_desc, dsize);
+> -		BUILD_BUG_ON(dsize > sizeof(ast_vhub_hub_desc));
+> +		memcpy(ep->buf, &vhub->vhub_hub_desc, dsize);
+> +		BUILD_BUG_ON(dsize > sizeof(vhub->vhub_hub_desc));
+>  		BUILD_BUG_ON(AST_VHUB_HUB_DESC_SIZE >=
+> AST_VHUB_EP0_MAX_PACKET);
+>  		break;
+>  	default:
+> @@ -317,7 +314,8 @@ static int ast_vhub_rep_string(struct ast_vhub_ep
+> *ep,
+>  			       u8 string_id, u16 lang_id,
+>  			       u16 len)
+>  {
+> -	int rc = usb_gadget_get_string (&ast_vhub_strings, string_id,
+> ep->buf);
+> +	int rc = usb_gadget_get_string(&ep->vhub->vhub_str_desc,
+> +					string_id, ep->buf);
+>  
+>  	/*
+>  	 * This should never happen unless we put too big strings in
+> @@ -834,9 +832,30 @@ void ast_vhub_hub_reset(struct ast_vhub *vhub)
+>  	writel(0, vhub->regs + AST_VHUB_EP1_STS_CHG);
+>  }
+>  
+> +static void ast_vhub_init_desc(struct ast_vhub *vhub)
+> +{
+> +	/* Initialize vhub Device Descriptor. */
+> +	memcpy(&vhub->vhub_dev_desc, &ast_vhub_dev_desc,
+> +		sizeof(vhub->vhub_dev_desc));
+> +
+> +	/* Initialize vhub Configuration Descriptor. */
+> +	memcpy(&vhub->vhub_conf_desc, &ast_vhub_conf_desc,
+> +		sizeof(vhub->vhub_conf_desc));
+> +
+> +	/* Initialize vhub Hub Descriptor. */
+> +	memcpy(&vhub->vhub_hub_desc, &ast_vhub_hub_desc,
+> +		sizeof(vhub->vhub_hub_desc));
+> +
+> +	/* Initialize vhub String Descriptors. */
+> +	memcpy(&vhub->vhub_str_desc, &ast_vhub_strings,
+> +		sizeof(vhub->vhub_str_desc));
+> +}
+> +
+>  void ast_vhub_init_hub(struct ast_vhub *vhub)
+>  {
+>  	vhub->speed = USB_SPEED_UNKNOWN;
+>  	INIT_WORK(&vhub->wake_work, ast_vhub_wake_work);
+> +
+> +	ast_vhub_init_desc(vhub);
+>  }
+>  
+> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> index 761919e220d3..191f9fae7420 100644
+> --- a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> +++ b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> @@ -2,6 +2,9 @@
+>  #ifndef __ASPEED_VHUB_H
+>  #define __ASPEED_VHUB_H
+>  
+> +#include <linux/usb.h>
+> +#include <linux/usb/ch11.h>
+> +
+>  /*****************************
+>   *                           *
+>   * VHUB register definitions *
+> @@ -373,6 +376,12 @@ struct ast_vhub_port {
+>  	struct ast_vhub_dev	dev;
+>  };
+>  
+> +struct ast_vhub_full_cdesc {
+> +	struct usb_config_descriptor	cfg;
+> +	struct usb_interface_descriptor intf;
+> +	struct usb_endpoint_descriptor	ep;
+> +} __packed;
+> +
+>  /* Global vhub structure */
+>  struct ast_vhub {
+>  	struct platform_device		*pdev;
+> @@ -409,6 +418,12 @@ struct ast_vhub {
+>  
+>  	/* Upstream bus speed captured at bus reset */
+>  	unsigned int			speed;
+> +
+> +	/* Standard USB Descriptors of the vhub. */
+> +	struct usb_device_descriptor	vhub_dev_desc;
+> +	struct ast_vhub_full_cdesc	vhub_conf_desc;
+> +	struct usb_hub_descriptor	vhub_hub_desc;
+> +	struct usb_gadget_strings	vhub_str_desc;
+>  };
+>  
+>  /* Standard request handlers result codes */
 
-> 3. Is it acceptable to have a Linux device attaching two different
-> nodes? If yes, could you guide us some APIs for one device to attach two
-> nodes? I don't know how to implement it. Thanks.
-
-I'm also trying to understand how that would work. The way the code
-works now (https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/power/avs/mtk_svs.c#1388):
-
-The SVS driver creates a platform device for each sub-node, find the
-sub-node that matches the compatible (pdev->dev.of_node):
-for_each_child_of_node(svs->dev->of_node, np) {
-  if (of_device_is_compatible(np, svsb->of_compatible)) {
-    pdev->dev.of_node = np;
-    break;
-  }
-}
-
-Then, thanks to that, the 2 functions dev_pm_opp_of_add_table and
-devm_regulator_get_optional "just work", as the get the opp table and
-regulator from the device tree node.
-
-So what you suggest is basically something like this:
-pdev->dev.of_node = of_find_compatible_node(NULL, NULL, "mediatek,mt8183-cci");
-
-I came up with a (very dirty) prototype here:
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2076718
-... and it doesn't really work
-(https://gist.github.com/drinkcat/61e50eedbdc301d418c9cee3ee5b6b06, I
-think the kernel is probing more than it should, like the DMA mask
-errors should not happen...)
-
-Before I dig further... I have the same concern as Roger, is it ok to
-have 2 devices bound to the same device tree node/compatible? My
-understanding was also that it's not.
-
-> > >
-> > > I'm not too sure how we'd fetch the right regulator name, however (for
-> > > the first 3 the name is "proc", for the last one it's "mali"), maybe
-> > > add a regulator-name list in the DT?
-> >
-> > To put this another way, write an SoC specific driver that understands
-> > to some extent what exists in the SoC (and DT). I doubt something like
-> > this is going to be generic across more than a few SoCs at most.
->
-> >
-> > Rob
->
