@@ -2,372 +2,282 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761D0C4BA3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FB7C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9BE246A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:07:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rn5hEcoh"
+	by mail.kernel.org (Postfix) with ESMTP id A92CC2468F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgB0LHn (ORCPT
+        id S1728794AbgB0LMt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:07:43 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34194 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgB0LHm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 06:07:42 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z15so2814641wrl.1
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 03:07:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I912AzBiNdcRXF6ljE1ucbGao0BRLHb9fyeKtWL0lk0=;
-        b=Rn5hEcohMHW3XxF1Xx5eBjIe6rPbPfl6GWYrfRj1L0+bZ4lJPq0CvZs0wAWZV8SjGm
-         MeAlazR9o5FgfvuJkrv+6rH02pBGTHNkFFwTRJNpxFJq7xhzLuYCWDwhz7SDVmT30emT
-         fzVZoWTHFsqLVxN8HmzyYWPB+raqVusghcfHE/mpwapaPq7m4OU12Mh+qcEzsSSgIWU7
-         z4ERisvkTrSxHoDGd8EsYUf+2dQXMcBEwS1OUpUE/8scNU3OWMU5I/mz5bb3X8/nRSTI
-         OPXjcjG5CqdUAxEq44zc9wEtX37WdvE1FUlBEPzBppliKwTCG5L4r7iMO1or2E3+cgSP
-         hycw==
+        Thu, 27 Feb 2020 06:12:49 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40289 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbgB0LMs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 06:12:48 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a142so2885183oii.7;
+        Thu, 27 Feb 2020 03:12:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=I912AzBiNdcRXF6ljE1ucbGao0BRLHb9fyeKtWL0lk0=;
-        b=bv40prVcY8Awmjqa46coiPtEAI68KST2Srcsa+4gEW+z1XmjnGWFVw92pnXmxzSl7f
-         JYYA+Q5OEuR74/4Sw1cRZMY8mbdEPSROWzvcZFimtkuibYpDKA6UOArEyLRzXLBwjd6/
-         +x/6Y7eM0HU/jEvGnRzUa7UkSZu7qBqTkcJG0TaWe9Ti32YvgAKH+Sp3OU8oWV3W7efR
-         SzOYC5eS6g7s9baUv2o6o6XbN0ApMm46jKC5ojj4ivaB4SuZGCLimZ5DQ2H9xIecP4Jv
-         eCbRqzVvXzuVCb6GRa52HiR2OYwGb0+bsc+JXVY6rxKCrF87qZzBX4ynk02sqqFv25Ka
-         rsvg==
-X-Gm-Message-State: APjAAAXxunyHRTuyXofITWfUNSrOjApO08n0DJxnnwbUDDv8PcVjMmGT
-        HTuLeKfiBAtooueMbAQxMhSc5w==
-X-Google-Smtp-Source: APXvYqwKB8qZ91kxn6OHpZrJULRLcR4/hMsvTmkT8gru20L0pspAsp59MbUR27smLN/AswZnE31IcQ==
-X-Received: by 2002:a5d:66c6:: with SMTP id k6mr4338833wrw.343.1582801659212;
-        Thu, 27 Feb 2020 03:07:39 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:d916:1723:c1c1:22d? ([2a01:e34:ed2f:f020:d916:1723:c1c1:22d])
-        by smtp.googlemail.com with ESMTPSA id j66sm7478129wmb.21.2020.02.27.03.07.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 03:07:38 -0800 (PST)
-Subject: Re: [PATCH RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM
- thermal monitoring unit
-To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        shengjiu.wang@nxp.com, peng.fan@nxp.com, ping.bai@nxp.com,
-        jun.li@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
-        vkoul@kernel.org, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1582186646-22096-1-git-send-email-Anson.Huang@nxp.com>
- <1582186646-22096-2-git-send-email-Anson.Huang@nxp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <f8dfdb39-14e5-4ee2-927a-fecbcd66c71e@linaro.org>
-Date:   Thu, 27 Feb 2020 12:07:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BRZl22qTx+n0iXrkM4uPLZmiGijPZu3bo/mxnerKIoY=;
+        b=foY6N/WtfbG3ju7wmgF6gkWQnGfByIF8s3affJFIAwB5LfaFZN9TgsqKbQ+fz8YmUG
+         qOAJh2MOYBuCCmssD+q2+psaQ30Qoj1sTwHRZEsQGQjbvpTMnRICSE2HM2oe+OTtp9y4
+         kEeHSNdwvSVpXuI6c5umuAQidwjpCbmTHogmonfygLmPT7YtaFBrlx0wG6WwU5sVmgsn
+         HYsG3HOXxiOMlbj9nf5DgX+fmI4AlSOUFervTJQjahg9pwwZl0oC8Spto/aT+fK0yz58
+         cHQ3l/YYWLn/aPkGnwNlzasYlQiDTLYNYt1QgE+8ZVAAO+WjCf7VqQEiONKR/mN6jvlj
+         CfGQ==
+X-Gm-Message-State: APjAAAWl2JeTSa0u+0aYzXWjpE1TcCnyntT4BGFrKRwGXbSyuqRRrwkU
+        8aZ3OPgr9nyKeguAL8VEB3kEOiMDvjFhZqNOnRc=
+X-Google-Smtp-Source: APXvYqx8JkPWGFyKwQUC6fADauIojDD6kegNTwPJ5zzR2R+qSvbkUfWUOMyceK8YtlC6zWYKWbJr1kxzVs8QLn2+vbQ=
+X-Received: by 2002:aca:b4c3:: with SMTP id d186mr2732342oif.131.1582801967331;
+ Thu, 27 Feb 2020 03:12:47 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1582186646-22096-2-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200224152640.1318-1-geert+renesas@glider.be> <158265013473.177367.4512247165308399202@swboyd.mtv.corp.google.com>
+In-Reply-To: <158265013473.177367.4512247165308399202@swboyd.mtv.corp.google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 27 Feb 2020 12:12:36 +0100
+Message-ID: <CAMuHMdUDjWKYaQ_MN+AvYg8vimZKMcck3SdHUSg8tPCCAEieJQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clock: renesas: cpg-mssr: Convert to json-schema
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20/02/2020 09:17, Anson Huang wrote:
-> i.MX8MM has a thermal monitoring unit(TMU) inside, it ONLY has one
-> sensor for CPU, add support for reading immediate temperature of
-> this sensor.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> This patch is base on patch series: https://lkml.org/lkml/2020/2/19/1258
-> ---
->  drivers/thermal/Kconfig          |  10 +++
->  drivers/thermal/Makefile         |   1 +
->  drivers/thermal/imx8mm_thermal.c | 134 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 145 insertions(+)
->  create mode 100644 drivers/thermal/imx8mm_thermal.c
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index d1cb8dc..972b169 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -262,6 +262,16 @@ config IMX_SC_THERMAL
->  	  sensor. It supports one critical trip point and one
->  	  passive trip point for each thermal sensor.
->  
-> +config IMX8MM_THERMAL
-> +	tristate "Temperature sensor driver for Freescale i.MX8MM SoC"
-> +	depends on ARCH_MXC
-> +	depends on OF
-> +	help
-> +	  Support for Thermal Monitoring Unit (TMU) found on Freescale i.MX8MM SoC.
-> +	  It supports one critical trip point and one passive trip point. The
-> +	  cpufreq is used as the cooling device to throttle CPUs when the passive
-> +	  trip is crossed.
-> +
->  config MAX77620_THERMAL
->  	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
->  	depends on MFD_MAX77620
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index a11a6d8..120a05e 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -44,6 +44,7 @@ obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
->  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
->  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
->  obj-$(CONFIG_IMX_SC_THERMAL)	+= imx_sc_thermal.o
-> +obj-$(CONFIG_IMX8MM_THERMAL)	+= imx8mm_thermal.o
->  obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
->  obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
->  obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
-> diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
-> new file mode 100644
-> index 0000000..04f8a8f
-> --- /dev/null
-> +++ b/drivers/thermal/imx8mm_thermal.c
-> @@ -0,0 +1,134 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 NXP.
+Hi Stephen,
 
-Copyright (c) 2020, NXP Semiconductors
+Thanks for your comments!
 
-Authors: Anson Huang <Anson.Huang@nxp.com>
+On Tue, Feb 25, 2020 at 6:02 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> Quoting Geert Uytterhoeven (2020-02-24 07:26:40)
+> > diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+> > new file mode 100644
+> > index 0000000000000000..dfbd1933f1bc56de
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+> > @@ -0,0 +1,204 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/clock/renesas,cpg-mssr.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: Renesas Clock Pulse Generator / Module Standby and Software Reset
+> > +
+> > +maintainers:
+> > +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> > +
+> > +description: |
+> > +  On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
+> > +  and MSSR (Module Standby and Software Reset) blocks are intimately connected,
+> > +  and share the same register block.
+> > +
+> > +  They provide the following functionalities:
+> > +    - The CPG block generates various core clocks,
+> > +    - The MSSR block provides two functions:
+> > +        1. Module Standby, providing a Clock Domain to control the clock supply
+> > +           to individual SoC devices,
+> > +        2. Reset Control, to perform a software reset of individual SoC devices.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - renesas,r7s9210-cpg-mssr  # RZ/A2
+> > +      - renesas,r8a7743-cpg-mssr  # RZ/G1M
+> > +      - renesas,r8a7744-cpg-mssr  # RZ/G1N
+> > +      - renesas,r8a7745-cpg-mssr  # RZ/G1E
+> > +      - renesas,r8a77470-cpg-mssr # RZ/G1C
+> > +      - renesas,r8a774a1-cpg-mssr # RZ/G2M
+> > +      - renesas,r8a774b1-cpg-mssr # RZ/G2N
+> > +      - renesas,r8a774c0-cpg-mssr # RZ/G2E
+> > +      - renesas,r8a7790-cpg-mssr  # R-Car H2
+> > +      - renesas,r8a7791-cpg-mssr  # R-Car M2-W
+> > +      - renesas,r8a7792-cpg-mssr  # R-Car V2H
+> > +      - renesas,r8a7793-cpg-mssr  # R-Car M2-N
+> > +      - renesas,r8a7794-cpg-mssr  # R-Car E2
+> > +      - renesas,r8a7795-cpg-mssr  # R-Car H3
+> > +      - renesas,r8a7796-cpg-mssr  # R-Car M3-W
+> > +      - renesas,r8a77961-cpg-mssr # R-Car M3-W+
+> > +      - renesas,r8a77965-cpg-mssr # R-Car M3-N
+> > +      - renesas,r8a77970-cpg-mssr # R-Car V3M
+> > +      - renesas,r8a77980-cpg-mssr # R-Car V3H
+> > +      - renesas,r8a77990-cpg-mssr # R-Car E3
+> > +      - renesas,r8a77995-cpg-mssr # R-Car D3
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    maxItems: 2
+>
+> Do we need this here and also below? Why can't it just be below with the
+> more specific constraints?
 
-??
+With the above removed:
 
-> + *
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/thermal.h>
-> +
-> +#include "thermal_core.h"
-> +
-> +#define TER			0x0	/* TMU enable */
-> +#define TRITSR			0x20	/* TMU immediate temp */
-> +
-> +#define TER_EN			BIT(31)
-> +#define TRITSR_VAL_MASK		0xff
-> +
-> +#define TEMP_LOW_LIMIT		10
-> +
-> +struct imx8mm_tmu {
-> +	struct thermal_zone_device *tzd;
-> +	void __iomem *base;
-> +	struct clk *clk;
-> +};
-> +
-> +static int tmu_get_temp(void *data, int *temp)
-> +{
-> +	struct imx8mm_tmu *tmu = data;
-> +	u32 val;
-> +
-> +	/* the temp sensor need about 1ms to finish the measurement */
-> +	usleep_range(1000, 2000);
+    Documentation/devicetree/bindings/clock/renesas,cpg-mssr.example.dt.yaml:
+clock-controller@e6150000: 'clock-names', 'clocks' do not match any of
+the regexes: 'pinctrl-[0-9]+'
 
-Why do yo need to force a delay here? If the sensor can not be read more
-than one time every 1ms, then specify that in the DT switching the
-polling to the right value, no?
+while the "if" below overriding minItems did trigger, as removing entries from
+clocks/clock-names in the example causes more errors.
 
-> +	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
-> +	if (val < TEMP_LOW_LIMIT)
-> +		return -EAGAIN;>
-> +	*temp = val * 1000;
-> +	return 0;
-> +}
-> +
-> +static struct thermal_zone_of_device_ops tmu_tz_ops = {
-> +	.get_temp = tmu_get_temp,
-> +};
-> +
-> +static int imx8mm_tmu_probe(struct platform_device *pdev)
-> +{
-> +	struct imx8mm_tmu *tmu;
-> +	u32 val;
-> +	int ret;
-> +
-> +	tmu = devm_kzalloc(&pdev->dev, sizeof(struct imx8mm_tmu), GFP_KERNEL);
-> +	if (!tmu)
-> +		return -ENOMEM;
-> +
-> +	tmu->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(tmu->base))
-> +		return PTR_ERR(tmu->base);
-> +
-> +	tmu->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(tmu->clk)) {
-> +		ret = PTR_ERR(tmu->clk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev,
-> +				"failed to get tmu clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(tmu->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable tmu clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	tmu->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0,
-> +							tmu, &tmu_tz_ops);
-> +	if (IS_ERR(tmu->tzd)) {
-> +		dev_err(&pdev->dev,
-> +			"failed to register thermal zone sensor: %d\n", ret);
-> +		return PTR_ERR(tmu->tzd);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, tmu);
-> +
-> +	/* enable the monitor */
-> +	val = readl_relaxed(tmu->base + TER);
-> +	val |= TER_EN;
-> +	writel_relaxed(val, tmu->base + TER);
+So it seems all properties must be listed in the main, unconditional,
+properties section at the top.
 
-A side note perhaps you can wrap:
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          items:
+> > +            enum:
+> > +              - renesas,r7s9210-cpg-mssr
+> > +              - renesas,r8a774c0-cpg-mssr
+> > +              - renesas,r8a7792-cpg-mssr
+> > +              - renesas,r8a77990-cpg-mssr
+> > +              - renesas,r8a77995-cpg-mssr
+> > +
+> > +    then:
+> > +      properties:
+> > +        clock:
+> > +          maxItems: 1
+> > +        clock-names:
+> > +          maxItems: 1
+> > +          items:
+> > +            - const: extal
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - renesas,r8a7743-cpg-mssr
+> > +              - renesas,r8a7744-cpg-mssr
+> > +              - renesas,r8a7745-cpg-mssr
+> > +              - renesas,r8a77470-cpg-mssr
+> > +              - renesas,r8a7790-cpg-mssr
+> > +              - renesas,r8a7791-cpg-mssr
+> > +              - renesas,r8a7793-cpg-mssr
+> > +              - renesas,r8a7794-cpg-mssr
+> > +
+> > +    then:
+> > +      properties:
+> > +        clock:
+> > +          minItems: 2
+> > +        clock-names:
+> > +          minItems: 2
+> > +          items:
+> > +            - const: extal
+> > +            - const: usb_extal
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          items:
+> > +            enum:
+> > +              - renesas,r8a774a1-cpg-mssr
+> > +              - renesas,r8a774b1-cpg-mssr
+> > +              - renesas,r8a7795-cpg-mssr
+> > +              - renesas,r8a7796-cpg-mssr
+> > +              - renesas,r8a77961-cpg-mssr
+> > +              - renesas,r8a77965-cpg-mssr
+> > +              - renesas,r8a77970-cpg-mssr
+> > +              - renesas,r8a77980-cpg-mssr
+> > +
+> > +    then:
+> > +      properties:
+> > +        clock:
+> > +          minItems: 2
+> > +        clock-names:
+> > +          minItems: 2
+> > +          items:
+> > +            - const: extal
+> > +            - const: extalr
+> > +
+> > +  - if:
+> > +      not:
+> > +        properties:
+> > +          compatible:
+> > +            items:
+> > +              enum:
+> > +                - renesas,r7s9210-cpg-mssr
+> > +    then:
+> > +      required:
+> > +        - '#reset-cells'
+>
+> It may make sense to split this binding up into multiple bindings so
+> that we don't have deeply nested if/else/then.
 
-static int imx8mm_start(struct imx8mm_tmu *tmu)
-{
-	clk_prepare_enable()
-	val = readl_relaxed(tmu->base + TER);
-	val |= TER_EN;
-	writel_relaxed(val, tmu->base + TER);
-}
+Note that the above is not a nested if, but the yaml-equivalent of a switch()
+statement.
 
-and
+If this is to be split, how to split it?
+Each if contains SoCs from multiple families, and each family of SoCs is
+split across multiple ifs.
 
-static void imx8mm_stop(struct imx8mm_tmu *tmu)
-{
-	val = readl_relaxed(tmu->base + TER);
-	val &= ~TER_EN;
-	writel_relaxed(val, tmu->base + TER);
-	clk_disable_unprepare(tmu->clk);
-}
+> > +examples:
+> > +  - |
+> > +    // CPG device node:
+> > +
+> > +    cpg: clock-controller@e6150000 {
+> > +            compatible = "renesas,r8a7795-cpg-mssr";
+> > +            reg = <0xe6150000 0x1000>;
+> > +            clocks = <&extal_clk>, <&extalr_clk>;
+> > +            clock-names = "extal", "extalr";
+> > +            #clock-cells = <2>;
+> > +            #power-domain-cells = <0>;
+> > +            #reset-cells = <1>;
+> > +    };
+> > +
+> > +  - |
+> > +    // CPG/MSSR Clock Domain member device node:
+> > +    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    scif2: serial@e6e88000 {
+> > +            compatible = "renesas,scif-r8a7795", "renesas,rcar-gen3-scif",
+> > +                         "renesas,scif";
+> > +            reg = <0xe6e88000 64>;
+> > +            interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+> > +            clocks = <&cpg CPG_MOD 310>, <&cpg CPG_CORE R8A7795_CLK_S3D1>,
+> > +                     <&scif_clk>;
+> > +            clock-names = "fck";
+> > +            dmas = <&dmac1 0x13>, <&dmac1 0x12>, <&dmac2 0x13>, <&dmac2 0x12>;
+> > +            dma-names = "tx", "rx", "tx", "rx";
+> > +            power-domains = <&cpg>;
+> > +            resets = <&cpg 310>;
+> > +    };
+>
+> I'm not sure we need this in the example.
 
-So the suspend/resume callbacks can call them directly if you decide to
-add them.
+OK, the second example can be removed.
 
-> +	return 0;
-> +}
-> +
-> +static int imx8mm_tmu_remove(struct platform_device *pdev)
-> +{
-> +	struct imx8mm_tmu *tmu = platform_get_drvdata(pdev);
-> +	u32 val;
-> +
-> +	/* disable TMU */
-> +	val = readl_relaxed(tmu->base + TER);
-> +	val &= ~TER_EN;
-> +	writel_relaxed(val, tmu->base + TER);
-> +
-> +	clk_disable_unprepare(tmu->clk);
-> +	platform_set_drvdata(pdev, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id imx8mm_tmu_table[] = {
-> +	{ .compatible = "fsl,imx8mm-tmu", },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver imx8mm_tmu = {
-> +	.driver = {
-> +		.name	= "i.mx8mm_thermal",
-> +		.of_match_table = imx8mm_tmu_table,
-> +	},
-> +	.probe = imx8mm_tmu_probe,
-> +	.remove = imx8mm_tmu_remove,
-> +};
-> +module_platform_driver(imx8mm_tmu);
-> +
-> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-> +MODULE_DESCRIPTION("i.MX8MM Thermal Monitor Unit driver");
-> +MODULE_LICENSE("GPL v2");
-> 
+Gr{oetje,eeting}s,
 
+                        Geert
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
