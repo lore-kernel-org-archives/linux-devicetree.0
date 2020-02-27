@@ -2,245 +2,175 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37B0C3F2C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6D3C3F2C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA1C246A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:05:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582841111;
-	bh=0ihjnXhr5rAzfNmh4KEWjS21hSY9s9S2m9nhLlMYXeU=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=CfqMX6dJCsrlCv2BhuqSgj+m8gA2Z4WlHMRL8kmfFH1XGLaTt4OoQvtC7z0dw5cn1
-	 b5A9qbdvXpi015lSngP8w9PPN9sS9vfNUtwKo2cgzuuh2ON3+mF/8CHzjh9MCBHcFT
-	 tmQhC/YL0gypQkTcgakJxQvDwqPPM0VLSwdP5su8=
+	by mail.kernel.org (Postfix) with ESMTP id 6564824677
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:07:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mo854CQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgB0WFL (ORCPT
+        id S1729965AbgB0WH5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:05:11 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46516 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729501AbgB0WFL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:05:11 -0500
-Received: by mail-ot1-f68.google.com with SMTP id g96so672730otb.13;
-        Thu, 27 Feb 2020 14:05:10 -0800 (PST)
+        Thu, 27 Feb 2020 17:07:57 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39095 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729988AbgB0WH4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:07:56 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j15so386110pgm.6
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 14:07:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=TCgFgmnmVNoNLpKm+CzEz0ezwvXIfKf3HTcMqbhXQxI=;
+        b=Mo854CQy+qdEmlCyfOZBHwhAwruPIZeiGuFjrn4Yt8mri6b6FkhTr9oCotMZN3I1cr
+         EiJFlJhh+Uflhc6D9hlqxqnrAKtWPSz/qRfgKCs5EqKjoNCSM/KNUmrhUEzuemeC92bq
+         1P98mavtoTdWY8ga/VSSD2XNBc7zvGMC+ll7E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5LDNhNs7r6soPU3FC796GU50umB+K7uQ7Dt/MTOuohM=;
-        b=cDmp48yucSO/eKm3wLSXPyHpa9hv7ZCs0xp76Oc4wm8d6MnTbi/yyr+l4NNVXDRTjN
-         4OtZ1x0lMPSBgebTlc6BVCodDQowAXGPzoQoECzUQqee40omoNWy/dYe+64gz1xekH9c
-         j5eOsX+IjfDjRfYLDJbS+OKzceiVTw98s3zZdLKOfQjdv+T3f1qT7qOADBvR+nuyfRqU
-         qngUCaQzudvSXsxxB8bmZxjwPmpmQh+TxZ+YjxfqSdGLQHN10/cYuEvyXsFu/tX8H8rL
-         uihlnxRAdJzIv7xwIStNQKXal8yXJ5I9DYahBzN3GbK4DRwKdzysfelox8t0IEqWt2HI
-         DOgQ==
-X-Gm-Message-State: APjAAAXCzig/Rkx6e3DseIkKMUJnsO8xnF55UES/iJACTQbTjCJfXe9d
-        WnwJI72IsfOxcBmGl9c+ig==
-X-Google-Smtp-Source: APXvYqz483UTkmhXETzVPut22diHPjpIUjyvi6kkf0SgJXjG53JFOHWMPBWFSUslFGRMSY5ZATtrVQ==
-X-Received: by 2002:a9d:6e02:: with SMTP id e2mr876041otr.194.1582841109953;
-        Thu, 27 Feb 2020 14:05:09 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id x17sm1291122oia.0.2020.02.27.14.05.08
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=TCgFgmnmVNoNLpKm+CzEz0ezwvXIfKf3HTcMqbhXQxI=;
+        b=N5Ka+htfRBh/6atvMpW9LhUiG5eYD/BI2kwiKhyCt5FVyPBPAcHp3eFCSP/platZIi
+         f0KXGp5TEWMnoxKwh0ZGSOj/70T9fu+BQlVWvI3muAYPjCZl6P8457EtQaRJyLZAWGxt
+         x9VJMvKnjJ7pUaj24o+xi7ff4d5t3kDiNHEqjFOqa5srUVefkWu981opKT3gCi6ZWfwY
+         FvSVonNzI7Lohth0mngRvi6nhogrVcLrgGTA3yV6MZ18KibRwvoPFVbQRtIdj0I25NMM
+         icv50pYWd+eb/lKqPSArlw18pNkQKdV9SsWOXQzzBdMj/y2MK9JE4dK27T/4LdwcHQdZ
+         tIzQ==
+X-Gm-Message-State: APjAAAXG2/lutHCYdUblGN4ynen8UnW5Y8vExbt3n930xFFvlK69Zb5/
+        Tt6r++1la2O7iQL1O9HxTx0euA==
+X-Google-Smtp-Source: APXvYqw/tQi7tCabfCC+1nJEE/UWsXDGZsSLQlhSvUhM1EvK50NmXr0EwYj9QWrNPetplUxgNhVUqw==
+X-Received: by 2002:a65:63d1:: with SMTP id n17mr1285707pgv.298.1582841274953;
+        Thu, 27 Feb 2020 14:07:54 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id a18sm8583066pfl.138.2020.02.27.14.07.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 14:05:09 -0800 (PST)
-Received: (nullmailer pid 1161 invoked by uid 1000);
-        Thu, 27 Feb 2020 22:05:08 -0000
-Date:   Thu, 27 Feb 2020 16:05:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Robert Richter <rric@kernel.org>, soc@kernel.org,
-        Jon Loeliger <jdl@jdl.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v2 06/13] dt-bindings: sata: Convert Calxeda SATA
- controller to json-schema
-Message-ID: <20200227220508.GE26010@bogus>
-References: <20200227182210.89512-1-andre.przywara@arm.com>
- <20200227182210.89512-7-andre.przywara@arm.com>
+        Thu, 27 Feb 2020 14:07:54 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227182210.89512-7-andre.przywara@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200227163825.GB18240@kuha.fi.intel.com>
+References: <20200220003102.204480-1-pmalani@chromium.org> <20200220003102.204480-2-pmalani@chromium.org> <158279287307.177367.4599344664477592900@swboyd.mtv.corp.google.com> <20200227163825.GB18240@kuha.fi.intel.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: Add cros-ec Type C port driver
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
+        bleung@chromium.org, devicetree@vger.kernel.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Date:   Thu, 27 Feb 2020 14:07:53 -0800
+Message-ID: <158284127336.4688.623067902277673206@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 06:22:03PM +0000, Andre Przywara wrote:
-> Convert the Calxeda Highbank SATA controller binding to DT schema format
-> using json-schema.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> ---
->  .../devicetree/bindings/ata/sata_highbank.txt | 44 ---------
->  .../bindings/ata/sata_highbank.yaml           | 95 +++++++++++++++++++
->  2 files changed, 95 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
->  create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-> deleted file mode 100644
-> index aa83407cb7a4..000000000000
-> --- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
-> +++ /dev/null
-> @@ -1,44 +0,0 @@
-> -* Calxeda AHCI SATA Controller
-> -
-> -SATA nodes are defined to describe on-chip Serial ATA controllers.
-> -The Calxeda SATA controller mostly conforms to the AHCI interface
-> -with some special extensions to add functionality.
-> -Each SATA controller should have its own node.
-> -
-> -Required properties:
-> -- compatible        : compatible list, contains "calxeda,hb-ahci"
-> -- interrupts        : <interrupt mapping for SATA IRQ>
-> -- reg               : <registers mapping>
-> -
-> -Optional properties:
-> -- dma-coherent      : Present if dma operations are coherent
-> -- calxeda,port-phys : phandle-combophy and lane assignment, which maps each
-> -			SATA port to a combophy and a lane within that
-> -			combophy
-> -- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
-> -			which indicates that the driver supports SGPIO
-> -			indicator lights using the indicated GPIOs
-> -- calxeda,led-order : a u32 array that map port numbers to offsets within the
-> -			SGPIO bitstream.
-> -- calxeda,tx-atten  : a u32 array that contains TX attenuation override
-> -			codes, one per port. The upper 3 bytes are always
-> -			0 and thus ignored.
-> -- calxeda,pre-clocks : a u32 that indicates the number of additional clock
-> -			cycles to transmit before sending an SGPIO pattern
-> -- calxeda,post-clocks: a u32 that indicates the number of additional clock
-> -			cycles to transmit after sending an SGPIO pattern
-> -
-> -Example:
-> -        sata@ffe08000 {
-> -		compatible = "calxeda,hb-ahci";
-> -		reg = <0xffe08000 0x1000>;
-> -		interrupts = <115>;
-> -		dma-coherent;
-> -		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
-> -					&combophy0 2 &combophy0 3>;
-> -		calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
-> -		calxeda,led-order = <4 0 1 2 3>;
-> -		calxeda,tx-atten = <0xff 22 0xff 0xff 23>;
-> -		calxeda,pre-clocks = <10>;
-> -		calxeda,post-clocks = <0>;
-> -        };
-> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.yaml b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
-> new file mode 100644
-> index 000000000000..6dcf91e1bac0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
-> @@ -0,0 +1,95 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/ata/sata_highbank.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Calxeda AHCI SATA Controller
-> +
-> +description: |
-> +  The Calxeda SATA controller mostly conforms to the AHCI interface
-> +  with some special extensions to add functionality, to map GPIOs for
-> +  activity LEDs and for mapping the ComboPHYs.
-> +
-> +maintainers:
-> +  - Andre Przywara <andre.przywara@arm.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: calxeda,hb-ahci
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  dma-coherent: true
-> +
-> +  calxeda,pre-clocks:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Indicates the number of additional clock cycles to transmit before
-> +      sending an SGPIO pattern.
-> +
-> +  calxeda,post-clocks:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Indicates the number of additional clock cycles to transmit after
-> +      sending an SGPIO pattern.
-> +
-> +  calxeda,led-order:
-> +    description: Maps port numbers to offsets within the SGPIO bitstream.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - minItems: 1
-> +        maxItems: 8
-> +
-> +  calxeda,port-phys:
-> +    description: |
-> +      phandle-combophy and lane assignment, which maps each SATA port to a
-> +      combophy and a lane within that combophy
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
-> +      - minItems: 1
-> +        maxItems: 8
-> +
-> +  calxeda,tx-atten:
-> +    description: |
-> +      Contains TX attenuation override codes, one per port.
-> +      The upper 24 bits of each entry are always 0 and thus ignored.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - minItems: 1
-> +        maxItems: 8
-> +
-> +  calxeda,sgpio-gpio:
-> +    description: |
-> +      phandle-gpio bank, bit offset, and default on or off, which indicates
-> +      that the driver supports SGPIO indicator lights using the indicated
-> +      GPIOs.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    sata@ffe08000 {
-> +        compatible = "calxeda,hb-ahci";
-> +        reg = <0xffe08000 0x1000>;
-> +        interrupts = <115>;
-> +        dma-coherent;
-> +        calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
-> +                             &combophy0 2 &combophy0 3>;
-> +        calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
+Quoting Heikki Krogerus (2020-02-27 08:38:25)
+> Hi Stephen,
+>=20
+> On Thu, Feb 27, 2020 at 12:41:13AM -0800, Stephen Boyd wrote:
+> > > +examples:
+> > > +  - |+
+> > > +    cros_ec: ec@0 {
+> > > +      compatible =3D "google,cros-ec-spi";
+> > > +
+> > > +      typec {
+> > > +        compatible =3D "google,cros-ec-typec";
+> > > +
+> > > +        usb_con: connector {
+> > > +          compatible =3D "usb-c-connector";
+> > > +          port-number =3D <0>;
+> > > +          power-role =3D "dual";
+> > > +          data-role =3D "dual";
+> > > +          try-power-role =3D "source";
+> > > +        };
+> >=20
+> > I thought that perhaps this would be done with the OF graph APIs instead
+> > of being a child of the ec node. I don't see how the usb connector is
+> > anything besides a child of the top-level root node because it's
+> > typically on the board. We put board level components at the root.
+>=20
+> No.
+>=20
+> The above follows the usb-connector bindings, so it is correct:
+> Documentation/devicetree/bindings/connector/usb-connector.txt
+>=20
+> So the connector is always a child of the "CC controller" with the USB
+> Type-C connectors, which in this case is the EC (from operating systems
+> perspective). The "CC controller" controls connectors, and it doesn't
+> actually do anything else. So placing the connectors under the
+> "connector controller" is also logically correct.
 
-Need to fix the bracketing here too.
+Ah ok I see. The graph binding is for describing the data path, not the
+control path. Makes sense.=20
 
-BTW, no system ever shipped with SGPIO support, so all this could just 
-be removed.
+>=20
+> > Yes, the connector is intimately involved with the EC here, but I would
+> > think that we would have an OF graph connection from the USB controller
+> > on the SoC to the USB connector, traversing through anything that may be
+> > in that path, such as a USB hub. Maybe the connector node itself can
+> > point to the EC type-c controller with some property like
+>=20
+> I think your idea here is that there should be only a single node for
+> each connector that is then linked with every component that it is
+> physically connected to (right?), but please note that that is not
+> enough. Every component attached to the connector must have its own
+> child node that represents the "port" that is physically connected to
+> the USB Type-C connector.
+>=20
+> So for example, the USB controller nodes have child nodes for every
+> USB2 port as well as for every USB3 port. Similarly, the GPU
+> controllers have child node for every DisplayPort, etc. And I believe
+> that is already how it has been done in DT (and also in ACPI).
 
-Rob
+It looks like perhaps you're conflating ports in USB spec with the OF
+graph port? I want there to be one node per type-c connector that I can
+physically see on the device. Is that not sufficient?
+
+Are there any examples of the type-c connector in DT? I see some
+NXP/Freescale boards and one Renesas board so far. Maybe there are other
+discussions I can read up on?
+
+>=20
+> Those "port" nodes then just need to be linked with the "connector"
+> node. I think for that the idea was to use OF graph, but I'm really
+> sceptical about that. The problem is that with the USB Type-C
+> connectors we have to be able to identify the connections, i.e. which
+> endpoint is the USB2 port, which is the DisplayPort and so on, and OF
+> graph does not give any means to do that on its own. We will have to
+> rely on separate device properties in order to do the identification.
+> Currently it is not documented anywhere which property should be used
+> for that.
+
+I hope that this patch series can document this. Why can't that work by
+having multiple OF graph ports for USB2 port, DisplayPort, USB3 port,
+etc? The data path goes to the connector and we can attach more
+information to each port node to describe what type of endpoint is there
+like a DisplayPort capable type-c connector for example.
+
+>=20
+> For ACPI we are going to propose that with every type of connection,
+> there should be a device property that returns a reference to the
+> appropriate port. That way there are no problems identifying the
+> connections. All we need to do is to define the property names for
+> every type of connection. "usb2-port" for the USB2 or high speed port,
+> "usb3-port" for USB3, etc.
+>=20
+
+That sounds like something we should figure out now for DT firmwares
+too. For this particular binding, I don't know if we need to do anything
+besides figure out how to represent multiple connectors underneath the
+EC node. The other properties seem fairly generic and so I'd expect this
+series to migrate
+Documentation/devicetree/bindings/connector/usb-connector.txt to YAML
+and refine the binding with anything necessary, like a 'reg' property to
+allow multiple ports to exist underneath the "CC controller".
