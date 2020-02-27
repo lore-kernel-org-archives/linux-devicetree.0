@@ -2,102 +2,177 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9B7C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6409C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EB7246A0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CEB24697
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBxy9CAM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="TGKvqL+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgB0P2r (ORCPT
+        id S1729258AbgB0Pjl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:28:47 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43283 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729174AbgB0P2q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 10:28:46 -0500
-Received: by mail-lf1-f66.google.com with SMTP id s23so2374440lfs.10
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 07:28:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PcDag5KjPfbMjNOieZ/TtsOewuHdYm2EO2ojNLOAuag=;
-        b=ZBxy9CAMLW+QGmiB06p3sBWXB9NP8ImNSQMEXiIuor8YO0FOLzLv4w8qUyfwhKAuoW
-         ttQzB+lRSARU0sCOm2CpEaqUFz8nqI0nMIphuZ+oWBXCPJ4s1qaqdi3Vc5zwHjyQZGKL
-         Ui2gyTOxL55SIZZJUzdsuWKROQVHYBPcqu86S0DIlw5n0jwJDZhhpVYueYhLxReyWXbz
-         i5hnvSreCYJo0qm3qnSXnWobXksK+7RiyP11J21B1trpMb1S5YDhAc9LXVlPKwsZdqRF
-         9hkwsTi+o9NBamj6ypbAUPdTz4Vuyzp0tdkbBEDjKrLsWEN627Yv8ippK/5+BNOFR0gp
-         m6Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PcDag5KjPfbMjNOieZ/TtsOewuHdYm2EO2ojNLOAuag=;
-        b=g9rXdd0J+3M/8E9aP8kZEL1E60MxpsLTp4RNRfTtvuCcUg1rjuupi6HTSqoKQa36Fx
-         FBTXwKWbfbGuE49rmliRk+WmfaOsQLZN/PkZ8smgYv8esvMh1FjgqbJKgD7KHDqZcidA
-         0QMPhkw6ri4+QSG+Go2ouczhGef+MVQp6B6awtKy0yYKoAX9kdnqYvrWB4/OTpkgDe2l
-         RFFV7iBupsF/gWRIh/W5A8OL9fm03XNhvF47ykeRPC/1oYfIHOOBHBMKoRk/ctYB3zgA
-         JwbJVUl7Pzlvsgpg1vyVD3L9ZnfUwZumr9ThoJonDyxb3Sn7ycoKRmJp5cjpj4afZgZk
-         AIZg==
-X-Gm-Message-State: ANhLgQ0XGR6gKDO5kR5d4fXd9rx2zWJJ3Ls4Rzu1eGp/NCeokxnwvF5/
-        2gkpcxeVgGb42EW4Dua6E0gBM8UCZlfcyUrjczLYPw==
-X-Google-Smtp-Source: ADFU+vvFL72KdrVEoPcoecFuP1zt7WatO+w7PswkNjLy3IGs+erHykMuhfeDGNw7vCNh1YdhsfVzSWjyKVwXCqERODY=
-X-Received: by 2002:a19:8b09:: with SMTP id n9mr89111lfd.7.1582817324693; Thu,
- 27 Feb 2020 07:28:44 -0800 (PST)
-MIME-Version: 1.0
-References: <E1j7I7v-0004dS-5u@rmk-PC.armlinux.org.uk> <CAOMZO5A6os4myE41ZLBvW639bjRudg8Tax4yBa5JOyY5+oJW+g@mail.gmail.com>
- <20200227134538.GK25745@shell.armlinux.org.uk> <20200227151738.GM25745@shell.armlinux.org.uk>
-In-Reply-To: <20200227151738.GM25745@shell.armlinux.org.uk>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 27 Feb 2020 12:28:42 -0300
-Message-ID: <CAOMZO5BJdpow6zLapGd3jvx2UZbviW44dqzH5H_RKc9kCrFsCA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sr-som-ti: indicate powering off wifi
- is safe
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        Thu, 27 Feb 2020 10:39:41 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:50486 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729089AbgB0Pjl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 10:39:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582817978; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3eSJUdHUOebLRYmbf4KgJLlfHEkgSJDeAo7KzMcKMN0=;
+        b=TGKvqL+3KLRGn2YYCLBOUiPc2R6eNx4XAagPUwJ7ukLTCUDLBjuh1L3mLfljBk0IT5XjtE
+        EKHapTe+v/XgnwKQ2lIxeIjjnLCQnWnp00yUjSs18GUA4ITcKp9ojUSXlVdV2/RNT2kMFV
+        OwIw7HUCZsyMTtXTnEqaJR9w3Cmkor8=
+Date:   Thu, 27 Feb 2020 12:39:14 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v6 5/6] MIPS: DTS: JZ4780: define node for JZ4780 efuse
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1582817954.3.5@crapouillou.net>
+In-Reply-To: <8CEAF117-8667-4616-B08D-211E2705B67B@goldelico.com>
+References: <cover.1582715761.git.hns@goldelico.com>
+        <c6177ff663b6f8e16dc41169a76ba5dac091e7bd.1582715761.git.hns@goldelico.com>
+        <1582815472.3.4@crapouillou.net>
+        <8CEAF117-8667-4616-B08D-211E2705B67B@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:17 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
 
-> Jon says:
->
-> "It was changes to the mmc power handling.  Basically telling the
-> controller that the card should be able to wake it up from a sleep
-> state.
->
-> "I think it has to do with the runtime PM addition.  This was added
-> to the TI driver in commit, 9b71578de08748defb3bcae3ce8ed1a75cb6a8d7
-> I don't know if that is what broke it, but that was the initial
-> integration.
->
-> "That was added after changes to the MMC layer were done I believe."
->
-> Jon thinks the idea for fixing it came from a post on one of the
-> mailing lists, but is unable to find it now.
->
-> So, I think the cause is now lost in the mists of time.
 
-Ok, thanks for checking:
+Le jeu., f=E9vr. 27, 2020 at 16:26, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Hi Paul,
+>=20
+>>  Am 27.02.2020 um 15:57 schrieb Paul Cercueil <paul@crapouillou.net>:
+>>=20
+>>  Hi Nikolaus,
+>>=20
+>>=20
+>>  Le mer., f=E9vr. 26, 2020 at 12:16, H. Nikolaus Schaller=20
+>> <hns@goldelico.com> a =E9crit :
+>>>  From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>>>  This patch brings support for the JZ4780 efuse. Currently it only=20
+>>> exposes
+>>>  a read only access to the entire 8K bits efuse memory and the
+>>>  ethernet mac address for the davicom dm9000 chip on the CI20 board.
+>>>  It also changes the nemc reg range to avoid overlap.
+>>>  Tested-by: Mathieu Malaterre <malat@debian.org>
+>>>  Signed-off-by: PrasannaKumar Muralidharan=20
+>>> <prasannatsmkumar@gmail.com>
+>>>  Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>  ---
+>>>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 ++++++++++++++++-
+>>>  1 file changed, 16 insertions(+), 1 deletion(-)
+>>>  diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+>>> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  index f928329b034b..1e266be28096 100644
+>>>  --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  @@ -358,7 +358,7 @@
+>>>  	nemc: nemc@13410000 {
+>>>  		compatible =3D "ingenic,jz4780-nemc";
+>>>  -		reg =3D <0x13410000 0x10000>;
+>>>  +		reg =3D <0x13410000 0x4c>;
+>>=20
+>>  This is wrong, the real size of the register area is 1x15c.
+>=20
+> It should not overlap with the efuse reg range which is:
+>=20
+> <0x134100d0 0x2c>
+>=20
+> If I look at JZ4780 Mobile Application Processor Programming Manual
+> section 16.4.1 Register Description Table 16-4 Static Memory=20
+> Interface Registers,
+> I see
+>=20
+> SMCR1 at 0x13410014 and
+> SACR6 at 0x13410048 and all 32 bits wide. I.e. a total size of 0x4c.
+>=20
+> Ah, now I see. There is also Table 16-5 NAND Flash Interface Registers
+> starting with NFCSR at 0x13410050 and ending with TGHH register at=20
+> 0x13410154.
+>=20
+> Hm. With this we are probably at "go back and start over"...
+>=20
+> Either nemc must be separated into two drivers for Static Memory and=20
+> one
+> for NAND Flash. Or must become able to handle two register ranges.
+>=20
+> Or the e-fuse driver must become a part of the nemc driver.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Nothing that bad. I'll make the NEMC driver request only the area it=20
+needs, out of the 0x10000 register space.
+
+Then, you can move the efuse node *inside* the nemc node (with proper=20
+#address-cells/#size-cells/ranges and "simple-mfd" compatible string)=20
+and everything will work.
+
+> Well, another assumption is that there is no NAND driver. AFAIR it
+> was even removed from the kernel because the maintainer did say
+> it is not fixable (if I really remember correctly).
+
+It's still there:
+drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+
+What was dropped from the kernel is MLC NAND support in UBI.
+
+Cheers,
+-Paul
+
+>>=20
+>>>  		#address-cells =3D <2>;
+>>>  		#size-cells =3D <1>;
+>>>  		ranges =3D <1 0 0x1b000000 0x1000000
+>>>  @@ -373,6 +373,21 @@
+>>>  		status =3D "disabled";
+>>>  	};
+>>>  +	efuse: efuse@134100d0 {
+>>>  +		compatible =3D "ingenic,jz4780-efuse";
+>>>  +		reg =3D <0x134100d0 0x2c>;
+>>>  +
+>>>  +		clocks =3D <&cgu JZ4780_CLK_AHB2>;
+>>>  +		clock-names =3D "ahb2";
+>>=20
+>>  As explained in my response to the other patch, 'clock-names' can=20
+>> go away.
+>=20
+> Yes.
+>=20
+> BR,
+> Nikolaus
+>=20
+
+=
+
