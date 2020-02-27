@@ -2,170 +2,149 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C919C3F36E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C3BC3567B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13AE224656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD6E246AD
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZNuChyRI"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Y0HlIriE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="4GjoEiDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388049AbgB0Oa5 (ORCPT
+        id S1731361AbgB0Olk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:30:57 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:60006 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731625AbgB0Oa4 (ORCPT
+        Thu, 27 Feb 2020 09:41:40 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:35199 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731346AbgB0NvM (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:30:56 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582813855; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=31Jyd0ydGwDjWftSsYoT2QGP7wSU/YQyP0VpNOmwFCQ=; b=ZNuChyRIVE4hcrZxwqmXoUnZFq4ky/0RNviTiCMHKDNFbOby/nQvdwjqXyblFwLYEbTRvSrh
- uyzsHISZFmpCWxSpcL7qupz4ea0BBrZnquPzc16wmPlHendBLpPD21dbg0MdJJlEEvBwyY7i
- vJWi7/qMenNwvK76gO/UHNjDDy4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e57d292.7fb093b93e30-smtp-out-n03;
- Thu, 27 Feb 2020 14:30:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3CA76C4479D; Thu, 27 Feb 2020 14:30:41 +0000 (UTC)
-Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35321C433A2;
-        Thu, 27 Feb 2020 14:30:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 35321C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
- of sdhci-msm platform driver
-To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mka@chromium.org
-Cc:     asutoshd@codeaurora.org, swboyd@chromium.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <d6c10b49-a12c-d17e-1ff9-90f12e98f624@codeaurora.org>
-Date:   Thu, 27 Feb 2020 20:00:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 08:51:12 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id E488A2151C;
+        Thu, 27 Feb 2020 08:51:11 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Thu, 27 Feb 2020 08:51:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=rL8rHIlj6lYtdHoMyUTKiQK1fsi
+        rI3FJ7XLB2RzfOfg=; b=Y0HlIriETGREYCWbtbx+x1ny0rV7S9mwZsEXLTYgFVR
+        DMnJ5qEGsXPku+TO4zN3jXnlQQwlH2VDVgK37KykoEk8OFfr1aP0MHPHkKfdbJx0
+        13XZSXCHDpt3g7DbueqmFrycl9YzEb6KEg+hEVWLb8pB7IvIq5CLxIGzzRpCUNHY
+        CFeK8Wlya5kRwJsQMBc1uWHKVuYzIVviMMlPsj4N7vw8Le657T2SswSFPGcMasLr
+        0EWVYVL7gf58djI4VnZpDCXJJiiog4BXlLsrAZVmnLKG3tbMw86cUNEj8t1xZgqu
+        Dmeii8yva6k/FR8rMg6VxICNJjDOCVEAI83vT99ubJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=rL8rHI
+        lj6lYtdHoMyUTKiQK1fsirI3FJ7XLB2RzfOfg=; b=4GjoEiDvxJLKHUmxewbgdu
+        +tWEZlXIrhrkI8/6VlDYm/BJsNQJClhF/mzBgDIjfiaCNVhJU5u1UHKTiBXFG29N
+        0LS9dAxWfs832VtY/Vj93tWH7NDoOvnsAAE1SNIB1vk7dZ5EBEe8DYmGxcx7mt0z
+        JB0q7HQUsdM61Uk34wJ68w5baqa/jYLRqm5q6xKrErZrQcb0w0Eq09raLHv6piPq
+        H0B3CkjxB0UCOrgvjSQ4R/zjAVvvtzXcobp7az3bwg+QFPj7tef4LKZvDxwt+qTG
+        xmzM/RU776O9ImVZ4nn9XSowaqcR1SKO+83VIk24Qz41Y/aeBucACTenLQO5C83A
+        ==
+X-ME-Sender: <xms:T8lXXu7n46_bKu6hKPfae_p-AeLw5MYi787npJ1Tjsb26n9kDgX_KQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeigdehjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:T8lXXs1JXuekKaGJawcJ2ILVVO9LyA67CA5B8_Rb2lAElszJ2LOhcA>
+    <xmx:T8lXXhvK74mld0NPu5rLUU19hZ4cyebrz19KU5_A_TUG6udwK2qlzQ>
+    <xmx:T8lXXq4FM_cnLW_eDruin4UqkmcALc3FQRGlUqsoZ3zRdE5LaX7vqQ>
+    <xmx:T8lXXrb8rWKD5_U6eJ7MxnObjhEWQ_XWLNV070QGGyru43ebyqK_Yg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1E6263280059;
+        Thu, 27 Feb 2020 08:51:11 -0500 (EST)
+Date:   Thu, 27 Feb 2020 14:51:09 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH] spi: dt-bindings: spi-controller: Fix #address-cells for
+ slave mode
+Message-ID: <20200227135109.l2oal55nwhm5un2c@gilmour.lan>
+References: <20200227130323.15327-1-geert+renesas@glider.be>
+ <20200227130937.qvrjyxcwim7rfum7@gilmour.lan>
+ <CAMuHMdUVW_51dqMK=ziz_JVT3LuXX7vOF3-Ei-aHiiBuSepGpg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="z6z2joa2jqig3ppp"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUVW_51dqMK=ziz_JVT3LuXX7vOF3-Ei-aHiiBuSepGpg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sajida,
 
-On 2/20/2020 12:15 PM, Shaik Sajida Bhanu wrote:
+--z6z2joa2jqig3ppp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> The existing suspend/resume callbacks of sdhci-msm driver are just
-> gating/un-gating the clocks. During suspend cycle more can be done
-> like disabling controller, disabling card detection, enabling wake-up events.
+On Thu, Feb 27, 2020 at 02:19:08PM +0100, Geert Uytterhoeven wrote:
+> Hi Maxime,
 >
-> So updating the system pm callbacks for performing these extra
-> actions besides controlling the clocks.
+> On Thu, Feb 27, 2020 at 2:09 PM Maxime Ripard <maxime@cerno.tech> wrote:
+> > On Thu, Feb 27, 2020 at 02:03:23PM +0100, Geert Uytterhoeven wrote:
+> > > Currently, the DT bindings for an SPI controller specify that
+> > > "#address-cells" must be fixed to one.  However, that applies to an SPI
+> > > controller in master mode only.  When running in SPI slave mode,
+> > > "#address-cells" should be zero.
+> > >
+> > > Fix this making the value of "#address-cells" dependent on the presence
+> > > of "spi-slave".
+> > >
+> > > Fixes: 0a1b929356830257 ("spi: Add YAML schemas for the generic SPI options")
+> > > Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
-> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> Changes since V3:
->      Invoking sdhci & cqhci resume if sdhci_host_suspend fails.
->      Removed condition check before invoking cqhci_resume since its a dummy function.
+> > > --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> > > +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
 >
-> Changes since V2:
->      Removed disabling/enabling pwr-irq from system pm ops.
+> > > @@ -52,6 +53,18 @@ properties:
+> > >      description:
+> > >        The SPI controller acts as a slave, instead of a master.
+> > >
+> > > +if:
+> > > +  required:
+> > > +    [ spi-slave ]
+> >
+> > Nit: Usually, that notation is when you would do it on the same line,
+> > if you want to go to a new line, it would make more sense to use -
 >
-> Changes since V1:
->      Invoking pm_runtime_force_suspend/resume instead of
->      sdhci_msm_runtime_suepend/resume.
-> ---
->   drivers/mmc/host/sdhci-msm.c | 47 ++++++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 45 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 3955fa5d..3559b50 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -2159,9 +2159,52 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
->   	return 0;
->   }
->   
-> +static int sdhci_msm_suspend(struct device *dev)
-> +{
-> +	struct sdhci_host *host = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	if (host->mmc->caps2 & MMC_CAP2_CQE) {
-> +		ret = cqhci_suspend(host->mmc);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = sdhci_suspend_host(host);
-> +	if (ret)
-> +		goto resume_cqhci;
-> +
-> +	ret = pm_runtime_force_suspend(dev);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	sdhci_resume_host(host);
-> +
-> +resume_cqhci:
-> +	cqhci_resume(host->mmc);
-> +	return ret;
-> +}
-> +
-> +static int sdhci_msm_resume(struct device *dev)
-> +{
-> +	struct sdhci_host *host = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = pm_runtime_force_resume(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = sdhci_resume_host(host);
+> Sorry, being a poor yaml-by-example programmer, I don't understand what
+> you mean.  Which part do you refer to by "that notation"?
 
-I'm observing an issue with this change.
+I meant that usually the [] notation is used over a single line.
 
-After this step, i find interrupt enable register is zero (even though 
-it's getting set in sdhci_resume_host()) and
+If you want to have a list over multiple lines, usually you would have
 
-resulting in request timeout for very first command in resume path.
+required:
+  - spi-slave
 
-Until its root caused, please hold back this change.
+Maxime
 
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = cqhci_resume(host->mmc);
-> +	return ret;
-> +}
-> +
->   static const struct dev_pm_ops sdhci_msm_pm_ops = {
-> -	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> -				pm_runtime_force_resume)
-> +	SET_SYSTEM_SLEEP_PM_OPS(sdhci_msm_suspend,
-> +				sdhci_msm_resume)
->   	SET_RUNTIME_PM_OPS(sdhci_msm_runtime_suspend,
->   			   sdhci_msm_runtime_resume,
->   			   NULL)
+--z6z2joa2jqig3ppp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlfJTQAKCRDj7w1vZxhR
+xSoKAQCMi6BKOxFBB0uhTTAvap1MsvS6SQ4ndibeVqk1uZYQrAD/So9dwDrZrPz1
+Tqt3wtZE3K5zNiD+3QvSqGsynf+04AM=
+=64J/
+-----END PGP SIGNATURE-----
+
+--z6z2joa2jqig3ppp--
