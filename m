@@ -2,213 +2,360 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14583C52D2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E350C52D3B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED0624697
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="QofFa8xo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P77kFJG4"
+	by mail.kernel.org (Postfix) with ESMTP id 05DA021D7E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbgB0OZ1 (ORCPT
+        id S1731018AbgB0OZt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:25:27 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:39459 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388698AbgB0OZ0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:25:26 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 82F7477BB;
-        Thu, 27 Feb 2020 09:25:25 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 27 Feb 2020 09:25:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=8k8ifdUwFDmcr1ArdIrV0k+L0po
-        RQVFUQt0Z3XT5bwI=; b=QofFa8xonDt6zn0DF9+ivYYHTiwYYcNzFwfQv9IYx1H
-        lQVTqGC6T9MYDQ5wgkVkBxpD+CfQESTGyKq+V8UjmweYx4jSXfEEpzLw+siiUijR
-        GFRQpqTYRU+9m0qTFUMjZDhgKaFHGZxOcauggtDnu15HdauSPn+VPerHAuJsNX4o
-        KfMykFLM2N+gBE2C6RvMPdLXQKPgqnSb/UHIWw+/S738HNMLlGCsjNTeV8CPk1KD
-        cszgujYUd5+ZKA1ogTfhafm7b+IXsrYo/jEPOvr0tNlXMBiT4NnJ4x1NR8AnTNOh
-        P9iUipa8bUgP9hKSBpO9MX0GVcXn9f2UKIQUJ+g2obA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=8k8ifd
-        UwFDmcr1ArdIrV0k+L0poRQVFUQt0Z3XT5bwI=; b=P77kFJG49ME2EtAi4y+kF/
-        znLlZmgqZEwYmB2IMRBbSfIHUUdmqbyOvR/EbbLSXwBjDin9Rog+/X/Rt04qH4LV
-        /VtU1ujfW40A10O7h9vF4/f55KRO3ZXVdZxwsHCrj3pzNpHk4xJXDI/Y52qw5fsp
-        pwg/ACaFJuO4dc+GU0Skj2rMCzyi61mZvtkG/ttEkcyaBIIO/Zraz5XBDYzGX84+
-        gmdF98c0g6MW4qJvZfj35HQ65Xy78qiFKLU5Sqxmg7w4O2wFdUPoQL0mo0ztE099
-        Jszd9z4WO51ocbXwLw8Y4p2Z+OpgpR+OmK/SgLX2Iel7Itck+IzdRmdt5ysLlrdg
-        ==
-X-ME-Sender: <xms:U9FXXqc_jC4dXhKJjYPY0SwqkKXkwg4bFqI9w6OA63FuIsfkqJDcdQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeigdeihecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrieekrdejieenucevlhhushht
-    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrh
-    hnohdrthgvtghh
-X-ME-Proxy: <xmx:U9FXXocZAPRdGoI3AMrdQIC_SExy12PCYkDXuEvfgdE8OkX3U75uCQ>
-    <xmx:U9FXXmgVGVeMNDJbNivPAomv_gMVHz70RTnLzv_VqngHyaJxHlnAmA>
-    <xmx:U9FXXsSWyJkG--YI-yWI5SIBGxb0Lhb200UYZocpUsk0DnhJ5ci3_A>
-    <xmx:VdFXXgO_BqyPBRPSX6zOnzDJR0pVYDwjNmKtOyHQsGZjZWT5NPMgkw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5CBCD3280066;
-        Thu, 27 Feb 2020 09:25:23 -0500 (EST)
-Date:   Thu, 27 Feb 2020 15:25:21 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        Thu, 27 Feb 2020 09:25:49 -0500
+Received: from mga03.intel.com ([134.134.136.65]:36937 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730421AbgB0OZt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:25:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 06:25:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,492,1574150400"; 
+   d="scan'208";a="350693637"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 27 Feb 2020 06:25:44 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 27 Feb 2020 16:25:40 +0200
+Date:   Thu, 27 Feb 2020 16:25:40 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
+        bleung@chromium.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] dt-bindings: display: sun4i-tcon: Add LVDS Dual Link
- property
-Message-ID: <20200227142521.vtmcwbwxjddphjf2@gilmour.lan>
-References: <20200214123244.109300-1-maxime@cerno.tech>
- <20200214131025.GI4831@pendragon.ideasonboard.com>
- <20200214154405.f5zuicm6uhhiczfs@gilmour.lan>
- <20200214154953.GJ4831@pendragon.ideasonboard.com>
- <20200217174253.mj53us4bb7h2lyca@gilmour.lan>
- <20200217181006.GE4830@pendragon.ideasonboard.com>
- <20200220175307.qool442lm7qjqb5h@gilmour.lan>
- <20200220191339.GJ4998@pendragon.ideasonboard.com>
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 2/4] platform/chrome: Add Type C connector class driver
+Message-ID: <20200227142540.GN23638@kuha.fi.intel.com>
+References: <20200220003102.204480-1-pmalani@chromium.org>
+ <20200220003102.204480-3-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ubhaez32phxyobwo"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220191339.GJ4998@pendragon.ideasonboard.com>
+In-Reply-To: <20200220003102.204480-3-pmalani@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Feb 19, 2020 at 04:30:57PM -0800, Prashant Malani wrote:
+> Add a driver to implement the Type C connector class for Chrome OS
+> devices with ECs (Embedded Controllers).
+> 
+> The driver relies on firmware device specifications for various port
+> attributes. On ACPI platforms, this is specified using the logical
+> device with HID GOOG0014. On DT platforms, this is specified using the
+> DT node with compatible string "google,cros-ec-typec".
+> 
+> This patch reads the device FW node and uses the port attributes to
+> register the typec ports with the Type C connector class framework, but
+> doesn't do much else.
+> 
+> Subsequent patches will add more functionality to the driver, including
+> obtaining current port information (polarity, vconn role, current power
+> role etc.) after querying the EC.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 
---ubhaez32phxyobwo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-On Thu, Feb 20, 2020 at 09:13:39PM +0200, Laurent Pinchart wrote:
-> Hi Maxime,
->
-> On Thu, Feb 20, 2020 at 06:53:07PM +0100, Maxime Ripard wrote:
-> > On Mon, Feb 17, 2020 at 08:10:06PM +0200, Laurent Pinchart wrote:
-> > > On Mon, Feb 17, 2020 at 06:42:53PM +0100, Maxime Ripard wrote:
-> > >> On Fri, Feb 14, 2020 at 05:49:53PM +0200, Laurent Pinchart wrote:
-> > >>> On Fri, Feb 14, 2020 at 04:44:05PM +0100, Maxime Ripard wrote:
-> > >>>> On Fri, Feb 14, 2020 at 03:10:25PM +0200, Laurent Pinchart wrote:
-> > >>>>> On Fri, Feb 14, 2020 at 01:32:43PM +0100, Maxime Ripard wrote:
-> > >>>>>> SoCs that have multiple TCONs can use the two set of pins on the first TCON
-> > >>>>>> to drive a dual-link display. Add a property to enable the dual link.
-> > >>>>>>
-> > >>>>>> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > >>>>>> ---
-> > >>>>>>  .../bindings/display/allwinner,sun4i-a10-tcon.yaml         | 7 +++++++
-> > >>>>>>  1 file changed, 7 insertions(+)
-> > >>>>>>
-> > >>>>>> diff --git a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
-> > >>>>>> index 86ad617d2327..aa6dd8409dbc 100644
-> > >>>>>> --- a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
-> > >>>>>> +++ b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
-> > >>>>>> @@ -105,6 +105,13 @@ properties:
-> > >>>>>>          - const: edp
-> > >>>>>>          - const: lvds
-> > >>>>>>
-> > >>>>>> +  allwinner,lvds-dual-link:
-> > >>>>>> +    type: boolean
-> > >>>>>> +    description: |
-> > >>>>>> +      On a SoC with two TCON with LVDS support, the first TCON can
-> > >>>>>> +      operate over both pins sets to output in a dual-link setup. This
-> > >>>>>> +      will be triggered by setting this property.
-> > >>>>>
-> > >>>>> Could you maybe provide an example of how this property is supposed to
-> > >>>>> be used ? I'm especially wondering what ports are used in that case and
-> > >>>>> how they're connected.
-> > >>>>
-> > >>>> It's pretty trivial to support, it's only a property to set on the
-> > >>>> encoder node itself.
-> > >>>>
-> > >>>> I'm not really sure what you meant by your question with the ports
-> > >>>> though :/
-> > >>>
-> > >>> I assume that, in the single-link case, you have two TCON instances that
-> > >>> operate independently, each of them with one port that models an LVDS
-> > >>> connection to a panel.
-> > >>
-> > >> Indeed,
-> > >>
-> > >>> In the dual-link mode, how does that look like ? Does the TCON
-> > >>> instance that operate in dual-link mode have two ports in DT ? There
-> > >>> are two physical ports, so I think it makes sense to always have two
-> > >>> ports in DT. That's what we're doing for the LVDS encoders on R-Car
-> > >>> Gen3, in order to specify in DT which LVDS input of the dual-link
-> > >>> panel is connected to which LVDS output of the SoC. That allows
-> > >>> configuring the LVDS encoder to send the even and odd pixels on the
-> > >>> right port.
-> > >>
-> > >> As far as I can tell, you can't control that in our TCON. It just on
-> > >> more lanes, that's it. Also, we currently have multiple ports, to map
-> > >> another feature of the TCON, which is that it can drive directly a
-> > >> panel, or will send its output to the HDMI / TV encoders. Adding
-> > >> another port in that will break the current binding we have.
-> > >
-> > > This will create one issue though, in that the dual-link sinks are
-> > > supposed to have two input ports, in order to expose the odd and even
-> > > pixels ordering. If you have a single ouput port in your TCON, how will
-> > > you interface with such sinks ?
-> >
-> > I guess we could create multiple endpoints in the same port? That's
-> > not going to be trivial either though given the current binding we
-> > have :/
->
-> That's however not really how endpoints are supposed to be used.
->
-> Let's try to find a solution. Could you show me a DT example that
-> explains why having two ports would create backward-compatibility issues
-> ?
+> ---
+> 
+> Changes in v3:
+> - Fixed minor spacing nits, and moved a modification to probe() if check
+>   from later patch to here instead.
+> 
+> Changes in v2:
+> - Updated Kconfig to default to MFD_CROS_EC_DEV.
+> - Fixed code comments.
+> - Moved get_num_ports() code into probe().
+> - Added module author.
+> 
+>  drivers/platform/chrome/Kconfig         |  11 ++
+>  drivers/platform/chrome/Makefile        |   1 +
+>  drivers/platform/chrome/cros_ec_typec.c | 221 ++++++++++++++++++++++++
+>  3 files changed, 233 insertions(+)
+>  create mode 100644 drivers/platform/chrome/cros_ec_typec.c
+> 
+> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+> index 5f57282a28da00..2320a4f0d93019 100644
+> --- a/drivers/platform/chrome/Kconfig
+> +++ b/drivers/platform/chrome/Kconfig
+> @@ -214,6 +214,17 @@ config CROS_EC_SYSFS
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called cros_ec_sysfs.
+>  
+> +config CROS_EC_TYPEC
+> +	tristate "ChromeOS EC Type-C Connector Control"
+> +	depends on MFD_CROS_EC_DEV && TYPEC
+> +	default MFD_CROS_EC_DEV
+> +	help
+> +	  If you say Y here, you get support for accessing Type C connector
+> +	  information from the Chrome OS EC.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called cros_ec_typec.
+> +
+>  config CROS_USBPD_LOGGER
+>  	tristate "Logging driver for USB PD charger"
+>  	depends on CHARGER_CROS_USBPD
+> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+> index aacd5920d8a180..caf2a9cdb5e6d1 100644
+> --- a/drivers/platform/chrome/Makefile
+> +++ b/drivers/platform/chrome/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
+>  obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
+>  obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
+>  cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_mec.o
+> +obj-$(CONFIG_CROS_EC_TYPEC)		+= cros_ec_typec.o
+>  obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
+>  obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
+>  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> new file mode 100644
+> index 00000000000000..6cac41f246b99f
+> --- /dev/null
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -0,0 +1,221 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2020 Google LLC
+> + *
+> + * This driver provides the ability to view and manage Type C ports through the
+> + * Chrome OS EC.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_data/cros_ec_commands.h>
+> +#include <linux/platform_data/cros_ec_proto.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/typec.h>
+> +
+> +#define DRV_NAME "cros-ec-typec"
+> +
+> +/* Platform-specific data for the Chrome OS EC Type C controller. */
+> +struct cros_typec_data {
+> +	struct device *dev;
+> +	struct cros_ec_device *ec;
+> +	int num_ports;
+> +	/* Array of ports, indexed by port number. */
+> +	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
+> +};
+> +
+> +static int cros_typec_parse_port_props(struct typec_capability *cap,
+> +				       struct fwnode_handle *fwnode,
+> +				       struct device *dev)
+> +{
+> +	const char *buf;
+> +	int ret;
+> +
+> +	memset(cap, 0, sizeof(*cap));
+> +	ret = fwnode_property_read_string(fwnode, "power-role", &buf);
+> +	if (ret) {
+> +		dev_err(dev, "power-role not found: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = typec_find_port_power_role(buf);
+> +	if (ret < 0)
+> +		return ret;
+> +	cap->type = ret;
+> +
+> +	ret = fwnode_property_read_string(fwnode, "data-role", &buf);
+> +	if (ret) {
+> +		dev_err(dev, "data-role not found: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = typec_find_port_data_role(buf);
+> +	if (ret < 0)
+> +		return ret;
+> +	cap->data = ret;
+> +
+> +	ret = fwnode_property_read_string(fwnode, "try-power-role", &buf);
+> +	if (ret) {
+> +		dev_err(dev, "try-power-role not found: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = typec_find_power_role(buf);
+> +	if (ret < 0)
+> +		return ret;
+> +	cap->prefer_role = ret;
+> +
+> +	cap->fwnode = fwnode;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cros_typec_init_ports(struct cros_typec_data *typec)
+> +{
+> +	struct device *dev = typec->dev;
+> +	struct typec_capability cap;
+> +	struct fwnode_handle *fwnode;
+> +	int ret;
+> +	int i;
+> +	int nports;
+> +	u32 port_num;
+> +
+> +	nports = device_get_child_node_count(dev);
+> +	if (nports == 0) {
+> +		dev_err(dev, "No port entries found.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	device_for_each_child_node(dev, fwnode) {
+> +		if (fwnode_property_read_u32(fwnode, "port-number",
+> +					     &port_num)) {
+> +			dev_err(dev, "No port-number for port, skipping.\n");
+> +			ret = -EINVAL;
+> +			goto unregister_ports;
+> +		}
+> +
+> +		if (port_num >= typec->num_ports) {
+> +			dev_err(dev, "Invalid port number.\n");
+> +			ret = -EINVAL;
+> +			goto unregister_ports;
+> +		}
+> +
+> +		dev_dbg(dev, "Registering port %d\n", port_num);
+> +
+> +		ret = cros_typec_parse_port_props(&cap, fwnode, dev);
+> +		if (ret < 0)
+> +			goto unregister_ports;
+> +
+> +		typec->ports[port_num] = typec_register_port(dev, &cap);
+> +		if (IS_ERR(typec->ports[port_num])) {
+> +			dev_err(dev, "Failed to register port %d\n", port_num);
+> +			ret = PTR_ERR(typec->ports[port_num]);
+> +			goto unregister_ports;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +unregister_ports:
+> +	for (i = 0; i < typec->num_ports; i++)
+> +		typec_unregister_port(typec->ports[i]);
+> +	return ret;
+> +}
+> +
+> +static int cros_typec_ec_command(struct cros_typec_data *typec,
+> +				 unsigned int version,
+> +				 unsigned int command,
+> +				 void *outdata,
+> +				 unsigned int outsize,
+> +				 void *indata,
+> +				 unsigned int insize)
+> +{
+> +	struct cros_ec_command *msg;
+> +	int ret;
+> +
+> +	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	msg->version = version;
+> +	msg->command = command;
+> +	msg->outsize = outsize;
+> +	msg->insize = insize;
+> +
+> +	if (outsize)
+> +		memcpy(msg->data, outdata, outsize);
+> +
+> +	ret = cros_ec_cmd_xfer_status(typec->ec, msg);
+> +	if (ret >= 0 && insize)
+> +		memcpy(indata, msg->data, insize);
+> +
+> +	kfree(msg);
+> +	return ret;
+> +}
+> +
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id cros_typec_acpi_id[] = {
+> +	{ "GOOG0014", 0 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, cros_typec_acpi_id);
+> +#endif
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id cros_typec_of_match[] = {
+> +	{ .compatible = "google,cros-ec-typec", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, cros_typec_of_match);
+> +#endif
+> +
+> +static int cros_typec_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct cros_typec_data *typec;
+> +	struct ec_response_usb_pd_ports resp;
+> +	int ret;
+> +
+> +	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
+> +	if (!typec)
+> +		return -ENOMEM;
+> +
+> +	typec->dev = dev;
+> +	typec->ec = dev_get_drvdata(pdev->dev.parent);
+> +	platform_set_drvdata(pdev, typec);
+> +
+> +	ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
+> +				    &resp, sizeof(resp));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	typec->num_ports = resp.num_ports;
+> +	if (typec->num_ports > EC_USB_PD_MAX_PORTS) {
+> +		dev_warn(typec->dev,
+> +			 "Too many ports reported: %d, limiting to max: %d\n",
+> +			 typec->num_ports, EC_USB_PD_MAX_PORTS);
+> +		typec->num_ports = EC_USB_PD_MAX_PORTS;
+> +	}
+> +
+> +	ret = cros_typec_init_ports(typec);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver cros_typec_driver = {
+> +	.driver	= {
+> +		.name = DRV_NAME,
+> +		.acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
+> +		.of_match_table = of_match_ptr(cros_typec_of_match),
+> +	},
+> +	.probe = cros_typec_probe,
+> +};
+> +
+> +module_platform_driver(cros_typec_driver);
+> +
+> +MODULE_AUTHOR("Prashant Malani <pmalani@chromium.org>");
+> +MODULE_DESCRIPTION("Chrome OS EC Type C control");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.25.0.265.gbab2e86ba0-goog
 
-Sure, here is what the DT looks like for the SoC this patch was
-relevant for (but we have the issue on multiple SoCs, all sharing
-pretty much the same binding as far as ports go):
-https://elixir.bootlin.com/linux/v5.6-rc3/source/arch/arm/boot/dts/sun7i-a20.dtsi#L406
+thanks,
 
-And here is the binding part:
-https://elixir.bootlin.com/linux/v5.6-rc3/source/arch/arm/boot/dts/sun7i-a20.dtsi#L406
-
-As you can see, in that binding, ports were used to differentiate
-between output and input, each of the output being an endpoint (since
-we can't have the TCON driving multiple output at once).
-
-Adding multiple ports would kind of break that, and would break the
-general idea behind that binding (and the rest of the display
-pipeline).
-
-Maxime
-
---ubhaez32phxyobwo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlfRUQAKCRDj7w1vZxhR
-xc0PAP9zjDzXT9CNGe6TSoSpsnFcO7r6DJ3ynEyYRcoX7uy9zQD/ZURcSADOTd+8
-9E6zrb7rrCuTN42+4NccjG1sXpHlego=
-=Vvge
------END PGP SIGNATURE-----
-
---ubhaez32phxyobwo--
+-- 
+heikki
