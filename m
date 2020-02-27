@@ -2,101 +2,209 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB07C3F2C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55897C3F2C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CF42469F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213952469F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 22:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TMG5VflR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qcTMvEgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbgB0V7F (ORCPT
+        id S1729831AbgB0WB6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:59:05 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34255 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729776AbgB0V7F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 16:59:05 -0500
-Received: by mail-ed1-f66.google.com with SMTP id dm3so920214edb.1
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:59:03 -0800 (PST)
+        Thu, 27 Feb 2020 17:01:58 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39115 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbgB0WB6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 17:01:58 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c84so1092188wme.4;
+        Thu, 27 Feb 2020 14:01:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=akb/fqWb9RAKIbbLYDDh8qkuoGYS5G+iOCImBrzoF9o=;
-        b=TMG5VflR3I+CGPW+mSXF7fJBlkIgbvu1pHHgkcCLliyNx/65WX4EateAFJ+aYYIZTw
-         c3laEpZS9R7qXtce7smYE4n1H0nZi18snVj03jIXMRsHgoFOyMPcwQBWb+g9rcCNCD28
-         PdCGEoz3ivKvIuWNhKqTW1465oIKHlXJl+83w=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=DZXI7uvvOw0fNdSg04a7D3gbzl4O/eHHrwdgk0aaqJE=;
+        b=qcTMvEgnxEKV4piO6AHz5L7oRN0JLeSuOXxP106XCYDKH09gIrroqn7rSfi287p0Wi
+         D4FnP5B3QV+mcghGyJNUbZXS1rbfCkppw2DtmlnQTCC2eAufS+i8q/1hFKOKlqGzKGOW
+         1IVKGWdjTZfSHTDMGqqTaIPqcpwa2bTTy0zU3gQoTPZuffAmZEToLTVFl8ivGLL7B+Jh
+         3MSUc/c6EAC8wJXc2B8Z/AB/aVwj36MrkGh7J0FrjMAh277nOhpy5ZupXbCTBq1/NhRf
+         WN6mKmsR5Tsl335zKCvdVL4llYeh7rdgyI4bhhjG+XE6eBv1Klc6GEw4F+l5aqRsRwXB
+         NSDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=akb/fqWb9RAKIbbLYDDh8qkuoGYS5G+iOCImBrzoF9o=;
-        b=f+Au/ajIvybIX3DM0d1uUN208n0nG3/qNFHCBEhT2k3AbLWzc3OW9oAK9H329LA+dZ
-         b99p+hmDhm8ONDIo1M7WKuJa2FdfBWKhRnJVbPXYhUh58TvlbOLKn5E2ZowmBYEX+2IT
-         dpyG8J7i90grKt1XeRdRyAcUxpE6nWGLHhogerYvC+Uvl6sjR/0j/Wey3xOkQGDWMxaK
-         I4ddWh3akmt+8PrZxLma3Sf4ZkLTOLWuGyhFaoo3RsYP3ROMG8ylLcttHdJukgPt8/LH
-         hfdiF+tonmh0Z48CSTnkwJ/00vLa6Gbz3pPDU7xz0FS77bMljX352JhwQSYIsHU6vXoK
-         s6HQ==
-X-Gm-Message-State: APjAAAWhlzsqVUpJZwj+WOwsEJEzqAH8dwm8jYdg6oUpgjvWwTluP6Lc
-        mqEa8L1D3ftf65/OzZM1DJsivaRxeMM=
-X-Google-Smtp-Source: APXvYqzTdHOOtG8/+dJs86xtr2SApQ2xtUMqDPZ+Nu5mskKNKbWaKIK35sccxs7j5SehjLxXIl/EpQ==
-X-Received: by 2002:a17:906:af84:: with SMTP id mj4mr1046479ejb.341.1582840742890;
-        Thu, 27 Feb 2020 13:59:02 -0800 (PST)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
-        by smtp.gmail.com with ESMTPSA id x12sm331861eje.52.2020.02.27.13.59.02
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 13:59:02 -0800 (PST)
-Received: by mail-wr1-f49.google.com with SMTP id e8so677421wrm.5
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 13:59:02 -0800 (PST)
-X-Received: by 2002:a05:651c:1a2:: with SMTP id c2mr734150ljn.79.1582840398185;
- Thu, 27 Feb 2020 13:53:18 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=DZXI7uvvOw0fNdSg04a7D3gbzl4O/eHHrwdgk0aaqJE=;
+        b=Hr7mZ035tS76RLMQ0TXU9xtSB8Mnj1TgpmSQ6WWeCPCMBqJLu0HFVoigB49WAZuHUv
+         q+pNIV3yn4gMW01Vs+SALCKwOO22bDq/2yNTvfJh3eCwqgAngRe+P/Wy893Pw21As+dG
+         dVb8rGoDFArGzJRMi2L3/1rsIg/LkQR6MqdkV6vFSV736atk52Dxltud+f25Rz534Yws
+         TP8rilKhQejv4BYW/QN1HGNt3LxnX8tSZ8ZgTIzFnqU5JSj9ochC7sC28gKq/jpt38Et
+         h1EV+fUayKcJikqx/rdsnb0mXBohYUWqr9y9eC9J+VvFMagckp3bFxdueAnKWTccIwbA
+         2Hxw==
+X-Gm-Message-State: APjAAAUV4obIQ6XRidc0GVGJK4t4IklcfukkxbdZDsy+utMXGmgeF08h
+        b37KYJHLJWiF3wBi00nWDwY=
+X-Google-Smtp-Source: APXvYqxOIbpdZLQdoCOz/7kFY829F0PDjAgwYtPnuzYix4T1+T8HFSPqEhciJa4khjnAvg8dEheDFg==
+X-Received: by 2002:a1c:4805:: with SMTP id v5mr884862wma.80.1582840915478;
+        Thu, 27 Feb 2020 14:01:55 -0800 (PST)
+Received: from AnsuelXPS (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.gmail.com with ESMTPSA id z2sm3443814wrq.95.2020.02.27.14.01.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 14:01:54 -0800 (PST)
+From:   <ansuelsmth@gmail.com>
+To:     "'Rob Herring'" <robh@kernel.org>
+Cc:     "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Andrew Lunn'" <andrew@lunn.ch>,
+        "'Florian Fainelli'" <f.fainelli@gmail.com>,
+        "'Heiner Kallweit'" <hkallweit1@gmail.com>,
+        "'Russell King'" <linux@armlinux.org.uk>,
+        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <andrew@lunn.ch> <20200227011050.11106-1-ansuelsmth@gmail.com> <20200227011050.11106-2-ansuelsmth@gmail.com> <20200227172340.GA19136@bogus>
+In-Reply-To: <20200227172340.GA19136@bogus>
+Subject: R: [PATCH v8 2/2] dt-bindings: net: Add ipq806x mdio bindings
+Date:   Thu, 27 Feb 2020 23:01:51 +0100
+Message-ID: <005401d5edb9$84fd8ec0$8ef8ac40$@gmail.com>
 MIME-Version: 1.0
-References: <20200209183411.17195-1-sibis@codeaurora.org> <20200209183411.17195-6-sibis@codeaurora.org>
-In-Reply-To: <20200209183411.17195-6-sibis@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Thu, 27 Feb 2020 13:52:41 -0800
-X-Gmail-Original-Message-ID: <CAE=gft755hYH7ue=fv2jvofejoWHZaguji6D-M1qHup-3SJTwQ@mail.gmail.com>
-Message-ID: <CAE=gft755hYH7ue=fv2jvofejoWHZaguji6D-M1qHup-3SJTwQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] interconnect: qcom: sdm845: Split qnodes into
- their respective NoCs
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Matthias Kaehlcke <mka@chromium.org>, linux-pm@vger.kernel.org,
-        Odelu Kukatla <okukatla@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQK3MMxYfxrxN4e01t227dGot2VmuAEzaQ9BAnacW3QBIS/lwaZGtj5w
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 9, 2020 at 10:35 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+> On Thu, Feb 27, 2020 at 02:10:46AM +0100, Ansuel Smith wrote:
+> > Add documentations for ipq806x mdio driver.
+> >
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> > Changes in v8:
+> > - Fix error in dtb check
+> > - Remove not needed reset definition from example
+> > - Add include header for ipq806x clocks
+> > - Fix wrong License type
+> >
+> > Changes in v7:
+> > - Fix dt_binding_check problem
+> >
+> >  .../bindings/net/qcom,ipq8064-mdio.yaml       | 61
+> +++++++++++++++++++
+> >  1 file changed, 61 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-
+> mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-
+> mdio.yaml
+> > new file mode 100644
+> > index 000000000000..4334a415f23c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-
+> mdio.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> 
+> Dual license new bindings please:
+> 
+> (GPL-2.0-only OR BSD-2-Clause)
+> 
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm ipq806x MDIO bus controller
+> > +
+> > +maintainers:
+> > +  - Ansuel Smith <ansuelsmth@gmail.com>
+> > +
+> > +description:
+> > +  The ipq806x soc have a MDIO dedicated controller that is
+> > +  used to comunicate with the gmac phy conntected.
+> 
+> 2 typos
+> 
+> > +  Child nodes of this MDIO bus controller node are standard
+> > +  Ethernet PHY device nodes as described in
+> > +  Documentation/devicetree/bindings/net/phy.txt
+> 
+> You might want to read what that file says now.
+> 
+> > +
+> > +allOf:
+> > +  - $ref: "mdio.yaml#"
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +        - const: qcom,ipq8064-mdio
+> > +        - const: syscon
+> 
+> Why is this a 'syscon'? Does it have more than 1 function?
 >
-> From: David Dai <daidavid1@codeaurora.org>
->
-> In order to better represent the hardware and its different Network-On-Chip
-> devices, split the sdm845 provider driver into NoC specific providers.
-> Remove duplicate functionality already provided by the icc rpmh and
-> bcm voter drivers to calculate and commit bandwidth requests to hardware.
->
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+ 
+Since the code use syscon_node_to_regmap, the syscon compatible
+is need or the driver fails to load. (since the reg is used also for the 
+gmac node) 
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
+Again sorry for the mess as I misread the email... Will fix all in v9 
+
+> > +
+> > +  reg:
+> > +    description: address and length of the register set for the device
+> 
+> Drop this and you need to state how many (maxItems).
+> 
+> > +
+> > +  clocks:
+> > +    description: A reference to the clock supplying the MDIO bus
+> controller
+> 
+> Same here.
+> 
+> > +
+> > +  clock-names:
+> > +    const: master
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> > +
+> > +    mdio0: mdio@37000000 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        compatible = "qcom,ipq8064-mdio", "syscon";
+> > +        reg = <0x37000000 0x200000>;
+> > +
+> > +        clocks = <&gcc GMAC_CORE1_CLK>;
+> > +
+> > +        switch@10 {
+> > +            compatible = "qca,qca8337";
+> > +            /* ... */
+> > +        };
+> > +    };
+> > --
+> > 2.25.0
+> >
+
