@@ -2,75 +2,83 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B77C11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547FEC35E17
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7369D2469C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BAEE2469C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbgB0SWY (ORCPT
+        id S1731004AbgB0SZJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:22:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:56626 "EHLO foss.arm.com"
+        Thu, 27 Feb 2020 13:25:09 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:48216 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729142AbgB0SWY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:22:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D57E34B2;
-        Thu, 27 Feb 2020 10:22:23 -0800 (PST)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3702D3F73B;
-        Thu, 27 Feb 2020 10:22:22 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Rob Herring <robh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Robert Richter <rric@kernel.org>, soc@kernel.org,
-        Jon Loeliger <jdl@jdl.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH v2 02/13] arm: dts: calxeda: Provide UART clock
-Date:   Thu, 27 Feb 2020 18:21:59 +0000
-Message-Id: <20200227182210.89512-3-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227182210.89512-1-andre.przywara@arm.com>
-References: <20200227182210.89512-1-andre.przywara@arm.com>
+        id S1729756AbgB0SZI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 13:25:08 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 275C938C69BB;
+        Thu, 27 Feb 2020 19:07:23 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id PSds-qT7qT7D; Thu, 27 Feb 2020 19:07:20 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andy Yan <andy.yan@rock-chips.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nick Xie <nick@khadas.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Tobias Schramm <t.schramm@manjaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        anarsoul@gmail.com
+Subject: [PATCH 1/2] dt-bindings: Add doc for pine64 Pinebook Pro
+Date:   Thu, 27 Feb 2020 19:06:29 +0100
+Message-Id: <20200227180630.166982-2-t.schramm@manjaro.org>
+In-Reply-To: <20200227180630.166982-1-t.schramm@manjaro.org>
+References: <20200227180630.166982-1-t.schramm@manjaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The PL011 UART binding requires two clocks to be named in a node.
-Add the second clock, which is the bus gate, that just gets enabled.
-Since this is a fixed clock anyway, it doesn't make any difference.
+This commit adds a compatible for the Pinebook Pro.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
 ---
- arch/arm/boot/dts/ecx-common.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ecx-common.dtsi b/arch/arm/boot/dts/ecx-common.dtsi
-index 66ee1d34f72b..f819e3328a9e 100644
---- a/arch/arm/boot/dts/ecx-common.dtsi
-+++ b/arch/arm/boot/dts/ecx-common.dtsi
-@@ -114,8 +114,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0xfff36000 0x1000>;
- 			interrupts = <0 20 4>;
--			clocks = <&pclk>;
--			clock-names = "apb_pclk";
-+			clocks = <&pclk>, <&pclk>;
-+			clock-names = "uartclk", "apb_pclk";
- 		};
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 874b0eaa2a75..482a0cbfb18a 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -402,6 +402,11 @@ properties:
+           - const: phytec,rk3288-phycore-som
+           - const: rockchip,rk3288
  
- 		smic@fff3a000 {
++      - description: Pine64 Pinebook Pro
++        items:
++          - const: pine64,pinebook-pro
++          - const: rockchip,rk3399
++
+       - description: Pine64 Rock64
+         items:
+           - const: pine64,rock64
 -- 
-2.17.1
+2.24.1
 
