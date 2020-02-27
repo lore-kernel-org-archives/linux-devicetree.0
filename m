@@ -2,194 +2,168 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668CEC4BA3B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA03C4BA3B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AFD24697
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17DE22468F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 11:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgB0LsY (ORCPT
+        id S1728910AbgB0LxL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:48:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:49094 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728904AbgB0LsY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:48:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05CAB1FB;
-        Thu, 27 Feb 2020 03:48:24 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 025253F73B;
-        Thu, 27 Feb 2020 03:48:21 -0800 (PST)
-Date:   Thu, 27 Feb 2020 11:48:16 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 5/5] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-Message-ID: <20200227114816.GA11443@e121166-lin.cambridge.arm.com>
-References: <20200113181411.32743-1-vidyas@nvidia.com>
- <20200113181411.32743-6-vidyas@nvidia.com>
+        Thu, 27 Feb 2020 06:53:11 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56397 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728908AbgB0LxL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 06:53:11 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j7Hj0-0003fl-HA; Thu, 27 Feb 2020 12:53:06 +0100
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j7His-00068v-Qd; Thu, 27 Feb 2020 12:52:58 +0100
+Message-ID: <d91b38bca62006cdf0a2433d088e2744c867064d.camel@pengutronix.de>
+Subject: Re: [PATCH v3 3/4] dt-bindings: display: imx: add bindings for DCSS
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     devicetree@vger.kernel.org, agx@sigxcpu.org, lukas@mntmn.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+Date:   Thu, 27 Feb 2020 12:52:58 +0100
+In-Reply-To: <1575625964-27102-4-git-send-email-laurentiu.palcu@nxp.com>
+References: <1575625964-27102-1-git-send-email-laurentiu.palcu@nxp.com>
+         <1575625964-27102-4-git-send-email-laurentiu.palcu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113181411.32743-6-vidyas@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 11:44:11PM +0530, Vidya Sagar wrote:
-> Add support for the endpoint mode of Synopsys DesignWare core based
-> dual mode PCIe controllers present in Tegra194 SoC.
+Hi Laurentiu,
+
+On Fri, 2019-12-06 at 11:52 +0200, Laurentiu Palcu wrote:
+> Add bindings for iMX8MQ Display Controller Subsystem.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
-> V3:
-> * Addressed Thierry's review comments
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml      | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> new file mode 100644
+> index 00000000..efd2494
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 NXP
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: iMX8MQ Display Controller Subsystem (DCSS)
+> +
+> +maintainers:
+> +  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> +
+> +description:
+> +
+> +  The DCSS (display controller sub system) is used to source up to three
+> +  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
+> +  2.2) or MIPI-DSI. The DCSS is intended to support up to 4kp60 displays. HDR10
+> +  image processing capabilities are included to provide a solution capable of
+> +  driving next generation high dynamic range displays.
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,imx8mq-dcss
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    maxItems: 3
+> +    items:
+> +      - description: Context loader completion and error interrupt
+> +      - description: DTG interrupt used to signal context loader trigger time
+> +      - description: DTG interrupt for Vblank
+> +
+> +  interrupt-names:
+> +    maxItems: 3
+> +    items:
+> +      - const: ctx_ld
+> +      - const: ctxld_kick
+> +      - const: vblank
+> +
+> +  clocks:
+> +    maxItems: 5
+> +    items:
+> +      - description: Display APB clock for all peripheral PIO access interfaces
+> +      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
+> +      - description: RTRAM clock
+> +      - description: Pixel clock, can be driver either by HDMI phy clock or MIPI
+> +      - description: DTRC clock, needed by video decompressor
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb
+> +      - const: axi
+> +      - const: rtrm
+> +      - const: pix
+> +      - const: dtrc
+> +
+> +  port@0:
 
-I need his ACK to merge this series.
+If there is just a single output port, I think the @0 unit address
+should be dropped. Otherwise the port node needs to contain a "reg =
+<0>;" property in the example below:
 
-[...]
+> +    type: object
+> +    description: A port node pointing to a hdmi_in or mipi_in port node.
+> +
+> +examples:
+> +  - |
+> +    dcss: display-controller@32e00000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
 
-> +static int tegra_pcie_ep_work_thread(void *p)
-> +{
-> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
-> +	u32 event;
-> +
-> +	while (true) {
-> +		wait_event_interruptible(pcie->wq,
-> +					 !kfifo_is_empty(&pcie->event_fifo));
-> +
-> +		if (kthread_should_stop())
-> +			break;
-> +
-> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
-> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
-> +			continue;
-> +		}
-> +
-> +		switch (event) {
-> +		case EP_PEX_RST_DEASSERT:
-> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
-> +			pex_ep_event_pex_rst_deassert(pcie);
-> +			break;
-> +
-> +		case EP_PEX_RST_ASSERT:
-> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
-> +			pex_ep_event_pex_rst_assert(pcie);
-> +			break;
-> +
-> +		case EP_HOT_RST_DONE:
-> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
-> +			pex_ep_event_hot_rst_done(pcie);
-> +			break;
-> +
-> +		case EP_BME_CHANGE:
-> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
-> +			pex_ep_event_bme_change(pcie);
-> +			break;
-> +
-> +		case EP_EVENT_EXIT:
-> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
-> +			return 0;
-> +
-> +		default:
-> +			dev_warn(pcie->dev, "Invalid PCIe EP event: %u\n",
-> +				 event);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t tegra_pcie_ep_pex_rst_irq(int irq, void *arg)
-> +{
-> +	struct tegra_pcie_dw *pcie = arg;
-> +
-> +	if (gpiod_get_value(pcie->pex_rst_gpiod)) {
-> +		if (!kfifo_put(&pcie->event_fifo, EP_PEX_RST_ASSERT)) {
-> +			dev_err(pcie->dev, "EVENT FIFO is full\n");
-> +			return IRQ_HANDLED;
-> +		}
-> +	} else {
-> +		if (!kfifo_put(&pcie->event_fifo, EP_PEX_RST_DEASSERT)) {
-> +			dev_err(pcie->dev, "EVENT FIFO is full\n");
-> +			return IRQ_HANDLED;
-> +		}
-> +	}
-> +
-> +	wake_up(&pcie->wq);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
+/soc@0/bus@32c00000/display-controller@32e00000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
 
-[...]
+> +        compatible = "nxp,imx8mq-dcss";
+> +        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
+> +        interrupts = <6>, <8>, <9>;
+> +        interrupt-names = "ctx_ld", "ctxld_kick", "vblank";
+> +        interrupt-parent = <&irqsteer>;
+> +        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
+> +                 <&clk 254>,<&clk 122>;
+> +        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
+> +        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
+> +        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
+> +        assigned-clock-rates = <800000000>,
+> +                               <400000000>;
+> +        port@0 {
 
-> +static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
-> +				struct platform_device *pdev)
-> +{
-> +	struct dw_pcie *pci = &pcie->pci;
-> +	struct device *dev = pcie->dev;
-> +	struct dw_pcie_ep *ep;
-> +	struct resource *res;
-> +	char *name;
-> +	int ret;
-> +
-> +	ep = &pci->ep;
-> +	ep->ops = &pcie_ep_ops;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-> +	if (!res)
-> +		return -EINVAL;
-> +
-> +	ep->phys_base = res->start;
-> +	ep->addr_size = resource_size(res);
-> +	ep->page_size = SZ_64K;
-> +
-> +	ret = gpiod_set_debounce(pcie->pex_rst_gpiod, PERST_DEBOUNCE_TIME);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to set PERST GPIO debounce time: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = gpiod_to_irq(pcie->pex_rst_gpiod);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to get IRQ for PERST GPIO: %d\n", ret);
-> +		return ret;
-> +	}
-> +	pcie->pex_rst_irq = (unsigned int)ret;
-> +
-> +	name = devm_kasprintf(dev, GFP_KERNEL, "tegra_pcie_%u_pex_rst_irq",
-> +			      pcie->cid);
-> +	if (!name) {
-> +		dev_err(dev, "Failed to create PERST IRQ string\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	irq_set_status_flags(pcie->pex_rst_irq, IRQ_NOAUTOEN);
-> +
-> +	ret = devm_request_irq(dev, pcie->pex_rst_irq,
-> +			       tegra_pcie_ep_pex_rst_irq,
-> +			       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-> +			       name, (void *)pcie);
+/soc@0/bus@32c00000/display-controller@32e00000/port@0: node has a unit name, but no reg property
 
-I have the impression that a threaded IRQ is what you need, which
-will also remove some boilerplate in the process. Any reason why
-you can't use a threaded IRQ instead of a standalone kthread ?
-
-Thanks,
-Lorenzo
+regards
+Philipp
