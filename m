@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD58EC35E15
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F56C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 946D3246C8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092CC246AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730698AbgB0SW2 (ORCPT
+        id S1730802AbgB0SWf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:22:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:56658 "EHLO foss.arm.com"
+        Thu, 27 Feb 2020 13:22:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:56690 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729142AbgB0SW2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:22:28 -0500
+        id S1730799AbgB0SWe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 13:22:34 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 900A930E;
-        Thu, 27 Feb 2020 10:22:27 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 966D61FB;
+        Thu, 27 Feb 2020 10:22:33 -0800 (PST)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E69423F73B;
-        Thu, 27 Feb 2020 10:22:25 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBC5C3F73B;
+        Thu, 27 Feb 2020 10:22:31 -0800 (PST)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Rob Herring <robh@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc:     Maxime Ripard <mripard@kernel.org>,
         Eric Auger <eric.auger@redhat.com>,
         Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH v2 04/13] arm: dts: calxeda: Group port-phys and sgpio-gpio items
-Date:   Thu, 27 Feb 2020 18:22:01 +0000
-Message-Id: <20200227182210.89512-5-andre.przywara@arm.com>
+Subject: [PATCH v2 07/13] dt-bindings: net: Convert Calxeda Ethernet binding to json-schema
+Date:   Thu, 27 Feb 2020 18:22:04 +0000
+Message-Id: <20200227182210.89512-8-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200227182210.89512-1-andre.przywara@arm.com>
 References: <20200227182210.89512-1-andre.przywara@arm.com>
@@ -47,34 +47,96 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For proper bindings checks we need to properly group the port-phys and
-sgpio-gpio items, so that they match the expected number of items.
+Convert the Calxeda XGMAC Ethernet device binding to DT schema format
+using json-schema.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- arch/arm/boot/dts/ecx-common.dtsi | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/net/calxeda-xgmac.txt | 18 -------
+ .../bindings/net/calxeda-xgmac.yaml           | 49 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 18 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.txt
+ create mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.yaml
 
-diff --git a/arch/arm/boot/dts/ecx-common.dtsi b/arch/arm/boot/dts/ecx-common.dtsi
-index b7e74a357471..57a028a69373 100644
---- a/arch/arm/boot/dts/ecx-common.dtsi
-+++ b/arch/arm/boot/dts/ecx-common.dtsi
-@@ -27,10 +27,11 @@
- 			reg = <0xffe08000 0x10000>;
- 			interrupts = <0 83 4>;
- 			dma-coherent;
--			calxeda,port-phys = <&combophy5 0 &combophy0 0
--					     &combophy0 1 &combophy0 2
--					     &combophy0 3>;
--			calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
-+			calxeda,port-phys = < &combophy5 0>, <&combophy0 0>,
-+					     <&combophy0 1>, <&combophy0 2>,
-+					     <&combophy0 3>;
-+			calxeda,sgpio-gpio =<&gpioh 5 1>, <&gpioh 6 1>,
-+					    <&gpioh 7 1>;
- 			calxeda,led-order = <4 0 1 2 3>;
- 		};
- 
+diff --git a/Documentation/devicetree/bindings/net/calxeda-xgmac.txt b/Documentation/devicetree/bindings/net/calxeda-xgmac.txt
+deleted file mode 100644
+index c8ae996bd8f2..000000000000
+--- a/Documentation/devicetree/bindings/net/calxeda-xgmac.txt
++++ /dev/null
+@@ -1,18 +0,0 @@
+-* Calxeda Highbank 10Gb XGMAC Ethernet
+-
+-Required properties:
+-- compatible : Should be "calxeda,hb-xgmac"
+-- reg : Address and length of the register set for the device
+-- interrupts : Should contain 3 xgmac interrupts. The 1st is main interrupt.
+-  The 2nd is pwr mgt interrupt. The 3rd is low power state interrupt.
+-
+-Optional properties:
+-- dma-coherent      : Present if dma operations are coherent
+-
+-Example:
+-
+-ethernet@fff50000 {
+-        compatible = "calxeda,hb-xgmac";
+-        reg = <0xfff50000 0x1000>;
+-        interrupts = <0 77 4  0 78 4  0 79 4>;
+-};
+diff --git a/Documentation/devicetree/bindings/net/calxeda-xgmac.yaml b/Documentation/devicetree/bindings/net/calxeda-xgmac.yaml
+new file mode 100644
+index 000000000000..a8c1f00cff0f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/calxeda-xgmac.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/calxeda-xgmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Calxeda Highbank 10Gb XGMAC Ethernet controller
++
++description: |
++  The Calxeda XGMAC Ethernet controllers are directly connected to the
++  internal machine "network fabric", which is set up, initialised and
++  managed by the firmware. So there are no PHY properties in this
++  binding. Switches in the fabric take care of routing and mapping the
++  traffic to external network ports.
++
++maintainers:
++  - Andre Przywara <andre.przywara@arm.com>
++
++properties:
++  compatible:
++    const: calxeda,hb-xgmac
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      Can point to at most 3 xgmac interrupts. The 1st one is the main
++      interrupt, the 2nd one is used for power management. The optional
++      3rd one is the low power state interrupt.
++    minItems: 2
++    maxItems: 3
++
++  dma-coherent: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    ethernet@fff50000 {
++        compatible = "calxeda,hb-xgmac";
++        reg = <0xfff50000 0x1000>;
++        interrupts = <0 77 4>, <0 78 4>, <0 79 4>;
++    };
 -- 
 2.17.1
 
