@@ -2,91 +2,110 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A16BC4BA24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 12:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47588C4BA3B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 12:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBBA2469A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 12:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fuVmNTjj"
+	by mail.kernel.org (Postfix) with ESMTP id 285D42468E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 12:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgB0MTE (ORCPT
+        id S1729021AbgB0MXg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:19:04 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36902 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbgB0MTE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 07:19:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cxRWl4iygWCd5L7NHM7xlXTbfcODNKfUbcRP/HfvzfE=; b=fuVmNTjjLQntSrX2JbWGV40TU2
-        u5RGclQIxqtdm1cMNNjbvsaMgBH0eDH3i1fOX8tdEDLOb246JiItTF8G0Pqp2mi7OqDi34e+Aut+W
-        x/0UBruZKn+9TlAxhhT+l3bqrsB3UuqfGTyFCCPwFnOtUnDtumrp71OuZhaSWeSAV4RxEFFPAiVTL
-        qskasJNfpCahSeh6aFZ+TuU5eZ0ZLMjVkdmUWJenCanvcmnNxVAy2Kz8zQC+hoZPrMUbwvcqyeEk1
-        naO7XZBslhafwT60cqczc3qfgJLMIfTrHHryOgYBYDQB8lwk76GkTgWqQ0fHaoUfHjTX/JMwEl0tP
-        mnkAWVSg==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([2001:4d48:ad52:3201:222:68ff:fe15:37dd]:58348 helo=rmk-PC.armlinux.org.uk)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1j7I7v-0005SJ-Od; Thu, 27 Feb 2020 12:18:51 +0000
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1j7I7v-0004dS-5u; Thu, 27 Feb 2020 12:18:51 +0000
-From:   Russell King <rmk+kernel@armlinux.org.uk>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thu, 27 Feb 2020 07:23:36 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:56864 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728929AbgB0MXg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 07:23:36 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 0E14C804D0;
+        Thu, 27 Feb 2020 13:23:26 +0100 (CET)
+Date:   Thu, 27 Feb 2020 13:23:25 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: imx6qdl-sr-som-ti: indicate powering off wifi is
- safe
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kernel@pyra-handheld.com,
+        letux-kernel@openphoenux.org
+Subject: Re: [RFC 0/8] MIPS: CI20: add HDMI out support
+Message-ID: <20200227122325.GA7587@ravnborg.org>
+References: <cover.1582744379.git.hns@goldelico.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1j7I7v-0004dS-5u@rmk-PC.armlinux.org.uk>
-Date:   Thu, 27 Feb 2020 12:18:51 +0000
+In-Reply-To: <cover.1582744379.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ptjrNaXRAAAA:8
+        a=r_1tXGB3AAAA:8 a=ewWNKpoYB36fyWn1uZ8A:9 a=CjuIK1q_8ugA:10
+        a=6TjziPoOuUJhFL2Tmcc1:22 a=t8nPyN_e6usw4ciXM-Pk:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We need to indicate that powering off the TI WiFi is safe, to avoid:
+Hi Nikolaus.
 
-wl18xx_driver wl18xx.2.auto: Unbalanced pm_runtime_enable!
-wl1271_sdio mmc0:0001:2: wl12xx_sdio_power_on: failed to get_sync(-13)
+On Wed, Feb 26, 2020 at 08:12:52PM +0100, H. Nikolaus Schaller wrote:
+> This patch series adds HDMI output to the jz4780/CI20 board.
+> 
+> It is based on taking the old 3.18 vendor kernel and trying
+> to achieve the same with modern DTS setup and new/modified
+> drivers.
+> 
+> Unfortunately, in this first RFC, only EDID and creation of
+> /dev/fb0 are working. Also, HDMI hot plugging is detected.
+> 
+> But there is no HDMI output signal. So some tiny piece seems
+> to be missing to enable/configure the Synposys HDMI controller.
+> 
+> We need help from the community to fix this.
+> 
+> Note: device tree bindings are from 2015 and still seem to
+> fit - except they are not in yaml format.
+> 
+> Original authors of most patches are
+> * Paul Boddie <paul@boddie.org.uk>
+> * Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> 
+> 
+> H. Nikolaus Schaller (2):
+>   drm: ingenic-drm: add MODULE_DEVICE_TABLE
+>   MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
+> 
+> Paul Boddie (4):
+>   drm: ingenic: add jz4780 Synopsys HDMI driver.
+>   pinctrl: ingenic: add hdmi-ddc pin control group
+>   MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
+>   MIPS: DTS: CI20: add HDMI setup
+> 
+> Zubair Lutfullah Kakakhel (2):
+>   dt-bindings: video: Add jz4780-lcd binding
+>   dt-bindings: video: Add jz4780-hdmi binding
+> 
+>  .../bindings/display/ingenic-jz4780-hdmi.txt  |  41 ++++++
+>  .../bindings/display/ingenic-jz4780-lcd.txt   |  39 ++++++
+New bindings in DT Schema format please...
+We want to have then in a formal launguage so we can use these
+to verify the DT files.
 
-which prevents the WiFi being functional.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
-index 44a97ba93a95..352ac585ca6b 100644
---- a/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
-@@ -153,6 +153,7 @@
- 	bus-width = <4>;
- 	keep-power-in-suspend;
- 	mmc-pwrseq = <&pwrseq_ti_wifi>;
-+	cap-power-off-card;
- 	non-removable;
- 	vmmc-supply = <&vcc_3v3>;
- 	/* vqmmc-supply = <&nvcc_sd1>; - MMC layer doesn't like it! */
--- 
-2.20.1
-
+	Sam
