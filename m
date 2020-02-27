@@ -2,189 +2,167 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B98AC11D3D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FADBC3567B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96EC246A0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0154B246A0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 15:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xds/R4BC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="jKe/Dg6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbgB0PSN (ORCPT
+        id S1730700AbgB0P0h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:18:13 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34312 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729279AbgB0PSN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 10:18:13 -0500
-Received: by mail-lj1-f194.google.com with SMTP id x7so3890981ljc.1;
-        Thu, 27 Feb 2020 07:18:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M4uLZ+YZgo9Q68Dx5CiKtqfNH6WlHnEQZUoVCBn8Lbc=;
-        b=Xds/R4BCpC6BW8dtHzTtZGQOCQGcOhXw+x+LzzwA/VJAA/Fpq6fXrabWA4Io39mSbY
-         I8EXdBzJq4OithOB0SjRvPqGZY2qCNMJmyjZCFXcScHogSkDq2kXTr1Ju7TBLKuMxq4V
-         9pp5l9LKE/3UFPBLmsvj2kpal5qDKajtLLbZ8FslteeR2jO5qUF6I89+LlEOtPaX7sYE
-         3DLUdCyCHHep/Kc+EF8/k0wKJoJKYh/kEX57/LQH3kLFodc1ei1s7eu7LWeEP1E1ZQha
-         NoG7OvkqtH9bukiPObP041+mnsPO2ZK2eoIa6RVUkxs/hpBcuKm8HSQ0AntWsOiRX9jc
-         2ZMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M4uLZ+YZgo9Q68Dx5CiKtqfNH6WlHnEQZUoVCBn8Lbc=;
-        b=ALzSvV2BaAW4xpsSQXJQh5W8y9jYGxqfZyXlKsQEmNf9YjUtVJd8ZeSFDcfRdJzYWN
-         QUvMiyEm2S3UDaIpycBpzvZGpwg8qxjrZHZL4VM5uAJW4kNBDkJiHCbnMQdtw8cpxXqP
-         ExCaxkwVqVL3WIqLY4LYFvZKHliQyZvNAzuq7QHsNNeVw/tKawocOwh0Qm+Rnp96FdB0
-         KbOzK+4Nc/X2kVLQYEjKKcbApXQ+st1WqTN9rCV7U0CDBZcNoNW7fzty0tHvar1ozL8s
-         AQHXIu4kshfWyjohIHH+KeeEatNdnMFFGXLb1IctqK3nlx2UDxGlj7Movbx9K693bpzE
-         3ffA==
-X-Gm-Message-State: ANhLgQ1G8h7Whd94X1y6HoaYYHgT26TS6FxFcdG2NOPt1AISfI8D3I+R
-        HgyekyVWlKP6H+38r2/GQmw=
-X-Google-Smtp-Source: ADFU+vvWGmb7VbXM2thy02s+ZlBJEquIVTkcMVYWcqrjO/570bRTlqOJc56Hn86Q1ksLj3e7mv01pQ==
-X-Received: by 2002:a05:651c:414:: with SMTP id 20mr3024627lja.165.1582816689249;
-        Thu, 27 Feb 2020 07:18:09 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id t1sm3409703lji.98.2020.02.27.07.18.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 07:18:06 -0800 (PST)
-Subject: Re: [PATCH V4 4/8] memory: tegra: Add Tegra210 EMC clock driver
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Joseph Lo <josephl@nvidia.com>
-Cc:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thu, 27 Feb 2020 10:26:37 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:34410 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729451AbgB0P0h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 10:26:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582817194;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=UuGBOFWKuJoSfl7RZOJsB5BFu4+iFIJhovviL6N8jCk=;
+        b=jKe/Dg6ZJx2wqkYnxvbracWksw7VjH1zi5UkIANhkiCzcfGPP73s1kC0KowuMjcPI0
+        1zoWNEOqYYqyI5cMosH6KEHe+xKFizJFm/d88ODqUHzKlCsQBh15J//V/fH4CGpD0Qqg
+        DKF6yLyrBZyH5uluqT/SMKf0tHHKDm/474PRrklnnlkSuEIhPtW8NAA9L4K3nwLlZOEN
+        NyDynvjp6uA3Y6snbkm/tYFKZQXO1CYCeidrXd2LwVlHN3e4PBWHOktelMPvWsA0tYHz
+        nmHQZNzJJ/tUMpaByFv/fIAuWhkTW026j0XURl14/5MAN2o29TA/gipyUlruQTzyw6IE
+        G+6g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMhw47o15Y="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1RFQNBuB
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Thu, 27 Feb 2020 16:26:23 +0100 (CET)
+Subject: Re: [PATCH v6 1/6] nvmem: add driver for JZ4780 efuse
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1582814861.3.2@crapouillou.net>
+Date:   Thu, 27 Feb 2020 16:26:23 +0100
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190529082139.5581-1-josephl@nvidia.com>
- <20190529082139.5581-5-josephl@nvidia.com>
- <403181d4-100b-679e-b1d8-c052c6d1f3ac@gmail.com>
- <2f9722b4-df92-546b-9659-3b02768bbe41@nvidia.com>
- <20200226165746.GA818759@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <922e3faf-dd51-e159-4dc4-d427af58dc8f@gmail.com>
-Date:   Thu, 27 Feb 2020 18:18:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20200226165746.GA818759@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B30BD902-CF5D-421A-9BD5-5FA038895712@goldelico.com>
+References: <cover.1582715761.git.hns@goldelico.com> <2a675558c6c7ba6df86669176004fe4703645793.1582715761.git.hns@goldelico.com> <1582814861.3.2@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-26.02.2020 19:57, Thierry Reding пишет:
-> On Thu, May 30, 2019 at 10:45:01AM +0800, Joseph Lo wrote:
->> On 5/29/19 9:26 PM, Dmitry Osipenko wrote:
->>> 29.05.2019 11:21, Joseph Lo пишет:
->>>> This is the initial patch for Tegra210 EMC clock driver, which doesn't
->>>> include the support code and detail sequence for clock scaling yet.
->>>>
->>>> The driver is designed to support LPDDR4 SDRAM. Because of the LPDDR4
->>>> devices need to do initial time training before it can be used, the
->>>> firmware will help to do that at early boot stage. Then, the trained
->>>> table of the rates we support will pass to the kernel via DT. So the
->>>> driver can get the trained table for clock scaling support.
->>>>
->>>> For the higher rate support (above 800MHz), the periodic training is
->>>> needed for the timing compensation. So basically, two methodologies for
->>>> clock scaling are supported, one is following the clock changing
->>>> sequence to update the EMC table to EMC registers and another is if the
->>>> rate needs periodic training, then we will start a timer to do that
->>>> periodically until it scales to the lower rate.
->>>>
->>>> Based on the work of Peter De Schrijver <pdeschrijver@nvidia.com>.
->>>>
->>>> Signed-off-by: Joseph Lo <josephl@nvidia.com>
->>>> ---
->>>> v4:
->>>> - remove the statistic data in debugfs
->>>> - add tegra210_clk_register_emc API to make it compatible with the case
->>>>    if the kernel still uses the older DTB which doesn't have EMC node.
->>>>    And the MC and EMC clock can still be registered successfully.
->>>> v3:
->>>> - address almost all the comments from the previous version
->>>> - remove the DT parser of EMC table
->>>> - The EMC table is passing as a binary blob now.
->>>> ---
->>>>   drivers/memory/tegra/Kconfig        |  10 +
->>>>   drivers/memory/tegra/Makefile       |   1 +
->>>>   drivers/memory/tegra/tegra210-emc.c | 671 ++++++++++++++++++++++++++++
->>>>   drivers/memory/tegra/tegra210-emc.h | 156 +++++++
->>>>   include/soc/tegra/emc.h             |   2 +
->>>>   5 files changed, 840 insertions(+)
->>>>   create mode 100644 drivers/memory/tegra/tegra210-emc.c
->>>>   create mode 100644 drivers/memory/tegra/tegra210-emc.h
->>>>
->>>> diff --git a/drivers/memory/tegra/Kconfig b/drivers/memory/tegra/Kconfig
->>>> index 4680124ddcab..9d051bcdbee3 100644
->>>> --- a/drivers/memory/tegra/Kconfig
->>>> +++ b/drivers/memory/tegra/Kconfig
->>>> @@ -26,3 +26,13 @@ config TEGRA124_EMC
->>>>   	  Tegra124 chips. The EMC controls the external DRAM on the board.
->>>>   	  This driver is required to change memory timings / clock rate for
->>>>   	  external memory.
->>>> +
->>>> +config TEGRA210_EMC
->>>> +	bool "NVIDIA Tegra210 External Memory Controller driver"
->>>> +	default y
->>>
->>> This is not enough since you're leaving possibility to disable
->>> compilation of the driver, but the compilation will fail because of the
->>> unresolved symbol (tegra210_clk_register_emc).
->>>
->>>> +	depends on TEGRA_MC && ARCH_TEGRA_210_SOC
->>>> +	help
->>>> +	  This driver is for the External Memory Controller (EMC) found on
->>>> +	  Tegra210 chips. The EMC controls the external DRAM on the board.
->>>> +	  This driver is required to change memory timings / clock rate for
->>>> +	  external memory.
->>>
->>> Either TEGRA210_EMC Kconfig option shall be always force-selected for
->>> T210 or you should move all the clk-related code into drivers/clk/tegra/.
->>>
->>> Could you please give a rationale for having EMC clock code within the
->>> EMC driver?
->>
->> I didn't have a specific reason for that initially, just wanted the clock
->> code and EMC driver together for easier maintenance.
->>
->> But considering the fix in v4, that makes it backward compatible with the
->> case if the kernel uses the older DT without EMC node, I think it's better
->> to move the clock code into the clk folder now.
-> 
-> I looked into this a bit and I don't think this is actually worth it.
-> The problem is that, as opposed to Tegra124 and earlier, the sequence
-> for changing the EMC frequency is much more entangled. The bulk of the
-> programming will be on the EMC side, with the code occasionally calling
-> into CAR code to set the parent clock and some other flags.
-> 
-> So there's going to be some interdependencies regardless of where the
-> clock code actually lives. I can try to split this apart, but I don't
-> have very high hopes that the end result will be any cleaner than the
-> version here.
+Hi Paul,
 
-I'm vaguely recalling that there was another reason than just to "make
-things cleaner"..
+> Am 27.02.2020 um 15:47 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Nikolaus,
+>=20
+>=20
+> Le mer., f=E9vr. 26, 2020 at 12:15, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> This patch brings support for the JZ4780 efuse. Currently it only =
+exposes
+>> a read only access to the entire 8K bits efuse memory and nvmem =
+cells.
+>> To fetch for example the MAC address:
+>> dd if=3D/sys/devices/platform/134100d0.efuse/jz4780-efuse0/nvmem bs=3D1=
+ skip=3D34 count=3D6 status=3Dnone | xxd
+>> Tested-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: PrasannaKumar Muralidharan =
+<prasannatsmkumar@gmail.com>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>> drivers/nvmem/Kconfig        |  12 ++
+>> drivers/nvmem/Makefile       |   2 +
+>> drivers/nvmem/jz4780-efuse.c | 239 =
++++++++++++++++++++++++++++++++++++
+>> 3 files changed, 253 insertions(+)
+>> create mode 100644 drivers/nvmem/jz4780-efuse.c
+>> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+>> index 35efab1ba8d9..d7b7f6d688e7 100644
+>> --- a/drivers/nvmem/Kconfig
+>> +++ b/drivers/nvmem/Kconfig
+>> @@ -55,6 +55,18 @@ config NVMEM_IMX_OCOTP_SCU
 
-https://patchwork.kernel.org/patch/10938389/#22641053
 
-Secondly, if you're going to use the CCF API for the clock changes, then
-I'm not sure that having couple custom clock-API functions sounds too bad.
+>> +	clk_rate =3D clk_get_rate(efuse->clk);
+>> +
+>> +	efuse->dev =3D dev;
+>> +
+>> +	/*
+>> +	 * rd_adj and rd_strobe are 4 bit values
+>> +	 * conditions:
+>> +	 *   bus clk_period * (rd_adj + 1) > 6.5ns
+>> +	 *   bus clk_period * (rd_adj + 5 + rd_strobe) > 35ns
+>> +	 *   i.e. rd_adj >=3D 6.5ns / clk_period
+>> +	 *   i.e. rd_strobe >=3D 35 ns / clk_period - 5 - rd_adj + 1
+>> +	 * constants:
+>> +	 *   1 / 6.5ns =3D=3D 153846154 Hz
+>> +	 *   1 / 35ns =3D=3D 28571429 Hz
+>> +	 */
+>> +
+>> +	rd_adj =3D clk_rate / 153846154;
+>> +	rd_strobe =3D clk_rate / 28571429 - 5 - rd_adj + 1;
+>> +
+>> +	if (rd_adj > BIT(4) - 1 || rd_strobe > BIT(4) - 1) {
+>=20
+> Just use 0xF or GENMASK(3, 0) instead of BIT(4) - 1
 
-Lastly, in regards to the cleanup.. at minimum you should strip out all
-the unused parts from this code, make a generic cleanup to make it all
-look better, address previous comments.
+Or would rd_adj >=3D BIT(4) be better since this is not used as a mask?
+This would also correspond to that the register is 4 bits wide.
+
+>=20
+>> +		dev_err(&pdev->dev, "Cannot set clock configuration\n");
+>> +		return -EINVAL;
+>=20
+> You need to clk_disable_unprepare() before you return now, since the =
+clock has been enabled.
+
+Ah, ok! Forgot about that.
+
+> I'd suggest registering a cleanup function (with =
+devm_add_action_or_reset) after clk_prepare_enable() is called, then you =
+don't need extra handling in the rest of the probe, and the .remove =
+function (and platform_set_drvdata) can be dropped too.
+
+Ok, this will indeed be simpler that the remove function if we take the =
+error path into account.
+
+Noted for v7.
+
+>=20
+> The rest looks pretty good.
+>=20
+> Cheers,
+> -Paul
+
+BR,
+Nikolaus
+
