@@ -2,252 +2,130 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB6BC35DF9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D5CC11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A556E246A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95226246A1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrLlidHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbgB0Roj (ORCPT
+        id S1729982AbgB0Rpp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:44:39 -0500
-Received: from out28-5.mail.aliyun.com ([115.124.28.5]:52317 "EHLO
-        out28-5.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730627AbgB0Roh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 12:44:37 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07441786|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.411568-0.0104174-0.578014;DS=CONTINUE|ham_regular_dialog|0.0594824-0.00168407-0.938833;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03305;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GtKZqhO_1582825466;
-Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GtKZqhO_1582825466)
-          by smtp.aliyun-inc.com(10.147.41.199);
-          Fri, 28 Feb 2020 01:44:28 +0800
-Subject: Re: [PATCH v6 5/7] dt-bindings: MIPS: Document Ingenic SoCs binding.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1582215889-113034-7-git-send-email-zhouyanjie@wanyeetech.com>
- <20200226162907.GA13489@bogus> <1582811295.3.1@crapouillou.net>
-Cc:     Rob Herring <robh@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, tglx@linutronix.de,
-        ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, sboyd@kernel.org,
-        mturquette@baylibre.com, mark.rutland@arm.com,
-        daniel.lezcano@linaro.org, geert+renesas@glider.be,
-        krzk@kernel.org, ebiederm@xmission.com, miquel.raynal@bootlin.com,
-        keescook@chromium.org, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, dongsheng.qiu@ingenic.com
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5E57FFF9.2030804@wanyeetech.com>
-Date:   Fri, 28 Feb 2020 01:44:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Thu, 27 Feb 2020 12:45:45 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36393 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729710AbgB0Rpo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 12:45:44 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d9so70479pgu.3;
+        Thu, 27 Feb 2020 09:45:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aavjJ+Z/Os0zHnsfY4LhrQa/kjKKVPycfJnfRrQ9Zao=;
+        b=WrLlidHpJQHENIo9YAPAEQekykxM5HD2YXi3IVdH2pDlg6yOsqQeAnBHuInus8IGYC
+         T+Llicheka6t83Av1G7fnGQK8N8t/+ARqHcr7lEyinMjtYM47yBrjkl2uEcRsEZ4vjUz
+         pAjZPbsFEKwx29NM8eVxoOKBbOhAa5Ss0rhJpdsluzAbqfyGiQnGG/Zp0NAiBrgbAbt0
+         jfF0riqJcV8+RHgdQPpeLHStGSeazOIOy4Dlp0oY3js8i23wr6q2uHDBiIWHOaJsg9t8
+         1ZOC6VPeEyYaQraK7qW+s5OLWdodWJnu6yrWH8xyJEc1DQGF4Yy9unxmzfeJW8N2YDjq
+         /lIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aavjJ+Z/Os0zHnsfY4LhrQa/kjKKVPycfJnfRrQ9Zao=;
+        b=d5KvKt7BrH7gcLYsDCg9of86TNN4g2JAf/HnyiTMXCB8uswLlUqBLq1E4wSDptQKQ1
+         sspnlkxy3KdzSpsm4dVwhLDlLo16atWdXP74R9SCzzkXW4591SVk890vcaAUC5bQjOJo
+         I2fHE/3ogFDDZ2jiSqu4K95yV8wDfZ32QYkH2y3oo3ig4fVxEBbTZ1TyF3HspInmEDCJ
+         ew+heDh1tSNyCBMjljV9X57gTIlNLIr8NzgiXO67TmTSzsa0HA96FTNVok/j/HoQl3nD
+         mnEeBBLNBEN6y8ELhXBBHozaf6ze/6GwZSaNRWjiyP1o4C///YHBtv6M8fWqFSstPiC+
+         aNLg==
+X-Gm-Message-State: APjAAAUH55cWVuSj9QbIGieqDRLpl/y9T7BDiyM+1XsyEigmKv7ewC7M
+        ERw76zBLAwH5IfwZ+luslN0=
+X-Google-Smtp-Source: APXvYqxLesXxb5FW6sTnMiGiGe5CN/UVKj1bBr36Rl2QBzPtHaPhoQYlUWdpilUa7ohjuvvcuvc2jw==
+X-Received: by 2002:a62:7c96:: with SMTP id x144mr114879pfc.7.1582825543344;
+        Thu, 27 Feb 2020 09:45:43 -0800 (PST)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id m16sm7712623pfh.60.2020.02.27.09.45.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 09:45:43 -0800 (PST)
+Date:   Thu, 27 Feb 2020 09:45:41 -0800
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/4] ASoC: fsl_asrc: Change asrc_width to asrc_format
+Message-ID: <20200227174540.GA17040@Asurada-Nvidia.nvidia.com>
+References: <cover.1582770784.git.shengjiu.wang@nxp.com>
+ <ffd5ff2fd0e8ad03a97f6a640630cff767d73fa7.1582770784.git.shengjiu.wang@nxp.com>
+ <20200227034121.GA20540@Asurada-Nvidia.nvidia.com>
+ <CAA+D8AMzqpC35_CR2dCG6a_h4FzvZ6orXkPSYh_1o1d8hv+BMg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1582811295.3.1@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA+D8AMzqpC35_CR2dCG6a_h4FzvZ6orXkPSYh_1o1d8hv+BMg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+On Thu, Feb 27, 2020 at 01:10:19PM +0800, Shengjiu Wang wrote:
+> On Thu, Feb 27, 2020 at 11:43 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> >
+> > On Thu, Feb 27, 2020 at 10:41:55AM +0800, Shengjiu Wang wrote:
+> > > asrc_format is more inteligent variable, which is align
+> > > with the alsa definition snd_pcm_format_t.
+> > >
+> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > ---
+> > >  sound/soc/fsl/fsl_asrc.c     | 23 +++++++++++------------
+> > >  sound/soc/fsl/fsl_asrc.h     |  4 ++--
+> > >  sound/soc/fsl/fsl_asrc_dma.c |  2 +-
+> > >  3 files changed, 14 insertions(+), 15 deletions(-)
+> > >
+> > > diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+> > > index 0dcebc24c312..2b6a1643573c 100644
+> > > --- a/sound/soc/fsl/fsl_asrc.c
+> > > +++ b/sound/soc/fsl/fsl_asrc.c
+> >
+> > > @@ -600,11 +599,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+> > >
+> > >       pair->config = &config;
+> > >
+> > > -     if (asrc_priv->asrc_width == 16)
+> > > -             format = SNDRV_PCM_FORMAT_S16_LE;
+> > > -     else
+> > > -             format = SNDRV_PCM_FORMAT_S24_LE;
+> >
+> > It feels better to me that we have format settings in hw_params().
+> >
+> > Why not let fsl_easrc align with this? Any reason that I'm missing?
+> 
+> because the asrc_width is not formal,  in the future we can direct
 
-On 2020年02月27日 21:48, Paul Cercueil wrote:
-> Hi,
->
-> Le mer., févr. 26, 2020 at 10:29, Rob Herring <robh@kernel.org> a écrit :
->> On Fri, Feb 21, 2020 at 12:24:47AM +0800, 周琰杰 (Zhou Yanjie) wrote:
->>>  Document the available properties for the SoC root node and the
->>>  CPU nodes of the devicetree for the Ingenic XBurst SoCs.
->>>
->>>  Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>  Tested-by: Paul Boddie <paul@boddie.org.uk>
->>>  Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->>>  ---
->>>
->>>  Notes:
->>>      v1->v2:
->>>      Change the two Document from txt to yaml.
->>>
->>>      v2->v3:
->>>      Fix formatting errors.
->>>
->>>      v3->v4:
->>>      Fix bugs in the two yaml files.
->>>
->>>      v4->v5:
->>>      No change.
->>>
->>>      v5->v6:
->>>      Rewrite the two yaml files.
->>>
->>>   .../bindings/mips/ingenic/ingenic,cpu.yaml         | 61 
->>> ++++++++++++++++++++++
->>>   .../bindings/mips/ingenic/ingenic,soc.yaml         | 34 ++++++++++++
->>>   2 files changed, 95 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
->>>
->>>  diff --git 
->>> a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml 
->>> b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
->>>  new file mode 100644
->>>  index 00000000..ad1fd86
->>>  --- /dev/null
->>>  +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
->>>  @@ -0,0 +1,61 @@
->>>  +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>  +%YAML 1.2
->>>  +---
->>>  +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
->>>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>  +
->>>  +title: Bindings for Ingenic XBurst family CPUs
->>>  +
->>>  +maintainers:
->>>  +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->>
->> Blank line here.
->>
->>>  +description: |
->>
->> Drop the '|'.
->>
->>>  +  Ingenic XBurst family CPUs shall have the following properties.
->>>  +
->>>  +properties:
->>>  +  compatible:
->>>  +    oneOf:
->>>  +
->>>  +      - description: Ingenic XBurst®1 CPU Core
->>>  +        items:
->>>  +          - const: ingenic,xburst
->>>  +
->>>  +      - description: Ingenic XBurst®2 CPU Core
->>>  +        items:
->>>  +          - const: ingenic,xburst2
->>
->> enum:
->>   - ingenic,xburst  # Ingenic XBurst®1 CPU Core
->>   - ingenic,xburst2 # Ingenic XBurst®2 CPU Core
->>
->> Though I don't find the description really adds much.
->
-> About the enum values: shouldn't they be a bit more descriptive? There 
-> has been various versions of the Xburst1 chip, with slightly different 
-> instruction sets and hardware (FPU).
+Hmm..that's our DT binding. And I don't feel it is a problem
+to be ASoC irrelative.
 
-Sure, will change in next version.
+> input the format from the dts. format involve the info about width.
 
->
-> -Paul
->
->>>  +
->>>  +  reg:
->>>  +    description: |
->>>  +      The number of the CPU.
->>
->> Drop this.
->>
->> Add:
->>
->> maxItems: 1
->>
->>>  +
->>>  +required:
->>>  +  - device_type
->>>  +  - compatible
->>>  +  - reg
->>>  +
->>>  +examples:
->>>  +  - |
->>>  +    #include <dt-bindings/clock/jz4780-cgu.h>
->>>  +
->>>  +    cpus {
->>>  +        #address-cells = <1>;
->>>  +        #size-cells = <0>;
->>>  +
->>>  +        cpu0: cpu@0 {
->>>  +            device_type = "cpu";
->>>  +            compatible = "ingenic,xburst";
->>>  +            reg = <0>;
->>>  +
->>
->>>  +            clocks = <&cgu JZ4780_CLK_CPU>;
->>>  +            clock-names = "cpu";
->>
->> Not documented.
->>
->>>  +        };
->>>  +
->>>  +        cpu1: cpu@1 {
->>>  +            device_type = "cpu";
->>>  +            compatible = "ingenic,xburst";
->>>  +            reg = <1>;
->>>  +
->>>  +            clocks = <&cgu JZ4780_CLK_CORE1>;
->>>  +            clock-names = "cpu";
->>>  +        };
->>>  +    };
->>>  +...
->>>  diff --git 
->>> a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml 
->>> b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
->>>  new file mode 100644
->>>  index 00000000..8943e73
->>>  --- /dev/null
->>>  +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
->>>  @@ -0,0 +1,34 @@
->>>  +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>  +%YAML 1.2
->>>  +---
->>>  +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
->>>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>  +
->>>  +title: Bindings for Ingenic SoCs with XBurst CPU inside.
->>>  +
->>>  +maintainers:
->>>  +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->>
->> Blank line.
->>
->>>  +description: |
->>>  +  Ingenic SoCs with XBurst CPU inside shall have the following 
->>> properties.
->>>  +
->>>  +properties:
->>>  +  $nodename:
->>>  +    const: '/'
->>>  +  compatible:
->>>  +    oneOf:
->>>  +
->>>  +      - description: Ingenic JZ47 Series Mobile Application Processor
->>>  +        items:
->>>  +          - const: ingenic,jz4740
->>>  +          - const: ingenic,jz4725b
->>>  +          - const: ingenic,jz4760
->>>  +          - const: ingenic,jz4760b
->>>  +          - const: ingenic,jz4770
->>>  +          - const: ingenic,jz4780
->>
->> This is defining the root compatible is 6 strings. You want a enum here
->> I think.
->>
->>>  +
->>>  +      - description: Ingenic X Series IoT Application Processor
->>>  +        items:
->>>  +          - const: ingenic,x1000
->>>  +          - const: ingenic,x1000e
->>>  +          - const: ingenic,x1500
->>
->> Same here.
->>
->> Did you validate your dts file with this schema using 'make dtbs_check'?
->>
->> Rob
->
-
+Is there such any formal ASoC binding? I don't see those PCM
+formats under include/dt-bindings/ folder. How are we going
+to involve those formats in DT?
