@@ -2,108 +2,161 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C125CC3F2C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A813EC3F2C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE05246A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EBBF24690
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 21:42:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582839747;
+	bh=eP2PgAj9f7/R2T4FIWvJwwF1aYOF2wVQsYe5OD3EvlM=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=SqjX+ZVhbRqgZdSdvwQ0JpdEL9BO/DsHnvPzkm604xXrgYvqLAWJ6Cc5+pQgmNFR0
+	 DFOdIPBxjzTHR2jWin6QphyAI5AFcReVutEDD4jdMEkgcSX2nDJZxzrEZYCe6dPkiG
+	 5TgJ8KsTuhbCIG/yxVmN5PGjZF/1m/t7OaJke/o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbgB0Vag (ORCPT
+        id S1729831AbgB0VmX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:30:36 -0500
-Received: from muru.com ([72.249.23.125]:58136 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgB0Vaf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:30:35 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 188C980C0;
-        Thu, 27 Feb 2020 21:31:19 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 13:30:31 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 06/12] ARM: dts: am335x-bone-common: Enable PRU-ICSS
- interconnect node
-Message-ID: <20200227213031.GK37466@atomide.com>
-References: <20200225204649.28220-1-s-anna@ti.com>
- <20200225204649.28220-7-s-anna@ti.com>
- <20200226182924.GU37466@atomide.com>
- <af3965db-54b2-3e4f-414f-d27ca4b5ced1@ti.com>
- <20200226223745.GA37466@atomide.com>
- <20200226223921.GB37466@atomide.com>
- <b1fe18b5-f779-aea5-8c66-41c0de66c39f@ti.com>
- <20200227020713.GE37466@atomide.com>
- <28724629-2872-545a-309f-5a3208221b33@ti.com>
+        Thu, 27 Feb 2020 16:42:23 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45230 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbgB0VmW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 16:42:22 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v19so739491oic.12;
+        Thu, 27 Feb 2020 13:42:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hxSUt8ecSkxryci9k7+9ny1llgrPw7O7ypz9WTmNE9A=;
+        b=rZJDMg5sy4qQqvl/qAR4orGfEgOkxn7z/X+CkxSWWbmYHIuO4NO1Ugpd34baMnWhXn
+         VjPYvjRIM88K154wmFahWWsBRzmUANaZligcX78Wy7Ql1Jq168X97Lv5xlGqH0TfzvFV
+         2cJOfCxDTdeaRK+MyqQaH/nhAQBnxpFvVNJmuhQ/Gbifd8LqVYSoUT/zYdrCnkqkk4wO
+         o1lDmVg/xhyzA55ib4spbaDyq4WPjhbxmQUxsYHnuaImWPid1JxL5dxK4xlcaFbUO8k2
+         EnPz283ah0mnUzBTOiedeBwM26p0Dcv7ejxaYQuntw6zA6jFo0eZNxRFQ88d7TNzuHLP
+         LP7w==
+X-Gm-Message-State: APjAAAXv+0yguuG0pWcgfy6vqGqEKYAmzYT/APMs+1DQnm4CEg5h2WHM
+        31BN5Wuu/UST7OMtT3eWNg==
+X-Google-Smtp-Source: APXvYqyJuw4LqldUP8MH0Ja45kzZ5rHTt45NPh9538Dg11MACmv0nYndqV17CAWIl0VA6KmbgC3AIA==
+X-Received: by 2002:a05:6808:618:: with SMTP id y24mr832198oih.86.1582839740003;
+        Thu, 27 Feb 2020 13:42:20 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t20sm2365430oij.19.2020.02.27.13.42.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 13:42:19 -0800 (PST)
+Received: (nullmailer pid 2192 invoked by uid 1000);
+        Thu, 27 Feb 2020 21:42:18 -0000
+Date:   Thu, 27 Feb 2020 15:42:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Robert Richter <rric@kernel.org>, soc@kernel.org,
+        Jon Loeliger <jdl@jdl.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v2 01/13] arm: dts: calxeda: Basic DT file fixes
+Message-ID: <20200227214218.GA26010@bogus>
+References: <20200227182210.89512-1-andre.przywara@arm.com>
+ <20200227182210.89512-2-andre.przywara@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <28724629-2872-545a-309f-5a3208221b33@ti.com>
+In-Reply-To: <20200227182210.89512-2-andre.przywara@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [200227 21:29]:
-> On 2/26/20 8:07 PM, Tony Lindgren wrote:
-> > * Suman Anna <s-anna@ti.com> [200227 00:59]:
-> >> Hi Tony,
-> >>
-> >> On 2/26/20 4:39 PM, Tony Lindgren wrote:
-> >>> * Tony Lindgren <tony@atomide.com> [200226 22:38]:
-> >>>> * Suman Anna <s-anna@ti.com> [200226 20:35]:
-> >>>>> On 2/26/20 12:29 PM, Tony Lindgren wrote:
-> >>>>>> * Suman Anna <s-anna@ti.com> [200225 20:47]:
-> >>>>>>> The PRU-ICSS target module node was left in disabled state in the base
-> >>>>>>> am33xx-l4.dtsi file. Enable this node on all the AM335x beaglebone
-> >>>>>>> boards as they mostly use a AM3358 or a AM3359 SoC which do contain
-> >>>>>>> the PRU-ICSS IP.
-> >>>>>>
-> >>>>>> Just get rid of the top level status = "disabled". The default
-> >>>>>> is enabled, and the device is there for sure inside the SoC.
-> >>>>>> And then there's no need for pointless status = "okay" tinkering
-> >>>>>> in the board specific dts files so no need for this patch.
-> >>>>>
-> >>>>> The IP is not available on all SoCs, and there are about 40 different
-> >>>>> board files atm across AM33xx and AM437x, and am not sure what SoCs they
-> >>>>> are actually using.
-> >>>>
-> >>>> Oh that issue again.. Maybe take a look at patch "[PATCH 2/3] bus: ti-sysc:
-> >>>> Detect display subsystem related devices" if you can add runtime
-> >>>> detection for the accelerators there similar to what I hadded for omap3.
-> >>>> acclerators.
-> >>>
-> >>> Sorry I meant instead patch "[PATCH 6/7] bus: ti-sysc: Implement SoC
-> >>> revision handling".
-> >>
-> >> OK, looked down that path a bit more and looking through mach-omap2/id.c
-> >>  and soc.h, I see some of the part number infrastructure build on top of
-> >> DEV_FEATURE bits for some SoCs. The DEVICE_ID registers only have the
-> >> generic family and the Silicon Revision number for AM33xx and AM437x and
-> >> we currently do not have any infrastructure around exact SoC
-> >> identification for AM33xx and AM437x atleast.
-> >>
-> >> Do you have the bit-field split for the DEV_FEATURE bits somewhere,
-> >> because I couldn't find any in either the DM or the TRM. On AM437x,
-> >> there is no difference between AM4372 and AM4376 DEV_FEATURE value even
-> >> though the former doesn't have the PRUSS. On AM335x, may be bit 0
-> >> signifies the presence of PRUSS??
-> > 
-> > OK not sure how that could be detected. Maybe check the efuses on
-> > the newer SoCs?
+On Thu, Feb 27, 2020 at 06:21:58PM +0000, Andre Przywara wrote:
+> The .dts files for the Calxeda machines are quite old, so carry some
+> sloppy mistakes that the DT schema checker will complain about.
 > 
-> OK, latest datasheeet has fixed these values up, and they are no longer
-> identical. In anycase, none of the current AM437x board dts files in the
-> kernel use AM4372, so atleast for AM4372, I can drop the status=disabled
-> even without adding any SoC name support.
+> Fix those issues, they should not have any effect on functionality.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  arch/arm/boot/dts/ecx-2000.dts | 3 ---
+>  arch/arm/boot/dts/highbank.dts | 7 ++-----
+>  2 files changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/ecx-2000.dts b/arch/arm/boot/dts/ecx-2000.dts
+> index 5651ae6dc969..81eb382b4c23 100644
+> --- a/arch/arm/boot/dts/ecx-2000.dts
+> +++ b/arch/arm/boot/dts/ecx-2000.dts
+> @@ -13,7 +13,6 @@
+>  	compatible = "calxeda,ecx-2000";
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
+> -	clock-ranges;
+>  
+>  	cpus {
+>  		#address-cells = <1>;
+> @@ -83,8 +82,6 @@
+>  		intc: interrupt-controller@fff11000 {
+>  			compatible = "arm,cortex-a15-gic";
+>  			#interrupt-cells = <3>;
+> -			#size-cells = <0>;
+> -			#address-cells = <1>;
 
-OK sounds good to me.
+This is needed if there's an interrupt-map pointing to the gic node. 
+However, it should be 0 in that case. 
 
-Thanks,
+I thought we had to fix this at some point, but I can't find any record 
+of it. So I guess fine to remove. 
 
-Tony
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+>  			interrupt-controller;
+>  			interrupts = <1 9 0xf04>;
+>  			reg = <0xfff11000 0x1000>,
+> diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
+> index f4e4dca6f7e7..9e34d1bd7994 100644
+> --- a/arch/arm/boot/dts/highbank.dts
+> +++ b/arch/arm/boot/dts/highbank.dts
+> @@ -13,7 +13,6 @@
+>  	compatible = "calxeda,highbank";
+>  	#address-cells = <1>;
+>  	#size-cells = <1>;
+> -	clock-ranges;
+>  
+>  	cpus {
+>  		#address-cells = <1>;
+> @@ -96,7 +95,7 @@
+>  		};
+>  	};
+>  
+> -	memory {
+> +	memory@0 {
+>  		name = "memory";
+>  		device_type = "memory";
+>  		reg = <0x00000000 0xff900000>;
+> @@ -128,14 +127,12 @@
+>  		intc: interrupt-controller@fff11000 {
+>  			compatible = "arm,cortex-a9-gic";
+>  			#interrupt-cells = <3>;
+> -			#size-cells = <0>;
+> -			#address-cells = <1>;
+>  			interrupt-controller;
+>  			reg = <0xfff11000 0x1000>,
+>  			      <0xfff10100 0x100>;
+>  		};
+>  
+> -		L2: l2-cache {
+> +		L2: cache-controller {
+>  			compatible = "arm,pl310-cache";
+>  			reg = <0xfff12000 0x1000>;
+>  			interrupts = <0 70 4>;
+> -- 
+> 2.17.1
+> 
