@@ -2,149 +2,265 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C3BC3567B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AEBC3567B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD6E246AD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5444024691
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Y0HlIriE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="4GjoEiDv"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QXHFFlll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731361AbgB0Olk (ORCPT
+        id S1730916AbgB0Nsl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:41:40 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:35199 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731346AbgB0NvM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:51:12 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id E488A2151C;
-        Thu, 27 Feb 2020 08:51:11 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 27 Feb 2020 08:51:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=rL8rHIlj6lYtdHoMyUTKiQK1fsi
-        rI3FJ7XLB2RzfOfg=; b=Y0HlIriETGREYCWbtbx+x1ny0rV7S9mwZsEXLTYgFVR
-        DMnJ5qEGsXPku+TO4zN3jXnlQQwlH2VDVgK37KykoEk8OFfr1aP0MHPHkKfdbJx0
-        13XZSXCHDpt3g7DbueqmFrycl9YzEb6KEg+hEVWLb8pB7IvIq5CLxIGzzRpCUNHY
-        CFeK8Wlya5kRwJsQMBc1uWHKVuYzIVviMMlPsj4N7vw8Le657T2SswSFPGcMasLr
-        0EWVYVL7gf58djI4VnZpDCXJJiiog4BXlLsrAZVmnLKG3tbMw86cUNEj8t1xZgqu
-        Dmeii8yva6k/FR8rMg6VxICNJjDOCVEAI83vT99ubJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=rL8rHI
-        lj6lYtdHoMyUTKiQK1fsirI3FJ7XLB2RzfOfg=; b=4GjoEiDvxJLKHUmxewbgdu
-        +tWEZlXIrhrkI8/6VlDYm/BJsNQJClhF/mzBgDIjfiaCNVhJU5u1UHKTiBXFG29N
-        0LS9dAxWfs832VtY/Vj93tWH7NDoOvnsAAE1SNIB1vk7dZ5EBEe8DYmGxcx7mt0z
-        JB0q7HQUsdM61Uk34wJ68w5baqa/jYLRqm5q6xKrErZrQcb0w0Eq09raLHv6piPq
-        H0B3CkjxB0UCOrgvjSQ4R/zjAVvvtzXcobp7az3bwg+QFPj7tef4LKZvDxwt+qTG
-        xmzM/RU776O9ImVZ4nn9XSowaqcR1SKO+83VIk24Qz41Y/aeBucACTenLQO5C83A
-        ==
-X-ME-Sender: <xms:T8lXXu7n46_bKu6hKPfae_p-AeLw5MYi787npJ1Tjsb26n9kDgX_KQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeigdehjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:T8lXXs1JXuekKaGJawcJ2ILVVO9LyA67CA5B8_Rb2lAElszJ2LOhcA>
-    <xmx:T8lXXhvK74mld0NPu5rLUU19hZ4cyebrz19KU5_A_TUG6udwK2qlzQ>
-    <xmx:T8lXXq4FM_cnLW_eDruin4UqkmcALc3FQRGlUqsoZ3zRdE5LaX7vqQ>
-    <xmx:T8lXXrb8rWKD5_U6eJ7MxnObjhEWQ_XWLNV070QGGyru43ebyqK_Yg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1E6263280059;
-        Thu, 27 Feb 2020 08:51:11 -0500 (EST)
-Date:   Thu, 27 Feb 2020 14:51:09 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH] spi: dt-bindings: spi-controller: Fix #address-cells for
- slave mode
-Message-ID: <20200227135109.l2oal55nwhm5un2c@gilmour.lan>
-References: <20200227130323.15327-1-geert+renesas@glider.be>
- <20200227130937.qvrjyxcwim7rfum7@gilmour.lan>
- <CAMuHMdUVW_51dqMK=ziz_JVT3LuXX7vOF3-Ei-aHiiBuSepGpg@mail.gmail.com>
+        Thu, 27 Feb 2020 08:48:41 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:37276 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730653AbgB0Nsl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 08:48:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582811318; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U8EHEG3UQNjA4HaBYXHdmP9NqhqX3Zb9Ia6fEhNQAAY=;
+        b=QXHFFllloRMGuXUtT013hAbV7mOi6b8FP0crwe0A2LqOyhYISrobkuNR2Sddb1NF1NVWTu
+        +GfqibsyfI9SALRcPXQmofyYFrCNykCVCDEsu53F9K4Pw41x1nZuSDcOCzaS+JL3+I20Nl
+        5HwNlNJmBDGgF8QiT+KFMQPJPH3YSY8=
+Date:   Thu, 27 Feb 2020 10:48:15 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v6 5/7] dt-bindings: MIPS: Document Ingenic SoCs binding.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de,
+        ralf@linux-mips.org, paulburton@kernel.org,
+        jiaxun.yang@flygoat.com, chenhc@lemote.com, sboyd@kernel.org,
+        mturquette@baylibre.com, mark.rutland@arm.com,
+        daniel.lezcano@linaro.org, geert+renesas@glider.be,
+        krzk@kernel.org, ebiederm@xmission.com, miquel.raynal@bootlin.com,
+        keescook@chromium.org, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, dongsheng.qiu@ingenic.com
+Message-Id: <1582811295.3.1@crapouillou.net>
+In-Reply-To: <20200226162907.GA13489@bogus>
+References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1582215889-113034-7-git-send-email-zhouyanjie@wanyeetech.com>
+        <20200226162907.GA13489@bogus>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="z6z2joa2jqig3ppp"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUVW_51dqMK=ziz_JVT3LuXX7vOF3-Ei-aHiiBuSepGpg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---z6z2joa2jqig3ppp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Le mer., f=C3=A9vr. 26, 2020 at 10:29, Rob Herring <robh@kernel.org> a=20
+=C3=A9crit :
+> On Fri, Feb 21, 2020 at 12:24:47AM +0800, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zh=
+ou Yanjie)=20
+> wrote:
+>>  Document the available properties for the SoC root node and the
+>>  CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+>>=20
+>>  Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>  Tested-by: Paul Boddie <paul@boddie.org.uk>
+>>  Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wa=
+nyeetech.com>
+>>  ---
+>>=20
+>>  Notes:
+>>      v1->v2:
+>>      Change the two Document from txt to yaml.
+>>=20
+>>      v2->v3:
+>>      Fix formatting errors.
+>>=20
+>>      v3->v4:
+>>      Fix bugs in the two yaml files.
+>>=20
+>>      v4->v5:
+>>      No change.
+>>=20
+>>      v5->v6:
+>>      Rewrite the two yaml files.
+>>=20
+>>   .../bindings/mips/ingenic/ingenic,cpu.yaml         | 61=20
+>> ++++++++++++++++++++++
+>>   .../bindings/mips/ingenic/ingenic,soc.yaml         | 34=20
+>> ++++++++++++
+>>   2 files changed, 95 insertions(+)
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml=20
+>> b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>>  new file mode 100644
+>>  index 00000000..ad1fd86
+>>  --- /dev/null
+>>  +++=20
+>> b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>>  @@ -0,0 +1,61 @@
+>>  +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>  +%YAML 1.2
+>>  +---
+>>  +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
+>>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>  +
+>>  +title: Bindings for Ingenic XBurst family CPUs
+>>  +
+>>  +maintainers:
+>>  +  - =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetech.c=
+om>
+>=20
+> Blank line here.
+>=20
+>>  +description: |
+>=20
+> Drop the '|'.
+>=20
+>>  +  Ingenic XBurst family CPUs shall have the following properties.
+>>  +
+>>  +properties:
+>>  +  compatible:
+>>  +    oneOf:
+>>  +
+>>  +      - description: Ingenic XBurst=C2=AE1 CPU Core
+>>  +        items:
+>>  +          - const: ingenic,xburst
+>>  +
+>>  +      - description: Ingenic XBurst=C2=AE2 CPU Core
+>>  +        items:
+>>  +          - const: ingenic,xburst2
+>=20
+> enum:
+>   - ingenic,xburst  # Ingenic XBurst=C2=AE1 CPU Core
+>   - ingenic,xburst2 # Ingenic XBurst=C2=AE2 CPU Core
+>=20
+> Though I don't find the description really adds much.
 
-On Thu, Feb 27, 2020 at 02:19:08PM +0100, Geert Uytterhoeven wrote:
-> Hi Maxime,
->
-> On Thu, Feb 27, 2020 at 2:09 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > On Thu, Feb 27, 2020 at 02:03:23PM +0100, Geert Uytterhoeven wrote:
-> > > Currently, the DT bindings for an SPI controller specify that
-> > > "#address-cells" must be fixed to one.  However, that applies to an SPI
-> > > controller in master mode only.  When running in SPI slave mode,
-> > > "#address-cells" should be zero.
-> > >
-> > > Fix this making the value of "#address-cells" dependent on the presence
-> > > of "spi-slave".
-> > >
-> > > Fixes: 0a1b929356830257 ("spi: Add YAML schemas for the generic SPI options")
-> > > Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> > > --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > > +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
->
-> > > @@ -52,6 +53,18 @@ properties:
-> > >      description:
-> > >        The SPI controller acts as a slave, instead of a master.
-> > >
-> > > +if:
-> > > +  required:
-> > > +    [ spi-slave ]
-> >
-> > Nit: Usually, that notation is when you would do it on the same line,
-> > if you want to go to a new line, it would make more sense to use -
->
-> Sorry, being a poor yaml-by-example programmer, I don't understand what
-> you mean.  Which part do you refer to by "that notation"?
+About the enum values: shouldn't they be a bit more descriptive? There=20
+has been various versions of the Xburst1 chip, with slightly different=20
+instruction sets and hardware (FPU).
 
-I meant that usually the [] notation is used over a single line.
+-Paul
 
-If you want to have a list over multiple lines, usually you would have
+>>  +
+>>  +  reg:
+>>  +    description: |
+>>  +      The number of the CPU.
+>=20
+> Drop this.
+>=20
+> Add:
+>=20
+> maxItems: 1
+>=20
+>>  +
+>>  +required:
+>>  +  - device_type
+>>  +  - compatible
+>>  +  - reg
+>>  +
+>>  +examples:
+>>  +  - |
+>>  +    #include <dt-bindings/clock/jz4780-cgu.h>
+>>  +
+>>  +    cpus {
+>>  +    	#address-cells =3D <1>;
+>>  +    	#size-cells =3D <0>;
+>>  +
+>>  +    	cpu0: cpu@0 {
+>>  +    		device_type =3D "cpu";
+>>  +    		compatible =3D "ingenic,xburst";
+>>  +    		reg =3D <0>;
+>>  +
+>=20
+>>  +    		clocks =3D <&cgu JZ4780_CLK_CPU>;
+>>  +    		clock-names =3D "cpu";
+>=20
+> Not documented.
+>=20
+>>  +    	};
+>>  +
+>>  +    	cpu1: cpu@1 {
+>>  +    		device_type =3D "cpu";
+>>  +    		compatible =3D "ingenic,xburst";
+>>  +    		reg =3D <1>;
+>>  +
+>>  +    		clocks =3D <&cgu JZ4780_CLK_CORE1>;
+>>  +    		clock-names =3D "cpu";
+>>  +    	};
+>>  +    };
+>>  +...
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml=20
+>> b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
+>>  new file mode 100644
+>>  index 00000000..8943e73
+>>  --- /dev/null
+>>  +++=20
+>> b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
+>>  @@ -0,0 +1,34 @@
+>>  +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>  +%YAML 1.2
+>>  +---
+>>  +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
+>>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>  +
+>>  +title: Bindings for Ingenic SoCs with XBurst CPU inside.
+>>  +
+>>  +maintainers:
+>>  +  - =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetech.c=
+om>
+>=20
+> Blank line.
+>=20
+>>  +description: |
+>>  +  Ingenic SoCs with XBurst CPU inside shall have the following=20
+>> properties.
+>>  +
+>>  +properties:
+>>  +  $nodename:
+>>  +    const: '/'
+>>  +  compatible:
+>>  +    oneOf:
+>>  +
+>>  +      - description: Ingenic JZ47 Series Mobile Application=20
+>> Processor
+>>  +        items:
+>>  +          - const: ingenic,jz4740
+>>  +          - const: ingenic,jz4725b
+>>  +          - const: ingenic,jz4760
+>>  +          - const: ingenic,jz4760b
+>>  +          - const: ingenic,jz4770
+>>  +          - const: ingenic,jz4780
+>=20
+> This is defining the root compatible is 6 strings. You want a enum=20
+> here
+> I think.
+>=20
+>>  +
+>>  +      - description: Ingenic X Series IoT Application Processor
+>>  +        items:
+>>  +          - const: ingenic,x1000
+>>  +          - const: ingenic,x1000e
+>>  +          - const: ingenic,x1500
+>=20
+> Same here.
+>=20
+> Did you validate your dts file with this schema using 'make=20
+> dtbs_check'?
+>=20
+> Rob
 
-required:
-  - spi-slave
+=
 
-Maxime
-
---z6z2joa2jqig3ppp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlfJTQAKCRDj7w1vZxhR
-xSoKAQCMi6BKOxFBB0uhTTAvap1MsvS6SQ4ndibeVqk1uZYQrAD/So9dwDrZrPz1
-Tqt3wtZE3K5zNiD+3QvSqGsynf+04AM=
-=64J/
------END PGP SIGNATURE-----
-
---z6z2joa2jqig3ppp--
