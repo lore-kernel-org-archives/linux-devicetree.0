@@ -2,115 +2,109 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2293C4BA24
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 05:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D62AC4BA3B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 05:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F4B24656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 05:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F7824679
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 05:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4jCUaLf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rmtsiL1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725805AbgB0FKc (ORCPT
+        id S1725862AbgB0FfO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:10:32 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46540 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgB0FKb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 00:10:31 -0500
-Received: by mail-qt1-f195.google.com with SMTP id i14so1355795qtv.13;
-        Wed, 26 Feb 2020 21:10:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pivyxHSyqwryDPI9Gp60bBQcqgh4EowGAu7KJlQgz8E=;
-        b=H4jCUaLfJYUfLLqA3eJUJTu4b5XveFIshSWzC8Y9ln+QPHPxLUrzmrpESy/4akroJp
-         Z1nDx07X+MlLtNHzVPHE0eRY5Ki3r78WV31qoXhY51kbpvG/tDwciXC480UedUkCVCLI
-         CfSE9KcQk9zWNnCwGGaiXi0+XGAOA+cUPGSLF1Kl8WM911mYZ5WBeZjtQ4p7/trNAmiG
-         lee0S5ks436Q82ah/K+yp4MxHyjN4E9/4sbSeYHC8ECGGPVvAIYYtbLsEKwL6P41B1Jg
-         5juA7vU9RxBBlarCdwpP1F6wZhIcVRvZZ8LOzUBwNwcutzQsS1no+Zbav7A+e8MY9XBO
-         f9ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pivyxHSyqwryDPI9Gp60bBQcqgh4EowGAu7KJlQgz8E=;
-        b=P+rfVjrCmQdv7CjsQC6DA6IBYdcYOYo3uZ59w2bV6YXx1hggcaM2T1IoLAP8eI+kCn
-         HIQ69jISmeDCan93DqUuFNILyT6dYD+01s0dz4o/RAqfkwYloje15WfrqMxrUJIGS6tZ
-         E1D+ue13+F5MWC2v5BsPLTWOWmEx0fceKtrHIuiwVzYuGt55r9MnJx0c48e6AMRrdTfO
-         RkVcdUdVHWqKo9KFkMuMIuvp3KzVtdZC2hOwwJgYLN6BsbKmA3l7ssc02yN2SgNcf0Sb
-         sHFX0Km4weYzUTE2oquvtJqOIKmOliEdjfInPpyUpfriZtZN/hQ5aE1KefP/8pkkOh+K
-         1hVA==
-X-Gm-Message-State: APjAAAUaSxgH5NG8UiziUsX1uUXWzje3RxWi0/UQxwzOmGdr5E47opUF
-        NxSUkdvBH1H6LFDTM31rDG4udjb3SQoZM9Q4UKk=
-X-Google-Smtp-Source: APXvYqycq8WwBFtqjVUYzXazfM0rpHuJEyxghtCnM5oaWtr3OyjFzAOxbLU+lLoU9oiDrDjLlu176P4wnMzSmLHlnG0=
-X-Received: by 2002:ac8:5298:: with SMTP id s24mr2831317qtn.54.1582780230751;
- Wed, 26 Feb 2020 21:10:30 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1582770784.git.shengjiu.wang@nxp.com> <ffd5ff2fd0e8ad03a97f6a640630cff767d73fa7.1582770784.git.shengjiu.wang@nxp.com>
- <20200227034121.GA20540@Asurada-Nvidia.nvidia.com>
-In-Reply-To: <20200227034121.GA20540@Asurada-Nvidia.nvidia.com>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Thu, 27 Feb 2020 13:10:19 +0800
-Message-ID: <CAA+D8AMzqpC35_CR2dCG6a_h4FzvZ6orXkPSYh_1o1d8hv+BMg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] ASoC: fsl_asrc: Change asrc_width to asrc_format
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        Thu, 27 Feb 2020 00:35:14 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47142 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB0FfO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 00:35:14 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01R5Z9nq009722;
+        Wed, 26 Feb 2020 23:35:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582781709;
+        bh=W6a8xjdmdk6xg15QL1s3y6dekJ7l96jr9e8pSwH3q0E=;
+        h=From:To:CC:Subject:Date;
+        b=rmtsiL1HmQ71s9YKQNYsl5WFRhepg6ktXQ5L5+MjW8BP3wwbrg1D7iOCGVPQAsobw
+         myUIvlxF3PY+hUazeUZegFWF53o8cjkhuzMA01/h5wLzBGa4T4F3/rSuwlBFVTVPjy
+         6maSyuJcKyTwNpHMgHglBNRPJ8+6migD4MOrKqow=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01R5Z9mT020205
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 23:35:09 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 23:35:09 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 23:35:09 -0600
+Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01R5Z6ee022834;
+        Wed, 26 Feb 2020 23:35:06 -0600
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH v4 0/2]  clk: keystone: Add new driver to handle ehrpwm tbclk
+Date:   Thu, 27 Feb 2020 11:05:27 +0530
+Message-ID: <20200227053529.16479-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 11:43 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Thu, Feb 27, 2020 at 10:41:55AM +0800, Shengjiu Wang wrote:
-> > asrc_format is more inteligent variable, which is align
-> > with the alsa definition snd_pcm_format_t.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  sound/soc/fsl/fsl_asrc.c     | 23 +++++++++++------------
-> >  sound/soc/fsl/fsl_asrc.h     |  4 ++--
-> >  sound/soc/fsl/fsl_asrc_dma.c |  2 +-
-> >  3 files changed, 14 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> > index 0dcebc24c312..2b6a1643573c 100644
-> > --- a/sound/soc/fsl/fsl_asrc.c
-> > +++ b/sound/soc/fsl/fsl_asrc.c
->
-> > @@ -600,11 +599,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
-> >
-> >       pair->config = &config;
-> >
-> > -     if (asrc_priv->asrc_width == 16)
-> > -             format = SNDRV_PCM_FORMAT_S16_LE;
-> > -     else
-> > -             format = SNDRV_PCM_FORMAT_S24_LE;
->
-> It feels better to me that we have format settings in hw_params().
->
-> Why not let fsl_easrc align with this? Any reason that I'm missing?
+On TI's AM654 and J721e SoCs, certain clocks can be gated/ungated by setting a
+single bit in SoC's System Control registers. Sometime more than
+one clock control can be in the same register. But these registers might
+also have bits to control other SoC functionalities.
+For example, Time Base clock(TBclk) enable bits for various EPWM IPs are
+all in EPWM_CTRL Syscon registers on K2G SoC.
 
-because the asrc_width is not formal,  in the future we can direct
-input the format from the dts. format involve the info about width.
+This series adds a new clk driver to support controlling tbclk. Registers
+which control clocks will be grouped into a syscon DT node, thus
+enabling sharing of register across clk drivers and other drivers.
 
-best regards
-wang shengjiu
+v4:
+Fix up the title of YAML bindings file to drop reference to driver
+
+v3:
+Register syscon node as clk provider
+
+v2:
+Simplify driver to have only one clock node per group of syscon
+controller registers instead of one per clock instance.
+
+v1: https://patchwork.kernel.org/cover/10848783/
+
+Vignesh Raghavendra (2):
+  dt-bindings: clock: Add binding documentation for TI EHRPWM TBCLK
+  clk: keystone: Add new driver to handle syscon based clocks
+
+ .../bindings/clock/ti,am654-ehrpwm-tbclk.yaml |  35 ++++
+ drivers/clk/keystone/Kconfig                  |   8 +
+ drivers/clk/keystone/Makefile                 |   1 +
+ drivers/clk/keystone/syscon-clk.c             | 172 ++++++++++++++++++
+ 4 files changed, 216 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
+ create mode 100644 drivers/clk/keystone/syscon-clk.c
+
+-- 
+2.25.1
+
