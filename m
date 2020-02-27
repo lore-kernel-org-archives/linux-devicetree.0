@@ -2,109 +2,113 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6B6C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1BFC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8A82469B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209DA2469B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NgD9KMhG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Heq4GnYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbgB0Xlj (ORCPT
+        id S1729809AbgB0Xrp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:41:39 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50575 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729812AbgB0Xlj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 18:41:39 -0500
-Received: by mail-pj1-f67.google.com with SMTP id r67so468335pjb.0
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 15:41:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RPDn3VN9g8p/m7AP7o3uN1UNa8ewvoBqlcsK2XU14p4=;
-        b=NgD9KMhGVNVhQUdRxhMPpfYcyj4KNSCvL5unnyCbaQTOPhFfKGRPgZ+HQFMfzKULX2
-         aPNS2TYrdM+f3jXnVBZMXwXR3BpGH+Qs4QzCMeTaGA1XeJAChmSALB3gsedpMWHKl5I5
-         7vSS6POjQckU5dQYHVECKTG9TVgtWw56n8PkE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RPDn3VN9g8p/m7AP7o3uN1UNa8ewvoBqlcsK2XU14p4=;
-        b=e8pkX7t7UTO/L+zvJp2O9dOnqZiWs8XEuLPSFR0fybizwMJK+mWZfzB+RZcsx+UOct
-         UaoPtEnInxV680oml4HpgK25gHGf+cn4GUGi2XmIExL6B+wT+6a7HcrHaljpouvV31jU
-         CCTZ5EppAoWVdU0drOkAzQVXaSZvhLZbP10RIDkOz4h9inRt9K1zcmFSm3xJGq3i4t8s
-         aFqFvLTI6SdHeYCkzs0qu5KtnTIJSBPLkx2hGd7E0/VE76AmAcmJBO/pCfF5cpd56K2T
-         NYfKsK2Mu8LxygI+Xx4gLycdH/dOhgiTcss4GQpeuyxdhJR6XBm+rQh0E4eHTACT/wMO
-         q7CA==
-X-Gm-Message-State: APjAAAXpl6b9MWlEd9uVq10aNZo2VTy8y3Z50P+dnDXJlmFHAHiLCo6F
-        h6Yogh72k3IWPpJlllo/5snXnQ==
-X-Google-Smtp-Source: APXvYqwF7mXopVy4e3b74ONItwDUAaWOB6zck1YGUfvRN/uUanLfN7+dU7YIvhfbunorfy/XmpJlhw==
-X-Received: by 2002:a17:902:aa49:: with SMTP id c9mr1254841plr.145.1582846896504;
-        Thu, 27 Feb 2020 15:41:36 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id u24sm7665466pgo.83.2020.02.27.15.41.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 15:41:35 -0800 (PST)
-Date:   Thu, 27 Feb 2020 15:41:34 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Chandan Uddaraju <chandanu@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, seanpaul@chromium.org,
-        abhinavk@codeaurora.org, hoegsberg@google.com,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [DPU PATCH v3 4/5] drm/msm/dp: add support for DP PLL driver
-Message-ID: <20200227234134.GL24720@google.com>
-References: <1575294437-6129-1-git-send-email-chandanu@codeaurora.org>
- <0101016ec6de9b5b-cd61a0a2-9ae4-4ca1-a3a4-0ad2e8783e20-000000@us-west-2.amazonses.com>
+        Thu, 27 Feb 2020 18:47:45 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55856 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729796AbgB0Xrp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 18:47:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=28jcykxKbJYL83IzLpxZlMJpogx12W0uOAOwjpNqnaI=; b=Heq4GnYY+Oj+WGi9WwRBC2i0+a
+        VDiEiN5ZK58MZelkOzLVC0Lo9BM/xYuYGNVXP9K/p+iYWu5eb46I3FZyzyBkk8Hdu4kN2zk38OXLp
+        fvQmkAQ3Y4XwKGHnzDQN3O1dAnOd/DwzCVdjTkt5mmPyVOqhNwLsJsEMdWZuj9riqSmoqc1aC442E
+        H3gxgwSY8w49zA/hp8CiVplCDKXUDvVhGFRh5E/z/8khTOS/dEUHq/QsNQGVmFW5r3rM7q5ARE0w1
+        8ItcDm1gnyhcSAEg6Je9qtj/S+jDmNJvyotvv5BmQ9SRca38X+95XLIIA3A2Ph04JtFW58ZOaSpV+
+        6k2hiJdw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7Ssa-0005zI-WE; Thu, 27 Feb 2020 23:47:45 +0000
+Subject: Re: linux-next: Tree for Feb 27 (drivers/of/unittest.c)
+To:     Frank Rowand <frowand.list@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+References: <20200227152223.3d8442f0@canb.auug.org.au>
+ <ed57c797-1d40-0786-2cdc-adae7047a86f@infradead.org>
+ <0bd9179f-c448-c40d-f520-d568547bc810@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <63b12f5e-e5e5-a3ca-70a3-0c65075f657a@infradead.org>
+Date:   Thu, 27 Feb 2020 15:47:42 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0101016ec6de9b5b-cd61a0a2-9ae4-4ca1-a3a4-0ad2e8783e20-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0bd9179f-c448-c40d-f520-d568547bc810@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 01:48:27PM +0000, Chandan Uddaraju wrote:
-> Add the needed DP PLL specific files to support
-> display port interface on msm targets.
+On 2/27/20 1:12 PM, Frank Rowand wrote:
+> Hi Randy,
 > 
-> The DP driver calls the DP PLL driver registration.
-> The DP driver sets the link and pixel clock sources.
+> On 2/27/20 10:23 AM, Randy Dunlap wrote:
+>> On 2/26/20 8:22 PM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20200226:
+>>>
+>>
+>> on x86_64:
+>>
+>> # CONFIG_GPIOLIB is not set
+>>
+>> ../drivers/of/unittest.c: In function ‘unittest_gpio_probe’:
+>> ../drivers/of/unittest.c:94:14: error: ‘struct gpio_chip’ has no member named ‘of_node’
+>>   devptr->chip.of_node = pdev->dev.of_node;
+>>               ^
+>> In file included from ../include/linux/kernel.h:15:0,
+>>                  from ../include/asm-generic/bug.h:19,
+>>                  from ../arch/x86/include/asm/bug.h:83,
+>>                  from ../include/linux/bug.h:5,
+>>                  from ../include/linux/mmdebug.h:5,
+>>                  from ../include/linux/mm.h:9,
+>>                  from ../include/linux/memblock.h:13,
+>>                  from ../drivers/of/unittest.c:8:
+>> ../drivers/of/unittest.c:103:73: error: ‘struct gpio_chip’ has no member named ‘of_node’
+>>     "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
+>>                                                                          ^
+>>
+>> Full randconfig file is attached.
+>>
 > 
-> Changes in v2:
-> -- Update copyright markings on all relevant files.
-> -- Use DRM_DEBUG_DP for debug msgs.
+> I am trying to build a kernel with the randconfig you provided.
 > 
-> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
-> ---
-> diff --git a/drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.c b/drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.c
-> new file mode 100644
-> index 0000000..6ef2492
-> --- /dev/null
-> +++ b/drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.c
->
-> ...
->
-> +static u8 dp_mux_get_parent_10nm(struct clk_hw *hw)
-> +{
-> +	u32 auxclk_div = 0;
-> +	struct dp_pll_10nm_pclksel *pclksel = to_pll_10nm_pclksel(hw);
-> +	struct dp_pll_10nm *dp_res = pclksel->pll;
-> +	u8 val = 0;
-> +
-> +	DRM_ERROR("clk_hw->init->name = %s\n", hw->init->name);
+> I am trying to figure out how to build with the exact configuration,
+> but every way I've tried to build modifies the .config file.
+> 
+> Do you have any pointers to info on how to get the build system
+> to use exactly the .config without modification?
+> 
+> (Just in case it is pertinent, I am using Linux 5.6-rc1 instead
+> of -next.)
 
-drive-by comment: DRM_ERROR doesn't seem the right level, DRM_DEBUG_DP
-would probably be more adequate.
+Hi Frank,
 
-Also I found this line triggers a NULL pointer dereference on a SC7180
-system, where clk_hw->init is NULL.
+Yeah, I can't get 5.6-rc1 to use that same .config file either.
+There are too many differences from rc1 to rc3+next and any
+'make' command will automatically run oldconfig (or silentoldconfig)
+to update the .config file.
+
+-- 
+~Randy
+
