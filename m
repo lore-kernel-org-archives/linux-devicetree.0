@@ -2,61 +2,63 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF63C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9DDC3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C417A2469D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9E524650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 23:10:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWvdFySm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWdOaI6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbgB0XFU (ORCPT
+        id S1729704AbgB0XKJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:05:20 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38564 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729656AbgB0XFT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 18:05:19 -0500
-Received: by mail-pg1-f196.google.com with SMTP id d6so458796pgn.5;
-        Thu, 27 Feb 2020 15:05:18 -0800 (PST)
+        Thu, 27 Feb 2020 18:10:09 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33926 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729656AbgB0XKI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 18:10:08 -0500
+Received: by mail-pl1-f196.google.com with SMTP id j7so433003plt.1;
+        Thu, 27 Feb 2020 15:10:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/6/5Jq8OX92b4HSNwKuaLqEuRxrbSYjBA5MrEijDT54=;
-        b=DWvdFySm5O/Ij3fF20zWJZu4mrx+xEVpJuYsMloOUbcldQzIzUT8i21Py7kj3YqH9r
-         h6C/hF+q841FVqXqlu81HDHicuIl5CEr7Y9MARaw8yf1AvTVKknjnt/5f4UsG1We8dh9
-         MiHGsVL/f+KYu2U7JUECo+Y7KrsSZbPG2Lvkz2W4QeDzOM2ZnpIgNjRtVOYLBrZU4Fsc
-         Ufjj7nCsUkhW75vAEZClRrMO48Lm+cVJT5cVLCMP0SF9uCHvgcC4vNIk1SOOXcShNCK6
-         z5PdJplVKv8y4Bmxsxv5ewzjVnaPEr5QriP358ruaykqeObyYyIXCOPeYl+xj0EgfL4v
-         yhRA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5tx0IPsAfgwG+TILN/HAZV3HlSTe9coOVs5pA2awyes=;
+        b=cWdOaI6UdtYjvDDD78mRiRNwvqh4vFuOOlGGqiE2I6Dz3BJ20xeowNvUI2Wb2v27Yn
+         jCmQ/RsSPS9CFnudpg/n87Vx0peDwnPbGM+Jl+K7UTATh2Slq3XcIrXKCp1cwyMdvcxu
+         2A/9+o4vM8+eLh27IPtwmBmezC4QzHBLI3J3ccEMHbOeXHEOfamiT9WuSuw8OEqQptfS
+         TPPGOuWkKH8SrWEZlDpgE2c4+T9o9os4NOtU1GEb+TpgyvvkF0cdbLZLBGaTt0fMRKdN
+         LFkkwB9XlwrBhZqjKjps/Rt599MZQuKILqy/Wf3lZweoaZXVbTWOrGrU8FZhCaEz2NbB
+         1AuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/6/5Jq8OX92b4HSNwKuaLqEuRxrbSYjBA5MrEijDT54=;
-        b=W1AcmW+r3O00miM9Pk4OLcUtsoUWYWzxiu+rXUyXF9ZgriDy49WWLCV/U1AS+gOSpd
-         ke7MyzY8+o563Nga1pvSeYnaZJOXHtV86eYxCVYEZ3JJS5gdls3W/1xhSUNe2yNGC2c7
-         unIvMtBS2gOT7iWisSsPGmNccudEYuF4M+sJzItp6a3T7bhcIOmQsNXzlNOMsXOqp/S8
-         nHU3TUo5OL5UQe3l328bYRQ/J6i6ibxNFAKmwxQ9Xl7yWsvzlaqhccHo6tGf4DuaSHU5
-         GlzdeFKcIvScGiHOuTS8Ma6wyZHR02ngxzvR/TUyH0YQOt4rUmpacKxWKL9EElAconPN
-         Hzjw==
-X-Gm-Message-State: APjAAAXDwC0VWu2e8lfI5946XRDangdkAuC9F8OK0cDK5iAuDNJ7zrrk
-        BzXW/mFRGBpCD6MNL39TuLA=
-X-Google-Smtp-Source: APXvYqz3DVM3OnkDUThhWnwP4pN5ZxKaxQKl7l+u0ECD+5kom/QMNC8W67pYN7UsiWXKk0UtP7t2Iw==
-X-Received: by 2002:a62:1883:: with SMTP id 125mr1342541pfy.166.1582844717409;
-        Thu, 27 Feb 2020 15:05:17 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:500::4:d8f5])
-        by smtp.gmail.com with ESMTPSA id w2sm8275975pfw.43.2020.02.27.15.05.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 15:05:17 -0800 (PST)
-From:   rentao.bupt@gmail.com
-To:     Felipe Balbi <balbi@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5tx0IPsAfgwG+TILN/HAZV3HlSTe9coOVs5pA2awyes=;
+        b=GgjQrlIA0cOSIuMA80uVe8hB9fi6KVIYtSKFTTEPARjXqWrzPiyMn1jH1OYpHRemZL
+         /2zC6bSo3Bio9cVNsU5Z04rQXce7a68+9EQq/Xl1m+d85XaUCBEjFVXHyk4NWyPrjkGr
+         7/Hnr3I3I164wmk90JrGkMnzexKjOESGEnU2aBAnk7qwlqp7QX5EMx5r1tdr43nhKEI+
+         7jLyBqMV0wvIlTzd7ApNUFtPCoS17f30D1vNcIRjfyCxpwfvZvtMcOrZhges0G3C2Azf
+         FoaPvsbr6j/cjBHE72UVbVf8xd3+5YahcyOwq4VRZwwhCXmX7qvxSeCNz0AfOj0SxSdN
+         fZDg==
+X-Gm-Message-State: APjAAAVj9jrSkllj5JwdQNNdkTdFser8r5396qvM82DvtahoNb+n4Tlm
+        5PiBWrFbFQdNpr3Vv0mPk9A=
+X-Google-Smtp-Source: APXvYqw09IN/MZmhAU4E9H1T2aLymchy26JoyYAjLg/DFgC719gs6v2RNo0x5W+jgVkjs460YxXpuQ==
+X-Received: by 2002:a17:902:7006:: with SMTP id y6mr1191261plk.84.1582845007630;
+        Thu, 27 Feb 2020 15:10:07 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:500::4:d8f5])
+        by smtp.gmail.com with ESMTPSA id u12sm7840988pgr.3.2020.02.27.15.10.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 15:10:07 -0800 (PST)
+Date:   Thu, 27 Feb 2020 15:10:00 -0800
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Joel Stanley <joel@jms.id.au>,
         Andrew Jeffery <andrew@aj.id.au>,
@@ -64,173 +66,38 @@ To:     Felipe Balbi <balbi@kernel.org>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
         Colin Ian King <colin.king@canonical.com>,
         Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
         taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v5 1/7] usb: gadget: aspeed: support per-vhub usb descriptors
-Date:   Thu, 27 Feb 2020 15:05:01 -0800
-Message-Id: <20200227230507.8682-2-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227230507.8682-1-rentao.bupt@gmail.com>
-References: <20200227230507.8682-1-rentao.bupt@gmail.com>
+Subject: Re: [PATCH v4 7/7] dt-bindings: usb: add documentation for aspeed
+ usb-vhub
+Message-ID: <20200227231000.GA31175@taoren-ubuntu-R90MNF91>
+References: <20200226230346.672-1-rentao.bupt@gmail.com>
+ <20200226230346.672-8-rentao.bupt@gmail.com>
+ <20200227165504.GA26955@bogus>
+ <20200227224250.GC29420@taoren-ubuntu-R90MNF91>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227224250.GC29420@taoren-ubuntu-R90MNF91>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+Hi Rob,
 
-This patch store vhub's standard usb descriptors in struct "ast_vhub" so
-it's more convenient to customize descriptors and potentially support
-multiple vhub instances in the future.
+On Thu, Feb 27, 2020 at 02:42:51PM -0800, Tao Ren wrote:
+> Sorry I forgot to add you when including the dt-binding document to the
+> series v4: will add you and all dt binding maintainers in v5 soon.
 
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
----
- No change in v2/v3/v4/v5:
-   - the patch is added to the patch series since v4.
+Just realized I already added you for the previous patch versions. Sorry
+about the noise.
 
- drivers/usb/gadget/udc/aspeed-vhub/hub.c  | 43 ++++++++++++++++-------
- drivers/usb/gadget/udc/aspeed-vhub/vhub.h | 15 ++++++++
- 2 files changed, 46 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/hub.c b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-index 19b3517e04c0..9c3027306b15 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-@@ -93,11 +93,7 @@ static void ast_vhub_patch_dev_desc_usb1(struct usb_device_descriptor *desc)
- 				 USB_DT_INTERFACE_SIZE + \
- 				 USB_DT_ENDPOINT_SIZE)
- 
--static const struct ast_vhub_full_cdesc {
--	struct usb_config_descriptor	cfg;
--	struct usb_interface_descriptor intf;
--	struct usb_endpoint_descriptor	ep;
--} __attribute__ ((packed)) ast_vhub_conf_desc = {
-+static const struct ast_vhub_full_cdesc ast_vhub_conf_desc = {
- 	.cfg = {
- 		.bLength		= USB_DT_CONFIG_SIZE,
- 		.bDescriptorType	= USB_DT_CONFIG,
-@@ -266,6 +262,7 @@ static int ast_vhub_rep_desc(struct ast_vhub_ep *ep,
- 			     u8 desc_type, u16 len)
- {
- 	size_t dsize;
-+	struct ast_vhub *vhub = ep->vhub;
- 
- 	EPDBG(ep, "GET_DESCRIPTOR(type:%d)\n", desc_type);
- 
-@@ -281,20 +278,20 @@ static int ast_vhub_rep_desc(struct ast_vhub_ep *ep,
- 	switch(desc_type) {
- 	case USB_DT_DEVICE:
- 		dsize = USB_DT_DEVICE_SIZE;
--		memcpy(ep->buf, &ast_vhub_dev_desc, dsize);
--		BUILD_BUG_ON(dsize > sizeof(ast_vhub_dev_desc));
-+		memcpy(ep->buf, &vhub->vhub_dev_desc, dsize);
-+		BUILD_BUG_ON(dsize > sizeof(vhub->vhub_dev_desc));
- 		BUILD_BUG_ON(USB_DT_DEVICE_SIZE >= AST_VHUB_EP0_MAX_PACKET);
- 		break;
- 	case USB_DT_CONFIG:
- 		dsize = AST_VHUB_CONF_DESC_SIZE;
--		memcpy(ep->buf, &ast_vhub_conf_desc, dsize);
--		BUILD_BUG_ON(dsize > sizeof(ast_vhub_conf_desc));
-+		memcpy(ep->buf, &vhub->vhub_conf_desc, dsize);
-+		BUILD_BUG_ON(dsize > sizeof(vhub->vhub_conf_desc));
- 		BUILD_BUG_ON(AST_VHUB_CONF_DESC_SIZE >= AST_VHUB_EP0_MAX_PACKET);
- 		break;
- 	case USB_DT_HUB:
- 		dsize = AST_VHUB_HUB_DESC_SIZE;
--		memcpy(ep->buf, &ast_vhub_hub_desc, dsize);
--		BUILD_BUG_ON(dsize > sizeof(ast_vhub_hub_desc));
-+		memcpy(ep->buf, &vhub->vhub_hub_desc, dsize);
-+		BUILD_BUG_ON(dsize > sizeof(vhub->vhub_hub_desc));
- 		BUILD_BUG_ON(AST_VHUB_HUB_DESC_SIZE >= AST_VHUB_EP0_MAX_PACKET);
- 		break;
- 	default:
-@@ -317,7 +314,8 @@ static int ast_vhub_rep_string(struct ast_vhub_ep *ep,
- 			       u8 string_id, u16 lang_id,
- 			       u16 len)
- {
--	int rc = usb_gadget_get_string (&ast_vhub_strings, string_id, ep->buf);
-+	int rc = usb_gadget_get_string(&ep->vhub->vhub_str_desc,
-+					string_id, ep->buf);
- 
- 	/*
- 	 * This should never happen unless we put too big strings in
-@@ -834,9 +832,30 @@ void ast_vhub_hub_reset(struct ast_vhub *vhub)
- 	writel(0, vhub->regs + AST_VHUB_EP1_STS_CHG);
- }
- 
-+static void ast_vhub_init_desc(struct ast_vhub *vhub)
-+{
-+	/* Initialize vhub Device Descriptor. */
-+	memcpy(&vhub->vhub_dev_desc, &ast_vhub_dev_desc,
-+		sizeof(vhub->vhub_dev_desc));
-+
-+	/* Initialize vhub Configuration Descriptor. */
-+	memcpy(&vhub->vhub_conf_desc, &ast_vhub_conf_desc,
-+		sizeof(vhub->vhub_conf_desc));
-+
-+	/* Initialize vhub Hub Descriptor. */
-+	memcpy(&vhub->vhub_hub_desc, &ast_vhub_hub_desc,
-+		sizeof(vhub->vhub_hub_desc));
-+
-+	/* Initialize vhub String Descriptors. */
-+	memcpy(&vhub->vhub_str_desc, &ast_vhub_strings,
-+		sizeof(vhub->vhub_str_desc));
-+}
-+
- void ast_vhub_init_hub(struct ast_vhub *vhub)
- {
- 	vhub->speed = USB_SPEED_UNKNOWN;
- 	INIT_WORK(&vhub->wake_work, ast_vhub_wake_work);
-+
-+	ast_vhub_init_desc(vhub);
- }
- 
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-index 761919e220d3..191f9fae7420 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-@@ -2,6 +2,9 @@
- #ifndef __ASPEED_VHUB_H
- #define __ASPEED_VHUB_H
- 
-+#include <linux/usb.h>
-+#include <linux/usb/ch11.h>
-+
- /*****************************
-  *                           *
-  * VHUB register definitions *
-@@ -373,6 +376,12 @@ struct ast_vhub_port {
- 	struct ast_vhub_dev	dev;
- };
- 
-+struct ast_vhub_full_cdesc {
-+	struct usb_config_descriptor	cfg;
-+	struct usb_interface_descriptor intf;
-+	struct usb_endpoint_descriptor	ep;
-+} __packed;
-+
- /* Global vhub structure */
- struct ast_vhub {
- 	struct platform_device		*pdev;
-@@ -409,6 +418,12 @@ struct ast_vhub {
- 
- 	/* Upstream bus speed captured at bus reset */
- 	unsigned int			speed;
-+
-+	/* Standard USB Descriptors of the vhub. */
-+	struct usb_device_descriptor	vhub_dev_desc;
-+	struct ast_vhub_full_cdesc	vhub_conf_desc;
-+	struct usb_hub_descriptor	vhub_hub_desc;
-+	struct usb_gadget_strings	vhub_str_desc;
- };
- 
- /* Standard request handlers result codes */
--- 
-2.17.1
+Cheers,
 
+Tao
