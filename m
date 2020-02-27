@@ -2,167 +2,183 @@ Return-Path: <SRS0=tkJE=4P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13476C3F37F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53063C54FDF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF306246A0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="qzjyy7Jh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mucMiCY2"
+	by mail.kernel.org (Postfix) with ESMTP id 24A5524688
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582813315;
+	bh=A82Y9A3U3/P7mYTp+rSrNOhL2WJfvMTsvO8YMvEjdtk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KaBqk6fN6nyvwXo1IDD5ED1uK3Kbtnb9q6NeTqJVhxBeAw1Hbkk/CutAlHyutrqci
+	 WiHw34kbxaVfV2Y41MekfgPCTN1jMZQ6OEeWOz8xJQ3wQu5UEMCF0DsIuXLML5cDKE
+	 zeIOjwgD2TI9DzQa/nyQK8yJbs7iS+ug6NcCmT9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389598AbgB0OQy (ORCPT
+        id S2389510AbgB0OVu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:16:54 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:33409 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389591AbgB0OQx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:53 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id EBE6E2212F;
-        Thu, 27 Feb 2020 09:16:51 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 27 Feb 2020 09:16:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=dDo2mPnc4MVPpOSIZ2b31LEePnf
-        tr129OiRuGtuO86o=; b=qzjyy7JhkK5+QTjj/6NdO3WWEHsrGskBARpt0N91oTN
-        Ld+TolnNyj7ZQFeMZKmbOb0wlmq9v8Kl777GWBWlKJpzmwhub8d2X0kkSIjqsE8+
-        KinIrzFMT5+WfTyZQXSc7vU7EufZ0D5iaEszhBbfTRsrJQJtzAfIS52a3Y55hFzJ
-        euP49i9LbYXCjsGUkvrVuqD7l36sym0NtfhNod5iRuLQO072mS9i6PdyxwDIv7XN
-        cr/kZkmiwa0FGt0pJnZNYw3MP+M9u5HlzY3AlSdnZ/Qs9ssbac1N3BZek71EYEZr
-        fpmezbB48FJfEp2EiYzgvrqNxW6CDcK41eSvd7p1Zgg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=dDo2mP
-        nc4MVPpOSIZ2b31LEePnftr129OiRuGtuO86o=; b=mucMiCY2ig2kS7eKuh5m46
-        SG9NlKDggt9sPp6jG1WZf3mF9BlKaT9EODy0hptaSTPfhwNzVLa0rwbS5KNdsnXL
-        TQ6vygPJ5reZLqA3GrtOiTGxqpq0shlt2WssiId+0514dGFVYGQ6seJZfLzYIJag
-        sOPI2GCt9OZKo+AahyxKwtVNpDutH6nfZ4YNmfK75g7YVv7/IPK7r7romkDt48sA
-        g5jVzauXPpTsUmdT8dKzRdDJCVbwdn+bz1q7CJUxfx0Sc7W7YSPgPBbBeuI2Ag3Z
-        in+UeW6j7OWrgt8j7el/jm7WH461o7sjqRh4/cGtWDiEHCDfj8ZN+lCmWayw3RvQ
-        ==
-X-ME-Sender: <xms:U89XXshUjvDZ76Ze3U4hE1Zxz7fXbfWYnAr6dNo_A5l5FS0VsdFYaw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeigdeigecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:U89XXjzLy7tvrbbRPviyT3q-BM7RHliOXzH-XMElwu8Yg_sui1Ryvw>
-    <xmx:U89XXmQpAOLUtCmOp_DnRY4ZlZtKTSHcjQeADTAf_KYyIWCvlCdjFA>
-    <xmx:U89XXhwNNUF9r_ZZ7WtOAsyiNah0ktiex6pZxPIQLEg4KieUvPUa7w>
-    <xmx:U89XXhoKDW6mJyXiYWPAxyIvdj-zwpsQ1kYN9S39SUcuWA5iw5d-TQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2823A3060F09;
-        Thu, 27 Feb 2020 09:16:51 -0500 (EST)
-Date:   Thu, 27 Feb 2020 15:16:49 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH] spi: dt-bindings: spi-controller: Fix #address-cells for
- slave mode
-Message-ID: <20200227141649.ji6js7vhlrltpn6z@gilmour.lan>
-References: <20200227130323.15327-1-geert+renesas@glider.be>
- <20200227130937.qvrjyxcwim7rfum7@gilmour.lan>
- <CAMuHMdUVW_51dqMK=ziz_JVT3LuXX7vOF3-Ei-aHiiBuSepGpg@mail.gmail.com>
- <20200227135109.l2oal55nwhm5un2c@gilmour.lan>
- <CAMuHMdWYF9RrLdkuK_PxfVqocUMHVKPpjnyc4FR+N69A_htdyQ@mail.gmail.com>
+        Thu, 27 Feb 2020 09:21:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389485AbgB0OQV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D2482469F;
+        Thu, 27 Feb 2020 14:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582812980;
+        bh=A82Y9A3U3/P7mYTp+rSrNOhL2WJfvMTsvO8YMvEjdtk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y0gd5iGwQNI5jynl7KeijZ4g1eGd5j5qSF5Mp8HbExmLQEPe4saPrSoMRPKgqtTlX
+         krZVdYH7RgZF2mKWi9P02IVlBEvNqe/4mho7FyTaUqVU1jDBP1jcIQ5cGrukoA30y7
+         50qqx21/LKOFAXN2AEZ7l0iXurdo4YJvqsEG9YuA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Zhou Yanjie <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 5.5 063/150] MIPS: ingenic: DTS: Fix watchdog nodes
+Date:   Thu, 27 Feb 2020 14:36:40 +0100
+Message-Id: <20200227132242.322641300@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+References: <20200227132232.815448360@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4ikzzwflzmxk3qkj"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWYF9RrLdkuK_PxfVqocUMHVKPpjnyc4FR+N69A_htdyQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Paul Cercueil <paul@crapouillou.net>
 
---4ikzzwflzmxk3qkj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+commit 11479e8e3cd896673a15af21cd0f145a4752f01a upstream.
 
-On Thu, Feb 27, 2020 at 03:05:56PM +0100, Geert Uytterhoeven wrote:
-> Hi Maxime,
->
-> On Thu, Feb 27, 2020 at 2:51 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > On Thu, Feb 27, 2020 at 02:19:08PM +0100, Geert Uytterhoeven wrote:
-> > > On Thu, Feb 27, 2020 at 2:09 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > On Thu, Feb 27, 2020 at 02:03:23PM +0100, Geert Uytterhoeven wrote:
-> > > > > Currently, the DT bindings for an SPI controller specify that
-> > > > > "#address-cells" must be fixed to one.  However, that applies to an SPI
-> > > > > controller in master mode only.  When running in SPI slave mode,
-> > > > > "#address-cells" should be zero.
-> > > > >
-> > > > > Fix this making the value of "#address-cells" dependent on the presence
-> > > > > of "spi-slave".
-> > > > >
-> > > > > Fixes: 0a1b929356830257 ("spi: Add YAML schemas for the generic SPI options")
-> > > > > Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >
-> > > > > --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > >
-> > > > > @@ -52,6 +53,18 @@ properties:
-> > > > >      description:
-> > > > >        The SPI controller acts as a slave, instead of a master.
-> > > > >
-> > > > > +if:
-> > > > > +  required:
-> > > > > +    [ spi-slave ]
-> > > >
-> > > > Nit: Usually, that notation is when you would do it on the same line,
-> > > > if you want to go to a new line, it would make more sense to use -
-> > >
-> > > Sorry, being a poor yaml-by-example programmer, I don't understand what
-> > > you mean.  Which part do you refer to by "that notation"?
-> >
-> > I meant that usually the [] notation is used over a single line.
-> >
-> > If you want to have a list over multiple lines, usually you would have
-> >
-> > required:
-> >   - spi-slave
->
-> IC. So I can also write:
->
->     if:
->       required: [ spi-slave ]
->     else:
->       ...
->
-> which is even shorter ;-)
->
-> Both seem to work fine.
+The devicetree ABI was broken on purpose by commit 6d532143c915
+("watchdog: jz4740: Use regmap provided by TCU driver"), and
+commit 1d9c30745455 ("watchdog: jz4740: Use WDT clock provided
+by TCU driver"). The commit message of the latter explains why the ABI
+was broken.
 
-The rest of the file uses the multi-line syntax, so I wouldn't do it
-for consistency, but yeah, they are equivalent.
+However, the current devicetree files were not updated to the new ABI
+described in Documentation/devicetree/bindings/timer/ingenic,tcu.txt,
+so the watchdog driver would not probe.
 
-Maxime
+Fix this problem by updating the watchdog nodes to comply with the new
+ABI.
 
---4ikzzwflzmxk3qkj
-Content-Type: application/pgp-signature; name="signature.asc"
+Fixes: 6d532143c915 ("watchdog: jz4740: Use regmap provided by TCU driver")
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Cc: od@zcrc.me
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: <stable@vger.kernel.org> # v5.5+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
------BEGIN PGP SIGNATURE-----
+---
+ arch/mips/boot/dts/ingenic/jz4740.dtsi |   17 +++++++++--------
+ arch/mips/boot/dts/ingenic/jz4780.dtsi |   17 +++++++++--------
+ 2 files changed, 18 insertions(+), 16 deletions(-)
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlfPUQAKCRDj7w1vZxhR
-xY1qAP9+J6ACEBSld2cNlgZ1np5JgE8toqkBz6bP/lxYW++O/gD+PkQQrYz3Ck0E
-pEtc4jLlxTZ04DThtUQDRRkGaY5KMgA=
-=hUDK
------END PGP SIGNATURE-----
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dt-bindings/clock/jz4740-cgu.h>
++#include <dt-bindings/clock/ingenic,tcu.h>
+ 
+ / {
+ 	#address-cells = <1>;
+@@ -45,14 +46,6 @@
+ 		#clock-cells = <1>;
+ 	};
+ 
+-	watchdog: watchdog@10002000 {
+-		compatible = "ingenic,jz4740-watchdog";
+-		reg = <0x10002000 0x10>;
+-
+-		clocks = <&cgu JZ4740_CLK_RTC>;
+-		clock-names = "rtc";
+-	};
+-
+ 	tcu: timer@10002000 {
+ 		compatible = "ingenic,jz4740-tcu", "simple-mfd";
+ 		reg = <0x10002000 0x1000>;
+@@ -73,6 +66,14 @@
+ 
+ 		interrupt-parent = <&intc>;
+ 		interrupts = <23 22 21>;
++
++		watchdog: watchdog@0 {
++			compatible = "ingenic,jz4740-watchdog";
++			reg = <0x0 0xc>;
++
++			clocks = <&tcu TCU_CLK_WDT>;
++			clock-names = "wdt";
++		};
+ 	};
+ 
+ 	rtc_dev: rtc@10003000 {
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dt-bindings/clock/jz4780-cgu.h>
++#include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/dma/jz4780-dma.h>
+ 
+ / {
+@@ -67,6 +68,14 @@
+ 
+ 		interrupt-parent = <&intc>;
+ 		interrupts = <27 26 25>;
++
++		watchdog: watchdog@0 {
++			compatible = "ingenic,jz4780-watchdog";
++			reg = <0x0 0xc>;
++
++			clocks = <&tcu TCU_CLK_WDT>;
++			clock-names = "wdt";
++		};
+ 	};
+ 
+ 	rtc_dev: rtc@10003000 {
+@@ -348,14 +357,6 @@
+ 		status = "disabled";
+ 	};
+ 
+-	watchdog: watchdog@10002000 {
+-		compatible = "ingenic,jz4780-watchdog";
+-		reg = <0x10002000 0x10>;
+-
+-		clocks = <&cgu JZ4780_CLK_RTCLK>;
+-		clock-names = "rtc";
+-	};
+-
+ 	nemc: nemc@13410000 {
+ 		compatible = "ingenic,jz4780-nemc";
+ 		reg = <0x13410000 0x10000>;
 
---4ikzzwflzmxk3qkj--
+
