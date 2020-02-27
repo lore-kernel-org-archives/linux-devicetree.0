@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792C3C35DF9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2C3C11D3D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 606452469C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804CF2469C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbgB0SWg (ORCPT
+        id S1730772AbgB0SWc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:22:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:56696 "EHLO foss.arm.com"
+        Thu, 27 Feb 2020 13:22:32 -0500
+Received: from foss.arm.com ([217.140.110.172]:56678 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730810AbgB0SWg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:22:36 -0500
+        id S1730763AbgB0SWc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 13:22:32 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7828C30E;
-        Thu, 27 Feb 2020 10:22:35 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B79DB30E;
+        Thu, 27 Feb 2020 10:22:31 -0800 (PST)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAC2A3F73B;
-        Thu, 27 Feb 2020 10:22:33 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F24703F73B;
+        Thu, 27 Feb 2020 10:22:29 -0800 (PST)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Rob Herring <robh@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -35,10 +35,11 @@ Cc:     Maxime Ripard <mripard@kernel.org>,
         Mark Langsdorf <mlangsdo@redhat.com>,
         Eric Auger <eric.auger@redhat.com>,
         Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH v2 08/13] dt-bindings: phy: Convert Calxeda ComboPHY binding to json-schema
-Date:   Thu, 27 Feb 2020 18:22:05 +0000
-Message-Id: <20200227182210.89512-9-andre.przywara@arm.com>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v2 06/13] dt-bindings: sata: Convert Calxeda SATA controller to json-schema
+Date:   Thu, 27 Feb 2020 18:22:03 +0000
+Message-Id: <20200227182210.89512-7-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200227182210.89512-1-andre.przywara@arm.com>
 References: <20200227182210.89512-1-andre.przywara@arm.com>
@@ -47,100 +48,169 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Calxeda ComboPHY binding to DT schema format using
-json-schema.
-There is no driver in the Linux kernel matching the compatible
-string, but the nodes are parsed by the SATA driver, which links to them
-using its port-phys property.
+Convert the Calxeda Highbank SATA controller binding to DT schema format
+using json-schema.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Cc: Jens Axboe <axboe@kernel.dk>
 ---
- .../bindings/phy/calxeda-combophy.txt         | 17 -------
- .../bindings/phy/calxeda-combophy.yaml        | 51 +++++++++++++++++++
- 2 files changed, 51 insertions(+), 17 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/calxeda-combophy.txt
- create mode 100644 Documentation/devicetree/bindings/phy/calxeda-combophy.yaml
+ .../devicetree/bindings/ata/sata_highbank.txt | 44 ---------
+ .../bindings/ata/sata_highbank.yaml           | 95 +++++++++++++++++++
+ 2 files changed, 95 insertions(+), 44 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
+ create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.yaml
 
-diff --git a/Documentation/devicetree/bindings/phy/calxeda-combophy.txt b/Documentation/devicetree/bindings/phy/calxeda-combophy.txt
+diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
 deleted file mode 100644
-index 6622bdb2e8bc..000000000000
---- a/Documentation/devicetree/bindings/phy/calxeda-combophy.txt
+index aa83407cb7a4..000000000000
+--- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
 +++ /dev/null
-@@ -1,17 +0,0 @@
--Calxeda Highbank Combination Phys for SATA
+@@ -1,44 +0,0 @@
+-* Calxeda AHCI SATA Controller
 -
--Properties:
--- compatible : Should be "calxeda,hb-combophy"
--- #phy-cells: Should be 1.
--- reg : Address and size for Combination Phy registers.
--- phydev: device ID for programming the combophy.
+-SATA nodes are defined to describe on-chip Serial ATA controllers.
+-The Calxeda SATA controller mostly conforms to the AHCI interface
+-with some special extensions to add functionality.
+-Each SATA controller should have its own node.
+-
+-Required properties:
+-- compatible        : compatible list, contains "calxeda,hb-ahci"
+-- interrupts        : <interrupt mapping for SATA IRQ>
+-- reg               : <registers mapping>
+-
+-Optional properties:
+-- dma-coherent      : Present if dma operations are coherent
+-- calxeda,port-phys : phandle-combophy and lane assignment, which maps each
+-			SATA port to a combophy and a lane within that
+-			combophy
+-- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
+-			which indicates that the driver supports SGPIO
+-			indicator lights using the indicated GPIOs
+-- calxeda,led-order : a u32 array that map port numbers to offsets within the
+-			SGPIO bitstream.
+-- calxeda,tx-atten  : a u32 array that contains TX attenuation override
+-			codes, one per port. The upper 3 bytes are always
+-			0 and thus ignored.
+-- calxeda,pre-clocks : a u32 that indicates the number of additional clock
+-			cycles to transmit before sending an SGPIO pattern
+-- calxeda,post-clocks: a u32 that indicates the number of additional clock
+-			cycles to transmit after sending an SGPIO pattern
 -
 -Example:
--
--	combophy5: combo-phy@fff5d000 {
--		compatible = "calxeda,hb-combophy";
--		#phy-cells = <1>;
--		reg = <0xfff5d000 0x1000>;
--		phydev = <31>;
--	};
--
-diff --git a/Documentation/devicetree/bindings/phy/calxeda-combophy.yaml b/Documentation/devicetree/bindings/phy/calxeda-combophy.yaml
+-        sata@ffe08000 {
+-		compatible = "calxeda,hb-ahci";
+-		reg = <0xffe08000 0x1000>;
+-		interrupts = <115>;
+-		dma-coherent;
+-		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
+-					&combophy0 2 &combophy0 3>;
+-		calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
+-		calxeda,led-order = <4 0 1 2 3>;
+-		calxeda,tx-atten = <0xff 22 0xff 0xff 23>;
+-		calxeda,pre-clocks = <10>;
+-		calxeda,post-clocks = <0>;
+-        };
+diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.yaml b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
 new file mode 100644
-index 000000000000..995d0efe280d
+index 000000000000..6dcf91e1bac0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/calxeda-combophy.yaml
-@@ -0,0 +1,51 @@
++++ b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
+@@ -0,0 +1,95 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/phy/calxeda-combophy.yaml#
++$id: http://devicetree.org/schemas/ata/sata_highbank.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Calxeda Highbank Combination PHYs binding for SATA
++title: Calxeda AHCI SATA Controller
 +
 +description: |
-+  The Calxeda Combination PHYs connect the SoC to the internal fabric
-+  and to SATA connectors. The PHYs support multiple protocols (SATA,
-+  SGMII, PCIe) and can be assigned to different devices (SATA or XGMAC
-+  controller).
-+  Programming the PHYs is typically handled by those device drivers,
-+  not by a dedicated PHY driver.
++  The Calxeda SATA controller mostly conforms to the AHCI interface
++  with some special extensions to add functionality, to map GPIOs for
++  activity LEDs and for mapping the ComboPHYs.
 +
 +maintainers:
 +  - Andre Przywara <andre.przywara@arm.com>
 +
 +properties:
 +  compatible:
-+    const: calxeda,hb-combophy
-+
-+  '#phy-cells':
-+    const: 1
++    const: calxeda,hb-ahci
 +
 +  reg:
 +    maxItems: 1
 +
-+  phydev:
-+    description: device ID for programming the ComboPHY.
++  interrupts:
++    maxItems: 1
++
++  dma-coherent: true
++
++  calxeda,pre-clocks:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Indicates the number of additional clock cycles to transmit before
++      sending an SGPIO pattern.
++
++  calxeda,post-clocks:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Indicates the number of additional clock cycles to transmit after
++      sending an SGPIO pattern.
++
++  calxeda,led-order:
++    description: Maps port numbers to offsets within the SGPIO bitstream.
 +    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - maximum: 31
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - minItems: 1
++        maxItems: 8
++
++  calxeda,port-phys:
++    description: |
++      phandle-combophy and lane assignment, which maps each SATA port to a
++      combophy and a lane within that combophy
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle-array
++      - minItems: 1
++        maxItems: 8
++
++  calxeda,tx-atten:
++    description: |
++      Contains TX attenuation override codes, one per port.
++      The upper 24 bits of each entry are always 0 and thus ignored.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - minItems: 1
++        maxItems: 8
++
++  calxeda,sgpio-gpio:
++    description: |
++      phandle-gpio bank, bit offset, and default on or off, which indicates
++      that the driver supports SGPIO indicator lights using the indicated
++      GPIOs.
 +
 +required:
 +  - compatible
 +  - reg
-+  - phydev
-+  - '#phy-cells'
++  - interrupts
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    combophy5: combo-phy@fff5d000 {
-+                   compatible = "calxeda,hb-combophy";
-+                   #phy-cells = <1>;
-+                   reg = <0xfff5d000 0x1000>;
-+                   phydev = <31>;
-+               };
++    sata@ffe08000 {
++        compatible = "calxeda,hb-ahci";
++        reg = <0xffe08000 0x1000>;
++        interrupts = <115>;
++        dma-coherent;
++        calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
++                             &combophy0 2 &combophy0 3>;
++        calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
++        calxeda,led-order = <4 0 1 2 3>;
++        calxeda,tx-atten = <0xff 22 0xff 0xff 23>;
++        calxeda,pre-clocks = <10>;
++        calxeda,post-clocks = <0>;
++    };
++
++...
 -- 
 2.17.1
 
