@@ -2,94 +2,206 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9808FC3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF712C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A58A246A0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D7C246A6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NH/H6Mbz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iXGNUb/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgB1FXE (ORCPT
+        id S1726388AbgB1Fe0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 00:23:04 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:40054 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725536AbgB1FXE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 00:23:04 -0500
-X-UUID: fa8bbfec1f9449b88f1bf2c313014cc2-20200228
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=iiTeyRrWpFxbRbm/zUqFMsVdCyJg1pm41Q+smhNO+Zw=;
-        b=NH/H6Mbz7CLvMC+EHLbH9LSsJnHhz2Z3LaFZV/BYHIb6tsKhkpnCg8Xr/URpAXzcySi7xGRhBIINcUWDb4mB2+P9v3SpRiQZac9JAC4nvieKdaV3o8ZWL+yXGs46GfcJ8bSKce+0iSAXzvWtVYjnMc4wXq5Y7BmT1TQmIzy6qC8=;
-X-UUID: fa8bbfec1f9449b88f1bf2c313014cc2-20200228
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1344005670; Fri, 28 Feb 2020 13:21:40 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 28 Feb
- 2020 13:22:15 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Fri, 28 Feb 2020 13:22:03 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v10 2/5] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
-Date:   Fri, 28 Feb 2020 13:21:25 +0800
-Message-ID: <20200228052128.82136-3-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200228052128.82136-1-jitao.shi@mediatek.com>
-References: <20200228052128.82136-1-jitao.shi@mediatek.com>
+        Fri, 28 Feb 2020 00:34:26 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36803 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgB1Fe0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 00:34:26 -0500
+Received: by mail-pj1-f68.google.com with SMTP id gv17so821274pjb.1
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 21:34:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ABqkN8aqbIHHq6CJCYzSzg/UYqF9PzEXTXmM8ircYdE=;
+        b=iXGNUb/uZGGZqE9qRVAQdGFZFVitoGfbTVoTeXp/0CB2r/Z0qwh/bwxklZ8Q7cYuYu
+         2RvKwC+gehTtiwjrX9jbCYozOL3ChBhd1Kk3XsFae6+/t1mv1cuKZaxn0SHr35igPDM0
+         iD5x2VXAOPlIZRmR7UOjDeRw2xcQ08RE5Yxos0yuMbCP3QTNw13nVM5uGGN6Xfd1lah3
+         0/zD5Ld7dZHKAMnYLF1TTkaiei2a+VS3yzeHB5RQBu+io9m5rPvEqKUk1XoMAhTvvpvG
+         skvYMD5yyrwEzGpvtm9J/S1H/8xBe7TmBoTUK4kDL95kYI2r0OhDV676MwAPh+B+ptvn
+         Svbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ABqkN8aqbIHHq6CJCYzSzg/UYqF9PzEXTXmM8ircYdE=;
+        b=LOxgMYiE9cvv0ku6wfQNcL8UEyJQ/kp8rLbpP3dMHk/nS+qVjBWfwu+nUczOOcBDSL
+         xRWpDmFKjwohczE8R8vIpnpCem3phI6FrQrqOeusWftuz4NA4EjweopMeY9bWFcb5Akd
+         SsCKn9XhggjvqhTybRF5GhZA8wiAEpuT1sru06eQENuhyz4G4wlqmfyyuIM776QFVa1S
+         u5/VQKuQcOs0T7JSDDwzT0SfnAUEFNRfcymAp6I6FCZg5Vr8YSIYbF+APO31MIZ80B7Z
+         1Wb2pfSdHNtzdYQDD5r1T/hADWGvqwb5riLbDt8cM0y/M8DsZZl8nreOGq58Q47AiiHw
+         xt2A==
+X-Gm-Message-State: APjAAAX9elWZXcTnByRWrw4bjgwdIgf4oeFrd3lLKfUmCQCUOoDiCI5F
+        29GBEeowe/C1v3hymBvlSeXHLQ==
+X-Google-Smtp-Source: APXvYqwCds92WSgOcATJjPe5GOxHNR3RIEXkjbscjsxcH0l7rplY2Ca6nLAzVaRD/jXZ+Ny7BqZg2w==
+X-Received: by 2002:a17:902:61:: with SMTP id 88mr2408012pla.17.1582868064152;
+        Thu, 27 Feb 2020 21:34:24 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q13sm8659550pgh.30.2020.02.27.21.34.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 21:34:23 -0800 (PST)
+Date:   Thu, 27 Feb 2020 21:34:20 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tsoni@codeaurora.org, vnkgutta@codeaurora.org
+Subject: Re: [PATCH v4 1/3] soc: qcom: Introduce Protection Domain Restart
+ helpers
+Message-ID: <20200228053420.GC210720@yoga>
+References: <20200226170001.24234-1-sibis@codeaurora.org>
+ <20200226170001.24234-2-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 9285102EC74516C055F4677AAD43C6BCF157A693778617175A2331D1BD6CCB922000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226170001.24234-2-sibis@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWRkIHByb3BlcnR5ICJwaW5jdHJsLW5hbWVzIiB0byBzd2FwIHBpbiBtb2RlIGJldHdlZW4gZ3Bp
-byBhbmQgZHBpIG1vZGUuIFNldA0KdGhlIGRwaSBwaW5zIHRvIGdwaW8gbW9kZSBhbmQgb3V0cHV0
-LWxvdyB0byBhdm9pZCBsZWFrYWdlIGN1cnJlbnQgd2hlbiBkcGkNCmRpc2FibGVkLg0KDQpTaWdu
-ZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+DQotLS0NCiAuLi4v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgIHwg
-NyArKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVk
-aWF0ZWssZHBpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCmluZGV4IDU4OTE0Y2Y2ODFiOC4uNzdjYTMyYTMy
-Mzk5IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KQEAgLTE3LDYg
-KzE3LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQogICBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZ3JhcGgudHh0LiBUaGlzIHBvcnQgc2hvdWxkIGJlIGNvbm5lY3RlZA0KICAg
-dG8gdGhlIGlucHV0IHBvcnQgb2YgYW4gYXR0YWNoZWQgSERNSSBvciBMVkRTIGVuY29kZXIgY2hp
-cC4NCiANCitPcHRpb25hbCBwcm9wZXJ0aWVzOg0KKy0gcGluY3RybC1uYW1lczogQ29udGFpbiAi
-Z3Bpb21vZGUiIGFuZCAiZHBpbW9kZSIuDQorICBwaW5jdHJsLW5hbWVzIHNlZSBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybHBpbmN0cmwtYmluZGluZ3MudHh0DQorDQog
-RXhhbXBsZToNCiANCiBkcGkwOiBkcGlAMTQwMWQwMDAgew0KQEAgLTI3LDYgKzMxLDkgQEAgZHBp
-MDogZHBpQDE0MDFkMDAwIHsNCiAJCSA8Jm1tc3lzIENMS19NTV9EUElfRU5HSU5FPiwNCiAJCSA8
-JmFwbWl4ZWRzeXMgQ0xLX0FQTUlYRURfVFZEUExMPjsNCiAJY2xvY2stbmFtZXMgPSAicGl4ZWwi
-LCAiZW5naW5lIiwgInBsbCI7DQorCXBpbmN0cmwtbmFtZXMgPSAiYWN0aXZlIiwgImlkbGUiOw0K
-KwlwaW5jdHJsLTAgPSA8JmRwaV9waW5fZnVuYz47DQorCXBpbmN0cmwtMSA9IDwmZHBpX3Bpbl9p
-ZGxlPjsNCiANCiAJcG9ydCB7DQogCQlkcGkwX291dDogZW5kcG9pbnQgew0KLS0gDQoyLjIxLjAN
-Cg==
+On Wed 26 Feb 08:59 PST 2020, Sibi Sankar wrote:
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+[..]
+> +config QCOM_PDR_HELPERS
+> +	tristate
+> +	depends on ARCH_QCOM || COMPILE_TEST
 
+As discussed on one of you other patches, please omit the depends on for
+Kconfig entries that are not user selectable. Presumably anyone
+selecting this option will have ARCH_QCOM met already.
+
+> +	select QCOM_QMI_HELPERS
+[..]
+> diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+[..]
+> +static void pdr_locator_work(struct work_struct *work)
+> +{
+> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
+> +					      locator_work);
+> +	struct pdr_service *pds;
+> +	int ret = 0;
+> +
+> +	/* Bail out early if the SERVREG LOCATOR QMI service is not up */
+> +	mutex_lock(&pdr->lock);
+> +	if (!pdr->locator_init_complete) {
+> +		mutex_unlock(&pdr->lock);
+> +		pr_debug("PDR: SERVICE LOCATOR service not available\n");
+> +		return;
+> +	}
+> +	mutex_unlock(&pdr->lock);
+> +
+> +	mutex_lock(&pdr->list_lock);
+> +	list_for_each_entry(pds, &pdr->lookups, node) {
+> +		if (!pds->need_locator_lookup)
+> +			continue;
+> +
+> +		pds->need_locator_lookup = false;
+> +		mutex_unlock(&pdr->list_lock);
+> +
+> +		ret = pdr_locate_service(pdr, pds);
+> +		if (ret < 0)
+> +			goto exit;
+> +
+> +		/* Initialize notifier QMI handle */
+> +		mutex_lock(&pdr->lock);
+> +		if (!pdr->notifier_init_complete) {
+> +			ret = qmi_handle_init(&pdr->notifier_hdl,
+> +					      SERVREG_STATE_UPDATED_IND_MAX_LEN,
+> +					      &pdr_notifier_ops,
+> +					      qmi_indication_handler);
+> +			if (ret < 0) {
+> +				mutex_unlock(&pdr->lock);
+> +				goto exit;
+> +			}
+> +			pdr->notifier_init_complete = true;
+> +		}
+> +		mutex_unlock(&pdr->lock);
+> +
+> +		ret = qmi_add_lookup(&pdr->notifier_hdl, pds->service, 1,
+> +				     pds->instance);
+> +		if (ret < 0)
+> +			goto exit;
+> +
+> +		return;
+
+If the caller calls pdr_add_lookup() multiple times in quick succession
+wouldn't it be possile to get the worker scheduled with multiple entries
+in &pdr->lookups with need_locator_lookup set?
+
+If so I think it makes sense to break the content of this loop, and the
+error handling under exit out into a separate function.
+
+And even if this would not be the case, breaking this out in a separate
+function would allow you to change the loop to:
+
+	list_for_each_entry() {
+		if (pdr->need_locator_lookup) {
+			do_the_lookup();
+			break;
+		}
+	}
+
+Which I think is easier to reason about than the loop with a return at
+the end.
+
+> +	}
+> +	mutex_unlock(&pdr->list_lock);
+> +exit:
+> +	if (ret < 0) {
+> +		/* Notify lookup failed */
+> +		mutex_lock(&pdr->list_lock);
+> +		list_del(&pds->node);
+> +		mutex_unlock(&pdr->list_lock);
+> +
+> +		if (ret == -ENXIO)
+> +			pds->state = SERVREG_LOCATOR_UNKNOWN_SERVICE;
+> +		else
+> +			pds->state = SERVREG_LOCATOR_ERR;
+> +
+> +		pr_err("PDR: service lookup for %s failed: %d\n",
+> +		       pds->service_name, ret);
+> +
+> +		mutex_lock(&pdr->status_lock);
+> +		pdr->status(pds->state, pds->service_path, pdr->priv);
+> +		mutex_unlock(&pdr->status_lock);
+> +		kfree(pds);
+> +	}
+> +}
+[..]
+> +struct pdr_handle *pdr_handle_alloc(void (*status)(int state,
+> +						   char *service_path,
+> +						   void *priv), void *priv)
+> +{
+> +	struct pdr_handle *pdr;
+> +	int ret;
+> +
+> +	if (!status)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	pdr = kzalloc(sizeof(*pdr), GFP_KERNEL);
+> +	if (!pdr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pdr->status = *status;
+
+Please omit the * here.
+
+Regards,
+Bjorn
