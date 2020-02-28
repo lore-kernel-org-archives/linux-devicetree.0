@@ -2,154 +2,130 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A00C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B11C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB6A246AF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:28:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6znWTYL"
+	by mail.kernel.org (Postfix) with ESMTP id 7EE73246AE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582897048;
+	bh=3QTsf6yxc7rs1GNJzVvRB6S0uuiy+3lK2e9AhBjgK9U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=I/FiWm5TD+teVUTu4qEvrdBfCFSwRisOF+hQNOKIs7USBBZwj3U7rM6PA4i3aTZCh
+	 Hlvg0B1yo385UDEnOTBknn/BS0ZOqbEILVCoebf7MEMmTiO1tJR7+rEOMFie0kvZqD
+	 h8dY0PWL+0cGKpT5ZSSC016BAeIK4nKEZCkMODcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgB1N2l (ORCPT
+        id S1726738AbgB1Nh2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:28:41 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46488 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgB1N2l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 08:28:41 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j7so2879989wrp.13;
-        Fri, 28 Feb 2020 05:28:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NrHT7T88RoyQjD1urqyZZ0aRh9a3eutzKOCuX5K1yeY=;
-        b=j6znWTYLAzRRvkNdjZ9zjIGXFuDM7tFBO5sd5AZONq1ZAuvPhGMFHHQOAoP61wNFNI
-         mNHtRD/kP22UvMXlJ5U3VoD1aUGzx6sA9covL0XoeczLGAAjioSJiDDNcQC4NskJXa6q
-         0EFE3AyjZ/CkTqKnG23nCGcNxYr4hN0h+3Z6ZnqPkULjB6NGlS0UIKjC1FZm8taT0yTZ
-         qEhmjFrXYy3BYHOU3YFz9EzKp63awNX/eiyDNLZcfi3ZZVdeM5B6PwIZzbFriEQPT8zv
-         ZIgCDKgj2COpOcdpjZ8iZDxOlFRZNROL9pmbfA8xT5yHobnGvQ0uIRxTTMHafZufC2m5
-         +tow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NrHT7T88RoyQjD1urqyZZ0aRh9a3eutzKOCuX5K1yeY=;
-        b=Cbc70BVQ/PKBosUkN5UtwqX8R5D4dksQz9/1GwL2UTZCGMltJIdxJJfwrFhgxJY7Ll
-         UXoq/mwMFSmCAuKHcb57bM2PBWuTBqe878/N3NPoc8AVIlkY+xT0vepcLfeZ/bXKdfKr
-         DnuvnVTssdlOakgdMNMeh6GTBPobFSXYmmfqy8drYUElhK7WesB/NpBA67aFN9IghsAe
-         UWqA4DBpCXgFrEbBcXA2cIqMP11uqQ3+ndZY/9TxssKb+ZBACmy33xCaNtZlFSei5Arm
-         t2zfk0AfeNWEpEkMLNryERvon7L8TXkvXF/0EoOxg3sbU7QQjWS4xHSTUOcp68iWROlF
-         ci1Q==
-X-Gm-Message-State: APjAAAVlseQfpcmyTK7QqT9dQW8GvfH2FpzKUnnn2r3br1g4T48fxAai
-        9PdDKBNMfwaF7PjSgApCZ8A=
-X-Google-Smtp-Source: APXvYqzcazyu+zLUhQgdULQfW0b/6JUEwzdAx/yhhMPyZiEnDR8uFexywppZaicqNefTUid2wvto4g==
-X-Received: by 2002:a5d:5609:: with SMTP id l9mr4697197wrv.48.1582896518952;
-        Fri, 28 Feb 2020 05:28:38 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id q9sm12906735wrx.18.2020.02.28.05.28.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 05:28:38 -0800 (PST)
-Subject: Re: [PATCH 3/4] dt-bindings: arm: fix Rockchip rk3399-evb bindings
-To:     Robin Murphy <robin.murphy@arm.com>, heiko@sntech.de
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-References: <20200228061436.13506-1-jbx6244@gmail.com>
- <20200228061436.13506-3-jbx6244@gmail.com>
- <78b8b53f-2e2a-3804-41fb-bb2610947ca2@arm.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <229c3511-d99d-8bac-6241-0088c5fc13ef@gmail.com>
-Date:   Fri, 28 Feb 2020 14:28:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 08:37:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726151AbgB1Nh2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:37:28 -0500
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16DAA246B2;
+        Fri, 28 Feb 2020 13:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582897047;
+        bh=3QTsf6yxc7rs1GNJzVvRB6S0uuiy+3lK2e9AhBjgK9U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PYW1elnCmO11I8yypoUm++QOvuS5mjo4qjQS3WJsoYbB8ouH57FD1Zn+AsHR6BxYh
+         uVzJ46ki3kR1P4j1XLTDhlPxJ9Naig6YinLcn3i69w/rkFDyzdiyu+i4WTcH2M9Vba
+         CObmYdWF8gL1UScf3zzKgVoPscBnBZUBtirabons=
+Received: by mail-qk1-f181.google.com with SMTP id z12so2873793qkg.12;
+        Fri, 28 Feb 2020 05:37:27 -0800 (PST)
+X-Gm-Message-State: APjAAAUq8X+rZ+44pmYwC/qy8okbFcJOi+c7go+nJxQl9XNZdR+XWsEQ
+        qWXkWigoIWgmq14la6Xfs5GW0Zw8H7/Q72tpmg==
+X-Google-Smtp-Source: APXvYqxv7Nvxn3gC9nka19zmNC3LNW+zYXn12WGYx0IvQ/8zlbcZx2PSeIw5Jyoc0EsM8EUw7UFcSWSt1Qu2jKo6TFU=
+X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr4553853qki.254.1582897046187;
+ Fri, 28 Feb 2020 05:37:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <78b8b53f-2e2a-3804-41fb-bb2610947ca2@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200227062754.19131-1-peter.chen@nxp.com> <20200227062754.19131-2-peter.chen@nxp.com>
+ <20200227170810.GA2318@bogus> <VI1PR04MB5327992CC6BA891C199D39A08BE80@VI1PR04MB5327.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB5327992CC6BA891C199D39A08BE80@VI1PR04MB5327.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 28 Feb 2020 07:37:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLQ+5iR_rTaS7D2cvS_psT0XKh=FLH0EmLo2EsE4cuXSA@mail.gmail.com>
+Message-ID: <CAL_JsqLQ+5iR_rTaS7D2cvS_psT0XKh=FLH0EmLo2EsE4cuXSA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     "kishon@ti.com" <kishon@ti.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "aniljoy@cadence.com" <aniljoy@cadence.com>,
+        Jun Li <jun.li@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin,
+On Fri, Feb 28, 2020 at 3:29 AM Peter Chen <peter.chen@nxp.com> wrote:
+>
+>
+> > >  .../bindings/phy/cdns,salvo-phy.yaml          | 47 +++++++++++++++++++
+> > >  1 file changed, 47 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > warning: no schema found in file:
+> > Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
+> > /builds/robherring/linux-dt-
+> > review/Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml: ignoring, error
+> > parsing file
+> > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-
+> > 37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be
+> > at root node
+> > Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml:  while scanning a
+> > block scalar
+> >   in "<unicode string>", line 39, column 5 found a tab character where an indentation
+> > space is expected
+> >   in "<unicode string>", line 41, column 1
+> > Documentation/devicetree/bindings/Makefile:12: recipe for target
+> > 'Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.dts' failed
+> > make[1]: *** [Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.dts]
+> > Error 1
+> > Makefile:1263: recipe for target 'dt_binding_check' failed
+> > make: *** [dt_binding_check] Error 2
+> >
+> Hi Rob,
+>
+> After changing some format, I still got below errors, would you please point to
+> what's wrong with line 40, column 12? Thanks.
 
-When I look at the review process of rk3399-evb.dts
-it is mentioned here:
+It is line numbers of the generated .example.dts you need to look at.
 
-https://lore.kernel.org/patchwork/patch/672327/
+>
+>  31 required:
+>  32   - compatible
+>  33   - reg
+>  34   - "#phy-cells"
+>  35
+>  36 additionalProperties: false
+>  37
+>  38 examples:
+>  39     -|
+>  40     usb3phy: usb3-phy {
 
->> +	model = "Rockchip RK3399 Evaluation Board";
->> +	compatible = "rockchip,rk3399-evb", "rockchip,rk3399",
->> +		     "google,rk3399evb-rev2", google,rk3399evb-rev1",
->> +		     "google,rk3399evb-rev0" ;
-> 
-> can you check against which compatibles that coreboot really matches?
-> 
-> As we said that the evb changed between rev1 and rev2, I would expect the 
-> compatible to be something like
-> 
-> 	compatible = "rockchip,rk3399-evb",  "google,rk3399evb-rev2", 
-> 			"rockchip,rk3399";
-> 
-> leaving out the rev1 and rev0
+Needs a unit address.
 
-The consensus in version 4 ends in what is shown in the dts file, so I
-changed it in rockchip.yaml. Things from the past maybe can better be
-explained by Heiko. Please advise if this patch needs to change and in
-what file.
+>  41         compatible = "nxp,salvo-phy";
+>  42         reg = <0x5B160000 0x40000>;
+>  43         clocks = <&usb3_lpcg 4>;
+>  44         clock-names = "salvo_phy_clk";
+>  45         power-domains = <&pd IMX_SC_R_USB_2_PHY>;
 
-Kind regards,
+Need to include the header for this define.
 
-Johan
-
-
-On 2/28/20 1:42 PM, Robin Murphy wrote:
-> On 28/02/2020 6:14 am, Johan Jonker wrote:
->> A test with the command below gives this error:
->>
->> arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: /: compatible:
->> ['rockchip,rk3399-evb', 'rockchip,rk3399', 'google,rk3399evb-rev2']
->> is not valid under any of the given schemas
->>
->> Fix this error by adding 'google,rk3399evb-rev2' to the compatible
->> property in rockchip.yaml
->>
->> make ARCH=arm64 dtbs_check
->> DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
->>
->> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->> ---
->>   Documentation/devicetree/bindings/arm/rockchip.yaml | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml
->> b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> index d303790f5..6c6e8273e 100644
->> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
->> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> @@ -509,6 +509,7 @@ properties:
->>           items:
->>             - const: rockchip,rk3399-evb
->>             - const: rockchip,rk3399
->> +          - const: google,rk3399evb-rev2
-> 
-> This looks wrong - the board can't reasonably be a *more* general match
-> than the SoC. If this is supposed to represent a specific variant of the
-> basic EVB design then it should come before "rockchip,rk3399-evb" (and
-> possibly be optional if other variants also exist).
-> 
-> Robin.
-> 
->>           - description: Rockchip RK3399 Sapphire standalone
->>           items:
->>
-
+>  46         #phy-cells = <0>;
+>  47     };
