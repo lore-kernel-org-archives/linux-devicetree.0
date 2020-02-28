@@ -2,110 +2,131 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2959CC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A4CC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DBE246B2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03CF246A8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725892AbgB1NTm (ORCPT
+        id S1726287AbgB1N0v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:19:42 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51562 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgB1NTm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 08:19:42 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B0434296B9F;
-        Fri, 28 Feb 2020 13:19:40 +0000 (GMT)
-Date:   Fri, 28 Feb 2020 14:18:14 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Richard Weinberger <richard@nod.at>,
-        Mark Brown <broonie@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mtd@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 06/11] mtd: spi-nor: add support for DTR protocol
-Message-ID: <20200228141814.633c7195@collabora.com>
-In-Reply-To: <20200228120750.hstohetdnqja2g2p@ti.com>
-References: <20200226093703.19765-1-p.yadav@ti.com>
-        <20200226093703.19765-7-p.yadav@ti.com>
-        <20200227175841.51435e3f@collabora.com>
-        <20200228093658.zc3uifqg4zruokq3@ti.com>
-        <20200228115355.5033798f@collabora.com>
-        <20200228120750.hstohetdnqja2g2p@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 28 Feb 2020 08:26:51 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33009 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgB1N0v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 08:26:51 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1j7ffG-00051B-1D; Fri, 28 Feb 2020 14:26:50 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1j7ffE-0006RR-91; Fri, 28 Feb 2020 14:26:48 +0100
+Date:   Fri, 28 Feb 2020 14:26:48 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     devicetree@vger.kernel.org, Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        netdev@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v8 1/1] net: ag71xx: port to phylink
+Message-ID: <20200228132648.fgeoify3qdeb53qn@pengutronix.de>
+References: <20200226054624.14199-1-o.rempel@pengutronix.de>
+ <20200226092138.GV25745@shell.armlinux.org.uk>
+ <20200228114753.GN18808@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4s5yhyplebixnzcf"
+Content-Disposition: inline
+In-Reply-To: <20200228114753.GN18808@shell.armlinux.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:25:56 up 105 days,  4:44, 122 users,  load average: 0.47, 0.18,
+ 0.11
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 28 Feb 2020 17:37:50 +0530
-Pratyush Yadav <p.yadav@ti.com> wrote:
 
- 
-> > Isn't there an EXIT sequence that allows NORs to return to a single 
-> > SPI state?  
-> 
-> Yes there is, but it comes with a lot of strings attached. There is a 
-> hardware reset pin on some flashes that puts the flash in Power-on-Reset 
-> (POR) mode. But that pin is not mandatory. It also might not be 
-> connected on a given board.
-> 
-> The other option is a "Soft Reset" (also optional), which puts the flash 
-> in POR mode after it is given the soft reset command. But to send the 
-> command you need to know the mode the device is in. On top of that, the 
-> Soft Reset opcode differs between flashes. According to the xSPI spec, 
-> some flashes can have the opcode as 0xF0 and some others can have it as 
-> a two command sequence of 0x66 and 0x99.
-> 
-> And the cherry on top is the fact that these reset operations return to 
-> a state based on the value of the non-volatile bits. So, if the 
-> non-volatile configuration is 8D-8D-8D mode, then all these resets 
-> achieve nothing.
+--4s5yhyplebixnzcf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looks like flash vendors don't learn from their mistakes, they keep
-adding more features without really thinking about backward
-compatibility :-(.
+On Fri, Feb 28, 2020 at 11:47:53AM +0000, Russell King - ARM Linux admin wr=
+ote:
+> On Wed, Feb 26, 2020 at 09:21:38AM +0000, Russell King - ARM Linux admin =
+wrote:
+> > On Wed, Feb 26, 2020 at 06:46:24AM +0100, Oleksij Rempel wrote:
+> > > The port to phylink was done as close as possible to initial
+> > > functionality.
+> > >=20
+> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > ---
+> > > changes v8:
+> > > - set the autoneg bit
+> > > - provide implementations for the mac_pcs_get_state and mac_an_restart
+> > >   methods
+> > > - do phylink_disconnect_phy() on _stop()
+> > > - rename ag71xx_phy_setup() to ag71xx_phylink_setup()=20
+> >=20
+> > There will be one more change required; I'm changing the prototype for
+> > the mac_link_up() function, and I suggest as you don't support in-band
+> > AN that most of the setup for speed and duplex gets moved out of your
+> > mac_config() implementation to mac_link_up().
+> >=20
+> > The patches have been available on netdev for just over a week now.
+>=20
+> The patches are now in net-next.  Please respin your patch against these
+> changes, which basically means the code which programs the speed and
+> duplex in ag71xx_mac_config() needs to be moved to ag71xx_mac_link_up().
 
-> >   
-> > > 
-> > >     So, the only solution I can now think of is having the flash name in 
-> > >     its compatible string in the device tree. This way we can skip all 
-> > >     the Read ID ugliness and can have flash-specific hooks to make it 
-> > >     easier to detect the mode it is in (though I wonder if it is even 
-> > >     possible to detect the mode in a flash that doesn't have SFDP in 
-> > >     8D-8D-8D).  
-> > 
-> > Hm, I'd really like to avoid that if possible.  
-> 
-> Unfortunately, I don't really see a better alternative. Just so I 
-> understand this better, why do you think it is something worth avoiding?
+OK, Thank you!
+I'll  update it.
 
-There are 2 main reasons:
+Regards,
+Oleksij
 
-1/ board manufacturers usually source their flashes from different
-vendors so they're not tied to one of them. That means you can't really
-make the compatible too specific or you'd have to deal with DT variants
-(one variant per-flash).
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-2/ I feel like once we start accepting specific compats, people will
-try to abuse it and decide that they need one for their flash too,
-before even trying to see if there's not a different way to detect the
-flash.
+--4s5yhyplebixnzcf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5ZFRMACgkQ4omh9DUa
+UbNtTxAAhCmNOMd5vUqbiJM1/w/s11cV8lfHjVZxuDKKrAeo6h+/L1xs+/Aw8ybN
+AFt2LojGejRo96MkotlhDcM5XjRpG2J7SA5tnPziTaRXwTuuyhItsxJtHcCJJrf7
+HFRnVmrEOclwfzGXFhnUsttaNgtTQrheEVgQzzfZi22o0qLOVp8jtnMoRk5XUWFB
+YtWCGMxsGyK72L3UpyXufYalpTKWnIAcWcEtL0SzAkrMIg55MoJDq3lHrecvyP1/
+FnjCToGwFDYBA0/ym0gQtlsGCeMJ4+qfgnHnMz1H8nUd9t7T5uXJOENXo3Ua/a/c
+d2BEbtgXX42QsDz3SEQDWdeQtpZv5lWPiO3xmBentFjpqkXldhLdVSSXOT+lwF0K
+puY8vSQqOt0OLoPedABEFLhUUrjndcndERdAzfuyjAtbUgSDKgiDnBW8ihjfVt9n
+Q3yWtrnSlltE8QgRlbok8DpyjZ1SoTnm3GIvlaZbHVnVWLSC1d8OY4Ev4fRr78K3
+JwmstQibR0AWWvKUsil0IPGrrNPk+AzR2lDJbdLCpnXOEHHpPLYL0dSVk103G9mx
+ntVYCNfd6BARiT55cwWrLU9zVb0n3Or8KMryTZZ9G0Vr6f+HTWr1bu7q5QrfY+Md
+c4NDy37wq1UelojjiYIg5Heli/nR6VSCvYfJyhcmp0Q9Dz56rpg=
+=vVIQ
+-----END PGP SIGNATURE-----
+
+--4s5yhyplebixnzcf--
