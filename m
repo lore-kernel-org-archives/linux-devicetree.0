@@ -2,122 +2,107 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF9FC3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E3FC3F2CF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03736246B2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72352246A3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:55:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="iFV3rVkv"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="cYfmVt6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgB1Is7 (ORCPT
+        id S1726287AbgB1Izb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:48:59 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34783 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgB1Is7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 03:48:59 -0500
-Received: by mail-pg1-f193.google.com with SMTP id t3so1169058pgn.1
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 00:48:58 -0800 (PST)
+        Fri, 28 Feb 2020 03:55:31 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:45719 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgB1Iza (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 03:55:30 -0500
+Received: by mail-ua1-f68.google.com with SMTP id k24so686915uaq.12
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 00:55:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=5EPoAhuZuphwlWtSWKyhSY+h7h3iivsxV4hMWTAxKUE=;
-        b=iFV3rVkvPQnO5aV+1FwyzJXv2sSSkRysESfqak/OMWbI3jNcxqgDZw9qAddYnR6hyQ
-         zGRH+b4yzk7kO1CpZLLrwj/s50pOnkCp52v6eYBdmRqm4Z1vPwuqPFwVhaE7ELQyRXrn
-         08ZzgWcJHLmfD1BJH0hg3bS062kvW/N4nMi20=
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yG3mf6LB9a/9xK+auG2ENhJV3nByoLN3L6ABYDFphIE=;
+        b=cYfmVt6G2PkgbuStmNktcBKViFfntND+jPOtOsqUXukLVEBRGX4y1OUq+glYisQEDf
+         sXKxSiTKnmkLeM+yBhuUBoA3/fqRn08UAE7ESPLPlx0LuLvIbP2DYluC5ksh539ydIpl
+         WRBNSpsEJU96iOGSbtD/ZtYNLvZ6mWnP5iRl2GUXKoL47Ju6blYAx4snrQJc5hmAcwjn
+         N687kT6PtdGloHVsu4UruYooQAfp4T9e1/BNg7K4ALDDWCVedUjFiRsCXE4wcWexzKS5
+         lwP91z0KhiopN2re9zUX6bTQy5emckn1llNCG2yFSn/SDsYQQIz0W35bHdhApWTUmtxQ
+         tDlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5EPoAhuZuphwlWtSWKyhSY+h7h3iivsxV4hMWTAxKUE=;
-        b=s/58ihcaLVXKx+vQnFBDa3Ea1C1DG47xIPiJo8ETgAvj2ZyxEJrHStgy1iigdWHr58
-         UKuGmlxtTob6P3r1oGngturUCqHFQq0NedxdC8/O2TI6eo43hjPCEnJGS3NZxIHXPN5+
-         DoyCR/N/KrgVVBKjBnhNjd0cH3ct7f7qRoHuIIZpV+ZRZqih/l8kZaY8OVp+PSoQmdWo
-         kcsc9VSy8XHpRg+qXxsTbnF3NAcKPIDk4n8qefghVNFk3FuN+KF+XiLGZ6sse2uf+YpA
-         eMQgaCGaZ7M9TQbhpB8IiYqjUCiC7RAY7rX4pwn8Q1uHwE9RDEMson1X3A7TBTCLC8Vl
-         VDrg==
-X-Gm-Message-State: APjAAAWhnUr2gZ5quO4vYEMNSOCyGGGdRdW8EOVWE2aQgy4+DUEfSeAC
-        NijJyl1kUM2ujfjF5xKz6m25LUiPM/8=
-X-Google-Smtp-Source: APXvYqwQNFMpLHGueqR6+qvmtUW/XKem1Ve1Ni7aNqltZQ2HkbpOaMYtmYLwubk5R7ASlRPHUoNW3A==
-X-Received: by 2002:a63:d441:: with SMTP id i1mr3685712pgj.426.1582879737942;
-        Fri, 28 Feb 2020 00:48:57 -0800 (PST)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id r72sm1496939pjb.18.2020.02.28.00.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 00:48:56 -0800 (PST)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
-Date:   Fri, 28 Feb 2020 14:18:42 +0530
-Message-Id: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yG3mf6LB9a/9xK+auG2ENhJV3nByoLN3L6ABYDFphIE=;
+        b=gaqjMfJ4ynVS/b9oUk5YRoFyFHC6BiTeWvXzVAl+UKoPtuqGECaXt0LeXIYKzeRHAA
+         E7qOgU3Ny/uNbr93IJw7X4DRPcu+sOr9nfNaxdIflVYgQT9FLXuKKtoluwC/ype4Yz+T
+         5J0mcPxh2K1N5OITsg75E1oxwIxdKjTvXydQWwZtJuT4skVqUGaJW+lu/QMjJXdMk8Ef
+         HVu5D7Fh7vVs+546ZFdus1Vq9eTH8Ix7KYF3Q0hG+p6+AOSIT/Pw1+1GX7fQE6G/qIdK
+         /0FXjiZAdBSp2WC6GYGk4/tNahLw/q7JdeBsxVW8ml/5/KBAjaTQJTc/8xTMcECMQLs1
+         qo6Q==
+X-Gm-Message-State: ANhLgQ3+FtqXnmDY36JpkODb3q5ZGIldvxDhsa5+nws+He+2DXAOCZKU
+        x6EqJ1G67Ld37+dYPLb4JFf+0oNTdpauDicu4LGgBg==
+X-Google-Smtp-Source: ADFU+vsLztMWpfaKINtTsKF68z+sMLM4PaaIv6oFTVvgFaKU7aareFJM7t6ZDu97PwZJduqdizT78uxAIc6c2M5WIBk=
+X-Received: by 2002:ab0:2758:: with SMTP id c24mr501689uap.94.1582880129628;
+ Fri, 28 Feb 2020 00:55:29 -0800 (PST)
+MIME-Version: 1.0
+References: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
+ <1582646384-1458-4-git-send-email-okukatla@codeaurora.org> <20200227171226.GJ24720@google.com>
+In-Reply-To: <20200227171226.GJ24720@google.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Fri, 28 Feb 2020 14:25:18 +0530
+Message-ID: <CAHLCerPMmEQCTU1+K6p01o+PJ1BAf2244Dze2gVLjLQ+cUxpAQ@mail.gmail.com>
+Subject: Re: [V4, 3/3] arm64: dts: sc7180: Add interconnect provider DT nodes
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Odelu Kukatla <okukatla@codeaurora.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        daidavid1@codeaurora.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        evgreen@google.com, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>, seansw@qti.qualcomm.com,
+        Alex Elder <elder@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Generally i2c addr should not be greater than 10-bit. The highest 2 bits
-are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
-these flags if check slave addr valid.
+On Thu, Feb 27, 2020 at 10:42 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> On Tue, Feb 25, 2020 at 09:29:44PM +0530, Odelu Kukatla wrote:
+> > Add the DT nodes for the network-on-chip interconnect buses found
+> > on sc7180-based platforms.
+> >
+> > Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 95 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 95 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index cc5a94f..3e28f34 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>
+> v2 had:
+>
+> +#include <dt-bindings/interconnect/qcom,sc7180.h>
+>
+> I think we still want that, otherwise some patch that adds an
+> interconnect configuration for SC7180 needs to add it (see also
+> https://patchwork.kernel.org/patch/11386485/#23187545)
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- scripts/dtc/Makefile | 2 +-
- scripts/dtc/checks.c | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-index 3acbb410904c..c5e8d6a9e73c 100644
---- a/scripts/dtc/Makefile
-+++ b/scripts/dtc/Makefile
-@@ -9,7 +9,7 @@ dtc-objs	:= dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
- dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
- 
- # Source files need to get at the userspace version of libfdt_env.h to compile
--HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
-+HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
- 
- ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
- ifneq ($(CHECK_DTBS),)
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index 756f0fa9203f..17c9ed4137b5 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -3,6 +3,7 @@
-  * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
-  */
- 
-+#include <linux/bits.h>
- #include "dtc.h"
- #include "srcpos.h"
- 
-@@ -17,6 +18,9 @@
- #define TRACE(c, fmt, ...)	do { } while (0)
- #endif
- 
-+#define I2C_TEN_BIT_ADDRESS    BIT(31)
-+#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
-+
- enum checkstatus {
- 	UNCHECKED = 0,
- 	PREREQ,
-@@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
- 
- 	for (len = prop->val.len; len > 0; len -= 4) {
- 		reg = fdt32_to_cpu(*(cells++));
-+		reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
- 		if (reg > 0x3ff)
- 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
- 				  reg);
--- 
-2.17.1
-
+Thanks Matthias. That fixed the build.
