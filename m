@@ -2,116 +2,110 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1DAC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB4EC3F2D3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C02246AE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2FAA2072A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:59:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fx3F0RVJ"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SHwf7hfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgB1O5V (ORCPT
+        id S1727070AbgB1O7s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:57:21 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39825 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgB1O5V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:57:21 -0500
-Received: by mail-qt1-f193.google.com with SMTP id p34so2192767qtb.6
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 06:57:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aXNQ0NABVZ/Zc8fXXYZpSz3dqh4Ns6QlhvK6/kwYM2k=;
-        b=fx3F0RVJpvuGR0vU2fusOG/NqXxNQdLCppTq9XL99VJF79clWgcp5+agQ8Bkdn764W
-         /6H4SP43zfEgHKiNsbn3EkZXEI5eftR/AZNv5GJYTZnxTXZRyq9aw7ICgIKMn8l0jnUx
-         9LorGB67BgZ2aphSqsGjJO2u/nt3IEPqyy6blQp30BdEWnEUxTjjCoo7zwPmwtZJlkI3
-         e+qGqpZDRkSLznZ8x2vUdH6CsaxJ2HRW27+fCzEtPp5EqdbjknklIN9PHhf1PYIBAg+F
-         PuUEX6g64YI1DZfAu0ym87ZYgi2PkqOOc/+5zxlIRaH10PX0tdO8PBQJ2rqvbzBeuTgk
-         IVvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aXNQ0NABVZ/Zc8fXXYZpSz3dqh4Ns6QlhvK6/kwYM2k=;
-        b=BjGG5/im3ovAY+oeawQuZSpxbGPUSDBwcQRW2NaJgjACFEEgCzS67C3NsmyOTxScwT
-         P5CkREUVD2PEbB8otPmBD72LOJovQq0JFf8NMoTZNP5qwxBqs9hRlzcGrhuNkVGxzt/W
-         q+l+OizicdxZXh7xqrQTjYMArvrBVJ/EJJr87fevkeSGT0uHJmQdUoiJLM96DWubk7pO
-         hjXWesse9Lz/YisWymOabaeZaQshhwyeXPbXpZzmY35kF+W6HZ9QQ3RrtUnixF3L57Vu
-         Looz9YwP/FUwQ8lOKoCeeHJ3CvVxKi5BoZICCmVrsGe8bOGgpkf+pWNxhK5JO1D++aFk
-         Gjag==
-X-Gm-Message-State: APjAAAVaczLScb5PxPIHZlReKKYniHlHAw3Ej0BynqSvqI0ly7Y+zQR7
-        TpnZl59wQ7cXCtrA9mxS7T7y5Q==
-X-Google-Smtp-Source: APXvYqxZGwk4KQ+YAY4GsyBgYKpbiHklk+KncMw+8qgpUr+ys9QfMTdjm4TizVQ6yPrtfGJb79x/jw==
-X-Received: by 2002:ac8:2939:: with SMTP id y54mr4410279qty.109.1582901840269;
-        Fri, 28 Feb 2020 06:57:20 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id f7sm5133445qtj.92.2020.02.28.06.57.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Feb 2020 06:57:19 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j7h4p-00034R-0q; Fri, 28 Feb 2020 10:57:19 -0400
-Date:   Fri, 28 Feb 2020 10:57:19 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, yi.l.liu@intel.com,
-        zhangfei.gao@linaro.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v4 02/26] iommu/sva: Manage process address spaces
-Message-ID: <20200228145718.GR31668@ziepe.ca>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-3-jean-philippe@linaro.org>
- <20200226111320.3b6e6d3d@jacob-builder>
- <20200228144007.GB2156@myrica>
+        Fri, 28 Feb 2020 09:59:48 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:3230 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726788AbgB1O7r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:59:47 -0500
+X-UUID: be1125d1dec44581b285cb0689465ad5-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NL2GKs6cWZDfq31vqetafIYcn/LVSVpleZHl8l/E0rk=;
+        b=SHwf7hfpS2zxYELI5+4ubreXrNJa4ZKvzA11q7RE6/S7dYdqtCf/9FWZ6bINM7qFOjQvcEJf6Dm5PXyX/RQ9T6NkYlNz30Dun5fNP0YNO04dArV/QaqYGpP9CtbMQAgo9hg2uw+u+L5PZFZ0zImaZ+ZXpcJAuRwRTQGMPk+QaL8=;
+X-UUID: be1125d1dec44581b285cb0689465ad5-20200228
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 468731037; Fri, 28 Feb 2020 22:59:42 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 22:58:36 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 22:59:23 +0800
+Message-ID: <1582901981.14824.9.camel@mtksdaap41>
+Subject: Re: [PATCH v3 11/13] soc: mediatek: cmdq: add jump function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Fri, 28 Feb 2020 22:59:41 +0800
+In-Reply-To: <1582897461-15105-13-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-13-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228144007.GB2156@myrica>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 03:40:07PM +0100, Jean-Philippe Brucker wrote:
-> > > Device
-> > > + * 00:00.0 accesses address spaces X and Y, each corresponding to an
-> > > mm_struct.
-> > > + * Devices 00:01.* only access address space Y. In addition each
-> > > + * IOMMU_DOMAIN_DMA domain has a private address space, io_pgtable,
-> > > that is
-> > > + * managed with iommu_map()/iommu_unmap(), and isn't shared with the
-> > > CPU MMU.
-> > So this would allow IOVA and SVA co-exist in the same address space?
-> 
-> Hmm, not in the same address space, but they can co-exist in a device. In
-> fact the endpoint I'm testing (hisi zip accelerator) already needs normal
-> DMA alongside SVA for queue management. This one is integrated on an
-> Arm-based platform so shouldn't be a concern for VT-d at the moment, but
-> I suspect we might see more of this kind of device with mixed DMA.
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IEFkZCBqdW1wIGZ1bmN0aW9uIHNvIHRoYXQgY2xpZW50IGNhbiBq
+dW1wIHRvIGFueSBhZGRyZXNzIHdoaWNoDQo+IGNvbnRhaW5zIGluc3RydWN0aW9uLg0KPiANCj4g
+U2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsu
+Y29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIHwg
+MTIgKysrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5o
+ICB8IDExICsrKysrKysrKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKykN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIu
+YyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4IDU4ZmVj
+NjM0ZGNmMS4uYmJjNjhhN2M4MWU5IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRl
+ay9tdGstY21kcS1oZWxwZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21k
+cS1oZWxwZXIuYw0KPiBAQCAtMzcyLDYgKzM3MiwxOCBAQCBpbnQgY21kcV9wa3RfYXNzaWduKHN0
+cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgcmVnX2lkeCwgdTMyIHZhbHVlKQ0KPiAgfQ0KPiAgRVhQ
+T1JUX1NZTUJPTChjbWRxX3BrdF9hc3NpZ24pOw0KPiAgDQo+ICtpbnQgY21kcV9wa3RfanVtcChz
+dHJ1Y3QgY21kcV9wa3QgKnBrdCwgZG1hX2FkZHJfdCBhZGRyKQ0KPiArew0KPiArCXN0cnVjdCBj
+bWRxX2NsaWVudCAqY2wgPSBwa3QtPmNsOw0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGlu
+c3QgPSB7IHswfSB9Ow0KPiArDQo+ICsJaW5zdC5vcCA9IENNRFFfQ09ERV9KVU1QOw0KPiArCWlu
+c3Qub2Zmc2V0ID0gMTsNCg0KU3ltYm9saXplIHRoZSB2YWx1ZSAnMScuDQoNCj4gKwlpbnN0LnZh
+bHVlID0gYWRkciA+PiBjbWRxX21ib3hfc2hpZnQoY2wtPmNoYW4pOw0KDQpJZiB5b3Ugd3JpdGUg
+YXMgJ2NtZHFfbWJveF9zaGlmdChwa3QtPmNsLT5jaGFuKScsIHlvdSBjb3VsZCBkcm9wIGxvY2Fs
+DQp2YXJpYWJsZSAnY2wnLg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiArCXJldHVybiBjbWRxX3BrdF9h
+cHBlbmRfY29tbWFuZChwa3QsIGluc3QpOw0KPiArfQ0KPiArRVhQT1JUX1NZTUJPTChjbWRxX3Br
+dF9qdW1wKTsNCj4gKw0KPiAgaW50IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBjbWRxX3BrdCAq
+cGt0KQ0KPiAgew0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0K
+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBiL2lu
+Y2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gaW5kZXggOTllNzcxNTVmOTY3
+Li4xYTZjNTZmM2JlYzEgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVr
+L210ay1jbWRxLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEu
+aA0KPiBAQCAtMjEzLDYgKzIxMywxNyBAQCBpbnQgY21kcV9wa3RfcG9sbF9tYXNrKHN0cnVjdCBj
+bWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ICAgKi8NCj4gIGludCBjbWRxX3BrdF9hc3NpZ24o
+c3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiByZWdfaWR4LCB1MzIgdmFsdWUpOw0KPiAgDQo+ICsv
+KioNCj4gKyAqIGNtZHFfcGt0X2p1bXAoKSAtIEFwcGVuZCBqdW1wIGNvbW1hbmQgdG8gdGhlIENN
+RFEgcGFja2V0LCBhc2sgR0NFDQo+ICsgKgkJICAgICB0byBleGVjdXRlIGFuIGluc3RydWN0aW9u
+IHRoYXQgY2hhbmdlIGN1cnJlbnQgdGhyZWFkIFBDIHRvDQo+ICsgKgkJICAgICBhIHBoeXNpY2Fs
+IGFkZHJlc3Mgd2hpY2ggc2hvdWxkIGNvbnRhaW5zIG1vcmUgaW5zdHJ1Y3Rpb24uDQo+ICsgKiBA
+cGt0OiAgICAgICAgdGhlIENNRFEgcGFja2V0DQo+ICsgKiBAYWRkcjogICAgICAgcGh5c2ljYWwg
+YWRkcmVzcyBvZiB0YXJnZXQgaW5zdHJ1Y3Rpb24gYnVmZmVyDQo+ICsgKg0KPiArICogUmV0dXJu
+OiAwIGZvciBzdWNjZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+ICsgKi8N
+Cj4gK2ludCBjbWRxX3BrdF9qdW1wKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCBkbWFfYWRkcl90IGFk
+ZHIpOw0KPiArDQo+ICAvKioNCj4gICAqIGNtZHFfcGt0X2ZpbmFsaXplKCkgLSBBcHBlbmQgRU9D
+IGFuZCBqdW1wIGNvbW1hbmQgdG8gcGt0Lg0KPiAgICogQHBrdDoJdGhlIENNRFEgcGFja2V0DQoN
+Cg==
 
-Probably the most interesting usecases for PASID definately require
-this, so this is more than a "suspect we might see"
-
-We want to see the privileged kernel control the general behavior of
-the PCI function and delegate only some DMAs to PASIDs associated with
-the user mm_struct. The device is always trusted the label its DMA
-properly.
-
-These programming models are already being used for years now with the
-opencapi implementation.
-
-Jason
