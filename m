@@ -2,131 +2,85 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FF1C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8471FC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0989124699
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Ljgpp5xG"
+	by mail.kernel.org (Postfix) with ESMTP id 578A024699
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgB1PNn (ORCPT
+        id S1726796AbgB1PPn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:13:43 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:42605 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgB1PNn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 10:13:43 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dc14so1471309qvb.9
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 07:13:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Wq8nlNbsnwZz9fji3Cl/zgmv4zDoBKk4NoZF3W2wkDQ=;
-        b=Ljgpp5xGPFtER1NGPwiitpNKYovODnCioFFOFLTyn2Ck/JR8HVTOx6j2p+g2nfn+c7
-         ZZ4POl/CTaYoux0tyCmDMX6rtKyDdXnlMSGlJzLw9GbBTTzDfneWvjGmL5R0O0CGmHup
-         2kp9E5S8Nxk8bHWYOZucZY6zoQaHVHi1zuuqGFV82FSHWkJZ4RoRvoylWAS0Wx4bc8K9
-         VTIK4BTuE9ZYLVtjSIRYLN6ZaAkL0DcdWHFg4QbbWrjltc2/+KxfoeQyempXAsF7sI0A
-         w3wliYOLVxCpNm799lBmqygk+nsWvEVxFVFJ7Lj2RQ/PkFIeGuOpHh4CgFZttaO2QJlZ
-         F0/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wq8nlNbsnwZz9fji3Cl/zgmv4zDoBKk4NoZF3W2wkDQ=;
-        b=bxQRaBxKaTInT+XRN+/ueiTfq7eG9KiwhiHzA2VXsixc/OiHuR85cMKaZv+yBhY5ZL
-         KsewL4GrNkMS1FDbDBdco6ecZX+RSBRpiBPsL4G5oh0dtvriH8LOSICsnl1d+YxZEDEO
-         J1YF8DteZdwzSYg2wQs79F1/1PBWne9uS7fhtSsLUc7gYsvV45AeBMc2RLRszTE5hzWs
-         GxTpNKxfYcAdk3TXLDULsMHtdtytFgWjmtR0n/oeNxgP//nCKFrpK6/A16LGeQxJ6lt+
-         UdAtJkDI183TX8Xh6Jwe9uHlS23L0r/zKf2Zc6aMLGL8K6vcXSjT1yMUoTPizXNd+YBM
-         Kg4A==
-X-Gm-Message-State: APjAAAUpUFWBFNYMwD7e6l1XNb/NYCVrol6Nowp2uRXYZ+xQgVjrm0jg
-        KK/lXdx+pjJ8bNHEhx3fowqyEA==
-X-Google-Smtp-Source: APXvYqzNk6wZcWW+lmBBUW/lZq2ZIkoXwN/aWaAwf7XC2b5DqYukekLVZ6CR2bhdZGkTfI1iTFM0Cw==
-X-Received: by 2002:a05:6214:a62:: with SMTP id ef2mr3484481qvb.109.1582902820845;
-        Fri, 28 Feb 2020 07:13:40 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id a128sm5296832qkc.44.2020.02.28.07.13.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Feb 2020 07:13:40 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j7hKe-0005qo-0Q; Fri, 28 Feb 2020 11:13:40 -0400
-Date:   Fri, 28 Feb 2020 11:13:40 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, will@kernel.org,
-        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
-        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
-        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        iommu@lists.linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        robin.murphy@arm.com, christian.koenig@amd.com
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200228151339.GS31668@ziepe.ca>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-2-jean-philippe@linaro.org>
- <20200224190056.GT31668@ziepe.ca>
- <20200225092439.GB375953@myrica>
- <20200225140814.GW31668@ziepe.ca>
- <20200228143935.GA2156@myrica>
- <20200228144844.GQ31668@ziepe.ca>
- <20200228150427.GF2156@myrica>
+        Fri, 28 Feb 2020 10:15:43 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:39050 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726720AbgB1PPn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:15:43 -0500
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1j7hMM-0006eU-6O; Fri, 28 Feb 2020 16:15:26 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nick Xie <nick@khadas.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        anarsoul@gmail.com, enric.balletbo@collabora.com
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add initial support for Pinebook Pro
+Date:   Fri, 28 Feb 2020 16:15:25 +0100
+Message-ID: <3144691.gaQQKPV42P@diego>
+In-Reply-To: <37190f26-48aa-dcad-d4b1-8a534ba1360e@manjaro.org>
+References: <20200227180630.166982-1-t.schramm@manjaro.org> <12370413.gKdrHkWbHd@diego> <37190f26-48aa-dcad-d4b1-8a534ba1360e@manjaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228150427.GF2156@myrica>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 04:04:27PM +0100, Jean-Philippe Brucker wrote:
-> On Fri, Feb 28, 2020 at 10:48:44AM -0400, Jason Gunthorpe wrote:
-> > On Fri, Feb 28, 2020 at 03:39:35PM +0100, Jean-Philippe Brucker wrote:
-> > > > > +	list_for_each_entry_rcu(bond, &io_mm->devices, mm_head) {
-> > > > > +		/*
-> > > > > +		 * To ensure that we observe the initialization of io_mm fields
-> > > > > +		 * by io_mm_finalize() before the registration of this bond to
-> > > > > +		 * the list by io_mm_attach(), introduce an address dependency
-> > > > > +		 * between bond and io_mm. It pairs with the smp_store_release()
-> > > > > +		 * from list_add_rcu().
-> > > > > +		 */
-> > > > > +		io_mm = rcu_dereference(bond->io_mm);
-> > > > 
-> > > > A rcu_dereference isn't need here, just a normal derference is fine.
-> > > 
-> > > bond->io_mm is annotated with __rcu (for iommu_sva_get_pasid_generic(),
-> > > which does bond->io_mm under rcu_read_lock())
-> > 
-> > I'm surprised the bond->io_mm can change over the lifetime of the
-> > bond memory..
+Hi Tobias,
+
+Am Freitag, 28. Februar 2020, 15:57:10 CET schrieb Tobias Schramm:
+> thanks for the review. I'll implement the changes and send a v2.
 > 
-> The normal lifetime of the bond is between device driver calls to bind()
-> and unbind(). If the mm exits early, though, we clear bond->io_mm. The
-> bond is then stale but can only be freed when the device driver releases
-> it with unbind().
+> >> +	 * of wakeup sources without disabling the whole key
+> > Also can you explain the problem a bit? If there is a deficit in the input
+> > subsystem regarding wakeup events, dt is normally not the place to work
+> > around things [we're supposed to be OS independent]
+> 
+> The issue is that some users wanted to be able to control the wakeup
+> functionality of the keys separately via sysfs. That does not seem to be
+> possible when combining both keys into one gpio-keys node. A more
+> detailed explanation of the issue can be found at [1].
 
-I usually advocate for simple use of these APIs. The mm_notifier_get()
-should happen in bind() and the matching put should happen in the
-call_rcu callbcak that does the kfree. Then you can never get a stale
-pointer. Don't worry about exit_mmap().
+ok ... but that is really strange, because looking at gpio-keys.c I see
+it checking the individual button wakeup-property before setting
+the irq-wake in gpio_keys_enable_wakeup() .
 
-release() is an unusual callback and I see alot of places using it
-wrong. The purpose of release is to invalidate_all, that is it.
+Ah, but I guess manually disabling/enabling wakeup via sysfs only
+works for the whole device and all wakeup buttons.
 
-Also, confusingly release may be called multiple times in some
-situations, so it shouldn't disturb anything that might impact a 2nd
-call.
+In general this sounds more like a gpio-keys deficit, but in the end
+we can keep the separate gpio-key nodes here, they don't violate any
+dt-bindings ;-) .
 
-Jason
+
+Heiko
+
+
