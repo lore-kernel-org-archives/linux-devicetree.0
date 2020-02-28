@@ -2,160 +2,94 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E92AC3F2D3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A41C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBF7246AE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0A5246B5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:45:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Ky9EmE1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgB1NnC (ORCPT
+        id S1726876AbgB1No7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:43:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:38328 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbgB1NnC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:43:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A33A31B;
-        Fri, 28 Feb 2020 05:43:01 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C8153F7B4;
-        Fri, 28 Feb 2020 05:42:57 -0800 (PST)
-Date:   Fri, 28 Feb 2020 13:42:54 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Will Deacon <will@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Fri, 28 Feb 2020 08:44:59 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:60099 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726867AbgB1No7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 08:44:59 -0500
+X-UUID: e8bb48947a9946a08acb1aea8836e8ba-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=y7T1TMD9w293pE+Fxbud4yhXgZQSFHACeiXgIaBB2Vs=;
+        b=Ky9EmE1HcdDiMzqgmx6yp9aIR8Hv72WlBjmUImO1yhLIxbMQkIoyxYpswULDla8is0zvtl1hMvkNXm5BOKpuKH017kA9bWK3I6xteBEibdMQWjQYzPHgmLkw56qSJ1goM6VshLdoFXnycChqrCDJRc1q+00bL+USYp6p27a+290=;
+X-UUID: e8bb48947a9946a08acb1aea8836e8ba-20200228
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1548517905; Fri, 28 Feb 2020 21:44:52 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 21:43:52 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 21:44:49 +0800
+From:   Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        soc@kernel.org, Robert Richter <rrichter@marvell.com>,
-        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        James Morse <james.morse@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        kvm@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC PATCH 06/11] iommu: arm-smmu: Remove Calxeda secure mode
- quirk
-Message-ID: <20200228134254.03fc5e1b@donnerap.cambridge.arm.com>
-In-Reply-To: <20200228105024.GC2395@willie-the-truck>
-References: <20200218171321.30990-1-robh@kernel.org>
-        <20200218171321.30990-7-robh@kernel.org>
-        <20200218172000.GF1133@willie-the-truck>
-        <CAL_JsqJn1kG6gah+4318NQfJ4PaS3x3woWEUh08+OTfOcD+1MQ@mail.gmail.com>
-        <20200228100446.GA2395@willie-the-truck>
-        <20200228102556.1dde016e@donnerap.cambridge.arm.com>
-        <20200228105024.GC2395@willie-the-truck>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        <srv_heupstream@mediatek.com>,
+        Ming-Fan Chen <ming-fan.chen@mediatek.com>
+Subject: [PATCH v3 00/13] support gce on mt6779 platform
+Date:   Fri, 28 Feb 2020 21:44:07 +0800
+Message-ID: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 28 Feb 2020 10:50:25 +0000
-Will Deacon <will@kernel.org> wrote:
-
-> On Fri, Feb 28, 2020 at 10:25:56AM +0000, Andre Przywara wrote:
-> > On Fri, 28 Feb 2020 10:04:47 +0000
-> > Will Deacon <will@kernel.org> wrote:
-> > 
-> > Hi,
-> >   
-> > > On Tue, Feb 25, 2020 at 04:01:54PM -0600, Rob Herring wrote:  
-> > > > On Tue, Feb 18, 2020 at 11:20 AM Will Deacon <will@kernel.org> wrote:    
-> > > > >
-> > > > > On Tue, Feb 18, 2020 at 11:13:16AM -0600, Rob Herring wrote:    
-> > > > > > Cc: Will Deacon <will@kernel.org>
-> > > > > > Cc: Robin Murphy <robin.murphy@arm.com>
-> > > > > > Cc: Joerg Roedel <joro@8bytes.org>
-> > > > > > Cc: iommu@lists.linux-foundation.org
-> > > > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > > > > ---
-> > > > > > Do not apply yet.    
-> > > > >
-> > > > > Pleeeeease? ;)
-> > > > >    
-> > > > > >  drivers/iommu/arm-smmu-impl.c | 43 -----------------------------------
-> > > > > >  1 file changed, 43 deletions(-)    
-> > > > >
-> > > > > Yes, I'm happy to get rid of this. Sadly, I don't think we can remove
-> > > > > anything from 'struct arm_smmu_impl' because most implementations fall
-> > > > > just short of perfect.
-> > > > >
-> > > > > Anyway, let me know when I can push the button and I'll queue this in
-> > > > > the arm-smmu tree.    
-> > > > 
-> > > > Seems we're leaving the platform support for now, but I think we never
-> > > > actually enabled SMMU support. It's not in the dts either in mainline
-> > > > nor the version I have which should be close to what shipped in
-> > > > firmware. So as long as Andre agrees, this one is good to apply.    
-> > > 
-> > > Andre? Can I queue this one for 5.7, please?  
-> > 
-> > I was wondering how much of a pain it is to keep it in? AFAICS there are
-> > other users of the "impl" indirection. If those goes away, I would be
-> > happy to let Calxeda go.  
-> 
-> The impl stuff is new, so we'll keep it around. The concern is more about
-> testing (see below).
-> 
-> > But Eric had the magic DT nodes to get the SMMU working, and I used that
-> > before, with updating the DT either on flash or dynamically via U-Boot.  
-> 
-> What did you actually use the SMMU for, though? The
-> 'arm_iommu_create_mapping()' interface isn't widely used and, given that
-> highbank doesn't support KVM, the use-cases for VFIO are pretty limited
-> too.
-
-AFAIK Highbank doesn't have the SMMU, probably mostly for that reason.
-I have a DT snippet for Midway, and that puts the MMIO base at ~36GB, which is not possible on Highbank.
-So I think that the quirk is really meant and needed for Midway.
-
-> > So I don't know exactly *how* desperate you are with removing this, or if
-> > there are other reasons than "negative diffstat", but if possible I would
-> > like to keep it in.  
-> 
-> It's more that we *do* make quite a lot of changes to the arm-smmu driver
-> and it's never tested with this quirk. If you're stepping up to run smmu
-> tests on my queue for each release on highbank, then great, but otherwise
-> I'd rather not carry the code for fun. The change in diffstat is minimal
-> (we're going to need to hooks for nvidia, who broke things in a different
-> way).
-
-I am about to set up some more sophisticated testing, and will include some SMMU bits in it.
-
-Cheers,
-Andre.
-
-> Also, since the hooks aren't going away, if you /do/ end up using the SMMU
-> in future, then we could re-add the driver quirk without any fuss.
-> 
-> Will
+VGhpcyBwYXRjaCBzdXBwb3J0IGdjZSBvbiBtdDY3NzkgcGxhdGZvcm0uDQoNCkNoYW5nZSBzaW5j
+ZSB2MjoNCi0gcmViYXNlIG9udG8gNS42LXJjMQ0KLSByZW1vdmUgdW5uZWNlc3NhcnkgZGVmaW5p
+dGlvbg0KLSBhZGQgY2xlYXIgcGFyYW1ldGVyIGluIHdmZSBhcGkNCi0gc2VwYXJhdGUgYXNzaWdu
+IGFuZCB3cml0ZV9zIGFwaQ0KLSBhZGQganVtcCBhcGkgaW5zdGVhZCBvZiBmaW5hbGl6ZSBpbiBs
+b29wDQoNCkNoYW5nZSBzaW5jZSB2MToNCi0gY2hhbmdlIHdyaXRlX3MgaW50ZXJmYWNlIHRvIGNv
+bnNpc3RhbnQgd2l0aCByZWFkX3MNCi0gcmVtb3ZlIGNvbWJpbmF0aW9uIGZ1bmN0aW9uIGFuZCBk
+ZXNpZ24gd3JpdGVfc192YWx1ZSBmdW5jdGlvbg0KLSBkbyBub3QgY2hlY2sgZmluYWxpemVkIGFu
+ZCBleHBvcnQgZmluYWxpemUgZnVuY3Rpb24NCi0gZ2l2ZSBhcmdfYSBuYW1lDQoNCg0KDQpEZW5u
+aXMgWUMgSHNpZWggKDEzKToNCiAgZHQtYmluZGluZzogZ2NlOiBhZGQgZ2NlIGhlYWRlciBmaWxl
+IGZvciBtdDY3NzkNCiAgbWFpbGJveDogY21kcTogdmFyaWFibGl6ZSBhZGRyZXNzIHNoaWZ0IGlu
+IHBsYXRmb3JtDQogIG1haWxib3g6IGNtZHE6IHN1cHBvcnQgbXQ2Nzc5IGdjZSBwbGF0Zm9ybSBk
+ZWZpbml0aW9uDQogIG1haWxib3g6IG1lZGlhdGVrOiBjbWRxOiBjbGVhciB0YXNrIGluIGNoYW5u
+ZWwgYmVmb3JlIHNodXRkb3duDQogIHNvYzogbWVkaWF0ZWs6IGNtZHE6IHJldHVybiBzZW5kIG1z
+ZyBlcnJvciBjb2RlDQogIHNvYzogbWVkaWF0ZWs6IGNtZHE6IGFkZCBhc3NpZ24gZnVuY3Rpb24N
+CiAgc29jOiBtZWRpYXRlazogY21kcTogYWRkIHdyaXRlX3MgZnVuY3Rpb24NCiAgc29jOiBtZWRp
+YXRlazogY21kcTogYWRkIHJlYWRfcyBmdW5jdGlvbg0KICBzb2M6IG1lZGlhdGVrOiBjbWRxOiBh
+ZGQgd3JpdGVfcyB2YWx1ZSBmdW5jdGlvbg0KICBzb2M6IG1lZGlhdGVrOiBjbWRxOiBleHBvcnQg
+ZmluYWxpemUgZnVuY3Rpb24NCiAgc29jOiBtZWRpYXRlazogY21kcTogYWRkIGp1bXAgZnVuY3Rp
+b24NCiAgc29jOiBtZWRpYXRlazogY21kcTogYWRkIGNsZWFyIG9wdGlvbiBpbiBjbWRxX3BrdF93
+ZmUgYXBpDQogIHNvYzogbWVkaWF0ZWs6IGNtZHE6IGFkZCBzZXQgZXZlbnQgZnVuY3Rpb24NCg0K
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvbXRrLWdjZS50eHQgICB8ICAgOCArLQ0K
+IGRyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMgICAgICAgICAgICB8ICA5NyArKysr
+KysrLQ0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jICAgICAgICB8IDE0
+MyArKysrKysrKysrLQ0KIGluY2x1ZGUvZHQtYmluZGluZ3MvZ2NlL210Njc3OS1nY2UuaCAgICAg
+ICAgICB8IDIyMiArKysrKysrKysrKysrKysrKysNCiBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRr
+LWNtZHEtbWFpbGJveC5oICAgICAgfCAgMTAgKy0NCiBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRl
+ay9tdGstY21kcS5oICAgICAgICAgfCAgOTQgKysrKysrKy0NCiA2IGZpbGVzIGNoYW5nZWQsIDU0
+MyBpbnNlcnRpb25zKCspLCAzMSBkZWxldGlvbnMoLSkNCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5j
+bHVkZS9kdC1iaW5kaW5ncy9nY2UvbXQ2Nzc5LWdjZS5oDQoNCi0tIA0KMi4xOC4w
 
