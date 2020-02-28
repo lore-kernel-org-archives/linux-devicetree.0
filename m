@@ -2,191 +2,181 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B2DC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A83DC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B766D24699
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24549246A8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:47:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiCNBCpD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n2AiaVXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725827AbgB1RYE (ORCPT
+        id S1726589AbgB1Rrd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:24:04 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:43496 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbgB1RYE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 12:24:04 -0500
-Received: by mail-yw1-f66.google.com with SMTP id f204so3981300ywc.10;
-        Fri, 28 Feb 2020 09:24:03 -0800 (PST)
+        Fri, 28 Feb 2020 12:47:33 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36562 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgB1Rrd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 12:47:33 -0500
+Received: by mail-yw1-f67.google.com with SMTP id y72so4110398ywg.3;
+        Fri, 28 Feb 2020 09:47:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=8DBagXdO92SGZD18edolNudaDY7BySfxVES4onPKc48=;
-        b=BiCNBCpDhvom4uoBEgi6wWUf78Kj5hpmt5TQuapy9qcR64nz4OnJs4O7vU8LcLUu1Q
-         Nfy/foDa3tGn4/w4Qq2UVG6M4CVuzCmn9cGtWCFzLZD/gC/cBKSKqjOgg1Y3L5Yy0mGv
-         PDHzM2BiUkH/rSgYYhZ/pZYHhX40OjyNXBiHVxpBfnnDjWLEmX58heB6u2EeaeQzIDcy
-         6/UrxwaLyrcFcHFVPAHwz4hCE5WmYIR+hl7l9Q9Zqhhks6gu/viQxHQ2VyXC/iKyyhnS
-         TRQifnXdpH2I43DBTHtwz6C4YTGxMhpodWZtaFd/rok5ZYFKXb0osBRKqJwU0XgXJ6eg
-         8KBg==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7PKfOLFLVMzQtUrgljSKPHVUzcIMzVWb/k+R/Aaq3LI=;
+        b=n2AiaVXBDYLpoz5V/ZBhyl+qF/5StswtzLNYPmErW158Ty6klQSVXD2llo7pdzm/Hm
+         qhhetWBn3K8YYTbHAkmvaWUDRMp0op/+waLu7O1uFAJ6AsPJfwx1LQB1Esbdv4sPMlqY
+         GvjvhfCVwb7/sN5GptGaWqExZc1Cxbug7FjvVgNDw/C2nW0KJV3EiG3PKqjWQNLEUzsS
+         mIR7V7FIpUh1wBV+V/SFf/CgHswBY+KXO+yjEscNrodopqRL3yNygp7GyZlNVZmSpNwf
+         7sm4jdDCJtyKfMTyQztEgHnqhoge+W7TBmtASeNy6+1gXcXCnvtAFkH0tpw9teWZFzZN
+         LhSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=8DBagXdO92SGZD18edolNudaDY7BySfxVES4onPKc48=;
-        b=XX1+gNaPKc4Z0uSrQBdJ/DdWScm3Ut8RGOKW0NTnB5j/vyjhF/DO42AkeAgVp5fnH5
-         TmWGHH97mAPICbaEtOSVEPpi7HvRu+0qMkOeabSso9TYlxs1wv9LNwaxnZsfl5FKX1wn
-         CzMIWVE4weW+CKbyoUJm09cTD6dCn2j/NTSb1tKf2BLUrybeAQenSw8V0QPlznA3mozO
-         VTDl+pO8YaXl5/lDc4Wd15FME1dBt97mJELQqKJc0jylgIH6wm2GjKH0BaitfK8LZPCI
-         UCnnwZ31Ktkzzepw0iptArnex9HQ2fHqdlsaHz9lzo1jZ0E6tjZv0MoibHMwel18s9pr
-         2aYQ==
-X-Gm-Message-State: APjAAAXgeeppPAgeNn1QnfX+WQaFJr+y6U+alE28Bzpylg5WjtXWoaJg
-        JyI4wwOdZ+P06vE4O4ltRwqwlsklsj8=
-X-Google-Smtp-Source: APXvYqzjFFyA3EgEXXPFZc4AK1Co1/BHuEDPNq3NoVt9mMTOgu4Ojh5FyaxarOeEjgtDprXLfIV49w==
-X-Received: by 2002:a25:b16:: with SMTP id 22mr4521149ybl.380.1582910643178;
-        Fri, 28 Feb 2020 09:24:03 -0800 (PST)
-Received: from [192.168.1.111] (96-42-251-64.dhcp.roch.mn.charter.com. [96.42.251.64])
-        by smtp.gmail.com with ESMTPSA id a202sm4221235ywe.8.2020.02.28.09.24.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 09:24:02 -0800 (PST)
-Subject: Re: [PATCH v2] ARM: dts: rainier: Set PCA9552 pin types
-To:     Matthew Barth <msbarth@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Eddie James <eajames@linux.ibm.com>
-References: <20200225201415.431668-1-msbarth@linux.ibm.com>
-From:   Brandon Wyman <bjwyman@gmail.com>
-Message-ID: <ec4c675a-b1db-c2d5-97d0-dcff44123db0@gmail.com>
-Date:   Fri, 28 Feb 2020 11:24:01 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7PKfOLFLVMzQtUrgljSKPHVUzcIMzVWb/k+R/Aaq3LI=;
+        b=O5c7lVfEysjk6yeK/xYf95J0Se8f1Qfq/2lvfflPxtKiYpC1dsvFTiWT6EPLteBAsR
+         c2UR2keiJiT98za/Q5UDSnNmlkHyEpTa1IoovsU+Soh2WCDh3G0DN4ntkgNP9g6aIK6k
+         6yGRLHH58rW+M96OPACwhs1D6Y6aJtjo76MrOECA6O6XBFAWDSfZ9nT5+562f/mXwmdD
+         PBqVhikr4OaXtSMl6nISWiJB7JbZuSU0vqGi/0Emlht1/9CqsSQQJKUKKcNmhcCp4Vrj
+         3WdX0yCMQuVHN5fzNmVTyQWGF8hhTPnUpWEVCNXyJTqU35U1R1eDmMQfSLra6Ui06ZFr
+         pj8Q==
+X-Gm-Message-State: APjAAAUt8rVoKyWTsiY/Dv9qjlry6l+FrAtKrmJfvk89YNvzjb773xfE
+        5U63FGVitLo+Y+e/pal6nrg=
+X-Google-Smtp-Source: APXvYqxz3qeXwQ1qLGzUQ8u0gRcUv5pYb59pUxz2T0Kgdw4cjm6IxyYBEW2t3+z7u8U2dFMMH62bsw==
+X-Received: by 2002:a25:384e:: with SMTP id f75mr4926670yba.224.1582912051827;
+        Fri, 28 Feb 2020 09:47:31 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id x84sm4256114ywg.47.2020.02.28.09.47.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Feb 2020 09:47:31 -0800 (PST)
+Subject: Re: [RFC PATCH v2 0/4] Add device tree build information
+From:   Frank Rowand <frowand.list@gmail.com>
+To:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        david@gibson.dropbear.id.au, sjg@chromium.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Ian Lepore <ian@freebsd.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <1b946fcf-47a9-012d-1b04-f4bbd2682607@gmail.com>
+Message-ID: <67d75f0c-7478-23b0-8619-746cf83cedb5@gmail.com>
+Date:   Fri, 28 Feb 2020 11:47:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200225201415.431668-1-msbarth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1b946fcf-47a9-012d-1b04-f4bbd2682607@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Alexandred,
 
-On 2020-02-25 14:14, Matthew Barth wrote:
-> All 16 pins of the PCA9552 at 7-bit address 0x61 should be set as type
-> GPIO.
->
-> Signed-off-by: Matthew Barth <msbarth@linux.ibm.com>
-> ---
-> v2: Added leds-pca955x.h include
->      Added upstream to patch
-> ---
-Reviewed-by: Brandon Wyman <bjwyman@gmail.com>
-> ---
->   arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> index c63cefce636d..d9fa9fd48058 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> @@ -4,6 +4,7 @@
->   
->   #include "aspeed-g6.dtsi"
->   #include <dt-bindings/gpio/aspeed-gpio.h>
-> +#include <dt-bindings/leds/leds-pca955x.h>
->   
->   / {
->   	model = "Rainier";
-> @@ -351,66 +352,82 @@
->   
->   		gpio@0 {
->   			reg = <0>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@1 {
->   			reg = <1>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@2 {
->   			reg = <2>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@3 {
->   			reg = <3>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@4 {
->   			reg = <4>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@5 {
->   			reg = <5>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@6 {
->   			reg = <6>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@7 {
->   			reg = <7>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@8 {
->   			reg = <8>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@9 {
->   			reg = <9>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@10 {
->   			reg = <10>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@11 {
->   			reg = <11>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@12 {
->   			reg = <12>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@13 {
->   			reg = <13>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@14 {
->   			reg = <14>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@15 {
->   			reg = <15>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   	};
->   
+Ping.
+
+-Frank
+
+
+On 2/21/20 11:47 AM, Frank Rowand wrote:
+> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+>> (with title it's better ;)
+>>
+>> Hi,
+>>
+>> The goal of this series is to add device tree build information in dtb.
+>> This information can be dtb build date, where devicetree files come from,
+>> who built the dtb ... Actually, same kind of information that you can find
+>> in the Linux banner which is printout during kernel boot. Having the same
+>> kind of information for device tree is useful for debugging and maintenance.
+>>
+>> A file (dtb-build.txt) containing a string with build information (e.g.,
+>> >From Linux 5.5.0-rc1 by alex the Mon Jan 13 18:25:38 CET 2020) is generated by
+>> "gen_dtb_build_info.sh" script. 
+>>
+>> This file has to be included manually in each dts file that would like to use 
+>> this build information.
+> 
+> In the RFC series, you said:
+> 
+>   "I gonna prepare a V2 with David proposition (to use overlay format) by
+>    keeping in mind not to modify existing dts(i) files."
+> 
+>    https://lore.kernel.org/linux-devicetree/9d83a36c-78c5-3452-bb48-209d68c46038@st.com/
+> 
+> But here in v2 instead requires including dtb-build.txt.
+> 
+> This would require modifying every single main .dts file to get the build info.
+> I would prefer the method that Ian and David came up with (sorry, no lore link,
+> it did not go to lkml).  Extract from David's email:
+> 
+>    Date:   Tue, 21 Jan 2020 13:05:25 +1100
+>    From:   David Gibson <david@gibson.dropbear.id.au>
+>    Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+> 
+>    > Given that dts files are run through the C preprocessor before being
+>    > fed to dtc, the build script could use the '-include' flag to force-
+>    > include a fragment containing generated build info without any need to
+>    > modify existing dts files.
+> 
+>    Uh... maybe.  -include will essentially prepend the forced file, which
+>    is a bit awkward for our purposes.  It means that the prepended file
+>    would need the /dts-v1/ tag, and we couldn't have it in the main files
+>    which would be a bit confusing.  I think it would also cause problems
+>    with any /memreserve/ tags and means that the main tree could in
+>    theory overwrite the build information which we don't necessarily
+>    want.
+> 
+>    I guess we could build things the other way around: have the main .dts
+>    file specified with -include and have the dts on the dtc commandline
+>    be a fixed one with the build information.  It'd be a little weird,
+>    though.
+> 
+> -Frank
+> 
+>>
+>> of/fdt.c is modified to printout "build-info" property during Kernel boot and 
+>> scripts/Makefile.lib is modified to call "gen_dtb_build_info.sh" script.
+>>
+>> Patch 1 & 2 script and of/fdt.c updates
+>> Patch 3 is an example of use in stm32mp157c-dk2.dts file.
+>> Patch 4 is a tentative to make it automatic (not yet 100% functional).
+>>
+>> regards
+>> Alex
+>>
+>> Changes since v1;
+>>  - Remove modification in dtc (no more -B option)
+>>  - Generate a file containing build info which is directly included in dts
+>>    file.
+>>
+>>
+>> Regards
+>> Alex
+>>
+>> Alexandre Torgue (4):
+>>   scripts: Add script to generate dtb build information
+>>   of: fdt: print dtb build information
+>>   ARM: dts: stm32: Add dtb build information entry for stm32mp157c-dk2
+>>   script: make automatic dtb build info generation
+>>
+>>  arch/arm/boot/dts/stm32mp157c-dk2.dts |  1 +
+>>  drivers/of/fdt.c                      |  9 +++++++++
+>>  scripts/Makefile.lib                  |  3 +++
+>>  scripts/gen_dtb_build_info.sh         | 12 ++++++++++++
+>>  4 files changed, 25 insertions(+)
+>>  create mode 100755 scripts/gen_dtb_build_info.sh
+>>
+> 
+> 
+
