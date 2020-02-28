@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A73C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 02:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C931BC3F2CF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 02:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E5D246B6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 02:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1609246A0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 02:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YI6/hC9Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZutASD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbgB1CIU (ORCPT
+        id S1730694AbgB1CIR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 21:08:20 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34067 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730736AbgB1CIT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 21:08:19 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i6so867634pfc.1;
-        Thu, 27 Feb 2020 18:08:19 -0800 (PST)
+        Thu, 27 Feb 2020 21:08:17 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41728 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730460AbgB1CIQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 21:08:16 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b1so657538pgm.8;
+        Thu, 27 Feb 2020 18:08:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HzRU1ozCvifY6J0qAE+2jJ3JxrolEuTI7i1JJUCoGUo=;
-        b=YI6/hC9QKIEOCJfin3HMlh8X26S+gmWpoljYrsp/+kCsAb5ir2WHqgMSFrGpTREtwb
-         8DqrGWac5OL8FpQLWvMOhEzKTDnYaAD92uNBRbSaLf5rhLL/rfew1PFnrNxzc7oYl4qR
-         BEwGzY6tz8CcJCnYvCBQQTwujMCXh4xLtoeJ18JcfN+f4JKWXcvGNcdkSd/32wWyEszt
-         unhgU7Pn6LggVceSkv4s4DKwutWAfGvuU3TUh+Y63Zv21n00DDsLThbpxVGGbnTFEE1z
-         OeFLO/ld8L0cirWMj8c34EljgUdOPpJICm6mqeCfk8p3usXK6ybcagzev63ULVukzszI
-         sY1w==
+        bh=S4kJGuEJfAjfPYh/Ew20Fs75jjdr/lDPxEC7XvHdiQ4=;
+        b=UZutASD0HqaUsmZQ28/j4nBb0ea4qnMjWg42ddLNpUQYkPvicXpWWaj+s0HbQjY6UE
+         rcOytnas6HACXzfJ5qU6ObxXqRQdL4vZJPEIQDJlMXPh+LU6m2g3a1iL2d26ImThm4dn
+         V9pDMYHqNXEWA7T7Lm+c3vITxW0NmH0bUckrlby8M4g2CZY3uwbLeyJfqQFZhMWHwXa+
+         ZiMNMP/6oZd7iVbJd8WKby+deNCmiz/TqUzsw79RXaWJ5k4dVQhcp4skiqJXB2AOyANz
+         cM7IopAYZcZxoAY9bFG9vt/ENAhgu70gjFRm7ILiD8A5xlaPqo3BGudTld5x6mE9Lg4f
+         INLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=HzRU1ozCvifY6J0qAE+2jJ3JxrolEuTI7i1JJUCoGUo=;
-        b=UfvdI/EB8s9nysr6qS4smW/jYj7LvbeX1LfBskloQ7H7WwL6mXHuRvCEL9Ztjl6Iyh
-         W3AvoYGBC2UmtMxkuopsW6rCLfujURDzQ4Cn/FwOVlpb1uGT42d3Lsc25NPosLMnfV4w
-         Fo2tKteP/ow+zxeiDucSwqqsrWPf9Onpe3XbuOFBcRzPJq9ofxp/oaHHJy8fha74B4V2
-         MAjeZgsM0iMHnedc+TFWTlbs3ZoDWPDcfAOwtvz5EtBcUhDP0gxVJmUgQncsoiFE04BQ
-         UB7t8N6/v4RCX0FpZHFLZgJwAxEytwa+0uAj6ijY59SyI2AaOpkMLp4MhDRQ1jbstJyd
-         ouOQ==
-X-Gm-Message-State: APjAAAVVcZMCpP+aUqI4Ew6Ai/RwMKe4Cpzxr58gZAZHsqeltahYU7Jg
-        Pa+wObg8JKXHAZpLO4KUZxY=
-X-Google-Smtp-Source: APXvYqzEapSR5PYlZurH/fZd0sgRbV4yjSDTqL9wZDaOn6xcciN6vCo7au9H0aRrNsNl+cJuMWCrxw==
-X-Received: by 2002:a62:1958:: with SMTP id 85mr1930027pfz.221.1582855698458;
-        Thu, 27 Feb 2020 18:08:18 -0800 (PST)
+        bh=S4kJGuEJfAjfPYh/Ew20Fs75jjdr/lDPxEC7XvHdiQ4=;
+        b=cHqDuClVePguBx831lqcTN16r4YwGAjV/Cefmps+iRnpwE641cR3AvgH5NoOO9KsVF
+         5jKevTFq1GuJh9EWVVrAN0LE2kcZx43esyKekI9CxCXMUFNacCygz5xEfqq0UMqu7GdQ
+         hxjzbu8xg9mIGJxxD0LSp7QuMNWxy96ydlUJSRt8GyXXMopwlq8PUu/HBO/pd7Q+QM+J
+         BcT9sk2qmG+NCUuMoeRDPcRXgj7Z0g60URbqn6YlPNRXP90jwKYTKrsMTnYAGCxdsLk9
+         HSbmuM6RfVtW0Fa4zdUuhFgM7SOeHzPZNHEX6+DGWdbFcGoi5GHUblA1SZquxF2FtsGH
+         XYNg==
+X-Gm-Message-State: APjAAAWlpcqgBvNq4DL3B055AWwHGZz6ugAnjcoVnsLV5Fz8ccxzAZgA
+        5bqrRBEVmMgJi4tUy+ngk8A=
+X-Google-Smtp-Source: APXvYqyyuwzFsaoesPovGGYPfNjv0U27sfwo1cNSj3VSdjUokF67ekm0yo1YUh2GET9uSjk0VZpl5w==
+X-Received: by 2002:a62:f251:: with SMTP id y17mr2111805pfl.204.1582855695286;
+        Thu, 27 Feb 2020 18:08:15 -0800 (PST)
 Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:500::4:d8f5])
-        by smtp.gmail.com with ESMTPSA id k24sm4931972pgm.61.2020.02.27.18.08.17
+        by smtp.gmail.com with ESMTPSA id k24sm4931972pgm.61.2020.02.27.18.08.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 18:08:18 -0800 (PST)
+        Thu, 27 Feb 2020 18:08:14 -0800 (PST)
 From:   rentao.bupt@gmail.com
 To:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -71,9 +71,9 @@ To:     Felipe Balbi <balbi@kernel.org>,
         linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
         taoren@fb.com
 Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v6 7/7] dt-bindings: usb: add documentation for aspeed usb-vhub
-Date:   Thu, 27 Feb 2020 18:07:57 -0800
-Message-Id: <20200228020757.10513-8-rentao.bupt@gmail.com>
+Subject: [PATCH v6 5/7] ARM: dts: aspeed-g5: add vhub port and endpoint properties
+Date:   Thu, 27 Feb 2020 18:07:55 -0800
+Message-Id: <20200228020757.10513-6-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200228020757.10513-1-rentao.bupt@gmail.com>
 References: <20200228020757.10513-1-rentao.bupt@gmail.com>
@@ -84,104 +84,32 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-Add device tree binding documentation for the Aspeed USB 2.0 Virtual HUb
-Controller.
+Add "aspeed,vhub-downstream-ports" and "aspeed,vhub-generic-endpoints"
+properties to describe supported number of vhub ports and endpoints.
 
 Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Reviewed-by: Joel Stanley <joel@jms.id.au>
 ---
- Changes in v6:
-   - added 2 required properties into example and passed "make
-     dt_binding_check".
- Changes in v5:
-   - updated maintainer to Ben.
-   - refined patch description per Joel's suggestion.
- No change in v2/v3/v4:
-   - the patch is added to the patch series since v4.
+ No change in v2/v3/v4/v5/v6.
+   - It's given v6 to align with the version of the patch series.
 
- .../bindings/usb/aspeed,usb-vhub.yaml         | 73 +++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+ arch/arm/boot/dts/aspeed-g5.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-new file mode 100644
-index 000000000000..b9f33310e9a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2020 Facebook Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/aspeed,usb-vhub.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ASPEED USB 2.0 Virtual Hub Controller
-+
-+maintainers:
-+  - Benjamin Herrenschmidt <benh@kernel.crashing.org>
-+
-+description: |+
-+  The ASPEED USB 2.0 Virtual Hub Controller implements 1 set of USB Hub
-+  register and several sets of Device and Endpoint registers to support
-+  the Virtual Hub's downstream USB devices.
-+
-+  Supported number of devices and endpoints vary depending on hardware
-+  revisions. AST2400 and AST2500 Virtual Hub supports 5 downstream devices
-+  and 15 generic endpoints, while AST2600 Virtual Hub supports 7 downstream
-+  devices and 21 generic endpoints.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - aspeed,ast2400-usb-vhub
-+      - aspeed,ast2500-usb-vhub
-+      - aspeed,ast2600-usb-vhub
-+
-+  reg:
-+    maxItems: 1
-+    description: Common configuration registers
-+
-+  clocks:
-+    maxItems: 1
-+    description: The Virtual Hub Controller clock gate
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  aspeed,vhub-downstream-ports:
-+    description: Number of downstream ports supported by the Virtual Hub
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  aspeed,vhub-generic-endpoints:
-+    description: Number of generic endpoints supported by the Virtual Hub
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
-+  - aspeed,vhub-downstream-ports
-+  - aspeed,vhub-generic-endpoints
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/aspeed-clock.h>
-+    vhub: usb-vhub@1e6a0000 {
-+            compatible = "aspeed,ast2500-usb-vhub";
-+            reg = <0x1e6a0000 0x300>;
-+            interrupts = <5>;
-+            clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-+            aspeed,vhub-downstream-ports = <5>;
-+            aspeed,vhub-generic-endpoints = <15>;
-+            pinctrl-names = "default";
-+            pinctrl-0 = <&pinctrl_usb2ad_default>;
-+    };
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index ebec0fa8baa7..f12ec04d3cbc 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -195,6 +195,8 @@
+ 			reg = <0x1e6a0000 0x300>;
+ 			interrupts = <5>;
+ 			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
++			aspeed,vhub-downstream-ports = <5>;
++			aspeed,vhub-generic-endpoints = <15>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb2ad_default>;
+ 			status = "disabled";
 -- 
 2.17.1
 
