@@ -2,80 +2,114 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3711BC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF6DC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6AC246AF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:24:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582892699;
-	bh=lHeiZkUFT50I1aHZURTGG+8Xh19E+2k3Jot1vyW6wa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e0E9nfS4pL9BnXnhtNpM93kWQbSeh/VEq0tY/PlDsCnXn4kc4h6Izt3TDmpSNFYVT
-	 VvcVn1RcXd326psxc883cSBfNwbVW6dWqlJ7cCNKqg03x9sNeHiPQo15yM0j2b28CG
-	 mxRJRTqq2n+hWxdYNJSZRjSSsYFAW7DXXyIfcFiM=
+	by mail.kernel.org (Postfix) with ESMTP id 40C68246A8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725769AbgB1MY6 (ORCPT
+        id S1725928AbgB1MdZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:24:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48380 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 07:33:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:37544 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgB1MY6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:24:58 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5160246A8;
-        Fri, 28 Feb 2020 12:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582892697;
-        bh=lHeiZkUFT50I1aHZURTGG+8Xh19E+2k3Jot1vyW6wa8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ei0SgnMDLBplCZABy8+Eu8+L6pRhwOuzjn3z0sE+LPCTuokU/xMc1N5MaVu57PN7d
-         fVj2SvtWnaD6o3KgwWsT7gt5+dC60l/V9zCc3leMZc/SsKbL+TVoZwph7nzPrqMWFr
-         73sRboapNwIAZ+owBO7gn2yCM+cXH+b16g+vseIs=
-Date:   Fri, 28 Feb 2020 12:24:53 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 5/5] arm64: perf: Support new DT compatibles
-Message-ID: <20200228122453.GD3275@willie-the-truck>
-References: <cover.1582312530.git.robin.murphy@arm.com>
- <6e5087621bd8112a35733054689d7c785b4bdde5.1582312530.git.robin.murphy@arm.com>
- <20200228121712.GF36089@lakrids.cambridge.arm.com>
+        id S1725730AbgB1MdZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:33:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B68224B2;
+        Fri, 28 Feb 2020 04:33:24 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 800F53F7B4;
+        Fri, 28 Feb 2020 04:33:23 -0800 (PST)
+Subject: Re: [PATCH] arm64: dts: rockchip: fix cpu compatible property for
+ rk3308
+To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+References: <20200228084827.16198-1-jbx6244@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6a6beced-a8cb-448e-a4b2-331cd09d0c61@arm.com>
+Date:   Fri, 28 Feb 2020 12:33:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228121712.GF36089@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200228084827.16198-1-jbx6244@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 12:17:13PM +0000, Mark Rutland wrote:
-> On Fri, Feb 21, 2020 at 07:35:32PM +0000, Robin Murphy wrote:
-> > Add support for matching the new PMUs. For now, this just wires them up
-> > as generic PMUv3 such that people writing DTs for new SoCs can do the
-> > right thing, and at least have architectural and raw events be usable.
-> > We can come back and fill in event maps for sysfs and/or perf tools at
-> > a later date.
-> > 
-> > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+On 28/02/2020 8:48 am, Johan Jonker wrote:
+> A test with the command below gives for example these errors:
 > 
-> Thanks for putting this together!
+> arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: cpu@0: compatible:
+> Additional items are not allowed ('arm,armv8' was unexpected)
+> arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: cpu@0: compatible:
+> ['arm,cortex-a35', 'arm,armv8']
+> is too long
 > 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> Will, are you happy to queue this and the previous patch?
+> Fix these errors by removing the last argument of
+> the cpu compatible property in rk3308.dtsi.
 
-Sure thing. I haven't queued anything for 5.7 yet, but I'll flag these
-two so I don't forget.
+Bah, seems this snuck in a couple of releases after we blitzed the last 
+of these from the tree :)
 
-Will
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+> make ARCH=arm64
+> dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/cpus.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>   arch/arm64/boot/dts/rockchip/rk3308.dtsi | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> index 116f1900e..3bd5bc860 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> @@ -40,7 +40,7 @@
+>   
+>   		cpu0: cpu@0 {
+>   			device_type = "cpu";
+> -			compatible = "arm,cortex-a35", "arm,armv8";
+> +			compatible = "arm,cortex-a35";
+>   			reg = <0x0 0x0>;
+>   			enable-method = "psci";
+>   			clocks = <&cru ARMCLK>;
+> @@ -53,7 +53,7 @@
+>   
+>   		cpu1: cpu@1 {
+>   			device_type = "cpu";
+> -			compatible = "arm,cortex-a35", "arm,armv8";
+> +			compatible = "arm,cortex-a35";
+>   			reg = <0x0 0x1>;
+>   			enable-method = "psci";
+>   			operating-points-v2 = <&cpu0_opp_table>;
+> @@ -63,7 +63,7 @@
+>   
+>   		cpu2: cpu@2 {
+>   			device_type = "cpu";
+> -			compatible = "arm,cortex-a35", "arm,armv8";
+> +			compatible = "arm,cortex-a35";
+>   			reg = <0x0 0x2>;
+>   			enable-method = "psci";
+>   			operating-points-v2 = <&cpu0_opp_table>;
+> @@ -73,7 +73,7 @@
+>   
+>   		cpu3: cpu@3 {
+>   			device_type = "cpu";
+> -			compatible = "arm,cortex-a35", "arm,armv8";
+> +			compatible = "arm,cortex-a35";
+>   			reg = <0x0 0x3>;
+>   			enable-method = "psci";
+>   			operating-points-v2 = <&cpu0_opp_table>;
+> 
