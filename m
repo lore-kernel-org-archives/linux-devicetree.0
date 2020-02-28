@@ -2,98 +2,102 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0551CC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93ADC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD37B246AA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3312084E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dy1vhT7N"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="f0ARzT0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725856AbgB1LsK (ORCPT
+        id S1725805AbgB1Lwu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:48:10 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:54054 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgB1LsK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 06:48:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=c9KhOrq2gOTbKBSsUSPBlkMn2esfMi/WqxI3fnMTFQg=; b=dy1vhT7N6x24wF1cdMc4yum7a
-        KBsbReBNpWhyqcP0/rRJ9UdD8EiqChUIycgPqz5T/fn0nB1cU90Qb4bth45mMhCAXctL/C+vWTw9Y
-        rAvoZHxXT+mvZjkI0K5MNetrYDbGk5IiY5jgzh507kStUsf7OvZ2fmzNEQzRenm/X3+zv/JBGQ2W2
-        7nFOH8xQozhgS98rljsazB4RWAQonUg3AK/qS6hdmtV04psfu0TzMtQJpvO6nUWFgblp8IrnvEJaq
-        R6nAZZ9QQFmmbqN0p/jsqPuDTnEuhN2PMC0HyszetcRuFTJhmWzhpEXqfl/KremAV5sxieUuNOvUs
-        hbYUoIlJQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:46392)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j7e7Y-0003aI-Rb; Fri, 28 Feb 2020 11:47:57 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j7e7V-0001xQ-Ew; Fri, 28 Feb 2020 11:47:53 +0000
-Date:   Fri, 28 Feb 2020 11:47:53 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Chris Snook <chris.snook@gmail.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Subject: Re: [PATCH v8 1/1] net: ag71xx: port to phylink
-Message-ID: <20200228114753.GN18808@shell.armlinux.org.uk>
-References: <20200226054624.14199-1-o.rempel@pengutronix.de>
- <20200226092138.GV25745@shell.armlinux.org.uk>
+        Fri, 28 Feb 2020 06:52:50 -0500
+Received: from mout.gmx.net ([212.227.17.22]:47203 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbgB1Lwt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 06:52:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582890761;
+        bh=E4E1cvmOoa1R3ggxn0W5VA37j87qo9Un/InroAhqkxA=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=f0ARzT0M69Tkv4sX7EVjqXDq+weVvqBWEzI6nuip1xvjpEM/N7mLFtv0des64thHM
+         m8pDMwxZyqcxyVBVqCiMjhfbR1QYB3Mg64DSDf7YPo8JS37HMH+WTOachGghuseIRY
+         KwBIPB+5aAZo5dpPwoDLSdovQ7WukH9JcdtX+waI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.68] ([86.161.30.248]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MwQXN-1jQPV62lTJ-00sKBB; Fri, 28
+ Feb 2020 12:52:41 +0100
+Subject: Re: [PATCH] define rpi0w sdhci pinctrl state
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <c34db439-3539-88c0-99f1-308d75afd1aa@gmx.co.uk>
+ <23a936db-fc89-6259-3991-5791fa88beb7@i2se.com>
+From:   Nick Hudson <nick.hudson@gmx.co.uk>
+Message-ID: <bd4bd5dc-307f-d058-8f94-00b61a8b8c87@gmx.co.uk>
+Date:   Fri, 28 Feb 2020 11:52:40 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226092138.GV25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <23a936db-fc89-6259-3991-5791fa88beb7@i2se.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:IyQXi+K25Am9OBXickJYB4m0olsIqE0l79J0l2rgQvn5sxjnn2T
+ zBswdHhNXLMx8vSzl6LkLTbD2kZFCXq2nY1FbPb9DYaG3TyKsiwgWFtRu4ybyYMwTvwwQOR
+ IYqVdu9kPMbUisp7N0FIDDt9KpMRrc1KdTpY4ftdVwVdFQh4FxlWwlodM4yZW1BrqOciEa4
+ HRNTDJXjOnZB7kWMCu+nA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:K97iQwfrBgI=:GRJ64+SJQCITrVbeU4yKzI
+ S2xEAJCgNSAjk0L3nQFviEpklg81aI6H7030NuJpRfEpECVlf3JauOGxc9Pu0W7vfiIK2diWD
+ A5yoBNuXhXDWDa8RDHOvfroQKqHvcr4lRQ9Oav2mBy2fie7WIFTyttQZFvSuxkW5Z9kIQwlON
+ 3H4BknzG0D6H/Ps1pXftnqBtVck6LsvDqotSRFsaYUE97ALO8V91V13WUF4msb3xdp8m2xPYq
+ TYGgBgbRcKrJp8K1DWNmda2/CJZrLJZ2OLoKPFbEOIdgBGyxXLgFavYN7cYGMlbfT0dIXZQCz
+ YwPWJCUSZPXeGp/pbvJonFznLW5TqLodn2s92KEtLNIUlgrhk4FC6C0AffHqdl1Iyv1nzmN0j
+ e+bUCQX3CubkdZsnu3rOh/5KfDIK05BsXzz72wuwewwoD4VcGYRf0Hwul/QMQy9UEerHfJoq1
+ hEs8X/u0wLuziCWnPQ8YAi0LWYql8NmhJTuDqt3svwETlesfG3K57mIAmcLYaF+TvNPFIqbWR
+ eW4XFI93AfL9XYcBt8mP2WGLMYKnhiS7e1yTHHNSWumq6JyACw8C7q2tpoR6+BlZOv1bR7zq9
+ rBUyZfVlBfNbv04az5l/Om+vgBVuS6Kq00fUgbhllzR0MbtDcEuG5fj5ip/FtdRD448Z74uUc
+ inJtLumA6nwcYb7Xs3J3i3P7Ef8ecCfW7Y1nu08ranIRVRvUblSj9ijEDiqvDH8AVJPF9J8vl
+ YH3C7onvBfZmwqxpXTeuLXYioQTb8VLuXBeNCm7p+mnOGD6AC9L6xqhOtvjH7vruhjdKu806l
+ S90ui83kiqzyA0jthgtJjrgwOBshkJfrWGsjBqrzVVGDP0Vucm7WzDJYWmaoX5xFiEXpXrpzN
+ Bl5H5V4KFaEDKPeNpqdt6noQDWIoXnAvmyhFKDTaESjHUP7rOUHOnITXe/VPj7pK7b3H9wQGk
+ V2Vu0V6ctRiOAN2RrEMYQkPg+px9Zn8HfAvLJn3P+ifRfunmMjukShOAZ2M57XEHW1hpMzooV
+ SibiobbhaMMlZ/RaOgmu2Nmo07tZhm4NMnRI99aWvp8651uJi9JqIBSUjb2mByvHexbmDysN1
+ WOGzJy5QLEHgVL+KQ8rBqs8+ULh2AZLa+Q6KbbJBKFoUylMFtwNIA3BNMS2I5eeZt0AmMS26Y
+ RglB67ON9wWnAdYRQhK4NBvLhN2TBJu+ZOT9MLmQtHnkl58e+f1hRV6hMVnkR4DyoLHQKnVXm
+ RE8QN5wjRUTnlIkTV
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 09:21:38AM +0000, Russell King - ARM Linux admin wrote:
-> On Wed, Feb 26, 2020 at 06:46:24AM +0100, Oleksij Rempel wrote:
-> > The port to phylink was done as close as possible to initial
-> > functionality.
-> > 
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> > changes v8:
-> > - set the autoneg bit
-> > - provide implementations for the mac_pcs_get_state and mac_an_restart
-> >   methods
-> > - do phylink_disconnect_phy() on _stop()
-> > - rename ag71xx_phy_setup() to ag71xx_phylink_setup() 
-> 
-> There will be one more change required; I'm changing the prototype for
-> the mac_link_up() function, and I suggest as you don't support in-band
-> AN that most of the setup for speed and duplex gets moved out of your
-> mac_config() implementation to mac_link_up().
-> 
-> The patches have been available on netdev for just over a week now.
 
-The patches are now in net-next.  Please respin your patch against these
-changes, which basically means the code which programs the speed and
-duplex in ag71xx_mac_config() needs to be moved to ag71xx_mac_link_up().
 
-Thanks.
+On 27/02/2020 17:53, Stefan Wahren wrote:
+> Hi Nick,
+>
+> Am 27.02.20 um 00:33 schrieb Nick Hudson:
+>> I'm still not sure where I should be sending this, but here goes.
+>
+> the addresses are right. Please rebase your change against recent Linux
+> git tree and generate a git patch, otherwise we cannot apply your it.
+Oops, I see I sent the comletely the wrong diff... will fix.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+>
+> I suggest the following subject:
+>
+> ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
+
+will do.
+
+>
+> Thanks
+> Stefan
+
+Thanks,
+Nick
