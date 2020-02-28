@@ -2,309 +2,188 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608C7C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E894AC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3034A246AE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:02:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8BsHJ2L"
+	by mail.kernel.org (Postfix) with ESMTP id BC0A1246AC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582910200;
+	bh=IDaZjLZxrZLRt50u+ZaYanMdErYZ7ar+lCyzISvKj2o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2Ht4RzzcN17umUEyv90xHT4ULs6+yLCNho2w5YDHllLNWhwGckTrT3x8jaOQw35jf
+	 1qKkDiavRBJVuIbs8Yka0FAF80n/tT4vgmqca8tYzHcy1Mdf+xBZeec/9g9FmuK6Qj
+	 H8ajV8NS5aGPPB0dbxYif4X41pU7K/8gmZ1edSKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgB1RCQ (ORCPT
+        id S1725900AbgB1RQk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:02:16 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37781 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgB1RCQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 12:02:16 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a141so3992499wme.2;
-        Fri, 28 Feb 2020 09:02:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YLiECJgyhguRX/IYrN5eINjBjUqtt9KK7ww1Qi9YDtY=;
-        b=b8BsHJ2LJgJY1WGYJHBogfnTDtsu+0aEahsFyTNox1D9246LN6g7BvnnfJXJoJaIxs
-         ojFct0Njohqj/snlt/wMHZvmhyY1TPnFlf2S9eGHnWai+G4fJC6zvQrKZ3dVN66zUPDr
-         ufUn3p4Is/NtxJs2w4DSJf8vXbjEVO8PefT935o5rG6UfFls4/bl6gOyjoUN72dnGJtR
-         okj6/piDhVTTlAEP+a3mf2a55gS7w+rGyRZZ3hfitkbfMM7AH4pU+t+xfVrQtkXO621O
-         mXNuqdBvV3KI6zR2SEGlPGM9Zv5hpbbxXFC6tD2wvJPljejVugrOg1NJiZl7IY+qS0cr
-         E7Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YLiECJgyhguRX/IYrN5eINjBjUqtt9KK7ww1Qi9YDtY=;
-        b=m41vn9hns7sMJwaZejMOiPbT07qzgWpmZScTN1iRKXgUnIuz/NuqUumaye4n5n8rHL
-         Qs92EFScT8GHNgwDuNxtUBgpNplCgEj1Vxp5ZQZUIB6XaSIsO9u/YZQB4PGTJglovOXj
-         D6lnRTgD9ZWKnW0kgyieb9pyDeC12X9GPMxtQ0Wcc7RcaoCvcHKOCzp1bmtaKMWFEIYA
-         zigeqtYu8qgp+tCa24U1J2drod0UjUE1lcstJSgBSicOW5/jVB+smpyau1fVZsJKOe5c
-         OxJ+EKoeyAfUlHvhc+pu1qPjMTdR/gGZS2jpcPr/+nXMSCAXAQHZdk6QbTlhomLLjMiC
-         m+KA==
-X-Gm-Message-State: APjAAAWv/2wQo0JnN/yDv2wNxK/ESFwoYdU8Sz/NK32qLICahen/Xcdb
-        AbrnajQugxRoGPYGQLb7F4U=
-X-Google-Smtp-Source: APXvYqxp4IX5vvh8ILpZYbiv5KH01y9nScXcItz9tyaqFFcB/6VhWwqOYkco6NCmdMJlv5LKZNCJFA==
-X-Received: by 2002:a1c:f60e:: with SMTP id w14mr5648797wmc.188.1582909333378;
-        Fri, 28 Feb 2020 09:02:13 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2510:d000:3855:fd13:6b76:a11b])
-        by smtp.gmail.com with ESMTPSA id q9sm5673058wrn.8.2020.02.28.09.02.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 09:02:12 -0800 (PST)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add support for AISTARVISION MIPI Adapter V2.1
-Date:   Fri, 28 Feb 2020 17:02:10 +0000
-Message-Id: <20200228170210.18252-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 28 Feb 2020 12:16:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1RQk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 12:16:40 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38C86246AE;
+        Fri, 28 Feb 2020 17:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582910199;
+        bh=IDaZjLZxrZLRt50u+ZaYanMdErYZ7ar+lCyzISvKj2o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WE1j9aFo5u71FkqhULMUZ32EgunKxjjLmN4sqCikQG6oKVcohm+HTAPry5CI+zK5I
+         ouuZ7XMgikz00NqOGVlYGJ1Xht0xbn1dZ9zoT82jGq7PqpmfecBdPe13yK0sdNMryQ
+         2YcPKNie2iqm/l26mqGO1+87yUwl/KY5kR3zrtCw=
+Received: by mail-qk1-f170.google.com with SMTP id f140so3632591qke.11;
+        Fri, 28 Feb 2020 09:16:39 -0800 (PST)
+X-Gm-Message-State: APjAAAXzS4s0fWpkpCPjONCC7stPF+x+sBvOK6p2ZaVWxEMiVcXP2VMJ
+        cyfr0bUn301JIo6HmDOCxuTFeKsHHWmGDcWIAQ==
+X-Google-Smtp-Source: APXvYqwm/UEHV7zIm/RLE/ehDEw018Mzqy218BUmwoYZizs7XmEV5j7FEcuMv4eYBsp5fxF5wJIcJGeBjuznVZuuysk=
+X-Received: by 2002:ae9:e711:: with SMTP id m17mr5272958qka.393.1582910198275;
+ Fri, 28 Feb 2020 09:16:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200224145821.262873-1-jbrunet@baylibre.com> <20200224145821.262873-3-jbrunet@baylibre.com>
+ <20200228155017.GA24730@bogus> <1jpndyejkn.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jpndyejkn.fsf@starbuckisacylon.baylibre.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 28 Feb 2020 11:16:27 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+K=XHXmPbKrkO1_jnUO8sOyCM-XRpCmEX0+aWwBoBbVw@mail.gmail.com>
+Message-ID: <CAL_Jsq+K=XHXmPbKrkO1_jnUO8sOyCM-XRpCmEX0+aWwBoBbVw@mail.gmail.com>
+Subject: Re: [PATCH 2/9] ASoC: meson: convert axg tdm interface to schema
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support AISTARVISION MIPI Adapter V2.1 board connected
-to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-which have the camera endpoint nodes with disabled status and in
-r8a774c0-ek874-mipi-2.1.dts file VIN/CSI nodes are enabled. By default
-imx219 endpoint is tied with CSI2.
+On Fri, Feb 28, 2020 at 10:57 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+>
+> On Fri 28 Feb 2020 at 16:50, Rob Herring <robh@kernel.org> wrote:
+>
+> > On Mon, Feb 24, 2020 at 03:58:14PM +0100, Jerome Brunet wrote:
+> >> Convert the DT binding documentation for the Amlogic tdm interface to
+> >> schema.
+> >>
+> >> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> >> ---
+> >>  .../bindings/sound/amlogic,axg-tdm-iface.txt  | 22 -------
+> >>  .../bindings/sound/amlogic,axg-tdm-iface.yaml | 57 +++++++++++++++++++
+> >>  2 files changed, 57 insertions(+), 22 deletions(-)
+> >>  delete mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt
+> >> deleted file mode 100644
+> >> index cabfb26a5f22..000000000000
+> >> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt
+> >> +++ /dev/null
+> >> @@ -1,22 +0,0 @@
+> >> -* Amlogic Audio TDM Interfaces
+> >> -
+> >> -Required properties:
+> >> -- compatible: 'amlogic,axg-tdm-iface'
+> >> -- clocks: list of clock phandle, one for each entry clock-names.
+> >> -- clock-names: should contain the following:
+> >> -  * "sclk" : bit clock.
+> >> -  * "lrclk": sample clock
+> >> -  * "mclk" : master clock
+> >> -         -> optional if the interface is in clock slave mode.
+> >> -- #sound-dai-cells: must be 0.
+> >> -
+> >> -Example of TDM_A on the A113 SoC:
+> >> -
+> >> -tdmif_a: audio-controller@0 {
+> >> -    compatible = "amlogic,axg-tdm-iface";
+> >> -    #sound-dai-cells = <0>;
+> >> -    clocks = <&clkc_audio AUD_CLKID_MST_A_MCLK>,
+> >> -             <&clkc_audio AUD_CLKID_MST_A_SCLK>,
+> >> -             <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
+> >> -    clock-names = "mclk", "sclk", "lrclk";
+> >> -};
+> >> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
+> >> new file mode 100644
+> >> index 000000000000..5f04f9cf30a0
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
+> >> @@ -0,0 +1,57 @@
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Amlogic Audio TDM Interfaces
+> >> +
+> >> +maintainers:
+> >> +  - Jerome Brunet <jbrunet@baylibre.com>
+> >> +
+> >> +properties:
+> >> +  $nodename:
+> >> +    pattern: "^audio-controller-.*"
+> >> +
+> >> +  "#sound-dai-cells":
+> >> +    const: 0
+> >> +
+> >> +  compatible:
+> >> +    items:
+> >> +      - const: 'amlogic,axg-tdm-iface'
+> >> +
+> >> +  clocks:
+> >> +    minItems: 2
+> >> +    maxItems: 3
+> >> +    items:
+> >> +      - description: Bit clock
+> >> +      - description: Sample clock
+> >> +      - description: Master clock #optional
+> >> +
+> >> +  clock-names:
+> >> +    minItems: 2
+> >> +    maxItems: 3
+> >> +    items:
+> >> +      - const: sclk
+> >> +      - const: lrclk
+> >> +      - const: mclk
+> >> +
+> >> +required:
+> >> +  - "#sound-dai-cells"
+> >> +  - compatible
+> >> +  - clocks
+> >> +  - clock-names
+> >
+> > Add an:
+> >
+> > additionalProperties: false
+>
+> I did not put that on purpose.
+> Most of the amlogic devices use an generic ASoC property called
+> "sound-name-prefix"
+>
+> You may see examples of that in
+> arch/arm64/boot/dts/amlogic/meson-axg.dtsi.
+>
+> That property is not expressed in json schema yet, and I don't
+> really know what is the best way to add that.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-Geert/Rob since the imx219 driver is yet to make into mainline
-but has been merged into media-subsystem I would like to take
-this patch via media-tree.
+Just assume it is (and I believe there's a patch I reviewed adding
+it). Regardless, you still need to define what the strings are.
 
- arch/arm64/boot/dts/renesas/Makefile          |  3 +-
- .../aistarvision-mipi-adapter-2.1.dtsi        | 98 +++++++++++++++++++
- .../dts/renesas/r8a774c0-ek874-mipi-2.1.dts   | 86 ++++++++++++++++
- 3 files changed, 186 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+> Adding 'additionalProperties: false' right now would generate a fair
+> amount of warning with 'make dtbs_check'
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 2153842321ce..9f5c53d62f5e 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -4,7 +4,8 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
--			       r8a774c0-ek874-idk-2121wr.dtb
-+			       r8a774c0-ek874-idk-2121wr.dtb \
-+			       r8a774c0-ek874-mipi-2.1.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-salvator-x.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-ulcb.dtb r8a77950-ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a77951-salvator-x.dtb r8a77951-salvator-xs.dtb
-diff --git a/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-new file mode 100644
-index 000000000000..e098a13e6345
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the AISTARVISION MIPI Adapter V2.1
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+/ {
-+	ov5645_vdddo_1v8: 1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdddo";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	ov5645_vdda_2v8: 2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdda";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
-+
-+	ov5645_vddd_1v5: 1p5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddd";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_vana_2v8: 2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vana";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_vdig_1v8: 1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdig";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_vddl_1v2: 1p2v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddl";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_clk: imx219_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24000000>;
-+	};
-+};
-+
-+&MIPI_PARENT_I2C {
-+	ov5645: ov5645@3c {
-+		compatible = "ovti,ov5645";
-+		reg = <0x3c>;
-+		status = "disabled";
-+
-+		clock-names = "xclk";
-+
-+		vdddo-supply = <&ov5645_vdddo_1v8>;
-+		vdda-supply = <&ov5645_vdda_2v8>;
-+		vddd-supply = <&ov5645_vddd_1v5>;
-+
-+		port@0 {
-+			ov5645_ep: endpoint {
-+			};
-+		};
-+	};
-+
-+	rpi_v2_camera: imx219@10 {
-+		compatible = "sony,imx219";
-+		reg = <0x10>;
-+		status = "disabled";
-+
-+		VANA-supply = <&imx219_vana_2v8>;
-+		VDIG-supply = <&imx219_vdig_1v8>;
-+		VDDL-supply = <&imx219_vddl_1v2>;
-+		clocks = <&imx219_clk>;
-+
-+		port@0 {
-+			reg = <0>;
-+			imx219_ep0: endpoint {
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-new file mode 100644
-index 000000000000..435b7f62d88d
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-+ * connected with aistarvision-mipi-v2-adapter board
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a774c0-ek874.dts"
-+#define MIPI_PARENT_I2C i2c3
-+#include "aistarvision-mipi-adapter-2.1.dtsi"
-+
-+/ {
-+	model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-+	compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&vin4 {
-+	status = "okay";
-+};
-+
-+&vin5 {
-+	status = "okay";
-+};
-+
-+&csi40 {
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			reg = <0>;
-+
-+			csi40_in: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+				remote-endpoint = <&imx219_ep0>;
-+			};
-+		};
-+	};
-+};
-+
-+&ov5645 {
-+	/* uncomment status and remote-endpoint properties to tie ov5645
-+	 * to CSI2 also make sure remote-endpoint for imx219 camera is
-+	 * commented and remote endpoint in csi40_in is ov5645_ep
-+	 */
-+	/* status = "okay"; */
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-+	reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-+
-+	clocks = <&cpg CPG_MOD 716>;
-+	clock-frequency = <24000000>;
-+
-+	port@0 {
-+		ov5645_ep: endpoint {
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+			/* remote-endpoint = <&csi40_in>; */
-+		};
-+	};
-+};
-+
-+&rpi_v2_camera {
-+	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	port@0 {
-+		reg = <0>;
-+		imx219_ep0: endpoint {
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+			remote-endpoint = <&csi40_in>;
-+			link-frequencies = /bits/ 64 <456000000>;
-+		};
-+	};
-+};
--- 
-2.20.1
+That's a good way to have a todo...
 
+Rob
