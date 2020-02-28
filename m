@@ -2,121 +2,134 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5BEC3F2D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B36C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3BA2469C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01BE2246AC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:46:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kqc24jvg"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Kd02hTbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgB1Lje (ORCPT
+        id S1725769AbgB1LqI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:39:34 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37630 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbgB1Ljd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 06:39:33 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a141so2842709wme.2;
-        Fri, 28 Feb 2020 03:39:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=1nT2rygpRjcW5Hc5nEx4+QR4Y0c2ZJTbeTcqfJuIxf8=;
-        b=Kqc24jvgOU22EK6INyCirOks2OzBu06s3R229MgyxZlaO9KwA00EYavqHNtqMuhU37
-         ZiGekBb6KP2Ovyu+ihydi+f0LrC/EjezkTbIzbAClYGMe+0/enh0qgPePsV6ybOBXbww
-         0ILwtqR0otTE4mjqS0m7vd8Yjtr6PvVWIrMmavPdV8KJLRSu88YK3Q3wzK71tZffUftz
-         w0vVxuoPAbgR1dYb7fmHNohJXdeRq2vAWCowCI3h7CjjwJ+xS8FxjvAjxTeg5iWzcole
-         zB3TTxUX4tQcz6qFEE0QYfc2VtTYYmwLrqxeaFnX1I+L9l4UKP5npgDqKCaLSdvSrscf
-         YZMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1nT2rygpRjcW5Hc5nEx4+QR4Y0c2ZJTbeTcqfJuIxf8=;
-        b=Ad7HyDwK1ap2f+7qIMeTNppCE46kT0vgL3ZpUzhjRjZAwTTbenP7+fhf616ux+obt7
-         lLkJjy2YHcXJ8c8/e3eN3gHUAKOu75li3HW487DacXcg+kq3HfPmB05l+E1EGMrYybvg
-         dGOdjMbacbSk68Au3xp0C4rHJjeTnuu0ZTzOoaCaTYisStzI2Oqv1vnHD8RuabOGdkt+
-         0imMCmvL7MDPsW2VIvTS1DKUgc4zSGFA9jfGNdL/soY9ODQRcaS2rGWfZMf34R0VqUG4
-         p8s+RIcEkmnmTTieAQchcz/NrzRqNjJg0di+FEsEuty0FthECNc+uChR8qz6G2eZL5LZ
-         FO5Q==
-X-Gm-Message-State: APjAAAVv+GHQ3oSKokvYAyg0hAslHeqSOwbeKDaJMb6mNSshsq69lCJ8
-        yKlNyCYTLdtiKtz1TUPisogvaTR6
-X-Google-Smtp-Source: APXvYqzl/ZY5TQUvn+/CB3/RaLjU8StBmIRt1iV97hCR5IEM+O1KSpKMioYZFHvB/LGdaLFAWtBYbg==
-X-Received: by 2002:a1c:3204:: with SMTP id y4mr4362124wmy.166.1582889970418;
-        Fri, 28 Feb 2020 03:39:30 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id q1sm11554294wrw.5.2020.02.28.03.39.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Feb 2020 03:39:29 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ARM: dts: remove g-use-dma from rockchip usb nodes
-Date:   Fri, 28 Feb 2020 12:39:21 +0100
-Message-Id: <20200228113922.20266-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 28 Feb 2020 06:46:08 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:39989 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgB1LqI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 06:46:08 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 077EF23EC2;
+        Fri, 28 Feb 2020 12:46:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582890365;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gSy0XB2/CLQYbsHikr4Odo8LY3KqR1/kjbGBzsGZ6ic=;
+        b=Kd02hTbELCQ1B3UuerkL4Fc7b2vovsKQPdSO+4+x6U6aQrJ160U9Cwu+LP/T0ECtCy7M8Z
+        efZDHvUU6S+hoLWqWkcaZxzDQu+dawGFfW0f7VuUOXoAYP8G6jIdloAu7B8slL0xdRyvXF
+        8Eje0iN6yqyS0otRzEpRo7ob+v+7o3M=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 28 Feb 2020 12:46:01 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Li Yang <leoyang.li@nxp.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: Re: [PATCH v2 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for
+ DMA
+In-Reply-To: <CAL_JsqKMNFFG5H4gPQwRdcTpfHynqZWo2A2db-oL7EmvTNqNkQ@mail.gmail.com>
+References: <20200221174754.5295-1-michael@walle.cc>
+ <20200221174754.5295-4-michael@walle.cc>
+ <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
+ <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
+ <CAL_JsqKMNFFG5H4gPQwRdcTpfHynqZWo2A2db-oL7EmvTNqNkQ@mail.gmail.com>
+Message-ID: <639a1df72fbeda77436b282a99f17995@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 077EF23EC2
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[12];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives these errors:
+Hi Rob, Hi Leo,
 
-arch/arm/boot/dts/rv1108-elgin-r1.dt.yaml: usb@30180000:
-'g-use-dma' does not match any of the regexes: 'pinctrl-[0-9]+'
-arch/arm/boot/dts/rv1108-evb.dt.yaml: usb@30180000:
-'g-use-dma' does not match any of the regexes: 'pinctrl-[0-9]+'
-arch/arm/boot/dts/rk3228-evb.dt.yaml: usb@30040000:
-'g-use-dma' does not match any of the regexes: 'pinctrl-[0-9]+'
-arch/arm/boot/dts/rk3229-evb.dt.yaml: usb@30040000:
-'g-use-dma' does not match any of the regexes: 'pinctrl-[0-9]+'
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: usb@30040000:
-'g-use-dma' does not match any of the regexes: 'pinctrl-[0-9]+'
+Am 2020-02-28 00:03, schrieb Rob Herring:
+> On Thu, Feb 27, 2020 at 4:49 PM Li Yang <leoyang.li@nxp.com> wrote:
+>> 
+>> On Thu, Feb 27, 2020 at 4:35 PM Rob Herring <robh+dt@kernel.org> 
+>> wrote:
+>> >
+>> > On Fri, Feb 21, 2020 at 11:48 AM Michael Walle <michael@walle.cc> wrote:
+>> > >
+>> > > The DMA channel might not be available at the first probe time. This is
+>> > > esp. the case if the DMA controller has an IOMMU mapping.
+>> > >
+>> > > Use the new dma_request_chan() API and handle EPROBE_DEFER errors. Also
+>> > > reorder the code a bit, so that we don't prepare the whole UART just to
+>> > > determine that the DMA channel is not ready yet and we have to undo all
+>> > > the stuff. Try to map the DMA channels earlier.
+>> >
+>> > Changing this means you never probe successfully if you boot a kernel
+>> > with the DMA driver disabled (or it's IOMMU disabled). Some other
+>> > drivers request DMA in open() and can work either way.
 
-'g-use-dma' is not a valid option in dwc2.yaml, so remove it
-from all Rockchip dtsi files.
+Oh, I see.
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/dwc2.yaml
+>> We got this exact issue previously with another driver.  When the
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm/boot/dts/rk322x.dtsi | 1 -
- arch/arm/boot/dts/rv1108.dtsi | 1 -
- 2 files changed, 2 deletions(-)
+What driver is it? I've been working on the i2c-mxs.c driver which has
+the same problem. Ie. its not working with DMA when the IOMMU is 
+enabled.
+Now that I've learned that dma_request_chan() will return EPROBE_DEFER
+if the actual DMA driver is not available, I don't think there is any
+trick like this there. There is no function which would be called late
+except you'd do something like on the first master_xfer() try to request
+the DMA channels. But I don't think that would be the way to go.
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 4e90efdc9..dac930be3 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -718,7 +718,6 @@
- 		g-np-tx-fifo-size = <16>;
- 		g-rx-fifo-size = <280>;
- 		g-tx-fifo-size = <256 128 128 64 32 16>;
--		g-use-dma;
- 		phys = <&u2phy0_otg>;
- 		phy-names = "usb2-phy";
- 		status = "disabled";
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index 1fd06e7cb..9bb109d66 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -527,7 +527,6 @@
- 		g-np-tx-fifo-size = <16>;
- 		g-rx-fifo-size = <280>;
- 		g-tx-fifo-size = <256 128 128 64 32 16>;
--		g-use-dma;
- 		phys = <&u2phy_otg>;
- 		phy-names = "usb2-phy";
- 		status = "disabled";
--- 
-2.11.0
+-michael
+
+>> required DMA driver is disabled, the DMA framework cannot figure out
+>> this situation and keeps returning EPROBE_DEFER.  I'm wondering if we
+>> should update the DMA framework to use your deferred probe timeout
+>> mechanism.  Is it still only used for debug purpose?
+> 
+> It's undergoing some rework ATM to not just be for debug. However,
+> it's not really going to help you if you care about the console
+> because waiting for the timeout will be too late to register the
+> console.
 
