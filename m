@@ -2,140 +2,102 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5D5C3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E631C3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A7E246A2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:33:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e6Ou04kM"
+	by mail.kernel.org (Postfix) with ESMTP id E6B43246AC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgB1Ido (ORCPT
+        id S1726077AbgB1Ikh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:33:44 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53866 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgB1Idn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 03:33:43 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S8XflV024121;
-        Fri, 28 Feb 2020 02:33:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582878821;
-        bh=vW+PepXRsxAK7WkwPUYIQq/S8m7kzQ/csZbigbHHHpQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=e6Ou04kMF7BtN+oobOFCQqXmtAVqXPwfnzwuvT/xCllDO0PkhZDli5M6AwHkld5C8
-         aQJptsMj0LZYmvTQURGMjV5IRfz7FIdRiRK3VJvAeTndc92tAEZs5aUYEgrrITajv5
-         tbY5MLCoPLcHV7rVB27WNgNW4HUuy3d1B2j9oDZw=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S8Xf2Q049033
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 02:33:41 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 02:33:41 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 02:33:41 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S8XdkL108896;
-        Fri, 28 Feb 2020 02:33:39 -0600
-Subject: Re: [PATCH v2 4/5] ARM: dts: AM4372: Add the PRU-ICSS interconnect
- target-module node
-To:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200227222837.7329-1-s-anna@ti.com>
- <20200227222837.7329-5-s-anna@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <f3ba0138-141c-0602-788c-8bf8f802f436@ti.com>
-Date:   Fri, 28 Feb 2020 10:33:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 03:40:37 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:59945 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725877AbgB1Ikh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 03:40:37 -0500
+Received: from [109.168.11.45] (port=51130 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1j7bCE-000aM0-Va; Fri, 28 Feb 2020 09:40:35 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     devicetree@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Luca Ceresoli <luca@lucaceresoli.net>
+Subject: [PATCH v3] of: overlay: log the error cause on resolver failure
+Date:   Fri, 28 Feb 2020 09:40:27 +0100
+Message-Id: <20200228084027.10797-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200227222837.7329-5-s-anna@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+When a DT overlay has a node label that is not present in the live
+devicetree symbols table, this error is printed:
 
+  OF: resolver: overlay phandle fixup failed: -22
+  create_overlay: Failed to create overlay (err=-22)
 
-On 28/02/2020 00:28, Suman Anna wrote:
-> The AM437x family of SoCs contains two dissimilar PRU-ICSS instances,
-> but leverage a common reset line and SYSCFG from the larger PRU-ICSS1
-> instance. This SYSC register has also very unique bit-fields. Both
-> the IPs require the PRCM reset to be deasserted to be able to access
-> any registers. Add a common PRUSS interconnect target-module with all
-> the required properties.
-> 
-> The PRUSS devices themselves shall be added as child nodes to this
-> interconnect node in the future. The PRU-ICSS instances are not
-> supported on AM4372 SoC though in the AM437x family, so the target
-> module node should be disabled in any derivative board files that
-> use this SoC.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+which does not help much in finding the node label that caused the problem
+and fix the overlay source.
 
-Reviewed-by: Roger Quadros <rogerq@ti.com>
+Add an error message with the name of the node label that caused the
+error. The new output is:
 
-> ---
-> v2:
->   - Remove status=disabled
->   - Revise last para in patch description
-> 
->   arch/arm/boot/dts/am4372.dtsi | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index faa14dc0faff..9f39413b0d0e 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -344,6 +344,28 @@
->   			};
->   		};
->   
-> +		pruss_tm: target-module@54400000 {
-> +			compatible = "ti,sysc-pruss", "ti,sysc";
-> +			reg = <0x54426000 0x4>,
-> +			      <0x54426004 0x4>;
-> +			reg-names = "rev", "sysc";
-> +			ti,sysc-mask = <(SYSC_PRUSS_STANDBY_INIT |
-> +					 SYSC_PRUSS_SUB_MWAIT)>;
-> +			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-> +					<SYSC_IDLE_NO>,
-> +					<SYSC_IDLE_SMART>;
-> +			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +					<SYSC_IDLE_NO>,
-> +					<SYSC_IDLE_SMART>;
-> +			clocks = <&pruss_ocp_clkctrl AM4_PRUSS_OCP_PRUSS_CLKCTRL 0>;
-> +			clock-names = "fck";
-> +			resets = <&prm_per 1>;
-> +			reset-names = "rstctrl";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges = <0x0 0x54400000 0x80000>;
-> +		};
-> +
->   		gpmc: gpmc@50000000 {
->   			compatible = "ti,am3352-gpmc";
->   			ti,hwmods = "gpmc";
-> 
+  OF: resolver: node label 'gpio9' not found in live devicetree symbols table
+  OF: resolver: overlay phandle fixup failed: -22
+  create_overlay: Failed to create overlay (err=-22)
 
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+
+---
+
+Changed in v3:
+ - add only the message from v1, but as reworded by Frank
+
+Changed in v2:
+ - add a message for each error path that does not have one yet
+---
+ drivers/of/resolver.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 83c766233181..b278ab4338ce 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -321,8 +321,11 @@ int of_resolve_phandles(struct device_node *overlay)
+ 
+ 		err = of_property_read_string(tree_symbols,
+ 				prop->name, &refpath);
+-		if (err)
++		if (err) {
++			pr_err("node label '%s' not found in live devicetree symbols table\n",
++			       prop->name);
+ 			goto out;
++		}
+ 
+ 		refnode = of_find_node_by_path(refpath);
+ 		if (!refnode) {
 -- 
-cheers,
--roger
+2.25.1
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
