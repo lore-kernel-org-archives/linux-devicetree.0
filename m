@@ -2,178 +2,118 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68969C3F2D3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9828AC3F2D3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDB1246A0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B81246BA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WfJ+Pvpx"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i5Zcoth6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgB1Ow3 (ORCPT
+        id S1726874AbgB1Ozr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:52:29 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:55076 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgB1Ow2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:52:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582901546; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c4Hpe5bJONH/FNTVGB+t29zh0HkFZmJeasNEqS8Vfj8=;
-        b=WfJ+Pvpx2y2KhO9bZiFPgod3uTc1OKPAVLSOxLatyiysiWhlrezwc7/XRj5Q/vD1YQxeiW
-        IB3syypfuEwpPisEVQOfZvz+jK1l5QVBZQxKwvLDB3t8RA9uR4b0IUWKI0YCfjYXSe4mgT
-        xHRbv52PO/NQLEFhhkPRtwP3GD9Kygw=
-Date:   Fri, 28 Feb 2020 11:52:03 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v7 3/7] Bindings: nvmem: add bindings for JZ4780 efuse
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Message-Id: <1582901523.3.6@crapouillou.net>
-In-Reply-To: <9B96463B-CEDE-46EF-87C4-395EB919C78F@goldelico.com>
-References: <cover.1582898302.git.hns@goldelico.com>
-        <ebd523e39aac31b087affcfa984738204fa8b542.1582898302.git.hns@goldelico.com>
-        <1582900837.3.3@crapouillou.net>
-        <9B96463B-CEDE-46EF-87C4-395EB919C78F@goldelico.com>
+        Fri, 28 Feb 2020 09:55:47 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:15064 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726906AbgB1Ozq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:55:46 -0500
+X-UUID: bec45df404ff4219a8476fd81106c3f9-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=KupROzX3aGOHBHNRJXxfTvVaiYRDVDCR4a16idnL8VA=;
+        b=i5Zcoth6DexXSmXFNfAo4B6rl2NkfsojbC3nBlrWeDPp4kyLQrXpvwZeDdC8hRWFlcmSous5b/Mbr0AFA/N+RWBCKFZJ7xISDX7pwPurp16w3GDp9qsbQWazZuag0bRcfpC2i9Mvf6hP0uFTDXNYrwA9PS7r6G7Sb1lOTGVD6U0=;
+X-UUID: bec45df404ff4219a8476fd81106c3f9-20200228
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 425614716; Fri, 28 Feb 2020 22:55:42 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 22:54:47 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 22:55:23 +0800
+Message-ID: <1582901741.14824.6.camel@mtksdaap41>
+Subject: Re: [PATCH v3 09/13] soc: mediatek: cmdq: add write_s value function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Fri, 28 Feb 2020 22:55:41 +0800
+In-Reply-To: <1582897461-15105-11-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-11-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-Le ven., f=E9vr. 28, 2020 at 15:47, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
->=20
->>  Am 28.02.2020 um 15:40 schrieb Paul Cercueil <paul@crapouillou.net>:
->>=20
->>  Hi Nikolaus,
->>=20
->>=20
->>  Le ven., f=E9vr. 28, 2020 at 14:58, H. Nikolaus Schaller=20
->> <hns@goldelico.com> a =E9crit :
->>>  From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>  This patch brings support for the JZ4780 efuse. Currently it only=20
->>> exposes
->>>  a read only access to the entire 8K bits efuse memory.
->>>  Tested-by: Mathieu Malaterre <malat@debian.org>
->>>  Signed-off-by: PrasannaKumar Muralidharan=20
->>> <prasannatsmkumar@gmail.com>
->>>  Signed-off-by: Mathieu Malaterre <malat@debian.org>
->>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>  [converted to yaml]
->>>  Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
->>>  ---
->>>  .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 49=20
->>> +++++++++++++++++++
->>>  1 file changed, 49 insertions(+)
->>>  create mode 100644=20
->>> Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
->>>  diff --git=20
->>> a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml=20
->>> b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
->>>  new file mode 100644
->>>  index 000000000000..ce6690c50a34
->>>  --- /dev/null
->>>  +++=20
->>> b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
->>>  @@ -0,0 +1,49 @@
->>>  +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>>  +%YAML 1.2
->>>  +---
->>>  +$id:=20
->>> http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
->>>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>  +
->>>  +title: Ingenic JZ EFUSE driver bindings
->>>  +
->>>  +maintainers:
->>>  +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>  +
->>>  +allOf:
->>>  +  - $ref: "nvmem.yaml#"
->>>  +
->>>  +properties:
->>>  +  compatible:
->>>  +    enum:
->>>  +      - ingenic,jz4780-efuse
->>>  +
->>>  +  reg:
->>>  +    maxItems: 1
->>>  +
->>>  +  clocks:
->>>  +    # Handle for the ahb for the efuse.
->>>  +    maxItems: 1
->>>  +
->>>  +  clock-names:
->>>  +    items:
->>>  +      - const: ahb2
->>=20
->>  You still have clock-names here. You can remove it completely.
->=20
-> I have just removed them from required: and the examples: because
-> I think they are optional. Or are they forbidden?
-
-The driver does not get its clock by name, it just takes the first one.=20
-So having 'clock-names' in the binding is just not needed.
-
--Paul
-
->>=20
->>>  +
->>>  +required:
->>>  +  - compatible
->>>  +  - reg
->>>  +  - clocks
->>>  +
->>>  +unevaluatedProperties: false
->>>  +
->>>  +examples:
->>>  +  - |
->>>  +    #include <dt-bindings/clock/jz4780-cgu.h>
->>>  +
->>>  +    efuse@134100d0 {
->>>  +        compatible =3D "ingenic,jz4780-efuse";
->>>  +        reg =3D <0x134100d0 0x2c>;
->>>  +
->>>  +        clocks =3D <&cgu JZ4780_CLK_AHB2>;
->>>  +    };
->>>  +
->>>  +...
->>>  --
->>>  2.23.0
->=20
-> BR,
-> Nikolaus
->=20
-
-=
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVscGVyIGZ1
+bmN0aW9ucyB3aGljaA0KPiB3cml0ZXMgYSBjb25zdGFudCB2YWx1ZSB0byBhZGRyZXNzIHdpdGgg
+bGFyZ2UgZG1hDQo+IGFjY2VzcyBzdXBwb3J0Lg0KPiANCg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxj
+ay5odUBtZWRpYXRlay5jb20+DQoNCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxk
+ZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1jbWRxLWhlbHBlci5jIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4g
+IGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggIHwgMTQgKysrKysrKysrKysr
+KysNCj4gIDIgZmlsZXMgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2Mv
+bWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gaW5kZXggNDI4Zjk5Mjg4Y2E2Li4xMzM2NTIz
+ZWI3ZDQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBl
+ci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IEBA
+IC0yNjksNiArMjY5LDMyIEBAIGludCBjbWRxX3BrdF93cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAq
+cGt0LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsDQo+ICB9DQo+ICBFWFBPUlRfU1lNQk9MKGNtZHFf
+cGt0X3dyaXRlX3MpOw0KPiAgDQo+ICtpbnQgY21kcV9wa3Rfd3JpdGVfc192YWx1ZShzdHJ1Y3Qg
+Y21kcV9wa3QgKnBrdCwgdTE2IGhpZ2hfYWRkcl9yZWdfaWR4LA0KPiArCQkJICAgdTE2IGFkZHJf
+bG93LCB1MzIgdmFsdWUsIHUzMiBtYXNrKQ0KPiArew0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0
+aW9uIGluc3QgPSB7IHswfSB9Ow0KPiArCWludCBlcnI7DQo+ICsNCj4gKwlpZiAobWFzayAhPSBV
+MzJfTUFYKSB7DQo+ICsJCWluc3Qub3AgPSBDTURRX0NPREVfTUFTSzsNCj4gKwkJaW5zdC5tYXNr
+ID0gfm1hc2s7DQo+ICsJCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7
+DQo+ICsJCWlmIChlcnIgPCAwKQ0KPiArCQkJcmV0dXJuIGVycjsNCj4gKw0KPiArCQlpbnN0Lm9w
+ID0gQ01EUV9DT0RFX1dSSVRFX1NfTUFTSzsNCj4gKwl9IGVsc2Ugew0KPiArCQlpbnN0Lm9wID0g
+Q01EUV9DT0RFX1dSSVRFX1M7DQo+ICsJfQ0KPiArDQo+ICsJaW5zdC5zb3AgPSBoaWdoX2FkZHJf
+cmVnX2lkeDsNCj4gKwlpbnN0Lm9mZnNldCA9IGFkZHJfbG93Ow0KPiArCWluc3QudmFsdWUgPSB2
+YWx1ZTsNCj4gKw0KPiArCXJldHVybiBjbWRxX3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3Qp
+Ow0KPiArfQ0KPiArRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9zX3ZhbHVlKTsNCj4gKw0K
+PiAgaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGV2ZW50KQ0KPiAg
+ew0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KPiBkaWZmIC0t
+Z2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBiL2luY2x1ZGUvbGlu
+dXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gaW5kZXggMDFiNDE4NGFmMzEwLi5mZWMyOTJh
+YWM4M2MgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRx
+LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBAQCAt
+MTM1LDYgKzEzNSwyMCBAQCBpbnQgY21kcV9wa3RfcmVhZF9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0
+LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsIHUxNiBhZGRyX2xvdywNCj4gIGludCBjbWRxX3BrdF93
+cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsDQo+ICAJ
+CSAgICAgdTE2IGFkZHJfbG93LCB1MTYgc3JjX3JlZ19pZHgsIHUzMiBtYXNrKTsNCj4gIA0KPiAr
+LyoqDQo+ICsgKiBjbWRxX3BrdF93cml0ZV9zX3ZhbHVlKCkgLSBhcHBlbmQgd3JpdGVfcyBjb21t
+YW5kIHdpdGggbWFzayB0byB0aGUgQ01EUQ0KPiArICoJCQkgICAgICBwYWNrZXQgd2hpY2ggd3Jp
+dGUgdmFsdWUgdG8gYSBwaHlzaWNhbCBhZGRyZXNzDQo+ICsgKiBAcGt0Ogl0aGUgQ01EUSBwYWNr
+ZXQNCj4gKyAqIEBoaWdoX2FkZHJfcmVnX2lkeDoJaW50ZXJuYWwgcmVnaXNnZXIgSUQgd2hpY2gg
+Y29udGFpbnMgaGlnaCBhZGRyZXNzIG9mIHBhDQo+ICsgKiBAYWRkcl9sb3c6CWxvdyBhZGRyZXNz
+IG9mIHBhDQo+ICsgKiBAdmFsdWU6CXRoZSBzcGVjaWZpZWQgdGFyZ2V0IHZhbHVlDQo+ICsgKiBA
+bWFzazoJdGhlIHNwZWNpZmllZCB0YXJnZXQgbWFzaw0KPiArICoNCj4gKyAqIFJldHVybjogMCBm
+b3Igc3VjY2VzczsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyByZXR1cm5lZA0KPiArICovDQo+ICtp
+bnQgY21kcV9wa3Rfd3JpdGVfc192YWx1ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGhpZ2hf
+YWRkcl9yZWdfaWR4LA0KPiArCQkJICAgdTE2IGFkZHJfbG93LCB1MzIgdmFsdWUsIHUzMiBtYXNr
+KTsNCj4gKw0KPiAgLyoqDQo+ICAgKiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0IGZvciBl
+dmVudCBjb21tYW5kIHRvIHRoZSBDTURRIHBhY2tldA0KPiAgICogQHBrdDoJdGhlIENNRFEgcGFj
+a2V0DQoNCg==
 
