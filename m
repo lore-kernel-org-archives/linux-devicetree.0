@@ -2,133 +2,123 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56295C3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3324C3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 04:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E60246A2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:42:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="CBp2RW16"
+	by mail.kernel.org (Postfix) with ESMTP id A10DD2469B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 04:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbgB1Dma (ORCPT
+        id S1730779AbgB1ELX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:42:30 -0500
-Received: from mail-dm6nam11on2070.outbound.protection.outlook.com ([40.107.223.70]:6072
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730808AbgB1Dma (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:42:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qcx/fGpRAEbzOSuK3baAITgnXqJKNC+XFcJYp6FwgTwq4cjNPkJu6tRNVA6JM+3Hqj0DDF6tEtCHqRXnu2fCNUkn6yRMLtvrrCZAaBr6yIucpURMt0MGA7hDvvBQ6ygNLVTL3+vMMRYcPaAZXO71+R7N6l4TnjawwoZyIFU3DoXnU0aVkw+pHiz+6TfhJEr59N4Xne4iLwCF3jwCSFs1lf4+bld8FF0csTBnmsUxU9P5O5y943GHpuAM4atWQP5zhD2BUTxaYDB8BjcdENzzAO/nnVxiZBhHHTl5kp4rnI+ssButYuddtVdwwgo+NMoGxY11EbvMFdQ5DdlhQZCjIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VBzUoj7KxIhXm490ckzoyhq3smb8urW8Emzs/Gj91jw=;
- b=QY9wK3/BnPgUoS+j4EXkWK32TQ1HiwaKp2u9ec4Z2BcRSh4Mx2cjTHptYNtlHfM4mUEQERbaG6mZT0rwXvqMOR93O8Z+6KPcy+dUuFlB12k2zMw/u9ufbtVuUMK/+GE9I7oz/ThhoS15DbN82ApVofIKMrUpppUZbgqc9P0yYrwrxUHt/0GtYFvEZNJuRtA2jF0MECY1u0Eos+tHj5dmbZOeEngbS0AOkgzaWxCuFnz9rMTe9JXfMY7Q4XqJsiIKpZrps7c/ZnyjpDHtS5YOdQGTbz0dKWHtTd+pxepscKR7soiH5PBf2Hv4QrFp0XgD//iogM8rN+iF5WoATX7j/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
- dkim=pass header.d=labundy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VBzUoj7KxIhXm490ckzoyhq3smb8urW8Emzs/Gj91jw=;
- b=CBp2RW16804OANk3+olgmPb4xM0WrqSUcjeZ2jLNq1dvfKVYGs9KzVTSOYp/Xb3+QMWt71nyAE7X5iuFOEetyoctgSlosE5GDX2axtsKtj3lAvMFHEybWVSGk9FpmH4MCazVs4W3U0l+vpMCbOGczZVYO59iQds9AStKbjXupgk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jeff@labundy.com; 
-Received: from SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
- by SN6PR08MB4895.namprd08.prod.outlook.com (2603:10b6:805:6d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.22; Fri, 28 Feb
- 2020 03:42:26 +0000
-Received: from SN6PR08MB5517.namprd08.prod.outlook.com
- ([fe80::e87b:9b6:d4b8:af68]) by SN6PR08MB5517.namprd08.prod.outlook.com
- ([fe80::e87b:9b6:d4b8:af68%6]) with mapi id 15.20.2750.021; Fri, 28 Feb 2020
- 03:42:26 +0000
-Date:   Thu, 27 Feb 2020 21:42:20 -0600
-From:   Jeff LaBundy <jeff@labundy.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     dmitry.torokhov@gmail.com, thierry.reding@gmail.com,
-        jic23@kernel.org, devicetree@vger.kernel.org,
-        linux-input@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v5 2/7] mfd: Add support for Azoteq
- IQS620A/621/622/624/625
-Message-ID: <20200228034220.GA3510@labundy.com>
-References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
- <1581895931-6056-3-git-send-email-jeff@labundy.com>
- <20200224111448.GS3494@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200224111448.GS3494@dell>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: DM5PR12CA0010.namprd12.prod.outlook.com (2603:10b6:4:1::20)
- To SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
+        Thu, 27 Feb 2020 23:11:23 -0500
+Received: from mga06.intel.com ([134.134.136.31]:56670 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730586AbgB1ELX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 23:11:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 20:11:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="272497840"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Feb 2020 20:11:20 -0800
+Received: from [10.226.38.23] (unknown [10.226.38.23])
+        by linux.intel.com (Postfix) with ESMTP id 77C5558052E;
+        Thu, 27 Feb 2020 20:11:11 -0800 (PST)
+Subject: Re: [PATCH v11 2/2] spi: cadence-quadspi: Add support for the Cadence
+ QSPI controller
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org,
+        marex@denx.de, devicetree@vger.kernel.org,
+        tien.fong.chee@intel.com, tudor.ambarus@gmail.com,
+        boris.brezillon@free-electrons.com, richard@nod.at,
+        qi-ming.wu@intel.com, simon.k.r.goldschmidt@gmail.com,
+        david.oberhollenzer@sigma-star.at, dinguyen@kernel.org,
+        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
+        cheol.yong.kim@intel.com, mark.rutland@arm.com,
+        computersforpeace@gmail.com, dwmw2@infradead.org,
+        cyrille.pitchen@atmel.com
+References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227062708.21544-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227183032.77ef0795@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <f82e4964-f030-9aac-5895-a715921ed6db@linux.intel.com>
+Date:   Fri, 28 Feb 2020 12:11:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from labundy.com (136.49.227.119) by DM5PR12CA0010.namprd12.prod.outlook.com (2603:10b6:4:1::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Fri, 28 Feb 2020 03:42:25 +0000
-X-Originating-IP: [136.49.227.119]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 087ac658-452d-4213-3a1e-08d7bc003a98
-X-MS-TrafficTypeDiagnostic: SN6PR08MB4895:
-X-Microsoft-Antispam-PRVS: <SN6PR08MB48953C62C8B25B06B7AFA235D3E80@SN6PR08MB4895.namprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0327618309
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(39830400003)(136003)(376002)(199004)(189003)(26005)(6916009)(33656002)(2906002)(186003)(2616005)(8676002)(956004)(16526019)(508600001)(1076003)(4744005)(7416002)(86362001)(36756003)(55016002)(7696005)(4326008)(52116002)(316002)(8936002)(8886007)(81156014)(66556008)(81166006)(66476007)(66946007)(5660300002)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB4895;H:SN6PR08MB5517.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: labundy.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XLNyOAz44igADOsc3jVY9CnMi6qYma0/mSYfCmfJMsjLKA43sK5A1HVog1QgeLrwWDBZsAB1+rd7RbYmGrr5AYYnKk7msVtQgWJ7kH7iVLS8SrUfTk1FXEIM6csRW4/MerWuNgDQAfGflD4R6DgZlPnKYnzttOJx1ZqGVhpplMjm+JLllja40tKToZH9ObB3K7KCNjD6r32QgFPSEMPHBSq6l/eMqjVuPTAEdp8ONYZ4Q5PKLg2qcFV1IUpzJyAx2JwVJm03RJLzYQDtEPaI+mAa/XDKQ5fR6HzDBbCr+iuhlViGOOHoSfKmOBVFVCa7CfTdw6iJ4NdBIxgE9XfqpV7FpkFYsIxNJygcKcY03Ih+lX1Np49QUUn61/v3fUq6SvnuLTcLU6asB39vDYa1wnDkdgfBMi0bvkfzuXfD1+fQQ1LCheT4ScTEAKmZ409/
-X-MS-Exchange-AntiSpam-MessageData: pKeFwkO2bfQ8EVT8ZV9p2JGlrXR0lLEpq1SJBiUEG/t1BPiv+6tF5iNp0veygwFEt3qW1p/noSakckDDDwPymTVNx1fuA99pfyzKljZdFEfawXDV/zXqXnrxzLpmNiBlgjajfhc+rOh+za0ISpnEGw==
-X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 087ac658-452d-4213-3a1e-08d7bc003a98
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2020 03:42:26.8469
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dVqwKsgbuoPTirhdxX6wQ/C2LXwtPECZ2jtXMfB4vCQFalGXuPyh943QCqErAiwTQvXWeQJ2tpla7Er7/IKyNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB4895
+In-Reply-To: <20200227183032.77ef0795@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Boris,
 
-On Mon, Feb 24, 2020 at 11:14:48AM +0000, Lee Jones wrote:
+      Thank you so much for the review comments...
 
-[...]
+On 28/2/2020 1:30 AM, Boris Brezillon wrote:
+> On Thu, 27 Feb 2020 14:27:08 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add support for the Cadence QSPI controller. This controller is
+>> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
+>> This driver has been tested on the Intel LGM SoCs.
+>>
+>> This driver does not support generic SPI and also the implementation
+>> only supports spi-mem interface to replace the existing driver in
+>> mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
+>> flash memory
+> Is it really supporting SPI NORs only, or is it just that you only
+> tested it with a spi-nor?
 
-> 
-> Well done Jeff.  Good job.
-> 
-> Applied, thanks.
-> 
-> -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+The existing drivers/mtd/spi-nor/cadence-quadspi.c supports SPI-NORs 
+only, because the driver is developed
 
-Thank you for your kind words as well as your support in fleshing out this
-series.
+such a way that it does not support other SPI based flash memories, also 
+never uses SPI/SPI-MEM based framework.
 
-Just to confirm, does your offer to take the remainder (once everything is
-approved) through immutable branches still stand?
+So we Vignesh suggested me to  develop the new driver which supports 
+both SPI-NOR and SPI-NAND based on the SPI-MEM framework.
 
-Hi Uwe and/or Thierry,
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Reported-by? What has been reported?
+Sure, will remove it.
+>
+>> ---
+>>   drivers/mtd/spi-nor/Kconfig                        |  11 -
+>>   drivers/mtd/spi-nor/Makefile                       |   1 -
+>>   drivers/spi/Kconfig                                |  10 +
+>>   drivers/spi/Makefile                               |   1 +
+>>   .../spi-cadence-quadspi.c}                         | 641 ++++++++++-----------
+> Looks like this could be split in several patches to ease the review:
+>
+> 1/ convert to spi-mem
+> 2/ move the driver to drivers/spi
+> 3/ add support for intel,lgm-qspi
+>
+> other than that, that's good to see one more spi-nor controller driver
+> converted to spi-mem.
 
-Please let me know if you have any additional input on patch [4/7], or you
-feel it is suitable for your Ack at this stage.
+Agreed!, will split as per your suggestions.
 
-Kind regards,
-Jeff LaBundy
+Regards
+Vadivel
+>
