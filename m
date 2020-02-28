@@ -2,200 +2,203 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DE2C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB33C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2021D2469F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38151246A0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:23:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jahVD06M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgB1PQM (ORCPT
+        id S1727144AbgB1PXH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:16:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57970 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726945AbgB1PQM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:16:12 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SFFcKc105420;
-        Fri, 28 Feb 2020 10:16:00 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepxphvrr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 10:15:59 -0500
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01SFFxa3107442;
-        Fri, 28 Feb 2020 10:15:59 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepxphuy1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 10:15:56 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01SFC17N007473;
-        Fri, 28 Feb 2020 15:14:55 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03dal.us.ibm.com with ESMTP id 2yepv2pkys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 15:14:55 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01SFEshx16253840
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 15:14:54 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 333582805C;
-        Fri, 28 Feb 2020 15:14:54 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C33028068;
-        Fri, 28 Feb 2020 15:14:53 +0000 (GMT)
-Received: from [9.211.148.203] (unknown [9.211.148.203])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Feb 2020 15:14:53 +0000 (GMT)
-Subject: Re: [PATCH v2] ARM: dts: rainier: Set PCA9552 pin types
-To:     Matthew Barth <msbarth@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Brandon Wyman <bjwyman@gmail.com>
-References: <20200225201415.431668-1-msbarth@linux.ibm.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <59ceccbd-b776-51fc-e80b-39427c70ec70@linux.ibm.com>
-Date:   Fri, 28 Feb 2020 09:14:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 10:23:07 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:34115 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726650AbgB1PXG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 10:23:06 -0500
+X-UUID: 092b7c56750e4f31a675daafab3161c7-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ifFGmBxdS0EJEl6Bjk1aR1VMhenXnvQtJT+O9VME79I=;
+        b=jahVD06MDfTO5KYynj8KIJMu767Sq+hIRk7dqnTKJXFoK+YJoMqAk9RgQDS0sGYVav+qD9spnUJ1YONi1fUCp6MAk5WE1KZnLEbiNHC9Ow5NY4EpnRh8S/yAeeRT3weqm/8UWouAjXekUEUZs6CNu7B4Duk5hFDjcmEzZja2kVw=;
+X-UUID: 092b7c56750e4f31a675daafab3161c7-20200228
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 13775098; Fri, 28 Feb 2020 23:22:58 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 23:22:03 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 23:22:39 +0800
+Message-ID: <1582903376.14824.16.camel@mtksdaap41>
+Subject: Re: [PATCH v3 02/13] mailbox: cmdq: variablize address shift in
+ platform
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Fri, 28 Feb 2020 23:22:56 +0800
+In-Reply-To: <1582897461-15105-4-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-4-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200225201415.431668-1-msbarth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_04:2020-02-28,2020-02-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 spamscore=0 suspectscore=0 clxscore=1015
- bulkscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002280121
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IFNvbWUgZ2NlIGhhcmR3YXJlIHNoaWZ0IHBjIGFuZCBlbmQgYWRk
+cmVzcyBpbiByZWdpc3RlciB0byBzdXBwb3J0DQo+IGxhcmdlIGRyYW0gYWRkcmVzc2luZy4NCj4g
+SW1wbGVtZW50IGdjZSBhZGRyZXNzIHNoaWZ0IHdoZW4gd3JpdGUgb3IgcmVhZCBwYyBhbmQgZW5k
+IHJlZ2lzdGVyLg0KPiBBbmQgYWRkIHNoaWZ0IGJpdCBpbiBwbGF0Zm9ybSBkZWZpbml0aW9uLg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVk
+aWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMg
+ICAgICAgfCA1NyArKysrKysrKysrKysrKysrKystLS0tLS0NCj4gIGRyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1jbWRxLWhlbHBlci5jICAgfCAgMyArLQ0KPiAgaW5jbHVkZS9saW51eC9tYWlsYm94
+L210ay1jbWRxLW1haWxib3guaCB8ICAyICsNCj4gIDMgZmlsZXMgY2hhbmdlZCwgNDggaW5zZXJ0
+aW9ucygrKSwgMTQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tYWls
+Ym94L210ay1jbWRxLW1haWxib3guYyBiL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
+LmMNCj4gaW5kZXggOWE2Y2U5ZjVhN2RiLi5hOThmMDM1N2RkN2QgMTAwNjQ0DQo+IC0tLSBhL2Ry
+aXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gKysrIGIvZHJpdmVycy9tYWlsYm94
+L210ay1jbWRxLW1haWxib3guYw0KPiBAQCAtNzYsOCArNzYsMjIgQEAgc3RydWN0IGNtZHEgew0K
+PiAgCXN0cnVjdCBjbWRxX3RocmVhZAkqdGhyZWFkOw0KPiAgCXN0cnVjdCBjbGsJCSpjbG9jazsN
+Cj4gIAlib29sCQkJc3VzcGVuZGVkOw0KPiArCXU4CQkJc2hpZnRfcGE7DQo+ICB9Ow0KPiAgDQo+
+ICtzdHJ1Y3QgZ2NlX3BsYXQgew0KPiArCXUzMiB0aHJlYWRfbnI7DQo+ICsJdTggc2hpZnQ7DQo+
+ICt9Ow0KPiArDQo+ICt1OCBjbWRxX21ib3hfc2hpZnQoc3RydWN0IG1ib3hfY2hhbiAqY2hhbikN
+Cj4gK3sNCj4gKwlzdHJ1Y3QgY21kcSAqY21kcSA9IGNvbnRhaW5lcl9vZihjaGFuLT5tYm94LCBz
+dHJ1Y3QgY21kcSwgbWJveCk7DQo+ICsNCj4gKwlyZXR1cm4gY21kcS0+c2hpZnRfcGE7DQo+ICt9
+DQo+ICtFWFBPUlRfU1lNQk9MKGNtZHFfbWJveF9zaGlmdCk7DQo+ICsNCj4gIHN0YXRpYyBpbnQg
+Y21kcV90aHJlYWRfc3VzcGVuZChzdHJ1Y3QgY21kcSAqY21kcSwgc3RydWN0IGNtZHFfdGhyZWFk
+ICp0aHJlYWQpDQo+ICB7DQo+ICAJdTMyIHN0YXR1czsNCj4gQEAgLTE4Myw3ICsxOTcsNyBAQCBz
+dGF0aWMgdm9pZCBjbWRxX3Rhc2tfcmVtb3ZlX3dmZShzdHJ1Y3QgY21kcV90YXNrICp0YXNrKQ0K
+PiAgCWZvciAoaSA9IDA7IGkgPCBDTURRX05VTV9DTUQodGFzay0+cGt0KTsgaSsrKQ0KPiAgCQlp
+ZiAoY21kcV9jb21tYW5kX2lzX3dmZShiYXNlW2ldKSkNCj4gIAkJCWJhc2VbaV0gPSAodTY0KUNN
+RFFfSlVNUF9CWV9PRkZTRVQgPDwgMzIgfA0KPiAtCQkJCSAgQ01EUV9KVU1QX1BBU1M7DQo+ICsJ
+CQkJICBDTURRX0pVTVBfUEFTUyA+PiB0YXNrLT5jbWRxLT5zaGlmdF9wYTsNCj4gIAlkbWFfc3lu
+Y19zaW5nbGVfZm9yX2RldmljZShkZXYsIHRhc2stPnBhX2Jhc2UsIHRhc2stPnBrdC0+Y21kX2J1
+Zl9zaXplLA0KPiAgCQkJCSAgIERNQV9UT19ERVZJQ0UpOw0KPiAgfQ0KPiBAQCAtMjIxLDEzICsy
+MzUsMTUgQEAgc3RhdGljIHZvaWQgY21kcV90YXNrX2hhbmRsZV9lcnJvcihzdHJ1Y3QgY21kcV90
+YXNrICp0YXNrKQ0KPiAgew0KPiAgCXN0cnVjdCBjbWRxX3RocmVhZCAqdGhyZWFkID0gdGFzay0+
+dGhyZWFkOw0KPiAgCXN0cnVjdCBjbWRxX3Rhc2sgKm5leHRfdGFzazsNCj4gKwlzdHJ1Y3QgY21k
+cSAqY21kcSA9IHRhc2stPmNtZHE7DQo+ICANCj4gIAlkZXZfZXJyKHRhc2stPmNtZHEtPm1ib3gu
+ZGV2LCAidGFzayAweCVwIGVycm9yXG4iLCB0YXNrKTsNCj4gIAlXQVJOX09OKGNtZHFfdGhyZWFk
+X3N1c3BlbmQodGFzay0+Y21kcSwgdGhyZWFkKSA8IDApOw0KDQpJZiB5b3UgaW52ZW50IGxvY2Fs
+IHZhcmlhYmxlICdjbWRxJywgSSB0aGluayB5b3UgY291bGQgcmVwbGFjZSBhbGwNCnRhc2stPmNt
+ZHEgd2l0aCBjbWRxIGluIHRoaXMgZnVuY3Rpb24uDQoNCj4gIAluZXh0X3Rhc2sgPSBsaXN0X2Zp
+cnN0X2VudHJ5X29yX251bGwoJnRocmVhZC0+dGFza19idXN5X2xpc3QsDQo+ICAJCQlzdHJ1Y3Qg
+Y21kcV90YXNrLCBsaXN0X2VudHJ5KTsNCj4gIAlpZiAobmV4dF90YXNrKQ0KPiAtCQl3cml0ZWwo
+bmV4dF90YXNrLT5wYV9iYXNlLCB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0K
+PiArCQl3cml0ZWwobmV4dF90YXNrLT5wYV9iYXNlID4+IGNtZHEtPnNoaWZ0X3BhLA0KPiArCQkg
+ICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gIAljbWRxX3RocmVh
+ZF9yZXN1bWUodGhyZWFkKTsNCj4gIH0NCj4gIA0KPiBAQCAtMjU3LDcgKzI3Myw3IEBAIHN0YXRp
+YyB2b2lkIGNtZHFfdGhyZWFkX2lycV9oYW5kbGVyKHN0cnVjdCBjbWRxICpjbWRxLA0KPiAgCWVs
+c2UNCj4gIAkJcmV0dXJuOw0KPiAgDQo+IC0JY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSAr
+IENNRFFfVEhSX0NVUlJfQUREUik7DQo+ICsJY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSAr
+IENNRFFfVEhSX0NVUlJfQUREUikgPDwgY21kcS0+c2hpZnRfcGE7DQo+ICANCj4gIAlsaXN0X2Zv
+cl9lYWNoX2VudHJ5X3NhZmUodGFzaywgdG1wLCAmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCwNCj4g
+IAkJCQkgbGlzdF9lbnRyeSkgew0KPiBAQCAtMzczLDE2ICszODksMjAgQEAgc3RhdGljIGludCBj
+bWRxX21ib3hfc2VuZF9kYXRhKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4sIHZvaWQgKmRhdGEpDQo+
+ICAJCVdBUk5fT04oY2xrX2VuYWJsZShjbWRxLT5jbG9jaykgPCAwKTsNCj4gIAkJV0FSTl9PTihj
+bWRxX3RocmVhZF9yZXNldChjbWRxLCB0aHJlYWQpIDwgMCk7DQo+ICANCj4gLQkJd3JpdGVsKHRh
+c2stPnBhX2Jhc2UsIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQo+IC0JCXdy
+aXRlbCh0YXNrLT5wYV9iYXNlICsgcGt0LT5jbWRfYnVmX3NpemUsDQo+ICsJCXdyaXRlbCh0YXNr
+LT5wYV9iYXNlID4+IGNtZHEtPnNoaWZ0X3BhLA0KPiArCQkgICAgICAgdGhyZWFkLT5iYXNlICsg
+Q01EUV9USFJfQ1VSUl9BRERSKTsNCj4gKwkJd3JpdGVsKCh0YXNrLT5wYV9iYXNlICsgcGt0LT5j
+bWRfYnVmX3NpemUpID4+IGNtZHEtPnNoaWZ0X3BhLA0KPiAgCQkgICAgICAgdGhyZWFkLT5iYXNl
+ICsgQ01EUV9USFJfRU5EX0FERFIpOw0KPiArDQo+ICAJCXdyaXRlbCh0aHJlYWQtPnByaW9yaXR5
+LCB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9QUklPUklUWSk7DQo+ICAJCXdyaXRlbChDTURRX1RI
+Ul9JUlFfRU4sIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0lSUV9FTkFCTEUpOw0KPiAgCQl3cml0
+ZWwoQ01EUV9USFJfRU5BQkxFRCwgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5BQkxFX1RBU0sp
+Ow0KPiAgCX0gZWxzZSB7DQo+ICAJCVdBUk5fT04oY21kcV90aHJlYWRfc3VzcGVuZChjbWRxLCB0
+aHJlYWQpIDwgMCk7DQo+IC0JCWN1cnJfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RI
+Ul9DVVJSX0FERFIpOw0KPiAtCQllbmRfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RI
+Ul9FTkRfQUREUik7DQo+ICsJCWN1cnJfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RI
+Ul9DVVJSX0FERFIpIDw8DQo+ICsJCQljbWRxLT5zaGlmdF9wYTsNCj4gKwkJZW5kX3BhID0gcmVh
+ZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5EX0FERFIpIDw8DQo+ICsJCQljbWRxLT5zaGlm
+dF9wYTsNCj4gIA0KPiAgCQkvKg0KPiAgCQkgKiBBdG9taWMgZXhlY3V0aW9uIHNob3VsZCByZW1v
+dmUgdGhlIGZvbGxvd2luZyB3ZmUsIGkuZS4gb25seQ0KPiBAQCAtMzk1LDcgKzQxNSw3IEBAIHN0
+YXRpYyBpbnQgY21kcV9tYm94X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lk
+ICpkYXRhKQ0KPiAgCQkJCWNtZHFfdGhyZWFkX3dhaXRfZW5kKHRocmVhZCwgZW5kX3BhKTsNCj4g
+IAkJCQlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8IDApOw0KPiAg
+CQkJCS8qIHNldCB0byB0aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gLQkJCQl3cml0ZWwodGFzay0+
+cGFfYmFzZSwNCj4gKwkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9wYSwN
+Cj4gIAkJCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gIAkJ
+CX0gZWxzZSB7DQo+ICAJCQkJY21kcV90YXNrX2luc2VydF9pbnRvX3RocmVhZCh0YXNrKTsNCj4g
+QEAgLTQwNywxNCArNDI3LDE0IEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3NlbmRfZGF0YShzdHJ1
+Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiAgCQkJaWYgKGN1cnJfcGEgPT0gZW5k
+X3BhIC0gQ01EUV9JTlNUX1NJWkUgfHwNCj4gIAkJCSAgICBjdXJyX3BhID09IGVuZF9wYSkgew0K
+PiAgCQkJCS8qIHNldCB0byB0aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gLQkJCQl3cml0ZWwodGFz
+ay0+cGFfYmFzZSwNCj4gKwkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9w
+YSwNCj4gIAkJCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4g
+IAkJCX0gZWxzZSB7DQo+ICAJCQkJY21kcV90YXNrX2luc2VydF9pbnRvX3RocmVhZCh0YXNrKTsN
+Cj4gIAkJCQlzbXBfbWIoKTsgLyogbW9kaWZ5IGp1bXAgYmVmb3JlIGVuYWJsZSB0aHJlYWQgKi8N
+Cj4gIAkJCX0NCj4gIAkJfQ0KPiAtCQl3cml0ZWwodGFzay0+cGFfYmFzZSArIHBrdC0+Y21kX2J1
+Zl9zaXplLA0KPiArCQl3cml0ZWwoKHRhc2stPnBhX2Jhc2UgKyBwa3QtPmNtZF9idWZfc2l6ZSkg
+Pj4gY21kcS0+c2hpZnRfcGEsDQo+ICAJCSAgICAgICB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9F
+TkRfQUREUik7DQo+ICAJCWNtZHFfdGhyZWFkX3Jlc3VtZSh0aHJlYWQpOw0KPiAgCX0NCj4gQEAg
+LTQ2MSw2ICs0ODEsNyBAQCBzdGF0aWMgaW50IGNtZHFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikNCj4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gIAlzdHJ1Y3QgY21kcSAq
+Y21kcTsNCj4gIAlpbnQgZXJyLCBpOw0KPiArCXN0cnVjdCBnY2VfcGxhdCAqcGxhdF9kYXRhOw0K
+PiAgDQo+ICAJY21kcSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqY21kcSksIEdGUF9LRVJO
+RUwpOw0KPiAgCWlmICghY21kcSkNCj4gQEAgLTQ3OSw3ICs1MDAsMTQgQEAgc3RhdGljIGludCBj
+bWRxX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJCXJldHVybiAtRUlO
+VkFMOw0KPiAgCX0NCj4gIA0KPiAtCWNtZHEtPnRocmVhZF9uciA9ICh1MzIpKHVuc2lnbmVkIGxv
+bmcpb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRldik7DQo+ICsJcGxhdF9kYXRhID0gKHN0cnVj
+dCBnY2VfcGxhdCAqKW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiArCWlmICghcGxh
+dF9kYXRhKSB7DQo+ICsJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGdldCBtYXRjaCBkYXRhXG4i
+KTsNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsJfQ0KPiArDQo+ICsJY21kcS0+dGhyZWFkX25y
+ID0gcGxhdF9kYXRhLT50aHJlYWRfbnI7DQo+ICsJY21kcS0+c2hpZnRfcGEgPSBwbGF0X2RhdGEt
+PnNoaWZ0Ow0KPiAgCWNtZHEtPmlycV9tYXNrID0gR0VOTUFTSyhjbWRxLT50aHJlYWRfbnIgLSAx
+LCAwKTsNCj4gIAllcnIgPSBkZXZtX3JlcXVlc3RfaXJxKGRldiwgY21kcS0+aXJxLCBjbWRxX2ly
+cV9oYW5kbGVyLCBJUlFGX1NIQVJFRCwNCj4gIAkJCSAgICAgICAibXRrX2NtZHEiLCBjbWRxKTsN
+Cj4gQEAgLTU0Miw5ICs1NzAsMTIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGNt
+ZHFfcG1fb3BzID0gew0KPiAgCS5yZXN1bWUgPSBjbWRxX3Jlc3VtZSwNCj4gIH07DQo+ICANCj4g
+K3N0YXRpYyBjb25zdCBzdHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjIgPSB7LnRocmVhZF9uciA9
+IDE2fTsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjMgPSB7LnRo
+cmVhZF9uciA9IDI0fTsNCj4gKw0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+Y21kcV9vZl9pZHNbXSA9IHsNCj4gLQl7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWdj
+ZSIsIC5kYXRhID0gKHZvaWQgKikxNn0sDQo+IC0Jey5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10
+ODE4My1nY2UiLCAuZGF0YSA9ICh2b2lkICopMjR9LA0KPiArCXsuY29tcGF0aWJsZSA9ICJtZWRp
+YXRlayxtdDgxNzMtZ2NlIiwgLmRhdGEgPSAodm9pZCAqKSZnY2VfcGxhdF92Mn0sDQo+ICsJey5j
+b21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1nY2UiLCAuZGF0YSA9ICh2b2lkICopJmdjZV9w
+bGF0X3YzfSwNCj4gIAl7fQ0KPiAgfTsNCj4gIA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2Mv
+bWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21k
+cS1oZWxwZXIuYw0KPiBpbmRleCBkZTIwZTZjYmE4M2IuLjJlMWJjNTEzNTY5YiAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gKysrIGIvZHJp
+dmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gQEAgLTI5MSw3ICsyOTEsOCBA
+QCBzdGF0aWMgaW50IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KPiAg
+DQo+ICAJLyogSlVNUCB0byBlbmQgKi8NCj4gIAlpbnN0Lm9wID0gQ01EUV9DT0RFX0pVTVA7DQo+
+IC0JaW5zdC52YWx1ZSA9IENNRFFfSlVNUF9QQVNTOw0KPiArCWluc3QudmFsdWUgPSBDTURRX0pV
+TVBfUEFTUyA+Pg0KPiArCQljbWRxX21ib3hfc2hpZnQoKChzdHJ1Y3QgY21kcV9jbGllbnQgKilw
+a3QtPmNsKS0+Y2hhbik7DQoNCldoeSBub3QganVzdCBjbWRxX21ib3hfc2hpZnQocGt0LT5jbC0+
+Y2hhbikgPw0KDQpSZWdhcmRzLA0KQ0sNCg0KPiAgCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21t
+YW5kKHBrdCwgaW5zdCk7DQo+ICANCj4gIAlyZXR1cm4gZXJyOw0KPiBkaWZmIC0tZ2l0IGEvaW5j
+bHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaCBiL2luY2x1ZGUvbGludXgvbWFp
+bGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gaW5kZXggYTRkYzQ1ZmJlYzBhLi5kZmU1YjJlYjg1
+Y2MgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
+LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBA
+QCAtODgsNCArODgsNiBAQCBzdHJ1Y3QgY21kcV9wa3Qgew0KPiAgCXZvaWQJCQkqY2w7DQo+ICB9
+Ow0KPiAgDQo+ICt1OCBjbWRxX21ib3hfc2hpZnQoc3RydWN0IG1ib3hfY2hhbiAqY2hhbik7DQo+
+ICsNCj4gICNlbmRpZiAvKiBfX01US19DTURRX01BSUxCT1hfSF9fICovDQoNCg==
 
-On 2/25/20 2:14 PM, Matthew Barth wrote:
-> All 16 pins of the PCA9552 at 7-bit address 0x61 should be set as type
-> GPIO.
->
-> Signed-off-by: Matthew Barth <msbarth@linux.ibm.com>
-
-
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
-
-
-> ---
-> v2: Added leds-pca955x.h include
->      Added upstream to patch
-> ---
-> ---
->   arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> index c63cefce636d..d9fa9fd48058 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> @@ -4,6 +4,7 @@
->   
->   #include "aspeed-g6.dtsi"
->   #include <dt-bindings/gpio/aspeed-gpio.h>
-> +#include <dt-bindings/leds/leds-pca955x.h>
->   
->   / {
->   	model = "Rainier";
-> @@ -351,66 +352,82 @@
->   
->   		gpio@0 {
->   			reg = <0>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@1 {
->   			reg = <1>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@2 {
->   			reg = <2>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@3 {
->   			reg = <3>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@4 {
->   			reg = <4>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@5 {
->   			reg = <5>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@6 {
->   			reg = <6>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@7 {
->   			reg = <7>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@8 {
->   			reg = <8>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@9 {
->   			reg = <9>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@10 {
->   			reg = <10>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@11 {
->   			reg = <11>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@12 {
->   			reg = <12>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@13 {
->   			reg = <13>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@14 {
->   			reg = <14>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@15 {
->   			reg = <15>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   	};
->   
