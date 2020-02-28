@@ -2,105 +2,131 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFFEC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FF1C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30DD12469D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582902801;
-	bh=F3zdByQIKN7XMYu5LbyWm7srbXTTmLdOEB4M/SS8g8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R+oWzHDsAA7s/1KSBTdWASulBFJWG92JPY8kDJO+DvdJ6ua0s5ZC3awb2l6sdTlcM
-	 gONBpB9ZOjTNgWxL2HTpenumAtAx7TYQ4zypnB4jzvf25EDCFsw/MdyB59RWtC//88
-	 yNPoEo/KTrRAq3l/Kl4ovI/f/B9LMj98Hv0FJ77w=
+	by mail.kernel.org (Postfix) with ESMTP id 0989124699
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Ljgpp5xG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgB1PNU (ORCPT
+        id S1726954AbgB1PNn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:13:20 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42042 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgB1PNU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 10:13:20 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so2840277otd.9;
-        Fri, 28 Feb 2020 07:13:20 -0800 (PST)
+        Fri, 28 Feb 2020 10:13:43 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:42605 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgB1PNn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 10:13:43 -0500
+Received: by mail-qv1-f66.google.com with SMTP id dc14so1471309qvb.9
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 07:13:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wq8nlNbsnwZz9fji3Cl/zgmv4zDoBKk4NoZF3W2wkDQ=;
+        b=Ljgpp5xGPFtER1NGPwiitpNKYovODnCioFFOFLTyn2Ck/JR8HVTOx6j2p+g2nfn+c7
+         ZZ4POl/CTaYoux0tyCmDMX6rtKyDdXnlMSGlJzLw9GbBTTzDfneWvjGmL5R0O0CGmHup
+         2kp9E5S8Nxk8bHWYOZucZY6zoQaHVHi1zuuqGFV82FSHWkJZ4RoRvoylWAS0Wx4bc8K9
+         VTIK4BTuE9ZYLVtjSIRYLN6ZaAkL0DcdWHFg4QbbWrjltc2/+KxfoeQyempXAsF7sI0A
+         w3wliYOLVxCpNm799lBmqygk+nsWvEVxFVFJ7Lj2RQ/PkFIeGuOpHh4CgFZttaO2QJlZ
+         F0/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zWo4qKuY/7ed4cYkYmCoOxOnA9Dj1w1J7SKejk3R5Z8=;
-        b=f8a2ptHfbp7rG9/fdH0kYvy1uAUYE9EKzsVx6gsNhiHbbU5Wrtr6ZJrEFQsN3RFzKw
-         8XCEPUdA9TGH0g2aDc0HusgYSuvfZt3kfUbrteFlxn2GwXf6MkNlo3K34cPlHV3CrOVn
-         Vnjm+SsXs743JLPk/3N4WDP9Q2K+XzP1cyZ0s+Rvna4RYHmaLPUBHgn/CFJ+27PPuCne
-         6P/UqdNFrlK0dH4rsZZ2J43mKaTf900ve/qeGPJVOx97NsbqqyU84DyJAvC5SLMxjgNm
-         rlBZXQkGWzMCgopsfr+fjZg4jD2aXCSefCTHY0ZJo0J5mgSEPyfZGfDM4dvLNmUZkLGo
-         qfMQ==
-X-Gm-Message-State: APjAAAV8vn7RCWZfh4L/Tt6f2HvB/QHhXuFRBvba/wsEXK47L5gI027O
-        nRqDoRWC+rZv8hO5H0EXkA==
-X-Google-Smtp-Source: APXvYqyIDBoCrTlnHsHo2ZWFLHbyIgEN0Y3a+LU5KpD+GDt608oltIOTk0QNBmppbKHbi9r4/mPT0A==
-X-Received: by 2002:a9d:6e02:: with SMTP id e2mr3884732otr.194.1582902799599;
-        Fri, 28 Feb 2020 07:13:19 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l207sm3264961oih.25.2020.02.28.07.13.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 07:13:18 -0800 (PST)
-Received: (nullmailer pid 4200 invoked by uid 1000);
-        Fri, 28 Feb 2020 15:13:17 -0000
-Date:   Fri, 28 Feb 2020 09:13:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com, leonard.crestez@nxp.com,
-        o.rempel@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, m.felsch@pengutronix.de, hongxing.zhu@nxp.com,
-        aisheng.dong@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: mailbox: imx-mu: add fsl,scu property
-Message-ID: <20200228151317.GA404@bogus>
-References: <1582546474-21721-1-git-send-email-peng.fan@nxp.com>
- <1582546474-21721-2-git-send-email-peng.fan@nxp.com>
+        bh=Wq8nlNbsnwZz9fji3Cl/zgmv4zDoBKk4NoZF3W2wkDQ=;
+        b=bxQRaBxKaTInT+XRN+/ueiTfq7eG9KiwhiHzA2VXsixc/OiHuR85cMKaZv+yBhY5ZL
+         KsewL4GrNkMS1FDbDBdco6ecZX+RSBRpiBPsL4G5oh0dtvriH8LOSICsnl1d+YxZEDEO
+         J1YF8DteZdwzSYg2wQs79F1/1PBWne9uS7fhtSsLUc7gYsvV45AeBMc2RLRszTE5hzWs
+         GxTpNKxfYcAdk3TXLDULsMHtdtytFgWjmtR0n/oeNxgP//nCKFrpK6/A16LGeQxJ6lt+
+         UdAtJkDI183TX8Xh6Jwe9uHlS23L0r/zKf2Zc6aMLGL8K6vcXSjT1yMUoTPizXNd+YBM
+         Kg4A==
+X-Gm-Message-State: APjAAAUpUFWBFNYMwD7e6l1XNb/NYCVrol6Nowp2uRXYZ+xQgVjrm0jg
+        KK/lXdx+pjJ8bNHEhx3fowqyEA==
+X-Google-Smtp-Source: APXvYqzNk6wZcWW+lmBBUW/lZq2ZIkoXwN/aWaAwf7XC2b5DqYukekLVZ6CR2bhdZGkTfI1iTFM0Cw==
+X-Received: by 2002:a05:6214:a62:: with SMTP id ef2mr3484481qvb.109.1582902820845;
+        Fri, 28 Feb 2020 07:13:40 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id a128sm5296832qkc.44.2020.02.28.07.13.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Feb 2020 07:13:40 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j7hKe-0005qo-0Q; Fri, 28 Feb 2020 11:13:40 -0400
+Date:   Fri, 28 Feb 2020 11:13:40 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, will@kernel.org,
+        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
+        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
+        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        robin.murphy@arm.com, christian.koenig@amd.com
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200228151339.GS31668@ziepe.ca>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+ <20200224182401.353359-2-jean-philippe@linaro.org>
+ <20200224190056.GT31668@ziepe.ca>
+ <20200225092439.GB375953@myrica>
+ <20200225140814.GW31668@ziepe.ca>
+ <20200228143935.GA2156@myrica>
+ <20200228144844.GQ31668@ziepe.ca>
+ <20200228150427.GF2156@myrica>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582546474-21721-2-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200228150427.GF2156@myrica>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 08:14:32PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Fri, Feb 28, 2020 at 04:04:27PM +0100, Jean-Philippe Brucker wrote:
+> On Fri, Feb 28, 2020 at 10:48:44AM -0400, Jason Gunthorpe wrote:
+> > On Fri, Feb 28, 2020 at 03:39:35PM +0100, Jean-Philippe Brucker wrote:
+> > > > > +	list_for_each_entry_rcu(bond, &io_mm->devices, mm_head) {
+> > > > > +		/*
+> > > > > +		 * To ensure that we observe the initialization of io_mm fields
+> > > > > +		 * by io_mm_finalize() before the registration of this bond to
+> > > > > +		 * the list by io_mm_attach(), introduce an address dependency
+> > > > > +		 * between bond and io_mm. It pairs with the smp_store_release()
+> > > > > +		 * from list_add_rcu().
+> > > > > +		 */
+> > > > > +		io_mm = rcu_dereference(bond->io_mm);
+> > > > 
+> > > > A rcu_dereference isn't need here, just a normal derference is fine.
+> > > 
+> > > bond->io_mm is annotated with __rcu (for iommu_sva_get_pasid_generic(),
+> > > which does bond->io_mm under rcu_read_lock())
+> > 
+> > I'm surprised the bond->io_mm can change over the lifetime of the
+> > bond memory..
 > 
-> Add fsl,scu property, this needs to be enabled for SCU channel type.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> index 9c43357c5924..5b502bcf7122 100644
-> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> @@ -45,6 +45,7 @@ Optional properties:
->  -------------------
->  - clocks :	phandle to the input clock.
->  - fsl,mu-side-b : Should be set for side B MU.
-> +- fsl,scu: Support i.MX8/8X SCU channel type
+> The normal lifetime of the bond is between device driver calls to bind()
+> and unbind(). If the mm exits early, though, we clear bond->io_mm. The
+> bond is then stale but can only be freed when the device driver releases
+> it with unbind().
 
-What's the type for this?
+I usually advocate for simple use of these APIs. The mm_notifier_get()
+should happen in bind() and the matching put should happen in the
+call_rcu callbcak that does the kfree. Then you can never get a stale
+pointer. Don't worry about exit_mmap().
 
-Perhaps update the example.
+release() is an unusual callback and I see alot of places using it
+wrong. The purpose of release is to invalidate_all, that is it.
 
->  
->  Examples:
->  --------
-> -- 
-> 2.16.4
-> 
+Also, confusingly release may be called multiple times in some
+situations, so it shouldn't disturb anything that might impact a 2nd
+call.
+
+Jason
