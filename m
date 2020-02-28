@@ -2,113 +2,124 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A69C3F2CF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 07:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0137C3F2CF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2262467B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 07:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D90246A8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:13:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BclSCGD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgB1Hxp (ORCPT
+        id S1725911AbgB1INV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 02:53:45 -0500
-Received: from mga01.intel.com ([192.55.52.88]:65130 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgB1Hxp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 02:53:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 23:53:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,495,1574150400"; 
-   d="scan'208";a="385431629"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 27 Feb 2020 23:53:44 -0800
-Received: from [10.226.38.23] (unknown [10.226.38.23])
-        by linux.intel.com (Postfix) with ESMTP id CE97A5805EF;
-        Thu, 27 Feb 2020 23:53:38 -0800 (PST)
-Subject: Re: [PATCH v11 2/2] spi: cadence-quadspi: Add support for the Cadence
- QSPI controller
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org,
-        marex@denx.de, devicetree@vger.kernel.org,
-        tien.fong.chee@intel.com, tudor.ambarus@gmail.com,
-        boris.brezillon@free-electrons.com, richard@nod.at,
-        qi-ming.wu@intel.com, simon.k.r.goldschmidt@gmail.com,
-        david.oberhollenzer@sigma-star.at, dinguyen@kernel.org,
-        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
-        cheol.yong.kim@intel.com, mark.rutland@arm.com,
-        computersforpeace@gmail.com, dwmw2@infradead.org,
-        cyrille.pitchen@atmel.com
-References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200227062708.21544-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200227183032.77ef0795@collabora.com>
- <f82e4964-f030-9aac-5895-a715921ed6db@linux.intel.com>
- <20200228084651.1ad0e334@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <10c5ec3f-8f1e-3f6f-a9cc-c8a3f8f2be75@linux.intel.com>
-Date:   Fri, 28 Feb 2020 15:53:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 28 Feb 2020 03:13:21 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33269 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbgB1INU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 03:13:20 -0500
+Received: by mail-pf1-f193.google.com with SMTP id n7so1342839pfn.0;
+        Fri, 28 Feb 2020 00:13:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1XeAZdDEEMWPSRFSSrigFDHZjIaWywrJrDOcCv/SctI=;
+        b=BclSCGD/+Gp7pLCK+Yfq+IH0orWklytTcUNiFna90KwERemW3y0lq2SFGwBTScn/ZR
+         SOnMFpFra//MK4i1yP2XSWxhSB0AmtyVADIvnaixDjHOEilFGfAtxn96llpXGSu9w6x9
+         cnYc7x7sgEcbB4wEdoWPyc1hRhVj/x1T1b7yJp/3L1qebJXpWiZZcerMA4aKUSTSJzOu
+         +EJL716Ez9KnsOA3AUIXTOEjEYftKhDFAE4pxRa3OfvNhxlaMqYrOmYwyXYyNJdP0BwU
+         JH+Jb4ugNll/M3AjCQdCwSJWKoNoHs8e/biyVduULpYiHq+u7xkE0FG316miHyBgMLPu
+         3vmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1XeAZdDEEMWPSRFSSrigFDHZjIaWywrJrDOcCv/SctI=;
+        b=Rb5MQdLNTJfph2R87UypBvSK54SNAdcquRtbIynWhNFG7+b70BN/9Qwy/7TPZtmjbF
+         lOuzLFK4gncNiGZ1gz6/Lc94G6+v9euOYIro0QySymlHx1mpXBeXpHscjQmXm1Qk5uBF
+         uQjbR3inHhwVaKLP9fuMvD9XJaIW0imY6hMxJsgaiNWMqJ5nVEIKzQm5temNrqCFdX/P
+         sTs62MOpng3NkJSTyTL35xb8JFtUwb25G90uUKERMi+h4OVV9L7W4i+zCY18QL+mJ6o9
+         Dt3LO6jXpOdc/WNv7TH/VY8Uu1vVtwS2oURENCYNpBWTnIhIrjsW3Vf467tgbeFDNf5N
+         ydjw==
+X-Gm-Message-State: APjAAAWTKt/zFrFfhec97eLFPiRJJRNqMeO9Z7X0Q3/DbwI+UtqbA5em
+        l8AToCXGSeDq4cVqDHFzEhU=
+X-Google-Smtp-Source: APXvYqwaScFWt2pSZw8deGePN2rW5lckHptMxbrEKDdWitX5+l+202jKgzn654xFzxvUIwznQHDJHQ==
+X-Received: by 2002:aa7:93a6:: with SMTP id x6mr3341479pff.72.1582877599463;
+        Fri, 28 Feb 2020 00:13:19 -0800 (PST)
+Received: from taoren-ubuntuvm (c-24-4-25-55.hsd1.ca.comcast.net. [24.4.25.55])
+        by smtp.gmail.com with ESMTPSA id c18sm8717917pgw.17.2020.02.28.00.13.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Feb 2020 00:13:19 -0800 (PST)
+Date:   Fri, 28 Feb 2020 00:13:11 -0800
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>, linux-aspeed@lists.ozlabs.org,
+        devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openbmc@lists.ozlabs.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joel Stanley <joel@jms.id.au>, taoren@fb.com,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 7/7] dt-bindings: usb: add documentation for aspeed
+ usb-vhub
+Message-ID: <20200228081309.GA4531@taoren-ubuntuvm>
+References: <20200227230507.8682-1-rentao.bupt@gmail.com>
+ <20200227230507.8682-8-rentao.bupt@gmail.com>
+ <3150424b9e9f5856c747a0fbf44647919f49209d.camel@kernel.crashing.org>
+ <20200228010444.GA19910@taoren-ubuntu-R90MNF91>
+ <2676013663fc8c53e02a5fdaafb1b27e18249b80.camel@kernel.crashing.org>
 MIME-Version: 1.0
-In-Reply-To: <20200228084651.1ad0e334@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2676013663fc8c53e02a5fdaafb1b27e18249b80.camel@kernel.crashing.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+On Fri, Feb 28, 2020 at 02:02:28PM +1100, Benjamin Herrenschmidt wrote:
+> On Thu, 2020-02-27 at 17:05 -0800, Tao Ren wrote:
+> > > Also long run I think best is going to have a child node per downstream
+> > > port, so we create a matching linux struct device. This will make it
+> > > easier to deal with the other device-controller in the ast2600 which is
+> > > basically one of these without a vhub above it.
+> > 
+> > Maybe a dumb question: what would be the proper place to parse the child
+> > node/properties when they are added? For example, in some usb_gadget_ops
+> > callback?
+> 
+> No. What the vhub would do is when it probes, it creates a platform
+> device for each "port" child node that's linked to the DT node.
+> 
+> The driver for the device then attaches to it via standard DT matching
+> and checks if it has a vhub parent or not, and based on that, operates
+> as a vhub child device or a standalone one.
+> 
+> (For example, it might have different functions for EP selection since
+> standalone devices have private EPs rather than a shared pool)
+> 
+> They can both be in the same module or they can be separate modules
+> with cross dependencies.
+> 
+> Cheers,
+> Ben.
 
-On 28/2/2020 3:46 PM, Boris Brezillon wrote:
-> On Fri, 28 Feb 2020 12:11:09 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
->> Hi Boris,
->>
->>        Thank you so much for the review comments...
->>
->> On 28/2/2020 1:30 AM, Boris Brezillon wrote:
->>> On Thu, 27 Feb 2020 14:27:08 +0800
->>> "Ramuthevar, Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>   
->>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>>
->>>> Add support for the Cadence QSPI controller. This controller is
->>>> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
->>>> This driver has been tested on the Intel LGM SoCs.
->>>>
->>>> This driver does not support generic SPI and also the implementation
->>>> only supports spi-mem interface to replace the existing driver in
->>>> mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
->>>> flash memory
->>> Is it really supporting SPI NORs only, or is it just that you only
->>> tested it with a spi-nor?
->> The existing drivers/mtd/spi-nor/cadence-quadspi.c supports SPI-NORs
->> only, because the driver is developed
->>
->> such a way that it does not support other SPI based flash memories, also
->> never uses SPI/SPI-MEM based framework.
->>
->> So we Vignesh suggested me to  develop the new driver which supports
->> both SPI-NOR and SPI-NAND based on the SPI-MEM framework.
-> Hm, your commit message makes it sound like even the new driver isn't
-> generic enough to support SPI NANDs. Maybe there's something to improve
-> to clarify the fact that this new version is not limited to SPI NORs.
+I see. It's to describe these downstream devices (such as configurations
+and according functions) in device tree, which is similar to defining a
+composite device and linking functions/interfaces via configfs. Thanks for
+the clarify.
 
-Thanks! for the suggestions to remind me to add.
 
-sure, I will add more information about supporting SPI-NOR and SPI-NAND
+Cheers,
 
-Regards
-Vadivel
+Tao
