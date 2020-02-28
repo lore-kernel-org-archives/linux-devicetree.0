@@ -2,84 +2,113 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB10C3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 04:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9362C3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 04:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB20246A1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 04:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E09246A6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 04:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KZ4sdpH9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGuISWEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbgB1EZG (ORCPT
+        id S1730818AbgB1EiZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:25:06 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47400 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730586AbgB1EZF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 23:25:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=FZyq9RtrT4u+zuNv6V7ds6STmcCI+bN5Z0lCFYKkYuM=; b=KZ4sdpH9I1BHewo1HRq1+8K9zD
-        BtpWcAohm5dQ6qY8syRZ+RgwgLWBPfZrEDEPZHYDiSSK/zjXTPVl4pLPefzsBODjb8yBTal4NragM
-        dFwgJksfP69hUJaK04308ZdX1iVXORDXr/XrS8jG7DgW8xShqTZlfw2rtDOXA77hkaQ8Em5pAq3Xr
-        R8fymlIhQFAzXxjOdzgneOVpb02LvZGBNR8sfABCgVimmu5gIgNmpFGYPfnJUHLUgmgrf+khUKLbu
-        LXLZFRP9hQxtnfWSyzc71q2prs5uIBAJ9X6xiEKszNYjoj9v2XbyJ7zOBMLdfcf5WOrc0i1vGOYXK
-        +mi40Pxw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7XCy-0003be-9f; Fri, 28 Feb 2020 04:25:04 +0000
-Subject: Re: [PATCH] of: unittest: make gpio overlay test dependent on
- CONFIG_OF_GPIO
-To:     frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        pantelis.antoniou@konsulko.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alan Tull <atull@kernel.org>
-References: <1582863389-3118-1-git-send-email-frowand.list@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ce8c2ef5-5402-6f1e-890a-1832610d8b0d@infradead.org>
-Date:   Thu, 27 Feb 2020 20:25:03 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 23:38:25 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46253 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730800AbgB1EiZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 23:38:25 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so715891pll.13;
+        Thu, 27 Feb 2020 20:38:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=srFQTDpYVngqG0eYKY8zeXeTxEow1+Q6Yy9to892+K8=;
+        b=OGuISWEli9eLWMchX3FyKGExfAxWPgMbRqfnKQ71+WgTo0dAEu2wLJuIhrKoGocX7C
+         NgR5sxtUyB2qc+ar05E0dailbAMsC/Kwdrk8MOBfQ4vYqgtPKQVDCZtupwPoBDBSJaHY
+         5N3TV62amf+JgPDxaRZ8kRVzgFexamdDBZnLMUd4UHpeSeFtwRVdcFnfvP7jDC5JxKXB
+         GprPn9waSFKdqTuaDbE50CEKUjlPN4vQKSkRzh1HrfX0oIkzMyIVOEFMVnYflBo8FWGe
+         ldlX01IUa/AEq4++DIRco4fmEed+VmzvnXwDP4sNJG4uEuNpeZa3AdkdoTFZjyMu7OSo
+         lYNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=srFQTDpYVngqG0eYKY8zeXeTxEow1+Q6Yy9to892+K8=;
+        b=Pvqt70CAE30X5SEstTqe/AoHXrntr5wiFDRDQWsFO/s/n/UGPMuvzvBU558YBSAJoa
+         Nw5+hiU0mLazPgN8Y5/yBYI+haBkBmWL26g4AyO/tgHQq9tpmSksdTb4os28j1A3o4cY
+         xxp3jTo9F9zuK1QOwaY6BJ609BhJvXXinQ1IQz/oCmM7RBpR7IU+qIvaD9PjWZV2Wbia
+         88tpx4Ivy3RHq0mFpj51yCzk3mjI/1v7kqByvtNXD7B1LBYOn11RZT6U2ES6eVubuABL
+         j0zWAg48d9LLLCyX2izeKXTn2/KbWspRRhe+PSeRKbIiB6Y/SuIoOcAgChpfRZ4Z2rK/
+         a1YQ==
+X-Gm-Message-State: APjAAAXMsVnTooazmTR59kQ1n9uno1WxP78I40PfxhcUfnd/rgFwFTQk
+        uVu3UvGHmG1GomfXTSOtrlM=
+X-Google-Smtp-Source: APXvYqyvibBkO+TV6UPsBt0A3f9XT3QV3cG3heDfSZwLqQ1gjV5l3PPpcjCz6rPkJXCg+y5fzWLizA==
+X-Received: by 2002:a17:90a:aa83:: with SMTP id l3mr2715072pjq.5.1582864703657;
+        Thu, 27 Feb 2020 20:38:23 -0800 (PST)
+Received: from localhost.localdomain ([240e:379:962:6595:7b84:9990:1a82:371c])
+        by smtp.gmail.com with ESMTPSA id 196sm9069047pfy.86.2020.02.27.20.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 20:38:22 -0800 (PST)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Chuanhong Guo <gch981213@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 0/4] rewrite mtk-quadspi spi-nor driver with spi-mem
+Date:   Fri, 28 Feb 2020 12:36:32 +0800
+Message-Id: <20200228043636.559915-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <1582863389-3118-1-git-send-email-frowand.list@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/27/20 8:16 PM, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> Randconfig testing found compile errors in drivers/of/unittest.c if
-> CONFIG_GPIOLIB is not set because CONFIG_OF_GPIO depends on
-> CONFIG_GPIOLIB.  Make the gpio overlay test depend on CONFIG_OF_GPIO.
-> 
-> No code is modified, it is only moved to a different location and
-> protected with #ifdef CONFIG_OF_GPIO.  An empty
-> of_unittest_overlay_gpio() is added in the #else.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->  drivers/of/unittest.c | 465 ++++++++++++++++++++++++++------------------------
->  1 file changed, 238 insertions(+), 227 deletions(-)
-> 
+This patchset adds a spi-mem driver for Mediatek SPI-NOR controller,
+which already has limited support by mtk-quadspi. This new driver can
+make use of full quadspi capability of this controller.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+1st new commit makes spi-max-frequency optional to match current
+binding doc and make this new driver compatible with old driver dt
+bindings.
 
-Thanks.
+Changes since v1:
+ two new commits.
+
+Chuanhong Guo (4):
+  spi: make spi-max-frequency optional
+  spi: add support for mediatek spi-nor controller
+  dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
+  mtd: spi-nor: remove mtk-quadspi driver
+
+ .../mtk-quadspi.txt => spi/spi-mtk-nor.txt}   |  34 +-
+ drivers/mtd/spi-nor/Kconfig                   |   8 -
+ drivers/mtd/spi-nor/Makefile                  |   1 -
+ drivers/mtd/spi-nor/mtk-quadspi.c             | 565 --------------
+ drivers/spi/Kconfig                           |  10 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-mtk-nor.c                     | 689 ++++++++++++++++++
+ drivers/spi/spi.c                             |   9 +-
+ 8 files changed, 717 insertions(+), 600 deletions(-)
+ rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt => spi/spi-mtk-nor.txt} (62%)
+ delete mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
+ create mode 100644 drivers/spi/spi-mtk-nor.c
 
 -- 
-~Randy
+2.24.1
 
