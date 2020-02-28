@@ -2,197 +2,139 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59C0C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EE6C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA481246B5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gRPlwvDC"
+	by mail.kernel.org (Postfix) with ESMTP id F2724246B0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582904058;
+	bh=+E+cDEQIOn/+OaQUF5/dHoKA3nKROt11LTRj27zC9aA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QbCNH00FRmDDRvBcp50WhrUJN5jEn0owwJFfwBBUcaxzkI/g2h6Hmw9NhvMvqwMZR
+	 j+UtYGs+r5h5rS0n/BYgUyP0+iP4DI484bCSXsKrKcd3mJwsKP0093X5Ap81suLtMY
+	 FC8i7+h4diGV9r/Pl1OeqzuCWCIOSAlKXSLfmFRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgB1P1S (ORCPT
+        id S1727031AbgB1PeO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:27:18 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35210 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727018AbgB1P1S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:27:18 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SFJEm1017901;
-        Fri, 28 Feb 2020 16:27:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=foC7UMQQei+fxPNT3xu96FfGnOI0+aWf4na6mkoAtxA=;
- b=gRPlwvDCj3eUqZxk0dQ6eZb5cH4fCPEQAC6A6lLeeouWIsE+ixsbHn2qICSp8+48N7fU
- +5JXCaiHNk2wHwaudJUmyQwScg2XGdVIkooqHH9LbMhx0Xzpu80l3M7Prk3qvGHqyCNM
- kA2qAauhwiqWfN0NAmc31wP/Tmg79mI4X2GEFz6of0+6F3P463h+JiBzuFfUEZjvks9/
- uMhMmLg+4egRqe0RbLZYkf8saksXFMiBo+L5yuYd02Bqo1o9r1R6RHf97872+AWKLCjs
- pLTdpOyHMCRtfi1lFdT7rQuft+yeuoZ05TWz1kykn0aA+WMUbS1FhKsR2rgzKbju1c3o VA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yepvvcq9f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 16:27:08 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 140ED10002A;
-        Fri, 28 Feb 2020 16:27:07 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DE6162D3769;
-        Fri, 28 Feb 2020 16:27:07 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 28 Feb 2020 16:27:07
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <olivier.moysan@st.com>
-CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: sound: Convert cirrus,cs42l51 to json-schema
-Date:   Fri, 28 Feb 2020 16:27:06 +0100
-Message-ID: <20200228152706.29749-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 28 Feb 2020 10:34:14 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45947 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgB1PeO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 10:34:14 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v19so3173996oic.12;
+        Fri, 28 Feb 2020 07:34:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JHoIxRhgYioRssl3aItHva/kMqhlc714/thZOuTd344=;
+        b=N9O6QWZ9j3Tb9YEFOprQHaawNP5VSf6yKHN8ZbSmG2DdheszGQlAlizeOlfLmuEBgC
+         jygAyah4fHnfDV5WDB6tG0KPMCJB8Qn3sb3FzXuvb2GfaQ6LQLKLqMcjchGXJbAVZCjU
+         Z44NlqRDw2icEVt+G3v5g23fe6QJ6Z6f2+LDuVdXIDAoHmPPWL4wMcTS66S1Mk5dr0lG
+         R9+28gd1y7LhSvXvmFZ8UHAOutlhmo8PHeyqvy0qE65gq6PSrQEVHhLIWIRtUXjodt36
+         /zURg0K/HwI9f+TvrcI5fudT/WGwObnuzocWX2y2N1qESNd7stWDNwK1ckDfVxID+DV1
+         e38Q==
+X-Gm-Message-State: APjAAAXoOtlcHZOAkZC2qreL3mCCNdcNhRL09+Ly+Ll9TKIBPMogVAko
+        NUbHRAFR1Vo0T+8bq9gBSQ==
+X-Google-Smtp-Source: APXvYqxGbQolRQFv5+0zxGuLWsBLC8hwoIZ3Faz/JTGNBK5nNQnnwNk9b0SEpFexZcs116M+q/rSjA==
+X-Received: by 2002:aca:f1c6:: with SMTP id p189mr3641411oih.159.1582904053100;
+        Fri, 28 Feb 2020 07:34:13 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t22sm3245899otq.18.2020.02.28.07.34.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 07:34:12 -0800 (PST)
+Received: (nullmailer pid 450 invoked by uid 1000);
+        Fri, 28 Feb 2020 15:34:11 -0000
+Date:   Fri, 28 Feb 2020 09:34:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: PCI: Add PCI Endpoint Controller
+ Schema
+Message-ID: <20200228153411.GA7882@bogus>
+References: <20200224130905.952-1-kishon@ti.com>
+ <20200224130905.952-2-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_04:2020-02-28,2020-02-28 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224130905.952-2-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert cirrus,cs42l51 to yaml format.
+On Mon, Feb 24, 2020 at 06:39:02PM +0530, Kishon Vijay Abraham I wrote:
+> Define a common schema for PCI Endpoint Controllers.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../devicetree/bindings/pci/pci-ep.yaml       | 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> new file mode 100644
+> index 000000000000..2287771a066a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> @@ -0,0 +1,41 @@
+> +# SPDX-License-Identifier: (GPL2.0-only OR BSD-2-Clause)
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../devicetree/bindings/sound/cirrus,cs42l51.yaml  | 69 ++++++++++++++++++++++
- .../devicetree/bindings/sound/cs42l51.txt          | 33 -----------
- 2 files changed, 69 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/cs42l51.txt
+Typo. Run checkpatch.
 
-diff --git a/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
-new file mode 100644
-index 000000000000..efce847a3408
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/cirrus,cs42l51.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: CS42L51 audio codec DT bindings
-+
-+maintainers:
-+  - Olivier Moysan <olivier.moysan@st.com>
-+
-+properties:
-+  compatible:
-+      const: cirrus,cs42l51
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: MCLK
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  VL-supply:
-+    description: phandle to voltage regulator of digital interface section
-+
-+  VD-supply:
-+    description: phandle to voltage regulator of digital internal section
-+
-+  VA-supply:
-+    description: phandle to voltage regulator of analog internal section
-+
-+  VAHP-supply:
-+    description: phandle to voltage regulator of headphone
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#sound-dai-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    i2c@0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      cs42l51@4a {
-+        compatible = "cirrus,cs42l51";
-+        reg = <0x4a>;
-+        #sound-dai-cells = <0>;
-+        clocks = <&mclk_prov>;
-+        clock-names = "MCLK";
-+        VL-supply = <&reg_audio>;
-+        VD-supply = <&reg_audio>;
-+        VA-supply = <&reg_audio>;
-+        VAHP-supply = <&reg_audio>;
-+        reset-gpios = <&gpiog 9 GPIO_ACTIVE_LOW>;
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/sound/cs42l51.txt b/Documentation/devicetree/bindings/sound/cs42l51.txt
-deleted file mode 100644
-index acbd68ddd2cb..000000000000
---- a/Documentation/devicetree/bindings/sound/cs42l51.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--CS42L51 audio CODEC
--
--Required properties:
--
--  - compatible : "cirrus,cs42l51"
--
--  - reg : the I2C address of the device for I2C.
--
--Optional properties:
--  - VL-supply, VD-supply, VA-supply, VAHP-supply: power supplies for the device,
--    as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
--
--  - reset-gpios : GPIO specification for the reset pin. If specified, it will be
--    deasserted before starting the communication with the codec.
--
--  - clocks : a list of phandles + clock-specifiers, one for each entry in
--    clock-names
--
--  - clock-names : must contain "MCLK"
--
--Example:
--
--cs42l51: cs42l51@4a {
--	compatible = "cirrus,cs42l51";
--	reg = <0x4a>;
--	clocks = <&mclk_prov>;
--	clock-names = "MCLK";
--	VL-supply = <&reg_audio>;
--	VD-supply = <&reg_audio>;
--	VA-supply = <&reg_audio>;
--	VAHP-supply = <&reg_audio>;
--	reset-gpios = <&gpiog 9 GPIO_ACTIVE_LOW>;
--};
--- 
-2.15.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/pci-ep.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCI Endpoint Controller Schema
+> +
+> +description: |
+> +  Common properties for PCI Endpoint Controller Nodes.
+> +
+> +maintainers:
+> +  - Kishon Vijay Abraham I <kishon@ti.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^pcie-ep?@"
 
+Why the '?'? Let's define the name and fix anything that doesn't match.
+
+> +
+> +  max-functions:
+> +    description: Maximum number of functions that can be configured
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint8
+> +    minimum: 1
+> +    default: 1
+> +    maximum: 255
+> +
+> +  max-link-speed:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 1, 2, 3, 4 ]
+> +
+> +  num-lanes:
+> +    description: maximum number of lanes
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    default: 1
+> +    maximum: 16
+> +
+> +required:
+> +  - compatible
+> -- 
+> 2.17.1
+> 
