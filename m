@@ -2,130 +2,185 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90445C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65242C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F57246B0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322382468E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="cxNF3kUw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v7jFCl7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgB1Og3 (ORCPT
+        id S1726682AbgB1Ojo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:36:29 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:38486 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgB1Og2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:36:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582900587; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rog/tSTAvNcd3kQJ+OVeh4UTSpCdgj4vmk6kCxigbqA=;
-        b=cxNF3kUw6YGZ1KT+uO/2j5e+rd3DK0gTwhU2XDST7hc1FAM30TRyvQ50kvvVtXOZTW8MSx
-        FzuYBSqXJU/LAlxUZh0VyuN/ky8rYfrR59sHoKJ+3uNEswzrlmqa8xUL/vl+7DJJL23Muv
-        rMWXCNqkU1U4Zx/f0as8f5NvIJpp+rg=
-Date:   Fri, 28 Feb 2020 11:36:08 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 5/6] MIPS: DTS: CI20: multiple DTS improvements
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Message-Id: <1582900568.3.2@crapouillou.net>
-In-Reply-To: <01795b270ad025ffffbf80e115b3b2d138a20ffe.1581884459.git.hns@goldelico.com>
-References: <cover.1581884459.git.hns@goldelico.com>
-        <01795b270ad025ffffbf80e115b3b2d138a20ffe.1581884459.git.hns@goldelico.com>
+        Fri, 28 Feb 2020 09:39:44 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37141 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726991AbgB1Ojo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:39:44 -0500
+Received: by mail-wr1-f65.google.com with SMTP id l5so3222451wrx.4
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 06:39:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0bZtBK6HC94nIEacPL+V6SajMXEMTp9BAFVguJlaz+Q=;
+        b=v7jFCl7OdeBWLjzPqqQAjqPrO/bujVk3YQ+hyShHLUfXRhZTEjht+G1EeKmiALwmrF
+         +K7WW2uAYpZmtBzezuv2w6JdJBKpUdrsVHMYifTW3ola4TSC2f9DFxhquGsIb9CwsYcj
+         I013dyyZ6/sIBNapnY1ANl/WmtPXa7OasfQA2NEYVXDTycNT7T/szrd8fPkyKttzDOhS
+         AkrRy0wJlbcKiLL14UW8NPqnhuTmdqHG+yqHosj5GBL25ODsv4IeTcjj/P24pxnowkqO
+         vgOp2+gPP2nbd/AjqXRm5VyhdRF+ZL9iukIU6Y4I/BilXyOX38XdNblyty+GogNj1crk
+         MH+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0bZtBK6HC94nIEacPL+V6SajMXEMTp9BAFVguJlaz+Q=;
+        b=DYKHHraKJaXKAupYOOOvQvMeOduHWleOe7MFflBGvGCVauI1ZzbvV67OhuKidTTXFi
+         DodVx6KSeiYoYqgosu9s4XDuFheue2336hY/9uvyx5qflTV0EnJ6gD5xyD92Pto0hSt/
+         nqmKLOaIuGyHHC6Ed2IgYP1SfsM+gqsG5w76UGuV0cUxd/8Jqe4vkeBRibi1ddQnxVcW
+         fHfxuvQp/BEymwrYP+JrrGKvJ/UvRg25JMiMIIoOke8Xsfp5pYosiymx/QWjMvbZWVqr
+         hjRYlYpuz/z3+KZaeeW4NmyjA0jluDVPNOUJDcHAwAOsHhm7e/aqSwqP8aGLtQKTk23+
+         Hu8A==
+X-Gm-Message-State: APjAAAVOKFk6NkDeibN1/EXJ9nnDOhZErkAiRV4sDOwCZpL82QDch7vR
+        n37o3wnmAZ+lyoh6tuPNHlIiag==
+X-Google-Smtp-Source: APXvYqy36tgbgxq6aX9f3yrenPgU8REug1w3SCjW1FgRUfJhNgTMxVBJWR+Ek+IeYzLIg7r0rI/Bvg==
+X-Received: by 2002:adf:ec0e:: with SMTP id x14mr4896046wrn.270.1582900782663;
+        Fri, 28 Feb 2020 06:39:42 -0800 (PST)
+Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id a7sm2294800wmj.12.2020.02.28.06.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 06:39:42 -0800 (PST)
+Date:   Fri, 28 Feb 2020 15:39:35 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, will@kernel.org,
+        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
+        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
+        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        robin.murphy@arm.com, christian.koenig@amd.com
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200228143935.GA2156@myrica>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+ <20200224182401.353359-2-jean-philippe@linaro.org>
+ <20200224190056.GT31668@ziepe.ca>
+ <20200225092439.GB375953@myrica>
+ <20200225140814.GW31668@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225140814.GW31668@ziepe.ca>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nikolaus,
+On Tue, Feb 25, 2020 at 10:08:14AM -0400, Jason Gunthorpe wrote:
+> On Tue, Feb 25, 2020 at 10:24:39AM +0100, Jean-Philippe Brucker wrote:
+> > On Mon, Feb 24, 2020 at 03:00:56PM -0400, Jason Gunthorpe wrote:
+> > > On Mon, Feb 24, 2020 at 07:23:36PM +0100, Jean-Philippe Brucker wrote:
+> > > > The new allocation scheme introduced by 2c7933f53f6b ("mm/mmu_notifiers:
+> > > > add a get/put scheme for the registration") provides a convenient way
+> > > > for users to attach notifier data to an mm. However, it would be even
+> > > > better to create this notifier data atomically.
+> > > > 
+> > > > Since the alloc_notifier() callback only takes an mm argument at the
+> > > > moment, some users have to perform the allocation in two times.
+> > > > alloc_notifier() initially creates an incomplete structure, which is
+> > > > then finalized using more context once mmu_notifier_get() returns. This
+> > > > second step requires carrying an initialization lock in the notifier
+> > > > data and playing dirty tricks to order memory accesses against live
+> > > > invalidation.
+> > > 
+> > > This was the intended pattern. Tthere shouldn't be an real issue as
+> > > there shouldn't be any data on which to invalidate, ie the later patch
+> > > does:
+> > > 
+> > > +       list_for_each_entry_rcu(bond, &io_mm->devices, mm_head)
+> > > 
+> > > And that list is empty post-allocation, so no 'dirty tricks' required.
+> > 
+> > Before introducing this patch I had the following code:
+> > 
+> > +	list_for_each_entry_rcu(bond, &io_mm->devices, mm_head) {
+> > +		/*
+> > +		 * To ensure that we observe the initialization of io_mm fields
+> > +		 * by io_mm_finalize() before the registration of this bond to
+> > +		 * the list by io_mm_attach(), introduce an address dependency
+> > +		 * between bond and io_mm. It pairs with the smp_store_release()
+> > +		 * from list_add_rcu().
+> > +		 */
+> > +		io_mm = rcu_dereference(bond->io_mm);
+> 
+> A rcu_dereference isn't need here, just a normal derference is fine.
 
-Le dim., f=E9vr. 16, 2020 at 21:20, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
-> a) add DT node for SW1 as Enter button
->=20
-> The SW1 button can be used as a simple one-button keyboard
-> and is connected to PD17.
->=20
-> Note: SW1 has a second meaning to change the boot sequence
-> when pressed while powering on.
->=20
-> b) give eth0_power a defined voltage.
->=20
-> This is a 3.3V power switch (DVNET3.3V ).
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  arch/mips/boot/dts/ingenic/ci20.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts=20
-> b/arch/mips/boot/dts/ingenic/ci20.dts
-> index 1ab55be707af..4bacefa2cfce 100644
-> --- a/arch/mips/boot/dts/ingenic/ci20.dts
-> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-> @@ -4,6 +4,7 @@
->  #include "jz4780.dtsi"
->  #include <dt-bindings/clock/ingenic,tcu.h>
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
->=20
->  / {
->  	compatible =3D "img,ci20", "ingenic,jz4780";
-> @@ -25,6 +26,17 @@
->  		       0x30000000 0x30000000>;
->  	};
->=20
-> +	gpio-keys {
-> +		compatible =3D "gpio-keys";
-> +
-> +		sw1 {
-> +			label =3D "ci20:sw1";
-> +			linux,code =3D <KEY_ENTER>;
+bond->io_mm is annotated with __rcu (for iommu_sva_get_pasid_generic(),
+which does bond->io_mm under rcu_read_lock())
 
-Why KEY_ENTER? It would make it impossible for applications to know=20
-that it's actually the switch that has been pressed an not the keyboard.
+> 
+> > +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid, io_mm->ctx,
+> > +				       start, end - start);
+> > +	}
+> > 
+> > (1) io_mm_get() would obtain an empty io_mm from iommu_notifier_get().
+> > (2) then io_mm_finalize() would initialize io_mm->ops, io_mm->ctx, etc.
+> > (3) finally io_mm_attach() would add the bond to io_mm->devices.
+> > 
+> > Since the above code can run before (2) it needs to observe valid
+> > io_mm->ctx, io_mm->ops initialized by (2) after obtaining the bond
+> > initialized by (3). Which I believe requires the address dependency from
+> > the rcu_dereference() above or some stronger barrier to pair with the
+> > list_add_rcu().
+> 
+> The list_for_each_entry_rcu() is an acquire that already pairs with
+> the release in list_add_rcu(), all you need is a data dependency chain
+> starting on bond to be correct on ordering.
+> 
+> But this is super tricky :\
+> 
+> > If io_mm->ctx and io_mm->ops are already valid before the
+> > mmu notifier is published, then we don't need that stuff.
+> 
+> So, this trickyness with RCU is not a bad reason to introduce the priv
+> scheme, maybe explain it in the commit message?
 
-> +			gpios =3D <&gpd 17 GPIO_ACTIVE_HIGH>;
-> +			wakeup-source;
-> +		};
-> +	};
-> +
->  	leds {
->  		compatible =3D "gpio-leds";
->=20
-> @@ -56,6 +68,8 @@
->  	eth0_power: fixedregulator@0 {
->  		compatible =3D "regulator-fixed";
->  		regulator-name =3D "eth0_power";
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
->  		gpio =3D <&gpb 25 GPIO_ACTIVE_LOW>;
->  		enable-active-high;
->  	};
-> --
-> 2.23.0
->=20
+Ok, I've added this to the commit message:
 
-=
+    The IOMMU SVA module, which attaches an mm to multiple devices,
+    exemplifies this situation. In essence it does:
 
+            mmu_notifier_get()
+              alloc_notifier()
+                 A = kzalloc()
+              /* MMU notifier is published */
+            A->ctx = ctx;                           // (1)
+            device->A = A;
+            list_add_rcu(device, A->devices);       // (2)
+
+    The invalidate notifier, which may start running before A is fully
+    initialized at (1), does the following:
+
+            io_mm_invalidate(A)
+              list_for_each_entry_rcu(device, A->devices)
+                A = device->A;                      // (3)
+                device->invalidate(A->ctx)
+
+    To ensure that an invalidate() thread observes write (1) before (2), it
+    needs the address dependency (3). The resulting code is subtle and
+    difficult to understand. If instead we fully initialize object A before
+    publishing the MMU notifier, we don't need the complexity added by (3).
+
+
+I'll try to improve the wording before sending next version.
+
+Thanks,
+Jean
