@@ -2,235 +2,191 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3E3C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B2DC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9C8246A2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:18:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582910323;
-	bh=k1hRL5DeZtkyFL/eURkkMrJR8KB4iCX+iuuPzyAjih4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=spPQrCWY1BB5Vv5ja3+aqdczClVZntfoZD19Es69yebwrBe57yD/xDiyPI/MiPVtB
-	 4WaRn81wH4v7+0cKsTmQM7LiSwco6+j9rMLPjcZ6XTnlJSIzXqTwTGQ9GsDmEUUZt3
-	 nFI63/pnmxWAhaRfOOlKRS07Gy3sAMsyc2SnaJwo=
+	by mail.kernel.org (Postfix) with ESMTP id B766D24699
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiCNBCpD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgB1RSn (ORCPT
+        id S1725827AbgB1RYE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:18:43 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40724 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1RSn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 12:18:43 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a36so3262261otb.7;
-        Fri, 28 Feb 2020 09:18:41 -0800 (PST)
+        Fri, 28 Feb 2020 12:24:04 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:43496 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgB1RYE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 12:24:04 -0500
+Received: by mail-yw1-f66.google.com with SMTP id f204so3981300ywc.10;
+        Fri, 28 Feb 2020 09:24:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=8DBagXdO92SGZD18edolNudaDY7BySfxVES4onPKc48=;
+        b=BiCNBCpDhvom4uoBEgi6wWUf78Kj5hpmt5TQuapy9qcR64nz4OnJs4O7vU8LcLUu1Q
+         Nfy/foDa3tGn4/w4Qq2UVG6M4CVuzCmn9cGtWCFzLZD/gC/cBKSKqjOgg1Y3L5Yy0mGv
+         PDHzM2BiUkH/rSgYYhZ/pZYHhX40OjyNXBiHVxpBfnnDjWLEmX58heB6u2EeaeQzIDcy
+         6/UrxwaLyrcFcHFVPAHwz4hCE5WmYIR+hl7l9Q9Zqhhks6gu/viQxHQ2VyXC/iKyyhnS
+         TRQifnXdpH2I43DBTHtwz6C4YTGxMhpodWZtaFd/rok5ZYFKXb0osBRKqJwU0XgXJ6eg
+         8KBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pb+PJoJtW2sA5x/kLQp2vnmzDsqGqr65TnSBcPMbR7g=;
-        b=E2mwvy0jwFxBpHSSU+X1mxXeFxw1vTw0rZl4V9k0m6/khPt7BSRVq3cdGvkQfIZHTq
-         j5ptbdqOB5jPNwrM+PRHoAkIhJRP3iuQgvMLlNArt5oTsIe2MK50WEE7gXRNg+xYhQml
-         MB0r45iBPLHlIKf4U7VDqBrr40MF3SdYrypK5yxfByfCi3QnSZHiSJouIR5393/2fihd
-         gSkUS/5yEzuWfYdZ3GJ3d/QWiyisioK4cMknOekDqpRTJ+ip5v7xZk1UjDp/76zFcE14
-         3leOf8JGgRKhF52Na9w4fYsGWgRSHvBqycvhPpOclGc9CN5t5PxxepqltSD7ThE32xdL
-         qRWg==
-X-Gm-Message-State: APjAAAX1GD8QcrXWj4SQEE0qUGy9iWl+1VnoEziI+0qSxVUkg+9u7X7m
-        sCf0cHfVYOxDEOqNOiTuzg==
-X-Google-Smtp-Source: APXvYqzab5ENBUX7/Dqgb0kBzOfn28/rFZnWr1rJG7CNXgNlbWqOdHwOkN1Yv4PRdvFnNLEteaDSbQ==
-X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr4121358otr.82.1582910320121;
-        Fri, 28 Feb 2020 09:18:40 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z17sm3296727oic.15.2020.02.28.09.18.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 09:18:39 -0800 (PST)
-Received: (nullmailer pid 26488 invoked by uid 1000);
-        Fri, 28 Feb 2020 17:18:38 -0000
-Date:   Fri, 28 Feb 2020 11:18:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 3/9] ASoC: meson: convert axg tdm formatters to schema
-Message-ID: <20200228171838.GA27450@bogus>
-References: <20200224145821.262873-1-jbrunet@baylibre.com>
- <20200224145821.262873-4-jbrunet@baylibre.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=8DBagXdO92SGZD18edolNudaDY7BySfxVES4onPKc48=;
+        b=XX1+gNaPKc4Z0uSrQBdJ/DdWScm3Ut8RGOKW0NTnB5j/vyjhF/DO42AkeAgVp5fnH5
+         TmWGHH97mAPICbaEtOSVEPpi7HvRu+0qMkOeabSso9TYlxs1wv9LNwaxnZsfl5FKX1wn
+         CzMIWVE4weW+CKbyoUJm09cTD6dCn2j/NTSb1tKf2BLUrybeAQenSw8V0QPlznA3mozO
+         VTDl+pO8YaXl5/lDc4Wd15FME1dBt97mJELQqKJc0jylgIH6wm2GjKH0BaitfK8LZPCI
+         UCnnwZ31Ktkzzepw0iptArnex9HQ2fHqdlsaHz9lzo1jZ0E6tjZv0MoibHMwel18s9pr
+         2aYQ==
+X-Gm-Message-State: APjAAAXgeeppPAgeNn1QnfX+WQaFJr+y6U+alE28Bzpylg5WjtXWoaJg
+        JyI4wwOdZ+P06vE4O4ltRwqwlsklsj8=
+X-Google-Smtp-Source: APXvYqzjFFyA3EgEXXPFZc4AK1Co1/BHuEDPNq3NoVt9mMTOgu4Ojh5FyaxarOeEjgtDprXLfIV49w==
+X-Received: by 2002:a25:b16:: with SMTP id 22mr4521149ybl.380.1582910643178;
+        Fri, 28 Feb 2020 09:24:03 -0800 (PST)
+Received: from [192.168.1.111] (96-42-251-64.dhcp.roch.mn.charter.com. [96.42.251.64])
+        by smtp.gmail.com with ESMTPSA id a202sm4221235ywe.8.2020.02.28.09.24.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 09:24:02 -0800 (PST)
+Subject: Re: [PATCH v2] ARM: dts: rainier: Set PCA9552 pin types
+To:     Matthew Barth <msbarth@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Eddie James <eajames@linux.ibm.com>
+References: <20200225201415.431668-1-msbarth@linux.ibm.com>
+From:   Brandon Wyman <bjwyman@gmail.com>
+Message-ID: <ec4c675a-b1db-c2d5-97d0-dcff44123db0@gmail.com>
+Date:   Fri, 28 Feb 2020 11:24:01 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224145821.262873-4-jbrunet@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200225201415.431668-1-msbarth@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 03:58:15PM +0100, Jerome Brunet wrote:
-> Convert the DT binding documentation for the Amlogic tdm formatters to
-> schema.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+
+On 2020-02-25 14:14, Matthew Barth wrote:
+> All 16 pins of the PCA9552 at 7-bit address 0x61 should be set as type
+> GPIO.
+>
+> Signed-off-by: Matthew Barth <msbarth@linux.ibm.com>
 > ---
->  .../sound/amlogic,axg-tdm-formatters.txt      | 36 --------
->  .../sound/amlogic,axg-tdm-formatters.yaml     | 92 +++++++++++++++++++
->  2 files changed, 92 insertions(+), 36 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-> deleted file mode 100644
-> index 5996c0cd89c2..000000000000
-> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -* Amlogic Audio TDM formatters
-> -
-> -Required properties:
-> -- compatible: 'amlogic,axg-tdmin' or
-> -	      'amlogic,axg-tdmout' or
-> -	      'amlogic,g12a-tdmin' or
-> -	      'amlogic,g12a-tdmout' or
-> -	      'amlogic,sm1-tdmin' or
-> -	      'amlogic,sm1-tdmout
-> -- reg: physical base address of the controller and length of memory
-> -       mapped region.
-> -- clocks: list of clock phandle, one for each entry clock-names.
-> -- clock-names: should contain the following:
-> -  * "pclk"     : peripheral clock.
-> -  * "sclk"     : bit clock.
-> -  * "sclk_sel" : bit clock input multiplexer.
-> -  * "lrclk"    : sample clock
-> -  * "lrclk_sel": sample clock input multiplexer
-> -
-> -Optional property:
-> -- resets: phandle to the dedicated reset line of the tdm formatter.
-> -
-> -Example of TDMOUT_A on the S905X2 SoC:
-> -
-> -tdmout_a: audio-controller@500 {
-> -	compatible = "amlogic,axg-tdmout";
-> -	reg = <0x0 0x500 0x0 0x40>;
-> -	resets = <&clkc_audio AUD_RESET_TDMOUT_A>;
-> -	clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
-> -		 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
-> -		 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-> -		 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>,
-> -		 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>;
-> -	clock-names = "pclk", "sclk", "sclk_sel",
-> -		      "lrclk", "lrclk_sel";
-> -};
-> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml
-> new file mode 100644
-> index 000000000000..f6f3bfb546f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license please as you're the only author of the .txt file.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-formatters.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Amlogic Audio AXG TDM formatters
-> +
-> +maintainers:
-> +  - Jerome Brunet <jbrunet@baylibre.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^audio-controller@.*"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +        - enum:
-> +          - amlogic,g12a-tdmout
-> +          - amlogic,sm1-tdmout
-> +          - amlogic,axg-tdmout
-> +      - items:
-> +        - enum:
-> +          - amlogic,g12a-tdmin
-> +          - amlogic,sm1-tdmin
-> +        - const:
-> +            amlogic,axg-tdmin
-> +      - items:
-> +        - const:
-> +            amlogic,axg-tdmin
-> +
-> +  clocks:
-> +    items:
-> +      - description: Peripheral clock
-> +      - description: Bit clock
-> +      - description: Bit clock input multiplexer
-> +      - description: Sample clock
-> +      - description: Sample clock input multiplexer
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +      - const: sclk
-> +      - const: sclk_sel
-> +      - const: lrclk
-> +      - const: lrclk_sel
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - amlogic,g12a-tdmin
-> +          - amlogic,sm1-tdmin
-> +          - amlogic,g12a-tdmout
-> +          - amlogic,sm1-tdmout
-> +then:
-> +  required:
-> +    - resets
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/axg-audio-clkc.h>
-> +    #include <dt-bindings/reset/amlogic,meson-g12a-audio-reset.h>
-> +
-> +    tdmout_a: audio-controller@500 {
-> +        compatible = "amlogic,g12a-tdmout",
-> +                     "amlogic,axg-tdmout";
-
-This fails validation.
-
-> +        reg = <0x0 0x500 0x0 0x40>;
-> +        resets = <&clkc_audio AUD_RESET_TDMOUT_A>;
-> +        clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
-> +                 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
-> +                 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-> +                 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>,
-> +                 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>;
-> +        clock-names = "pclk", "sclk", "sclk_sel",
-> +                      "lrclk", "lrclk_sel";
-> +    };
-> +
-> -- 
-> 2.24.1
-> 
+> v2: Added leds-pca955x.h include
+>      Added upstream to patch
+> ---
+Reviewed-by: Brandon Wyman <bjwyman@gmail.com>
+> ---
+>   arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 17 +++++++++++++++++
+>   1 file changed, 17 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+> index c63cefce636d..d9fa9fd48058 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+> @@ -4,6 +4,7 @@
+>   
+>   #include "aspeed-g6.dtsi"
+>   #include <dt-bindings/gpio/aspeed-gpio.h>
+> +#include <dt-bindings/leds/leds-pca955x.h>
+>   
+>   / {
+>   	model = "Rainier";
+> @@ -351,66 +352,82 @@
+>   
+>   		gpio@0 {
+>   			reg = <0>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@1 {
+>   			reg = <1>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@2 {
+>   			reg = <2>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@3 {
+>   			reg = <3>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@4 {
+>   			reg = <4>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@5 {
+>   			reg = <5>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@6 {
+>   			reg = <6>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@7 {
+>   			reg = <7>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@8 {
+>   			reg = <8>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@9 {
+>   			reg = <9>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@10 {
+>   			reg = <10>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@11 {
+>   			reg = <11>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@12 {
+>   			reg = <12>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@13 {
+>   			reg = <13>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@14 {
+>   			reg = <14>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   
+>   		gpio@15 {
+>   			reg = <15>;
+> +			type = <PCA955X_TYPE_GPIO>;
+>   		};
+>   	};
+>   
