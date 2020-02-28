@@ -2,95 +2,132 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45961C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E21C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18851246A3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411E2246BB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:50:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRPTW2UL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbgB1Msx (ORCPT
+        id S1726733AbgB1MuR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:48:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:37770 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgB1Msx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:48:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12BE34B2;
-        Fri, 28 Feb 2020 04:48:53 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D82A33F7B4;
-        Fri, 28 Feb 2020 04:48:51 -0800 (PST)
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: Describe RK3328 GPIO_MUTE
- users
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     heiko@sntech.de
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        pgwipeout@gmail.com, linux-arm-kernel@lists.infradead.org,
+        Fri, 28 Feb 2020 07:50:17 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36633 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgB1MuQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 07:50:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id g83so867369wme.1;
+        Fri, 28 Feb 2020 04:50:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7SOOFR5A8cRXpbsPD4NmdfCkYNnaGr0VzqHcY4iP4Ns=;
+        b=hRPTW2ULNhZjOA7emZQEEesi0PP78D2LjuQEDDCKuOSmhH2h3dXr/i2KP0Eh5ZDEQY
+         Sl8/xquqjPHT2muExLEDXse/D/C+AgxqOUQjBLddCYYebubu6P0yxK2KUCoxir6gVHlt
+         a9chrqRrjWXfXXbAKNMM0JZleYqutB3bgwhdSx/4msoeVSXCjvdn8j7lgq8tlFcJBGNj
+         zt8hAewJ71Rprux8EA3g0UshuptOIRaucJsW6wAX/ypcH8Q99Jb8vdhwZj/HLpCH6IbN
+         j+BXJQeoMzI17eqjjAG64da++fJXdaXh3MWCVKsQM2khOkO/Oym4aoYRNDtwh3syYwAG
+         WxLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7SOOFR5A8cRXpbsPD4NmdfCkYNnaGr0VzqHcY4iP4Ns=;
+        b=BYJKJNzoqT3/djcTn8WpHkVa93X3ixW7xVY+8naDxfrrY7kB2Yzp8EfWeTxMIrUl1j
+         GsHsgvldW50Ni8g/IcSPo+nc+PfySPNQxHCcmI1vpRdxHQ9RuAFbIy1ZOojuE1VRdThL
+         Qr3aj2ZUve8GRUNTUY7mWUAfkjcAK8Gdl/x34FMmdqAsWQ5beQCS8XpmNHIyNYeNAiq3
+         r8aViRuGj/CiTIAM2UoFcBqt4y7bl0aOaU55oBS+Wih7y4Eeoim7DmLD3uqkmOviTWIe
+         BF0pRH9JzdHR7ssbu8MUZ2zKnkvvuvSlZZhloYz00PcjXa3VeZfytSMZ7oTysxYGrPix
+         pyPg==
+X-Gm-Message-State: APjAAAX04zZkPt8wfeSXAkGfsH8FUDLDbvGHloJ9CLsCBgGwWO6nF+tH
+        omagrgBs4UGpPVhXGVoRg1s=
+X-Google-Smtp-Source: APXvYqyh7/fg3k/2U7H+2hUIEb3j1cDGCqO8ryTnH0ZUxrE0DmK4Gl1qwlanUJWAfh9jNCS7V8A/dA==
+X-Received: by 2002:a05:600c:251:: with SMTP id 17mr4687252wmj.59.1582894214215;
+        Fri, 28 Feb 2020 04:50:14 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id c9sm12549852wrq.44.2020.02.28.04.50.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 04:50:13 -0800 (PST)
+Subject: Re: [PATCH 1/4] dt-bindings: arm: fix Rockchip Kylin board bindings
+To:     Robin Murphy <robin.murphy@arm.com>, heiko@sntech.de
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org
-References: <cover.1581376744.git.robin.murphy@arm.com>
- <53637c0359ad9473dc1391a8428ba21017ec467e.1581376744.git.robin.murphy@arm.com>
-Message-ID: <59fe8a7d-22ab-6098-5266-4fdf4bf41adb@arm.com>
-Date:   Fri, 28 Feb 2020 12:48:50 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+References: <20200228061436.13506-1-jbx6244@gmail.com>
+ <73b41bd1-01e9-6af8-afc8-b1a96614d026@arm.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <5d47cf5f-9ac4-cff4-340b-a2518a508738@gmail.com>
+Date:   Fri, 28 Feb 2020 13:50:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <53637c0359ad9473dc1391a8428ba21017ec467e.1581376744.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <73b41bd1-01e9-6af8-afc8-b1a96614d026@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-On 18/02/2020 9:32 pm, Robin Murphy wrote:
-> Add explicit properties to describe existing boards' GPIO_MUTE usage
-> for the analog codec.
-
-Are you happy to pick this up now that the driver patches are queued?
-
-Thanks,
-Robin.
-
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
+On 2/28/20 1:35 PM, Robin Murphy wrote:
+> On 28/02/2020 6:14 am, Johan Jonker wrote:
+>> A test with the command below gives this error:
+>>
+>> arch/arm/boot/dts/rk3036-kylin.dt.yaml: /: compatible:
+>> ['rockchip,rk3036-kylin', 'rockchip,rk3036']
+>> is not valid under any of the given schemas
+>>
+>> Fix this error by changing 'rockchip,kylin-rk3036' to
+>> 'rockchip,rk3036-kylin' in rockchip.yaml.
 > 
-> v2: no change
+
+
+> Although I can guess, it might be worth a note to explain why it's the
+> binding rather than the DTS that gets changed here.
+
+Hi Robin,
+
+My guess is that given a look at the other boards the processor name
+comes first and then the board name, so I changed it in rockchip.yaml.
+But maybe Heiko can better explain what the naming consensus in the past
+was.
+
+Kind regards,
+
+Johan
+
 > 
->   arch/arm64/boot/dts/rockchip/rk3328-a1.dts     | 1 +
->   arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 1 +
->   2 files changed, 2 insertions(+)
+> Robin.
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-a1.dts b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
-> index 16f1656d5203..797e90a3ac92 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
-> @@ -60,6 +60,7 @@
->   };
->   
->   &codec {
-> +	mute-gpios = <&grf_gpio 0 GPIO_ACTIVE_LOW>;
->   	status = "okay";
->   };
->   
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> index 62936b432f9a..bf3e546f5266 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> @@ -104,6 +104,7 @@
->   };
->   
->   &codec {
-> +	mute-gpios = <&grf_gpio 0 GPIO_ACTIVE_LOW>;
->   	status = "okay";
->   
->   	port@0 {
-> 
+>> make ARCH=arm dtbs_check
+>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
+>>
+>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+>> ---
+>>   Documentation/devicetree/bindings/arm/rockchip.yaml | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> index 874b0eaa2..203158038 100644
+>> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> @@ -443,7 +443,7 @@ properties:
+>>           - description: Rockchip Kylin
+>>           items:
+>> -          - const: rockchip,kylin-rk3036
+>> +          - const: rockchip,rk3036-kylin
+>>             - const: rockchip,rk3036
+>>           - description: Rockchip PX3 Evaluation board
+>>
+
