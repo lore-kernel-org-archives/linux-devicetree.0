@@ -2,97 +2,174 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D35CC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF416C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8011246AF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="iYcVK30f"
+	by mail.kernel.org (Postfix) with ESMTP id CF16324680
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725796AbgB1MQS (ORCPT
+        id S1725730AbgB1MRS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:16:18 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:28470 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgB1MQS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 07:16:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582892176;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=/pGfs+Fcvd96yqGbcPc48p/hEAQ3m45dUh23TDSXiyE=;
-        b=iYcVK30ff4LR3aNY9CcxoqAnKTB/+hH14ExivMlBoKxj78f+QwcFk0CtG78viySoCJ
-        YSspNDSQelkiZgXGCtR3I6TmFXJqHatQfEqFLpQ/CwddX2tAtpEfz6kpluSk0GVjI5bY
-        g/kXeFPfKJMUCitopmGXp6DM3IpM3l1BAJqzwosjekVZyTboGQnkfKyZzf1l4MbW+t/9
-        SMaSFErLPE3Tw6j/TO4XEF9JcBgO27VDhQONYxqye9QGfVJ319NWT6WugiYFyeFj6TzF
-        0CchyvAnP+Ij5zZJrq47n4DYOMVcI0FjxevSRH/5dyWf+ijQoIs6WmwMr1B1/i9ncBeJ
-        cpHQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaYXAcKqg=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SCG80hH
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 28 Feb 2020 13:16:08 +0100 (CET)
-Subject: Re: [PATCH v6 1/6] nvmem: add driver for JZ4780 efuse
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <B30BD902-CF5D-421A-9BD5-5FA038895712@goldelico.com>
-Date:   Fri, 28 Feb 2020 13:16:08 +0100
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: 7bit
-Message-Id: <E67D2DA7-2B02-4033-84D0-004A79ACA686@goldelico.com>
-References: <cover.1582715761.git.hns@goldelico.com> <2a675558c6c7ba6df86669176004fe4703645793.1582715761.git.hns@goldelico.com> <1582814861.3.2@crapouillou.net> <B30BD902-CF5D-421A-9BD5-5FA038895712@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 28 Feb 2020 07:17:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:37364 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgB1MRR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:17:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF4334B2;
+        Fri, 28 Feb 2020 04:17:15 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31D733F7B4;
+        Fri, 28 Feb 2020 04:17:15 -0800 (PST)
+Date:   Fri, 28 Feb 2020 12:17:13 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Robin Murphy <robin.murphy@arm.com>, will@kernel.org
+Cc:     catalin.marinas@arm.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 5/5] arm64: perf: Support new DT compatibles
+Message-ID: <20200228121712.GF36089@lakrids.cambridge.arm.com>
+References: <cover.1582312530.git.robin.murphy@arm.com>
+ <6e5087621bd8112a35733054689d7c785b4bdde5.1582312530.git.robin.murphy@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e5087621bd8112a35733054689d7c785b4bdde5.1582312530.git.robin.murphy@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
->>> +	rd_adj = clk_rate / 153846154;
->>> +	rd_strobe = clk_rate / 28571429 - 5 - rd_adj + 1;
->>> +
->>> +	if (rd_adj > BIT(4) - 1 || rd_strobe > BIT(4) - 1) {
->> 
->> Just use 0xF or GENMASK(3, 0) instead of BIT(4) - 1
+On Fri, Feb 21, 2020 at 07:35:32PM +0000, Robin Murphy wrote:
+> Add support for matching the new PMUs. For now, this just wires them up
+> as generic PMUv3 such that people writing DTs for new SoCs can do the
+> right thing, and at least have architectural and raw events be usable.
+> We can come back and fill in event maps for sysfs and/or perf tools at
+> a later date.
 > 
-> Or would rd_adj >= BIT(4) be better since this is not used as a mask?
-> This would also correspond to that the register is 4 bits wide.
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
-I just recognized that we already have these constants defined:
+Thanks for putting this together!
 
-So I'll add
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-	if (rd_adj > EFUCFG_RD_ADJ_MASK || rd_strobe > EFUCFG_RD_STR_MASK) {
+Will, are you happy to queue this and the previous patch?
 
-to v7.
+Thanks,
+Mark.
 
-BR,
-Nikolaus
+> ---
+> 
+> v2: define separate init functions to preserve the user ABI for naming
+>     (and perhaps more crucially, to simply avoid sysfs collisions on
+>      the inevitable A7[567] + A55 big.LITTLE systems)
+> 
+>  arch/arm64/kernel/perf_event.c | 56 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index 1e0b04da2f3a..726cd8bda025 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -991,6 +991,12 @@ static int armv8_pmuv3_init(struct arm_pmu *cpu_pmu)
+>  			      armv8_pmuv3_map_event, NULL, NULL);
+>  }
+>  
+> +static int armv8_a34_pmu_init(struct arm_pmu *cpu_pmu)
+> +{
+> +	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a34",
+> +			      armv8_pmuv3_map_event, NULL, NULL);
+> +}
+> +
+>  static int armv8_a35_pmu_init(struct arm_pmu *cpu_pmu)
+>  {
+>  	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a35",
+> @@ -1003,12 +1009,24 @@ static int armv8_a53_pmu_init(struct arm_pmu *cpu_pmu)
+>  			      armv8_a53_map_event, NULL, NULL);
+>  }
+>  
+> +static int armv8_a55_pmu_init(struct arm_pmu *cpu_pmu)
+> +{
+> +	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a55",
+> +			      armv8_pmuv3_map_event, NULL, NULL);
+> +}
+> +
+>  static int armv8_a57_pmu_init(struct arm_pmu *cpu_pmu)
+>  {
+>  	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a57",
+>  			      armv8_a57_map_event, NULL, NULL);
+>  }
+>  
+> +static int armv8_a65_pmu_init(struct arm_pmu *cpu_pmu)
+> +{
+> +	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a65",
+> +			      armv8_pmuv3_map_event, NULL, NULL);
+> +}
+> +
+>  static int armv8_a72_pmu_init(struct arm_pmu *cpu_pmu)
+>  {
+>  	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a72",
+> @@ -1021,6 +1039,36 @@ static int armv8_a73_pmu_init(struct arm_pmu *cpu_pmu)
+>  			      armv8_a73_map_event, NULL, NULL);
+>  }
+>  
+> +static int armv8_a75_pmu_init(struct arm_pmu *cpu_pmu)
+> +{
+> +	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a75",
+> +			      armv8_pmuv3_map_event, NULL, NULL);
+> +}
+> +
+> +static int armv8_a76_pmu_init(struct arm_pmu *cpu_pmu)
+> +{
+> +	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a76",
+> +			      armv8_pmuv3_map_event, NULL, NULL);
+> +}
+> +
+> +static int armv8_a77_pmu_init(struct arm_pmu *cpu_pmu)
+> +{
+> +	return armv8_pmu_init(cpu_pmu, "armv8_cortex_a77",
+> +			      armv8_pmuv3_map_event, NULL, NULL);
+> +}
+> +
+> +static int armv8_e1_pmu_init(struct arm_pmu *cpu_pmu)
+> +{
+> +	return armv8_pmu_init(cpu_pmu, "armv8_neoverse_e1",
+> +			      armv8_pmuv3_map_event, NULL, NULL);
+> +}
+> +
+> +static int armv8_n1_pmu_init(struct arm_pmu *cpu_pmu)
+> +{
+> +	return armv8_pmu_init(cpu_pmu, "armv8_neoverse_n1",
+> +			      armv8_pmuv3_map_event, NULL, NULL);
+> +}
+> +
+>  static int armv8_thunder_pmu_init(struct arm_pmu *cpu_pmu)
+>  {
+>  	return armv8_pmu_init(cpu_pmu, "armv8_cavium_thunder",
+> @@ -1035,11 +1083,19 @@ static int armv8_vulcan_pmu_init(struct arm_pmu *cpu_pmu)
+>  
+>  static const struct of_device_id armv8_pmu_of_device_ids[] = {
+>  	{.compatible = "arm,armv8-pmuv3",	.data = armv8_pmuv3_init},
+> +	{.compatible = "arm,cortex-a34-pmu",	.data = armv8_a34_pmu_init},
+>  	{.compatible = "arm,cortex-a35-pmu",	.data = armv8_a35_pmu_init},
+>  	{.compatible = "arm,cortex-a53-pmu",	.data = armv8_a53_pmu_init},
+> +	{.compatible = "arm,cortex-a55-pmu",	.data = armv8_a55_pmu_init},
+>  	{.compatible = "arm,cortex-a57-pmu",	.data = armv8_a57_pmu_init},
+> +	{.compatible = "arm,cortex-a65-pmu",	.data = armv8_a65_pmu_init},
+>  	{.compatible = "arm,cortex-a72-pmu",	.data = armv8_a72_pmu_init},
+>  	{.compatible = "arm,cortex-a73-pmu",	.data = armv8_a73_pmu_init},
+> +	{.compatible = "arm,cortex-a75-pmu",	.data = armv8_a75_pmu_init},
+> +	{.compatible = "arm,cortex-a76-pmu",	.data = armv8_a76_pmu_init},
+> +	{.compatible = "arm,cortex-a77-pmu",	.data = armv8_a77_pmu_init},
+> +	{.compatible = "arm,neoverse-e1-pmu",	.data = armv8_e1_pmu_init},
+> +	{.compatible = "arm,neoverse-n1-pmu",	.data = armv8_n1_pmu_init},
+>  	{.compatible = "cavium,thunder-pmu",	.data = armv8_thunder_pmu_init},
+>  	{.compatible = "brcm,vulcan-pmu",	.data = armv8_vulcan_pmu_init},
+>  	{},
+> -- 
+> 2.23.0.dirty
+> 
