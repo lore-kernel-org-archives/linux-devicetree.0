@@ -2,223 +2,223 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F6DC3F2D4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8639EC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABA9246AE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F664246AE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rwh+g20Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725536AbgB1MAQ (ORCPT
+        id S1725805AbgB1MIL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:00:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:37134 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgB1MAQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:00:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CCC04B2;
-        Fri, 28 Feb 2020 04:00:15 -0800 (PST)
-Received: from [10.37.12.207] (unknown [10.37.12.207])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE33C3F7B4;
-        Fri, 28 Feb 2020 04:00:11 -0800 (PST)
-Subject: Re: [RESEND PATCH v2 0/2] Enable Odroid-XU3/4 to use Energy Model and
- Energy Aware Scheduler
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kgene@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, cw00.choi@samsung.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
-        dietmar.eggemann@arm.com
-References: <20200220095636.29469-1-lukasz.luba@arm.com>
- <20200220180040.GA8338@kozik-lap>
- <CGME20200221103307eucas1p2bc51b3b5d6d0a9739ab97cdd39078505@eucas1p2.samsung.com>
- <597f1475-754c-d77a-b599-0fa07d8ee948@arm.com>
- <fb6961ce-846e-3c26-5227-6327c6d511f6@samsung.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <b2823ea1-a782-1024-bcc0-c1aba9a84fc3@arm.com>
-Date:   Fri, 28 Feb 2020 12:00:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 28 Feb 2020 07:08:11 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41046 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgB1MIL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 07:08:11 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SC7q2Q043838;
+        Fri, 28 Feb 2020 06:07:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582891672;
+        bh=RVaHyNziJFILc4NB6NRDkwB5/daSs+z4c/gyOlgD+ek=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=rwh+g20QW552RFvkuCgcRs2jkBFBcKp1jWgUlrjkZP2STi0TluWsZ7xTV9LCC4+Bx
+         pzbeyaYAFOcFeznfcNEala2/LgYUWxU5ZTZVmIOHPW7cG3mQv525pyt/auXufiOsp1
+         7LJHiZQZkHrKpmoctpQac93cH35T/gv4Jd+3atx8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01SC7qOn075668
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Feb 2020 06:07:52 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
+ Feb 2020 06:07:51 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 28 Feb 2020 06:07:51 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01SC7o7x085695;
+        Fri, 28 Feb 2020 06:07:51 -0600
+Date:   Fri, 28 Feb 2020 17:37:50 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 06/11] mtd: spi-nor: add support for DTR protocol
+Message-ID: <20200228120750.hstohetdnqja2g2p@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+ <20200226093703.19765-7-p.yadav@ti.com>
+ <20200227175841.51435e3f@collabora.com>
+ <20200228093658.zc3uifqg4zruokq3@ti.com>
+ <20200228115355.5033798f@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <fb6961ce-846e-3c26-5227-6327c6d511f6@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200228115355.5033798f@collabora.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marek,
-
-On 2/28/20 10:59 AM, Marek Szyprowski wrote:
-> Hi Lukasz
+On 28/02/20 11:53AM, Boris Brezillon wrote:
+> On Fri, 28 Feb 2020 15:06:58 +0530
+> Pratyush Yadav <p.yadav@ti.com> wrote:
 > 
-> On 21.02.2020 11:32, Lukasz Luba wrote:
->> On 2/20/20 6:00 PM, Krzysztof Kozlowski wrote:
->>> On Thu, Feb 20, 2020 at 09:56:34AM +0000, Lukasz Luba wrote:
->>>> This is just a resend, now with proper v2 in the patches subject.
->>>>
->>>> The Odroid-XU4/3 is a decent and easy accessible ARM big.LITTLE
->>>> platform,
->>>> which might be used for research and development.
->>>>
->>>> This small patch set provides possibility to run Energy Aware
->>>> Scheduler (EAS)
->>>> on Odroid-XU4/3 and experiment with it.
->>>>
->>>> The patch 1/2 provides 'dynamic-power-coefficient' in CPU DT nodes,
->>>> which is
->>>> then used by the Energy Model (EM).
->>>> The patch 2/2 enables SCHED_MC (which adds another level in
->>>> scheduling domains)
->>>> and enables EM making EAS possible to run (when schedutil is set as
->>>> a CPUFreq
->>>> governor).
->>>>
->>>> 1. Test results
->>>>
->>>> Two types of different tests have been executed. The first is energy
->>>> test
->>>> case showing impact on energy consumption of this patch set. It is
->>>> using a
->>>> synthetic set of tasks (rt-app based). The second is the performance
->>>> test
->>>> case which is using hackbench (less time to complete is better).
->>>> In both tests schedutil has been used as cpufreq governor. In all tests
->>>> PROVE_LOCKING has not been compiled into the kernels.
->>>>
->>>> 1.1 Energy test case
->>>>
->>>> 10 iterations of 24 periodic rt-app tasks (16ms period, 10% duty-cycle)
->>>> with energy measurement. The cpufreq governor - schedutil. Unit is
->>>> Joules.
->>>> The energy is calculated based on hwmon0 and hwmon3 power1_input.
->>>> The goal is to save energy, lower is better.
->>>>
->>>> +-----------+-----------------+------------------------+
->>>> |           | Without patches | With patches           |
->>>> +-----------+--------+--------+----------------+-------+
->>>> | benchmark |  Mean  | RSD*   | Mean           | RSD*  |
->>>> +-----------+--------+--------+----------------+-------+
->>>> | 24 rt-app |  21.56 |  1.37% |  19.85 (-9.2%) | 0.92% |
->>>> |    tasks  |        |        |                |       |
->>>> +-----------+--------+--------+----------------+-------+
->>>>
->>>> 1.2 Performance test case
->>>>
->>>> 10 consecutive iterations of hackbench (hackbench -l 500 -s 4096),
->>>> no delay between two successive executions.
->>>> The cpufreq governor - schedutil. Units in seconds.
->>>> The goal is to see not regression, lower completion time is better.
->>>>
->>>> +-----------+-----------------+------------------------+
->>>> |           | Without patches | With patches           |
->>>> +-----------+--------+--------+----------------+-------+
->>>> | benchmark | Mean   | RSD*   | Mean           | RSD*  |
->>>> +-----------+--------+--------+----------------+-------+
->>>> | hackbench |  8.15  | 2.86%  |  7.95 (-2.5%)  | 0.60% |
->>>> +-----------+--------+--------+----------------+-------+
->>>>
->>>> *RSD: Relative Standard Deviation (std dev / mean)
->>>
->>> Nice measurements!
->>
->> Glad to hear that.
->>
->>>
->>> Applied both, thank you.
->>>
->>
->> Thank you for applying this.
+> > Hi Boris,
+> > 
+> > On 27/02/20 05:58PM, Boris Brezillon wrote:
+> > > On Wed, 26 Feb 2020 15:06:58 +0530
+> > > Pratyush Yadav <p.yadav@ti.com> wrote:
+> > >   
+> > > > Double Transfer Rate (DTR) is SPI protocol in which data is transferred
+> > > > on each clock edge as opposed to on each clock cycle. Make
+> > > > framework-level changes to allow supporting flashes in DTR mode.
+> > > > 
+> > > > Right now, mixed DTR modes are not supported. So, for example a mode
+> > > > like 4S-4D-4D will not work. All phases need to be either DTR or STR.  
+> > > 
+> > > Didn't go deep into the patch but at first glance you don't seem to
+> > > extend the framework to support stateful modes as I tried to do here
+> > > [1]. That's really something we should address before considering
+> > > supporting xD-xD-xD modes, unless the SPI-NOR only supports one
+> > > stateful mode. If we don't do that first, we might face all sort of
+> > > unpleasant issues:
+> > > 
+> > > * kexec not working correctly because the previous kernel left the NOR
+> > >   in an unknown state
+> > > * suspend/resume not working properly
+> > > * linux not booting properly because the bootloader left the device in
+> > >   its non-default mode
+> > > * ...  
+> > 
+> > Correct. I am working on a follow-up series that takes care of these 
+> > problems. The series will allow spi-nor to detect what mode the flash is 
+> > in and then run the SFPD procedure in that mode (or maybe switch to 
+> > single SPI mode and then go about its business as usual? I haven't 
+> > figured out all the details yet).
+> > 
+> > So for the context of this series, assume we are handed the flash in 
+> > single SPI mode.
+> >  
+> > > [1]https://patchwork.kernel.org/cover/10638055/  
+> > 
+> > BTW, I took a quick look at this series but I don't see any code that 
+> > tries to detect which mode the flash is in (which is the troublesome 
+> > part [0]). So, for example, if the bootloader leaves the flash in 
+> > 8D-8D-8D mode, how would your series handle that situation?
 > 
+> Oh, it's definitely not taking care of that, it was just paving the
+> road for spi-nor state tracking. You'd need to extend it to support
+> 8D-8D-8D to 1-1-1 transitions at boot time (if that's even possible).
 > 
-> After applying the patches I see the following warnings during boot (XU4):
+> > 
+> > [0] There are multiple problems to take care of when trying to detect 
+> >     which mode a flash is in. We can try reading SFDP in each mode and 
+> >     whichever mode gives us the correct "SFDP" signature is the mode the 
+> >     flash is in. But the problem is that even in xSPI standard Read SFDP 
+> >     command is optional in 8D-8D-8D mode, let alone non-xSPI flashes.
+> >     Another problem is that the address bytes and dummy cycles for Read 
+> >     SFDP are not the same for every flash. The xSPI standard says 
+> >     address bytes can be 3/4 and dummy cycles can be 8/20. So, for 
+> >     example, Cypress s28hs/s28ht family and Micron Xccela (mt35x) family 
+> >     use 4 address bytes, but the Adesto ATXP032/ATXP032R flashes use 3 
+> >     address bytes.
 > 
-> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 1 >= em_cap_state0
-> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 3 >= em_cap_state2
-> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 4 >= em_cap_state3
-> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 5 >= em_cap_state4
-> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 8 >= em_cap_state7
-> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 10 >= em_cap_state9
-> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 11 >= em_cap_state10
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 1 >= em_cap_state0
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 2 >= em_cap_state1
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 3 >= em_cap_state2
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 4 >= em_cap_state3
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 5 >= em_cap_state4
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 6 >= em_cap_state5
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 8 >= em_cap_state7
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 9 >= em_cap_state8
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 10 >= em_cap_state9
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 13 >= em_cap_state12
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 15 >= em_cap_state14
-> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
-> em_cap_state 16 >= em_cap_state15
+> I'd rather go with something simpler and more widely supported than SFDP
+> reads. Don't we have a simple command that's supported by all flashes
+> and returns well known data.
+
+I'm not aware of any other command that would return well-known data.
+
+> Isn't there an EXIT sequence that allows NORs to return to a single 
+> SPI state?
+
+Yes there is, but it comes with a lot of strings attached. There is a 
+hardware reset pin on some flashes that puts the flash in Power-on-Reset 
+(POR) mode. But that pin is not mandatory. It also might not be 
+connected on a given board.
+
+The other option is a "Soft Reset" (also optional), which puts the flash 
+in POR mode after it is given the soft reset command. But to send the 
+command you need to know the mode the device is in. On top of that, the 
+Soft Reset opcode differs between flashes. According to the xSPI spec, 
+some flashes can have the opcode as 0xF0 and some others can have it as 
+a two command sequence of 0x66 and 0x99.
+
+And the cherry on top is the fact that these reset operations return to 
+a state based on the value of the non-volatile bits. So, if the 
+non-volatile configuration is 8D-8D-8D mode, then all these resets 
+achieve nothing.
+ 
+> > 
+> >     Say that a flash supports Read SFDP in 8D-8D-8D mode and we try all 
+> >     the combinations to find out which mode the flash is in, we now have 
+> >     the problem of actually identifying the flash. Unfortunately, the 
+> >     Read ID command is not uniform across flash vendors. The Micron 
+> >     Xccela flashes use 8 dummy cycles and no address bytes for Read ID. 
+> >     The Cypress s28hs/t family uses configurable dummy cycles 
+> >     (defaulting to 3) and needs 4 dummy address bytes all of which are 
+> >     0.
 > 
-> Is it okay?
+> Yep, that's what I complained about when I tried to support the
+> Macronix flash. They didn't plan for a reliable RETURN-TO-SINGLE-SPI
+> sequence which would not conflict with any other existing SPI commands,
+> and that's a real problem.
+> 
+> > 
+> >     If we can't find out which flash it is, we can't run its fixup 
+> >     hooks, and might end up running it with incorrect settings. And all 
+> >     this is assuming a flash even has SFDP and has it available in all 
+> >     modes.
+> 
+> Absolutely.
+> 
+> > 
+> >     So, the only solution I can now think of is having the flash name in 
+> >     its compatible string in the device tree. This way we can skip all 
+> >     the Read ID ugliness and can have flash-specific hooks to make it 
+> >     easier to detect the mode it is in (though I wonder if it is even 
+> >     possible to detect the mode in a flash that doesn't have SFDP in 
+> >     8D-8D-8D).
+> 
+> Hm, I'd really like to avoid that if possible.
 
-It shouldn't harm the EAS but it might be used by thermal, especially
-those OPPs from the top. Like in your case in step_wise (IIRC the DT
-settings).
-But removing some of these from the bottom, would be good.
-It would lower the Energy Model complexity, which is:
-nr_perf_domain * (nr_cpus + nr_OPPs) [1] (in Odroid XU4 is ~80 IIRC)
+Unfortunately, I don't really see a better alternative. Just so I 
+understand this better, why do you think it is something worth avoiding?
+ 
+> > 
+> >     Thoughts? Is there a better way to solve this problem that I didn't 
+> >     think of?
+> > 
+> 
+> Nope, except maybe mandate that the bootloader always put the NOR in
+> single SPI mode before booting Linux (and Linux should do the same,
+> which is what my series was trying to address IIRC).
 
-smaller OPP number is better.
+A simple bootloader might not even have a SPI driver. So, if the flash 
+PORs to 8D-8D-8D, Linux would be unable to use the flash.
 
-Douglas is working on a patch set which could skip non-efficient OPPs
-(the OPPs which have the same voltage but different frequency).
-Although, we don't know the numbers how much it could save energy - when
-we use the fastest frequency for the set of OPPs with the same voltage,
-comparing to the slowest (theoretically entering idle earlier) .
-The discussion is ongoing here [2].
+Or, if the ROM puts the flash in 8D-8D-8D mode for better boot speed, we 
+would have the same problem.
 
-Regarding the print message. It's not a bug in the platform so in
-my opinion we shouldn't use 'pr_warn' in this case.
-It's going to be changed to just debug level print. I have this
-change in the new Energy Model. It is in last point in changelog v3 [3]
-and the change which does this is in patch 1/4:
---------------------------------------------->8------------------
--			pr_warn("pd%d: hertz/watts ratio non-monotonically decreasing: 
-em_cap_state %d >= em_cap_state%d\n",
--					cpu, i, i - 1);
-+			dev_dbg(dev, "EM: hertz/watts ratio non-monotonically decreasing: 
-em_perf_state %d >= em_perf_state%d\n",
-+					i, i - 1);
-
---------------------------------------8<------------------------
-
-
+-- 
 Regards,
-Lukasz
-
-[1] 
-https://elixir.bootlin.com/linux/latest/source/kernel/sched/topology.c#L397
-[2] https://lkml.org/lkml/2020/1/22/1169
-[3] https://lkml.org/lkml/2020/2/21/1910
+Pratyush Yadav
+Texas Instruments India
