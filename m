@@ -2,68 +2,68 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F93DC3F2D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBEAC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D055246BB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4C1246AE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="QK4OOiMf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aZ75bPb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgB1SDU (ORCPT
+        id S1725906AbgB1STl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:03:20 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:33451 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgB1SDB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 13:03:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582912978;
+        Fri, 28 Feb 2020 13:19:41 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.173]:21610 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1STk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 13:19:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582913978;
         s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=vBXvmFWAkccWf37eeFfgn5yiVRBwwJsqAAKcSSUBpbk=;
-        b=QK4OOiMfhKzap8ynfVpqVr78YLxVQyvi0QLKE/eZv3UvinJHvLGVPKRcZI6S3jxm2W
-        WY80Ja0nzVDnNWslccpvl3jBUsmCO/m8f3CRlLRL81jribqWXMEsEfXl1NtmY/KRMIOh
-        P04Cd5v5/x7DdxcgiRPLlGMjnrvFmbqT74een+T6hRF+XdwrNYMJ7KvNRl+TsLPWqlIC
-        RaCDwjImVZsNPaIhN3ad/Sfv2SA39squdnq7x/+DwTn9ki8rb7kJNP8hvkxNT/5zlg4h
-        YH/eJFdsmpwl7gn3L1A+1fkezRyxX8HYMti6uQD6kE1MUrfw9A1Abe25sdnuK1l4NrT3
-        Zkqg==
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=mtibfl3if76oFyUx4VaWIyxio7nt25pVHxLuChFLvDo=;
+        b=aZ75bPb3UYuN4N9aN0YBIWyrBOK/iZY8Ir6WhYzlfk445MnNbt/XqzVeFpHOQeHqYu
+        XpeqYIQ6uaOu08zU/kkP+WidWdRPzzcmHA0gwY4PIcIlzF4URVYwReZ+zcNnPOb43sYb
+        44Az9IukV0TptjcO3EI1bBW6S3pfh0cUQs7iVaZQZfuA0qrfFYc4asptQZKhyWcEjMjL
+        fp0pYh57py+WLFb5k1R9k4j+hsiUjV811aHdzKf5TtCIZNyXUgldWhAebHTMsE7OUZIC
+        0S36kvn3doNRlyuhZRgWCQwLyEcvarBp5G5BhLoz8kuaaNhwv7vJTpEVmjs0m2i09wab
+        JZ8A==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SI2t2JL
+        with ESMTPSA id y0a02cw1SIJY2Lm
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 28 Feb 2020 19:02:55 +0100 (CET)
+        Fri, 28 Feb 2020 19:19:34 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Boddie <paul@boddie.org.uk>,
-        Paul Cercueil <paul@crapouillou.net>,
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Subject: [PATCH v4 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-Date:   Fri, 28 Feb 2020 19:02:50 +0100
-Message-Id: <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com>
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: [RFC v2 0/8] MIPS: CI20: add HDMI out support 
+Date:   Fri, 28 Feb 2020 19:19:25 +0100
+Message-Id: <cover.1582913973.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1582912972.git.hns@goldelico.com>
-References: <cover.1582912972.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -71,130 +71,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is a ACT8600 on the CI20 board and the bindings of the
-ACT8865 driver have changed without updating the CI20 device
-tree. Therefore the PMU can not be probed successfully and
-is running in power-on reset state.
+* Converted .txt bindings to .yaml (by Sam Ravnborg <sam@ravnborg.org> - big THANKS)
 
-Fix DT to match the latest act8865-regulator bindings.
+RFC V1 2020-02-26 20:13:06:
+This patch series adds HDMI output to the jz4780/CI20 board.
 
-Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
-Cc: stable@vger.kernel.org
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/mips/boot/dts/ingenic/ci20.dts | 48 ++++++++++++++++++++---------
- 1 file changed, 33 insertions(+), 15 deletions(-)
+It is based on taking the old 3.18 vendor kernel and trying
+to achieve the same with modern DTS setup and new/modified
+drivers.
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 59c104289ece..44741e927d2b 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -4,6 +4,8 @@
- #include "jz4780.dtsi"
- #include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/regulator/active-semi,8865-regulator.h>
- 
- / {
- 	compatible = "img,ci20", "ingenic,jz4780";
-@@ -166,65 +168,81 @@
- 		reg = <0x5a>;
- 		status = "okay";
- 
-+/*
-+Optional input supply properties:
-+- for act8600:
-+  - vp1-supply: The input supply for DCDC_REG1
-+  - vp2-supply: The input supply for DCDC_REG2
-+  - vp3-supply: The input supply for DCDC_REG3
-+  - inl-supply: The input supply for LDO_REG5, LDO_REG6, LDO_REG7 and LDO_REG8
-+  SUDCDC_REG4, LDO_REG9 and LDO_REG10 do not have separate supplies.
-+*/
-+
- 		regulators {
- 			vddcore: SUDCDC1 {
--				regulator-name = "VDDCORE";
-+				regulator-name = "DCDC_REG1";
- 				regulator-min-microvolt = <1100000>;
- 				regulator-max-microvolt = <1100000>;
- 				regulator-always-on;
- 			};
- 			vddmem: SUDCDC2 {
--				regulator-name = "VDDMEM";
-+				regulator-name = "DCDC_REG2";
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
- 			vcc_33: SUDCDC3 {
--				regulator-name = "VCC33";
-+				regulator-name = "DCDC_REG3";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 			vcc_50: SUDCDC4 {
--				regulator-name = "VCC50";
-+				regulator-name = "SUDCDC_REG4";
- 				regulator-min-microvolt = <5000000>;
- 				regulator-max-microvolt = <5000000>;
- 				regulator-always-on;
- 			};
- 			vcc_25: LDO_REG5 {
--				regulator-name = "VCC25";
-+				regulator-name = "LDO_REG5";
- 				regulator-min-microvolt = <2500000>;
- 				regulator-max-microvolt = <2500000>;
- 				regulator-always-on;
- 			};
- 			wifi_io: LDO_REG6 {
--				regulator-name = "WIFIIO";
-+				regulator-name = "LDO_REG6";
- 				regulator-min-microvolt = <2500000>;
- 				regulator-max-microvolt = <2500000>;
- 				regulator-always-on;
- 			};
- 			vcc_28: LDO_REG7 {
--				regulator-name = "VCC28";
-+				regulator-name = "LDO_REG7";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
- 				regulator-always-on;
- 			};
- 			vcc_15: LDO_REG8 {
--				regulator-name = "VCC15";
-+				regulator-name = "LDO_REG8";
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
--			vcc_18: LDO_REG9 {
--				regulator-name = "VCC18";
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
-+			vrtc_18: LDO_REG9 {
-+				regulator-name = "LDO_REG9";
-+				/* Despite the datasheet stating 3.3V for REG9 and
-+				   driver expecting that, REG9 outputs 1.8V.
-+				   Likely the CI20 uses a chip variant.
-+				   Since it is a simple on/off LDO the exact values
-+				   do not matter.
-+				*/
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 			vcc_11: LDO_REG10 {
--				regulator-name = "VCC11";
--				regulator-min-microvolt = <1100000>;
--				regulator-max-microvolt = <1100000>;
-+				regulator-name = "LDO_REG10";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
- 				regulator-always-on;
- 			};
- 		};
+Unfortunately, in this first RFC, only EDID and creation of
+/dev/fb0 are working. Also, HDMI hot plugging is detected.
+
+But there is no HDMI output signal. So some tiny piece seems
+to be missing to enable/configure the Synposys HDMI controller.
+
+We need help from the community to fix this.
+
+Original authors of most patches are
+* Paul Boddie <paul@boddie.org.uk>
+* Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+
+
+H. Nikolaus Schaller (2):
+  drm: ingenic-drm: add MODULE_DEVICE_TABLE
+  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
+
+Paul Boddie (4):
+  drm: ingenic: add jz4780 Synopsys HDMI driver.
+  pinctrl: ingenic: add hdmi-ddc pin control group
+  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
+  MIPS: DTS: CI20: add HDMI setup
+
+Sam Ravnborg (2):
+  dt-bindings: display: add ingenic-jz4780-lcd DT Schema
+  dt-bindings: display: add ingenic-jz4780-hdmi DT Schema
+
+ .../bindings/display/ingenic-jz4780-hdmi.yaml |  83 ++++++++++++
+ .../bindings/display/ingenic-jz4780-lcd.yaml  |  78 ++++++++++++
+ arch/mips/boot/dts/ingenic/ci20.dts           |  64 ++++++++++
+ arch/mips/boot/dts/ingenic/jz4780.dtsi        |  32 +++++
+ arch/mips/configs/ci20_defconfig              |   3 +
+ drivers/gpu/drm/ingenic/Kconfig               |   8 ++
+ drivers/gpu/drm/ingenic/Makefile              |   1 +
+ drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c      | 120 ++++++++++++++++++
+ drivers/gpu/drm/ingenic/ingenic-drm.c         |   2 +
+ drivers/pinctrl/pinctrl-ingenic.c             |   7 +
+ 10 files changed, 398 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+ create mode 100644 drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
+
 -- 
 2.23.0
 
