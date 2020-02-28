@@ -2,45 +2,44 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D214C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA99C3F2D3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229E12064A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06321246AC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="EkQ5dMEO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="AteLBv85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgB1QBJ (ORCPT
+        id S1727252AbgB1QBE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:01:09 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:33566 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbgB1QBI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 11:01:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582905666;
+        Fri, 28 Feb 2020 11:01:04 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:36141 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbgB1QBD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 11:01:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582905660;
         s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Ay31G7exAkSbg3PL1nOzfK8qqlNf1gmdrl8NmheHFD8=;
-        b=EkQ5dMEOfGDQHO6gCTfYD/RC/vUI0V/6tQgBxMhJK9BCaWu+pUBJT533EFcMgguNw9
-        D5m7FoNNxXWw9EiD3382vG7sO72FeWynJObHctMNzF2P/KyycZxqf+eW9C/rvxykddQr
-        dwtLaZjrLYnvORd2K+f5Ql+2ZWyFVhd91RvSwkugOCYkDCE7W5DKWD4mKZexI3RsezgD
-        XyKfC4/o2lx34FCeYzoouXxxDRtQxMD8rNM9drWFO+WTG1sEZ+RvJnXpaOTWdrpRNFaK
-        +595XDsTjCArILb1R7fQLZ56vZLfie+jopiZJC/qbSvn3hZ+d18U673x7reAuLygQZpR
-        PSLw==
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=3vVLyvNBvLoUPS7a958Mox8CACN92ClzYCsPXl4lY7g=;
+        b=AteLBv85qK73Kw2VZvb8tNJyrbK1Erf2GjwPGFM5i2lRGxcjv83Uo91ing+JEScVtN
+        3xw6iKP80FVDU6eU/zo04quhqdZ+PvFItVk1BOkRT39OVpf1zS9b+tUXB32b6grRTDvj
+        Zvq0yorTz2SWtRA+cQ0KuyHHaB5NdtO5cCZwxsUM9t2Wy/AnSo1pSEk1fIP1g+JVbN/n
+        TrapXRE/+04nVsZtEGKyQW0odEv+LBg127Kr8clTL1CW8UW6e/uiwBEfseKsBcdh08w3
+        KA9UFigOu2oKyju5oFfKvPBq1+ifvuboXANLJ/eTr+ZbkQYLJq5yO4CnL8llxxrInl0D
+        DTAQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SG0v1lB
+        with ESMTPSA id y0a02cw1SG0s1l2
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 28 Feb 2020 17:00:57 +0100 (CET)
+        Fri, 28 Feb 2020 17:00:54 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
         Andreas Kemnade <andreas@kemnade.info>,
@@ -63,12 +62,10 @@ To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [PATCH v8 4/7] Documentation: ABI: nvmem: add documentation for JZ4780 efuse ABI
-Date:   Fri, 28 Feb 2020 17:00:50 +0100
-Message-Id: <08f3bb4e0fe5499907c4e07fa6751bfb2016f23d.1582905653.git.hns@goldelico.com>
+Subject: [PATCH v8 0/7] MIPS: CI20: Add efuse driver for Ingenic JZ4780 and attach to DM9000 for stable MAC addresses
+Date:   Fri, 28 Feb 2020 17:00:46 +0100
+Message-Id: <cover.1582905653.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1582905653.git.hns@goldelico.com>
-References: <cover.1582905653.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -76,41 +73,91 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+* fix a compiler warning/error (reported by Paul Cercueil <paul@crapouillou.net>)
+* remove clock-names from properties (suggested by Paul Cercueil <paul@crapouillou.net>)
 
-This patch brings support for the JZ4780 efuse. Currently it only exposes
-a read only access to the entire 8K bits efuse memory.
+PATCH V7 2020-02-28 14:58:30:
+* use devm_add_action_or_reset to unprepare clock in case of error (suggested by Paul Cercueil <paul@crapouillou.net>)
+* use already existing constants to check for overflow of rd_adj and rd_strobe
+* remove clock-names from bindings example and DTS (suggested by Paul Cercueil <paul@crapouillou.net>)
+* addition for nemc driver to handle this correctly (contributed by Paul Cercueil <paul@crapouillou.net>)
+* make efuse a child node of nemc to avoid problems with overlapping
+  reg address ranges (suggested by Paul Cercueil <paul@crapouillou.net>)
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
----
- .../ABI/testing/sysfs-driver-jz4780-efuse        | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+PATCH V6 2020-02-26 12:16:07:
+* add dependency on CONFIG_OF and select REGMAP_MMIO (suggested by Paul Cercueil <paul@crapouillou.net>)
+* add clk_prepare_enable() (suggested by Paul Cercueil <paul@crapouillou.net>)
+* inline jz4780_efuse_read_32bytes() since it is only used once
+* remove read optimization for full block (suggested by Paul Cercueil <paul@crapouillou.net>)
+* simplify calculations for rd_adj and rd_strobe (suggested by Paul Cercueil <paul@crapouillou.net>)
+* do calculations for rd_adj and rd_strobe in local variables
+* fix overflow check (did allow for 5 bit values although register is 4 bit wide)
+* fixes for yaml (sugested by Andreas Kemnade <andreas@kemnade.info>)
+
+PATCH V5 2020-02-22 11:25:35:
+* no longer RFC but PATCH
+* add yaml bindings (by Andreas Kemnade <andreas@kemnade.info>)
+* fixes to yaml (suggested by Rob Herring <robh@kernel.org>)
+
+RFC V4 2020-02-17 17:55:35:
+* removed read_only for nvmem config because there is no write method
+* Kconfig: replaced depends MACH_JZ4780 with MACH_INGENIC
+* run through checkpatch and fixed issues
+* made use of devm_nvram_register() and get rid of jz4780_efuse_remove()
+  (suggested by Srinivas Kandagatla <srinivas.kandagatla@linaro.org>)
+* squashed previous patch 1/9 and 2/9 into single (regmap based) driver
+
+RFC V3 2020-02-16 20:20:59:
+
+This series is based on and a follow up for
+
+https://lore.kernel.org/patchwork/cover/868157/
+
+("[v2,0/2] Add efuse driver for Ingenic JZ4780 SoC")
+
+Original authors were
+PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Mathieu Malaterre <malat@debian.org>
+
+and there are additions / code improvements by
+H. Nikolaus Schaller <hns@goldelico.com>
+Paul Cercueil <paul@crapouillou.net>
+
+This setup works, if the dm9000 driver is compiled
+as a module.
+
+Therefore it is all RFC level. It is also not completely
+checkpatched.
+
+
+H. Nikolaus Schaller (1):
+  MIPS: DTS: CI20: make DM9000 Ethernet controller use NVMEM to find the
+    default MAC address
+
+Paul Cercueil (1):
+  memory: jz4780_nemc: Only request IO memory the driver will use
+
+PrasannaKumar Muralidharan (5):
+  nvmem: add driver for JZ4780 efuse
+  Bindings: nvmem: add bindings for JZ4780 efuse
+  Documentation: ABI: nvmem: add documentation for JZ4780 efuse ABI
+  nvmem: MAINTAINERS: add maintainer for JZ4780 efuse driver
+  MIPS: DTS: JZ4780: define node for JZ4780 efuse
+
+ .../ABI/testing/sysfs-driver-jz4780-efuse     |  16 ++
+ .../bindings/nvmem/ingenic,jz4780-efuse.yaml  |  45 ++++
+ MAINTAINERS                                   |   5 +
+ arch/mips/boot/dts/ingenic/ci20.dts           |   3 +
+ arch/mips/boot/dts/ingenic/jz4780.dtsi        |  19 +-
+ drivers/memory/jz4780-nemc.c                  |  15 +-
+ drivers/nvmem/Kconfig                         |  12 +
+ drivers/nvmem/Makefile                        |   2 +
+ drivers/nvmem/jz4780-efuse.c                  | 239 ++++++++++++++++++
+ 9 files changed, 353 insertions(+), 3 deletions(-)
  create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+ create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+ create mode 100644 drivers/nvmem/jz4780-efuse.c
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-jz4780-efuse b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
-new file mode 100644
-index 000000000000..bb6f5d6ceea0
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
-@@ -0,0 +1,16 @@
-+What:		/sys/devices/*/<our-device>/nvmem
-+Date:		December 2017
-+Contact:	PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-+Description:	read-only access to the efuse on the Ingenic JZ4780 SoC
-+		The SoC has a one time programmable 8K efuse that is
-+		split into segments. The driver supports read only.
-+		The segments are
-+		0x000   64 bit Random Number
-+		0x008  128 bit Ingenic Chip ID
-+		0x018  128 bit Customer ID
-+		0x028 3520 bit Reserved
-+		0x1E0    8 bit Protect Segment
-+		0x1E1 2296 bit HDMI Key
-+		0x300 2048 bit Security boot key
-+Users:		any user space application which wants to read the Chip
-+		and Customer ID
 -- 
 2.23.0
 
