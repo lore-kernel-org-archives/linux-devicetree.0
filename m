@@ -2,136 +2,117 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33713C3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0840BC3F2CF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083F624691
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12EB24691
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i0mXqGQr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j/Fs6l++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgB1GdO (ORCPT
+        id S1726103AbgB1Get (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:33:14 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44174 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbgB1GdO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 01:33:14 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d9so838829plo.11
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 22:33:13 -0800 (PST)
+        Fri, 28 Feb 2020 01:34:49 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39750 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgB1Get (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 01:34:49 -0500
+Received: by mail-pf1-f194.google.com with SMTP id l7so1200910pff.6
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 22:34:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z16ZHpuypSAVdnxOxij5MvVMLN1BTwXGBSuHheXl+q8=;
-        b=i0mXqGQr5GdP34akzJU2rXrJDzTsqrX/p7eCKI/ia2WYggc9Ju1+iUOP0ImylqI54T
-         IKZX8AnrS+OqtZbM/AcsiLzWkA3iw+DD819cIseEZN+GSnbbddb+cAyMlijjCRPp3YTl
-         dQG3CXIhIVahebgHL9zMYwpQIvpTIxC6TMZhdx3VC5FGxMkvCj5aPQ1Wfhmj9H1aBTiL
-         tWAVIr6+FJf0qcpTQw1cGyEi/GaGAr4khCC7BGLEPPrzA+amdm+OYT0/j8TWtFTsNOK9
-         I5BUCS1TNSU0ugPdvCzMBgqrpS1ksu1zSkdbWbeOoblsDdImhhTxBovEs0BvTG9FT18M
-         Q+oQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=H06v/GT9nj7/Fe27LeiShYTU4s7PYoRFGJxdUeLF4jk=;
+        b=j/Fs6l++dZ9qALBWak3L+c7UXa4IIRLPenWuacNuEQd8dh3UcBTbCvLq9o546UICn3
+         lwOjLXjWkV01CTlA8JXRELlPW1aRpgcFw/7OHYdLgBFUFjx0D4ZxDFSD+Gj/720l8LXJ
+         OW/OZvqBxYdZrumh3va0nAAytKMaq1z0JFgITQCiXfy44z0D0d2OS52FEmUPTK0GC41r
+         m1WodAtFulspPeMqlkk650z8YG3n0iwfGyyXF9emc6VaRNlDiB+ABeHPlHO/tKR2XTsW
+         geeAgNNQplWQj+VceArexHJvFizxttahyfdxckRpNRAXwnEhxdGOmszhv6tNuYtO8COY
+         hbLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z16ZHpuypSAVdnxOxij5MvVMLN1BTwXGBSuHheXl+q8=;
-        b=BYO7gapXqAr4oxe4E1gXzlXqn0ChURpXcv+5gGebE4kZNWwLdDpOubW0BcXxmTMLkm
-         ndgcFF7u/43oAvaTh1qeVduLSmFkgK2DuIaPCWVj2Qh700DZcbACHoP2O3zwl3b5s1EB
-         v1pZahiA+PlxYVicb1zXuIit5mJExKbFhqOj2S/PLIkfbvtJOdVPhWPFkffrssZqG/61
-         KORl+ejyZ/uHTy325ZDfuAGa7wzmTO2BF3YlK83ywmaKtX0Acq5EZJ9KfZsJP3Pf5fRC
-         w2pMQ819N/+q/75JAxU04S/4znRKJYCDsFK2t3vlZgwbsNwzV2hMkEpagWn6Ow1YXKUb
-         mHfw==
-X-Gm-Message-State: APjAAAV2Wkels9PdEBPWpDjPlcWcKBwyBkNxpkMtD26dH8/XrMWvFRap
-        cqqW1or7idLUI1bpuCOa8ltBWFPqy58=
-X-Google-Smtp-Source: APXvYqw1CF+JtIMKBXwKc+VzDvcLRXgVhoVWOsCC12dQe/rihzCnhdFZbclxJc7jAwzPUcFCvD5uKg==
-X-Received: by 2002:a17:902:9a48:: with SMTP id x8mr2747564plv.14.1582871592974;
-        Thu, 27 Feb 2020 22:33:12 -0800 (PST)
-Received: from localhost ([103.249.89.56])
-        by smtp.gmail.com with ESMTPSA id d73sm9942863pfd.109.2020.02.27.22.33.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H06v/GT9nj7/Fe27LeiShYTU4s7PYoRFGJxdUeLF4jk=;
+        b=V05Zz4eEF6a6/YmdrsN6VuCFA7mjelCR+GsshbS8qgyt6BK00xy2AlCwharfLcXfIB
+         Jro/LgDzPP5NITgYhIoWcZTCs5g9C21k5ma/ZWQ6G4+28+5fLBJ7m9E9WJ5axb3+bnQk
+         BjIAGoCahfx+gZIsr40TivH23HBASi0TYa2jP8nIOwcsDiEol1i5r9M1MDldkv2xHfpM
+         1ieSobfj/ZIZ0QBgJ8QTjx+td6EkdLDuV5d4E34d76DFB0Y3A/cpRIdjBJ7IPjsKTftx
+         P19rGyLScPXjwAbFWI2VFgyuSIharkYumnFfzNYT0ABvDKeIa4yMzu4OJbgXwax6qKXR
+         OyZA==
+X-Gm-Message-State: APjAAAW1JiGAIOydcwfwVGLPBkGBu4hmwoQSEsbziq3/V8CCz+lZzHkX
+        gdt7b5ERpkc4v5XojBKiEGDAvA==
+X-Google-Smtp-Source: APXvYqxyhqToHPPmsxUjYcwCyp1GEtdva6uxDKjmSZjjjjLhF2foY+Q+zG+CAqTI2APSlmWFURYZvA==
+X-Received: by 2002:a63:2c03:: with SMTP id s3mr2934770pgs.19.1582871687805;
+        Thu, 27 Feb 2020 22:34:47 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y5sm9392183pfr.169.2020.02.27.22.34.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 22:33:12 -0800 (PST)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vkoul@kernel.org, daniel.lezcano@linaro.org,
-        bjorn.andersson@linaro.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v4 3/3] arm64: dts: qcom: msm8996:: Add qcom,tsens-v2 to msm8996.dtsi compatible
-Date:   Fri, 28 Feb 2020 12:02:42 +0530
-Message-Id: <ebaa801adade53c567857db2f74af7d2e00f935b.1582871139.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1582871139.git.amit.kucheria@linaro.org>
-References: <cover.1582871139.git.amit.kucheria@linaro.org>
+        Thu, 27 Feb 2020 22:34:46 -0800 (PST)
+Date:   Thu, 27 Feb 2020 22:34:44 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: sc7180: Enable soc sleep stats
+Message-ID: <20200228063444.GA857139@builder>
+References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
+ <1582274986-17490-4-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582274986-17490-4-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The qcom-tsens binding requires a SoC-specific and a TSENS
-family-specific binding to be specified in the compatible string.
+On Fri 21 Feb 00:49 PST 2020, Maulik Shah wrote:
 
-Since them family-specific binding is not listed in the .dtsi file, we
-see the following warnings in 'make dtbs_check'. Fix them.
+> SoC sleep stats provides various low power mode stats.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 8011c5f..eee6d92 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -745,6 +745,11 @@
+>  			};
+>  		};
+>  
+> +		rpmh_sleep_stats: soc-sleep-stats@c3f0000 {
 
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is not valid
-under any of the given schemas (Possible causes of the failure):
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is too short
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
-['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
-['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+I don't see any reason to reference this node, so you should be able to
+omit the label(?)
 
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is not valid
-under any of the given schemas (Possible causes of the failure):
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is too short
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
-['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
-['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> +			compatible = "qcom,rpmh-sleep-stats";
+> +			reg = <0 0xc3f0000 0 0x400>;
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Please pad the address to 8 digits and sort the nodes by address.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 7ae082ea14ea..f157cd4f53b4 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -446,7 +446,7 @@
- 		};
- 
- 		tsens0: thermal-sensor@4a9000 {
--			compatible = "qcom,msm8996-tsens";
-+			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
- 			reg = <0x004a9000 0x1000>, /* TM */
- 			      <0x004a8000 0x1000>; /* SROT */
- 			#qcom,sensors = <13>;
-@@ -457,7 +457,7 @@
- 		};
- 
- 		tsens1: thermal-sensor@4ad000 {
--			compatible = "qcom,msm8996-tsens";
-+			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
- 			reg = <0x004ad000 0x1000>, /* TM */
- 			      <0x004ac000 0x1000>; /* SROT */
- 			#qcom,sensors = <8>;
--- 
-2.20.1
+Regards,
+Bjorn
 
+> +		};
+> +
+>  		tcsr_mutex_regs: syscon@1f40000 {
+>  			compatible = "syscon";
+>  			reg = <0 0x01f40000 0 0x40000>;
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
