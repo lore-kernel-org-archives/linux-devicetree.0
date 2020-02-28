@@ -2,136 +2,124 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB69C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABD3C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21655246AC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E6C12469F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:32:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUeTvM/9"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rK2xvdfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgB1O3A (ORCPT
+        id S1726694AbgB1Oc4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:29:00 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:39652 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgB1O3A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:29:00 -0500
-Received: by mail-yw1-f66.google.com with SMTP id x184so3437739ywd.6;
-        Fri, 28 Feb 2020 06:28:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1miRK1mEzWH0HleISod00fDwFSsYi7WyuiSe/ld2DLI=;
-        b=lUeTvM/956qY6JCuxDkIsb+rLf4crpckakgsKjC0WUp3bu1rQQqUZ5ZsWh0WnsX7fk
-         owyoGlajBnyfUiYtUyIeg0H4sDiFQT9tHt383NLV4fRbJYxg2oxVd4OYXntF6U88wKV5
-         ol2e1hPDbGtmZZY/27TlmMeL2bvffxFIBBgYkAR6U7WIGo5jyQOyFi/fm/3bHEAYBtX4
-         EMHKAOnICW/uH7sPH1z+vVHA0o0EFCnoV81bOtXKi5puxsyEq6sxcFedwr3hfWoqFsud
-         QBL8rgKhg1Wj2K0dPDDR3wZciJhRn6YLbc6E9T8MuFoyN2+XCv5qQKQegBzSdn/4+m07
-         SQUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1miRK1mEzWH0HleISod00fDwFSsYi7WyuiSe/ld2DLI=;
-        b=QOn2EhyqpVNWhgoB6ML1lgn+0ZQfRoDpLCFnT8xDJFFwyeoFCyMIjJwLLIDY+++xar
-         +iuIx1Uxyptr2uVVkiSu73Q9g4OYflV7DaBcajdKywYiB4C3Me4wJNvtwVkuLN5F0CTp
-         5PopfDffhBtHbiuQdN60s2c/Ppvb0AumfgJ4oovFGjOQPtYA1TFwA3IwHdYk12V5VVWz
-         igvBHl+0PzsnUzKNQjSuJXlq62PCsr/LpXZIufNt4Xi52G8ShualPSrqWiNgIKxiQJ07
-         YGWwLOUIPzT84sacxQwQsAjYKWihOOZRkp62gaIofd0sJbmrHYJoSCxvdVw8541K+h8Y
-         KemA==
-X-Gm-Message-State: APjAAAU5b9lynyQZe2t1Wj4ttac9YrNKGL2eRMZNj9iJYOi95oIM7GDN
-        7QCIQLX6+WyvkWjF6nUGtA8=
-X-Google-Smtp-Source: APXvYqyqYrbxvlzw9FZLEHH+UjYlW5TslsoD/PAZmEBH+GpBMHOOKPmN0B3RPc+ev4VICRqHACbw3A==
-X-Received: by 2002:a25:4843:: with SMTP id v64mr3616892yba.315.1582900139260;
-        Fri, 28 Feb 2020 06:28:59 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id d125sm2700754ywb.94.2020.02.28.06.28.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Feb 2020 06:28:58 -0800 (PST)
-Subject: Re: [PATCH v3] of: overlay: log the error cause on resolver failure
-To:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-References: <20200228084027.10797-1-luca@lucaceresoli.net>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <37e8707f-a351-7979-98f5-36c5c30a16dd@gmail.com>
-Date:   Fri, 28 Feb 2020 08:28:58 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 28 Feb 2020 09:32:56 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:28862 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726860AbgB1Oc4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:32:56 -0500
+X-UUID: 2e8db6e70c9c49dda18a0ffc1f66d1f1-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=tCcBPOv9JtXBkELXSRqCsT2eYGkv19cNJithXm3gQmI=;
+        b=rK2xvdfFpUEKoKLgQMQtPi0oTugLow49yQ9vccqNylPPRo0ThMvqO1nx9zBCZNJZ3MbgtWHT1sNLleghvtYcx10mPhdXGxnrCOyX97ekU01OSV3UtHax94Ns0XvPfjRduWQIT1khCC+TRsw7GqXLid2xZjfYnEeU0g3vNuFa/Xo=;
+X-UUID: 2e8db6e70c9c49dda18a0ffc1f66d1f1-20200228
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1308984288; Fri, 28 Feb 2020 22:32:51 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 22:31:51 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 22:32:41 +0800
+Message-ID: <1582900369.14824.2.camel@mtksdaap41>
+Subject: Re: [PATCH v3 12/13] soc: mediatek: cmdq: add clear option in
+ cmdq_pkt_wfe api
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Fri, 28 Feb 2020 22:32:49 +0800
+In-Reply-To: <1582897461-15105-14-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-14-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200228084027.10797-1-luca@lucaceresoli.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/28/20 2:40 AM, Luca Ceresoli wrote:
-> When a DT overlay has a node label that is not present in the live
-> devicetree symbols table, this error is printed:
-> 
->   OF: resolver: overlay phandle fixup failed: -22
->   create_overlay: Failed to create overlay (err=-22)
-> 
-> which does not help much in finding the node label that caused the problem
-> and fix the overlay source.
-> 
-> Add an error message with the name of the node label that caused the
-> error. The new output is:
-> 
->   OF: resolver: node label 'gpio9' not found in live devicetree symbols table
->   OF: resolver: overlay phandle fixup failed: -22
->   create_overlay: Failed to create overlay (err=-22)
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-
-Thanks Luca, looks good.
-
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-
--Frank
-
-
-> 
-> ---
-> 
-> Changed in v3:
->  - add only the message from v1, but as reworded by Frank
-> 
-> Changed in v2:
->  - add a message for each error path that does not have one yet
-> ---
->  drivers/of/resolver.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 83c766233181..b278ab4338ce 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -321,8 +321,11 @@ int of_resolve_phandles(struct device_node *overlay)
->  
->  		err = of_property_read_string(tree_symbols,
->  				prop->name, &refpath);
-> -		if (err)
-> +		if (err) {
-> +			pr_err("node label '%s' not found in live devicetree symbols table\n",
-> +			       prop->name);
->  			goto out;
-> +		}
->  
->  		refnode = of_find_node_by_path(refpath);
->  		if (!refnode) {
-> 
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IEFkZCBjbGVhciBwYXJhbWV0ZXIgdG8gbGV0IGNsaWVudCBkZWNp
+ZGUgaWYNCj4gZXZlbnQgc2hvdWxkIGJlIGNsZWFyIHRvIDAgYWZ0ZXIgR0NFIHJlY2VpdmUgaXQu
+DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBt
+ZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVs
+cGVyLmMgICB8IDUgKysrLS0NCj4gIGluY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWls
+Ym94LmggfCAzICstLQ0KPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAg
+ICB8IDUgKysrLS0NCj4gIDMgZmlsZXMgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCA2IGRlbGV0
+aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRx
+LWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gaW5k
+ZXggYmJjNjhhN2M4MWU5Li40MDZlMWQzNGQyMzQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29j
+L21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVr
+L210ay1jbWRxLWhlbHBlci5jDQo+IEBAIC0yOTUsMTUgKzI5NSwxNiBAQCBpbnQgY21kcV9wa3Rf
+d3JpdGVfc192YWx1ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGhpZ2hfYWRkcl9yZWdfaWR4
+LA0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9zX3ZhbHVlKTsNCj4gIA0K
+PiAtaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGV2ZW50KQ0KPiAr
+aW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGV2ZW50LCBib29sIGNs
+ZWFyKQ0KPiAgew0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0K
+PiArCXUzMiBjbGVhcl9vcHRpb24gPSBjbGVhciA/IENNRFFfV0ZFX1VQREFURSA6IDA7DQo+ICAN
+Cj4gIAlpZiAoZXZlbnQgPj0gQ01EUV9NQVhfRVZFTlQpDQo+ICAJCXJldHVybiAtRUlOVkFMOw0K
+PiAgDQo+ICAJaW5zdC5vcCA9IENNRFFfQ09ERV9XRkU7DQo+IC0JaW5zdC52YWx1ZSA9IENNRFFf
+V0ZFX09QVElPTjsNCj4gKwlpbnN0LnZhbHVlID0gQ01EUV9XRkVfT1BUSU9OIHwgY2xlYXJfb3B0
+aW9uOw0KPiAgCWluc3QuZXZlbnQgPSBldmVudDsNCj4gIA0KPiAgCXJldHVybiBjbWRxX3BrdF9h
+cHBlbmRfY29tbWFuZChwa3QsIGluc3QpOw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9t
+YWlsYm94L210ay1jbWRxLW1haWxib3guaCBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21k
+cS1tYWlsYm94LmgNCj4gaW5kZXggM2Y2YmMwZGZkNWRhLi40MmQyYTMwZTZhNzAgMTAwNjQ0DQo+
+IC0tLSBhL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gKysrIGIv
+aW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBAQCAtMjcsOCArMjcs
+NyBAQA0KPiAgICogYml0IDE2LTI3OiB1cGRhdGUgdmFsdWUNCj4gICAqIGJpdCAzMTogMSAtIHVw
+ZGF0ZSwgMCAtIG5vIHVwZGF0ZQ0KPiAgICovDQo+IC0jZGVmaW5lIENNRFFfV0ZFX09QVElPTgkJ
+CShDTURRX1dGRV9VUERBVEUgfCBDTURRX1dGRV9XQUlUIHwgXA0KPiAtCQkJCQlDTURRX1dGRV9X
+QUlUX1ZBTFVFKQ0KPiArI2RlZmluZSBDTURRX1dGRV9PUFRJT04JCQkoQ01EUV9XRkVfV0FJVCB8
+IENNRFFfV0ZFX1dBSVRfVkFMVUUpDQo+ICANCj4gIC8qKiBjbWRxIGV2ZW50IG1heGltdW0gKi8N
+Cj4gICNkZWZpbmUgQ01EUV9NQVhfRVZFTlQJCQkweDNmZg0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVk
+ZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBiL2luY2x1ZGUvbGludXgvc29jL21lZGlh
+dGVrL210ay1jbWRxLmgNCj4gaW5kZXggMWE2YzU2ZjNiZWMxLi5kNjM3NDk0NDA2OTcgMTAwNjQ0
+DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gKysrIGIv
+aW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBAQCAtMTUyLDExICsxNTIs
+MTIgQEAgaW50IGNtZHFfcGt0X3dyaXRlX3NfdmFsdWUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUx
+NiBoaWdoX2FkZHJfcmVnX2lkeCwNCj4gIC8qKg0KPiAgICogY21kcV9wa3Rfd2ZlKCkgLSBhcHBl
+bmQgd2FpdCBmb3IgZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gICAqIEBwa3Q6
+CXRoZSBDTURRIHBhY2tldA0KPiAtICogQGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0eXBlIHRv
+ICJ3YWl0IGFuZCBDTEVBUiINCj4gKyAqIEBldmVudDoJdGhlIGRlc2lyZWQgZXZlbnQgdHlwZSB0
+byB3YWl0DQo+ICsgKiBAY2xlYXI6CWNsZWFyIGV2ZW50IG9yIG5vdCBhZnRlciBldmVudCBhcnJp
+dmUNCj4gICAqDQo+ICAgKiBSZXR1cm46IDAgZm9yIHN1Y2Nlc3M7IGVsc2UgdGhlIGVycm9yIGNv
+ZGUgaXMgcmV0dXJuZWQNCj4gICAqLw0KPiAtaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9w
+a3QgKnBrdCwgdTE2IGV2ZW50KTsNCj4gK2ludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNtZHFfcGt0
+ICpwa3QsIHUxNiBldmVudCwgYm9vbCBjbGVhcik7DQoNCkkgdGhpbmsgeW91IHNob3VsZCBtb2Rp
+ZnkgY2xpZW50IGRyaXZlciBbMV0gYXMgd2VsbCBpbiB0aGlzIHBhdGNoLg0KQ2hhbmdlIGl0IHRv
+DQoNCmNtZHFfcGt0X3dmZShjbWRxX2hhbmRsZSwgbXRrX2NydGMtPmNtZHFfZXZlbnQsIGZhbHNl
+KTsNCg0KWzFdDQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dp
+dC90b3J2YWxkcy9saW51eC5naXQvdHJlZS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9jcnRjLmM/aD12NS42LXJjMyNuNDkxDQoNClJlZ2FyZHMsDQpDSw0KDQo+ICANCj4gIC8qKg0K
+PiAgICogY21kcV9wa3RfY2xlYXJfZXZlbnQoKSAtIGFwcGVuZCBjbGVhciBldmVudCBjb21tYW5k
+IHRvIHRoZSBDTURRIHBhY2tldA0KDQo=
 
