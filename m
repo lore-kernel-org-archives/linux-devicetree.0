@@ -2,104 +2,179 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832F8C3F2CF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC77C3F2CF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507942469C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A960222C2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:55:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JZWWWXPQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jxcmDlc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725802AbgB1GpX (ORCPT
+        id S1726788AbgB1GzM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:45:23 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36169 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgB1GpW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 01:45:22 -0500
-Received: by mail-pg1-f196.google.com with SMTP id d9so1010944pgu.3
-        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 22:45:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XbwCgyzVBr1Eex7C4dZmk+lP7N9qyM1bwXDkPQVNSxc=;
-        b=JZWWWXPQlwpFMM+AmL6fMEUoHrxuhqLoDilpUgmvmVAKEqhhSePTAMQ0slt9Lf5vZo
-         iF+l3WGS3z/TWp1qwOj9Y5Erx2EscBNgXkxVBbHaAMkr43nhTaK3z1dIEP3JvH4uQ0cd
-         Jw/I5bKUULhGu7gue52JYD7uwP+zoMV1UE2OFwxi1II9q0QEfOWd4xrgBdDzmoy3BKHu
-         JPeQRnH1EI+M6Xvs+CSnnSqHAMAAr644hSU4Vg0TF8dxceiw0rA3MrUGiracAi71k2MI
-         RmDW3uM6RVjhir88gnl+P0vD5jj83Wa4cCg3MOrGfMBL6l+1QaB7saiu8yMmw30wZkFZ
-         mzCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XbwCgyzVBr1Eex7C4dZmk+lP7N9qyM1bwXDkPQVNSxc=;
-        b=LyvJnaxhsEWVz6m4zUAsDykHDMjtw8QVMbBcuiao649L2H7Y1kX+/3Nh1BBf5KW2YJ
-         LSXClIG6ckoe8G9WcFxqgvVeND3UdRzNETgs4KueDeh2ZhLvj4Ch5Ht+0mhiJRi36407
-         mXzMv6ZG203Ye1+D3rGx+QhaUlTrvCltX1sDttW5sx+Zj4HANIV28nFZmk201byf5fac
-         giCn+vGDkKoQobv2juzCBzv+noSsi4b7gzVKyCBt+cgHTnuhYbX1A9yWcUx0oc9NckbM
-         GfIszrfCs+fhgF633UL2DuLO0XldRgeTlkFNXHM/Vh6uGaFqhXVFoBf3IXIdnoDRgutX
-         qVUg==
-X-Gm-Message-State: APjAAAU/Ef4OJKAWQt74OAk4LjF8B2BGIy+RSIzaGtpGHMRPlbUvcbK0
-        NjGHyylNMjsgW05AIKUOLdlyAg==
-X-Google-Smtp-Source: APXvYqzF8ji+gn0dQ8v39z9gCg4DrDb6BT+aNjn8AKK6duXJ7WHZBsqH1TJg6ktNWWvBpX27Ce2TWw==
-X-Received: by 2002:aa7:8e9e:: with SMTP id a30mr3031533pfr.158.1582872321548;
-        Thu, 27 Feb 2020 22:45:21 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g10sm9711018pfo.166.2020.02.27.22.45.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 22:45:20 -0800 (PST)
-Date:   Thu, 27 Feb 2020 22:45:18 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vkoul@kernel.org, daniel.lezcano@linaro.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] Cleanup dtbs_check warnings for tsens
-Message-ID: <20200228064518.GD857139@builder>
-References: <cover.1582871139.git.amit.kucheria@linaro.org>
+        Fri, 28 Feb 2020 01:55:12 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:44256 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726792AbgB1GzM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 01:55:12 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582872911; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ocx4fj9vAB5RcFI/K8qcqaNpKxontpgTVQkM0E6lBf0=; b=jxcmDlc0EPKhZb4PLxvPAgb3CU8GqXcpBts6KP/SGurlXh05vlvPkA+maMyo8YP/edx98zMT
+ gHIooXzGSrPEiJ4klKkhfVa2Hm8cTUqSoTDG9T6n8teCpF/OfJm+XXdJec6SxQl6WSk+1NUO
+ PDuPhz/X/BXt5rfnyw8QDyfC48E=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e58b93f.7ff823006228-smtp-out-n03;
+ Fri, 28 Feb 2020 06:54:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E44C8C447A3; Fri, 28 Feb 2020 06:54:53 +0000 (UTC)
+Received: from [10.206.25.58] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sayalil)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 217EBC43383;
+        Fri, 28 Feb 2020 06:54:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 217EBC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sayalil@codeaurora.org
+Subject: Re: [PATCH RFC] mmc: sdhci-msm: Toggle fifo write clk after ungating
+ sdcc clk
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org, stummala@codeaurora.org,
+        ppvk@codeaurora.org, rampraka@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, linux-mmc-owner@vger.kernel.org
+References: <1582190446-4778-1-git-send-email-sayalil@codeaurora.org>
+ <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
+ <4e4f1e44-8033-94e9-641c-a74232727895@codeaurora.org>
+From:   Sayali Lokhande <sayalil@codeaurora.org>
+Message-ID: <f486df9d-072e-6a39-82a8-3d21465653b3@codeaurora.org>
+Date:   Fri, 28 Feb 2020 12:24:45 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1582871139.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <4e4f1e44-8033-94e9-641c-a74232727895@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 27 Feb 22:32 PST 2020, Amit Kucheria wrote:
+Hi Veera,
 
-> Make dtbs_check pass for tsens bits. I'm working on another series to
-> cleanup other DT warnings for QC platforms.
-> 
-
-Thanks for the fast respin, patch 2 and 3 applied.
-
-> Changes since v3:
-> - Fixed up subject prefix
-> - Added acks.
-> 
-> Amit Kucheria (3):
->   dt-bindings: thermal: tsens: Add entry for sc7180 tsens to binding
->   arm64: dts: qcom: msm8916:: Add qcom,tsens-v0_1 to msm8916.dtsi
->     compatible
->   arm64: dts: qcom: msm8996:: Add qcom,tsens-v2 to msm8996.dtsi
->     compatible
-> 
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
->  arch/arm64/boot/dts/qcom/msm8916.dtsi                     | 2 +-
->  arch/arm64/boot/dts/qcom/msm8996.dtsi                     | 4 ++--
->  3 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+On 2/24/2020 7:19 PM, Veerabhadrarao Badiganti wrote:
+>
+> On 2/20/2020 2:50 PM, Sayali Lokhande wrote:
+>> From: Ram Prakash Gupta <rampraka@codeaurora.org>
+>>
+>> During GCC level clock gating of MCLK, the async FIFO
+>> gets into some hang condition, such that for the next
+>> transfer after MCLK ungating, first bit of CMD response
+>> doesn't get written in to the FIFO. This cause the CPSM
+>> to hang eventually leading to SW timeout.
+>>
+>> To fix the issue, toggle the FIFO write clock after
+>> MCLK ungated to get the FIFO pointers and flags to
+>> valid states.
+>>
+>> Change-Id: Ibef2d1d283ac0b6983c609a4abc98bc574d31fa6
+>> Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
+>> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+>> ---
+>>   drivers/mmc/host/sdhci-msm.c | 43 
+>> +++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 43 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>> index c3a160c..eaa3e95 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -127,6 +127,8 @@
+>>   #define CQHCI_VENDOR_CFG1    0xA00
+>>   #define CQHCI_VENDOR_DIS_RST_ON_CQ_EN    (0x3 << 13)
+>>   +#define RCLK_TOGGLE 0x2
+>> +
+>>   struct sdhci_msm_offset {
+>>       u32 core_hc_mode;
+>>       u32 core_mci_data_cnt;
+>> @@ -1554,6 +1556,43 @@ static void __sdhci_msm_set_clock(struct 
+>> sdhci_host *host, unsigned int clock)
+>>       sdhci_enable_clk(host, clk);
+>>   }
+>>   +/*
+>> + * After MCLK ugating, toggle the FIFO write clock to get
+>> + * the FIFO pointers and flags to valid state.
+>> + */
+>> +static void sdhci_msm_toggle_fifo_write_clk(struct sdhci_host *host)
+>> +{
+>> +    struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +    struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +    const struct sdhci_msm_offset *msm_offset =
+>> +                    msm_host->offset;
+>> +    struct mmc_card *card = host->mmc->card;
+>> +
+>> +    if (msm_host->tuning_done ||
+>> +            (card && card->ext_csd.strobe_support &&
+>> +            card->host->ios.enhanced_strobe)) {
+>
+> This issue is present on only HS400ES mode.
+>
+> If(host->ios.enhanced_strob) check should be sufficient, other checks 
+> are not needed.
+Agree, Will update.
+>
+>> +        /*
+>> +         * set HC_REG_DLL_CONFIG_3[1] to select MCLK as
+>> +         * DLL input clock
+>> +         */
+>> +        writel_relaxed(((readl_relaxed(host->ioaddr +
+>> +            msm_offset->core_dll_config_3))
+>> +            | RCLK_TOGGLE), host->ioaddr +
+>> +            msm_offset->core_dll_config_3);
+>> +        /* ensure above write as toggling same bit quickly */
+>> +        wmb();
+>> +        udelay(2);
+>> +        /*
+>> +         * clear HC_REG_DLL_CONFIG_3[1] to select RCLK as
+>> +         * DLL input clock
+>> +         */
+>> +        writel_relaxed(((readl_relaxed(host->ioaddr +
+>> +            msm_offset->core_dll_config_3))
+>> +            & ~RCLK_TOGGLE), host->ioaddr +
+>> +            msm_offset->core_dll_config_3);
+>> +    }
+>> +}
+>> +
+>>   /* sdhci_msm_set_clock - Called with (host->lock) spinlock held. */
+>>   static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned 
+>> int clock)
+>>   {
+>> @@ -2149,6 +2188,10 @@ static __maybe_unused int 
+>> sdhci_msm_runtime_resume(struct device *dev)
+>>                          msm_host->bulk_clks);
+>>       if (ret)
+>>           return ret;
+>> +    if (host->mmc &&
+>> +            (host->mmc->ios.timing == MMC_TIMING_MMC_HS400))
+> These checks are not needed. You can have these checks within 
+> sdhci_msm_toggle_fifo_write_clk
+Agree. Will update.
+>> + sdhci_msm_toggle_fifo_write_clk(host);
+>> +
+>>       /*
+>>        * Whenever core-clock is gated dynamically, it's needed to
+>>        * restore the SDR DLL settings when the clock is ungated.
