@@ -2,293 +2,133 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9B2C3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56295C3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE8E246A5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E60246A2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:42:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sPuGsD1i"
+	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="CBp2RW16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgB1Dk7 (ORCPT
+        id S1730816AbgB1Dma (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:40:59 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34170 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730638AbgB1Dk7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 22:40:59 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S3em9f024433;
-        Thu, 27 Feb 2020 21:40:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582861248;
-        bh=nFHa3nPck9OMXyJJrWEfYBYfsZn16z2PgDyatq9xoXs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sPuGsD1isLJOejYNCqmSS9rULVfhxpM8DxiVWUP+jeuRiyRxw0faahFqHm6/6VgBX
-         oRYin1xWqYnk73WK8eZJJvhMTZ1uEysnFISDbHjpZ2sZxJPiPOJfOHT/gekpfFP8LC
-         vX5pREEtm4HvKOnAEh6odAkPy/2yXAxsLEGp/Nuw=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S3emtI117655
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Feb 2020 21:40:48 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
- Feb 2020 21:40:47 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 27 Feb 2020 21:40:47 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01S3ell0119905;
-        Thu, 27 Feb 2020 21:40:47 -0600
-Subject: Re: [PATCH v5 1/3] remoteproc: add support for co-processor loaded
- and booted before kernel
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
- <20200211174205.22247-2-arnaud.pouliquen@st.com>
- <20200213200813.GA14415@xps15>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <1c259bf8-6cfa-c9b3-4707-e4d67a5e4483@ti.com>
-Date:   Thu, 27 Feb 2020 21:40:47 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 27 Feb 2020 22:42:30 -0500
+Received: from mail-dm6nam11on2070.outbound.protection.outlook.com ([40.107.223.70]:6072
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730808AbgB1Dma (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 22:42:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qcx/fGpRAEbzOSuK3baAITgnXqJKNC+XFcJYp6FwgTwq4cjNPkJu6tRNVA6JM+3Hqj0DDF6tEtCHqRXnu2fCNUkn6yRMLtvrrCZAaBr6yIucpURMt0MGA7hDvvBQ6ygNLVTL3+vMMRYcPaAZXO71+R7N6l4TnjawwoZyIFU3DoXnU0aVkw+pHiz+6TfhJEr59N4Xne4iLwCF3jwCSFs1lf4+bld8FF0csTBnmsUxU9P5O5y943GHpuAM4atWQP5zhD2BUTxaYDB8BjcdENzzAO/nnVxiZBhHHTl5kp4rnI+ssButYuddtVdwwgo+NMoGxY11EbvMFdQ5DdlhQZCjIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VBzUoj7KxIhXm490ckzoyhq3smb8urW8Emzs/Gj91jw=;
+ b=QY9wK3/BnPgUoS+j4EXkWK32TQ1HiwaKp2u9ec4Z2BcRSh4Mx2cjTHptYNtlHfM4mUEQERbaG6mZT0rwXvqMOR93O8Z+6KPcy+dUuFlB12k2zMw/u9ufbtVuUMK/+GE9I7oz/ThhoS15DbN82ApVofIKMrUpppUZbgqc9P0yYrwrxUHt/0GtYFvEZNJuRtA2jF0MECY1u0Eos+tHj5dmbZOeEngbS0AOkgzaWxCuFnz9rMTe9JXfMY7Q4XqJsiIKpZrps7c/ZnyjpDHtS5YOdQGTbz0dKWHtTd+pxepscKR7soiH5PBf2Hv4QrFp0XgD//iogM8rN+iF5WoATX7j/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
+ dkim=pass header.d=labundy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VBzUoj7KxIhXm490ckzoyhq3smb8urW8Emzs/Gj91jw=;
+ b=CBp2RW16804OANk3+olgmPb4xM0WrqSUcjeZ2jLNq1dvfKVYGs9KzVTSOYp/Xb3+QMWt71nyAE7X5iuFOEetyoctgSlosE5GDX2axtsKtj3lAvMFHEybWVSGk9FpmH4MCazVs4W3U0l+vpMCbOGczZVYO59iQds9AStKbjXupgk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jeff@labundy.com; 
+Received: from SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
+ by SN6PR08MB4895.namprd08.prod.outlook.com (2603:10b6:805:6d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.22; Fri, 28 Feb
+ 2020 03:42:26 +0000
+Received: from SN6PR08MB5517.namprd08.prod.outlook.com
+ ([fe80::e87b:9b6:d4b8:af68]) by SN6PR08MB5517.namprd08.prod.outlook.com
+ ([fe80::e87b:9b6:d4b8:af68%6]) with mapi id 15.20.2750.021; Fri, 28 Feb 2020
+ 03:42:26 +0000
+Date:   Thu, 27 Feb 2020 21:42:20 -0600
+From:   Jeff LaBundy <jeff@labundy.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     dmitry.torokhov@gmail.com, thierry.reding@gmail.com,
+        jic23@kernel.org, devicetree@vger.kernel.org,
+        linux-input@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v5 2/7] mfd: Add support for Azoteq
+ IQS620A/621/622/624/625
+Message-ID: <20200228034220.GA3510@labundy.com>
+References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
+ <1581895931-6056-3-git-send-email-jeff@labundy.com>
+ <20200224111448.GS3494@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200224111448.GS3494@dell>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: DM5PR12CA0010.namprd12.prod.outlook.com (2603:10b6:4:1::20)
+ To SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
 MIME-Version: 1.0
-In-Reply-To: <20200213200813.GA14415@xps15>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from labundy.com (136.49.227.119) by DM5PR12CA0010.namprd12.prod.outlook.com (2603:10b6:4:1::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Fri, 28 Feb 2020 03:42:25 +0000
+X-Originating-IP: [136.49.227.119]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 087ac658-452d-4213-3a1e-08d7bc003a98
+X-MS-TrafficTypeDiagnostic: SN6PR08MB4895:
+X-Microsoft-Antispam-PRVS: <SN6PR08MB48953C62C8B25B06B7AFA235D3E80@SN6PR08MB4895.namprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0327618309
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(39830400003)(136003)(376002)(199004)(189003)(26005)(6916009)(33656002)(2906002)(186003)(2616005)(8676002)(956004)(16526019)(508600001)(1076003)(4744005)(7416002)(86362001)(36756003)(55016002)(7696005)(4326008)(52116002)(316002)(8936002)(8886007)(81156014)(66556008)(81166006)(66476007)(66946007)(5660300002)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB4895;H:SN6PR08MB5517.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: labundy.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XLNyOAz44igADOsc3jVY9CnMi6qYma0/mSYfCmfJMsjLKA43sK5A1HVog1QgeLrwWDBZsAB1+rd7RbYmGrr5AYYnKk7msVtQgWJ7kH7iVLS8SrUfTk1FXEIM6csRW4/MerWuNgDQAfGflD4R6DgZlPnKYnzttOJx1ZqGVhpplMjm+JLllja40tKToZH9ObB3K7KCNjD6r32QgFPSEMPHBSq6l/eMqjVuPTAEdp8ONYZ4Q5PKLg2qcFV1IUpzJyAx2JwVJm03RJLzYQDtEPaI+mAa/XDKQ5fR6HzDBbCr+iuhlViGOOHoSfKmOBVFVCa7CfTdw6iJ4NdBIxgE9XfqpV7FpkFYsIxNJygcKcY03Ih+lX1Np49QUUn61/v3fUq6SvnuLTcLU6asB39vDYa1wnDkdgfBMi0bvkfzuXfD1+fQQ1LCheT4ScTEAKmZ409/
+X-MS-Exchange-AntiSpam-MessageData: pKeFwkO2bfQ8EVT8ZV9p2JGlrXR0lLEpq1SJBiUEG/t1BPiv+6tF5iNp0veygwFEt3qW1p/noSakckDDDwPymTVNx1fuA99pfyzKljZdFEfawXDV/zXqXnrxzLpmNiBlgjajfhc+rOh+za0ISpnEGw==
+X-OriginatorOrg: labundy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 087ac658-452d-4213-3a1e-08d7bc003a98
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2020 03:42:26.8469
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dVqwKsgbuoPTirhdxX6wQ/C2LXwtPECZ2jtXMfB4vCQFalGXuPyh943QCqErAiwTQvXWeQJ2tpla7Er7/IKyNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB4895
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+Hi Lee,
 
-On 2/13/20 2:08 PM, Mathieu Poirier wrote:
-> Good day,
-> 
-> On Tue, Feb 11, 2020 at 06:42:03PM +0100, Arnaud Pouliquen wrote:
->> From: Loic Pallardy <loic.pallardy@st.com>
->>
->> Remote processor could boot independently or be loaded/started before
->> Linux kernel by bootloader or any firmware.
->> This patch introduces a new property in rproc core, named skip_fw_load,
->> to be able to allocate resources and sub-devices like vdev and to
->> synchronize with current state without loading firmware from file system.
->> It is platform driver responsibility to implement the right firmware
->> load ops according to HW specificities.
->>
->> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
->> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> ---
->>  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++------
->>  include/linux/remoteproc.h           |  2 +
->>  2 files changed, 55 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->> index 097f33e4f1f3..876b5420a32b 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -1358,8 +1358,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
->>  	return ret;
->>  }
->>  
->> -/*
->> - * take a firmware and boot a remote processor with it.
->> +/**
->> + * rproc_fw_boot() - boot specified remote processor according to specified
->> + * firmware
->> + * @rproc: handle of a remote processor
->> + * @fw: pointer on firmware to handle
->> + *
->> + * Handle resources defined in resource table, load firmware and
->> + * start remote processor.
->> + *
->> + * If firmware pointer fw is NULL, firmware is not handled by remoteproc
->> + * core, but under the responsibility of platform driver.
->> + *
->> + * Returns 0 on success, and an appropriate error value otherwise.
->>   */
->>  static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->>  {
->> @@ -1371,7 +1382,11 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->>  	if (ret)
->>  		return ret;
->>  
->> -	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
->> +	if (fw)
->> +		dev_info(dev, "Booting fw image %s, size %zd\n", name,
->> +			 fw->size);
->> +	else
->> +		dev_info(dev, "Synchronizing with preloaded co-processor\n");
->>  
->>  	/*
->>  	 * if enabling an IOMMU isn't relevant for this rproc, this is
->> @@ -1718,16 +1733,22 @@ static void rproc_crash_handler_work(struct work_struct *work)
->>   * rproc_boot() - boot a remote processor
->>   * @rproc: handle of a remote processor
->>   *
->> - * Boot a remote processor (i.e. load its firmware, power it on, ...).
->> + * Boot a remote processor (i.e. load its firmware, power it on, ...) from
->> + * different contexts:
->> + * - power off
->> + * - preloaded firmware
->> + * - started before kernel execution
->> + * The different operations are selected thanks to properties defined by
->> + * platform driver.
->>   *
->> - * If the remote processor is already powered on, this function immediately
->> - * returns (successfully).
->> + * If the remote processor is already powered on at rproc level, this function
->> + * immediately returns (successfully).
->>   *
->>   * Returns 0 on success, and an appropriate error value otherwise.
->>   */
->>  int rproc_boot(struct rproc *rproc)
->>  {
->> -	const struct firmware *firmware_p;
->> +	const struct firmware *firmware_p = NULL;
->>  	struct device *dev;
->>  	int ret;
->>  
->> @@ -1758,11 +1779,20 @@ int rproc_boot(struct rproc *rproc)
->>  
->>  	dev_info(dev, "powering up %s\n", rproc->name);
->>  
->> -	/* load firmware */
->> -	ret = request_firmware(&firmware_p, rproc->firmware, dev);
->> -	if (ret < 0) {
->> -		dev_err(dev, "request_firmware failed: %d\n", ret);
->> -		goto downref_rproc;
->> +	if (!rproc->skip_fw_load) {
->> +		/* load firmware */
->> +		ret = request_firmware(&firmware_p, rproc->firmware, dev);
->> +		if (ret < 0) {
->> +			dev_err(dev, "request_firmware failed: %d\n", ret);
->> +			goto downref_rproc;
->> +		}
->> +	} else {
->> +		/*
->> +		 * Set firmware name pointer to null as remoteproc core is not
->> +		 * in charge of firmware loading
->> +		 */
->> +		kfree(rproc->firmware);
->> +		rproc->firmware = NULL;
-> 
-> If the MCU with pre-loaded FW crashes request_firmware() in
-> rproc_trigger_recovery() will return an error and rproc_start()
-> never called.
-> 
->>  	}
->>  
->>  	ret = rproc_fw_boot(rproc, firmware_p);
->> @@ -1916,8 +1946,17 @@ int rproc_add(struct rproc *rproc)
->>  	/* create debugfs entries */
->>  	rproc_create_debug_dir(rproc);
->>  
->> -	/* if rproc is marked always-on, request it to boot */
->> -	if (rproc->auto_boot) {
->> +	if (rproc->skip_fw_load) {
->> +		/*
->> +		 * If rproc is marked already booted, no need to wait
->> +		 * for firmware.
->> +		 * Just handle associated resources and start sub devices
->> +		 */
->> +		ret = rproc_boot(rproc);
->> +		if (ret < 0)
->> +			return ret;
+On Mon, Feb 24, 2020 at 11:14:48AM +0000, Lee Jones wrote:
 
-I am still catching up on all the various responses on this particular
-thread, but this particular path will have an issue for one of the
-usecases (#2 below) that I have for TI drivers.
-
-We have couple of use-cases for TI drivers:
-1. The regular early-boot & late-attach case, where the processor is
-booted earlier by a bootloader, and we establish the virtio stack in
-kernel. We do want to support the regular remoteproc operations
-thereafter - stop the remoteproc using sysfs (userspace control to be
-able to stop, change firmware and boot the new firmware), support
-error-recovery (using the same firmware).
-2. Support a userspace loader with the kernel only providing the hooks
-for actually processing the vrings, and starting the processor (the boot
-control registers are not exposed). We support this by enhancing our
-platform driver to provide some ioctl support, and set skip_fw_load and
-clear auto_boot for this, but the above path takes will fail this.
-3. A third subset usecase of #1, where kernel is only responsible for
-establishing the the IPC. Linux won't be able to stop and/or start the
-processors, and perform any error recovery either. I use a combination
-of above flags + recovery_disabled + platform driver support + an
-additional flag where I do not allow any userspace start/stop that I
-have posted a while ago [1].
-
->> +	} else if (rproc->auto_boot) {
->> +		/* if rproc is marked always-on, request it to boot */
-> 
-> I spent way too much time staring at this modification...  I can't decide if a
-> system where the FW has been pre-loaded should be considered "auto_boot".
-> Indeed the result is the same, i.e the MCU is started at boot time without user
-> intervention.
-
-Yeah, #2 usecase falls in this category where it is not auto_boot.
-
-FYI, [2] is the patch that I was using on downstream TI kernels that
-looks slightly different to this patch - it uses two flags instead for
-skip_fw_load and skip_fw_request instead of clearing the fw, but even
-that one probably doesn't cater to all the combinations being discussed
-in this thread.
-
-regards
-Suman
-
-[1] https://patchwork.kernel.org/patch/10601325/
-[2]
-https://git.ti.com/gitweb?p=rpmsg/remoteproc.git;a=commitdiff;h=c1a632fc83e364aa8fd82e949b47b36db64523c5
+[...]
 
 > 
-> I'd welcome other people's opinion on this.
+> Well done Jeff.  Good job.
 > 
->>  		ret = rproc_trigger_auto_boot(rproc);
->>  		if (ret < 0)
->>  			return ret;
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index 16ad66683ad0..4fd5bedab4fa 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -479,6 +479,7 @@ struct rproc_dump_segment {
->>   * @table_sz: size of @cached_table
->>   * @has_iommu: flag to indicate if remote processor is behind an MMU
->>   * @auto_boot: flag to indicate if remote processor should be auto-started
->> + * @skip_fw_load: remote processor has been preloaded before start sequence
->>   * @dump_segments: list of segments in the firmware
->>   * @nb_vdev: number of vdev currently handled by rproc
->>   */
->> @@ -512,6 +513,7 @@ struct rproc {
->>  	size_t table_sz;
->>  	bool has_iommu;
->>  	bool auto_boot;
->> +	bool skip_fw_load;
->>  	struct list_head dump_segments;
->>  	int nb_vdev;
->>  };
->> -- 
->> 2.17.1
->>
+> Applied, thanks.
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
 
+Thank you for your kind words as well as your support in fleshing out this
+series.
+
+Just to confirm, does your offer to take the remainder (once everything is
+approved) through immutable branches still stand?
+
+Hi Uwe and/or Thierry,
+
+Please let me know if you have any additional input on patch [4/7], or you
+feel it is suitable for your Ack at this stage.
+
+Kind regards,
+Jeff LaBundy
