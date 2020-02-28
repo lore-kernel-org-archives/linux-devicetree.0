@@ -2,246 +2,277 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9667DC3F2CF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7FDC3F2CF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76752246A0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7671246A2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbgB1C7w (ORCPT
+        id S1730658AbgB1DCA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 21:59:52 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:34784 "EHLO inva020.nxp.com"
+        Thu, 27 Feb 2020 22:02:00 -0500
+Received: from mga02.intel.com ([134.134.136.20]:38100 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730445AbgB1C7v (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 21:59:51 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5D55E1A07AD;
-        Fri, 28 Feb 2020 03:59:49 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7DB221A00DD;
-        Fri, 28 Feb 2020 03:59:34 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 660E9402D5;
-        Fri, 28 Feb 2020 10:59:20 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        aford173@gmail.com, shengjiu.wang@nxp.com, ping.bai@nxp.com,
-        jun.li@nxp.com, peng.fan@nxp.com, bjorn.andersson@linaro.org,
-        olof@lixom.net, dinguyen@kernel.org, marcin.juszkiewicz@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 2/4] thermal: imx8mm: Add support for i.MX8MM thermal monitoring unit
-Date:   Fri, 28 Feb 2020 10:53:31 +0800
-Message-Id: <1582858413-11906-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582858413-11906-1-git-send-email-Anson.Huang@nxp.com>
-References: <1582858413-11906-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1730445AbgB1DCA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 22:02:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 19:01:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="261722452"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Feb 2020 19:01:57 -0800
+Received: from [10.226.38.23] (unknown [10.226.38.23])
+        by linux.intel.com (Postfix) with ESMTP id 6A8B958052E;
+        Thu, 27 Feb 2020 19:01:50 -0800 (PST)
+Subject: Re: [PATCH v11 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>, Vignesh R <vigneshr@ti.com>,
+        devicetree@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
+        Dinh Nguyen <dinguyen@kernel.org>, tien.fong.chee@intel.com,
+        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris BREZILLON <boris.brezillon@free-electrons.com>,
+        Cyrille Pitchen <cyrille.pitchen@atmel.com>,
+        david.oberhollenzer@sigma-star.at,
+        =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
+        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227062708.21544-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqJno0gmUnGnsWFYdHY_3CHNijtksAmRhuEudimip0aK4w@mail.gmail.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <10e65e28-197f-b094-5901-917b07f09adf@linux.intel.com>
+Date:   Fri, 28 Feb 2020 11:01:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJno0gmUnGnsWFYdHY_3CHNijtksAmRhuEudimip0aK4w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX8MM has a thermal monitoring unit(TMU) inside, it ONLY has one
-sensor for CPU, add support for reading immediate temperature of
-this sensor.
+Hi Rob,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Update the copyright and add the author.
----
- drivers/thermal/Kconfig          |  10 +++
- drivers/thermal/Makefile         |   1 +
- drivers/thermal/imx8mm_thermal.c | 135 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 146 insertions(+)
- create mode 100644 drivers/thermal/imx8mm_thermal.c
+      Thank you so much for the review comments...
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 3502ee8..165b7d6 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -262,6 +262,16 @@ config IMX_SC_THERMAL
- 	  sensor. It supports one critical trip point and one
- 	  passive trip point for each thermal sensor.
- 
-+config IMX8MM_THERMAL
-+	tristate "Temperature sensor driver for Freescale i.MX8MM SoC"
-+	depends on ARCH_MXC
-+	depends on OF
-+	help
-+	  Support for Thermal Monitoring Unit (TMU) found on Freescale i.MX8MM SoC.
-+	  It supports one critical trip point and one passive trip point. The
-+	  cpufreq is used as the cooling device to throttle CPUs when the passive
-+	  trip is crossed.
-+
- config MAX77620_THERMAL
- 	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
- 	depends on MFD_MAX77620
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index a11a6d8..120a05e 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
- obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
- obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
- obj-$(CONFIG_IMX_SC_THERMAL)	+= imx_sc_thermal.o
-+obj-$(CONFIG_IMX8MM_THERMAL)	+= imx8mm_thermal.o
- obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
- obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
- obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
-diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
-new file mode 100644
-index 0000000..ad5dd57
---- /dev/null
-+++ b/drivers/thermal/imx8mm_thermal.c
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 NXP.
-+ *
-+ * Author: Anson Huang <Anson.Huang@nxp.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
-+
-+#include "thermal_core.h"
-+
-+#define TER			0x0	/* TMU enable */
-+#define TRITSR			0x20	/* TMU immediate temp */
-+
-+#define TER_EN			BIT(31)
-+#define TRITSR_VAL_MASK		0xff
-+
-+#define TEMP_LOW_LIMIT		10
-+
-+struct imx8mm_tmu {
-+	struct thermal_zone_device *tzd;
-+	void __iomem *base;
-+	struct clk *clk;
-+};
-+
-+static int tmu_get_temp(void *data, int *temp)
-+{
-+	struct imx8mm_tmu *tmu = data;
-+	u32 val;
-+
-+	/* the temp sensor need about 1ms to finish the measurement */
-+	usleep_range(1000, 2000);
-+
-+	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
-+	if (val < TEMP_LOW_LIMIT)
-+		return -EAGAIN;
-+
-+	*temp = val * 1000;
-+
-+	return 0;
-+}
-+
-+static struct thermal_zone_of_device_ops tmu_tz_ops = {
-+	.get_temp = tmu_get_temp,
-+};
-+
-+static int imx8mm_tmu_probe(struct platform_device *pdev)
-+{
-+	struct imx8mm_tmu *tmu;
-+	u32 val;
-+	int ret;
-+
-+	tmu = devm_kzalloc(&pdev->dev, sizeof(struct imx8mm_tmu), GFP_KERNEL);
-+	if (!tmu)
-+		return -ENOMEM;
-+
-+	tmu->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(tmu->base))
-+		return PTR_ERR(tmu->base);
-+
-+	tmu->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(tmu->clk)) {
-+		ret = PTR_ERR(tmu->clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"failed to get tmu clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(tmu->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable tmu clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	tmu->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0,
-+							tmu, &tmu_tz_ops);
-+	if (IS_ERR(tmu->tzd)) {
-+		dev_err(&pdev->dev,
-+			"failed to register thermal zone sensor: %d\n", ret);
-+		return PTR_ERR(tmu->tzd);
-+	}
-+
-+	platform_set_drvdata(pdev, tmu);
-+
-+	/* enable the monitor */
-+	val = readl_relaxed(tmu->base + TER);
-+	val |= TER_EN;
-+	writel_relaxed(val, tmu->base + TER);
-+
-+	return 0;
-+}
-+
-+static int imx8mm_tmu_remove(struct platform_device *pdev)
-+{
-+	struct imx8mm_tmu *tmu = platform_get_drvdata(pdev);
-+	u32 val;
-+
-+	/* disable TMU */
-+	val = readl_relaxed(tmu->base + TER);
-+	val &= ~TER_EN;
-+	writel_relaxed(val, tmu->base + TER);
-+
-+	clk_disable_unprepare(tmu->clk);
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx8mm_tmu_table[] = {
-+	{ .compatible = "fsl,imx8mm-tmu", },
-+	{ },
-+};
-+
-+static struct platform_driver imx8mm_tmu = {
-+	.driver = {
-+		.name	= "i.mx8mm_thermal",
-+		.of_match_table = imx8mm_tmu_table,
-+	},
-+	.probe = imx8mm_tmu_probe,
-+	.remove = imx8mm_tmu_remove,
-+};
-+module_platform_driver(imx8mm_tmu);
-+
-+MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-+MODULE_DESCRIPTION("i.MX8MM Thermal Monitor Unit driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+On 28/2/2020 1:07 AM, Rob Herring wrote:
+> On Thu, Feb 27, 2020 at 12:27 AM Ramuthevar,Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add dt-bindings documentation for Cadence-QSPI controller to support
+>> spi based flash memories.
+> You need to run 'make dt_binding_check' because this doesn't pass.
+Sure,  run and fix it.
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 ----------
+>>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 142 +++++++++++++++++++++
+>>   2 files changed, 142 insertions(+), 67 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>
+>> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>> new file mode 100644
+>> index 000000000000..3ad2850c412e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>> @@ -0,0 +1,142 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Cadence QSPI Flash Controller support
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +allOf:
+>> +  - $ref: "spi-controller.yaml#"
+>> +
+>> +description: |
+>> +  Binding Documentation for Cadence QSPI controller,This controller is
+>> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
+>> +  has been tested On Intel's LGM SoC.
+>> +
+>> +  - compatible : should be one of the following:
+>> +        Generic default - "cdns,qspi-nor".
+>> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+>> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+>> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
+> The schema below says all this, so drop this part.
+>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - items:
+>> +        - enum:
+>> +           - ti,k2g-qspi
+>> +        - const: cdns,qspi-nor
+>> +
+>> +      - items:
+>> +        - enum:
+>> +           - ti,am654-ospi
+>> +        - const: cdns,qspi-nor
+>> +
+>> +      - items:
+>> +        - enum:
+>> +           - intel,lgm-qspi
+>> +        - const: cdns,qspi-nor
+> These 3 items can be 1 entry (combine the enums).
+Noted, will fix it.
+>
+>> +
+>> +      - items:
+>> +        - const: cdns,qspi-nor
+>> +
+>> +  reg:
+>> +    maxItems: 2
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  cdns,fifo-depth:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      128 or 256 bytes size of the data FIFO in words.
+> Sounds like constraints. Make them a schema.
+Sure, will make as schema.
+>> +
+>> +  cdns,fifo-width:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      4 byte bus width of the data FIFO in bytes.
+> That's not very clear. It should be schema constraints anyways:
+>
+> enum: [ 4, 8, 12, 16, ...??? ]
+>
+> or:
+>
+> multipleOf: 4
+> minimum: 4
+> maximum: ?
+Noted,  will fix it.
+>> +
+>> +  cdns,trigger-address:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      32-bit indirect AHB trigger address.
+>> +
+>> +  cdns,rclk-en:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> Wrong type if this is a 'flag' aka boolean.
+Yes , you are correct.
+>> +    description: |
+>> +      Flag to indicate that QSPI return clock is used to latch the read data
+>> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
+>> +      on the board before using this property.
+>> +
+>> +# subnode's properties
+>> +patternProperties:
+>> +  "^.*@[0-9a-fA-F]+$":
+>> +    type: object
+>> +    description:
+>> +      flash device uses the subnodes below defined properties.
+>> +
+>> +  cdns,read-delay:
+>> +    description:
+>> +      Delay in 4 microseconds, read capture logic, in clock cycles.
+> Huh? Is it in time or clocks?
+>
+> No unit suffix here, so this needs a type ref. That's what 'make
+> dt_binding_check' fails on.
+it's clock cycles to adjustable delay,  read data delay between the 
+Flash Device data outputs and the controller data inputs
+>> +
+>> +  cdns,tshsl-ns:
+>> +    description: |
+>> +      Delay in 50 nanoseconds, for the length that the master mode chip select
+>> +      outputs are de-asserted between transactions.
+> multipleOf: 50
+>
+> And so on for the rest.
 
+Okay , Noted.
+
+Regards
+Vadivel
+>> +
+>> +  cdns,tsd2d-ns:
+>> +    description: |
+>> +      Delay in 50 nanoseconds, between one chip select being de-activated
+>> +      and the activation of another.
+>> +
+>> +  cdns,tchsh-ns:
+>> +    description: |
+>> +      Delay in 4 nanoseconds, between last bit of current transaction and
+>> +      deasserting the device chip select (qspi_n_ss_out).
+>> +
+>> +  cdns,tslch-ns:
+>> +    description: |
+>> +      Delay in 4 nanoseconds, between setting qspi_n_ss_out low and
+>> +      first bit transfer.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - cdns,fifo-depth
+>> +  - cdns,fifo-width
+>> +  - cdns,trigger-address
+>> +
+>> +examples:
+>> +  - |
+>> +    qspi: spi@ff705000 {
+>> +          compatible = "cdns,qspi-nor";
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +          reg = <0xff705000 0x1000>,
+>> +                <0xffa00000 0x1000>;
+>> +          interrupts = <0 151 4>;
+>> +          clocks = <&qspi_clk>;
+>> +          cdns,fifo-depth = <128>;
+>> +          cdns,fifo-width = <4>;
+>> +          cdns,trigger-address = <0x00000000>;
+>> +
+>> +          flash0: n25q00@0 {
+>> +              compatible = "jedec,spi-nor";
+>> +              reg = <0x0>;
+>> +              cdns,read-delay = <4>;
+>> +              cdns,tshsl-ns = <50>;
+>> +              cdns,tsd2d-ns = <50>;
+>> +              cdns,tchsh-ns = <4>;
+>> +              cdns,tslch-ns = <4>;
+>> +          };
+>> +    };
+>> +
+>> --
+>> 2.11.0
+>>
