@@ -2,90 +2,89 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E976BC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 23:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C45BC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 23:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF50A2469C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 23:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE6C246B6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 23:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fa//2cfD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jR9hz1Hn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgB1XW6 (ORCPT
+        id S1726359AbgB1Xm3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 18:22:58 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33908 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgB1XWz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 18:22:55 -0500
-Received: by mail-lj1-f193.google.com with SMTP id x7so5197892ljc.1
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 15:22:52 -0800 (PST)
+        Fri, 28 Feb 2020 18:42:29 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37266 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgB1Xm2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 18:42:28 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so3366536lfc.4
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 15:42:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2eqxeoYIrVLOIQ7hh1SkaHG4jTSn1JrLp5pMhF228gg=;
-        b=fa//2cfD9xxk9b6pZ6Yw33KdAqjyxP/fqbFuCPrtvpvcXafVEnloRfDXvaBe0dN0Qa
-         fINSDiTXoEkKpAHbZR0/CdQGXzw4BkWxKqFbvTTlF2t30WImNasawyhoby7EbJk0v4sP
-         eFf8Y1wTo/G2c4D/JkpUKxEmXnYI5Cv+VsODpIJdCdKwfbE8trfou+O6r4JHKG9284Qv
-         VKRG+jTEXuy0aWblF9Jkk49FRn1B4uyIvX52L5y2JhQ/ZLISwAnuVEoiuN976mSXrGfs
-         khNSj9gFNkG3O9Qxt+VkpLOxS+pBmxH+KEZlYmCfeNRuyviRcA4DHcXPIw388fNvkykP
-         RL9g==
+        bh=iId8/Patumvx4bfeqRK0XfOfMMBiyM4YKPgGmeoe3Ic=;
+        b=jR9hz1HnsFYdmlGMnV8RJw+1wYnmwgmp5F4eYV/HQJq0IT8X9BmWqLirtywy1i2QP4
+         PENcGt2urlSOb7+1q2awxksqIf8X5fPoDXtpW+LGhA4OHuAGV/S+OJrrdNiN25PDwSId
+         oBmLzMgzt4wjcsLTuSyUutMgMmEgIhzVmQS2g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2eqxeoYIrVLOIQ7hh1SkaHG4jTSn1JrLp5pMhF228gg=;
-        b=XuR/sPudAgswGTPx39vIlI1PECZt0NPaULRN8EUmrjUAuE7hHPO9ydLtN0bU9GSI1l
-         E25ikxiTsGrawH4km4zMB6ROVCziRcA8Tdp6Qj40RYH2FiXxNmAGoBeg5JYYZ/crgHc+
-         Ioyeo82ZpwK/ai6ZQteFSeLjxIK1bW0JdHMqpxI8fUbSQdUOF2fYnwjchlJ5Erx6wE8J
-         ICnD+1r9BCmDsizVDs5wDR+JuNCLbGcwLffMNIymUbkJF0P98+NkOcT0MaAuEBQ+Bxf9
-         InOGN6DTssOzzuPrLO12+QxSg5rtFtLIEm8FPOgfl51wtJiQWrPAo/dSxv8/opaC0Hv8
-         MNeQ==
-X-Gm-Message-State: ANhLgQ2aBSSfXA0d1+KNcACXvkHRNjSAcXJ2kSThOnvwYNLreqRX/u2m
-        xlgKhpy1nM2oiRNBg6TM+gyh+iR/Wmfi0lF7wEGCUg==
-X-Google-Smtp-Source: ADFU+vv4jorIIrhlu3IkFg1e8VzFI1djLIzV0XhA4c7hYwnb2v6uJwaQ90o8fQbNN3FP42H3eq2tJ/643zwjgaSocV8=
-X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr4238077ljo.125.1582932172096;
- Fri, 28 Feb 2020 15:22:52 -0800 (PST)
+        bh=iId8/Patumvx4bfeqRK0XfOfMMBiyM4YKPgGmeoe3Ic=;
+        b=BUDl1Fff4vRBYnUAXftaYj0m17cjDQqyf5jME6VtlgnsqB/X3KyGfJ1oQ8inGfmOmn
+         kJnRAc05gFnNigmHxTv/P2OOjxQWhnG93OfSt0JkaD0NCRX56HHMN632DSHww8GQOCIg
+         v/YDrwgIawVTFGa5HmS72/7MCZl7M0M5fQZf6k6Klbc/mU5dVltLNdEMB5RUSXUDOJll
+         aqUhWjO1ahGLvQqZ9cR2+TbKHPoR2L9YAAL9PY1rYebqZlPeHsTiP/UU9+N3+m+9+clX
+         YTgVOj35HP3wwdvhXb6n69sNuI9CEIKCj04GnwRPr2tKxgS5SPxPa1NjlyecyeliRP5w
+         2j3A==
+X-Gm-Message-State: ANhLgQ0EnAiQDV7/WiS/YT1wahdREjFXRLjJcy5Xjk1jbJwx9tuW0VAF
+        s/Wf38SqkEViLcamzLE2R0pFmkxTh4k=
+X-Google-Smtp-Source: ADFU+vtQ74uWt9zFE2uJJntCOSaLHtXMIyoywhnnfZyVP0S8+N6CHhEd1Be+6UsdZIpUFCCq+bRCEg==
+X-Received: by 2002:ac2:4d16:: with SMTP id r22mr3656716lfi.74.1582933345809;
+        Fri, 28 Feb 2020 15:42:25 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id n21sm2779535ljc.103.2020.02.28.15.42.23
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 15:42:24 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id 83so3323241lfh.9
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 15:42:23 -0800 (PST)
+X-Received: by 2002:ac2:5226:: with SMTP id i6mr3661642lfl.99.1582933343335;
+ Fri, 28 Feb 2020 15:42:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20200222060435.971-1-yamada.masahiro@socionext.com> <20200222060435.971-3-yamada.masahiro@socionext.com>
-In-Reply-To: <20200222060435.971-3-yamada.masahiro@socionext.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 29 Feb 2020 00:22:41 +0100
-Message-ID: <CACRpkdaj8jiABWU8Nj1p8=8HbDoi3zh4yMedVQ9C9BppqMT65w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bingings: pinctrl: Convert UniPhier pin
- controller to json-schema
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+References: <1581316605-29202-1-git-send-email-sanm@codeaurora.org>
+ <1581316605-29202-2-git-send-email-sanm@codeaurora.org> <158137029351.121156.8319119424832255457@swboyd.mtv.corp.google.com>
+In-Reply-To: <158137029351.121156.8319119424832255457@swboyd.mtv.corp.google.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 28 Feb 2020 15:41:47 -0800
+X-Gmail-Original-Message-ID: <CAE=gft47is6Td7dtM_FmP1g6TFv+yRYuz7yca015YXbRRDon5w@mail.gmail.com>
+Message-ID: <CAE=gft47is6Td7dtM_FmP1g6TFv+yRYuz7yca015YXbRRDon5w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 7:05 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-
-> Convert the UniPhier pin controller binding to DT schema format.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-I see this was applied, I had some comments on the previous
-version but they can be addressed with follow-up patches.
-
-Yours,
-Linus Walleij
+Sandeep, are you going to spin this series?
+-Evan
