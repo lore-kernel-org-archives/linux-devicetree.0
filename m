@@ -7,93 +7,130 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA274C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F40C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911A1246B4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97FE4246B9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ojCXi//c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UGTTPcGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgB1WF4 (ORCPT
+        id S1726621AbgB1WNS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:05:56 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43477 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgB1WF4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 17:05:56 -0500
-Received: by mail-lf1-f68.google.com with SMTP id s23so3191574lfs.10
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 14:05:54 -0800 (PST)
+        Fri, 28 Feb 2020 17:13:18 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46933 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgB1WNR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 17:13:17 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v6so3193144lfo.13
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 14:13:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=C8LpeFRkJkAVGCGFA7ZkDQ8EDfylVrvQYhKNrzB5Agw=;
-        b=ojCXi//c/Oh73F5Il6IazTwlBEsFoNfw47/YGyUECYl4dvUC6WgxSI3iyIlBLbz3mZ
-         OSWB0BXF+JhGvD/zk+/GTAVNuJymMfHWiE5Sv3OzrtLzD8wvItVwx6Rc09jJQNdTPYzX
-         r+nTnXjxGnxb2Xi53R4UsUcTjKMg0E5gsaEkeqNNdoLNPTlR4pZw9KtGmo/qhkaQZY0q
-         Ebc8ul2qrGS9XuhqUFeb5gUHcchMPES2yWxB5pCRDT3o5006DzOBQ6kNkjHlHYrGFg3y
-         /wC1+1VRU56iKegko8xSykYkKhnvdO+/IIHG94etItcj9WvTOxgl9cgYOkx6IiaBsY6G
-         TagQ==
+        bh=Ns84jhjwh80AF+NgTsU5G8wYY3x4+c5K/NhAZhbbc6Q=;
+        b=UGTTPcGEoBQyMt2ffSmRLLgjAyPIUt+r0iIa8o1P49YLGdoYVKEbB6QakZAN00mAhm
+         zy9v/0hSmLVI9UU5NBqAMSlsMEbwzjXJUYrFOUUGuxdKU48PBR44wBrg3ACsxrb/zaWM
+         Or4tdMTMz2yn0WZyUSohIWbPxmV6UCTiz32JYGddmb92FTjXa/6SjWPkUvU+rdOtCmfO
+         xQ2M/T2sSSDc2DNlZwW4KMcPv9JPGtOTigyxCycxvrdmkRaiIjVU8c1ZwVNZ6OvQgbcv
+         EhDIU4HLC/IeZT9Q78lwgZ26eC8OIKVeUBXJL6rcX9IfF0d5WMo1ny5So2z7fU+ebfXj
+         wg5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=C8LpeFRkJkAVGCGFA7ZkDQ8EDfylVrvQYhKNrzB5Agw=;
-        b=SXAjQy2Nh5/j+7GNUygKosesXDJIkh/jtstvfkUwp+eAsmYbTWLx11TG1m7JPHTCeh
-         e4AJRDFCKaB+6O3D0RKIF4bYKEPgsPJQkPoQKGUgycb6sT3WeOGH7q2sDA37/hgvPeDW
-         Ynsj3yEOWd8ovJXFRhxRQ0lQkajh07/DS60EkWni3ivWuRvJx8vOmkahQxg1+/jvVcL0
-         L7pnC0hYEo8A8vNvJNOs9Vsjfnur9e3i86UnnuJK6Uhj/zSPEdyJbrFaLGDtdb1iCocN
-         qMg6FxpBj0kItOQV+sV2x6ZWR6g6Wj6hjtSktem6OQvOGXhEisx5qIJnDJ7W+pyA1fRu
-         T2CA==
-X-Gm-Message-State: ANhLgQ0ILmPldCb3v5T3IkADg+VrYyPgOMJ0xyluHMqb00Ba24HVgISW
-        xPXVaEqJSxGRhg6rYgo48+Jpe06SGMaO9SOjYlIjLw==
-X-Google-Smtp-Source: ADFU+vsnW+F7X3gpdEz8AQTDqD1Tj7f66W9FTRZOnyRHh9OXBDCJ69RY3C5fHJ4DyNMTzylusEt2hk5oPHgCphc0DMY=
-X-Received: by 2002:a19:87:: with SMTP id 129mr3655815lfa.217.1582927553833;
- Fri, 28 Feb 2020 14:05:53 -0800 (PST)
+        bh=Ns84jhjwh80AF+NgTsU5G8wYY3x4+c5K/NhAZhbbc6Q=;
+        b=Zj0PHOgPFH75jIpeKxYPS4A9wwwy40pgyF+XUbwf77qUUmeg26uIyB1i00MY8+SRwX
+         yuFWjehyC9qgjcQPpyc9WpYhXy4MJFd+RHVKQ4Z+rWEvTvixx09JnyJbzEkBIBRvYVGL
+         OCZFwAfEJZLDQ8zhZFNUE/LVH2xY2ZWfXUB3htyaB6m8BXWpmMdlChGoy0kybu/4QGRr
+         HqG0NkUjSQ4tidWYHjHsft/6HOURtEE3kR/Q10Ta4jkdPJh2JpCEEqN4cpZKK2yMgfdm
+         qasAZGCr6Mai2MZ/5c3D2hObfpUzmw2zba1LbkzMwCTuOkY2VHSxlPX/O2w3sFj89bPe
+         qpcg==
+X-Gm-Message-State: ANhLgQ0fuX6ZyY+KLQ59rRtoTR2uEOtHeuxSc9tCpXvA2C9YrQfLiTNu
+        4N4OKyBZRVXfh4dSjIXn8jU2KBpI/XyrvyPl06xWDw==
+X-Google-Smtp-Source: ADFU+vscaxQrz5bVMwzo9WHGRN+dd76KhhzlssRfrguQv31+o1oklXkSerfl7hQ6ykL3RwS+CWHsiJVG6jWWAoyAsOA=
+X-Received: by 2002:ac2:44a5:: with SMTP id c5mr3541720lfm.4.1582927994221;
+ Fri, 28 Feb 2020 14:13:14 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1582913973.git.hns@goldelico.com> <010d6ad3473fb4b1f1041888a071796180cdd838.1582913973.git.hns@goldelico.com>
-In-Reply-To: <010d6ad3473fb4b1f1041888a071796180cdd838.1582913973.git.hns@goldelico.com>
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com> <20200221021002.18795-3-yamada.masahiro@socionext.com>
+In-Reply-To: <20200221021002.18795-3-yamada.masahiro@socionext.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Feb 2020 23:05:42 +0100
-Message-ID: <CACRpkdYSde=6JBBbe3sL3hDHhGAeOfwadT0BvL0n+-F0O2vX0g@mail.gmail.com>
-Subject: Re: [RFC v2 5/8] pinctrl: ingenic: add hdmi-ddc pin control group
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+Date:   Fri, 28 Feb 2020 23:13:03 +0100
+Message-ID: <CACRpkdbrowXC-Awy_N1gq+LxuEMhgLNf81cCZ=bwZwFdJXLWDA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bingings: pinctrl: Convert UniPhier pin controller
+ to json-schema
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 7:19 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+On Fri, Feb 21, 2020 at 3:10 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-> From: Paul Boddie <paul@boddie.org.uk>
+> Convert the UniPhier pin controller binding to DT schema format.
 >
-> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-This looks good, can I just apply this to the pinctrl tree?
+Nice!
+
+> In the original .txt file, there is a description:
+> The UniPhier pinctrl should be a subnode of a "syscon" compatible node
+>
+> I did not figure out how to represent (or check) it in dt-schema.
+> I just moved it to a comment line in 'examples'.
+> If there is a better way, please let me know.
+
+There is no way to do that AFAICT, we are checking nodes from
+one node and downwards, never upwards. The syscon needs to
+have its own binding file: if it has another specific compatible
+such as compatible = "foo", "syscon"; then for the DT bindings
+for foo, make sure to add this subnode as optional/compulsory
+if you want to tie up the whole thing.
+
+> -Required properties:
+> -- compatible: should be one of the following:
+> -    "socionext,uniphier-ld4-pinctrl"  - for LD4 SoC
+> -    "socionext,uniphier-pro4-pinctrl" - for Pro4 SoC
+> -    "socionext,uniphier-sld8-pinctrl" - for sLD8 SoC
+> -    "socionext,uniphier-pro5-pinctrl" - for Pro5 SoC
+> -    "socionext,uniphier-pxs2-pinctrl" - for PXs2 SoC
+> -    "socionext,uniphier-ld6b-pinctrl" - for LD6b SoC
+> -    "socionext,uniphier-ld11-pinctrl" - for LD11 SoC
+> -    "socionext,uniphier-ld20-pinctrl" - for LD20 SoC
+> -    "socionext,uniphier-pxs3-pinctrl" - for PXs3 SoC
+
+But:
+
+> +    soc-glue@5f800000 {
+> +        compatible = "socionext,uniphier-pro4-soc-glue", "simple-mfd", "syscon";
+> +        reg = <0x5f800000 0x2000>;
+> +
+> +        pinctrl: pinctrl {
+> +            compatible = "socionext,uniphier-pro4-pinctrl";
+> +        };
+> +    };
+
+It looks like you want to check also for "simple-mfd" and "syscon"
+following after the enum (two consts)
+
+It seems you want to check that reg is there.
+
+It seems the subnode pinctrl is also compulsory.
+
+All of this have examples in example-schema.yaml IIRC.
 
 Yours,
 Linus Walleij
