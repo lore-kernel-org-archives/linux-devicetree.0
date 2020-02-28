@@ -2,102 +2,94 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93ADC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710F2C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3312084E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:52:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="f0ARzT0M"
+	by mail.kernel.org (Postfix) with ESMTP id 5172D2084E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725805AbgB1Lwu (ORCPT
+        id S1726359AbgB1Lxp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:52:50 -0500
-Received: from mout.gmx.net ([212.227.17.22]:47203 "EHLO mout.gmx.net"
+        Fri, 28 Feb 2020 06:53:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:37022 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbgB1Lwt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:52:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582890761;
-        bh=E4E1cvmOoa1R3ggxn0W5VA37j87qo9Un/InroAhqkxA=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=f0ARzT0M69Tkv4sX7EVjqXDq+weVvqBWEzI6nuip1xvjpEM/N7mLFtv0des64thHM
-         m8pDMwxZyqcxyVBVqCiMjhfbR1QYB3Mg64DSDf7YPo8JS37HMH+WTOachGghuseIRY
-         KwBIPB+5aAZo5dpPwoDLSdovQ7WukH9JcdtX+waI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.68] ([86.161.30.248]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MwQXN-1jQPV62lTJ-00sKBB; Fri, 28
- Feb 2020 12:52:41 +0100
-Subject: Re: [PATCH] define rpi0w sdhci pinctrl state
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <c34db439-3539-88c0-99f1-308d75afd1aa@gmx.co.uk>
- <23a936db-fc89-6259-3991-5791fa88beb7@i2se.com>
-From:   Nick Hudson <nick.hudson@gmx.co.uk>
-Message-ID: <bd4bd5dc-307f-d058-8f94-00b61a8b8c87@gmx.co.uk>
-Date:   Fri, 28 Feb 2020 11:52:40 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1725827AbgB1Lxp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 06:53:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF1934B2;
+        Fri, 28 Feb 2020 03:53:44 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36A473F7B4;
+        Fri, 28 Feb 2020 03:53:43 -0800 (PST)
+Date:   Fri, 28 Feb 2020 11:53:40 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Olof Johansson <olof@lixom.net>
+List-Id: <soc.lore.kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Robert Richter <rric@kernel.org>, SoC Team <soc@kernel.org>,
+        Jon Loeliger <jdl@jdl.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v2 13/13] MAINTAINERS: Update Calxeda Highbank
+ maintainership
+Message-ID: <20200228115340.26495693@donnerap.cambridge.arm.com>
+In-Reply-To: <CAOesGMg1AiF5kLipKpD+3BYNE1hPfs2XYwSnFr0Szp3t=4zw-w@mail.gmail.com>
+References: <20200227182210.89512-1-andre.przywara@arm.com>
+        <20200227182210.89512-14-andre.przywara@arm.com>
+        <20200227223523.GH26010@bogus>
+        <CAOesGMg1AiF5kLipKpD+3BYNE1hPfs2XYwSnFr0Szp3t=4zw-w@mail.gmail.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <23a936db-fc89-6259-3991-5791fa88beb7@i2se.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IyQXi+K25Am9OBXickJYB4m0olsIqE0l79J0l2rgQvn5sxjnn2T
- zBswdHhNXLMx8vSzl6LkLTbD2kZFCXq2nY1FbPb9DYaG3TyKsiwgWFtRu4ybyYMwTvwwQOR
- IYqVdu9kPMbUisp7N0FIDDt9KpMRrc1KdTpY4ftdVwVdFQh4FxlWwlodM4yZW1BrqOciEa4
- HRNTDJXjOnZB7kWMCu+nA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:K97iQwfrBgI=:GRJ64+SJQCITrVbeU4yKzI
- S2xEAJCgNSAjk0L3nQFviEpklg81aI6H7030NuJpRfEpECVlf3JauOGxc9Pu0W7vfiIK2diWD
- A5yoBNuXhXDWDa8RDHOvfroQKqHvcr4lRQ9Oav2mBy2fie7WIFTyttQZFvSuxkW5Z9kIQwlON
- 3H4BknzG0D6H/Ps1pXftnqBtVck6LsvDqotSRFsaYUE97ALO8V91V13WUF4msb3xdp8m2xPYq
- TYGgBgbRcKrJp8K1DWNmda2/CJZrLJZ2OLoKPFbEOIdgBGyxXLgFavYN7cYGMlbfT0dIXZQCz
- YwPWJCUSZPXeGp/pbvJonFznLW5TqLodn2s92KEtLNIUlgrhk4FC6C0AffHqdl1Iyv1nzmN0j
- e+bUCQX3CubkdZsnu3rOh/5KfDIK05BsXzz72wuwewwoD4VcGYRf0Hwul/QMQy9UEerHfJoq1
- hEs8X/u0wLuziCWnPQ8YAi0LWYql8NmhJTuDqt3svwETlesfG3K57mIAmcLYaF+TvNPFIqbWR
- eW4XFI93AfL9XYcBt8mP2WGLMYKnhiS7e1yTHHNSWumq6JyACw8C7q2tpoR6+BlZOv1bR7zq9
- rBUyZfVlBfNbv04az5l/Om+vgBVuS6Kq00fUgbhllzR0MbtDcEuG5fj5ip/FtdRD448Z74uUc
- inJtLumA6nwcYb7Xs3J3i3P7Ef8ecCfW7Y1nu08ranIRVRvUblSj9ijEDiqvDH8AVJPF9J8vl
- YH3C7onvBfZmwqxpXTeuLXYioQTb8VLuXBeNCm7p+mnOGD6AC9L6xqhOtvjH7vruhjdKu806l
- S90ui83kiqzyA0jthgtJjrgwOBshkJfrWGsjBqrzVVGDP0Vucm7WzDJYWmaoX5xFiEXpXrpzN
- Bl5H5V4KFaEDKPeNpqdt6noQDWIoXnAvmyhFKDTaESjHUP7rOUHOnITXe/VPj7pK7b3H9wQGk
- V2Vu0V6ctRiOAN2RrEMYQkPg+px9Zn8HfAvLJn3P+ifRfunmMjukShOAZ2M57XEHW1hpMzooV
- SibiobbhaMMlZ/RaOgmu2Nmo07tZhm4NMnRI99aWvp8651uJi9JqIBSUjb2mByvHexbmDysN1
- WOGzJy5QLEHgVL+KQ8rBqs8+ULh2AZLa+Q6KbbJBKFoUylMFtwNIA3BNMS2I5eeZt0AmMS26Y
- RglB67ON9wWnAdYRQhK4NBvLhN2TBJu+ZOT9MLmQtHnkl58e+f1hRV6hMVnkR4DyoLHQKnVXm
- RE8QN5wjRUTnlIkTV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, 27 Feb 2020 16:39:44 -0800
+Olof Johansson <olof@lixom.net> wrote:
+
+> On Thu, Feb 27, 2020 at 2:35 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Thu, Feb 27, 2020 at 06:22:10PM +0000, Andre Przywara wrote:  
+> > > Rob sees little point in maintaining the Calxeda architecture (early ARM
+> > > 32-bit server) anymore.
+> > > Since I have a machine sitting under my desk, change the maintainership
+> > > to not lose support for that platform.
+> > >
+> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > > ---
+> > >  MAINTAINERS | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)  
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> >
+> > Send a PR to arm-soc folks for this and the dts changes. I'll pickup the
+> > bindings.  
+> 
+> Given that it's likely to be a low volume of code, we can also just
+> apply patches directly in this case (if it's easier than setting up a
+> kernel.org account, etc). Andre, just let us know your preference.
+
+I am happy (and more familiar) with just sending a final series via email. Especially if you insist on pulling from kernel.org git trees only, that is probably the only way for now.
+
+To gain more independence from "corporate email" I am looking forward to setting up a kernel.org account and sending proper PRs in the future, but indeed this is probably overkill given the expected volume of patches.
+
+Let me just run some test with the final version of the DT, then I will send a v3.
+
+Cheers,
+Andre
 
 
-On 27/02/2020 17:53, Stefan Wahren wrote:
-> Hi Nick,
->
-> Am 27.02.20 um 00:33 schrieb Nick Hudson:
->> I'm still not sure where I should be sending this, but here goes.
->
-> the addresses are right. Please rebase your change against recent Linux
-> git tree and generate a git patch, otherwise we cannot apply your it.
-Oops, I see I sent the comletely the wrong diff... will fix.
-
->
-> I suggest the following subject:
->
-> ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
-
-will do.
-
->
-> Thanks
-> Stefan
-
-Thanks,
-Nick
