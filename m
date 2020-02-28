@@ -2,194 +2,160 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E35C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88860C3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7E4246A8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC7524672
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jE67j5cc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rgJKb74y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgB1Jbd (ORCPT
+        id S1726816AbgB1JhY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:31:33 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35669 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgB1Jbc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 04:31:32 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m3so2457184wmi.0
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 01:31:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MHeQm6U+o0608Xi2QEDKzTbxNSKLm6MuqMAztV8dmJM=;
-        b=jE67j5ccRqZv9eK3iRUZLVykttz9c5sI8MK/YsOKN3jPVJFZJhmO4HrvBYpDo76iM7
-         B5NhRsZHEeYebBhF7xDDNPfgZHWdQJFJeZyZlL+CrAtLT35iy5E0m46pahcfydTs03Tc
-         fsyLquzsE28rqLEUzgEECrvaySmdEb04RpbPt3DeB3FtQCzTdBS1Ve09Ja7U+XTXmDEl
-         3p0THzcCVczmCnPGDFHeqYSQXxkgcYKIDaFJpef3jx9PlM3jZIwXL3fR/uZ3MWisT0pk
-         cR9t/lYOussthGdnFjc9OnagjXXsLew9M6zM5HO15RX2Jknpkma5/9RJYyqFSScmftRi
-         ty0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=MHeQm6U+o0608Xi2QEDKzTbxNSKLm6MuqMAztV8dmJM=;
-        b=S7Izry5mBri8pFWk+EaB+RmuBX55pUzGD9ZiKdS0YKgxH5nsAGyBI/c0BcG01n+ImH
-         heLlZ5ovoc3S65CzF+WR2tqOS8iBVP9aCsTs5TCko5h4XqX4sklAx6GfHAcyZl6yyzqe
-         SVRhk8iHrRhB27Xl3hsGrWY0kguFwXxdIoCCV/FAufEplRRwn5aUpIaT2UjPA+fElXWy
-         JpRmH8Fx7glLunH8ZHGxtZDVzGklYBq+R5Gw0ph8ldugjQOrJkfnNgZs4jnJSN4Zxbnu
-         jTwkE17EAWhpAirB8Kdb8vBEMNv9TbRVXVTMIohCw98iPAn8XtnpTubKOQZDfIERVtH7
-         Y+CA==
-X-Gm-Message-State: APjAAAUEL/I9v0knWC+wWDLY6djH95/Ty4pAWO79ghz1TU2+SdF7PO/q
-        0UeWWfZ0zrh18ewx/MZrlyb+BA==
-X-Google-Smtp-Source: APXvYqyF4k/gTiOodnjjGmlgUAFqePXdEZSWAR3mecnKr9zQIIfkcdyGRMU46SrUVXmpQYryG154Sw==
-X-Received: by 2002:a05:600c:2:: with SMTP id g2mr3921747wmc.18.1582882288774;
-        Fri, 28 Feb 2020 01:31:28 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9002:9a61:c019:3c99? ([2a01:e34:ed2f:f020:9002:9a61:c019:3c99])
-        by smtp.googlemail.com with ESMTPSA id q125sm1409867wme.19.2020.02.28.01.31.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 01:31:28 -0800 (PST)
-Subject: Re: [PATCH RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM
- thermal monitoring unit
-To:     Anson Huang <anson.huang@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1582186646-22096-1-git-send-email-Anson.Huang@nxp.com>
- <1582186646-22096-2-git-send-email-Anson.Huang@nxp.com>
- <f8dfdb39-14e5-4ee2-927a-fecbcd66c71e@linaro.org>
- <DB3PR0402MB39163AE75E59613AB6B21575F5E80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <07994b0e-9735-2f3e-e5c3-a57e2344dbc0@linaro.org>
-Date:   Fri, 28 Feb 2020 10:31:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 04:37:24 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45708 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgB1JhY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 04:37:24 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9b0LZ113746;
+        Fri, 28 Feb 2020 03:37:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582882620;
+        bh=SPh+Agdmc6y0lmp3JNluat2ukjO6mzKkaFasmlrPdpQ=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=rgJKb74ynq2dLwtsfSpxdsXdaOGvSe9L4xmdd+a3NkHX485BrLUxJvn69jE1xHkOc
+         YHl5UH2KhSNFs89dzWm+9i7e1QcOuht2RIfDAElrWfIpjkVw+kUuJdlIr/wSNWk5se
+         ZnIWaUcEQSDzIaxoW/Gbir8lcxFJ+dLVRnohg/I0=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S9b0d4120325
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Feb 2020 03:37:00 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
+ Feb 2020 03:36:59 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 28 Feb 2020 03:37:00 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9axce104882;
+        Fri, 28 Feb 2020 03:36:59 -0600
+Date:   Fri, 28 Feb 2020 15:06:58 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH v2 06/11] mtd: spi-nor: add support for DTR protocol
+Message-ID: <20200228093658.zc3uifqg4zruokq3@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+ <20200226093703.19765-7-p.yadav@ti.com>
+ <20200227175841.51435e3f@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB39163AE75E59613AB6B21575F5E80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200227175841.51435e3f@collabora.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 28/02/2020 02:12, Anson Huang wrote:
-> Hi, Daniel
+Hi Boris,
 
-[ ... ]
-
->>> +static int tmu_get_temp(void *data, int *temp) {
->>> +	struct imx8mm_tmu *tmu = data;
->>> +	u32 val;
->>> +
->>> +	/* the temp sensor need about 1ms to finish the measurement */
->>> +	usleep_range(1000, 2000);
->>
->> Why do yo need to force a delay here? If the sensor can not be read more
->> than one time every 1ms, then specify that in the DT switching the polling to
->> the right value, no?
+On 27/02/20 05:58PM, Boris Brezillon wrote:
+> On Wed, 26 Feb 2020 15:06:58 +0530
+> Pratyush Yadav <p.yadav@ti.com> wrote:
 > 
-> The polling time(2 seconds) is OK for this case, adding this sleep is to prevent user from reading
-> temperature from sysfs interface very frequently like less than 1ms, does it make sense? 
+> > Double Transfer Rate (DTR) is SPI protocol in which data is transferred
+> > on each clock edge as opposed to on each clock cycle. Make
+> > framework-level changes to allow supporting flashes in DTR mode.
+> > 
+> > Right now, mixed DTR modes are not supported. So, for example a mode
+> > like 4S-4D-4D will not work. All phases need to be either DTR or STR.
+> 
+> Didn't go deep into the patch but at first glance you don't seem to
+> extend the framework to support stateful modes as I tried to do here
+> [1]. That's really something we should address before considering
+> supporting xD-xD-xD modes, unless the SPI-NOR only supports one
+> stateful mode. If we don't do that first, we might face all sort of
+> unpleasant issues:
+> 
+> * kexec not working correctly because the previous kernel left the NOR
+>   in an unknown state
+> * suspend/resume not working properly
+> * linux not booting properly because the bootloader left the device in
+>   its non-default mode
+> * ...
 
-Not really, well except if the user is able to press the keys in less
-than 1ms :)
+Correct. I am working on a follow-up series that takes care of these 
+problems. The series will allow spi-nor to detect what mode the flash is 
+in and then run the SFPD procedure in that mode (or maybe switch to 
+single SPI mode and then go about its business as usual? I haven't 
+figured out all the details yet).
 
-If the userspace writes a polling script reading the temperature in a
-busy loop, there is nothing we can do against silly programming :/
+So for the context of this series, assume we are handed the flash in 
+single SPI mode.
+ 
+> [1]https://patchwork.kernel.org/cover/10638055/
 
-However, it could interesting to add a <min polling interval> in the
-thermal structure and handle that from the core framework by caching the
-last value and return it in case get_temp is called too fast.
+BTW, I took a quick look at this series but I don't see any code that 
+tries to detect which mode the flash is in (which is the troublesome 
+part [0]). So, for example, if the bootloader leaves the flash in 
+8D-8D-8D mode, how would your series handle that situation?
+
+[0] There are multiple problems to take care of when trying to detect 
+    which mode a flash is in. We can try reading SFDP in each mode and 
+    whichever mode gives us the correct "SFDP" signature is the mode the 
+    flash is in. But the problem is that even in xSPI standard Read SFDP 
+    command is optional in 8D-8D-8D mode, let alone non-xSPI flashes. 
+    Another problem is that the address bytes and dummy cycles for Read 
+    SFDP are not the same for every flash. The xSPI standard says 
+    address bytes can be 3/4 and dummy cycles can be 8/20. So, for 
+    example, Cypress s28hs/s28ht family and Micron Xccela (mt35x) family 
+    use 4 address bytes, but the Adesto ATXP032/ATXP032R flashes use 3 
+    address bytes.
+
+    Say that a flash supports Read SFDP in 8D-8D-8D mode and we try all 
+    the combinations to find out which mode the flash is in, we now have 
+    the problem of actually identifying the flash. Unfortunately, the 
+    Read ID command is not uniform across flash vendors. The Micron 
+    Xccela flashes use 8 dummy cycles and no address bytes for Read ID. 
+    The Cypress s28hs/t family uses configurable dummy cycles 
+    (defaulting to 3) and needs 4 dummy address bytes all of which are 
+    0.
+
+    If we can't find out which flash it is, we can't run its fixup 
+    hooks, and might end up running it with incorrect settings. And all 
+    this is assuming a flash even has SFDP and has it available in all 
+    modes.
+
+    So, the only solution I can now think of is having the flash name in 
+    its compatible string in the device tree. This way we can skip all 
+    the Read ID ugliness and can have flash-specific hooks to make it 
+    easier to detect the mode it is in (though I wonder if it is even 
+    possible to detect the mode in a flash that doesn't have SFDP in 
+    8D-8D-8D).
+
+    Thoughts? Is there a better way to solve this problem that I didn't 
+    think of?
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Regards,
+Pratyush Yadav
+Texas Instruments India
