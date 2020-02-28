@@ -7,58 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CFBC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEE7C3F2D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D6E246B5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491C6246B5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDkTIPjT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OUXVXnzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgB1WmW (ORCPT
+        id S1726896AbgB1WmP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:42:22 -0500
-Received: from mail-yw1-f46.google.com ([209.85.161.46]:39497 "EHLO
-        mail-yw1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgB1WmU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 17:42:20 -0500
-Received: by mail-yw1-f46.google.com with SMTP id x184so4941673ywd.6
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 14:42:19 -0800 (PST)
+        Fri, 28 Feb 2020 17:42:15 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:46462 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgB1WmN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 17:42:13 -0500
+Received: by mail-yw1-f67.google.com with SMTP id n1so4406214ywe.13
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 14:42:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=N0JA1jVQWs/bwF31BbpAQ6qu/wg1v384KBX/XRnY+Z4=;
-        b=tDkTIPjThAk7QX5UUYbLzxQuuZ0/RSw7B8gpvbyNa7gTpeFxVKq1GMoisKehdaItsu
-         OmKy5O0T1WhcBQ4QLAyTDKG7n9eR2NjAvHwarAcVsEVzaJzSsd4UGvzE8RJ/zyOtKE1g
-         yF4xgtQ4ujV8Ao/e4STJa0rM2bSaRAnv++7wSG5SiSAD4RzPN2AoeFFu4QEHrk8ajpGD
-         F9lSzF5M9eN69218cZyfVoHlBkwpdsyJ01GWboQP7zqIcLx7DMgSpepH7EyPmA8Ydwlu
-         I0WOG6UGzNEt6s/wuxnu0i8y5OIGU9bnzz+J0ZoWFPKh0BEaYqVay9oze3N5iSmAi/2K
-         pb2g==
+        bh=87+frOTHX8qnO3QpcSs16fPwX2RXtb0vNrYvrQADVwE=;
+        b=OUXVXnziXjzdpfuLRW1taEtDpgyKCViDitiG64XI2BzJrg3AL0VBcpErt2EHf5252h
+         ExAjluZLaAQ1xt7p/2lmK72LjnayS1iUSfh86nlmdfHjGXVIJo2gCFCR+oTdYR2jCI2F
+         HNY7/SPtXWEYzVjnVUboaDOhMyeSY5jGm8IIh1EJRgI31hrH1mxMxdFrqGxhsYdQehyH
+         vOXNcwkHjHSxhpdEoNNyGMiXduKnyor0oqjbmwFjZ5bK2ocE/s8Li4qpE2nw+pCUPASr
+         /2eAxQedZQmeaPFtbC8BbYbkEr6QFQIMHT94a3XKTfRfPj6Y6fZVS1mB6toSy0syQbyF
+         4p0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=N0JA1jVQWs/bwF31BbpAQ6qu/wg1v384KBX/XRnY+Z4=;
-        b=XzD4tQa6DXRYo5VhaYi02yGtwbzbrXtMatpqVZLquo5TGiV7U9bkkdbdHpihd0Srqg
-         bb3r+l4fQCKf12OlB5UeWtZgtZd7DY77XWy1fs9AkqVScf8jcFsUF4U1sP4oxLaWinSZ
-         Rn8jQFaDXUhtWxk+DLxYLOM7aqVIe6Tg0+neOYGcPVXSEieMsFL5nSFSipzTDTHmkHIa
-         cW+DC3MaVr8wmUOGR5oy31YmVMvxpBDVy7EkRKr8da3tXdvNsWBhje4xmxGGGyS7CZGB
-         P7/He7AxO3dBtxgf+ReW0CMxPAlBsO5+zjPJIpXcouDEW6ypfM9nooZuyo0HJEC6u+u4
-         aB8A==
-X-Gm-Message-State: APjAAAXrbcknSB/qPk/8QF5u7uXac4ytY7flVKS/gSjaFNas4PzHzZUw
-        7/Co9iJFlz54wV4xYaytmNmu3A==
-X-Google-Smtp-Source: APXvYqwO2UDNS9wj/Int/im9d98qw56XdCPeNJ0JRccePqLKUjJlJUflAQOcLqNpogcn+ch+tby1kw==
-X-Received: by 2002:a25:c902:: with SMTP id z2mr5625145ybf.425.1582929738057;
-        Fri, 28 Feb 2020 14:42:18 -0800 (PST)
+        bh=87+frOTHX8qnO3QpcSs16fPwX2RXtb0vNrYvrQADVwE=;
+        b=qPVr3iYz9uASbc1x1dzZru8nA0ZH/BtjUC05gxddmd4Bt/EVYWpD3uo0WtO9aiAfia
+         MEl6e3UhM4ulkb3nFi2q4TQyTFN0j7f1zmJe+pyGwJsn/Li+vnmqNyy8fKXh+AtlY/Qk
+         /Wvb2sdKfLEpwstU7swJ+NT02akwBeOsmzpI8UFhPS3YWQbh9E7I2EufssaboFCD7eJS
+         lGXbmPGGe6bJ3nJIl+GPDo/6PU1mrQMDZs5mHs01YFLm15tIfrVtWTMihmyYtg68CRuJ
+         cKO4S+N0JUKj2UosqkSPHQviqhfsn5qdGJuEwgaMwsEC23gkZKacBnl1Biq26V9WpxRu
+         wwhQ==
+X-Gm-Message-State: APjAAAWtzbRbsIlXCYMnw1HhdZd9UTQZRHL27xx0DT1LZqnqqo4jhvSR
+        8g5WPRHvddR64eDAVGvH88b2xg==
+X-Google-Smtp-Source: APXvYqw5FAvtXFtlfg7OoMGDUn3VM8hzGG/ytz9cZ2nYfI2JUdb8yurZWcz3Qzup/MaWVDO6Smw5pg==
+X-Received: by 2002:a81:ae21:: with SMTP id m33mr7122769ywh.54.1582929731652;
+        Fri, 28 Feb 2020 14:42:11 -0800 (PST)
 Received: from localhost.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.15
+        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 14:42:17 -0800 (PST)
+        Fri, 28 Feb 2020 14:42:11 -0800 (PST)
 From:   Alex Elder <elder@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Miller <davem@davemloft.net>
+Cc:     Andy Gross <agross@kernel.org>,
         Johannes Berg <johannes@sipsolutions.net>,
         Dan Williams <dcbw@redhat.com>,
         Evan Green <evgreen@google.com>,
@@ -68,15 +70,14 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
         Siddharth Gupta <sidgup@codeaurora.org>,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/17] soc: qcom: ipa: configuration data
-Date:   Fri, 28 Feb 2020 16:41:51 -0600
-Message-Id: <20200228224204.17746-5-elder@linaro.org>
+Subject: [PATCH 01/17] remoteproc: add IPA notification to q6v5 driver
+Date:   Fri, 28 Feb 2020 16:41:48 -0600
+Message-Id: <20200228224204.17746-2-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200228224204.17746-1-elder@linaro.org>
 References: <20200228224204.17746-1-elder@linaro.org>
@@ -87,956 +88,345 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch defines configuration data that is used to specify some
-of the details of IPA hardware supported by the driver.  It is built
-as Device Tree match data, discovered at boot time.  The driver
-supports the Qualcomm SDM845 SoC.  Data for the Qualcomm SC7180 is
-also defined here, but it is not yet completely supported.
+Set up a subdev in the q6v5 modem remoteproc driver that generates
+event notifications for the IPA driver to use for initialization and
+recovery following a modem shutdown or crash.
+
+A pair of new functions provides a way for the IPA driver to register
+and deregister a notification callback function that will be called
+whenever modem events (about to boot, running, about to shut down,
+etc.) occur.  A void pointer value (provided by the IPA driver at
+registration time) and an event type are supplied to the callback
+function.
+
+One event, MODEM_REMOVING, is signaled whenever the q6v5 driver is
+about to remove the notification subdevice.  It requires the IPA
+driver de-register its callback.
+
+This sub-device is only used by the modem subsystem (MSS) driver,
+so the code that adds the new subdev and allows registration and
+deregistration of the notifier is found in "qcom_q6v6_mss.c".
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_data-sc7180.c | 307 ++++++++++++++++++++++++++++
- drivers/net/ipa/ipa_data-sdm845.c | 329 ++++++++++++++++++++++++++++++
- drivers/net/ipa/ipa_data.h        | 280 +++++++++++++++++++++++++
- 3 files changed, 916 insertions(+)
- create mode 100644 drivers/net/ipa/ipa_data-sc7180.c
- create mode 100644 drivers/net/ipa/ipa_data-sdm845.c
- create mode 100644 drivers/net/ipa/ipa_data.h
 
-diff --git a/drivers/net/ipa/ipa_data-sc7180.c b/drivers/net/ipa/ipa_data-sc7180.c
+ NOTE:	This was developed last year.  Recently there is another
+ 	proposal that addresses what this does in a more general
+	way.  For now I'm simply including this in my IPA patch
+	series to satisfy the need.  If/when the other proposal
+	lands upstream it won't be hard to adapt the IPA driver
+	to use it.
+
+					-Alex
+
+ drivers/remoteproc/Kconfig                    |  6 ++
+ drivers/remoteproc/Makefile                   |  1 +
+ drivers/remoteproc/qcom_q6v5_ipa_notify.c     | 85 +++++++++++++++++++
+ drivers/remoteproc/qcom_q6v5_mss.c            | 42 ++++++++-
+ .../linux/remoteproc/qcom_q6v5_ipa_notify.h   | 82 ++++++++++++++++++
+ 5 files changed, 214 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/remoteproc/qcom_q6v5_ipa_notify.c
+ create mode 100644 include/linux/remoteproc/qcom_q6v5_ipa_notify.h
+
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index de3862c15fcc..80c3cac60fbe 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -167,6 +167,12 @@ config QCOM_Q6V5_WCSS
+ 	  Say y here to support the Qualcomm Peripheral Image Loader for the
+ 	  Hexagon V5 based WCSS remote processors.
+ 
++config QCOM_Q6V5_IPA_NOTIFY
++	tristate
++	depends on IPA
++	depends on QCOM_Q6V5_MSS
++	default IPA
++
+ config QCOM_SYSMON
+ 	tristate "Qualcomm sysmon driver"
+ 	depends on RPMSG
+diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+index e30a1b15fbac..0effd3825035 100644
+--- a/drivers/remoteproc/Makefile
++++ b/drivers/remoteproc/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
+ obj-$(CONFIG_QCOM_Q6V5_MSS)		+= qcom_q6v5_mss.o
+ obj-$(CONFIG_QCOM_Q6V5_PAS)		+= qcom_q6v5_pas.o
+ obj-$(CONFIG_QCOM_Q6V5_WCSS)		+= qcom_q6v5_wcss.o
++obj-$(CONFIG_QCOM_Q6V5_IPA_NOTIFY)	+= qcom_q6v5_ipa_notify.o
+ obj-$(CONFIG_QCOM_SYSMON)		+= qcom_sysmon.o
+ obj-$(CONFIG_QCOM_WCNSS_PIL)		+= qcom_wcnss_pil.o
+ qcom_wcnss_pil-y			+= qcom_wcnss.o
+diff --git a/drivers/remoteproc/qcom_q6v5_ipa_notify.c b/drivers/remoteproc/qcom_q6v5_ipa_notify.c
 new file mode 100644
-index 000000000000..042b5fc3c135
+index 000000000000..e1c10a128bfd
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_data-sc7180.c
-@@ -0,0 +1,307 @@
++++ b/drivers/remoteproc/qcom_q6v5_ipa_notify.c
+@@ -0,0 +1,85 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+/* Copyright (C) 2019-2020 Linaro Ltd. */
-+
-+#include <linux/log2.h>
-+
-+#include "gsi.h"
-+#include "ipa_data.h"
-+#include "ipa_endpoint.h"
-+#include "ipa_mem.h"
-+
-+/* Endpoint configuration for the SC7180 SoC. */
-+static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
-+	[IPA_ENDPOINT_AP_COMMAND_TX] = {
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 1,
-+		.endpoint_id	= 6,
-+		.toward_ipa	= true,
-+		.channel = {
-+			.tre_count	= 256,
-+			.event_count	= 256,
-+			.tlv_count	= 20,
-+		},
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_DMA_ONLY,
-+			.config = {
-+				.dma_mode	= true,
-+				.dma_endpoint	= IPA_ENDPOINT_AP_LAN_RX,
-+			},
-+		},
-+	},
-+	[IPA_ENDPOINT_AP_LAN_RX] = {
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 2,
-+		.endpoint_id	= 8,
-+		.toward_ipa	= false,
-+		.channel = {
-+			.tre_count	= 256,
-+			.event_count	= 256,
-+			.tlv_count	= 6,
-+		},
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_INVALID,
-+			.config = {
-+				.aggregation	= true,
-+				.status_enable	= true,
-+				.rx = {
-+					.pad_align	= ilog2(sizeof(u32)),
-+				},
-+			},
-+		},
-+	},
-+	[IPA_ENDPOINT_AP_MODEM_TX] = {
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 0,
-+		.endpoint_id	= 1,
-+		.toward_ipa	= true,
-+		.channel = {
-+			.tre_count	= 512,
-+			.event_count	= 512,
-+			.tlv_count	= 8,
-+		},
-+		.endpoint = {
-+			.filter_support	= true,
-+			.seq_type	=
-+				IPA_SEQ_PKT_PROCESS_NO_DEC_NO_UCP_DMAP,
-+			.config = {
-+				.checksum	= true,
-+				.qmap		= true,
-+				.status_enable	= true,
-+				.tx = {
-+					.status_endpoint =
-+						IPA_ENDPOINT_MODEM_AP_RX,
-+				},
-+			},
-+		},
-+	},
-+	[IPA_ENDPOINT_AP_MODEM_RX] = {
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 3,
-+		.endpoint_id	= 9,
-+		.toward_ipa	= false,
-+		.channel = {
-+			.tre_count	= 256,
-+			.event_count	= 256,
-+			.tlv_count	= 6,
-+		},
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_INVALID,
-+			.config = {
-+				.checksum	= true,
-+				.qmap		= true,
-+				.aggregation	= true,
-+				.rx = {
-+					.aggr_close_eof	= true,
-+				},
-+			},
-+		},
-+	},
-+	[IPA_ENDPOINT_MODEM_COMMAND_TX] = {
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 1,
-+		.endpoint_id	= 5,
-+		.toward_ipa	= true,
-+	},
-+	[IPA_ENDPOINT_MODEM_LAN_RX] = {
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 3,
-+		.endpoint_id	= 13,
-+		.toward_ipa	= false,
-+	},
-+	[IPA_ENDPOINT_MODEM_AP_TX] = {
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 0,
-+		.endpoint_id	= 4,
-+		.toward_ipa	= true,
-+		.endpoint = {
-+			.filter_support	= true,
-+		},
-+	},
-+	[IPA_ENDPOINT_MODEM_AP_RX] = {
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 2,
-+		.endpoint_id	= 10,
-+		.toward_ipa	= false,
-+	},
-+};
-+
-+/* For the SC7180, resource groups are allocated this way:
-+ *   group 0:	UL_DL
++/*
++ * Qualcomm IPA notification subdev support
++ *
++ * Copyright (C) 2019 Linaro Ltd.
 + */
-+static const struct ipa_resource_src ipa_resource_src[] = {
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_PKT_CONTEXTS,
-+		.limits[0] = {
-+			.min = 3,
-+			.max = 63,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_LISTS,
-+		.limits[0] = {
-+			.min = 3,
-+			.max = 3,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_BUFF,
-+		.limits[0] = {
-+			.min = 10,
-+			.max = 10,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_HPS_DMARS,
-+		.limits[0] = {
-+			.min = 1,
-+			.max = 1,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_ACK_ENTRIES,
-+		.limits[0] = {
-+			.min = 5,
-+			.max = 5,
-+		},
-+	},
-+};
 +
-+static const struct ipa_resource_dst ipa_resource_dst[] = {
-+	{
-+		.type = IPA_RESOURCE_TYPE_DST_DATA_SECTORS,
-+		.limits[0] = {
-+			.min = 3,
-+			.max = 3,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_DST_DPS_DMARS,
-+		.limits[0] = {
-+			.min = 1,
-+			.max = 63,
-+		},
-+	},
-+};
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/remoteproc.h>
++#include <linux/remoteproc/qcom_q6v5_ipa_notify.h>
 +
-+/* Resource configuration for the SC7180 SoC. */
-+static const struct ipa_resource_data ipa_resource_data = {
-+	.resource_src_count	= ARRAY_SIZE(ipa_resource_src),
-+	.resource_src		= ipa_resource_src,
-+	.resource_dst_count	= ARRAY_SIZE(ipa_resource_dst),
-+	.resource_dst		= ipa_resource_dst,
-+};
++static void
++ipa_notify_common(struct rproc_subdev *subdev, enum qcom_rproc_event event)
++{
++	struct qcom_rproc_ipa_notify *ipa_notify;
++	qcom_ipa_notify_t notify;
 +
-+/* IPA-resident memory region configuration for the SC7180 SoC. */
-+static const struct ipa_mem ipa_mem_data[] = {
-+	[IPA_MEM_UC_SHARED] = {
-+		.offset		= 0x0000,
-+		.size		= 0x0080,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_UC_INFO] = {
-+		.offset		= 0x0080,
-+		.size		= 0x0200,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V4_FILTER_HASHED] = {
-+		.offset		= 0x0288,
-+		.size		= 0,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V4_FILTER] = {
-+		.offset		= 0x0290,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V6_FILTER_HASHED] = {
-+		.offset		= 0x0310,
-+		.size		= 0,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V6_FILTER] = {
-+		.offset		= 0x0318,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V4_ROUTE_HASHED] = {
-+		.offset		= 0x0398,
-+		.size		= 0,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V4_ROUTE] = {
-+		.offset		= 0x03a0,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V6_ROUTE_HASHED] = {
-+		.offset		= 0x0420,
-+		.size		= 0,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V6_ROUTE] = {
-+		.offset		= 0x0428,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_MODEM_HEADER] = {
-+		.offset		= 0x04a8,
-+		.size		= 0x0140,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_AP_HEADER] = {
-+		.offset		= 0x05e8,
-+		.size		= 0x0000,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_MODEM_PROC_CTX] = {
-+		.offset		= 0x05f0,
-+		.size		= 0x0200,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_AP_PROC_CTX] = {
-+		.offset		= 0x07f0,
-+		.size		= 0x0200,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_PDN_CONFIG] = {
-+		.offset		= 0x09f8,
-+		.size		= 0x0050,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_STATS_QUOTA] = {
-+		.offset		= 0x0a50,
-+		.size		= 0x0060,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_STATS_TETHERING] = {
-+		.offset		= 0x0ab0,
-+		.size		= 0x0140,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_STATS_DROP] = {
-+		.offset		= 0x0bf0,
-+		.size		= 0,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_MODEM] = {
-+		.offset		= 0x0bf0,
-+		.size		= 0x140c,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_UC_EVENT_RING] = {
-+		.offset		= 0x2000,
-+		.size		= 0,
-+		.canary_count	= 1,
-+	},
-+};
++	ipa_notify = container_of(subdev, struct qcom_rproc_ipa_notify, subdev);
++	notify = ipa_notify->notify;
++	if (notify)
++		notify(ipa_notify->data, event);
++}
 +
-+/* Configuration data for the SC7180 SoC. */
-+const struct ipa_data ipa_data_sc7180 = {
-+	.version	= IPA_VERSION_4_2,
-+	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
-+	.endpoint_data	= ipa_gsi_endpoint_data,
-+	.resource_data	= &ipa_resource_data,
-+	.mem_count	= ARRAY_SIZE(ipa_mem_data),
-+	.mem_data	= ipa_mem_data,
-+};
-diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
++static int ipa_notify_prepare(struct rproc_subdev *subdev)
++{
++	ipa_notify_common(subdev, MODEM_STARTING);
++
++	return 0;
++}
++
++static int ipa_notify_start(struct rproc_subdev *subdev)
++{
++	ipa_notify_common(subdev, MODEM_RUNNING);
++
++	return 0;
++}
++
++static void ipa_notify_stop(struct rproc_subdev *subdev, bool crashed)
++
++{
++	ipa_notify_common(subdev, crashed ? MODEM_CRASHED : MODEM_STOPPING);
++}
++
++static void ipa_notify_unprepare(struct rproc_subdev *subdev)
++{
++	ipa_notify_common(subdev, MODEM_OFFLINE);
++}
++
++static void ipa_notify_removing(struct rproc_subdev *subdev)
++{
++	ipa_notify_common(subdev, MODEM_REMOVING);
++}
++
++/* Register the IPA notification subdevice with the Q6V5 MSS remoteproc */
++void qcom_add_ipa_notify_subdev(struct rproc *rproc,
++		struct qcom_rproc_ipa_notify *ipa_notify)
++{
++	ipa_notify->notify = NULL;
++	ipa_notify->data = NULL;
++	ipa_notify->subdev.prepare = ipa_notify_prepare;
++	ipa_notify->subdev.start = ipa_notify_start;
++	ipa_notify->subdev.stop = ipa_notify_stop;
++	ipa_notify->subdev.unprepare = ipa_notify_unprepare;
++
++	rproc_add_subdev(rproc, &ipa_notify->subdev);
++}
++EXPORT_SYMBOL_GPL(qcom_add_ipa_notify_subdev);
++
++/* Remove the IPA notification subdevice */
++void qcom_remove_ipa_notify_subdev(struct rproc *rproc,
++		struct qcom_rproc_ipa_notify *ipa_notify)
++{
++	struct rproc_subdev *subdev = &ipa_notify->subdev;
++
++	ipa_notify_removing(subdev);
++
++	rproc_remove_subdev(rproc, subdev);
++	ipa_notify->notify = NULL;	/* Make it obvious */
++}
++EXPORT_SYMBOL_GPL(qcom_remove_ipa_notify_subdev);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Qualcomm IPA notification remoteproc subdev");
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 97093f4f58e1..ac60588ebe5a 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -22,6 +22,7 @@
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/remoteproc.h>
++#include "linux/remoteproc/qcom_q6v5_ipa_notify.h"
+ #include <linux/reset.h>
+ #include <linux/soc/qcom/mdt_loader.h>
+ #include <linux/iopoll.h>
+@@ -201,6 +202,7 @@ struct q6v5 {
+ 	struct qcom_rproc_glink glink_subdev;
+ 	struct qcom_rproc_subdev smd_subdev;
+ 	struct qcom_rproc_ssr ssr_subdev;
++	struct qcom_rproc_ipa_notify ipa_notify_subdev;
+ 	struct qcom_sysmon *sysmon;
+ 	bool need_mem_protection;
+ 	bool has_alt_reset;
+@@ -1540,6 +1542,39 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
+ 	return 0;
+ }
+ 
++#if IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY)
++
++/* Register IPA notification function */
++int qcom_register_ipa_notify(struct rproc *rproc, qcom_ipa_notify_t notify,
++			     void *data)
++{
++	struct qcom_rproc_ipa_notify *ipa_notify;
++	struct q6v5 *qproc = rproc->priv;
++
++	if (!notify)
++		return -EINVAL;
++
++	ipa_notify = &qproc->ipa_notify_subdev;
++	if (ipa_notify->notify)
++		return -EBUSY;
++
++	ipa_notify->notify = notify;
++	ipa_notify->data = data;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(qcom_register_ipa_notify);
++
++/* Deregister IPA notification function */
++void qcom_deregister_ipa_notify(struct rproc *rproc)
++{
++	struct q6v5 *qproc = rproc->priv;
++
++	qproc->ipa_notify_subdev.notify = NULL;
++}
++EXPORT_SYMBOL_GPL(qcom_deregister_ipa_notify);
++#endif /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
++
+ static int q6v5_probe(struct platform_device *pdev)
+ {
+ 	const struct rproc_hexagon_res *desc;
+@@ -1664,10 +1699,11 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
+ 	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
+ 	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
++	qcom_add_ipa_notify_subdev(rproc, &qproc->ipa_notify_subdev);
+ 	qproc->sysmon = qcom_add_sysmon_subdev(rproc, "modem", 0x12);
+ 	if (IS_ERR(qproc->sysmon)) {
+ 		ret = PTR_ERR(qproc->sysmon);
+-		goto remove_ssr_subdev;
++		goto remove_ipa_subdev;
+ 	}
+ 
+ 	ret = rproc_add(rproc);
+@@ -1678,7 +1714,8 @@ static int q6v5_probe(struct platform_device *pdev)
+ 
+ remove_sysmon_subdev:
+ 	qcom_remove_sysmon_subdev(qproc->sysmon);
+-remove_ssr_subdev:
++remove_ipa_subdev:
++	qcom_remove_ipa_notify_subdev(qproc->rproc, &qproc->ipa_notify_subdev);
+ 	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
+ 	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
+ 	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
+@@ -1700,6 +1737,7 @@ static int q6v5_remove(struct platform_device *pdev)
+ 	rproc_del(rproc);
+ 
+ 	qcom_remove_sysmon_subdev(qproc->sysmon);
++	qcom_remove_ipa_notify_subdev(rproc, &qproc->ipa_notify_subdev);
+ 	qcom_remove_ssr_subdev(rproc, &qproc->ssr_subdev);
+ 	qcom_remove_smd_subdev(rproc, &qproc->smd_subdev);
+ 	qcom_remove_glink_subdev(rproc, &qproc->glink_subdev);
+diff --git a/include/linux/remoteproc/qcom_q6v5_ipa_notify.h b/include/linux/remoteproc/qcom_q6v5_ipa_notify.h
 new file mode 100644
-index 000000000000..0d9c36e1e806
+index 000000000000..0820edc0ab7d
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_data-sdm845.c
-@@ -0,0 +1,329 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019-2020 Linaro Ltd.
-+ */
-+
-+#include <linux/log2.h>
-+
-+#include "gsi.h"
-+#include "ipa_data.h"
-+#include "ipa_endpoint.h"
-+#include "ipa_mem.h"
-+
-+/* Endpoint configuration for the SDM845 SoC. */
-+static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
-+	[IPA_ENDPOINT_AP_COMMAND_TX] = {
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 4,
-+		.endpoint_id	= 5,
-+		.toward_ipa	= true,
-+		.channel = {
-+			.tre_count	= 512,
-+			.event_count	= 256,
-+			.tlv_count	= 20,
-+		},
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_DMA_ONLY,
-+			.config = {
-+				.dma_mode	= true,
-+				.dma_endpoint	= IPA_ENDPOINT_AP_LAN_RX,
-+			},
-+		},
-+	},
-+	[IPA_ENDPOINT_AP_LAN_RX] = {
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 5,
-+		.endpoint_id	= 9,
-+		.toward_ipa	= false,
-+		.channel = {
-+			.tre_count	= 256,
-+			.event_count	= 256,
-+			.tlv_count	= 8,
-+		},
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_INVALID,
-+			.config = {
-+				.checksum	= true,
-+				.aggregation	= true,
-+				.status_enable	= true,
-+				.rx = {
-+					.pad_align	= ilog2(sizeof(u32)),
-+				},
-+			},
-+		},
-+	},
-+	[IPA_ENDPOINT_AP_MODEM_TX] = {
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 3,
-+		.endpoint_id	= 2,
-+		.toward_ipa	= true,
-+		.channel = {
-+			.tre_count	= 512,
-+			.event_count	= 512,
-+			.tlv_count	= 16,
-+		},
-+		.endpoint = {
-+			.filter_support	= true,
-+			.seq_type	=
-+				IPA_SEQ_2ND_PKT_PROCESS_PASS_NO_DEC_UCP,
-+			.config = {
-+				.checksum	= true,
-+				.qmap		= true,
-+				.status_enable	= true,
-+				.tx = {
-+					.status_endpoint =
-+						IPA_ENDPOINT_MODEM_AP_RX,
-+					.delay	= true,
-+				},
-+			},
-+		},
-+	},
-+	[IPA_ENDPOINT_AP_MODEM_RX] = {
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 6,
-+		.endpoint_id	= 10,
-+		.toward_ipa	= false,
-+		.channel = {
-+			.tre_count	= 256,
-+			.event_count	= 256,
-+			.tlv_count	= 8,
-+		},
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_INVALID,
-+			.config = {
-+				.checksum	= true,
-+				.qmap		= true,
-+				.aggregation	= true,
-+				.rx = {
-+					.aggr_close_eof	= true,
-+				},
-+			},
-+		},
-+	},
-+	[IPA_ENDPOINT_MODEM_COMMAND_TX] = {
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 1,
-+		.endpoint_id	= 4,
-+		.toward_ipa	= true,
-+	},
-+	[IPA_ENDPOINT_MODEM_LAN_TX] = {
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 0,
-+		.endpoint_id	= 3,
-+		.toward_ipa	= true,
-+		.endpoint = {
-+			.filter_support	= true,
-+		},
-+	},
-+	[IPA_ENDPOINT_MODEM_LAN_RX] = {
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 3,
-+		.endpoint_id	= 13,
-+		.toward_ipa	= false,
-+	},
-+	[IPA_ENDPOINT_MODEM_AP_TX] = {
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 4,
-+		.endpoint_id	= 6,
-+		.toward_ipa	= true,
-+		.endpoint = {
-+			.filter_support	= true,
-+		},
-+	},
-+	[IPA_ENDPOINT_MODEM_AP_RX] = {
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 2,
-+		.endpoint_id	= 12,
-+		.toward_ipa	= false,
-+	},
-+};
-+
-+/* For the SDM845, resource groups are allocated this way:
-+ *   group 0:	LWA_DL
-+ *   group 1:	UL_DL
-+ */
-+static const struct ipa_resource_src ipa_resource_src[] = {
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_PKT_CONTEXTS,
-+		.limits[0] = {
-+			.min = 1,
-+			.max = 63,
-+		},
-+		.limits[1] = {
-+			.min = 1,
-+			.max = 63,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_LISTS,
-+		.limits[0] = {
-+			.min = 10,
-+			.max = 10,
-+		},
-+		.limits[1] = {
-+			.min = 10,
-+			.max = 10,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_BUFF,
-+		.limits[0] = {
-+			.min = 12,
-+			.max = 12,
-+		},
-+		.limits[1] = {
-+			.min = 14,
-+			.max = 14,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_HPS_DMARS,
-+		.limits[0] = {
-+			.min = 0,
-+			.max = 63,
-+		},
-+		.limits[1] = {
-+			.min = 0,
-+			.max = 63,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_ACK_ENTRIES,
-+		.limits[0] = {
-+			.min = 14,
-+			.max = 14,
-+		},
-+		.limits[1] = {
-+			.min = 20,
-+			.max = 20,
-+		},
-+	},
-+};
-+
-+static const struct ipa_resource_dst ipa_resource_dst[] = {
-+	{
-+		.type = IPA_RESOURCE_TYPE_DST_DATA_SECTORS,
-+		.limits[0] = {
-+			.min = 4,
-+			.max = 4,
-+		},
-+		.limits[1] = {
-+			.min = 4,
-+			.max = 4,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_DST_DPS_DMARS,
-+		.limits[0] = {
-+			.min = 2,
-+			.max = 63,
-+		},
-+		.limits[1] = {
-+			.min = 1,
-+			.max = 63,
-+		},
-+	},
-+};
-+
-+/* Resource configuration for the SDM845 SoC. */
-+static const struct ipa_resource_data ipa_resource_data = {
-+	.resource_src_count	= ARRAY_SIZE(ipa_resource_src),
-+	.resource_src		= ipa_resource_src,
-+	.resource_dst_count	= ARRAY_SIZE(ipa_resource_dst),
-+	.resource_dst		= ipa_resource_dst,
-+};
-+
-+/* IPA-resident memory region configuration for the SDM845 SoC. */
-+static const struct ipa_mem ipa_mem_data[] = {
-+	[IPA_MEM_UC_SHARED] = {
-+		.offset		= 0x0000,
-+		.size		= 0x0080,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_UC_INFO] = {
-+		.offset		= 0x0080,
-+		.size		= 0x0200,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_V4_FILTER_HASHED] = {
-+		.offset		= 0x0288,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V4_FILTER] = {
-+		.offset		= 0x0308,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V6_FILTER_HASHED] = {
-+		.offset		= 0x0388,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V6_FILTER] = {
-+		.offset		= 0x0408,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V4_ROUTE_HASHED] = {
-+		.offset		= 0x0488,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V4_ROUTE] = {
-+		.offset		= 0x0508,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V6_ROUTE_HASHED] = {
-+		.offset		= 0x0588,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_V6_ROUTE] = {
-+		.offset		= 0x0608,
-+		.size		= 0x0078,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_MODEM_HEADER] = {
-+		.offset		= 0x0688,
-+		.size		= 0x0140,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_AP_HEADER] = {
-+		.offset		= 0x07c8,
-+		.size		= 0x0000,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_MODEM_PROC_CTX] = {
-+		.offset		= 0x07d0,
-+		.size		= 0x0200,
-+		.canary_count	= 2,
-+	},
-+	[IPA_MEM_AP_PROC_CTX] = {
-+		.offset		= 0x09d0,
-+		.size		= 0x0200,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_MODEM] = {
-+		.offset		= 0x0bd8,
-+		.size		= 0x1024,
-+		.canary_count	= 0,
-+	},
-+	[IPA_MEM_UC_EVENT_RING] = {
-+		.offset		= 0x1c00,
-+		.size		= 0x0400,
-+		.canary_count	= 1,
-+	},
-+};
-+
-+/* Configuration data for the SDM845 SoC. */
-+const struct ipa_data ipa_data_sdm845 = {
-+	.version	= IPA_VERSION_3_5_1,
-+	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
-+	.endpoint_data	= ipa_gsi_endpoint_data,
-+	.resource_data	= &ipa_resource_data,
-+	.mem_count	= ARRAY_SIZE(ipa_mem_data),
-+	.mem_data	= ipa_mem_data,
-+};
-diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
-new file mode 100644
-index 000000000000..7110de2de817
---- /dev/null
-+++ b/drivers/net/ipa/ipa_data.h
-@@ -0,0 +1,280 @@
++++ b/include/linux/remoteproc/qcom_q6v5_ipa_notify.h
+@@ -0,0 +1,82 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019-2020 Linaro Ltd.
-+ */
-+#ifndef _IPA_DATA_H_
-+#define _IPA_DATA_H_
++/* Copyright (C) 2019 Linaro Ltd. */
 +
-+#include <linux/types.h>
++#ifndef __QCOM_Q6V5_IPA_NOTIFY_H__
++#define __QCOM_Q6V5_IPA_NOTIFY_H__
 +
-+#include "ipa_version.h"
-+#include "ipa_endpoint.h"
-+#include "ipa_mem.h"
++#if IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY)
 +
-+/**
-+ * DOC: IPA/GSI Configuration Data
-+ *
-+ * Boot-time configuration data is used to define the configuration of the
-+ * IPA and GSI resources to use for a given platform.  This data is supplied
-+ * via the Device Tree match table, associated with a particular compatible
-+ * string.  The data defines information about resources, endpoints, and
-+ * channels.
-+ *
-+ * Resources are data structures used internally by the IPA hardware.  The
-+ * configuration data defines the number (or limits of the number) of various
-+ * types of these resources.
-+ *
-+ * Endpoint configuration data defines properties of both IPA endpoints and
-+ * GSI channels.  A channel is a GSI construct, and represents a single
-+ * communication path between the IPA and a particular execution environment
-+ * (EE), such as the AP or Modem.  Each EE has a set of channels associated
-+ * with it, and each channel has an ID unique for that EE.  For the most part
-+ * the only GSI channels of concern to this driver belong to the AP
-+ *
-+ * An endpoint is an IPA construct representing a single channel anywhere
-+ * in the system.  An IPA endpoint ID maps directly to an (EE, channel_id)
-+ * pair.  Generally, this driver is concerned with only endpoints associated
-+ * with the AP, however this will change when support for routing (etc.) is
-+ * added.  IPA endpoint and GSI channel configuration data are defined
-+ * together, establishing the endpoint_id->(EE, channel_id) mapping.
-+ *
-+ * Endpoint configuration data consists of three parts:  properties that
-+ * are common to IPA and GSI (EE ID, channel ID, endpoint ID, and direction);
-+ * properties associated with the GSI channel; and properties associated with
-+ * the IPA endpoint.
-+ */
++#include <linux/remoteproc.h>
 +
-+/* The maximum value returned by ipa_resource_group_count() */
-+#define IPA_RESOURCE_GROUP_COUNT	4
++enum qcom_rproc_event {
++	MODEM_STARTING	= 0,	/* Modem is about to be started */
++	MODEM_RUNNING	= 1,	/* Startup complete; modem is operational */
++	MODEM_STOPPING	= 2,	/* Modem is about to shut down */
++	MODEM_CRASHED	= 3,	/* Modem has crashed (implies stopping) */
++	MODEM_OFFLINE	= 4,	/* Modem is now offline */
++	MODEM_REMOVING	= 5,	/* Modem is about to be removed */
++};
 +
-+/** enum ipa_resource_type_src - source resource types */
-+/**
-+ * struct gsi_channel_data - GSI channel configuration data
-+ * @tre_count:		number of TREs in the channel ring
-+ * @event_count:	number of slots in the associated event ring
-+ * @tlv_count:		number of entries in channel's TLV FIFO
-+ *
-+ * A GSI channel is a unidirectional means of transferring data to or
-+ * from (and through) the IPA.  A GSI channel has a ring buffer made
-+ * up of "transfer elements" (TREs) that specify individual data transfers
-+ * or IPA immediate commands.  TREs are filled by the AP, and control
-+ * is passed to IPA hardware by writing the last written element
-+ * into a doorbell register.
-+ *
-+ * When data transfer commands have completed the GSI generates an
-+ * event (a structure of data) and optionally signals the AP with
-+ * an interrupt.  Event structures are implemented by another ring
-+ * buffer, directed toward the AP from the IPA.
-+ *
-+ * The input to a GSI channel is a FIFO of type/length/value (TLV)
-+ * elements, and the size of this FIFO limits the number of TREs
-+ * that can be included in a single transaction.
-+ */
-+struct gsi_channel_data {
-+	u16 tre_count;
-+	u16 event_count;
-+	u8 tlv_count;
++typedef void (*qcom_ipa_notify_t)(void *data, enum qcom_rproc_event event);
++
++struct qcom_rproc_ipa_notify {
++	struct rproc_subdev subdev;
++
++	qcom_ipa_notify_t notify;
++	void *data;
 +};
 +
 +/**
-+ * struct ipa_endpoint_tx_data - configuration data for TX endpoints
-+ * @status_endpoint:	endpoint to which status elements are sent
-+ * @delay:		whether endpoint starts in delay mode
++ * qcom_add_ipa_notify_subdev() - Register IPA notification subdevice
++ * @rproc:	rproc handle
++ * @ipa_notify:	IPA notification subdevice handle
 + *
-+ * Delay mode prevents a TX endpoint from transmitting anything, even if
-+ * commands have been presented to the hardware.  Once the endpoint exits
-+ * delay mode, queued transfer commands are sent.
++ * Register the @ipa_notify subdevice with the @rproc so modem events
++ * can be sent to IPA when they occur.
 + *
-+ * The @status_endpoint is only valid if the endpoint's @status_enable
-+ * flag is set.
++ * This is defined in "qcom_q6v5_ipa_notify.c".
 + */
-+struct ipa_endpoint_tx_data {
-+	enum ipa_endpoint_name status_endpoint;
-+	bool delay;
-+};
++void qcom_add_ipa_notify_subdev(struct rproc *rproc,
++		struct qcom_rproc_ipa_notify *ipa_notify);
 +
 +/**
-+ * struct ipa_endpoint_rx_data - configuration data for RX endpoints
-+ * @pad_align:	power-of-2 boundary to which packet payload is aligned
-+ * @aggr_close_eof: whether aggregation closes on end-of-frame
++ * qcom_remove_ipa_notify_subdev() - Remove IPA SSR subdevice
++ * @rproc:	rproc handle
++ * @ipa_notify:	IPA notification subdevice handle
 + *
-+ * With each packet it transfers, the IPA hardware can perform certain
-+ * transformations of its packet data.  One of these is adding pad bytes
-+ * to the end of the packet data so the result ends on a power-of-2 boundary.
++ * This is defined in "qcom_q6v5_ipa_notify.c".
++ */
++void qcom_remove_ipa_notify_subdev(struct rproc *rproc,
++		struct qcom_rproc_ipa_notify *ipa_notify);
++
++/**
++ * qcom_register_ipa_notify() - Register IPA notification function
++ * @rproc:	Remote processor handle
++ * @notify:	Non-null IPA notification callback function pointer
++ * @data:	Data supplied to IPA notification callback function
 + *
-+ * It is also able to aggregate multiple packets into a single receive buffer.
-+ * Aggregation is "open" while a buffer is being filled, and "closes" when
-+ * certain criteria are met.  One of those criteria is the sender indicating
-+ * a "frame" consisting of several transfers has ended.
-+ */
-+struct ipa_endpoint_rx_data {
-+	u32 pad_align;
-+	bool aggr_close_eof;
-+};
-+
-+/**
-+ * struct ipa_endpoint_config_data - IPA endpoint hardware configuration
-+ * @checksum:		whether checksum offload is enabled
-+ * @qmap:		whether endpoint uses QMAP protocol
-+ * @aggregation:	whether endpoint supports aggregation
-+ * @status_enable:	whether endpoint uses status elements
-+ * @dma_mode:		whether endpoint operates in DMA mode
-+ * @dma_endpoint:	peer endpoint, if operating in DMA mode
-+ * @tx:			TX-specific endpoint information (see above)
-+ * @rx:			RX-specific endpoint information (see above)
-+ */
-+struct ipa_endpoint_config_data {
-+	bool checksum;
-+	bool qmap;
-+	bool aggregation;
-+	bool status_enable;
-+	bool dma_mode;
-+	enum ipa_endpoint_name dma_endpoint;
-+	union {
-+		struct ipa_endpoint_tx_data tx;
-+		struct ipa_endpoint_rx_data rx;
-+	};
-+};
-+
-+/**
-+ * struct ipa_endpoint_data - IPA endpoint configuration data
-+ * @filter_support:	whether endpoint supports filtering
-+ * @seq_type:		hardware sequencer type used for endpoint
-+ * @config:		hardware configuration (see above)
++ * @Return: 0 if successful, or a negative error code otherwise
 + *
-+ * Not all endpoints support the IPA filtering capability.  A filter table
-+ * defines the filters to apply for those endpoints that support it.  The
-+ * AP is responsible for initializing this table, and it must include entries
-+ * for non-AP endpoints.  For this reason we define *all* endpoints used
-+ * in the system, and indicate whether they support filtering.
++ * This is defined in "qcom_q6v5_mss.c".
++ */
++int qcom_register_ipa_notify(struct rproc *rproc, qcom_ipa_notify_t notify,
++			     void *data);
++/**
++ * qcom_deregister_ipa_notify() - Deregister IPA notification function
++ * @rproc:	Remote processor handle
 + *
-+ * The remaining endpoint configuration data applies only to AP endpoints.
-+ * The IPA hardware is implemented by sequencers, and the AP must program
-+ * the type(s) of these sequencers at initialization time.  The remaining
-+ * endpoint configuration data is defined above.
++ * This is defined in "qcom_q6v5_mss.c".
 + */
-+struct ipa_endpoint_data {
-+	bool filter_support;
-+	/* The next two are specified only for AP endpoints */
-+	enum ipa_seq_type seq_type;
-+	struct ipa_endpoint_config_data config;
-+};
++void qcom_deregister_ipa_notify(struct rproc *rproc);
 +
-+/**
-+ * struct ipa_gsi_endpoint_data - GSI channel/IPA endpoint data
-+ * ee:		GSI execution environment ID
-+ * channel_id:	GSI channel ID
-+ * endpoint_id:	IPA endpoint ID
-+ * toward_ipa:	direction of data transfer
-+ * gsi:		GSI channel configuration data (see above)
-+ * ipa:		IPA endpoint configuration data (see above)
-+ */
-+struct ipa_gsi_endpoint_data {
-+	u8 ee_id;		/* enum gsi_ee_id */
-+	u8 channel_id;
-+	u8 endpoint_id;
-+	bool toward_ipa;
++#else /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
 +
-+	struct gsi_channel_data channel;
-+	struct ipa_endpoint_data endpoint;
-+};
++struct qcom_rproc_ipa_notify { /* empty */ };
 +
-+/** enum ipa_resource_type_src - source resource types */
-+enum ipa_resource_type_src {
-+	IPA_RESOURCE_TYPE_SRC_PKT_CONTEXTS,
-+	IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_LISTS,
-+	IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_BUFF,
-+	IPA_RESOURCE_TYPE_SRC_HPS_DMARS,
-+	IPA_RESOURCE_TYPE_SRC_ACK_ENTRIES,
-+};
++#define qcom_add_ipa_notify_subdev(rproc, ipa_notify)		/* no-op */
++#define qcom_remove_ipa_notify_subdev(rproc, ipa_notify)	/* no-op */
 +
-+/** enum ipa_resource_type_dst - destination resource types */
-+enum ipa_resource_type_dst {
-+	IPA_RESOURCE_TYPE_DST_DATA_SECTORS,
-+	IPA_RESOURCE_TYPE_DST_DPS_DMARS,
-+};
++#endif /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
 +
-+/**
-+ * struct ipa_resource_limits - minimum and maximum resource counts
-+ * @min:	minimum number of resources of a given type
-+ * @max:	maximum number of resources of a given type
-+ */
-+struct ipa_resource_limits {
-+	u32 min;
-+	u32 max;
-+};
-+
-+/**
-+ * struct ipa_resource_src - source endpoint group resource usage
-+ * @type:	source group resource type
-+ * @limits:	array of limits to use for each resource group
-+ */
-+struct ipa_resource_src {
-+	enum ipa_resource_type_src type;
-+	struct ipa_resource_limits limits[IPA_RESOURCE_GROUP_COUNT];
-+};
-+
-+/**
-+ * struct ipa_resource_dst - destination endpoint group resource usage
-+ * @type:	destination group resource type
-+ * @limits:	array of limits to use for each resource group
-+ */
-+struct ipa_resource_dst {
-+	enum ipa_resource_type_dst type;
-+	struct ipa_resource_limits limits[IPA_RESOURCE_GROUP_COUNT];
-+};
-+
-+/**
-+ * struct ipa_resource_data - IPA resource configuration data
-+ * @resource_src_count:	number of entries in the resource_src array
-+ * @resource_src:	source endpoint group resources
-+ * @resource_dst_count:	number of entries in the resource_dst array
-+ * @resource_dst:	destination endpoint group resources
-+ *
-+ * In order to manage quality of service between endpoints, certain resources
-+ * required for operation are allocated to groups of endpoints.  Generally
-+ * this information is invisible to the AP, but the AP is responsible for
-+ * programming it at initialization time, so we specify it here.
-+ */
-+struct ipa_resource_data {
-+	u32 resource_src_count;
-+	const struct ipa_resource_src *resource_src;
-+	u32 resource_dst_count;
-+	const struct ipa_resource_dst *resource_dst;
-+};
-+
-+/**
-+ * struct ipa_mem - IPA-local memory region description
-+ * @offset:		offset in IPA memory space to base of the region
-+ * @size:		size in bytes base of the region
-+ * @canary_count:	number of 32-bit "canary" values that precede region
-+ */
-+struct ipa_mem_data {
-+	u32 offset;
-+	u16 size;
-+	u16 canary_count;
-+};
-+
-+/**
-+ * struct ipa_data - combined IPA/GSI configuration data
-+ * @version:		IPA hardware version
-+ * @endpoint_count:	number of entries in endpoint_data array
-+ * @endpoint_data:	IPA endpoint/GSI channel data
-+ * @resource_data:	IPA resource configuration data
-+ * @mem_count:		number of entries in mem_data array
-+ * @mem_data:		IPA-local shared memory region data
-+ */
-+struct ipa_data {
-+	enum ipa_version version;
-+	u32 endpoint_count;	/* # entries in endpoint_data[] */
-+	const struct ipa_gsi_endpoint_data *endpoint_data;
-+	const struct ipa_resource_data *resource_data;
-+	u32 mem_count;		/* # entries in mem_data[] */
-+	const struct ipa_mem *mem_data;
-+};
-+
-+extern const struct ipa_data ipa_data_sdm845;
-+extern const struct ipa_data ipa_data_sc7180;
-+
-+#endif /* _IPA_DATA_H_ */
++#endif /* !__QCOM_Q6V5_IPA_NOTIFY_H__ */
 -- 
 2.20.1
 
