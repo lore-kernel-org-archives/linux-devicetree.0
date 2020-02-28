@@ -2,114 +2,98 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2391BC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 21:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA274C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F322D246A8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 21:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911A1246B4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:05:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ojCXi//c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgB1VyB (ORCPT
+        id S1726589AbgB1WF4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 16:54:01 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39130 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgB1VyB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 16:54:01 -0500
-Received: by mail-ot1-f67.google.com with SMTP id x97so4013725ota.6;
-        Fri, 28 Feb 2020 13:54:00 -0800 (PST)
+        Fri, 28 Feb 2020 17:05:56 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43477 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB1WF4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 17:05:56 -0500
+Received: by mail-lf1-f68.google.com with SMTP id s23so3191574lfs.10
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 14:05:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C8LpeFRkJkAVGCGFA7ZkDQ8EDfylVrvQYhKNrzB5Agw=;
+        b=ojCXi//c/Oh73F5Il6IazTwlBEsFoNfw47/YGyUECYl4dvUC6WgxSI3iyIlBLbz3mZ
+         OSWB0BXF+JhGvD/zk+/GTAVNuJymMfHWiE5Sv3OzrtLzD8wvItVwx6Rc09jJQNdTPYzX
+         r+nTnXjxGnxb2Xi53R4UsUcTjKMg0E5gsaEkeqNNdoLNPTlR4pZw9KtGmo/qhkaQZY0q
+         Ebc8ul2qrGS9XuhqUFeb5gUHcchMPES2yWxB5pCRDT3o5006DzOBQ6kNkjHlHYrGFg3y
+         /wC1+1VRU56iKegko8xSykYkKhnvdO+/IIHG94etItcj9WvTOxgl9cgYOkx6IiaBsY6G
+         TagQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pDVNEc+emqEYhHMEI0BkQh8VuJ0zUAhAe+A2963SxX0=;
-        b=BhqHVZ2BqQuaGPgq01e0uENA0LzH4IW4LbLEg18hF44ZhNSsjptFlWRf7mdSTrv2B5
-         nyhE4QjOIO0Zi3bv7qvmF1y2mXU94UT2CkNn34mDw92FK1xO2hMc0OZYcrY/AvbuHF3O
-         ytYJh3L3r4Zi+tADmEkHsCAJLiJ3+t3FHLMACuv45BEgMNUqPJ84ELsgwcprDfbgw+BF
-         ZAjZFig4VPTAMbZf6PIp9O5gEYbnLHxo1iaxVJg7SbLxcGegBHLwE6PtwtxzMnRe9Goj
-         0edfYjMIOe9+FRJVdnER342QK7GU0SbCekf1vxlYsLn6GvpJuJe35hz9jr4pGS+/2iNl
-         gKdw==
-X-Gm-Message-State: APjAAAXsFRSHRklY3pV+F9u7njfYAh/ObPNHX+JG6RZffDRJ4yRx9BTn
-        N9cTgAT49QolC9W0Wbe82iUYtiYXITA=
-X-Google-Smtp-Source: APXvYqwcD8KegygDg2uXmfGc0b5s3g2iOWW8QB+yGdhZqZT2cbFUJgwyKh2XZap9Gmfhgkl0wuZRrg==
-X-Received: by 2002:a9d:7593:: with SMTP id s19mr4713096otk.219.1582926840159;
-        Fri, 28 Feb 2020 13:54:00 -0800 (PST)
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
-        by smtp.gmail.com with ESMTPSA id 17sm2358741oth.7.2020.02.28.13.53.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 13:53:59 -0800 (PST)
-Received: by mail-ot1-f51.google.com with SMTP id x97so4013634ota.6;
-        Fri, 28 Feb 2020 13:53:59 -0800 (PST)
-X-Received: by 2002:a05:6830:1c8:: with SMTP id r8mr5033412ota.63.1582926839216;
- Fri, 28 Feb 2020 13:53:59 -0800 (PST)
+        bh=C8LpeFRkJkAVGCGFA7ZkDQ8EDfylVrvQYhKNrzB5Agw=;
+        b=SXAjQy2Nh5/j+7GNUygKosesXDJIkh/jtstvfkUwp+eAsmYbTWLx11TG1m7JPHTCeh
+         e4AJRDFCKaB+6O3D0RKIF4bYKEPgsPJQkPoQKGUgycb6sT3WeOGH7q2sDA37/hgvPeDW
+         Ynsj3yEOWd8ovJXFRhxRQ0lQkajh07/DS60EkWni3ivWuRvJx8vOmkahQxg1+/jvVcL0
+         L7pnC0hYEo8A8vNvJNOs9Vsjfnur9e3i86UnnuJK6Uhj/zSPEdyJbrFaLGDtdb1iCocN
+         qMg6FxpBj0kItOQV+sV2x6ZWR6g6Wj6hjtSktem6OQvOGXhEisx5qIJnDJ7W+pyA1fRu
+         T2CA==
+X-Gm-Message-State: ANhLgQ0ILmPldCb3v5T3IkADg+VrYyPgOMJ0xyluHMqb00Ba24HVgISW
+        xPXVaEqJSxGRhg6rYgo48+Jpe06SGMaO9SOjYlIjLw==
+X-Google-Smtp-Source: ADFU+vsnW+F7X3gpdEz8AQTDqD1Tj7f66W9FTRZOnyRHh9OXBDCJ69RY3C5fHJ4DyNMTzylusEt2hk5oPHgCphc0DMY=
+X-Received: by 2002:a19:87:: with SMTP id 129mr3655815lfa.217.1582927553833;
+ Fri, 28 Feb 2020 14:05:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221174754.5295-1-michael@walle.cc> <20200221174754.5295-4-michael@walle.cc>
- <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
- <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
- <CAL_JsqKMNFFG5H4gPQwRdcTpfHynqZWo2A2db-oL7EmvTNqNkQ@mail.gmail.com>
- <639a1df72fbeda77436b282a99f17995@walle.cc> <24b9a657a65f75a4f4f10baa17561451@walle.cc>
-In-Reply-To: <24b9a657a65f75a4f4f10baa17561451@walle.cc>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 28 Feb 2020 15:53:47 -0600
-X-Gmail-Original-Message-ID: <CADRPPNQong1bD83ncHTj1OHip9LEV9PFOnPN3Jo00aZT056eiw@mail.gmail.com>
-Message-ID: <CADRPPNQong1bD83ncHTj1OHip9LEV9PFOnPN3Jo00aZT056eiw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
-To:     Michael Walle <michael@walle.cc>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+References: <cover.1582913973.git.hns@goldelico.com> <010d6ad3473fb4b1f1041888a071796180cdd838.1582913973.git.hns@goldelico.com>
+In-Reply-To: <010d6ad3473fb4b1f1041888a071796180cdd838.1582913973.git.hns@goldelico.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Feb 2020 23:05:42 +0100
+Message-ID: <CACRpkdYSde=6JBBbe3sL3hDHhGAeOfwadT0BvL0n+-F0O2vX0g@mail.gmail.com>
+Subject: Re: [RFC v2 5/8] pinctrl: ingenic: add hdmi-ddc pin control group
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 3:51 PM Michael Walle <michael@walle.cc> wrote:
->
-> Am 2020-02-28 12:46, schrieb Michael Walle:
-> > Hi Rob, Hi Leo,
-> >
-> > Am 2020-02-28 00:03, schrieb Rob Herring:
-> >> On Thu, Feb 27, 2020 at 4:49 PM Li Yang <leoyang.li@nxp.com> wrote:
-> >>>
-> >>> On Thu, Feb 27, 2020 at 4:35 PM Rob Herring <robh+dt@kernel.org>
-> >>> wrote:
-> >>> >
-> >>> > On Fri, Feb 21, 2020 at 11:48 AM Michael Walle <michael@walle.cc> wrote:
-> >>> > >
-> >>> > > The DMA channel might not be available at the first probe time. This is
-> >>> > > esp. the case if the DMA controller has an IOMMU mapping.
-> >>> > >
-> >>> > > Use the new dma_request_chan() API and handle EPROBE_DEFER errors. Also
-> >>> > > reorder the code a bit, so that we don't prepare the whole UART just to
-> >>> > > determine that the DMA channel is not ready yet and we have to undo all
-> >>> > > the stuff. Try to map the DMA channels earlier.
-> >>> >
-> >>> > Changing this means you never probe successfully if you boot a kernel
-> >>> > with the DMA driver disabled (or it's IOMMU disabled). Some other
-> >>> > drivers request DMA in open() and can work either way.
-> >
-> > Oh, I see.
-> >
-> >>> We got this exact issue previously with another driver.  When the
-> >
-> > What driver is it? I've been working on the i2c-mxs.c driver which has
->
-> whoops, i2c-imx.c, not i2c-mxs.c
+On Fri, Feb 28, 2020 at 7:19 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
-Ya.  Same one.  I have added CONFIG_FSL_EDMA into the arm64/defconfig
-as a workaround.
+> From: Paul Boddie <paul@boddie.org.uk>
+>
+> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-Regards,
-Leo
+This looks good, can I just apply this to the pinctrl tree?
+
+Yours,
+Linus Walleij
