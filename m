@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362BAC3F2D3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F0BC3F2CD
 	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18039246AC
+	by mail.kernel.org (Postfix) with ESMTP id B831D24677
 	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgB1Nvs (ORCPT
+        id S1726906AbgB1Nvn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:51:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:38608 "EHLO foss.arm.com"
+        Fri, 28 Feb 2020 08:51:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:38574 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbgB1Nvr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:51:47 -0500
+        id S1725892AbgB1Nvn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:51:43 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E1BE31B;
-        Fri, 28 Feb 2020 05:51:47 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9116FEC;
+        Fri, 28 Feb 2020 05:51:42 -0800 (PST)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EAF23F7B4;
-        Fri, 28 Feb 2020 05:51:45 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 150CF3F7B4;
+        Fri, 28 Feb 2020 05:51:40 -0800 (PST)
 From:   Andre Przywara <andre.przywara@arm.com>
 List-Id: <soc.lore.kernel.org>
 To:     soc@kernel.org, Olof Johansson <olof@lixom.net>,
@@ -38,9 +37,9 @@ Cc:     Rob Herring <robh@kernel.org>,
         Eric Auger <eric.auger@redhat.com>,
         Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH v3 3/5] arm: dts: calxeda: Fix interrupt grouping
-Date:   Fri, 28 Feb 2020 13:51:04 +0000
-Message-Id: <20200228135106.220620-4-andre.przywara@arm.com>
+Subject: [PATCH v3 1/5] arm: dts: calxeda: Basic DT file fixes
+Date:   Fri, 28 Feb 2020 13:51:02 +0000
+Message-Id: <20200228135106.220620-2-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200228135106.220620-1-andre.przywara@arm.com>
 References: <20200228135106.220620-1-andre.przywara@arm.com>
@@ -49,80 +48,77 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently multiple interrupts for some devices are written as one array
-instead of using the DT grouping notation (<0 42 4>, <0 23 4>).
-This ends up in the same binary representation in the .dtb, but is
-semantically not equivalent. The yaml schema checks will stumble over
-this, so lets fix that first.
+The .dts files for the Calxeda machines are quite old, so carry some
+sloppy mistakes that the DT schema checker will complain about.
 
-I refrained from using the symbolic names for GIC_SPI/GIC_PPI and
-IRQ_TYPE_LEVEL_HIGH, mostly because it increases the delta between the
-original DTS files and the mainline versions, so it's just additional
-churn.
+Fix those issues, they should not have any effect on functionality.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/ecx-2000.dts    | 2 +-
- arch/arm/boot/dts/ecx-common.dtsi | 4 ++--
- arch/arm/boot/dts/highbank.dts    | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/ecx-2000.dts | 4 +---
+ arch/arm/boot/dts/highbank.dts | 7 ++-----
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
 diff --git a/arch/arm/boot/dts/ecx-2000.dts b/arch/arm/boot/dts/ecx-2000.dts
-index 8e0489607704..f6eb71553b95 100644
+index 5651ae6dc969..8e0489607704 100644
 --- a/arch/arm/boot/dts/ecx-2000.dts
 +++ b/arch/arm/boot/dts/ecx-2000.dts
-@@ -93,7 +93,7 @@
+@@ -13,7 +13,6 @@
+ 	compatible = "calxeda,ecx-2000";
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+-	clock-ranges;
  
- 		pmu {
- 			compatible = "arm,cortex-a9-pmu";
--			interrupts = <0 76 4  0 75 4  0 74 4  0 73 4>;
-+			interrupts = <0 76 4>, <0 75 4>, <0 74 4>, <0 73 4>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/ecx-common.dtsi b/arch/arm/boot/dts/ecx-common.dtsi
-index f819e3328a9e..b7e74a357471 100644
---- a/arch/arm/boot/dts/ecx-common.dtsi
-+++ b/arch/arm/boot/dts/ecx-common.dtsi
-@@ -202,14 +202,14 @@
- 		ethernet@fff50000 {
- 			compatible = "calxeda,hb-xgmac";
- 			reg = <0xfff50000 0x1000>;
--			interrupts = <0 77 4  0 78 4  0 79 4>;
-+			interrupts = <0 77 4>, <0 78 4>, <0 79 4>;
- 			dma-coherent;
- 		};
- 
- 		ethernet@fff51000 {
- 			compatible = "calxeda,hb-xgmac";
- 			reg = <0xfff51000 0x1000>;
--			interrupts = <0 80 4  0 81 4  0 82 4>;
-+			interrupts = <0 80 4>, <0 81 4>, <0 82 4>;
- 			dma-coherent;
- 		};
- 
+ 	cpus {
+ 		#address-cells = <1>;
+@@ -83,8 +82,7 @@
+ 		intc: interrupt-controller@fff11000 {
+ 			compatible = "arm,cortex-a15-gic";
+ 			#interrupt-cells = <3>;
+-			#size-cells = <0>;
+-			#address-cells = <1>;
++			#address-cells = <0>;
+ 			interrupt-controller;
+ 			interrupts = <1 9 0xf04>;
+ 			reg = <0xfff11000 0x1000>,
 diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
-index 9e34d1bd7994..b6b0225a769e 100644
+index f4e4dca6f7e7..9e34d1bd7994 100644
 --- a/arch/arm/boot/dts/highbank.dts
 +++ b/arch/arm/boot/dts/highbank.dts
-@@ -142,14 +142,14 @@
+@@ -13,7 +13,6 @@
+ 	compatible = "calxeda,highbank";
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+-	clock-ranges;
  
- 		pmu {
- 			compatible = "arm,cortex-a9-pmu";
--			interrupts = <0 76 4  0 75 4  0 74 4  0 73 4>;
-+			interrupts = <0 76 4>, <0 75 4>, <0 74 4>, <0 73 4>;
+ 	cpus {
+ 		#address-cells = <1>;
+@@ -96,7 +95,7 @@
  		};
- 
- 
- 		sregs@fff3c200 {
- 			compatible = "calxeda,hb-sregs-l2-ecc";
- 			reg = <0xfff3c200 0x100>;
--			interrupts = <0 71 4  0 72 4>;
-+			interrupts = <0 71 4>, <0 72 4>;
- 		};
- 
  	};
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x00000000 0xff900000>;
+@@ -128,14 +127,12 @@
+ 		intc: interrupt-controller@fff11000 {
+ 			compatible = "arm,cortex-a9-gic";
+ 			#interrupt-cells = <3>;
+-			#size-cells = <0>;
+-			#address-cells = <1>;
+ 			interrupt-controller;
+ 			reg = <0xfff11000 0x1000>,
+ 			      <0xfff10100 0x100>;
+ 		};
+ 
+-		L2: l2-cache {
++		L2: cache-controller {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfff12000 0x1000>;
+ 			interrupts = <0 70 4>;
 -- 
 2.17.1
 
