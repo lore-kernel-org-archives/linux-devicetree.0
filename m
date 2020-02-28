@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F283C3F2D4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC3BC3F2D3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58115246AC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2322A2469F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JQKCeE1s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ETaWSSrP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgB1Wmg (ORCPT
+        id S1727250AbgB1Wml (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:42:36 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:34200 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgB1Wmd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 17:42:33 -0500
-Received: by mail-yw1-f66.google.com with SMTP id o186so665726ywc.1
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 14:42:30 -0800 (PST)
+        Fri, 28 Feb 2020 17:42:41 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:37993 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbgB1Wmk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 17:42:40 -0500
+Received: by mail-yw1-f65.google.com with SMTP id 10so4946804ywv.5
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 14:42:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=b47MKvxD2msol8/MWCxj/Lo4whOdBr+UIw9UckJBD2M=;
-        b=JQKCeE1sINUaZmgL6fmXVTYxY6xBba3Wp0U/KnreSRt3pdxW4xtJl/tG/ljszRe7W6
-         LtrgQOGZqGn1MhU6ABB2xJ+eg7B4WmTUdi7HwFEbI8o7pC7jkPpFBl1TgD7ZPLorugIn
-         N7uepY6HvisdOPEgir6sAp6wZqcZf/zPI6TAwB5cJE2kYZclSULVURK1cZNSVyNMC3Wa
-         a9m5K9oI6fnD9e05dzulfR+7sj5cDpf9KquLxH8ek7M7c85FEJchaU4Q6ZAl8mq98I8B
-         9jbZcYlUHeW4U/+zg4VPpKTqIgZ7hR45uqbOWyTfTDfVtlAqALjC0gyBxd9Sg/tkCxHW
-         YKHg==
+        bh=1FjiyB2UR7IJCTV4hdav4BRXYVXWGABQs9i9JOUx400=;
+        b=ETaWSSrPrWgTnfT3fl2uhvUAy3w9OudX93kaTsPeJvgLvR2s0BVz04AJeRFwLod+/M
+         5ldc8Bu0ncFjnNFDpgVqeYWIZrVNFoB36y6LYhykxlgTbTA8aORkvVSSKtjfC03tm2R3
+         PnT9rJdYE+rybV9AZXtEaGzn0Ypdhc+/gTdE2fb/tMm8tmFD+gH+5fPd9mJvELIaBj6v
+         ktG0Ocp1PP+1HF1GOVaGVz/yBZ2yM6BpWb/EXgiI5lbm9PGiC6abWQhkwneIEBVcluYZ
+         cDqKwxqq83qOlUR+bZgZpsLvYq24c8I713+eYcu8tYaGxmS6jR9qKm90ntKKsjgzvAx9
+         euaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=b47MKvxD2msol8/MWCxj/Lo4whOdBr+UIw9UckJBD2M=;
-        b=aOz+x+OtUPOb8BhbgmiqFr93zTQJFXVvT3t2Unln3G9dOIEXQtLK0AqEAsgN3fSpeC
-         +pG2qtG1JLAXrP/Ql2qVbKeQbfeseztqtslZhzQdfSip5RtovDEAk0nFnhGqkBAFnt0L
-         rGtYiHXp8tlYtLViuxvItTgfg3vI3H2XcejtY/c9sUS0wiSwHCKlN/tdHXD+Jt0oLBGZ
-         8LSk4riZiCwr6m2/rKy38RBujov3jQlhq9+BgjHV8gshQlI81jGhcJfGt96qIHLaEIfQ
-         5BH+r93xLI+x7jZ5PGN7gGOaRLLZ4aKRlI7KjzBKEmhvbZTNK9xeJTvkiuumxM6koDL7
-         ulbQ==
-X-Gm-Message-State: APjAAAVBfvDY2vhDRlA2E8kFBQ45ZG6estQr3EiuMuEjaxRs/NHext+e
-        sdv/rjXMWLyUvAz0CAoGXquRYA==
-X-Google-Smtp-Source: APXvYqwEicRswfTvRY7H/iQHyxdQZGBArwSG6Pw6q5WZLDi4wTf5h1vi8PiJ6vnKZZRE0kPvDXU42Q==
-X-Received: by 2002:a81:8803:: with SMTP id y3mr6985802ywf.338.1582929749187;
-        Fri, 28 Feb 2020 14:42:29 -0800 (PST)
+        bh=1FjiyB2UR7IJCTV4hdav4BRXYVXWGABQs9i9JOUx400=;
+        b=ep1fC6liRdohuxEwa8P3xGUXnE/VJF7DiXSUVRLltx4D1kIp2LUwh72062VFIsrlRI
+         ITdC8EL/krifx/cLI4Flw+KJUl+1rwXcHXuv30sTdJZYEcJoU2Y4HPViwnk3QnnD9rFc
+         7Jvf3/mR5RMa6wVwr4y/jyseeQ94rz75SW5veUpmiRN/u5de7eSYjMyyLl+SlT/VSxQC
+         XFT5h1q64gJ/i8uPPkexjvWLlUcuRAIddAfwe8RNVtZes678m1noeBbmilLjyaCkHppS
+         gDyEr5bi5gtu5WwJBeGwkfQcHKmF8nOHaoiKC3KkehTnam5F7pEOPkFj117wWEsgBvpp
+         5+Dw==
+X-Gm-Message-State: APjAAAUJTVqD6HbKdz/6wryMUkd5me47Pd0/EbNKFFXVNEPqAkilahFO
+        8v8tBxQ3ngHGKjiBxpEreoCj1g==
+X-Google-Smtp-Source: APXvYqxce0PWb19HHSo2U6WSdUjpvkWrkbmV5AlarN1qHJeBrbI24L4I8hRRWxGC/lhO93YG3JJ5Hw==
+X-Received: by 2002:a25:becd:: with SMTP id k13mr5777808ybm.220.1582929757504;
+        Fri, 28 Feb 2020 14:42:37 -0800 (PST)
 Received: from localhost.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.27
+        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 14:42:28 -0800 (PST)
+        Fri, 28 Feb 2020 14:42:36 -0800 (PST)
 From:   Alex Elder <elder@linaro.org>
 To:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -74,9 +74,9 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 09/17] soc: qcom: ipa: GSI transactions
-Date:   Fri, 28 Feb 2020 16:41:56 -0600
-Message-Id: <20200228224204.17746-10-elder@linaro.org>
+Subject: [PATCH 13/17] soc: qcom: ipa: modem and microcontroller
+Date:   Fri, 28 Feb 2020 16:42:00 -0600
+Message-Id: <20200228224204.17746-14-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200228224204.17746-1-elder@linaro.org>
 References: <20200228224204.17746-1-elder@linaro.org>
@@ -87,1059 +87,715 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch implements GSI transactions.  A GSI transaction is a
-structure that represents a single request (consisting of one or
-more TREs) sent to the GSI hardware.  The last TRE in a transaction
-includes a flag requesting that the GSI interrupt the AP to notify
-that it has completed.
+This patch includes code implementing the modem functionality.
+There are several communication paths between the AP and modem,
+separate from the main data path provided by IPA.  SMP2P provides
+primitive messaging and interrupt capability, and QMI allows more
+complex out-of-band messaging to occur between entities on the AP
+and modem.  (SMP2P and QMI support are added by the next patch.)
+Management of these (plus the network device implementing the data
+path) is done by code within "ipa_modem.c".
 
-TREs are executed and completed strictly in order.  For this reason,
-the completion of a single TRE implies that all previous TREs (in
-particular all of those "earlier" in a transaction) have completed.
-
-Whenever there is a need to send a request (a set of TREs) to the
-IPA, a GSI transaction is allocated, specifying the number of TREs
-that will be required.  Details of the request (e.g. transfer offsets
-and length) are represented by in a Linux scatterlist array that is
-incorporated in the transaction structure.
-
-Once all commands (TREs) are added to a transaction it is committed.
-When the hardware signals that the request has completed, a callback
-function allows for cleanup or followup activity to be performed
-before the transaction is freed.
+Sort of unrelated, this patch also includes the code supporting the
+microcontroller CPU present on the IPA.  The microcontroller can be
+used to implement special handling of packets, but at this time we
+don't support that.  Still, it is a component that needs to be
+initialized, and in the event of a crash we need to do some
+synchronization between the AP and the microcontroller.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/gsi_trans.c | 786 ++++++++++++++++++++++++++++++++++++
- drivers/net/ipa/gsi_trans.h | 226 +++++++++++
- 2 files changed, 1012 insertions(+)
- create mode 100644 drivers/net/ipa/gsi_trans.c
- create mode 100644 drivers/net/ipa/gsi_trans.h
+ drivers/net/ipa/ipa_modem.c | 383 ++++++++++++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_modem.h |  31 +++
+ drivers/net/ipa/ipa_uc.c    | 211 ++++++++++++++++++++
+ drivers/net/ipa/ipa_uc.h    |  32 +++
+ 4 files changed, 657 insertions(+)
+ create mode 100644 drivers/net/ipa/ipa_modem.c
+ create mode 100644 drivers/net/ipa/ipa_modem.h
+ create mode 100644 drivers/net/ipa/ipa_uc.c
+ create mode 100644 drivers/net/ipa/ipa_uc.h
 
-diff --git a/drivers/net/ipa/gsi_trans.c b/drivers/net/ipa/gsi_trans.c
+diff --git a/drivers/net/ipa/ipa_modem.c b/drivers/net/ipa/ipa_modem.c
 new file mode 100644
-index 000000000000..09fbbfbcca1b
+index 000000000000..039afc8c608e
 --- /dev/null
-+++ b/drivers/net/ipa/gsi_trans.c
-@@ -0,0 +1,786 @@
++++ b/drivers/net/ipa/ipa_modem.c
+@@ -0,0 +1,383 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019-2020 Linaro Ltd.
++/* Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
 + */
 +
-+#include <linux/types.h>
-+#include <linux/bits.h>
-+#include <linux/bitfield.h>
-+#include <linux/refcount.h>
-+#include <linux/scatterlist.h>
-+#include <linux/dma-direction.h>
++#include <linux/errno.h>
++#include <linux/if_arp.h>
++#include <linux/netdevice.h>
++#include <linux/skbuff.h>
++#include <linux/if_rmnet.h>
++#include <linux/remoteproc/qcom_q6v5_ipa_notify.h>
 +
-+#include "gsi.h"
-+#include "gsi_private.h"
-+#include "gsi_trans.h"
-+#include "ipa_gsi.h"
++#include "ipa.h"
 +#include "ipa_data.h"
-+#include "ipa_cmd.h"
++#include "ipa_endpoint.h"
++#include "ipa_table.h"
++#include "ipa_mem.h"
++#include "ipa_modem.h"
++#include "ipa_smp2p.h"
++#include "ipa_qmi.h"
 +
-+/**
-+ * DOC: GSI Transactions
-+ *
-+ * A GSI transaction abstracts the behavior of a GSI channel by representing
-+ * everything about a related group of IPA commands in a single structure.
-+ * (A "command" in this sense is either a data transfer or an IPA immediate
-+ * command.)  Most details of interaction with the GSI hardware are managed
-+ * by the GSI transaction core, allowing users to simply describe commands
-+ * to be performed.  When a transaction has completed a callback function
-+ * (dependent on the type of endpoint associated with the channel) allows
-+ * cleanup of resources associated with the transaction.
-+ *
-+ * To perform a command (or set of them), a user of the GSI transaction
-+ * interface allocates a transaction, indicating the number of TREs required
-+ * (one per command).  If sufficient TREs are available, they are reserved
-+ * for use in the transaction and the allocation succeeds.  This way
-+ * exhaustion of the available TREs in a channel ring is detected
-+ * as early as possible.  All resources required to complete a transaction
-+ * are allocated at transaction allocation time.
-+ *
-+ * Commands performed as part of a transaction are represented in an array
-+ * of Linux scatterlist structures.  This array is allocated with the
-+ * transaction, and its entries are initialized using standard scatterlist
-+ * functions (such as sg_set_buf() or skb_to_sgvec()).
-+ *
-+ * Once a transaction's scatterlist structures have been initialized, the
-+ * transaction is committed.  The caller is responsible for mapping buffers
-+ * for DMA if necessary, and this should be done *before* allocating
-+ * the transaction.  Between a successful allocation and commit of a
-+ * transaction no errors should occur.
-+ *
-+ * Committing transfers ownership of the entire transaction to the GSI
-+ * transaction core.  The GSI transaction code formats the content of
-+ * the scatterlist array into the channel ring buffer and informs the
-+ * hardware that new TREs are available to process.
-+ *
-+ * The last TRE in each transaction is marked to interrupt the AP when the
-+ * GSI hardware has completed it.  Because transfers described by TREs are
-+ * performed strictly in order, signaling the completion of just the last
-+ * TRE in the transaction is sufficient to indicate the full transaction
-+ * is complete.
-+ *
-+ * When a transaction is complete, ipa_gsi_trans_complete() is called by the
-+ * GSI code into the IPA layer, allowing it to perform any final cleanup
-+ * required before the transaction is freed.
-+ */
++#define IPA_NETDEV_NAME		"rmnet_ipa%d"
++#define IPA_NETDEV_TAILROOM	0	/* for padding by mux layer */
++#define IPA_NETDEV_TIMEOUT	10	/* seconds */
 +
-+/* Hardware values representing a transfer element type */
-+enum gsi_tre_type {
-+	GSI_RE_XFER	= 0x2,
-+	GSI_RE_IMMD_CMD	= 0x3,
++enum ipa_modem_state {
++	IPA_MODEM_STATE_STOPPED	= 0,
++	IPA_MODEM_STATE_STARTING,
++	IPA_MODEM_STATE_RUNNING,
++	IPA_MODEM_STATE_STOPPING,
 +};
 +
-+/* An entry in a channel ring */
-+struct gsi_tre {
-+	__le64 addr;		/* DMA address */
-+	__le16 len_opcode;	/* length in bytes or enum IPA_CMD_* */
-+	__le16 reserved;
-+	__le32 flags;		/* TRE_FLAGS_* */
++/** struct ipa_priv - IPA network device private data */
++struct ipa_priv {
++	struct ipa *ipa;
 +};
 +
-+/* gsi_tre->flags mask values (in CPU byte order) */
-+#define TRE_FLAGS_CHAIN_FMASK	GENMASK(0, 0)
-+#define TRE_FLAGS_IEOB_FMASK	GENMASK(8, 8)
-+#define TRE_FLAGS_IEOT_FMASK	GENMASK(9, 9)
-+#define TRE_FLAGS_BEI_FMASK	GENMASK(10, 10)
-+#define TRE_FLAGS_TYPE_FMASK	GENMASK(23, 16)
-+
-+int gsi_trans_pool_init(struct gsi_trans_pool *pool, size_t size, u32 count,
-+			u32 max_alloc)
++/** ipa_open() - Opens the modem network interface */
++static int ipa_open(struct net_device *netdev)
 +{
-+	void *virt;
-+
-+#ifdef IPA_VALIDATE
-+	if (!size || size % 8)
-+		return -EINVAL;
-+	if (count < max_alloc)
-+		return -EINVAL;
-+	if (!max_alloc)
-+		return -EINVAL;
-+#endif /* IPA_VALIDATE */
-+
-+	/* By allocating a few extra entries in our pool (one less
-+	 * than the maximum number that will be requested in a
-+	 * single allocation), we can always satisfy requests without
-+	 * ever worrying about straddling the end of the pool array.
-+	 * If there aren't enough entries starting at the free index,
-+	 * we just allocate free entries from the beginning of the pool.
-+	 */
-+	virt = kcalloc(count + max_alloc - 1, size, GFP_KERNEL);
-+	if (!virt)
-+		return -ENOMEM;
-+
-+	pool->base = virt;
-+	/* If the allocator gave us any extra memory, use it */
-+	pool->count = ksize(pool->base) / size;
-+	pool->free = 0;
-+	pool->max_alloc = max_alloc;
-+	pool->size = size;
-+	pool->addr = 0;		/* Only used for DMA pools */
-+
-+	return 0;
-+}
-+
-+void gsi_trans_pool_exit(struct gsi_trans_pool *pool)
-+{
-+	kfree(pool->base);
-+	memset(pool, 0, sizeof(*pool));
-+}
-+
-+/* Allocate the requested number of (zeroed) entries from the pool */
-+/* Home-grown DMA pool.  This way we can preallocate and use the tre_count
-+ * to guarantee allocations will succeed.  Even though we specify max_alloc
-+ * (and it can be more than one), we only allow allocation of a single
-+ * element from a DMA pool.
-+ */
-+int gsi_trans_pool_init_dma(struct device *dev, struct gsi_trans_pool *pool,
-+			    size_t size, u32 count, u32 max_alloc)
-+{
-+	size_t total_size;
-+	dma_addr_t addr;
-+	void *virt;
-+
-+#ifdef IPA_VALIDATE
-+	if (!size || size % 8)
-+		return -EINVAL;
-+	if (count < max_alloc)
-+		return -EINVAL;
-+	if (!max_alloc)
-+		return -EINVAL;
-+#endif /* IPA_VALIDATE */
-+
-+	/* Don't let allocations cross a power-of-two boundary */
-+	size = __roundup_pow_of_two(size);
-+	total_size = (count + max_alloc - 1) * size;
-+
-+	/* The allocator will give us a power-of-2 number of pages.  But we
-+	 * can't guarantee that, so request it.  That way we won't waste any
-+	 * memory that would be available beyond the required space.
-+	 */
-+	total_size = get_order(total_size) << PAGE_SHIFT;
-+
-+	virt = dma_alloc_coherent(dev, total_size, &addr, GFP_KERNEL);
-+	if (!virt)
-+		return -ENOMEM;
-+
-+	pool->base = virt;
-+	pool->count = total_size / size;
-+	pool->free = 0;
-+	pool->size = size;
-+	pool->max_alloc = max_alloc;
-+	pool->addr = addr;
-+
-+	return 0;
-+}
-+
-+void gsi_trans_pool_exit_dma(struct device *dev, struct gsi_trans_pool *pool)
-+{
-+	dma_free_coherent(dev, pool->size, pool->base, pool->addr);
-+	memset(pool, 0, sizeof(*pool));
-+}
-+
-+/* Return the byte offset of the next free entry in the pool */
-+static u32 gsi_trans_pool_alloc_common(struct gsi_trans_pool *pool, u32 count)
-+{
-+	u32 offset;
-+
-+	/* assert(count > 0); */
-+	/* assert(count <= pool->max_alloc); */
-+
-+	/* Allocate from beginning if wrap would occur */
-+	if (count > pool->count - pool->free)
-+		pool->free = 0;
-+
-+	offset = pool->free * pool->size;
-+	pool->free += count;
-+	memset(pool->base + offset, 0, count * pool->size);
-+
-+	return offset;
-+}
-+
-+/* Allocate a contiguous block of zeroed entries from a pool */
-+void *gsi_trans_pool_alloc(struct gsi_trans_pool *pool, u32 count)
-+{
-+	return pool->base + gsi_trans_pool_alloc_common(pool, count);
-+}
-+
-+/* Allocate a single zeroed entry from a DMA pool */
-+void *gsi_trans_pool_alloc_dma(struct gsi_trans_pool *pool, dma_addr_t *addr)
-+{
-+	u32 offset = gsi_trans_pool_alloc_common(pool, 1);
-+
-+	*addr = pool->addr + offset;
-+
-+	return pool->base + offset;
-+}
-+
-+/* Return the pool element that immediately follows the one given.
-+ * This only works done if elements are allocated one at a time.
-+ */
-+void *gsi_trans_pool_next(struct gsi_trans_pool *pool, void *element)
-+{
-+	void *end = pool->base + pool->count * pool->size;
-+
-+	/* assert(element >= pool->base); */
-+	/* assert(element < end); */
-+	/* assert(pool->max_alloc == 1); */
-+	element += pool->size;
-+
-+	return element < end ? element : pool->base;
-+}
-+
-+/* Map a given ring entry index to the transaction associated with it */
-+static void gsi_channel_trans_map(struct gsi_channel *channel, u32 index,
-+				  struct gsi_trans *trans)
-+{
-+	/* Note: index *must* be used modulo the ring count here */
-+	channel->trans_info.map[index % channel->tre_ring.count] = trans;
-+}
-+
-+/* Return the transaction mapped to a given ring entry */
-+struct gsi_trans *
-+gsi_channel_trans_mapped(struct gsi_channel *channel, u32 index)
-+{
-+	/* Note: index *must* be used modulo the ring count here */
-+	return channel->trans_info.map[index % channel->tre_ring.count];
-+}
-+
-+/* Return the oldest completed transaction for a channel (or null) */
-+struct gsi_trans *gsi_channel_trans_complete(struct gsi_channel *channel)
-+{
-+	return list_first_entry_or_null(&channel->trans_info.complete,
-+					struct gsi_trans, links);
-+}
-+
-+/* Move a transaction from the allocated list to the pending list */
-+static void gsi_trans_move_pending(struct gsi_trans *trans)
-+{
-+	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	list_move_tail(&trans->links, &trans_info->pending);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+}
-+
-+/* Move a transaction and all of its predecessors from the pending list
-+ * to the completed list.
-+ */
-+void gsi_trans_move_complete(struct gsi_trans *trans)
-+{
-+	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
-+	struct list_head list;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	/* Move this transaction and all predecessors to completed list */
-+	list_cut_position(&list, &trans_info->pending, &trans->links);
-+	list_splice_tail(&list, &trans_info->complete);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+}
-+
-+/* Move a transaction from the completed list to the polled list */
-+void gsi_trans_move_polled(struct gsi_trans *trans)
-+{
-+	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	list_move_tail(&trans->links, &trans_info->polled);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+}
-+
-+/* Reserve some number of TREs on a channel.  Returns true if successful */
-+static bool
-+gsi_trans_tre_reserve(struct gsi_trans_info *trans_info, u32 tre_count)
-+{
-+	int avail = atomic_read(&trans_info->tre_avail);
-+	int new;
-+
-+	do {
-+		new = avail - (int)tre_count;
-+		if (unlikely(new < 0))
-+			return false;
-+	} while (!atomic_try_cmpxchg(&trans_info->tre_avail, &avail, new));
-+
-+	return true;
-+}
-+
-+/* Release previously-reserved TRE entries to a channel */
-+static void
-+gsi_trans_tre_release(struct gsi_trans_info *trans_info, u32 tre_count)
-+{
-+	atomic_add(tre_count, &trans_info->tre_avail);
-+}
-+
-+/* Allocate a GSI transaction on a channel */
-+struct gsi_trans *gsi_channel_trans_alloc(struct gsi *gsi, u32 channel_id,
-+					  u32 tre_count,
-+					  enum dma_data_direction direction)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	struct gsi_trans_info *trans_info;
-+	struct gsi_trans *trans;
-+
-+	/* assert(tre_count <= gsi_channel_trans_tre_max(gsi, channel_id)); */
-+
-+	trans_info = &channel->trans_info;
-+
-+	/* We reserve the TREs now, but consume them at commit time.
-+	 * If there aren't enough available, we're done.
-+	 */
-+	if (!gsi_trans_tre_reserve(trans_info, tre_count))
-+		return NULL;
-+
-+	/* Allocate and initialize non-zero fields in the the transaction */
-+	trans = gsi_trans_pool_alloc(&trans_info->pool, 1);
-+	trans->gsi = gsi;
-+	trans->channel_id = channel_id;
-+	trans->tre_count = tre_count;
-+	init_completion(&trans->completion);
-+
-+	/* Allocate the scatterlist and (if requested) info entries. */
-+	trans->sgl = gsi_trans_pool_alloc(&trans_info->sg_pool, tre_count);
-+	sg_init_marker(trans->sgl, tre_count);
-+
-+	trans->direction = direction;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	list_add_tail(&trans->links, &trans_info->alloc);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+
-+	refcount_set(&trans->refcount, 1);
-+
-+	return trans;
-+}
-+
-+/* Free a previously-allocated transaction (used only in case of error) */
-+void gsi_trans_free(struct gsi_trans *trans)
-+{
-+	struct gsi_trans_info *trans_info;
-+
-+	if (!refcount_dec_and_test(&trans->refcount))
-+		return;
-+
-+	trans_info = &trans->gsi->channel[trans->channel_id].trans_info;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	list_del(&trans->links);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+
-+	ipa_gsi_trans_release(trans);
-+
-+	/* Releasing the reserved TREs implicitly frees the sgl[] and
-+	 * (if present) info[] arrays, plus the transaction itself.
-+	 */
-+	gsi_trans_tre_release(trans_info, trans->tre_count);
-+}
-+
-+/* Add an immediate command to a transaction */
-+void gsi_trans_cmd_add(struct gsi_trans *trans, void *buf, u32 size,
-+		       dma_addr_t addr, enum dma_data_direction direction,
-+		       enum ipa_cmd_opcode opcode)
-+{
-+	struct ipa_cmd_info *info;
-+	u32 which = trans->used++;
-+	struct scatterlist *sg;
-+
-+	/* assert(which < trans->tre_count); */
-+
-+	/* Set the page information for the buffer.  We also need to fill in
-+	 * the DMA address for the buffer (something dma_map_sg() normally
-+	 * does).
-+	 */
-+	sg = &trans->sgl[which];
-+
-+	sg_set_buf(sg, buf, size);
-+	sg_dma_address(sg) = addr;
-+
-+	info = &trans->info[which];
-+	info->opcode = opcode;
-+	info->direction = direction;
-+}
-+
-+/* Add a page transfer to a transaction.  It will fill the only TRE. */
-+int gsi_trans_page_add(struct gsi_trans *trans, struct page *page, u32 size,
-+		       u32 offset)
-+{
-+	struct scatterlist *sg = &trans->sgl[0];
++	struct ipa_priv *priv = netdev_priv(netdev);
++	struct ipa *ipa = priv->ipa;
 +	int ret;
 +
-+	/* assert(trans->tre_count == 1); */
-+	/* assert(!trans->used); */
-+
-+	sg_set_page(sg, page, size, offset);
-+	ret = dma_map_sg(trans->gsi->dev, sg, 1, trans->direction);
-+	if (!ret)
-+		return -ENOMEM;
-+
-+	trans->used++;	/* Transaction now owns the (DMA mapped) page */
-+
-+	return 0;
-+}
-+
-+/* Add an SKB transfer to a transaction.  No other TREs will be used. */
-+int gsi_trans_skb_add(struct gsi_trans *trans, struct sk_buff *skb)
-+{
-+	struct scatterlist *sg = &trans->sgl[0];
-+	u32 used;
-+	int ret;
-+
-+	/* assert(trans->tre_count == 1); */
-+	/* assert(!trans->used); */
-+
-+	/* skb->len will not be 0 (checked early) */
-+	ret = skb_to_sgvec(skb, sg, 0, skb->len);
-+	if (ret < 0)
++	ret = ipa_endpoint_enable_one(ipa->name_map[IPA_ENDPOINT_AP_MODEM_TX]);
++	if (ret)
 +		return ret;
-+	used = ret;
-+
-+	ret = dma_map_sg(trans->gsi->dev, sg, used, trans->direction);
-+	if (!ret)
-+		return -ENOMEM;
-+
-+	trans->used += used;	/* Transaction now owns the (DMA mapped) skb */
-+
-+	return 0;
-+}
-+
-+/* Compute the length/opcode value to use for a TRE */
-+static __le16 gsi_tre_len_opcode(enum ipa_cmd_opcode opcode, u32 len)
-+{
-+	return opcode == IPA_CMD_NONE ? cpu_to_le16((u16)len)
-+				      : cpu_to_le16((u16)opcode);
-+}
-+
-+/* Compute the flags value to use for a given TRE */
-+static __le32 gsi_tre_flags(bool last_tre, bool bei, enum ipa_cmd_opcode opcode)
-+{
-+	enum gsi_tre_type tre_type;
-+	u32 tre_flags;
-+
-+	tre_type = opcode == IPA_CMD_NONE ? GSI_RE_XFER : GSI_RE_IMMD_CMD;
-+	tre_flags = u32_encode_bits(tre_type, TRE_FLAGS_TYPE_FMASK);
-+
-+	/* Last TRE contains interrupt flags */
-+	if (last_tre) {
-+		/* All transactions end in a transfer completion interrupt */
-+		tre_flags |= TRE_FLAGS_IEOT_FMASK;
-+		/* Don't interrupt when outbound commands are acknowledged */
-+		if (bei)
-+			tre_flags |= TRE_FLAGS_BEI_FMASK;
-+	} else {	/* All others indicate there's more to come */
-+		tre_flags |= TRE_FLAGS_CHAIN_FMASK;
-+	}
-+
-+	return cpu_to_le32(tre_flags);
-+}
-+
-+static void gsi_trans_tre_fill(struct gsi_tre *dest_tre, dma_addr_t addr,
-+			       u32 len, bool last_tre, bool bei,
-+			       enum ipa_cmd_opcode opcode)
-+{
-+	struct gsi_tre tre;
-+
-+	tre.addr = cpu_to_le64(addr);
-+	tre.len_opcode = gsi_tre_len_opcode(opcode, len);
-+	tre.reserved = 0;
-+	tre.flags = gsi_tre_flags(last_tre, bei, opcode);
-+
-+	/* ARM64 can write 16 bytes as a unit with a single instruction.
-+	 * Doing the assignment this way is an attempt to make that happen.
-+	 */
-+	*dest_tre = tre;
-+}
-+
-+/**
-+ * __gsi_trans_commit() - Common GSI transaction commit code
-+ * @trans:	Transaction to commit
-+ * @ring_db:	Whether to tell the hardware about these queued transfers
-+ *
-+ * Formats channel ring TRE entries based on the content of the scatterlist.
-+ * Maps a transaction pointer to the last ring entry used for the transaction,
-+ * so it can be recovered when it completes.  Moves the transaction to the
-+ * pending list.  Finally, updates the channel ring pointer and optionally
-+ * rings the doorbell.
-+ */
-+static void __gsi_trans_commit(struct gsi_trans *trans, bool ring_db)
-+{
-+	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
-+	struct gsi_ring *ring = &channel->tre_ring;
-+	enum ipa_cmd_opcode opcode = IPA_CMD_NONE;
-+	bool bei = channel->toward_ipa;
-+	struct ipa_cmd_info *info;
-+	struct gsi_tre *dest_tre;
-+	struct scatterlist *sg;
-+	u32 byte_count = 0;
-+	u32 avail;
-+	u32 i;
-+
-+	/* assert(trans->used > 0); */
-+
-+	/* Consume the entries.  If we cross the end of the ring while
-+	 * filling them we'll switch to the beginning to finish.
-+	 * If there is no info array we're doing a simple data
-+	 * transfer request, whose opcode is IPA_CMD_NONE.
-+	 */
-+	info = trans->info ? &trans->info[0] : NULL;
-+	avail = ring->count - ring->index % ring->count;
-+	dest_tre = gsi_ring_virt(ring, ring->index);
-+	for_each_sg(trans->sgl, sg, trans->used, i) {
-+		bool last_tre = i == trans->used - 1;
-+		dma_addr_t addr = sg_dma_address(sg);
-+		u32 len = sg_dma_len(sg);
-+
-+		byte_count += len;
-+		if (!avail--)
-+			dest_tre = gsi_ring_virt(ring, 0);
-+		if (info)
-+			opcode = info++->opcode;
-+
-+		gsi_trans_tre_fill(dest_tre, addr, len, last_tre, bei, opcode);
-+		dest_tre++;
-+	}
-+	ring->index += trans->used;
-+
-+	if (channel->toward_ipa) {
-+		/* We record TX bytes when they are sent */
-+		trans->len = byte_count;
-+		trans->trans_count = channel->trans_count;
-+		trans->byte_count = channel->byte_count;
-+		channel->trans_count++;
-+		channel->byte_count += byte_count;
-+	}
-+
-+	/* Associate the last TRE with the transaction */
-+	gsi_channel_trans_map(channel, ring->index - 1, trans);
-+
-+	gsi_trans_move_pending(trans);
-+
-+	/* Ring doorbell if requested, or if all TREs are allocated */
-+	if (ring_db || !atomic_read(&channel->trans_info.tre_avail)) {
-+		/* Report what we're handing off to hardware for TX channels */
-+		if (channel->toward_ipa)
-+			gsi_channel_tx_queued(channel);
-+		gsi_channel_doorbell(channel);
-+	}
-+}
-+
-+/* Commit a GSI transaction */
-+void gsi_trans_commit(struct gsi_trans *trans, bool ring_db)
-+{
-+	if (trans->used)
-+		__gsi_trans_commit(trans, ring_db);
-+	else
-+		gsi_trans_free(trans);
-+}
-+
-+/* Commit a GSI transaction and wait for it to complete */
-+void gsi_trans_commit_wait(struct gsi_trans *trans)
-+{
-+	if (!trans->used)
-+		goto out_trans_free;
-+
-+	refcount_inc(&trans->refcount);
-+
-+	__gsi_trans_commit(trans, true);
-+
-+	wait_for_completion(&trans->completion);
-+
-+out_trans_free:
-+	gsi_trans_free(trans);
-+}
-+
-+/* Commit a GSI transaction and wait for it to complete, with timeout */
-+int gsi_trans_commit_wait_timeout(struct gsi_trans *trans,
-+				  unsigned long timeout)
-+{
-+	unsigned long timeout_jiffies = msecs_to_jiffies(timeout);
-+	unsigned long remaining = 1;	/* In case of empty transaction */
-+
-+	if (!trans->used)
-+		goto out_trans_free;
-+
-+	refcount_inc(&trans->refcount);
-+
-+	__gsi_trans_commit(trans, true);
-+
-+	remaining = wait_for_completion_timeout(&trans->completion,
-+						timeout_jiffies);
-+out_trans_free:
-+	gsi_trans_free(trans);
-+
-+	return remaining ? 0 : -ETIMEDOUT;
-+}
-+
-+/* Process the completion of a transaction; called while polling */
-+void gsi_trans_complete(struct gsi_trans *trans)
-+{
-+	/* If the entire SGL was mapped when added, unmap it now */
-+	if (trans->direction != DMA_NONE)
-+		dma_unmap_sg(trans->gsi->dev, trans->sgl, trans->used,
-+			     trans->direction);
-+
-+	ipa_gsi_trans_complete(trans);
-+
-+	complete(&trans->completion);
-+
-+	gsi_trans_free(trans);
-+}
-+
-+/* Cancel a channel's pending transactions */
-+void gsi_channel_trans_cancel_pending(struct gsi_channel *channel)
-+{
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
-+	struct gsi_trans *trans;
-+	bool cancelled;
-+
-+	/* channel->gsi->mutex is held by caller */
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	cancelled = !list_empty(&trans_info->pending);
-+	list_for_each_entry(trans, &trans_info->pending, links)
-+		trans->cancelled = true;
-+
-+	list_splice_tail_init(&trans_info->pending, &trans_info->complete);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+
-+	/* Schedule NAPI polling to complete the cancelled transactions */
-+	if (cancelled)
-+		napi_schedule(&channel->napi);
-+}
-+
-+/* Issue a command to read a single byte from a channel */
-+int gsi_trans_read_byte(struct gsi *gsi, u32 channel_id, dma_addr_t addr)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	struct gsi_ring *ring = &channel->tre_ring;
-+	struct gsi_trans_info *trans_info;
-+	struct gsi_tre *dest_tre;
-+
-+	trans_info = &channel->trans_info;
-+
-+	/* First reserve the TRE, if possible */
-+	if (!gsi_trans_tre_reserve(trans_info, 1))
-+		return -EBUSY;
-+
-+	/* Now fill the the reserved TRE and tell the hardware */
-+
-+	dest_tre = gsi_ring_virt(ring, ring->index);
-+	gsi_trans_tre_fill(dest_tre, addr, 1, true, false, IPA_CMD_NONE);
-+
-+	ring->index++;
-+	gsi_channel_doorbell(channel);
-+
-+	return 0;
-+}
-+
-+/* Mark a gsi_trans_read_byte() request done */
-+void gsi_trans_read_byte_done(struct gsi *gsi, u32 channel_id)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+
-+	gsi_trans_tre_release(&channel->trans_info, 1);
-+}
-+
-+/* Initialize a channel's GSI transaction info */
-+int gsi_channel_trans_init(struct gsi *gsi, u32 channel_id)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	struct gsi_trans_info *trans_info;
-+	u32 tre_max;
-+	int ret;
-+
-+	/* Ensure the size of a channel element is what's expected */
-+	BUILD_BUG_ON(sizeof(struct gsi_tre) != GSI_RING_ELEMENT_SIZE);
-+
-+	/* The map array is used to determine what transaction is associated
-+	 * with a TRE that the hardware reports has completed.  We need one
-+	 * map entry per TRE.
-+	 */
-+	trans_info = &channel->trans_info;
-+	trans_info->map = kcalloc(channel->tre_count, sizeof(*trans_info->map),
-+				  GFP_KERNEL);
-+	if (!trans_info->map)
-+		return -ENOMEM;
-+
-+	/* We can't use more TREs than there are available in the ring.
-+	 * This limits the number of transactions that can be oustanding.
-+	 * Worst case is one TRE per transaction (but we actually limit
-+	 * it to something a little less than that).  We allocate resources
-+	 * for transactions (including transaction structures) based on
-+	 * this maximum number.
-+	 */
-+	tre_max = gsi_channel_tre_max(channel->gsi, channel_id);
-+
-+	/* Transactions are allocated one at a time. */
-+	ret = gsi_trans_pool_init(&trans_info->pool, sizeof(struct gsi_trans),
-+				  tre_max, 1);
++	ret = ipa_endpoint_enable_one(ipa->name_map[IPA_ENDPOINT_AP_MODEM_RX]);
 +	if (ret)
-+		goto err_kfree;
++		goto err_disable_tx;
 +
-+	/* A transaction uses a scatterlist array to represent the data
-+	 * transfers implemented by the transaction.  Each scatterlist
-+	 * element is used to fill a single TRE when the transaction is
-+	 * committed.  So we need as many scatterlist elements as the
-+	 * maximum number of TREs that can be outstanding.
-+	 *
-+	 * All TREs in a transaction must fit within the channel's TLV FIFO.
-+	 * A transaction on a channel can allocate as many TREs as that but
-+	 * no more.
-+	 */
-+	ret = gsi_trans_pool_init(&trans_info->sg_pool,
-+				  sizeof(struct scatterlist),
-+				  tre_max, channel->tlv_count);
-+	if (ret)
-+		goto err_trans_pool_exit;
-+
-+	/* Finally, the tre_avail field is what ultimately limits the number
-+	 * of outstanding transactions and their resources.  A transaction
-+	 * allocation succeeds only if the TREs available are sufficient for
-+	 * what the transaction might need.  Transaction resource pools are
-+	 * sized based on the maximum number of outstanding TREs, so there
-+	 * will always be resources available if there are TREs available.
-+	 */
-+	atomic_set(&trans_info->tre_avail, tre_max);
-+
-+	spin_lock_init(&trans_info->spinlock);
-+	INIT_LIST_HEAD(&trans_info->alloc);
-+	INIT_LIST_HEAD(&trans_info->pending);
-+	INIT_LIST_HEAD(&trans_info->complete);
-+	INIT_LIST_HEAD(&trans_info->polled);
++	netif_start_queue(netdev);
 +
 +	return 0;
 +
-+err_trans_pool_exit:
-+	gsi_trans_pool_exit(&trans_info->pool);
-+err_kfree:
-+	kfree(trans_info->map);
-+
-+	dev_err(gsi->dev, "error %d initializing channel %u transactions\n",
-+		channel_id);
++err_disable_tx:
++	ipa_endpoint_disable_one(ipa->name_map[IPA_ENDPOINT_AP_MODEM_TX]);
 +
 +	return ret;
 +}
 +
-+/* Inverse of gsi_channel_trans_init() */
-+void gsi_channel_trans_exit(struct gsi_channel *channel)
++/** ipa_stop() - Stops the modem network interface. */
++static int ipa_stop(struct net_device *netdev)
 +{
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
++	struct ipa_priv *priv = netdev_priv(netdev);
++	struct ipa *ipa = priv->ipa;
 +
-+	gsi_trans_pool_exit(&trans_info->sg_pool);
-+	gsi_trans_pool_exit(&trans_info->pool);
-+	kfree(trans_info->map);
++	netif_stop_queue(netdev);
++
++	ipa_endpoint_disable_one(ipa->name_map[IPA_ENDPOINT_AP_MODEM_RX]);
++	ipa_endpoint_disable_one(ipa->name_map[IPA_ENDPOINT_AP_MODEM_TX]);
++
++	return 0;
 +}
-diff --git a/drivers/net/ipa/gsi_trans.h b/drivers/net/ipa/gsi_trans.h
++
++/** ipa_start_xmit() - Transmits an skb.
++ * @skb: skb to be transmitted
++ * @dev: network device
++ *
++ * Return codes:
++ * NETDEV_TX_OK: Success
++ * NETDEV_TX_BUSY: Error while transmitting the skb. Try again later
++ */
++static int ipa_start_xmit(struct sk_buff *skb, struct net_device *netdev)
++{
++	struct net_device_stats *stats = &netdev->stats;
++	struct ipa_priv *priv = netdev_priv(netdev);
++	struct ipa_endpoint *endpoint;
++	struct ipa *ipa = priv->ipa;
++	u32 skb_len = skb->len;
++	int ret;
++
++	if (!skb_len)
++		goto err_drop_skb;
++
++	endpoint = ipa->name_map[IPA_ENDPOINT_AP_MODEM_TX];
++	if (endpoint->data->qmap && skb->protocol != htons(ETH_P_MAP))
++		goto err_drop_skb;
++
++	ret = ipa_endpoint_skb_tx(endpoint, skb);
++	if (ret) {
++		if (ret != -E2BIG)
++			return NETDEV_TX_BUSY;
++		goto err_drop_skb;
++	}
++
++	stats->tx_packets++;
++	stats->tx_bytes += skb_len;
++
++	return NETDEV_TX_OK;
++
++err_drop_skb:
++	dev_kfree_skb_any(skb);
++	stats->tx_dropped++;
++
++	return NETDEV_TX_OK;
++}
++
++void ipa_modem_skb_rx(struct net_device *netdev, struct sk_buff *skb)
++{
++	struct net_device_stats *stats = &netdev->stats;
++
++	if (skb) {
++		skb->dev = netdev;
++		skb->protocol = htons(ETH_P_MAP);
++		stats->rx_packets++;
++		stats->rx_bytes += skb->len;
++
++		(void)netif_receive_skb(skb);
++	} else {
++		stats->rx_dropped++;
++	}
++}
++
++static const struct net_device_ops ipa_modem_ops = {
++	.ndo_open	= ipa_open,
++	.ndo_stop	= ipa_stop,
++	.ndo_start_xmit	= ipa_start_xmit,
++};
++
++/** ipa_modem_netdev_setup() - netdev setup function for the modem */
++static void ipa_modem_netdev_setup(struct net_device *netdev)
++{
++	netdev->netdev_ops = &ipa_modem_ops;
++	ether_setup(netdev);
++	/* No header ops (override value set by ether_setup()) */
++	netdev->header_ops = NULL;
++	netdev->type = ARPHRD_RAWIP;
++	netdev->hard_header_len = 0;
++	netdev->max_mtu = IPA_MTU;
++	netdev->mtu = netdev->max_mtu;
++	netdev->addr_len = 0;
++	netdev->flags &= ~(IFF_BROADCAST | IFF_MULTICAST);
++	/* The endpoint is configured for QMAP */
++	netdev->needed_headroom = sizeof(struct rmnet_map_header);
++	netdev->needed_tailroom = IPA_NETDEV_TAILROOM;
++	netdev->watchdog_timeo = IPA_NETDEV_TIMEOUT * HZ;
++	netdev->hw_features = NETIF_F_SG;
++}
++
++/** ipa_modem_suspend() - suspend callback
++ * @netdev:	Network device
++ *
++ * Suspend the modem's endpoints.
++ */
++void ipa_modem_suspend(struct net_device *netdev)
++{
++	struct ipa_priv *priv = netdev_priv(netdev);
++	struct ipa *ipa = priv->ipa;
++
++	netif_stop_queue(netdev);
++
++	ipa_endpoint_suspend_one(ipa->name_map[IPA_ENDPOINT_AP_MODEM_RX]);
++	ipa_endpoint_suspend_one(ipa->name_map[IPA_ENDPOINT_AP_MODEM_TX]);
++}
++
++/** ipa_modem_resume() - resume callback for runtime_pm
++ * @dev: pointer to device
++ *
++ * Resume the modem's endpoints.
++ */
++void ipa_modem_resume(struct net_device *netdev)
++{
++	struct ipa_priv *priv = netdev_priv(netdev);
++	struct ipa *ipa = priv->ipa;
++
++	ipa_endpoint_resume_one(ipa->name_map[IPA_ENDPOINT_AP_MODEM_TX]);
++	ipa_endpoint_resume_one(ipa->name_map[IPA_ENDPOINT_AP_MODEM_RX]);
++
++	netif_wake_queue(netdev);
++}
++
++int ipa_modem_start(struct ipa *ipa)
++{
++	enum ipa_modem_state state;
++	struct net_device *netdev;
++	struct ipa_priv *priv;
++	int ret;
++
++	/* Only attempt to start the modem if it's stopped */
++	state = atomic_cmpxchg(&ipa->modem_state, IPA_MODEM_STATE_STOPPED,
++			       IPA_MODEM_STATE_STARTING);
++
++	/* Silently ignore attempts when running, or when changing state */
++	if (state != IPA_MODEM_STATE_STOPPED)
++		return 0;
++
++	netdev = alloc_netdev(sizeof(struct ipa_priv), IPA_NETDEV_NAME,
++			      NET_NAME_UNKNOWN, ipa_modem_netdev_setup);
++	if (!netdev) {
++		ret = -ENOMEM;
++		goto out_set_state;
++	}
++
++	ipa->name_map[IPA_ENDPOINT_AP_MODEM_TX]->netdev = netdev;
++	ipa->name_map[IPA_ENDPOINT_AP_MODEM_RX]->netdev = netdev;
++
++	priv = netdev_priv(netdev);
++	priv->ipa = ipa;
++
++	ret = register_netdev(netdev);
++	if (ret)
++		free_netdev(netdev);
++	else
++		ipa->modem_netdev = netdev;
++
++out_set_state:
++	if (ret)
++		atomic_set(&ipa->modem_state, IPA_MODEM_STATE_STOPPED);
++	else
++		atomic_set(&ipa->modem_state, IPA_MODEM_STATE_RUNNING);
++	smp_mb__after_atomic();
++
++	return ret;
++}
++
++int ipa_modem_stop(struct ipa *ipa)
++{
++	struct net_device *netdev = ipa->modem_netdev;
++	enum ipa_modem_state state;
++	int ret;
++
++	/* Only attempt to stop the modem if it's running */
++	state = atomic_cmpxchg(&ipa->modem_state, IPA_MODEM_STATE_RUNNING,
++			       IPA_MODEM_STATE_STOPPING);
++
++	/* Silently ignore attempts when already stopped */
++	if (state == IPA_MODEM_STATE_STOPPED)
++		return 0;
++
++	/* If we're somewhere between stopped and starting, we're busy */
++	if (state != IPA_MODEM_STATE_RUNNING)
++		return -EBUSY;
++
++	/* Prevent the modem from triggering a call to ipa_setup() */
++	ipa_smp2p_disable(ipa);
++
++	if (netdev) {
++		/* Stop the queue and disable the endpoints if it's open */
++		ret = ipa_stop(netdev);
++		if (ret)
++			goto out_set_state;
++
++		ipa->modem_netdev = NULL;
++		unregister_netdev(netdev);
++		free_netdev(netdev);
++	} else {
++		ret = 0;
++	}
++
++out_set_state:
++	if (ret)
++		atomic_set(&ipa->modem_state, IPA_MODEM_STATE_RUNNING);
++	else
++		atomic_set(&ipa->modem_state, IPA_MODEM_STATE_STOPPED);
++	smp_mb__after_atomic();
++
++	return ret;
++}
++
++/* Treat a "clean" modem stop the same as a crash */
++static void ipa_modem_crashed(struct ipa *ipa)
++{
++	struct device *dev = &ipa->pdev->dev;
++	int ret;
++
++	ipa_endpoint_modem_pause_all(ipa, true);
++
++	ipa_endpoint_modem_hol_block_clear_all(ipa);
++
++	ipa_table_reset(ipa, true);
++
++	ret = ipa_table_hash_flush(ipa);
++	if (ret)
++		dev_err(dev, "error %d flushing hash cahces\n", ret);
++
++	ret = ipa_endpoint_modem_exception_reset_all(ipa);
++	if (ret)
++		dev_err(dev, "error %d resetting exception endpoint",
++			ret);
++
++	ipa_endpoint_modem_pause_all(ipa, false);
++
++	ret = ipa_modem_stop(ipa);
++	if (ret)
++		dev_err(dev, "error %d stopping modem", ret);
++
++	/* Now prepare for the next modem boot */
++	ret = ipa_mem_zero_modem(ipa);
++	if (ret)
++		dev_err(dev, "error %d zeroing modem memory regions\n", ret);
++}
++
++static void ipa_modem_notify(void *data, enum qcom_rproc_event event)
++{
++	struct ipa *ipa = data;
++	struct device *dev;
++
++	dev = &ipa->pdev->dev;
++	switch (event) {
++	case MODEM_STARTING:
++		dev_info(dev, "received modem starting event\n");
++		ipa_smp2p_notify_reset(ipa);
++		break;
++
++	case MODEM_RUNNING:
++		dev_info(dev, "received modem running event\n");
++		break;
++
++	case MODEM_STOPPING:
++	case MODEM_CRASHED:
++		dev_info(dev, "received modem %s event\n",
++			 event == MODEM_STOPPING ? "stopping"
++						 : "crashed");
++		if (ipa->setup_complete)
++			ipa_modem_crashed(ipa);
++		break;
++
++	case MODEM_OFFLINE:
++		dev_info(dev, "received modem offline event\n");
++		break;
++
++	case MODEM_REMOVING:
++		dev_info(dev, "received modem stopping event\n");
++		break;
++
++	default:
++		dev_err(&ipa->pdev->dev, "unrecognized event %u\n", event);
++		break;
++	}
++}
++
++int ipa_modem_init(struct ipa *ipa, bool modem_init)
++{
++	return ipa_smp2p_init(ipa, modem_init);
++}
++
++void ipa_modem_exit(struct ipa *ipa)
++{
++	ipa_smp2p_exit(ipa);
++}
++
++int ipa_modem_config(struct ipa *ipa)
++{
++	return qcom_register_ipa_notify(ipa->modem_rproc, ipa_modem_notify,
++					ipa);
++}
++
++void ipa_modem_deconfig(struct ipa *ipa)
++{
++	qcom_deregister_ipa_notify(ipa->modem_rproc);
++}
++
++int ipa_modem_setup(struct ipa *ipa)
++{
++	return ipa_qmi_setup(ipa);
++}
++
++void ipa_modem_teardown(struct ipa *ipa)
++{
++	ipa_qmi_teardown(ipa);
++}
+diff --git a/drivers/net/ipa/ipa_modem.h b/drivers/net/ipa/ipa_modem.h
 new file mode 100644
-index 000000000000..1477fc15b30a
+index 000000000000..2de3e216d1d4
 --- /dev/null
-+++ b/drivers/net/ipa/gsi_trans.h
-@@ -0,0 +1,226 @@
++++ b/drivers/net/ipa/ipa_modem.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++#ifndef _IPA_MODEM_H_
++#define _IPA_MODEM_H_
++
++struct ipa;
++struct ipa_endpoint;
++struct net_device;
++struct sk_buff;
++
++int ipa_modem_start(struct ipa *ipa);
++int ipa_modem_stop(struct ipa *ipa);
++
++void ipa_modem_skb_rx(struct net_device *netdev, struct sk_buff *skb);
++
++void ipa_modem_suspend(struct net_device *netdev);
++void ipa_modem_resume(struct net_device *netdev);
++
++int ipa_modem_init(struct ipa *ipa, bool modem_init);
++void ipa_modem_exit(struct ipa *ipa);
++
++int ipa_modem_config(struct ipa *ipa);
++void ipa_modem_deconfig(struct ipa *ipa);
++
++int ipa_modem_setup(struct ipa *ipa);
++void ipa_modem_teardown(struct ipa *ipa);
++
++#endif /* _IPA_MODEM_H_ */
+diff --git a/drivers/net/ipa/ipa_uc.c b/drivers/net/ipa/ipa_uc.c
+new file mode 100644
+index 000000000000..a1f8db00d55a
+--- /dev/null
++++ b/drivers/net/ipa/ipa_uc.c
+@@ -0,0 +1,211 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++
++#include <linux/types.h>
++#include <linux/io.h>
++#include <linux/delay.h>
++
++#include "ipa.h"
++#include "ipa_clock.h"
++#include "ipa_uc.h"
++
++/**
++ * DOC:  The IPA embedded microcontroller
++ *
++ * The IPA incorporates a microcontroller that is able to do some additional
++ * handling/offloading of network activity.  The current code makes
++ * essentially no use of the microcontroller, but it still requires some
++ * initialization.  It needs to be notified in the event the AP crashes.
++ *
++ * The microcontroller can generate two interrupts to the AP.  One interrupt
++ * is used to indicate that a response to a request from the AP is available.
++ * The other is used to notify the AP of the occurrence of an event.  In
++ * addition, the AP can interrupt the microcontroller by writing a register.
++ *
++ * A 128 byte block of structured memory within the IPA SRAM is used together
++ * with these interrupts to implement the communication interface between the
++ * AP and the IPA microcontroller.  Each side writes data to the shared area
++ * before interrupting its peer, which will read the written data in response
++ * to the interrupt.  Some information found in the shared area is currently
++ * unused.  All remaining space in the shared area is reserved, and must not
++ * be read or written by the AP.
++ */
++/* Supports hardware interface version 0x2000 */
++
++/* Offset relative to the base of the IPA shared address space of the
++ * shared region used for communication with the microcontroller.  The
++ * region is 128 bytes in size, but only the first 40 bytes are used.
++ */
++#define IPA_MEM_UC_OFFSET	0x0000
++
++/* Delay to allow a the microcontroller to save state when crashing */
++#define IPA_SEND_DELAY		100	/* microseconds */
++
++/**
++ * struct ipa_uc_mem_area - AP/microcontroller shared memory area
++ * @command:		command code (AP->microcontroller)
++ * @command_param:	low 32 bits of command parameter (AP->microcontroller)
++ * @command_param_hi:	high 32 bits of command parameter (AP->microcontroller)
++ *
++ * @response:		response code (microcontroller->AP)
++ * @response_param:	response parameter (microcontroller->AP)
++ *
++ * @event:		event code (microcontroller->AP)
++ * @event_param:	event parameter (microcontroller->AP)
++ *
++ * @first_error_address: address of first error-source on SNOC
++ * @hw_state:		state of hardware (including error type information)
++ * @warning_counter:	counter of non-fatal hardware errors
++ * @interface_version:	hardware-reported interface version
++ */
++struct ipa_uc_mem_area {
++	u8 command;		/* enum ipa_uc_command */
++	u8 reserved0[3];
++	__le32 command_param;
++	__le32 command_param_hi;
++	u8 response;		/* enum ipa_uc_response */
++	u8 reserved1[3];
++	__le32 response_param;
++	u8 event;		/* enum ipa_uc_event */
++	u8 reserved2[3];
++
++	__le32 event_param;
++	__le32 first_error_address;
++	u8 hw_state;
++	u8 warning_counter;
++	__le16 reserved3;
++	__le16 interface_version;
++	__le16 reserved4;
++};
++
++/** enum ipa_uc_command - commands from the AP to the microcontroller */
++enum ipa_uc_command {
++	IPA_UC_COMMAND_NO_OP		= 0,
++	IPA_UC_COMMAND_UPDATE_FLAGS	= 1,
++	IPA_UC_COMMAND_DEBUG_RUN_TEST	= 2,
++	IPA_UC_COMMAND_DEBUG_GET_INFO	= 3,
++	IPA_UC_COMMAND_ERR_FATAL	= 4,
++	IPA_UC_COMMAND_CLK_GATE		= 5,
++	IPA_UC_COMMAND_CLK_UNGATE	= 6,
++	IPA_UC_COMMAND_MEMCPY		= 7,
++	IPA_UC_COMMAND_RESET_PIPE	= 8,
++	IPA_UC_COMMAND_REG_WRITE	= 9,
++	IPA_UC_COMMAND_GSI_CH_EMPTY	= 10,
++};
++
++/** enum ipa_uc_response - microcontroller response codes */
++enum ipa_uc_response {
++	IPA_UC_RESPONSE_NO_OP		= 0,
++	IPA_UC_RESPONSE_INIT_COMPLETED	= 1,
++	IPA_UC_RESPONSE_CMD_COMPLETED	= 2,
++	IPA_UC_RESPONSE_DEBUG_GET_INFO	= 3,
++};
++
++/** enum ipa_uc_event - common cpu events reported by the microcontroller */
++enum ipa_uc_event {
++	IPA_UC_EVENT_NO_OP     = 0,
++	IPA_UC_EVENT_ERROR     = 1,
++	IPA_UC_EVENT_LOG_INFO  = 2,
++};
++
++static struct ipa_uc_mem_area *ipa_uc_shared(struct ipa *ipa)
++{
++	u32 offset = ipa->mem_offset + ipa->mem[IPA_MEM_UC_SHARED].offset;
++
++	return ipa->mem_virt + offset;
++}
++
++/* Microcontroller event IPA interrupt handler */
++static void ipa_uc_event_handler(struct ipa *ipa, enum ipa_irq_id irq_id)
++{
++	struct ipa_uc_mem_area *shared = ipa_uc_shared(ipa);
++	struct device *dev = &ipa->pdev->dev;
++
++	if (shared->event == IPA_UC_EVENT_ERROR)
++		dev_err(dev, "microcontroller error event\n");
++	else
++		dev_err(dev, "unsupported microcontroller event %hhu\n",
++			shared->event);
++}
++
++/* Microcontroller response IPA interrupt handler */
++static void ipa_uc_response_hdlr(struct ipa *ipa, enum ipa_irq_id irq_id)
++{
++	struct ipa_uc_mem_area *shared = ipa_uc_shared(ipa);
++
++	/* An INIT_COMPLETED response message is sent to the AP by the
++	 * microcontroller when it is operational.  Other than this, the AP
++	 * should only receive responses from the microcontroller when it has
++	 * sent it a request message.
++	 *
++	 * We can drop the clock reference taken in ipa_uc_init() once we
++	 * know the microcontroller has finished its initialization.
++	 */
++	switch (shared->response) {
++	case IPA_UC_RESPONSE_INIT_COMPLETED:
++		ipa->uc_loaded = true;
++		ipa_clock_put(ipa);
++		break;
++	default:
++		dev_warn(&ipa->pdev->dev,
++			 "unsupported microcontroller response %hhu\n",
++			 shared->response);
++		break;
++	}
++}
++
++/* ipa_uc_setup() - Set up the microcontroller */
++void ipa_uc_setup(struct ipa *ipa)
++{
++	/* The microcontroller needs the IPA clock running until it has
++	 * completed its initialization.  It signals this by sending an
++	 * INIT_COMPLETED response message to the AP.  This could occur after
++	 * we have finished doing the rest of the IPA initialization, so we
++	 * need to take an extra "proxy" reference, and hold it until we've
++	 * received that signal.  (This reference is dropped in
++	 * ipa_uc_response_hdlr(), above.)
++	 */
++	ipa_clock_get(ipa);
++
++	ipa->uc_loaded = false;
++	ipa_interrupt_add(ipa->interrupt, IPA_IRQ_UC_0, ipa_uc_event_handler);
++	ipa_interrupt_add(ipa->interrupt, IPA_IRQ_UC_1, ipa_uc_response_hdlr);
++}
++
++/* Inverse of ipa_uc_setup() */
++void ipa_uc_teardown(struct ipa *ipa)
++{
++	ipa_interrupt_remove(ipa->interrupt, IPA_IRQ_UC_1);
++	ipa_interrupt_remove(ipa->interrupt, IPA_IRQ_UC_0);
++	if (!ipa->uc_loaded)
++		ipa_clock_put(ipa);
++}
++
++/* Send a command to the microcontroller */
++static void send_uc_command(struct ipa *ipa, u32 command, u32 command_param)
++{
++	struct ipa_uc_mem_area *shared = ipa_uc_shared(ipa);
++
++	shared->command = command;
++	shared->command_param = cpu_to_le32(command_param);
++	shared->command_param_hi = 0;
++	shared->response = 0;
++	shared->response_param = 0;
++
++	iowrite32(1, ipa->reg_virt + IPA_REG_IRQ_UC_OFFSET);
++}
++
++/* Tell the microcontroller the AP is shutting down */
++void ipa_uc_panic_notifier(struct ipa *ipa)
++{
++	if (!ipa->uc_loaded)
++		return;
++
++	send_uc_command(ipa, IPA_UC_COMMAND_ERR_FATAL, 0);
++
++	/* give uc enough time to save state */
++	udelay(IPA_SEND_DELAY);
++}
+diff --git a/drivers/net/ipa/ipa_uc.h b/drivers/net/ipa/ipa_uc.h
+new file mode 100644
+index 000000000000..e8510899a3f0
+--- /dev/null
++++ b/drivers/net/ipa/ipa_uc.h
+@@ -0,0 +1,32 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
 +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
 + * Copyright (C) 2019-2020 Linaro Ltd.
 + */
-+#ifndef _GSI_TRANS_H_
-+#define _GSI_TRANS_H_
++#ifndef _IPA_UC_H_
++#define _IPA_UC_H_
 +
-+#include <linux/types.h>
-+#include <linux/refcount.h>
-+#include <linux/completion.h>
-+#include <linux/dma-direction.h>
-+
-+#include "ipa_cmd.h"
-+
-+struct scatterlist;
-+struct device;
-+struct sk_buff;
-+
-+struct gsi;
-+struct gsi_trans;
-+struct gsi_trans_pool;
++struct ipa;
 +
 +/**
-+ * struct gsi_trans - a GSI transaction
++ * ipa_uc_setup() - set up the IPA microcontroller subsystem
++ * @ipa:	IPA pointer
++ */
++void ipa_uc_setup(struct ipa *ipa);
++
++/**
++ * ipa_uc_teardown() - inverse of ipa_uc_setup()
++ * @ipa:	IPA pointer
++ */
++void ipa_uc_teardown(struct ipa *ipa);
++
++/**
++ * ipa_uc_panic_notifier()
++ * @ipa:	IPA pointer
 + *
-+ * Most fields in this structure for internal use by the transaction core code:
-+ * @links:	Links for channel transaction lists by state
-+ * @gsi:	GSI pointer
-+ * @channel_id: Channel number transaction is associated with
-+ * @cancelled:	If set by the core code, transaction was cancelled
-+ * @tre_count:	Number of TREs reserved for this transaction
-+ * @used:	Number of TREs *used* (could be less than tre_count)
-+ * @len:	Total # of transfer bytes represented in sgl[] (set by core)
-+ * @data:	Preserved but not touched by the core transaction code
-+ * @sgl:	An array of scatter/gather entries managed by core code
-+ * @info:	Array of command information structures (command channel)
-+ * @direction:	DMA transfer direction (DMA_NONE for commands)
-+ * @refcount:	Reference count used for destruction
-+ * @completion:	Completed when the transaction completes
-+ * @byte_count:	TX channel byte count recorded when transaction committed
-+ * @trans_count: Channel transaction count when committed (for BQL accounting)
-+ *
-+ * The size used for some fields in this structure were chosen to ensure
-+ * the full structure size is no larger than 128 bytes.
++ * Notifier function called when the system crashes, to inform the
++ * microcontroller of the event.
 + */
-+struct gsi_trans {
-+	struct list_head links;		/* gsi_channel lists */
++void ipa_uc_panic_notifier(struct ipa *ipa);
 +
-+	struct gsi *gsi;
-+	u8 channel_id;
-+
-+	bool cancelled;			/* true if transaction was cancelled */
-+
-+	u8 tre_count;			/* # TREs requested */
-+	u8 used;			/* # entries used in sgl[] */
-+	u32 len;			/* total # bytes across sgl[] */
-+
-+	void *data;
-+	struct scatterlist *sgl;
-+	struct ipa_cmd_info *info;	/* array of entries, or null */
-+	enum dma_data_direction direction;
-+
-+	refcount_t refcount;
-+	struct completion completion;
-+
-+	u64 byte_count;			/* channel byte_count when committed */
-+	u64 trans_count;		/* channel trans_count when committed */
-+};
-+
-+/**
-+ * gsi_trans_pool_init() - Initialize a pool of structures for transactions
-+ * @gsi:	GSI pointer
-+ * @size:	Size of elements in the pool
-+ * @count:	Minimum number of elements in the pool
-+ * @max_alloc:	Maximum number of elements allocated at a time from pool
-+ *
-+ * @Return:	0 if successful, or a negative error code
-+ */
-+int gsi_trans_pool_init(struct gsi_trans_pool *pool, size_t size, u32 count,
-+			u32 max_alloc);
-+
-+/**
-+ * gsi_trans_pool_alloc() - Allocate one or more elements from a pool
-+ * @pool:	Pool pointer
-+ * @count:	Number of elements to allocate from the pool
-+ *
-+ * @Return:	Virtual address of element(s) allocated from the pool
-+ */
-+void *gsi_trans_pool_alloc(struct gsi_trans_pool *pool, u32 count);
-+
-+/**
-+ * gsi_trans_pool_exit() - Inverse of gsi_trans_pool_init()
-+ * @pool:	Pool pointer
-+ */
-+void gsi_trans_pool_exit(struct gsi_trans_pool *pool);
-+
-+/**
-+ * gsi_trans_pool_init_dma() - Initialize a pool of DMA-able structures
-+ * @dev:	Device used for DMA
-+ * @pool:	Pool pointer
-+ * @size:	Size of elements in the pool
-+ * @count:	Minimum number of elements in the pool
-+ * @max_alloc:	Maximum number of elements allocated at a time from pool
-+ *
-+ * @Return:	0 if successful, or a negative error code
-+ *
-+ * Structures in this pool reside in DMA-coherent memory.
-+ */
-+int gsi_trans_pool_init_dma(struct device *dev, struct gsi_trans_pool *pool,
-+			    size_t size, u32 count, u32 max_alloc);
-+
-+/**
-+ * gsi_trans_pool_alloc_dma() - Allocate an element from a DMA pool
-+ * @pool:	DMA pool pointer
-+ * @addr:	DMA address "handle" associated with the allocation
-+ *
-+ * @Return:	Virtual address of element allocated from the pool
-+ *
-+ * Only one element at a time may be allocated from a DMA pool.
-+ */
-+void *gsi_trans_pool_alloc_dma(struct gsi_trans_pool *pool, dma_addr_t *addr);
-+
-+/**
-+ * gsi_trans_pool_exit() - Inverse of gsi_trans_pool_init()
-+ * @pool:	Pool pointer
-+ */
-+void gsi_trans_pool_exit_dma(struct device *dev, struct gsi_trans_pool *pool);
-+
-+/**
-+ * gsi_channel_trans_alloc() - Allocate a GSI transaction on a channel
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel the transaction is associated with
-+ * @tre_count:	Number of elements in the transaction
-+ * @direction:	DMA direction for entire SGL (or DMA_NONE)
-+ *
-+ * @Return:	A GSI transaction structure, or a null pointer if all
-+ *		available transactions are in use
-+ */
-+struct gsi_trans *gsi_channel_trans_alloc(struct gsi *gsi, u32 channel_id,
-+					  u32 tre_count,
-+					  enum dma_data_direction direction);
-+
-+/**
-+ * gsi_trans_free() - Free a previously-allocated GSI transaction
-+ * @trans:	Transaction to be freed
-+ */
-+void gsi_trans_free(struct gsi_trans *trans);
-+
-+/**
-+ * gsi_trans_cmd_add() - Add an immediate command to a transaction
-+ * @trans:	Transaction
-+ * @buf:	Buffer pointer for command payload
-+ * @size:	Number of bytes in buffer
-+ * @addr:	DMA address for payload
-+ * @direction:	Direction of DMA transfer (or DMA_NONE if none required)
-+ * @opcode:	IPA immediate command opcode
-+ */
-+void gsi_trans_cmd_add(struct gsi_trans *trans, void *buf, u32 size,
-+		       dma_addr_t addr, enum dma_data_direction direction,
-+		       enum ipa_cmd_opcode opcode);
-+
-+/**
-+ * gsi_trans_page_add() - Add a page transfer to a transaction
-+ * @trans:	Transaction
-+ * @page:	Page pointer
-+ * @size:	Number of bytes (starting at offset) to transfer
-+ * @offset:	Offset within page for start of transfer
-+ */
-+int gsi_trans_page_add(struct gsi_trans *trans, struct page *page, u32 size,
-+		       u32 offset);
-+
-+/**
-+ * gsi_trans_skb_add() - Add a socket transfer to a transaction
-+ * @trans:	Transaction
-+ * @skb:	Socket buffer for transfer (outbound)
-+ *
-+ * @Return:	0, or -EMSGSIZE if socket data won't fit in transaction.
-+ */
-+int gsi_trans_skb_add(struct gsi_trans *trans, struct sk_buff *skb);
-+
-+/**
-+ * gsi_trans_commit() - Commit a GSI transaction
-+ * @trans:	Transaction to commit
-+ * @ring_db:	Whether to tell the hardware about these queued transfers
-+ */
-+void gsi_trans_commit(struct gsi_trans *trans, bool ring_db);
-+
-+/**
-+ * gsi_trans_commit_wait() - Commit a GSI transaction and wait for it
-+ *			     to complete
-+ * @trans:	Transaction to commit
-+ */
-+void gsi_trans_commit_wait(struct gsi_trans *trans);
-+
-+/**
-+ * gsi_trans_commit_wait_timeout() - Commit a GSI transaction and wait for
-+ *				     it to complete, with timeout
-+ * @trans:	Transaction to commit
-+ * @timeout:	Timeout period (in milliseconds)
-+ */
-+int gsi_trans_commit_wait_timeout(struct gsi_trans *trans,
-+				  unsigned long timeout);
-+
-+/**
-+ * gsi_trans_read_byte() - Issue a single byte read TRE on a channel
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel on which to read a byte
-+ * @addr:	DMA address into which to transfer the one byte
-+ *
-+ * This is not a transaction operation at all.  It's defined here because
-+ * it needs to be done in coordination with other transaction activity.
-+ */
-+int gsi_trans_read_byte(struct gsi *gsi, u32 channel_id, dma_addr_t addr);
-+
-+/**
-+ * gsi_trans_read_byte_done() - Clean up after a single byte read TRE
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel on which byte was read
-+ *
-+ * This function needs to be called to signal that the work related
-+ * to reading a byte initiated by gsi_trans_read_byte() is complete.
-+ */
-+void gsi_trans_read_byte_done(struct gsi *gsi, u32 channel_id);
-+
-+#endif /* _GSI_TRANS_H_ */
++#endif /* _IPA_UC_H_ */
 -- 
 2.20.1
 
