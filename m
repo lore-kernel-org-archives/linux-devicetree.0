@@ -4,94 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2398DC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A569FC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCDE6246AE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6832C24699
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 15:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582902535;
-	bh=HHwEYyDSEKdV6Xycj4HlJPneyj3PZUumbO+wq7TktNg=;
+	s=default; t=1582902653;
+	bh=UejwP0M/4ErU8VwsIQa5l7GTzIH7rFjxTYgRAxGJics=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EzlScMLtPk+32/IPtoBQRttWZtft4KPvEYElUfWjsdMgAePXXUeys0eckwzusybSi
-	 EhIkkLeBQtaqhOdq3+jf925pr2l1HVVRK7Q/EeKbZ9dMHZp+u96ayEqL4rAPlFyqcJ
-	 araOsjVPNw8asiPvkhAcOAA4KHBBP5xvmTP0XwvU=
+	b=I7p+78RIxLtv5PtC6IhRBUWG5dv19pltZEd5YYNrLMAgEMk1sKM3VTW/uKkHs6ZRg
+	 i4r0x5FEPX4SSKicRWUyXXA2qsR6RApnHA1U6fhiBRlDf9EDAyQfUqEsUB3FYxix/t
+	 GAn0Qf6/PHY0W96dbOBHN+CaBCdzBPsXYGe72k5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbgB1PIy (ORCPT
+        id S1726944AbgB1PKu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:08:54 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35775 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbgB1PIr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 10:08:47 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b18so3167273oie.2
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 07:08:46 -0800 (PST)
+        Fri, 28 Feb 2020 10:10:50 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35034 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgB1PKu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 10:10:50 -0500
+Received: by mail-oi1-f193.google.com with SMTP id b18so3174029oie.2;
+        Fri, 28 Feb 2020 07:10:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GrxfLKNeb7VX7iUvU68jTNFGkoGVVgvbiiMbCe2hCME=;
-        b=LGmrXQpdq8jD5ZzShnEZKrBeKV/Bnl4ojIbiTK3jggZxWjpr9QkZQIOroeDw3ceuLP
-         4XEBw9n8RK561Rp52nV26jN4aFHf/gtzO+h7cgK3FCoBgR6CH3Dxijk0Hv6pnycPqHPu
-         LA8G5KsmNMpRR6IcH7aMbfE0+QZp3mhUPNJKrb+YpGx/293Vt6ObbDpfbCa8E+aUEYEp
-         /zDuohgRoz00En1zFFyYGa9Ge9jAoe46TSPVFA0zluMfIfzfOx8A5BdHzIazSTdXGjHl
-         IAMaO1y8oMjypaFTxQhFye3lQw/ftB5iwx9OueGJ8trLfQbtT78ee96MBHs7c2CZ2Iyj
-         Wbnw==
-X-Gm-Message-State: APjAAAXLv6GmTBJP/CBT5jId0lv/bZHQAhvv+eumVmlg9ipVbjgJjdHd
-        w/YagG/GFpqmVkMokufcrupBakk=
-X-Google-Smtp-Source: APXvYqyIW4if0WiCCw0nWSFPDRi7C8E817zpUync88QJ06v4KoR749wkve/rgQKkMl0LMEvnPVD/GA==
-X-Received: by 2002:a05:6808:45:: with SMTP id v5mr3356762oic.90.1582902526405;
-        Fri, 28 Feb 2020 07:08:46 -0800 (PST)
+        bh=t0G3mflzMLYfHT/AnRWKVaX1lcvqOhj/G6xuPMWJ9SY=;
+        b=I0kO/nEhwgXNjI/WtwGuUpOVPQ6nODVEh3Pp0cRuslLF/p1rctUIzv3uuS2vrhc2GS
+         TqaJmxndsQNAfNgW5jYFQMxQ3dj/eNdULAmx303TRfJU4AV9Ny6moR6YeVhc0iN4U3BU
+         0jXDuNsgSi3vVWPj4mmvP0xfKITN1xJeC7np1fGbRJtUEtCd2mcOC1K5d7Ea/h84vKOH
+         v1Zfx3qFSmHp3AmhycqRFZ83w65EsTM0MQ/7jpLFQwUGIfKYm2PnoQFfHCoNGAZlAV2N
+         om5Ozv7DQmVf+6WUDwjp1nRs7cZVSiwvxnknKEdByQRGJzdhFY/El3hmuwQ7ar+KX8tn
+         9Rdg==
+X-Gm-Message-State: APjAAAUEeHWgyb5BXY1V4H8KjfZyE5KV2WP+gSbA0XkmxSSPLYyIeiz/
+        gsr3PSVWCFYR/MIjp6sHxQ==
+X-Google-Smtp-Source: APXvYqxtcZ6ZNm10DIZf0YYzfzgPghegW6SU51q8Yb4V2+TcrwQt6aZ/TOLwt19IL07IumO1NVtEqA==
+X-Received: by 2002:a05:6808:4d3:: with SMTP id a19mr3271213oie.119.1582902649140;
+        Fri, 28 Feb 2020 07:10:49 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l12sm3204651oth.9.2020.02.28.07.08.45
+        by smtp.gmail.com with ESMTPSA id z3sm2010618oia.46.2020.02.28.07.10.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 07:08:45 -0800 (PST)
-Received: (nullmailer pid 27469 invoked by uid 1000);
-        Fri, 28 Feb 2020 15:08:44 -0000
-Date:   Fri, 28 Feb 2020 09:08:44 -0600
+        Fri, 28 Feb 2020 07:10:48 -0800 (PST)
+Received: (nullmailer pid 347 invoked by uid 1000);
+        Fri, 28 Feb 2020 15:10:47 -0000
+Date:   Fri, 28 Feb 2020 09:10:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Charles-Antoine Couret <charles-antoine.couret@mind.be>
-Cc:     alsa-devel@alsa-project.org,
-        Charles-Antoine Couret <charles-antoine.couret@mind.be>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2 V2] ASoC: tas5756m: Add DT binding document
-Message-ID: <20200228150844.GA26458@bogus>
-References: <20200227232327.46309-1-charles-antoine.couret@mind.be>
- <20200227232327.46309-3-charles-antoine.couret@mind.be>
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org,
+        asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, dianders@google.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V3] dt-bindings: mmc: sdhci-msm: Add CQE reg map
+Message-ID: <20200228151047.GA32759@bogus>
+References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+ <1582545470-11530-1-git-send-email-vbadigan@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227232327.46309-3-charles-antoine.couret@mind.be>
+In-Reply-To: <1582545470-11530-1-git-send-email-vbadigan@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 28 Feb 2020 00:23:27 +0100, Charles-Antoine Couret wrote:
-> Document the bindings for the tas5756m driver.
+On Mon, 24 Feb 2020 17:27:50 +0530, Veerabhadrarao Badiganti wrote:
+> CQE feature has been enabled on sdhci-msm. Add CQE reg map
+> and reg names that need to be supplied for supporting CQE feature.
 > 
-> Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@mind.be>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 > ---
->  .../devicetree/bindings/sound/tas5756m.yaml   | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/tas5756m.yaml
+> Changes since V2:
+> 	- Dropped _mem suffix to reg names.
+> 
+> Changes since V1:
+> 	- Updated description for more clarity & Fixed typos.
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-warning: no schema found in file: Documentation/devicetree/bindings/sound/tas5756m.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/tas5756m.yaml: ignoring, error parsing file
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Documentation/devicetree/bindings/sound/tas5756m.yaml:  did not find expected <document start>
-  in "<unicode string>", line 4, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/sound/tas5756m.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/sound/tas5756m.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1246173
-Please check and re-submit.
+Reviewed-by: Rob Herring <robh@kernel.org>
