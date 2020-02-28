@@ -2,147 +2,63 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9277EC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5967C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68352246AC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="WlxMPV0I"
+	by mail.kernel.org (Postfix) with ESMTP id B382F2467B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgB1QBD (ORCPT
+        id S1725911AbgB1QSb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:01:03 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:33668 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727173AbgB1QBC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 11:01:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582905660;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=gbizeSabj1SA3R/yYEBCTuuOG7bMiftKSlGUj+fFwyY=;
-        b=WlxMPV0ImmhxV2wlP9v+eCctIi14LDAECsmXnNMg+P37NefcgwjMROnDwCiLgciIQ6
-        hv4aH45xJ4VPkeftrb3x010LNmOcUIsxbFFm7jgdX1oRRbJnp553yf2W1/BSTN+CdKVj
-        cDlo/7Zha1Dpisa/uoeph6pAEZK/mXKhZuJ1362+VPiht89Ty0IfI2CWMTIqAL+zILp+
-        v903J6rRfqr4pSVVDd6S8YnfLt7JWpju9c4ugnwkB33QrtdfhTlcAgC4dkqU86pzdiK9
-        YXOnA5SSZ2/qqjEbLV5Q0ymt2RoPjysKbKzEjVFs0qeD1UpdxaMP7YD3eS/J6UbHYEXS
-        LHmw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SG0u1l9
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 28 Feb 2020 17:00:56 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v8 3/7] Bindings: nvmem: add bindings for JZ4780 efuse
-Date:   Fri, 28 Feb 2020 17:00:49 +0100
-Message-Id: <37d3b9e4c60692215fff0e75a78ac1e7792aaf75.1582905653.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1582905653.git.hns@goldelico.com>
-References: <cover.1582905653.git.hns@goldelico.com>
+        Fri, 28 Feb 2020 11:18:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:40880 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1QSb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:18:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F4BA31B;
+        Fri, 28 Feb 2020 08:18:30 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B08E3F73B;
+        Fri, 28 Feb 2020 08:18:28 -0800 (PST)
+Date:   Fri, 28 Feb 2020 16:18:20 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     peng.fan@nxp.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, robh@kernel.org,
+        viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andre.przywara@arm.com,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V3 2/2] firmware: arm_scmi: add smc/hvc transport
+Message-ID: <20200228161820.GA17229@bogus>
+References: <1582701171-26842-1-git-send-email-peng.fan@nxp.com>
+ <1582701171-26842-3-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582701171-26842-3-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+On Wed, Feb 26, 2020 at 03:12:51PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Take arm,smc-id as the 1st arg, and protocol id as the 2nd arg when
+> issuing SMC/HVC. Since we need protocol id, so add this parameter
 
-This patch brings support for the JZ4780 efuse. Currently it only exposes
-a read only access to the entire 8K bits efuse memory.
+And why do we need protocol id here ? I couldn't find it out myself.
+I would like to know why/what/how is it used in the firmware(smc/hvc
+handler). I hope you are not mixing the need for multiple channel with
+protocol id ? One can find out id from the command itself, no need to
+pass it and hence asking here for more details.
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-[converted to yaml]
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-
-diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-new file mode 100644
-index 000000000000..1485d3fbabfd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ingenic JZ EFUSE driver bindings
-+
-+maintainers:
-+  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-+
-+allOf:
-+  - $ref: "nvmem.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ingenic,jz4780-efuse
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    # Handle for the ahb for the efuse.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4780-cgu.h>
-+
-+    efuse@134100d0 {
-+        compatible = "ingenic,jz4780-efuse";
-+        reg = <0x134100d0 0x2c>;
-+
-+        clocks = <&cgu JZ4780_CLK_AHB2>;
-+    };
-+
-+...
 -- 
-2.23.0
-
+Regards,
+Sudeep
