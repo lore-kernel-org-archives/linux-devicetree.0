@@ -2,177 +2,96 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A60C3F2D3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D852EC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 19:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2A2222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T85BmpDr"
+	by mail.kernel.org (Postfix) with ESMTP id ABADC246A2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 19:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgB1TRx (ORCPT
+        id S1726490AbgB1TqR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:17:53 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:46482 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgB1TRw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 14:17:52 -0500
-Received: by mail-ua1-f68.google.com with SMTP id l6so1365790uap.13
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 11:17:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uXA3/+C+Ws03rM5oecAfvZ0EjvjFdg2ZbM6QXJtOnis=;
-        b=T85BmpDrleLyl915HxeMadTD8HviR0L4YI8g1TPE3bzM0UctdJVLSN9P2/laHAAMSR
-         upFTHz+wPJzr7i4Kmsk87YXVm3GIj8ZRb29Jod2t6WqHxNhpchtwJDD3oQSj5yOOZ+VA
-         0xFJMmVLfXQegbcviPjOWZJAOHv/hAvB7tfno8C6Cc4qnuJG4rnyd7SewPIMeLg5qfTP
-         0iOb2BIh6w+DBm+BgJgnPIbzYb6W1N0uSTX0wHehFWdXEmViuSrDILQJS2dFGSvWI7n+
-         9QAM8+Tr/LSd7aW7pyGeSy14nQvI3fNhAz79HVyqyE4Y+nSqVU7aqfQq2cgQ04SgFn1n
-         sI3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uXA3/+C+Ws03rM5oecAfvZ0EjvjFdg2ZbM6QXJtOnis=;
-        b=ecRBDLJjp8AN+DLxENaLwHzDfry+VDs1rVCaEV3MIDF55DR+2kvOa+6lmP1wBQJc3y
-         NIEjXE4CvPoKfYLNewjPWoC8zjh/uk7kF3CFbHaH8/1kP0ICLU1pTf2YCSk97ZNkqChK
-         xD/OiS/vKxKtRFm/j75qpKQbub/e1pUt01vjRSsulEkh2EPUoP8R7w46yqOjCh9NABXx
-         yGn3/Dqi01zRzox37c/74C2nFfjfgli3Cah70AuR6MKb7XTI5DgD7bxTz5B3Tc5nWW0l
-         VZnJymj2bWInxKQ/npk+VI9KVmS1jSvG46F6Y+JUu8qrS4yDroVud0xr9QsVcVLLCDMH
-         QdZQ==
-X-Gm-Message-State: ANhLgQ0ufvD596VQ0WvwqIUSEMAiKOqyt07ydwo3vZCzmyxm2hELlo73
-        V8St6z02uWbGPGQwJEqH8v2RAa6zhkwaVdf34kKq3A==
-X-Google-Smtp-Source: ADFU+vvsbZIc5VB+r9XiljUrppstnkF/gEQRydJ0xpNF0569jfMXKelO0dOU5dM371tMVLG+h8JPKHod/4zNraTMhww=
-X-Received: by 2002:a9f:36ca:: with SMTP id p68mr2882516uap.112.1582917469575;
- Fri, 28 Feb 2020 11:17:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20200224021029.142701-1-adelva@google.com> <20200224021029.142701-3-adelva@google.com>
- <20200227232253.GA5966@bogus>
-In-Reply-To: <20200227232253.GA5966@bogus>
-From:   Alistair Delva <adelva@google.com>
-Date:   Fri, 28 Feb 2020 11:17:38 -0800
-Message-ID: <CANDihLFFUoauKxwcNDNE4=PuhzHSpB+FecxFJOn5H2GkreiYhw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] dt-bindings: pmem-region: Document memory-region
-To:     Rob Herring <robh@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Kenny Root <kroot@google.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Device Tree <devicetree@vger.kernel.org>,
-        linux-nvdimm@lists.01.org, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 28 Feb 2020 14:46:17 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:55899 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1TqR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 14:46:17 -0500
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1j7lbO-0005Rf-VP; Fri, 28 Feb 2020 19:47:15 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH] ARM: dts: imx6qdl-gw5910: add CC1352 UART
+Date:   Fri, 28 Feb 2020 11:46:07 -0800
+Message-Id: <1582919167-28690-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+The GW5910-C revision adds a TI CC1352 connected to IMX UART4
 
-Thanks for reviewing.
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ arch/arm/boot/dts/imx6qdl-gw5910.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-On Thu, Feb 27, 2020 at 3:22 PM Rob Herring <robh@kernel.org> wrote:
->> On Sun, Feb 23, 2020 at 06:10:29PM -0800, Alistair Delva wrote:
-> > From: Kenny Root <kroot@google.com>
-> >
-> > Add documentation and example for memory-region in pmem.
-> >
-> > Signed-off-by: Kenny Root <kroot@google.com>
-> > Signed-off-by: Alistair Delva <adelva@google.com>
-> > Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Vishal Verma <vishal.l.verma@intel.com>
-> > Cc: Dave Jiang <dave.jiang@intel.com>
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-nvdimm@lists.01.org
-> > Cc: kernel-team@android.com
-> > ---
-> > [v3: adelva: remove duplicate "From:"]
-> >  .../devicetree/bindings/pmem/pmem-region.txt  | 29 +++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> > index 5cfa4f016a00..0ec87bd034e0 100644
-> > --- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> > +++ b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> > @@ -29,6 +29,18 @@ Required properties:
-> >               in a separate device node. Having multiple address ranges in a
-> >               node implies no special relationship between the two ranges.
-> >
-> > +             This property may be replaced or supplemented with a
-> > +             memory-region property. Only one of reg or memory-region
-> > +             properties is required.
-> > +
-> > +     - memory-region:
-> > +             Reference to the reserved memory node. The reserved memory
-> > +             node should be defined as per the bindings in
-> > +             reserved-memory.txt
->
-> Though we've never enforced it, but /reserved-memory should be within
-> the bounds of /memory node(s). Is that the intent here? If so, how does
-> that work? Wouldn't all the memory be persistent then? Or some other
-> system processor is preserving the contents?
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+index be1af74..30fe47f 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+@@ -220,6 +220,14 @@
+ 	status = "okay";
+ };
+ 
++/* cc1352 */
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
+ /* Sterling-LWB Bluetooth */
+ &uart4 {
+ 	pinctrl-names = "default";
+@@ -411,6 +419,23 @@
+ 		>;
+ 	};
+ 
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D23__UART3_RTS_B		0x1b0b1
++			MX6QDL_PAD_EIM_D31__UART3_CTS_B		0x1b0b1
++			MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x4001b0b1 /* DIO20 */
++			MX6QDL_PAD_DISP0_DAT11__GPIO5_IO05	0x4001b0b1 /* DIO14 */
++			MX6QDL_PAD_DISP0_DAT12__GPIO5_IO06	0x4001b0b1 /* DIO15 */
++			MX6QDL_PAD_DISP0_DAT14__GPIO5_IO08	0x1b0b1 /* TMS */
++			MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09	0x1b0b1 /* TCK */
++			MX6QDL_PAD_DISP0_DAT16__GPIO5_IO10	0x1b0b1 /* TDO */
++			MX6QDL_PAD_DISP0_DAT17__GPIO5_IO11	0x1b0b1 /* TDI */
++			MX6QDL_PAD_DISP0_DAT23__GPIO5_IO17	0x4001b0b1 /* RST# */
++		>;
++	};
++
+ 	pinctrl_uart4: uart4grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA	0x1b0b1
+-- 
+2.7.4
 
-On the systems we're working with, the RAM remains refreshed across
-reboots, but the contents of RAM could be changed by something outside
-of Linux (i.e. the bootloader). By reserving this region in DT for
-pmem we are saying "this is persistent like the rest of RAM on this
-device, but it is also not going to be touched by anything besides
-this Linux driver".
-
-> > +
-> > +             This property may be replaced or supplemented with a reg
-> > +             property. Only one of reg or memory-region is required.
-> > +
-> >  Optional properties:
-> >       - Any relevant NUMA assocativity properties for the target platform.
-> >
-> > @@ -63,3 +75,20 @@ Examples:
-> >               volatile;
-> >       };
-> >
-> > +
-> > +     /*
-> > +      * This example uses a reserved-memory entry instead of
-> > +      * specifying the memory region directly in the node.
-> > +      */
-> > +
-> > +     reserved-memory {
-> > +             pmem_1: pmem@5000 {
-> > +                     no-map;
->
-> Just add 'compatible = "pmem-region";' here and be done with it. Why add
-> a layer of indirection?
-
-Sure, I'll do that..
-
-> > +                     reg = <0x00005000 0x00001000>;
-> > +             };
-> > +     };
-> > +
-> > +     pmem@1 {
->
-> No 'reg', so shouldn't have a unit-address here.
-
-..then I guess I can just delete this. v4 incoming.
-
-
-> > +             compatible = "pmem-region";
-> > +             memory-region = <&pmem_1>;
-> > +     };
-> > --
-> > 2.25.0.265.gbab2e86ba0-goog
-> >
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->
