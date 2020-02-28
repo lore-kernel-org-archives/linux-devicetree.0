@@ -2,192 +2,177 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D248C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A60C3F2D3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167E0246AF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2A2222C2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T85BmpDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgB1Smz (ORCPT
+        id S1726867AbgB1TRx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:42:55 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:44760 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1Smz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 13:42:55 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 2EED82004C;
-        Fri, 28 Feb 2020 19:42:44 +0100 (CET)
-Date:   Fri, 28 Feb 2020 19:42:42 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT
- Schema
-Message-ID: <20200228184242.GA20089@ravnborg.org>
-References: <cover.1582913973.git.hns@goldelico.com>
- <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
+        Fri, 28 Feb 2020 14:17:53 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:46482 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgB1TRw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 14:17:52 -0500
+Received: by mail-ua1-f68.google.com with SMTP id l6so1365790uap.13
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 11:17:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uXA3/+C+Ws03rM5oecAfvZ0EjvjFdg2ZbM6QXJtOnis=;
+        b=T85BmpDrleLyl915HxeMadTD8HviR0L4YI8g1TPE3bzM0UctdJVLSN9P2/laHAAMSR
+         upFTHz+wPJzr7i4Kmsk87YXVm3GIj8ZRb29Jod2t6WqHxNhpchtwJDD3oQSj5yOOZ+VA
+         0xFJMmVLfXQegbcviPjOWZJAOHv/hAvB7tfno8C6Cc4qnuJG4rnyd7SewPIMeLg5qfTP
+         0iOb2BIh6w+DBm+BgJgnPIbzYb6W1N0uSTX0wHehFWdXEmViuSrDILQJS2dFGSvWI7n+
+         9QAM8+Tr/LSd7aW7pyGeSy14nQvI3fNhAz79HVyqyE4Y+nSqVU7aqfQq2cgQ04SgFn1n
+         sI3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uXA3/+C+Ws03rM5oecAfvZ0EjvjFdg2ZbM6QXJtOnis=;
+        b=ecRBDLJjp8AN+DLxENaLwHzDfry+VDs1rVCaEV3MIDF55DR+2kvOa+6lmP1wBQJc3y
+         NIEjXE4CvPoKfYLNewjPWoC8zjh/uk7kF3CFbHaH8/1kP0ICLU1pTf2YCSk97ZNkqChK
+         xD/OiS/vKxKtRFm/j75qpKQbub/e1pUt01vjRSsulEkh2EPUoP8R7w46yqOjCh9NABXx
+         yGn3/Dqi01zRzox37c/74C2nFfjfgli3Cah70AuR6MKb7XTI5DgD7bxTz5B3Tc5nWW0l
+         VZnJymj2bWInxKQ/npk+VI9KVmS1jSvG46F6Y+JUu8qrS4yDroVud0xr9QsVcVLLCDMH
+         QdZQ==
+X-Gm-Message-State: ANhLgQ0ufvD596VQ0WvwqIUSEMAiKOqyt07ydwo3vZCzmyxm2hELlo73
+        V8St6z02uWbGPGQwJEqH8v2RAa6zhkwaVdf34kKq3A==
+X-Google-Smtp-Source: ADFU+vvsbZIc5VB+r9XiljUrppstnkF/gEQRydJ0xpNF0569jfMXKelO0dOU5dM371tMVLG+h8JPKHod/4zNraTMhww=
+X-Received: by 2002:a9f:36ca:: with SMTP id p68mr2882516uap.112.1582917469575;
+ Fri, 28 Feb 2020 11:17:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=r_1tXGB3AAAA:8 a=ztCEdXhiAAAA:8 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8
-        a=pSfg_kgG_YkFMEKRir4A:9 a=qn4TxXM_sh0ilUaX:21 a=kcv_VjDv9XC6Jkun:21
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=t8nPyN_e6usw4ciXM-Pk:22
-        a=nCm3ceeH17rKjHWsMeRo:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+References: <20200224021029.142701-1-adelva@google.com> <20200224021029.142701-3-adelva@google.com>
+ <20200227232253.GA5966@bogus>
+In-Reply-To: <20200227232253.GA5966@bogus>
+From:   Alistair Delva <adelva@google.com>
+Date:   Fri, 28 Feb 2020 11:17:38 -0800
+Message-ID: <CANDihLFFUoauKxwcNDNE4=PuhzHSpB+FecxFJOn5H2GkreiYhw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] dt-bindings: pmem-region: Document memory-region
+To:     Rob Herring <robh@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Kenny Root <kroot@google.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Device Tree <devicetree@vger.kernel.org>,
+        linux-nvdimm@lists.01.org, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nikolaus.
+Hi Rob,
 
-On Fri, Feb 28, 2020 at 07:19:26PM +0100, H. Nikolaus Schaller wrote:
-> From: Sam Ravnborg <sam@ravnborg.org>
-> 
-> Add DT bindings for the LCD controller on the jz4780 SoC
-> Based on .txt binding from Zubair Lutfullah Kakakhel
-> 
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
+Thanks for reviewing.
 
-As this patch was sent to you and you forward it you need to
-testify that this is OK.
-To do so follow the rules of the Developemnt Certificate of Origin
-as can be found in SubmittingPatches.rst.
+On Thu, Feb 27, 2020 at 3:22 PM Rob Herring <robh@kernel.org> wrote:
+>> On Sun, Feb 23, 2020 at 06:10:29PM -0800, Alistair Delva wrote:
+> > From: Kenny Root <kroot@google.com>
+> >
+> > Add documentation and example for memory-region in pmem.
+> >
+> > Signed-off-by: Kenny Root <kroot@google.com>
+> > Signed-off-by: Alistair Delva <adelva@google.com>
+> > Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Vishal Verma <vishal.l.verma@intel.com>
+> > Cc: Dave Jiang <dave.jiang@intel.com>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-nvdimm@lists.01.org
+> > Cc: kernel-team@android.com
+> > ---
+> > [v3: adelva: remove duplicate "From:"]
+> >  .../devicetree/bindings/pmem/pmem-region.txt  | 29 +++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> > index 5cfa4f016a00..0ec87bd034e0 100644
+> > --- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> > +++ b/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> > @@ -29,6 +29,18 @@ Required properties:
+> >               in a separate device node. Having multiple address ranges in a
+> >               node implies no special relationship between the two ranges.
+> >
+> > +             This property may be replaced or supplemented with a
+> > +             memory-region property. Only one of reg or memory-region
+> > +             properties is required.
+> > +
+> > +     - memory-region:
+> > +             Reference to the reserved memory node. The reserved memory
+> > +             node should be defined as per the bindings in
+> > +             reserved-memory.txt
+>
+> Though we've never enforced it, but /reserved-memory should be within
+> the bounds of /memory node(s). Is that the intent here? If so, how does
+> that work? Wouldn't all the memory be persistent then? Or some other
+> system processor is preserving the contents?
 
-In other words - you need to add your Signed-off-by: xxx <mail>
-to the patch.
-In the end we want to be able to see the patch the patch has taken
-reading the Signed-off-by: lines from top to bottom.
+On the systems we're working with, the RAM remains refreshed across
+reboots, but the contents of RAM could be changed by something outside
+of Linux (i.e. the bootloader). By reserving this region in DT for
+pmem we are saying "this is persistent like the rest of RAM on this
+device, but it is also not going to be touched by anything besides
+this Linux driver".
 
-Please check other patches in this series for the same issue.
+> > +
+> > +             This property may be replaced or supplemented with a reg
+> > +             property. Only one of reg or memory-region is required.
+> > +
+> >  Optional properties:
+> >       - Any relevant NUMA assocativity properties for the target platform.
+> >
+> > @@ -63,3 +75,20 @@ Examples:
+> >               volatile;
+> >       };
+> >
+> > +
+> > +     /*
+> > +      * This example uses a reserved-memory entry instead of
+> > +      * specifying the memory region directly in the node.
+> > +      */
+> > +
+> > +     reserved-memory {
+> > +             pmem_1: pmem@5000 {
+> > +                     no-map;
+>
+> Just add 'compatible = "pmem-region";' here and be done with it. Why add
+> a layer of indirection?
 
-	Sam
+Sure, I'll do that..
 
-> ---
->  .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
-> new file mode 100644
-> index 000000000000..c71415a3a342
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-lcd.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Ingenic JZ4780 LCD Controller
-> +
-> +maintainers:
-> +  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +
-> +description: |
-> +  LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: ingenic,jz4780-lcd
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: the address & size of the LCD controller registers
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: Specifies the interrupt provided by parent
-> +
-> +  clocks:
-> +    maxItems: 2
-> +    description: Clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK
-> +
-> +  clock-names:
-> +    items:
-> +      - const: lcd_clk
-> +      - const: lcd_pixclk
-> +
-> +  port:
-> +    type: object
-> +    description: |
-> +      A port node with endpoint definitions as defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +required:
-> +    - compatible
-> +    - reg
-> +    - interrupts
-> +    - clocks
-> +    - clock-names
-> +    - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/jz4780-cgu.h>
-> +    lcd: jz4780-lcdk@0x13050000 {
-> +        compatible = "ingenic,jz4780-lcd";
-> +        reg = <0x13050000 0x1800>;
-> +
-> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
-> +        clock-names = "lcd_clk", "lcd_pixclk";
-> +
-> +        interrupt-parent = <&intc>;
-> +        interrupts = <31>;
-> +
-> +        jz4780_lcd_out: port {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            jz4780_out_hdmi: endpoint@0 {
-> +                reg = <0>;
-> +                remote-endpoint = <&hdmi_in_lcd>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.23.0
+> > +                     reg = <0x00005000 0x00001000>;
+> > +             };
+> > +     };
+> > +
+> > +     pmem@1 {
+>
+> No 'reg', so shouldn't have a unit-address here.
+
+..then I guess I can just delete this. v4 incoming.
+
+
+> > +             compatible = "pmem-region";
+> > +             memory-region = <&pmem_1>;
+> > +     };
+> > --
+> > 2.25.0.265.gbab2e86ba0-goog
+> >
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
