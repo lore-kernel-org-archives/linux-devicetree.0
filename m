@@ -2,181 +2,194 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469B5C3F2CF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E35C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AEB324695
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7E4246A8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fAnjWe3V"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jE67j5cc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbgB1J3l (ORCPT
+        id S1726525AbgB1Jbd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:29:41 -0500
-Received: from mail-vi1eur05on2067.outbound.protection.outlook.com ([40.107.21.67]:23393
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726490AbgB1J3l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:29:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E5fCujb/P4lsfqiuMf8Emk8OcKq9cX23AwivbAsmiipPL1LvUEBzFndwCHFPSDcLSPwvX5ke/NPkl+PJub/0KWa2jGjWyHSNir3zi9Yo0AfmAyKlj50yHgYOaZtSebrOUPxQeSq0FSNyScq4zBcbt7iuSsCiJNiq1TqOPk/IbIwd8Ak8MynjTPWYq1em3o4O9NVKoLR+XbHbXzFZKiihYNbBFxkP3xIcLeRbgQPRmLOAYiM0bvp41qXnBQEL47lY259ECswpVdyzXkHObhjEPmFhULoJwj1xz2PUk80viUIKaoQd6y2jG2Dwvnn4jrBXiDukD7Qoe4sra7199Gn04w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/ZS6HYc9dPci1LW/QecOhlynDdsO3psOg0zqECWWyo=;
- b=P4mdq9D85CJgZF4PINv5kBab1K+sDrz+X12L4GNJYVDzEmgXljUzHb7seVSO3qKAH89QRLmizntTnprCoUjkd0kFmaRprdWXhBr99ia3BnfWkjpSMxcsjBB8zLl/J9dxhOJV0utUkSxttY4eldA5SDlqXlmNjYtft0JzBBY+OSa1v6E/e9UYPmW1JDfgrZwJYnxGYjxVuXW5qtHtMy10pyY8ZnDtrMfjCttrzz+S17LwNUDnXSxH7Ln5aavd6tT4kpSGHaQgJ1xyZ9/8TOGj6ENqJPYeU3UQ/s8pd3UsMdtKO306PoqS4DLTkVhPlW2OatZlapwEGGCbLzcxwzLiaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/ZS6HYc9dPci1LW/QecOhlynDdsO3psOg0zqECWWyo=;
- b=fAnjWe3V0plA0M1eA2cqsJIQ4OtJcdt1aRcVDGGhEzwpQTkmaZhpcOII52bChHYOAVtg5CtkSXeylAftZE2bbVRD5P1l0inXdSexHyidEpCHXkFanJd+CZHomAiPFS43+w1qBEh20kMvLTd8d3fFQKOqqwCxjvDtkcXKkdwxinA=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB3246.eurprd04.prod.outlook.com (10.170.229.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.22; Fri, 28 Feb 2020 09:29:36 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1%7]) with mapi id 15.20.2750.021; Fri, 28 Feb 2020
- 09:29:33 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "kishon@ti.com" <kishon@ti.com>,
+        Fri, 28 Feb 2020 04:31:33 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35669 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgB1Jbc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 04:31:32 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m3so2457184wmi.0
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 01:31:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MHeQm6U+o0608Xi2QEDKzTbxNSKLm6MuqMAztV8dmJM=;
+        b=jE67j5ccRqZv9eK3iRUZLVykttz9c5sI8MK/YsOKN3jPVJFZJhmO4HrvBYpDo76iM7
+         B5NhRsZHEeYebBhF7xDDNPfgZHWdQJFJeZyZlL+CrAtLT35iy5E0m46pahcfydTs03Tc
+         fsyLquzsE28rqLEUzgEECrvaySmdEb04RpbPt3DeB3FtQCzTdBS1Ve09Ja7U+XTXmDEl
+         3p0THzcCVczmCnPGDFHeqYSQXxkgcYKIDaFJpef3jx9PlM3jZIwXL3fR/uZ3MWisT0pk
+         cR9t/lYOussthGdnFjc9OnagjXXsLew9M6zM5HO15RX2Jknpkma5/9RJYyqFSScmftRi
+         ty0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MHeQm6U+o0608Xi2QEDKzTbxNSKLm6MuqMAztV8dmJM=;
+        b=S7Izry5mBri8pFWk+EaB+RmuBX55pUzGD9ZiKdS0YKgxH5nsAGyBI/c0BcG01n+ImH
+         heLlZ5ovoc3S65CzF+WR2tqOS8iBVP9aCsTs5TCko5h4XqX4sklAx6GfHAcyZl6yyzqe
+         SVRhk8iHrRhB27Xl3hsGrWY0kguFwXxdIoCCV/FAufEplRRwn5aUpIaT2UjPA+fElXWy
+         JpRmH8Fx7glLunH8ZHGxtZDVzGklYBq+R5Gw0ph8ldugjQOrJkfnNgZs4jnJSN4Zxbnu
+         jTwkE17EAWhpAirB8Kdb8vBEMNv9TbRVXVTMIohCw98iPAn8XtnpTubKOQZDfIERVtH7
+         Y+CA==
+X-Gm-Message-State: APjAAAUEL/I9v0knWC+wWDLY6djH95/Ty4pAWO79ghz1TU2+SdF7PO/q
+        0UeWWfZ0zrh18ewx/MZrlyb+BA==
+X-Google-Smtp-Source: APXvYqyF4k/gTiOodnjjGmlgUAFqePXdEZSWAR3mecnKr9zQIIfkcdyGRMU46SrUVXmpQYryG154Sw==
+X-Received: by 2002:a05:600c:2:: with SMTP id g2mr3921747wmc.18.1582882288774;
+        Fri, 28 Feb 2020 01:31:28 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9002:9a61:c019:3c99? ([2a01:e34:ed2f:f020:9002:9a61:c019:3c99])
+        by smtp.googlemail.com with ESMTPSA id q125sm1409867wme.19.2020.02.28.01.31.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 01:31:28 -0800 (PST)
+Subject: Re: [PATCH RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM
+ thermal monitoring unit
+To:     Anson Huang <anson.huang@nxp.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "aniljoy@cadence.com" <aniljoy@cadence.com>,
-        Jun Li <jun.li@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
-Thread-Topic: [PATCH 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
-Thread-Index: AQHV7TcYWgsnimYnvUK07Zx3ZoCe3agvRosAgAER7SA=
-Date:   Fri, 28 Feb 2020 09:29:32 +0000
-Message-ID: <VI1PR04MB5327992CC6BA891C199D39A08BE80@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <20200227062754.19131-1-peter.chen@nxp.com>
- <20200227062754.19131-2-peter.chen@nxp.com> <20200227170810.GA2318@bogus>
-In-Reply-To: <20200227170810.GA2318@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [222.65.251.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3524706a-9927-4a74-b978-08d7bc30b832
-x-ms-traffictypediagnostic: VI1PR04MB3246:|VI1PR04MB3246:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB324621C72CE1C376A638AFB68BE80@VI1PR04MB3246.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0327618309
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(366004)(39860400002)(199004)(189003)(478600001)(6916009)(81156014)(316002)(4326008)(7696005)(81166006)(54906003)(71200400001)(8676002)(55016002)(8936002)(44832011)(86362001)(2906002)(26005)(52536014)(186003)(5660300002)(33656002)(66446008)(9686003)(64756008)(66476007)(66946007)(76116006)(66556008)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3246;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZYIfTfWHDVkXa0/z6Gund1IFLdyX8/x8eHHtCVWKgQU7VoqZiSOaSGoOUuk8O2MPJ9N6xOLlFDoLRsTdMwF7uuHXT3+vq6QGpPjzxeurTsWBFghz23zd6Soiomjvu0HPpgoubFn/NdLMxkVFeOq4CvwL9g8M1YH/3/N+H01Of8oIqwO/5sDvaZ+/uXipNL3CJ2X0wFajy8xMCZph181xLZLvJ/htoOAu+4wpxhM5S9RKn86HEcMnYl1iGzi2MwgslsX4bPG14OlcO1f5s1xlczCrFF8WloO7ftVl/B/2xEi609tA8uWrSyG+2/o43WLPEn+QzBluorwzI/U3j8tgpgsAekXIg1qM9Jt+ZUBqYnOaVS1QvVp88rWV8MWlZZ/4ikujVQMtg5uM42JZoS6wvdNhAVXyRRi4qj3/hYPYKNJC9K1DzJivbpTzibjLgek1
-x-ms-exchange-antispam-messagedata: nD8eQaHimbBcSrgbvWSTQldHXumav1lHOEFeejs3PUgKuYX1gPHQ42jvszPJDkmPXSHI36ZyOyvJUZCP5oFWPq1aTfDa1PNMLP6t5aTPuBzxhefRjsl2UdkM38PanLZUXsGOS4fuIlx2Ly3y8YrbiQ==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1582186646-22096-1-git-send-email-Anson.Huang@nxp.com>
+ <1582186646-22096-2-git-send-email-Anson.Huang@nxp.com>
+ <f8dfdb39-14e5-4ee2-927a-fecbcd66c71e@linaro.org>
+ <DB3PR0402MB39163AE75E59613AB6B21575F5E80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <07994b0e-9735-2f3e-e5c3-a57e2344dbc0@linaro.org>
+Date:   Fri, 28 Feb 2020 10:31:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3524706a-9927-4a74-b978-08d7bc30b832
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2020 09:29:32.9839
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QGpN5P9ebLiXH6gSdqftB6k7OC6UDDpyJbrcO8+viNAsGKLNguGtxi6kzsb7/meUyoENclwsYs+A4KhGVHnuLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3246
+In-Reply-To: <DB3PR0402MB39163AE75E59613AB6B21575F5E80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-=20
-> >  .../bindings/phy/cdns,salvo-phy.yaml          | 47 +++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-> >
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> warning: no schema found in file:
-> Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-> /builds/robherring/linux-dt-
-> review/Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml: ignorin=
-g, error
-> parsing file
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:=
-21.16-
-> 37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must=
- be
-> at root node
-> Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml:  while scannin=
-g a
-> block scalar
->   in "<unicode string>", line 39, column 5 found a tab character where an=
- indentation
-> space is expected
->   in "<unicode string>", line 41, column 1
-> Documentation/devicetree/bindings/Makefile:12: recipe for target
-> 'Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.dts' failed
-> make[1]: *** [Documentation/devicetree/bindings/phy/cdns,salvo-phy.exampl=
-e.dts]
-> Error 1
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->=20
-Hi Rob,
+On 28/02/2020 02:12, Anson Huang wrote:
+> Hi, Daniel
 
-After changing some format, I still got below errors, would you please poin=
-t to
-what's wrong with line 40, column 12? Thanks.
+[ ... ]
 
-=A031 required:
-=A032 =A0 - compatible
-=A033 =A0 - reg
-=A034 =A0 - "#phy-cells"
-=A035
-=A036 additionalProperties: false
-=A037
-=A038 examples:
-=A039 =A0 =A0 -|
-=A040 =A0 =A0 usb3phy: usb3-phy {
-=A041 =A0 =A0 =A0 =A0 compatible =3D "nxp,salvo-phy";
-=A042 =A0 =A0 =A0 =A0 reg =3D <0x5B160000 0x40000>;
-=A043 =A0 =A0 =A0 =A0 clocks =3D <&usb3_lpcg 4>;
-=A044 =A0 =A0 =A0 =A0 clock-names =3D "salvo_phy_clk";
-=A045 =A0 =A0 =A0 =A0 power-domains =3D <&pd IMX_SC_R_USB_2_PHY>;
-=A046 =A0 =A0 =A0 =A0 #phy-cells =3D <0>;
-=A047 =A0 =A0 };
+>>> +static int tmu_get_temp(void *data, int *temp) {
+>>> +	struct imx8mm_tmu *tmu = data;
+>>> +	u32 val;
+>>> +
+>>> +	/* the temp sensor need about 1ms to finish the measurement */
+>>> +	usleep_range(1000, 2000);
+>>
+>> Why do yo need to force a delay here? If the sensor can not be read more
+>> than one time every 1ms, then specify that in the DT switching the polling to
+>> the right value, no?
+> 
+> The polling time(2 seconds) is OK for this case, adding this sleep is to prevent user from reading
+> temperature from sysfs interface very frequently like less than 1ms, does it make sense? 
 
+Not really, well except if the user is able to press the keys in less
+than 1ms :)
 
-make[1]: Entering directory '/home/b29397/work/projects/upstream/usb/outout=
-/imx_v8'
-=A0 CHKDT =A0 Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-/home/b29397/work/projects/upstream/usb/Documentation/devicetree/bindings/p=
-hy/cdns,salvo-phy.yaml: =A0mapping values are not allowed in this context
-=A0 in "<unicode string>", line 40, column 12
-/home/b29397/work/projects/upstream/usb/Documentation/devicetree/bindings/M=
-akefile:12: recipe for target 'Documentation/devicetree/bindings/phy/cdns,s=
-alvo-phy.example.dts' failed
-make[2]: *** [Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.=
-dts] Error 1
-/home/b29397/work/projects/upstream/usb/Makefile:1262: recipe for target 'd=
-t_binding_check' failed
-make[1]: *** [dt_binding_check] Error 2
-make[1]: Leaving directory '/home/b29397/work/projects/upstream/usb/outout/=
-imx_v8'
-Makefile:179: recipe for target 'sub-make' failed
-make: *** [sub-make] Error 2
+If the userspace writes a polling script reading the temperature in a
+busy loop, there is nothing we can do against silly programming :/
 
-Peter
+However, it could interesting to add a <min polling interval> in the
+thermal structure and handle that from the core framework by caching the
+last value and return it in case get_temp is called too fast.
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
