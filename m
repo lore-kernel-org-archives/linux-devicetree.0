@@ -2,47 +2,33 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8B2C3F2D3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D248C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589CE246B0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ePUnD406"
+	by mail.kernel.org (Postfix) with ESMTP id 167E0246AF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgB1SUN (ORCPT
+        id S1726642AbgB1Smz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:20:13 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.179]:32065 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1STo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 13:19:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582913981;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0JJycjUZuE0K+moN1m3lrjoPSKtB8+IZld+xTNxi9ls=;
-        b=ePUnD406nrZs3CRmztnFWTlTj1m14Vino2r5ic9e1paiQJ8SE05Fbh1l4hhGnzKTZM
-        JacyBdtWd6E6cYpFcKB25PGu5RjtEu4Y13xpxsvcc6VuzPGOKP/DXxyfdBVe3Z60NWSy
-        rhVUKm3Y9MGPxf/vQoR8Yeusan8b476ZzxGhlvYDL0mGJT6QIEGoBF7N4x6UEorQB78o
-        GMK/oO5V4Rx0bwQs2HPOhvHlvUL6st+w6/bd7zZ2PXhdYgboi3dmtHA3L1AnZum13fu4
-        AcE/V6QnNQY2aD26+Y+ZdiDjJOZycqPman9JMPUQq9hZZUCQ6xo7DcMJLcF4aEm+vRuH
-        PdsQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SIJd2Lt
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 28 Feb 2020 19:19:39 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
+        Fri, 28 Feb 2020 13:42:55 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:44760 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1Smz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 13:42:55 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 2EED82004C;
+        Fri, 28 Feb 2020 19:42:44 +0100 (CET)
+Date:   Fri, 28 Feb 2020 19:42:42 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -55,125 +41,153 @@ To:     Paul Cercueil <paul@crapouillou.net>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [RFC v2 7/8] MIPS: DTS: CI20: add HDMI setup
-Date:   Fri, 28 Feb 2020 19:19:32 +0100
-Message-Id: <d28386df7983b6ecab5cceb3580fc3bd6508d3ad.1582913973.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1582913973.git.hns@goldelico.com>
+        kernel@pyra-handheld.com,
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT
+ Schema
+Message-ID: <20200228184242.GA20089@ravnborg.org>
 References: <cover.1582913973.git.hns@goldelico.com>
+ <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=r_1tXGB3AAAA:8 a=ztCEdXhiAAAA:8 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8
+        a=pSfg_kgG_YkFMEKRir4A:9 a=qn4TxXM_sh0ilUaX:21 a=kcv_VjDv9XC6Jkun:21
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=t8nPyN_e6usw4ciXM-Pk:22
+        a=nCm3ceeH17rKjHWsMeRo:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Paul Boddie <paul@boddie.org.uk>
+Hi Nikolaus.
 
-We need to hook up
-* HDMI power regulator
-* HDMI connector
-* DDC pinmux
-* HDMI and LCD endpoint connections
+On Fri, Feb 28, 2020 at 07:19:26PM +0100, H. Nikolaus Schaller wrote:
+> From: Sam Ravnborg <sam@ravnborg.org>
+> 
+> Add DT bindings for the LCD controller on the jz4780 SoC
+> Based on .txt binding from Zubair Lutfullah Kakakhel
+> 
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> Cc: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
 
-Signed-off-by: Paul Boddie <paul@boddie.org.uk>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/mips/boot/dts/ingenic/ci20.dts | 64 +++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+As this patch was sent to you and you forward it you need to
+testify that this is OK.
+To do so follow the rules of the Developemnt Certificate of Origin
+as can be found in SubmittingPatches.rst.
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 37b93166bf22..efa8270afbba 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -60,6 +60,28 @@
- 		enable-active-high;
- 	};
- 
-+	hdmi_power: fixedregulator@2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "hdmi_power";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpa 25 GPIO_ACTIVE_LOW>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	hdmi_out: connector {
-+		compatible = "hdmi-connector";
-+		label = "HDMI OUT";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&dw_hdmi_out>;
-+			};
-+		};
-+	};
-+
- 	wlan0_power: fixedregulator@1 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "wlan0_power";
-@@ -423,6 +445,12 @@
- 		bias-disable;
- 	};
- 
-+	pins_hdmi_ddc: hdmi_ddc {
-+		function = "hdmi-ddc";
-+		groups = "hdmi-ddc";
-+		bias-disable;
-+	};
-+
- 	pins_nemc: nemc {
- 		function = "nemc";
- 		groups = "nemc-data", "nemc-cle-ale", "nemc-rd-we", "nemc-frd-fwe";
-@@ -459,3 +487,39 @@
- 	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
- 	assigned-clock-rates = <3000000>, <3000000>;
- };
-+
-+&hdmi {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_hdmi_ddc>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			dw_hdmi_in: endpoint {
-+				remote-endpoint = <&lcd_out>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			dw_hdmi_out: endpoint {
-+				remote-endpoint = <&hdmi_con>;
-+			};
-+		};
-+	};
-+};
-+
-+&lcd {
-+	status = "okay";
-+
-+	port {
-+		lcd_out: endpoint {
-+			remote-endpoint = <&dw_hdmi_in>;
-+		};
-+	};
-+};
--- 
-2.23.0
+In other words - you need to add your Signed-off-by: xxx <mail>
+to the patch.
+In the end we want to be able to see the patch the patch has taken
+reading the Signed-off-by: lines from top to bottom.
 
+Please check other patches in this series for the same issue.
+
+	Sam
+
+> ---
+>  .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+> new file mode 100644
+> index 000000000000..c71415a3a342
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-lcd.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Ingenic JZ4780 LCD Controller
+> +
+> +maintainers:
+> +  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> +  - H. Nikolaus Schaller <hns@goldelico.com>
+> +
+> +description: |
+> +  LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: ingenic,jz4780-lcd
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: the address & size of the LCD controller registers
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Specifies the interrupt provided by parent
+> +
+> +  clocks:
+> +    maxItems: 2
+> +    description: Clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK
+> +
+> +  clock-names:
+> +    items:
+> +      - const: lcd_clk
+> +      - const: lcd_pixclk
+> +
+> +  port:
+> +    type: object
+> +    description: |
+> +      A port node with endpoint definitions as defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +required:
+> +    - compatible
+> +    - reg
+> +    - interrupts
+> +    - clocks
+> +    - clock-names
+> +    - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4780-cgu.h>
+> +    lcd: jz4780-lcdk@0x13050000 {
+> +        compatible = "ingenic,jz4780-lcd";
+> +        reg = <0x13050000 0x1800>;
+> +
+> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
+> +        clock-names = "lcd_clk", "lcd_pixclk";
+> +
+> +        interrupt-parent = <&intc>;
+> +        interrupts = <31>;
+> +
+> +        jz4780_lcd_out: port {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            jz4780_out_hdmi: endpoint@0 {
+> +                reg = <0>;
+> +                remote-endpoint = <&hdmi_in_lcd>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.23.0
