@@ -2,107 +2,122 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E3FC3F2CF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFD6C3F2CF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72352246A3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 08:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA4A246AA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:19:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="cYfmVt6G"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sObfravm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgB1Izb (ORCPT
+        id S1726378AbgB1JTw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:55:31 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:45719 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgB1Iza (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 03:55:30 -0500
-Received: by mail-ua1-f68.google.com with SMTP id k24so686915uaq.12
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 00:55:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yG3mf6LB9a/9xK+auG2ENhJV3nByoLN3L6ABYDFphIE=;
-        b=cYfmVt6G2PkgbuStmNktcBKViFfntND+jPOtOsqUXukLVEBRGX4y1OUq+glYisQEDf
-         sXKxSiTKnmkLeM+yBhuUBoA3/fqRn08UAE7ESPLPlx0LuLvIbP2DYluC5ksh539ydIpl
-         WRBNSpsEJU96iOGSbtD/ZtYNLvZ6mWnP5iRl2GUXKoL47Ju6blYAx4snrQJc5hmAcwjn
-         N687kT6PtdGloHVsu4UruYooQAfp4T9e1/BNg7K4ALDDWCVedUjFiRsCXE4wcWexzKS5
-         lwP91z0KhiopN2re9zUX6bTQy5emckn1llNCG2yFSn/SDsYQQIz0W35bHdhApWTUmtxQ
-         tDlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yG3mf6LB9a/9xK+auG2ENhJV3nByoLN3L6ABYDFphIE=;
-        b=gaqjMfJ4ynVS/b9oUk5YRoFyFHC6BiTeWvXzVAl+UKoPtuqGECaXt0LeXIYKzeRHAA
-         E7qOgU3Ny/uNbr93IJw7X4DRPcu+sOr9nfNaxdIflVYgQT9FLXuKKtoluwC/ype4Yz+T
-         5J0mcPxh2K1N5OITsg75E1oxwIxdKjTvXydQWwZtJuT4skVqUGaJW+lu/QMjJXdMk8Ef
-         HVu5D7Fh7vVs+546ZFdus1Vq9eTH8Ix7KYF3Q0hG+p6+AOSIT/Pw1+1GX7fQE6G/qIdK
-         /0FXjiZAdBSp2WC6GYGk4/tNahLw/q7JdeBsxVW8ml/5/KBAjaTQJTc/8xTMcECMQLs1
-         qo6Q==
-X-Gm-Message-State: ANhLgQ3+FtqXnmDY36JpkODb3q5ZGIldvxDhsa5+nws+He+2DXAOCZKU
-        x6EqJ1G67Ld37+dYPLb4JFf+0oNTdpauDicu4LGgBg==
-X-Google-Smtp-Source: ADFU+vsLztMWpfaKINtTsKF68z+sMLM4PaaIv6oFTVvgFaKU7aareFJM7t6ZDu97PwZJduqdizT78uxAIc6c2M5WIBk=
-X-Received: by 2002:ab0:2758:: with SMTP id c24mr501689uap.94.1582880129628;
- Fri, 28 Feb 2020 00:55:29 -0800 (PST)
-MIME-Version: 1.0
-References: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
- <1582646384-1458-4-git-send-email-okukatla@codeaurora.org> <20200227171226.GJ24720@google.com>
-In-Reply-To: <20200227171226.GJ24720@google.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 28 Feb 2020 14:25:18 +0530
-Message-ID: <CAHLCerPMmEQCTU1+K6p01o+PJ1BAf2244Dze2gVLjLQ+cUxpAQ@mail.gmail.com>
-Subject: Re: [V4, 3/3] arm64: dts: sc7180: Add interconnect provider DT nodes
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Odelu Kukatla <okukatla@codeaurora.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        daidavid1@codeaurora.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        evgreen@google.com, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>, seansw@qti.qualcomm.com,
-        Alex Elder <elder@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
+        Fri, 28 Feb 2020 04:19:52 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:65069 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726207AbgB1JTw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 04:19:52 -0500
+X-UUID: caab609a429849368284e83c25abd92c-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=6zeC4yb1VQBu7ApncTTy8tf7CnDnABwjHUo57+LSsO8=;
+        b=sObfravm74/bA6AytUYIAQBeFbeGeZ/0otXn+fYlZbbNA/h7vjLnFFHE7HrlJws4/KInkSIrQHMWoxXX7xuCHPJ/FPk09vAQxu/YO3qUxNp07A16o/21nq2HBHHMcmiUoLhC08rKtTmYQ++TTeaB44x2pmPVg4JXFfha1GoyLPA=;
+X-UUID: caab609a429849368284e83c25abd92c-20200228
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1234426427; Fri, 28 Feb 2020 17:19:47 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 17:18:48 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 17:19:44 +0800
+Message-ID: <1582881585.22475.0.camel@mtksdaap41>
+Subject: Re: [PATCH v10 2/5] dt-bindings: mediatek: Update mmsys binding to
+ reflect it is a system controller
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <ulrich.hecht+renesas@gmail.com>,
+        <laurent.pinchart@ideasonboard.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        <rdunlap@infradead.org>, <dri-devel@lists.freedesktop.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        "Seiya Wang" <seiya.wang@mediatek.com>,
+        <linux-clk@vger.kernel.org>,
+        "Collabora Kernel ML" <kernel@collabora.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>, <wens@csie.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <sean.wang@mediatek.com>, <frank-w@public-files.de>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>, <hsinyi@chromium.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <matthias.bgg@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 28 Feb 2020 17:19:45 +0800
+In-Reply-To: <20200227180858.1514157-3-enric.balletbo@collabora.com>
+References: <20200227180858.1514157-1-enric.balletbo@collabora.com>
+         <20200227180858.1514157-3-enric.balletbo@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: FC89D009C6FEBE11B57038010837F5A87B7460971BF352976EDF9382E63247B12000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 10:42 PM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> On Tue, Feb 25, 2020 at 09:29:44PM +0530, Odelu Kukatla wrote:
-> > Add the DT nodes for the network-on-chip interconnect buses found
-> > on sc7180-based platforms.
-> >
-> > Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 95 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 95 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > index cc5a94f..3e28f34 100644
-> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->
-> v2 had:
->
-> +#include <dt-bindings/interconnect/qcom,sc7180.h>
->
-> I think we still want that, otherwise some patch that adds an
-> interconnect configuration for SC7180 needs to add it (see also
-> https://patchwork.kernel.org/patch/11386485/#23187545)
+SGksIEVucmljOg0KDQpPbiBUaHUsIDIwMjAtMDItMjcgYXQgMTk6MDggKzAxMDAsIEVucmljIEJh
+bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IFRoZSBtbXN5cyBzeXN0ZW0gY29udHJvbGxlciBpcyBu
+b3Qgb25seSBhIHB1cmUgY2xvY2sgY29udHJvbGxlciwgc28NCj4gdXBkYXRlIHRoZSBiaW5kaW5n
+IGRvY3VtZW50YXRpb24gdG8gcmVmbGVjdCB0aGF0IGFwYXJ0IGZyb20gcHJvdmlkaW5nDQo+IGNs
+b2NrcywgaXQgYWxzbyBwcm92aWRlcyByb3V0aW5nIGFuZCBtaXNjZWxsYW5lb3VzIGNvbnRyb2wg
+cmVnaXN0ZXJzLg0KPiANCg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+
+DQoNCj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSA8ZW5yaWMuYmFsbGV0
+Ym9AY29sbGFib3JhLmNvbT4NCj4gLS0tDQo+IA0KPiBDaGFuZ2VzIGluIHYxMDoNCj4gLSBVcGRh
+dGUgdGhlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIG1tc3lzIHN5c3RlbSBjb250cm9s
+bGVyLg0KPiANCj4gQ2hhbmdlcyBpbiB2OTogTm9uZQ0KPiBDaGFuZ2VzIGluIHY4OiBOb25lDQo+
+IENoYW5nZXMgaW4gdjc6IE5vbmUNCj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
+bWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0ICAgIHwgNyArKysrLS0tDQo+ICAxIGZpbGUgY2hh
+bmdlZCwgNCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWss
+bW1zeXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRl
+ay9tZWRpYXRlayxtbXN5cy50eHQNCj4gaW5kZXggMzAxZWVmYmUxNjE4Li44ZDZhOWQ5OGU3YTYg
+MTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVk
+aWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQo+IEBAIC0xLDcgKzEs
+OCBAQA0KPiAgTWVkaWF0ZWsgbW1zeXMgY29udHJvbGxlcg0KPiAgPT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQ0KPiAgDQo+IC1UaGUgTWVkaWF0ZWsgbW1zeXMgY29udHJvbGxlciBwcm92aWRl
+cyB2YXJpb3VzIGNsb2NrcyB0byB0aGUgc3lzdGVtLg0KPiArVGhlIE1lZGlhdGVrIG1tc3lzIHN5
+c3RlbSBjb250cm9sbGVyIHByb3ZpZGVzIGNsb2NrIGNvbnRyb2wsIHJvdXRpbmcgY29udHJvbCwN
+Cj4gK2FuZCBtaXNjZWxsYW5lb3VzIGNvbnRyb2wgaW4gbW1zeXMgcGFydGl0aW9uLg0KPiAgDQo+
+ICBSZXF1aXJlZCBQcm9wZXJ0aWVzOg0KPiAgDQo+IEBAIC0xNSwxMyArMTYsMTMgQEAgUmVxdWly
+ZWQgUHJvcGVydGllczoNCj4gIAktICJtZWRpYXRlayxtdDgxODMtbW1zeXMiLCAic3lzY29uIg0K
+PiAgLSAjY2xvY2stY2VsbHM6IE11c3QgYmUgMQ0KPiAgDQo+IC1UaGUgbW1zeXMgY29udHJvbGxl
+ciB1c2VzIHRoZSBjb21tb24gY2xrIGJpbmRpbmcgZnJvbQ0KPiArRm9yIHRoZSBjbG9jayBjb250
+cm9sLCB0aGUgbW1zeXMgY29udHJvbGxlciB1c2VzIHRoZSBjb21tb24gY2xrIGJpbmRpbmcgZnJv
+bQ0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRp
+bmdzLnR4dA0KPiAgVGhlIGF2YWlsYWJsZSBjbG9ja3MgYXJlIGRlZmluZWQgaW4gZHQtYmluZGlu
+Z3MvY2xvY2svbXQqLWNsay5oLg0KPiAgDQo+ICBFeGFtcGxlOg0KPiAgDQo+IC1tbXN5czogY2xv
+Y2stY29udHJvbGxlckAxNDAwMDAwMCB7DQo+ICttbXN5czogc3lzY29uQDE0MDAwMDAwIHsNCj4g
+IAljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1tbXN5cyIsICJzeXNjb24iOw0KPiAgCXJl
+ZyA9IDwwIDB4MTQwMDAwMDAgMCAweDEwMDA+Ow0KPiAgCSNjbG9jay1jZWxscyA9IDwxPjsNCg0K
 
-Thanks Matthias. That fixed the build.
