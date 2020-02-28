@@ -2,122 +2,110 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFD6C3F2CF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AA9C3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA4A246AA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sObfravm"
+	by mail.kernel.org (Postfix) with ESMTP id 03999246A8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:21:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgB1JTw (ORCPT
+        id S1726603AbgB1JVD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:19:52 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:65069 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726207AbgB1JTw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 04:19:52 -0500
-X-UUID: caab609a429849368284e83c25abd92c-20200228
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=6zeC4yb1VQBu7ApncTTy8tf7CnDnABwjHUo57+LSsO8=;
-        b=sObfravm74/bA6AytUYIAQBeFbeGeZ/0otXn+fYlZbbNA/h7vjLnFFHE7HrlJws4/KInkSIrQHMWoxXX7xuCHPJ/FPk09vAQxu/YO3qUxNp07A16o/21nq2HBHHMcmiUoLhC08rKtTmYQ++TTeaB44x2pmPVg4JXFfha1GoyLPA=;
-X-UUID: caab609a429849368284e83c25abd92c-20200228
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1234426427; Fri, 28 Feb 2020 17:19:47 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 28 Feb 2020 17:18:48 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Feb 2020 17:19:44 +0800
-Message-ID: <1582881585.22475.0.camel@mtksdaap41>
-Subject: Re: [PATCH v10 2/5] dt-bindings: mediatek: Update mmsys binding to
- reflect it is a system controller
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        <rdunlap@infradead.org>, <dri-devel@lists.freedesktop.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        "Seiya Wang" <seiya.wang@mediatek.com>,
-        <linux-clk@vger.kernel.org>,
-        "Collabora Kernel ML" <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, <wens@csie.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sean.wang@mediatek.com>, <frank-w@public-files.de>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, <hsinyi@chromium.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <matthias.bgg@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 28 Feb 2020 17:19:45 +0800
-In-Reply-To: <20200227180858.1514157-3-enric.balletbo@collabora.com>
-References: <20200227180858.1514157-1-enric.balletbo@collabora.com>
-         <20200227180858.1514157-3-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 28 Feb 2020 04:21:03 -0500
+Received: from mga17.intel.com ([192.55.52.151]:48110 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgB1JVD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 04:21:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 01:21:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,495,1574150400"; 
+   d="scan'208";a="232182809"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 28 Feb 2020 01:21:02 -0800
+Received: from [10.226.39.43] (unknown [10.226.39.43])
+        by linux.intel.com (Postfix) with ESMTP id 70C5A5805EA;
+        Fri, 28 Feb 2020 01:20:59 -0800 (PST)
+Subject: Re: [PATCH v3 3/3] phy: intel: Add driver support for Combophy
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh@kernel.org>, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+References: <cover.1582709320.git.eswara.kota@linux.intel.com>
+ <48dbbe705a1f22fb9e088827ca0be149e8fbcd85.1582709320.git.eswara.kota@linux.intel.com>
+ <20200226144147.GQ10400@smile.fi.intel.com>
+ <371e50f1-cab6-56f4-d12d-371d1b1f9c67@linux.intel.com>
+ <CAHp75VfJHvtLBueHJnU6xEuSrehiXH4Pvj880TqpyDBBnx1RuQ@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <8627eb55-e590-4295-a528-9d091fdbb4f1@linux.intel.com>
+Date:   Fri, 28 Feb 2020 17:20:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: FC89D009C6FEBE11B57038010837F5A87B7460971BF352976EDF9382E63247B12000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAHp75VfJHvtLBueHJnU6xEuSrehiXH4Pvj880TqpyDBBnx1RuQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIEVucmljOg0KDQpPbiBUaHUsIDIwMjAtMDItMjcgYXQgMTk6MDggKzAxMDAsIEVucmljIEJh
-bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IFRoZSBtbXN5cyBzeXN0ZW0gY29udHJvbGxlciBpcyBu
-b3Qgb25seSBhIHB1cmUgY2xvY2sgY29udHJvbGxlciwgc28NCj4gdXBkYXRlIHRoZSBiaW5kaW5n
-IGRvY3VtZW50YXRpb24gdG8gcmVmbGVjdCB0aGF0IGFwYXJ0IGZyb20gcHJvdmlkaW5nDQo+IGNs
-b2NrcywgaXQgYWxzbyBwcm92aWRlcyByb3V0aW5nIGFuZCBtaXNjZWxsYW5lb3VzIGNvbnRyb2wg
-cmVnaXN0ZXJzLg0KPiANCg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+
-DQoNCj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSA8ZW5yaWMuYmFsbGV0
-Ym9AY29sbGFib3JhLmNvbT4NCj4gLS0tDQo+IA0KPiBDaGFuZ2VzIGluIHYxMDoNCj4gLSBVcGRh
-dGUgdGhlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIG1tc3lzIHN5c3RlbSBjb250cm9s
-bGVyLg0KPiANCj4gQ2hhbmdlcyBpbiB2OTogTm9uZQ0KPiBDaGFuZ2VzIGluIHY4OiBOb25lDQo+
-IENoYW5nZXMgaW4gdjc6IE5vbmUNCj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
-bWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0ICAgIHwgNyArKysrLS0tDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgNCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWss
-bW1zeXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRl
-ay9tZWRpYXRlayxtbXN5cy50eHQNCj4gaW5kZXggMzAxZWVmYmUxNjE4Li44ZDZhOWQ5OGU3YTYg
-MTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVk
-aWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQo+IEBAIC0xLDcgKzEs
-OCBAQA0KPiAgTWVkaWF0ZWsgbW1zeXMgY29udHJvbGxlcg0KPiAgPT09PT09PT09PT09PT09PT09
-PT09PT09PT09PQ0KPiAgDQo+IC1UaGUgTWVkaWF0ZWsgbW1zeXMgY29udHJvbGxlciBwcm92aWRl
-cyB2YXJpb3VzIGNsb2NrcyB0byB0aGUgc3lzdGVtLg0KPiArVGhlIE1lZGlhdGVrIG1tc3lzIHN5
-c3RlbSBjb250cm9sbGVyIHByb3ZpZGVzIGNsb2NrIGNvbnRyb2wsIHJvdXRpbmcgY29udHJvbCwN
-Cj4gK2FuZCBtaXNjZWxsYW5lb3VzIGNvbnRyb2wgaW4gbW1zeXMgcGFydGl0aW9uLg0KPiAgDQo+
-ICBSZXF1aXJlZCBQcm9wZXJ0aWVzOg0KPiAgDQo+IEBAIC0xNSwxMyArMTYsMTMgQEAgUmVxdWly
-ZWQgUHJvcGVydGllczoNCj4gIAktICJtZWRpYXRlayxtdDgxODMtbW1zeXMiLCAic3lzY29uIg0K
-PiAgLSAjY2xvY2stY2VsbHM6IE11c3QgYmUgMQ0KPiAgDQo+IC1UaGUgbW1zeXMgY29udHJvbGxl
-ciB1c2VzIHRoZSBjb21tb24gY2xrIGJpbmRpbmcgZnJvbQ0KPiArRm9yIHRoZSBjbG9jayBjb250
-cm9sLCB0aGUgbW1zeXMgY29udHJvbGxlciB1c2VzIHRoZSBjb21tb24gY2xrIGJpbmRpbmcgZnJv
-bQ0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRp
-bmdzLnR4dA0KPiAgVGhlIGF2YWlsYWJsZSBjbG9ja3MgYXJlIGRlZmluZWQgaW4gZHQtYmluZGlu
-Z3MvY2xvY2svbXQqLWNsay5oLg0KPiAgDQo+ICBFeGFtcGxlOg0KPiAgDQo+IC1tbXN5czogY2xv
-Y2stY29udHJvbGxlckAxNDAwMDAwMCB7DQo+ICttbXN5czogc3lzY29uQDE0MDAwMDAwIHsNCj4g
-IAljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1tbXN5cyIsICJzeXNjb24iOw0KPiAgCXJl
-ZyA9IDwwIDB4MTQwMDAwMDAgMCAweDEwMDA+Ow0KPiAgCSNjbG9jay1jZWxscyA9IDwxPjsNCg0K
 
+On 2/27/2020 5:43 PM, Andy Shevchenko wrote:
+> On Thu, Feb 27, 2020 at 9:54 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>
+...
+>>>> +static int intel_cbphy_iphy_dt_parse(struct intel_combo_phy *cbphy,
+>>> dt -> fwnode
+>>> Ditto for other similar function names.
+>> Sure, it looks appropriate for intel_cbphy_iphy_dt_parse() ->
+>> intel_cbphy_iphy_fwnode_parse().
+>> Whereas for intel_cbphy_dt_parse() i will keep it unchanged, because it
+>> is calling devm_*, devm_platform_*, fwnode_* APIs to traverse dt node.
+> How do you know that it will be DT node?
+> I can't say it from the function parameters: Is any of them takes of_node?
+Got it, All the functions are traversing through device only. I will 
+change intel_cbphy_dt_parse() to intel_cbphy_fwnode_parse().
+(PS: My intention is something different. As the function is fetching 
+device tree node entries so kept is as *_dt_parse() )
+>
+>>>> +                                 struct fwnode_handle *fwnode, int idx)
+> ...
+>
+>>>> +    struct fwnode_reference_args ref;
+>>>> +    struct device *dev = cbphy->dev;
+>>>> +    struct fwnode_handle *fwnode;
+>>>> +    struct platform_device *pdev;
+>>>> +    int i, ret;
+>>>> +    u32 prop;
+>>> I guess the following would be better:
+>> In the v2 patch, for int i = 0 you mentioned to do initialization at the
+>> user, instead of doing at declaration.
+>> So i followed the same for "pdev" and "fwnode" which are being used
+>> after few lines of the code . It looked good in the perspective of code
+>> readability.
+> No, it is different. For the loop counter is better to have closer to
+> the loop, for the more global thingy like platform device it makes it
+> actually harder to find.
+> When you do assignments you have to think about the variable meaning
+> and scope. Scope is different for loop counter versus the mentioned
+> rest.
+
+Understand. I will follow the same and keep a note for future drivers too.
+
+Thanks for detail explanation.
+
+Regards,
+Dilip
+
+>> .
