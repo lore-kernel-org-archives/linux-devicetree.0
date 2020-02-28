@@ -2,81 +2,95 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF35C3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9292C3F2CF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E73C222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F12C24691
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 06:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fctCtUQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725906AbgB1GPo (ORCPT
+        id S1726016AbgB1Gcv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:15:44 -0500
-Received: from mga02.intel.com ([134.134.136.20]:49165 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgB1GPo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:15:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 22:15:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="257017344"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 27 Feb 2020 22:15:43 -0800
-Received: from [10.226.38.23] (unknown [10.226.38.23])
-        by linux.intel.com (Postfix) with ESMTP id 148405805EF;
-        Thu, 27 Feb 2020 22:15:36 -0800 (PST)
-Subject: Re: [PATCH v11 2/2] spi: cadence-quadspi: Add support for the Cadence
- QSPI controller
-To:     Mark Brown <broonie@kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        vigneshr@ti.com, robh+dt@kernel.org, marex@denx.de,
-        devicetree@vger.kernel.org, tien.fong.chee@intel.com,
-        tudor.ambarus@gmail.com, boris.brezillon@free-electrons.com,
-        richard@nod.at, qi-ming.wu@intel.com,
-        simon.k.r.goldschmidt@gmail.com, david.oberhollenzer@sigma-star.at,
-        dinguyen@kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com, cheol.yong.kim@intel.com,
-        mark.rutland@arm.com, computersforpeace@gmail.com,
-        dwmw2@infradead.org, cyrille.pitchen@atmel.com
-References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200227062708.21544-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200227183032.77ef0795@collabora.com> <20200227173224.GH4062@sirena.org.uk>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <5a63a66b-e82a-30bf-5939-842549299772@linux.intel.com>
-Date:   Fri, 28 Feb 2020 14:15:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 28 Feb 2020 01:32:51 -0500
+Received: from mail-pl1-f174.google.com ([209.85.214.174]:40493 "EHLO
+        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgB1Gcv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 01:32:51 -0500
+Received: by mail-pl1-f174.google.com with SMTP id y1so844437plp.7
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 22:32:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dtcRx/xrQcP0C0zv1gSyxKTgfZjSQZqO9VhWjTr/Rf8=;
+        b=fctCtUQXeEJuPvJTvnsSzRpmaM69ybDBogj8K0in5rgbuquVAaguD7FvrQdIoJQ18d
+         gh5r3RY8/kRzkPcP0ILXzEC7n0X9FnHwrWynuI1FChMQtzZkU4mDjdoRY8YsCIXBr5QC
+         4lsX+vmTpX2j7cTQJZCT6shFP1sb1CEYZf/hgqskdiGhq+LEfpTLywFZfhXSAQG0bHoT
+         eMs5fDaoqke19VeezsAb0N6zzye0sR4hTxDUpcEtU82x3j2NzK8OCUECmJQPoEf4nafi
+         qjS1JC682spxFN3dQQT0xw7RRq2WfX05SLrtnaR6TxyVaGYV1oyV/yiIKfl7uoUa5yF9
+         a08g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dtcRx/xrQcP0C0zv1gSyxKTgfZjSQZqO9VhWjTr/Rf8=;
+        b=R+swIsHpVSauCbLOEZKZIa0LxNwJ4IgG86psTSN1Ybe+UTjuBbZbuK9rDbrw9o38au
+         HB+Lodm99OwIKWT/BQjl28XJ1mR84xgYXE266n5xKH88ot6sR4POjzTA1gUhABDz/rWK
+         0bx8t58jWgvImBevmJX+fFpwu23a43iBMaUlpnHKiEQTHuEzuJokrVM7KGMO1NZGT5TL
+         IFhl3URc564wPDo4VTXWLHg4VZ7qNzsH9DuMjkS2/7f5c5q3iT05C6FaRtdG7wuJR2Jd
+         U4JVrYlVAyGCtKFmBvz0dMrlymNHattISybsKKgLOHicozNPLGDbaFkzqm8YishT60Pp
+         JG4g==
+X-Gm-Message-State: APjAAAV38f0wVWu+KHNuX8a2qHI69vh3dQi0CK0/xYyFV1Pe/9PIUj7+
+        Yhj+29euKIg5VhKRCXFBt5HUEg==
+X-Google-Smtp-Source: APXvYqz9kjSDoKMHEw4EyvHBEIxPfo4zgvKkRo5JXyyFZ8yKQKx+Rc+7EnCJ4hfYEadj0CglZKMFsw==
+X-Received: by 2002:a17:902:a408:: with SMTP id p8mr2724487plq.132.1582871570204;
+        Thu, 27 Feb 2020 22:32:50 -0800 (PST)
+Received: from localhost ([103.249.89.56])
+        by smtp.gmail.com with ESMTPSA id x7sm5555746pgp.0.2020.02.27.22.32.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 22:32:48 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vkoul@kernel.org, daniel.lezcano@linaro.org,
+        bjorn.andersson@linaro.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>, Zhang Rui <rui.zhang@intel.com>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v4 0/3] Cleanup dtbs_check warnings for tsens
+Date:   Fri, 28 Feb 2020 12:02:39 +0530
+Message-Id: <cover.1582871139.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200227173224.GH4062@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark,
+Make dtbs_check pass for tsens bits. I'm working on another series to
+cleanup other DT warnings for QC platforms.
 
-On 28/2/2020 1:32 AM, Mark Brown wrote:
-> On Thu, Feb 27, 2020 at 06:30:32PM +0100, Boris Brezillon wrote:
->> "Ramuthevar, Vadivel MuruganX"
->>> Reported-by: kbuild test robot <lkp@intel.com>
->>> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->> Reported-by? What has been reported?
-> There were static checker issues with some of the earlier versions.
-> Vadivel, normally you wouldn't carry tags like that forward when you fix
-> them.
+Changes since v3:
+- Fixed up subject prefix
+- Added acks.
 
-Than you Mark, will remove it in the next patch-set.
+Amit Kucheria (3):
+  dt-bindings: thermal: tsens: Add entry for sc7180 tsens to binding
+  arm64: dts: qcom: msm8916:: Add qcom,tsens-v0_1 to msm8916.dtsi
+    compatible
+  arm64: dts: qcom: msm8996:: Add qcom,tsens-v2 to msm8996.dtsi
+    compatible
 
-Regards
-Vadivel
+ Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
+ arch/arm64/boot/dts/qcom/msm8916.dtsi                     | 2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi                     | 4 ++--
+ 3 files changed, 4 insertions(+), 3 deletions(-)
+
+-- 
+2.20.1
+
