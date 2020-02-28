@@ -2,111 +2,109 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6087DC3F2CF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACDDC3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B6C246A1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:47:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoIne1Nb"
+	by mail.kernel.org (Postfix) with ESMTP id 9AE23246A1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725827AbgB1Fr6 (ORCPT
+        id S1725856AbgB1FwS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 00:47:58 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40108 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgB1Fr6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 00:47:58 -0500
-Received: by mail-lj1-f193.google.com with SMTP id 143so1950649ljj.7;
-        Thu, 27 Feb 2020 21:47:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=e3rRbEToSCqTcYjLDTcdw4LcAsL1QAmXUv8JS5cebgQ=;
-        b=XoIne1Nb5kFUDj41LjD7kbLI5h5o3wzu5VM5IngJI7deJOu6WjFlxaYnNQ1UQ6NFhu
-         BG7RLL6hzImb4cHu34XCXFPKdZ70ow+w4lJC9jkdte2AU2B1q4IBd1HD/d3z9UzOPr7f
-         sXRsrJhUZ1bJNHLIHDXh3SzOmormK+EbIoPDZdQ9+wnFUKgASpsyXkz0GJz7++pF4wx/
-         GWFbdZbGiHiZkeNw3dmghR5KxMmcat6H+IOtpj+N46ndfmHQubOI28sQ5lG7jofBLJpO
-         NXf7cCfBJbmHvF8CHzVsijz1SMReF2LsksShAumP69hR/eqMsYo/UKrU9g1SimzgE8yR
-         gP2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=e3rRbEToSCqTcYjLDTcdw4LcAsL1QAmXUv8JS5cebgQ=;
-        b=oZ9tXD6K4+3pxCuvP4ctrAP1EF4rxbjolbnkeQeY55YWb7+C0J0XG3bz08feE5QduV
-         pe0lYozfNuDE5FIq1YTxmHVyuAHGeOreu+JTUegy4VEFMRo/Nt5Ex2iIWm2kD0wJ+dIJ
-         bpVo0xo0X72y+GayADzc+fsAbVeOK5liGpOKnTFVkQZKEPXHsLexXXxJfulK9jieyE2C
-         o+yPgxsJ2MGo8KEb8X04omRXQviq/xlrCR8PiI/aj1/acYDKbh6gTAwC0IcJRZOjaHGZ
-         5Hk9UXCRKAvtqTnPiD+wXLf+GmuNziZQ26yIJAUIWlEkPSEFYJHlXygfCDlhNTZvmYIA
-         McHw==
-X-Gm-Message-State: ANhLgQ05W4jEJTvOJOASut9DuerO5TMMyTcKLMmlus7xRnSjIdeRM4lk
-        ExvQ8jaK0dNHR6QftZdVGxE=
-X-Google-Smtp-Source: ADFU+vsMBvBqWogz63CGu3gbsY1yy+UiOZUyqdEFXylOvp7Y3ANY7Klm69JBRpTiocOvvbgNU4uikA==
-X-Received: by 2002:a2e:8797:: with SMTP id n23mr1659910lji.176.1582868875231;
-        Thu, 27 Feb 2020 21:47:55 -0800 (PST)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id d24sm4760642lja.82.2020.02.27.21.47.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 27 Feb 2020 21:47:54 -0800 (PST)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Fri, 28 Feb 2020 00:52:18 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:39870 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgB1FwR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 00:52:17 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 250B120208;
+        Fri, 28 Feb 2020 06:52:08 +0100 (CET)
+Date:   Fri, 28 Feb 2020 06:52:07 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson: khadas-vim3: move model to g12b-khadas-vim3 dtsi
-Date:   Fri, 28 Feb 2020 09:47:04 +0400
-Message-Id: <1582868824-73870-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
+        huijuan.xie@mediatek.com, stonea168@163.com,
+        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v10 2/5] dt-bindings: display: mediatek: control dpi pins
+ mode to avoid leakage
+Message-ID: <20200228055207.GA6324@ravnborg.org>
+References: <20200228052128.82136-1-jitao.shi@mediatek.com>
+ <20200228052128.82136-3-jitao.shi@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228052128.82136-3-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
+        a=e5mUnYsNAAAA:8 a=HWwQx7EG-uLDjA1hwS8A:9 a=CjuIK1q_8ugA:10
+        a=6heAxKwa5pAsJatQ0mat:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The common meson-khadas-vim3.dtsi is now shared with VIM3L so move the
-VIM3 model namne to meson-g12b-khadas-vim3.dtsi.
+Hi Jitao.
 
-meson-sm1-khadas-vim3l.dts contains the VIM3L model name.
+On Fri, Feb 28, 2020 at 01:21:25PM +0800, Jitao Shi wrote:
+> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
+> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
+> disabled.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt  | 7 +++++++
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 2 ++
- arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi      | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
+When this has landed it would be great if you could follow-up with a
+conversion to DT Schema of this file (.yaml).
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-index 5548634..2b2d72c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -8,6 +8,8 @@
- #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
-+	model = "Khadas VIM3";
-+
- 	vddcpu_a: regulator-vddcpu-a {
- 		/*
- 		 * MP8756GD Regulator.
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 90815fa..0ef60c7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -9,8 +9,6 @@
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
- 
- / {
--	model = "Khadas VIM3";
--
- 	aliases {
- 		serial0 = &uart_AO;
- 		ethernet0 = &ethmac;
--- 
-2.7.4
+	Sam
 
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> index 58914cf681b8..77ca32a32399 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> @@ -17,6 +17,10 @@ Required properties:
+>    Documentation/devicetree/bindings/graph.txt. This port should be connected
+>    to the input port of an attached HDMI or LVDS encoder chip.
+>  
+> +Optional properties:
+> +- pinctrl-names: Contain "gpiomode" and "dpimode".
+> +  pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
+> +
+>  Example:
+>  
+>  dpi0: dpi@1401d000 {
+> @@ -27,6 +31,9 @@ dpi0: dpi@1401d000 {
+>  		 <&mmsys CLK_MM_DPI_ENGINE>,
+>  		 <&apmixedsys CLK_APMIXED_TVDPLL>;
+>  	clock-names = "pixel", "engine", "pll";
+> +	pinctrl-names = "active", "idle";
+> +	pinctrl-0 = <&dpi_pin_func>;
+> +	pinctrl-1 = <&dpi_pin_idle>;
+>  
+>  	port {
+>  		dpi0_out: endpoint {
+> -- 
+> 2.21.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
