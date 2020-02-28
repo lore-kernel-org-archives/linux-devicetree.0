@@ -2,125 +2,174 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA2BC3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F7CC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 10:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B747246A0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 09:46:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ExCJs9Pn"
+	by mail.kernel.org (Postfix) with ESMTP id 62AAE246A2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 10:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgB1JqY (ORCPT
+        id S1726586AbgB1KDc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:46:24 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45534 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgB1JqY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 04:46:24 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9kA2p092506;
-        Fri, 28 Feb 2020 03:46:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582883170;
-        bh=c2o0KfeDE8LsXiUgyljzWzRxFOrZt7ujr7i1FEE6h+U=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=ExCJs9PnvbMVgnP4NkPmcH7pk7Uz+kF0/vY453UC96M6L8DAjXSBIX3qSYs1iQ+9w
-         QldOiOUVgNXNp8gRaBoAsfcE4h41dWejqyBMQw0xA5iiWYFTrK7d6KjHwoZf72dkjg
-         /TCrLvDjM6H6kFEXsV00dN7y8TVoDgi7GwuzKGn8=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S9kAeC013540
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 03:46:10 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 03:46:09 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 03:46:09 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9k9IA123014;
-        Fri, 28 Feb 2020 03:46:09 -0600
-Date:   Fri, 28 Feb 2020 15:16:08 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH v2 01/11] dt-bindings: spi: allow expressing DTR
- capability
-Message-ID: <20200228094606.fyxtlutq2aajfyyo@ti.com>
-References: <20200226093703.19765-1-p.yadav@ti.com>
- <20200226093703.19765-2-p.yadav@ti.com>
- <CAMuHMdUGN8Yu6Tx0=OoLKzyOZ08fvjF6pEWi3ye02pr3Cgj=cg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUGN8Yu6Tx0=OoLKzyOZ08fvjF6pEWi3ye02pr3Cgj=cg@mail.gmail.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 28 Feb 2020 05:03:32 -0500
+Received: from lucky1.263xmail.com ([211.157.147.131]:32926 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgB1KDb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 05:03:31 -0500
+Received: from localhost (unknown [192.168.167.8])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 559CB86D9A;
+        Fri, 28 Feb 2020 18:01:48 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P12225T140183993132800S1582884093668539_;
+        Fri, 28 Feb 2020 18:01:48 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <e7c593bff7f229217b7463a911207b02>
+X-RL-SENDER: yifeng.zhao@rock-chips.com
+X-SENDER: zyf@rock-chips.com
+X-LOGIN-NAME: yifeng.zhao@rock-chips.com
+X-FST-TO: miquel.raynal@bootlin.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Subject: [PATCH 1/3] mtd: rawnand: rockchip: NFC drivers for RK3308, RK3188 and others
+Date:   Fri, 28 Feb 2020 18:01:15 +0800
+Message-Id: <1582884076-27615-3-git-send-email-yifeng.zhao@rock-chips.com>
+X-Mailer: git-send-email 2.0.0
+In-Reply-To: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
+References: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+Documentation support for Rockchip NAND controllers
 
-On 27/02/20 05:29PM, Geert Uytterhoeven wrote:
-> Hi Pratyush,
-> 
-> On Wed, Feb 26, 2020 at 10:37 AM Pratyush Yadav <p.yadav@ti.com> wrote:
-> > Allow spi devices to express DTR receive and transmit capabilities via
-> > the properties "spi-rx-dtr" and "spi-tx-dtr".
-> >
-> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> 
-> Thanks for your patch!
-> 
-> > --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > @@ -120,6 +120,11 @@ patternProperties:
-> >          description:
-> >            Delay, in microseconds, after a read transfer.
-> >
-> > +      spi-rx-dtr:
-> > +        $ref: /schemas/types.yaml#/definitions/flag
-> > +        description:
-> > +          Device supports receiving in DTR mode.
-> 
-> Please explain "DTR" in the document, at least once, e.g.
-> 
->     Double Transfer Rate (DTR).
+Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+---
 
-Will do.
- 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+ .../bindings/mtd/rockchip,nand.yaml           | 95 +++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
 
+diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
+new file mode 100644
+index 000000000000..9a81f682ac01
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
+@@ -0,0 +1,95 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mtd/rockchip,nand.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip SoCs NAND FLASH Controller (NFC) Device Tree Bindings
++
++allOf:
++  - $ref: "nand-controller.yaml"
++
++maintainers:
++  - Yifeng Zhao <yifeng.zhao@rock-chips.com>
++
++properties:
++  "#address-cells": true
++  "#size-cells": true
++
++  compatible:
++    const: rockchip,nfc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Module Clock
++      - description: Bus Clock
++
++  clock-names:
++    items:
++      - const: clk_nfc
++      - const: clk_ahb
++
++  clock-rates:
++      maximum: 150000000
++
++  pinctrl-names: true
++
++patternProperties:
++  "^pinctrl-[0-9]+$": true
++
++  "^nand@[a-f0-9]$":
++    type: object
++    properties:
++      reg:
++        minimum: 0
++        maximum: 3
++
++      nand-ecc-step-size:
++        const: 1024
++
++      nand-ecc-strength:
++        enum: [16, 24 , 40, 60, 70]
++
++      nand-bus-width:
++        const: 8
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/rk3308-cru.h>
++    nfc: nand-controller@ff4b0000 {
++      compatible = "rockchip,nfc";
++      reg = <0x0 0xff4b0000 0x0 0x4000>;
++      interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru SCLK_NANDC>, <&cru HCLK_NANDC>;
++      clock-names = "clk_nfc", "clk_ahb";
++      clock-rates = <150000000>;
++      pinctrl-names = "default";
++      pinctrl-0 = <&flash_csn0 &flash_rdy &flash_ale &flash_cle
++                  &flash_wrn &flash_rdn &flash_bus8>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++      nand@0 {
++        reg = <0>;
++        nand-ecc-mode = "hw";
++        nand-ecc-strength = <16>;
++        nand-ecc-step-size = <1024>;
++        nand-bus-width = <8>;
++      };
++    };
++
++...
 -- 
-Regards,
-Pratyush Yadav
-Texas Instruments India
+2.17.1
+
+
+
