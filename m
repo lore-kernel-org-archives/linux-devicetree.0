@@ -2,109 +2,155 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACDDC3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 612A2C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE23246A1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37846246A1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 05:59:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qIWEKs1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725856AbgB1FwS (ORCPT
+        id S1725886AbgB1F7O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 00:52:18 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:39870 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgB1FwR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 00:52:17 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 250B120208;
-        Fri, 28 Feb 2020 06:52:08 +0100 (CET)
-Date:   Fri, 28 Feb 2020 06:52:07 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v10 2/5] dt-bindings: display: mediatek: control dpi pins
- mode to avoid leakage
-Message-ID: <20200228055207.GA6324@ravnborg.org>
-References: <20200228052128.82136-1-jitao.shi@mediatek.com>
- <20200228052128.82136-3-jitao.shi@mediatek.com>
+        Fri, 28 Feb 2020 00:59:14 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37051 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgB1F7N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 00:59:13 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so1159056pfn.4
+        for <devicetree@vger.kernel.org>; Thu, 27 Feb 2020 21:59:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZKBVIeRSLkTABImhK09WMLdKCBu5/xMvSWiCq5Gk5ew=;
+        b=qIWEKs1fiJ9RymzQ9qxGXyQ7zq7OH6AHa4z8jWL/42Gg+Atw6uuPb/zmu224vNoAts
+         zpTjotXFlSx9g1eHHYxqA+q0aEGg0rNrwQhTmbHx2KPA/QIkBk20cdBes3KSFsuMlT+R
+         b6sfLeYv0F7D/ftpdOi0SdoRVlVwgGLDQqp6S3QkWVneU2qw3OPbAfM9EIcjm5tZdf3c
+         6xgenLXUXhdkSgSTaUwHE21DQrdmX2m1DKNq6L7Pe2Zd3werv4IGgdll84y0lups3DdJ
+         +Q1V/TZ3USFu3HnByU8y5p9sKzIIwXqG6nrLILShsteZGiNm66CkA0+xoplaP68PVAmv
+         DnCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZKBVIeRSLkTABImhK09WMLdKCBu5/xMvSWiCq5Gk5ew=;
+        b=oGkYG+M2r9HNIGzRVZLxa25PMPHJYUKwWcTgbzf0lXHWmIH6ALMXtauhETdpnsPYLU
+         kLybo5eN+BtdL5gZ1+vz918TLYUVOP5+CW6lc5y6sZ2ziGUJkfFQdpWFNo7EKhuUo60i
+         ZikuIyhpvyeyrre1xSGcW1ABLj5ambphIoXgmdNay0xr4C6mynyGq/IGd3CRWc/hQRmo
+         E3dLLTti/5BLCPQiw56x/kD8jX1Tlq6I12NVo0WOY0K3ErMH2Q4mmcUwWM9KXBmMXez/
+         LaFwoYpaEimSDp5QXrNe+qG9d3Pomzv3YcKo7nGhqPi5EhacWVax/FIGjp+SnagQOMAC
+         EKrA==
+X-Gm-Message-State: APjAAAWSZqUX09n0aq/VTQUb+QNXsjmK4aLu12/nDflGxG/zCMiY5x3Y
+        Cjkla74TFQLrhgBH0fKghS5Fsg==
+X-Google-Smtp-Source: APXvYqxqmURZAi/f55EJv8aex6BUad+OH04tpFm+Z8vGcdyQAIIthi7QVmfey/lpCqGu0Q7enA1Ppw==
+X-Received: by 2002:a63:3f44:: with SMTP id m65mr2923728pga.351.1582869551241;
+        Thu, 27 Feb 2020 21:59:11 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f3sm8201106pga.38.2020.02.27.21.59.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 21:59:10 -0800 (PST)
+Date:   Thu, 27 Feb 2020 21:59:08 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        dikshita@codeaurora.org
+Subject: Re: [PATCH v4 11/12] arm64: dts: sdm845: follow venus-sdm845v2 DT
+ binding
+Message-ID: <20200228055908.GY3948@builder>
+References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+ <20200106154929.4331-12-stanimir.varbanov@linaro.org>
+ <13ea7221-5253-37fc-595d-e650b2d474c6@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228052128.82136-3-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
-        a=e5mUnYsNAAAA:8 a=HWwQx7EG-uLDjA1hwS8A:9 a=CjuIK1q_8ugA:10
-        a=6heAxKwa5pAsJatQ0mat:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <13ea7221-5253-37fc-595d-e650b2d474c6@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jitao.
+On Thu 27 Feb 14:38 PST 2020, Stanimir Varbanov wrote:
 
-On Fri, Feb 28, 2020 at 01:21:25PM +0800, Jitao Shi wrote:
-> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
-> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
-> disabled.
+> Hi Bjorn,
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt  | 7 +++++++
-
-When this has landed it would be great if you could follow-up with a
-conversion to DT Schema of this file (.yaml).
-
-	Sam
-
->  1 file changed, 7 insertions(+)
+> Could you take this for v5.7.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> index 58914cf681b8..77ca32a32399 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> @@ -17,6 +17,10 @@ Required properties:
->    Documentation/devicetree/bindings/graph.txt. This port should be connected
->    to the input port of an attached HDMI or LVDS encoder chip.
->  
-> +Optional properties:
-> +- pinctrl-names: Contain "gpiomode" and "dpimode".
-> +  pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
-> +
->  Example:
->  
->  dpi0: dpi@1401d000 {
-> @@ -27,6 +31,9 @@ dpi0: dpi@1401d000 {
->  		 <&mmsys CLK_MM_DPI_ENGINE>,
->  		 <&apmixedsys CLK_APMIXED_TVDPLL>;
->  	clock-names = "pixel", "engine", "pll";
-> +	pinctrl-names = "active", "idle";
-> +	pinctrl-0 = <&dpi_pin_func>;
-> +	pinctrl-1 = <&dpi_pin_idle>;
->  
->  	port {
->  		dpi0_out: endpoint {
+
+Applied, thanks for the ping Stan!
+
+Regards,
+Bjorn
+
+> On 1/6/20 5:49 PM, Stanimir Varbanov wrote:
+> > Move all pmdomain and clock resources to Venus DT node. And make
+> > possible to support dynamic core assignment on v4.
+> > 
+> > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 25 +++++++++++++------------
+> >  1 file changed, 13 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index ddb1f23c936f..c5784951d408 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -2568,32 +2568,33 @@
+> >  		};
+> >  
+> >  		video-codec@aa00000 {
+> > -			compatible = "qcom,sdm845-venus";
+> > +			compatible = "qcom,sdm845-venus-v2";
+> >  			reg = <0 0x0aa00000 0 0xff000>;
+> >  			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > -			power-domains = <&videocc VENUS_GDSC>;
+> > +			power-domains = <&videocc VENUS_GDSC>,
+> > +					<&videocc VCODEC0_GDSC>,
+> > +					<&videocc VCODEC1_GDSC>;
+> > +			power-domain-names = "venus", "vcodec0", "vcodec1";
+> >  			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> >  				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> > -				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
+> > -			clock-names = "core", "iface", "bus";
+> > +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> > +				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> > +				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>,
+> > +				 <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+> > +				 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+> > +			clock-names = "core", "iface", "bus",
+> > +				      "vcodec0_core", "vcodec0_bus",
+> > +				      "vcodec1_core", "vcodec1_bus";
+> >  			iommus = <&apps_smmu 0x10a0 0x8>,
+> >  				 <&apps_smmu 0x10b0 0x0>;
+> >  			memory-region = <&venus_mem>;
+> >  
+> >  			video-core0 {
+> >  				compatible = "venus-decoder";
+> > -				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> > -					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> > -				clock-names = "core", "bus";
+> > -				power-domains = <&videocc VCODEC0_GDSC>;
+> >  			};
+> >  
+> >  			video-core1 {
+> >  				compatible = "venus-encoder";
+> > -				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+> > -					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+> > -				clock-names = "core", "bus";
+> > -				power-domains = <&videocc VCODEC1_GDSC>;
+> >  			};
+> >  		};
+> >  
+> > 
+> 
 > -- 
-> 2.21.0
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> regards,
+> Stan
