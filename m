@@ -2,142 +2,144 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A5BC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E82C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93CD2469D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE4C2469F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CV3X+nQK"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tdkTQz+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgB1Osq (ORCPT
+        id S1726899AbgB1OtI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:48:46 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36596 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgB1Osq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:48:46 -0500
-Received: by mail-qt1-f196.google.com with SMTP id t13so2188692qto.3
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 06:48:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rsM6P0iWQtYbTIZfDH4GZGs0dcL9Uy2VcIbqhq4DVAs=;
-        b=CV3X+nQKX4SjkWXOCXtPcfUWPbWcnGZIr5HXT0td8jCm8UnHLWOJGbCDin+fnDMVh6
-         HJjdT1BDInHrt1jgg7+HKPKmxJ+UWR8YMidtypOgu4QTRFY9Wu0jLvzuIF2MK/mIyaDX
-         U6540tjncMTP9HxIc2pcrk8RD8kEm4WNC+qgrATMR0y1E2OgtHFcKDmfecdvihyCtKzE
-         5z/LqZfYlvAK7Ftc6n4Me1dMh0Y1wkVX2SLDydwWUd9444Zrts13ZQcXeFvt1tJDmWyx
-         pVirruhQetio5UlZFpFM8fniSZUI6ZOWFVd0j2FrnRrxsI3M0zlRlNvFarECiOVYnx29
-         GpFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rsM6P0iWQtYbTIZfDH4GZGs0dcL9Uy2VcIbqhq4DVAs=;
-        b=mpyZYsw2yJ+7cpnoGPLRbAd266HN3c4jIgGxiR1e3HlY+vMtHZGFsed+7aGJQjveAJ
-         1I6MeRhM1PAoJ+HBbPFp6ugICysoIe6ptQDufozrgHpAXeMuaPNY46v52+/BjknpMYK/
-         DxdkzBU1yMkx7Vy76wwiKCRF8DMGKzNA9wk0/Ha1APEFMGXTiZoniHx06elOn+2t+wm/
-         lteymXZZGa8j5oExd+jJqFpkYK2XLyM8G/0qPItpaHzuuaRGzAslnZJGcZj6KyIq/M4P
-         zyZx3rWkU4f7TMT1AF3nGAVlTdBYTGZ/2NMMnw1vQA0MbkHywaOqJDuzBZHcoNQQm/uR
-         3EEw==
-X-Gm-Message-State: APjAAAVh/qkRX7XXQaNjp0Id3KNtLR+5XQLGCDEsJOeIoauFttqGw4LX
-        MBU93Qj0glNrTh71NJsvMx42Og==
-X-Google-Smtp-Source: APXvYqx4if0FgrogA1eRtXiNBtPg1pCTbepMjiVN00txoqKmRdlRgAbN74CUZqB71Vhu4mXSAdk1Rg==
-X-Received: by 2002:ac8:425a:: with SMTP id r26mr4520637qtm.138.1582901325295;
-        Fri, 28 Feb 2020 06:48:45 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id t29sm5422548qtt.20.2020.02.28.06.48.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Feb 2020 06:48:44 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j7gwW-0002z7-9g; Fri, 28 Feb 2020 10:48:44 -0400
-Date:   Fri, 28 Feb 2020 10:48:44 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, will@kernel.org,
-        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
-        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
-        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        iommu@lists.linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        robin.murphy@arm.com, christian.koenig@amd.com
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200228144844.GQ31668@ziepe.ca>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-2-jean-philippe@linaro.org>
- <20200224190056.GT31668@ziepe.ca>
- <20200225092439.GB375953@myrica>
- <20200225140814.GW31668@ziepe.ca>
- <20200228143935.GA2156@myrica>
+        Fri, 28 Feb 2020 09:49:08 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63173 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726788AbgB1OtI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:49:08 -0500
+X-UUID: 138b06b591704c6280134076cf712b37-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=S8rYojz3CCXZsrWk7K/95dRmIjgQg2sAN3aYNGrhVNU=;
+        b=tdkTQz+/pxE8T8E9ABQZY6jLqaEt9mCR2M84Q9jFd/Wo2sIHnlBkybhd916CA5vHQXJgQyO+dO0nBvqqa2tXy6R1YMcHDacsGlZDzy2xI6p+Is9L0QfV2xmkvGtzZRFuiRiqYxxva+ioihsXHP5wD+VaVnUrBOzvNkJYduRdymw=;
+X-UUID: 138b06b591704c6280134076cf712b37-20200228
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 820977458; Fri, 28 Feb 2020 22:49:03 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 22:48:08 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 22:48:54 +0800
+Message-ID: <1582901342.14824.4.camel@mtksdaap41>
+Subject: Re: [PATCH v3 07/13] soc: mediatek: cmdq: add write_s function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Fri, 28 Feb 2020 22:49:02 +0800
+In-Reply-To: <1582897461-15105-9-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-9-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228143935.GA2156@myrica>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 03:39:35PM +0100, Jean-Philippe Brucker wrote:
-> > > +	list_for_each_entry_rcu(bond, &io_mm->devices, mm_head) {
-> > > +		/*
-> > > +		 * To ensure that we observe the initialization of io_mm fields
-> > > +		 * by io_mm_finalize() before the registration of this bond to
-> > > +		 * the list by io_mm_attach(), introduce an address dependency
-> > > +		 * between bond and io_mm. It pairs with the smp_store_release()
-> > > +		 * from list_add_rcu().
-> > > +		 */
-> > > +		io_mm = rcu_dereference(bond->io_mm);
-> > 
-> > A rcu_dereference isn't need here, just a normal derference is fine.
-> 
-> bond->io_mm is annotated with __rcu (for iommu_sva_get_pasid_generic(),
-> which does bond->io_mm under rcu_read_lock())
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVscGVyIGZ1
+bmN0aW9ucyB3aGljaA0KPiB3cml0ZXMgdmFsdWUgY29udGFpbnMgaW4gaW50ZXJuYWwgcmVnaXN0
+ZXIgdG8gYWRkcmVzcw0KPiB3aXRoIGxhcmdlIGRtYSBhY2Nlc3Mgc3VwcG9ydC4NCj4gDQoNClJl
+dmlld2VkLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6
+IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+
+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwgMzQgKysrKysrKysr
+KysrKysrKysrKysrKystDQo+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJv
+eC5oIHwgIDIgKysNCj4gIGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggICAg
+fCAyMCArKysrKysrKysrKysrKw0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA1NSBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsv
+bXRrLWNtZHEtaGVscGVyLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIu
+Yw0KPiBpbmRleCA4MzQyYTVjOTRiYzcuLjY4YjQyYzkzNWZlNiAxMDA2NDQNCj4gLS0tIGEvZHJp
+dmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gKysrIGIvZHJpdmVycy9zb2Mv
+bWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gQEAgLTE4LDYgKzE4LDEwIEBAIHN0cnVjdCBj
+bWRxX2luc3RydWN0aW9uIHsNCj4gIAl1bmlvbiB7DQo+ICAJCXUzMiB2YWx1ZTsNCj4gIAkJdTMy
+IG1hc2s7DQo+ICsJCXN0cnVjdCB7DQo+ICsJCQl1MTYgYXJnX2M7DQo+ICsJCQl1MTYgc3JjX3Jl
+ZzsNCj4gKwkJfTsNCj4gIAl9Ow0KPiAgCXVuaW9uIHsNCj4gIAkJdTE2IG9mZnNldDsNCj4gQEAg
+LTI5LDcgKzMzLDcgQEAgc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gew0KPiAgCQlzdHJ1Y3Qgew0K
+PiAgCQkJdTggc29wOjU7DQo+ICAJCQl1OCBhcmdfY190OjE7DQo+IC0JCQl1OCBhcmdfYl90OjE7
+DQo+ICsJCQl1OCBzcmNfdDoxOw0KPiAgCQkJdTggZHN0X3Q6MTsNCj4gIAkJfTsNCj4gIAl9Ow0K
+PiBAQCAtMjIyLDYgKzIyNiwzNCBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3QgY21k
+cV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93
+cml0ZV9tYXNrKTsNCj4gIA0KPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0
+ICpwa3QsIHUxNiBoaWdoX2FkZHJfcmVnX2lkeCwNCj4gKwkJICAgICB1MTYgYWRkcl9sb3csIHUx
+NiBzcmNfcmVnX2lkeCwgdTMyIG1hc2spDQo+ICt7DQo+ICsJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rp
+b24gaW5zdCA9IHsgezB9IH07DQo+ICsJaW50IGVycjsNCj4gKw0KPiArCWlmIChtYXNrICE9IFUz
+Ml9NQVgpIHsNCj4gKwkJaW5zdC5vcCA9IENNRFFfQ09ERV9NQVNLOw0KPiArCQlpbnN0Lm1hc2sg
+PSB+bWFzazsNCj4gKwkJZXJyID0gY21kcV9wa3RfYXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsN
+Cj4gKwkJaWYgKGVyciA8IDApDQo+ICsJCQlyZXR1cm4gZXJyOw0KPiArDQo+ICsJCWluc3QubWFz
+ayA9IDA7DQo+ICsJCWluc3Qub3AgPSBDTURRX0NPREVfV1JJVEVfU19NQVNLOw0KPiArCX0gZWxz
+ZSB7DQo+ICsJCWluc3Qub3AgPSBDTURRX0NPREVfV1JJVEVfUzsNCj4gKwl9DQo+ICsNCj4gKwlp
+bnN0LnNyY190ID0gQ01EUV9SRUdfVFlQRTsNCj4gKwlpbnN0LnNvcCA9IGhpZ2hfYWRkcl9yZWdf
+aWR4Ow0KPiArCWluc3Qub2Zmc2V0ID0gYWRkcl9sb3c7DQo+ICsJaW5zdC5zcmNfcmVnID0gc3Jj
+X3JlZ19pZHg7DQo+ICsNCj4gKwlyZXR1cm4gY21kcV9wa3RfYXBwZW5kX2NvbW1hbmQocGt0LCBp
+bnN0KTsNCj4gK30NCj4gK0VYUE9SVF9TWU1CT0woY21kcV9wa3Rfd3JpdGVfcyk7DQo+ICsNCj4g
+IGludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiBldmVudCkNCj4gIHsN
+Cj4gIAlzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gZGlmZiAtLWdp
+dCBhL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmggYi9pbmNsdWRlL2xp
+bnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+IGluZGV4IDEyMWMzYmI2ZDNkZS4uOGVm
+ODdlMWJkMDNiIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEt
+bWFpbGJveC5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
+LmgNCj4gQEAgLTU5LDYgKzU5LDggQEAgZW51bSBjbWRxX2NvZGUgew0KPiAgCUNNRFFfQ09ERV9K
+VU1QID0gMHgxMCwNCj4gIAlDTURRX0NPREVfV0ZFID0gMHgyMCwNCj4gIAlDTURRX0NPREVfRU9D
+ID0gMHg0MCwNCj4gKwlDTURRX0NPREVfV1JJVEVfUyA9IDB4OTAsDQo+ICsJQ01EUV9DT0RFX1dS
+SVRFX1NfTUFTSyA9IDB4OTEsDQo+ICAJQ01EUV9DT0RFX0xPR0lDID0gMHhhMCwNCj4gIH07DQo+
+ICANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgg
+Yi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+IGluZGV4IDgzMzQwMjEx
+ZTFkMy4uYzcyZDgyNmQ4OTM0IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRp
+YXRlay9tdGstY21kcS5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
+bWRxLmgNCj4gQEAgLTEyLDYgKzEyLDggQEANCj4gICNpbmNsdWRlIDxsaW51eC90aW1lci5oPg0K
+PiAgDQo+ICAjZGVmaW5lIENNRFFfTk9fVElNRU9VVAkJMHhmZmZmZmZmZnUNCj4gKyNkZWZpbmUg
+Q01EUV9BRERSX0hJR0goYWRkcikJKCh1MzIpKCgoYWRkcikgPj4gMTYpICYgR0VOTUFTSygzMSwg
+MCkpKQ0KPiArI2RlZmluZSBDTURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRyKSB8IEJJVCgx
+KSkNCj4gIA0KPiAgc3RydWN0IGNtZHFfcGt0Ow0KPiAgDQo+IEBAIC0xMDIsNiArMTA0LDI0IEBA
+IGludCBjbWRxX3BrdF93cml0ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLCB1MTYg
+b2Zmc2V0LCB1MzIgdmFsdWUpOw0KPiAgaW50IGNtZHFfcGt0X3dyaXRlX21hc2soc3RydWN0IGNt
+ZHFfcGt0ICpwa3QsIHU4IHN1YnN5cywNCj4gIAkJCXUxNiBvZmZzZXQsIHUzMiB2YWx1ZSwgdTMy
+IG1hc2spOw0KPiAgDQo+ICsvKioNCj4gKyAqIGNtZHFfcGt0X3dyaXRlX3MoKSAtIGFwcGVuZCB3
+cml0ZV9zIGNvbW1hbmQgdG8gdGhlIENNRFEgcGFja2V0DQo+ICsgKiBAcGt0Ogl0aGUgQ01EUSBw
+YWNrZXQNCj4gKyAqIEBoaWdoX2FkZHJfcmVnX2lkeDoJaW50ZXJuYWwgcmVnaXNnZXIgSUQgd2hp
+Y2ggY29udGFpbnMgaGlnaCBhZGRyZXNzIG9mIHBhDQo+ICsgKiBAYWRkcl9sb3c6CWxvdyBhZGRy
+ZXNzIG9mIHBhDQo+ICsgKiBAc3JjX3JlZ19pZHg6CXRoZSBDTURRIGludGVybmFsIHJlZ2lzdGVy
+IElEIHdoaWNoIGNhY2hlIHNvdXJjZSB2YWx1ZQ0KPiArICogQG1hc2s6CXRoZSBzcGVjaWZpZWQg
+dGFyZ2V0IGFkZHJlc3MgbWFzaywgdXNlIFUzMl9NQVggaWYgbm8gbmVlZA0KPiArICoNCj4gKyAq
+IFJldHVybjogMCBmb3Igc3VjY2VzczsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyByZXR1cm5lZA0K
+PiArICoNCj4gKyAqIFN1cHBvcnQgd3JpdGUgdmFsdWUgdG8gcGh5c2ljYWwgYWRkcmVzcyB3aXRo
+b3V0IHN1YnN5cy4gVXNlIENNRFFfQUREUl9ISUdIKCkNCj4gKyAqIHRvIGdldCBoaWdoIGFkZHJl
+ZXMgYW5kIGNhbGwgY21kcV9wa3RfYXNzaWduKCkgdG8gYXNzaWduIHZhbHVlIGludG8gaW50ZXJu
+YWwNCj4gKyAqIHJlZy4gQWxzbyB1c2UgQ01EUV9BRERSX0xPVygpIHRvIGdldCBsb3cgYWRkcmVz
+cyBmb3IgYWRkcl9sb3cgcGFyYW1ldGVyd2hlbg0KPiArICogY2FsbCB0byB0aGlzIGZ1bmN0aW9u
+Lg0KPiArICovDQo+ICtpbnQgY21kcV9wa3Rfd3JpdGVfcyhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwg
+dTE2IGhpZ2hfYWRkcl9yZWdfaWR4LA0KPiArCQkgICAgIHUxNiBhZGRyX2xvdywgdTE2IHNyY19y
+ZWdfaWR4LCB1MzIgbWFzayk7DQo+ICsNCj4gIC8qKg0KPiAgICogY21kcV9wa3Rfd2ZlKCkgLSBh
+cHBlbmQgd2FpdCBmb3IgZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gICAqIEBw
+a3Q6CXRoZSBDTURRIHBhY2tldA0KDQo=
 
-I'm surprised the bond->io_mm can change over the lifetime of the
-bond memory..
-
-> > > If io_mm->ctx and io_mm->ops are already valid before the
-> > > mmu notifier is published, then we don't need that stuff.
-> > 
-> > So, this trickyness with RCU is not a bad reason to introduce the priv
-> > scheme, maybe explain it in the commit message?
-> 
-> Ok, I've added this to the commit message:
-> 
->     The IOMMU SVA module, which attaches an mm to multiple devices,
->     exemplifies this situation. In essence it does:
-> 
->             mmu_notifier_get()
->               alloc_notifier()
->                  A = kzalloc()
->               /* MMU notifier is published */
->             A->ctx = ctx;                           // (1)
->             device->A = A;
->             list_add_rcu(device, A->devices);       // (2)
-> 
->     The invalidate notifier, which may start running before A is fully
->     initialized at (1), does the following:
-> 
->             io_mm_invalidate(A)
->               list_for_each_entry_rcu(device, A->devices)
->                 A = device->A;                      // (3)
-
-I would drop the work around from the decription, it is enough to say
-that the line below needs to observe (1) after (2) and this is
-trivially achieved by moving (1) to before publishing the notifier so
-the core MM locking can be used.
-
-Regards,
-Jason
