@@ -2,94 +2,223 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 710F2C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F6DC3F2D4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5172D2084E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABA9246AE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 12:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgB1Lxp (ORCPT
+        id S1725536AbgB1MAQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:53:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:37022 "EHLO foss.arm.com"
+        Fri, 28 Feb 2020 07:00:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:37134 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgB1Lxp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:53:45 -0500
+        id S1726287AbgB1MAQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:00:16 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF1934B2;
-        Fri, 28 Feb 2020 03:53:44 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36A473F7B4;
-        Fri, 28 Feb 2020 03:53:43 -0800 (PST)
-Date:   Fri, 28 Feb 2020 11:53:40 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Olof Johansson <olof@lixom.net>
-List-Id: <soc.lore.kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Robert Richter <rric@kernel.org>, SoC Team <soc@kernel.org>,
-        Jon Loeliger <jdl@jdl.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2 13/13] MAINTAINERS: Update Calxeda Highbank
- maintainership
-Message-ID: <20200228115340.26495693@donnerap.cambridge.arm.com>
-In-Reply-To: <CAOesGMg1AiF5kLipKpD+3BYNE1hPfs2XYwSnFr0Szp3t=4zw-w@mail.gmail.com>
-References: <20200227182210.89512-1-andre.przywara@arm.com>
-        <20200227182210.89512-14-andre.przywara@arm.com>
-        <20200227223523.GH26010@bogus>
-        <CAOesGMg1AiF5kLipKpD+3BYNE1hPfs2XYwSnFr0Szp3t=4zw-w@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CCC04B2;
+        Fri, 28 Feb 2020 04:00:15 -0800 (PST)
+Received: from [10.37.12.207] (unknown [10.37.12.207])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE33C3F7B4;
+        Fri, 28 Feb 2020 04:00:11 -0800 (PST)
+Subject: Re: [RESEND PATCH v2 0/2] Enable Odroid-XU3/4 to use Energy Model and
+ Energy Aware Scheduler
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, cw00.choi@samsung.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
+        dietmar.eggemann@arm.com
+References: <20200220095636.29469-1-lukasz.luba@arm.com>
+ <20200220180040.GA8338@kozik-lap>
+ <CGME20200221103307eucas1p2bc51b3b5d6d0a9739ab97cdd39078505@eucas1p2.samsung.com>
+ <597f1475-754c-d77a-b599-0fa07d8ee948@arm.com>
+ <fb6961ce-846e-3c26-5227-6327c6d511f6@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <b2823ea1-a782-1024-bcc0-c1aba9a84fc3@arm.com>
+Date:   Fri, 28 Feb 2020 12:00:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <fb6961ce-846e-3c26-5227-6327c6d511f6@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 27 Feb 2020 16:39:44 -0800
-Olof Johansson <olof@lixom.net> wrote:
+Hi Marek,
 
-> On Thu, Feb 27, 2020 at 2:35 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Feb 27, 2020 at 06:22:10PM +0000, Andre Przywara wrote:  
-> > > Rob sees little point in maintaining the Calxeda architecture (early ARM
-> > > 32-bit server) anymore.
-> > > Since I have a machine sitting under my desk, change the maintainership
-> > > to not lose support for that platform.
-> > >
-> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > > ---
-> > >  MAINTAINERS | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)  
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
-> >
-> > Send a PR to arm-soc folks for this and the dts changes. I'll pickup the
-> > bindings.  
+On 2/28/20 10:59 AM, Marek Szyprowski wrote:
+> Hi Lukasz
 > 
-> Given that it's likely to be a low volume of code, we can also just
-> apply patches directly in this case (if it's easier than setting up a
-> kernel.org account, etc). Andre, just let us know your preference.
+> On 21.02.2020 11:32, Lukasz Luba wrote:
+>> On 2/20/20 6:00 PM, Krzysztof Kozlowski wrote:
+>>> On Thu, Feb 20, 2020 at 09:56:34AM +0000, Lukasz Luba wrote:
+>>>> This is just a resend, now with proper v2 in the patches subject.
+>>>>
+>>>> The Odroid-XU4/3 is a decent and easy accessible ARM big.LITTLE
+>>>> platform,
+>>>> which might be used for research and development.
+>>>>
+>>>> This small patch set provides possibility to run Energy Aware
+>>>> Scheduler (EAS)
+>>>> on Odroid-XU4/3 and experiment with it.
+>>>>
+>>>> The patch 1/2 provides 'dynamic-power-coefficient' in CPU DT nodes,
+>>>> which is
+>>>> then used by the Energy Model (EM).
+>>>> The patch 2/2 enables SCHED_MC (which adds another level in
+>>>> scheduling domains)
+>>>> and enables EM making EAS possible to run (when schedutil is set as
+>>>> a CPUFreq
+>>>> governor).
+>>>>
+>>>> 1. Test results
+>>>>
+>>>> Two types of different tests have been executed. The first is energy
+>>>> test
+>>>> case showing impact on energy consumption of this patch set. It is
+>>>> using a
+>>>> synthetic set of tasks (rt-app based). The second is the performance
+>>>> test
+>>>> case which is using hackbench (less time to complete is better).
+>>>> In both tests schedutil has been used as cpufreq governor. In all tests
+>>>> PROVE_LOCKING has not been compiled into the kernels.
+>>>>
+>>>> 1.1 Energy test case
+>>>>
+>>>> 10 iterations of 24 periodic rt-app tasks (16ms period, 10% duty-cycle)
+>>>> with energy measurement. The cpufreq governor - schedutil. Unit is
+>>>> Joules.
+>>>> The energy is calculated based on hwmon0 and hwmon3 power1_input.
+>>>> The goal is to save energy, lower is better.
+>>>>
+>>>> +-----------+-----------------+------------------------+
+>>>> |           | Without patches | With patches           |
+>>>> +-----------+--------+--------+----------------+-------+
+>>>> | benchmark |  Mean  | RSD*   | Mean           | RSD*  |
+>>>> +-----------+--------+--------+----------------+-------+
+>>>> | 24 rt-app |  21.56 |  1.37% |  19.85 (-9.2%) | 0.92% |
+>>>> |    tasks  |        |        |                |       |
+>>>> +-----------+--------+--------+----------------+-------+
+>>>>
+>>>> 1.2 Performance test case
+>>>>
+>>>> 10 consecutive iterations of hackbench (hackbench -l 500 -s 4096),
+>>>> no delay between two successive executions.
+>>>> The cpufreq governor - schedutil. Units in seconds.
+>>>> The goal is to see not regression, lower completion time is better.
+>>>>
+>>>> +-----------+-----------------+------------------------+
+>>>> |           | Without patches | With patches           |
+>>>> +-----------+--------+--------+----------------+-------+
+>>>> | benchmark | Mean   | RSD*   | Mean           | RSD*  |
+>>>> +-----------+--------+--------+----------------+-------+
+>>>> | hackbench |  8.15  | 2.86%  |  7.95 (-2.5%)  | 0.60% |
+>>>> +-----------+--------+--------+----------------+-------+
+>>>>
+>>>> *RSD: Relative Standard Deviation (std dev / mean)
+>>>
+>>> Nice measurements!
+>>
+>> Glad to hear that.
+>>
+>>>
+>>> Applied both, thank you.
+>>>
+>>
+>> Thank you for applying this.
+> 
+> 
+> After applying the patches I see the following warnings during boot (XU4):
+> 
+> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 1 >= em_cap_state0
+> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 3 >= em_cap_state2
+> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 4 >= em_cap_state3
+> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 5 >= em_cap_state4
+> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 8 >= em_cap_state7
+> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 10 >= em_cap_state9
+> energy_model: pd0: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 11 >= em_cap_state10
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 1 >= em_cap_state0
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 2 >= em_cap_state1
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 3 >= em_cap_state2
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 4 >= em_cap_state3
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 5 >= em_cap_state4
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 6 >= em_cap_state5
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 8 >= em_cap_state7
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 9 >= em_cap_state8
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 10 >= em_cap_state9
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 13 >= em_cap_state12
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 15 >= em_cap_state14
+> energy_model: pd4: hertz/watts ratio non-monotonically decreasing:
+> em_cap_state 16 >= em_cap_state15
+> 
+> Is it okay?
 
-I am happy (and more familiar) with just sending a final series via email. Especially if you insist on pulling from kernel.org git trees only, that is probably the only way for now.
+It shouldn't harm the EAS but it might be used by thermal, especially
+those OPPs from the top. Like in your case in step_wise (IIRC the DT
+settings).
+But removing some of these from the bottom, would be good.
+It would lower the Energy Model complexity, which is:
+nr_perf_domain * (nr_cpus + nr_OPPs) [1] (in Odroid XU4 is ~80 IIRC)
 
-To gain more independence from "corporate email" I am looking forward to setting up a kernel.org account and sending proper PRs in the future, but indeed this is probably overkill given the expected volume of patches.
+smaller OPP number is better.
 
-Let me just run some test with the final version of the DT, then I will send a v3.
+Douglas is working on a patch set which could skip non-efficient OPPs
+(the OPPs which have the same voltage but different frequency).
+Although, we don't know the numbers how much it could save energy - when
+we use the fastest frequency for the set of OPPs with the same voltage,
+comparing to the slowest (theoretically entering idle earlier) .
+The discussion is ongoing here [2].
 
-Cheers,
-Andre
+Regarding the print message. It's not a bug in the platform so in
+my opinion we shouldn't use 'pr_warn' in this case.
+It's going to be changed to just debug level print. I have this
+change in the new Energy Model. It is in last point in changelog v3 [3]
+and the change which does this is in patch 1/4:
+--------------------------------------------->8------------------
+-			pr_warn("pd%d: hertz/watts ratio non-monotonically decreasing: 
+em_cap_state %d >= em_cap_state%d\n",
+-					cpu, i, i - 1);
++			dev_dbg(dev, "EM: hertz/watts ratio non-monotonically decreasing: 
+em_perf_state %d >= em_perf_state%d\n",
++					i, i - 1);
+
+--------------------------------------8<------------------------
 
 
+Regards,
+Lukasz
+
+[1] 
+https://elixir.bootlin.com/linux/latest/source/kernel/sched/topology.c#L397
+[2] https://lkml.org/lkml/2020/1/22/1169
+[3] https://lkml.org/lkml/2020/2/21/1910
