@@ -2,83 +2,101 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956E3C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875D4C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC7220658
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC172469D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 03:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730569AbgB1DD1 (ORCPT
+        id S1730586AbgB1DJH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:03:27 -0500
-Received: from kernel.crashing.org ([76.164.61.194]:37276 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730520AbgB1DD1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 22:03:27 -0500
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01S32TN4031937
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 27 Feb 2020 21:02:32 -0600
-Message-ID: <2676013663fc8c53e02a5fdaafb1b27e18249b80.camel@kernel.crashing.org>
-Subject: Re: [PATCH v5 7/7] dt-bindings: usb: add documentation for aspeed
- usb-vhub
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Tao Ren <rentao.bupt@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>, linux-aspeed@lists.ozlabs.org,
-        devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openbmc@lists.ozlabs.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>, taoren@fb.com,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 28 Feb 2020 14:02:28 +1100
-In-Reply-To: <20200228010444.GA19910@taoren-ubuntu-R90MNF91>
-References: <20200227230507.8682-1-rentao.bupt@gmail.com>
-         <20200227230507.8682-8-rentao.bupt@gmail.com>
-         <3150424b9e9f5856c747a0fbf44647919f49209d.camel@kernel.crashing.org>
-         <20200228010444.GA19910@taoren-ubuntu-R90MNF91>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Feb 2020 22:09:07 -0500
+Received: from mga04.intel.com ([192.55.52.120]:52592 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730569AbgB1DJH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Feb 2020 22:09:07 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 19:09:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="232410956"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Feb 2020 19:09:06 -0800
+Received: from [10.226.38.23] (unknown [10.226.38.23])
+        by linux.intel.com (Postfix) with ESMTP id 9638158045A;
+        Thu, 27 Feb 2020 19:09:00 -0800 (PST)
+Subject: Re: [PATCH v11 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
+        dinguyen@kernel.org, tien.fong.chee@intel.com, marex@denx.de,
+        mark.rutland@arm.com, linux-mtd@lists.infradead.org,
+        dwmw2@infradead.org, richard@nod.at, computersforpeace@gmail.com,
+        boris.brezillon@free-electrons.com, cyrille.pitchen@atmel.com,
+        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
+        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227062708.21544-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227170748.GA19661@bogus>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <3ec7c41f-f074-3b0a-25c6-1ac04f524bbb@linux.intel.com>
+Date:   Fri, 28 Feb 2020 11:08:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200227170748.GA19661@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 2020-02-27 at 17:05 -0800, Tao Ren wrote:
-> > Also long run I think best is going to have a child node per downstream
-> > port, so we create a matching linux struct device. This will make it
-> > easier to deal with the other device-controller in the ast2600 which is
-> > basically one of these without a vhub above it.
-> 
-> Maybe a dumb question: what would be the proper place to parse the child
-> node/properties when they are added? For example, in some usb_gadget_ops
-> callback?
+Hi Rob,
 
-No. What the vhub would do is when it probes, it creates a platform
-device for each "port" child node that's linked to the DT node.
+On 28/2/2020 1:07 AM, Rob Herring wrote:
+> On Thu, 27 Feb 2020 14:27:07 +0800, "Ramuthevar,Vadivel MuruganX" wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add dt-bindings documentation for Cadence-QSPI controller to support
+>> spi based flash memories.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 ----------
+>>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 142 +++++++++++++++++++++
+>>   2 files changed, 142 insertions(+), 67 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>
+> My bot found errors running 'make dt_binding_check' on your patch:
 
-The driver for the device then attaches to it via standard DT matching
-and checks if it has a vhub parent or not, and based on that, operates
-as a vhub child device or a standalone one.
+Thanks!,  Sorry for the trouble , next time will run and fix it up.
 
-(For example, it might have different functions for EP selection since
-standalone devices have private EPs rather than a shared pool)
-
-They can both be in the same module or they can be separate modules
-with cross dependencies.
-
-Cheers,
-Ben.
-
-
+Regards
+Vadivel
+>
+> warning: no schema found in file: Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml: ignoring, error in schema: patternProperties: cdns,read-delay
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml: patternProperties:cdns,read-delay: {'description': 'Delay in 4 microseconds, read capture logic, in clock cycles.'} is not valid under any of the given schemas (Possible causes of the failure):
+> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml: patternProperties:cdns,read-delay: 'not' is a required property
+>
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dts] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> See https://patchwork.ozlabs.org/patch/1245559
+> Please check and re-submit.
