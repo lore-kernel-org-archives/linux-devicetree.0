@@ -2,129 +2,78 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12D5C3F2D3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C092EC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7386624699
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582897811;
-	bh=AenvJB04PGqxvh0r1u1fNLP1JQNsy7lc4FSuIxM11sk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1+WsnaUVEN61ykXyOeOwvEuiCqTlyUtrzUulI2bnS3Bn0aVFaRpR25n25JlI0yFAv
-	 RhgHgeYaCtj0zXP3f1a8h/Svykm1HcLm45pIyqnWI7zQF3Jr1bT+ugFc4mhIgqSo/Q
-	 xs/L1kokKUyWcLWxSOfU+MHdf4uZS2K6npptAEF4=
+	by mail.kernel.org (Postfix) with ESMTP id 93E4D246AC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgB1NuL (ORCPT
+        id S1726956AbgB1Nvp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:50:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 08:51:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:38590 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbgB1NuK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:50:10 -0500
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E839A246AC;
-        Fri, 28 Feb 2020 13:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582897810;
-        bh=AenvJB04PGqxvh0r1u1fNLP1JQNsy7lc4FSuIxM11sk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mUnZCSMM9LEbGnCEw35f28QV3pBkme8CDwX4/BDxk9H2Ji7Vi0TObAnCYbe9XEvQC
-         +95CGAuJPQXEVGi8dnTZP0Q+EbYIODpIFXLzn+EcKT/Zd47JHc412n1RGzMq3KHCPa
-         EC+gibBft58i3mw0DfO4DyUeBXAHiskz1n0IrR98=
-Received: by mail-qk1-f179.google.com with SMTP id p62so240972qkb.0;
-        Fri, 28 Feb 2020 05:50:09 -0800 (PST)
-X-Gm-Message-State: APjAAAW61S2/+a8EkfiR/oSS+1Tv/vpJDGBjkAAsbFf8mffVeKOjJYzj
-        lxPD5BbkRRpGbv3GFeOsg8vsb0WQYjV1wynrfA==
-X-Google-Smtp-Source: APXvYqwry3YZZtRR7flSe2amPBy5GQiHkF7TBWOS6WX5oOexYDr8PBVvzsyChsK1MHT6pg1W2sd0lsr9Q7kb3XcqETk=
-X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr4606535qki.254.1582897809072;
- Fri, 28 Feb 2020 05:50:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
-In-Reply-To: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 28 Feb 2020 07:49:57 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com>
-Message-ID: <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1725892AbgB1Nvp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:51:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09CCE31B;
+        Fri, 28 Feb 2020 05:51:45 -0800 (PST)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 293DE3F7B4;
+        Fri, 28 Feb 2020 05:51:43 -0800 (PST)
+From:   Andre Przywara <andre.przywara@arm.com>
+List-Id: <soc.lore.kernel.org>
+To:     soc@kernel.org, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Robert Richter <rric@kernel.org>, Jon Loeliger <jdl@jdl.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH v3 2/5] arm: dts: calxeda: Provide UART clock
+Date:   Fri, 28 Feb 2020 13:51:03 +0000
+Message-Id: <20200228135106.220620-3-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200228135106.220620-1-andre.przywara@arm.com>
+References: <20200228135106.220620-1-andre.przywara@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
-<rayagonda.kokatanur@broadcom.com> wrote:
->
-> Generally i2c addr should not be greater than 10-bit. The highest 2 bits
-> are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
-> these flags if check slave addr valid.
->
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> ---
->  scripts/dtc/Makefile | 2 +-
->  scripts/dtc/checks.c | 5 +++++
->  2 files changed, 6 insertions(+), 1 deletion(-)
+The PL011 UART binding requires two clocks to be named in a node.
+Add the second clock, which is the bus gate, that just gets enabled.
+Since this is a fixed clock anyway, it doesn't make any difference.
 
-dtc changes must be submitted against upstream dtc.
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ arch/arm/boot/dts/ecx-common.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm/boot/dts/ecx-common.dtsi b/arch/arm/boot/dts/ecx-common.dtsi
+index 66ee1d34f72b..f819e3328a9e 100644
+--- a/arch/arm/boot/dts/ecx-common.dtsi
++++ b/arch/arm/boot/dts/ecx-common.dtsi
+@@ -114,8 +114,8 @@
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0xfff36000 0x1000>;
+ 			interrupts = <0 20 4>;
+-			clocks = <&pclk>;
+-			clock-names = "apb_pclk";
++			clocks = <&pclk>, <&pclk>;
++			clock-names = "uartclk", "apb_pclk";
+ 		};
+ 
+ 		smic@fff3a000 {
+-- 
+2.17.1
 
-> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> index 3acbb410904c..c5e8d6a9e73c 100644
-> --- a/scripts/dtc/Makefile
-> +++ b/scripts/dtc/Makefile
-> @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
->  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
->
->  # Source files need to get at the userspace version of libfdt_env.h to compile
-> -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
-> +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
->
->  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
->  ifneq ($(CHECK_DTBS),)
-> diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-> index 756f0fa9203f..17c9ed4137b5 100644
-> --- a/scripts/dtc/checks.c
-> +++ b/scripts/dtc/checks.c
-> @@ -3,6 +3,7 @@
->   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
->   */
->
-> +#include <linux/bits.h>
-
-Not a UAPI header not that that would be much better as dtc also builds on Mac.
-
->  #include "dtc.h"
->  #include "srcpos.h"
->
-> @@ -17,6 +18,9 @@
->  #define TRACE(c, fmt, ...)     do { } while (0)
->  #endif
->
-> +#define I2C_TEN_BIT_ADDRESS    BIT(31)
-> +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
-> +
->  enum checkstatus {
->         UNCHECKED = 0,
->         PREREQ,
-> @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
->
->         for (len = prop->val.len; len > 0; len -= 4) {
->                 reg = fdt32_to_cpu(*(cells++));
-> +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
-
-I'd just mask the top byte so we don't have to update on the next flag we add.
-
-Rob
