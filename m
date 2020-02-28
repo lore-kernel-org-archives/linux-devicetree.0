@@ -2,98 +2,126 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B48CC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F3FC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6298F246AE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C91F2051A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 13:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vpujZh9h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ZaecqM0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgB1N6L (ORCPT
+        id S1726748AbgB1N6b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:58:11 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45200 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725892AbgB1N6L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:58:11 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SDvEF7018288;
-        Fri, 28 Feb 2020 14:58:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=sQGS3ajcizRpXz7eztz3fMHKRX1ok8Cx3ATqa3t8sXI=;
- b=vpujZh9hfVYYlWUBbS8oSxHfGRCy2GfcEAt1BI1uN7+mFa93ncdXlB9wBNfU9WqOrhAc
- 3xb+TXjcfeGfZziVC3lYIkK/Imxyie+wAQbXtPytjuiMV+rl39zDIwrUk4jgLyS9t83v
- Bhl+PeR5nEUfigrpurqzT/vlrJzhlVZ5ggs3pApho4zq89TubdjI45yd/h6mcpJ331Wr
- S9xBi+1gB6lmAKqFE0ds8V/UrOuKxmwwDy0tYuNR32hSx0gvn1m5QAXu1Uu7cnnw4y6J
- 7rN5kD/Pet5zHniRymn/m1hXE8KI1affqqgNXXhu9JMvGoxjJimcrATiPe00CcjHIoa4 eA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yepvtc9xe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 14:58:06 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 251F9100034;
-        Fri, 28 Feb 2020 14:58:00 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E9BC32BEC4A;
-        Fri, 28 Feb 2020 14:57:59 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Feb 2020 14:57:59
- +0100
-From:   Yannick Fertre <yannick.fertre@st.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Fri, 28 Feb 2020 08:58:31 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:14830 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgB1N6b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 08:58:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582898308;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Lg2vjJyPeK3SdOkL22G/V755a2Cx89sCodyhANXZ7FE=;
+        b=ZaecqM0nrZ1pntXILB9tp0ZDdg9DJ6VndQrMNVCos3hB36cEL8Y7AJ6Pc9FOYBCZeF
+        1V8d573NglW9+mViklC+GrYS8tfO8lj6SViiFDyqIXIU3ZwvJfVlbJm0Jr30t0rvbvyl
+        2UDHRpcLjxFM/DUe8rHd4wAWdtIZ809rUODs5tRa0v+tuPM5nhK5MlffFouMMUjj1NO0
+        5+y7NvX2PB3wwy2Cy0WmjX83P+9cVlhS2jy18SIKUrwJk6fWA7NajqcOTOKIpYRZEsDq
+        7ANTgDcVnklV34gHecoTTP4M7RdBl1uYJv2O8wrTEu4IY3s6gqqW0dTVrX+DT1IUZp3v
+        j7vw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1SDwP1A5
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 28 Feb 2020 14:58:25 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Yannick Fertre <yannick.fertre@st.com>,
-        <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: touchscreen: goodix: support of gt9147
-Date:   Fri, 28 Feb 2020 14:57:51 +0100
-Message-ID: <1582898271-21073-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: [PATCH v7 1/7] memory: jz4780_nemc: Only request IO memory the driver will use
+Date:   Fri, 28 Feb 2020 14:58:17 +0100
+Message-Id: <551a8560261543c1decb1d4d1671ec4b7fa52fdb.1582898302.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1582898302.git.hns@goldelico.com>
+References: <cover.1582898302.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_04:2020-02-28,2020-02-28 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for it by adding compatible.
-The chip data on GT9147 is similar to GT912, like
-- config data register has 0x8047 address
-- config data register max len is 240
-- config data checksum has 8-bit
+From: Paul Cercueil <paul@crapouillou.net>
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+The driver only uses the registers up to offset 0x54. Since the EFUSE
+registers are in the middle of the NEMC registers, we only request
+the registers we will use for now - that way the EFUSE driver can
+probe too.
+
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- Documentation/devicetree/bindings/input/touchscreen/goodix.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/memory/jz4780-nemc.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-index d7c3262..9f65d67 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-@@ -21,6 +21,7 @@ properties:
-       - goodix,gt911
-       - goodix,gt9110
-       - goodix,gt912
-+      - goodix,gt9147
-       - goodix,gt927
-       - goodix,gt9271
-       - goodix,gt928
+diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
+index b232ed279fc3..647267ea8c63 100644
+--- a/drivers/memory/jz4780-nemc.c
++++ b/drivers/memory/jz4780-nemc.c
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/init.h>
++#include <linux/io.h>
+ #include <linux/math64.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -288,7 +289,19 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
+ 	nemc->dev = dev;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	nemc->base = devm_ioremap_resource(dev, res);
++
++	/*
++	 * The driver only uses the registers up to offset 0x54. Since the EFUSE
++	 * registers are in the middle of the NEMC registers, we only request
++	 * the registers we will use for now - that way the EFUSE driver can
++	 * probe too.
++	 */
++	if (!devm_request_mem_region(dev, res->start, 0x54, dev_name(dev))) {
++		dev_err(dev, "unable to request I/O memory region\n");
++		return -EBUSY;
++	}
++
++	nemc->base = devm_ioremap(dev, res->start, resource_size(res));
+ 	if (IS_ERR(nemc->base)) {
+ 		dev_err(dev, "failed to get I/O memory\n");
+ 		return PTR_ERR(nemc->base);
 -- 
-2.7.4
+2.23.0
 
