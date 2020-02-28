@@ -2,222 +2,129 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9B6C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49EAC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73642246A3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA15246A3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:44:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eyk6vY0A"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fEwVUgql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgB1OoN (ORCPT
+        id S1727024AbgB1OoS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:44:13 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35195 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgB1OoM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:44:12 -0500
-Received: by mail-wr1-f68.google.com with SMTP id r7so3259360wro.2
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 06:44:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QMl+VBaGMao7gyBNUaUbW1tLbhMPTZJMdvofJak/bmM=;
-        b=Eyk6vY0Af0pgRHDvnoOLJKEE9DaGoa+4z0NJ0t/WaE+0vf6ERLTI5+gCSTL4JKeEc7
-         arJUIl26vcb7lA32WK3mE1Z9pObCrTyBu370u//nTiHn54Qsk9vtBAlncLuZo9K0V9Bo
-         few19oXa3fshNwMeLE1X36r0Kl70yyi9UUOxcD7HXOQk57UJt7R/uONrD0jw5QwBKUEP
-         XNLUCyENocPiBEBMYBsa65NNpXfx1bwVRSoKhuPD+Y1BFMRjqLFWjj7Bjg+11i79QgS1
-         AuuGvqPiln8Z0uHDmfdS0ONpDj/sxIKSFG/mkvrKTjD2nZHB7B4UWE1XulydcVQDQVxM
-         5WkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QMl+VBaGMao7gyBNUaUbW1tLbhMPTZJMdvofJak/bmM=;
-        b=VR8kCxeC6ioyGcPXUPonUK2tTPsxsMZJ1ArAc/SCw3B545qaIlHq7BkQEaoPUo8Px1
-         66RDfCvgcJkI1q3HtMAaxIQiPrgpKEHoeGQpwhdEPanlCE57BENSI6QrsV5+m+WBp8/Y
-         FkOW0a1VmxFIeI8U8O+ZeLOrb3LfAzJazCgpH/o+id+mnuv82zekyTv1cFgXya/3kgq7
-         hnOJiSb7h4uDpwbvjvmp404YBYh7XMpNfAZZDBKglQUNAW+UPRu5IZ/YR1NOv0vjlfmx
-         3ETFHwLpyrUJ/kvU3AbIGwhPer1c4Vgv0qdl9l3y4wEPXGGwhWuZsMwPbYuf+sD/7nxd
-         r1Yw==
-X-Gm-Message-State: APjAAAVbwllbt3kEmfayH9SPU1KUhXlHwYK5g8VKXaMdcILZIkwpxoql
-        LM+sqXooloCmynPGCugOUDr1lw==
-X-Google-Smtp-Source: APXvYqw6DykiBE32SqEJ+HnRwk8TuEFmQqrz2Fb4Wvuo7oVY88B0FHH4nfUvdWL5pnDIWaqbqIxz+g==
-X-Received: by 2002:adf:f648:: with SMTP id x8mr5477186wrp.198.1582901051368;
-        Fri, 28 Feb 2020 06:44:11 -0800 (PST)
-Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id o27sm13045012wro.27.2020.02.28.06.44.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 06:44:10 -0800 (PST)
-Date:   Fri, 28 Feb 2020 15:44:04 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, jacob.jun.pan@linux.intel.com,
-        christian.koenig@amd.com, yi.l.liu@intel.com,
-        zhangfei.gao@linaro.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v4 03/26] iommu: Add a page fault handler
-Message-ID: <20200228144404.GD2156@myrica>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-4-jean-philippe@linaro.org>
- <20200226135933.000061a0@Huawei.com>
+        Fri, 28 Feb 2020 09:44:18 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:46938 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726860AbgB1OoR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:44:17 -0500
+X-UUID: 134be1b3739c47e38870e25573550941-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Oo9OqLwNu+IUBMtwmf3xp6IAkUZJKqSI+TGBkTXf0MU=;
+        b=fEwVUgql/zgAEvFPUsB1rTth52ppMq5xvxEtXGDFEnmLQAwzf1iwYmv5g9NQp2GyQFqm1kGUfeWgOREcWZ96HM7YfgEaQrPogjzACShpLTDF+v8lvVjzC2NKuImn5d+Mc/xxcy0fExBkNGQ3sOlK6LTWLJjX1XH+hfIpcrthZW4=;
+X-UUID: 134be1b3739c47e38870e25573550941-20200228
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1620552108; Fri, 28 Feb 2020 22:44:14 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 22:45:52 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 22:44:05 +0800
+Message-ID: <1582901053.14824.3.camel@mtksdaap41>
+Subject: Re: [PATCH v3 06/13] soc: mediatek: cmdq: add assign function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Fri, 28 Feb 2020 22:44:13 +0800
+In-Reply-To: <1582897461-15105-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226135933.000061a0@Huawei.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 01:59:33PM +0000, Jonathan Cameron wrote:
-> > +static int iopf_complete(struct device *dev, struct iopf_fault *iopf,
-> > +			 enum iommu_page_response_code status)
-> 
-> This is called once per group.  Should name reflect that?
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IEFkZCBhc3NpZ24gZnVuY3Rpb24gaW4gY21kcSBoZWxwZXIgd2hp
+Y2ggYXNzaWduIGNvbnN0YW50IHZhbHVlIGludG8NCj4gaW50ZXJuYWwgcmVnaXN0ZXIgYnkgaW5k
+ZXguDQo+IA0KDQpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCg0KPiBT
+aWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5j
+b20+DQo+IC0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgICB8
+IDI0ICsrKysrKysrKysrKysrKysrKysrKysrLQ0KPiAgaW5jbHVkZS9saW51eC9tYWlsYm94L210
+ay1jbWRxLW1haWxib3guaCB8ICAxICsNCj4gIGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210
+ay1jbWRxLmggICAgfCAxNCArKysrKysrKysrKysrKw0KPiAgMyBmaWxlcyBjaGFuZ2VkLCAzOCBp
+bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+b2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGst
+Y21kcS1oZWxwZXIuYw0KPiBpbmRleCAwNjk4NjEyZGU1YWQuLjgzNDJhNWM5NGJjNyAxMDA2NDQN
+Cj4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gKysrIGIv
+ZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gQEAgLTEyLDYgKzEyLDcg
+QEANCj4gICNkZWZpbmUgQ01EUV9XUklURV9FTkFCTEVfTUFTSwlCSVQoMCkNCj4gICNkZWZpbmUg
+Q01EUV9QT0xMX0VOQUJMRV9NQVNLCUJJVCgwKQ0KPiAgI2RlZmluZSBDTURRX0VPQ19JUlFfRU4J
+CUJJVCgwKQ0KPiArI2RlZmluZSBDTURRX1JFR19UWVBFCQkxDQo+ICANCj4gIHN0cnVjdCBjbWRx
+X2luc3RydWN0aW9uIHsNCj4gIAl1bmlvbiB7DQo+IEBAIC0yMSw4ICsyMiwxNyBAQCBzdHJ1Y3Qg
+Y21kcV9pbnN0cnVjdGlvbiB7DQo+ICAJdW5pb24gew0KPiAgCQl1MTYgb2Zmc2V0Ow0KPiAgCQl1
+MTYgZXZlbnQ7DQo+ICsJCXUxNiByZWdfZHN0Ow0KPiArCX07DQo+ICsJdW5pb24gew0KPiArCQl1
+OCBzdWJzeXM7DQo+ICsJCXN0cnVjdCB7DQo+ICsJCQl1OCBzb3A6NTsNCj4gKwkJCXU4IGFyZ19j
+X3Q6MTsNCj4gKwkJCXU4IGFyZ19iX3Q6MTsNCj4gKwkJCXU4IGRzdF90OjE7DQo+ICsJCX07DQo+
+ICAJfTsNCj4gLQl1OCBzdWJzeXM7DQo+ICAJdTggb3A7DQo+ICB9Ow0KPiAgDQo+IEBAIC0yNzcs
+NiArMjg3LDE4IEBAIGludCBjbWRxX3BrdF9wb2xsX21hc2soc3RydWN0IGNtZHFfcGt0ICpwa3Qs
+IHU4IHN1YnN5cywNCj4gIH0NCj4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3RfcG9sbF9tYXNrKTsN
+Cj4gIA0KPiAraW50IGNtZHFfcGt0X2Fzc2lnbihzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IHJl
+Z19pZHgsIHUzMiB2YWx1ZSkNCj4gK3sNCj4gKwlzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiBpbnN0
+ID0geyB7MH0gfTsNCj4gKw0KPiArCWluc3Qub3AgPSBDTURRX0NPREVfTE9HSUM7DQo+ICsJaW5z
+dC5kc3RfdCA9IENNRFFfUkVHX1RZUEU7DQo+ICsJaW5zdC5yZWdfZHN0ID0gcmVnX2lkeDsNCj4g
+KwlpbnN0LnZhbHVlID0gdmFsdWU7DQo+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5k
+KHBrdCwgaW5zdCk7DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X2Fzc2lnbik7DQo+
+ICsNCj4gIHN0YXRpYyBpbnQgY21kcV9wa3RfZmluYWxpemUoc3RydWN0IGNtZHFfcGt0ICpwa3Qp
+DQo+ICB7DQo+ICAJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+IGRp
+ZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIGIvaW5j
+bHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBpbmRleCBkZmU1YjJlYjg1
+Y2MuLjEyMWMzYmI2ZDNkZSAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210
+ay1jbWRxLW1haWxib3guaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEt
+bWFpbGJveC5oDQo+IEBAIC01OSw2ICs1OSw3IEBAIGVudW0gY21kcV9jb2RlIHsNCj4gIAlDTURR
+X0NPREVfSlVNUCA9IDB4MTAsDQo+ICAJQ01EUV9DT0RFX1dGRSA9IDB4MjAsDQo+ICAJQ01EUV9D
+T0RFX0VPQyA9IDB4NDAsDQo+ICsJQ01EUV9DT0RFX0xPR0lDID0gMHhhMCwNCj4gIH07DQo+ICAN
+Cj4gIGVudW0gY21kcV9jYl9zdGF0dXMgew0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9z
+b2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
+bWRxLmgNCj4gaW5kZXggYTc0YzFkNWFjZGYzLi44MzM0MDIxMWUxZDMgMTAwNjQ0DQo+IC0tLSBh
+L2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gKysrIGIvaW5jbHVkZS9s
+aW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBAQCAtMTUyLDYgKzE1MiwyMCBAQCBpbnQg
+Y21kcV9wa3RfcG9sbChzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiAgICovDQo+
+ICBpbnQgY21kcV9wa3RfcG9sbF9tYXNrKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMs
+DQo+ICAJCSAgICAgICB1MTYgb2Zmc2V0LCB1MzIgdmFsdWUsIHUzMiBtYXNrKTsNCj4gKw0KPiAr
+LyoqDQo+ICsgKiBjbWRxX3BrdF9hc3NpZ24oKSAtIEFwcGVuZCBsb2dpYyBhc3NpZ24gY29tbWFu
+ZCB0byB0aGUgQ01EUSBwYWNrZXQsIGFzayBHQ0UNCj4gKyAqCQkgICAgICAgdG8gZXhlY3V0ZSBh
+biBpbnN0cnVjdGlvbiB0aGF0IHNldCBhIGNvbnN0YW50IHZhbHVlIGludG8NCj4gKyAqCQkgICAg
+ICAgaW50ZXJuYWwgcmVnaXN0ZXIgYW5kIHVzZSBhcyB2YWx1ZSwgbWFzayBvciBhZGRyZXNzIGlu
+DQo+ICsgKgkJICAgICAgIHJlYWQvd3JpdGUgaW5zdHJ1Y3Rpb24uDQo+ICsgKiBAcGt0Ogl0aGUg
+Q01EUSBwYWNrZXQNCj4gKyAqIEByZWdfaWR4Ogl0aGUgQ01EUSBpbnRlcm5hbCByZWdpc3RlciBJ
+RA0KPiArICogQHZhbHVlOgl0aGUgc3BlY2lmaWVkIHZhbHVlDQo+ICsgKg0KPiArICogUmV0dXJu
+OiAwIGZvciBzdWNjZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+ICsgKi8N
+Cj4gK2ludCBjbWRxX3BrdF9hc3NpZ24oc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiByZWdfaWR4
+LCB1MzIgdmFsdWUpOw0KPiArDQo+ICAvKioNCj4gICAqIGNtZHFfcGt0X2ZsdXNoX2FzeW5jKCkg
+LSB0cmlnZ2VyIENNRFEgdG8gYXN5bmNocm9ub3VzbHkgZXhlY3V0ZSB0aGUgQ01EUQ0KPiAgICog
+ICAgICAgICAgICAgICAgICAgICAgICAgIHBhY2tldCBhbmQgY2FsbCBiYWNrIGF0IHRoZSBlbmQg
+b2YgZG9uZSBwYWNrZXQNCg0K
 
-Ok
-
-[...]
-> > +/**
-> > + * iommu_queue_iopf - IO Page Fault handler
-> > + * @evt: fault event
-> > + * @cookie: struct device, passed to iommu_register_device_fault_handler.
-> > + *
-> > + * Add a fault to the device workqueue, to be handled by mm.
-> > + *
-> > + * Return: 0 on success and <0 on error.
-> > + */
-> > +int iommu_queue_iopf(struct iommu_fault *fault, void *cookie)
-> > +{
-> > +	int ret;
-> > +	struct iopf_group *group;
-> > +	struct iopf_fault *iopf, *next;
-> > +	struct iopf_device_param *iopf_param;
-> > +
-> > +	struct device *dev = cookie;
-> > +	struct iommu_param *param = dev->iommu_param;
-> > +
-> > +	if (WARN_ON(!mutex_is_locked(&param->lock)))
-> > +		return -EINVAL;
-> 
-> Just curious...
-> 
-> Why do we always need a runtime check on this rather than say,
-> using lockdep_assert_held or similar?
-
-I probably didn't know about lockdep_assert at the time :)
-
-> > +	/*
-> > +	 * It is incredibly easy to find ourselves in a deadlock situation if
-> > +	 * we're not careful, because we're taking the opposite path as
-> > +	 * iommu_queue_iopf:
-> > +	 *
-> > +	 *   iopf_queue_flush_dev()   |  PRI queue handler
-> > +	 *    lock(&param->lock)      |   iommu_queue_iopf()
-> > +	 *     queue->flush()         |    lock(&param->lock)
-> > +	 *      wait PRI queue empty  |
-> > +	 *
-> > +	 * So we can't hold the device param lock while flushing. Take a
-> > +	 * reference to the device param instead, to prevent the queue from
-> > +	 * going away.
-> > +	 */
-> > +	mutex_lock(&param->lock);
-> > +	iopf_param = param->iopf_param;
-> > +	if (iopf_param) {
-> > +		queue = param->iopf_param->queue;
-> > +		iopf_param->busy = true;
-> 
-> Describing this as taking a reference is not great...
-> I'd change the comment to set a flag or something like that.
-> 
-> Is there any potential of multiple copies of this running against
-> each other?  I've not totally gotten my head around when this
-> might be called yet.
-
-Yes it's allowed, this should be a refcount
-
-[...]
-> > +int iopf_queue_remove_device(struct iopf_queue *queue, struct device *dev)
-> > +{
-> > +	int ret = -EINVAL;
-> > +	struct iopf_fault *iopf, *next;
-> > +	struct iopf_device_param *iopf_param;
-> > +	struct iommu_param *param = dev->iommu_param;
-> > +
-> > +	if (!param || !queue)
-> > +		return -EINVAL;
-> > +
-> > +	do {
-> > +		mutex_lock(&queue->lock);
-> > +		mutex_lock(&param->lock);
-> > +		iopf_param = param->iopf_param;
-> > +		if (iopf_param && iopf_param->queue == queue) {
-> > +			if (iopf_param->busy) {
-> > +				ret = -EBUSY;
-> > +			} else {
-> > +				list_del(&iopf_param->queue_list);
-> > +				param->iopf_param = NULL;
-> > +				ret = 0;
-> > +			}
-> > +		}
-> > +		mutex_unlock(&param->lock);
-> > +		mutex_unlock(&queue->lock);
-> > +
-> > +		/*
-> > +		 * If there is an ongoing flush, wait for it to complete and
-> > +		 * then retry. iopf_param isn't going away since we're the only
-> > +		 * thread that can free it.
-> > +		 */
-> > +		if (ret == -EBUSY)
-> > +			wait_event(iopf_param->wq_head, !iopf_param->busy);
-> > +		else if (ret)
-> > +			return ret;
-> > +	} while (ret == -EBUSY);
-> 
-> I'm in two minds about the next comment (so up to you)...
-> 
-> Currently this looks a bit odd.  Would you be better off just having a separate
-> parameter for busy and explicit separate handling for the error path?
-> 
-> 	bool busy;
-> 	int ret = 0;
-> 
-> 	do {
-> 		mutex_lock(&queue->lock);
-> 		mutex_lock(&param->lock);
-> 		iopf_param = param->iopf_param;
-> 		if (iopf_param && iopf_param->queue == queue) {
-> 			busy = iopf_param->busy;
-> 			if (!busy) {
-> 				list_del(&iopf_param->queue_list);
-> 				param->iopf_param = NULL;
-> 			}
-> 		} else {
-> 			ret = -EINVAL;
-> 		}
-> 		mutex_unlock(&param->lock);
-> 		mutex_unlock(&queue->lock);
-> 		if (ret)
-> 			return ret;
-> 		if (busy)
-> 			wait_event(iopf_param->wq_head, !iopf_param->busy);
-> 		
-> 	} while (busy);
-> 
-> 	..
-
-Sure, I think it looks better
-
-Thanks,
-Jean
