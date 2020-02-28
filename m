@@ -2,86 +2,127 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EC7C3F2D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 01:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E053C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 02:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C828E246A1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 01:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00ED024695
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 02:08:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxZo9JuH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbgB1BOd (ORCPT
+        id S1730468AbgB1CIK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Feb 2020 20:14:33 -0500
-Received: from mga06.intel.com ([134.134.136.31]:46744 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730445AbgB1BOd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Feb 2020 20:14:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 17:14:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="317979084"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 27 Feb 2020 17:14:28 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j7UEW-0002UF-2F; Fri, 28 Feb 2020 09:14:28 +0800
-Date:   Fri, 28 Feb 2020 01:40:03 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     kbuild-all@lists.01.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] clk: qcom: Add ipq6018 apss clock controller
-Message-ID: <202002280157.XsbiYL94%lkp@intel.com>
-References: <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 27 Feb 2020 21:08:10 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46685 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730346AbgB1CIK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Feb 2020 21:08:10 -0500
+Received: by mail-pf1-f193.google.com with SMTP id o24so836793pfp.13;
+        Thu, 27 Feb 2020 18:08:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Z5AIbk2nbOcHqpTmcvhMG9mF23rIvUFPSLJXXgXhGns=;
+        b=WxZo9JuHxs2vb8rzf2HkXGaALenOiLW17gU9FV7NRZnQX/R4Snkc7mWGvmDU4MAO7t
+         8jVaLqfz7cr3WemoDQyHzihCUa74B7tA2upzRpq3DhB56XOkNZEUAP+diQ8F5pr1mYYy
+         /eINOAoaeDTbtQSjkQ7q78GZrG18X6ofyEIevln/VnS7x9LMTG0vZCQ7fdSQAuOm/YSX
+         LPE2FMrcSLV42KJJN0Al145sJ40ccNpQSxso2CPCXZfPBYXsZdmZXydPm6TGRv8sxS8X
+         IO+MQfO38hqOcgEArnArXh/Imkv8+osKKLguQ/jJgaRUiT+PKDryfxsvWMW27f74d2WQ
+         +KMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Z5AIbk2nbOcHqpTmcvhMG9mF23rIvUFPSLJXXgXhGns=;
+        b=KA1Vo/F0zAQs4sY+S3HHKQkAK3JfpNhyVorKqoCL8brqB23u4wBLsWZrlM913wmdpV
+         ZS1Ylr4l4lJutkWt0up4d0a4iBw4eZ29sWnPZKeXKfQhLh2/PPuFmBWf1QZMG3dm4Csa
+         jt/Ky6toeeGpGd8VktZUxbbiIZzROoBjGZqQy9KhKoTQ+HQ5SbKUj3E1rYEdc8+3jnXD
+         HGJdoyL5c2FhC9+1ogro0tjXfZz0Ggt0dEmRG84DZaeRdJUWSg/KBBQa9xe8t5cV5q88
+         6jVLMcty/ZBrklGrJSMVz5ighA9etgk5mybVSEQQmTKY8Q5MxLmRxitOxLw039S6xF4s
+         Uytw==
+X-Gm-Message-State: APjAAAXlXdvJ3bJNI0y9pAYQBwnJRp9Zrj3VWfpoudWGdUG5PXr3T97b
+        C+QGWkCFkHMrnvYuq4UOXl4=
+X-Google-Smtp-Source: APXvYqzwfsLxTTqt4X5L8xIjUVbm8bxdacPFLrNAwoD4cD1bY8Ry1LYaaB9nFvV5Fr/sOrt1DhrKRA==
+X-Received: by 2002:a63:42c2:: with SMTP id p185mr2358809pga.268.1582855687383;
+        Thu, 27 Feb 2020 18:08:07 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:500::4:d8f5])
+        by smtp.gmail.com with ESMTPSA id k24sm4931972pgm.61.2020.02.27.18.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 18:08:06 -0800 (PST)
+From:   rentao.bupt@gmail.com
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH v6 0/7] aspeed-g6: enable usb support
+Date:   Thu, 27 Feb 2020 18:07:50 -0800
+Message-Id: <20200228020757.10513-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sivaprakash,
+From: Tao Ren <rentao.bupt@gmail.com>
 
-Thank you for the patch! Perhaps something to improve:
+The patch series aims at enabling USB Host and Gadget support on AST2600
+platforms.
 
-[auto build test WARNING on clk/clk-next]
-[also build test WARNING on v5.6-rc3 next-20200227]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+Patch #1 includes vhub's usb descriptors in struct "ast_vhub": all usb
+descriptor changes will go to the per-vhub instance instead of touching
+the global default descriptors.
 
-url:    https://github.com/0day-ci/linux/commits/Sivaprakash-Murugesan/Add-APSS-clock-controller-support-for-IPQ6018/20200227-185847
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-173-ge0787745-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Patch #2 replaces hardcoded vhub port/endpoint number with device tree
+properties, so that it's more convenient to add support for ast2600-vhub
+which provides more downstream ports and endpoints.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Patch #3 enables ast2600 support in aspeed-vhub usb gadget driver.
 
+Patch #4 adds USB devices and according pin groups in aspeed-g6 dtsi.
 
-sparse warnings: (new ones prefixed by >>)
+Patch #5 and #6 add vhub port/endpoint properties into aspeed-g4 and
+aspeed-g5 dtsi.
 
->> drivers/clk/qcom/apss-ipq6018.c:39:10: sparse: sparse: symbol 'apss_pll_offsets' was not declared. Should it be static?
+Patch #7 adds device tree binding document for aspeed usb-vhub driver.
 
-Please review and possibly fold the followup patch.
+Tao Ren (7):
+  usb: gadget: aspeed: support per-vhub usb descriptors
+  usb: gadget: aspeed: read vhub properties from device tree
+  usb: gadget: aspeed: add ast2600 vhub support
+  ARM: dts: aspeed-g6: add usb functions
+  ARM: dts: aspeed-g5: add vhub port and endpoint properties
+  ARM: dts: aspeed-g4: add vhub port and endpoint properties
+  dt-bindings: usb: add documentation for aspeed usb-vhub
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ .../bindings/usb/aspeed,usb-vhub.yaml         | 73 +++++++++++++++++++
+ arch/arm/boot/dts/aspeed-g4.dtsi              |  2 +
+ arch/arm/boot/dts/aspeed-g5.dtsi              |  2 +
+ arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi      | 25 +++++++
+ arch/arm/boot/dts/aspeed-g6.dtsi              | 45 ++++++++++++
+ drivers/usb/gadget/udc/aspeed-vhub/Kconfig    |  4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/core.c     | 71 +++++++++++-------
+ drivers/usb/gadget/udc/aspeed-vhub/dev.c      | 30 ++++++--
+ drivers/usb/gadget/udc/aspeed-vhub/epn.c      |  4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/hub.c      | 58 ++++++++++-----
+ drivers/usb/gadget/udc/aspeed-vhub/vhub.h     | 43 +++++++----
+ 11 files changed, 286 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+
+-- 
+2.17.1
+
