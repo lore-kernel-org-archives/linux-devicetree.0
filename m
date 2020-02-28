@@ -2,189 +2,249 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A259AC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE36CC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D28246A8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943AC2469C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 16:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbgB1QYF (ORCPT
+        id S1726063AbgB1Q0n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:24:05 -0500
-Received: from mga17.intel.com ([192.55.52.151]:12638 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1QYE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:24:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:24:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="350947379"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 28 Feb 2020 08:24:01 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 28 Feb 2020 18:24:00 +0200
-Date:   Fri, 28 Feb 2020 18:24:00 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
-        bleung@chromium.org, devicetree@vger.kernel.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: Add cros-ec Type C port driver
-Message-ID: <20200228162400.GA27904@kuha.fi.intel.com>
-References: <20200220003102.204480-1-pmalani@chromium.org>
- <20200220003102.204480-2-pmalani@chromium.org>
- <158279287307.177367.4599344664477592900@swboyd.mtv.corp.google.com>
- <20200227163825.GB18240@kuha.fi.intel.com>
- <158284127336.4688.623067902277673206@swboyd.mtv.corp.google.com>
+        Fri, 28 Feb 2020 11:26:43 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2480 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725730AbgB1Q0n (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:26:43 -0500
+Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 0714367CCA21321329BA;
+        Fri, 28 Feb 2020 16:26:41 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 28 Feb 2020 16:26:40 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 28 Feb
+ 2020 16:26:40 +0000
+Date:   Fri, 28 Feb 2020 16:26:37 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>,
+        <joro@8bytes.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <robin.murphy@arm.com>, <kevin.tian@intel.com>,
+        <baolu.lu@linux.intel.com>, <jacob.jun.pan@linux.intel.com>,
+        <christian.koenig@amd.com>, <yi.l.liu@intel.com>,
+        <zhangfei.gao@linaro.org>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH v4 02/26] iommu/sva: Manage process address spaces
+Message-ID: <20200228162637.00007f4c@Huawei.com>
+In-Reply-To: <20200228144304.GC2156@myrica>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+        <20200224182401.353359-3-jean-philippe@linaro.org>
+        <20200226123506.000076fb@Huawei.com>
+        <20200228144304.GC2156@myrica>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158284127336.4688.623067902277673206@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Fri, 28 Feb 2020 15:43:04 +0100
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-On Thu, Feb 27, 2020 at 02:07:53PM -0800, Stephen Boyd wrote:
-> Quoting Heikki Krogerus (2020-02-27 08:38:25)
-> > Hi Stephen,
+> On Wed, Feb 26, 2020 at 12:35:06PM +0000, Jonathan Cameron wrote:
+> > > + * A single Process Address Space ID (PASID) is allocated for each mm. In the
+> > > + * example, devices use PASID 1 to read/write into address space X and PASID 2
+> > > + * to read/write into address space Y. Calling iommu_sva_get_pasid() on bond 1
+> > > + * returns 1, and calling it on bonds 2-4 returns 2.
+> > > + *
+> > > + * Hardware tables describing this configuration in the IOMMU would typically
+> > > + * look like this:
+> > > + *
+> > > + *                                PASID tables
+> > > + *                                 of domain A
+> > > + *                              .->+--------+
+> > > + *                             / 0 |        |-------> io_pgtable
+> > > + *                            /    +--------+
+> > > + *            Device tables  /   1 |        |-------> pgd X
+> > > + *              +--------+  /      +--------+
+> > > + *      00:00.0 |      A |-'     2 |        |--.
+> > > + *              +--------+         +--------+   \
+> > > + *              :        :       3 |        |    \
+> > > + *              +--------+         +--------+     --> pgd Y
+> > > + *      00:01.0 |      B |--.                    /
+> > > + *              +--------+   \                  |
+> > > + *      00:01.1 |      B |----+   PASID tables  |
+> > > + *              +--------+     \   of domain B  |
+> > > + *                              '->+--------+   |
+> > > + *                               0 |        |-- | --> io_pgtable
+> > > + *                                 +--------+   |
+> > > + *                               1 |        |   |
+> > > + *                                 +--------+   |
+> > > + *                               2 |        |---'
+> > > + *                                 +--------+
+> > > + *                               3 |        |
+> > > + *                                 +--------+
+> > > + *
+> > > + * With this model, a single call binds all devices in a given domain to an
+> > > + * address space. Other devices in the domain will get the same bond implicitly.
+> > > + * However, users must issue one bind() for each device, because IOMMUs may
+> > > + * implement SVA differently. Furthermore, mandating one bind() per device
+> > > + * allows the driver to perform sanity-checks on device capabilities.  
+> >   
+> > > + *
+> > > + * In some IOMMUs, one entry of the PASID table (typically the first one) can
+> > > + * hold non-PASID translations. In this case PASID 0 is reserved and the first
+> > > + * entry points to the io_pgtable pointer. In other IOMMUs the io_pgtable
+> > > + * pointer is held in the device table and PASID 0 is available to the
+> > > + * allocator.  
 > > 
-> > On Thu, Feb 27, 2020 at 12:41:13AM -0800, Stephen Boyd wrote:
-> > > > +examples:
-> > > > +  - |+
-> > > > +    cros_ec: ec@0 {
-> > > > +      compatible = "google,cros-ec-spi";
-> > > > +
-> > > > +      typec {
-> > > > +        compatible = "google,cros-ec-typec";
-> > > > +
-> > > > +        usb_con: connector {
-> > > > +          compatible = "usb-c-connector";
-> > > > +          port-number = <0>;
-> > > > +          power-role = "dual";
-> > > > +          data-role = "dual";
-> > > > +          try-power-role = "source";
-> > > > +        };
-> > > 
-> > > I thought that perhaps this would be done with the OF graph APIs instead
-> > > of being a child of the ec node. I don't see how the usb connector is
-> > > anything besides a child of the top-level root node because it's
-> > > typically on the board. We put board level components at the root.
-> > 
-> > No.
-> > 
-> > The above follows the usb-connector bindings, so it is correct:
-> > Documentation/devicetree/bindings/connector/usb-connector.txt
-> > 
-> > So the connector is always a child of the "CC controller" with the USB
-> > Type-C connectors, which in this case is the EC (from operating systems
-> > perspective). The "CC controller" controls connectors, and it doesn't
-> > actually do anything else. So placing the connectors under the
-> > "connector controller" is also logically correct.
+> > Is it worth hammering home in here that we can only do this because the PASID space
+> > is global (with exception of PASID 0)?  It's a convenient simplification but not
+> > necessarily a hardware restriction so perhaps we should remind people somewhere in here?  
 > 
-> Ah ok I see. The graph binding is for describing the data path, not the
-> control path. Makes sense. 
+> I could add this four paragraphs up:
 > 
-> > 
-> > > Yes, the connector is intimately involved with the EC here, but I would
-> > > think that we would have an OF graph connection from the USB controller
-> > > on the SoC to the USB connector, traversing through anything that may be
-> > > in that path, such as a USB hub. Maybe the connector node itself can
-> > > point to the EC type-c controller with some property like
-> > 
-> > I think your idea here is that there should be only a single node for
-> > each connector that is then linked with every component that it is
-> > physically connected to (right?), but please note that that is not
-> > enough. Every component attached to the connector must have its own
-> > child node that represents the "port" that is physically connected to
-> > the USB Type-C connector.
-> > 
-> > So for example, the USB controller nodes have child nodes for every
-> > USB2 port as well as for every USB3 port. Similarly, the GPU
-> > controllers have child node for every DisplayPort, etc. And I believe
-> > that is already how it has been done in DT (and also in ACPI).
+> "A single Process Address Space ID (PASID) is allocated for each mm. It is
+> a choice made for the Linux SVA implementation, not a hardware
+> restriction."
+
+Perfect.
+
 > 
-> It looks like perhaps you're conflating ports in USB spec with the OF
-> graph port? I want there to be one node per type-c connector that I can
-> physically see on the device. Is that not sufficient?
-
-It is. We don't need more than one node that represents the physical
-connector (and we should not have more than one node for that). And
-actually, I was not mixing the OF graph ports and USB ports... I
-think I should be talking about PHY instead of "port". That is
-probable more clear.
-
-My point is that every PHY that is connected to a Type-C connector
-must still be represented with its own node in devicetree and ACPI. So
-there still needs to be a node for the USB2 PHY, USB3 PHY, DisplayPort
-PHY, etc., on top of the connector node. I got the picture that you
-are proposing that we don't need those PHY nodes anymore since we have
-the connector nodes, but maybe I misunderstood?
-
-> Are there any examples of the type-c connector in DT? I see some
-> NXP/Freescale boards and one Renesas board so far. Maybe there are other
-> discussions I can read up on?
-> 
+> > > + */
+> > > +
+> > > +struct io_mm {
+> > > +	struct list_head		devices;
+> > > +	struct mm_struct		*mm;
+> > > +	struct mmu_notifier		notifier;
+> > > +
+> > > +	/* Late initialization */
+> > > +	const struct io_mm_ops		*ops;
+> > > +	void				*ctx;
+> > > +	int				pasid;
+> > > +};
+> > > +
+> > > +#define to_io_mm(mmu_notifier)	container_of(mmu_notifier, struct io_mm, notifier)
+> > > +#define to_iommu_bond(handle)	container_of(handle, struct iommu_bond, sva)  
 > > 
-> > Those "port" nodes then just need to be linked with the "connector"
-> > node. I think for that the idea was to use OF graph, but I'm really
-> > sceptical about that. The problem is that with the USB Type-C
-> > connectors we have to be able to identify the connections, i.e. which
-> > endpoint is the USB2 port, which is the DisplayPort and so on, and OF
-> > graph does not give any means to do that on its own. We will have to
-> > rely on separate device properties in order to do the identification.
-> > Currently it is not documented anywhere which property should be used
-> > for that.
-> 
-> I hope that this patch series can document this.
-
-Well, we do need that to be documented, but do we really need to block
-this series because of that? This driver does not depend on OF graph
-yet.
-
-> Why can't that work by having multiple OF graph ports for USB2 port,
-> DisplayPort, USB3 port, etc? The data path goes to the connector and
-> we can attach more information to each port node to describe what
-> type of endpoint is there like a DisplayPort capable type-c
-> connector for example.
-
-The PHY nodes we must still always have. So the OF graph will always
-describe the connection between the PHY and the connector, and the
-connection between the PHY and the controller must be described
-separately.
-
-> > For ACPI we are going to propose that with every type of connection,
-> > there should be a device property that returns a reference to the
-> > appropriate port. That way there are no problems identifying the
-> > connections. All we need to do is to define the property names for
-> > every type of connection. "usb2-port" for the USB2 or high speed port,
-> > "usb3-port" for USB3, etc.
+> > Code ordering wise, do we want this after the definition of iommu_bond?
 > > 
+> > For both of these it's a bit non obvious what they come 'from'.
+> > I wouldn't naturally assume to_io_mm gets me from notifier to the io_mm
+> > for example.  Not sure it matters though if these are only used in a few
+> > places.  
 > 
-> That sounds like something we should figure out now for DT firmwares
-> too. For this particular binding, I don't know if we need to do anything
-> besides figure out how to represent multiple connectors underneath the
-> EC node. The other properties seem fairly generic and so I'd expect this
-> series to migrate
-> Documentation/devicetree/bindings/connector/usb-connector.txt to YAML
-> and refine the binding with anything necessary, like a 'reg' property to
-> allow multiple ports to exist underneath the "CC controller".
+> Right, I can rename the first one to mn_to_io_mm(). The second one I think
+> might be good enough.
 
-OK.
+Agreed. The second one does feel more natural.
 
-thanks,
+> 
+> 
+> > > +static struct iommu_sva *
+> > > +io_mm_attach(struct device *dev, struct io_mm *io_mm, void *drvdata)
+> > > +{
+> > > +	int ret = 0;  
+> > 
+> > I'm fairly sure this is set in all paths below.  Now, of course the
+> > compiler might not think that in which case fair enough :)
+> >   
+> > > +	bool attach_domain = true;
+> > > +	struct iommu_bond *bond, *tmp;
+> > > +	struct iommu_domain *domain, *other;
+> > > +	struct iommu_sva_param *param = dev->iommu_param->sva_param;
+> > > +
+> > > +	domain = iommu_get_domain_for_dev(dev);
+> > > +
+> > > +	bond = kzalloc(sizeof(*bond), GFP_KERNEL);
+> > > +	if (!bond)
+> > > +		return ERR_PTR(-ENOMEM);
+> > > +
+> > > +	bond->sva.dev	= dev;
+> > > +	bond->drvdata	= drvdata;
+> > > +	refcount_set(&bond->refs, 1);
+> > > +	RCU_INIT_POINTER(bond->io_mm, io_mm);
+> > > +
+> > > +	mutex_lock(&iommu_sva_lock);
+> > > +	/* Is it already bound to the device or domain? */
+> > > +	list_for_each_entry(tmp, &io_mm->devices, mm_head) {
+> > > +		if (tmp->sva.dev != dev) {
+> > > +			other = iommu_get_domain_for_dev(tmp->sva.dev);
+> > > +			if (domain == other)
+> > > +				attach_domain = false;
+> > > +
+> > > +			continue;
+> > > +		}
+> > > +
+> > > +		if (WARN_ON(tmp->drvdata != drvdata)) {
+> > > +			ret = -EINVAL;
+> > > +			goto err_free;
+> > > +		}
+> > > +
+> > > +		/*
+> > > +		 * Hold a single io_mm reference per bond. Note that we can't
+> > > +		 * return an error after this, otherwise the caller would drop
+> > > +		 * an additional reference to the io_mm.
+> > > +		 */
+> > > +		refcount_inc(&tmp->refs);
+> > > +		io_mm_put(io_mm);
+> > > +		kfree(bond);  
+> > 
+> > Free outside the lock would be ever so slightly more logical given we allocated
+> > before taking the lock.
+> >   
+> > > +		mutex_unlock(&iommu_sva_lock);
+> > > +		return &tmp->sva;
+> > > +	}
+> > > +
+> > > +	list_add_rcu(&bond->mm_head, &io_mm->devices);
+> > > +	param->nr_bonds++;
+> > > +	mutex_unlock(&iommu_sva_lock);
+> > > +
+> > > +	ret = io_mm->ops->attach(bond->sva.dev, io_mm->pasid, io_mm->ctx,
+> > > +				 attach_domain);
+> > > +	if (ret)
+> > > +		goto err_remove;
+> > > +
+> > > +	return &bond->sva;
+> > > +
+> > > +err_remove:
+> > > +	/*
+> > > +	 * At this point concurrent threads may have started to access the
+> > > +	 * io_mm->devices list in order to invalidate address ranges, which
+> > > +	 * requires to free the bond via kfree_rcu()
+> > > +	 */
+> > > +	mutex_lock(&iommu_sva_lock);
+> > > +	param->nr_bonds--;
+> > > +	list_del_rcu(&bond->mm_head);
+> > > +
+> > > +err_free:
+> > > +	mutex_unlock(&iommu_sva_lock);
+> > > +	kfree_rcu(bond, rcu_head);  
+> > 
+> > I don't suppose it matters really but we don't need the rcu free if
+> > we follow the err_free goto.  Perhaps we are cleaner in this case
+> > to not use a unified exit path but do that case inline?  
+> 
+> Agreed, though I moved the kzalloc() later as suggested by Jacob, I think
+> it looks a little better and simplifies the error paths
+> 
+> Thanks,
+> Jean
+Jonathan
 
--- 
-heikki
