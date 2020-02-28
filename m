@@ -2,142 +2,173 @@ Return-Path: <SRS0=Dihy=4Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198A6C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896F1C3F2D3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D8A246AE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 607FE2469D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Feb 2020 14:47:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JCRrLIEo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="DuXnIaxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgB1Oo3 (ORCPT
+        id S1726805AbgB1Ors (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:44:29 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36518 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbgB1Oo3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:44:29 -0500
-Received: by mail-wm1-f66.google.com with SMTP id g83so1261380wme.1
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 06:44:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EaNst+hWQycMu0KGsnv4CxZ9Si7qKvgKxC1mvggZU4w=;
-        b=JCRrLIEo6Jpe8dHIBFGmuTXIFtETxczvLzWf5uy8Y4Rm9R7wgxKO+2afcz/GNnH0Y3
-         q0tqjcxhgffbbsl10LWkrDKFYFGroNVipFdobpiY+ORfr6InAZrnVRnUUJdKxAKtACEM
-         dTxklEFgeMyTkRclu9MCF6ibbvsenPwWRDYZLFrWvg+m8RzwfWoY6XELfqEtrbGkmQ5q
-         TgpYmhbgZkm0bFXzLd85KOOeaNDPUJQuCrD90Ya9ovii8HTS+dVU1eWttG0owswwOm8u
-         MFcNQWUAz9eoCClWH9QiIu0LftzF5ZzkomXsU1JPNJCynNEi1BYGHsYrU8xBnhT/OP6K
-         8hMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EaNst+hWQycMu0KGsnv4CxZ9Si7qKvgKxC1mvggZU4w=;
-        b=Ty34LfSXZgjFOF8gV9RekbZDrqz+I8t6mlXGPZzcbFX7NuMhQgCeMGNpZkRrv8mGgP
-         ZXcDIE8fdWtNdPQ9bPlSfs8S+1G7jU2YFzMJ6Ay5QeOkuwhnJe7qBy00NsGPUTY9kAgT
-         XsnqPBvhDHQatvnmBSpyuHfOlJ51QAW3evC5aO+Dt+W2C6WT9ozaaBR1UlfJMhe87ixr
-         /hFxbtqPdaWsyiwocdOJ36AONE2mvX9a1V0l5dxJAg8/oIC4/yZ64afjFtDh9uD1GkMS
-         xVuOuIxBWPTBSw32gUfvUieuqFbqY7VZ+qEl8c3JlJnDOnEqYgIc2yxtLusMiE+CARgY
-         iueg==
-X-Gm-Message-State: APjAAAVsdcL3H6Gq3a50bO/aXEmwZCXZUVs6tuoTnVemswAWTlftaSGY
-        ZtUk9ZVwwhFwMzWjxKliO+dSYQ==
-X-Google-Smtp-Source: APXvYqwmzNWF57lJGnnMPvJ7KLRmrlfEQjMUS3cUSNh6ONuPqWLfuhP1DtkFcJz13ydjNSUlBxXNAQ==
-X-Received: by 2002:a7b:c4d0:: with SMTP id g16mr3359111wmk.3.1582901067287;
-        Fri, 28 Feb 2020 06:44:27 -0800 (PST)
-Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id n11sm2001521wrq.40.2020.02.28.06.44.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 06:44:26 -0800 (PST)
-Date:   Fri, 28 Feb 2020 15:44:20 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, yi.l.liu@intel.com,
-        zhangfei.gao@linaro.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v4 06/26] iommu/sva: Register page fault handler
-Message-ID: <20200228144420.GE2156@myrica>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-7-jean-philippe@linaro.org>
- <20200226113959.62621098@jacob-builder>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226113959.62621098@jacob-builder>
+        Fri, 28 Feb 2020 09:47:48 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.120]:16014 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgB1Ors (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 09:47:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582901266;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=qqf0pjro2BO53k2Y7GVfbuwFuheFtgoTpJWiEKvgrfU=;
+        b=DuXnIaxvDxvKje5KSNOFNgz0Whd19uiAhPLuChjOmTj/iXgpkBJPmWCAZPT82wg4nD
+        RH2utvfp3seqQ62deuRCGKIxjmsQVnpYhYVXD3eQYK3JRa1/pTDIoeZvsUNNQ5yhOGVc
+        vNlhpWUCEdxmzXGoJoh5dFnJ4dZCZvA2VF9LVNKMFPiGBP6Ns5hKNIM6gtq2tLHe3PWe
+        YNymJYgBP/NhcuTgIHSdHT3cKPzzhn/X7hqYHMRLDu8osfoFF08f/zMHzJXGO4ZpUE6J
+        lbgo6Kv9v4EZfh74yrt0nQG/d3mTV9JQ1wS5jk3l8dBcgYIkDd0Meec+1/l7dZY9UhHv
+        tMlw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaYXAcKqg=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1SEla1Lw
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 28 Feb 2020 15:47:36 +0100 (CET)
+Subject: Re: [PATCH v7 3/7] Bindings: nvmem: add bindings for JZ4780 efuse
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1582900837.3.3@crapouillou.net>
+Date:   Fri, 28 Feb 2020 15:47:36 +0100
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9B96463B-CEDE-46EF-87C4-395EB919C78F@goldelico.com>
+References: <cover.1582898302.git.hns@goldelico.com> <ebd523e39aac31b087affcfa984738204fa8b542.1582898302.git.hns@goldelico.com> <1582900837.3.3@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:39:59AM -0800, Jacob Pan wrote:
-> > @@ -442,11 +444,20 @@ static void iommu_sva_unbind_locked(struct
-> > iommu_bond *bond) 
-> >  void iommu_sva_unbind_generic(struct iommu_sva *handle)
-> >  {
-> > +	int pasid;
-> >  	struct iommu_param *param = handle->dev->iommu_param;
-> >  
-> >  	if (WARN_ON(!param))
-> >  		return;
-> >  
-> > +	/*
-> > +	 * Caller stopped the device from issuing PASIDs, now make
-> > sure they are
-> > +	 * out of the fault queue.
-> > +	 */
-> > +	pasid = iommu_sva_get_pasid_generic(handle);
-> > +	if (pasid != IOMMU_PASID_INVALID)
-> > +		iopf_queue_flush_dev(handle->dev, pasid);
-> > +
-> I have an ordering concern.
-> The caller can only stop the device issuing page request but there will
-> be in-flight request inside the IOMMU. If we flush here before clearing
-> the PASID context, there might be new request coming in before the
-> detach.
 
-The goal of this flush is also to clear the IOMMU PRI queue. It calls the
-IOMMU's flush() callback before flushing the workqueue. So when this
-returns, there shouldn't be any more pending fault.
+> Am 28.02.2020 um 15:40 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Nikolaus,
+>=20
+>=20
+> Le ven., f=E9vr. 28, 2020 at 14:58, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> This patch brings support for the JZ4780 efuse. Currently it only =
+exposes
+>> a read only access to the entire 8K bits efuse memory.
+>> Tested-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: PrasannaKumar Muralidharan =
+<prasannatsmkumar@gmail.com>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> [converted to yaml]
+>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+>> ---
+>> .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 49 =
++++++++++++++++++++
+>> 1 file changed, 49 insertions(+)
+>> create mode 100644 =
+Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>> diff --git =
+a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml =
+b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>> new file mode 100644
+>> index 000000000000..ce6690c50a34
+>> --- /dev/null
+>> +++ =
+b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>> @@ -0,0 +1,49 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Ingenic JZ EFUSE driver bindings
+>> +
+>> +maintainers:
+>> +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> +
+>> +allOf:
+>> +  - $ref: "nvmem.yaml#"
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ingenic,jz4780-efuse
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    # Handle for the ahb for the efuse.
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: ahb2
+>=20
+> You still have clock-names here. You can remove it completely.
 
-Thanks,
-Jean
+I have just removed them from required: and the examples: because
+I think they are optional. Or are they forbidden?
 
-> How about detach first then flush? Then anything come after the detach
-> would be faults. Flush will be clean.
-> 
-> >  	mutex_lock(&param->sva_lock);
-> >  	mutex_lock(&iommu_sva_lock);
-> >  	iommu_sva_unbind_locked(to_iommu_bond(handle));
-> > @@ -484,6 +495,10 @@ int iommu_sva_enable(struct device *dev, struct
-> > iommu_sva_param *sva_param) goto err_unlock;
-> >  	}
-> >  
-> > +	ret = iommu_register_device_fault_handler(dev,
-> > iommu_queue_iopf, dev);
-> > +	if (ret)
-> > +		goto err_unlock;
-> > +
-> >  	dev->iommu_param->sva_param = new_param;
-> >  	mutex_unlock(&param->sva_lock);
-> >  	return 0;
-> > @@ -521,6 +536,7 @@ int iommu_sva_disable(struct device *dev)
-> >  		goto out_unlock;
-> >  	}
-> >  
-> > +	iommu_unregister_device_fault_handler(dev);
-> >  	kfree(param->sva_param);
-> >  	param->sva_param = NULL;
-> >  out_unlock:
-> 
-> [Jacob Pan]
+>=20
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/jz4780-cgu.h>
+>> +
+>> +    efuse@134100d0 {
+>> +        compatible =3D "ingenic,jz4780-efuse";
+>> +        reg =3D <0x134100d0 0x2c>;
+>> +
+>> +        clocks =3D <&cgu JZ4780_CLK_AHB2>;
+>> +    };
+>> +
+>> +...
+>> --
+>> 2.23.0
+
+BR,
+Nikolaus
+
