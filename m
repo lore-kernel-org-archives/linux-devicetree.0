@@ -2,243 +2,171 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374E8C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 03:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22A7C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 04:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15913246B5
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 03:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9FF6246B5
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 04:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582949605;
+	bh=XF/dQCOkZ/Aeisc5nBCupbeELUvBhb6/8IWy5oLfGTM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Facc64vH+Kz1l3wHw0Lclm4QYiK4BnLzDAM7F5uO/5dngElYhsqxvaGuEIS9vqdIU
+	 IYRhOOrFhaIhXD15UyaMsizcmDWbB47f28a11pNVZqkj+VScFvaYwBXHg9bwC6uA4p
+	 hAwW/e9vKyK11R2lyx2+6IgCemtNQe9FFvcYxJZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgB2Duq (ORCPT
+        id S1726631AbgB2ENZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 22:50:46 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:35332 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbgB2Dup (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Feb 2020 22:50:45 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BD6922004F2;
-        Sat, 29 Feb 2020 04:50:42 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C4342004F3;
-        Sat, 29 Feb 2020 04:50:26 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9C4CE402DE;
-        Sat, 29 Feb 2020 11:50:12 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        peng.fan@nxp.com, aford173@gmail.com, ping.bai@nxp.com,
-        jun.li@nxp.com, shengjiu.wang@nxp.com, bjorn.andersson@linaro.org,
-        olof@lixom.net, vkoul@kernel.org, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM thermal monitoring unit
-Date:   Sat, 29 Feb 2020 11:44:20 +0800
-Message-Id: <1582947862-11073-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
-References: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 28 Feb 2020 23:13:25 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:48703 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB2ENY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 23:13:24 -0500
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 01T4D41A025071;
+        Sat, 29 Feb 2020 13:13:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01T4D41A025071
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582949585;
+        bh=a0pOxn4yBaf/CY6aaFvzsHrraptkGWxpAnq3v9ZlKRY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fOA7El3gUZ+0vookKfso5oCJGJGXdyvfax5sR2I/8GpIokf76DL8pZ24WAfMfeSsr
+         U7g4VUlvoWMwe1QlKJpl07c3DuxJ/MGi0QDqFrqw6n0JpWMNuoLETbC07BHzdeAItd
+         MTQLLRf2TjHMAKc/3tbB7Meg8Bk2AHfj+eeqIC3P+Qr4p1rWTzJ8zuBuapk70KdDKh
+         UM/w7Twnn9o3Ak63xkR61NljF9Zv95d9dv0KWFD3oEATkysMmFDXXO2EO88kCU9Hmv
+         qfPybMSMqk+vbkeDzepC1vTHr+Byx7sq7FNW+a9XY6bWhiE2oUUqJNYSbl3XJmHi+E
+         +zHW1cnleh1kw==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id a19so3132715vsp.6;
+        Fri, 28 Feb 2020 20:13:05 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2esNiX7087hKcGA+ocLH9MW4dfAtWIvmgEEqlDDnSe/eIOFREJ
+        B1qYzWTkhdM7wvHgVRKSHSbnergQsoseF/+f8F8=
+X-Google-Smtp-Source: ADFU+vvxO1CRnyMOWLQZldeIlAa6RWJEku0VkeJX/ZGM7zhqt+hXfohIi/gRZqN4pvVQXSryjtSgwIaIwyqYdEqkVts=
+X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr4205619vsh.179.1582949583909;
+ Fri, 28 Feb 2020 20:13:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
+ <20200221021002.18795-3-yamada.masahiro@socionext.com> <CACRpkdbrowXC-Awy_N1gq+LxuEMhgLNf81cCZ=bwZwFdJXLWDA@mail.gmail.com>
+In-Reply-To: <CACRpkdbrowXC-Awy_N1gq+LxuEMhgLNf81cCZ=bwZwFdJXLWDA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 29 Feb 2020 13:12:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASMn_xMtBa8sCj0AW2LTpSEMpv=haDhWrfkZrrKbwSeug@mail.gmail.com>
+Message-ID: <CAK7LNASMn_xMtBa8sCj0AW2LTpSEMpv=haDhWrfkZrrKbwSeug@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bingings: pinctrl: Convert UniPhier pin controller
+ to json-schema
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX8MM has a thermal monitoring unit(TMU) inside, it ONLY has one
-sensor for CPU, add support for reading immediate temperature of
-this sensor.
+Hi Linus,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Change since V1:
-	- update copyright year and add author;
-	- remove unnecessary sleep in .get_temp.
----
- drivers/thermal/Kconfig          |  10 +++
- drivers/thermal/Makefile         |   1 +
- drivers/thermal/imx8mm_thermal.c | 131 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 142 insertions(+)
- create mode 100644 drivers/thermal/imx8mm_thermal.c
+On Sat, Feb 29, 2020 at 7:13 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Fri, Feb 21, 2020 at 3:10 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>
+> > Convert the UniPhier pin controller binding to DT schema format.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> Nice!
+>
+> > In the original .txt file, there is a description:
+> > The UniPhier pinctrl should be a subnode of a "syscon" compatible node
+> >
+> > I did not figure out how to represent (or check) it in dt-schema.
+> > I just moved it to a comment line in 'examples'.
+> > If there is a better way, please let me know.
+>
+> There is no way to do that AFAICT, we are checking nodes from
+> one node and downwards, never upwards. The syscon needs to
+> have its own binding file: if it has another specific compatible
+> such as compatible = "foo", "syscon"; then for the DT bindings
+> for foo, make sure to add this subnode as optional/compulsory
+> if you want to tie up the whole thing.
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 3502ee8..165b7d6 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -262,6 +262,16 @@ config IMX_SC_THERMAL
- 	  sensor. It supports one critical trip point and one
- 	  passive trip point for each thermal sensor.
- 
-+config IMX8MM_THERMAL
-+	tristate "Temperature sensor driver for Freescale i.MX8MM SoC"
-+	depends on ARCH_MXC
-+	depends on OF
-+	help
-+	  Support for Thermal Monitoring Unit (TMU) found on Freescale i.MX8MM SoC.
-+	  It supports one critical trip point and one passive trip point. The
-+	  cpufreq is used as the cooling device to throttle CPUs when the passive
-+	  trip is crossed.
-+
- config MAX77620_THERMAL
- 	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
- 	depends on MFD_MAX77620
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index a11a6d8..120a05e 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
- obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
- obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
- obj-$(CONFIG_IMX_SC_THERMAL)	+= imx_sc_thermal.o
-+obj-$(CONFIG_IMX8MM_THERMAL)	+= imx8mm_thermal.o
- obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
- obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
- obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
-diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
-new file mode 100644
-index 0000000..d597ceb
---- /dev/null
-+++ b/drivers/thermal/imx8mm_thermal.c
-@@ -0,0 +1,131 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 NXP.
-+ *
-+ * Author: Anson Huang <Anson.Huang@nxp.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
-+
-+#include "thermal_core.h"
-+
-+#define TER			0x0	/* TMU enable */
-+#define TRITSR			0x20	/* TMU immediate temp */
-+
-+#define TER_EN			BIT(31)
-+#define TRITSR_VAL_MASK		0xff
-+
-+#define TEMP_LOW_LIMIT		10
-+
-+struct imx8mm_tmu {
-+	struct thermal_zone_device *tzd;
-+	void __iomem *base;
-+	struct clk *clk;
-+};
-+
-+static int tmu_get_temp(void *data, int *temp)
-+{
-+	struct imx8mm_tmu *tmu = data;
-+	u32 val;
-+
-+	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
-+	if (val < TEMP_LOW_LIMIT)
-+		return -EAGAIN;
-+
-+	*temp = val * 1000;
-+
-+	return 0;
-+}
-+
-+static struct thermal_zone_of_device_ops tmu_tz_ops = {
-+	.get_temp = tmu_get_temp,
-+};
-+
-+static int imx8mm_tmu_probe(struct platform_device *pdev)
-+{
-+	struct imx8mm_tmu *tmu;
-+	u32 val;
-+	int ret;
-+
-+	tmu = devm_kzalloc(&pdev->dev, sizeof(struct imx8mm_tmu), GFP_KERNEL);
-+	if (!tmu)
-+		return -ENOMEM;
-+
-+	tmu->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(tmu->base))
-+		return PTR_ERR(tmu->base);
-+
-+	tmu->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(tmu->clk)) {
-+		ret = PTR_ERR(tmu->clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"failed to get tmu clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(tmu->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable tmu clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	tmu->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0,
-+							tmu, &tmu_tz_ops);
-+	if (IS_ERR(tmu->tzd)) {
-+		dev_err(&pdev->dev,
-+			"failed to register thermal zone sensor: %d\n", ret);
-+		return PTR_ERR(tmu->tzd);
-+	}
-+
-+	platform_set_drvdata(pdev, tmu);
-+
-+	/* enable the monitor */
-+	val = readl_relaxed(tmu->base + TER);
-+	val |= TER_EN;
-+	writel_relaxed(val, tmu->base + TER);
-+
-+	return 0;
-+}
-+
-+static int imx8mm_tmu_remove(struct platform_device *pdev)
-+{
-+	struct imx8mm_tmu *tmu = platform_get_drvdata(pdev);
-+	u32 val;
-+
-+	/* disable TMU */
-+	val = readl_relaxed(tmu->base + TER);
-+	val &= ~TER_EN;
-+	writel_relaxed(val, tmu->base + TER);
-+
-+	clk_disable_unprepare(tmu->clk);
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx8mm_tmu_table[] = {
-+	{ .compatible = "fsl,imx8mm-tmu", },
-+	{ },
-+};
-+
-+static struct platform_driver imx8mm_tmu = {
-+	.driver = {
-+		.name	= "i.mx8mm_thermal",
-+		.of_match_table = imx8mm_tmu_table,
-+	},
-+	.probe = imx8mm_tmu_probe,
-+	.remove = imx8mm_tmu_remove,
-+};
-+module_platform_driver(imx8mm_tmu);
-+
-+MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-+MODULE_DESCRIPTION("i.MX8MM Thermal Monitor Unit driver");
-+MODULE_LICENSE("GPL v2");
+
+Thanks for your advice.
+
+
+Documentation/devicetree/bindings/mfd/syscon.yaml
+
+already contains sunxi-specific compatibles, but
+I hesitate to add more and more platform-specific stuff
+in this file.
+
+Maybe, I can add
+
+Documentation/devicetree/bindings/mfd/socionext,uniphier-soc-glue.yaml
+
+and then, check 'reg' and compulsory sub-nodes.
+
+
+
+> > -Required properties:
+> > -- compatible: should be one of the following:
+> > -    "socionext,uniphier-ld4-pinctrl"  - for LD4 SoC
+> > -    "socionext,uniphier-pro4-pinctrl" - for Pro4 SoC
+> > -    "socionext,uniphier-sld8-pinctrl" - for sLD8 SoC
+> > -    "socionext,uniphier-pro5-pinctrl" - for Pro5 SoC
+> > -    "socionext,uniphier-pxs2-pinctrl" - for PXs2 SoC
+> > -    "socionext,uniphier-ld6b-pinctrl" - for LD6b SoC
+> > -    "socionext,uniphier-ld11-pinctrl" - for LD11 SoC
+> > -    "socionext,uniphier-ld20-pinctrl" - for LD20 SoC
+> > -    "socionext,uniphier-pxs3-pinctrl" - for PXs3 SoC
+>
+> But:
+>
+> > +    soc-glue@5f800000 {
+> > +        compatible = "socionext,uniphier-pro4-soc-glue", "simple-mfd", "syscon";
+> > +        reg = <0x5f800000 0x2000>;
+> > +
+> > +        pinctrl: pinctrl {
+> > +            compatible = "socionext,uniphier-pro4-pinctrl";
+> > +        };
+> > +    };
+>
+> It looks like you want to check also for "simple-mfd" and "syscon"
+> following after the enum (two consts)
+>
+> It seems you want to check that reg is there.
+
+
+Documentation/devicetree/bindings/mfd/syscon.yaml
+
+already checks the 'reg' by the 'contains syscon' pattern,
+but I can repeat it in my yaml file.
+
+Thanks.
+
+
+> It seems the subnode pinctrl is also compulsory.
+>
+> All of this have examples in example-schema.yaml IIRC.
+>
+> Yours,
+> Linus Walleij
+
+
+
 -- 
-2.7.4
-
+Best Regards
+Masahiro Yamada
