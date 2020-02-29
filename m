@@ -2,64 +2,147 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B954DC3F2D3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 21:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B775C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 23:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9645A222C2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 21:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072CD24688
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 23:07:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="BEsEeRA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgB2VSm (ORCPT
+        id S1727263AbgB2XHC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 16:18:42 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:54116 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbgB2VSm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 29 Feb 2020 16:18:42 -0500
-Received: from p508fcd9d.dip0.t-ipconnect.de ([80.143.205.157] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j89VI-0004ON-0U; Sat, 29 Feb 2020 22:18:32 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Sat, 29 Feb 2020 18:07:02 -0500
+Received: from mail-eopbgr80137.outbound.protection.outlook.com ([40.107.8.137]:15118
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726786AbgB2XHC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 29 Feb 2020 18:07:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X8eL591JVQ4zd0yjpTe3d7fWxcKQVA+z+vdOSwoktSkgZjLFN3imPYrkqQPvf7d55EZUuDhu7AtCCiy2EKf+139qU6gJas7vzmtnAYiSo9wJT9TvD7uydoFzd1WyJ5aaWvEkF6KZ/YEeQQa1FvwB6urw5okd10tpQMCoBeTo01eK5zfQJVjFgbpaYOBjbHZ24bZ8TB/HSlQQ0asd9mnfnYmDIsG205kfWes6fiRr7y37Se45icqGUuJwS8twP6WaZ2WMwFpCwU6wjgDOUhAxD9YcK9nMQUkVDny+OE0z8QVGcgR8SMS8nikJsCzV5pdS7frkkW9dt2Rj+CrbZvOWLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j9NwnqjzOEn7SAFnPgIMaY5+QocVdNWZcAsasBSTTd0=;
+ b=RCddzQ61WpDqrQKnL4gVE7V7ZCjMF1Nim3DJ/F9TrCTU33CnXV8utnEjKABItcur50Dc9P7wvyXbKqH2IzG/DIx0OMLC3OL644VZl0feVof4mkWogRdKEOb5lWUdL2vlEZt5voicekc6I4Up2+xyjTMJpXETDf1h48ZHWCzydPiR3oRSHMrg+ZDzrjYCghRXyArbL4i9r2KLhavvcVxZC4VcHWQU6NVdwY5ytwZU1RNEdeIaBUhsd2lBnU/3fWPD27uUHLZqBJq9pxB5knszD96/LsJoJ8nmhQS7ljSvJv5aQoeg/1zbgY1bMKN/WiY4bMLCw5IK0vMc14O7QCWS2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j9NwnqjzOEn7SAFnPgIMaY5+QocVdNWZcAsasBSTTd0=;
+ b=BEsEeRA/MUj+PL5VR5STEI52MvXc1AQxJ7cIEoHA8hRPIHHI0r32SkqJ4RezMMrganfrjajsCTjCX6Dv1ei+f5gVSGyWm4eqawKZOvbkCw0LA+LunU6SJTu30YEIDw+gTVqvhAWj020bT4ErFO7a3LDv5tgYKVW+6WD2LhATtG4=
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
+ VI1P190MB0397.EURP190.PROD.OUTLOOK.COM (10.165.196.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.14; Sat, 29 Feb 2020 23:06:57 +0000
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::a587:f64e:cbb8:af96]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::a587:f64e:cbb8:af96%4]) with mapi id 15.20.2772.018; Sat, 29 Feb 2020
+ 23:06:56 +0000
+Received: from plvision.eu (217.20.186.93) by AM5PR0701CA0012.eurprd07.prod.outlook.com (2603:10a6:203:51::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.5 via Frontend Transport; Sat, 29 Feb 2020 23:06:55 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] input: joystick: Add ADC attached joystick driver.
-Date:   Sat, 29 Feb 2020 22:18:31 +0100
-Message-ID: <8358368.BJ5kSsQai2@phil>
-In-Reply-To: <20200126161236.63631-5-contact@artur-rojek.eu>
-References: <20200126161236.63631-1-contact@artur-rojek.eu> <20200126161236.63631-5-contact@artur-rojek.eu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: marvell: fix non-existed cpu referrence in
+ armada-ap806-dual.dtsi
+Thread-Topic: [PATCH] arm64: dts: marvell: fix non-existed cpu referrence in
+ armada-ap806-dual.dtsi
+Thread-Index: AQHV347B2j3P1pYbBU6vmfM/4HtQ8Kgy6rgA
+Date:   Sat, 29 Feb 2020 23:06:56 +0000
+Message-ID: <20200229230648.GA21220@plvision.eu>
+References: <20200209212016.27062-1-vadym.kochan@plvision.eu>
+In-Reply-To: <20200209212016.27062-1-vadym.kochan@plvision.eu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5PR0701CA0012.eurprd07.prod.outlook.com
+ (2603:10a6:203:51::22) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:35::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vadym.kochan@plvision.eu; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [217.20.186.93]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f9b30180-fc95-4b6c-6bde-08d7bd6c128e
+x-ms-traffictypediagnostic: VI1P190MB0397:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1P190MB0397292A09918BBE7DA2D9AD95E90@VI1P190MB0397.EURP190.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 03283976A6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39830400003)(396003)(366004)(376002)(136003)(199004)(189003)(66446008)(66476007)(66556008)(64756008)(16526019)(508600001)(186003)(8886007)(2906002)(55016002)(7696005)(81156014)(81166006)(8676002)(52116002)(4326008)(66946007)(86362001)(8936002)(4744005)(33656002)(110136005)(26005)(36756003)(956004)(2616005)(44832011)(1076003)(71200400001)(5660300002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1P190MB0397;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: plvision.eu does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: P2HS+krweyWQ8CRbe1o5Z4+PTMFcQuaPa+dJwlwY9LKuIVIi1rFPpt7Qbcby3xsV5jh3OU1qng2vNvWmk2aD6F3fBbSjC0ulZmhaxvSUgnidrWMNiq26LkUdzM5eO002Kzy4BtnURkaHHrG1kUlFDjV+PyS0NEyJLjJvTxzpbeCmBPuX5UmchrTC5JXuEMLLnSd35TBcmAfLXrIhbifoleF+lKWKQZp6ew4nWeEQbyucA47qtKIrCI+a+u5FFp/Y3S3SWdXbZ4LQj8yXb9wYJJAnvJDzfYHGDTndiAllKA7148I7XOuG7cfUAUkbyvvrTx4Yg+mxbB9SKhQBaHpatz+J5GnUgS18HdYBpFWkRT3kprvLpeawMEfFdPkjzo/Stc8d1czmW6PKNg5m9KtWjIWszFGj1oLdlavYTXWllI++NHwyjEwNQG9xsIsRv1W2
+x-ms-exchange-antispam-messagedata: WSH3fv+ZwPPnMU5akZXuHueLJlqbNZnoycg8pu9tx7AmZsl6gdyf09IlCdz+4idiVvBdVVtdglMSxcg/QGw4yCw0dx9+gB1hIjdyhtrZeXpyhvR9bIKsUy99NaO/Mpf4Z3OiVSo4J6krPSP3zjyD/w==
 Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1462DB9A36CE444384035ADE6DB1B14A@EURP190.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9b30180-fc95-4b6c-6bde-08d7bd6c128e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2020 23:06:56.5143
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: R3IscuNb/pV1mazkPCPRnlB3lxIPo7JG1m3S4xqbUNLIIGoejIcKH49dqLbmh/bYr34wm8SfCugS+/YUF8j9HFjFbmUrG46WF6mdDtqIuqw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0397
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Sonntag, 26. Januar 2020, 17:12:36 CET schrieb Artur Rojek:
-> Add a driver for joystick devices connected to ADC controllers
-> supporting the Industrial I/O subsystem.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Hi,
 
-On a rk3326-based Odroid Go Advance
-Tested-by: Heiko Stuebner <heiko@sntech.de>
+Just softly ping if I sent it to the right direction.
 
-would be cool to get this merged ;-)
+On Sun, Feb 09, 2020 at 11:20:30PM +0200, Vadym Kochan wrote:
+> armada-ap806-dual.dtsi includes armada-ap806.dtsi which describes
+> thermal zones for 4 cpus but only cpu0 and cpu1 only exists for dual
+> configuration, this makes dtb compilation fail. Fix it by removing
+> thermal zone nodes for non-existed cpus for dual configuration.
+>=20
+> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+> ---
+>  arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi b/arch/ar=
+m64/boot/dts/marvell/armada-ap806-dual.dtsi
+> index 09849558a776..fcab5173fe67 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+> @@ -53,4 +53,9 @@
+>  			cache-sets =3D <512>;
+>  		};
+>  	};
+> +
+> +	thermal-zones {
+> +		/delete-node/ ap-thermal-cpu2;
+> +		/delete-node/ ap-thermal-cpu3;
+> +	};
+>  };
+> --=20
+> 2.17.1
+>=20
 
-Thanks
-Heiko
-
-
+Regards,
+Vadym Kochan
