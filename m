@@ -4,208 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BBAC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 16:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF08C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 16:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B52E24688
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 16:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3AC2469C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 16:18:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="SuGPJR7o"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="v0lGJtOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgB2QKA (ORCPT
+        id S1727176AbgB2QSb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:10:00 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:36326 "EHLO
+        Sat, 29 Feb 2020 11:18:31 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:43970 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbgB2QKA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 11:10:00 -0500
+        with ESMTP id S1727137AbgB2QSb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 11:18:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582992596; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1582993109; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=q7mF5atke8Ap8hRErefVt8fGumK0zb1yGxaNC+9qAy0=;
-        b=SuGPJR7okTC7LXBeeCaWdPsNYWDgT/MdrEz4hknnQcTSsvTGUCoNLuYy6UHuZOH37NrCyA
-        CaUC8XMQ1Obzj8u011QtYf/NkiAktAdN8INTDSn7R9Vn1QnmvP8WSoLhAyQ5kNpFgeNEnA
-        y3AFO/cxHpPBAHFfSp8kc3hVj1Dx2kM=
-Date:   Sat, 29 Feb 2020 13:09:35 -0300
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=lZfOPkwgE6nYYSnIfv4pFhy7q8haHYJZ5qG0aVOe4oU=;
+        b=v0lGJtOJYKbBiHlWAzMord2ep9YNFVEXMg/a+IOzhRXD9a0Ye1ha/D3c8qeThq2Gz8dAWa
+        EF/fW95Uyr6C0dbsM+UQ4ejmSx1a0JpqrEZvEO7KamBo9XqRhA6OMbAn0lgsnDaMYSGiTB
+        /t+DJgzP5FRUtLo8HMvfLpxpQpcx6Hs=
 From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Message-Id: <1582992575.3.2@crapouillou.net>
-In-Reply-To: <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com>
-References: <cover.1582912972.git.hns@goldelico.com>
-        <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/2] dt-bindings: Document JZ4770 PHY bindings
+Date:   Sat, 29 Feb 2020 13:18:19 -0300
+Message-Id: <20200229161820.17824-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nikolaus,
+Add documentation for the devicetree bindings of the
+Ingenic JZ4770 USB transceiver.
 
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-Le ven., f=E9vr. 28, 2020 at 19:02, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
-> There is a ACT8600 on the CI20 board and the bindings of the
-> ACT8865 driver have changed without updating the CI20 device
-> tree. Therefore the PMU can not be probed successfully and
-> is running in power-on reset state.
->=20
-> Fix DT to match the latest act8865-regulator bindings.
->=20
-> Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  arch/mips/boot/dts/ingenic/ci20.dts | 48=20
-> ++++++++++++++++++++---------
->  1 file changed, 33 insertions(+), 15 deletions(-)
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts=20
-> b/arch/mips/boot/dts/ingenic/ci20.dts
-> index 59c104289ece..44741e927d2b 100644
-> --- a/arch/mips/boot/dts/ingenic/ci20.dts
-> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-> @@ -4,6 +4,8 @@
->  #include "jz4780.dtsi"
->  #include <dt-bindings/clock/ingenic,tcu.h>
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
+Notes:
+    v2: No change
 
-This include should be in patch 3/5 where it's first used.
+ .../bindings/usb/ingenic,jz4770-phy.yaml      | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
 
-With that fixed:
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-
-for the whole series.
-
-Cheers,
--Paul
-
-> +#include <dt-bindings/regulator/active-semi,8865-regulator.h>
->=20
->  / {
->  	compatible =3D "img,ci20", "ingenic,jz4780";
-> @@ -166,65 +168,81 @@
->  		reg =3D <0x5a>;
->  		status =3D "okay";
->=20
-> +/*
-> +Optional input supply properties:
-> +- for act8600:
-> +  - vp1-supply: The input supply for DCDC_REG1
-> +  - vp2-supply: The input supply for DCDC_REG2
-> +  - vp3-supply: The input supply for DCDC_REG3
-> +  - inl-supply: The input supply for LDO_REG5, LDO_REG6, LDO_REG7=20
-> and LDO_REG8
-> +  SUDCDC_REG4, LDO_REG9 and LDO_REG10 do not have separate supplies.
-> +*/
-> +
->  		regulators {
->  			vddcore: SUDCDC1 {
-> -				regulator-name =3D "VDDCORE";
-> +				regulator-name =3D "DCDC_REG1";
->  				regulator-min-microvolt =3D <1100000>;
->  				regulator-max-microvolt =3D <1100000>;
->  				regulator-always-on;
->  			};
->  			vddmem: SUDCDC2 {
-> -				regulator-name =3D "VDDMEM";
-> +				regulator-name =3D "DCDC_REG2";
->  				regulator-min-microvolt =3D <1500000>;
->  				regulator-max-microvolt =3D <1500000>;
->  				regulator-always-on;
->  			};
->  			vcc_33: SUDCDC3 {
-> -				regulator-name =3D "VCC33";
-> +				regulator-name =3D "DCDC_REG3";
->  				regulator-min-microvolt =3D <3300000>;
->  				regulator-max-microvolt =3D <3300000>;
->  				regulator-always-on;
->  			};
->  			vcc_50: SUDCDC4 {
-> -				regulator-name =3D "VCC50";
-> +				regulator-name =3D "SUDCDC_REG4";
->  				regulator-min-microvolt =3D <5000000>;
->  				regulator-max-microvolt =3D <5000000>;
->  				regulator-always-on;
->  			};
->  			vcc_25: LDO_REG5 {
-> -				regulator-name =3D "VCC25";
-> +				regulator-name =3D "LDO_REG5";
->  				regulator-min-microvolt =3D <2500000>;
->  				regulator-max-microvolt =3D <2500000>;
->  				regulator-always-on;
->  			};
->  			wifi_io: LDO_REG6 {
-> -				regulator-name =3D "WIFIIO";
-> +				regulator-name =3D "LDO_REG6";
->  				regulator-min-microvolt =3D <2500000>;
->  				regulator-max-microvolt =3D <2500000>;
->  				regulator-always-on;
->  			};
->  			vcc_28: LDO_REG7 {
-> -				regulator-name =3D "VCC28";
-> +				regulator-name =3D "LDO_REG7";
->  				regulator-min-microvolt =3D <2800000>;
->  				regulator-max-microvolt =3D <2800000>;
->  				regulator-always-on;
->  			};
->  			vcc_15: LDO_REG8 {
-> -				regulator-name =3D "VCC15";
-> +				regulator-name =3D "LDO_REG8";
->  				regulator-min-microvolt =3D <1500000>;
->  				regulator-max-microvolt =3D <1500000>;
->  				regulator-always-on;
->  			};
-> -			vcc_18: LDO_REG9 {
-> -				regulator-name =3D "VCC18";
-> -				regulator-min-microvolt =3D <1800000>;
-> -				regulator-max-microvolt =3D <1800000>;
-> +			vrtc_18: LDO_REG9 {
-> +				regulator-name =3D "LDO_REG9";
-> +				/* Despite the datasheet stating 3.3V for REG9 and
-> +				   driver expecting that, REG9 outputs 1.8V.
-> +				   Likely the CI20 uses a chip variant.
-> +				   Since it is a simple on/off LDO the exact values
-> +				   do not matter.
-> +				*/
-> +				regulator-min-microvolt =3D <3300000>;
-> +				regulator-max-microvolt =3D <3300000>;
->  				regulator-always-on;
->  			};
->  			vcc_11: LDO_REG10 {
-> -				regulator-name =3D "VCC11";
-> -				regulator-min-microvolt =3D <1100000>;
-> -				regulator-max-microvolt =3D <1100000>;
-> +				regulator-name =3D "LDO_REG10";
-> +				regulator-min-microvolt =3D <1200000>;
-> +				regulator-max-microvolt =3D <1200000>;
->  				regulator-always-on;
->  			};
->  		};
-> --
-> 2.23.0
->=20
-
-=
+diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+new file mode 100644
+index 000000000000..a81b0b1a2226
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/ingenic,jz4770-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ingenic JZ4770 USB PHY devicetree bindings
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  $nodename:
++    pattern: '^usb-phy@.*'
++
++  compatible:
++    enum:
++      - ingenic,jz4770-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  vcc-supply:
++    description: VCC power supply
++
++  '#phy-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - vcc-supply
++  - '#phy-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4770-cgu.h>
++    otg_phy: usb-phy@3c {
++      compatible = "ingenic,jz4770-phy";
++      reg = <0x3c 0x10>;
++
++      vcc-supply = <&vcc>;
++      clocks = <&cgu JZ4770_CLK_OTG_PHY>;
++
++      #phy-cells = <0>;
++    };
+-- 
+2.25.1
 
