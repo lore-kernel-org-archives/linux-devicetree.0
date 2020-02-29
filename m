@@ -2,80 +2,124 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FF6C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 19:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33D9C3F2D3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 19:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE13E2467D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 19:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B1124688
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 19:33:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dD3gpeUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbgB2TGF (ORCPT
+        id S1727316AbgB2Tdq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 14:06:05 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51427 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727209AbgB2TGF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 14:06:05 -0500
-X-Originating-IP: 83.155.44.161
-Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id D027D2000B;
-        Sat, 29 Feb 2020 19:06:00 +0000 (UTC)
-Message-ID: <409fce621796948d630e1988e3f8a178e8803344.camel@hadess.net>
-Subject: Re: [PATCH] dt-bindings: touchscreen: goodix: support of gt9147
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Sat, 29 Feb 2020 14:33:46 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:60244 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727190AbgB2Tdq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 14:33:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583004823; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3pmaIIz4IWO5Cvqd4//x0wCrBroxzaVqn7Ua9M/d+fM=;
+        b=dD3gpeUqqLiw2RU0TENRCfQCPkiALo0x/dQt+L+Ch7pFN2UY+ZfyPMwm8gSOku0GTx7ynK
+        6EAbDQOnrq2MGUVRCFnibZYqbFBX35UJZAgz5fuN7y8iY5jIGhSb7ngVVtnYldsLvjipQh
+        sNHV0Ap2AwvZ55qftn3oLnWuUGZE+/s=
+Date:   Sat, 29 Feb 2020 16:33:21 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Sat, 29 Feb 2020 20:06:00 +0100
-In-Reply-To: <1582898271-21073-1-git-send-email-yannick.fertre@st.com>
-References: <1582898271-21073-1-git-send-email-yannick.fertre@st.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.35.91 (3.35.91-1.fc32) 
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Message-Id: <1583004801.3.3@crapouillou.net>
+In-Reply-To: <F5AAAD52-2C1D-4B14-AA7E-590D026C7DBE@goldelico.com>
+References: <cover.1582912972.git.hns@goldelico.com>
+        <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com>
+        <1582992575.3.2@crapouillou.net>
+        <F5AAAD52-2C1D-4B14-AA7E-590D026C7DBE@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2020-02-28 at 14:57 +0100, Yannick Fertre wrote:
-> Add support for it by adding compatible.
-> The chip data on GT9147 is similar to GT912, like
-> - config data register has 0x8047 address
-> - config data register max len is 240
-> - config data checksum has 8-bit
-> 
-> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
-> ---
->  Documentation/devicetree/bindings/input/touchscreen/goodix.yaml | 1
-> +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-> b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-> index d7c3262..9f65d67 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-> @@ -21,6 +21,7 @@ properties:
->        - goodix,gt911
->        - goodix,gt9110
->        - goodix,gt912
-> +      - goodix,gt9147
+Hi Nikolaus,
 
-It's not going to be much help if you don't have a driver patch that
-adds that string to the OF match table. And please CC: the driver
-maintainer as well.
 
->        - goodix,gt927
->        - goodix,gt9271
->        - goodix,gt928
+Le sam., f=E9vr. 29, 2020 at 19:58, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Hi Paul,
+>=20
+>>  Am 29.02.2020 um 17:09 schrieb Paul Cercueil <paul@crapouillou.net>:
+>>=20
+>>  Hi Nikolaus,
+>>=20
+>>=20
+>>  Le ven., f=E9vr. 28, 2020 at 19:02, H. Nikolaus Schaller=20
+>> <hns@goldelico.com> a =E9crit :
+>>>  There is a ACT8600 on the CI20 board and the bindings of the
+>>>  ACT8865 driver have changed without updating the CI20 device
+>>>  tree. Therefore the PMU can not be probed successfully and
+>>>  is running in power-on reset state.
+>>>  Fix DT to match the latest act8865-regulator bindings.
+>>>  Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+>>>  Cc: stable@vger.kernel.org
+>>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>  ---
+>>>  arch/mips/boot/dts/ingenic/ci20.dts | 48=20
+>>> ++++++++++++++++++++---------
+>>>  1 file changed, 33 insertions(+), 15 deletions(-)
+>>>  diff --git a/arch/mips/boot/dts/ingenic/ci20.dts=20
+>>> b/arch/mips/boot/dts/ingenic/ci20.dts
+>>>  index 59c104289ece..44741e927d2b 100644
+>>>  --- a/arch/mips/boot/dts/ingenic/ci20.dts
+>>>  +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+>>>  @@ -4,6 +4,8 @@
+>>>  #include "jz4780.dtsi"
+>>>  #include <dt-bindings/clock/ingenic,tcu.h>
+>>>  #include <dt-bindings/gpio/gpio.h>
+>>>  +#include <dt-bindings/interrupt-controller/irq.h>
+>>=20
+>>  This include should be in patch 3/5 where it's first used.
+>=20
+> Yes. That is much better.
+>=20
+>>=20
+>>  With that fixed:
+>>  Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+>>=20
+>>  for the whole series.
+>=20
+> What is easier: that you fix it during applying somewhere
+> or should I send a v5?
+
+I guess send a V5.
+
+- Paul
+
+>=20
+> BR,
+> Nikolaus
+>=20
+
+=
 
