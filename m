@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C24DC3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 12:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF31C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 12:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7843C24699
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 12:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A310246B0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 12:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgB2Mu5 (ORCPT
+        id S1726973AbgB2M5b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 07:50:57 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:51970 "EHLO
+        Sat, 29 Feb 2020 07:57:31 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:52660 "EHLO
         asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbgB2Mu4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 07:50:56 -0500
+        with ESMTP id S1726944AbgB2M5b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 07:57:31 -0500
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id CB48020043;
-        Sat, 29 Feb 2020 13:50:53 +0100 (CET)
-Date:   Sat, 29 Feb 2020 13:50:52 +0100
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 132D320023;
+        Sat, 29 Feb 2020 13:57:27 +0100 (CET)
+Date:   Sat, 29 Feb 2020 13:57:25 +0100
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Heiko Stuebner <heiko@sntech.de>
 Cc:     dri-devel@lists.freedesktop.org, thierry.reding@gmail.com,
@@ -32,24 +32,23 @@ Cc:     dri-devel@lists.freedesktop.org, thierry.reding@gmail.com,
         mark.rutland@arm.com, christoph.muellner@theobroma-systems.com,
         robin.murphy@arm.com, linux-rockchip@lists.infradead.org,
         Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: display: panel: Add binding document
- for Elida KD35T133
-Message-ID: <20200229125052.GB5447@ravnborg.org>
+Subject: Re: [PATCH v2 3/3] drm/panel: add panel driver for Elida KD35T133
+ panels
+Message-ID: <20200229125725.GC5447@ravnborg.org>
 References: <20200225093913.415844-1-heiko@sntech.de>
- <20200225093913.415844-2-heiko@sntech.de>
+ <20200225093913.415844-3-heiko@sntech.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225093913.415844-2-heiko@sntech.de>
+In-Reply-To: <20200225093913.415844-3-heiko@sntech.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
         a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=NXpJzYs8AAAA:8
-        a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8 a=Plb8VKaFw85NpEceskgA:9
-        a=CjuIK1q_8ugA:10 a=cwV61pgf2j4Cq8VD9hE_:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=pHzHmUro8NiASowvMSCR:22
-        a=nt3jZW36AmriUCFCBwmW:22
+        a=7gkXJVJtAAAA:8 a=zCkcj9i8kGs0GUICEK4A:9 a=CjuIK1q_8ugA:10
+        a=cwV61pgf2j4Cq8VD9hE_:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -57,81 +56,114 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Heiko.
 
-On Tue, Feb 25, 2020 at 10:39:12AM +0100, Heiko Stuebner wrote:
+On Tue, Feb 25, 2020 at 10:39:13AM +0100, Heiko Stuebner wrote:
 > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 > 
-> The KD35T133 is a 3.5" 320x480 DSI display used in the RK3326-based
-> Odroid Go Advance handheld device.
+> Panel driver for the KD35T133 display from Elida, used for example
+> in the rk3326-based Odroid Go Advance handheld.
+> 
+> changes in v2:
+> - rename dsi_generic_write_seq macro to dsi_dcs_write_seq to honor
+>   the underlying mipi_dsi_dcs_write (Robin)
 > 
 > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-One small comment, but anyway:
-
+Driver looks good. One small nit.
+With or without this addressed:
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  .../display/panel/elida,kd35t133.yaml         | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml b/Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml
-> new file mode 100644
-> index 000000000000..4bd74eaa61be
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/elida,kd35t133.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Elida KD35T133 3.5in 320x480 DSI panel
-> +
-> +maintainers:
-> +  - Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: elida,kd35t133
-> +  reg: true
-> +  backlight: true
-> +  reset-gpios: true
-> +  iovcc-supply:
-> +     description: regulator that supplies the iovcc voltage
-> +  vdd-supply:
-> +     description: regulator that supplies the vdd voltage
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - backlight
-Is backlight really required? If it is tied to for example vcc then
-there is nothing to express in the DT.
+
+Until we have the vendor prefix applied I cannot apply
+the binding and thus this driver.
+Ping me when we have the vendor prefix applied.
 
 	Sam
 
-> +  - iovcc-supply
-> +  - vdd-supply
+> ---
+>  drivers/gpu/drm/panel/Kconfig                |  10 +
+>  drivers/gpu/drm/panel/Makefile               |   1 +
+>  drivers/gpu/drm/panel/panel-elida-kd35t133.c | 352 +++++++++++++++++++
+>  3 files changed, 363 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-elida-kd35t133.c
+> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index db7ba062027e..56149fdbdf53 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -50,6 +50,16 @@ config DRM_PANEL_SIMPLE
+>  	  that it can be automatically turned off when the panel goes into a
+>  	  low power state.
+>  
+> +config DRM_PANEL_ELIDA_KD35T133
+> +	tristate "Elida KD35T133 panel driver"
+> +	depends on OF
+> +	depends on DRM_MIPI_DSI
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  Say Y here if you want to enable support for the Elida
+> +	  KD35T133 controller for 320x480 LCD panels with MIPI-DSI
+> +	  system interfaces.
 > +
-> +additionalProperties: false
+>  config DRM_PANEL_FEIYANG_FY07024DI26A30D
+>  	tristate "Feiyang FY07024DI26A30-D MIPI-DSI LCD panel"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index 276907410a45..63189c015ba5 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -3,6 +3,7 @@ obj-$(CONFIG_DRM_PANEL_ARM_VERSATILE) += panel-arm-versatile.o
+>  obj-$(CONFIG_DRM_PANEL_BOE_HIMAX8279D) += panel-boe-himax8279d.o
+>  obj-$(CONFIG_DRM_PANEL_LVDS) += panel-lvds.o
+>  obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
+> +obj-$(CONFIG_DRM_PANEL_ELIDA_KD35T133) += panel-elida-kd35t133.o
+>  obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) += panel-feiyang-fy07024di26a30d.o
+>  obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
+>  obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9881C) += panel-ilitek-ili9881c.o
+> diff --git a/drivers/gpu/drm/panel/panel-elida-kd35t133.c b/drivers/gpu/drm/panel/panel-elida-kd35t133.c
+> new file mode 100644
+> index 000000000000..424fb3998d2f
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-elida-kd35t133.c
+> @@ -0,0 +1,352 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Elida kd35t133 5.5" MIPI-DSI panel driver
+> + * Copyright (C) 2020 Theobroma Systems Design und Consulting GmbH
+> + *
+> + * based on
+> + *
+> + * Rockteck jh057n00900 5.5" MIPI-DSI panel driver
+> + * Copyright (C) Purism SPC 2019
+> + */
 > +
-> +examples:
-> +  - |
-> +    dsi@ff450000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        panel@0 {
-> +            compatible = "elida,kd35t133";
-> +            reg = <0>;
-> +            backlight = <&backlight>;
-> +            iovcc-supply = <&vcc_1v8>;
-> +            vdd-supply = <&vcc3v3_lcd>;
-> +        };
-> +    };
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_print.h>
 > +
-> +...
-> -- 
-> 2.24.1
+> +#include <video/display_timing.h>
+> +#include <video/mipi_display.h>
+> +
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/media-bus-format.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regulator/consumer.h>
+
+We usually order this:
+
+#include <linux/*>
+
+#include <video/*>
+
+#include <drm/*>
+
+And sorted within each block as you already did.
+
+> +
+> +/* Manufacturer specific Commands send via DSI */
+> +#define KD35T133_CMD_INTERFACEMODECTRL		0xb0
+> +#define KD35T133_CMD_FRAMERATECTRL		0xb1
+> +#define KD35T133_CMD_DISPLAYINVERSIONCTRL	0xb4
+> +#define KD35T133_CMD_DISPLAYFUNCTIONCTRL	0xb6
+> +#define KD35T133_CMD_POWERCONTROL1		0xc0
