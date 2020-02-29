@@ -2,39 +2,38 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838B4C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 23:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F791C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 23:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9C520828
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 23:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E7E20828
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 23:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbgB2XmI (ORCPT
+        id S1727254AbgB2Xnv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 18:42:08 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:55058 "EHLO gloria.sntech.de"
+        Sat, 29 Feb 2020 18:43:51 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:55094 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbgB2XmI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 29 Feb 2020 18:42:08 -0500
+        id S1727185AbgB2Xnv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 29 Feb 2020 18:43:51 -0500
 Received: from p508fcd9d.dip0.t-ipconnect.de ([80.143.205.157] helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1j8BkC-0004p9-60; Sun, 01 Mar 2020 00:42:04 +0100
+        id 1j8Blr-0004pd-AW; Sun, 01 Mar 2020 00:43:47 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        pgwipeout@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: Describe RK3328 GPIO_MUTE users
-Date:   Sun, 01 Mar 2020 00:42:03 +0100
-Message-ID: <2986513.xosFKxlJ7S@phil>
-In-Reply-To: <59fe8a7d-22ab-6098-5266-4fdf4bf41adb@arm.com>
-References: <cover.1581376744.git.robin.murphy@arm.com> <53637c0359ad9473dc1391a8428ba21017ec467e.1581376744.git.robin.murphy@arm.com> <59fe8a7d-22ab-6098-5266-4fdf4bf41adb@arm.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: fix cpu compatible property for rk3308
+Date:   Sun, 01 Mar 2020 00:43:46 +0100
+Message-ID: <2296994.saQPy0AWz7@phil>
+In-Reply-To: <20200228084827.16198-1-jbx6244@gmail.com>
+References: <20200228084827.16198-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -43,17 +42,24 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Freitag, 28. Februar 2020, 13:48:50 CET schrieb Robin Murphy:
-> Hi Heiko,
+Am Freitag, 28. Februar 2020, 09:48:27 CET schrieb Johan Jonker:
+> A test with the command below gives for example these errors:
 > 
-> On 18/02/2020 9:32 pm, Robin Murphy wrote:
-> > Add explicit properties to describe existing boards' GPIO_MUTE usage
-> > for the analog codec.
+> arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: cpu@0: compatible:
+> Additional items are not allowed ('arm,armv8' was unexpected)
+> arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: cpu@0: compatible:
+> ['arm,cortex-a35', 'arm,armv8']
+> is too long
 > 
-> Are you happy to pick this up now that the driver patches are queued?
+> Fix these errors by removing the last argument of
+> the cpu compatible property in rk3308.dtsi.
+> 
+> make ARCH=arm64
+> dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/cpus.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-very happy :-)
-And applied for 5.7
+applied for 5.7 with Robins Rb
 
 Thanks
 Heiko
