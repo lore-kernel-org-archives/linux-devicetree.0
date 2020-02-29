@@ -2,461 +2,86 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C28C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 15:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2789C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 15:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B761B2468A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 15:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1E924699
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 15:47:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYgnTIsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgB2PPa (ORCPT
+        id S1727142AbgB2Prq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 10:15:30 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:51288 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbgB2PPa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 29 Feb 2020 10:15:30 -0500
-Received: from p508fcd9d.dip0.t-ipconnect.de ([80.143.205.157] helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j83pp-0003GL-1R; Sat, 29 Feb 2020 16:15:21 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     dri-devel@lists.freedesktop.org
-Cc:     thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        christoph.muellner@theobroma-systems.com, robin.murphy@arm.com,
-        linux-rockchip@lists.infradead.org, heiko@sntech.de,
-        francescolavra.fl@gmail.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH v3 3/3] drm/panel: add panel driver for Elida KD35T133 panels
-Date:   Sat, 29 Feb 2020 16:15:06 +0100
-Message-Id: <20200229151506.750242-3-heiko@sntech.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200229151506.750242-1-heiko@sntech.de>
-References: <20200229151506.750242-1-heiko@sntech.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 29 Feb 2020 10:47:46 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45902 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgB2Prq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 10:47:46 -0500
+Received: by mail-lj1-f193.google.com with SMTP id e18so6725108ljn.12;
+        Sat, 29 Feb 2020 07:47:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qKnesHmoBmkag7afF4T2hMq9e7zOlVqqvlQY6asutgI=;
+        b=ZYgnTIshFA3SA6KepwgRqr5oUtuUCbz4B2COy7r5yyka2yYxbVu79xdN7YKFTKHiPn
+         XHTG0Tr8/akQ1CXsX9zbIvuNoFX617SS6bvk5OlsYRbsu82HqnO8EJKcoALaSk5hmx4Z
+         tZZpSJhqWyfxzVkIyIhTU3xTbccdiYy0F+RCgoYGye+XiCxwZJI2h0UdRnhmDUEReIN5
+         EBHO4JjUxwCKzrAAx1VJnSzfY1hFS5W7uXiiTmuXkth3aqwoe2Bh7GgJpfLQlWQWwaJX
+         rMJq8GsUv7X0Cadle9ZGosMQFdxSZfkSU8s6WXZ2++pdhKMjrdDxH64zPhGUDCfOIjjE
+         yMJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qKnesHmoBmkag7afF4T2hMq9e7zOlVqqvlQY6asutgI=;
+        b=Y45dEnyKRHB+MNc1LtRwPJss3HsWPd1FkqbpDlU3ja1smPFau1S/alONYdpJJipflW
+         +v+QnUdyuifVaH4GVUnGuSG/ltbpi951hf6+CipXL/oK3BJceQ6ndZ1Iyk6YYGHyLl7x
+         yO8+9k+w42ujSGKzpCrf4fTxf9+njWwCiXz4hdMInxKwaX9dcBibO0nCDgdAE9ZwcgKB
+         +5L7+ugVVgTADgIPRrIz7Vtp/jeGde7fGw5JAGIcd8tnDSDNw0F9+XEnT1cIpzobw8S3
+         ktSvn1yKbRQFEtPePzxMgam4t6nEXt7G05uSbCxygCnIUYbLG9tLuXXfQcucTS6yaZrJ
+         D3rg==
+X-Gm-Message-State: ANhLgQ1H4ps1ZKDBPmQv0GbEvcCF7U6XzrI2/QQYf8Xn0bbigP9L9BmB
+        dwA7AzWvohyQ0KbBltuf7qI=
+X-Google-Smtp-Source: ADFU+vuJeGLV4/eo3/0Y4eK+BpBa3yvD+ui50MRir/6gj1Ss+eZRs556UDZ9Tud5nszjviVxLu4l0g==
+X-Received: by 2002:a05:651c:39b:: with SMTP id e27mr4981749ljp.99.1582991264652;
+        Sat, 29 Feb 2020 07:47:44 -0800 (PST)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id g20sm7294786lfb.33.2020.02.29.07.47.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 29 Feb 2020 07:47:44 -0800 (PST)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH 0/2] arm64: dts: meson: add dts/bindings for Tanix TX5 Max
+Date:   Sat, 29 Feb 2020 19:46:52 +0400
+Message-Id: <1582991214-85209-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+This series adds new bindings and a device-tree file for the Tanix TX5 Max
+set-top box.
 
-Panel driver for the KD35T133 display from Elida, used for example
-in the rk3326-based Odroid Go Advance handheld.
+Christian Hewitt (2):
+  dt-bindings: arm: amlogic: add support for the Tanix TX5 Max
+  arm64: dts: meson-g12a-tanix-tx5max: add initial device tree
 
-changes in v3:
-- add missing return value assignment (Francesco)
-- re-sort header includes (Sam)
-changes in v2:
-- rename dsi_generic_write_seq macro to dsi_dcs_write_seq to honor
-  the underlying mipi_dsi_dcs_write (Robin)
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-g12a-tanix-tx5max.dts   | 481 +++++++++++++++++++++
+ 3 files changed, 483 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-tanix-tx5max.dts
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
----
- drivers/gpu/drm/panel/Kconfig                |  10 +
- drivers/gpu/drm/panel/Makefile               |   1 +
- drivers/gpu/drm/panel/panel-elida-kd35t133.c | 352 +++++++++++++++++++
- 3 files changed, 363 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-elida-kd35t133.c
-
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index db7ba062027e..56149fdbdf53 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -50,6 +50,16 @@ config DRM_PANEL_SIMPLE
- 	  that it can be automatically turned off when the panel goes into a
- 	  low power state.
- 
-+config DRM_PANEL_ELIDA_KD35T133
-+	tristate "Elida KD35T133 panel driver"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for the Elida
-+	  KD35T133 controller for 320x480 LCD panels with MIPI-DSI
-+	  system interfaces.
-+
- config DRM_PANEL_FEIYANG_FY07024DI26A30D
- 	tristate "Feiyang FY07024DI26A30-D MIPI-DSI LCD panel"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 276907410a45..63189c015ba5 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_DRM_PANEL_ARM_VERSATILE) += panel-arm-versatile.o
- obj-$(CONFIG_DRM_PANEL_BOE_HIMAX8279D) += panel-boe-himax8279d.o
- obj-$(CONFIG_DRM_PANEL_LVDS) += panel-lvds.o
- obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
-+obj-$(CONFIG_DRM_PANEL_ELIDA_KD35T133) += panel-elida-kd35t133.o
- obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) += panel-feiyang-fy07024di26a30d.o
- obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
- obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9881C) += panel-ilitek-ili9881c.o
-diff --git a/drivers/gpu/drm/panel/panel-elida-kd35t133.c b/drivers/gpu/drm/panel/panel-elida-kd35t133.c
-new file mode 100644
-index 000000000000..75fbecdbf65a
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-elida-kd35t133.c
-@@ -0,0 +1,352 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Elida kd35t133 5.5" MIPI-DSI panel driver
-+ * Copyright (C) 2020 Theobroma Systems Design und Consulting GmbH
-+ *
-+ * based on
-+ *
-+ * Rockteck jh057n00900 5.5" MIPI-DSI panel driver
-+ * Copyright (C) Purism SPC 2019
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/media-bus-format.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <video/display_timing.h>
-+#include <video/mipi_display.h>
-+
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_print.h>
-+
-+/* Manufacturer specific Commands send via DSI */
-+#define KD35T133_CMD_INTERFACEMODECTRL		0xb0
-+#define KD35T133_CMD_FRAMERATECTRL		0xb1
-+#define KD35T133_CMD_DISPLAYINVERSIONCTRL	0xb4
-+#define KD35T133_CMD_DISPLAYFUNCTIONCTRL	0xb6
-+#define KD35T133_CMD_POWERCONTROL1		0xc0
-+#define KD35T133_CMD_POWERCONTROL2		0xc1
-+#define KD35T133_CMD_VCOMCONTROL		0xc5
-+#define KD35T133_CMD_POSITIVEGAMMA		0xe0
-+#define KD35T133_CMD_NEGATIVEGAMMA		0xe1
-+#define KD35T133_CMD_SETIMAGEFUNCTION		0xe9
-+#define KD35T133_CMD_ADJUSTCONTROL3		0xf7
-+
-+struct kd35t133 {
-+	struct device *dev;
-+	struct drm_panel panel;
-+	struct gpio_desc *reset_gpio;
-+	struct regulator *vdd;
-+	struct regulator *iovcc;
-+	bool prepared;
-+};
-+
-+static inline struct kd35t133 *panel_to_kd35t133(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct kd35t133, panel);
-+}
-+
-+#define dsi_dcs_write_seq(dsi, cmd, seq...) do {			\
-+		static const u8 d[] = { seq };				\
-+		int ret;						\
-+		ret = mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d));	\
-+		if (ret < 0)						\
-+			return ret;					\
-+	} while (0)
-+
-+static int kd35t133_init_sequence(struct kd35t133 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	struct device *dev = ctx->dev;
-+
-+	/*
-+	 * Init sequence was supplied by the panel vendor with minimal
-+	 * documentation.
-+	 */
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_POSITIVEGAMMA,
-+			      0x00, 0x13, 0x18, 0x04, 0x0f, 0x06, 0x3a, 0x56,
-+			      0x4d, 0x03, 0x0a, 0x06, 0x30, 0x3e, 0x0f);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_NEGATIVEGAMMA,
-+			      0x00, 0x13, 0x18, 0x01, 0x11, 0x06, 0x38, 0x34,
-+			      0x4d, 0x06, 0x0d, 0x0b, 0x31, 0x37, 0x0f);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_POWERCONTROL1, 0x18, 0x17);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_POWERCONTROL2, 0x41);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_VCOMCONTROL, 0x00, 0x1a, 0x80);
-+	dsi_dcs_write_seq(dsi, MIPI_DCS_SET_ADDRESS_MODE, 0x48);
-+	dsi_dcs_write_seq(dsi, MIPI_DCS_SET_PIXEL_FORMAT, 0x55);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_INTERFACEMODECTRL, 0x00);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_FRAMERATECTRL, 0xa0);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_DISPLAYINVERSIONCTRL, 0x02);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_DISPLAYFUNCTIONCTRL,
-+			      0x20, 0x02);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_SETIMAGEFUNCTION, 0x00);
-+	dsi_dcs_write_seq(dsi, KD35T133_CMD_ADJUSTCONTROL3,
-+			      0xa9, 0x51, 0x2c, 0x82);
-+	mipi_dsi_dcs_write(dsi, MIPI_DCS_ENTER_INVERT_MODE, NULL, 0);
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
-+	return 0;
-+}
-+
-+static int kd35t133_unprepare(struct drm_panel *panel)
-+{
-+	struct kd35t133 *ctx = panel_to_kd35t133(panel);
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	int ret;
-+
-+	if (!ctx->prepared)
-+		return 0;
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(ctx->dev, "failed to set display off: %d\n",
-+			      ret);
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "failed to enter sleep mode: %d\n",
-+			      ret);
-+		return ret;
-+	}
-+
-+	regulator_disable(ctx->iovcc);
-+	regulator_disable(ctx->vdd);
-+
-+	ctx->prepared = false;
-+
-+	return 0;
-+}
-+
-+static int kd35t133_prepare(struct drm_panel *panel)
-+{
-+	struct kd35t133 *ctx = panel_to_kd35t133(panel);
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	int ret;
-+
-+	if (ctx->prepared)
-+		return 0;
-+
-+	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
-+	ret = regulator_enable(ctx->vdd);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev,
-+			      "Failed to enable vdd supply: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regulator_enable(ctx->iovcc);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev,
-+			      "Failed to enable iovcc supply: %d\n", ret);
-+		goto disable_vdd;
-+	}
-+
-+	msleep(20);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(10, 20);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+
-+	msleep(20);
-+
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "Failed to exit sleep mode: %d\n", ret);
-+		goto disable_iovcc;
-+	}
-+
-+	msleep(250);
-+
-+	ret = kd35t133_init_sequence(ctx);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
-+			      ret);
-+		goto disable_iovcc;
-+	}
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "Failed to set display on: %d\n", ret);
-+		goto disable_iovcc;
-+	}
-+
-+	msleep(50);
-+
-+	ctx->prepared = true;
-+
-+	return 0;
-+
-+disable_iovcc:
-+	regulator_disable(ctx->iovcc);
-+disable_vdd:
-+	regulator_disable(ctx->vdd);
-+	return ret;
-+}
-+
-+static const struct drm_display_mode default_mode = {
-+	.hdisplay	= 320,
-+	.hsync_start	= 320 + 130,
-+	.hsync_end	= 320 + 130 + 4,
-+	.htotal		= 320 + 130 + 4 + 130,
-+	.vdisplay	= 480,
-+	.vsync_start	= 480 + 2,
-+	.vsync_end	= 480 + 2 + 1,
-+	.vtotal		= 480 + 2 + 1 + 2,
-+	.vrefresh	= 60,
-+	.clock		= 17000,
-+	.width_mm	= 42,
-+	.height_mm	= 82,
-+};
-+
-+static int kd35t133_get_modes(struct drm_panel *panel,
-+				struct drm_connector *connector)
-+{
-+	struct kd35t133 *ctx = panel_to_kd35t133(panel);
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(connector->dev, &default_mode);
-+	if (!mode) {
-+		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u\n",
-+			      default_mode.hdisplay, default_mode.vdisplay,
-+			      default_mode.vrefresh);
-+		return -ENOMEM;
-+	}
-+
-+	drm_mode_set_name(mode);
-+
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
-+	drm_mode_probed_add(connector, mode);
-+
-+	return 1;
-+}
-+
-+static const struct drm_panel_funcs kd35t133_funcs = {
-+	.unprepare	= kd35t133_unprepare,
-+	.prepare	= kd35t133_prepare,
-+	.get_modes	= kd35t133_get_modes,
-+};
-+
-+static int kd35t133_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct kd35t133 *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(ctx->reset_gpio)) {
-+		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
-+		return PTR_ERR(ctx->reset_gpio);
-+	}
-+
-+	ctx->vdd = devm_regulator_get(dev, "vdd");
-+	if (IS_ERR(ctx->vdd)) {
-+		ret = PTR_ERR(ctx->vdd);
-+		if (ret != -EPROBE_DEFER)
-+			DRM_DEV_ERROR(dev,
-+				      "Failed to request vdd regulator: %d\n",
-+				      ret);
-+		return ret;
-+	}
-+
-+	ctx->iovcc = devm_regulator_get(dev, "iovcc");
-+	if (IS_ERR(ctx->iovcc)) {
-+		ret = PTR_ERR(ctx->iovcc);
-+		if (ret != -EPROBE_DEFER)
-+			DRM_DEV_ERROR(dev,
-+				      "Failed to request iovcc regulator: %d\n",
-+				      ret);
-+		return ret;
-+	}
-+
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	ctx->dev = dev;
-+
-+	dsi->lanes = 1;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-+			  MIPI_DSI_MODE_LPM | MIPI_DSI_MODE_EOT_PACKET;
-+
-+	drm_panel_init(&ctx->panel, &dsi->dev, &kd35t133_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+
-+	ret = drm_panel_of_backlight(&ctx->panel);
-+	if (ret)
-+		return ret;
-+
-+	drm_panel_add(&ctx->panel);
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed: %d\n", ret);
-+		drm_panel_remove(&ctx->panel);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void kd35t133_shutdown(struct mipi_dsi_device *dsi)
-+{
-+	struct kd35t133 *ctx = mipi_dsi_get_drvdata(dsi);
-+	int ret;
-+
-+	ret = drm_panel_unprepare(&ctx->panel);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(&dsi->dev, "Failed to unprepare panel: %d\n",
-+			      ret);
-+
-+	ret = drm_panel_disable(&ctx->panel);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(&dsi->dev, "Failed to disable panel: %d\n",
-+			      ret);
-+}
-+
-+static int kd35t133_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct kd35t133 *ctx = mipi_dsi_get_drvdata(dsi);
-+	int ret;
-+
-+	kd35t133_shutdown(dsi);
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(&dsi->dev, "Failed to detach from DSI host: %d\n",
-+			      ret);
-+
-+	drm_panel_remove(&ctx->panel);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id kd35t133_of_match[] = {
-+	{ .compatible = "elida,kd35t133" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, kd35t133_of_match);
-+
-+static struct mipi_dsi_driver kd35t133_driver = {
-+	.driver = {
-+		.name = "panel-elida-kd35t133",
-+		.of_match_table = kd35t133_of_match,
-+	},
-+	.probe	= kd35t133_probe,
-+	.remove = kd35t133_remove,
-+	.shutdown = kd35t133_shutdown,
-+};
-+module_mipi_dsi_driver(kd35t133_driver);
-+
-+MODULE_AUTHOR("Heiko Stuebner <heiko.stuebner@theobroma-systems.com>");
-+MODULE_DESCRIPTION("DRM driver for Elida kd35t133 MIPI DSI panel");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.24.1
+2.7.4
 
