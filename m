@@ -2,193 +2,125 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086E0C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5505C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0955246A3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CCE8246A2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="1EMgyUrZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MUhmg5FG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgB2Knz (ORCPT
+        id S1726892AbgB2KoI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 05:43:55 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:37702 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgB2Kny (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 05:43:54 -0500
-Received: by mail-qk1-f193.google.com with SMTP id m9so5562320qke.4
-        for <devicetree@vger.kernel.org>; Sat, 29 Feb 2020 02:43:52 -0800 (PST)
+        Sat, 29 Feb 2020 05:44:08 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36586 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgB2KoH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 05:44:07 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d9so2881978pgu.3
+        for <devicetree@vger.kernel.org>; Sat, 29 Feb 2020 02:44:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cWLh3cGNIdtmam3OU5Dca7rYeIjQy825G41ll9rpNfc=;
-        b=1EMgyUrZE/3eoHr19mlRudElQgXg3GyTeFmnUg2jKH/9lOE8A2LdAQFKDLQSULVbp8
-         i32HSDCeXR27luc1aSM27riRvQvW9J7cFC3/LBQeONwnuyo/1iZtgA1rkF/oINU/L/SN
-         ZBYth62kfJUwYsyOYMEMb84l36Ya8H2sw830g8Y58qM2U427A/8XhzdcPIAP1sYx4dWK
-         QlvWDCfmRjYIXkCX9FU62uH7EF4Z/QCQSn+HtT324B42EpzQn1DwGuuq6WS8UpZeixE3
-         Sz/CSMeJG7IS5Ys7v801rrhea6xGiQutfawP3um4149+cAG/BfBlR7lQ5eFXhxiP+2Po
-         xNuA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SB2zgIhiQZxj/QhdSznnFhbcqQLT0zn4L9QUBfDgryE=;
+        b=MUhmg5FGS1EBD6jMzsKu3KwSU6WQCv0D8ZRh11klKyG6dGEGM1Z5GQ9AY85EelgZQc
+         I8c02hcXUC+6D3Dtzj9MBOsP01nryezSHBMJjdKNGqpStoRaPqpq6/ggg6KCEJ11mgKe
+         mpisWb5fjhgqshqwDMWfxj+sq9i7CJeg+fmAnXr55V5v9DHOZBS/JozfMhfAgS6z/vNn
+         cv8Lve04mAAuFXguSIS/ssXFQGFpqB52gfzM2+2X4DAk98Nj+Zske27klr+1Razu9KFm
+         LxQCIffqAp7f3V4aYF14gsmbrw2vDxQitXzQ/sghYC7etT9+7g5s7akJB+cCUQi+c83Q
+         yl+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cWLh3cGNIdtmam3OU5Dca7rYeIjQy825G41ll9rpNfc=;
-        b=ig70osmVL8BMOjHjIkGMzzmDHzUjOBaXRticZUiuAcPfWhacyJP2n6g84knhBPR43a
-         Tilw3tcmzAp+awPeB0TLpRJYwVJyXb4jDU7egNZgu9TI4Kj8BqNVmk13v6YFuW5CUF45
-         +LMn6+7LeUO/Plj+x3FWb/5EJsKFv/slNew7FC2ZTQHbs8w1V2MNmWIfq9XdYM7ZRRSs
-         XWNpoBAHEXZ9F2wJ90tzeSv03h4cBzA1RFSCLmEIt0V/vJvwxAZOyTeJNaBcLdDweLtj
-         bHIyY9TwP2OOd7d9YaMSn9SIIAnUonXRhLfRnAqaxjbvMd9Y7IMAQQeuQ+8KKE5HIfED
-         eQyQ==
-X-Gm-Message-State: APjAAAUUw/YUGh2BPnz0mcKfw3i7xkDu8I5+eyLAkPU/gd5DHJxkMUxd
-        5tY7FnyTN+YrEXKp3D8RNbhfgGXjJNfzJw==
-X-Google-Smtp-Source: APXvYqzKSpOtCuGl13wtVyIl+A2uueLeUiyltEAJsnTd8/rg0gyfETvajHr+CRxRePNxGXOCXGTTHQ==
-X-Received: by 2002:a37:9181:: with SMTP id t123mr8094431qkd.230.1582973031766;
-        Sat, 29 Feb 2020 02:43:51 -0800 (PST)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id t6sm6737843qke.57.2020.02.29.02.43.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 02:43:51 -0800 (PST)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, festevam@gmail.com, marco.franchi@nxp.com,
-        linux-imx@nxp.com, lkcamp@lists.libreplanetbr.org
-Subject: [PATCH] arm64: dts: freescale: add gpio-fan/thermal support for Google i.MX 8MQ Phanbell
-Date:   Sat, 29 Feb 2020 07:43:47 -0300
-Message-Id: <20200229104347.11126-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.21.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SB2zgIhiQZxj/QhdSznnFhbcqQLT0zn4L9QUBfDgryE=;
+        b=J14a0dNPlNev4cWcPKDOfZNDBl6dn3X2cT5vmBmVKwcX6KILBL2ynZHnsvT7WxnF23
+         wTqDUjj9paeG+NiKUsR/DcnFWuR0P0vv6ktefojoyEdtnQhsoemzIWIyTXLp/oszzpiB
+         3dDJHfn377UcBgKN1HJSGXAaqB46/YjsO8UFG0sg0QSMVOjqK+Nkw3LbDGsSMSgrwuQs
+         egdBuwPXYKgq/o5EE+P5Mfqo96qZAYIZJhBdxB+6JrHiiqs5axTxmyiY0IQrKrQFCyxk
+         Tx1b/yLuIRss7k9UlDZCG+ierY+LG32t6N4OQSgzeB2P8ubl8Cku6LVYpIPeyNtFyVSf
+         nX8A==
+X-Gm-Message-State: APjAAAUfdVPFkcSrknHRjAdSx/K81O+kXapUlZ5ZPI1HrqoLq3Hc9jWU
+        s6jJwGOgaJi0kC+44cWFC0CH
+X-Google-Smtp-Source: APXvYqwV8CNh7pfjbCdPlz5eowb4Zc8P0T47nldacmIYks5MMdlgteVAxEM6vUQRGb+e4d44Nl4K2g==
+X-Received: by 2002:aa7:8101:: with SMTP id b1mr8940121pfi.105.1582973046778;
+        Sat, 29 Feb 2020 02:44:06 -0800 (PST)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id c2sm5396676pjo.28.2020.02.29.02.44.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 29 Feb 2020 02:44:06 -0800 (PST)
+Date:   Sat, 29 Feb 2020 16:13:58 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     afaerber@suse.de, mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] dt-bindings: arm: actions: Document Caninos
+ Loucos Labrador
+Message-ID: <20200229104358.GB19610@mani>
+References: <20200227201557.368533-1-matheus@castello.eng.br>
+ <20200227201557.368533-2-matheus@castello.eng.br>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227201557.368533-2-matheus@castello.eng.br>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It was based on Google Source Code for Coral Edge TPU Mendel release:
-https://coral.googlesource.com/linux-imx/
+On Thu, Feb 27, 2020 at 05:15:56PM -0300, Matheus Castello wrote:
+> Update the documentation to add the Caninos Loucos Labrador
+> vendor-prefix and items that were included in the device tree files.
+> 
 
-It was tested on Coral Dev Board using this command:
-  sudo stress --cpu 4 --timeout 3600
+These two should be splitted into separate patches.
 
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
----
- .../boot/dts/freescale/imx8mq-phanbell.dts    | 78 +++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  2 +-
- 2 files changed, 79 insertions(+), 1 deletion(-)
+Thanks,
+Mani
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index 3f2a489a4ad8..fb9f208d1e41 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -35,6 +35,14 @@
- 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	fan: gpio_fan {
-+		compatible = "gpio-fan";
-+		gpio-fan,speed-map = <0 0 8600 1>;
-+		gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-+		#cooling-cells = <2>;
-+		status = "okay";
-+	};
- };
- 
- &A53_0 {
-@@ -374,3 +382,73 @@
- 		>;
- 	};
- };
-+
-+&tmu {
-+	throttle-cfgs {
-+		throttle_devfreq: devfreq {
-+			throttle,max_state = <2>;
-+			#cooling-cells = <2>;
-+		};
-+	};
-+};
-+
-+&cpu_thermal {
-+	trips {
-+		cpu_alert0: trip0 {
-+			temperature = <75000>;
-+			hysteresis = <2000>;
-+			type = "passive";
-+		};
-+
-+		cpu_alert1: trip1 {
-+			temperature = <80000>;
-+			hysteresis = <2000>;
-+			type = "passive";
-+		};
-+
-+		cpu_alert2: trip2 {
-+			temperature = <85000>;
-+			hysteresis = <2000>;
-+			type = "passive";
-+		};
-+
-+		cpu_crit0: trip3 {
-+			temperature = <90000>;
-+			hysteresis = <2000>;
-+			type = "critical";
-+		};
-+
-+		fan_toggle0: trip4 {
-+			temperature = <65000>;
-+			hysteresis = <10000>;
-+			type = "active";
-+		};
-+	};
-+
-+	cooling-maps {
-+		map0 {
-+			trip = <&cpu_alert0>;
-+			cooling-device =
-+			<&throttle_devfreq 0 1>, /* 1/2 GPU Clock */
-+			<&A53_0 0 1>; /* Exclude highest OPP */
-+		};
-+
-+		map1 {
-+			trip = <&cpu_alert1>;
-+			cooling-device =
-+			<&A53_0 0 2>; /* Exclude two highest OPPs */
-+		};
-+
-+		map2 {
-+			trip = <&cpu_alert2>;
-+			cooling-device =
-+			<&throttle_devfreq 0 2>; /* Min GPU Clock, disable CPU2/3 */
-+		};
-+
-+		map4 {
-+			trip = <&fan_toggle0>;
-+			cooling-device = <&fan 0 1>;
-+		};
-+	};
-+};
-+
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 6a1e83922c71..a3bb17a6b9df 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -198,7 +198,7 @@
- 	};
- 
- 	thermal-zones {
--		cpu-thermal {
-+		cpu_thermal: cpu-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <2000>;
- 			thermal-sensors = <&tmu 0>;
--- 
-2.21.1
-
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  Documentation/devicetree/bindings/arm/actions.yaml     | 5 +++++
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
+> index ace3fdaa8396..1b131ceb884a 100644
+> --- a/Documentation/devicetree/bindings/arm/actions.yaml
+> +++ b/Documentation/devicetree/bindings/arm/actions.yaml
+> @@ -24,6 +24,11 @@ properties:
+>                - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
+>            - const: lemaker,guitar
+>            - const: actions,s500
+> +      - items:
+> +          - enum:
+> +              - caninos,labrador-bb # Caninos Loucos Labrador Base Board
+> +          - const: caninos,labrador
+> +          - const: actions,s500
+> 
+>        # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
+>        - items:
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 9e67944bec9c..3e974dd563cf 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -167,6 +167,8 @@ patternProperties:
+>      description: Calxeda
+>    "^capella,.*":
+>      description: Capella Microsystems, Inc
+> +  "^caninos,.*":
+> +    description: Caninos Loucos LSI-TEC NPO
+>    "^cascoda,.*":
+>      description: Cascoda, Ltd.
+>    "^catalyst,.*":
+> --
+> 2.25.0
+> 
