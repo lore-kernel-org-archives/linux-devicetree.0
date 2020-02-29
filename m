@@ -2,343 +2,121 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1CBC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 16:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582A8C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 16:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8851E246A2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 16:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BED324697
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 16:29:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="jBWfK0rV"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SIEnl2c4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgB2QSj (ORCPT
+        id S1727257AbgB2Q3D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:18:39 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:43988 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgB2QSi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 11:18:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582993113; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kxGsOA3g2K72N6MJIP9ViHY+Ly8xmNm//jXsHT/pLUI=;
-        b=jBWfK0rVNDfn411fUmbKasbmSupopL3pjHTwgoCLeRQFlnBsfqrIN1cokwyzz7OUB8YZHF
-        xau4kt29Eka/0TkO6cNX96+4Ga/h+69iNAOMzS+wjwOdSYHaV87tXRHK03rfvQ1ZQX8+SJ
-        Ka/aq33cYZmlMmwRHQ1aSy9Ig9RZ7F8=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 2/2] usb: phy: Add driver for the Ingenic JZ4770 USB transceiver
-Date:   Sat, 29 Feb 2020 13:18:20 -0300
-Message-Id: <20200229161820.17824-2-paul@crapouillou.net>
-In-Reply-To: <20200229161820.17824-1-paul@crapouillou.net>
-References: <20200229161820.17824-1-paul@crapouillou.net>
+        Sat, 29 Feb 2020 11:29:03 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55251 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbgB2Q3D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 11:29:03 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z12so6736643wmi.4
+        for <devicetree@vger.kernel.org>; Sat, 29 Feb 2020 08:29:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=/nhS7fRXWHjddQ2mW6qgUCBhU766o/FgbNANhrsBC+c=;
+        b=SIEnl2c4LTlz56TnuowihDkAwHNgn0iRVkJm3p3VjdUo+NAOW0iAVBgUQCS93z+qC0
+         NT/o0F4dGyDIfEKjqkkST4MXWGElsz0Ms3ijH4V1bTcuhOe2N/ISC7T3Pw33rNt1yb6i
+         GoLFZG5G0clR5UIczr7iKW2GGVbFANq8SyTJzqmqYAgJBEFmyOo0FEBRgbcFXLdiVt9Q
+         UpniXAW9a39DtmI3q75R0yMYdeZHZEwOc8LSKN3YTICHjqoYUuBiPT1nralowAP0Tnnv
+         u38Hk6QCZptvhO+2BwbnflrKwueq3HYZMib9xY/OO2HWHKK8aubquWy/I7h3o0bMu9Kk
+         X00w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=/nhS7fRXWHjddQ2mW6qgUCBhU766o/FgbNANhrsBC+c=;
+        b=CAQPkLXpv8DWBixX2Q/UMQJk8gd5QBMz+J1/XMPpDXZDAcUTVbd6xQoTV6KejHsvOd
+         waJouTlBLnXdTDFI1a6Qjovs4OnK2gFkLEg3yy3C0Zm29zd2mXsLtkaOO2+g3LMBMXCd
+         mGNCnppsEdck7yrdbbInCxE7y0sG0Xsrd2dLSIjHXw4KHWgZgtsAGMI8gGoT0ZqRxch2
+         6tIMnthlZvP0vXyTWO1ere+qiGXqm24ppw88HyPgPqr65a/4LsNfhRerHthhcO3RxZeH
+         p03qkwWQ3mDj+lb6DYRZqeJkvDFBrJ81eWpLGmLIldIna9bp7JSER4v470rkbm7g+kQW
+         lNGA==
+X-Gm-Message-State: APjAAAXnOMf8Lxwmw3cA6rMzbqDxj34HhYCV2xGzlg0D+D/jVaHC5+ME
+        tb3kpuOkFci1FIPaJcQkVxMxMA==
+X-Google-Smtp-Source: APXvYqzfqcYtCrS+L+2YW0wCapvE4z22/nu0RMLPxck3ioY80N+w/B/BrxC//vE2fGmjFlcQRyFnqA==
+X-Received: by 2002:a7b:cc6a:: with SMTP id n10mr10430395wmj.170.1582993741675;
+        Sat, 29 Feb 2020 08:29:01 -0800 (PST)
+Received: from localhost (229.3.136.88.rev.sfr.net. [88.136.3.229])
+        by smtp.gmail.com with ESMTPSA id k7sm18113920wrq.12.2020.02.29.08.29.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 29 Feb 2020 08:29:00 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-amlogic@lists.infradead.org
+Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RESEND] dt-bindings: power: Fix dt_binding_check error
+In-Reply-To: <1582856099-105484-1-git-send-email-jianxin.pan@amlogic.com>
+References: <1582856099-105484-1-git-send-email-jianxin.pan@amlogic.com>
+Date:   Sat, 29 Feb 2020 17:28:59 +0100
+Message-ID: <7h5zfpbbn8.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a driver to support the USB PHY found in the JZ4770 SoC from
-Ingenic.
+Hi Jianxin,
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+Jianxin Pan <jianxin.pan@amlogic.com> writes:
 
-Notes:
-    v2: Add missing include <linux/io.h>
+> Missing ';' in the end of secure-monitor example node.
+>
+> Fixes: f50b4108ede1 ("dt-bindings: power: add Amlogic secure power domains bindings")
 
- drivers/usb/phy/Kconfig      |   8 ++
- drivers/usb/phy/Makefile     |   1 +
- drivers/usb/phy/phy-jz4770.c | 243 +++++++++++++++++++++++++++++++++++
- 3 files changed, 252 insertions(+)
- create mode 100644 drivers/usb/phy/phy-jz4770.c
+Thanks for the fix, but where did this commit ID come from?  I think
+this is the right upstream commit:
 
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index ff24fca0a2d9..4b3fa78995cf 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -184,4 +184,12 @@ config USB_ULPI_VIEWPORT
- 	  Provides read/write operations to the ULPI phy register set for
- 	  controllers with a viewport register (e.g. Chipidea/ARC controllers).
- 
-+config JZ4770_PHY
-+	tristate "Ingenic JZ4770 Transceiver Driver"
-+	depends on MIPS || COMPILE_TEST
-+	select USB_PHY
-+	help
-+	  This driver provides PHY support for the USB controller found
-+	  on the JZ4770 SoC from Ingenic.
-+
- endmenu
-diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
-index df1d99010079..b352bdbe8712 100644
---- a/drivers/usb/phy/Makefile
-+++ b/drivers/usb/phy/Makefile
-@@ -24,3 +24,4 @@ obj-$(CONFIG_USB_MXS_PHY)		+= phy-mxs-usb.o
- obj-$(CONFIG_USB_ULPI)			+= phy-ulpi.o
- obj-$(CONFIG_USB_ULPI_VIEWPORT)		+= phy-ulpi-viewport.o
- obj-$(CONFIG_KEYSTONE_USB_PHY)		+= phy-keystone.o
-+obj-$(CONFIG_JZ4770_PHY)		+= phy-jz4770.o
-diff --git a/drivers/usb/phy/phy-jz4770.c b/drivers/usb/phy/phy-jz4770.c
-new file mode 100644
-index 000000000000..3ea1f5b9bcf8
---- /dev/null
-+++ b/drivers/usb/phy/phy-jz4770.c
-@@ -0,0 +1,243 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ingenic JZ4770 USB PHY driver
-+ * Copyright (c) Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/usb/otg.h>
-+#include <linux/usb/phy.h>
-+
-+#define REG_USBPCR_OFFSET	0x00
-+#define REG_USBRDT_OFFSET	0x04
-+#define REG_USBVBFIL_OFFSET	0x08
-+#define REG_USBPCR1_OFFSET	0x0c
-+
-+/* USBPCR */
-+#define USBPCR_USB_MODE		BIT(31)
-+#define USBPCR_AVLD_REG		BIT(30)
-+#define USBPCR_INCRM		BIT(27)
-+#define USBPCR_CLK12_EN		BIT(26)
-+#define USBPCR_COMMONONN	BIT(25)
-+#define USBPCR_VBUSVLDEXT	BIT(24)
-+#define USBPCR_VBUSVLDEXTSEL	BIT(23)
-+#define USBPCR_POR		BIT(22)
-+#define USBPCR_SIDDQ		BIT(21)
-+#define USBPCR_OTG_DISABLE	BIT(20)
-+#define USBPCR_TXPREEMPHTUNE	BIT(6)
-+
-+#define USBPCR_IDPULLUP_LSB	28
-+#define USBPCR_IDPULLUP_MASK	GENMASK(29, USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_ALWAYS	(3 << USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_SUSPEND	(1 << USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_OTG	(0 << USBPCR_IDPULLUP_LSB)
-+
-+#define USBPCR_COMPDISTUNE_LSB	17
-+#define USBPCR_COMPDISTUNE_MASK	GENMASK(19, USBPCR_COMPDISTUNE_LSB)
-+#define USBPCR_COMPDISTUNE_DFT	4
-+
-+#define USBPCR_OTGTUNE_LSB	14
-+#define USBPCR_OTGTUNE_MASK	GENMASK(16, USBPCR_OTGTUNE_LSB)
-+#define USBPCR_OTGTUNE_DFT	4
-+
-+#define USBPCR_SQRXTUNE_LSB	11
-+#define USBPCR_SQRXTUNE_MASK	GENMASK(13, USBPCR_SQRXTUNE_LSB)
-+#define USBPCR_SQRXTUNE_DFT	3
-+
-+#define USBPCR_TXFSLSTUNE_LSB	7
-+#define USBPCR_TXFSLSTUNE_MASK	GENMASK(10, USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_DFT	3
-+
-+#define USBPCR_TXRISETUNE_LSB	4
-+#define USBPCR_TXRISETUNE_MASK	GENMASK(5, USBPCR_TXRISETUNE_LSB)
-+#define USBPCR_TXRISETUNE_DFT	3
-+
-+#define USBPCR_TXVREFTUNE_LSB	0
-+#define USBPCR_TXVREFTUNE_MASK	GENMASK(3, USBPCR_TXVREFTUNE_LSB)
-+#define USBPCR_TXVREFTUNE_DFT	5
-+
-+/* USBRDT */
-+#define USBRDT_VBFIL_LD_EN	BIT(25)
-+#define USBRDT_IDDIG_EN		BIT(24)
-+#define USBRDT_IDDIG_REG	BIT(23)
-+
-+#define USBRDT_USBRDT_LSB	0
-+#define USBRDT_USBRDT_MASK	GENMASK(22, USBRDT_USBRDT_LSB)
-+
-+/* USBPCR1 */
-+#define USBPCR1_UHC_POWON	BIT(5)
-+
-+struct jz4770_phy {
-+	struct usb_phy phy;
-+	struct usb_otg otg;
-+	struct device *dev;
-+	void __iomem *base;
-+	struct clk *clk;
-+	struct regulator *vcc_supply;
-+};
-+
-+static inline struct jz4770_phy *otg_to_jz4770_phy(struct usb_otg *otg)
-+{
-+	return container_of(otg, struct jz4770_phy, otg);
-+}
-+
-+static inline struct jz4770_phy *phy_to_jz4770_phy(struct usb_phy *phy)
-+{
-+	return container_of(phy, struct jz4770_phy, phy);
-+}
-+
-+static int jz4770_phy_set_peripheral(struct usb_otg *otg,
-+				     struct usb_gadget *gadget)
-+{
-+	struct jz4770_phy *priv = otg_to_jz4770_phy(otg);
-+	u32 reg;
-+
-+	reg = readl(priv->base + REG_USBPCR_OFFSET);
-+	reg &= ~USBPCR_USB_MODE;
-+	reg |= USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL | USBPCR_OTG_DISABLE;
-+	writel(reg, priv->base + REG_USBPCR_OFFSET);
-+
-+	return 0;
-+}
-+
-+static int jz4770_phy_set_host(struct usb_otg *otg, struct usb_bus *host)
-+{
-+	struct jz4770_phy *priv = otg_to_jz4770_phy(otg);
-+	u32 reg;
-+
-+	reg = readl(priv->base + REG_USBPCR_OFFSET);
-+	reg &= ~(USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL | USBPCR_OTG_DISABLE);
-+	reg |= USBPCR_USB_MODE;
-+	writel(reg, priv->base + REG_USBPCR_OFFSET);
-+
-+	return 0;
-+}
-+
-+static int jz4770_phy_init(struct usb_phy *phy)
-+{
-+	struct jz4770_phy *priv = phy_to_jz4770_phy(phy);
-+	int err;
-+	u32 reg;
-+
-+	err = regulator_enable(priv->vcc_supply);
-+	if (err) {
-+		dev_err(priv->dev, "Unable to enable VCC: %d", err);
-+		return err;
-+	}
-+
-+	err = clk_prepare_enable(priv->clk);
-+	if (err) {
-+		dev_err(priv->dev, "Unable to start clock: %d", err);
-+		return err;
-+	}
-+
-+	reg = USBPCR_AVLD_REG | USBPCR_COMMONONN | USBPCR_IDPULLUP_ALWAYS |
-+		(USBPCR_COMPDISTUNE_DFT << USBPCR_COMPDISTUNE_LSB) |
-+		(USBPCR_OTGTUNE_DFT << USBPCR_OTGTUNE_LSB) |
-+		(USBPCR_SQRXTUNE_DFT << USBPCR_SQRXTUNE_LSB) |
-+		(USBPCR_TXFSLSTUNE_DFT << USBPCR_TXFSLSTUNE_LSB) |
-+		(USBPCR_TXRISETUNE_DFT << USBPCR_TXRISETUNE_LSB) |
-+		(USBPCR_TXVREFTUNE_DFT << USBPCR_TXVREFTUNE_LSB) |
-+		USBPCR_POR;
-+	writel(reg, priv->base + REG_USBPCR_OFFSET);
-+
-+	/* Wait for PHY to reset */
-+	usleep_range(30, 300);
-+	writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
-+	usleep_range(300, 1000);
-+
-+	return 0;
-+}
-+
-+static void jz4770_phy_shutdown(struct usb_phy *phy)
-+{
-+	struct jz4770_phy *priv = phy_to_jz4770_phy(phy);
-+
-+	clk_disable_unprepare(priv->clk);
-+	regulator_disable(priv->vcc_supply);
-+}
-+
-+static void jz4770_phy_remove(void *phy)
-+{
-+	usb_remove_phy(phy);
-+}
-+
-+static int jz4770_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct jz4770_phy *priv;
-+	int err;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+	priv->dev = dev;
-+	priv->phy.dev = dev;
-+	priv->phy.otg = &priv->otg;
-+	priv->phy.label = "jz4770-phy";
-+	priv->phy.init = jz4770_phy_init;
-+	priv->phy.shutdown = jz4770_phy_shutdown;
-+
-+	priv->otg.state = OTG_STATE_UNDEFINED;
-+	priv->otg.usb_phy = &priv->phy;
-+	priv->otg.set_host = jz4770_phy_set_host;
-+	priv->otg.set_peripheral = jz4770_phy_set_peripheral;
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base)) {
-+		dev_err(dev, "Failed to map registers");
-+		return PTR_ERR(priv->base);
-+	}
-+
-+	priv->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		err = PTR_ERR(priv->clk);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get clock");
-+		return err;
-+	}
-+
-+	priv->vcc_supply = devm_regulator_get(dev, "vcc");
-+	if (IS_ERR(priv->vcc_supply)) {
-+		err = PTR_ERR(priv->vcc_supply);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get regulator");
-+		return err;
-+	}
-+
-+	err = usb_add_phy(&priv->phy, USB_PHY_TYPE_USB2);
-+	if (err) {
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to register PHY");
-+		return err;
-+	}
-+
-+	return devm_add_action_or_reset(dev, jz4770_phy_remove, &priv->phy);
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id jz4770_phy_of_matches[] = {
-+	{ .compatible = "ingenic,jz4770-phy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, jz4770_phy_of_matches);
-+#endif
-+
-+static struct platform_driver jz4770_phy_driver = {
-+	.probe		= jz4770_phy_probe,
-+	.driver		= {
-+		.name	= "jz4770-phy",
-+		.of_match_table = of_match_ptr(jz4770_phy_of_matches),
-+	},
-+};
-+module_platform_driver(jz4770_phy_driver);
-+
-+MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-+MODULE_DESCRIPTION("Ingenic JZ4770 USB PHY driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+Fixes: 165b5fb294e8 ("dt-bindings: power: add Amlogic secure power domains bindings")
 
+Also, when you resend, can you cc soc@kernel.org.  The soc maintainers
+are who queue my amlogic tree.  I will ack and they can submit to Linus
+for v5.7 so Stephen doesn't have to carry his local linux-next fix
+anymore.
+
+Thanks,
+
+Kevin
+
+> Reported-by: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> index af32209..bc4e037 100644
+> --- a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> @@ -36,5 +36,5 @@ examples:
+>              compatible = "amlogic,meson-a1-pwrc";
+>              #power-domain-cells = <1>;
+>          };
+> -    }
+> +    };
+>  
+> -- 
+> 2.7.4
