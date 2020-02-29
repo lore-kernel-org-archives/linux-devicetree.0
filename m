@@ -2,146 +2,214 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADF5C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 13:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46769C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 13:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67931246A2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 13:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E45246A2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 13:36:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HFn83XBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgB2NIF (ORCPT
+        id S1726995AbgB2Ngk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 08:08:05 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:53496 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726933AbgB2NIF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 08:08:05 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 9DB3520023;
-        Sat, 29 Feb 2020 14:08:02 +0100 (CET)
-Date:   Sat, 29 Feb 2020 14:08:01 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/3 v2] drm/panel: Add DT bindings for Novatek
- NT35510-based panels
-Message-ID: <20200229130801.GE5447@ravnborg.org>
-References: <20200223121841.26836-1-linus.walleij@linaro.org>
- <20200223121841.26836-2-linus.walleij@linaro.org>
+        Sat, 29 Feb 2020 08:36:40 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:26518 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726973AbgB2Ngk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 08:36:40 -0500
+X-UUID: 08d7846565454e66bdbcaa117a462aae-20200229
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Dx2qiVbtcnvo9hiyRO0Rt8sPm8J4l82Ym1oh2Kcvb5E=;
+        b=HFn83XBjSN2ZxM7F4CXsfaqhgxrVYIf5dQFCh9EOWelxD2KgmyjkdYxi9Tj6zgzVmGEtRibQ4XXGyJR6EMVPy3YqXx5f1wVLtt9OSW98ITV4Y7aL2Pe1uhC43IGpxXS7S9VKmbV4ZE/S8k0RsuO5JJ6sy5tWcQ72kYedJ+6W6vs=;
+X-UUID: 08d7846565454e66bdbcaa117a462aae-20200229
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 690810008; Sat, 29 Feb 2020 21:36:33 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 29 Feb 2020 21:38:08 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 29 Feb 2020 21:36:09 +0800
+Message-ID: <1582983391.21073.1.camel@mtkswgap22>
+Subject: Re: [PATCH v3 02/13] mailbox: cmdq: variablize address shift in
+ platform
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Sat, 29 Feb 2020 21:36:31 +0800
+In-Reply-To: <1582903376.14824.16.camel@mtksdaap41>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-4-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582903376.14824.16.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223121841.26836-2-linus.walleij@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=j8Cu_9a8AAAA:8
-        a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=gEfo2CItAAAA:8 a=2Pge5cGlz_rskII7FHUA:9
-        a=CjuIK1q_8ugA:10 a=A2jcf3dkIZPIRbEE90CI:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=cvBusfyB2V15izCimMoJ:22 a=sptkURWiP4Gy88Gu7hUp:22
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 01:18:40PM +0100, Linus Walleij wrote:
-> This adds device tree bindings for the Novatek NT35510-based
-> family of panels. Since several such panels are in existence
-> we define bindings common for all, and define the compatible
-> string for one certain panel (Hydis HVA40WV1).
-> 
-> As other panels are discovered and investigated, we can add
-> more compatibles to the binding using oneOf constructions.
-> 
-> Cc: Stephan Gerhold <stephan@gerhold.net>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+SGkgQ0ssDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQpPbiBGcmksIDIwMjAtMDItMjgg
+YXQgMjM6MjIgKzA4MDAsIENLIEh1IHdyb3RlOg0KPiBIaSwgRGVubmlzOg0KPiANCj4gT24gRnJp
+LCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6DQo+ID4g
+U29tZSBnY2UgaGFyZHdhcmUgc2hpZnQgcGMgYW5kIGVuZCBhZGRyZXNzIGluIHJlZ2lzdGVyIHRv
+IHN1cHBvcnQNCj4gPiBsYXJnZSBkcmFtIGFkZHJlc3NpbmcuDQo+ID4gSW1wbGVtZW50IGdjZSBh
+ZGRyZXNzIHNoaWZ0IHdoZW4gd3JpdGUgb3IgcmVhZCBwYyBhbmQgZW5kIHJlZ2lzdGVyLg0KPiA+
+IEFuZCBhZGQgc2hpZnQgYml0IGluIHBsYXRmb3JtIGRlZmluaXRpb24uDQo+ID4gDQo+ID4gU2ln
+bmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jICAgICAg
+IHwgNTcgKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ID4gIGRyaXZlcnMvc29jL21lZGlhdGVr
+L210ay1jbWRxLWhlbHBlci5jICAgfCAgMyArLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L21haWxib3gv
+bXRrLWNtZHEtbWFpbGJveC5oIHwgIDIgKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDQ4IGluc2Vy
+dGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jIGIvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1h
+aWxib3guYw0KPiA+IGluZGV4IDlhNmNlOWY1YTdkYi4uYTk4ZjAzNTdkZDdkIDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gPiArKysgYi9kcml2
+ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQo+ID4gQEAgLTc2LDggKzc2LDIyIEBAIHN0
+cnVjdCBjbWRxIHsNCj4gPiAgCXN0cnVjdCBjbWRxX3RocmVhZAkqdGhyZWFkOw0KPiA+ICAJc3Ry
+dWN0IGNsawkJKmNsb2NrOw0KPiA+ICAJYm9vbAkJCXN1c3BlbmRlZDsNCj4gPiArCXU4CQkJc2hp
+ZnRfcGE7DQo+ID4gIH07DQo+ID4gIA0KPiA+ICtzdHJ1Y3QgZ2NlX3BsYXQgew0KPiA+ICsJdTMy
+IHRocmVhZF9ucjsNCj4gPiArCXU4IHNoaWZ0Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArdTggY21k
+cV9tYm94X3NoaWZ0KHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pDQo+ID4gK3sNCj4gPiArCXN0cnVj
+dCBjbWRxICpjbWRxID0gY29udGFpbmVyX29mKGNoYW4tPm1ib3gsIHN0cnVjdCBjbWRxLCBtYm94
+KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gY21kcS0+c2hpZnRfcGE7DQo+ID4gK30NCj4gPiArRVhQ
+T1JUX1NZTUJPTChjbWRxX21ib3hfc2hpZnQpOw0KPiA+ICsNCj4gPiAgc3RhdGljIGludCBjbWRx
+X3RocmVhZF9zdXNwZW5kKHN0cnVjdCBjbWRxICpjbWRxLCBzdHJ1Y3QgY21kcV90aHJlYWQgKnRo
+cmVhZCkNCj4gPiAgew0KPiA+ICAJdTMyIHN0YXR1czsNCj4gPiBAQCAtMTgzLDcgKzE5Nyw3IEBA
+IHN0YXRpYyB2b2lkIGNtZHFfdGFza19yZW1vdmVfd2ZlKHN0cnVjdCBjbWRxX3Rhc2sgKnRhc2sp
+DQo+ID4gIAlmb3IgKGkgPSAwOyBpIDwgQ01EUV9OVU1fQ01EKHRhc2stPnBrdCk7IGkrKykNCj4g
+PiAgCQlpZiAoY21kcV9jb21tYW5kX2lzX3dmZShiYXNlW2ldKSkNCj4gPiAgCQkJYmFzZVtpXSA9
+ICh1NjQpQ01EUV9KVU1QX0JZX09GRlNFVCA8PCAzMiB8DQo+ID4gLQkJCQkgIENNRFFfSlVNUF9Q
+QVNTOw0KPiA+ICsJCQkJICBDTURRX0pVTVBfUEFTUyA+PiB0YXNrLT5jbWRxLT5zaGlmdF9wYTsN
+Cj4gPiAgCWRtYV9zeW5jX3NpbmdsZV9mb3JfZGV2aWNlKGRldiwgdGFzay0+cGFfYmFzZSwgdGFz
+ay0+cGt0LT5jbWRfYnVmX3NpemUsDQo+ID4gIAkJCQkgICBETUFfVE9fREVWSUNFKTsNCj4gPiAg
+fQ0KPiA+IEBAIC0yMjEsMTMgKzIzNSwxNSBAQCBzdGF0aWMgdm9pZCBjbWRxX3Rhc2tfaGFuZGxl
+X2Vycm9yKHN0cnVjdCBjbWRxX3Rhc2sgKnRhc2spDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBjbWRx
+X3RocmVhZCAqdGhyZWFkID0gdGFzay0+dGhyZWFkOw0KPiA+ICAJc3RydWN0IGNtZHFfdGFzayAq
+bmV4dF90YXNrOw0KPiA+ICsJc3RydWN0IGNtZHEgKmNtZHEgPSB0YXNrLT5jbWRxOw0KPiA+ICAN
+Cj4gPiAgCWRldl9lcnIodGFzay0+Y21kcS0+bWJveC5kZXYsICJ0YXNrIDB4JXAgZXJyb3JcbiIs
+IHRhc2spOw0KPiA+ICAJV0FSTl9PTihjbWRxX3RocmVhZF9zdXNwZW5kKHRhc2stPmNtZHEsIHRo
+cmVhZCkgPCAwKTsNCj4gDQo+IElmIHlvdSBpbnZlbnQgbG9jYWwgdmFyaWFibGUgJ2NtZHEnLCBJ
+IHRoaW5rIHlvdSBjb3VsZCByZXBsYWNlIGFsbA0KPiB0YXNrLT5jbWRxIHdpdGggY21kcSBpbiB0
+aGlzIGZ1bmN0aW9uLg0KPiANCg0KT2ssIHdpbGwgZG8uDQoNCg0KPiA+ICAJbmV4dF90YXNrID0g
+bGlzdF9maXJzdF9lbnRyeV9vcl9udWxsKCZ0aHJlYWQtPnRhc2tfYnVzeV9saXN0LA0KPiA+ICAJ
+CQlzdHJ1Y3QgY21kcV90YXNrLCBsaXN0X2VudHJ5KTsNCj4gPiAgCWlmIChuZXh0X3Rhc2spDQo+
+ID4gLQkJd3JpdGVsKG5leHRfdGFzay0+cGFfYmFzZSwgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJf
+Q1VSUl9BRERSKTsNCj4gPiArCQl3cml0ZWwobmV4dF90YXNrLT5wYV9iYXNlID4+IGNtZHEtPnNo
+aWZ0X3BhLA0KPiA+ICsJCSAgICAgICB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIp
+Ow0KPiA+ICAJY21kcV90aHJlYWRfcmVzdW1lKHRocmVhZCk7DQo+ID4gIH0NCj4gPiAgDQo+ID4g
+QEAgLTI1Nyw3ICsyNzMsNyBAQCBzdGF0aWMgdm9pZCBjbWRxX3RocmVhZF9pcnFfaGFuZGxlcihz
+dHJ1Y3QgY21kcSAqY21kcSwNCj4gPiAgCWVsc2UNCj4gPiAgCQlyZXR1cm47DQo+ID4gIA0KPiA+
+IC0JY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQo+
+ID4gKwljdXJyX3BhID0gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKSA8
+PCBjbWRxLT5zaGlmdF9wYTsNCj4gPiAgDQo+ID4gIAlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUo
+dGFzaywgdG1wLCAmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCwNCj4gPiAgCQkJCSBsaXN0X2VudHJ5
+KSB7DQo+ID4gQEAgLTM3MywxNiArMzg5LDIwIEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3NlbmRf
+ZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiA+ICAJCVdBUk5fT04o
+Y2xrX2VuYWJsZShjbWRxLT5jbG9jaykgPCAwKTsNCj4gPiAgCQlXQVJOX09OKGNtZHFfdGhyZWFk
+X3Jlc2V0KGNtZHEsIHRocmVhZCkgPCAwKTsNCj4gPiAgDQo+ID4gLQkJd3JpdGVsKHRhc2stPnBh
+X2Jhc2UsIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQo+ID4gLQkJd3JpdGVs
+KHRhc2stPnBhX2Jhc2UgKyBwa3QtPmNtZF9idWZfc2l6ZSwNCj4gPiArCQl3cml0ZWwodGFzay0+
+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9wYSwNCj4gPiArCQkgICAgICAgdGhyZWFkLT5iYXNlICsg
+Q01EUV9USFJfQ1VSUl9BRERSKTsNCj4gPiArCQl3cml0ZWwoKHRhc2stPnBhX2Jhc2UgKyBwa3Qt
+PmNtZF9idWZfc2l6ZSkgPj4gY21kcS0+c2hpZnRfcGEsDQo+ID4gIAkJICAgICAgIHRocmVhZC0+
+YmFzZSArIENNRFFfVEhSX0VORF9BRERSKTsNCj4gPiArDQo+ID4gIAkJd3JpdGVsKHRocmVhZC0+
+cHJpb3JpdHksIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX1BSSU9SSVRZKTsNCj4gPiAgCQl3cml0
+ZWwoQ01EUV9USFJfSVJRX0VOLCB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9JUlFfRU5BQkxFKTsN
+Cj4gPiAgCQl3cml0ZWwoQ01EUV9USFJfRU5BQkxFRCwgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJf
+RU5BQkxFX1RBU0spOw0KPiA+ICAJfSBlbHNlIHsNCj4gPiAgCQlXQVJOX09OKGNtZHFfdGhyZWFk
+X3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8IDApOw0KPiA+IC0JCWN1cnJfcGEgPSByZWFkbCh0aHJl
+YWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0KPiA+IC0JCWVuZF9wYSA9IHJlYWRsKHRo
+cmVhZC0+YmFzZSArIENNRFFfVEhSX0VORF9BRERSKTsNCj4gPiArCQljdXJyX3BhID0gcmVhZGwo
+dGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKSA8PA0KPiA+ICsJCQljbWRxLT5zaGlm
+dF9wYTsNCj4gPiArCQllbmRfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9FTkRf
+QUREUikgPDwNCj4gPiArCQkJY21kcS0+c2hpZnRfcGE7DQo+ID4gIA0KPiA+ICAJCS8qDQo+ID4g
+IAkJICogQXRvbWljIGV4ZWN1dGlvbiBzaG91bGQgcmVtb3ZlIHRoZSBmb2xsb3dpbmcgd2ZlLCBp
+LmUuIG9ubHkNCj4gPiBAQCAtMzk1LDcgKzQxNSw3IEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3Nl
+bmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiA+ICAJCQkJY21k
+cV90aHJlYWRfd2FpdF9lbmQodGhyZWFkLCBlbmRfcGEpOw0KPiA+ICAJCQkJV0FSTl9PTihjbWRx
+X3RocmVhZF9zdXNwZW5kKGNtZHEsIHRocmVhZCkgPCAwKTsNCj4gPiAgCQkJCS8qIHNldCB0byB0
+aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gPiAtCQkJCXdyaXRlbCh0YXNrLT5wYV9iYXNlLA0KPiA+
+ICsJCQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UgPj4gY21kcS0+c2hpZnRfcGEsDQo+ID4gIAkJCQkg
+ICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gPiAgCQkJfSBlbHNl
+IHsNCj4gPiAgCQkJCWNtZHFfdGFza19pbnNlcnRfaW50b190aHJlYWQodGFzayk7DQo+ID4gQEAg
+LTQwNywxNCArNDI3LDE0IEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3NlbmRfZGF0YShzdHJ1Y3Qg
+bWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiA+ICAJCQlpZiAoY3Vycl9wYSA9PSBlbmRf
+cGEgLSBDTURRX0lOU1RfU0laRSB8fA0KPiA+ICAJCQkgICAgY3Vycl9wYSA9PSBlbmRfcGEpIHsN
+Cj4gPiAgCQkJCS8qIHNldCB0byB0aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gPiAtCQkJCXdyaXRl
+bCh0YXNrLT5wYV9iYXNlLA0KPiA+ICsJCQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UgPj4gY21kcS0+
+c2hpZnRfcGEsDQo+ID4gIAkJCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9B
+RERSKTsNCj4gPiAgCQkJfSBlbHNlIHsNCj4gPiAgCQkJCWNtZHFfdGFza19pbnNlcnRfaW50b190
+aHJlYWQodGFzayk7DQo+ID4gIAkJCQlzbXBfbWIoKTsgLyogbW9kaWZ5IGp1bXAgYmVmb3JlIGVu
+YWJsZSB0aHJlYWQgKi8NCj4gPiAgCQkJfQ0KPiA+ICAJCX0NCj4gPiAtCQl3cml0ZWwodGFzay0+
+cGFfYmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplLA0KPiA+ICsJCXdyaXRlbCgodGFzay0+cGFfYmFz
+ZSArIHBrdC0+Y21kX2J1Zl9zaXplKSA+PiBjbWRxLT5zaGlmdF9wYSwNCj4gPiAgCQkgICAgICAg
+dGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5EX0FERFIpOw0KPiA+ICAJCWNtZHFfdGhyZWFkX3Jl
+c3VtZSh0aHJlYWQpOw0KPiA+ICAJfQ0KPiA+IEBAIC00NjEsNiArNDgxLDcgQEAgc3RhdGljIGlu
+dCBjbWRxX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlzdHJ1Y3Qg
+cmVzb3VyY2UgKnJlczsNCj4gPiAgCXN0cnVjdCBjbWRxICpjbWRxOw0KPiA+ICAJaW50IGVyciwg
+aTsNCj4gPiArCXN0cnVjdCBnY2VfcGxhdCAqcGxhdF9kYXRhOw0KPiA+ICANCj4gPiAgCWNtZHEg
+PSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKmNtZHEpLCBHRlBfS0VSTkVMKTsNCj4gPiAgCWlm
+ICghY21kcSkNCj4gPiBAQCAtNDc5LDcgKzUwMCwxNCBAQCBzdGF0aWMgaW50IGNtZHFfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4g
+PiAgCX0NCj4gPiAgDQo+ID4gLQljbWRxLT50aHJlYWRfbnIgPSAodTMyKSh1bnNpZ25lZCBsb25n
+KW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiA+ICsJcGxhdF9kYXRhID0gKHN0cnVj
+dCBnY2VfcGxhdCAqKW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiA+ICsJaWYgKCFw
+bGF0X2RhdGEpIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byBnZXQgbWF0Y2ggZGF0
+YVxuIik7DQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJY21k
+cS0+dGhyZWFkX25yID0gcGxhdF9kYXRhLT50aHJlYWRfbnI7DQo+ID4gKwljbWRxLT5zaGlmdF9w
+YSA9IHBsYXRfZGF0YS0+c2hpZnQ7DQo+ID4gIAljbWRxLT5pcnFfbWFzayA9IEdFTk1BU0soY21k
+cS0+dGhyZWFkX25yIC0gMSwgMCk7DQo+ID4gIAllcnIgPSBkZXZtX3JlcXVlc3RfaXJxKGRldiwg
+Y21kcS0+aXJxLCBjbWRxX2lycV9oYW5kbGVyLCBJUlFGX1NIQVJFRCwNCj4gPiAgCQkJICAgICAg
+ICJtdGtfY21kcSIsIGNtZHEpOw0KPiA+IEBAIC01NDIsOSArNTcwLDEyIEBAIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgZGV2X3BtX29wcyBjbWRxX3BtX29wcyA9IHsNCj4gPiAgCS5yZXN1bWUgPSBjbWRx
+X3Jlc3VtZSwNCj4gPiAgfTsNCj4gPiAgDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZ2NlX3Bs
+YXQgZ2NlX3BsYXRfdjIgPSB7LnRocmVhZF9uciA9IDE2fTsNCj4gPiArc3RhdGljIGNvbnN0IHN0
+cnVjdCBnY2VfcGxhdCBnY2VfcGxhdF92MyA9IHsudGhyZWFkX25yID0gMjR9Ow0KPiA+ICsNCj4g
+PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgY21kcV9vZl9pZHNbXSA9IHsNCj4g
+PiAtCXsuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtZ2NlIiwgLmRhdGEgPSAodm9pZCAq
+KTE2fSwNCj4gPiAtCXsuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtZ2NlIiwgLmRhdGEg
+PSAodm9pZCAqKTI0fSwNCj4gPiArCXsuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtZ2Nl
+IiwgLmRhdGEgPSAodm9pZCAqKSZnY2VfcGxhdF92Mn0sDQo+ID4gKwl7LmNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssbXQ4MTgzLWdjZSIsIC5kYXRhID0gKHZvaWQgKikmZ2NlX3BsYXRfdjN9LA0KPiA+
+ICAJe30NCj4gPiAgfTsNCj4gPiAgDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVs
+cGVyLmMNCj4gPiBpbmRleCBkZTIwZTZjYmE4M2IuLjJlMWJjNTEzNTY5YiAxMDA2NDQNCj4gPiAt
+LS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gQEAgLTI5MSw3ICsyOTEs
+OCBAQCBzdGF0aWMgaW50IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0K
+PiA+ICANCj4gPiAgCS8qIEpVTVAgdG8gZW5kICovDQo+ID4gIAlpbnN0Lm9wID0gQ01EUV9DT0RF
+X0pVTVA7DQo+ID4gLQlpbnN0LnZhbHVlID0gQ01EUV9KVU1QX1BBU1M7DQo+ID4gKwlpbnN0LnZh
+bHVlID0gQ01EUV9KVU1QX1BBU1MgPj4NCj4gPiArCQljbWRxX21ib3hfc2hpZnQoKChzdHJ1Y3Qg
+Y21kcV9jbGllbnQgKilwa3QtPmNsKS0+Y2hhbik7DQo+IA0KPiBXaHkgbm90IGp1c3QgY21kcV9t
+Ym94X3NoaWZ0KHBrdC0+Y2wtPmNoYW4pID8NCg0KT2ssIHdpbGwgZG8uDQoNCg0KUmVnYXJkcywN
+CkRlbm5pcw0KDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IENLDQo+IA0KPiA+ICAJZXJyID0gY21kcV9w
+a3RfYXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gPiAgDQo+ID4gIAlyZXR1cm4gZXJyOw0K
+PiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5o
+IGIvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiA+IGluZGV4IGE0
+ZGM0NWZiZWMwYS4uZGZlNWIyZWI4NWNjIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgv
+bWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L21haWxi
+b3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+ID4gQEAgLTg4LDQgKzg4LDYgQEAgc3RydWN0IGNtZHFf
+cGt0IHsNCj4gPiAgCXZvaWQJCQkqY2w7DQo+ID4gIH07DQo+ID4gIA0KPiA+ICt1OCBjbWRxX21i
+b3hfc2hpZnQoc3RydWN0IG1ib3hfY2hhbiAqY2hhbik7DQo+ID4gKw0KPiA+ICAjZW5kaWYgLyog
+X19NVEtfQ01EUV9NQUlMQk9YX0hfXyAqLw0KPiANCj4gDQoNCg==
 
-Applied to drm-misc-next.
-
-	Sam
-
-> ---
-> ChangeLog v1->v2:
-> - Rename file to novatek,nt35510,yaml to match the first
->   compatible.
-> - Require both the specific display manufacturer compatible
->   and the novatek,nt35510 compatible in strict sequence.
-> ---
->  .../display/panel/novatek,nt35510.yaml        | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml b/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
-> new file mode 100644
-> index 000000000000..791fc9daa68b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/novatek,nt35510.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Novatek NT35510-based display panels
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: hydis,hva40wv1
-> +      - const: novatek,nt35510
-> +    description: This indicates the panel manufacturer of the panel
-> +      that is in turn using the NT35510 panel driver. The compatible
-> +      string determines how the NT35510 panel driver shall be configured
-> +      to work with the indicated panel. The novatek,nt35510 compatible shall
-> +      always be provided as a fallback.
-> +  reg: true
-> +  reset-gpios: true
-> +  vdd-supply:
-> +     description: regulator that supplies the vdd voltage
-> +  vddi-supply:
-> +     description: regulator that supplies the vddi voltage
-> +  backlight: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    dsi@a0351000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        panel {
-> +            compatible = "hydis,hva40wv1", "novatek,nt35510";
-> +            reg = <0>;
-> +            vdd-supply = <&ab8500_ldo_aux4_reg>;
-> +            vddi-supply = <&ab8500_ldo_aux6_reg>;
-> +            reset-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
-> +            backlight = <&gpio_bl>;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.21.1
