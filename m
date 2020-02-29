@@ -2,116 +2,118 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AD7C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 18:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CA2C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 18:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747EC2467D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 18:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6732D2467D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 18:58:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="CTHuxgay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgB2SNZ (ORCPT
+        id S1727483AbgB2S6h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 13:13:25 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:46786 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgB2SNZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 13:13:25 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 0317B20020;
-        Sat, 29 Feb 2020 19:13:21 +0100 (CET)
-Date:   Sat, 29 Feb 2020 19:13:20 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v3 0/5] dt-bindings: convert timing + panel-dpi to DT
- schema
-Message-ID: <20200229181320.GA14589@ravnborg.org>
-References: <20200216181513.28109-1-sam@ravnborg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200216181513.28109-1-sam@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8
-        a=QBz0WmAjK130PHwwYnYA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+        Sat, 29 Feb 2020 13:58:37 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:26536 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbgB2S6h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 13:58:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583002712;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=RWt0DnFLtT3Zn2kRM3ZW1ioOA87GUG1MQf6oAoJiwzU=;
+        b=CTHuxgaynO5jfFNz2LNhgJYCJeks7SuMzcY0rO2EgTwnhXwTib5OVQFV9ydkis+UHW
+        4bQxFmVuZwtYQ7n/+waWJYFnqbJVql2WuMJ54koiA6nUa7L3sATXAw4+DmRYCBjs9zmN
+        EgBONQuATI5QsDU7OOxYEc7WcbpIZSn8GSALVB7NR2NDxs9YCUjIob5mVa44VJqfzZXz
+        h8OnJo9AHfhqlvWRY5vMwT6zyM+coGPS9VVARGbu3dc4j4qG9D2+pKUW4ZIlt4XR9P4E
+        AUNHaEXX5bfqLpZ5lybrQKf/bo1JmPUdZ+ro7l3QKZ1zpXkUFaxaB+Zii7ZMwo8agzih
+        kRiQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlafXAwF5A=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1TIwM6hG
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 29 Feb 2020 19:58:22 +0100 (CET)
+Subject: Re: [PATCH v4 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1582992575.3.2@crapouillou.net>
+Date:   Sat, 29 Feb 2020 19:58:21 +0100
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F5AAAD52-2C1D-4B14-AA7E-590D026C7DBE@goldelico.com>
+References: <cover.1582912972.git.hns@goldelico.com> <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com> <1582992575.3.2@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 07:15:08PM +0100, Sam Ravnborg wrote:
-> This set of patches convert display-timing.txt to DT schema.
-> To do that add a panel-timing.yaml file that include all the
-> panel-timing properties and use this in panel-common and in display-timings.
-> 
-> panel-dpi was also converted so we have no .txt users left of panel-timing
-> in panel/
-> 
-> Everything passed dt_binding_check - and the trivial errors I tried in
-> the examples was all catched during validation.
-> 
-> This work was triggered by a patch-set from Oleksandr Suvorov aiming
-> at updating panel-lvds to support panel-dpi.
-> This will make it simple to add additional properties to panel-dpi.
-> 
-> Thanks for the quick responses on v2 and likewise the quick
-> feedback on the request for the license change!
-> 
-> Highlight from v3 - se individual patches for details.
-> - Added panel-dpi support to panel-simple.
->   We can now add a simple panel just by addding timing parameters
->   in a DT node
->   The patch [5/5] is RFC as test is pending
-> - To support panel-dpi in panel-simple - add a data-mapping
->   property to panel-dpi
-> 
-> Highlights from v2 - see individual patches for details.
-> - Got acks for the license change
-> - Simplfied panel-timings bindings
-> - panel-dpi can now be used without a panel specific compatible
->   So panel-dpi can be used as a generic binding for dumb panels
-> 
-> Feedback welcome!
-> 
-> 	Sam
-> 
-> Sam Ravnborg (5):
->       dt-bindings: display: add panel-timing.yaml
->       dt-bindings: display: convert display-timings to DT schema
->       dt-bindings: display: convert panel-dpi to DT schema
->       dt-bindings: display: add data-mapping to panel-dpi
->       drm/panel: simple: add panel-dpi support
+Hi Paul,
 
-All patches now pushed to drm-misc-next.
-Dropped lvds666 when applying the patches.
+> Am 29.02.2020 um 17:09 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Nikolaus,
+>=20
+>=20
+> Le ven., f=E9vr. 28, 2020 at 19:02, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>> There is a ACT8600 on the CI20 board and the bindings of the
+>> ACT8865 driver have changed without updating the CI20 device
+>> tree. Therefore the PMU can not be probed successfully and
+>> is running in power-on reset state.
+>> Fix DT to match the latest act8865-regulator bindings.
+>> Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> arch/mips/boot/dts/ingenic/ci20.dts | 48 =
+++++++++++++++++++++---------
+>> 1 file changed, 33 insertions(+), 15 deletions(-)
+>> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts =
+b/arch/mips/boot/dts/ingenic/ci20.dts
+>> index 59c104289ece..44741e927d2b 100644
+>> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+>> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+>> @@ -4,6 +4,8 @@
+>> #include "jz4780.dtsi"
+>> #include <dt-bindings/clock/ingenic,tcu.h>
+>> #include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>=20
+> This include should be in patch 3/5 where it's first used.
 
-	Sam
+Yes. That is much better.
 
-> 
->  .../bindings/display/panel/display-timing.txt      | 124 +----------
->  .../bindings/display/panel/display-timings.yaml    |  77 +++++++
->  .../bindings/display/panel/panel-common.yaml       |  15 +-
->  .../bindings/display/panel/panel-dpi.txt           |  50 -----
->  .../bindings/display/panel/panel-dpi.yaml          |  82 ++++++++
->  .../bindings/display/panel/panel-timing.yaml       | 227 +++++++++++++++++++++
->  drivers/gpu/drm/panel/panel-simple.c               |  74 ++++++-
->  7 files changed, 470 insertions(+), 179 deletions(-)
-> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+> With that fixed:
+> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+>=20
+> for the whole series.
+
+What is easier: that you fix it during applying somewhere
+or should I send a v5?
+
+BR,
+Nikolaus
+
