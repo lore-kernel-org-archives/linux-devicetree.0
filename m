@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF1CC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7E7C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB93246AE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46735246AE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LkkYFkw5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BA1m1yb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgB2AK5 (ORCPT
+        id S1726857AbgB2ALC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:10:57 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41113 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbgB2AK5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 19:10:57 -0500
-Received: by mail-lj1-f193.google.com with SMTP id u26so5099488ljd.8
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 16:10:55 -0800 (PST)
+        Fri, 28 Feb 2020 19:11:02 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44190 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbgB2ALB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 19:11:01 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so5235277ljj.11
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 16:11:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MtiiDQqIKSwOiG748ha0RsiYW64G2u9tJs1YfUEZ07M=;
-        b=LkkYFkw5qXgxsxLKLRdhuf8VX9Bm0uJFBVYjbOycmkZ2HF5N7EPXaXp5qIFbwJMFFF
-         bM92NEf1nz9sxFZEyqdT+8QdTXebCc1ff7rExRiLkcCgeGCasdpJNEtXqrdlGddyDURt
-         r3D0Q3/kz0FrTEkQJfssCDRmWawC7m+DPFZws=
+        bh=fBJm70vbCm0LCgNvDsCCsjTJ9PBmdad0nZhpwK5OW30=;
+        b=BA1m1yb8EjVa87IwqexlqG9YD5+1FxdNi0fybLqKTY1lr+JdaGhoGz1NnCbYNIuD70
+         C97Mla/aSciSFJD84HLwuF8SH2rrgCGGGpmX7Sr76vnrhQw91k88N2suNg/2Qy6dsSBH
+         wanttyosuVCvZi1KMU6VIIXDAxBgXsyUJKUQY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MtiiDQqIKSwOiG748ha0RsiYW64G2u9tJs1YfUEZ07M=;
-        b=pZAP4NTnrzGpF4guj2JKbjlWiklByFb3yoc+8qdwk0mnj/IShLjD6i+NQO2VEjhMf2
-         VxQZmmEmz/8Ng6fb9YQWDiwO85ZzDTBhclocZqSve4XE6Kex/3Q6QJpELBRG59HgvaHu
-         6uG1R8No9g06rpkoQIEBWfGg2NKQGnerFeGGjEJdyBcY71Yput4OObaSgTaMw5F9R7Wb
-         vM28xk6YNJFZxvvKX3RXxJo6w1wF7GP3r+bZpeyjg8OFRTnn4766DwUCNmK/miZu1TcM
-         HTnZRiphymjkEHyGcA5iEO7pFzAwzfXrUAlK3WbJySPyzigXACU5KP1vBD0Pru1rliWM
-         WyRg==
-X-Gm-Message-State: ANhLgQ2S3XFPj921DHnCV23W6gu1m7nFcObPpUJzyLqCezryIhcOQDpk
-        7G61ZD4OcxgRWSYp8Yt4eOgdv+s7Jv8=
-X-Google-Smtp-Source: ADFU+vsFTkkZR4vkfku1hzS2GHfd3Yh7+oZLactdxdruxLc+QjJfkfv105Ybdtlwn2xIyS0URCBYkA==
-X-Received: by 2002:a2e:8090:: with SMTP id i16mr1142320ljg.4.1582935054792;
-        Fri, 28 Feb 2020 16:10:54 -0800 (PST)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id r10sm7684853ljk.9.2020.02.28.16.10.53
+        bh=fBJm70vbCm0LCgNvDsCCsjTJ9PBmdad0nZhpwK5OW30=;
+        b=ZxmK5ViJrz/kVrOF1TjPfNABbjLUXp2T/FXJnU4TMiDljVQLWht822TgKGc0DT2Zbq
+         /MdTOVKJs8v/Y9DhqOVLI4RnBuwuXHmByfUa283m4KjPXEoKI1e+hzbz+Fty6FjG7InJ
+         qGP4b0ZiAbyuoCHB7XQdJFNOcUQhi3Y/f0Yem/BS1yCb9WzpSDdMHgCcUYbjyhWrzC2w
+         cIKf5ECNOuxUntjQzhutSn36wQPCAjVipEiPIdNGk7z6wCml98qqJy2yV8tLQi+PvJLH
+         a+3x88MK+lg0+oC+zxzNbGnCNTZMa3MHPKmcJ/OmQk4L7/hYSSH15Pkly+a9lUlh/UES
+         f/gw==
+X-Gm-Message-State: ANhLgQ0XnQlSUcj9savy9VsTNlXSoV96z6CIKgiLUWmJNtF4+rLztquF
+        fI6J9k3dHgjukPhGW6kR3C7aabkmsQ4=
+X-Google-Smtp-Source: ADFU+vspmrg/ZVeblY+2wrMHGqH1RtQoV7yFVHo8395dHThKINb8xrgDO5++wG5mqJsmvpYJ1VliTA==
+X-Received: by 2002:a2e:b4cf:: with SMTP id r15mr4397260ljm.52.1582935058890;
+        Fri, 28 Feb 2020 16:10:58 -0800 (PST)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id i4sm7751781lji.0.2020.02.28.16.10.56
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 16:10:53 -0800 (PST)
-Received: by mail-lf1-f53.google.com with SMTP id n30so3381733lfh.6
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 16:10:53 -0800 (PST)
-X-Received: by 2002:a19:8585:: with SMTP id h127mr3874662lfd.196.1582935052501;
- Fri, 28 Feb 2020 16:10:52 -0800 (PST)
+        Fri, 28 Feb 2020 16:10:57 -0800 (PST)
+Received: by mail-lf1-f51.google.com with SMTP id z9so3406746lfa.2
+        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 16:10:56 -0800 (PST)
+X-Received: by 2002:a19:691e:: with SMTP id e30mr3855069lfc.104.1582935056422;
+ Fri, 28 Feb 2020 16:10:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20200227105632.15041-1-sibis@codeaurora.org> <20200227105632.15041-4-sibis@codeaurora.org>
-In-Reply-To: <20200227105632.15041-4-sibis@codeaurora.org>
+References: <20200227105632.15041-1-sibis@codeaurora.org> <20200227105632.15041-6-sibis@codeaurora.org>
+In-Reply-To: <20200227105632.15041-6-sibis@codeaurora.org>
 From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 28 Feb 2020 16:10:15 -0800
-X-Gmail-Original-Message-ID: <CAE=gft50mTp6-u-Dw5wzL=1GGTsZB+HoM=5NDSNxnVVwVfA51Q@mail.gmail.com>
-Message-ID: <CAE=gft50mTp6-u-Dw5wzL=1GGTsZB+HoM=5NDSNxnVVwVfA51Q@mail.gmail.com>
-Subject: Re: [PATCH v5 3/7] interconnect: qcom: Add OSM L3 interconnect
- provider support
+Date:   Fri, 28 Feb 2020 16:10:20 -0800
+X-Gmail-Original-Message-ID: <CAE=gft6bFOMaX_iCVogWjD2+8Hs3prBJi4GYA=KUPRK1M-ABgw@mail.gmail.com>
+Message-ID: <CAE=gft6bFOMaX_iCVogWjD2+8Hs3prBJi4GYA=KUPRK1M-ABgw@mail.gmail.com>
+Subject: Re: [PATCH v5 5/7] interconnect: qcom: Add OSM L3 support on SC7180
 To:     Sibi Sankar <sibis@codeaurora.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Georgi Djakov <georgi.djakov@linaro.org>,
@@ -87,9 +86,8 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Thu, Feb 27, 2020 at 2:57 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-> resources of scaling L3 caches. Add a driver to handle bandwidth
-> requests to OSM L3 from CPU on SDM845 SoCs.
+> Add Operating State Manager (OSM) L3 interconnect provider support on
+> SC7180 SoCs.
 >
 > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
