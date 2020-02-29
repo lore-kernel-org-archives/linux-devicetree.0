@@ -2,191 +2,193 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47411C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086E0C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED47246A3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0955246A3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rv9T+7k3"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="1EMgyUrZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725747AbgB2KmO (ORCPT
+        id S1726809AbgB2Knz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 05:42:14 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34484 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgB2KmN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 05:42:13 -0500
-Received: by mail-pg1-f196.google.com with SMTP id t3so2885952pgn.1
-        for <devicetree@vger.kernel.org>; Sat, 29 Feb 2020 02:42:10 -0800 (PST)
+        Sat, 29 Feb 2020 05:43:55 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37702 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbgB2Kny (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 05:43:54 -0500
+Received: by mail-qk1-f193.google.com with SMTP id m9so5562320qke.4
+        for <devicetree@vger.kernel.org>; Sat, 29 Feb 2020 02:43:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZzIyS9yhP5PRMubXOxIFShxNXKSbCIxvvlyoIGTDdSQ=;
-        b=rv9T+7k3rSDBBf7tiievZuA7eWs2xiVZldc+zDpZK+kepfOQAd6F+wfTMPAMqW89mm
-         V4dwiTF+KENZa4T5IQDYXS2FmaWNZF2j1LcFuAqfjrdI8fBG6Y9uL/4J80BzYUv0mXj3
-         xpsL9PGb2xOUeR0nkHqLaEm6e+xPTl7EXiViWZlYjJ35Ri6WG2P7+N8LPLqv+Do6YNGg
-         0xoFjdrnjqQkfsp4PpEAxcRoB0e3QRdBmqJupTbfZifYRx4HWzU8QGzz+QmZfmk4sviR
-         nBmNWFvq2e7fvM2ilTIYdeRDp5ifWnSVCV6SAPCOS1QmQ7JWraBBABzARzGLK77WuNBw
-         xMgQ==
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cWLh3cGNIdtmam3OU5Dca7rYeIjQy825G41ll9rpNfc=;
+        b=1EMgyUrZE/3eoHr19mlRudElQgXg3GyTeFmnUg2jKH/9lOE8A2LdAQFKDLQSULVbp8
+         i32HSDCeXR27luc1aSM27riRvQvW9J7cFC3/LBQeONwnuyo/1iZtgA1rkF/oINU/L/SN
+         ZBYth62kfJUwYsyOYMEMb84l36Ya8H2sw830g8Y58qM2U427A/8XhzdcPIAP1sYx4dWK
+         QlvWDCfmRjYIXkCX9FU62uH7EF4Z/QCQSn+HtT324B42EpzQn1DwGuuq6WS8UpZeixE3
+         Sz/CSMeJG7IS5Ys7v801rrhea6xGiQutfawP3um4149+cAG/BfBlR7lQ5eFXhxiP+2Po
+         xNuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZzIyS9yhP5PRMubXOxIFShxNXKSbCIxvvlyoIGTDdSQ=;
-        b=DuLdSuw+HA0XAjaTFtO6IOrkqKQ3S4TNKWFRsvmLI6f3B+VGbhJxpeLU2f7jDX1LDB
-         o/T1pROuA3dE1kKEdxltpiADpcoli7VGj+KwR3iuIZc1zkqLx6TFpaTJQ6D6jOsdPKaN
-         Qk19azRIDfEF/2lB+0x5P6n3s9CsEwyoxosL460N+Hc+ET92LexfjTdvsiV6snEr4am4
-         ecZ4oBDq6zN5/NJR/iWWArifP/xtLh7kcdIPn4+KfKAiQFkzJkQ36rf4OzOm3zwQpYCH
-         X/4DlBCZ2bkaWnMtEaX6wiiC+Yz93mmMXX5oLzLt6WMw3/t2iUqYjks9OUuCNlvxR7cS
-         pLXA==
-X-Gm-Message-State: APjAAAVW+mCcvKU3Azf5/R1GFY6itO07wUCCA4CYcjvOLb8kke7YzABE
-        xkSU7lAV0w52bPAxr+kihDwK
-X-Google-Smtp-Source: APXvYqxFuIpAAUSXOCIb8wR8iP1M+6alf1Wcq8lFOXfAz0qwvzIiIYz/WHDdik1cpwtmkMbwWaBi7A==
-X-Received: by 2002:a63:5124:: with SMTP id f36mr8819866pgb.288.1582972929850;
-        Sat, 29 Feb 2020 02:42:09 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id 7sm2513995pfg.12.2020.02.29.02.42.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 29 Feb 2020 02:42:09 -0800 (PST)
-Date:   Sat, 29 Feb 2020 16:12:02 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     afaerber@suse.de, mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] ARM: dts: Add Caninos Loucos Labrador
-Message-ID: <20200229104202.GA19610@mani>
-References: <20200227201557.368533-1-matheus@castello.eng.br>
- <20200227201557.368533-3-matheus@castello.eng.br>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cWLh3cGNIdtmam3OU5Dca7rYeIjQy825G41ll9rpNfc=;
+        b=ig70osmVL8BMOjHjIkGMzzmDHzUjOBaXRticZUiuAcPfWhacyJP2n6g84knhBPR43a
+         Tilw3tcmzAp+awPeB0TLpRJYwVJyXb4jDU7egNZgu9TI4Kj8BqNVmk13v6YFuW5CUF45
+         +LMn6+7LeUO/Plj+x3FWb/5EJsKFv/slNew7FC2ZTQHbs8w1V2MNmWIfq9XdYM7ZRRSs
+         XWNpoBAHEXZ9F2wJ90tzeSv03h4cBzA1RFSCLmEIt0V/vJvwxAZOyTeJNaBcLdDweLtj
+         bHIyY9TwP2OOd7d9YaMSn9SIIAnUonXRhLfRnAqaxjbvMd9Y7IMAQQeuQ+8KKE5HIfED
+         eQyQ==
+X-Gm-Message-State: APjAAAUUw/YUGh2BPnz0mcKfw3i7xkDu8I5+eyLAkPU/gd5DHJxkMUxd
+        5tY7FnyTN+YrEXKp3D8RNbhfgGXjJNfzJw==
+X-Google-Smtp-Source: APXvYqzKSpOtCuGl13wtVyIl+A2uueLeUiyltEAJsnTd8/rg0gyfETvajHr+CRxRePNxGXOCXGTTHQ==
+X-Received: by 2002:a37:9181:: with SMTP id t123mr8094431qkd.230.1582973031766;
+        Sat, 29 Feb 2020 02:43:51 -0800 (PST)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id t6sm6737843qke.57.2020.02.29.02.43.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Feb 2020 02:43:51 -0800 (PST)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com, marco.franchi@nxp.com,
+        linux-imx@nxp.com, lkcamp@lists.libreplanetbr.org
+Subject: [PATCH] arm64: dts: freescale: add gpio-fan/thermal support for Google i.MX 8MQ Phanbell
+Date:   Sat, 29 Feb 2020 07:43:47 -0300
+Message-Id: <20200229104347.11126-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200227201557.368533-3-matheus@castello.eng.br>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+It was based on Google Source Code for Coral Edge TPU Mendel release:
+https://coral.googlesource.com/linux-imx/
 
-Thanks for the patch! Please find comments inline.
+It was tested on Coral Dev Board using this command:
+  sudo stress --cpu 4 --timeout 3600
 
-On Thu, Feb 27, 2020 at 05:15:57PM -0300, Matheus Castello wrote:
-> Add Device Trees for Caninos Loucos Labrador SoM and base board.
-> Based on the work of Andreas Färber on Lemaker Guitar device tree.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  arch/arm/boot/dts/Makefile                  |  3 +-
->  arch/arm/boot/dts/owl-s500-labrador-bb.dts  | 33 +++++++++++++++++++++
->  arch/arm/boot/dts/owl-s500-labrador-v2.dtsi | 21 +++++++++++++
->  3 files changed, 56 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/owl-s500-labrador-bb.dts
->  create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index d6546d2676b9..acdf65ef3236 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -842,7 +842,8 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
->  dtb-$(CONFIG_ARCH_ACTIONS) += \
->  	owl-s500-cubieboard6.dtb \
->  	owl-s500-guitar-bb-rev-b.dtb \
-> -	owl-s500-sparky.dtb
-> +	owl-s500-sparky.dtb \
-> +	owl-s500-labrador-bb.dtb
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+ .../boot/dts/freescale/imx8mq-phanbell.dts    | 78 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  2 +-
+ 2 files changed, 79 insertions(+), 1 deletion(-)
 
-Please sort the entries alphabetically.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+index 3f2a489a4ad8..fb9f208d1e41 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+@@ -35,6 +35,14 @@
+ 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	fan: gpio_fan {
++		compatible = "gpio-fan";
++		gpio-fan,speed-map = <0 0 8600 1>;
++		gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
++		#cooling-cells = <2>;
++		status = "okay";
++	};
+ };
+ 
+ &A53_0 {
+@@ -374,3 +382,73 @@
+ 		>;
+ 	};
+ };
++
++&tmu {
++	throttle-cfgs {
++		throttle_devfreq: devfreq {
++			throttle,max_state = <2>;
++			#cooling-cells = <2>;
++		};
++	};
++};
++
++&cpu_thermal {
++	trips {
++		cpu_alert0: trip0 {
++			temperature = <75000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++
++		cpu_alert1: trip1 {
++			temperature = <80000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++
++		cpu_alert2: trip2 {
++			temperature = <85000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++
++		cpu_crit0: trip3 {
++			temperature = <90000>;
++			hysteresis = <2000>;
++			type = "critical";
++		};
++
++		fan_toggle0: trip4 {
++			temperature = <65000>;
++			hysteresis = <10000>;
++			type = "active";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device =
++			<&throttle_devfreq 0 1>, /* 1/2 GPU Clock */
++			<&A53_0 0 1>; /* Exclude highest OPP */
++		};
++
++		map1 {
++			trip = <&cpu_alert1>;
++			cooling-device =
++			<&A53_0 0 2>; /* Exclude two highest OPPs */
++		};
++
++		map2 {
++			trip = <&cpu_alert2>;
++			cooling-device =
++			<&throttle_devfreq 0 2>; /* Min GPU Clock, disable CPU2/3 */
++		};
++
++		map4 {
++			trip = <&fan_toggle0>;
++			cooling-device = <&fan 0 1>;
++		};
++	};
++};
++
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 6a1e83922c71..a3bb17a6b9df 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -198,7 +198,7 @@
+ 	};
+ 
+ 	thermal-zones {
+-		cpu-thermal {
++		cpu_thermal: cpu-thermal {
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <2000>;
+ 			thermal-sensors = <&tmu 0>;
+-- 
+2.21.1
 
->  dtb-$(CONFIG_ARCH_PRIMA2) += \
->  	prima2-evb.dtb
->  dtb-$(CONFIG_ARCH_PXA) += \
-> diff --git a/arch/arm/boot/dts/owl-s500-labrador-bb.dts b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
-> new file mode 100644
-> index 000000000000..1e821804da30
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-
-A title here would be helpful like how you added for the SoM below.
-
-> + * Copyright (c) 2019-2020 Matheus Castello
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "owl-s500-labrador-v2.dtsi"
-> +#include <dt-bindings/leds/common.h>
-
-Do we need this now?
-
-Thanks,
-Mani
-
-> +
-> +/ {
-> +	compatible = "caninos,labrador-bb", "caninos,labrador", "actions,s500";
-> +	model = "Caninos Labrador Base Board M v1.0";
-> +
-> +	aliases {
-> +		serial3 = &uart3;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial3:115200n8";
-> +	};
-> +
-> +	uart3_clk: uart3-clk {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <921600>;
-> +		#clock-cells = <0>;
-> +	};
-> +};
-> +
-> +&uart3 {
-> +	status = "okay";
-> +	clocks = <&uart3_clk>;
-> +};
-> diff --git a/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-> new file mode 100644
-> index 000000000000..ee079f02b5dd
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-> @@ -0,0 +1,21 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Caninos Labrador SoM V2
-> + *
-> + * Copyright (c) 2019-2020 Matheus Castello
-> + */
-> +
-> +#include "owl-s500.dtsi"
-> +
-> +/ {
-> +	compatible = "caninos,labrador", "actions,s500";
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000>;
-> +	};
-> +};
-> +
-> +&timer {
-> +	clocks = <&hosc>;
-> +};
-> --
-> 2.25.0
-> 
