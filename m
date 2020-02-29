@@ -2,125 +2,111 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5505C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFCDC3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 12:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCE8246A2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 10:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF08246AE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 12:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MUhmg5FG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fF+PnU8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgB2KoI (ORCPT
+        id S1726950AbgB2MQ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 05:44:08 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36586 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgB2KoH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 05:44:07 -0500
-Received: by mail-pg1-f196.google.com with SMTP id d9so2881978pgu.3
-        for <devicetree@vger.kernel.org>; Sat, 29 Feb 2020 02:44:07 -0800 (PST)
+        Sat, 29 Feb 2020 07:16:58 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44388 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbgB2MQ5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 07:16:57 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 7so4099967lfz.11;
+        Sat, 29 Feb 2020 04:16:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SB2zgIhiQZxj/QhdSznnFhbcqQLT0zn4L9QUBfDgryE=;
-        b=MUhmg5FGS1EBD6jMzsKu3KwSU6WQCv0D8ZRh11klKyG6dGEGM1Z5GQ9AY85EelgZQc
-         I8c02hcXUC+6D3Dtzj9MBOsP01nryezSHBMJjdKNGqpStoRaPqpq6/ggg6KCEJ11mgKe
-         mpisWb5fjhgqshqwDMWfxj+sq9i7CJeg+fmAnXr55V5v9DHOZBS/JozfMhfAgS6z/vNn
-         cv8Lve04mAAuFXguSIS/ssXFQGFpqB52gfzM2+2X4DAk98Nj+Zske27klr+1Razu9KFm
-         LxQCIffqAp7f3V4aYF14gsmbrw2vDxQitXzQ/sghYC7etT9+7g5s7akJB+cCUQi+c83Q
-         yl+Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HUQahJ8jieCI4R4OACtWdxDB3DdcfhrTI/7VNOoaPK8=;
+        b=fF+PnU8ypTPRYP2StXGZUT73bB/q0X22+IzS9vRlhTkiVKY2TQ7/D3RIQf809t0GID
+         GQyq5z+7IGlHTP+Thu+DJ8pJ8CGEI9MjxzVXX+HsSgS5AeanZ9v5NTafVFIO/62vMLrX
+         +OG7rW4w7XmgIyL1aWNB4zfB39z6Rl5IksWRdwjUJI9/rm2wRFxVSqJaA1RCfVVXOXsJ
+         zurj3FLrv+kFuR2t+W+KISSdagPuLefEHgmZXbA8bRbLxbAfoaxH7IlcF3/fRm9dFJXx
+         MdJ4jxvQ/9gSJplaJV3UEC10zSCWEeyCpP237XfweYQIDD7QoL1FeaqGwjHINgAOpvNn
+         iI/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SB2zgIhiQZxj/QhdSznnFhbcqQLT0zn4L9QUBfDgryE=;
-        b=J14a0dNPlNev4cWcPKDOfZNDBl6dn3X2cT5vmBmVKwcX6KILBL2ynZHnsvT7WxnF23
-         wTqDUjj9paeG+NiKUsR/DcnFWuR0P0vv6ktefojoyEdtnQhsoemzIWIyTXLp/oszzpiB
-         3dDJHfn377UcBgKN1HJSGXAaqB46/YjsO8UFG0sg0QSMVOjqK+Nkw3LbDGsSMSgrwuQs
-         egdBuwPXYKgq/o5EE+P5Mfqo96qZAYIZJhBdxB+6JrHiiqs5axTxmyiY0IQrKrQFCyxk
-         Tx1b/yLuIRss7k9UlDZCG+ierY+LG32t6N4OQSgzeB2P8ubl8Cku6LVYpIPeyNtFyVSf
-         nX8A==
-X-Gm-Message-State: APjAAAUfdVPFkcSrknHRjAdSx/K81O+kXapUlZ5ZPI1HrqoLq3Hc9jWU
-        s6jJwGOgaJi0kC+44cWFC0CH
-X-Google-Smtp-Source: APXvYqwV8CNh7pfjbCdPlz5eowb4Zc8P0T47nldacmIYks5MMdlgteVAxEM6vUQRGb+e4d44Nl4K2g==
-X-Received: by 2002:aa7:8101:: with SMTP id b1mr8940121pfi.105.1582973046778;
-        Sat, 29 Feb 2020 02:44:06 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id c2sm5396676pjo.28.2020.02.29.02.44.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 29 Feb 2020 02:44:06 -0800 (PST)
-Date:   Sat, 29 Feb 2020 16:13:58 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     afaerber@suse.de, mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] dt-bindings: arm: actions: Document Caninos
- Loucos Labrador
-Message-ID: <20200229104358.GB19610@mani>
-References: <20200227201557.368533-1-matheus@castello.eng.br>
- <20200227201557.368533-2-matheus@castello.eng.br>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227201557.368533-2-matheus@castello.eng.br>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HUQahJ8jieCI4R4OACtWdxDB3DdcfhrTI/7VNOoaPK8=;
+        b=G3YJBLwdyk0kbwLKGtVvoRYYEdjc8Zz2/gnI1G32A/jCxFZxoZKQRv6nHag32DYrzg
+         zs1hK9xn1mYpYn2iUIY0Gxnvd1TKcaxLCiB9Jvv0/6SqS72sjgWBKyWmlasxd5V9cIl0
+         3vhz41Hw+ovRvKIKgp7zytPAZHfkc4LTahT3tQq5AearjVmZdZAEGI7PKmlvKwMZrd0t
+         B2conqL3YI+XD2gmncR6qTBmhaBuELHeOOeS1C6ZS4HIJT8L5OvLmL5FGjQG54fHc1VM
+         Fw4GvgRRfv1xM2W+jOBBGKjFk7SUqyQnd7eA1PSGsRtz3scAyRIqpDHRg0eXHKxplk93
+         YgTQ==
+X-Gm-Message-State: ANhLgQ3u/ilWrWGANTnpS9XZpL6o/GplDLoee4WYBGWoVt5S5smoifGU
+        Mfe0B6seZrwf/RraH+f5YjU=
+X-Google-Smtp-Source: ADFU+vsLBJTIEqIzdTzPSw9aHFuC1dvOqRssdzID6BwrYxGJAlETK+qn94/K1264KDgW4nbrqvGOCQ==
+X-Received: by 2002:a05:6512:6c7:: with SMTP id u7mr5408308lff.176.1582978615322;
+        Sat, 29 Feb 2020 04:16:55 -0800 (PST)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id x1sm6270232lfq.46.2020.02.29.04.16.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 29 Feb 2020 04:16:54 -0800 (PST)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        =?UTF-8?q?Jer=C3=B4me=20Brunet?= <jbrunet@baylibre.com>
+Subject: [PATCH v4 0/3] arm64: dts: meson: add dts/bindings for SmartLabs SML-5442TW
+Date:   Sat, 29 Feb 2020 16:16:01 +0400
+Message-Id: <1582978564-81491-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 05:15:56PM -0300, Matheus Castello wrote:
-> Update the documentation to add the Caninos Loucos Labrador
-> vendor-prefix and items that were included in the device tree files.
-> 
+This series adds new bindings and a device-tree file for the Smartlabs
+SML-5442TW set-top box. The previous v3 attempt [1] was 15-months ago
+but nothing has really changed apart from a change to yaml bindings. I
+have checked and the hci_qca driver does not provide QCA9377 bindings
+so there is no alernative to the gpio-hog for enabling BT support.
 
-These two should be splitted into separate patches.
+It would be good if Jerome would check the audio card config. It looks
+correct from dmesg output but the driver is new and there's currently
+no upstream prior-art to copy. I've cribbed node details from his WIP
+gitlab branches.
 
-Thanks,
-Mani
+v4 - typos/corrections from Andreas
+   - add sound node back
+   - confirmed gpio-hog is necessary
 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  Documentation/devicetree/bindings/arm/actions.yaml     | 5 +++++
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-> index ace3fdaa8396..1b131ceb884a 100644
-> --- a/Documentation/devicetree/bindings/arm/actions.yaml
-> +++ b/Documentation/devicetree/bindings/arm/actions.yaml
-> @@ -24,6 +24,11 @@ properties:
->                - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
->            - const: lemaker,guitar
->            - const: actions,s500
-> +      - items:
-> +          - enum:
-> +              - caninos,labrador-bb # Caninos Loucos Labrador Base Board
-> +          - const: caninos,labrador
-> +          - const: actions,s500
-> 
->        # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
->        - items:
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 9e67944bec9c..3e974dd563cf 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -167,6 +167,8 @@ patternProperties:
->      description: Calxeda
->    "^capella,.*":
->      description: Capella Microsystems, Inc
-> +  "^caninos,.*":
-> +    description: Caninos Loucos LSI-TEC NPO
->    "^cascoda,.*":
->      description: Cascoda, Ltd.
->    "^catalyst,.*":
-> --
-> 2.25.0
-> 
+v3 - change to Smartlabs LLC
+   - removed sound node
+
+v2 - removed audio nodes
+   - changes soundcard name to "meson-gx-audio"
+   - added missing uart-has-rtscts;
+
+[1] https://patchwork.kernel.org/cover/10674939/
+
+Christian Hewitt (3):
+  dt-bindings: add vendor prefix for Smartlabs LLC
+  dt-bindings: arm: amlogic: add support for the Smartlabs SML-5442TW
+  arm64: dts: meson: add support for the Smartlabs SML-5442TW
+
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts | 386 +++++++++++++++++++++
+ 4 files changed, 390 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
+
+-- 
+2.7.4
+
