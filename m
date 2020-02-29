@@ -2,95 +2,102 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FB0C3F2D3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA4FC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5AD3246B4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:22:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fGaQ5JCV"
+	by mail.kernel.org (Postfix) with ESMTP id 03EFD2469D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582936658;
+	bh=lzk/V2BhySbvR7SS4HsmvygUZHYJrp81uXSAkjCii3s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zSCLFBRTPZLAREhR90g+5MkIIas7Y3v1x7mWDiHYWIXV69AbFnUtS28oJtkNnBytq
+	 sqp8km/aAbcvTxBhBK3DSwAYZ1/T8RWT5GxD9hngHyQ0Pld/DlZmpRg9uTcym0MFQc
+	 GfWQCbycoMk9k4UtAWh7ptWt5Xvf3sg5EoZjf+Ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgB2AWM (ORCPT
+        id S1726366AbgB2Ahf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:22:12 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34296 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgB2AWL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 19:22:11 -0500
-Received: by mail-lf1-f67.google.com with SMTP id w27so3411297lfc.1
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 16:22:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+u0gv0tl7AmgLhCL7vM7Tz8IImT4ldCCBT4qkE7ULKY=;
-        b=fGaQ5JCVhGTePvUAx++hyza0BfqY9JdB2F2GhfTLy9rPR5cQk5nYiP4YxWG8OFvXIw
-         eaxCQprO0+OU8yIrfsI3GJjzKRqnBwA0Up1pGquOWCbSGik5YvXxE4JhmtLjR2sNGlOd
-         k3ZQA8sT66ACy9nosyGTOwS19r/nZ2etYGTq0=
+        Fri, 28 Feb 2020 19:37:35 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43390 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB2Ahf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 19:37:35 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j5so3429554otn.10;
+        Fri, 28 Feb 2020 16:37:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+u0gv0tl7AmgLhCL7vM7Tz8IImT4ldCCBT4qkE7ULKY=;
-        b=PNd/GnU2dVUvttMZvAotrqfP0oiYgXrLrGvQqQeppV59Kr4/97dt6bGs1g1ghrDn1f
-         Uk2BesmTgoQyCvi9gbNYdSP8d4sOTJOk5vazni7lmUgtGeU4466MdT3YhQidd242QlpC
-         /Vwb9njabIYUV94J2HhW0S12MPHedi5dFlAjuTovvMCyjAzQbbfDQMFzu0triwAIaGui
-         hQ+gHh0CQ3BvLlJvZF5vtqSGMUVPdeOblDiMSho28O5YJJGyaDk34vzvWv02OurmZ/1e
-         vuGRA84dh+nWiqeG3DKD17iEe0tfQ0+8nzZ7tu4NBwQQmfz7eK5nsnuwAJmRCvEMK3Ax
-         Czew==
-X-Gm-Message-State: ANhLgQ0PeYvQtbcnsdFbzZ0iVCsSIfuLxzObuNTiIQKD4aNaqfiTDQl0
-        /+A6jHhpDtfkPrwIrBjwQocveJ4ISCY=
-X-Google-Smtp-Source: ADFU+vuIZHyl/WNuadSQ0AcTg/OqY0d57WNTkpWrWfYF41djyBONJooXYgy4D074edWE4qF+NjMObw==
-X-Received: by 2002:a05:6512:3a6:: with SMTP id v6mr4009350lfp.205.1582935728670;
-        Fri, 28 Feb 2020 16:22:08 -0800 (PST)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id h14sm6045626lfj.29.2020.02.28.16.22.07
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 16:22:07 -0800 (PST)
-Received: by mail-lf1-f50.google.com with SMTP id y17so3375076lfe.8
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 16:22:07 -0800 (PST)
-X-Received: by 2002:a19:c611:: with SMTP id w17mr4041445lff.59.1582935726653;
- Fri, 28 Feb 2020 16:22:06 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+KGXtOvxiA0IpTTWNq3e4uQPXdV4/lf3e5/qDF38Lbw=;
+        b=rhtgoJP1oCCZT0C26VdyNrbCvwM0sfJvBe5RhJq0QLUIatdPFdzR/2GtMF5Tjr5zQ6
+         R3ift9SzJo4YL7GIPsH0p/+HdSMYq7NsUNuuIwgdpioXTrzAxGQrLc5nJ+hk6fSkRcuL
+         HhiYHvtzx9utMh1+5JX24lj31OWWI/udgiXJFVxRnw5cSkoGNN36f3garIJHm153vuCr
+         fsh2zmP0Y5DZ8qqIRwJfub2rRL5VjU59ShvAPbGjIB/6HlJpbkdg2ymjIdDjQSLkiJd/
+         MJ+NWz/CoYD6BlAM5bFuY47e+5ZOYJavguh+++peYQd6EgvOQXzA5IoqC78Ve3J203z1
+         uEug==
+X-Gm-Message-State: APjAAAViOnEVlbyrqz0JqMvQeXqrhzfEybjX+zJ/hQBiaGYWNYVNHs0p
+        P/F6wAPaZhNquUPeAuMuGQ==
+X-Google-Smtp-Source: APXvYqztcy3vU3MWrA5yZzZErsrUddW8DGwpxBly96I7eJEXM1Uj5MxlM4cz3blE5t1o3Lj/3ITc0g==
+X-Received: by 2002:a9d:4e8a:: with SMTP id v10mr5708626otk.17.1582936654034;
+        Fri, 28 Feb 2020 16:37:34 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id t23sm3713619oic.28.2020.02.28.16.37.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 16:37:33 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org
+Subject: [PATCH v2 2/2] kbuild: Build DT binding examples with dtc warnings enabled
+Date:   Fri, 28 Feb 2020 18:37:31 -0600
+Message-Id: <20200229003731.2728-2-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200229003731.2728-1-robh@kernel.org>
+References: <20200229003731.2728-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <20200227105632.15041-1-sibis@codeaurora.org> <20200227105632.15041-2-sibis@codeaurora.org>
-In-Reply-To: <20200227105632.15041-2-sibis@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 28 Feb 2020 16:21:30 -0800
-X-Gmail-Original-Message-ID: <CAE=gft5=r3MaoAYTn1X416-QGjSBKj5526VDbFoXUbiEvUKO4Q@mail.gmail.com>
-Message-ID: <CAE=gft5=r3MaoAYTn1X416-QGjSBKj5526VDbFoXUbiEvUKO4Q@mail.gmail.com>
-Subject: Re: [PATCH v5 1/7] interconnect: qcom: Allow icc node to be used
- across icc providers
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Odelu Kukatla <okukatla@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 2:57 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Move the icc node ids to a common header, this will allow for
-> referencing/linking of icc nodes to multiple icc providers on
-> SDM845 SoCs.
->
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Now that we have a separate rule for DT binding examples, we can customize
+the dtc options. Let's adjust the dtc warnings to me more strict by
+default so the examples get cleaned up as they get converted to schema.
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
+Leaving 'avoid_unnecessary_addr_size' and 'graph_child_address' warnings
+disabled as examples tend to be incomplete and they generates a lot of
+warnings.
+
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: linux-kbuild@vger.kernel.org
+Co-developed-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+index 7c40d5ba1b51..b62c0470f122 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -31,6 +31,10 @@ extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+ extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
+ extra-y += processed-schema-examples.yaml
+ 
++override DTC_FLAGS := \
++	-Wno-avoid_unnecessary_addr_size \
++	-Wno-graph_child_address
++
+ $(obj)/processed-schema-examples.yaml: $(DT_DOCS) FORCE
+ 	$(call if_changed,mk_schema)
+ endif
+-- 
+2.20.1
+
