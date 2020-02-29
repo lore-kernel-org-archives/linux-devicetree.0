@@ -2,124 +2,104 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33D9C3F2D3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 19:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0445CC3F2D3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 19:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B1124688
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 19:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C207D2468A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 19:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dD3gpeUq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="CD5kPTYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgB2Tdq (ORCPT
+        id S1727272AbgB2TqB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 14:33:46 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:60244 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727190AbgB2Tdq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 14:33:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1583004823; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3pmaIIz4IWO5Cvqd4//x0wCrBroxzaVqn7Ua9M/d+fM=;
-        b=dD3gpeUqqLiw2RU0TENRCfQCPkiALo0x/dQt+L+Ch7pFN2UY+ZfyPMwm8gSOku0GTx7ynK
-        6EAbDQOnrq2MGUVRCFnibZYqbFBX35UJZAgz5fuN7y8iY5jIGhSb7ngVVtnYldsLvjipQh
-        sNHV0Ap2AwvZ55qftn3oLnWuUGZE+/s=
-Date:   Sat, 29 Feb 2020 16:33:21 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
+        Sat, 29 Feb 2020 14:46:01 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:32620 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbgB2TqB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 14:46:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583005559;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=9aj0iNXW9sT+vgaHhh3H7qCB3K/FWvtt+HP6Njt4Sik=;
+        b=CD5kPTYGuf0p1tRtJTfE7tOAplcBITiGhzsCCxR3stN/7TgFJwBwF3TUYvfuTnYYU3
+        n3RJgqXYtTxSxppxR6jKgiUp72EZ4JJ5+I9hXEe4eoym3P+c0zCV1YJjpEjrEDADoA2Y
+        8lvjzdtGyt0SQm3vitkqCmoRwkzAUTGZL6yJdw7VnNRI9OvflHR3ffem3CEJ8bsJ0UVk
+        zqwOPf3nA5Rdkxu3NcojuSWrk1ogW3MlKFPGClGlt8/TbKoKOBtmkW4RoCj6v1OCEE3P
+        0pfo3C+4o1WRKqRcIFvgCPSPwznLk8wfSXtfvSfdCfwIDD4Eg204vSARUFc9NGpfDpef
+        3ACA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6HGqvi2w="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1TJjo6m2
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sat, 29 Feb 2020 20:45:50 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Boddie <paul@boddie.org.uk>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Andi Kleen <ak@linux.intel.com>,
         Kees Cook <keescook@chromium.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Message-Id: <1583004801.3.3@crapouillou.net>
-In-Reply-To: <F5AAAD52-2C1D-4B14-AA7E-590D026C7DBE@goldelico.com>
-References: <cover.1582912972.git.hns@goldelico.com>
-        <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com>
-        <1582992575.3.2@crapouillou.net>
-        <F5AAAD52-2C1D-4B14-AA7E-590D026C7DBE@goldelico.com>
+        kernel@pyra-handheld.com, Alex Smith <alex.smith@imgtec.com>
+Subject: [PATCH v5 1/5] MIPS: DTS: CI20: add DT node for IR sensor
+Date:   Sat, 29 Feb 2020 20:45:44 +0100
+Message-Id: <b058cb1aadbc63eb8c0c35abc6366f552263cf1b.1583005548.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1583005548.git.hns@goldelico.com>
+References: <cover.1583005548.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nikolaus,
+From: Alex Smith <alex.smith@imgtec.com>
 
+The infrared sensor on the CI20 board is connected to a GPIO and can
+be operated by using the gpio-ir-recv driver. Add a DT node for the
+sensor to allow that driver to be used.
 
-Le sam., f=E9vr. 29, 2020 at 19:58, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
-> Hi Paul,
->=20
->>  Am 29.02.2020 um 17:09 schrieb Paul Cercueil <paul@crapouillou.net>:
->>=20
->>  Hi Nikolaus,
->>=20
->>=20
->>  Le ven., f=E9vr. 28, 2020 at 19:02, H. Nikolaus Schaller=20
->> <hns@goldelico.com> a =E9crit :
->>>  There is a ACT8600 on the CI20 board and the bindings of the
->>>  ACT8865 driver have changed without updating the CI20 device
->>>  tree. Therefore the PMU can not be probed successfully and
->>>  is running in power-on reset state.
->>>  Fix DT to match the latest act8865-regulator bindings.
->>>  Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
->>>  Cc: stable@vger.kernel.org
->>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>  ---
->>>  arch/mips/boot/dts/ingenic/ci20.dts | 48=20
->>> ++++++++++++++++++++---------
->>>  1 file changed, 33 insertions(+), 15 deletions(-)
->>>  diff --git a/arch/mips/boot/dts/ingenic/ci20.dts=20
->>> b/arch/mips/boot/dts/ingenic/ci20.dts
->>>  index 59c104289ece..44741e927d2b 100644
->>>  --- a/arch/mips/boot/dts/ingenic/ci20.dts
->>>  +++ b/arch/mips/boot/dts/ingenic/ci20.dts
->>>  @@ -4,6 +4,8 @@
->>>  #include "jz4780.dtsi"
->>>  #include <dt-bindings/clock/ingenic,tcu.h>
->>>  #include <dt-bindings/gpio/gpio.h>
->>>  +#include <dt-bindings/interrupt-controller/irq.h>
->>=20
->>  This include should be in patch 3/5 where it's first used.
->=20
-> Yes. That is much better.
->=20
->>=20
->>  With that fixed:
->>  Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->>=20
->>  for the whole series.
->=20
-> What is easier: that you fix it during applying somewhere
-> or should I send a v5?
+Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+---
+ arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I guess send a V5.
-
-- Paul
-
->=20
-> BR,
-> Nikolaus
->=20
-
-=
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 37b93166bf22..59c104289ece 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -60,6 +60,11 @@
+ 		enable-active-high;
+ 	};
+ 
++	ir: ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
++	};
++
+ 	wlan0_power: fixedregulator@1 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "wlan0_power";
+-- 
+2.23.0
 
