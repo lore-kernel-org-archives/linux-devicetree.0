@@ -2,439 +2,134 @@ Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88099C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92859C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 02:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA1124699
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 00:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F88C246A2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 02:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cGYorvrA"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="izMEbqLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgB2An6 (ORCPT
+        id S1726621AbgB2CHj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:43:58 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41382 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgB2An6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Feb 2020 19:43:58 -0500
-Received: by mail-pf1-f194.google.com with SMTP id j9so2546533pfa.8
-        for <devicetree@vger.kernel.org>; Fri, 28 Feb 2020 16:43:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=YdhnRSd+cstE0kPU3FgjhuNOoqtyTRInPO9ECVleTR8=;
-        b=cGYorvrA+0g1YKC2gbx72oqQinYu9/SZTx0KC8KxdEHXVx8rQdgp4dQQewFte2eK09
-         4I69D5bdKcEmojgjKy9S0z2PSR/QS6aF/c5FBZsAI09oSYaIX1hYkfXcvvR8L2tlMR/Q
-         25ArSUkoDULpdxy2HVGv7PPwRZODZIOjLEGTw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=YdhnRSd+cstE0kPU3FgjhuNOoqtyTRInPO9ECVleTR8=;
-        b=k4xW6P3pPB6uRd/ieQK8GkiJyCMjjl2xPxBv2TH2e07f88ECtkJUE+hxXUmfH1RpnF
-         VN0sOMARB1GPIJTMOl826ex4IaijAXnhoIxVW30pj77L2CER0QZPW67kz3kzgaoX06YY
-         izbPI9qOl740MvC61IPDPQfF0qI2J9c+DiAS5iGXF/PlLn94+Oneq90urhETp9KqrnN2
-         nhDCBnjZNV55SEqXe/1K852VZLDxcxE+Xytg5guE9AMH0+v/5fWOrfq3ujQWPnj2IxhP
-         sI0glya95DNLtlZUK9S8MscwvE2jIf9xPKkgX5tDp1hxVm9AiIGs7s3qvGz2pWd4cQwk
-         yzsA==
-X-Gm-Message-State: APjAAAUZoj0EWU+XDPWFC5u+nsWBHuATBSIO+jj3IQ3vM2fEnNJY9zGn
-        I5vf1597/wa529HNHXJyQyNo4w==
-X-Google-Smtp-Source: APXvYqxrO8EYk/uoLMVCoKsKrUzR9xWTQZa/snALm2yszlQdg0gXFKsYipDOCuXpRckETEc7Qgm67g==
-X-Received: by 2002:a63:5f43:: with SMTP id t64mr7436900pgb.207.1582937035720;
-        Fri, 28 Feb 2020 16:43:55 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w184sm11039601pgw.84.2020.02.28.16.43.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 16:43:55 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Fri, 28 Feb 2020 21:07:39 -0500
+Received: from mail-eopbgr80085.outbound.protection.outlook.com ([40.107.8.85]:41029
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726603AbgB2CHj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Feb 2020 21:07:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ECCT5ZqcK96yWui2qybTloHH9Ngyzm77k3yKOYEooP2ZfVKq4KCnmy6z+GvCcd3PbslMmpD//Wp0B53wEicGxN19WwJpXdU/SKS5PNiJcmygJGBYv7ywSBn9G17yiQo95U6W4Sr1R//8qJ0/Kw9c/sdPitjNagH8+l84SlWEZtau0Rh31LkLIwTiCT+nn2PLqLu/Lv2Cdj8mLemYdeAI1dAbUeModXroQ2sZCNt5ZTFTPhe+6mUicPjluQsGMgOn4NVY2Kzmv+ooK1a7nFbSY14zfrR+uVxaCeeEsRcbgcmnF/wjWoIjKxolvXSxM5pGhl0KlsNwxTfLk2VperJ2BA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RHUEF6DlaDyZLujTZEmLjLnII30tgcc/7ijd3oVMX6g=;
+ b=kOP1vXpaDr/xIXqc0SoronDir1ik03vxBpu4jf91gkitmAdsFZSQzMlJNO4nJLw2tX/yS9PYTamRLFvJa/dUMQD9WxAG8268gmTH/48nG16up+V2zNVmNgtv/uADiUoxsPqrSPaOSp1ZYcApScCHBvwygmV+lIMm00ktHPh5QBGPMEtns1UFLBiSSRDE5xCIRS+Lqf8EFSPOaDTkkAZpDcRxbcaB8jaF0v7c8xf2STLLvZSijoIQ1cLMkyCSv4CCkSNIA8J8P6k5nqJeawK86g5rpOzNb5EEjmhYriRTeHt6ZWyAapeNCClUmCzD+HfcBv+1P2SdeflPp9ceOE8QkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RHUEF6DlaDyZLujTZEmLjLnII30tgcc/7ijd3oVMX6g=;
+ b=izMEbqLKCavqOQwMjVZ6EvO8rs8jeLCU39X/OHib9xzGOSKGCZaw4nU4FAwQD25AcaNgr9Rc9WA4rLlvkEEdzt18argl9EoMGBYg9veqaY+XfzhgF0qLoN4fAL6PVZTQhTuqtMhUbFQxpX0nK+gp7Xy5UToQxisFu8DhUDAuzsE=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5793.eurprd04.prod.outlook.com (20.178.118.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.18; Sat, 29 Feb 2020 02:07:33 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2772.012; Sat, 29 Feb 2020
+ 02:07:32 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>
+Subject: RE: [PATCH V3 2/2] firmware: arm_scmi: add smc/hvc transport
+Thread-Topic: [PATCH V3 2/2] firmware: arm_scmi: add smc/hvc transport
+Thread-Index: AQHV7HUEw4K6S9kW+0Sj3fQlJbhvlqgwzHcAgACkEkA=
+Date:   Sat, 29 Feb 2020 02:07:30 +0000
+Message-ID: <AM0PR04MB4481C79FD4EB32E6F111A22588E90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1582701171-26842-1-git-send-email-peng.fan@nxp.com>
+ <1582701171-26842-3-git-send-email-peng.fan@nxp.com>
+ <20200228161820.GA17229@bogus>
+In-Reply-To: <20200228161820.GA17229@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2e30f7a3-0330-43c9-9b92-08d7bcbc22d0
+x-ms-traffictypediagnostic: AM0PR04MB5793:|AM0PR04MB5793:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5793F9E67422695A58C64A9F88E90@AM0PR04MB5793.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 03283976A6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(376002)(396003)(346002)(189003)(199004)(33656002)(4326008)(7416002)(26005)(9686003)(64756008)(66556008)(478600001)(66446008)(66946007)(66476007)(76116006)(6916009)(186003)(44832011)(86362001)(55016002)(81166006)(8936002)(316002)(8676002)(5660300002)(2906002)(81156014)(71200400001)(6506007)(54906003)(7696005)(4744005)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5793;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xOTWPSpmPwBPBMBGhU4oWLScvAHXB0hzVTRRAST9949+acb1Gy8g2FG1uhFjP9/rSDBgSEuIhZgOqlxiU12V7ba8SGgEveJKVIWeHREmQXrXf6I0m7JWX0IPQCQzryNGSb3UNidizVmb31xxqFOpiWgZ03mWyzRpDt0b6kOIPCTKA41IExo4bsiN0xHS2omYY3O4p6ftrRWCh923E5f7be7WDKDTZaKzaD4Z3itn8osUqkjoUfGBVo+FMlZPiBy7ujxAEIQQzr12juIX/2Xq0rxMf3HSsyuRZho4hWQM0jDqwEm/iQzsl9DiYN05TOoRVXeikYNcLM6e2+M5/XlLXafipqhDK0+/K48WS2e7PX0gK/iVbQ0YuyQ7iG1OFgWhJNU4zHSShaDOoGxsRzwybdToNMZz0LWgr7WpaABu6jdL4C+e/wD9Y7XMhtGLyI9+
+x-ms-exchange-antispam-messagedata: P5saxQxq4DX1T6TiMumqP7Y3PMqlTijYDo4Zv6gUv+Gfd0PhlXJwbIQO+3cNL04GU0MyogKzwXUjcgrKcEUkhMELdPYncCJsA6nXYVw9AGIDrfYlQZIoJimy/MITbc+IwsYil3rDWaNBFQoUKiVoYw==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200228162400.GA27904@kuha.fi.intel.com>
-References: <20200220003102.204480-1-pmalani@chromium.org> <20200220003102.204480-2-pmalani@chromium.org> <158279287307.177367.4599344664477592900@swboyd.mtv.corp.google.com> <20200227163825.GB18240@kuha.fi.intel.com> <158284127336.4688.623067902277673206@swboyd.mtv.corp.google.com> <20200228162400.GA27904@kuha.fi.intel.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: Add cros-ec Type C port driver
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
-        bleung@chromium.org, devicetree@vger.kernel.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Date:   Fri, 28 Feb 2020 16:43:54 -0800
-Message-ID: <158293703400.112031.11453499974796783579@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e30f7a3-0330-43c9-9b92-08d7bcbc22d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2020 02:07:30.3274
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2ux73LShVH912iE+eT2DtgvNrxiRB5LvIZMQqmxnJzjx03UIxjqJudpB0mgvipkwhh3/+e9C5lCktTQgcX0KSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5793
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Heikki Krogerus (2020-02-28 08:24:00)
-> On Thu, Feb 27, 2020 at 02:07:53PM -0800, Stephen Boyd wrote:
-> > Quoting Heikki Krogerus (2020-02-27 08:38:25)
-> > > No.
-> > >=20
-> > > The above follows the usb-connector bindings, so it is correct:
-> > > Documentation/devicetree/bindings/connector/usb-connector.txt
-> > >=20
-> > > So the connector is always a child of the "CC controller" with the USB
-> > > Type-C connectors, which in this case is the EC (from operating syste=
-ms
-> > > perspective). The "CC controller" controls connectors, and it doesn't
-> > > actually do anything else. So placing the connectors under the
-> > > "connector controller" is also logically correct.
-> >=20
-> > Ah ok I see. The graph binding is for describing the data path, not the
-> > control path. Makes sense.=20
-> >=20
-> > >=20
-> > > > Yes, the connector is intimately involved with the EC here, but I w=
-ould
-> > > > think that we would have an OF graph connection from the USB contro=
-ller
-> > > > on the SoC to the USB connector, traversing through anything that m=
-ay be
-> > > > in that path, such as a USB hub. Maybe the connector node itself can
-> > > > point to the EC type-c controller with some property like
-> > >=20
-> > > I think your idea here is that there should be only a single node for
-> > > each connector that is then linked with every component that it is
-> > > physically connected to (right?), but please note that that is not
-> > > enough. Every component attached to the connector must have its own
-> > > child node that represents the "port" that is physically connected to
-> > > the USB Type-C connector.
-> > >=20
-> > > So for example, the USB controller nodes have child nodes for every
-> > > USB2 port as well as for every USB3 port. Similarly, the GPU
-> > > controllers have child node for every DisplayPort, etc. And I believe
-> > > that is already how it has been done in DT (and also in ACPI).
-> >=20
-> > It looks like perhaps you're conflating ports in USB spec with the OF
-> > graph port? I want there to be one node per type-c connector that I can
-> > physically see on the device. Is that not sufficient?
->=20
-> It is. We don't need more than one node that represents the physical
-> connector (and we should not have more than one node for that). And
-> actually, I was not mixing the OF graph ports and USB ports... I
-> think I should be talking about PHY instead of "port". That is
-> probable more clear.
->=20
-> My point is that every PHY that is connected to a Type-C connector
-> must still be represented with its own node in devicetree and ACPI. So
-> there still needs to be a node for the USB2 PHY, USB3 PHY, DisplayPort
-> PHY, etc., on top of the connector node. I got the picture that you
-> are proposing that we don't need those PHY nodes anymore since we have
-> the connector nodes, but maybe I misunderstood?
+Hi Sudeep,
 
-Alright. Maybe a full example will help. See below. I think I understand
-how it's supposed to look.
+> Subject: Re: [PATCH V3 2/2] firmware: arm_scmi: add smc/hvc transport
+>=20
+> On Wed, Feb 26, 2020 at 03:12:51PM +0800, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > Take arm,smc-id as the 1st arg, and protocol id as the 2nd arg when
+> > issuing SMC/HVC. Since we need protocol id, so add this parameter
+>=20
+> And why do we need protocol id here ? I couldn't find it out myself.
+> I would like to know why/what/how is it used in the firmware(smc/hvc
+> handler). I hope you are not mixing the need for multiple channel with
+> protocol id ? One can find out id from the command itself, no need to pas=
+s it
+> and hence asking here for more details.
+
+When each protocol needs its own shmem area, we need let firmware
+know which shmem area to parse the message from. Without protocol
+id, firmware not know which shmem area should use. Hope this is clear.
+
+Thanks,
+Peng.
 
 >=20
-> > Are there any examples of the type-c connector in DT? I see some
-> > NXP/Freescale boards and one Renesas board so far. Maybe there are other
-> > discussions I can read up on?
-> >=20
-> > >=20
-> > > Those "port" nodes then just need to be linked with the "connector"
-> > > node. I think for that the idea was to use OF graph, but I'm really
-> > > sceptical about that. The problem is that with the USB Type-C
-> > > connectors we have to be able to identify the connections, i.e. which
-> > > endpoint is the USB2 port, which is the DisplayPort and so on, and OF
-> > > graph does not give any means to do that on its own. We will have to
-> > > rely on separate device properties in order to do the identification.
-> > > Currently it is not documented anywhere which property should be used
-> > > for that.
-> >=20
-> > I hope that this patch series can document this.
->=20
-> Well, we do need that to be documented, but do we really need to block
-> this series because of that? This driver does not depend on OF graph
-> yet.
-
-I don't know. I think this binding patch will go for another round so
-maybe it's blocked in other ways?
-
->=20
-> > Why can't that work by having multiple OF graph ports for USB2 port,
-> > DisplayPort, USB3 port, etc? The data path goes to the connector and
-> > we can attach more information to each port node to describe what
-> > type of endpoint is there like a DisplayPort capable type-c
-> > connector for example.
->=20
-> The PHY nodes we must still always have. So the OF graph will always
-> describe the connection between the PHY and the connector, and the
-> connection between the PHY and the controller must be described
-> separately.
-
-Got it.
-
-Here's the same example that hopefully shows how all this stuff can
-work. I've added more nonsense to try and make it as complicated as
-possible.
-
- / {
-
-	// Expand single usb2/usb3 from SoC to 4 port hub
-        usb-hub {
-		compatible =3D "vendor,usb-hub-4-port";
-		usb-vid =3D <0xaaad>;
-		usb-pid =3D <0xffed>;
-		vdd-supply =3D <&pp3300_usb>;
-		reset-gpios =3D <&gpio_controller 50 GPIO_ACTIVE_LOW>;
-
-		ports {=20
-			#address-cells =3D <1>;
-			#size-cells =3D <0>;
-
-			port@0 {
-				reg =3D <0>;
-				usb2_hub0: endpoint0 {
-					remote-endpoint =3D <&left_typec2>;
-				};
-
-				usb3_hub0: endpoint1 {
-					remote-endpoint =3D <&left_typec3>;
-				};
-			};
-
-			port@1 {
-				reg =3D <1>;
-				usb2_hub1: endpoint0 {
-					remote-endpoint =3D <&right_typec2>;
-				};
-
-				usb3_hub1: endpoint1 {
-					remote-endpoint =3D <&right_typec3>;
-				};
-			};
-
-			port@2 {
-				reg =3D <2>;
-				usb2_hub2: endpoint0 {
-					remote-endpoint =3D <&left_typea2>;
-				};
-				usb3_hub2: endpoint1 {
-					remote-endpoint =3D <&left_typea3>;
-				};
-			};
-
-			port@3 {
-				reg =3D <3>;
-				usb2_hub3: endpoint0 {
-					// Not connected
-				};
-				usb3_hub3: endpoint1 {
-					// Not connected
-				};
-			};
-
-			port@4 {
-				reg =3D <4>;
-				usb2_hub_in: endpoint0 {
-					remote-endpoint =3D <&usb2_phy_out>;
-				};
-				usb3_hub_in: endpoint1 {
-					remote-endpoint =3D <&usb3_phy_out>;
-				};
-			};
-		};
-	};
-
-	// Maybe this should go under EC node too if EC controls it
-	// somehow?
-	connector {
-		compatible =3D "usb-a-connector";
-		label =3D "type-A-left"
-
-		ports {
-			#address-cells =3D <1>;
-			#size-cells =3D <0>;
-			port@0 {
-				reg =3D <0>;
-				left_typea2: endpoint0 {
-					remote-endpoint =3D <&usb2_hub2>;
-				};
-				left_typea3: endpoint1 {
-					remote-endpoint =3D <&usb3_hub2>;
-				};
-			};
-
-	};
-
-	// Steer DP to either left or right type-c port
-	mux {
-		compatible =3D "vendor,dp-mux";
-		// Inactive: port 0
-		// Active: port 1
-		mux-gpios =3D <&gpio_controller 23 GPIO_ACTIVE_HIGH>;
-
-		ports {
-			#address-cells =3D <1>;
-			#size-cells =3D <0>;
-			port@0 {
-				reg =3D <0>;
-				mux_dp_0: endpoint {
-					remote-endpoint =3D <&right_typec_dp>;
-				};
-			};
-
-			port@1 {
-				reg =3D <1>;
-				mux_dp_1: endpoint {
-					remote-endpoint =3D <&left_typec_dp>;
-				};
-			};
-
-			port@2 {
-				reg =3D <1>;
-				mux_dp_in: endpoint {
-					remote-endpoint =3D <&dp_phy_out>;
-				};
-			};
-		};
-	};
-
-        soc@0 {
-                #address-cells =3D <1>;
-                #size-cells =3D <0>;
-
-                spi@a000000 {
-                        compatible =3D "soc,spi-controller";
-                        reg =3D <0xa000000 0x1000>;
-                        cros_ec: ec@0 {
-                                compatible =3D "google,cros-ec-spi";
-                                reg =3D <0>;
-
-                                connector@0 {
-                                        compatible =3D "usb-c-connector";
-                                        label =3D "type-c-left";
-                                        reg =3D <0>;
-                                        power-role =3D "dual";
-                                        ...
-
-                                        ports {  // Maybe ports is overkill=
- with only one port?
-                                                #address-cells =3D <1>;
-                                                #size-cells =3D <0>;
-
-                                                port@0 {
-                                                        reg =3D <0>;
-                                                        left_typec2: endpoi=
-nt0 {
-                                                                remote-endp=
-oint =3D <&usb2_hub0>;
-                                                        };
-
-                                                        left_typec3: endpoi=
-nt1 {
-                                                                remote-endp=
-oint =3D <&usb3_hub0>;
-                                                        };
-
-                                                        left_typec_dp: endp=
-oint2 {
-                                                                remote-endp=
-oint =3D <&mux_dp_1>;
-                                                        };
-                                                };
-                                        };
-                                };
-
-                                connector@1 {
-                                        compatible =3D "usb-c-connector";
-                                        label =3D "type-c-right";
-                                        reg =3D <1>;
-                                        power-role =3D "dual";
-                                        ...
-
-                                        ports {=20
-                                                #address-cells =3D <1>;
-                                                #size-cells =3D <0>;
-
-                                                port@0 {
-                                                        reg =3D <0>;
-                                                        right_typec2: endpo=
-int0 {
-                                                                remote-endp=
-oint =3D <&usb2_hub1>;
-                                                        };
-
-                                                        right_typec3: endpo=
-int1 {
-                                                                remote-endp=
-oint =3D <&usb3_hub1>;
-                                                        };
-
-                                                        right_typec_dp: end=
-point2 {
-                                                                remote-endp=
-oint =3D <&mux_dp_0>;
-                                                        };
-                                                };
-                                        };
-                                };
-                        };
-                };
-
-                usb2_phy: phy@da00000 {
-                        compatible =3D "soc,usb2-phy";
-                        reg =3D <0xda00000 0x1000>;
-                        ports {
-                                port@0 {
-                                        reg =3D <0>;
-                                        usb2_phy_out: endpoint {
-                                                remote-endpoint =3D <&usb2_=
-hub_in>;
-                                        };
-                                };
-                        };
-                };
-
-                usb3_phy: phy@db00000 {
-                        compatible =3D "soc,usb3-phy";
-                        reg =3D <0xdb00000 0x1000>;
-                        ports {
-                                port@0 {
-                                        reg =3D <0>;
-                                        usb3_phy_out: endpoint {
-                                                remote-endpoint =3D <&usb3_=
-hub_in>;
-                                        };
-                                };
-                        };
-                };
-
-                dp_phy: phy@dc00000 {
-                        compatible =3D "soc,dp-phy";
-                        reg =3D <0xdc00000 0x1000>;
-                        ports {
-                                port@0 {
-                                        reg =3D <0>;
-                                        dp_phy_out: endpoint {
-                                                remote-endpoint =3D <&mux_d=
-p_in>;
-                                        };
-                                };
-                        };
-                };
-
-                usb@ea00000 {
-                        compatible =3D "soc,dwc3-controller";
-                        reg =3D <0xea00000 0x1000>;
-                        phys =3D <&usb2_phy>, <&usb3_phy>;
-                };
-
-	        display-controller@eb00000 {
-                        compatible =3D "soc,dwc3-controller";
-                        reg =3D <0xeb00000 0x1000>;
-                        phys =3D <&dp_phy>;
-			// TODO: Connect audio to DP phy somehow
-	        };
-
-        };
- };
+> --
+> Regards,
+> Sudeep
