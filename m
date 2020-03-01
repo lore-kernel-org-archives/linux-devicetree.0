@@ -1,4 +1,4 @@
-Return-Path: <SRS0=QVf9=4R=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=3r9R=4S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C72C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 23:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB617C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 00:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55FEE20409
-	for <linux-devicetree@archiver.kernel.org>; Sat, 29 Feb 2020 23:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09962468E
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 00:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgB2XzW (ORCPT
+        id S1727174AbgCAACK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 18:55:22 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:55408 "EHLO gloria.sntech.de"
+        Sat, 29 Feb 2020 19:02:10 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:55476 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbgB2XzW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 29 Feb 2020 18:55:22 -0500
+        id S1727162AbgCAACJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 29 Feb 2020 19:02:09 -0500
 Received: from p508fcd9d.dip0.t-ipconnect.de ([80.143.205.157] helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1j8Bx1-0004s7-QY; Sun, 01 Mar 2020 00:55:19 +0100
+        id 1j8C3a-0004tG-JZ; Sun, 01 Mar 2020 01:02:06 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
+To:     Johan Jonker <jbx6244@gmail.com>, dianders@chromium.org
 Cc:     Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org,
         robh+dt@kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 1/4] dt-bindings: arm: fix Rockchip Kylin board bindings
-Date:   Sun, 01 Mar 2020 00:55:19 +0100
-Message-ID: <21505688.DxWBmkEV5j@phil>
-In-Reply-To: <5d47cf5f-9ac4-cff4-340b-a2518a508738@gmail.com>
-References: <20200228061436.13506-1-jbx6244@gmail.com> <73b41bd1-01e9-6af8-afc8-b1a96614d026@arm.com> <5d47cf5f-9ac4-cff4-340b-a2518a508738@gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: arm: fix Rockchip rk3399-evb bindings
+Date:   Sun, 01 Mar 2020 01:02:06 +0100
+Message-ID: <3089122.gegXmbq47i@phil>
+In-Reply-To: <229c3511-d99d-8bac-6241-0088c5fc13ef@gmail.com>
+References: <20200228061436.13506-1-jbx6244@gmail.com> <78b8b53f-2e2a-3804-41fb-bb2610947ca2@arm.com> <229c3511-d99d-8bac-6241-0088c5fc13ef@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -45,41 +45,47 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Johan,
 
-Am Freitag, 28. Februar 2020, 13:50:11 CET schrieb Johan Jonker:
-> On 2/28/20 1:35 PM, Robin Murphy wrote:
-> > On 28/02/2020 6:14 am, Johan Jonker wrote:
-> >> A test with the command below gives this error:
-> >>
-> >> arch/arm/boot/dts/rk3036-kylin.dt.yaml: /: compatible:
-> >> ['rockchip,rk3036-kylin', 'rockchip,rk3036']
-> >> is not valid under any of the given schemas
-> >>
-> >> Fix this error by changing 'rockchip,kylin-rk3036' to
-> >> 'rockchip,rk3036-kylin' in rockchip.yaml.
-> > 
-> 
-> 
-> > Although I can guess, it might be worth a note to explain why it's the
-> > binding rather than the DTS that gets changed here.
-> 
+Am Freitag, 28. Februar 2020, 14:28:36 CET schrieb Johan Jonker:
 > Hi Robin,
 > 
-> My guess is that given a look at the other boards the processor name
-> comes first and then the board name, so I changed it in rockchip.yaml.
-> But maybe Heiko can better explain what the naming consensus in the past
-> was.
+> When I look at the review process of rk3399-evb.dts
+> it is mentioned here:
+> 
+> https://lore.kernel.org/patchwork/patch/672327/
+> 
+> >> +	model = "Rockchip RK3399 Evaluation Board";
+> >> +	compatible = "rockchip,rk3399-evb", "rockchip,rk3399",
+> >> +		     "google,rk3399evb-rev2", google,rk3399evb-rev1",
+> >> +		     "google,rk3399evb-rev0" ;
+> > 
+> > can you check against which compatibles that coreboot really matches?
+> > 
+> > As we said that the evb changed between rev1 and rev2, I would expect the 
+> > compatible to be something like
+> > 
+> > 	compatible = "rockchip,rk3399-evb",  "google,rk3399evb-rev2", 
+> > 			"rockchip,rk3399";
+> > 
+> > leaving out the rev1 and rev0
+> 
+> The consensus in version 4 ends in what is shown in the dts file, so I
+> changed it in rockchip.yaml. Things from the past maybe can better be
+> explained by Heiko. Please advise if this patch needs to change and in
+> what file.
 
+Just get rid of the "google,rk3399evb-rev2" from the .dts please :-) .
 
-I think what Robin meant was that there should be an explanation in the
-commit message on why you change the binding and not the board.
+(1)  "rockchip,rk3399-evb", "rockchip,rk3399", "google,rk3399evb-rev2";
+    is just wrong for the reasons Robin explained, I guess that slipped
+    through review at the time.
+(2) "google,rk3399evb-rev2" was a specific variant for Google I'm pretty
+    sure they'll have scraped all these boards directly after they had the
+    first actual rk3399-gru development devices
 
-Normally the dt-binding is the authoritative part, so boards should follow
-the binding, but in the kylin-case the compatible from the .dts is used fr
-years in the field now, so you're correct to fix the binding, as otherwise
-we would break old users.
+So I'm pretty sure the only rk3399-evbs in existence are the general ones.
 
-So just add a paragraph to the commit message with the above ;-)
 
 Heiko
+
 
 
