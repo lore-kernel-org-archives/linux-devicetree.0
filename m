@@ -6,96 +6,93 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628A6C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 16:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A98FC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 16:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C686222C4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 16:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB4A222C4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 16:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583080004;
-	bh=Vl0cCFiJ7XoQYl17+ZAVR9pF8KhOIaD16bFm79hguNc=;
+	s=default; t=1583080263;
+	bh=ERPfdKj2oIeEjhrOYyy9Db071ji3eYYbwbOcXxgReTs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HhZ8NlyP55K997CzSvenJSYVq2GMDyOYR78Y812wH6THiuiX3XHEq7eqdecytEv1z
-	 pKny4fiSSlaCRiGPqKpUO/5vaDs/WfRdKwApMXPImoB97Hehsv0jLTqoWi2sJdSDU+
-	 MbYbuQx/fpf0ZwBV9nO/oBVeR+L1OnFEWKRKG9Iw=
+	b=y5UJiXVcHgEcte3NVtGq86c2cDH9L9risMgjVVU+oQsKOSo9voCUR6MJfcJLhGzEm
+	 ZhV87kGPAJjmAY+hgnoAsV8XjIpjFBKNlG539whVwU6a7JSDzawzHC25kEJaIq2wTy
+	 QOUU+5Pbh42O9bnRjgHk0dvUD5lJ5fp1c4uwz3nA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgCAQ0n (ORCPT
+        id S1726359AbgCAQbD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Mar 2020 11:26:43 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36533 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgCAQ0n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 11:26:43 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g12so1180570plo.3;
-        Sun, 01 Mar 2020 08:26:42 -0800 (PST)
+        Sun, 1 Mar 2020 11:31:03 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38267 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCAQbC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 11:31:02 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d6so4156869pgn.5;
+        Sun, 01 Mar 2020 08:31:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=X7zxxhgHbKLDitd/8pwwrybHJl2ebla3PsVr9XveOPE=;
-        b=ehFvhi2HfDA7iwAplHkdLgI/ndQ64YePjxiv1YE4FYgg6c36ORcKrL+BIQ3S4HGzel
-         oI5VM8QBtkwD+CI7gzkVEpgtRvbJy+9JfLIL8c67pF8WT703I+1ZSmevYoylZ2TeEdEo
-         SDkGWjd3uU76htC7Li2Q+Tk6exmF6+nHMOk2isOIFDzyueAWcUo/1THOaA10F8bLGuaD
-         8305yBECUFOhFRW9RsglGHe06xM05i+JaEV+fL2LSg2SnhSAe2gEWL5eYofrH9B5P2vy
-         oTh03jSIdIzFkFFLUmYS2aiKbfqEjvrBL+fF4OXOYT3DHUwzwIOShHTbs5Hqes0yhjEI
-         +Iow==
-X-Gm-Message-State: ANhLgQ22s+egmIk6zLOCLUS43+U4tnJmKTPv/Y+aTrURsB2DXi1qdIAj
-        2laEa6/bD3VwGGtg8TWyvv4Rr8GkzUE=
-X-Google-Smtp-Source: ADFU+vsmL4VCAnuyLcIDF618gVDP+uBDmnHopShPkg/C1O0bJ2GDJhk9Z4Gr3Wg9ndeW6DbXCvE+Yg==
-X-Received: by 2002:a17:90a:bd90:: with SMTP id z16mr2090729pjr.36.1583080002408;
-        Sun, 01 Mar 2020 08:26:42 -0800 (PST)
+        bh=OgwwkseIQNrVKk8KiHXZ8vpmf+IGjcntZ9v/XR+cspc=;
+        b=WHni1f58kR5R7IV7FWXcSSB/8Dc4q5QRdIZoPhxkZ18hTbr7qCR/HP11VBOrhm+EZZ
+         KIKHag71ZZbxP9+cbUyvi8sqnsgk/F9HJxPtgvuRWBV0CO6+blasI0Wm3Mz6WSv2MhLy
+         E/EQSQApyPOgD5jQ5gXcAAllGJ/+W9Kfvbm8eRUdeemdZnhMWNZliHZo/QmUp1Kudfwn
+         oJiMGDHxnDdJ508sa/NiUjgxfNosTBiwj/KBBVXCpn19AVFQU61fQ1qzg3UWWNQ5SROa
+         flojmOGhg+JcQyQNJSKg7MUon/8cH1oFWQwdRQayOYc1AbVxgQvz3uKlWW+dJM4g8hul
+         ODug==
+X-Gm-Message-State: APjAAAUkgQyRhJOWmV5qUIwHAjcWwfeIt1Stu83rTIqL0fqrYg+H0/cd
+        7W9Hm5Uu6mIiPqKZA8Kp/lbnTOjQLUA=
+X-Google-Smtp-Source: APXvYqw8TrEi3h7yP2TvYfqIbWT7/xKtnJnzOX9Ojyo+t22DL5l6xGnwtZtgzpYTuMSk2E1KmTpFaQ==
+X-Received: by 2002:a63:ed4d:: with SMTP id m13mr15016563pgk.350.1583080261654;
+        Sun, 01 Mar 2020 08:31:01 -0800 (PST)
 Received: from localhost ([2601:647:5b00:710:c2fa:3aa3:193c:db86])
-        by smtp.gmail.com with ESMTPSA id l4sm9066313pje.27.2020.03.01.08.26.41
+        by smtp.gmail.com with ESMTPSA id p14sm16754585pgm.49.2020.03.01.08.31.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 08:26:41 -0800 (PST)
-Date:   Sun, 1 Mar 2020 08:26:40 -0800
+        Sun, 01 Mar 2020 08:31:00 -0800 (PST)
+Date:   Sun, 1 Mar 2020 08:31:00 -0800
 From:   Moritz Fischer <mdf@kernel.org>
 To:     richard.gong@linux.intel.com
 Cc:     gregkh@linuxfoundation.org, mdf@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com, dinguyen@kernel.org,
         linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv1 5/7] arm64: dts: agilex: correct service layer driver's
- compatible value
-Message-ID: <20200301162640.GH7593@epycbox.lan>
+Subject: Re: [PATCHv1 6/7] firmware: stratix10-svc: add the compatible value
+ for intel agilex
+Message-ID: <20200301163100.GA7992@epycbox.lan>
 References: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
- <1581696052-11540-6-git-send-email-richard.gong@linux.intel.com>
+ <1581696052-11540-7-git-send-email-richard.gong@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581696052-11540-6-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <1581696052-11540-7-git-send-email-richard.gong@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:00:50AM -0600, richard.gong@linux.intel.com wrote:
+On Fri, Feb 14, 2020 at 10:00:51AM -0600, richard.gong@linux.intel.com wrote:
 > From: Richard Gong <richard.gong@intel.com>
 > 
-> Correct the compatible property value for Intel Service Layer driver
-> on Intel Agilex SoC platform.
+> Add the compatible property value so we can reuse Intel Stratix10
+> Service Layer driver on Intel Agilex SoC platform.
 > 
+Acked-by: Moritz Fischer <mdf@kernel.org>
 > Signed-off-by: Richard Gong <richard.gong@intel.com>
 > ---
->  arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/firmware/stratix10-svc.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> index 8c29853..d48218c 100644
-> --- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> @@ -539,7 +539,7 @@
+> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
+> index 7ffb42b..d5f0769 100644
+> --- a/drivers/firmware/stratix10-svc.c
+> +++ b/drivers/firmware/stratix10-svc.c
+> @@ -966,6 +966,7 @@ EXPORT_SYMBOL_GPL(stratix10_svc_free_memory);
 >  
->  		firmware {
->  			svc {
-> -				compatible = "intel,stratix10-svc";
-> +				compatible = "intel,agilex-svc";
->  				method = "smc";
->  				memory-region = <&service_reserved>;
+>  static const struct of_device_id stratix10_svc_drv_match[] = {
+>  	{.compatible = "intel,stratix10-svc"},
+> +	{.compatible = "intel,agilex-svc"},
+>  	{},
+>  };
 >  
 > -- 
 > 2.7.4
 > 
-Applied to for-next,
-
-Thanks
