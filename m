@@ -2,78 +2,100 @@ Return-Path: <SRS0=3r9R=4S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AB7C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 05:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE894C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 07:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A3320848
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 05:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882F720828
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 07:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgCAFbJ (ORCPT
+        id S1725747AbgCAHoY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Mar 2020 00:31:09 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:56012 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgCAFai (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 1 Mar 2020 00:30:38 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 88CEB200A32;
-        Sun,  1 Mar 2020 06:30:36 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 44BF9200A2B;
-        Sun,  1 Mar 2020 06:30:27 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 83DD3402A7;
-        Sun,  1 Mar 2020 13:30:16 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/8] ARM: dts: imx6qdl: Change asrc-width to asrc-format
-Date:   Sun,  1 Mar 2020 13:24:13 +0800
-Message-Id: <5bb6329e32d7c12019daec403b8f01758df675da.1583039752.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1583039752.git.shengjiu.wang@nxp.com>
-References: <cover.1583039752.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1583039752.git.shengjiu.wang@nxp.com>
-References: <cover.1583039752.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 1 Mar 2020 02:44:24 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:36789 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgCAHoY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 02:44:24 -0500
+X-Originating-IP: 90.112.224.173
+Received: from pc-39.home (lfbn-gre-1-269-173.w90-112.abo.wanadoo.fr [90.112.224.173])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 6C1A9FF809;
+        Sun,  1 Mar 2020 07:44:21 +0000 (UTC)
+Date:   Sun, 01 Mar 2020 08:44:19 +0100
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200229230648.GA21220@plvision.eu>
+References: <20200209212016.27062-1-vadym.kochan@plvision.eu> <20200229230648.GA21220@plvision.eu>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH] arm64: dts: marvell: fix non-existed cpu referrence in armada-ap806-dual.dtsi
+To:     Vadym Kochan <vadym.kochan@plvision.eu>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+Message-ID: <647B367B-4278-4D00-98D3-1FCA76D87488@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-asrc_format is more inteligent, which is align with the alsa
-definition snd_pcm_format_t, we don't need to convert it to
-format in driver, and it can distinguish S24_LE & S24_3LE.
-default value is SNDRV_PCM_FORMAT_S16_LE(2).
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e6b4b8525f98..062d98ee513b 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -481,7 +481,7 @@
- 					dma-names = "rxa", "rxb", "rxc",
- 							"txa", "txb", "txc";
- 					fsl,asrc-rate  = <48000>;
--					fsl,asrc-width = <16>;
-+					fsl,asrc-format = <2>;
- 					status = "okay";
- 				};
- 
+Le 1 mars 2020 00:06:56 GMT+01:00, Vadym Kochan <vadym.kochan@plvision.eu> a écrit :
+>Hi,
+>
+
+Hello
+>Just softly ping if I sent it to the right direction.
+It looks ok, and was on the list of patches to apply 
+
+Sorry for the delay
+>
+>On Sun, Feb 09, 2020 at 11:20:30PM +0200, Vadym Kochan wrote:
+>> armada-ap806-dual.dtsi includes armada-ap806.dtsi which describes
+>> thermal zones for 4 cpus but only cpu0 and cpu1 only exists for dual
+>> configuration, this makes dtb compilation fail. Fix it by removing
+>> thermal zone nodes for non-existed cpus for dual configuration.
+>> 
+>> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+>> ---
+>>  arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+>b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+>> index 09849558a776..fcab5173fe67 100644
+>> --- a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+>> +++ b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+>> @@ -53,4 +53,9 @@
+>>  			cache-sets = <512>;
+>>  		};
+>>  	};
+>> +
+>> +	thermal-zones {
+>> +		/delete-node/ ap-thermal-cpu2;
+>> +		/delete-node/ ap-thermal-cpu3;
+>> +	};
+>>  };
+>> -- 
+>> 2.17.1
+>> 
+>
+>Regards,
+>Vadym Kochan
+
 -- 
-2.21.0
-
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
