@@ -2,97 +2,92 @@ Return-Path: <SRS0=3r9R=4S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5309C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 16:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F298C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 16:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866DE24692
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 16:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583080290;
-	bh=gTMNcMdUJArPkKni9pU1KCNQk2SzW6wgTQlNNM4CwuM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JmRIzGSRaRNQbwAb+x3ObK9yvMznux6aLWIfrwKt/VmAyLi0HVCODf1melm9A5XEs
-	 R+Ua9VLSfZ4EaHgk2+fjcUFIQl6ADiZeGmkzocbgP8hiht7q6L1FmNiIOLj2fcJLj8
-	 ALgM3qNeynTV+Sx8Q3fNC6TMOvNr6Zv9ejJ49CPc=
+	by mail.kernel.org (Postfix) with ESMTP id EDF8121775
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 16:41:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NltdUatu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgCAQba (ORCPT
+        id S1726602AbgCAQlv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Mar 2020 11:31:30 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34788 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgCAQb3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 11:31:29 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y21so820164pfp.1;
-        Sun, 01 Mar 2020 08:31:29 -0800 (PST)
+        Sun, 1 Mar 2020 11:41:51 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51191 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgCAQlv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 11:41:51 -0500
+Received: by mail-pj1-f67.google.com with SMTP id nm14so622689pjb.0;
+        Sun, 01 Mar 2020 08:41:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nBNOxHWFas+8MMS2HXjk5to/S9YWzFiNrJt6S9zLpis=;
+        b=NltdUatu/ub4DSzhHG4Gn/xibW7gv7MaKnQaH9nruTAl2c8102UoZQTsdo4vTLPVvF
+         QNKZSFheeLsYG8JZCj5hqNubFaYrzskg+5dSSdDMPTM9adGXY2Nv9R3M1lKqCnYauHZl
+         Yw3fW3b7TdvgbZ1Fttr6ZJG4v6/h01sp+IXQWrmvjCkLPh0RT2K4XtxmdtGbnAZ/F5Yc
+         DC6VZVvF5wsq1pUeYu57XorVp6v4m4NeN6fHF3IHdUR3JGUSkkVhjEr4ltoab5/6M9sO
+         VSARx4LJlPBv7+rRo37swAC9VDc5Yd2vHvUUqESAWv5JhK6489Sw0h+vGWRyTC4VQhKJ
+         9ePw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hF9aq/Io9bovStuf4wtcdOmPjzW4yrdQMyk+A3d5xnM=;
-        b=bPMSRZuw3q6OS/GsS7are2EOShrfBRiAOoqGhPG/pDxEgiBZNGYY/bL+EO5fVYX7i2
-         9jaEPCnM2iuGaRKn+MjpOPxzhGd5Tzm3qf19eeQjBTYbI9CvcPA3Txx9gN41YdZuOwxQ
-         ncMiGVGAG2wbUvTpeK+9lixanKg7hPcEx8J4NyaycopE4QVBTzW9HSZw6j1zovxsUk0Z
-         MJeXkNnKoPVpG60zi7ki21yxZ1tmF2mBY38WhPLVGLA6nUVKLo+yWqvHWzQewG/xA37I
-         e2E07lvnOkBZwAMo2zRIcxxdu5bkg51kl8mOuvZohJkW0fXr3LEoVaRrGgiHmcxXS7Hc
-         bQag==
-X-Gm-Message-State: APjAAAWQVyNgOVadCLyt8aEdaV47WT9dKiDSS6M5dH2v64fkqlMwKbdo
-        kAk+1ZpkCCbF+vr8qTlnrzM=
-X-Google-Smtp-Source: APXvYqwEzOceSVbWacHwehKTSrTHhWIPujXAvb+qMDIhrfhBgj3owTtwM3qyOJcT1YLUTKHsyoAaGQ==
-X-Received: by 2002:a63:1044:: with SMTP id 4mr15499647pgq.412.1583080288534;
-        Sun, 01 Mar 2020 08:31:28 -0800 (PST)
-Received: from localhost ([2601:647:5b00:710:c2fa:3aa3:193c:db86])
-        by smtp.gmail.com with ESMTPSA id g9sm9043227pfi.37.2020.03.01.08.31.27
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nBNOxHWFas+8MMS2HXjk5to/S9YWzFiNrJt6S9zLpis=;
+        b=s15xYwAkTsCuGya3DtROaO+uX0SqD6yAGjtCzbOaoJ7CHPoAOuoHdgpYdlmzC54QsX
+         qcGfsIzP0iRFKkKVKxSpVN90cOk1B7wMDQKxF3AJugiDgX/NiWKcAmP5OoylwGOPJ57w
+         KYes/MP4Gdim+f6Li1hNPwhEYbTv+qxBzHCrAz2QsyXffr8Y577wGQuPVL8l1YRHGJOI
+         jJNsBWpt7SZW6HnjI+ik1MvsQD4gMvWekHH1bhBryuVyVpXuOddBfBz08aun7y6tUSwi
+         FHpIaa3at69230dAzO+GJNUfxLGM8YXBGQtZlTiptIhMdoZhqgoHX9dpXYzvLZiJG5Pi
+         rOfQ==
+X-Gm-Message-State: APjAAAV5J/VC2MrYX8G53OqhbXFR68dAjYmDdxXUOFJM9rJk1xOV44Ka
+        l/GJV1sCd+xDee08mVjSaQc=
+X-Google-Smtp-Source: APXvYqw7kqWuoD3/nRn6iKkX1dGGBSVD99jXF9EE1d1jsgpdSTJ+8OQNizvg3PsCoo6fgwAXhGkkkA==
+X-Received: by 2002:a17:902:ac83:: with SMTP id h3mr13812813plr.86.1583080908907;
+        Sun, 01 Mar 2020 08:41:48 -0800 (PST)
+Received: from localhost.localdomain ([61.141.64.253])
+        by smtp.googlemail.com with ESMTPSA id l13sm9129643pjq.23.2020.03.01.08.41.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 08:31:27 -0800 (PST)
-Date:   Sun, 1 Mar 2020 08:31:26 -0800
-From:   Moritz Fischer <mdf@kernel.org>
-To:     richard.gong@linux.intel.com
-Cc:     gregkh@linuxfoundation.org, mdf@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, dinguyen@kernel.org,
-        linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv1 7/7] firmware: intel_stratix10_service: add depend on
- agilex
-Message-ID: <20200301163126.GB7992@epycbox.lan>
-References: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
- <1581696052-11540-8-git-send-email-richard.gong@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581696052-11540-8-git-send-email-richard.gong@linux.intel.com>
+        Sun, 01 Mar 2020 08:41:48 -0800 (PST)
+From:   Dajun Jin <adajunjin@gmail.com>
+To:     andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        robh+dt@kernel.org, frowand.list@gmail.com
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        Dajun Jin <adajunjin@gmail.com>
+Subject: [PATCH] drivers/of/of_mdio.c:fix of_mdiobus_register()
+Date:   Mon,  2 Mar 2020 00:41:38 +0800
+Message-Id: <20200301164138.8542-1-adajunjin@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:00:52AM -0600, richard.gong@linux.intel.com wrote:
-> From: Richard Gong <richard.gong@intel.com>
-> 
-> Add depend on Agilex for Intel Agilex SoC platform.
-> 
-Acked-by: Moritz Fischer <mdf@kernel.org>
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> ---
->  drivers/firmware/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index ea869ad..8007d4a 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -206,7 +206,7 @@ config FW_CFG_SYSFS_CMDLINE
->  
->  config INTEL_STRATIX10_SERVICE
->  	tristate "Intel Stratix10 Service Layer"
-> -	depends on ARCH_STRATIX10 && HAVE_ARM_SMCCC
-> +	depends on (ARCH_STRATIX10 || ARCH_AGILEX) && HAVE_ARM_SMCCC
->  	default n
->  	help
->  	  Intel Stratix10 service layer runs at privileged exception level,
-> -- 
-> 2.7.4
-> 
+when registers a phy_device successful, should terminate the loop
+or the phy_device would be registered in other addr.
+
+Signed-off-by: Dajun Jin <adajunjin@gmail.com>
+---
+ drivers/of/of_mdio.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 8270bbf505fb..9f982c0627a0 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -306,6 +306,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 				rc = of_mdiobus_register_phy(mdio, child, addr);
+ 				if (rc && rc != -ENODEV)
+ 					goto unregister;
++				break;
+ 			}
+ 		}
+ 	}
+-- 
+2.17.1
+
