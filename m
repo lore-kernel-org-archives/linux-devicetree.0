@@ -2,106 +2,92 @@ Return-Path: <SRS0=3r9R=4S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DBCC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 00:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E5FC3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 02:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F629222C2
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 00:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52403222C4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 02:07:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bQndGde9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxqEXM8L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgCAAs2 (ORCPT
+        id S1727276AbgCACHA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 19:48:28 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56275 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbgCAAs2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 29 Feb 2020 19:48:28 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48VPlW5nYLz9sPk;
-        Sun,  1 Mar 2020 11:48:23 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583023705;
-        bh=4nRI6rwZRJmJBCSa2D7NMwK+7ECxFcV3Jplu7f2M8vI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bQndGde94p9FyOTmTOsKt5AnSDdUQoxCwxy7l9+8ZpBXs+oyYGsT/USUpwwCYFUeB
-         OAs2OK8w6ainF6Hb1E0AJ3CtUFbC/Gb0BjAl8V8sCSxedVthQ/5mF0cXHyhWH3URuy
-         548JnLhcYrDjKtEwM62cZV7xhRlwqKtlLRSnogfOpYniYaEqqhZXM/iY1dM+4u/X/N
-         6kc5DIlzx4Xg9x6Gdes2FktrED8OwRU/yMDa6+PP8t50g89z4T4PxnCkpVeVv3S4db
-         oEtYHaxZc1SvKAmmMUypMuz3UqBveSsmjCegll5CS64Xsw+gfj6rEWt1n7xZ+786FC
-         OU6eoFzkoU47Q==
-Date:   Sun, 1 Mar 2020 11:47:50 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Carlo Caione <carlo@caione.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org,
+        Sat, 29 Feb 2020 21:07:00 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53708 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbgCACHA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 21:07:00 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f15so7525492wml.3;
+        Sat, 29 Feb 2020 18:06:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:message-id:in-reply-to:references
+         :mime-version;
+        bh=mFMK4D+LnUKRd/F79nEwyUOb2aPeDQ33LhkUgHUmiGc=;
+        b=WxqEXM8LNzUi/E7hr0gNTnCsdZ3nu91HgDePZERGtz3W9noXE+0ktjuMCq5ufbOiYq
+         T8rXIsM/gYs6Eb4CPv0RE7G7jyOzqpE9I6Do9tnbZ2b20Hj2l+5lkGdt17BCST/BU77Z
+         zpwE6Z5GZ9PaJk5ovCzdQ+H3SNzV1BOhOkVfpEwDUWJ5Ur2oweOKLRGGwXbEViHuamKX
+         mmT7nIeWRgad4+IfBfSvTjsEVj9AzZIEr1DpKrryRclGh9lWAq/Nx9pORGuiXjDl5b44
+         NKHzxUVU/75XqVjK2BZU/x5YbQcO/EFzmjmOvkAm6BbkihQCnwHRBj3+MUgvdcIbe2HK
+         R+xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
+         :references:mime-version;
+        bh=mFMK4D+LnUKRd/F79nEwyUOb2aPeDQ33LhkUgHUmiGc=;
+        b=KXW4xcrmj3txOQChsA2Y3e3QR2xRYWgZ1cnsjJ5v6XoSeMUaog3TUW1l5TAJ2hJYIr
+         jsWcxJFjdcktEiR18oHIRLApsudmQ/wGtGfxiTgWaeTJnGNjg5Yn7PJ7Zlx1vdLLPggT
+         etzQA1hAx2WYy90ZFqxprRw+A55x8YmE89yIig2GQ9ioqHrLQga2sGv5GkuHOqoT/OYm
+         n5EJ3YGUdqoWp3kwmTepDII27fxGODwAD+//KBCaw8gh7we3Vvo/CLhKGmBkFiBP7ayk
+         Zj1N845/KPg578F9VAoSPmOkbniGdTlhybP6SMWJMV9QiJ/EfTe9ZXCe3F788HKoxrVJ
+         IuSA==
+X-Gm-Message-State: APjAAAWBGoy6WzsKz5ABmjT4ri1NYt4tAiJCdg79axXSUfO6MYdh0q18
+        3tKNpfeB3roB9RrzahhhT7g=
+X-Google-Smtp-Source: APXvYqzo/NeLjiWLx17CFDKlODf5uCGNKaEDGv01jvjeA8hCO8or8bNmA4KCjZe/q9m0WsEFjEbPaw==
+X-Received: by 2002:a1c:238d:: with SMTP id j135mr12374607wmj.165.1583028418492;
+        Sat, 29 Feb 2020 18:06:58 -0800 (PST)
+Received: from [192.168.1.6] (ppp141237210022.access.hol.gr. [141.237.210.22])
+        by smtp.gmail.com with ESMTPSA id f195sm8614206wmf.17.2020.02.29.18.06.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Feb 2020 18:06:58 -0800 (PST)
+Date:   Sun, 01 Mar 2020 04:06:54 +0200
+From:   "Leonidas P." <papadakospan@gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add txpbl node for RK3399/RK3328
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Carlos de Paula <me@carlosedp.com>, jose.abreu@synopsys.com,
         Rob Herring <robh+dt@kernel.org>,
-        "Neil Armstrong" <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        "Jian Hu" <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH] soc: amlogic: fix compile failure with
- MESON_SECURE_PM_DOMAINS & !MESON_SM
-Message-ID: <20200301114750.7d270124@canb.auug.org.au>
-In-Reply-To: <7hzhd19vuj.fsf@baylibre.com>
-References: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
-        <20200218080743.07e58c6e@canb.auug.org.au>
-        <20200218092229.0448d266@canb.auug.org.au>
-        <20200224101654.530f1837@canb.auug.org.au>
-        <7hzhd19vuj.fsf@baylibre.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-Id: <1583028414.33600.0@gmail.com>
+In-Reply-To: <6132615.msM8OCcsVu@phil>
+References: <20200218221040.10955-1-me@carlosedp.com>
+        <6132615.msM8OCcsVu@phil>
+X-Mailer: geary/3.34.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Kf1.E4dLddnNTqvZx6GlV0A";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---Sig_/Kf1.E4dLddnNTqvZx6GlV0A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Kevin,
+I am also in favor of this but I think we should remove the line that 
+specifies the txpbl in the rk3328-roc-cc.dts gmac2io since it will get 
+applied here in the .dtsi
 
-On Sat, 29 Feb 2020 17:55:32 +0100 Kevin Hilman <khilman@baylibre.com> wrot=
-e:
->
-> I've fixed up the trailer whitespace an queued this up now, so should
-> show up in linux next shortly.
 
-Thanks.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Kf1.E4dLddnNTqvZx6GlV0A
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5bBjYACgkQAVBC80lX
-0Gw+KAgAhjy4Z4V15rVXk29DVizB7BmoTp0AHlbwyBOXdg1fqDDAgpSapQv/aaTF
-t/kpWrI8HPqJIV33mTw9Y4ihIwM3w3hurf1Z3fal9lem4IITW6hlcuXG8jm1I0Zh
-rMlvimE+P9nv7UYTDqgQx0+v7nw3Y0kxJTkkoRbtPMOBeX/mq3oEMqHmvyTRzjjf
-+uqsMBh50kotDakasWPX47i7cULdhXg3BUd/lPYg7n1wJ179GLOl0F83CLmbeCtK
-D5PxpxIZmQEvgFModR81zi8NPz46WCa1WeSQ0edqS2AYBe8p6FWYyEeBCmU2b2ER
-xjSTCdXBgNDI8gD67V0Tx7Qs1++sjA==
-=V59f
------END PGP SIGNATURE-----
-
---Sig_/Kf1.E4dLddnNTqvZx6GlV0A--
