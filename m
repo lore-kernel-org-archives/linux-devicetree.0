@@ -2,124 +2,379 @@ Return-Path: <SRS0=3r9R=4S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA74C3F2D5
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A397C3F2D4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 23:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F72246D7
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C99246BB
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 23:00:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MgqWfHeI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zMc6JRlg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgCAVUt (ORCPT
+        id S1726700AbgCAXAG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:20:49 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52371 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbgCAVUs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 16:20:48 -0500
-Received: by mail-pj1-f65.google.com with SMTP id lt1so802659pjb.2;
-        Sun, 01 Mar 2020 13:20:46 -0800 (PST)
+        Sun, 1 Mar 2020 18:00:06 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36611 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgCAXAG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 18:00:06 -0500
+Received: by mail-qk1-f193.google.com with SMTP id f3so8433253qkh.3
+        for <devicetree@vger.kernel.org>; Sun, 01 Mar 2020 15:00:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D6dnU3YCYSZUcdITT9tRm2FU4sfYo2G5AyV3xv+G08o=;
-        b=MgqWfHeI0HYwF89+XYqy06+aARmL6UTcW9w64ZmEKNGLgJWHqfPaY2/BjjcxpeSmOg
-         drJB2EsgzlbcfszvaC/s77CI5iWgYl4eAZAritTid4/RvPI6EPf57V0I+CC+nGjPaNlH
-         fjW3FRuhURZIEjsLXEZOB53t6MYxEkm6vXJYu7cLfmL+Q1XDifYbhVJEXArvmb4R1yWw
-         dhQYZ6Al24wX7bxpEz+/YdGgfiRmHkr2xfonMXtUOLJx6yHmkeWr7rslE8ov7T+VxT0K
-         R7t8BvLQ/qpdW+w55dkMKSPgxnbZPxHnS8zerjNIFgrYCjSAxQPWkeVG12L8maX2gzJH
-         cz6g==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4XRXBMLfswElGthzyg0E7Y81nyO8pgBgTsiCR8yuSgc=;
+        b=zMc6JRlgzRoL15hbFE0UuWcUNn5t+cMEZsMGJbfZfkyGC3Ge2SXwiA2mgXDETX+qKb
+         lSO/khYjroRrITgYGfZpURi2NXhKdPqqJtW8YaiJAJUMHL6ApUFC9DHKM0wh9nH2XnIq
+         rmSup6BcYRbwZE8LTou+6pEKpjwYArWHx38qzF8aCXdBtLVNNF87BMuIiKOE7FmSKKqu
+         yIm6QUh024sqwDzdeOxVWCKDkRLIDqdSDbfgKNHjlVq5GPg1CdIYs2Lhj35tV8NDOA0v
+         PhWr5dVGN/n2Zu3051108/htS58boP9oqreh7BzdcajsVixQIEUKxlaXSP/eehPxDN6n
+         yMTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D6dnU3YCYSZUcdITT9tRm2FU4sfYo2G5AyV3xv+G08o=;
-        b=CX/LZeo9xszEH227P/bgiJRMEYxM0R1ZILgbYcsecsk6dAbRc5tQl/72f5lpyaFM6L
-         vzknCtYqaWCjLEjxFDR7P4h7+o/hzTsG0zJx+9yJPPKNy50TvL3n/YyZnAUGQJqL6BI3
-         A37NWrGc7s3RYHb6P3VzZBmfio55d+Wufd8fqcFiKtRj0YTd0ieXWpdCjEqM/YSnXoVM
-         kqgglV5nOJSddwUuL0qSB+JsVN9gFZjFoI4wsGgCFSdRyqkzlf4wuJOtP0HDQcle9KfL
-         3qB5kHS5Z+BrJz+EcPHGynrUKXbM3Gai9JNElZxjGrc6wdgwxqvu01BXHL7uKAqEy9JR
-         ONJg==
-X-Gm-Message-State: APjAAAX1tCgyQQk1gK/9zwLwrg3keiKkQgNXqIgaAS8mB7Eo7MTKBdcN
-        4x65KfAlNCfNiezX1rBsyMe+1RZI
-X-Google-Smtp-Source: APXvYqz5y/2XYySv8A042ORhLqlk6CxHi1FMncc8+lWZy0TS48OgPtnqt5PE2f7/b+21BO2umkDcZw==
-X-Received: by 2002:a17:90a:928c:: with SMTP id n12mr18093932pjo.45.1583097645413;
-        Sun, 01 Mar 2020 13:20:45 -0800 (PST)
-Received: from localhost.localdomain ([103.51.74.208])
-        by smtp.gmail.com with ESMTPSA id u19sm4547686pgf.11.2020.03.01.13.20.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 13:20:44 -0800 (PST)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4XRXBMLfswElGthzyg0E7Y81nyO8pgBgTsiCR8yuSgc=;
+        b=CEuMdCafLHwe4ATsbpPC32n0DvlrnsCqF3XiUGAXghoqTECuZBDWqMbzMnDWgBlIm9
+         MrIaDK43Ey+cKv34LN655qmdk+XmZdzb9s7LsKcuC03L6XzsxpUGFF5QpTL5Ed2YNe64
+         4lMs5wKjHIu1EBStUjd/9CEYnd4D7BKSUw+2jJU78a+coStlNJ33rmLRMvIW4JDY0Ot3
+         gXlxIzWJJKZ/m+ETSpfy+ncOKDwjeLze6LW38E5EJLvZ5rjIJBNxBKFbyqumqZq9j0j2
+         1IfD87moNhpUHRVpCOn9Ml2mwx8kkroMHIsfq4FXUQf4HE9I2P9uTL7y05CdHLKk3jaA
+         q0rA==
+X-Gm-Message-State: APjAAAVFvc3aGJ54SxhjG8ch6+yyNHtRwcineNtLz0tV/KCluuthWI1i
+        V3ZI5QdB+S2C/QgIS2pzBug8NA==
+X-Google-Smtp-Source: APXvYqxRSt63yPuuv0mIlA6u7e9vwd1xjy3UqXV8n7ZSULKVSBb5W1bqB9wAsiYTXtWndOxnkPV83Q==
+X-Received: by 2002:a37:68c6:: with SMTP id d189mr14155448qkc.307.1583103603911;
+        Sun, 01 Mar 2020 15:00:03 -0800 (PST)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id q1sm1562355qtp.81.2020.03.01.15.00.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Mar 2020 15:00:03 -0800 (PST)
+Subject: Re: [Patch v4 4/7] thermal: Add generic power domain warming device
+ driver.
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCHv2 3/3] usb: dwc3: exynos: Add support for Exynos5422 suspend clk
-Date:   Sun,  1 Mar 2020 21:20:18 +0000
-Message-Id: <20200301212019.2248-4-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200301212019.2248-1-linux.amoon@gmail.com>
-References: <20200301212019.2248-1-linux.amoon@gmail.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org>
+ <1574254593-16078-5-git-send-email-thara.gopinath@linaro.org>
+ <CAPDyKFqBusMHWNHBCMXx6TxFO=8B6ytoyvvSfi14Z=-ahBDV5A@mail.gmail.com>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <ac341c33-003a-587a-7078-84a7f0c01a3a@linaro.org>
+Date:   Sun, 1 Mar 2020 18:00:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPDyKFqBusMHWNHBCMXx6TxFO=8B6ytoyvvSfi14Z=-ahBDV5A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Exynos5422 DWC3 module support two clk USBD300 and SCLK_USBD300
-so add missing code to enable/disable code and suspend clk, for this
-add a new compatible samsung,exynos5420-dwusb3 to help configure
-dwc3 code and dwc3 suspend clock. Suspend clock controls the PHY power
-change from P0 to P1/P2/P3 during U0 to U1/U2/U3 transition.
+Hi Ulf,
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Append the Power Managment State control by the suspend clk for USB3.0
----
- drivers/usb/dwc3/dwc3-exynos.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Thanks for the reviews. Sorry for the delay in response.
+I have started working on this again. So this should pick
+up pace now.
 
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index 90bb022737da..48b68b6f0dc8 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -162,6 +162,12 @@ static const struct dwc3_exynos_driverdata exynos5250_drvdata = {
- 	.suspend_clk_idx = -1,
- };
- 
-+static const struct dwc3_exynos_driverdata exynos5420_drvdata = {
-+	.clk_names = { "usbdrd30", "usbdrd30_susp_clk"},
-+	.num_clks = 2,
-+	.suspend_clk_idx = 1,
-+};
-+
- static const struct dwc3_exynos_driverdata exynos5433_drvdata = {
- 	.clk_names = { "aclk", "susp_clk", "pipe_pclk", "phyclk" },
- 	.num_clks = 4,
-@@ -178,6 +184,9 @@ static const struct of_device_id exynos_dwc3_match[] = {
- 	{
- 		.compatible = "samsung,exynos5250-dwusb3",
- 		.data = &exynos5250_drvdata,
-+	}, {
-+		.compatible = "samsung,exynos5420-dwusb3",
-+		.data = &exynos5420_drvdata,
- 	}, {
- 		.compatible = "samsung,exynos5433-dwusb3",
- 		.data = &exynos5433_drvdata,
+On 2/4/20 11:54 AM, Ulf Hansson wrote:
+> On Wed, 20 Nov 2019 at 13:56, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>>
+>> Resources modeled as power domains in linux kenrel can  be used to warm the
+>> SoC(eg. mx power domain on sdm845).  To support this feature, introduce a
+>> generic power domain warming device driver that can be plugged into the
+>> thermal framework (The thermal framework itself requires further
+>> modifiction to support a warming device in place of a cooling device.
+>> Those extensions are not introduced in this patch series).
+>>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+>> v3->v4:
+>>          - Removed late_init hook pd_warming_device_ops.
+>>          - Use of_genpd_add_device instead of pm_genpd_add_device to attach
+>>            device to the generic power domain.
+>>          - Use thermal_of_cooling_device_parent_register to register the
+>>            cooling device so that the device with genpd attached can be
+>>            made parent of the cooling device.
+>>          - With above changes, remove reference to generic_pm_domain in
+>>            pd_warming_device.
+>>
+>>   drivers/thermal/Kconfig              |  10 +++
+>>   drivers/thermal/Makefile             |   2 +
+>>   drivers/thermal/pwr_domain_warming.c | 138 +++++++++++++++++++++++++++++++++++
+>>   include/linux/pwr_domain_warming.h   |  29 ++++++++
+> 
+> Not sure about what the thermal maintainers think about the naming
+> here. In the end, it's their call.
+> 
+> However, normally we use "pm_domain_*", rather than "pwr_domain_*",
+> but maybe just "pd_*" is sufficient here.
+
+I will rename this to pd_ for now.
+
+> 
+>>   4 files changed, 179 insertions(+)
+>>   create mode 100644 drivers/thermal/pwr_domain_warming.c
+>>   create mode 100644 include/linux/pwr_domain_warming.h
+>>
+>> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+>> index 001a21a..0c5c93e 100644
+>> --- a/drivers/thermal/Kconfig
+>> +++ b/drivers/thermal/Kconfig
+>> @@ -187,6 +187,16 @@ config DEVFREQ_THERMAL
+>>
+>>            If you want this support, you should say Y here.
+>>
+>> +config PWR_DOMAIN_WARMING_THERMAL
+>> +       bool "Power Domain based warming device"
+>> +       depends on PM_GENERIC_DOMAINS_OF
+>> +       help
+>> +         This implements the generic power domain based warming
+>> +         mechanism through increasing the performance state of
+>> +         a power domain.
+>> +
+>> +         If you want this support, you should say Y here.
+>> +
+>>   config THERMAL_EMULATION
+>>          bool "Thermal emulation mode support"
+>>          help
+>> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+>> index 74a37c7..382c64a 100644
+>> --- a/drivers/thermal/Makefile
+>> +++ b/drivers/thermal/Makefile
+>> @@ -27,6 +27,8 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)   += clock_cooling.o
+>>   # devfreq cooling
+>>   thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+>>
+>> +thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)       += pwr_domain_warming.o
+>> +
+>>   # platform thermal drivers
+>>   obj-y                          += broadcom/
+>>   obj-$(CONFIG_THERMAL_MMIO)             += thermal_mmio.o
+>> diff --git a/drivers/thermal/pwr_domain_warming.c b/drivers/thermal/pwr_domain_warming.c
+>> new file mode 100644
+>> index 0000000..40162b9
+>> --- /dev/null
+>> +++ b/drivers/thermal/pwr_domain_warming.c
+>> @@ -0,0 +1,138 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2019, Linaro Ltd
+>> + */
+>> +#include <linux/err.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/init.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/module.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/pwr_domain_warming.h>
+>> +
+>> +struct pd_warming_device {
+>> +       struct thermal_cooling_device *cdev;
+>> +       struct device dev;
+>> +       int max_state;
+>> +       int cur_state;
+>> +       bool runtime_resumed;
+>> +};
+>> +
+>> +static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
+>> +                                unsigned long *state)
+>> +{
+>> +       struct pd_warming_device *pd_wdev = cdev->devdata;
+>> +
+>> +       *state = pd_wdev->max_state;
+>> +       return 0;
+>> +}
+>> +
+>> +static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
+>> +                                unsigned long *state)
+>> +{
+>> +       struct pd_warming_device *pd_wdev = cdev->devdata;
+>> +
+>> +       *state = dev_pm_genpd_get_performance_state(&pd_wdev->dev);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
+>> +                                unsigned long state)
+>> +{
+>> +       struct pd_warming_device *pd_wdev = cdev->devdata;
+>> +       struct device *dev = &pd_wdev->dev;
+>> +       int ret;
+>> +
+>> +       ret = dev_pm_genpd_set_performance_state(dev, state);
+>> +
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       if (state && !pd_wdev->runtime_resumed) {
+>> +               ret = pm_runtime_get_sync(dev);
+>> +               pd_wdev->runtime_resumed = true;
+>> +       } else if (!state && pd_wdev->runtime_resumed) {
+>> +               ret = pm_runtime_put(dev);
+>> +               pd_wdev->runtime_resumed = false;
+>> +       }
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
+>> +       .get_max_state  = ::pd_wdev_get_max_state,
+>> +       .get_cur_state  = pd_wdev_get_cur_state,
+>> +       .set_cur_state  = pd_wdev_set_cur_state,
+>> +};
+>> +
+>> +struct thermal_cooling_device *
+>> +pwr_domain_warming_register(struct device *parent, char *pd_name, int pd_id)
+> 
+> Maybe rename this to: thermal_of_pd_warming_register()
+
+How about pd_of_warming_register? It is consistent with other cooling 
+device register like cpuidle_of_cooling_register and 
+cpufreq_of_cooling_register.
+
+> Moreover, I think you could replace the "struct device *parent", with
+> a "struct device_node *node" as in-parameter. That's all you need,
+> right?
+
+You mean pd_wdev->dev.parent need not be populated ? The device
+in this case will be created under /sys/devices which I do not think
+is the correct.
+With a parent device specified, the power controller that resides the 
+power domain that can act as the warming dev, becomes the parent of the 
+warming dev. In case of this patch series, for the mx warming dev, 
+179c0000.rsc/179c0000.rsc\:power-controller/ becomes the parent.(The 
+device will be created under 
+/sys/devices/platform/soc\@0/179c0000.rsc/179c0000.rsc\:power-controller/)
+
+Other way might be to register the warming device under virtual devices 
+as a new category of devices.
+
+I prefer to keep it as a child of the power controller device, but I am 
+open to explore other options and to re-do this bit. What do you think?
+
+> 
+>> +{
+>> +       struct pd_warming_device *pd_wdev;
+>> +       struct of_phandle_args pd_args;
+>> +       int ret;
+>> +
+>> +       pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
+>> +       if (!pd_wdev)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       dev_set_name(&pd_wdev->dev, "%s_warming_dev", pd_name);
+> 
+> Perhaps skip the in-param *pd_name and make use of the suggested
+> "struct device_node *node", the index and something with "warming...",
+> when setting the name.
+
+Won't the index have to be in-param in this case ?
+
+> 
+> Just an idea, as to simplify for the caller.
+> 
+>> +       pd_wdev->dev.parent = parent;
+> 
+> This isn't needed, I think.
+> 
+>> +
+>> +       ret = device_register(&pd_wdev->dev);
+>> +       if (ret)
+>> +               goto error;
+>> +
+>> +       pd_args.np = parent->of_node;
+>> +       pd_args.args[0] = pd_id;
+>> +       pd_args.args_count = 1;
+>> +
+>> +       ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
+>> +
+> 
+> White space.
+
+Will fix it.
+
+> 
+>> +       if (ret)
+>> +               goto error;
+>> +
+>> +       ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
+>> +       if (ret < 0)
+>> +               goto error;
+>> +
+>> +       pd_wdev->max_state = ret - 1;
+>> +       pm_runtime_enable(&pd_wdev->dev);
+>> +       pd_wdev->runtime_resumed = false;
+>> +
+>> +       pd_wdev->cdev = thermal_of_cooling_device_parent_register
+>> +                                       (NULL, parent, pd_name, pd_wdev,
+>> +                                        &pd_warming_device_ops);
+> 
+> As stated in patch3, I don't get it why you need to use this new API
+> for "parents".
+
+I agree with you. I cannot re-collect my thought process for this API.
+I compiled and tested using the regular API and everything works fine.
+I will drop patch 3 and use the thermal_of_cooling_device_register here.
+
+> 
+>> +       if (IS_ERR(pd_wdev->cdev)) {
+>> +               pr_err("unable to register %s cooling device\n", pd_name);
+>> +               pm_runtime_disable(&pd_wdev->dev);
+>> +               ret = PTR_ERR(pd_wdev->cdev);
+>> +               goto error;
+>> +       }
+>> +
+>> +       return pd_wdev->cdev;
+>> +error:
+>> +       put_device(&pd_wdev->dev);
+> 
+> If device_register() succeeds you need to call device_unregister(),
+> rather than put_device() as a part of the error handling.
+
+Will fix this.
+
+> 
+>> +       kfree(pd_wdev);
+> 
+> You need a ->release() callback to manage kfree(), after you called
+> device_register().
+
+mm?? I did not get this. What release callback? You mean for power 
+controller driver to call ?
+
+> 
+>> +       return ERR_PTR(ret);
+> 
+> Another thing is missing in the error path, which is to remove the
+> device for the genpd. I think calling pm_genpd_remove_device() should
+> work fine here.
+
+I will fix this. I am thinking this will be be needed in 
+pwr_domain_warming_unregister as well.
+
+
 -- 
-2.25.1
-
+Warm Regards
+Thara
