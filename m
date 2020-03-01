@@ -7,87 +7,98 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E5FC3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 02:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA05C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 04:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52403222C4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 02:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C81A20848
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 04:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxqEXM8L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1JTMEkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgCACHA (ORCPT
+        id S1726151AbgCAEQ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 29 Feb 2020 21:07:00 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53708 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbgCACHA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 21:07:00 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f15so7525492wml.3;
-        Sat, 29 Feb 2020 18:06:59 -0800 (PST)
+        Sat, 29 Feb 2020 23:16:27 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37378 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgCAEQ1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Feb 2020 23:16:27 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q23so8006257ljm.4;
+        Sat, 29 Feb 2020 20:16:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:message-id:in-reply-to:references
-         :mime-version;
-        bh=mFMK4D+LnUKRd/F79nEwyUOb2aPeDQ33LhkUgHUmiGc=;
-        b=WxqEXM8LNzUi/E7hr0gNTnCsdZ3nu91HgDePZERGtz3W9noXE+0ktjuMCq5ufbOiYq
-         T8rXIsM/gYs6Eb4CPv0RE7G7jyOzqpE9I6Do9tnbZ2b20Hj2l+5lkGdt17BCST/BU77Z
-         zpwE6Z5GZ9PaJk5ovCzdQ+H3SNzV1BOhOkVfpEwDUWJ5Ur2oweOKLRGGwXbEViHuamKX
-         mmT7nIeWRgad4+IfBfSvTjsEVj9AzZIEr1DpKrryRclGh9lWAq/Nx9pORGuiXjDl5b44
-         NKHzxUVU/75XqVjK2BZU/x5YbQcO/EFzmjmOvkAm6BbkihQCnwHRBj3+MUgvdcIbe2HK
-         R+xA==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aUNhSk4XiLO4JVswFHsb4th4Idff4PdkPgnCTD0hgkI=;
+        b=I1JTMEkxzMBH3C/Ciby3PlqiyiMfD/nJ/o2wOAOjQvw2YH9yrAJ58t0Sapyndq6MYx
+         Qi0CD5xSzKT4bfeJZOLQqUkdWCJFDpLm6ZXdRGbwdSdJkWWsTIymgvYul03/pqr6GWYh
+         chzhBcioJY7OX1mg6jQd49fDNYa4VElpccDAV//P0NsoeF0jdioT6K8nHPMb0bq//jtb
+         wyUUU2txXE3y8W+Y9jI1HuGTgaWpjnNsuSl1KFHa1PRqzeqocnWSYa+gKIMkKh16m4ua
+         KQJxWxT2D1FsaccJV/gBTDLu+Rhi4+vkaSnc4u3vkPYB5Grz/tqwmoAZAEr4wF86eYeh
+         hg1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
-         :references:mime-version;
-        bh=mFMK4D+LnUKRd/F79nEwyUOb2aPeDQ33LhkUgHUmiGc=;
-        b=KXW4xcrmj3txOQChsA2Y3e3QR2xRYWgZ1cnsjJ5v6XoSeMUaog3TUW1l5TAJ2hJYIr
-         jsWcxJFjdcktEiR18oHIRLApsudmQ/wGtGfxiTgWaeTJnGNjg5Yn7PJ7Zlx1vdLLPggT
-         etzQA1hAx2WYy90ZFqxprRw+A55x8YmE89yIig2GQ9ioqHrLQga2sGv5GkuHOqoT/OYm
-         n5EJ3YGUdqoWp3kwmTepDII27fxGODwAD+//KBCaw8gh7we3Vvo/CLhKGmBkFiBP7ayk
-         Zj1N845/KPg578F9VAoSPmOkbniGdTlhybP6SMWJMV9QiJ/EfTe9ZXCe3F788HKoxrVJ
-         IuSA==
-X-Gm-Message-State: APjAAAWBGoy6WzsKz5ABmjT4ri1NYt4tAiJCdg79axXSUfO6MYdh0q18
-        3tKNpfeB3roB9RrzahhhT7g=
-X-Google-Smtp-Source: APXvYqzo/NeLjiWLx17CFDKlODf5uCGNKaEDGv01jvjeA8hCO8or8bNmA4KCjZe/q9m0WsEFjEbPaw==
-X-Received: by 2002:a1c:238d:: with SMTP id j135mr12374607wmj.165.1583028418492;
-        Sat, 29 Feb 2020 18:06:58 -0800 (PST)
-Received: from [192.168.1.6] (ppp141237210022.access.hol.gr. [141.237.210.22])
-        by smtp.gmail.com with ESMTPSA id f195sm8614206wmf.17.2020.02.29.18.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 18:06:58 -0800 (PST)
-Date:   Sun, 01 Mar 2020 04:06:54 +0200
-From:   "Leonidas P." <papadakospan@gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Add txpbl node for RK3399/RK3328
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Carlos de Paula <me@carlosedp.com>, jose.abreu@synopsys.com,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aUNhSk4XiLO4JVswFHsb4th4Idff4PdkPgnCTD0hgkI=;
+        b=enxqx2n1izV1LgdU/H3kuJKm2RAxkUY2F6jcEGbaE5rdL2idnCqzviTwNBk0YDCnr3
+         g3KsaEts0mlBm3wVfXda+ch4bH9odiwlpkXFweFEVJBv9cEUt02s0lGzY8zzIrQMjyQT
+         XYP3L9bHINSIEiVvpCj0BA0PJraxqklQUcil3p+TItPwKub8uRfIJFfBQAbHSCYYV/Mw
+         GGG1/TGE6eHZb1bHMEgQYNjv4BcNrWns8pobPQRmbdUmzdqG/gMRuPn6g4NzDLjlSnLZ
+         ImKVYn30mI0J2j3NO4SHSfMD4BlJWAPUSzOp02vpKh6ZeSElc2q3qvNmxXlduhrC0OKn
+         Jm/A==
+X-Gm-Message-State: ANhLgQ3UcIkT+5ptKYwTlThzxkZc1BpP41+OHr0A9x7YMEQsd9HeSM43
+        FZltmU5+KxQLnKoC8AwopD8=
+X-Google-Smtp-Source: ADFU+vuuiIbd/U+4zor59WByPUmKyTFfOsyde0g80YyZBbZZu0GA7x4k09I06Z7MX6R1gKrjKP0Pag==
+X-Received: by 2002:a2e:b895:: with SMTP id r21mr7293919ljp.126.1583036185172;
+        Sat, 29 Feb 2020 20:16:25 -0800 (PST)
+Received: from [172.16.20.20] ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id a17sm1118378ljk.42.2020.02.29.20.16.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Feb 2020 20:16:24 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v5 3/3] arm64: dts: meson: add support for the SmartLabs
+ SML-5442TW
+From:   Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <1jpndxgxqi.fsf@starbuckisacylon.baylibre.com>
+Date:   Sun, 1 Mar 2020 08:16:20 +0400
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-Id: <1583028414.33600.0@gmail.com>
-In-Reply-To: <6132615.msM8OCcsVu@phil>
-References: <20200218221040.10955-1-me@carlosedp.com>
-        <6132615.msM8OCcsVu@phil>
-X-Mailer: geary/3.34.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7E2FA81A-9A24-433D-A674-C0C224FCB2DE@gmail.com>
+References: <1582979124-82363-1-git-send-email-christianshewitt@gmail.com>
+ <1582979124-82363-4-git-send-email-christianshewitt@gmail.com>
+ <1jpndxgxqi.fsf@starbuckisacylon.baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-I am also in favor of this but I think we should remove the line that 
-specifies the txpbl in the rk3328-roc-cc.dts gmac2io since it will get 
-applied here in the .dtsi
+> On 29 Feb 2020, at 8:32 pm, Jerome Brunet <jbrunet@baylibre.com> =
+wrote:
 
+[snip]
 
+> The above does not compile against kevin's tree:
+> 1# the audio dt device have not been added yet
+> 2# the bindings deps of 3 different subsystem will be available in =
+this
+> tree with the next rc1
+>=20
+> I warned about this on IRC.
+
+Sorry.. I saw notices on the mailing list that Mark Brown had applied=20
+changes and assumed this meant that audio things would be available
+for use. I=E2=80=99ll resubmit a v6 series without the audio nodes and =
+wait for
+the audio changes to percolate through.
+
+Christian=
