@@ -2,89 +2,112 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7704C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6648C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707ED246A1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583134741;
-	bh=XIX1LJr3jD45q3Z0gSSWopKbjAyVMDxrUDvlKRrob/E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tjju2UuSOpaNyCx3lmVcdGiuIM7gKT30ePqojS8aaJPgw1YxlzY4KWdKWGQgpwqD4
-	 EFC8jgSglsOT2f33ODc8y3/KUCq9UA8O+NJHJF3KkZ6OqnRpfQgY9UJKvehNiAk2cB
-	 enGDpziG4AxO/2dbtk8m8jz1WiCKkAYum4P4mxlI=
+	by mail.kernel.org (Postfix) with ESMTP id 99E29246A1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:45:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehow4vu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgCBHiP (ORCPT
+        id S1726313AbgCBHpF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:38:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgCBHiP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:38:15 -0500
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F3B9246B6;
-        Mon,  2 Mar 2020 07:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583134694;
-        bh=XIX1LJr3jD45q3Z0gSSWopKbjAyVMDxrUDvlKRrob/E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sF6rR4xmi6t7PeztH1k0fb41pP1sQytvD2Plgcr6tPMqqsBnEd839sgvjK0eV5Hza
-         p/h2YgL568/dOxXva79cGXbTZ2hYDsuoB0aMpmH1zxP2mVSl9pDOO5RjUeGRtI9h5H
-         iikUmjaCIqFKpGMj4ycSsE/WODE+BWmu3mVdQK9w=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1j8feV-0003VZ-Ri; Mon, 02 Mar 2020 08:38:11 +0100
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 03/12] docs: dt: usage_model.rst: fix link for DT usage
-Date:   Mon,  2 Mar 2020 08:37:58 +0100
-Message-Id: <a7e0a5597ace97503c8ff67cdab2351151c7f267.1583134242.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <cover.1583134242.git.mchehab+samsung@kernel.org>
-References: <cover.1583134242.git.mchehab+samsung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 2 Mar 2020 02:45:05 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36876 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBHpE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 02:45:04 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q23so10606286ljm.4;
+        Sun, 01 Mar 2020 23:45:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=5p7zJr0xKI0vCUUOTcHCNVe4S/T3X0b9SlsPBN2yTzQ=;
+        b=ehow4vu90D6zdQlrC08Ydu2TzhYin/mPzAtpOekZKKBQivIp/5rDao00o8W5rhMlsa
+         Ks3yCbjNRGWfcF1z/5zmrLlNu2vOuCUt/VFLyp3QJoL0N2iGdS286lWWVF1hBR06BwUL
+         54gWuli+mlpv+LZ40r8IAXyLvkpH5gm/qnOsyjnDM0bCTWzpQu3gAhy5fg6hAw7Caf2F
+         ZdFWhwj4JnUgEe5v4nqBSHSJgippG+hC4mXPeyVOIPbM5Nw4ZbEEPB2YRl6kA9I/Gmv9
+         OZ2alNqk/ivcTUy9UrTZZsQGgqvht/4qPLyK1KR4M5BJtDuCWuAR9RNcnf45xIbcgwxw
+         +RiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5p7zJr0xKI0vCUUOTcHCNVe4S/T3X0b9SlsPBN2yTzQ=;
+        b=B43Sd3LoY+kFOHL5jhKBs3B0Nb1bHtFbbzBKnD1fOejZZGGV88KffBb1m5iEY29ex9
+         abyfZgqH5RxCvjScgxqSNTeGZEi2nhKQsgpuQ9PPlUYPeTn9bERau5XhONYTHwyFLCIQ
+         +2nrN8kCjLTrTZ6otF+w1E8o0ZKxk2cDyebBRsuj26wDcTkGr6QqtIXBQuKoarVcmeZj
+         ufWOI6pNkhfCE2AeVWBmkDvSkrJxL/GiDia6lIMBgH15IDqsKGP87t1NlDjc9dRau3NP
+         dvVCusKw/v3w3vkl7C3lYd9+jGcL8A89U7RUzwZe/biaDowVEeuwVcDTW4z8rUpqoevp
+         czTA==
+X-Gm-Message-State: ANhLgQ1fkn/g4aLsWZ9fZrv39OHOb8ZUdK+ASCuTnHIUmth35N2QeymH
+        k7nhyd1P4F3NXgy/9wYHEUg=
+X-Google-Smtp-Source: ADFU+vtCf2T5IdyiTy3s+QtGxhzlCMHPIlG48KMdBxo7gv9WDaTEyFyWSelWEQK+deNOUUF+2srYvg==
+X-Received: by 2002:a2e:5357:: with SMTP id t23mr10436559ljd.227.1583135102251;
+        Sun, 01 Mar 2020 23:45:02 -0800 (PST)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id d9sm9862806lfm.16.2020.03.01.23.44.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 01 Mar 2020 23:45:01 -0800 (PST)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] arm64: dts: meson-g12b: fix N2/VIM3 audio card model names
+Date:   Mon,  2 Mar 2020 11:44:11 +0400
+Message-Id: <1583135051-95529-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+This is largely cosmetic, but Odroid N2 and Khadas VIM3 are G12B devices so
+correct the card model names to reflect this.
 
-The devicetree.org doesn't host the Device_Tree_Usage page
-anymore. So, fix the link to point to a new address.
+Fixes: aa7d5873bf6e ("arm64: dts: meson-g12b-odroid-n2: add sound card")
+Fixes: c6d29c66e582 ("arm64: dts: meson-g12b-khadas-vim3: add initial device-tree")
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- Documentation/devicetree/usage-model.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/usage-model.rst b/Documentation/devicetree/usage-model.rst
-index 326d7af10c5b..e1b42dc63f01 100644
---- a/Documentation/devicetree/usage-model.rst
-+++ b/Documentation/devicetree/usage-model.rst
-@@ -12,7 +12,7 @@ This article describes how Linux uses the device tree.  An overview of
- the device tree data format can be found on the device tree usage page
- at devicetree.org\ [1]_.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+index 5548634..b1fab57 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+@@ -48,7 +48,7 @@
  
--.. [1] http://devicetree.org/Device_Tree_Usage
-+.. [1] https://elinux.org/Device_Tree_Usage
+ 	sound {
+ 		compatible = "amlogic,axg-sound-card";
+-		model = "G12A-KHADAS-VIM3";
++		model = "G12B-KHADAS-VIM3";
+ 		audio-aux-devs = <&tdmout_b>;
+ 		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
+ 				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+index 0e54c1d..8830d38 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+@@ -208,7 +208,7 @@
  
- The "Open Firmware Device Tree", or simply Device Tree (DT), is a data
- structure and language for describing hardware.  More specifically, it
+ 	sound {
+ 		compatible = "amlogic,axg-sound-card";
+-		model = "G12A-ODROIDN2";
++		model = "G12B-ODROID-N2";
+ 		audio-aux-devs = <&tdmout_b>;
+ 		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
+ 				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
 -- 
-2.21.1
+2.7.4
 
