@@ -2,143 +2,501 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B87EC3F2D8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEA2C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0683D21556
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D16021739
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:06:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U6nBtKqI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="RDNqZKDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgCBUEz (ORCPT
+        id S1726740AbgCBUGE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:04:55 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44130 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgCBUEz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 15:04:55 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 022K4YgG061160;
-        Mon, 2 Mar 2020 14:04:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583179474;
-        bh=QpJEH4WZMRrWIDHS2nhaRKdfdtwL/3UibZ6zrK3AhVc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=U6nBtKqIAqd84xCi6moWDMklu5+NrQ+zElaQ8ZEQAf7YfogGt3Z+P0rKTe48Fm80I
-         dtthUc8OX9B8Rv0K97uZxeMbbYDQBROzURcfcb3MqGo9XWR3dJPalsWOm/MUjf/V1N
-         6OUJZ/YVmNm/UYp4kdDSa000BpXtlgBoFdsrbc2g=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 022K4Y1O012949
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 2 Mar 2020 14:04:34 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
- 2020 14:04:33 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 2 Mar 2020 14:04:33 -0600
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 022K4UtB074555;
-        Mon, 2 Mar 2020 14:04:32 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCHv2 1/4] dt-bindings: watchdog: Add support for TI K3 RTI watchdog
-Date:   Mon, 2 Mar 2020 22:04:23 +0200
-Message-ID: <20200302200426.6492-2-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200302200426.6492-1-t-kristo@ti.com>
-References: <20200302200426.6492-1-t-kristo@ti.com>
+        Mon, 2 Mar 2020 15:06:04 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:46666 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgCBUGD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 15:06:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583179562; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=hgHQnWf0Lizbthpp0bG8RrHMJJH4mivNXnFYtogHWSg=;
+        b=RDNqZKDzt9ZUVgmdUKYWyZOFY45rNFH0+yurpTfgOwKqmRG0rl4jfmGyaeQ4yu1ilGFlkR
+        zE0pYVjiLNMBeV5bH+XuzWT5j3w+aZDx4ukhh+Rgtc5E1UbV3hwMTFEPDyJfjStEV7a9ie
+        +X+QzwnIJ9xbtSQRJG2AVo7VTbwk9Hc=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        od@zcrc.me,
+        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
+Date:   Mon,  2 Mar 2020 17:05:51 -0300
+Message-Id: <20200302200551.19845-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
-used to implement a windowed watchdog functionality. Windowed watchdog
-will generate an error if it is petted outside the time window, either
-too early or too late.
+Convert the ingenic,tcu.txt file to YAML.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- .../bindings/watchdog/ti,rti-wdt.yaml         | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
 
-diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+@Daniel:
+
+As for v1, if Rob acks it, please take this patch to your tree, since
+the .txt file was modified there. Going through your tree would avoid a
+merge conflict.
+
+Thanks,
+-Paul
+
+Changelog:
+    v2:	- Add missing 'reg' properties to child nodes
+    	- Removed 'additionalProperties: false' on child objects which
+    	  included external YAML
+    	- Add description of interrupts
+    	- Fix pattern regex
+    	- Add missing ingenic,jz4780-tcu compatible string (which requires
+    	  fallback to ingenic,jz4770-tcu)
+    	- Add 'select' to fix matching of schema
+
+ .../devicetree/bindings/timer/ingenic,tcu.txt | 138 ---------
+ .../bindings/timer/ingenic,tcu.yaml           | 269 ++++++++++++++++++
+ 2 files changed, 269 insertions(+), 138 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+
+diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+deleted file mode 100644
+index 91f704951845..000000000000
+--- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
++++ /dev/null
+@@ -1,138 +0,0 @@
+-Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
+-==========================================================
+-
+-For a description of the TCU hardware and drivers, have a look at
+-Documentation/mips/ingenic-tcu.rst.
+-
+-Required properties:
+-
+-- compatible: Must be one of:
+-  * ingenic,jz4740-tcu
+-  * ingenic,jz4725b-tcu
+-  * ingenic,jz4770-tcu
+-  * ingenic,x1000-tcu
+-  followed by "simple-mfd".
+-- reg: Should be the offset/length value corresponding to the TCU registers
+-- clocks: List of phandle & clock specifiers for clocks external to the TCU.
+-  The "pclk", "rtc" and "ext" clocks should be provided. The "tcu" clock
+-  should be provided if the SoC has it.
+-- clock-names: List of name strings for the external clocks.
+-- #clock-cells: Should be <1>;
+-  Clock consumers specify this argument to identify a clock. The valid values
+-  may be found in <dt-bindings/clock/ingenic,tcu.h>.
+-- interrupt-controller : Identifies the node as an interrupt controller
+-- #interrupt-cells : Specifies the number of cells needed to encode an
+-  interrupt source. The value should be 1.
+-- interrupts : Specifies the interrupt the controller is connected to.
+-
+-Optional properties:
+-
+-- ingenic,pwm-channels-mask: Bitmask of TCU channels reserved for PWM use.
+-  Default value is 0xfc.
+-
+-
+-Children nodes
+-==========================================================
+-
+-
+-PWM node:
+----------
+-
+-Required properties:
+-
+-- compatible: Must be one of:
+-  * ingenic,jz4740-pwm
+-  * ingenic,jz4725b-pwm
+-- #pwm-cells: Should be 3. See ../pwm/pwm.yaml for a description of the cell
+-  format.
+-- clocks: List of phandle & clock specifiers for the TCU clocks.
+-- clock-names: List of name strings for the TCU clocks.
+-
+-
+-Watchdog node:
+---------------
+-
+-Required properties:
+-
+-- compatible: Must be "ingenic,jz4740-watchdog"
+-- clocks: phandle to the WDT clock
+-- clock-names: should be "wdt"
+-
+-
+-OS Timer node:
+----------
+-
+-Required properties:
+-
+-- compatible: Must be one of:
+-  * ingenic,jz4725b-ost
+-  * ingenic,jz4770-ost
+-- clocks: phandle to the OST clock
+-- clock-names: should be "ost"
+-- interrupts : Specifies the interrupt the OST is connected to.
+-
+-
+-Example
+-==========================================================
+-
+-#include <dt-bindings/clock/jz4770-cgu.h>
+-#include <dt-bindings/clock/ingenic,tcu.h>
+-
+-/ {
+-	tcu: timer@10002000 {
+-		compatible = "ingenic,jz4770-tcu", "simple-mfd";
+-		reg = <0x10002000 0x1000>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0x0 0x10002000 0x1000>;
+-
+-		#clock-cells = <1>;
+-
+-		clocks = <&cgu JZ4770_CLK_RTC
+-			  &cgu JZ4770_CLK_EXT
+-			  &cgu JZ4770_CLK_PCLK>;
+-		clock-names = "rtc", "ext", "pclk";
+-
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-
+-		interrupt-parent = <&intc>;
+-		interrupts = <27 26 25>;
+-
+-		watchdog: watchdog@0 {
+-			compatible = "ingenic,jz4740-watchdog";
+-			reg = <0x0 0xc>;
+-
+-			clocks = <&tcu TCU_CLK_WDT>;
+-			clock-names = "wdt";
+-		};
+-
+-		pwm: pwm@40 {
+-			compatible = "ingenic,jz4740-pwm";
+-			reg = <0x40 0x80>;
+-
+-			#pwm-cells = <3>;
+-
+-			clocks = <&tcu TCU_CLK_TIMER0
+-				  &tcu TCU_CLK_TIMER1
+-				  &tcu TCU_CLK_TIMER2
+-				  &tcu TCU_CLK_TIMER3
+-				  &tcu TCU_CLK_TIMER4
+-				  &tcu TCU_CLK_TIMER5
+-				  &tcu TCU_CLK_TIMER6
+-				  &tcu TCU_CLK_TIMER7>;
+-			clock-names = "timer0", "timer1", "timer2", "timer3",
+-				      "timer4", "timer5", "timer6", "timer7";
+-		};
+-
+-		ost: timer@e0 {
+-			compatible = "ingenic,jz4770-ost";
+-			reg = <0xe0 0x20>;
+-
+-			clocks = <&tcu TCU_CLK_OST>;
+-			clock-names = "ost";
+-
+-			interrupts = <15>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
 new file mode 100644
-index 000000000000..3813f59fb6c3
+index 000000000000..14b68c87319f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+@@ -0,0 +1,269 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
++$id: http://devicetree.org/schemas/timer/ingenic,tcu.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments K3 SoC Watchdog Timer
++title: Ingenic SoCs Timer/Counter Unit (TCU) devicetree bindings
++
++description: |
++  For a description of the TCU hardware and drivers, have a look at
++  Documentation/mips/ingenic-tcu.rst.
 +
 +maintainers:
-+  - Tero Kristo <t-kristo@ti.com>
++  - Paul Cercueil <paul@crapouillou.net>
 +
-+description: |+
-+  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
-+  Interrupt) IP module. This timer adds a support for windowed watchdog
-+  mode, which will signal an error if it is pinged outside the watchdog
-+  time window, meaning either too early or too late. The error signal
-+  generated can be routed to either interrupt a safety controller or
-+  to directly reset the SoC.
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - ingenic,jz4740-tcu
++          - ingenic,jz4725b-tcu
++          - ingenic,jz4770-tcu
++          - ingenic,jz4780-tcu
++          - ingenic,x1000-tcu
++  required:
++    - compatible
 +
 +properties:
++  $nodename:
++    pattern: "^timer@[0-9a-f]+$"
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  "#clock-cells":
++    const: 1
++
++  "#interrupt-cells":
++    const: 1
++
++  interrupt-controller: true
++
++  ranges: true
++
 +  compatible:
-+    enum:
-+      - ti,rti-wdt
++    oneOf:
++      - items:
++        - enum:
++          - ingenic,jz4740-tcu
++          - ingenic,jz4725b-tcu
++          - ingenic,jz4770-tcu
++          - ingenic,x1000-tcu
++        - const: simple-mfd
++      - items:
++        - const: ingenic,jz4780-tcu
++        - const: ingenic,jz4770-tcu
++        - const: simple-mfd
 +
 +  reg:
 +    maxItems: 1
 +
 +  clocks:
-+    maxItems: 1
++    items:
++      - description: RTC clock
++      - description: EXT clock
++      - description: PCLK clock
++      - description: TCU clock
++    minItems: 3
++
++  clock-names:
++    items:
++      - const: rtc
++      - const: ext
++      - const: pclk
++      - const: tcu
++    minItems: 3
++
++  interrupts:
++    items:
++      - description: TCU0 interrupt
++      - description: TCU1 interrupt
++      - description: TCU2 interrupt
++    minItems: 1
++
++  ingenic,pwm-channels-mask:
++    description: Bitmask of TCU channels reserved for PWM use.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0x00
++      - maximum: 0xff
++      - default: 0xfc
++
++patternProperties:
++  "^watchdog@[a-f0-9]+$":
++    type: object
++    allOf: [ $ref: ../watchdog/watchdog.yaml# ]
++    properties:
++      compatible:
++        oneOf:
++          - enum:
++            - ingenic,jz4740-watchdog
++            - ingenic,jz4780-watchdog
++          - items:
++            - const: ingenic,jz4770-watchdog
++            - const: ingenic,jz4740-watchdog
++
++      reg:
++        maxItems: 1
++
++      clocks:
++        maxItems: 1
++
++      clock-names:
++        const: wdt
++
++    required:
++      - compatible
++      - reg
++      - clocks
++      - clock-names
++
++  "^pwm@[a-f0-9]+$":
++    type: object
++    allOf: [ $ref: ../pwm/pwm.yaml# ]
++    properties:
++      compatible:
++        oneOf:
++          - enum:
++            - ingenic,jz4740-pwm
++          - items:
++            - enum:
++              - ingenic,jz4770-pwm
++              - ingenic,jz4780-pwm
++            - const: ingenic,jz4740-pwm
++
++      reg:
++        maxItems: 1
++
++      clocks:
++        minItems: 6
++        maxItems: 8
++
++      clock-names:
++        items:
++          - const: timer0
++          - const: timer1
++          - const: timer2
++          - const: timer3
++          - const: timer4
++          - const: timer5
++          - const: timer6
++          - const: timer7
++        minItems: 6
++
++    required:
++      - compatible
++      - reg
++      - clocks
++      - clock-names
++
++  "^timer@[a-f0-9]+$":
++    type: object
++    properties:
++      compatible:
++        oneOf:
++          - enum:
++            - ingenic,jz4725b-ost
++            - ingenic,jz4770-ost
++          - items:
++            - const: ingenic,jz4780-ost
++            - const: ingenic,jz4770-ost
++
++      reg:
++        maxItems: 1
++
++      clocks:
++        maxItems: 1
++
++      clock-names:
++        const: ost
++
++      interrupts:
++        maxItems: 1
++
++    required:
++      - compatible
++      - reg
++      - clocks
++      - clock-names
++      - interrupts
++
++    additionalProperties: false
 +
 +required:
++  - "#clock-cells"
++  - "#interrupt-cells"
++  - interrupt-controller
 +  - compatible
 +  - reg
 +  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
 +
 +examples:
 +  - |
-+    /*
-+     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
-+     * select the source clock for the watchdog, forcing it to tick with
-+     * a 32kHz clock in this case.
-+     */
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
++    #include <dt-bindings/clock/jz4770-cgu.h>
++    #include <dt-bindings/clock/ingenic,tcu.h>
++    tcu: timer@10002000 {
++      compatible = "ingenic,jz4770-tcu", "simple-mfd";
++      reg = <0x10002000 0x1000>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges = <0x0 0x10002000 0x1000>;
 +
-+    main_rti0: rti@2200000 {
-+        compatible = "ti,rti-wdt";
-+        reg = <0x0 0x2200000 0x0 0x100>;
-+        clocks = <&k3_clks 252 1>;
-+        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
-+        assigned-clocks = <&k3_clks 252 1>;
-+        assigned-clock-parents = <&k3_clks 252 5>;
++      #clock-cells = <1>;
++
++      clocks = <&cgu JZ4770_CLK_RTC>,
++               <&cgu JZ4770_CLK_EXT>,
++               <&cgu JZ4770_CLK_PCLK>;
++      clock-names = "rtc", "ext", "pclk";
++
++      interrupt-controller;
++      #interrupt-cells = <1>;
++
++      interrupt-parent = <&intc>;
++      interrupts = <27 26 25>;
++
++      watchdog: watchdog@0 {
++        compatible = "ingenic,jz4770-watchdog", "ingenic,jz4740-watchdog";
++        reg = <0x0 0xc>;
++
++        clocks = <&tcu TCU_CLK_WDT>;
++        clock-names = "wdt";
++      };
++
++      pwm: pwm@40 {
++        compatible = "ingenic,jz4770-pwm", "ingenic,jz4740-pwm";
++        reg = <0x40 0x80>;
++
++        #pwm-cells = <3>;
++
++        clocks = <&tcu TCU_CLK_TIMER0>,
++                 <&tcu TCU_CLK_TIMER1>,
++                 <&tcu TCU_CLK_TIMER2>,
++                 <&tcu TCU_CLK_TIMER3>,
++                 <&tcu TCU_CLK_TIMER4>,
++                 <&tcu TCU_CLK_TIMER5>,
++                 <&tcu TCU_CLK_TIMER6>,
++                 <&tcu TCU_CLK_TIMER7>;
++        clock-names = "timer0", "timer1", "timer2", "timer3",
++                "timer4", "timer5", "timer6", "timer7";
++      };
++
++      ost: timer@e0 {
++        compatible = "ingenic,jz4770-ost";
++        reg = <0xe0 0x20>;
++
++        clocks = <&tcu TCU_CLK_OST>;
++        clock-names = "ost";
++
++        interrupts = <15>;
++      };
 +    };
 -- 
-2.17.1
+2.25.1
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
