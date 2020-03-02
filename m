@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354DCC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44236C3F2D8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C714246B4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B12E246B4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583136026;
-	bh=hAwgYv9I6N9FUJGWAzMXgm110Nj2KkkEzJ/96xJ9rhA=;
+	s=default; t=1583136027;
+	bh=dbM6ws0/Oqvz1iJityzfK5eRG+lz5REP3+A2a7K9CKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1K4Qb3q68mcirxkFQifPkUw6ydlQBEikr3srysfmK+UYzPCkICL/0zJHGoxU4X8lH
-	 mxf5LU3k2KdtwrOJT96HBZakmZv+RgxwjPPTNwCtR1R4lBbcjaX2ls6W4eiX4fKdnB
-	 epu6WftrPAlng559S2yeeBSfxuBCQcFXtApNk6zU=
+	b=MmML6fmIEp/ItbWMfzZYJQAb3Z3vtivPLLCkk19aEQV4aoGKaoPfbfkdiknR+YTaf
+	 Q+s1OBI/kuG5hf77xc3DanmdcyqwXbrGDfGxst9HqVxO5Gik7x1hjVYEXRuD3Dxa+W
+	 vMwS9lZfYQ+1kHHtPssaeqjAkE+jUW7Wqg4C5l+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgCBIAW (ORCPT
+        id S1727059AbgCBH7m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:00:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 02:59:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726951AbgCBH7m (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726969AbgCBH7m (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 2 Mar 2020 02:59:42 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 508F2246B4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 52110246B9;
         Mon,  2 Mar 2020 07:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583135981;
-        bh=hAwgYv9I6N9FUJGWAzMXgm110Nj2KkkEzJ/96xJ9rhA=;
+        bh=dbM6ws0/Oqvz1iJityzfK5eRG+lz5REP3+A2a7K9CKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DtuRZwDZzTHdH/U/FoYolrNitNUpxrn358lOut/uaRSo6czfCfN2aLgwGYT+B1X5z
-         M3dwITItj3TmJy217CsbiyX26YYesBbkZOHcS9o/Nal6jFVu0F6c1O5FQMf/NgWb89
-         ckIM7ZIVAotsJRga2Pt3cNy48Q7Eh4Hvq36YJtgo=
+        b=QN6Uz+fJY7yr3hx1Oip3Pg77+NTBnKOD+gWFAfkBTMX0PRP0arpu2o/hPQz6q7pnn
+         POdV9c95jcaFMZgxRekmKE0CQ0ICGSxDTjTj/JI8SWvO5cK06PVNiOYsXN3aavt3cr
+         a7eGlGi2OTYvkKNVLIl2ID5mL0oxOTweDrtSZNWs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8fzH-0003gd-45; Mon, 02 Mar 2020 08:59:39 +0100
+        id 1j8fzH-0003gV-2S; Mon, 02 Mar 2020 08:59:39 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v2 05/12] docs: dt: convert changesets to ReST
-Date:   Mon,  2 Mar 2020 08:59:30 +0100
-Message-Id: <b03ed74ccc14d1a9710702fda9b9a6d7d0a7d136.1583135507.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 03/12] docs: dt: usage_model.rst: fix link for DT usage
+Date:   Mon,  2 Mar 2020 08:59:28 +0100
+Message-Id: <a7e0a5597ace97503c8ff67cdab2351151c7f267.1583135507.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <cover.1583135507.git.mchehab+huawei@kernel.org>
 References: <cover.1583135507.git.mchehab+huawei@kernel.org>
@@ -60,71 +60,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-- Add a SPDX header;
-- Add a document title;
-- Some whitespace fixes and new line breaks;
-- Add it to devicetree/index.rst.
+The devicetree.org doesn't host the Device_Tree_Usage page
+anymore. So, fix the link to point to a new address.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../{changesets.txt => changesets.rst}        | 24 ++++++++++++-------
- Documentation/devicetree/index.rst            |  1 +
- 2 files changed, 16 insertions(+), 9 deletions(-)
- rename Documentation/devicetree/{changesets.txt => changesets.rst} (59%)
+ Documentation/devicetree/usage-model.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/changesets.txt b/Documentation/devicetree/changesets.rst
-similarity index 59%
-rename from Documentation/devicetree/changesets.txt
-rename to Documentation/devicetree/changesets.rst
-index cb488eeb6353..c7fd8cd6a270 100644
---- a/Documentation/devicetree/changesets.txt
-+++ b/Documentation/devicetree/changesets.rst
-@@ -1,3 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=============
-+DT Changesets
-+=============
-+
- A DT changeset is a method which allows one to apply changes
- in the live tree in such a way that either the full set of changes
- will be applied, or none of them will be. If an error occurs partway
-@@ -15,17 +21,17 @@ The sequence of a changeset is as follows.
- 1. of_changeset_init() - initializes a changeset
+diff --git a/Documentation/devicetree/usage-model.rst b/Documentation/devicetree/usage-model.rst
+index 326d7af10c5b..e1b42dc63f01 100644
+--- a/Documentation/devicetree/usage-model.rst
++++ b/Documentation/devicetree/usage-model.rst
+@@ -12,7 +12,7 @@ This article describes how Linux uses the device tree.  An overview of
+ the device tree data format can be found on the device tree usage page
+ at devicetree.org\ [1]_.
  
- 2. A number of DT tree change calls, of_changeset_attach_node(),
--of_changeset_detach_node(), of_changeset_add_property(),
--of_changeset_remove_property, of_changeset_update_property() to prepare
--a set of changes. No changes to the active tree are made at this point.
--All the change operations are recorded in the of_changeset 'entries'
--list.
-+   of_changeset_detach_node(), of_changeset_add_property(),
-+   of_changeset_remove_property, of_changeset_update_property() to prepare
-+   a set of changes. No changes to the active tree are made at this point.
-+   All the change operations are recorded in the of_changeset 'entries'
-+   list.
+-.. [1] http://devicetree.org/Device_Tree_Usage
++.. [1] https://elinux.org/Device_Tree_Usage
  
- 3. of_changeset_apply() - Apply the changes to the tree. Either the
--entire changeset will get applied, or if there is an error the tree will
--be restored to the previous state. The core ensures proper serialization
--through locking. An unlocked version __of_changeset_apply is available,
--if needed.
-+   entire changeset will get applied, or if there is an error the tree will
-+   be restored to the previous state. The core ensures proper serialization
-+   through locking. An unlocked version __of_changeset_apply is available,
-+   if needed.
- 
- If a successfully applied changeset needs to be removed, it can be done
- with of_changeset_revert().
-diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
-index 6b4daf252375..64c78c3ffea6 100644
---- a/Documentation/devicetree/index.rst
-+++ b/Documentation/devicetree/index.rst
-@@ -10,3 +10,4 @@ Open Firmware and Device Tree
-    usage-model
-    writing-schema
-    booting-without-of
-+   changesets
+ The "Open Firmware Device Tree", or simply Device Tree (DT), is a data
+ structure and language for describing hardware.  More specifically, it
 -- 
 2.21.1
 
