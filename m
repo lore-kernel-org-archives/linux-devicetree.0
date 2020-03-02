@@ -6,34 +6,36 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCE4C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D25BC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398EA246BB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE435246B4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgCBJba convert rfc822-to-8bit (ORCPT
+        id S1727130AbgCBJsA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:31:30 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:41163 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgCBJba (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 04:31:30 -0500
+        Mon, 2 Mar 2020 04:48:00 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:45393 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgCBJsA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 04:48:00 -0500
 X-Originating-IP: 90.89.41.158
 Received: from xps13 (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 80483FF803;
-        Mon,  2 Mar 2020 09:31:03 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 10:31:03 +0100
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 5FD5040006;
+        Mon,  2 Mar 2020 09:47:55 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 10:47:54 +0100
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>
 Cc:     richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
         heiko@sntech.de, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 0/3] Add Rockchip NFC drivers for RK3308 and others
-Message-ID: <20200302103103.1eb7df94@xps13>
-In-Reply-To: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
-References: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
+Subject: Re: [PATCH 1/3] mtd: rawnand: rockchip: NFC drivers for RK3308,
+ RK3188 and others
+Message-ID: <20200302104754.61204e72@xps13>
+In-Reply-To: <20200302024744.28185-2-yifeng.zhao@rock-chips.com>
+References: <20200302024744.28185-1-yifeng.zhao@rock-chips.com>
+        <20200302024744.28185-2-yifeng.zhao@rock-chips.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
@@ -46,21 +48,25 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Yifeng,
 
-Yifeng Zhao <yifeng.zhao@rock-chips.com> wrote on Fri, 28 Feb 2020
-18:01:13 +0800:
+Yifeng Zhao <yifeng.zhao@rock-chips.com> wrote on Mon,  2 Mar 2020
+10:47:42 +0800:
 
-> Rockchp's NFC(Nand Flash Controller) has three versions: V6, V8 and V9.
-> This series patch can support all  three versions.
-> 
+> This driver supports Rockchip NFC (NAND Flash Controller) found on RK3308,
+> RK3368, RKPX30, RV1108 and other SOCs. The driver has been tested using
+> 8-bit NAND interface on the ARM based RK3308 platform.
 
-Your series has been badly created, strangely I received twice patch 1
-with two different contents, patch 2 arrived way later than patch 1 and
-3 and the commit title of the bindings patch is wrong, it should
-besomething like:
+I missed this series, you should have it prefixed "v2". Please use
+git-format-patch to generate your series. This time you miss the cover
+letter (or at least your second and third patches should be answers to
+the first one) otherwise it is not easy to follow when people start
+discussing:
 
-	dt-bindings: mtd: Describe Rockchip RK3xxx NAND flash controller
+	git format-patch --cover-letter -v<x> [commits]
+	git send-email v<x>-*.patch --to ... --cc ...
 
-Can you please resend this series in a v2?
+For the next iteration, <x> should be 3.
 
-Thanks,
+Also, mind the title change for the bindings changes.
+
+Good luck,
 Miquèl
