@@ -2,235 +2,298 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6471BC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 02:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899F0C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 03:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 225F324697
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 02:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F60422B48
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 03:34:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="etVZBWso"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NyMYhyLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgCBC6v (ORCPT
+        id S1726829AbgCBDeU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Mar 2020 21:58:51 -0500
-Received: from mail-eopbgr60073.outbound.protection.outlook.com ([40.107.6.73]:9536
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Sun, 1 Mar 2020 22:34:20 -0500
+Received: from mail-vi1eur05on2045.outbound.protection.outlook.com ([40.107.21.45]:20480
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726688AbgCBC6v (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 1 Mar 2020 21:58:51 -0500
+        id S1726758AbgCBDeT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 1 Mar 2020 22:34:19 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U8LvCwW6aD3EMF6lNIY4DX94ojW1Gzi0FoxG75NMeHuDTB788W8Rcr0JtVfQlED0Bxqo7SQFaq5ZMUNVzfGLRrnnWiPEpJWhpvNd+seei3HGPkIUThQQPsfG2nNL39AHvCVnWbVIss/Dt1sD7p1QKBXaoAsssNLg2eS+DvqbbWvpR43oNHSXj1S1NUszPzIAcFRHcWb3CAGpK2er7SqFufi9NJrsVJOmbDBMHoATsdvSfxeLAWCA85PTWeZlaNxXJm09P/Zvf0xcgmJT/8aXKJuTA12TOZ4/ISF+UqdtVLikx0SBAncm3BwFdoZr53Bk1pKiCtdGDPBfMOGht2qwtw==
+ b=Pj/kOe4EDE1y86wF5Wmru9K/yesGJwVAbMKOStprW6HsaTNVUWjQN/nb5u9WmVh54SG2PBR7EJy8/Ajfp9/weZZxTSVjIvBQ1CYyhiFDgLrfov2F55XwIJXNmqBEDKcbqMlZqK1oYiU3fNE2wR01exFuTHet0Lkuq+J8KR608RArbV1WZQXcOxskDbRGom3oMLJMHZuRUi9eXuenEfR64wPZkIHIycmq87PTp9AbunD1OfzMm8OC2y0/8T3rEJ+Dsv7iNktRIEtyoy/ccL+zQdv+cRmw7BOfgWGQFz59ihgu9JFuYkUie+NdiVCWU7xx8+6HCsfwZGqp23/KnniDmA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/Z0lPYxvMToG9KRfqH7EuMmv7Q2X7gRgzTUcU7bHgD8=;
- b=aKelyea+S55tszNIMvh8D6MwiTAxotSsUSadAcGfcm0mnmUNg1m90krl37j5cQEkdFPuoyOzbN6rtxFIoIGZyC5giZYNc2CZnlIWj+f5gktKPiUQCdl1U4xCCY2qDRV6RRqGOrs2DxlqX3zQXYqvjyZEV97tEuMPzOrH9FyXhO4cPJNP+mlkzvTdZ3p/Mk2S9wH0dCAszDZfi6EUzNuGWvuLeq/2i8+qqizZ0scgsv7jgdfQGeQF/t7SmXYwxNvhSXCyuX7tq/KFb41SHGm0xrztuLyIgtupbrOjXASb4clLFGVrC2c1EquJKps7swyGK64rkHlWdu3iwmK7qA4pYg==
+ bh=A4Boq0/u49rDYl9rffTweCwdu0ZfgrliVj4uYzuL/M8=;
+ b=jQ721a5M0v8BnyunK94yNtrLurVFVz0dpAGqsiN40GAdGhB84gEIrKWmzU+dE2RIz5IQuh8rT0Ret9FCCNRapETl7cqBdMZO8O4ectPMo8EPzrqGtnWLI5oONeXAIBoiDg9L6Kz9QvPtVAjWHVfuIFlAKo3SsiMhpbVEiiUfETQP65HM080tUF8AvIGg3GLW2xPv1vXtSavS9sN+htNdIGCuxzYnX+lsJxqvx15PLYO66/k4aVAeoUcLApHC+kPK0kN8TUt73GrdlGOnjYgkpUKvGryaA1EeaKTNLosEm0lrsT17NmaKyqblDs4B1AONN6ktoy1fNWRFLZs/J9PByQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/Z0lPYxvMToG9KRfqH7EuMmv7Q2X7gRgzTUcU7bHgD8=;
- b=etVZBWsobUXiEe332pQa7uE3MExGx3xaake8BMdEZEvZ3VOT9CQ7/hXyzyq/9vpIXQ4l6jYDr2f5v4ilrtEjxzpygK3fBooJAX2FHXkv3V6PCMb/7ZD0q2dMabl44pd5LepsQ41cD33xN8MEJkGTlJkaCapsCdnJr4PWk5RyrLQ=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB4480.eurprd04.prod.outlook.com (20.177.53.80) with Microsoft SMTP
+ bh=A4Boq0/u49rDYl9rffTweCwdu0ZfgrliVj4uYzuL/M8=;
+ b=NyMYhyLylJfpvRV/aXTHTLsk6lnmcTYKtJRmMdnmGu0F96wXgYoJBPDSFMyY5wTRTf01uLydnyl3Hf0laDnovExpeDaWns5RqQ+lsO7iItMwuKQgEpMXDDUAPWbFW3t4CMDMnneFZDLfj7TyhIOzk9QNmVNFh7D+ttLCVeAxvSs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6876.eurprd04.prod.outlook.com (52.133.241.72) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.18; Mon, 2 Mar 2020 02:58:47 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 02:58:47 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "kishon@ti.com" <kishon@ti.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "aniljoy@cadence.com" <aniljoy@cadence.com>,
-        Jun Li <jun.li@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
-Thread-Topic: [PATCH 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
-Thread-Index: AQHV7TcYWgsnimYnvUK07Zx3ZoCe3agvRosAgAER7SCAAEV4AIAEBKCA
-Date:   Mon, 2 Mar 2020 02:58:46 +0000
-Message-ID: <20200302025849.GB3834@b29397-desktop>
-References: <20200227062754.19131-1-peter.chen@nxp.com>
- <20200227062754.19131-2-peter.chen@nxp.com> <20200227170810.GA2318@bogus>
- <VI1PR04MB5327992CC6BA891C199D39A08BE80@VI1PR04MB5327.eurprd04.prod.outlook.com>
- <CAL_JsqLQ+5iR_rTaS7D2cvS_psT0XKh=FLH0EmLo2EsE4cuXSA@mail.gmail.com>
-In-Reply-To: <CAL_JsqLQ+5iR_rTaS7D2cvS_psT0XKh=FLH0EmLo2EsE4cuXSA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 49edfbab-54f0-4a31-8867-08d7be55a080
-x-ms-traffictypediagnostic: VI1PR04MB4480:|VI1PR04MB4480:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB44809BA235558EAA6F8834E28BE70@VI1PR04MB4480.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 033054F29A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(376002)(396003)(346002)(366004)(39860400002)(199004)(189003)(66556008)(66476007)(66446008)(64756008)(53546011)(6506007)(6916009)(2906002)(33656002)(478600001)(71200400001)(33716001)(66946007)(54906003)(8936002)(6512007)(9686003)(966005)(44832011)(4326008)(81156014)(81166006)(8676002)(91956017)(76116006)(316002)(26005)(1076003)(86362001)(6486002)(5660300002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4480;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: E6omLGwZV42Efq/p61w/DwAru5N0605LzVFCkoD2IxplQnFTllBZCBAa+Ylpo3lm8LrQAVHQFQY9PFTsb8NCldqDWJlsQbdYFaVv/cfR86WSxdF0onxXgxitRAzZsVDrSGj9staM5/o7cSiKCUwpxvQl7IqvZOSQcWu6Qf2YNVffiembD9wnQD2n/dB/A2RB7tX0195bzh+2nF4A6LcLigtosCqZu/Laqh/oUQHUgMCX1Esc4sgYfopn1TseER9yyZiVe9iHenAAco3zwkW3NcfKGv/w1NVW1RCpEBS0i19niv0fHe/UPuT3oXA3JK+H2ZFAEheMVIq1OKf6o+SqTbkFzEMZJtngiPyC2yWwTQdwY60uUR50XbyvN/c4OY/Z4qnaTitP3OsxR6HVJISx3+MVyv5HkgN/Z3Z++PzJDMhlargy6yWbaE03pYRgZwl8XErU6Ti7BH9Fu2FgdSE6qYBgDO0NHNafQ9viC51YGE4LTdwSHdViLtnjDImjf3HROBJyeR7ti+jz3QY9CyqaRw==
-x-ms-exchange-antispam-messagedata: GIhyPVF/TrvhWUcdLQn/NjPg+fz32CfEjO8JbdGRMsTo9DNqvY0uK/kEhekFj7TuZSgiQfDF1M9H0FvlYSBwbbeVvX4k38SG3T5hWncSdvOIYNr56gTIqiXTvDgjFa3lSqy5fmMxJAzonES8FAuP2g==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B1904CFF5FDA754E9553B63587CB1352@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+ 15.20.2772.14; Mon, 2 Mar 2020 03:34:14 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 03:34:13 +0000
+From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, shawnguo@kernel.org
+Cc:     leoyang.li@nxp.com, laurentiu.tudor@nxp.com, Xiaowei.Bao@nxp.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCH] arm64: dts: layerscape: add iommu-map property to pci nodes
+Date:   Mon,  2 Mar 2020 11:31:04 +0800
+Message-Id: <20200302033104.19681-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0114.apcprd02.prod.outlook.com
+ (2603:1096:4:92::30) To DB8PR04MB6747.eurprd04.prod.outlook.com
+ (2603:10a6:10:10b::31)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.73) by SG2PR02CA0114.apcprd02.prod.outlook.com (2603:1096:4:92::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 03:34:10 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.73]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b89d7940-a7f6-4ea2-7d68-08d7be5a9400
+X-MS-TrafficTypeDiagnostic: DB8PR04MB6876:|DB8PR04MB6876:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR04MB6876C334F899020F40D0C05D84E70@DB8PR04MB6876.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 033054F29A
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(189003)(199004)(36756003)(1076003)(956004)(2616005)(5660300002)(316002)(6506007)(26005)(186003)(6486002)(6512007)(2906002)(66556008)(66476007)(478600001)(16526019)(66946007)(4326008)(86362001)(6666004)(8936002)(81156014)(81166006)(8676002)(52116002)(69590400007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6876;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: a2uKRc6UXAerWXwrxnnWFN083VLeojb2nyJ+VdWzAG+3Yxg2xRgQZrOF3tYWG9qzkar4aevIACvo4+rxp23xZVC82iPiZox6zExP2i+UlQKB2GFG/n1eg37bP27sN+5IWHZg5L9uZLsMv0IMyZTHaKNftMZ1Udc/2iyM5P2mSzIrn0AkORLwqHVoLEuY3MaLiWIFcsuFe8qtH/TlTRJc96os1tTiL6ueabMwgRw8Pdng74s73jYYk0P7GGIAfWiVoqVKCd9SUzP4w+lHBFbtlERdNZyU1ehEypxPt4P2ahPsycnznM+GBoCMz0QK4E3BzbPPFL0P+8K3quQN4fsH35Tkze2ReOaafNxz+ZfHHnJWlioy7msh3rk2BnfzHGzMC3knaAqXh4egFbu7ABI4/md74iRr7xz1wfzKmtvQfi++tVkLDq9kCdPpXgabu0BiEWunPphr/y6eMyoKNVSFQhKTa9eOGXAUSQIFNM/L3vjjaiSSJzgJ1vPZAjR3SoqT
+X-MS-Exchange-AntiSpam-MessageData: 6atbGI65SoKshkCoM6ad2e4Oexw0knREC7LO/KDkCaOKhBYooQhqXrGZyAhQpeZmmKMMm+GoN2js63SZ3WognFXGNAdVKPVAwZwD7MUi/iLUfXnu9heCztVw2737Y858woRSSAzCEFkORDmI+ThwoQ==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49edfbab-54f0-4a31-8867-08d7be55a080
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 02:58:46.9210
+X-MS-Exchange-CrossTenant-Network-Message-Id: b89d7940-a7f6-4ea2-7d68-08d7be5a9400
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2020 03:34:13.8227
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 02Rh9RUQBJdE+u3uluwG9WE66dTZ0BcKxgQtXm0/HN2cmg7cd+kjtlpuUDwIQ4eKrElIAyii78djebTUYs7yGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4480
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2dMuHBylZU2yoGM6YDzkTo53M85pLnh2TpKzX2HwBRuV0M3HKbvI1Weqy4S8MEgbF3Qui37KCccVdIQNleeFlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6876
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-02-28 07:37:14, Rob Herring wrote:
-> On Fri, Feb 28, 2020 at 3:29 AM Peter Chen <peter.chen@nxp.com> wrote:
-> >
-> >
-> > > >  .../bindings/phy/cdns,salvo-phy.yaml          | 47 +++++++++++++++=
-++++
-> > > >  1 file changed, 47 insertions(+)
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-> > > >
-> > >
-> > > My bot found errors running 'make dt_binding_check' on your patch:
-> > >
-> > > warning: no schema found in file:
-> > > Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-> > > /builds/robherring/linux-dt-
-> > > review/Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml: ign=
-oring, error
-> > > parsing file
-> > > Documentation/devicetree/bindings/display/simple-framebuffer.example.=
-dts:21.16-
-> > > 37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node =
-must be
-> > > at root node
-> > > Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml:  while sca=
-nning a
-> > > block scalar
-> > >   in "<unicode string>", line 39, column 5 found a tab character wher=
-e an indentation
-> > > space is expected
-> > >   in "<unicode string>", line 41, column 1
-> > > Documentation/devicetree/bindings/Makefile:12: recipe for target
-> > > 'Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.dts' fa=
-iled
-> > > make[1]: *** [Documentation/devicetree/bindings/phy/cdns,salvo-phy.ex=
-ample.dts]
-> > > Error 1
-> > > Makefile:1263: recipe for target 'dt_binding_check' failed
-> > > make: *** [dt_binding_check] Error 2
-> > >
-> > Hi Rob,
-> >
-> > After changing some format, I still got below errors, would you please =
-point to
-> > what's wrong with line 40, column 12? Thanks.
->=20
-> It is line numbers of the generated .example.dts you need to look at.
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-There is no cdns,salvo-phy.example.dts file at both source folder or
-obj (-O) folder. I use https://github.com/robherring/dt-schema to
-create dt-doc-validate. The command I use to verify yaml file:
-make O=3D$OUTKNL dt_binding_check, OUTKNL is my kernel obj folder.
+Add the iommu-map property to the pci nodes so that the firmware
+fixes it up with the required values thus enabling iommu for
+devices connected over pci.
 
-I am sorry I get below error:
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 +++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 3 +++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 4 ++++
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 6 ++++++
+ 6 files changed, 20 insertions(+)
 
-make[1]: Entering directory '/home/b29397/work/projects/upstream/usb/outout=
-/imx_v8'
-  CHKDT   Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-/home/b29397/work/projects/upstream/usb/Documentation/devicetree/bindings/p=
-hy/cdns,salvo-phy.yaml:  while parsing a block mapping
-  in "<unicode string>", line 5, column 1
-did not find expected key
-  in "<unicode string>", line 42, column 5
-/home/b29397/work/projects/upstream/usb/Documentation/devicetree/bindings/M=
-akefile:12: recipe for target 'Documentation/devicetree/bindings/phy/cdns,s=
-alvo-phy.example.dts' failed
-make[2]: *** [Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.=
-dts] Error 1
-/home/b29397/work/projects/upstream/usb/Makefile:1262: recipe for target 'd=
-t_binding_check' failed
-make[1]: *** [dt_binding_check] Error 2
-make[1]: Leaving directory '/home/b29397/work/projects/upstream/usb/outout/=
-imx_v8'
-Makefile:179: recipe for target 'sub-make' failed
-make: *** [sub-make] Error 2
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 337919366dc8..fe992d1982d1 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -497,6 +497,7 @@
+ 					<0000 0 0 2 &gic 0 111 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 112 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index c084c7a4b6a6..e5a8773fd02c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -688,6 +688,7 @@
+ 					<0000 0 0 2 &gic 0 111 0x4>,
+ 					<0000 0 0 3 &gic 0 112 0x4>,
+ 					<0000 0 0 4 &gic 0 113 0x4>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -714,6 +715,7 @@
+ 					<0000 0 0 2 &gic 0 121 0x4>,
+ 					<0000 0 0 3 &gic 0 122 0x4>,
+ 					<0000 0 0 4 &gic 0 123 0x4>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -740,6 +742,7 @@
+ 					<0000 0 0 2 &gic 0 155 0x4>,
+ 					<0000 0 0 3 &gic 0 156 0x4>,
+ 					<0000 0 0 4 &gic 0 157 0x4>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index d4c1da3d4bde..697d7387a3a3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -660,6 +660,7 @@
+ 					<0000 0 0 2 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -696,6 +697,7 @@
+ 					<0000 0 0 2 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -732,6 +734,7 @@
+ 					<0000 0 0 2 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index ec6013a8137d..36a799554620 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -494,6 +494,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -519,6 +520,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 115 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 0 116 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 0 117 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -544,6 +546,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 120 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 0 121 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 0 122 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index f96d06da96be..3944ef16ec60 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -648,6 +648,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 110 4>,
+ 					<0000 0 0 3 &gic 0 0 0 111 4>,
+ 					<0000 0 0 4 &gic 0 0 0 112 4>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -669,6 +670,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 115 4>,
+ 					<0000 0 0 3 &gic 0 0 0 116 4>,
+ 					<0000 0 0 4 &gic 0 0 0 117 4>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -690,6 +692,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 120 4>,
+ 					<0000 0 0 3 &gic 0 0 0 121 4>,
+ 					<0000 0 0 4 &gic 0 0 0 122 4>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -711,6 +714,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 125 4>,
+ 					<0000 0 0 3 &gic 0 0 0 126 4>,
+ 					<0000 0 0 4 &gic 0 0 0 127 4>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index 98a8f6def55e..ae1b113ab162 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -858,6 +858,7 @@
+ 					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -885,6 +886,7 @@
+ 					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -912,6 +914,7 @@
+ 					<0000 0 0 2 &gic 0 0 GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -939,6 +942,7 @@
+ 					<0000 0 0 2 &gic 0 0 GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -966,6 +970,7 @@
+ 					<0000 0 0 2 &gic 0 0 GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+@@ -993,6 +998,7 @@
+ 					<0000 0 0 2 &gic 0 0 GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.17.1
 
-  1 # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-  2 # Copyright (c) 2020 NXP
-  3 %YAML 1.2
-  4 ---
-  5 $id: "http://devicetree.org/schemas/phy/cdns,salvo-phy.yaml#"
-  6 $schema: "http://devicetree.org/meta-schemas/core.yaml#"
-  7=20
-  8 title: Cadence SALVO PHY
-  9=20
- 10 maintainers:
- 11   - Peter Chen <peter.chen@nxp.com>
- 12=20
- 13 properties:
- 14   compatible:
- 15     enum:
- 16       - nxp,salvo-phy
- 17=20
- 18   reg:
- 19     maxItems: 1
- 20=20
- 21   clocks:
- 22     maxItems: 1
- 23=20
- 24   clock-names:
- 25     items:
- 26       - const: salvo_phy_clk
- 27=20
- 28   "#phy-cells":
- 29     const: 1
- 30=20
- 31 required:
- 32   - compatible
- 33   - reg
- 34   - "#phy-cells"
- 35=20
- 36 additionalProperties: false
- 37=20
- 38 examples:
- 39     -|
- 40     #include <dt-bindings/firmware/imx/rsrc.h>
- 41=20
- 42     usb3phy: usb3-phy@5B160000 {
- 43         compatible =3D "nxp,salvo-phy";
- 44         reg =3D <0x5B160000 0x40000>;
- 45         clocks =3D <&usb3_lpcg 4>;
- 46         clock-names =3D "salvo_phy_clk";
- 47         power-domains =3D <&pd IMX_SC_R_USB_2_PHY>;
- 48         #phy-cells =3D <0>;
- 49     };
-
-
---=20
-
-Thanks,
-Peter Chen=
