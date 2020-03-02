@@ -2,204 +2,124 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AE9C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 19:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F8CC3F2D8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C37B21D56
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 19:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167E92086A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="g09F7/at"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Awop9XOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbgCBTfj (ORCPT
+        id S1727073AbgCBT6C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:35:39 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:48898 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbgCBTfi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 14:35:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1583177736; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DGfSMIikOY3kreg6w/PuWqLAcsa2i58iD5RE/ITwXCY=;
-        b=g09F7/at4RhFLxEG/sswSLYFCPUn929KYVnYN8sQRSeEB0Pdtvcon4Ttu3ACgx7WFWbv84
-        ibS5uRHTmcIoVZ7kOPe1LZVUAKR5NxNKUaaDPU7xtMpX7+Z0LUOXn5HOmX4hxHmPV42byW
-        jkOTjhHZ8kYe5bKuVTU7tcx7T8WL3Gg=
-Date:   Mon, 02 Mar 2020 16:35:20 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/1] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Mon, 2 Mar 2020 14:58:02 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:35134 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBT5i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 14:57:38 -0500
+Received: by mail-yw1-f65.google.com with SMTP id a132so1051007ywb.2;
+        Mon, 02 Mar 2020 11:57:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GKP1xnf+jUUC+vOfFhdMTbNrJBQ854KSrSLYHrZ06Bk=;
+        b=Awop9XOq1i7oNr44YoGmA/aw95RSF8KIPQDXWo+1HSAkfVPLyZ/RyncObWJcPd4laq
+         NzxXrvF8SPPpMcfZV8Luei62eAqaZpvxHJQk18hal4Omfa3ZTpgPybX2vqKC7X5hsQV/
+         sL71FkPxxFdS1utqODguNaCYJjniAdx39fLE73d0ZVIHjqbXQ96iIO+whXm/XoWqoHOC
+         wkX09IwZ7qhUr0xP4hdn/Oxz87kY9U45HEcdRQCutvEzzdnPeiVieD1uaMiCwXSkRBPh
+         6aWgVRynhzIfrnW6fjyB+eHMv8yyCQ/wniKw7sNUSMagdPkHHZXnTkAs/rUavxHIt9VF
+         layQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GKP1xnf+jUUC+vOfFhdMTbNrJBQ854KSrSLYHrZ06Bk=;
+        b=MoR9ZDhWQVolFXAU9UNvzVF/E8XLDUvffN79Uk7twDwhYGPFMFxU5t1S4FK73WCQQJ
+         tPEM3Q897cWR1SKSUNvXiRIGzBE4dNRpSrGF6VUI9nwVXwfGt+GoQKh5/X6WsX0jbdBn
+         GTSxqmz0qx5ysa05UxTUxJQ7OKXxnaU8N0wUpyokVgz8ur73IJ36KGh6a/pkkOwG+raP
+         bq6Vn5h6P4Jw59Joxx4Zb7ToUde1WUrarldX+37BL3S0eXPr/HWi3cZ5UgO1Aac0VAO5
+         8gu2N4a1/dz8re/WFB0SPKMhOPMAt6HZcPBeemKyhV29lVhhYC8zDUWckEAARr+dohEj
+         mYeg==
+X-Gm-Message-State: ANhLgQ16xMz92iT4pc6OANiqFwCfmeIYSDFmvx3W5+ZCC5LpvGDAIkH5
+        psvsZaNjCP9JySTCFN9vor0=
+X-Google-Smtp-Source: ADFU+vvSk0t778qUzgJHbIXKFXgek6hyiUQEZELhI0jIaTTa8lYIW9yq45tXspn4bqz2gB7DHU9ozg==
+X-Received: by 2002:a0d:fc82:: with SMTP id m124mr1013400ywf.174.1583179055311;
+        Mon, 02 Mar 2020 11:57:35 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id h203sm8224852ywb.98.2020.03.02.11.57.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Mar 2020 11:57:35 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-Id: <1583177720.3.6@crapouillou.net>
-In-Reply-To: <CAL_JsqL7b8mwtg3XyNS2fdA4fxaFdUpsfqTPx521pW5xqSPneg@mail.gmail.com>
-References: <20200301174636.63446-1-paul@crapouillou.net>
-        <20200301174636.63446-2-paul@crapouillou.net>
-        <CAL_JsqKGzxdMj4_+i4ycKj6ZjiuGMY8F+yBzVPt_b2CLhrcdKg@mail.gmail.com>
-        <1583173481.3.0@crapouillou.net>
-        <CAL_JsqL7b8mwtg3XyNS2fdA4fxaFdUpsfqTPx521pW5xqSPneg@mail.gmail.com>
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200220130149.26283-1-geert+renesas@glider.be>
+ <20200220130149.26283-2-geert+renesas@glider.be>
+ <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
+ <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
+ <CACRpkdZwaKA-Gq4wjkPZ_VFiOgNgvLPnYmx4A3AFE-0eNNjQpQ@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <ecde265b-f451-7514-2265-cf4d3024690b@gmail.com>
+Date:   Mon, 2 Mar 2020 13:57:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACRpkdZwaKA-Gq4wjkPZ_VFiOgNgvLPnYmx4A3AFE-0eNNjQpQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 2/28/20 4:43 PM, Linus Walleij wrote:
+> On Fri, Feb 21, 2020 at 6:18 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 2/21/20 10:08 AM, Linus Walleij wrote:
+> 
+>>> Patch applied with Frank's Review tag.
+>>
+>> I created a devicetree unittest to show the problem that Geert's patches
+>> fix.
+>>
+>> I would prefer to have my unittest patch series applied somewhere,
+>> immediately followed by Geert's patch series.  This way, after
+>> applying my series, a test fail is reported, then after Geert's
+>> series is applied, the test fail becomes a test pass.
+>>
+>> Can you coordinate with Rob to accept both series either via
+>> your tree or Rob's tree?
+> 
+> I see Rob already applied the test.
+> 
+> I do not personally bother much about which order problems
+> get solved but I guess if Rob can back out the patch I can apply
+> it to my tree instead, before these patches. for some time,
+> before I start pulling stuff on top.
+> 
+> Yours,
+> Linus Walleij
+> 
 
+At this point, if it is a lot of trouble or confusion, I would not
+bother undoing the commits that have been done.  I'll leave it up
+to you and Rob to coordinate if you do decide to undo.
 
-Le lun., mars 2, 2020 at 13:07, Rob Herring <robh+dt@kernel.org> a=20
-=E9crit :
-> On Mon, Mar 2, 2020 at 12:25 PM Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>=20
->>  Hi Rob,
->>=20
->>=20
->>  Le lun., mars 2, 2020 at 11:06, Rob Herring <robh+dt@kernel.org> a
->>  =E9crit :
->>  > On Sun, Mar 1, 2020 at 11:47 AM Paul Cercueil=20
->> <paul@crapouillou.net>
->>  > wrote:
->>  >>
->>  >
->>  > Well, this flew into linux-next quickly and breaks 'make
->>  > dt_binding_check'... Please drop, revert or fix quickly.
->>=20
->>  For my defense I said to merge "provided Rob acks it" ;)
->>=20
->>  >>  Convert the ingenic,tcu.txt file to YAML.
->>  >>
->>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  >>  ---
->>  >>   .../devicetree/bindings/timer/ingenic,tcu.txt | 138 ----------
->>  >>   .../bindings/timer/ingenic,tcu.yaml           | 235
->>  >> ++++++++++++++++++
->>  >>   2 files changed, 235 insertions(+), 138 deletions(-)
->>  >>   delete mode 100644
->>  >> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
->>  >>   create mode 100644
->>  >> Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
->>  >
->>  >
->>  >>  diff --git
->>  >> a/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
->>  >> b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
->>  >>  new file mode 100644
->>  >>  index 000000000000..1ded3b4762bb
->>  >>  --- /dev/null
->>  >>  +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
->>  >>  @@ -0,0 +1,235 @@
->>  >>  +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>  >>  +%YAML 1.2
->>  >>  +---
->>  >>  +$id: http://devicetree.org/schemas/timer/ingenic,tcu.yaml#
->>  >>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>  >>  +
->>  >>  +title: Ingenic SoCs Timer/Counter Unit (TCU) devicetree=20
->> bindings
->>  >>  +
->>  >>  +description: |
->>  >>  +  For a description of the TCU hardware and drivers, have a=20
->> look at
->>  >>  +  Documentation/mips/ingenic-tcu.rst.
->>  >>  +
->>  >>  +maintainers:
->>  >>  +  - Paul Cercueil <paul@crapouillou.net>
->>  >>  +
->>  >>  +properties:
->>  >>  +  $nodename:
->>  >>  +    pattern: "^timer@.*"
->>  >
->>  > '.*' is redundant.
->>  >
->>  >>  +
->>  >>  +  "#address-cells":
->>  >>  +    const: 1
->>  >>  +
->>  >>  +  "#size-cells":
->>  >>  +    const: 1
->>  >>  +
->>  >>  +  "#clock-cells":
->>  >>  +    const: 1
->>  >>  +
->>  >>  +  "#interrupt-cells":
->>  >>  +    const: 1
->>  >>  +
->>  >>  +  interrupt-controller: true
->>  >>  +
->>  >>  +  ranges: true
->>  >>  +
->>  >>  +  compatible:
->>  >>  +    items:
->>  >>  +      - enum:
->>  >>  +        - ingenic,jz4740-tcu
->>  >>  +        - ingenic,jz4725b-tcu
->>  >>  +        - ingenic,jz4770-tcu
->>  >>  +        - ingenic,x1000-tcu
->>  >>  +      - const: simple-mfd
->>  >
->>  > This breaks several examples in dt_binding_check because this=20
->> schema
->>  > will be applied to every 'simple-mfd' node. You need a custom=20
->> select
->>  > entry that excludes 'simple-mfd'. There should be several=20
->> examples in
->>  > tree to copy.
->>=20
->>  Why would it be applied to all 'single-mfd' nodes?
->=20
-> single-mfd?
-
-simple-mfd* of course, sorry.
-
-> The way the tool decides to apply a schema or not is my matching on
-> any of the compatible strings (or node name if no compatible
-> specified). You can override this with 'select'.
->=20
->>  Doesn't what I wrote
->>  specify that it needs one of ingenic,*-tcu _and_ simple-mfd?
->=20
-> Yes, but matching is on any of them. You need to add:
-
-Alright, will do. Is there a reason why it's done that way? It sounds a=20
-bit counter-intuitive.
-
-> select:
->   properties:
->     compatible:
->       contains:
->         enum:
->           - ingenic,jz4740-tcu
->           - ingenic,jz4725b-tcu
->           - ingenic,jz4770-tcu
->           - ingenic,x1000-tcu
->   required:
->     - compatible
->=20
->>  I'm not sure I understand what you mean.
->>=20
->>  I did grep for 'single-mfd' in all YAML files in Documentation/ and
->>  nothing really stands out.
->=20
-> I guess even without the typo it was harder to find an example than I=20
-> thought.
->=20
-> Note that I think I'll make the tool exclude 'simple-mfd', but it will
-> take some time for users to update so you still need to fix this.
-
-Alright, thanks for the help.
-
--Paul
-
-=
-
+-Frank
