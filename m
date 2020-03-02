@@ -2,106 +2,78 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6C4C3F2D8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765E3C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 502A724677
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:54:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6j9t0b6"
+	by mail.kernel.org (Postfix) with ESMTP id 3BB6F21D56
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:54:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583150091;
+	bh=g1ZYQNRudb7dOHHtDC/0u7w+QrmM8esVYtHWRpxBXmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lT8qGyXQxTT84FUfSwbHmxt/3xsKfpEz3NLXE0iss5Xw8FiWJQa7RJXEdKhngOaQD
+	 xpZqKnoMqJBdJ6arLjDTccpijbqyUluDqvw9vT8yYP0Czot5g/rwghF4ClZX+5SRf/
+	 ELRs3smYQ6pRFp+aQh96bJ1Qc+XYqhp6iS+c9cbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbgCBLx7 (ORCPT
+        id S1727517AbgCBLyu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:53:59 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52068 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbgCBLx6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 06:53:58 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a132so841715wme.1
-        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 03:53:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=azUAbwec9h/nTfVaFPcgmhe6fEkHKvdkY4Og3qBi37Y=;
-        b=r6j9t0b6YVsKN35LyP/H5lUyKRUrdC0WhAe7pyoL9zqxJsdyHeGhs2X3RPXsG77ucE
-         jE/L3lSF6Wv872Mzbni4tCKo2Uf/J5FiErTEvIguKLvUeYhUGNPKhhpaGFNRNrWGk+f2
-         1QjGeQADib8veuFWed0VG38BvxD1/BlcZKNZvBoIdZaKVu4tpxIefsYEaasn1pXrO6pw
-         1IS1EFDyfxBfwjF3zBykGgdaT4Xa+9qN7Hg+f7ZRYZZU9a6HuY5nByYkE4VPQwAGEqOh
-         HGZj0HxfvbruJPh91RNIa+cmcx57q78ersUThwaD49igmWlsnmeX5r7Lhm6Fksn6cv6m
-         AmWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=azUAbwec9h/nTfVaFPcgmhe6fEkHKvdkY4Og3qBi37Y=;
-        b=njmvg/Y3yhM1jxd5s2QKW8MIXJdyAuuX+VEWUunXYrXFG3FN5TYrTMW1uxRYSN/8ZG
-         9+2M0KG80BwDD0NBADlQed0OEekNRDbdzSO7dj2uPSH5Rwv+awvRVvxPv79YvONrurjr
-         ikpdUq1mOEr3AjgZR1FEA3L1zXcQiYGsqFizysz/Djde+WlT2PTvLav5X7eQH/+Ek9bi
-         nRviyfgdo+iE9295igop/RHXbgZ+P+nMnqvZ5SCj0stMYwTtrGTkv9vXpK7LpAj8w1QU
-         FOWwtbUo+uJ9NsFbgWy528SJ9O6hmJjw72OeR2dI4YiGRljaOuA1Z5SxWzmcRewOiUyg
-         iYog==
-X-Gm-Message-State: APjAAAVNiyqOk7sCFCygnPKdS7V+G8COosIUSBLuu+T6ExS59xWicj8B
-        l70G/eNDNOwZPc8cYvgWfWqAIQ==
-X-Google-Smtp-Source: APXvYqynY+onBCIIhC4P/zjfJVC1tFcUN36uleAbHJTeNOVBp0N74P2fBTF9cu3aqLEh5sEG98Rv7w==
-X-Received: by 2002:a1c:9d85:: with SMTP id g127mr19364122wme.75.1583150036591;
-        Mon, 02 Mar 2020 03:53:56 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id j5sm27954117wrx.56.2020.03.02.03.53.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 03:53:55 -0800 (PST)
-Date:   Mon, 2 Mar 2020 11:54:32 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 02/12] docs: dt: convert usage-model.txt to ReST
-Message-ID: <20200302115432.GX3494@dell>
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
- <0432bc8cdb6abb8618eac89d68db7441b613106d.1583135507.git.mchehab+huawei@kernel.org>
+        Mon, 2 Mar 2020 06:54:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727485AbgCBLyu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Mar 2020 06:54:50 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32CB92086A;
+        Mon,  2 Mar 2020 11:54:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583150090;
+        bh=g1ZYQNRudb7dOHHtDC/0u7w+QrmM8esVYtHWRpxBXmI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JHIpMEqSIMeQ1uGz9HkhnZBTFmkCkXwSpJMCU0w32GcqOK8PhZd5ZMU5Wk0tbAEfh
+         IlVulhuXZbXPDcBp3Z6yFjPjhO9pGfenykNa8lR7gft34vUDlUTuNZmDDjW8VE9qkO
+         hgNcPYD5qNAd7djLgLdKE0EGubjhBEHoaGynPn9k=
+Date:   Mon, 2 Mar 2020 11:54:46 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 5/5] arm64: perf: Support new DT compatibles
+Message-ID: <20200302115445.GB9233@willie-the-truck>
+References: <cover.1582312530.git.robin.murphy@arm.com>
+ <6e5087621bd8112a35733054689d7c785b4bdde5.1582312530.git.robin.murphy@arm.com>
+ <20200228121712.GF36089@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0432bc8cdb6abb8618eac89d68db7441b613106d.1583135507.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200228121712.GF36089@lakrids.cambridge.arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 02 Mar 2020, Mauro Carvalho Chehab wrote:
-
-> - Add a SPDX header;
-> - Adjust document title;
-> - Use footnoote markups;
-> - Some whitespace fixes and new line breaks;
-> - Mark literal blocks as such;
-> - Add it to devicetree/index.rst.
+On Fri, Feb 28, 2020 at 12:17:13PM +0000, Mark Rutland wrote:
+> On Fri, Feb 21, 2020 at 07:35:32PM +0000, Robin Murphy wrote:
+> > Add support for matching the new PMUs. For now, this just wires them up
+> > as generic PMUv3 such that people writing DTs for new SoCs can do the
+> > right thing, and at least have architectural and raw events be usable.
+> > We can come back and fill in event maps for sysfs and/or perf tools at
+> > a later date.
+> > 
+> > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/devicetree/index.rst            |  1 +
->  Documentation/devicetree/of_unittest.txt      |  2 +-
->  .../{usage-model.txt => usage-model.rst}      | 35 +++++++++++--------
+> Thanks for putting this together!
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> Will, are you happy to queue this and the previous patch?
 
->  include/linux/mfd/core.h                      |  2 +-
+Yup, I'll pick these two up shortly.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
->  4 files changed, 23 insertions(+), 17 deletions(-)
->  rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Will
