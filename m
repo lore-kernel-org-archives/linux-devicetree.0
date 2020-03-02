@@ -2,151 +2,110 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0318C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E94C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A85E22465E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737A5217F4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:03:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="G//D/RNJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJ0hC0VC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgCBRB1 (ORCPT
+        id S1727202AbgCBRDy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:01:27 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33312 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727360AbgCBRBZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 12:01:25 -0500
-Received: by mail-wr1-f68.google.com with SMTP id x7so694959wrr.0
-        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 09:01:22 -0800 (PST)
+        Mon, 2 Mar 2020 12:03:54 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44023 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727195AbgCBRDy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 12:03:54 -0500
+Received: by mail-lj1-f196.google.com with SMTP id e3so242894lja.10
+        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 09:03:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=JxxZMXsVW1OlUAj2yQJ6ZF+K072kLAsn2WXP+512A/M=;
-        b=G//D/RNJf7ItaCMkYYyhrVVoLHbmg+VdXhMwiw86M2PluaUELtampqk8xrbWLKMLqe
-         wDF6bck4vxs+t2ye9djT5PqWyAngPJSwNSuWytRndAweD5E9TdzAcOMNjOpOyQNtZZZg
-         r7vL6QxW0b3sBA7umhlOFOrPG88rJermRECnzifaNjrCU0zarr6CZ6TLwVTnV4KbC7Dz
-         KKCLPYE2Dbc/TUsbpqgaCjNK+2s1i2B07rTF8WBiOaoSBJ93SrGx7UA6IdL5G6Z1Qdsj
-         uktYR5gQeIpnWGXqf4kRgvEeN+l3bmxU2AD9cznl/S5X2ZM5XmTsbVcBGYTB9Wc/54/p
-         +mVQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XPcMs7JIMlUv20DOzI5SHy+/OcC5LtbzMpMfGg1G0ug=;
+        b=cJ0hC0VCK3d1FiWp4feDyo+RDpMW/ZDeST2Q91xPHabKlMNnRe8D201mgwNNbE7lQL
+         0cw9MLzh4vP2ZsxpFjeALnYVPvRwRmtRkBdnxXsFswxCa1sRoR3qelbxqhSCYw1A4+fr
+         Z3cUAFjpM+GQgVLk0KS02nfLnEIZQpVLncpRHhjGofnh/tR1OKKb3aZ/IBsMytcwcQAF
+         m5f1rvnO+kJkTSVInjD3G/Ldkrzg8E0arhecej1RDFEfAjeh8p2AMPvX8jc7to1Q5k9X
+         sFCzitDsQeI8HE7yZtEA7xsG8E4po1cSZdMnQESXZTe52IA/89HsBJ7krAp6nZ8R3lX1
+         IXpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=JxxZMXsVW1OlUAj2yQJ6ZF+K072kLAsn2WXP+512A/M=;
-        b=jtVrBCHBbWvd90HWkM73vNpZif9mqiqb/bKhE8jD6e0BWmytxMZdck+w3UeeAYasvW
-         aewHWxmwLD7RXvhmWlrjwoDD8qCa+jOJ5RT3eSXhnC1/xn+1+XVBpKpJHbGPKhe7ixQs
-         It4gWahj3LBkbNuJIglXC8KUa2Enil/J/TLsptZaud0R3iyHdoFyhzEgOO8HbAHdycT/
-         o2Ns2cNMDodSHPd82mUN2j27F5XQTKoQj3fOeZl5+HrLsgGE522CjWYOFcUdfcaZ9egm
-         Ni4bviJmYeBlYp49D1LKAZ6a108k3x2heFLDn6KDo7aHVxV8tJMFcWfQpU6AAy6OeH8D
-         r8Qw==
-X-Gm-Message-State: ANhLgQ3J93/rnYvc1dcr9zA6r4fUqlRBIyfiaWCtOE4FAqnjI8nxUQMn
-        b2wXAP1FMaOfw+s6v2dHn9Hcsw==
-X-Google-Smtp-Source: ADFU+vvbCDhbjKnBTJ0P9gUMwbINUDb4htWjCWs1X4yIjcZsa/sq2I2rF81VVO4nPsuCrCG5FapnZA==
-X-Received: by 2002:adf:df8f:: with SMTP id z15mr533884wrl.184.1583168481691;
-        Mon, 02 Mar 2020 09:01:21 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id p10sm23628037wrx.81.2020.03.02.09.01.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Mar 2020 09:01:21 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Anand Moon <linux.amoon@gmail.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XPcMs7JIMlUv20DOzI5SHy+/OcC5LtbzMpMfGg1G0ug=;
+        b=N1AsKC7POVCNSLoC9CKCc3t/ezTk0SEjyPpvAhUewC7asJA/wXVW+kX5oauNi14Wmx
+         iayb/ySylksl7Ki6UWlDKCcXToheve5OZdunjts8+hI3kI1t+tZbt0SL9f/ZB21hpJ60
+         Qsa77saTYKwP2C2qiRE93c2JgJADG8vn+qyox0HCBFafI/e6NJGtANn0F6GPJdJeg+b2
+         ItDDwZaf+Z5mkWzgK0ZjLKYjrdNlzS82H9XwrlSdqLxlqBwxV7gKudor7FFz/qoa6/8m
+         BDse4ArZju9s9e4P/76XKYmH9E+ceA+/nTe0FxwQd/RczbLLdouP2cR6BDa+vDu5JOjr
+         UGvA==
+X-Gm-Message-State: ANhLgQ34BxmzX5hjsdhlalTclur/fFkXI2Li40jzHVuWuD5wVmQdDlOZ
+        rHk9xLiBJOt15zE+aBT/R2i558C0ve2zmbZ889c=
+X-Google-Smtp-Source: ADFU+vuIGQKHZ0dTpeXvkF9hW60IlQJGMZOKf3tnAwmi+oSO9sl5g4yJgj5bBEEtpk0sSh9goqDfwGpv8iWBQKrJUHg=
+X-Received: by 2002:a05:651c:cf:: with SMTP id 15mr368406ljr.288.1583168632297;
+ Mon, 02 Mar 2020 09:03:52 -0800 (PST)
+MIME-Version: 1.0
+References: <20200302001150.27952-1-vitor@massaru.org>
+In-Reply-To: <20200302001150.27952-1-vitor@massaru.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 2 Mar 2020 14:03:41 -0300
+Message-ID: <CAOMZO5DQ=sg9Qf7N4N9S-5DpS4EQFG1w6ZqK0nS9P3M0ghSzDg@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: freescale: add gpio-fan/thermal support
+ for Google i.MX 8MQ Phanbell
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCHv2 2/2] clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
-In-Reply-To: <20200302125310.742-3-linux.amoon@gmail.com>
-References: <20200302125310.742-1-linux.amoon@gmail.com> <20200302125310.742-3-linux.amoon@gmail.com>
-Date:   Mon, 02 Mar 2020 18:01:20 +0100
-Message-ID: <7hlfoir8rj.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        lkcamp@lists.libreplanetbr.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Anand Moon <linux.amoon@gmail.com> writes:
+Hi Vitor,
 
-> On Odroid n2, cpub_clk is not geting enable, which lead the stalling
-> at booting of the device,
+Forgot to say in the previous revision, but the typical Subject pattern is:
 
-First, how is the CPU_B clk related to the SD card issue described in
-the cover letter?  I think this patch is attempting to fix something
-unrelated to the SD card.  Please separate from this series (or describe
-in detail how it's related to the SD card booting.)
+arm64: dts: imx8mq-phanbell: Add gpio-fan/thermal support
 
-Also, we're missing lots of details here to be able to help.  Are you
-using the u-boot from hardkernel?  your own?  something else?  What's
-the version?
+On Sun, Mar 1, 2020 at 9:11 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
 
-Can you share logs (including u-boot logs) showing how your kernel is
-booting and full kernel boot log (including the stalls.)
+>  &A53_0 {
+> @@ -373,4 +383,58 @@
+>                         MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
+>                 >;
+>         };
+> +
+> +       pinctrl_gpio_fan: gpiofanp {
 
-> updating flags to CLK_IS_CRITICAL which help enable all the parent for
-> cpub_clk.
+Please keep the pinctrl entries in alphabetical order.
 
-With current mainline, I've tested DVFS using CPUfreq on both clusters
-on odroid-n2, and both clusters are booting, so I don't understand the
-need for this patch.  
+> +               fsl,pins = <
+> +                       MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5 0x01
 
-It's not related to your problem (I don't think) but for the regulators
-used by each cluster, the PWM driver is needed, and there's a bug/race
-in the probing of the PWM regulators used for CPU_B.  If you make the
-PWM regulators, built-in this problem goes away for CPUfreq.
+This pad comes as 0x16 after POR, so please add it as:
 
-Just for kicks, can you build your kernel with CONFIG_PWM_MESON=y
-(currently defaults to =n) and see if you have any better results with
-booting.
+MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5 0x16
 
-And FYI, any use of CLK_IS_CRITICAL will be very highly scrutinized.
-You will need detailed justification for adding this flag since it most
-often is just masking some other bug.
+> +&cpu_thermal {
 
-Kevin
+Please put it prior to the &i2c1 node in order to keep the alphabetical order.
 
-> Fixes: ffae8475b90c (clk: meson: g12a: add notifiers to handle cpu clock change);
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Previous changes
-> 	fix the commit $subject and $message as previously I was
->         wrong on the my findings.
->         Added the Fixed tags to the commit.
->
-> Following Neil's suggestion, I have prepared this patch.
-> https://patchwork.kernel.org/patch/11177441/#22964889
-> ---
->  drivers/clk/meson/g12a.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index d2760a021301..7237d08b4112 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -681,7 +681,7 @@ static struct clk_regmap g12b_cpub_clk = {
->  			&g12a_sys_pll.hw
->  		},
->  		.num_parents = 2,
-> -		.flags = CLK_SET_RATE_PARENT,
-> +		.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
->  	},
->  };
->  
-> -- 
-> 2.25.1
+With these changes you can add:
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
