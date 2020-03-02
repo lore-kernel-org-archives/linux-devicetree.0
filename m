@@ -2,205 +2,98 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5F7C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974A7C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C86B22B48
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tl1O4K9Y"
+	by mail.kernel.org (Postfix) with ESMTP id 68CB420842
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583185251;
+	bh=8PRgKjkNMdhif7FRzdbtgwVzBO9oZGAr+YxyaiFUiOg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hUdGa2eyQbztXfclVrT4L82E4tqXKV/a/XGi5l51MrjnaUcFrJn35Nferw0h5/iC3
+	 3hKhlc5l33fVpK66vu3hPGiFQEIhT2GinSH98fucxtxua3MXh2z0E6+cA+9/57xq0q
+	 j2EA5Yh4LEbh9nlmrXe9rbnBfHdksIFZHtuvOOew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgCBVkU (ORCPT
+        id S1726970AbgCBVku (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:40:20 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:40292 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgCBVkT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 16:40:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1583185211; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BGwq+fhag28ClFaNMhFdV25yYzPJLioisKoVSy4cwhc=;
-        b=tl1O4K9YHPqpP/GsqLu9svrpCSz0veCI95ciwXCA+E+ILkxuYAI4uKIGaE5Q8BK4tlumUF
-        k1Ks6FAwqPsfzLDBMPufgMm1FyQt4fffJkX/AFULozEojZNKdLTNbmuCHmbmfMPiUcpK3i
-        ksKEkoxDwsYYX54TlSfRvTjNdgEigJM=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me,
-        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/3] dt-bindings: rtc: Convert and update jz4740-rtc doc to YAML
-Date:   Mon,  2 Mar 2020 18:39:53 -0300
-Message-Id: <20200302213953.28834-3-paul@crapouillou.net>
-In-Reply-To: <20200302213953.28834-1-paul@crapouillou.net>
-References: <20200302213953.28834-1-paul@crapouillou.net>
+        Mon, 2 Mar 2020 16:40:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726700AbgCBVku (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Mar 2020 16:40:50 -0500
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A069021D56;
+        Mon,  2 Mar 2020 21:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583185249;
+        bh=8PRgKjkNMdhif7FRzdbtgwVzBO9oZGAr+YxyaiFUiOg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0+LBwjpF/BmWn5lcCy3AxC+d00V17BqOxhC3d4cbpIEqx/GQaY0tVH2Jt0kmGLJHF
+         8btyeC1RpCgv4EIqzmOKr79ME3BtxyfyHCqG8A+LexGXd6Ed3+k3JWGWCCOAkl0Mmg
+         3UWkwI4DGOe2o16B4x7fVuDSzOqvUxOPmU4h1OMk=
+Received: by mail-qv1-f50.google.com with SMTP id r8so669771qvs.12;
+        Mon, 02 Mar 2020 13:40:49 -0800 (PST)
+X-Gm-Message-State: ANhLgQ1j0lv4hxrBZH1mwD8HNizWtp8Ut5c5RQ9v2s1RE2rI2IvEpISf
+        f+TpMtgtKYclCMgoJ3YOPiHT59T1JjQVnBV3Yg==
+X-Google-Smtp-Source: ADFU+vtTHuHx49e5idYInPHiAYGTirAJ8BP2JfuSQxPXsVI6gokNdhLgD1Zf5FnnJ3gTgIlSXsOyzDAJJ4zGpbzcIcM=
+X-Received: by 2002:ad4:42cd:: with SMTP id f13mr1288473qvr.136.1583185248726;
+ Mon, 02 Mar 2020 13:40:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1583135507.git.mchehab+huawei@kernel.org>
+ <a7e0a5597ace97503c8ff67cdab2351151c7f267.1583135507.git.mchehab+huawei@kernel.org>
+ <7a4d92e5-a1e2-6bd2-9a40-dcdb52e80801@gmail.com>
+In-Reply-To: <7a4d92e5-a1e2-6bd2-9a40-dcdb52e80801@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 2 Mar 2020 15:40:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJwKcR4UVit=VBnvOcKx0z9UuUw5aXd0Y7+2nMgk3X_zw@mail.gmail.com>
+Message-ID: <CAL_JsqJwKcR4UVit=VBnvOcKx0z9UuUw5aXd0Y7+2nMgk3X_zw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/12] docs: dt: usage_model.rst: fix link for DT usage
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the jz4740-rtc doc to YAML, and update it to reflect the new
-changes in the driver:
-- More compatible strings are specified, with fallbacks if needed,
-- The vendor-specific properties are now properly prefixed with the
-  'ingenic,' prefix.
+On Mon, Mar 2, 2020 at 3:11 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 3/2/20 1:59 AM, Mauro Carvalho Chehab wrote:
+> > The devicetree.org doesn't host the Device_Tree_Usage page
+> > anymore. So, fix the link to point to a new address.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  Documentation/devicetree/usage-model.rst | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/usage-model.rst b/Documentation/devicetree/usage-model.rst
+> > index 326d7af10c5b..e1b42dc63f01 100644
+> > --- a/Documentation/devicetree/usage-model.rst
+> > +++ b/Documentation/devicetree/usage-model.rst
+> > @@ -12,7 +12,7 @@ This article describes how Linux uses the device tree.  An overview of
+> >  the device tree data format can be found on the device tree usage page
+> >  at devicetree.org\ [1]_.
+>
+> s/devicetree.org/elinux.org/
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- .../bindings/rtc/ingenic,jz4740-rtc.txt       | 37 --------
- .../devicetree/bindings/rtc/ingenic,rtc.yaml  | 87 +++++++++++++++++++
- 2 files changed, 87 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
+I wonder if we should make the devicetree.org link work again instead.
+Primarily just to avoid the appearance of it being Linux specific.
 
-diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-deleted file mode 100644
-index 41c7ae18fd7b..000000000000
---- a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--JZ4740 and similar SoCs real-time clock driver
--
--Required properties:
--
--- compatible: One of:
--  - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
--  - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
--- reg: Address range of rtc register set
--- interrupts: IRQ number for the alarm interrupt
--- clocks: phandle to the "rtc" clock
--- clock-names: must be "rtc"
--
--Optional properties:
--- system-power-controller: To use this component as the
--  system power controller
--- reset-pin-assert-time-ms: Reset pin low-level assertion
--  time after wakeup (default 60ms; range 0-125ms if RTC clock
--  at 32 kHz)
--- min-wakeup-pin-assert-time-ms: Minimum wakeup pin assertion
--  time (default 100ms; range 0-2s if RTC clock at 32 kHz)
--
--Example:
--
--rtc@10003000 {
--	compatible = "ingenic,jz4740-rtc";
--	reg = <0x10003000 0x40>;
--
--	interrupt-parent = <&intc>;
--	interrupts = <32>;
--
--	clocks = <&rtc_clock>;
--	clock-names = "rtc";
--
--	system-power-controller;
--	reset-pin-assert-time-ms = <60>;
--	min-wakeup-pin-assert-time-ms = <100>;
--};
-diff --git a/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-new file mode 100644
-index 000000000000..c18ed8ac263f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rtc/ingenic,rtc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ingenic SoCs Real-Time Clock DT bindings
-+
-+maintainers:
-+  - Paul Cercueil <paul@crapouillou.net>
-+
-+allOf:
-+  - $ref: rtc.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+        - ingenic,jz4740-rtc
-+        - ingenic,jz4760-rtc
-+      - items:
-+        - const: ingenic,jz4725b-rtc
-+        - const: ingenic,jz4740-rtc
-+      - items:
-+        - enum:
-+          - ingenic,jz4770-rtc
-+          - ingenic,jz4780-rtc
-+        - const: ingenic,jz4760-rtc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: rtc
-+
-+  system-power-controller:
-+    description: |
-+      Indicates that the RTC is responsible for powering OFF
-+      the system.
-+    type: boolean
-+
-+  ingenic,reset-pin-assert-time-ms:
-+    description: |
-+      Reset pin low-level assertion time after wakeup
-+      (assuming RTC clock at 32 kHz)
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 125
-+      - default: 60
-+
-+  ingenic,min-wakeup-pin-assert-time-ms:
-+    description: |
-+      Minimum wakeup pin assertion time
-+      (assuming RTC clock at 32 kHz)
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 2000
-+      - default: 100
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4740-cgu.h>
-+    rtc_dev: rtc@10003000 {
-+      compatible = "ingenic,jz4740-rtc";
-+      reg = <0x10003000 0x40>;
-+
-+      interrupt-parent = <&intc>;
-+      interrupts = <15>;
-+
-+      clocks = <&cgu JZ4740_CLK_RTC>;
-+      clock-names = "rtc";
-+    };
--- 
-2.25.1
+The website is hosted on github[1] and I'd assume there's a way to do
+redirects as a start.
 
+Rob
+
+[1] https://github.com/devicetree-org/devicetree-website
