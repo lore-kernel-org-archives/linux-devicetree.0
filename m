@@ -2,82 +2,101 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAAEC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E707C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A25208C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2616B208C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:18:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ly1l1Lrf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgCBKSw (ORCPT
+        id S1727390AbgCBKSm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:18:52 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40625 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbgCBKSt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 05:18:49 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1j8i9o-000400-Pk; Mon, 02 Mar 2020 11:18:40 +0100
-Message-ID: <fbba971d7501c774ce0081f22dcff4ef74002a4d.camel@pengutronix.de>
-Subject: Re: [PATCH 2/3] ARM: dts: stm32: add STM32MP1-based Linux
- Automation MC-1 board
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org
-Date:   Mon, 02 Mar 2020 11:18:39 +0100
-In-Reply-To: <244a4502-03e0-836c-2ce2-7fa6cef3c188@st.com>
-References: <20200226143826.1146-1-a.fatoum@pengutronix.de>
-         <20200226143826.1146-2-a.fatoum@pengutronix.de>
-         <244a4502-03e0-836c-2ce2-7fa6cef3c188@st.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 2 Mar 2020 05:18:42 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46848 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727267AbgCBKSm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 05:18:42 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022AHOdU029111;
+        Mon, 2 Mar 2020 11:18:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=sQGS3ajcizRpXz7eztz3fMHKRX1ok8Cx3ATqa3t8sXI=;
+ b=ly1l1LrfmdW+OA8JjznUO/o8/hrhHzc8ZE1lYr+bUD0ZbxNLB8bH8vsDmC2sV5HO8FgH
+ 4gM0FO13G6HTzpMSinxFUGe0S8TsPsuwlbZnjRfRUo6BL6I6mId0juive/qBoBXNUrkO
+ rtbzHbR2BT8YK5ghnPD1EpE/035ubzQf9YSwudleXKhqGp3EHiqKPTxMuAM5S6BSP1dB
+ XrbyfKOrJMizyQuD88IOszjxAA6YQ39yNig774CbYT0XA+pNa5kl4CYI+DOIxfEvz5T2
+ lcz93ysZ3/a7iFP0DmljDLUBrVoFZWaLd3z3lpQxeTw6nJv5adsLNtiCBW2Ux5+9ZHYi zw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yffqpjqar-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 11:18:35 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7B46A100038;
+        Mon,  2 Mar 2020 11:18:30 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 688A32B62F4;
+        Mon,  2 Mar 2020 11:18:30 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Mar 2020 11:18:29
+ +0100
+From:   Yannick Fertre <yannick.fertre@st.com>
+To:     Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/2] dt-bindings: touchscreen: goodix: support of gt9147
+Date:   Mon, 2 Mar 2020 11:18:27 +0100
+Message-ID: <1583144308-3781-2-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583144308-3781-1-git-send-email-yannick.fertre@st.com>
+References: <1583144308-3781-1-git-send-email-yannick.fertre@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_03:2020-02-28,2020-03-02 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mo, 2020-03-02 at 11:06 +0100, Alexandre Torgue wrote:
-> Hi Ahmad
-> 
-> Thanks for adding a new STM32 board. Some minor comments.
-> 
-> On 2/26/20 3:38 PM, Ahmad Fatoum wrote:
-> > The Linux Automation MC-1 is a SBC built around the Octavo Systems
-> > OSD32MP15x SiP. The SiP features up to 1 GB DDR3 RAM, EEPROM and
-> > a PMIC. The board has eMMC and a SD slot for storage and GbE
-> > for both connectivity and power.
-> > 
-> > Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de
-> > ---
-[...]
-> > +
-> > +&gpu {
-> > +	status = "okay";
-> > +};
+Add support for it by adding compatible.
+The chip data on GT9147 is similar to GT912, like
+- config data register has 0x8047 address
+- config data register max len is 240
+- config data checksum has 8-bit
 
-This question is more to the ST guys than this specific DT: Why is the
-GPU marked as disabled in the SoC dtsi file? This device is always
-present on the SoC and AFAICS there are no board level dependencies, so
-there is no reason to have it disabled by default, right? Removing the
-status property from the dtsi would remove the need for this override
-on the board DT.
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+---
+ Documentation/devicetree/bindings/input/touchscreen/goodix.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
-Lucas
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+index d7c3262..9f65d67 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+@@ -21,6 +21,7 @@ properties:
+       - goodix,gt911
+       - goodix,gt9110
+       - goodix,gt912
++      - goodix,gt9147
+       - goodix,gt927
+       - goodix,gt9271
+       - goodix,gt928
+-- 
+2.7.4
 
