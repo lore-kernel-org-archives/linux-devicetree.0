@@ -2,188 +2,173 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8A0C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 00:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FE9C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 00:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D487524697
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 00:11:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="carO0kFs"
+	by mail.kernel.org (Postfix) with ESMTP id 7A3EA2468D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 00:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgCBAL5 (ORCPT
+        id S1726614AbgCBAmi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Mar 2020 19:11:57 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41899 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbgCBAL5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 19:11:57 -0500
-Received: by mail-qk1-f194.google.com with SMTP id b5so8491258qkh.8
-        for <devicetree@vger.kernel.org>; Sun, 01 Mar 2020 16:11:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4/YCjZ1oaKRZgdjhxl8DLn+nRy9DD18mNfW/zomwFzE=;
-        b=carO0kFs1H4HE9z1tt2Yn3Llcx8sXHWgu5rJipogdsli2uizchBvU9ydf+1yIw0U6v
-         TWQX65v4oKXz2HMztMrBG0qDyINAkfqwHMP1ELbl2rfBOAcyCXVJ9PWgXioNq1G093n/
-         ieXrYGXG1eB2G/RR66betZPBripGPC0rjJPwLWFHDx15AEr9WO3UHafFLhHLAYBWXky/
-         NbPSlUCy7vKAbC88dlDfnWd9uFqrSQgCgAKCXZDeFspnznj560BIkUBGKNjF0AOfqYPD
-         +dyJi0/wrT+tvMKe+OvuaIEvrHqJl83v1crOZMRW3DT6jkpvu3t0SBMcZ5AeRPLAMVDO
-         iihQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4/YCjZ1oaKRZgdjhxl8DLn+nRy9DD18mNfW/zomwFzE=;
-        b=TbD1aEigfkKR4rNfTMmRYYECkosi5hQB9oxJS870ggTjVttFaGLOERkEPquo7MUkAX
-         oFpz72Trqscemx+eFANHoUoAS83KtBx/uKlrwx3sUUGFV1yR0t76PT312gKEZiJwjF3d
-         dQUx0zKWoAdPmcdJtZdws8HUK5PWTDxGhIwesEeuejFwNFqpP9aD+0zN0Mbd5KHFOty5
-         Pc/a0eJF6zsWP6RnPcb1RD8YlyxBy713SCsJcU+yhnW/EVgChjTT44jknIdgSDTVBe8i
-         VYALpXNOfgEzRkbHCx1SeD/H1tdzuqIvDDpOVobc2qsUCw+wb3bIuiVrFdNfyR+vru/Q
-         JrsQ==
-X-Gm-Message-State: APjAAAWhzjaKeCGzEPNLr0vsOi+/abURvH9q7RKhPLomQ/SfzcHBFHeV
-        Hb08g/yGNq2YPrZsks/ynReB2vpZnqwA8JAH
-X-Google-Smtp-Source: APXvYqx6If6whTCbu1kaCgR0TRrpOFIWdC6fmEUBVEcHG8zBm14f496mkUEMnQZ/aYydOZrT1VUKcw==
-X-Received: by 2002:a05:620a:22cc:: with SMTP id o12mr14087296qki.331.1583107915740;
-        Sun, 01 Mar 2020 16:11:55 -0800 (PST)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id l16sm4921372qke.68.2020.03.01.16.11.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 16:11:55 -0800 (PST)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, festevam@gmail.com, marco.franchi@nxp.com,
-        linux-imx@nxp.com, lkcamp@lists.libreplanetbr.org
-Subject: [PATCH v2] arm64: dts: freescale: add gpio-fan/thermal support for Google i.MX 8MQ Phanbell
-Date:   Sun,  1 Mar 2020 21:11:49 -0300
-Message-Id: <20200302001150.27952-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.21.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 1 Mar 2020 19:42:38 -0500
+Received: from lucky1.263xmail.com ([211.157.147.132]:50624 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgCBAmi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 19:42:38 -0500
+Received: from localhost (unknown [192.168.167.13])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 48B9FA27EF;
+        Mon,  2 Mar 2020 08:42:30 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P3521T140169829132032S1583109744046925_;
+        Mon, 02 Mar 2020 08:42:30 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <4192909b6d47e22ef0e119a7b8b5e01d>
+X-RL-SENDER: yifeng.zhao@rock-chips.com
+X-SENDER: zyf@rock-chips.com
+X-LOGIN-NAME: yifeng.zhao@rock-chips.com
+X-FST-TO: miquel.raynal@bootlin.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Subject: [PATCH 2/3] mtd: rockchip: device tree bindings for Rockchip
+Date:   Mon,  2 Mar 2020 08:42:16 +0800
+Message-Id: <1583109736-27801-1-git-send-email-yifeng.zhao@rock-chips.com>
+X-Mailer: git-send-email 2.0.0
+In-Reply-To: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
+References: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It was based on Google Source Code for Coral Edge TPU Mendel release:
-https://coral.googlesource.com/linux-imx/
+Documentation support for Rockchip NAND controllers
 
-It was tested on Coral Dev Board using this command:
-  sudo stress --cpu 4 --timeout 3600
-
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
 ---
-v2:
- * Fix underscore in property name;
- * Add pinctrl entry for gpio-fan;
- * Removes undocumented property.
 
-BR,
-Vitor
----
- .../boot/dts/freescale/imx8mq-phanbell.dts    | 64 +++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  2 +-
- 2 files changed, 65 insertions(+), 1 deletion(-)
+ .../bindings/mtd/rockchip,nand.yaml           | 95 +++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index 3f2a489a4ad8..3302e5c127ca 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -35,6 +35,16 @@
- 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
+diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
+new file mode 100644
+index 000000000000..9a81f682ac01
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
+@@ -0,0 +1,95 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mtd/rockchip,nand.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	fan: gpio-fan {
-+		compatible = "gpio-fan";
-+		gpio-fan,speed-map = <0 0 8600 1>;
-+		gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-+		#cooling-cells = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_fan>;
-+		status = "okay";
-+	};
- };
- 
- &A53_0 {
-@@ -373,4 +383,58 @@
- 			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
- 		>;
- 	};
++title: Rockchip SoCs NAND FLASH Controller (NFC) Device Tree Bindings
 +
-+	pinctrl_gpio_fan: gpiofanp {
-+		fsl,pins = <
-+			MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5 0x01
-+		>;
-+	};
- };
++allOf:
++  - $ref: "nand-controller.yaml"
 +
-+&cpu_thermal {
-+	trips {
-+		cpu_alert0: trip0 {
-+			temperature = <75000>;
-+			hysteresis = <2000>;
-+			type = "passive";
-+		};
++maintainers:
++  - Yifeng Zhao <yifeng.zhao@rock-chips.com>
 +
-+		cpu_alert1: trip1 {
-+			temperature = <80000>;
-+			hysteresis = <2000>;
-+			type = "passive";
-+		};
++properties:
++  "#address-cells": true
++  "#size-cells": true
 +
-+		cpu_crit0: trip3 {
-+			temperature = <90000>;
-+			hysteresis = <2000>;
-+			type = "critical";
-+		};
++  compatible:
++    const: rockchip,nfc
 +
-+		fan_toggle0: trip4 {
-+			temperature = <65000>;
-+			hysteresis = <10000>;
-+			type = "active";
-+		};
-+	};
++  reg:
++    maxItems: 1
 +
-+	cooling-maps {
-+		map0 {
-+			trip = <&cpu_alert0>;
-+			cooling-device =
-+			<&A53_0 0 1>; /* Exclude highest OPP */
-+		};
++  interrupts:
++    maxItems: 1
 +
-+		map1 {
-+			trip = <&cpu_alert1>;
-+			cooling-device =
-+			<&A53_0 0 2>; /* Exclude two highest OPPs */
-+		};
++  clocks:
++    items:
++      - description: Module Clock
++      - description: Bus Clock
 +
-+		map4 {
-+			trip = <&fan_toggle0>;
-+			cooling-device = <&fan 0 1>;
-+		};
-+	};
-+};
++  clock-names:
++    items:
++      - const: clk_nfc
++      - const: clk_ahb
 +
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 6a1e83922c71..a3bb17a6b9df 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -198,7 +198,7 @@
- 	};
- 
- 	thermal-zones {
--		cpu-thermal {
-+		cpu_thermal: cpu-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <2000>;
- 			thermal-sensors = <&tmu 0>;
++  clock-rates:
++      maximum: 150000000
++
++  pinctrl-names: true
++
++patternProperties:
++  "^pinctrl-[0-9]+$": true
++
++  "^nand@[a-f0-9]$":
++    type: object
++    properties:
++      reg:
++        minimum: 0
++        maximum: 3
++
++      nand-ecc-step-size:
++        const: 1024
++
++      nand-ecc-strength:
++        enum: [16, 24 , 40, 60, 70]
++
++      nand-bus-width:
++        const: 8
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/rk3308-cru.h>
++    nfc: nand-controller@ff4b0000 {
++      compatible = "rockchip,nfc";
++      reg = <0x0 0xff4b0000 0x0 0x4000>;
++      interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru SCLK_NANDC>, <&cru HCLK_NANDC>;
++      clock-names = "clk_nfc", "clk_ahb";
++      clock-rates = <150000000>;
++      pinctrl-names = "default";
++      pinctrl-0 = <&flash_csn0 &flash_rdy &flash_ale &flash_cle
++                  &flash_wrn &flash_rdn &flash_bus8>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++      nand@0 {
++        reg = <0>;
++        nand-ecc-mode = "hw";
++        nand-ecc-strength = <16>;
++        nand-ecc-step-size = <1024>;
++        nand-bus-width = <8>;
++      };
++    };
++
++...
 -- 
-2.21.1
+2.17.1
+
+
 
