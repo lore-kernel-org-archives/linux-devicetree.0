@@ -2,184 +2,91 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9769EC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112BFC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 13:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7946321739
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49D121739
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 13:49:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UH5EmQ8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgCBNr7 (ORCPT
+        id S1726621AbgCBNtZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:47:59 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40452 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbgCBNr7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 08:47:59 -0500
-Received: by mail-oi1-f194.google.com with SMTP id j80so8308811oih.7;
-        Mon, 02 Mar 2020 05:47:58 -0800 (PST)
+        Mon, 2 Mar 2020 08:49:25 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33679 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgCBNtZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 08:49:25 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a25so2597359wmm.0
+        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 05:49:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=pDQHChPAvHbaHiAh1rx2hc7lXXqfrv2AqyVIgjj3sL4=;
+        b=UH5EmQ8xNHA0Plu/McRn1qzyUYWuxXbSKQ2Os9L0yoktOYu7tCx3sdJI7YWZDxYoHd
+         +YL3OEUKvM/W7hKB41X+4FFEjSxBJAVk5gdh5ny/LUcvZAIIrr1B3WQhGeUbo8nhyhjJ
+         YErz9cLbumJ9EU8Q1wTQxX1Bo4aRM5DcDqFGnmdskcTtTl60EykI71bjpWhvL433KI6k
+         1zp5xmHgz0vxdOb2LAhL2niLWDwbVPa+UYR0WaVrxCd+4X1KV0gISqCbaTXsch8ZTvpP
+         2pSH5mZIJxey3CFXFP6hifTlnIokOwzOBrOrJD7jVSHNogev7ThF6WI4H0vnNCqvkDfL
+         J1iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=hDB6s0mVsZWzKBwRcoxWaZ6NA1lo5wdAr0u5W26z+JE=;
-        b=l7lEazKyQVeciw9mD3hG4uS9EcNZal43Dm/bjnNbtFxOho88NmwV/MA/pT0i4jm10G
-         C62bU3uM3yssel+KV6MuuQ0s04TOtlZei43OW4IVHcCQck18guI6n3dqJjVWc4mZLFOH
-         +3gftezsVSWTJAavu70R3FlMq57a+FfGhLBTDpaIXYuXdKZqFRx4JAFHkFvVBA+4kmM+
-         b/wGKwygSzFIjH2cWvm9ZC12TJkvBLPKFedq+hQi1W/B3LGfHNl3sWxl9jZhokqzDDSO
-         RHMArxl4MNlrOSfuTvBKCbHbQwGC2AfIj9GMBkV0G/W5u9FZgKYmErWePrwV1kTfDYFN
-         noiA==
-X-Gm-Message-State: APjAAAW9w8SbAk/qn3mHjjY16D/GgUgCWD5sUGVLvzlQGd2BYIM/dUyG
-        ohbm7X6ZSkj5vb9Je+Fdkq8RiUsHCF/edyOna/sX1A==
-X-Google-Smtp-Source: APXvYqzWVp9IhNwDI2+UTTrugW/SFZ+bbTayj2vr/BAzNkK7k45D30xX4RP/S0TypGTtAOrugGLKPdfWiiTIxXsXYzM=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr11048818oia.148.1583156877859;
- Mon, 02 Mar 2020 05:47:57 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
- <20200113141556.GI3606@pflmari> <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
- <20200302134011.GA3717@pflmari>
-In-Reply-To: <20200302134011.GA3717@pflmari>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 2 Mar 2020 14:47:46 +0100
-Message-ID: <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=pDQHChPAvHbaHiAh1rx2hc7lXXqfrv2AqyVIgjj3sL4=;
+        b=dqKk4yvFrFSEX4YstNnMpTyxG/FyGViSegrY0PUcd6kUYmXfFnRGUCVGDLNlnr7jT0
+         7fHIwRmafW2StVjFgT9TwTUK7VAlcIbAR6rv1Omk9Er4eZ9i1PqsZuKsKpJ/Si1N5c5j
+         d3cTGF59JEJvha40izG6omvYMWtqkd0VhOZH6WTqBZoDa0ul4JDeE3qtGhhcyvasHzD9
+         xw4oq2tKed/WJUAwtKrU8F9M6tumzCpY4C8t4G9mGxPJWhVxUAuzXMvSODxxZAEwpspw
+         9BIa3gh+BVCpWIzJdlF03rcRXr0XWjrt6u3LWaGIhs1KzIAlzKNeCUjObsZUUSIChaEY
+         clfA==
+X-Gm-Message-State: ANhLgQ3jrnPORuRkF3nxC7vfQ4oZ/ySx/EJ6dXeEJy1ImfgmQbYWdxeT
+        u4n2+h86nCyVWsi+zBeG4X9K1g==
+X-Google-Smtp-Source: ADFU+vvG6MBPGRkXYyxVAEaRWeNUehBlIcQSHO6fOGOEKIiRp511b6KjpX5fIWmrSFxV9Fue65UAYA==
+X-Received: by 2002:a1c:2d88:: with SMTP id t130mr7393177wmt.68.1583156963877;
+        Mon, 02 Mar 2020 05:49:23 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h10sm16163783wml.18.2020.03.02.05.49.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Mar 2020 05:49:23 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH] arm64: dts: meson-g12b: fix N2/VIM3 audio card model names
+In-Reply-To: <1583135051-95529-1-git-send-email-christianshewitt@gmail.com>
+References: <1583135051-95529-1-git-send-email-christianshewitt@gmail.com>
+Date:   Mon, 02 Mar 2020 14:49:22 +0100
+Message-ID: <7h8skisw7x.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alex,
+Christian Hewitt <christianshewitt@gmail.com> writes:
 
-On Mon, Mar 2, 2020 at 2:40 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> Geert Uytterhoeven, Mon, Mar 02, 2020 13:28:13 +0100:
-> > On Mon, Jan 13, 2020 at 3:24 PM Alex Riesen
-> > <alexander.riesen@cetitec.com> wrote:
-> > > Not sure if all variants of the Salvator board have the HDMI decoder
-> > > chip (the ADV7482) connected to the SSI4 on R-Car SoC, as it is on
-> > > Salvator-X ES1, so the the ADV7482 endpoint and connection definitions
-> > > are placed in the board file.
-> >
-> > Both Salvator-X and Salvator-XS have SSI4 wired to the ADV7482.
-> >
-> > > I do assume though that all Salvator variants have the CLK_C clock line
-> > > hard-wired to the ADV7482 HDMI decoder, and remove it from the list of
-> > > clocks provided by the R-Car sound system.
-> >
-> > Yes, both Salvator-X and Salvator-XS have it wired that way.
+> This is largely cosmetic, but Odroid N2 and Khadas VIM3 are G12B devices so
+> correct the card model names to reflect this.
 >
-> Ok, seems like I can move that part into the common file as well.
-> Integrations of ADV7482 and R-Car which use salvator-common.dts can still
-> redefine the endpoint settings in their board files, right?
+> Fixes: aa7d5873bf6e ("arm64: dts: meson-g12b-odroid-n2: add sound card")
+> Fixes: c6d29c66e582 ("arm64: dts: meson-g12b-khadas-vim3: add initial device-tree")
 
-Indeed.
+nit: no blank lines between Fixes tags and others (cf
 
-> > > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > @@ -322,6 +322,10 @@
-> > >         clock-frequency = <22579200>;
-> > >  };
-> > >
-> > > +&audio_clk_c {
-> > > +       clock-frequency = <12288000>;
-> > > +};
-> >
-> > Does the ADV7482 always generate a 12.288 MHz clock signal?
-> > Or is this programmable?
->
-> Oops. It looks like it is and the value is derived from the sampling rate
-> (48kHz) and the master clock multiplier. Both hard-coded in the board file.
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 
-Where are these hardcoded in the board file?
-Even if they are, technically this is a clock output of the ADC7482.
+Queued for v5.7,
 
-> > > video-receiver@70 {
-> > >     compatible = "adi,adv7482";
-> > > ...
-> > > +   clocks = <&rcar_sound 3>, <&audio_clk_c>;
-> > > +   clock-names = "clk-hdmi-video", "clk-hdmi-i2s-mclk";
-> >
-> > The above declares the Audio CLK C to be a clock input of the ADV7482, while
-> > it is an output.
->
-> I would gladly give it right direction if I *really* understood what I was
-> doing...
+Thanks for the cleanup,
 
-:-)
-
-> > Furthermore, the DT bindings do not document that clocks can be specified.
->
-> Should the DT bindings document that the clock cannot be specified than?
-
-It currently does say so, as it doesn't list "clocks" in its properties section.
-
-> > > @@ -686,7 +700,8 @@
-> > >         };
-> > >
-> > >         sound_pins: sound {
-> > > -               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
-> > > +               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
-> > > +                        "ssi4_data";
-> >
-> > Missing "ss4_ctrl", for the SCK4 and WS4 pins.
->
-> I'll add them.
-> As the device seems to function even without thoes, does this mean the pins in
-> the group are used "on demand" by whatever needs them?
-
-Probably the SCK4/WS4 functions are the reset-state defaults.
-
-> > > @@ -760,8 +775,18 @@
-> > >                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
-> > >                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
-> > >                  <&audio_clk_a>, <&cs2000>,
-> > > -                <&audio_clk_c>,
-> >
-> > Why remove it? This is the list of clock inputs, not outputs.
->
-> ...probably because I was thinking the specification was exactly the other way
-> around.
->
-> Does a "clocks = ..." statement always mean input clocks?
-
-Yes it does.
-If a device has clock outputs and is thus a clock provider, it should
-have a #clock-cells property, and this should be documented in the bindings.
-
-A clock consumer will refer to clocks of a provider using the "clocks"
-property, specifying a clock specifier (phandle and zero or more indices)
-for each clock referenced.
-
-> I shall correct that and re-test (might take a while, I don't have the
-> hardware anymore).
-
-Oops.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Kevin
