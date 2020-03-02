@@ -2,105 +2,107 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A718C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5497C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013FC2173E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="udcRkwfK"
+	by mail.kernel.org (Postfix) with ESMTP id C5FC924673
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgCBUsE (ORCPT
+        id S1726755AbgCBUtN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:48:04 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:17721 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726700AbgCBUsE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 15:48:04 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583182083; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=O+9e9Rw4vOt5ge1vzMdXqb5oDjeStYlgakftUbm5IH4=; b=udcRkwfK8sSpimfGlS3ao5i2L/VSsfI0+QU8gomm+JBn2hdH/wuqRdXqzfcZr390TSxcu0+f
- XsXQRr9ha3KchQKKcRWkTqtLBeobaUuRwFYt9cZ9n7ISRVf8rLYRnldtBZ8p4VA+AcCJdr8B
- knsCtwPHCgjHoCZHFINjkYAIpyk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5d70f9.7fb601d03e68-smtp-out-n01;
- Mon, 02 Mar 2020 20:47:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 629EBC4479C; Mon,  2 Mar 2020 20:47:53 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 2 Mar 2020 15:49:13 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:54078 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgCBUtN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 15:49:13 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B845C43383;
-        Mon,  2 Mar 2020 20:47:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B845C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     smasetty@codeaurora.org, John Stultz <john.stultz@linaro.org>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 408528051F;
+        Mon,  2 Mar 2020 21:49:08 +0100 (CET)
+Date:   Mon, 2 Mar 2020 21:49:06 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         David Airlie <airlied@linux.ie>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v4 0/2] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
-Date:   Mon,  2 Mar 2020 13:47:45 -0700
-Message-Id: <1583182067-16530-1-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        freedreno@lists.freedesktop.org, smasetty@codeaurora.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: msm: Convert GMU bindings
+ to YAML
+Message-ID: <20200302204906.GA32123@ravnborg.org>
+References: <1583173424-21832-1-git-send-email-jcrouse@codeaurora.org>
+ <1583173424-21832-2-git-send-email-jcrouse@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583173424-21832-2-git-send-email-jcrouse@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8
+        a=7gkXJVJtAAAA:8 a=QUSSlG8YkhR_fViXtTAA:9 a=3EO_jEHvlgRDqEOL:21
+        a=b2m7j8IoA-gO4Aiz:21 a=CjuIK1q_8ugA:10 a=pioyyrs4ZptJ924tMmac:22
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
-cache coherency issues because it is mapped as write-combine without clearing
-the cache after it was zeroed.
+Hi Jordan.
 
-Rather than duplicate the hacky workaround we use in the GEM allocator for the
-same reason it turns out that we don't need to have a bespoke memory allocator
-for the GMU anyway. It uses a flat, global address space and there are only
-two relatively minor allocations anyway. In short, this is essentially what the
-DMA API was created for so replace a bunch of memory management code with two
-calls to allocate and free DMA memory and we're fine.
+On Mon, Mar 02, 2020 at 11:23:43AM -0700, Jordan Crouse wrote:
+> Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
+> text bindings.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> 
+>  .../devicetree/bindings/display/msm/gmu.txt        | 116 -------------------
+> -
+> -Required properties:
+> -- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
+> -    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
+> -  Note that you need to list the less specific "qcom,adreno-gmu"
+> -  for generic matches and the more specific identifier to identify
+> -  the specific device.
+> -- reg: Physical base address and length of the GMU registers.
+> -- reg-names: Matching names for the register regions
+> -  * "gmu"
+> -  * "gmu_pdc"
+> -  * "gmu_pdc_seg"
+> -- interrupts: The interrupt signals from the GMU.
+> -- interrupt-names: Matching names for the interrupts
+> -  * "hfi"
+> -  * "gmu"
+> -- clocks: phandles to the device clocks
+> -- clock-names: Matching names for the clocks
+> -   * "gmu"
+> -   * "cxo"
+> -   * "axi"
+> -   * "mnoc"
+The new binding - and arch/arm64/boot/dts/qcom/sdm845.dtsi agrees that
+"mnoc" is wrong.
 
-In a previous version of this series I added the dma-ranges property to the
-device tree file for the GMU and updated the bindings to YAML. Rob correctly
-pointed out that we didn't need dma-ranges any more but I'm still pushing the
-YAML conversion because it is good and we'll eventually need it anyway so why
-not.
+> -- power-domains: should be:
+> -	<&clock_gpucc GPU_CX_GDSC>
+> -	<&clock_gpucc GPU_GX_GDSC>
+> -- power-domain-names: Matching names for the power domains
+> -- iommus: phandle to the adreno iommu
+> -- operating-points-v2: phandle to the OPP operating points
+> -
+> -Optional properties:
+> -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+> -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+This property is not included in the new binding.
 
-v4: Use dma_alloc_wc() wrappers per Michael Ruhl.
+Everything else looked fine to me.
+With sram added - or expalined in commit why it is dropped:
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-v3: Fix YAML description per RobH and remove dma-ranges and replace it with the
-correct DMA mask in the GMU device. Convert the iova type to a dma_attr_t to
-make it 32 bit friendly.
-
-v2: Fix the example bindings for dma-ranges - the third item is the size
-Pass false to of_dma_configure so that it fails probe if the DMA region is not
-set up.
-
-Jordan Crouse (2):
-  dt-bindings: display: msm: Convert GMU bindings to YAML
-  drm/msm/a6xx: Use the DMA API for GMU memory objects
-
- .../devicetree/bindings/display/msm/gmu.txt        | 116 -------------------
- .../devicetree/bindings/display/msm/gmu.yaml       | 123 +++++++++++++++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 113 ++-----------------
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h              |   6 +-
- 4 files changed, 135 insertions(+), 223 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
- create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
-
--- 
-2.7.4
+	Sam
