@@ -2,101 +2,105 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E707C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8953C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2616B208C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:18:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ly1l1Lrf"
+	by mail.kernel.org (Postfix) with ESMTP id A2B9F208C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgCBKSm (ORCPT
+        id S1726956AbgCBKUK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:18:42 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46848 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727267AbgCBKSm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 05:18:42 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022AHOdU029111;
-        Mon, 2 Mar 2020 11:18:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=sQGS3ajcizRpXz7eztz3fMHKRX1ok8Cx3ATqa3t8sXI=;
- b=ly1l1LrfmdW+OA8JjznUO/o8/hrhHzc8ZE1lYr+bUD0ZbxNLB8bH8vsDmC2sV5HO8FgH
- 4gM0FO13G6HTzpMSinxFUGe0S8TsPsuwlbZnjRfRUo6BL6I6mId0juive/qBoBXNUrkO
- rtbzHbR2BT8YK5ghnPD1EpE/035ubzQf9YSwudleXKhqGp3EHiqKPTxMuAM5S6BSP1dB
- XrbyfKOrJMizyQuD88IOszjxAA6YQ39yNig774CbYT0XA+pNa5kl4CYI+DOIxfEvz5T2
- lcz93ysZ3/a7iFP0DmljDLUBrVoFZWaLd3z3lpQxeTw6nJv5adsLNtiCBW2Ux5+9ZHYi zw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yffqpjqar-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Mar 2020 11:18:35 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7B46A100038;
-        Mon,  2 Mar 2020 11:18:30 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 688A32B62F4;
-        Mon,  2 Mar 2020 11:18:30 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Mar 2020 11:18:29
- +0100
-From:   Yannick Fertre <yannick.fertre@st.com>
-To:     Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mon, 2 Mar 2020 05:20:10 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43340 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbgCBKUK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 05:20:10 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F239229480B;
+        Mon,  2 Mar 2020 10:20:07 +0000 (GMT)
+Date:   Mon, 2 Mar 2020 11:20:02 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Pratyush Yadav <p.yadav@ti.com>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Yannick Fertre <yannick.fertre@st.com>,
-        <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 1/2] dt-bindings: touchscreen: goodix: support of gt9147
-Date:   Mon, 2 Mar 2020 11:18:27 +0100
-Message-ID: <1583144308-3781-2-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583144308-3781-1-git-send-email-yannick.fertre@st.com>
-References: <1583144308-3781-1-git-send-email-yannick.fertre@st.com>
+        <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH v2 02/11] spi: set mode bits for "spi-rx-dtr" and
+ "spi-tx-dtr"
+Message-ID: <20200302112002.4e3aaffd@collabora.com>
+In-Reply-To: <20200302094829.opazalwldrdn4s7y@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+        <20200226093703.19765-3-p.yadav@ti.com>
+        <20200227172247.0e8ec459@collabora.com>
+        <20200302094829.opazalwldrdn4s7y@ti.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_03:2020-02-28,2020-03-02 signatures=0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for it by adding compatible.
-The chip data on GT9147 is similar to GT912, like
-- config data register has 0x8047 address
-- config data register max len is 240
-- config data checksum has 8-bit
+On Mon, 2 Mar 2020 15:18:31 +0530
+Pratyush Yadav <p.yadav@ti.com> wrote:
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
----
- Documentation/devicetree/bindings/input/touchscreen/goodix.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> > > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> > > index 38b4c78df506..25c8ed9343f9 100644
+> > > --- a/drivers/spi/spi.c
+> > > +++ b/drivers/spi/spi.c
+> > > @@ -1927,6 +1927,13 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+> > >  		}
+> > >  	}
+> > >  
+> > > +	/* Device DTR mode. */
+> > > +	if (of_property_read_bool(nc, "spi-tx-dtr"))
+> > > +		spi->mode |= SPI_TX_DTR;
+> > > +
+> > > +	if (of_property_read_bool(nc, "spi-rx-dtr"))
+> > > +		spi->mode |= SPI_RX_DTR;
+> > > +  
+> > 
+> > If this DTR mode is only used in spi-mem, maybe we shouldn't add those
+> > flags. SPI mem devices are usually smart enough to advertise what they
+> > support, and the subsystem in charge of those devices (in this specific
+> > case, spi-nor) will check what the controller supports
+> > using spi_mem_supports_op(). The only case we might have to deal with
+> > at some point is board level limitations (disabling DTR because the
+> > routing prevents using this mode).  
+>  
+> Yes, being able to handle board-level limitations is the main reason 
+> behind this change. There should be a way to over-ride the use of DTR 
+> for a given board. And IIUC, SPI allows doing the same for Rx and Tx 
+> buswidth. So I don't see why we should deviate from that model.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-index d7c3262..9f65d67 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-@@ -21,6 +21,7 @@ properties:
-       - goodix,gt911
-       - goodix,gt9110
-       - goodix,gt912
-+      - goodix,gt9147
-       - goodix,gt927
-       - goodix,gt9271
-       - goodix,gt928
--- 
-2.7.4
+My point is, maybe it should be expressed as a limitation, rather than
+made mandatory for the non-limited case (default to supported, unless
+stated otherwise). I think we already had this discussion with Rob and
+Mark regarding the QUAD/DUAL flags, which made conversion from spi-nor
+to spi-mem non-backward compatible for some controllers (some spi-nor
+controller drivers were considering the absence of spi-{tx,rx}-width as
+'use the max supported by the controller if the device supports it'
+while the spi subsystem goes for the more conservative 'use single SPI
+if spi-{tx,rx}-width is missing'). If we introduce a new property, maybe
+it'd be a good thing to think twice before taking this decision. FWIW,
+I'd vote for a 'spi-no-dtr' property to express board-level
+limitations.
 
+Orthogonal to this is the question of where we should put those flags,
+and I'm still not convinced we need that at the spi level (at least not
+yet).
