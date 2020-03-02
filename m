@@ -2,134 +2,103 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C7C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 06:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4947C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24AC624695
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 06:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QyDveerB"
+	by mail.kernel.org (Postfix) with ESMTP id 707AD246CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583134696;
+	bh=4uAsxGGUcqUWD/COuQVojB5OTTc8bDuMT4ZGz9MSG9c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TFmfGxcC/L0drnThZL8yLYIVLvMCecsVrRfV8/GutbBufRwr2CzNEw1EHUZxp9U8Y
+	 U2yE0xBkxcQBuBsfBpOD/eOBHTfxWmM0cycRrCko2LQOv6OMHsOVVV08V0mnbh7wuz
+	 +hGrzW9t0B5ijeclchdFDfI61PH37SNbJKgXBPtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgCBGgR (ORCPT
+        id S1726953AbgCBHiP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:36:17 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23069 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726263AbgCBGgR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 01:36:17 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583130976; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=YYalt6l/N7I/mSLT1TfY3UB/16G6fmRPNEGmAhNeO4I=; b=QyDveerBgxzE2kFNBna3YyvzG62yX7DX0JfHpGt/AeRZ3fcXyuLEGQnoqm13I1KBqA04N45o
- +tAtWN+ltSZW1XxJZ7nHEmER71SbjgNuPoOMP0z10izJ2TK6Fx9dNaOgeNNfhMgK0yAUwGO/
- ppDtqY3WaNkzwOjYexDa2IwwdvM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5ca950.7ff8cb975340-smtp-out-n02;
- Mon, 02 Mar 2020 06:36:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6CC71C4479F; Mon,  2 Mar 2020 06:35:59 +0000 (UTC)
-Received: from [10.204.67.17] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 2 Mar 2020 02:38:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbgCBHiP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Mar 2020 02:38:15 -0500
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6A9CC43383;
-        Mon,  2 Mar 2020 06:35:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C6A9CC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        saiprakash.ranjan@codeaurora.org
-References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
- <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
- <20200220203509.GA14697@bogus>
- <6a7c1f39-a85f-4a99-fed3-71001bdb6128@codeaurora.org>
- <CAL_JsqKVNENPZKbCy4FrGRO=D79hBL3keuE-U2tTwDVViCrdPQ@mail.gmail.com>
-From:   Sharat Masetty <smasetty@codeaurora.org>
-Message-ID: <3f9ae835-5146-d5db-1caf-01ede5bc9a1f@codeaurora.org>
-Date:   Mon, 2 Mar 2020 12:05:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 70280246BF;
+        Mon,  2 Mar 2020 07:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583134694;
+        bh=4uAsxGGUcqUWD/COuQVojB5OTTc8bDuMT4ZGz9MSG9c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DroSkeJpB0zHiDpXSFIGonVn1/BcR3QNlVJNL2X1qV6+aLPE9ARbe0fulx7ywkzm4
+         w3nTQordNzMA/Fl5BT3Js+puaHTM8yfcTqZdM720A8vQLQ0KKK6AKMZbjJxbDpVluo
+         1IF5VmQ82R7ZPOCvEyOtFS41dsE1AuxoePtHExxM=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1j8feW-0003Vy-0g; Mon, 02 Mar 2020 08:38:12 +0100
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 09/12] docs: dt: minor adjustments at writing-schema.rst
+Date:   Mon,  2 Mar 2020 08:38:04 +0100
+Message-Id: <b1e47ef85472a9a98aae12911c76c0e45a557cf4.1583134242.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <cover.1583134242.git.mchehab+samsung@kernel.org>
+References: <cover.1583134242.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKVNENPZKbCy4FrGRO=D79hBL3keuE-U2tTwDVViCrdPQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On 2/26/2020 8:03 PM, Rob Herring wrote:
-> On Wed, Feb 26, 2020 at 5:17 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
->>
->> On 2/21/2020 2:05 AM, Rob Herring wrote:
->>> On Thu, 20 Feb 2020 13:42:22 +0530, Sharat Masetty wrote:
->>>> This patch adds a clock definition needed for powering on the GPU TBUs
->>>> and the GPU TCU.
->>>>
->>>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
->>>> ---
->>>>    Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
->>>>    1 file changed, 3 insertions(+)
->>>>
->>> My bot found errors running 'make dt_binding_check' on your patch:
->>>
->>> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
->>> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clock-names: ['bus', 'iface'] is too short
->>> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clocks: [[4294967295, 123], [4294967295, 124]] is too short
->>>
->>> See https://patchwork.ozlabs.org/patch/1241297
->>> Please check and re-submit.
->> Hi Rob, These issues seem to be from the original code and not related
->> to my patch. Are these going to be blocking errors?
-> There are no errors in this binding in mainline. You've added a 3rd
-> clock when all the existing users have exactly 2 clocks.
+There are two literal blocks that aren't mark as such. Mark them,
+in order to make the document to produce a better html output.
 
-Rob,
+While here, also add a SPDX header to it.
 
-Adding something like the following seems to be solving the bot errors, 
-but I am not certain if this is the right way to address this issue. Can 
-you please comment?
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/devicetree/writing-schema.rst | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-    clock-names:
-+    minItems: 2
-+    maxItems: 3
-      items:
-        - const: bus
-        - const: iface
-+      - const: mem_iface_clk
+diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
+index 7635ab230456..6b3ef308c59f 100644
+--- a/Documentation/devicetree/writing-schema.rst
++++ b/Documentation/devicetree/writing-schema.rst
+@@ -1,4 +1,4 @@
+-:orphan:
++.. SPDX-License-Identifier: GPL-2.0
+ 
+ Writing DeviceTree Bindings in json-schema
+ ==========================================
+@@ -124,9 +124,12 @@ dtc must also be built with YAML output support enabled. This requires that
+ libyaml and its headers be installed on the host system. For some distributions
+ that involves installing the development package, such as:
+ 
+-Debian:
++Debian::
++
+   apt-get install libyaml-dev
+-Fedora:
++
++Fedora::
++
+   dnf -y install libyaml-devel
+ 
+ Running checks
+-- 
+2.21.1
 
-    clocks:
-+    minItems: 2
-+    maxItems: 3
-      items:
-        - description: bus clock required for downstream bus access and 
-for the
-            smmu ptw
-        - description: interface clock required to access smmu's registers
-            through the TCU's programming interface.
-+      - description: core clock required for the GPU SMMU TBUs and the 
-GPU TCU.
-
->
-> Rob
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
