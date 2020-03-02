@@ -2,112 +2,148 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6648C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAB5C3F2D4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E29246A1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehow4vu9"
+	by mail.kernel.org (Postfix) with ESMTP id 23679246B4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583135403;
+	bh=ONNo5czmh6fu5j0BUfw9CMOMf+tPmThhb62/x1pFQcs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NDDIjuVoWxW9YUvjQnQLmDnwgbQnuuvQI1Vm/r14sfJ2jY68DRHYqneDeC3oGL0QL
+	 VP9RJ837wODbX1kPBr2JAJzFHIIxJrl3NZCCG4KoT4THf+fAsFfyxtKSPKhm2WJ9SC
+	 6yf6Cb2OQHygI4ApHJ2kH7S2Hc4ry0ck6orVJR4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbgCBHpF (ORCPT
+        id S1726905AbgCBHt7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:45:05 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36876 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBHpE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 02:45:04 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q23so10606286ljm.4;
-        Sun, 01 Mar 2020 23:45:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5p7zJr0xKI0vCUUOTcHCNVe4S/T3X0b9SlsPBN2yTzQ=;
-        b=ehow4vu90D6zdQlrC08Ydu2TzhYin/mPzAtpOekZKKBQivIp/5rDao00o8W5rhMlsa
-         Ks3yCbjNRGWfcF1z/5zmrLlNu2vOuCUt/VFLyp3QJoL0N2iGdS286lWWVF1hBR06BwUL
-         54gWuli+mlpv+LZ40r8IAXyLvkpH5gm/qnOsyjnDM0bCTWzpQu3gAhy5fg6hAw7Caf2F
-         ZdFWhwj4JnUgEe5v4nqBSHSJgippG+hC4mXPeyVOIPbM5Nw4ZbEEPB2YRl6kA9I/Gmv9
-         OZ2alNqk/ivcTUy9UrTZZsQGgqvht/4qPLyK1KR4M5BJtDuCWuAR9RNcnf45xIbcgwxw
-         +RiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5p7zJr0xKI0vCUUOTcHCNVe4S/T3X0b9SlsPBN2yTzQ=;
-        b=B43Sd3LoY+kFOHL5jhKBs3B0Nb1bHtFbbzBKnD1fOejZZGGV88KffBb1m5iEY29ex9
-         abyfZgqH5RxCvjScgxqSNTeGZEi2nhKQsgpuQ9PPlUYPeTn9bERau5XhONYTHwyFLCIQ
-         +2nrN8kCjLTrTZ6otF+w1E8o0ZKxk2cDyebBRsuj26wDcTkGr6QqtIXBQuKoarVcmeZj
-         ufWOI6pNkhfCE2AeVWBmkDvSkrJxL/GiDia6lIMBgH15IDqsKGP87t1NlDjc9dRau3NP
-         dvVCusKw/v3w3vkl7C3lYd9+jGcL8A89U7RUzwZe/biaDowVEeuwVcDTW4z8rUpqoevp
-         czTA==
-X-Gm-Message-State: ANhLgQ1fkn/g4aLsWZ9fZrv39OHOb8ZUdK+ASCuTnHIUmth35N2QeymH
-        k7nhyd1P4F3NXgy/9wYHEUg=
-X-Google-Smtp-Source: ADFU+vtCf2T5IdyiTy3s+QtGxhzlCMHPIlG48KMdBxo7gv9WDaTEyFyWSelWEQK+deNOUUF+2srYvg==
-X-Received: by 2002:a2e:5357:: with SMTP id t23mr10436559ljd.227.1583135102251;
-        Sun, 01 Mar 2020 23:45:02 -0800 (PST)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id d9sm9862806lfm.16.2020.03.01.23.44.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 01 Mar 2020 23:45:01 -0800 (PST)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson-g12b: fix N2/VIM3 audio card model names
-Date:   Mon,  2 Mar 2020 11:44:11 +0400
-Message-Id: <1583135051-95529-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 2 Mar 2020 02:49:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43042 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBHt7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 02:49:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=0Gx1JYZhfx2m87lYF6sjqKW0wz1nAkV9fNxlNiWemtg=; b=DUv3pXp/WnZAz6/NloRdVJoHy3
+        mZMQveVL2VS0z5P1D/PcDICmKLczfNXGCBGpl+9Kv3OgtSCpT3W7eUlAW1vwHjfFSheUJRhgjHIY+
+        lnXXHN2u04NC3PfDngbIOFXjg6M74Jwez8yXq1CXhCeHRVdhvNoPPlKZrxyvXUtZSe9DcwImDy1rG
+        H0AMXKKNNCDV4WOFOWqyaJZ+5MGQCCi4NIHTyH0vdg17cMs6LTIdVGQUNetCHS1edaSWnjfUQ6n6c
+        uzVkHJfRooFf+sHodHXWKZ9FPze1bxToD4fZzHw58Bt69UAlXLebJRthTLZZBWQMSc+2ehxaoTgUd
+        yUxSCQmw==;
+Received: from ip5f5ad4e9.dynamic.kabel-deutschland.de ([95.90.212.233] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j8fpt-0003Te-42; Mon, 02 Mar 2020 07:49:57 +0000
+Date:   Mon, 2 Mar 2020 08:49:50 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Andy Whitcroft <apw@canonical.com>, devicetree@vger.kernel.org,
+        Harry Wei <harryxiyou@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Joe Perches <joe@perches.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 00/12] Convert some DT documentation files to ReST
+Message-ID: <20200302084950.589fe0b6@coco.lan>
+In-Reply-To: <cover.1583134242.git.mchehab+samsung@kernel.org>
+References: <cover.1583134242.git.mchehab+samsung@kernel.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is largely cosmetic, but Odroid N2 and Khadas VIM3 are G12B devices so
-correct the card model names to reflect this.
+Em Mon,  2 Mar 2020 08:37:55 +0100
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
 
-Fixes: aa7d5873bf6e ("arm64: dts: meson-g12b-odroid-n2: add sound card")
-Fixes: c6d29c66e582 ("arm64: dts: meson-g12b-khadas-vim3: add initial device-tree")
+Please ignore this patch series. Something got wrong with my settings. It
+ended getting a wrong "From" e-mail address from my previous employer.
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 2 +-
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+I should be resending it after fixing the issue.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-index 5548634..b1fab57 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -48,7 +48,7 @@
- 
- 	sound {
- 		compatible = "amlogic,axg-sound-card";
--		model = "G12A-KHADAS-VIM3";
-+		model = "G12B-KHADAS-VIM3";
- 		audio-aux-devs = <&tdmout_b>;
- 		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
- 				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 0e54c1d..8830d38 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -208,7 +208,7 @@
- 
- 	sound {
- 		compatible = "amlogic,axg-sound-card";
--		model = "G12A-ODROIDN2";
-+		model = "G12B-ODROID-N2";
- 		audio-aux-devs = <&tdmout_b>;
- 		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
- 				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
--- 
-2.7.4
 
+
+
+> While most of the devicetree stuff has its own format (with is now being
+> converted to YAML format), some documents there are actually
+> describing the DT concepts and how to contribute to it.
+> 
+> IMHO, those documents would fit perfectly as part of the documentation
+> body, as part of the firmare documents set.
+> 
+> This patch series manually converts some DT documents that, on my
+> opinion, would belong to it.
+> 
+> If you want to see how this would show at the documentation body,
+> a sneak peak of this series (together with the other pending
+> doc patches from me) is available at:
+> 
+> 	https://www.infradead.org/~mchehab/kernel_docs/devicetree/index.html
+> 
+> Mauro Carvalho Chehab (12):
+>   docs: dt: add an index.rst file for devicetree
+>   docs: dt: convert usage-model.txt to ReST
+>   docs: dt: usage_model.rst: fix link for DT usage
+>   docs: dt: convert booting-without-of.txt to ReST format
+>   docs: dt: convert changesets to ReST
+>   docs: dt: convert dynamic-resolution-notes.txt to ReST
+>   docs: dt: convert of_unittest.txt to ReST
+>   docs: dt: convert overlay-notes.txt to ReST format
+>   docs: dt: minor adjustments at writing-schema.rst
+>   docs: dt: convert ABI.txt to ReST format
+>   docs: dt: convert submitting-patches.txt to ReST format
+>   docs: dt: convert writing-bindings.txt to ReST
+> 
+>  Documentation/arm/booting.rst                 |   2 +-
+>  Documentation/arm/microchip.rst               |   2 +-
+>  .../devicetree/bindings/{ABI.txt => ABI.rst}  |   5 +-
+>  .../devicetree/bindings/arm/amlogic.yaml      |   2 +-
+>  .../devicetree/bindings/arm/syna.txt          |   2 +-
+>  Documentation/devicetree/bindings/index.rst   |  12 +
+>  ...ing-patches.txt => submitting-patches.rst} |  12 +-
+>  ...ting-bindings.txt => writing-bindings.rst} |   9 +-
+>  ...-without-of.txt => booting-without-of.rst} | 299 ++++++++++--------
+>  .../{changesets.txt => changesets.rst}        |  24 +-
+>  ...notes.txt => dynamic-resolution-notes.rst} |   5 +-
+>  Documentation/devicetree/index.rst            |  18 ++
+>  .../{of_unittest.txt => of_unittest.rst}      | 186 +++++------
+>  .../{overlay-notes.txt => overlay-notes.rst}  | 143 +++++----
+>  .../{usage-model.txt => usage-model.rst}      |  35 +-
+>  Documentation/devicetree/writing-schema.rst   |   9 +-
+>  Documentation/index.rst                       |   3 +
+>  Documentation/process/submitting-patches.rst  |   2 +-
+>  .../it_IT/process/submitting-patches.rst      |   2 +-
+>  Documentation/translations/zh_CN/arm/Booting  |   2 +-
+>  MAINTAINERS                                   |   4 +-
+>  include/linux/mfd/core.h                      |   2 +-
+>  scripts/checkpatch.pl                         |   2 +-
+>  23 files changed, 446 insertions(+), 336 deletions(-)
+>  rename Documentation/devicetree/bindings/{ABI.txt => ABI.rst} (94%)
+>  create mode 100644 Documentation/devicetree/bindings/index.rst
+>  rename Documentation/devicetree/bindings/{submitting-patches.txt => submitting-patches.rst} (92%)
+>  rename Documentation/devicetree/bindings/{writing-bindings.txt => writing-bindings.rst} (89%)
+>  rename Documentation/devicetree/{booting-without-of.txt => booting-without-of.rst} (90%)
+>  rename Documentation/devicetree/{changesets.txt => changesets.rst} (59%)
+>  rename Documentation/devicetree/{dynamic-resolution-notes.txt => dynamic-resolution-notes.rst} (90%)
+>  create mode 100644 Documentation/devicetree/index.rst
+>  rename Documentation/devicetree/{of_unittest.txt => of_unittest.rst} (54%)
+>  rename Documentation/devicetree/{overlay-notes.txt => overlay-notes.rst} (56%)
+>  rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
+> 
+
+
+Thanks,
+Mauro
