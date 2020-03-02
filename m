@@ -2,95 +2,90 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11252C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79E4C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 16:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A4B222C4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99840222C4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 16:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbgCBP6Y (ORCPT
+        id S1726661AbgCBQGd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:58:24 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:41491 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbgCBP6Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 10:58:24 -0500
-X-Originating-IP: 90.89.41.158
-Received: from localhost.localdomain (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 175FB1BF217;
-        Mon,  2 Mar 2020 15:58:21 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        <linux-rockchip@lists.infradead.org>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 2/2] arm64: dts: rockchip: Describe PX30 GPU
-Date:   Mon,  2 Mar 2020 16:58:08 +0100
-Message-Id: <20200302155808.11273-2-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200302155808.11273-1-miquel.raynal@bootlin.com>
-References: <20200302155808.11273-1-miquel.raynal@bootlin.com>
+        Mon, 2 Mar 2020 11:06:33 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35836 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCBQGd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 11:06:33 -0500
+Received: by mail-oi1-f193.google.com with SMTP id b18so10827433oie.2;
+        Mon, 02 Mar 2020 08:06:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oCQ00dGXGbkpTntEBszN/cZPJvdcqZI+tE1FzP8Z8RQ=;
+        b=II7i2Eo7k1U54Nr4oxK8izk9M3W9Km+cyzw0L4UzvyQhC+rvBbqg4SKDStK6kB1DR4
+         ar14uJJvYwSKmLoQ3C/Esp+F/ARy4CucddMSuHFsbGdnNXgmx+DAYgV0nc9Dl179pbmE
+         brq2gYA+DtAlwQaVPQiJpRK9iEzmgm9iX57IgxYPTcTwGK9gWwYAwlH84U9hFqBFitgu
+         JItiLhAB7FKXLdRapG7Tx3guPoBLXmM9CnV72shNql12GgfFUX86oOppYjqAkhYt7Y+c
+         692usl7i2phjgmYkdF5bOB922Gu0ugWOqz1/K8pwlR9RIdouTfWlpwx5z/r13HsOmesG
+         aexg==
+X-Gm-Message-State: ANhLgQ14VV74OmgaSxTcp5V0CnH5GnBDfZ/o2wz5szzuGOlanxji6jVc
+        XudBcNZuTu10p+HUAp9g91i6dNMkyRIVceTXlf4=
+X-Google-Smtp-Source: ADFU+vtZXz8SdSye/nw2ap/8pa8hJSZRa2xsrVK0nFccLQ9abSV85WjQel7krZaM1uARTj33atQw5Vpq2PqAvGuFoIQ=
+X-Received: by 2002:aca:b4c3:: with SMTP id d186mr119333oif.131.1583165192444;
+ Mon, 02 Mar 2020 08:06:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200228084027.10797-1-luca@lucaceresoli.net>
+In-Reply-To: <20200228084027.10797-1-luca@lucaceresoli.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 2 Mar 2020 17:06:21 +0100
+Message-ID: <CAMuHMdXNiZLmkLyuyvPCzdE9BdFoMDzKuGgAzRuPkv8jd2F4zg@mail.gmail.com>
+Subject: Re: [PATCH v3] of: overlay: log the error cause on resolver failure
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PX30 SoCs feature an ARM Bifrost GPU.
+On Fri, Feb 28, 2020 at 9:40 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+> When a DT overlay has a node label that is not present in the live
+> devicetree symbols table, this error is printed:
+>
+>   OF: resolver: overlay phandle fixup failed: -22
+>   create_overlay: Failed to create overlay (err=-22)
+>
+> which does not help much in finding the node label that caused the problem
+> and fix the overlay source.
+>
+> Add an error message with the name of the node label that caused the
+> error. The new output is:
+>
+>   OF: resolver: node label 'gpio9' not found in live devicetree symbols table
+>   OF: resolver: overlay phandle fixup failed: -22
+>   create_overlay: Failed to create overlay (err=-22)
+>
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Hello, this change is just adding basic GPU support, more work is
-needed on the devfreq/opp side to be sure everything works and is
-properly described. Hence, this proposal aims at describing the HW
-block only, not its hability to change voltages/frequencies.
+Gr{oetje,eeting}s,
 
-Thanks,
-Miquèl
+                        Geert
 
- arch/arm64/boot/dts/rockchip/px30.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index f99988b08244..7780e532d31b 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -997,6 +997,19 @@
- 		status = "disabled";
- 	};
- 
-+	gpu: gpu@ff400000 {
-+		compatible = "rockchip,px30-mali", "arm,mali-bifrost";
-+		reg = <0x0 0xff400000 0x0 0x4000>;
-+		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "gpu", "mmu", "job";
-+		clocks = <&cru SCLK_GPU>;
-+		clock-names = "clk_mali";
-+		power-domains = <&power PX30_PD_GPU>;
-+		status = "disabled";
-+	};
-+
- 	vopb: vop@ff460000 {
- 		compatible = "rockchip,px30-vop-big";
- 		reg = <0x0 0xff460000 0x0 0xefc>;
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
