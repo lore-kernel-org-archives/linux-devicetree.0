@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2F8C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A53C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309D1246D7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45AD2166E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgCBLBy (ORCPT
+        id S1727892AbgCBLBq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:01:54 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44600 "EHLO
+        Mon, 2 Mar 2020 06:01:46 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44502 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727896AbgCBLBx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 06:01:53 -0500
+        with ESMTP id S1727883AbgCBLBp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 06:01:45 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 27F322949C5
+        with ESMTPSA id CC79F2949CF
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
         p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
@@ -50,9 +50,9 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>, rdunlap@infradead.org,
         Richard Fontana <rfontana@redhat.com>,
         linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v11 5/5] soc / drm: mediatek: Fix mediatek-drm device probing
-Date:   Mon,  2 Mar 2020 12:01:28 +0100
-Message-Id: <20200302110128.2664251-6-enric.balletbo@collabora.com>
+Subject: [PATCH v11 2/5] dt-bindings: mediatek: Update mmsys binding to reflect it is a system controller
+Date:   Mon,  2 Mar 2020 12:01:25 +0100
+Message-Id: <20200302110128.2664251-3-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200302110128.2664251-1-enric.balletbo@collabora.com>
 References: <20200302110128.2664251-1-enric.balletbo@collabora.com>
@@ -63,129 +63,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In the actual implementation the same compatible string
-"mediatek,<chip>-mmsys" is used to bind the clock drivers
-(drivers/soc/mediatek) as well as to the gpu driver
-(drivers/gpu/drm/mediatek/mtk_drm_drv.c). This ends with the problem
-that the only probed driver is the clock driver and there is no display
-at all.
-
-In any case having the same compatible string for two drivers is not
-correct and should be fixed. To fix this, and maintain backward
-compatibility, we can consider that the mmsys driver is the top-level
-entry point for the multimedia subsystem, so is not a pure clock
-controller but a system controller, and the drm driver is instantiated
-by that MMSYS driver.
+The mmsys system controller is not only a pure clock controller, so
+update the binding documentation to reflect that apart from providing
+clocks, it also provides routing and miscellaneous control registers.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
 
 Changes in v11: None
 Changes in v10:
-- Match driver data to get display routing.
+- Update the binding documentation for the mmsys system controller.
 
-Changes in v9:
-- Do not move the display routing from the drm driver (CK)
-
-Changes in v8:
-- New patch introduced in this series.
-
+Changes in v9: None
+Changes in v8: None
 Changes in v7: None
 
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 31 ++++++++++++++++----------
- drivers/soc/mediatek/mtk-mmsys.c       |  6 +++++
- 2 files changed, 25 insertions(+), 12 deletions(-)
+ .../devicetree/bindings/arm/mediatek/mediatek,mmsys.txt    | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 208f9c5256ef..bb26e346750a 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -422,9 +422,21 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
- 	{ }
- };
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+index 301eefbe1618..8d6a9d98e7a6 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+@@ -1,7 +1,8 @@
+ Mediatek mmsys controller
+ ============================
  
-+static const struct of_device_id mtk_drm_of_ids[] = {
-+	{ .compatible = "mediatek,mt2701-mmsys",
-+	  .data = &mt2701_mmsys_driver_data},
-+	{ .compatible = "mediatek,mt2712-mmsys",
-+	  .data = &mt2712_mmsys_driver_data},
-+	{ .compatible = "mediatek,mt8173-mmsys",
-+	  .data = &mt8173_mmsys_driver_data},
-+	{ }
-+};
-+
- static int mtk_drm_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct device_node *phandle = dev->parent->of_node;
-+	const struct of_device_id *of_id;
- 	struct mtk_drm_private *private;
- 	struct device_node *node;
- 	struct component_match *match = NULL;
-@@ -442,8 +454,14 @@ static int mtk_drm_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
+-The Mediatek mmsys controller provides various clocks to the system.
++The Mediatek mmsys system controller provides clock control, routing control,
++and miscellaneous control in mmsys partition.
  
-+	of_id = of_match_node(mtk_drm_of_ids, phandle);
-+	if (!of_id)
-+		return -ENODEV;
-+
-+	private->data = of_id->data;
-+
- 	/* Iterate over sibling DISP function blocks */
--	for_each_child_of_node(dev->of_node->parent, node) {
-+	for_each_child_of_node(phandle->parent, node) {
- 		const struct of_device_id *of_id;
- 		enum mtk_ddp_comp_type comp_type;
- 		int comp_id;
-@@ -575,22 +593,11 @@ static int mtk_drm_sys_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
- 			 mtk_drm_sys_resume);
+ Required Properties:
  
--static const struct of_device_id mtk_drm_of_ids[] = {
--	{ .compatible = "mediatek,mt2701-mmsys",
--	  .data = &mt2701_mmsys_driver_data},
--	{ .compatible = "mediatek,mt2712-mmsys",
--	  .data = &mt2712_mmsys_driver_data},
--	{ .compatible = "mediatek,mt8173-mmsys",
--	  .data = &mt8173_mmsys_driver_data},
--	{ }
--};
--
- static struct platform_driver mtk_drm_platform_driver = {
- 	.probe	= mtk_drm_probe,
- 	.remove	= mtk_drm_remove,
- 	.driver	= {
- 		.name	= "mediatek-drm",
--		.of_match_table = mtk_drm_of_ids,
- 		.pm     = &mtk_drm_pm_ops,
- 	},
- };
-diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
-index bb99a05fb278..090dbab41160 100644
---- a/drivers/soc/mediatek/mtk-mmsys.c
-+++ b/drivers/soc/mediatek/mtk-mmsys.c
-@@ -379,6 +379,7 @@ static int mtk_mmsys_probe(struct platform_device *pdev)
- 	const struct mtk_mmsys_driver_data *data;
- 	struct clk_onecell_data *clk_data;
- 	struct device *dev = &pdev->dev;
-+	struct platform_device *drm;
- 	void __iomem *config_regs;
- 	struct resource *mem;
- 	int ret;
-@@ -409,6 +410,11 @@ static int mtk_mmsys_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+@@ -15,13 +16,13 @@ Required Properties:
+ 	- "mediatek,mt8183-mmsys", "syscon"
+ - #clock-cells: Must be 1
  
-+	drm = platform_device_register_data(&pdev->dev, "mediatek-drm",
-+					    PLATFORM_DEVID_NONE, NULL, 0);
-+	if (IS_ERR(drm))
-+		return PTR_ERR(drm);
-+
- 	return 0;
- }
+-The mmsys controller uses the common clk binding from
++For the clock control, the mmsys controller uses the common clk binding from
+ Documentation/devicetree/bindings/clock/clock-bindings.txt
+ The available clocks are defined in dt-bindings/clock/mt*-clk.h.
  
+ Example:
+ 
+-mmsys: clock-controller@14000000 {
++mmsys: syscon@14000000 {
+ 	compatible = "mediatek,mt8173-mmsys", "syscon";
+ 	reg = <0 0x14000000 0 0x1000>;
+ 	#clock-cells = <1>;
 -- 
 2.25.1
 
