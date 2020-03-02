@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A01C3F2D8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4FDC3F2D6
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63882246A1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C465D246A1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 07:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583134734;
-	bh=a/vrBYd7w6ekMDJXY8HBC89VID4NrdXsxymJhV+Pacc=;
+	s=default; t=1583134742;
+	bh=f6i/xaLRU1T6rTh9TlFkJDoYWjgK7JZpOPbZpK+IlBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MVlQ4gpc8Y3c4RPEIERQKWFas9WPmwSKYzZcuUQgAWcwQtgmvNWnvWfccDP6sQFNC
-	 MVG4jhKDGjHrsGFeoZy922npKCBtwEpvY/xbwyHze3753w38teOosXswTTc7UfunW3
-	 FTdZwhs1+kAYHdISHSBV/txqyfhhZegwKl0749bQ=
+	b=Py5RT2Am7IyL7tw5H6nrkE6XuNnY2Bvm0rnNTmKjw2d67u+2rehQzvHeugx/l+8UF
+	 lME8ipIHY5awHrztgdWx9UlnDOpddDmUzMNGFL+ST8TpTKRfnOreYG4oWw0YckirjZ
+	 0um0W6y1xLuX+cDAOyw113SeedgGiuprx0MgG7o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCBHiQ (ORCPT
+        id S1727330AbgCBHjB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:38:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44664 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 02:39:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCBHiP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726426AbgCBHiP (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 2 Mar 2020 02:38:15 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7074E246C0;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ED26246A1;
         Mon,  2 Mar 2020 07:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583134694;
-        bh=a/vrBYd7w6ekMDJXY8HBC89VID4NrdXsxymJhV+Pacc=;
+        bh=f6i/xaLRU1T6rTh9TlFkJDoYWjgK7JZpOPbZpK+IlBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FO3S9MtwtprGxwtfYF0T9XHSfvQ2CEBWw2I7SAW5rW7sfRwzNuZ9bkRrUIQb/s+at
-         UfOpybeCtJhC2VwH11w3x+eDt6iGOGyPV5khAJFvf2DHV+ndt3L48/OD80k34gspl2
-         2j7z7l+i6hzLEYqLfAibCJcKzwHp1DNNTNJ6i/hs=
+        b=ZC0gx/EyTodst0I9AllFHWhXSLSBkmq8KkXp102rfVUmO6T0D6BYLbJQGR1OQqetT
+         xkGhSk/y5ANztZ5UPr1E0WpnHk3p7TNtBMUnIW667jSBS+pfWj6WofAs92j5ZmfH7+
+         ocCo81f4216vRBgrWURagHldax0zrKZZqCNfIxhs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8feV-0003VR-Pg; Mon, 02 Mar 2020 08:38:11 +0100
+        id 1j8feV-0003Vm-UQ; Mon, 02 Mar 2020 08:38:11 +0100
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 01/12] docs: dt: add an index.rst file for devicetree
-Date:   Mon,  2 Mar 2020 08:37:56 +0100
-Message-Id: <535a508f48d223b4e9632117e96db18265ab6c7b.1583134242.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 06/12] docs: dt: convert dynamic-resolution-notes.txt to ReST
+Date:   Mon,  2 Mar 2020 08:38:01 +0100
+Message-Id: <959df4057c4b09f73924c9ee5bafd4ad8c861f99.1583134242.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <cover.1583134242.git.mchehab+samsung@kernel.org>
 References: <cover.1583134242.git.mchehab+samsung@kernel.org>
@@ -63,52 +65,72 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-There are some device tree documentation under
-Documentation/devicetree. Add a top index file for it and
-add the already-existing ReST file on it.
+- Add a SPDX header;
+- Adjust document title;
+- Add it to devicetree/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/devicetree/index.rst | 10 ++++++++++
- Documentation/index.rst            |  3 +++
- 2 files changed, 13 insertions(+)
- create mode 100644 Documentation/devicetree/index.rst
+ ...mic-resolution-notes.txt => dynamic-resolution-notes.rst} | 5 ++++-
+ Documentation/devicetree/index.rst                           | 1 +
+ Documentation/devicetree/overlay-notes.txt                   | 2 +-
+ MAINTAINERS                                                  | 2 +-
+ 4 files changed, 7 insertions(+), 3 deletions(-)
+ rename Documentation/devicetree/{dynamic-resolution-notes.txt => dynamic-resolution-notes.rst} (90%)
 
+diff --git a/Documentation/devicetree/dynamic-resolution-notes.txt b/Documentation/devicetree/dynamic-resolution-notes.rst
+similarity index 90%
+rename from Documentation/devicetree/dynamic-resolution-notes.txt
+rename to Documentation/devicetree/dynamic-resolution-notes.rst
+index c24ec366c5dc..570b7e1f39eb 100644
+--- a/Documentation/devicetree/dynamic-resolution-notes.txt
++++ b/Documentation/devicetree/dynamic-resolution-notes.rst
+@@ -1,5 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==================================
+ Device Tree Dynamic Resolver Notes
+-----------------------------------
++==================================
+ 
+ This document describes the implementation of the in-kernel
+ Device Tree resolver, residing in drivers/of/resolver.c
 diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
-new file mode 100644
-index 000000000000..a11efe26f205
---- /dev/null
+index 64c78c3ffea6..308cac9d7021 100644
+--- a/Documentation/devicetree/index.rst
 +++ b/Documentation/devicetree/index.rst
-@@ -0,0 +1,10 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=============================
-+Open Firmware and Device Tree
-+=============================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   writing-schema
-diff --git a/Documentation/index.rst b/Documentation/index.rst
-index e99d0bd2589d..b63d117aea15 100644
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@ -1,3 +1,5 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
+@@ -11,3 +11,4 @@ Open Firmware and Device Tree
+    writing-schema
+    booting-without-of
+    changesets
++   dynamic-resolution-notes
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+index 725fb8d255c1..3f20a39e4bc2 100644
+--- a/Documentation/devicetree/overlay-notes.txt
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -3,7 +3,7 @@ Device Tree Overlay Notes
  
- .. The Linux Kernel documentation master file, created by
-    sphinx-quickstart on Fri Feb 12 13:51:46 2016.
-@@ -46,6 +48,7 @@ platform firmwares.
-    :maxdepth: 2
+ This document describes the implementation of the in-kernel
+ device tree overlay functionality residing in drivers/of/overlay.c and is a
+-companion document to Documentation/devicetree/dynamic-resolution-notes.txt[1]
++companion document to Documentation/devicetree/dynamic-resolution-notes.rst[1]
  
-    firmware-guide/index
-+   devicetree/index
- 
- Application-developer documentation
- -----------------------------------
+ How overlays work
+ -----------------
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 09b04505e7c3..1380b1ed69a2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12458,7 +12458,7 @@ M:	Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+ M:	Frank Rowand <frowand.list@gmail.com>
+ L:	devicetree@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/dynamic-resolution-notes.txt
++F:	Documentation/devicetree/dynamic-resolution-notes.rst
+ F:	Documentation/devicetree/overlay-notes.txt
+ F:	drivers/of/overlay.c
+ F:	drivers/of/resolver.c
 -- 
 2.21.1
 
