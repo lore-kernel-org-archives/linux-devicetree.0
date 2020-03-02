@@ -2,99 +2,131 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FE0C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA80C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE756246B4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583136026;
-	bh=2/DNAapS2UOdSVGxm+XzjadCyyFdTsbsMdhV6JX9eVk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VamBrtV+jaEQoqD4UawhT7O01oJxIwRhapJ3v+BNabMNw2Rjt3jTAjoZqS7QgHE8Z
-	 hhy5w7GPsVI+E5qiFqIVUsYersamBgcR4ZX0pmBHOj8sDCBj/MX05GbkQkY/KIXMe/
-	 dlYgtmdpbnnrUSETPR1ANKgp1ZNuR5uXBn5zz+04=
+	by mail.kernel.org (Postfix) with ESMTP id A1C7C2468E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:15:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DRENygLr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgCBH7m (ORCPT
+        id S1726621AbgCBIPU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:59:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727030AbgCBH7m (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:59:42 -0500
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C2C5246C0;
-        Mon,  2 Mar 2020 07:59:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583135981;
-        bh=2/DNAapS2UOdSVGxm+XzjadCyyFdTsbsMdhV6JX9eVk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u9joVP2T5KLYLdFWkyDwgZHFxLQK1nSfLm6W3LdAt7HvOYiRGQ61XtPtrNt4RjI9g
-         lee1I1e4653bVCPWsX8bH88hzvzAwJzDoz/ow69+bIoYXPaECf2Y0fnaqlQwGrfDwz
-         BJ8j08m2hyftr5wGaWZqMGtNw6JF+YS+yoQtvBCw=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1j8fzH-0003gv-7l; Mon, 02 Mar 2020 08:59:39 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v2 09/12] docs: dt: minor adjustments at writing-schema.rst
-Date:   Mon,  2 Mar 2020 08:59:34 +0100
-Message-Id: <b1e47ef85472a9a98aae12911c76c0e45a557cf4.1583135507.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <cover.1583135507.git.mchehab+huawei@kernel.org>
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
+        Mon, 2 Mar 2020 03:15:20 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47434 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgCBIPU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 03:15:20 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0228Esbw067966;
+        Mon, 2 Mar 2020 02:14:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583136894;
+        bh=TdhMpVGavBMp+rXwCQqseldtj1O3C6Ev8oQyZs2QgMQ=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=DRENygLrbKRMRypHzLIXHGsOsqoyTlJ5Vkm+EKAVOcFMmK11FULvxBUIHsDLXKN+K
+         aNo3jq8jEpTzrBm/UgzqoEZeGBAui6BEtEkGbb++n3N/HIJ+K6sBoq0MpMThKZ84My
+         V/LeFhUvoK7C5lFZaA2WubDIoF2vtwevBqu9Gh70=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0228EsA4016695;
+        Mon, 2 Mar 2020 02:14:54 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
+ 2020 02:14:54 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 2 Mar 2020 02:14:54 -0600
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 0228EnLq073051;
+        Mon, 2 Mar 2020 02:14:50 -0600
+Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
+ transceiver regulator
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Rob Herring <robh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
+References: <20200217142836.23702-1-faiz_abbas@ti.com>
+ <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
+ <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
+ <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
+ <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
+Message-ID: <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
+Date:   Mon, 2 Mar 2020 13:46:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are two literal blocks that aren't mark as such. Mark them,
-in order to make the document to produce a better html output.
+Marc,
 
-While here, also add a SPDX header to it.
+On 26/02/20 2:40 pm, Faiz Abbas wrote:
+> Hi Marc,
+> 
+> On 21/02/20 2:01 pm, Marc Kleine-Budde wrote:
+>> On 2/21/20 9:31 AM, Faiz Abbas wrote:
+>>> Hi Rob,
+>>>
+>>> On 20/02/20 2:05 am, Rob Herring wrote:
+>>>> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
+>>>>> Some CAN transceivers have a standby line that needs to be asserted
+>>>>> before they can be used. Model this GPIO lines as an optional
+>>>>> fixed-regulator node. Document bindings for the same.
+>>>>>
+>>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
+>>>>>  1 file changed, 3 insertions(+)
+>>>>
+>>>> This has moved to DT schema in my tree, so please adjust it and resend.
+>>>
+>>> Ok.
+>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>> index ed614383af9c..f17e2a5207dc 100644
+>>>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>> @@ -48,6 +48,9 @@ Optional Subnode:
+>>>>>  			  that can be used for CAN/CAN-FD modes. See
+>>>>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>>>>>  			  for details.
+>>>>> +
+>>>>> +- xceiver-supply: Regulator that powers the CAN transceiver.
+>>>>
+>>>> The supply for a transceiver should go in the transceiver node.
+>>>>
+>>>
+>>> Marc, while I have you here, do you agree with this?
+>>
+>> I'll look into the details later today.
+>>
+> 
+> Sure. Be sure to take another look at my attempt to use the transceiver
+> with a phy driver some time ago.
+> 
+> https://lore.kernel.org/patchwork/patch/1006238/
+> 
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/devicetree/writing-schema.rst | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Do you have any comments?
 
-diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
-index 7635ab230456..6b3ef308c59f 100644
---- a/Documentation/devicetree/writing-schema.rst
-+++ b/Documentation/devicetree/writing-schema.rst
-@@ -1,4 +1,4 @@
--:orphan:
-+.. SPDX-License-Identifier: GPL-2.0
- 
- Writing DeviceTree Bindings in json-schema
- ==========================================
-@@ -124,9 +124,12 @@ dtc must also be built with YAML output support enabled. This requires that
- libyaml and its headers be installed on the host system. For some distributions
- that involves installing the development package, such as:
- 
--Debian:
-+Debian::
-+
-   apt-get install libyaml-dev
--Fedora:
-+
-+Fedora::
-+
-   dnf -y install libyaml-devel
- 
- Running checks
--- 
-2.21.1
-
+Thanks,
+Faiz
