@@ -2,108 +2,65 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1509C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCE4C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C95C6246B4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2o99Rb+"
+	by mail.kernel.org (Postfix) with ESMTP id 398EA246BB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgCBJ2K (ORCPT
+        id S1727176AbgCBJba convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:28:10 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36758 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgCBJ2K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 04:28:10 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j16so11614441wrt.3;
-        Mon, 02 Mar 2020 01:28:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fknAu4Mi7mPoGch0tjoJSjMYmeswX/bt/k6r2YfuwWE=;
-        b=c2o99Rb+A9AQ9FPzgwZKoZcoZNdvDOZLXgkynZGdcgs4YGzUyqDjKIWyEG3bWlDMl8
-         zqlSN01fxUWAMKdv5y+D9ZaY2FwedSsk55BG+hO21RkNYE2i5nNzhjpIyRb3rvRUi5oh
-         NH6Ovi8MuLjskr4lmwTCwdamwzQEBWXDxwbVBYK8CNWr7jAsS1/GzgLDGZ28rZCeox1/
-         JC82bd1OmxriXshLCDJGdMjAi7Iib+roOE7yrXex3Hcj3kwL8dOIz4CCu0YsHfqFl/Vr
-         y6xbuiR12kNOqonU2RWoBhx7w3oXcjY6S5JqzK/FtTXwBBSFF/I8lLu5eVsIzxNzPvLQ
-         hoOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fknAu4Mi7mPoGch0tjoJSjMYmeswX/bt/k6r2YfuwWE=;
-        b=GxKIN8aagJW/HHVjY/Qg4JkJVgI+zsYzS6Lrzrnr5GmZB2cJPakFJiMUPxElTJAoE3
-         JKADCEksLgMbT5StQYTEDpX2AxesaqvHnQ7+bKnMCQWvzu1VkXnswFwTGHc5fVxXEtj/
-         rdn/O3iSbGbd3zZiJMIab4P5uq1dDnY/l6Ij7d46u+ZzsfdIM5oa7CRyNX0VETUPUYve
-         uvGDVyaaDWPyoFx1aJoZqri6u0ndVpR3Penov3VaZC2eQFotsZ2yFTIjVk5PZtPHfNRx
-         /lyoEnBeFrilNWAH5J5bK6PLlhyRjmwiSCfhkRWPLNmvmgfe/TEhWn1RaXx6rahoPoSA
-         88EQ==
-X-Gm-Message-State: APjAAAVE5xnXxo7Ffmg0SWKq39XlyN6s2nuiZjkhrX9jXbWHc2ZXipke
-        qiKp26Zpdv5hp5kLgKlywH8=
-X-Google-Smtp-Source: APXvYqxXlaMIucYPo55iWHhBI6sB1zHQmuSaeo2TekBQf3XjDtq0te5TlDq0lzQBCK4NO256i+X+eQ==
-X-Received: by 2002:a5d:4d48:: with SMTP id a8mr21138127wru.35.1583141288142;
-        Mon, 02 Mar 2020 01:28:08 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id m3sm6409586wrx.9.2020.03.02.01.28.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 01:28:07 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] dt-bindings: arm: add Rockchip rk3036-evb board
-Date:   Mon,  2 Mar 2020 10:27:58 +0100
-Message-Id: <20200302092759.3291-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200302092759.3291-1-jbx6244@gmail.com>
-References: <20200302092759.3291-1-jbx6244@gmail.com>
+        Mon, 2 Mar 2020 04:31:30 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:41163 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgCBJba (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 04:31:30 -0500
+X-Originating-IP: 90.89.41.158
+Received: from xps13 (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 80483FF803;
+        Mon,  2 Mar 2020 09:31:03 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 10:31:03 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Cc:     richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 0/3] Add Rockchip NFC drivers for RK3308 and others
+Message-ID: <20200302103103.1eb7df94@xps13>
+In-Reply-To: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
+References: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives this error:
+Hi Yifeng,
 
-arch/arm/boot/dts/rk3036-evb.dt.yaml: /: compatible:
-['rockchip,rk3036-evb', 'rockchip,rk3036']
-is not valid under any of the given schemas
+Yifeng Zhao <yifeng.zhao@rock-chips.com> wrote on Fri, 28 Feb 2020
+18:01:13 +0800:
 
-This board was somehow never added to the documentation.
-Fix this error by adding the rk3036-evb board to rockchip.yaml.
+> Rockchp's NFC(Nand Flash Controller) has three versions: V6, V8 and V9.
+> This series patch can support all  three versions.
+> 
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
+Your series has been badly created, strangely I received twice patch 1
+with two different contents, patch 2 arrived way later than patch 1 and
+3 and the commit title of the bindings patch is wrong, it should
+besomething like:
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+	dt-bindings: mtd: Describe Rockchip RK3xxx NAND flash controller
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 203158038..d303790f5 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -468,6 +468,11 @@ properties:
-           - const: rockchip,r88
-           - const: rockchip,rk3368
- 
-+      - description: Rockchip RK3036 Evaluation board
-+        items:
-+          - const: rockchip,rk3036-evb
-+          - const: rockchip,rk3036
-+
-       - description: Rockchip RK3228 Evaluation board
-         items:
-           - const: rockchip,rk3228-evb
--- 
-2.11.0
+Can you please resend this series in a v2?
 
+Thanks,
+Miquèl
