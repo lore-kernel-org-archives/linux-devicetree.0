@@ -2,98 +2,138 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB422C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43474C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FD0222C4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0172146E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mSdaRQNl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tElqR9xI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbgCBRSZ (ORCPT
+        id S1727054AbgCBR3Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:18:25 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36300 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbgCBRSW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 12:18:22 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j16so747981wrt.3
-        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 09:18:19 -0800 (PST)
+        Mon, 2 Mar 2020 12:29:24 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34706 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgCBR3Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 12:29:24 -0500
+Received: by mail-pj1-f66.google.com with SMTP id f2so140685pjq.1;
+        Mon, 02 Mar 2020 09:29:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=SXg4ANPPHujnOtlOtYMneAF3xY1y0Qzs6lLnP3dZ2Eo=;
-        b=mSdaRQNlY7mufhxefFHO9E0HmiRuJqcR5IkePx8zpUI992xFIFgiMiz4Gi5sNj3NEI
-         hd9N2W+4Dsx6v7z2hXGn5kxId0G3btlLTgkiwpAyx9BHnkcH7DNgJkFwd9JeQ/SLXftl
-         +9HmX3flc+V509SOfMf1CeDGcImsWgpc1FtEXVRF59szYLbOFJ8Ac3vjMAclYY3eVBO0
-         VkaksqS/ZaI/Hkm6f1oXy+NUAJUmm7teNAIJtZaVhrPE/dpzQP5pX6HxaqApu+UnpgrR
-         m30yCONditdo/eeyfb0vTsI+hldY5qSWaLg8a86atbEOC1iqlmuPytX8k26Sb8Z2TLdZ
-         ZtTg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=i318bxoT6Ni0C1g9+1+56bhI51FxJh+OrbLkthVCfys=;
+        b=tElqR9xI55IlX1bqzqmpCQQSYJlt61RVqZa1ejTlX+FKTLQPtkBa2KwjxkSLqNTZcG
+         fL6iIxN4Y8DcaNRMeLug9PwC2JkFy2O3oSv280HwdydKeW18IxnzP9EhYdDUrMeP6t1D
+         qQjnvKisCpl3nQRireRZQaEJ1iDX9RIgXfpF0izkJYfQeQk4KQZ7I/bqMH2rmJ08dzIF
+         /eODhX4cMivxMP+eu2HTXaUbcgejaeCSspNQPcpgtXRcMrQbsfF9XgG37gKTjqxF9y+k
+         SkYFD779/rifEd4Uh1Ua7V3N42FIKkrtapfch8MJ2acoenSAwf3iYsHzvpTxoLoA+c6G
+         WFHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=SXg4ANPPHujnOtlOtYMneAF3xY1y0Qzs6lLnP3dZ2Eo=;
-        b=LwaxXHl8fb1lpH0c0fgTpKk3BSUwQe8w2Lg0Nionir21gtAUnxzn8AjDMfo85K7VOe
-         lPSB8x9+bWw4VWhJVzZIA7swfhUxroqaCaf1xxh83zE2p4UwY6BRUykBXscVSVLAdeq4
-         GvldZkdotwIc4weFGimp6bwWyamhRQqAF8QcbYPZ2euVMF3++fo90mFRvjcW7TdbAKQ0
-         XAAv6ilNZeqkDjTLDLROgpayy99CjjWOaK88B2IrIbWLksCZ7U8UcwSR1pvni9VlJf/9
-         WjKbAbXK5rgfS7wcjwuQpYT+pPJgHGgeKPSKnzENz+wGNqtsK9AdMM8easywxBtsnQfN
-         xL8w==
-X-Gm-Message-State: ANhLgQ2VGC1pUBrmEp8WuQEnb7l1TnkiC5Cr3zJ0ZYSzbHW/4IuYE0PI
-        QsP28XNzC1jCGGI/pvS0pPWJcw==
-X-Google-Smtp-Source: ADFU+vsX7sylmYulhpint5DODaeUoRGQLESGv6af+LdEy2T3qLGW2WZccdCEKj2zO/+pPKdQyCoHhQ==
-X-Received: by 2002:adf:fdc2:: with SMTP id i2mr652127wrs.166.1583169499293;
-        Mon, 02 Mar 2020 09:18:19 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id c2sm45867wma.39.2020.03.02.09.18.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Mar 2020 09:18:18 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Anand Moon <linux.amoon@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCHv2 1/2] arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator to FLASH_VDD
-In-Reply-To: <20200302125310.742-2-linux.amoon@gmail.com>
-References: <20200302125310.742-1-linux.amoon@gmail.com> <20200302125310.742-2-linux.amoon@gmail.com>
-Date:   Mon, 02 Mar 2020 18:18:17 +0100
-Message-ID: <7hfteqr7za.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=i318bxoT6Ni0C1g9+1+56bhI51FxJh+OrbLkthVCfys=;
+        b=ASDhfZdRgBFZMZmhGGMqhIcIMY5nP6LHtZZzs9G/Z2itgOhdQMKJCSCByAsB8bQxIN
+         2YLasyeIvkVVRPgSzomrXpiPtlHTIlKQ3cv7um/FlPKFxJ90/PYtVR5XIq/KcSlxx5Sp
+         7zi8ZexE/DTs4+fheEadSwMASrMZJJtXCbvrbAKxseNGeudsqREOyTVmwMzaAKlTgLaK
+         Fzk3Uea+ztwt+BDm7KEQOGMVQcvimJEFQu9H0pZ5aHr0Vo8S5tMkBvf9W/XM9P88S5DN
+         e8iVJsZmNsBkYlhXTi9Wi48hn9oouCn5+QqsNADiDJUkEax/GhZfr5Q8I75rVBwo61Od
+         Xh4A==
+X-Gm-Message-State: ANhLgQ3ufO6v+6HFasrFhAgmBSixkL3REJVggwyp9aH4aFWADWtYT+0h
+        zQTiGgOVEQHAm4Ui0VATZoQ=
+X-Google-Smtp-Source: ADFU+vvrbLq1J0XXKKmBcmbvRzLZLLsAuraN2ldas+ndFYDRBWE/ICl1xxcGMJJGxJ2GkiTYJBLQkQ==
+X-Received: by 2002:a17:902:61:: with SMTP id 88mr223176pla.313.1583170161637;
+        Mon, 02 Mar 2020 09:29:21 -0800 (PST)
+Received: from localhost.localdomain (c-98-210-123-170.hsd1.ca.comcast.net. [98.210.123.170])
+        by smtp.googlemail.com with ESMTPSA id h7sm22901467pfq.36.2020.03.02.09.29.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 09:29:21 -0800 (PST)
+From:   Dajun Jin <adajunjin@gmail.com>
+To:     andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        robh+dt@kernel.org, frowand.list@gmail.com
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] drivers/of/of_mdio.c:fix of_mdiobus_register()
+Date:   Mon,  2 Mar 2020 09:29:19 -0800
+Message-Id: <20200302172919.31425-1-adajunjin@gmail.com>
+X-Mailer: git-send-email 2.18.2
+In-Reply-To: <20200301165018.GN6305@lunn.ch>
+References: <20200301165018.GN6305@lunn.ch>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Anand Moon <linux.amoon@gmail.com> writes:
+>On Mon, Mar 02, 2020 at 12:41:38AM +0800, Dajun Jin wrote:
+>> when registers a phy_device successful, should terminate the loop
+>> or the phy_device would be registered in other addr.
+>> 
+>> Signed-off-by: Dajun Jin <adajunjin@xxxxxxxxx>
+>> ---
+>>  drivers/of/of_mdio.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>> 
+>> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+>> index 8270bbf505fb..9f982c0627a0 100644
+>> --- a/drivers/of/of_mdio.c
+>> +++ b/drivers/of/of_mdio.c
+>> @@ -306,6 +306,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>>  				rc = of_mdiobus_register_phy(mdio, child, addr);
+>>  				if (rc && rc != -ENODEV)
+>>  					goto unregister;
+>> +				break;
+>>  			}
+>>  		}
+>>  	}
+>
+>Hi Dajun
+>
+>What problem are you seeing? You explanation needs to be better.
+>
+>I'm guessing you have two or more PHYs on the bus, without reg
+>properties?
+>
+>	Andrew
 
-> As per schematics add missing VDDAO_3V3 power supply to FLASH_VDD
-> regulator.
+Hi Andrew
 
-Could you please add a link to the specific schematics you used to find
-this usseu?
+If a phy without reg property would be registered to all unoccupied addr.
 
-> Also add TFLASH_VDD_EN signal name to gpio pin.
+This is my test in Xilinx zcu106 board.
 
-Your patch does not do this part.
+dts is liks this:
+ethernet@ff0e0000 {
+    compatible = "cdns,zynqmp-gem", "cdns,gem";
+    status = "okay";
+    ...
+    
+    phy@0 {
+        ti,rx-internal-delay = <0x8>;
+        ti,tx-internal-delay = <0xa>;
+        ti,fifo-depth = <0x1>;
+        ti,rxctrl-strap-worka;
+        linux,phandle = <0x12>;
+        phandle = <0x12>;
+    };
+};
 
-Similarily to the other patch, can you explain in more detail (including
-kernel boot logs) how the SD card is not working?
+then when borad is booting,the dmesg is like this:
+[    4.600035] mdio_bus ff0e0000.ethernet-ffffffff: /amba/ethernet@ff0e0000/phy@0 has invalid PHY address
+[    4.600050] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 0
+[    4.602076] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 1
+[    4.603849] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 2
+[    4.605574] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 4
+[    4.607312] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 5
+...
+[    4.636155] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 28
+[    4.637335] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 29
+[    4.638504] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 30
+[    4.639666] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 31
 
-I just tested with latest mainline, and the MMC driver is detecting both
-the eMMC and the SD card.
-
-Kevin
+	Dajun
