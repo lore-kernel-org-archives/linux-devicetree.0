@@ -2,151 +2,209 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95F6C3F2D5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6410C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A784A246B6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A36E024695
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 09:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="N00SaeGu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vwz+88AV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgCBJWN (ORCPT
+        id S1726654AbgCBJYO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:22:13 -0500
-Received: from mail-eopbgr50067.outbound.protection.outlook.com ([40.107.5.67]:42244
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbgCBJWM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:22:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lMCoyYXguIMARlkVAdlNbs5Gw7pD/MQRtyuQ7RhzQXevWtQzN52AsTJKbFkzE9PRqEm0TzG8Wd0lhm90ehyl/KiIAtmmvVjqANZMBg737vn55CYktfqLBSfO5oBDt3gdbPS/35YG1Cf7O8gdlgHEr9bIH1MeHePcLfM+y+CxOZ/hHGuLU6XCRtq4mswFQKNnFdSlYIpjMt7BRUqA/GkhROwI95MOS2vDkGNVreXxKxEWu8Yyg4+zSome5nIZFtI6MrKLHEmPinvwIoa/PwaJRde9Qffe20iYvzzRbaUNBFoa3682oEMh16tTFi5+mqlLR3hF8I+ugJhwP/E73chbGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AESask4hxg+NxuR3iw0qgQCIFGwFhuPpQ7urhIoFkJg=;
- b=VjmK2kMBh29twnLy8jLXGjFcKUlaTFk+dLhHb9ZQxdR1wtYsAwki6v9XWOnSxt93W8UqchRiyO3vv17W/ifXBbOLUQZsNZNEdowHF00izIvILYG1j+4sFN2pEnIB01E2ONvwaif3+A2wCyFiqbeMleRKYrgGd8xgnCL2wjA4SpRErW7DscpPN2pLP+yUzuJkY0I2KOD9P1yMkH65mkLRij/Rw/RSgnN8iwHn+56xlnrIAo+OehkQcCI7OXqX8wMLVPFUM6OKJjoA38VeE+kS4rsxE3Gt8w+rxJef0/mSBn5o8nS5krDOq9nOKlSEEP3ms7arz5hZXVKCjIE910xerQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AESask4hxg+NxuR3iw0qgQCIFGwFhuPpQ7urhIoFkJg=;
- b=N00SaeGusuyckZBlh0Z68xS98Ds4bK8mXsN99wOkixNiKyN5G50Ek5DZqqE5wB4w/KIy0nbsB/1LenTYWvu9CC+SJI+ra2O9FHH9SvYARlMv+fV6C+fn9YEM8sp9xqc82PlGY7rVASUuLHArIONY4JRR3xdEFJVXb8lI5Fnpcok=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3950.eurprd04.prod.outlook.com (52.134.18.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15; Mon, 2 Mar 2020 09:22:06 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 09:22:06 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     =?iso-8859-2?Q?Andr=E9_Draszik?= <git@andred.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Subject: Re: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
- events
-Thread-Topic: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
- events
-Thread-Index: AQHV6/ZVd03O0pGg0Eazbugm7ITLfQ==
-Date:   Mon, 2 Mar 2020 09:22:05 +0000
-Message-ID: <VI1PR0402MB3485A743C94442533B6840F298E70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20200225161201.1975-1-git@andred.net>
- <20200225161201.1975-6-git@andred.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dc5c0d42-2b77-40b7-6b2b-08d7be8b2cf7
-x-ms-traffictypediagnostic: VI1PR0402MB3950:|VI1PR0402MB3950:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB395047C915FA595FCA64FAD198E70@VI1PR0402MB3950.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 033054F29A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(346002)(366004)(376002)(189003)(199004)(55016002)(478600001)(44832011)(7416002)(33656002)(86362001)(71200400001)(52536014)(66946007)(76116006)(91956017)(66556008)(64756008)(9686003)(26005)(186003)(66476007)(66446008)(4326008)(6506007)(7696005)(53546011)(81166006)(81156014)(8676002)(8936002)(2906002)(5660300002)(54906003)(110136005)(4744005)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3950;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QKTz8HWUx6bn1kv6BfkBz/LOrHy8L6r+9vNWnnsNR9gMLn8BWZHeAfyh/iJ8OOXaRdP1oamsWmI3A6iHnfMhpq+JpR1fxzDIhJiE0S/pOxeR50zAJ1gV9PpGGq9jnX6w2n9MbeB2bMzPF8W/7gQs/5HE8ODgPDH+lX4qc157x/FNDe/3VWIgL2ADg3Dbgv8bxcv0/HBlEdfnZ6NmRc9l3WDNKLEl+yzuHTE1BjToBsYoBy7pLq1m/vjMdw+4/zX2g6zifcMN3SWIaxe2z73jhod5XN20kkjYNQavbzxw/bCjN/Bk69qVITrLnpi7udJn5DHYiqsudbLncFlILx2jVdC03B47EfLGV9x776nBDjsUGIruM4qtcqYTj9D4/jE4nsK1iXSlnwakilUxIKvmCn5ZkmsIj97pE3ERpyxExFul2ioLkgfvxfpgJCJE7EAt
-x-ms-exchange-antispam-messagedata: Pn7nSN/zmOBki6jqqdTydkSzKCcsxxUm4chNhqX0gxh2wKZaqVS2O3aJvBKJ8J0hc/dFTj/kIhOefZYVLGpH+ndr8N11Q1ySW5FoHU4SJyu3lsmiHznP6GmbJ/MPPFwOnifXHrgDpIM6fxI6QIIvEA==
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Mar 2020 04:24:14 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:42172 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgCBJYO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 04:24:14 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0229O47w115727;
+        Mon, 2 Mar 2020 09:24:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=L5s/2KkDnKUQeUzW5nA0QlVvM5PRywVEFDW/9xkZqu0=;
+ b=vwz+88AVmnLeBh9tg06tbIxapFTTr4jkPmjIlTiT/9Nl6ezB+jHa0NgZZRM3M5y2Egyq
+ ieMlYV6eE9isVKwlOTBxwrTHrurU+OCspxirawvJ/2Vz2bds3meZNzfGW6AI4433iu1j
+ 7qmGvx8hxmxDT97jj4N0/aoAfee5TYlhXCAAgcB23vMq9MfyQhoWDa5d2sp4EcD7HYAg
+ f5O/5thS+gecYABLk+thRzW/V4sOz1NzWA4VAHNUy8vfKcWOIp1AOAaLmZ5WYz2u45Ok
+ aIgwWapxoRUPeSJxE+y6RwN4G7l5zCuYIS7ngmELBO9tQFy7PVGgexMG80n7dE3q4+Ju NQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2yffwqee52-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Mar 2020 09:24:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0229IijF189919;
+        Mon, 2 Mar 2020 09:24:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2yg1p18qbn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Mar 2020 09:24:01 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0229O04u019668;
+        Mon, 2 Mar 2020 09:24:00 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 02 Mar 2020 01:23:56 -0800
+Date:   Mon, 2 Mar 2020 12:23:46 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Ajay.Kathat@microchip.com
+Cc:     linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        devicetree@vger.kernel.org, Venkateswara.Kaja@microchip.com,
+        gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com,
+        Adham.Abozaeid@microchip.com, johannes@sipsolutions.net
+Subject: Re: [PATCH v3 00/18] wilc1000: move out of staging
+Message-ID: <20200302092346.GA24308@kadam>
+References: <20200225074105.7740-1-ajay.kathat@microchip.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc5c0d42-2b77-40b7-6b2b-08d7be8b2cf7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 09:22:05.8549
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6krFPgu6xFm7RKczQrMqcVtUWvBMH2Low4qZ4iiAtZnvs7+QGTyTpXtr+k2TZswDj4QJBIBHGtgMI9ZtamiqJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3950
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225074105.7740-1-ajay.kathat@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020073
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=1
+ phishscore=0 clxscore=1011 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003020073
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/25/2020 6:12 PM, Andr=E9 Draszik wrote:=0A=
-> The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.=
-=0A=
-> =0A=
-> This driver here should only return IRQ_HANDLED if the status register=0A=
-> indicates that the event we're handling in the irq handler was genuinely=
-=0A=
-> intended for this driver. Otheriwse the interrupt subsystem will=0A=
-> assume the interrupt was handled successfully even though it wasn't=0A=
-> at all.=0A=
-> =0A=
-> Signed-off-by: Andr=E9 Draszik <git@andred.net>=0A=
-> Cc: "Horia Geant=E3" <horia.geanta@nxp.com>=0A=
-> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>=0A=
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
-> Cc: "David S. Miller" <davem@davemloft.net>=0A=
-> Cc: Rob Herring <robh+dt@kernel.org>=0A=
-> Cc: Mark Rutland <mark.rutland@arm.com>=0A=
-> Cc: Shawn Guo <shawnguo@kernel.org>=0A=
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>=0A=
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>=0A=
-> Cc: Fabio Estevam <festevam@gmail.com>=0A=
-> Cc: NXP Linux Team <linux-imx@nxp.com>=0A=
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>=0A=
-> Cc: Anson Huang <Anson.Huang@nxp.com>=0A=
-> Cc: Robin Gong <yibin.gong@nxp.com>=0A=
-> Cc: linux-crypto@vger.kernel.org=0A=
-> Cc: devicetree@vger.kernel.org=0A=
-> Cc: linux-arm-kernel@lists.infradead.org=0A=
-> Cc: linux-input@vger.kernel.org=0A=
-For patches 2-6:=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Also imx8mn.dtsi and imx8mp.dtsi will have to be updated.=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+There are a few static checker warnings from Friday's linux-next.  Only
+the first one is important.  (Not all these Smatch warnings have been
+published).
+
+drivers/staging/wilc1000/hif.c:804 wilc_hif_pack_sta_param() warn: '&params->ht_capa' sometimes too small '8' size = 29
+
+drivers/staging/wilc1000/hif.c
+   787  static void wilc_hif_pack_sta_param(u8 *cur_byte, const u8 *mac,
+   788                                      struct station_parameters *params)
+   789  {
+   790          ether_addr_copy(cur_byte, mac);
+   791          cur_byte += ETH_ALEN;
+   792  
+   793          put_unaligned_le16(params->aid, cur_byte);
+   794          cur_byte += 2;
+   795  
+   796          *cur_byte++ = params->supported_rates_len;
+   797          if (params->supported_rates_len > 0)
+   798                  memcpy(cur_byte, params->supported_rates,
+   799                         params->supported_rates_len);
+   800          cur_byte += params->supported_rates_len;
+   801  
+   802          if (params->ht_capa) {
+   803                  *cur_byte++ = true;
+   804                  memcpy(cur_byte, &params->ht_capa,
+                                         ^^^^^^^^^^^^^^^^
+This is copying the wrong data.  The "&" is wrong.
+
+   805                         sizeof(struct ieee80211_ht_cap));
+   806          } else {
+   807                  *cur_byte++ = false;
+   808          }
+   809          cur_byte += sizeof(struct ieee80211_ht_cap);
+   810  
+   811          put_unaligned_le16(params->sta_flags_mask, cur_byte);
+   812          cur_byte += 2;
+   813          put_unaligned_le16(params->sta_flags_set, cur_byte);
+   814  }
+
+
+drivers/staging/wilc1000/cfg80211.c:904 del_pmksa() warn: 'i < priv->pmkid_list.numpmkid' 'true' implies 'priv->pmkid_list.numpmkid > 0' is 'true'
+
+drivers/staging/wilc1000/cfg80211.c
+   887  static int del_pmksa(struct wiphy *wiphy, struct net_device *netdev,
+   888                       struct cfg80211_pmksa *pmksa)
+   889  {
+   890          u32 i;
+   891          int ret = 0;
+   892          struct wilc_vif *vif = netdev_priv(netdev);
+   893          struct wilc_priv *priv = &vif->priv;
+   894  
+   895          for (i = 0; i < priv->pmkid_list.numpmkid; i++) {
+   896                  if (!memcmp(pmksa->bssid, priv->pmkid_list.pmkidlist[i].bssid,
+   897                              ETH_ALEN)) {
+   898                          memset(&priv->pmkid_list.pmkidlist[i], 0,
+   899                                 sizeof(struct wilc_pmkid));
+   900                          break;
+   901                  }
+   902          }
+   903  
+   904          if (i < priv->pmkid_list.numpmkid && priv->pmkid_list.numpmkid > 0) {
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This part of the condition is a given (must be true).  Delete it.  It's
+better to reverse the test and say:
+
+	if (i == priv->pmkid_list.numpmkid)
+		return -EINVAL;
+
+   905                  for (; i < (priv->pmkid_list.numpmkid - 1); i++) {
+   906                          memcpy(priv->pmkid_list.pmkidlist[i].bssid,
+   907                                 priv->pmkid_list.pmkidlist[i + 1].bssid,
+   908                                 ETH_ALEN);
+   909                          memcpy(priv->pmkid_list.pmkidlist[i].pmkid,
+   910                                 priv->pmkid_list.pmkidlist[i + 1].pmkid,
+   911                                 WLAN_PMKID_LEN);
+   912                  }
+   913                  priv->pmkid_list.numpmkid--;
+   914          } else {
+   915                  ret = -EINVAL;
+   916          }
+   917  
+   918          return ret;
+   919  }
+
+
+drivers/staging/wilc1000/wlan.c:706 wilc_wlan_handle_rx_buff() warn: 'pkt_len' 'true' implies 'pkt_len > 0' is 'true'
+
+drivers/staging/wilc1000/wlan.c
+   686          int is_cfg_packet;
+   687          u8 *buff_ptr;
+   688  
+   689          do {
+   690                  buff_ptr = buffer + offset;
+   691                  header = get_unaligned_le32(buff_ptr);
+   692  
+   693                  is_cfg_packet = FIELD_GET(WILC_PKT_HDR_CONFIG_FIELD, header);
+   694                  pkt_offset = FIELD_GET(WILC_PKT_HDR_OFFSET_FIELD, header);
+   695                  tp_len = FIELD_GET(WILC_PKT_HDR_TOTAL_LEN_FIELD, header);
+   696                  pkt_len = FIELD_GET(WILC_PKT_HDR_LEN_FIELD, header);
+   697  
+   698                  if (pkt_len == 0 || tp_len == 0)
+                            ^^^^^^^^^^^^
+
+   699                          break;
+   700  
+   701                  if (pkt_offset & IS_MANAGMEMENT) {
+   702                          buff_ptr += HOST_HDR_OFFSET;
+   703                          wilc_wfi_mgmt_rx(wilc, buff_ptr, pkt_len);
+   704                  } else {
+   705                          if (!is_cfg_packet) {
+   706                                  if (pkt_len > 0) {
+                                            ^^^^^^^^^^^
+Delete.
+
+   707                                          wilc_frmw_to_host(wilc, buff_ptr,
+   708                                                            pkt_len, pkt_offset);
+   709                                  }
+   710                          } else {
+   711                                  struct wilc_cfg_rsp rsp;
+   712  
+   713                                  buff_ptr += pkt_offset;
+   714  
+
+regards,
+dan carpenter
+
