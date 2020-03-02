@@ -2,131 +2,106 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440EFC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6C4C3F2D8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1A021775
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502A724677
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:54:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aXkSI2bB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6j9t0b6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgCBLW1 (ORCPT
+        id S1727228AbgCBLx7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:22:27 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51596 "EHLO
+        Mon, 2 Mar 2020 06:53:59 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52068 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727744AbgCBLW0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 06:22:26 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a132so714048wme.1
-        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 03:22:24 -0800 (PST)
+        with ESMTP id S1727485AbgCBLx6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 06:53:58 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a132so841715wme.1
+        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 03:53:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pXFVNDmvd1Q57O9A14StFD9o/pCLl1WZ1LXT9jyY7wg=;
-        b=aXkSI2bBqKF1Vn9HUmliqysTYyVduIDV+GQticrpQgMBTuEwdyXOU/yJMasY+tU5Bh
-         hp9mdNGiZWQRZY43djxJU5Te2hjCeYOJpZE7Kf3yMhWMtbjr/YfeBWsTUYMli0o6aneL
-         hjQxlCGaHxw5B4mqGQuBdfFY64NBTbqKcFbD9Q9B+reFNDjYSirVv+uhEuEH2mPjEYye
-         DHGWR6uPEVThhBh32hv4RMSCHXtXBfMxNBgCzr3MAjMAcXu9Vuz4o2qszUfTlZaWAC/q
-         a5CF7XzPxLXyWRXiFRJ0m1biCtXgBj/ia3i8conaAv6hKKaW6UZZ1bQ38AcQvB9ihgIL
-         o5hQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=azUAbwec9h/nTfVaFPcgmhe6fEkHKvdkY4Og3qBi37Y=;
+        b=r6j9t0b6YVsKN35LyP/H5lUyKRUrdC0WhAe7pyoL9zqxJsdyHeGhs2X3RPXsG77ucE
+         jE/L3lSF6Wv872Mzbni4tCKo2Uf/J5FiErTEvIguKLvUeYhUGNPKhhpaGFNRNrWGk+f2
+         1QjGeQADib8veuFWed0VG38BvxD1/BlcZKNZvBoIdZaKVu4tpxIefsYEaasn1pXrO6pw
+         1IS1EFDyfxBfwjF3zBykGgdaT4Xa+9qN7Hg+f7ZRYZZU9a6HuY5nByYkE4VPQwAGEqOh
+         HGZj0HxfvbruJPh91RNIa+cmcx57q78ersUThwaD49igmWlsnmeX5r7Lhm6Fksn6cv6m
+         AmWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pXFVNDmvd1Q57O9A14StFD9o/pCLl1WZ1LXT9jyY7wg=;
-        b=WDe+Rn92/WcSMv7U3tJm1kdhDKSh0zaenfKZ3hG/zEMi3tmgDQUbycmJtSibUunt0G
-         77Z4xx573YgAuv5jOrkQSJDsXFeiq0EzjI4/Mq1bxCMFlbsgIXg2k7ErnyFdjvmFM2wB
-         U8fB4qm4JwesRZh24aPxNJ6V3Qyj0pY/O756xhUnD3gXZHmkbH6MQyAWYuFt5uFUJNJR
-         fGL+zk3pqSwjx6wzECSmFROe4YQV87z7o93/qC6cfHrSmWoq1YGJyXq+1yM1A5T5dWll
-         iMfrmP0q8XSY0AwRrkvdhOvhcfDz/40JRQS9bZmX5rVngw1zJalBWP8WphN6ipI/44q6
-         9jRA==
-X-Gm-Message-State: APjAAAUHb8G/peskeutgEErMKuHrD45KmMCtFWl/z4ihRs1xnuTdpjR8
-        0Lg7oydSb0kDGbm7jq6hVS4rBw==
-X-Google-Smtp-Source: APXvYqz+e/Cqch5x656k3Vz2SnBMUPxNp29Vb0LYw28FU3uDN1mzrpA/IdGcwPsttcC9lnuYBg3tgQ==
-X-Received: by 2002:a05:600c:2942:: with SMTP id n2mr18840374wmd.87.1583148143534;
-        Mon, 02 Mar 2020 03:22:23 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e34:ecba:5540:6f5c:582a:cc84:32f5])
-        by smtp.gmail.com with ESMTPSA id j14sm28398441wrn.32.2020.03.02.03.22.21
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=azUAbwec9h/nTfVaFPcgmhe6fEkHKvdkY4Og3qBi37Y=;
+        b=njmvg/Y3yhM1jxd5s2QKW8MIXJdyAuuX+VEWUunXYrXFG3FN5TYrTMW1uxRYSN/8ZG
+         9+2M0KG80BwDD0NBADlQed0OEekNRDbdzSO7dj2uPSH5Rwv+awvRVvxPv79YvONrurjr
+         ikpdUq1mOEr3AjgZR1FEA3L1zXcQiYGsqFizysz/Djde+WlT2PTvLav5X7eQH/+Ek9bi
+         nRviyfgdo+iE9295igop/RHXbgZ+P+nMnqvZ5SCj0stMYwTtrGTkv9vXpK7LpAj8w1QU
+         FOWwtbUo+uJ9NsFbgWy528SJ9O6hmJjw72OeR2dI4YiGRljaOuA1Z5SxWzmcRewOiUyg
+         iYog==
+X-Gm-Message-State: APjAAAVNiyqOk7sCFCygnPKdS7V+G8COosIUSBLuu+T6ExS59xWicj8B
+        l70G/eNDNOwZPc8cYvgWfWqAIQ==
+X-Google-Smtp-Source: APXvYqynY+onBCIIhC4P/zjfJVC1tFcUN36uleAbHJTeNOVBp0N74P2fBTF9cu3aqLEh5sEG98Rv7w==
+X-Received: by 2002:a1c:9d85:: with SMTP id g127mr19364122wme.75.1583150036591;
+        Mon, 02 Mar 2020 03:53:56 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id j5sm27954117wrx.56.2020.03.02.03.53.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 03:22:23 -0800 (PST)
-From:   Fabien Parent <fparent@baylibre.com>
-To:     linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc:     matthias.bgg@gmail.com, joro@8bytes.org, yong.wu@mediatek.com,
-        ck.hu@mediatek.com, Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH v2 3/3] iommu/mediatek: add support for MT8167
-Date:   Mon,  2 Mar 2020 12:21:52 +0100
-Message-Id: <20200302112152.2887131-3-fparent@baylibre.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200302112152.2887131-1-fparent@baylibre.com>
-References: <20200302112152.2887131-1-fparent@baylibre.com>
+        Mon, 02 Mar 2020 03:53:55 -0800 (PST)
+Date:   Mon, 2 Mar 2020 11:54:32 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 02/12] docs: dt: convert usage-model.txt to ReST
+Message-ID: <20200302115432.GX3494@dell>
+References: <cover.1583135507.git.mchehab+huawei@kernel.org>
+ <0432bc8cdb6abb8618eac89d68db7441b613106d.1583135507.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0432bc8cdb6abb8618eac89d68db7441b613106d.1583135507.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the IOMMU on MT8167
+On Mon, 02 Mar 2020, Mauro Carvalho Chehab wrote:
 
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
----
+> - Add a SPDX header;
+> - Adjust document title;
+> - Use footnoote markups;
+> - Some whitespace fixes and new line breaks;
+> - Mark literal blocks as such;
+> - Add it to devicetree/index.rst.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/devicetree/index.rst            |  1 +
+>  Documentation/devicetree/of_unittest.txt      |  2 +-
+>  .../{usage-model.txt => usage-model.rst}      | 35 +++++++++++--------
 
-V2:
-	* removed if based on m4u_plat, and using instead the new
-	has_legacy_ivrp_paddr member that was introduced in patch 2.
+>  include/linux/mfd/core.h                      |  2 +-
 
----
- drivers/iommu/mtk_iommu.c | 9 +++++++++
- drivers/iommu/mtk_iommu.h | 1 +
- 2 files changed, 10 insertions(+)
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 78cb14ab7dd0..25b7ad1647ba 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -782,6 +782,14 @@ static const struct mtk_iommu_plat_data mt2712_data = {
- 	.larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
- };
- 
-+static const struct mtk_iommu_plat_data mt8167_data = {
-+	.m4u_plat     = M4U_MT8167,
-+	.has_4gb_mode = true,
-+	.has_legacy_ivrp_paddr = true;
-+	.reset_axi    = true,
-+	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
-+};
-+
- static const struct mtk_iommu_plat_data mt8173_data = {
- 	.m4u_plat     = M4U_MT8173,
- 	.has_4gb_mode = true,
-@@ -799,6 +807,7 @@ static const struct mtk_iommu_plat_data mt8183_data = {
- 
- static const struct of_device_id mtk_iommu_of_ids[] = {
- 	{ .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
-+	{ .compatible = "mediatek,mt8167-m4u", .data = &mt8167_data},
- 	{ .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
- 	{ .compatible = "mediatek,mt8183-m4u", .data = &mt8183_data},
- 	{}
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index 4696ba027a71..72f874ec9e9c 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -30,6 +30,7 @@ struct mtk_iommu_suspend_reg {
- enum mtk_iommu_plat {
- 	M4U_MT2701,
- 	M4U_MT2712,
-+	M4U_MT8167,
- 	M4U_MT8173,
- 	M4U_MT8183,
- };
+>  4 files changed, 23 insertions(+), 17 deletions(-)
+>  rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
+
 -- 
-2.25.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
