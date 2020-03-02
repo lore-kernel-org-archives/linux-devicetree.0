@@ -2,105 +2,125 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8953C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD26AC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B9F208C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF97B2146E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 10:29:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="exSa+YIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCBKUK (ORCPT
+        id S1727363AbgCBK3n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:20:10 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43340 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgCBKUK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 05:20:10 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F239229480B;
-        Mon,  2 Mar 2020 10:20:07 +0000 (GMT)
-Date:   Mon, 2 Mar 2020 11:20:02 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH v2 02/11] spi: set mode bits for "spi-rx-dtr" and
- "spi-tx-dtr"
-Message-ID: <20200302112002.4e3aaffd@collabora.com>
-In-Reply-To: <20200302094829.opazalwldrdn4s7y@ti.com>
-References: <20200226093703.19765-1-p.yadav@ti.com>
-        <20200226093703.19765-3-p.yadav@ti.com>
-        <20200227172247.0e8ec459@collabora.com>
-        <20200302094829.opazalwldrdn4s7y@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 2 Mar 2020 05:29:43 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49754 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726654AbgCBK3n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 05:29:43 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022ANQDP005577;
+        Mon, 2 Mar 2020 11:29:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=zkytL5nVEwPnsSSru/KymaDUr/ha+HwULMX9F6zIoyc=;
+ b=exSa+YIJRpOznMWRg+X11gkj5wmZyPmRg08IYzfFup7xEtPRjr6hWuETdT4oWSeRj3gy
+ wg3QhBQp7WTFiMxpDmBLYzfUI0Z4kea/DHRf82bFxgz48iJsg368pvRH6M0FBQQJNvm2
+ 0YtY1DCoULu5mT1lJ0lgrxwVHyC9zPpFuF/GYQlx5zjVBJ/TepQqiOoRZEw0lYD/5ZxJ
+ /1s50RY+qf7NVfQdXBcYlsg6gkidy+IpOg0GatzRrm3hdSfJPdQ+5+F/QNciTNbLBRYc
+ d/EGAvKYG+5A3T82naPax11ZVINz1N2f98HRIsLxjAIZH2hM78fSz8U2ZnViQc3sIiEi XQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yffqpjscd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 11:29:31 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7C81410002A;
+        Mon,  2 Mar 2020 11:29:30 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 610342B881B;
+        Mon,  2 Mar 2020 11:29:30 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 2 Mar
+ 2020 11:29:29 +0100
+Subject: Re: [PATCH 2/3] ARM: dts: stm32: add STM32MP1-based Linux Automation
+ MC-1 board
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>
+References: <20200226143826.1146-1-a.fatoum@pengutronix.de>
+ <20200226143826.1146-2-a.fatoum@pengutronix.de>
+ <244a4502-03e0-836c-2ce2-7fa6cef3c188@st.com>
+ <fbba971d7501c774ce0081f22dcff4ef74002a4d.camel@pengutronix.de>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <e227de9a-7440-7e1f-2928-5648cbbe44c1@st.com>
+Date:   Mon, 2 Mar 2020 11:29:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <fbba971d7501c774ce0081f22dcff4ef74002a4d.camel@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_03:2020-02-28,2020-03-02 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2 Mar 2020 15:18:31 +0530
-Pratyush Yadav <p.yadav@ti.com> wrote:
+Hi Lucas
 
-> > > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> > > index 38b4c78df506..25c8ed9343f9 100644
-> > > --- a/drivers/spi/spi.c
-> > > +++ b/drivers/spi/spi.c
-> > > @@ -1927,6 +1927,13 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
-> > >  		}
-> > >  	}
-> > >  
-> > > +	/* Device DTR mode. */
-> > > +	if (of_property_read_bool(nc, "spi-tx-dtr"))
-> > > +		spi->mode |= SPI_TX_DTR;
-> > > +
-> > > +	if (of_property_read_bool(nc, "spi-rx-dtr"))
-> > > +		spi->mode |= SPI_RX_DTR;
-> > > +  
-> > 
-> > If this DTR mode is only used in spi-mem, maybe we shouldn't add those
-> > flags. SPI mem devices are usually smart enough to advertise what they
-> > support, and the subsystem in charge of those devices (in this specific
-> > case, spi-nor) will check what the controller supports
-> > using spi_mem_supports_op(). The only case we might have to deal with
-> > at some point is board level limitations (disabling DTR because the
-> > routing prevents using this mode).  
->  
-> Yes, being able to handle board-level limitations is the main reason 
-> behind this change. There should be a way to over-ride the use of DTR 
-> for a given board. And IIUC, SPI allows doing the same for Rx and Tx 
-> buswidth. So I don't see why we should deviate from that model.
+On 3/2/20 11:18 AM, Lucas Stach wrote:
+> On Mo, 2020-03-02 at 11:06 +0100, Alexandre Torgue wrote:
+>> Hi Ahmad
+>>
+>> Thanks for adding a new STM32 board. Some minor comments.
+>>
+>> On 2/26/20 3:38 PM, Ahmad Fatoum wrote:
+>>> The Linux Automation MC-1 is a SBC built around the Octavo Systems
+>>> OSD32MP15x SiP. The SiP features up to 1 GB DDR3 RAM, EEPROM and
+>>> a PMIC. The board has eMMC and a SD slot for storage and GbE
+>>> for both connectivity and power.
+>>>
+>>> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de
+>>> ---
+> [...]
+>>> +
+>>> +&gpu {
+>>> +	status = "okay";
+>>> +};
+> 
+> This question is more to the ST guys than this specific DT: Why is the
+> GPU marked as disabled in the SoC dtsi file? This device is always
+> present on the SoC and AFAICS there are no board level dependencies, so
+> there is no reason to have it disabled by default, right? Removing the
+> status property from the dtsi would remove the need for this override
+> on the board DT.
 
-My point is, maybe it should be expressed as a limitation, rather than
-made mandatory for the non-limited case (default to supported, unless
-stated otherwise). I think we already had this discussion with Rob and
-Mark regarding the QUAD/DUAL flags, which made conversion from spi-nor
-to spi-mem non-backward compatible for some controllers (some spi-nor
-controller drivers were considering the absence of spi-{tx,rx}-width as
-'use the max supported by the controller if the device supports it'
-while the spi subsystem goes for the more conservative 'use single SPI
-if spi-{tx,rx}-width is missing'). If we introduce a new property, maybe
-it'd be a good thing to think twice before taking this decision. FWIW,
-I'd vote for a 'spi-no-dtr' property to express board-level
-limitations.
+You are right. With new stm32 device tree diversity, it makes no longer 
+sens to disable GPU node in stm32mp157 dtsi file. Indeed, we use now 
+dedicated files for each SoC (stm32mp151 / stm32mp153 /stm32mp157).
 
-Orthogonal to this is the question of where we should put those flags,
-and I'm still not convinced we need that at the spi level (at least not
-yet).
+Ahmad, can you add this modification in your series please ?
+
+regards
+Alex
+
+
+> 
+> Regards,
+> Lucas
+> 
