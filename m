@@ -3,99 +3,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C19FC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 14:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013BFC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 14:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A7521775
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 14:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB1B214DB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 14:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgCBOXq (ORCPT
+        id S1727137AbgCBOao convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:23:46 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44673 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgCBOXo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 09:23:44 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j8lys-0006BU-0S; Mon, 02 Mar 2020 15:23:38 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j8lyo-0005zd-PI; Mon, 02 Mar 2020 15:23:34 +0100
-Date:   Mon, 2 Mar 2020 15:23:34 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, dmitry.torokhov@gmail.com,
-        thierry.reding@gmail.com, jic23@kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v5 2/7] mfd: Add support for Azoteq
- IQS620A/621/622/624/625
-Message-ID: <20200302142334.orvi7aqbsbnfspy5@pengutronix.de>
-References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
- <1581895931-6056-3-git-send-email-jeff@labundy.com>
- <20200224111448.GS3494@dell>
- <20200228034220.GA3510@labundy.com>
- <20200302120458.GY3494@dell>
- <20200302141117.GA11787@labundy.com>
+        Mon, 2 Mar 2020 09:30:44 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46468 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbgCBOao (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 09:30:44 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C7561294B57;
+        Mon,  2 Mar 2020 14:30:41 +0000 (GMT)
+Date:   Mon, 2 Mar 2020 15:30:39 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 5/6] media: rkvdec: Add the rkvdec driver
+Message-ID: <20200302153039.0c4ff54f@collabora.com>
+In-Reply-To: <20200302145746.3e94c1d1@coco.lan>
+References: <20200220163016.21708-1-ezequiel@collabora.com>
+        <20200220163016.21708-6-ezequiel@collabora.com>
+        <20200302145746.3e94c1d1@coco.lan>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200302141117.GA11787@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+On Mon, 2 Mar 2020 14:57:46 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-On Mon, Mar 02, 2020 at 08:11:17AM -0600, Jeff LaBundy wrote:
-> On Mon, Mar 02, 2020 at 12:04:58PM +0000, Lee Jones wrote:
-> > On Thu, 27 Feb 2020, Jeff LaBundy wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > On Mon, Feb 24, 2020 at 11:14:48AM +0000, Lee Jones wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > 
-> > > > Well done Jeff.  Good job.
-> > > > 
-> > > > Applied, thanks.
-> > > > 
-> > > 
-> > > Thank you for your kind words as well as your support in fleshing out this
-> > > series.
-> > > 
-> > > Just to confirm, does your offer to take the remainder (once everything is
-> > > approved) through immutable branches still stand?
-> > 
-> > Depends how quickly you can get the other drivers turned around.
+> > +#define M_N(ctxidx, idc0_m, idc0_n, idc1_m, idc1_n,		\
+> > +	    idc2_m, idc2_n, intra_m, intra_n)			\
+> > +	[0][(ctxidx)] = {idc0_m, idc0_n},			\
+> > +	[1][(ctxidx)] = {idc1_m, idc1_n},			\
+> > +	[2][(ctxidx)] = {idc2_m, idc2_n},			\
+> > +	[3][(ctxidx)] = {intra_m, intra_n}  
 > 
-> With Uwe's approval from Friday, all five drivers are complete.
+> Hmm... I can't even imagine what a macro named "M_N" would do.
+> Please use a better name for it.
 
-Note that I'm "only" reviewer of the PWM stuff and Thierry is the one
-responsible for the pwm-tree. So you need his ack to take the pwm patch
-through a different tree.
+Well, the meaning of those fields is explained in the spec, and the
+name itself has been chosen so it's short enough to not have lines
+exceeding 80 chars while still keeping the number of lines used for the
+cabac_table[] definition acceptable. But, I'm open to any other
+suggestion.
 
-Best regards
-Uwe
+> 
+> -
+> 
+> With regards to the macro itself, at least for my eyes, it looked bad,
+> from long-term maintenance PoV, to have a first argument (ctxidx) whose
+> value is just a monotonic linearly-incremented counter.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+It's not, we have holes in the middle, hence the explicit indexing. I
+also tried to have something as close as possible to the spec, so
+people can easily see where it comes from.
+
+> 
+> I mean, the way it is, it sounds risky, as one might miss a number
+> and one entire line of the array would be filled with zeros.
+
+That's exactly why I used explicit indexing: I want specific portions
+of the table to be 0-filled :-).
+
+> 
+> > +
+> > +/*
+> > + * Constant CABAC table.
+> > + * Built from the tables described in section '9.3.1.1 Initialisation process
+> > + * for context variables' of the H264 spec.
+> > + */
+> > +static const s8 rkvdec_h264_cabac_table[4][464][2] = {
+> > +	/* Table 9-12 – Values of variables m and n for ctxIdx from 0 to 10 */
+> > +	M_N(0, 20, -15, 20, -15, 20, -15, 20, -15),  
+> 
+> So, (maybe except if the ctxidx value has some real meaning),
+> perhaps you could, instead, switch the array order at the tables,
+> and get rid of ctxidx parameter for good, so the above code would
+> be like:
+
+I can't switch the array order since the HW expects things to be
+organized this way (that table is directly copied to a memory region
+that's passed to the HW).
+
+> 
+> #define INIT_MN_PAIRS(idc0_m, idc0_n, idc1_m, idc1_n,	\
+> 	       idc2_m, idc2_n, intra_m, intra_n)	\
+> 	{						\
+> 		[0] = {idc0_m, idc0_n},			\
+> 		[1] = {idc1_m, idc1_n},			\
+> 		[2] = {idc2_m, idc2_n},			\
+> 		[3] = {intra_m, intra_n}		\
+> 	},
+> 
+> static const s8 rkvdec_h264_cabac_table[464][4][2] = {
+> 	/* Table 9-12 – Values of variables m and n for ctxIdx from 0 to 10 */
+> 	INIT_MN_PAIRS(20, -15, 20, -15, 20, -15, 20, -15),
+> 	...
+
