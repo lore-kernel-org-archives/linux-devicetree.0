@@ -2,120 +2,87 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A12C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913B6C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CAE21739
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51DD821739
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583187209;
-	bh=RjZJQLTRgZ//erdDNfuPOWuFRICQwhfarvT5dgfPtXE=;
+	s=default; t=1583187339;
+	bh=QXNtMN2NF3vlLc56hopAN1MVxaRU10dt55sfNA1FQVk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HufrwWkGf25ZunUnJ+rGcB0Q4lESmBlGLEFPkzt/KBCP8Jf16KqT/wy/7pJ37mRTm
-	 rLOJP3C7Vnq4GKkkDdtE8lxxv1CwzYEiaSwV7rkdwQwHAsc11I4qGkYMVuc4PZ3b0L
-	 4sOsGarVPDXm4RkjTwsYmnSVJ2BNC5Rbc4ZSzxMI=
+	b=SKl1C0hiY+5PYmUeyGEbdk3xjMQ/nBpXa5ETukKarE8NK44EXMNUsS9EC0MApNhfu
+	 XcU1UC96of+ZCEQf8M/7UpIwiRrXAIyvCLiF4xfJcTbTw2Q9i2b1WI2w6Whn1K0/fb
+	 opt+ZRLbeXraRJSATYVSP9I6iCumO3J3LaFJuvTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgCBWN3 (ORCPT
+        id S1726744AbgCBWPj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:13:29 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37243 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgCBWN2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 17:13:28 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b3so975810otp.4;
-        Mon, 02 Mar 2020 14:13:28 -0800 (PST)
+        Mon, 2 Mar 2020 17:15:39 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42630 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgCBWPi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 17:15:38 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 66so942168otd.9
+        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 14:15:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uGARtVGb5GQcRJdnLbZgGSdPsUcgBwNPE/vctX/sjkM=;
-        b=Od4Eloo5fE07MvzTIY6OHAXefNYxN2f5HUdX6K0dmiu57/Q5ZaA9ceNc5qgfhnF6ZQ
-         0cO/M7MJZLVHZYX2SDxUTK0dLu7C9J5K5LIyNfKhQeNCVZxWhCmNicWab4Lt/3grhfKw
-         mfB2dZKOJinKU4V6Bl7lY4v6JwcShN2EQkKTCyCui55VM0JASJMZp4HS9iUmNAgLxEhX
-         fTGhpXzAFVj5jaB1OTYAv7bx43nV4bbhqJF2vBagpJIGCtW3zPPOudJBHRIdSxVQ06qu
-         ipL79PO+e1eYkWx9ThNFP9JjfAGvujtD3csPCjqf3JFttYRTdjsXtYrdJlu6IPsHRSeI
-         kUIw==
-X-Gm-Message-State: ANhLgQ1iRa4xTEEXUVBxbl+TZgZs+BGRrqJaaIxjj0FRJpJ9jUmqOBPY
-        2nUm4O1qjltWWiftNWXDY6BggiA=
-X-Google-Smtp-Source: ADFU+vsW/Ftc+zw0bkyoQI7ygt1in3IUwH41Y0ReqXzak1w+/RwutHp8ko7jGUtVL4RV0SiqGHVaZg==
-X-Received: by 2002:a9d:21b4:: with SMTP id s49mr998093otb.294.1583187208115;
-        Mon, 02 Mar 2020 14:13:28 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=LETpXWmgpQKAWlf7/PNYOZU17euTcGls817NEC0Ll5Q=;
+        b=cFH+UMF96S5JI4j6ZcGdf7S1R+iQ0prVnd/wzVa+Plb57PKjdFO9RB4d2DS2GyS0Ug
+         Xuff8J4o299NTMQcGXdI2gmv8C2gM7HEq7MysK0cFKBIYa2VtZTJAWK/2oX7tZVO0VH5
+         nqe/z6AgeLtz8PONOEI6QRA8G7g45yCu9RG6KKotVXdeH/ZQV/zzK57lJdwfVGZVXUTg
+         i5jlo42q9FgdNYz+Ehd4IHPLFkzvGhGjA8MBRY2rFVGaTv/v4eji797CotbHyalGhJMR
+         PEEXiXMqGT285W5jhu1OkYxyaieTPIdZWnYTf4Ofwi0ANW/ApzY+igejGm0o+5GM/dRd
+         gtcg==
+X-Gm-Message-State: ANhLgQ2Pvis8n9lXWbKNQdpcBue5i+Rw5ukfMm5FWhNPJv/XVsNsQtOx
+        8i5NWBiOG6UgtKAjF1p6zg==
+X-Google-Smtp-Source: ADFU+vuIu9sIr+g4n3XyKI7KAnCEhL992URnfpHt8RwUvwkHeYF8Y/WQdkO8jX6NtAq7uvi9f0tx8Q==
+X-Received: by 2002:a05:6830:1e46:: with SMTP id e6mr1000399otj.257.1583187338208;
+        Mon, 02 Mar 2020 14:15:38 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p65sm6809911oif.47.2020.03.02.14.13.26
+        by smtp.gmail.com with ESMTPSA id a26sm5181632oid.17.2020.03.02.14.15.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 14:13:27 -0800 (PST)
-Received: (nullmailer pid 24401 invoked by uid 1000);
-        Mon, 02 Mar 2020 22:13:26 -0000
-Date:   Mon, 2 Mar 2020 16:13:26 -0600
+        Mon, 02 Mar 2020 14:15:37 -0800 (PST)
+Received: (nullmailer pid 27528 invoked by uid 1000);
+        Mon, 02 Mar 2020 22:15:36 -0000
+Date:   Mon, 2 Mar 2020 16:15:36 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
-Subject: Re: [PATCH v2 1/4] dt-binds: display: mediatek: add property to
- control mipi tx drive current
-Message-ID: <20200302221326.GA17941@bogus>
-References: <20200225114730.124939-1-jitao.shi@mediatek.com>
- <20200225114730.124939-2-jitao.shi@mediatek.com>
+To:     =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>
+Subject: Re: [PATCH 1/1] dt-bindings: arm: fsl: fix APF6Dev compatible
+Message-ID: <20200302221536.GA27370@bogus>
+References: <20200225123904.14723-1-sebastien.szymanski@armadeus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200225114730.124939-2-jitao.shi@mediatek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225123904.14723-1-sebastien.szymanski@armadeus.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 07:47:27PM +0800, Jitao Shi wrote:
-> Add a property to control mipi tx drive current:
-> "mipitx-current-drive"
-
-'dt-bindings: display: ...' for the subject prefix.
-
+On Tue, 25 Feb 2020 13:39:04 +0100, =?UTF-8?q?S=C3=A9bastien=20Szymanski?=          wrote:
+> APF6 Dev compatible is armadeus,imx6dl-apf6dev and not
+> armadeus,imx6dl-apf6dldev.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Fixes: 3d735471d066 ("dt-bindings: arm: Document Armadeus SoM and Dev boards devicetree binding")
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 > ---
->  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt     | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> index a19a6cc375ed..780201ddcd5c 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> @@ -33,6 +33,9 @@ Required properties:
->  - #clock-cells: must be <0>;
->  - #phy-cells: must be <0>.
->  
-> +Optional properties:
-> +- mipitx-current-drive: adjust driving current, should be 1 ~ 0xF
 
-Perhaps should be a common property and use the existing 
-'drive-strength-microamp'.
+Applied, thanks.
 
-> +
->  Example:
->  
->  mipi_tx0: mipi-dphy@10215000 {
-> @@ -42,6 +45,7 @@ mipi_tx0: mipi-dphy@10215000 {
->  	clock-output-names = "mipi_tx0_pll";
->  	#clock-cells = <0>;
->  	#phy-cells = <0>;
-> +	mipitx-current-drive = <0x8>;
->  };
->  
->  dsi0: dsi@1401b000 {
-> -- 
-> 2.21.0
+Rob
