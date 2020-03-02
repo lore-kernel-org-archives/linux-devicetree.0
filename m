@@ -2,91 +2,133 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DF6C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C998C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D80C21D56
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583182355;
-	bh=FLnuhIihPlnkfx+qEIKD35XRkiWsmrgqr4yKhDUOuo0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PpFMcJXzavnvGYnuWrcqA/Ha75LpC1l+aTIgQurksdgV1+LEpSwERSylFG04i42Dy
-	 ZMV4GL0jkuV3uxBHHpWJXz/e248FCuZg3OujXfaZ1YcFJvW1OJuXglUHksBqF7jNYT
-	 WNYFf4WtsGoFRKV2IJMHgKDG/MhIUTbC36+yfe7I=
+	by mail.kernel.org (Postfix) with ESMTP id 6B3572173E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 20:55:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="NA++ZvB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgCBUwf (ORCPT
+        id S1726752AbgCBUzZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:52:35 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42230 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgCBUwe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 15:52:34 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so691941otd.9;
-        Mon, 02 Mar 2020 12:52:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Mbj926lcMMww9ZNMv7XcrAqImfQQxGz/1hr+H7/z0k=;
-        b=SALkbDmCO4oHDdV8909meb+aI/DR1q76h+u93aaSgCMqdniHsTvmRHSH3pbNvvIoPs
-         82c69vs4g0NcHa36ujwG4GC/3KMktJDR0DnPk3LXq07Qits5udJ2eMkph+REXEecqb7R
-         /FyxXGudoDoG5ChohA4XZ68VvJyv0GEumOHCMd1y26fpJc+kmu5Sq4jCTba6zHVZP2Cg
-         4OfyFiM5BgwKdRIHUmvoMyIovmltboZvxqnRRcne3FNCJs8/oaSsdawPiQHEhw3d3y7z
-         959Q9f4OjpwKkdh9FwTaloM6382WTaKD7WTdhjaPRTv1q2uBVlOhT01+PtKpU8DVDJf4
-         xLZA==
-X-Gm-Message-State: ANhLgQ1emJCmR8VtHnQfc9Svu+zrOLrKUx8Sq7J2kj1xJkJQ293JaRYj
-        XgljySMGgnmDXW4ABlbuFQ==
-X-Google-Smtp-Source: ADFU+vsU4BwI+ZhtAeYrEEnEWFuq7vUTpJHGBZvXyUJlXUt3DWxeVgdXESU0lhisXPI0WR6u21nvWw==
-X-Received: by 2002:a05:6830:11c7:: with SMTP id v7mr769049otq.41.1583182354070;
-        Mon, 02 Mar 2020 12:52:34 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p141sm934283oic.7.2020.03.02.12.52.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 12:52:33 -0800 (PST)
-Received: (nullmailer pid 9793 invoked by uid 1000);
-        Mon, 02 Mar 2020 20:52:32 -0000
-Date:   Mon, 2 Mar 2020 14:52:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mon, 2 Mar 2020 15:55:25 -0500
+Received: from mxa1.seznam.cz ([77.75.78.90]:42117 "EHLO mxa1.seznam.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbgCBUzY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:55:24 -0500
+Received: from email.seznam.cz
+        by email-smtpc11b.ko.seznam.cz (email-smtpc11b.ko.seznam.cz [10.53.14.75])
+        id 2b9617137098437a2a3fdb4d;
+        Mon, 02 Mar 2020 21:55:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
+        t=1583182514; bh=PrVyWKz+cStZKFUbfG88xeiAHpw+y5USeILJtHAAfcU=;
+        h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:
+         References:MIME-Version:Content-Transfer-Encoding;
+        b=NA++ZvB7/6OZBV1Cnxjlju81CR0v1UVWTJjLbPPZqXXugCLxpek+lEiueRwZcYT/R
+         xlv7qgvf7WNpvlGXhjkOWyqPmecLzkt6Y7zn6EGC4rxBXswA+etykz+JWcWwERl1qY
+         BEMH/f4V+1zC17eMS7SAoJJCVSgf6emiE9oXSlNo=
+Received: from localhost.localdomain (212.69.128.228 [212.69.128.228])
+        by email-relay4.ko.seznam.cz (Seznam SMTPD 1.3.108) with ESMTP;
+        Mon, 02 Mar 2020 21:55:11 +0100 (CET)  
+From:   michael.srba@seznam.cz
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: clock: Convert UniPhier clock to json-schema
-Message-ID: <20200302205232.GA9730@bogus>
-References: <20200225010328.5638-1-yamada.masahiro@socionext.com>
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Michael Srba <Michael.Srba@seznam.cz>
+Subject: [PATCH v3 2/2][PATCH RESEND] dt-bindings: input/touchscreen: add bindings for zinitix
+Date:   Mon,  2 Mar 2020 21:12:16 +0100
+Message-Id: <20200302201216.12410-2-michael.srba@seznam.cz>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200302201216.12410-1-michael.srba@seznam.cz>
+References: <20200302201216.12410-1-michael.srba@seznam.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225010328.5638-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Feb 2020 10:03:28 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier clock controller binding to DT schema format.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  .../clock/socionext,uniphier-clock.yaml       |  94 +++++++++++++
->  .../bindings/clock/uniphier-clock.txt         | 132 ------------------
->  2 files changed, 94 insertions(+), 132 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/socionext,uniphier-clock.yaml
->  delete mode 100644 Documentation/devicetree/bindings/clock/uniphier-clock.txt
-> 
+From: Michael Srba <Michael.Srba@seznam.cz>
 
-Applied, thanks.
+This patch adds dts bindings for the zinitix bt541 touchscreen.
 
-Rob
+Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
+---
+ changes in v2: none
+ changes in v3: document zinitix,mode property
+
+
+ .../bindings/input/touchscreen/zinitix.txt    | 40 +++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ 2 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/zinitix.txt
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/zinitix.txt b/Documentation/devicetree/bindings/input/touchscreen/zinitix.txt
+new file mode 100644
+index 000000000000..446efb9f5f55
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/zinitix.txt
+@@ -0,0 +1,40 @@
++Device tree bindings for Zinitx BT541 touchscreen controller
++
++Required properties:
++
++ - compatible		: Should be "zinitix,bt541"
++ - reg			: I2C address of the chip. Should be 0x20
++ - interrupts		: Interrupt to which the chip is connected
++
++Optional properties:
++
++ - vdd-supply		: Analog power supply regulator on VCCA pin
++ - vddo-supply		: Digital power supply regulator on VDD pin
++ - zinitix,mode		: Mode of reporting touch points. Some modes may not work
++			  with a particular ts firmware for unknown reasons. Available
++			  modes are 1 and 2. Mode 2 is the default and preferred.
++
++The touchscreen-* properties are documented in touchscreen.txt in this
++directory.
++
++Example:
++
++	i2c@00000000 {
++		/* ... */
++
++		bt541@20 {
++			compatible = "zinitix,bt541";
++			reg = <0x20>;
++			interrupt-parent = <&msmgpio>;
++			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&tsp_default>;
++			vdd-supply = <&reg_vdd_tsp>;
++			vddo-supply = <&pm8916_l6>;
++			touchscreen-size-x = <540>;
++			touchscreen-size-y = <960>;
++			zinitix,mode = <2>;
++		};
++
++		/* ... */
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 967e78c5ec0a..1b0b5e23267d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1066,6 +1066,8 @@ patternProperties:
+     description: Shenzhen Zidoo Technology Co., Ltd.
+   "^zii,.*":
+     description: Zodiac Inflight Innovations
++  "^zinitix,.*":
++    description: Zinitix Co., Ltd
+   "^zte,.*":
+     description: ZTE Corp.
+   "^zyxel,.*":
+-- 
+2.24.0
