@@ -2,98 +2,118 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974A7C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB35BC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CB420842
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD02021739
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583185251;
-	bh=8PRgKjkNMdhif7FRzdbtgwVzBO9oZGAr+YxyaiFUiOg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hUdGa2eyQbztXfclVrT4L82E4tqXKV/a/XGi5l51MrjnaUcFrJn35Nferw0h5/iC3
-	 3hKhlc5l33fVpK66vu3hPGiFQEIhT2GinSH98fucxtxua3MXh2z0E6+cA+9/57xq0q
-	 j2EA5Yh4LEbh9nlmrXe9rbnBfHdksIFZHtuvOOew=
+	s=default; t=1583186458;
+	bh=JHiMmmIQWA6N3yckKGXMQMB24XH5xJvTtVmQagYi/ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c7v7XTUpY2PIAoLyQSZnZsP6Gv8innHrB9IRZURIvVrrrAliVKcDKhFC2kzfWD5jU
+	 MXP5qpK2L1WKGTQVYF0MKO6HDbj0rOeDyRRGbCPq3KHgf1sVYiinUQsk0N33f9MC7i
+	 G7x7XeMnVY/3f+xE5NTU/s8fuurgANTdmCWj6TiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgCBVku (ORCPT
+        id S1726816AbgCBWA6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:40:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726700AbgCBVku (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:40:50 -0500
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A069021D56;
-        Mon,  2 Mar 2020 21:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583185249;
-        bh=8PRgKjkNMdhif7FRzdbtgwVzBO9oZGAr+YxyaiFUiOg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0+LBwjpF/BmWn5lcCy3AxC+d00V17BqOxhC3d4cbpIEqx/GQaY0tVH2Jt0kmGLJHF
-         8btyeC1RpCgv4EIqzmOKr79ME3BtxyfyHCqG8A+LexGXd6Ed3+k3JWGWCCOAkl0Mmg
-         3UWkwI4DGOe2o16B4x7fVuDSzOqvUxOPmU4h1OMk=
-Received: by mail-qv1-f50.google.com with SMTP id r8so669771qvs.12;
-        Mon, 02 Mar 2020 13:40:49 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1j0lv4hxrBZH1mwD8HNizWtp8Ut5c5RQ9v2s1RE2rI2IvEpISf
-        f+TpMtgtKYclCMgoJ3YOPiHT59T1JjQVnBV3Yg==
-X-Google-Smtp-Source: ADFU+vtTHuHx49e5idYInPHiAYGTirAJ8BP2JfuSQxPXsVI6gokNdhLgD1Zf5FnnJ3gTgIlSXsOyzDAJJ4zGpbzcIcM=
-X-Received: by 2002:ad4:42cd:: with SMTP id f13mr1288473qvr.136.1583185248726;
- Mon, 02 Mar 2020 13:40:48 -0800 (PST)
+        Mon, 2 Mar 2020 17:00:58 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41191 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgCBWA6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 17:00:58 -0500
+Received: by mail-oi1-f196.google.com with SMTP id i1so846515oie.8;
+        Mon, 02 Mar 2020 14:00:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=REUIC2AfAnGT+owqjgQK+odBaQ6CyNbOXlKApYyt3Y0=;
+        b=WskOJGRtGyKfIkUUGO6jN9fXDu62GCRIVzUSBbOLBveVIdzipt5wnpEYsB8t9J+M/h
+         UfVaV3olYvMG+8gUpsLxoQTETOzBLn/peTGGanfU2RTmpjkocSjUdpUQnbSBPkO13NNY
+         GriZg18j4IzxxDZG8fCU6ECwzcvpr7Fr/Inqers+etVBq9SUrtuoPgbu0hVE7bPt6h5l
+         r5xonn6Jh+FRUdyXiDUrYmIgpAViffyXnaMQb5GLLCFgVJizmkoxGWIWgwA8fDdMAz9s
+         D1z1j5Au8Il8+P5OOAI/cjl8aXfMHTWLelOcWCVL+rGRHuMfTX+I0IWIOExx8+lyJtpE
+         tmdw==
+X-Gm-Message-State: ANhLgQ0uWRnZ9lrI7dj9Ys3INDBRGcmv2b2XLVnsLDKO7VI+OUcizR9m
+        zC66RakLni3zLPABsvAqxg==
+X-Google-Smtp-Source: ADFU+vvazweio8K6m4k3TUYFDYIvkV5M8sfuFvTaUiCHYZwjPTfgp2PcKt8UtITcY8R71ZKIO35YoA==
+X-Received: by 2002:aca:75c1:: with SMTP id q184mr369725oic.35.1583186457287;
+        Mon, 02 Mar 2020 14:00:57 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 67sm6819519oid.30.2020.03.02.14.00.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 14:00:56 -0800 (PST)
+Received: (nullmailer pid 6837 invoked by uid 1000);
+        Mon, 02 Mar 2020 22:00:55 -0000
+Date:   Mon, 2 Mar 2020 16:00:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
+        Sebastian Reichel <sre@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: Re: [PATCH v4 1/9] dt-bindings: battery: add new battery parameters
+Message-ID: <20200302220055.GA6779@bogus>
+References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+ <a834eda9015145e978da16d89857b78669a2b9c8.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
- <a7e0a5597ace97503c8ff67cdab2351151c7f267.1583135507.git.mchehab+huawei@kernel.org>
- <7a4d92e5-a1e2-6bd2-9a40-dcdb52e80801@gmail.com>
-In-Reply-To: <7a4d92e5-a1e2-6bd2-9a40-dcdb52e80801@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 2 Mar 2020 15:40:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJwKcR4UVit=VBnvOcKx0z9UuUw5aXd0Y7+2nMgk3X_zw@mail.gmail.com>
-Message-ID: <CAL_JsqJwKcR4UVit=VBnvOcKx0z9UuUw5aXd0Y7+2nMgk3X_zw@mail.gmail.com>
-Subject: Re: [PATCH v2 03/12] docs: dt: usage_model.rst: fix link for DT usage
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a834eda9015145e978da16d89857b78669a2b9c8.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 3:11 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 3/2/20 1:59 AM, Mauro Carvalho Chehab wrote:
-> > The devicetree.org doesn't host the Device_Tree_Usage page
-> > anymore. So, fix the link to point to a new address.
-> >
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  Documentation/devicetree/usage-model.rst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/usage-model.rst b/Documentation/devicetree/usage-model.rst
-> > index 326d7af10c5b..e1b42dc63f01 100644
-> > --- a/Documentation/devicetree/usage-model.rst
-> > +++ b/Documentation/devicetree/usage-model.rst
-> > @@ -12,7 +12,7 @@ This article describes how Linux uses the device tree.  An overview of
-> >  the device tree data format can be found on the device tree usage page
-> >  at devicetree.org\ [1]_.
->
-> s/devicetree.org/elinux.org/
+On Tue, 25 Feb 2020 10:52:04 +0200, Matti Vaittinen wrote:
+> Add:
+> 
+>  - trickle-charge-current-microamp:
+> 
+> Some chargers have 3 charging stages. First one when battery is almost
+> empty is often called as trickle-charge. Last state when battery has been
+> "woken up" is usually called as fast-charge. In addition to this some
+> chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
+> pre-charge. Some batteries can benefit from this 3-phase charging
+> [citation needed].
+> 
+> Introduce trickle-charge-current-microamp so that batteries can give
+> charging current limit for all three states.
+> 
+>  - precharge-upper-limit-microvolt:
+> 
+> When battery voltage has reached certain limit we change from
+> trickle-charge to next charging state (pre-charge for BD99954). Allow
+> battery to specify this limit.
+> 
+>  - re-charge-voltage-microvolt:
+> 
+> Allow giving a battery specific voltage limit for chargers which can
+> automatically re-start charging when battery has discharghed down to
+> this limit.
+> 
+> - over-voltage-threshold-microvolt
+> 
+> Allow specifying voltage threshold after which the battery is assumed to
+> be faulty.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> Changes from rfc-v3:
+>   Fixed typo in commit message battry => battery
+> 
+>  Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-I wonder if we should make the devicetree.org link work again instead.
-Primarily just to avoid the appearance of it being Linux specific.
-
-The website is hosted on github[1] and I'd assume there's a way to do
-redirects as a start.
-
-Rob
-
-[1] https://github.com/devicetree-org/devicetree-website
+Reviewed-by: Rob Herring <robh@kernel.org>
