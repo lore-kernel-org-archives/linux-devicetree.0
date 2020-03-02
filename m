@@ -2,62 +2,110 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AA3C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 16:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D58C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 16:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CEF2467E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 16:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD4C21D56
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 16:31:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eoSemUK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgCBQ3G convert rfc822-to-8bit (ORCPT
+        id S1726872AbgCBQbK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:29:06 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:43514 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbgCBQ3F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:29:05 -0500
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j8nwF-0003w2-0L; Mon, 02 Mar 2020 17:29:03 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 1/2] dt-bindings: gpu: mali-bifrost: Add Rockchip PX30 compatible
-Date:   Mon, 02 Mar 2020 17:29:02 +0100
-Message-ID: <2766954.FXckbfHlGz@diego>
-In-Reply-To: <20200302155808.11273-1-miquel.raynal@bootlin.com>
-References: <20200302155808.11273-1-miquel.raynal@bootlin.com>
+        Mon, 2 Mar 2020 11:31:10 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36452 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgCBQbK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 11:31:10 -0500
+Received: by mail-wm1-f66.google.com with SMTP id g83so9077111wme.1
+        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 08:31:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=9ekD/wZU2juB89x3ikSs3OkvRfctZBZxxFo0UhHx8JY=;
+        b=eoSemUK7ZEaNlKrg4HP6Fdxa2bm/AR3bYZEjvkL17es58SixQJTcPwvyZwNOpDQ8A/
+         MQG1tGVsfuxNYI4m+NO7zBAFHQJmYENCdyK126T8b/+5n0RtMHVIIRFI3KCqz1cZ47cu
+         ymX4QQ8l8KrH+NmiJS8zfmW0n9b6efekoW9GjqwPf1dHmurPNtTQ/bwcogGAuRZ5Kslc
+         67wzNcuxqJnr8n4Ibt5O7nzmF+gMa81KoaNWC7OJdB3nWYNkVVKZZ+TVtLC6ORZ6eDA/
+         ep5tQy1soUtgwjVcNFtV34CG7UMIljnWx4rgW1tykurhCb0F+8LSFTJ3Mj9v+xvo+Lss
+         gJJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=9ekD/wZU2juB89x3ikSs3OkvRfctZBZxxFo0UhHx8JY=;
+        b=PNPVHkSmrVyxSZze4m59T7hZKbtoL4TXZ7J96/zkjyVhnNeN5F/gPnJi8oDx8EGIIN
+         kDsR2yhmIPeFLFNtQEhtYJN4p7twYWHIxDtIZnCY74Ng6O0NZmHLAUevjF0ian3NX9IX
+         iiuu6pL2+mQQh/ylv4X0IpjTUgnFOWjnwIZ7+1armridnruVS6Z9OPzQXRhEvZYpG0R8
+         8u+Q3Q6sjEmmFUwycZRCkBprchEhF9wYix6AFm/JD0x+1Zgxf9TrtiaZNykg8p1eZNcn
+         5QzRJYzFMMRHydx/Skhy4+Hq2QqlfiT7tURVN9r42IgeiJ1S3t8qEkfVfvS3QcVVS3Gb
+         vNAw==
+X-Gm-Message-State: ANhLgQ3FBIwJhWqamJi74/o+PKz9SDUVKe+80mrK8VsJBie71ZzMvngG
+        1DAJ8ZG2AV15BKpL3XH4oxpiAg==
+X-Google-Smtp-Source: ADFU+vsO4oMThfxe4T+3k8CrA3b+cufx1zE37BxkfjQy0S1+vSAU7EwEHK50HsH3LU0tLqS86uSXvw==
+X-Received: by 2002:a7b:c183:: with SMTP id y3mr250047wmi.0.1583166667736;
+        Mon, 02 Mar 2020 08:31:07 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id v131sm17357885wme.23.2020.03.02.08.31.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Mar 2020 08:31:07 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org
+List-Id: <soc.lore.kernel.org>
+Cc:     Jianxin Pan <jianxin.pan@amlogic.com>, SoC Team <soc@kernel.org>,
+        "Stephen Rothwell" <sfr@canb.auug.org.au>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: power: Fix dt_binding_check error
+In-Reply-To: <1583164448-83438-1-git-send-email-jianxin.pan@amlogic.com>
+References: <1583164448-83438-1-git-send-email-jianxin.pan@amlogic.com>
+Date:   Mon, 02 Mar 2020 17:31:06 +0100
+Message-ID: <7hsgiqra5x.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Montag, 2. März 2020, 16:58:07 CET schrieb Miquel Raynal:
-> Rockchip PX30 SoCs feature a Bifrost Mali GPU.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Hi Jianxin,
+
+Jianxin Pan <jianxin.pan@amlogic.com> writes:
+
+> Missing ';' in the end of secure-monitor example node.
+>
+> Fixes: 165b5fb294e8 ("dt-bindings: power: add Amlogic secure power domains bindings")
+> Reported-by: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 > ---
->  Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml | 1 +
+>  Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> index af32209..bc4e037 100644
+> --- a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> @@ -36,5 +36,5 @@ examples:
+>              compatible = "amlogic,meson-a1-pwrc";
+>              #power-domain-cells = <1>;
+>          };
+> -    }
+> +    };
 
-already in mainline ;-)
+Thanks for the fix.  Queued for v5.7.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ad848dd53385b61f3c2b94d3466bf799f31035a7
+@Arnd, @Olof: you can ignore this one.  I requested Jianxin to send to
+you thinking this was a fix for something you already queued, but it's
+not.  I'll handle it.
 
-
+Kevin
