@@ -2,173 +2,115 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FE9C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 00:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847CFC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 02:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3EA2468D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 00:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457642469C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 02:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yqr0M/Nd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgCBAmi (ORCPT
+        id S1726688AbgCBCJX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Mar 2020 19:42:38 -0500
-Received: from lucky1.263xmail.com ([211.157.147.132]:50624 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgCBAmi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 19:42:38 -0500
-Received: from localhost (unknown [192.168.167.13])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 48B9FA27EF;
-        Mon,  2 Mar 2020 08:42:30 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P3521T140169829132032S1583109744046925_;
-        Mon, 02 Mar 2020 08:42:30 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4192909b6d47e22ef0e119a7b8b5e01d>
-X-RL-SENDER: yifeng.zhao@rock-chips.com
-X-SENDER: zyf@rock-chips.com
-X-LOGIN-NAME: yifeng.zhao@rock-chips.com
-X-FST-TO: miquel.raynal@bootlin.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
-To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
-        heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        Yifeng Zhao <yifeng.zhao@rock-chips.com>
-Subject: [PATCH 2/3] mtd: rockchip: device tree bindings for Rockchip
-Date:   Mon,  2 Mar 2020 08:42:16 +0800
-Message-Id: <1583109736-27801-1-git-send-email-yifeng.zhao@rock-chips.com>
-X-Mailer: git-send-email 2.0.0
-In-Reply-To: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
-References: <1582884076-27615-1-git-send-email-yifeng.zhao@rock-chips.com>
+        Sun, 1 Mar 2020 21:09:23 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36772 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbgCBCJX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 21:09:23 -0500
+Received: by mail-pj1-f67.google.com with SMTP id d7so773135pjw.1
+        for <devicetree@vger.kernel.org>; Sun, 01 Mar 2020 18:09:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Y617NjPV2w0ps+7DkMU/HSrI2+VaICeo3Wmn8yqjrI=;
+        b=Yqr0M/Nd8HF+aGZNYtnaqApjbKNmUfJzIkxfNG78niHql0bIYGw/HmZsSz8UJEnHui
+         P26sITklXpwlFTmbB5sf4gLJed2jbKdyqUYnKnhgiQJobwT988DqsMpePkywIlSdj4CC
+         iculfj6zghd2otF8wYE0m4rSHNEkPsn7+L/IL89fSsaKPtbNOzDuB3H9utHpQSrndn98
+         2ToAnUEoU43XyAkGgRhVZF0fn1efgvKI5Lzxvan50s4COGHKQeKUuOCvCXY0CqGxuwmx
+         0JIFsML4gI94JYAEH1Kj4X/qgiFSCYJ0sZes+WGrHnnymMyZnz8NGShNRb3KVUWSr/7S
+         gOaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Y617NjPV2w0ps+7DkMU/HSrI2+VaICeo3Wmn8yqjrI=;
+        b=CyZIH9AiYpeMUcBOVut9KOvVqlSqaobA8MOYu+x4zdaILyVMkr1KHVo/DZdkTcPJdF
+         2yB9UOZQKZTjHmHkPx7WLcRpj6gW4MUXsyi9zgIHazzonMy7M9aS73zKPPxSgmKYmMKd
+         y7fHiVzHKK5iz38Hxy0IrG/J+vd8ZBd3IM3VyY6Pq+/pFaM+Cc10mxQku0MpudPZ7Chv
+         k5fSUFc33uO7sk0zWRBpFcBLDphjHEP5ME1VQ1oDDbX+wiuZLBq1zWRzRBhN3caZswRO
+         kg00P3WZFuKksiyR1f8F3hB7z76Y7xQ5UqII3FiqFQzOFRsIc5HRUVVIKkVjosMRUNg0
+         rCYw==
+X-Gm-Message-State: APjAAAVwX+dmUgPF/ZwOvGy3B51YSV+OPWnu2lJRyRXyeLU+/ijGtei/
+        W1SKzBZ10TgFaXdbsC8R/XmDMg==
+X-Google-Smtp-Source: APXvYqxfWyEPbC+YVHwW6uh4cHK4f4uu8GCmPDe2S9W5MvePPjMSTsJSNaOeLDNfMtXpLd0yZXczFA==
+X-Received: by 2002:a17:902:524:: with SMTP id 33mr16076380plf.241.1583114962362;
+        Sun, 01 Mar 2020 18:09:22 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o12sm6147522pfp.1.2020.03.01.18.09.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 18:09:21 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc firmware
+Date:   Sun,  1 Mar 2020 18:07:57 -0800
+Message-Id: <20200302020757.551483-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Documentation support for Rockchip NAND controllers
+Update the firmware-name of the remoteproc nodes to mimic the firmware
+structure on other 845 devices.
 
-Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- .../bindings/mtd/rockchip,nand.yaml           | 95 +++++++++++++++++++
- 1 file changed, 95 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
-
-diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
-new file mode 100644
-index 000000000000..9a81f682ac01
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
-@@ -0,0 +1,95 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/rockchip,nand.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+index 09ad37b0dd71..fa7f4373a668 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+@@ -50,6 +50,7 @@ vreg_s4a_1p8: pm8998-smps4 {
+ 
+ &adsp_pas {
+ 	status = "okay";
++	firmware-name = "qcom/sdm845/adsp.mdt";
+ };
+ 
+ &apps_rsc {
+@@ -350,6 +351,7 @@ vreg_s3c_0p6: smps3 {
+ 
+ &cdsp_pas {
+ 	status = "okay";
++	firmware-name = "qcom/sdm845/cdsp.mdt";
+ };
+ 
+ &gcc {
+@@ -372,6 +374,11 @@ &i2c10 {
+ 	clock-frequency = <400000>;
+ };
+ 
++&mss_pil {
++	status = "okay";
++	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mbn";
++};
 +
-+title: Rockchip SoCs NAND FLASH Controller (NFC) Device Tree Bindings
-+
-+allOf:
-+  - $ref: "nand-controller.yaml"
-+
-+maintainers:
-+  - Yifeng Zhao <yifeng.zhao@rock-chips.com>
-+
-+properties:
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+  compatible:
-+    const: rockchip,nfc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Module Clock
-+      - description: Bus Clock
-+
-+  clock-names:
-+    items:
-+      - const: clk_nfc
-+      - const: clk_ahb
-+
-+  clock-rates:
-+      maximum: 150000000
-+
-+  pinctrl-names: true
-+
-+patternProperties:
-+  "^pinctrl-[0-9]+$": true
-+
-+  "^nand@[a-f0-9]$":
-+    type: object
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 3
-+
-+      nand-ecc-step-size:
-+        const: 1024
-+
-+      nand-ecc-strength:
-+        enum: [16, 24 , 40, 60, 70]
-+
-+      nand-bus-width:
-+        const: 8
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/rk3308-cru.h>
-+    nfc: nand-controller@ff4b0000 {
-+      compatible = "rockchip,nfc";
-+      reg = <0x0 0xff4b0000 0x0 0x4000>;
-+      interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru SCLK_NANDC>, <&cru HCLK_NANDC>;
-+      clock-names = "clk_nfc", "clk_ahb";
-+      clock-rates = <150000000>;
-+      pinctrl-names = "default";
-+      pinctrl-0 = <&flash_csn0 &flash_rdy &flash_ale &flash_cle
-+                  &flash_wrn &flash_rdn &flash_bus8>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      nand@0 {
-+        reg = <0>;
-+        nand-ecc-mode = "hw";
-+        nand-ecc-strength = <16>;
-+        nand-ecc-step-size = <1024>;
-+        nand-bus-width = <8>;
-+      };
-+    };
-+
-+...
+ &qupv3_id_1 {
+ 	status = "okay";
+ };
 -- 
-2.17.1
-
-
+2.24.0
 
