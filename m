@@ -2,84 +2,96 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70AFC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FD1C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 23:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A77208C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:46:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8mL4Wkq"
+	by mail.kernel.org (Postfix) with ESMTP id 743342173E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 23:25:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583191528;
+	bh=+Ch1kAwnRSAhnEYWYeS0IClgwv4aRBiLDZ4SEonb9hM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uX7CEAOPY4Nf2S6iT+O/VaZjl+CqP1rwijtx2luTT3kc7efv4Z6YGQMCXMrWHVZLl
+	 7iivmbMs0rBl5coTJHPLMXfxtefwNPkU3YYRjA3dcsaqT8ud8xCVdpeRthj62z9ZpH
+	 w7ehGYdtZ865GvdFI+7fAZatN3HicN9umnDK/h6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgCBWqX (ORCPT
+        id S1726773AbgCBXZ2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:46:23 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33505 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgCBWqW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 17:46:22 -0500
-Received: by mail-lf1-f67.google.com with SMTP id c20so1002554lfb.0
-        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 14:46:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yLlRHbktFbOxtzNl8Vihg7v3kIKc6TMAjjHUPUH1szE=;
-        b=M8mL4WkqqPiqVdS4845vC4Zpdwppdn9R8gd4H0FXSSRr52BVwtl8Mra38019iqK2cs
-         +91u+CUb1uRSjJxp0d04WJBwO2/piAaXNeX32RQCf8mVP/G92k5qj4hqrERMd142LMie
-         NL3JUr2NPXvOjObXSaW1GG53HlzikBruZB8pW0SjA4tGQAOBD1YB/UoKgDPa5Pg9N3qX
-         gSB1bFR8KIaWCwB7u1XkmHLdMXNc1hZn07FDAUHZxjv1sY7owLJu92TVWG60Q5KqpwCw
-         0ApzdsuhSTmRrgb42SLu9FQjQQPBFc6QO05ePhcNg53P5Og6bFJBEU7UebSu0VspWVCl
-         PLWA==
+        Mon, 2 Mar 2020 18:25:28 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35585 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgCBXZ1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 18:25:27 -0500
+Received: by mail-ot1-f68.google.com with SMTP id v10so1170003otp.2;
+        Mon, 02 Mar 2020 15:25:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yLlRHbktFbOxtzNl8Vihg7v3kIKc6TMAjjHUPUH1szE=;
-        b=mVkABLMuxCrOJiH9ckuEEQJOnf7ODmvrBX8AO2j0UA2q1nFpLTCOKLFDyv2cqV/EjC
-         dBdGGk89geAYgFxTw1OPeiUbGJOn+Oru8wIyZukXQ3IfaTZDM4+jPVBq83m3dBWYMmSs
-         kWYFNtvQgzSyUen6txJfw2125IOAP/7sVT8B5hyma0/umvsvsxVifyh9mbGCDaAzyGR3
-         sU1RhkpW3Q0rJntJ/WJyjQANeoQcHFSIKReEL1rgLjdXDXDy+FlPne5FB/kdnx+EI7i4
-         opLG2PNJaNnw5JkeNcKhaA9R8ps6h3ILfy4h8m3kcxdPrfJi67blolfvXc4nir3Gc7/C
-         12Aw==
-X-Gm-Message-State: ANhLgQ32wr4BuirgwtVJZHfWyp044xyHaeOlcfaXH2NoPqiU3YXOFWho
-        wlXLf23WMrfuaI9u+Bcrf60h4Z5sSQqG4dvHYao=
-X-Google-Smtp-Source: ADFU+vukK/ZdZyY9pLzllMfUz93sWGqAKVB4wD5ScH7PQHTGtStfvT6fbGnEJPtU+8VaCDyESKT0/8pJMiZdPi/+V6Q=
-X-Received: by 2002:a19:ed08:: with SMTP id y8mr803334lfy.56.1583189179625;
- Mon, 02 Mar 2020 14:46:19 -0800 (PST)
-MIME-Version: 1.0
-References: <20200302213557.11128-1-vitor@massaru.org>
-In-Reply-To: <20200302213557.11128-1-vitor@massaru.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 2 Mar 2020 19:46:08 -0300
-Message-ID: <CAOMZO5BqvmRpTbq-gGgnKC2gFTRxS0mK0=W3tBSfZKQ-MUXMzA@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: dts: imx8mq-phanbell: Add gpio-fan/thermal support
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OkU6h93T1z7BbIKFi2XT/lPbFqlFCSBzUI1f7w5xrXM=;
+        b=YYSmVLSNI2ydfFTwuvIKuccg4Cp3GWgrDVpoe0VQeKabnBybKr54ozLa9LAJnjVeQh
+         yJnClxF0OQuD18q7M8eLOOnz6lrB/ugMe6TwzcUpFeplC+Vu2GfkR1862WdRKc+yEPYT
+         6jjXiwmucsW0tx5ESG9gaYjs3lUh8jQqIGAFGiCzAz7KVKRXokrQFbwVltkm7TSx+Vu1
+         Rfo3fhNkQwaIAl3SX/VA3PXmGuN3klpHu8pcly2znV2E66HlkuE0Bxko6GJyaTlT1WwS
+         lziAjq+jgtz+djwScZBPdD3pjyVODOc9Z0Qg8S8eEw9RtWm9xRlicHK0wO+97bpA5nQ/
+         bxaQ==
+X-Gm-Message-State: ANhLgQ3KQwWEYAAX5U6b/iShyZDph0F9tFRM4lPCBDp9ZtoLUKrd5EKx
+        EItI+LemkcVFXjTcwH3vbg==
+X-Google-Smtp-Source: ADFU+vt6nyQwvzyGCVGjnZvcOohd30nERptmkf1F6xc1R7WZ2cUFjUGFfnfoCsjmS0qa+/CP/L7WJQ==
+X-Received: by 2002:a9d:6c01:: with SMTP id f1mr1198139otq.133.1583191527119;
+        Mon, 02 Mar 2020 15:25:27 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w2sm1750081otq.10.2020.03.02.15.25.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 15:25:26 -0800 (PST)
+Received: (nullmailer pid 31631 invoked by uid 1000);
+        Mon, 02 Mar 2020 23:25:25 -0000
+Date:   Mon, 2 Mar 2020 17:25:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     michael.srba@seznam.cz
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Marco Franchi <marco.franchi@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        lkcamp@lists.libreplanetbr.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Michael Srba <Michael.Srba@seznam.cz>
+Subject: Re: [PATCH v3 2/2][PATCH RESEND] dt-bindings: input/touchscreen: add
+ bindings for zinitix
+Message-ID: <20200302232525.GA30485@bogus>
+References: <20200302201216.12410-1-michael.srba@seznam.cz>
+ <20200302201216.12410-2-michael.srba@seznam.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302201216.12410-2-michael.srba@seznam.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vitor,
+On Mon,  2 Mar 2020 21:12:16 +0100, michael.srba@seznam.cz wrote:
+> From: Michael Srba <Michael.Srba@seznam.cz>
+> 
+> This patch adds dts bindings for the zinitix bt541 touchscreen.
+> 
+> Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
+> ---
+>  changes in v2: none
+>  changes in v3: document zinitix,mode property
+> 
+> 
+>  .../bindings/input/touchscreen/zinitix.txt    | 40 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  2 files changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/zinitix.txt
+> 
 
-On Mon, Mar 2, 2020 at 6:36 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-> +&cpu_thermal {
-
-You missed to place cpu_thermal prior to i2c1 to keep the nodes sorted.
+If a tag was not added on purpose, please state why and what changed.
