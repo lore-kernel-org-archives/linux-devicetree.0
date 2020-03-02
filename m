@@ -2,231 +2,278 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973B1C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F7C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4E3214DB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE67214DB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583162469;
+	bh=PLvk6y3hcWUG0cJaGOrwLbmj0GYuf2HRT1LWd/H3Pvw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=x0sv50lINToudcf1QDm/0Txaa3OTCp0hzJSoEBIbSXV6rduXQDKwbe0J5iotHJWnn
+	 nc5OxxxPreS9I+MKp4luAoIDFawVGcy9QUUt6maLTf/WboL7ca2ZjCdnp8Jz/YnpoE
+	 eebyEf6yJzWsSVzSAmtbZR7qU4PKjNSiVSHseA1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCBPHW (ORCPT
+        id S1726831AbgCBPVI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:07:22 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:51753 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgCBPHW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 10:07:22 -0500
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MPXQi-1inQJq0rpa-00Marv; Mon, 02 Mar 2020 16:07:08 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id EA8FB64FC2B;
-        Mon,  2 Mar 2020 15:07:06 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GhsWmSQpHrC5; Mon,  2 Mar 2020 16:07:06 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 77F3764FB47;
-        Mon,  2 Mar 2020 16:07:06 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.10.2.141) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 2 Mar 2020 16:07:06 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 1CEAD804EF; Mon,  2 Mar 2020 16:07:06 +0100 (CET)
-Date:   Mon, 2 Mar 2020 16:07:06 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-Message-ID: <20200302150706.GB3717@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mon, 2 Mar 2020 10:21:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbgCBPVI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:21:08 -0500
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4B6C2146E;
+        Mon,  2 Mar 2020 15:21:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583162467;
+        bh=PLvk6y3hcWUG0cJaGOrwLbmj0GYuf2HRT1LWd/H3Pvw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vxmofjcBaFgoMf1BcXCB1UtH3FNWdlGmtwPDusDU85gCm5zGZy4rUj4XM2Ocx1qEa
+         WTIdopeGSmWkh7UFfRTCZR56v+z+5BpuwItWvaTJeK/6UqNFtkxlfRgzbja7Ns6K7t
+         mnSWRGWyXyZ387AYxiKeIymAFHqgLmIuFmCDrxAk=
+Date:   Mon, 2 Mar 2020 16:21:00 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
- <20200113141556.GI3606@pflmari>
- <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
- <20200302134011.GA3717@pflmari>
- <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 2/6] media: v4l2-core: Add helpers to build the H264
+ P/B0/B1 reflists
+Message-ID: <20200302162100.72696380@coco.lan>
+In-Reply-To: <20200302154426.5fb09f91@collabora.com>
+References: <20200220163016.21708-1-ezequiel@collabora.com>
+        <20200220163016.21708-3-ezequiel@collabora.com>
+        <20200302142433.0ad1b383@coco.lan>
+        <20200302154426.5fb09f91@collabora.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
-X-Originating-IP: [10.10.2.141]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29536F936F63776B
-X-Provags-ID: V03:K1:vOVbK2DsFg7SX9pxGLNnfcHuRTuLm+XbuwenDwgHRnvBswnGikn
- Cn0SrAENmZPtAV8HIiI5WNh3Cxf1wjaTRzN0ZE4sQ9L4zGn7o+gEo8bUG94r1pY7uuMlsla
- 6HOKcjKBxsvOsdoQTejcmnGMRYLxEQZh90VeNvyE//J5uxXHNMb6ObJKaSYu5JEO/DBle+I
- 7pk1O7jC+YHrfAqve0cOQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XvsG33bYZEM=:fdor2OGUiLrPhgNiUn4pai
- TocsOSG2bbB4IwYTAUq8u6x1ABq/HV11hpykCkyitvbyGNmPlBVyiyCnemOX+4+ACJYikxd/7
- 2mcbHe8n9OeSBA5kC536pDcy9pvGzURmNW4Izxrkz79jj4C7rIa1Oanfld7M8PtMeIe3T0SO5
- B4tFc40RciFaxG06ZUExeRKdU82oELuCpTDl8jnZ2qjCh6r89KrV8q8Rd1XkMNOUkVzzB5i8z
- paAqs3bc9U7ZsCO1YwWTvT+vUIZJA+irPqLr6/Ux3lNcc69Ym93jtmY+BvW+QzSOIpvaS6g78
- BSeTXo7OQMDKkXPp0HxLv4hD61OcQgegXRX7XAuRFTofs32WcAeChqRw1SXWDI9AoUDY/qotx
- V8xAxFncImhtfGv/y3LMSO8cxmxSmTpoqySMrxOxbk5GSY/H+rUFoTg/Rd4w1H5KFsOeY6EmU
- DsTvRjl1wJgeyS33Y2LQHd75o8gwjfuEL6mfDqa0TTBCmYuawbcYcovifqGt0Rkk5/UeU2a6G
- YYFM6PnzV1HGOt/EtrNhg4zP2ZRtohCCnrejGnOwl6yfIJNYDbaP7nxR5Cy5JoIPjGjFT5jCD
- tnlmckvvWQCO1qcpqCA6jt3NyvisljiyV6JPv2juK3tfxU0P9ZoEfLJrfiILhXeSskCiUBWpS
- rnh0WukoPdX51BjdZttO0bl8QoOSLVHmpyn9YVLecaa1pWyrkhj+AdikJM6ZG4/2MalmCTJ2i
- 3KSJmbEMo8jy5DvNzXtslArNKmw9Kkef8xE9V8Nxvl0lWDQgiDCJ2R5tWzzRpMMYLFtdGbHm5
- tEcP7juKebhigvNaUMsnTIdbBYUrn7plAHbc4apMgMO1el7YHUHTggFeUOFKOrbE4XMI1ox
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Geert Uytterhoeven, Mon, Mar 02, 2020 14:47:46 +0100:
-> On Mon, Mar 2, 2020 at 2:40 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > > > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > > @@ -322,6 +322,10 @@
-> > > >         clock-frequency = <22579200>;
-> > > >  };
-> > > >
-> > > > +&audio_clk_c {
-> > > > +       clock-frequency = <12288000>;
-> > > > +};
-> > >
-> > > Does the ADV7482 always generate a 12.288 MHz clock signal?
-> > > Or is this programmable?
-> >
-> > Oops. It looks like it is and the value is derived from the sampling rate
-> > (48kHz) and the master clock multiplier. Both hard-coded in the board file.
+Em Mon, 2 Mar 2020 15:44:26 +0100
+Boris Brezillon <boris.brezillon@collabora.com> escreveu:
+
+> On Mon, 2 Mar 2020 14:24:33 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 > 
-> Where are these hardcoded in the board file?
-
-In the endpoint definition, arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dts
-
-So the frequency can be set at the run-time, perhaps even derived from
-endpoint connected to the output. In this case, rsnd_endpoint3,
-which has the "mclk-fs" setting. Not sure if the sampling rate
-can be set to something else for the HDMI, though.
-
-> Even if they are, technically this is a clock output of the ADV7482.
-
-... which I hope to correct as soon as I steal the hardware from whoever stole
-it from me...
-
-> > > > video-receiver@70 {
-> > > >     compatible = "adi,adv7482";
-> > > > ...
-> > > > +   clocks = <&rcar_sound 3>, <&audio_clk_c>;
-> > > > +   clock-names = "clk-hdmi-video", "clk-hdmi-i2s-mclk";
-> > >
-> > > The above declares the Audio CLK C to be a clock input of the ADV7482, while
-> > > it is an output.
-> >
-> > I would gladly give it right direction if I *really* understood what I was
-> > doing...
+> > Em Thu, 20 Feb 2020 13:30:12 -0300
+> > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+> >   
+> > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > 
+> > > Building those list is a standard procedure described in section
+> > > '8.2.4 Decoding process for reference picture lists construction' of
+> > > the H264 specification.
+> > > 
+> > > We already have 2 drivers needing the same logic (hantro and rkvdec) and
+> > > I suspect we will soon have more.
+> > > 
+> > > Let's provide generic helpers to create those lists.
+> > > 
+> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > ---
+> > >  drivers/media/v4l2-core/Kconfig     |   4 +
+> > >  drivers/media/v4l2-core/Makefile    |   1 +
+> > >  drivers/media/v4l2-core/v4l2-h264.c | 258 ++++++++++++++++++++++++++++
+> > >  include/media/v4l2-h264.h           |  85 +++++++++
+> > >  4 files changed, 348 insertions(+)
+> > >  create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
+> > >  create mode 100644 include/media/v4l2-h264.h
+> > > 
+> > > diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-core/Kconfig
+> > > index 39e3fb30ba0b..8a4ccfbca8cf 100644
+> > > --- a/drivers/media/v4l2-core/Kconfig
+> > > +++ b/drivers/media/v4l2-core/Kconfig
+> > > @@ -45,6 +45,10 @@ config VIDEO_PCI_SKELETON
+> > >  config VIDEO_TUNER
+> > >  	tristate
+> > >  
+> > > +# Used by drivers that need v4l2-h264.ko
+> > > +config V4L2_H264
+> > > +	tristate
+> > > +
+> > >  # Used by drivers that need v4l2-mem2mem.ko
+> > >  config V4L2_MEM2MEM_DEV
+> > >  	tristate
+> > > diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-core/Makefile
+> > > index 786bd1ec4d1b..c5c53e0941ad 100644
+> > > --- a/drivers/media/v4l2-core/Makefile
+> > > +++ b/drivers/media/v4l2-core/Makefile
+> > > @@ -21,6 +21,7 @@ obj-$(CONFIG_VIDEO_V4L2) += v4l2-dv-timings.o
+> > >  obj-$(CONFIG_VIDEO_TUNER) += tuner.o
+> > >  
+> > >  obj-$(CONFIG_V4L2_MEM2MEM_DEV) += v4l2-mem2mem.o
+> > > +obj-$(CONFIG_V4L2_H264) += v4l2-h264.o
+> > >  
+> > >  obj-$(CONFIG_V4L2_FLASH_LED_CLASS) += v4l2-flash-led-class.o
+> > >  
+> > > diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-core/v4l2-h264.c
+> > > new file mode 100644
+> > > index 000000000000..4f68c27ec7fd
+> > > --- /dev/null
+> > > +++ b/drivers/media/v4l2-core/v4l2-h264.c
+> > > @@ -0,0 +1,258 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * V4L2 H264 helpers.
+> > > + *
+> > > + * Copyright (C) 2019 Collabora, Ltd.
+> > > + *
+> > > + * Author: Boris Brezillon <boris.brezillon@collabora.com>
+> > > + */
+> > > +
+> > > +#include <linux/module.h>
+> > > +#include <linux/sort.h>
+> > > +
+> > > +#include <media/v4l2-h264.h>
+> > > +
+> > > +/**
+> > > + * v4l2_h264_init_reflist_builder() - Initialize a P/B0/B1 reference list
+> > > + *				      builder
+> > > + *
+> > > + * @b: the builder context to initialize
+> > > + * @dec_params: decode parameters control
+> > > + * @slice_params: first slice parameters control
+> > > + * @sps: SPS control
+> > > + * @dpb: DPB to use when creating the reference list
+> > > + */
+> > > +void
+> > > +v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
+> > > +		const struct v4l2_ctrl_h264_decode_params *dec_params,
+> > > +		const struct v4l2_ctrl_h264_slice_params *slice_params,
+> > > +		const struct v4l2_ctrl_h264_sps *sps,
+> > > +		const struct v4l2_h264_dpb_entry *dpb)    
+> > 
+> > The prototype here is not nice...
+> >   
+> > > +{
+> > > +	int cur_frame_num, max_frame_num;
+> > > +	unsigned int i;
+> > > +
+> > > +	max_frame_num = 1 << (sps->log2_max_frame_num_minus4 + 4);
+> > > +	cur_frame_num = slice_params->frame_num;
+> > > +
+> > > +	memset(b, 0, sizeof(*b));
+> > > +	if (!(slice_params->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC))
+> > > +		b->cur_pic_order_count = min(dec_params->bottom_field_order_cnt,
+> > > +					     dec_params->top_field_order_cnt);
+> > > +	else if (slice_params->flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
+> > > +		b->cur_pic_order_count = dec_params->bottom_field_order_cnt;
+> > > +	else
+> > > +		b->cur_pic_order_count = dec_params->top_field_order_cnt;
+> > > +
+> > > +	for (i = 0; i < 16; i++) {
+> > > +		u32 pic_order_count;
+> > > +
+> > > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> > > +			continue;
+> > > +
+> > > +		b->refs[i].pic_num = dpb[i].pic_num;    
+> > 
+> > ... as you're expecting a fixed number of elements at DPB array, and using
+> > a magic number (16) inside the for loop.  
 > 
-> :-)
+> I used to have a '#define V4L2_H264_NUM_DPB_ENTRIES 16' but have been
+> told that this is an arbitrary limitation (the spec does not explicitly
+> limit the DPB size, even if all the HW we've seen seem to limit it to
+> 16).
+
+Yeah, 16 seems an arbitrary limitation to me too. Yet, the way it
+is, the code still has this arbitrary limit, except that it is now
+split into different places, making worse to change if we ever need
+to extend it.
+
+At least with a define, if we need to change it to, let's say, 32,
+it would be just a matter of changing the #define.
+
+> Maybe we can pass the DPB array size as an argument so it stays
+> HW-specific.
+
+That would work too, but then you'll likely need to add dynamic
+allocation for the structs, with would add more complexity without
+a real use-case.
+
 > 
-> > > Furthermore, the DT bindings do not document that clocks can be specified.
-> >
-> > Should the DT bindings document that the clock cannot be specified than?
+> >   
+> > > +
+> > > +		/*
+> > > +		 * Handle frame_num wraparound as described in section
+> > > +		 * '8.2.4.1 Decoding process for picture numbers' of the spec.
+> > > +		 * TODO: This logic will have to be adjusted when we start
+> > > +		 * supporting interlaced content.
+> > > +		 */
+> > > +		if (dpb[i].frame_num > cur_frame_num)
+> > > +			b->refs[i].frame_num = (int)dpb[i].frame_num -
+> > > +					       max_frame_num;
+> > > +		else
+> > > +			b->refs[i].frame_num = dpb[i].frame_num;
+> > > +
+> > > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
+> > > +			pic_order_count = min(dpb[i].top_field_order_cnt,
+> > > +					      dpb[i].bottom_field_order_cnt);
+> > > +		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
+> > > +			pic_order_count = dpb[i].bottom_field_order_cnt;
+> > > +		else
+> > > +			pic_order_count = dpb[i].top_field_order_cnt;
+> > > +
+> > > +		b->refs[i].pic_order_count = pic_order_count;
+> > > +		b->unordered_reflist[b->num_valid] = i;
+> > > +		b->num_valid++;
+> > > +	}
+> > > +
+> > > +	for (i = b->num_valid; i < ARRAY_SIZE(b->unordered_reflist); i++)
+> > > +		b->unordered_reflist[i] = i;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(v4l2_h264_init_reflist_builder);
+> > > +
+> > > +static int v4l2_h264_p_ref_list_cmp(const void *ptra, const void *ptrb,
+> > > +				    const void *data)
+> > > +{
+> > > +	const struct v4l2_h264_reflist_builder *builder = data;
+> > > +	u8 idxa, idxb;
+> > > +
+> > > +	idxa = *((u8 *)ptra);
+> > > +	idxb = *((u8 *)ptrb);
+> > > +
+> > > +	if (builder->refs[idxa].longterm != builder->refs[idxb].longterm) {    
+> > 
+> > Where do you ensure that idxa and idxb won't be bigger than NUM_DPB_ENTRIES?  
 > 
-> It currently does say so, as it doesn't list "clocks" in its properties section.
+> If it does that means something went wrong in the init func. 
 
-The bindings documentation file, which we're talking about here and which does
-not list the specifiable input clocks in its properties, is it the
+Well, this is a library code. We know that the init function won't
+do that, but the core doesn't really know if the driver didn't change
+the refs for some reason. If it does, it will go past the array index,
+with can be very bad. So, I would try to either re-work this sorting
+code to prevent going out of refs[] array or add some code to bail out
+if this ever happen.
 
-    Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> I can add
+> a WARN_ON() and bail out if you want, but I can't return an error here
+> (that's not what the caller of the callback expects).
 
-?
 
-And this absence of documentation also means that whatever clocks (both input
-in "clocks=" and output in "#clock-cells") listed in a specific .dts are just
-an integration detail?
-
-Does this below makes more sense, than?
-
-    video-receiver@70 {
-        compatible = "adi,adv7482";
-        clocks = <&rcar_sound 3>;
-        clock-names = "clk-hdmi-video";
-        adv748x_mclk: mclk {
-            compatible = "fixed-clock";
-            #clock-cells =  <0>;
-            /* frequency hard-coded for illustration */
-            clock-frequency = <12288000>;
-            clock-output-names = "clk-hdmi-i2s-mclk";
-        };
-    };
-
-Now I'm a bit hazy on how to declare that the MCLK output of the
-video-receiver@70 is connected to the Audio Clock C of the SoC...
-Probably remove use of "audio_clk_c" completely?
-
-> > > > @@ -686,7 +700,8 @@
-> > > >         };
-> > > >
-> > > >         sound_pins: sound {
-> > > > -               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
-> > > > +               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
-> > > > +                        "ssi4_data";
-> > >
-> > > Missing "ss4_ctrl", for the SCK4 and WS4 pins.
-> >
-> > I'll add them.
-> > As the device seems to function even without thoes, does this mean the
-> > pins in the group are used "on demand" by whatever needs them?
-> 
-> Probably the SCK4/WS4 functions are the reset-state defaults.
-
-That ... might require some trial and testing: when I add them to the group,
-the reset defaults will be overridden by the platform initialization, which is
-not necessarily the reset default. Will see.
-
-> >
-> > Does a "clocks = ..." statement always mean input clocks?
-> 
-> Yes it does.
-> If a device has clock outputs and is thus a clock provider, it should
-> have a #clock-cells property, and this should be documented in the bindings.
-> 
-> A clock consumer will refer to clocks of a provider using the "clocks"
-> property, specifying a clock specifier (phandle and zero or more indices)
-> for each clock referenced.
-
-Something like this?
-
-    &rcar_sound {
-        clocks = ...,
-                 <&adv748x_mclk>,
-                 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
-        clock-names = ...,
-                      "clk_c",
-                      "clk_i";
-    };
-
-Regards,
-Alex
+Thanks,
+Mauro
