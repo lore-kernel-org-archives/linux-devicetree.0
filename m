@@ -2,98 +2,101 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3CAC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A18DC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 18:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBA92173E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 17:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6622420842
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 18:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jAFV6CUd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZHpQogY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgCBR6J (ORCPT
+        id S1727538AbgCBSX6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:58:09 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:41602 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgCBR6I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:58:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=WpKyjECZo9+0yn++WZklBBBgzh8mJlsrDow9rZ76U+g=; b=jAFV6CUd9CG7R8eUymfFUC9paF
-        LGsEmsz7ZqdWXc74+tYuzstbQob+EonjVdUhEhyf7TdsqzFPCgCTU4KTRm7zJAvl/6E8/NmQznobL
-        LGRUGTBqh816r0+9vGc3LNK06NzkQEO6m9PDjFVOMwC4oQZvYpmwbS7Rhrp2SZeyUtv0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j8pKJ-0007Ef-R8; Mon, 02 Mar 2020 18:57:59 +0100
-Date:   Mon, 2 Mar 2020 18:57:59 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dajun Jin <adajunjin@gmail.com>
-Cc:     hkallweit1@gmail.com, linux@armlinux.org.uk, robh+dt@kernel.org,
-        frowand.list@gmail.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] drivers/of/of_mdio.c:fix of_mdiobus_register()
-Message-ID: <20200302175759.GD24912@lunn.ch>
-References: <20200301165018.GN6305@lunn.ch>
- <20200302172919.31425-1-adajunjin@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302172919.31425-1-adajunjin@gmail.com>
+        Mon, 2 Mar 2020 13:23:58 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28163 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726451AbgCBSX5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 13:23:57 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583173437; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=edcFSYSexIsmSnWikdqjkm9DxkW7RoVnWKJulqkV/Sg=; b=ZHpQogY9BEo+GhRVdYDTg67eXIyJCmQxIa6B2618FGf0QzV3JGyWFej4fbNlgvdcr6WHBgq3
+ txcdNvDsI9XW0n8JnqXu+d1l5YtzyXlBOmvY/OR+pEHKsDt0GUIU5OgwHN2/ZxAqQ4Nw2lip
+ SotMwm4HnoX4rWbZUJD4ywyaqno=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5d4f35.7fb708292df8-smtp-out-n03;
+ Mon, 02 Mar 2020 18:23:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7A878C447A2; Mon,  2 Mar 2020 18:23:49 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BDA6DC43383;
+        Mon,  2 Mar 2020 18:23:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BDA6DC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     smasetty@codeaurora.org, John Stultz <john.stultz@linaro.org>,
+        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v3 0/2] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
+Date:   Mon,  2 Mar 2020 11:23:42 -0700
+Message-Id: <1583173424-21832-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dajun
+When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
+cache coherency issues because it is mapped as write-combine without clearing
+the cache after it was zeroed.
 
-> This is my test in Xilinx zcu106 board.
-> 
-> dts is liks this:
-> ethernet@ff0e0000 {
->     compatible = "cdns,zynqmp-gem", "cdns,gem";
->     status = "okay";
->     ...
->     
->     phy@0 {
->         ti,rx-internal-delay = <0x8>;
->         ti,tx-internal-delay = <0xa>;
->         ti,fifo-depth = <0x1>;
->         ti,rxctrl-strap-worka;
->         linux,phandle = <0x12>;
->         phandle = <0x12>;
->     };
-> };
-> 
-> then when borad is booting,the dmesg is like this:
-> [    4.600035] mdio_bus ff0e0000.ethernet-ffffffff: /amba/ethernet@ff0e0000/phy@0 has invalid PHY address
-> [    4.600050] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 0
-> [    4.602076] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 1
-> [    4.603849] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 2
-> [    4.605574] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 4
-> [    4.607312] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 5
-> ...
-> [    4.636155] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 28
-> [    4.637335] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 29
-> [    4.638504] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 30
-> [    4.639666] mdio_bus ff0e0000.ethernet-ffffffff: scan phy phy at address 31
+Rather than duplicate the hacky workaround we use in the GEM allocator for the
+same reason it turns out that we don't need to have a bespoke memory allocator
+for the GMU anyway. It uses a flat, global address space and there are only
+two relatively minor allocations anyway. In short, this is essentially what the
+DMA API was created for so replace a bunch of memory management code with two
+calls to allocate and free DMA memory and we're fine.
 
-For a single PHY without a reg properties, it should do the right
-thing. But it will go wrong if there are multiple PHYs without reg
-properties. In that case, the break helps.
+In a previous version of this series I added the dma-ranges property to the
+device tree file for the GMU and updated the bindings to YAML. Rob correctly
+pointed out that we should set the dma mask instead of using dma-ranges so I
+removed that bit, but I'm still pushing the YAML conversion because it is good
+and we'll eventually need it anyway.
 
-However, as the comment suggests, you really should have a reg
-property.
+v3: Fix YAML description per RobH and remove dma-ranges and replace it with the
+correct DMA mask in the GMU device. Convert the iova type to a dma_attr_t to
+make it 32 bit friendly.
 
-Please make the commit message better, and then i will give a
-reviewed-by.
+v2: Fix the example bindings for dma-ranges - the third item is the size
+Pass false to of_dma_configure so that it fails probe if the DMA region is not
+set up.
 
-Thanks
-	Andrew
+Jordan Crouse (2):
+  dt-bindings: display: msm: Convert GMU bindings to YAML
+  drm/msm/a6xx: Use the DMA API for GMU memory objects
+
+ .../devicetree/bindings/display/msm/gmu.txt        | 116 -------------------
+ .../devicetree/bindings/display/msm/gmu.yaml       | 123 +++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 115 +++----------------
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h              |   7 +-
+ 4 files changed, 138 insertions(+), 223 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
+ create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
+
+-- 
+2.7.4
