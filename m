@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44236C3F2D8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FE0C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B12E246B4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE756246B4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 08:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583136027;
-	bh=dbM6ws0/Oqvz1iJityzfK5eRG+lz5REP3+A2a7K9CKg=;
+	s=default; t=1583136026;
+	bh=2/DNAapS2UOdSVGxm+XzjadCyyFdTsbsMdhV6JX9eVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MmML6fmIEp/ItbWMfzZYJQAb3Z3vtivPLLCkk19aEQV4aoGKaoPfbfkdiknR+YTaf
-	 Q+s1OBI/kuG5hf77xc3DanmdcyqwXbrGDfGxst9HqVxO5Gik7x1hjVYEXRuD3Dxa+W
-	 vMwS9lZfYQ+1kHHtPssaeqjAkE+jUW7Wqg4C5l+U=
+	b=VamBrtV+jaEQoqD4UawhT7O01oJxIwRhapJ3v+BNabMNw2Rjt3jTAjoZqS7QgHE8Z
+	 hhy5w7GPsVI+E5qiFqIVUsYersamBgcR4ZX0pmBHOj8sDCBj/MX05GbkQkY/KIXMe/
+	 dlYgtmdpbnnrUSETPR1ANKgp1ZNuR5uXBn5zz+04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgCBH7m (ORCPT
+        id S1727130AbgCBH7m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 2 Mar 2020 02:59:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51268 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:51284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbgCBH7m (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1727030AbgCBH7m (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 2 Mar 2020 02:59:42 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52110246B9;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C2C5246C0;
         Mon,  2 Mar 2020 07:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583135981;
-        bh=dbM6ws0/Oqvz1iJityzfK5eRG+lz5REP3+A2a7K9CKg=;
+        bh=2/DNAapS2UOdSVGxm+XzjadCyyFdTsbsMdhV6JX9eVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QN6Uz+fJY7yr3hx1Oip3Pg77+NTBnKOD+gWFAfkBTMX0PRP0arpu2o/hPQz6q7pnn
-         POdV9c95jcaFMZgxRekmKE0CQ0ICGSxDTjTj/JI8SWvO5cK06PVNiOYsXN3aavt3cr
-         a7eGlGi2OTYvkKNVLIl2ID5mL0oxOTweDrtSZNWs=
+        b=u9joVP2T5KLYLdFWkyDwgZHFxLQK1nSfLm6W3LdAt7HvOYiRGQ61XtPtrNt4RjI9g
+         lee1I1e4653bVCPWsX8bH88hzvzAwJzDoz/ow69+bIoYXPaECf2Y0fnaqlQwGrfDwz
+         BJ8j08m2hyftr5wGaWZqMGtNw6JF+YS+yoQtvBCw=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8fzH-0003gV-2S; Mon, 02 Mar 2020 08:59:39 +0100
+        id 1j8fzH-0003gv-7l; Mon, 02 Mar 2020 08:59:39 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v2 03/12] docs: dt: usage_model.rst: fix link for DT usage
-Date:   Mon,  2 Mar 2020 08:59:28 +0100
-Message-Id: <a7e0a5597ace97503c8ff67cdab2351151c7f267.1583135507.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 09/12] docs: dt: minor adjustments at writing-schema.rst
+Date:   Mon,  2 Mar 2020 08:59:34 +0100
+Message-Id: <b1e47ef85472a9a98aae12911c76c0e45a557cf4.1583135507.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <cover.1583135507.git.mchehab+huawei@kernel.org>
 References: <cover.1583135507.git.mchehab+huawei@kernel.org>
@@ -60,27 +60,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The devicetree.org doesn't host the Device_Tree_Usage page
-anymore. So, fix the link to point to a new address.
+There are two literal blocks that aren't mark as such. Mark them,
+in order to make the document to produce a better html output.
+
+While here, also add a SPDX header to it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/usage-model.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/writing-schema.rst | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/usage-model.rst b/Documentation/devicetree/usage-model.rst
-index 326d7af10c5b..e1b42dc63f01 100644
---- a/Documentation/devicetree/usage-model.rst
-+++ b/Documentation/devicetree/usage-model.rst
-@@ -12,7 +12,7 @@ This article describes how Linux uses the device tree.  An overview of
- the device tree data format can be found on the device tree usage page
- at devicetree.org\ [1]_.
+diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
+index 7635ab230456..6b3ef308c59f 100644
+--- a/Documentation/devicetree/writing-schema.rst
++++ b/Documentation/devicetree/writing-schema.rst
+@@ -1,4 +1,4 @@
+-:orphan:
++.. SPDX-License-Identifier: GPL-2.0
  
--.. [1] http://devicetree.org/Device_Tree_Usage
-+.. [1] https://elinux.org/Device_Tree_Usage
+ Writing DeviceTree Bindings in json-schema
+ ==========================================
+@@ -124,9 +124,12 @@ dtc must also be built with YAML output support enabled. This requires that
+ libyaml and its headers be installed on the host system. For some distributions
+ that involves installing the development package, such as:
  
- The "Open Firmware Device Tree", or simply Device Tree (DT), is a data
- structure and language for describing hardware.  More specifically, it
+-Debian:
++Debian::
++
+   apt-get install libyaml-dev
+-Fedora:
++
++Fedora::
++
+   dnf -y install libyaml-devel
+ 
+ Running checks
 -- 
 2.21.1
 
