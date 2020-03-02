@@ -2,99 +2,213 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6117CC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 19:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2A2C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 19:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB0820842
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 19:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CD224673
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 19:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k25nYhd+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="d0MKOFwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgCBTLW (ORCPT
+        id S1727534AbgCBTUQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:11:22 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34888 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgCBTLW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 14:11:22 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 022JBITB103346;
-        Mon, 2 Mar 2020 13:11:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583176278;
-        bh=z3LjQa/lvG261qfCTQihr6ev+Qd8qiUMnEg6eeQxmsU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=k25nYhd+7xWeA1M1Z5smp2xB+4qiEzgiU2lswKgrJOQb/8TGzJz8czFUsIACw7jbH
-         I6L76g3DAImkDdLGg59PwDFsfW1VFh46/xE9V9DvCiSl8ZUcZrqHaUJvRFxaXy4e/5
-         MJOPZGl2EgR/aowt8t1YPBw6gHLQ3rP+aQ1Jdr1Q=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 022JBIoG071859
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 2 Mar 2020 13:11:18 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
- 2020 13:11:18 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 2 Mar 2020 13:11:18 -0600
-Received: from [10.250.132.245] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 022JBFGB065948;
-        Mon, 2 Mar 2020 13:11:16 -0600
-Subject: Re: [PATCH 0/3] Update phy configuration for AM65x
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
-        <robh+dt@kernel.org>
-References: <20200108150920.14547-1-faiz_abbas@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <7edb2c28-11fd-e282-a8d7-e61aad8cace2@ti.com>
-Date:   Tue, 3 Mar 2020 00:41:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 14:20:16 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:35682 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727526AbgCBTUQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 14:20:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583176813; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9b0Z/Qba7LUP/RrSMDKMHs9SQ88poHoZJgYnVCQFASA=;
+        b=d0MKOFwQvBM6ClQa3yJHcMLwqnFovSbXy6cAQd+XKMeESguGlK4NDxP3myaRBaTVDvLJpD
+        mPGCFhxHF+bJlFt69p4zpUGcDFAXl7UCG36KcDmYg19DagklpthXmJ9fWu8kzJMlrsTQJJ
+        2yrP7XgiI383KknSTRt8OErBlYnXfLg=
+Date:   Mon, 02 Mar 2020 16:19:47 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RFC v2 2/8] dt-bindings: display: add ingenic-jz4780-hdmi DT
+ Schema
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, Sam Ravnborg <sam@ravnborg.org>,
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
+        Rob Herring <robh@kernel.org>
+Message-Id: <1583176788.3.3@crapouillou.net>
+In-Reply-To: <0fb2f39437ea04fb4de889aac001b44f4b0a77e8.1582913973.git.hns@goldelico.com>
+References: <cover.1582913973.git.hns@goldelico.com>
+        <0fb2f39437ea04fb4de889aac001b44f4b0a77e8.1582913973.git.hns@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20200108150920.14547-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Uffe,
+Hi Nikolaus,
 
-On 08/01/20 8:39 pm, Faiz Abbas wrote:
-> The following patches update phy configurations for AM65x as given in
-> the latest data manual.
-> 
-> The patches depend on my fixes series posted just before this:
-> https://patchwork.kernel.org/project/linux-mmc/list/?series=225425
-> 
-> Device tree patch updating the actual otap values will be posted
-> separately.
-> 
-> Tested with Am65x-evm and J721e-evm.
-> 
-> Faiz Abbas (3):
->   dt-bindings: mmc: sdhci-am654: Update Output tap delay binding
->   mmc: sdhci_am654: Update OTAPDLY writes
->   mmc: sdhci_am654: Enable DLL only for some speed modes
-> 
->  .../devicetree/bindings/mmc/sdhci-am654.txt   |  21 +-
->  drivers/mmc/host/sdhci_am654.c                | 247 ++++++++++++------
->  include/linux/mmc/host.h                      |   2 +
->  3 files changed, 192 insertions(+), 78 deletions(-)
-> 
 
-Can you help merge this?
+Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> From: Sam Ravnborg <sam@ravnborg.org>
+>=20
+> Add DT bindings for the hdmi driver for the Ingenic JZ4780 SoC.
+> Based on .txt binding from Zubair Lutfullah Kakakhel
+>=20
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> Cc: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../bindings/display/ingenic-jz4780-hdmi.yaml | 83=20
+> +++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644=20
+> Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+>=20
+> diff --git=20
+> a/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml=20
+> b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+> new file mode 100644
+> index 000000000000..9b71c427bd69
+> --- /dev/null
+> +++=20
+> b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-hdmi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Ingenic JZ4780 HDMI Transmitter
+> +
+> +maintainers:
+> +  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> +  - H. Nikolaus Schaller <hns@goldelico.com>
 
-Thanks,
-Faiz
+Did Zubair write this glue driver? He's been MIA for a while, doesn't=20
+work at ImgTec anymore, and this email doesn't work.
+
+> +
+> +description: |
+> +  The HDMI Transmitter in the Ingenic JZ4780 is a Synopsys=20
+> DesignWare HDMI 1.4
+> +  TX controller IP with accompanying PHY IP.
+> +
+> +allOf:
+> +  - $ref: panel/panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: ingenic,jz4780-hdmi
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: the address & size of the LCD controller registers
+
+Remove the description here,
+
+> +
+> +  reg-io-width:
+> +    const: 4
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Specifies the interrupt provided by parent
+
+and here.
+
+The rule is that if there is only one "reg", "interrupts" or "clocks"=20
+entry then a description is not needed as it's pretty obvious what it's=20
+for.
+
+> +
+> +  clocks:
+> +    maxItems: 2
+> +    description: Clock specifiers for isrf and iahb clocks
+
+You need two 'description:' like this:
+
+clocks:
+  items:
+    - description: ISRF clock
+    - description: IAHB clock
+
+Cheers,
+-Paul
+
+> +
+> +  clock-names:
+> +    items:
+> +      - const: isfr
+> +      - const: iahb
+> +
+> +  ddc-i2c-bus: true
+> +  ports: true
+> +
+> +required:
+> +    - compatible
+> +    - clocks
+> +    - clock-names
+> +    - ports
+> +    - reg-io-width
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4780-cgu.h>
+> +
+> +    hdmi: hdmi@10180000 {
+> +        compatible =3D "ingenic,jz4780-hdmi";
+> +        reg =3D <0x10180000 0x8000>;
+> +        reg-io-width =3D <4>;
+> +        ddc-i2c-bus =3D <&i2c4>;
+> +        interrupt-parent =3D <&intc>;
+> +        interrupts =3D <3>;
+> +        clocks =3D <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
+> +        clock-names =3D "isfr", "iahb";
+> +
+> +        ports {
+> +            hdmi_in: port {
+> +                #address-cells =3D <1>;
+> +                #size-cells =3D <0>;
+> +                hdmi_in_lcd: endpoint@0 {
+> +                    reg =3D <0>;
+> +                    remote-endpoint =3D <&jz4780_out_hdmi>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> --
+> 2.23.0
+>=20
+
+=
+
