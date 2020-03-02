@@ -4,94 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FD1C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 23:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63641C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 23:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743342173E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 23:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F43924673
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 23:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583191528;
-	bh=+Ch1kAwnRSAhnEYWYeS0IClgwv4aRBiLDZ4SEonb9hM=;
+	s=default; t=1583191747;
+	bh=ahpf1EotaEJQRqpkKyEK6/B8hTNM1TIvzQevKfubgFU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uX7CEAOPY4Nf2S6iT+O/VaZjl+CqP1rwijtx2luTT3kc7efv4Z6YGQMCXMrWHVZLl
-	 7iivmbMs0rBl5coTJHPLMXfxtefwNPkU3YYRjA3dcsaqT8ud8xCVdpeRthj62z9ZpH
-	 w7ehGYdtZ865GvdFI+7fAZatN3HicN9umnDK/h6E=
+	b=vptWqYyFlndYtJLhu4vNn9BStVWiojwI963ANIzd4I4avd+Fyrli3glgegBVDs6Cs
+	 PCdk+OCSOr7Sz0z1QhKXOPysRgGxMXVoEOX8hYv0dEHPqwl6YFrNUMW6W/C8KsMCRK
+	 3trPl2F9/sLdXPTn0jFb8yQzQkOwXwvfrHIHyHn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgCBXZ2 (ORCPT
+        id S1726758AbgCBX3G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:25:28 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35585 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgCBXZ1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 18:25:27 -0500
-Received: by mail-ot1-f68.google.com with SMTP id v10so1170003otp.2;
-        Mon, 02 Mar 2020 15:25:27 -0800 (PST)
+        Mon, 2 Mar 2020 18:29:06 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42668 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgCBX3G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 18:29:06 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so1124292otd.9;
+        Mon, 02 Mar 2020 15:29:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OkU6h93T1z7BbIKFi2XT/lPbFqlFCSBzUI1f7w5xrXM=;
-        b=YYSmVLSNI2ydfFTwuvIKuccg4Cp3GWgrDVpoe0VQeKabnBybKr54ozLa9LAJnjVeQh
-         yJnClxF0OQuD18q7M8eLOOnz6lrB/ugMe6TwzcUpFeplC+Vu2GfkR1862WdRKc+yEPYT
-         6jjXiwmucsW0tx5ESG9gaYjs3lUh8jQqIGAFGiCzAz7KVKRXokrQFbwVltkm7TSx+Vu1
-         Rfo3fhNkQwaIAl3SX/VA3PXmGuN3klpHu8pcly2znV2E66HlkuE0Bxko6GJyaTlT1WwS
-         lziAjq+jgtz+djwScZBPdD3pjyVODOc9Z0Qg8S8eEw9RtWm9xRlicHK0wO+97bpA5nQ/
-         bxaQ==
-X-Gm-Message-State: ANhLgQ3KQwWEYAAX5U6b/iShyZDph0F9tFRM4lPCBDp9ZtoLUKrd5EKx
-        EItI+LemkcVFXjTcwH3vbg==
-X-Google-Smtp-Source: ADFU+vt6nyQwvzyGCVGjnZvcOohd30nERptmkf1F6xc1R7WZ2cUFjUGFfnfoCsjmS0qa+/CP/L7WJQ==
-X-Received: by 2002:a9d:6c01:: with SMTP id f1mr1198139otq.133.1583191527119;
-        Mon, 02 Mar 2020 15:25:27 -0800 (PST)
+        bh=NS6hER+VVAnGHZWWvDFXB42+gq+sW8+/QdX9Qb/AI7g=;
+        b=UsFYuuv3MJ6SQ3Vecp60psP+Csx6U2ujet35Mu/CoAtwIwXTB40vRLlC6/ziZgN2bM
+         8mIL7YzTDC9w+C2DIp4JMEViUV3opXYqGvmIhZs/XMYp78QYgnfNtSCN+AH5ReYwcg7i
+         qnAi2MdDQRHZeXMnW4w8RNobgHnly5jr/yWeFYPkpa+9iLrEnMJ7D3F7lcjWSRKVBj+W
+         68QuToTGhmKCfjLf50ufawvesQg9kF+JA5aRQyuWdup3EHnDTUEBkdbZZr/XppOK/rak
+         NMrorLCycPbhqYG6bcLcGJUKUjNdoVTIdKEy7Ry9QnO6YsuiDoHlKNNZTUhpBCyPUIqD
+         bppQ==
+X-Gm-Message-State: ANhLgQ2l5caFyrVve9U/3UrOPuAJzDORrvpcFpYc6UMU6X2LGlGEJFjw
+        yFtG5JuwFZAXe29BVYC9zg==
+X-Google-Smtp-Source: ADFU+vsUt55eBcvqYE0rSpf9oRYffX/uXs52slphFkLEkbKH37ioBPr+eiRmTNq+O9nX9CF5FnnZAQ==
+X-Received: by 2002:a9d:6446:: with SMTP id m6mr1231470otl.122.1583191745239;
+        Mon, 02 Mar 2020 15:29:05 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w2sm1750081otq.10.2020.03.02.15.25.25
+        by smtp.gmail.com with ESMTPSA id m69sm7061077otc.78.2020.03.02.15.29.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 15:25:26 -0800 (PST)
-Received: (nullmailer pid 31631 invoked by uid 1000);
-        Mon, 02 Mar 2020 23:25:25 -0000
-Date:   Mon, 2 Mar 2020 17:25:25 -0600
+        Mon, 02 Mar 2020 15:29:04 -0800 (PST)
+Received: (nullmailer pid 4498 invoked by uid 1000);
+        Mon, 02 Mar 2020 23:29:03 -0000
+Date:   Mon, 2 Mar 2020 17:29:03 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     michael.srba@seznam.cz
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Michael Srba <Michael.Srba@seznam.cz>
-Subject: Re: [PATCH v3 2/2][PATCH RESEND] dt-bindings: input/touchscreen: add
- bindings for zinitix
-Message-ID: <20200302232525.GA30485@bogus>
-References: <20200302201216.12410-1-michael.srba@seznam.cz>
- <20200302201216.12410-2-michael.srba@seznam.cz>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH v11 2/6] dt-bindings: display: mediatek: control dpi pins
+ mode to avoid leakage
+Message-ID: <20200302232903.GA4460@bogus>
+References: <20200228081441.88179-1-jitao.shi@mediatek.com>
+ <20200228081441.88179-3-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302201216.12410-2-michael.srba@seznam.cz>
+In-Reply-To: <20200228081441.88179-3-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  2 Mar 2020 21:12:16 +0100, michael.srba@seznam.cz wrote:
-> From: Michael Srba <Michael.Srba@seznam.cz>
+On Fri, 28 Feb 2020 16:14:37 +0800, Jitao Shi wrote:
+> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
+> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
+> disabled.
 > 
-> This patch adds dts bindings for the zinitix bt541 touchscreen.
-> 
-> Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
->  changes in v2: none
->  changes in v3: document zinitix,mode property
-> 
-> 
->  .../bindings/input/touchscreen/zinitix.txt    | 40 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  2 files changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/zinitix.txt
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt  | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Acked-by: Rob Herring <robh@kernel.org>
