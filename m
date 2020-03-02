@@ -2,77 +2,70 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77553C3F2D8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5E6C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5302467E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:44:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583163857;
-	bh=LN1RQWc8RpwciBFPczlzKo3MGBV/kh9Vl+67Fn3oi34=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
-	 List-ID:From;
-	b=TEcWqz/PS1AYtHsH8XzHV3D5cLNL6MSUpUKIoCMWaMYO0AzRYzqigB0fUkGjDulB+
-	 cyvgtZiEBaunnxQtEg3M34O1fqEumPHXkHlzLniqhg3ht4bdcX7kNpnznF2a5kSTER
-	 LieGp45UbyWqoK5FHkF9M6qnfTDjGKVs8wjctz3U=
+	by mail.kernel.org (Postfix) with ESMTP id 17879222C4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbgCBPoQ (ORCPT
+        id S1727210AbgCBPy1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:44:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgCBPoQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:44:16 -0500
-Received: from localhost (unknown [137.135.114.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D869F21D56;
-        Mon,  2 Mar 2020 15:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583163856;
-        bh=LN1RQWc8RpwciBFPczlzKo3MGBV/kh9Vl+67Fn3oi34=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=lfL5rB8inaBro71qAg38OsI/ZwmcdXiH4W/kIBlxAaGn2GU4IGoeokAax3ikTXpfl
-         vpxJ2gFaPwlE4Im1Jwm4bYvCDGHmwg/lqEhMeIZf0iFO8yoZ0RpF3PIC/on2kdpgpU
-         6mStsfCfHC/rIj/qWR5JDEOR7tcT7Xti6xZnBDd0=
-Date:   Mon, 02 Mar 2020 15:44:15 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Boddie <paul@boddie.org.uk>
-Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] MIPS: DTS: CI20: fix interrupt for pcf8563 RTC
-In-Reply-To: <32910df46c8723097830e002a13580904ac74a65.1583005548.git.hns@goldelico.com>
-References: <32910df46c8723097830e002a13580904ac74a65.1583005548.git.hns@goldelico.com>
-Message-Id: <20200302154415.D869F21D56@mail.kernel.org>
+        Mon, 2 Mar 2020 10:54:27 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:36655 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgCBPy1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 10:54:27 -0500
+Received: from droid13.amlogic.com (45.146.122.89) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Mon, 2 Mar 2020
+ 23:54:45 +0800
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Jianxin Pan <jianxin.pan@amlogic.com>, SoC Team <soc@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2] dt-bindings: power: Fix dt_binding_check error
+Date:   Mon, 2 Mar 2020 23:54:08 +0800
+Message-ID: <1583164448-83438-1-git-send-email-jianxin.pan@amlogic.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [45.146.122.89]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
+Missing ';' in the end of secure-monitor example node.
 
-[This is an automated email]
+Fixes: 165b5fb294e8 ("dt-bindings: power: add Amlogic secure power domains bindings")
+Reported-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+---
+ Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes").
-
-The bot has tested the following trees: v5.5.7.
-
-v5.5.7: Failed to apply! Possible dependencies:
-    5314215430e5 ("MIPS: DTS: CI20: fix PMU definitions for ACT8600")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
+diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+index af32209..bc4e037 100644
+--- a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
++++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+@@ -36,5 +36,5 @@ examples:
+             compatible = "amlogic,meson-a1-pwrc";
+             #power-domain-cells = <1>;
+         };
+-    }
++    };
+ 
 -- 
-Thanks
-Sasha
+2.7.4
+
