@@ -2,244 +2,84 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4EFC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70AFC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452652465E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583187778;
-	bh=I3xKn1zVMD2gHOt5iDda/e6wSBljb+jpeLUapxwJh2k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A55QKwNezjfzIXz346OVTFP/PU0klXMNVYHcGeQi2dQ1PvdtlO0Via/my3NN6dQgp
-	 zChr+3cpwWcjbggd0hTa/a8Vo7dAuRUliTqHOv84HvCaKrN8OhiVJLVfSLrr/yPHNd
-	 lr+C/FBaVyErUwyy2SxzBeRcxXiE60i6Id/W3Jy0=
+	by mail.kernel.org (Postfix) with ESMTP id 76A77208C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 22:46:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8mL4Wkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgCBWW5 (ORCPT
+        id S1726773AbgCBWqX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:22:57 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46249 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgCBWW5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 17:22:57 -0500
-Received: by mail-ot1-f68.google.com with SMTP id g96so940120otb.13;
-        Mon, 02 Mar 2020 14:22:56 -0800 (PST)
+        Mon, 2 Mar 2020 17:46:23 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33505 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgCBWqW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 17:46:22 -0500
+Received: by mail-lf1-f67.google.com with SMTP id c20so1002554lfb.0
+        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 14:46:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yLlRHbktFbOxtzNl8Vihg7v3kIKc6TMAjjHUPUH1szE=;
+        b=M8mL4WkqqPiqVdS4845vC4Zpdwppdn9R8gd4H0FXSSRr52BVwtl8Mra38019iqK2cs
+         +91u+CUb1uRSjJxp0d04WJBwO2/piAaXNeX32RQCf8mVP/G92k5qj4hqrERMd142LMie
+         NL3JUr2NPXvOjObXSaW1GG53HlzikBruZB8pW0SjA4tGQAOBD1YB/UoKgDPa5Pg9N3qX
+         gSB1bFR8KIaWCwB7u1XkmHLdMXNc1hZn07FDAUHZxjv1sY7owLJu92TVWG60Q5KqpwCw
+         0ApzdsuhSTmRrgb42SLu9FQjQQPBFc6QO05ePhcNg53P5Og6bFJBEU7UebSu0VspWVCl
+         PLWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Mh10aMF/oi3rjlaRMPp5pf7W/UgyFmkGUHizeqaiF0c=;
-        b=ICZUOWsVgpn2nmw9vBnS1fMiPXk46laJtd7Ercxy01j+6nAPObdR6VEPrUTR4WS1OT
-         iunzjCUBoqagDPVj6lzd2UDSXaTOSfqqekzwofy2CdIF/wQfzSOHxLJNJrXEN3WhN1rC
-         2c2Dr6rCCOYHZwzcDgXgmpw9RAiPhv/t/CXXmpUxxasLpGgZv77ZDTy3BCAefD2Cs/Bs
-         EBLe5xkRnNcMiYfX/F72NKyykiwjbrMFfP2DeZMlPAcaWKIzGo2CG61KFUWRTXdFzGCs
-         RwmjJnjY44upyQqpdZdae2qeqaYdjg82n1+MjeodMixXHrmlXj4Mcy5qJYC65EyzLCiM
-         Ry5g==
-X-Gm-Message-State: ANhLgQ3AopyrdfCsJ8V564CjrDOM1eKkn36UGqmJbJz3v+b4jOZ0OIZD
-        Gei6jRZhjC+h9BRE5ITdVUISvhg=
-X-Google-Smtp-Source: ADFU+vvuu9wwWij0ssVuytqOvpgn2VMZuebstNfd9YdrSFmhnG3DJi+5FQrw+p1aTja3qXR+sr0cVQ==
-X-Received: by 2002:a9d:a16:: with SMTP id 22mr1020718otg.31.1583187776486;
-        Mon, 02 Mar 2020 14:22:56 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n27sm6848645oie.18.2020.03.02.14.22.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 14:22:55 -0800 (PST)
-Received: (nullmailer pid 5527 invoked by uid 1000);
-        Mon, 02 Mar 2020 22:22:54 -0000
-Date:   Mon, 2 Mar 2020 16:22:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH 5/5] dt-bindings: iio: Add adis16475 documentation
-Message-ID: <20200302222254.GA27619@bogus>
-References: <20200225124152.270914-1-nuno.sa@analog.com>
- <20200225124152.270914-6-nuno.sa@analog.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yLlRHbktFbOxtzNl8Vihg7v3kIKc6TMAjjHUPUH1szE=;
+        b=mVkABLMuxCrOJiH9ckuEEQJOnf7ODmvrBX8AO2j0UA2q1nFpLTCOKLFDyv2cqV/EjC
+         dBdGGk89geAYgFxTw1OPeiUbGJOn+Oru8wIyZukXQ3IfaTZDM4+jPVBq83m3dBWYMmSs
+         kWYFNtvQgzSyUen6txJfw2125IOAP/7sVT8B5hyma0/umvsvsxVifyh9mbGCDaAzyGR3
+         sU1RhkpW3Q0rJntJ/WJyjQANeoQcHFSIKReEL1rgLjdXDXDy+FlPne5FB/kdnx+EI7i4
+         opLG2PNJaNnw5JkeNcKhaA9R8ps6h3ILfy4h8m3kcxdPrfJi67blolfvXc4nir3Gc7/C
+         12Aw==
+X-Gm-Message-State: ANhLgQ32wr4BuirgwtVJZHfWyp044xyHaeOlcfaXH2NoPqiU3YXOFWho
+        wlXLf23WMrfuaI9u+Bcrf60h4Z5sSQqG4dvHYao=
+X-Google-Smtp-Source: ADFU+vukK/ZdZyY9pLzllMfUz93sWGqAKVB4wD5ScH7PQHTGtStfvT6fbGnEJPtU+8VaCDyESKT0/8pJMiZdPi/+V6Q=
+X-Received: by 2002:a19:ed08:: with SMTP id y8mr803334lfy.56.1583189179625;
+ Mon, 02 Mar 2020 14:46:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200225124152.270914-6-nuno.sa@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200302213557.11128-1-vitor@massaru.org>
+In-Reply-To: <20200302213557.11128-1-vitor@massaru.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 2 Mar 2020 19:46:08 -0300
+Message-ID: <CAOMZO5BqvmRpTbq-gGgnKC2gFTRxS0mK0=W3tBSfZKQ-MUXMzA@mail.gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq-phanbell: Add gpio-fan/thermal support
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        lkcamp@lists.libreplanetbr.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 01:41:52PM +0100, Nuno Sá wrote:
-> Document the ADIS16475 device devicetree bindings.
-> 
-> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> ---
->  .../bindings/iio/imu/adi,adis16475.yaml       | 130 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 131 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-> new file mode 100644
-> index 000000000000..c0f2146e000c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-> @@ -0,0 +1,130 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/imu/adi,adis16475.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADIS16475 and similar IMUs
-> +
-> +maintainers:
-> +  - Nuno Sá <nuno.sa@analog.com>
-> +
-> +description: |
-> +  Analog Devices ADIS16475 and similar IMUs
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIS16475.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adis16475-1
-> +      - adi,adis16475-2
-> +      - adi,adis16475-3
-> +      - adi,adis16477-1
-> +      - adi,adis16477-2
-> +      - adi,adis16477-3
-> +      - adi,adis16470
-> +      - adi,adis16465-1
-> +      - adi,adis16465-2
-> +      - adi,adis16465-3
-> +      - adi,adis16467-1
-> +      - adi,adis16467-2
-> +      - adi,adis16467-3
-> +      - adi,adis16500
-> +      - adi,adis16505-1
-> +      - adi,adis16505-2
-> +      - adi,adis16505-3
-> +      - adi,adis16507-1
-> +      - adi,adis16507-2
-> +      - adi,adis16507-3
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spi-cpha: true
-> +
-> +  spi-cpol: true
-> +
-> +  spi-max-frequency:
-> +    maximum: 2000000
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - const: sync
-> +      - const: direct-sync
-> +      - const: pulse-sync
-> +      - const: scaled-sync
+Hi Vitor,
 
-According to the datasheet I looked at, the input is called 'sync'. It 
-looks like you are mixing operating mode and clock connection.
+On Mon, Mar 2, 2020 at 6:36 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
 
-> +
-> +  reset-gpios:
-> +    description:
-> +      Must be the device tree identifier of the RESET pin. If specified,
-> +      it will be asserted during driver probe. As the line is active low,
-> +      it should be marked GPIO_ACTIVE_LOW.
-> +    maxItems: 1
-> +
-> +  adi,scaled-output-hz:
-> +    description:
-> +      This property must be present if the clock mode is scaled-sync through
-> +      clock-names property. In this mode, the input clock can have a range
-> +      of 1Hz to 128HZ which must be scaled to originate an allowable sample
-> +      rate. This property specifies that rate.
-> +    minimum: 1900
-> +    maximum: 2100
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - spi-cpha
-> +  - spi-cpol
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - adi,adis16500
-> +          - adi,adis16505-1
-> +          - adi,adis16505-2
-> +          - adi,adis16505-3
-> +          - adi,adis16507-1
-> +          - adi,adis16507-2
-> +          - adi,adis16507-3
-> +
-> +then:
-> +  properties:
-> +    clock-names:
-> +      oneOf:
-> +        - const: sync
-> +        - const: direct-sync
-> +        - const: scaled-sync
-> +
-> +    adi,burst32-enable:
-> +      description:
-> +        Enable burst32 mode. In this mode, a burst reading contains calibrated
-> +        gyroscope and accelerometer data in 32-bit format.
-> +      type: boolean
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    spi {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            adis16475: adis16475-3@0 {
-> +                    compatible = "adi,adis16475-3";
-> +                    reg = <0>;
-> +                    spi-cpha;
-> +                    spi-cpol;
-> +                    spi-max-frequency = <2000000>;
-> +                    interrupts = <4 IRQ_TYPE_EDGE_RISING>;
-> +                    interrupt-parent = <&gpio>;
-> +            };
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f11262f1f3bb..f8ccc92ab378 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1015,6 +1015,7 @@ W:	http://ez.analog.com/community/linux-device-drivers
->  S:	Supported
->  F:	drivers/iio/imu/adis16475.c
->  F:	Documentation/ABI/testing/sysfs-bus-iio-imu-adis16475
-> +F:	Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
->  
->  ANALOG DEVICES INC ADM1177 DRIVER
->  M:	Beniamin Bia <beniamin.bia@analog.com>
-> -- 
-> 2.25.1
-> 
+> +&cpu_thermal {
+
+You missed to place cpu_thermal prior to i2c1 to keep the nodes sorted.
