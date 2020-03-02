@@ -2,125 +2,111 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C80C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC3BC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 12:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8ECA21D56
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 11:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270522187F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 12:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezO+T8QR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fJsoGkY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgCBL6Y (ORCPT
+        id S1727762AbgCBMEZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:58:24 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34974 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbgCBL6X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 06:58:23 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m3so10402084wmi.0;
-        Mon, 02 Mar 2020 03:58:21 -0800 (PST)
+        Mon, 2 Mar 2020 07:04:25 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53547 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727736AbgCBMEZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 07:04:25 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f15so10864036wml.3
+        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 04:04:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iflJIvqjKSNmZN001KRyauVV1RXmgC8qmOhi3NV99NM=;
-        b=ezO+T8QRjR4ODnmGvsIE0lrcK6rPy0G8gECUFGVgsrkx9JZfsEO7a1N/l0qa1g3+3p
-         n9fZhznzVJPWvdHdzTKWt4uKBQTOsdfsAOso0ewM9QgdzzEMceDBMZsX826sdfKXe8ZG
-         B0aBxChJaMHAsWd1ZQ9PD6AajioSEiqiT+OPFhIXg5ikIs5Hf9K+OljC6iNLuYcyYOdU
-         rs66rtLbIgtaBWhiSmd6Bxd8LD5D/FBkgec5bocLw+MQ/kOHyMp0+yqKdGL3qZA+bNkv
-         8b8lTMr+fkYRhnAhL7lb5Qx3cI1OsfiGnIUStELGJr7jdeLSbvQIDJaOZtftoP+b26pI
-         U24g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=LfwHBF+1G3/DK1Sa/fxKynvnskOyWmgOn43G66JuuXg=;
+        b=fJsoGkY66Y+OGJcqLdZCFSg2SEwEJ5bMmGoYoNjlCGPFA1TJKDS5CosrXav6DjtawT
+         YZQSyHU8kThF342vvA4c6n8b5oSXIfH5BzLS9T6rwV0s61QDV+vUYr/KozQ8ZKKLE8mQ
+         /vR5oDePM6lxDYnfsQiZQg1fScIT0dKeLkw9rwSscm0W9j6mcX6jUvpdZ0zC9CXV+3v1
+         hofXleOlfL3zDrk1tpmFkeRCXYaboRfbceNBVBugoL9w6hB/+mMHIf6UnburM8FBaOSg
+         ei7g/pxeh3OkZPwnY2LoRgm/aqeqPouwI3tsmDyZZZ8xFRLAMMIAEVL5KzGuOXM6jXtP
+         CR2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iflJIvqjKSNmZN001KRyauVV1RXmgC8qmOhi3NV99NM=;
-        b=eoKvr2xkuToQfqml/TTzIsXSASnK/b+VGQMjUUTr9YiWOiFMuWt2ziv2Rp0ikjqutc
-         2F1LqCJQbtNkIMpg5VjtBll8QypU1Yj4Uzssi834xvsmD3RDyeZVM3OuJCvCxVvhPPbf
-         orqsrFFRvOOqD3fW+iCwjQhEPJB0fAwdpWE/dJ9tIiJh9XLWy6Mz1Y5TjEqNVfcqcaOG
-         fZn/8bH+KIdKprBk5Kna1k5HgK8Tf4dIK5n7YtjmK43hdxEUKI8J3vEaGfd557NxjnTe
-         JfZmW7ol1Flme6Zhb05JegNEY39gC4PFVGWIh4lQwrKLw4WfRf7GoS/EFA343gpHXQ+7
-         u4VQ==
-X-Gm-Message-State: ANhLgQ1/r8HtMt3R94foibwptxqc6Zf265PYyaxaCiyO2uTXYg0enjMt
-        6tXNuRUTFifxT6PcOP1YYSzcVnxO
-X-Google-Smtp-Source: ADFU+vuOFSIJepvCdWl91GQTBHdvvIeCtHEsEkk20T6cmsn+Xd75wm81zY1l1J8AeghRp+J1fjLtQQ==
-X-Received: by 2002:a1c:9d0d:: with SMTP id g13mr5238660wme.111.1583150300592;
-        Mon, 02 Mar 2020 03:58:20 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id o16sm12653303wrj.5.2020.03.02.03.58.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 03:58:20 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: usb: dwc2: add compatible property for rk3368 usb
-Date:   Mon,  2 Mar 2020 12:58:12 +0100
-Message-Id: <20200302115812.7207-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200302115812.7207-1-jbx6244@gmail.com>
-References: <20200302115812.7207-1-jbx6244@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=LfwHBF+1G3/DK1Sa/fxKynvnskOyWmgOn43G66JuuXg=;
+        b=qY4PCJFtRcm3Z5fSahzWdzqkDq19PIGiC14RMOuEoFo3aRJttY7c4V96e/POG/zIBl
+         7Lrt/Mv/fszxtHLpx53nQWMdhyoRZt+t9dNsyjN1j3OxkIdwhx3zlylR32R4rm+eq9HM
+         jcWO/dl272VKk9fS9vLn7z20pFx9FHPzW3JKk2RaLQJ6vUq0rCMp3a8uvV7BZEoRF7UQ
+         Hu4GFofHvjBXk4Mnm+/Ua3M8q2mc5GPl4sq6jJ2yWOoA5AO8Fp431Qn9nmk5+DL64Rvk
+         KWUKpo663Oi0GwwaQ6FixLf95mAFokuScofWpZFfJiMFinrlwUEiAh4RmT289q/OqkHq
+         laKA==
+X-Gm-Message-State: APjAAAXBmO3H2Mr0OJ7aNdfZX2rDcFQ332FE5Daiwp0N/zE/UmyoA0D9
+        Ki9nAfNUqD5GqsBIKzFXgQsqjA==
+X-Google-Smtp-Source: APXvYqwY7JNdGcibXu8arbodj+Ox9DFMTorii9SxoGFb+i/waE0uuBxRdi/Lb0LYg2yCgoBDixUQvg==
+X-Received: by 2002:a1c:2504:: with SMTP id l4mr19983737wml.72.1583150663296;
+        Mon, 02 Mar 2020 04:04:23 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id v8sm27192427wrw.2.2020.03.02.04.04.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 04:04:22 -0800 (PST)
+Date:   Mon, 2 Mar 2020 12:04:58 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     dmitry.torokhov@gmail.com, thierry.reding@gmail.com,
+        jic23@kernel.org, devicetree@vger.kernel.org,
+        linux-input@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v5 2/7] mfd: Add support for Azoteq
+ IQS620A/621/622/624/625
+Message-ID: <20200302120458.GY3494@dell>
+References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
+ <1581895931-6056-3-git-send-email-jeff@labundy.com>
+ <20200224111448.GS3494@dell>
+ <20200228034220.GA3510@labundy.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200228034220.GA3510@labundy.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives these errors:
+On Thu, 27 Feb 2020, Jeff LaBundy wrote:
 
-arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-geekbox.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-r88.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
+> Hi Lee,
+> 
+> On Mon, Feb 24, 2020 at 11:14:48AM +0000, Lee Jones wrote:
+> 
+> [...]
+> 
+> > 
+> > Well done Jeff.  Good job.
+> > 
+> > Applied, thanks.
+> > 
+> 
+> Thank you for your kind words as well as your support in fleshing out this
+> series.
+> 
+> Just to confirm, does your offer to take the remainder (once everything is
+> approved) through immutable branches still stand?
 
-The compatible property for rk3368 dwc2 usb was somehow never added to
-the documention. Fix this error by adding
-'rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2'
-to dwc2.yaml.
+Depends how quickly you can get the other drivers turned around.
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/dwc2.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/usb/dwc2.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-index e9f4cea21..14aeb67e8 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-+++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-@@ -45,6 +45,10 @@ properties:
-           - const: rockchip,rk3328-usb
-           - const: rockchip,rk3066-usb
-           - const: snps,dwc2
-+      - items:
-+          - const: rockchip,rk3368-usb
-+          - const: rockchip,rk3066-usb
-+          - const: snps,dwc2
-       - const: lantiq,arx100-usb
-       - const: lantiq,xrx200-usb
-       - items:
 -- 
-2.11.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
