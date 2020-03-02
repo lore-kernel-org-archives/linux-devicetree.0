@@ -2,164 +2,241 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AFFC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF25C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C0021739
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:31:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSQIFwJD"
+	by mail.kernel.org (Postfix) with ESMTP id C1618217F4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 15:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgCBPbG (ORCPT
+        id S1727083AbgCBPcp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:31:06 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38682 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgCBPbF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 10:31:05 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t11so193562wrw.5;
-        Mon, 02 Mar 2020 07:31:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eFDMzvNJhb9C/gjmO5CDDLNllKw2BwatUidg0r9OWqc=;
-        b=NSQIFwJD1hXMDRKHfbPuIpu/mXLa55KLrT5j9PkX2LU2p6fhyD5ya9mMjqqi9hYXns
-         ojy+Xua5CGm/m0RBQPSaq2h6039qAft3JpLhUHEFvmilxIJM7zps6og557U91v93+M/S
-         lYz1C1YMUA8gKmbKd5PDDp3nHPW1kJbvQ/Rvsj2NwajiE5d/5dgwslqDIJ+QV+ubL921
-         e+kmE0tuiwM4jTR2vUUVzi3J9iWRp4xpFRhiGTgKquBIqWqb2PGCj5L+xNvLw+K32d/C
-         xvSrsD/d3RvqeiYWxUDCMW8XtKGORklwjwOIbe3l6XJ3F1dDSyoeUEP3x7jAPBEL0DPy
-         V4YA==
+        Mon, 2 Mar 2020 10:32:45 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43870 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgCBPcp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 10:32:45 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j5so9205057otn.10;
+        Mon, 02 Mar 2020 07:32:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=eFDMzvNJhb9C/gjmO5CDDLNllKw2BwatUidg0r9OWqc=;
-        b=ZF3ZhB65LRZSRkJbjZBs/XU50hPrw5AovugVsyM5l828UfH6AQUDYtK7UMV4iO4tXJ
-         aF4OkdsbxwRe5MmOY5N2YaJ7j3MN/Jxd8b8Sn2HEMStfKkKqDsPoyDNCeOjmrMot7VB5
-         swsA9npbdpd9NpqPvz+MjhsxLKuXpJrpoho7wB0XkAJI+xO0QcLdz0cTz92v2OzEPyOX
-         g2xyq67xL+eM7GSP0CKbWftdsdjS2YWDTp8tthJfb69bHU70wtspZjTtqKxJJorm34rq
-         CSkpATcCWwLQdpkiWC2lNk3la6kJ3vSXxlYUJQHDXZDoXnlsYyzKikM6vAXy3Vvc5JSh
-         DSqw==
-X-Gm-Message-State: ANhLgQ1rWBQNkITB1+/u3ZOZfxkei/vtE8EWJS9Q9umGNclC39bY+5mU
-        1c3XSF0Q97hQTDenNiCUm/I=
-X-Google-Smtp-Source: ADFU+vvbIMHFtMOd/nNEBuz9Sck5/PZWnPzOs6+fSxM1d70yAvo48rCFI0OCKH6irEXdAFZNLy9kgw==
-X-Received: by 2002:adf:dfcc:: with SMTP id q12mr140710wrn.171.1583163063985;
-        Mon, 02 Mar 2020 07:31:03 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g7sm23967540wrm.72.2020.03.02.07.31.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 07:31:03 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: add bus to rockchip amba nodenames
-Date:   Mon,  2 Mar 2020 16:30:47 +0100
-Message-Id: <20200302153047.17101-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200302153047.17101-1-jbx6244@gmail.com>
-References: <20200302153047.17101-1-jbx6244@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=ZZC2Pupfl/eFbEiQmQK8DrdbI5TFes5OKB8zq+O8R1I=;
+        b=BPCImpaVZVUxdzN5KKku2FS9cxnyrj2VqNM3qtKB+QZ+0w9mHciBcdIIq9B8Vs/PQE
+         FIKNtt+NuYy4FCTC5IjNNaAFtQOPszr4h0ypcY1VSUshP2mp4EV6gk6EHkaMFRBn71i7
+         ODVRkeg9V3uFlgVMh9HiEJJ2u/UXX+aBL1tDAMLQBgclcn8uyTl+RqgsA3t8IRIQdV/K
+         eDATaKp3BhNmetgxJUUJIxxAqzSwqwHzBnxNlibDnB1rxTOWIzkTCvoXnPsTRoo+FQcp
+         FVw5wAQuXjgRm8/IyfM8Dv7KJTSCHFJdX7XY9+NG+rKBtAMd6wJ96EjHeqxTNqIG8E/P
+         wOeg==
+X-Gm-Message-State: APjAAAUBl9fdkQGci9LxDqxfeJjDKANX0hxiS0brY6T+q68oG9G18gxW
+        REcgnlNh1xFj3yfI0IcT+OJkHWgvmO9MCt/cDmE=
+X-Google-Smtp-Source: APXvYqwgjIFCSqSj4qBpYRjDRfnQGcUTZSl3tHFJqbuFk9d/EBsOPPhJjGzJbigayYo0pnbjUOze3Cw83b79RAdw6Sc=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr13477946ots.250.1583163163733;
+ Mon, 02 Mar 2020 07:32:43 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1578924232.git.alexander.riesen@cetitec.com>
+ <20200113141556.GI3606@pflmari> <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+ <20200302134011.GA3717@pflmari> <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+ <20200302150706.GB3717@pflmari>
+In-Reply-To: <20200302150706.GB3717@pflmari>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 2 Mar 2020 16:32:32 +0100
+Message-ID: <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
+ adv748x codec (HDMI input) to the R-Car SoC
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives for example this error:
+Hi Alex,
 
-arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: amba: $nodename:0:
-'amba' does not match
-'^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+On Mon, Mar 2, 2020 at 4:07 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> Geert Uytterhoeven, Mon, Mar 02, 2020 14:47:46 +0100:
+> > On Mon, Mar 2, 2020 at 2:40 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > > > > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > > > > @@ -322,6 +322,10 @@
+> > > > >         clock-frequency = <22579200>;
+> > > > >  };
+> > > > >
+> > > > > +&audio_clk_c {
+> > > > > +       clock-frequency = <12288000>;
+> > > > > +};
+> > > >
+> > > > Does the ADV7482 always generate a 12.288 MHz clock signal?
+> > > > Or is this programmable?
+> > >
+> > > Oops. It looks like it is and the value is derived from the sampling rate
+> > > (48kHz) and the master clock multiplier. Both hard-coded in the board file.
+> >
+> > Where are these hardcoded in the board file?
+>
+> In the endpoint definition, arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dts
+>
+> So the frequency can be set at the run-time, perhaps even derived from
+> endpoint connected to the output. In this case, rsnd_endpoint3,
+> which has the "mclk-fs" setting. Not sure if the sampling rate
+> can be set to something else for the HDMI, though.
+>
+> > Even if they are, technically this is a clock output of the ADV7482.
+>
+> ... which I hope to correct as soon as I steal the hardware from whoever stole
+> it from me...
+>
+> > > > > video-receiver@70 {
+> > > > >     compatible = "adi,adv7482";
+> > > > > ...
+> > > > > +   clocks = <&rcar_sound 3>, <&audio_clk_c>;
+> > > > > +   clock-names = "clk-hdmi-video", "clk-hdmi-i2s-mclk";
+> > > >
+> > > > The above declares the Audio CLK C to be a clock input of the ADV7482, while
+> > > > it is an output.
+> > >
+> > > I would gladly give it right direction if I *really* understood what I was
+> > > doing...
+> >
+> > :-)
+> >
+> > > > Furthermore, the DT bindings do not document that clocks can be specified.
+> > >
+> > > Should the DT bindings document that the clock cannot be specified than?
+> >
+> > It currently does say so, as it doesn't list "clocks" in its properties section.
+>
+> The bindings documentation file, which we're talking about here and which does
+> not list the specifiable input clocks in its properties, is it the
+>
+>     Documentation/devicetree/bindings/media/i2c/adv748x.txt
+>
+> ?
 
-AMBA is a open standard for the connection and
-management of functional blocks in a SoC.
-It's compatible with 'simple-bus', so fix this error
-by adding 'bus' to all Rockchip 'amba' nodes.
+Yes.
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
-schemas/simple-bus.yaml
+>
+> And this absence of documentation also means that whatever clocks (both input
+> in "clocks=" and output in "#clock-cells") listed in a specific .dts are just
+> an integration detail?
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi   | 2 +-
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 2 +-
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 +-
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 2 +-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+No, the absence probably means that any clock-related properties in a .dts
+file will just be ignored.
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 4f484119f..215515ccb 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -700,7 +700,7 @@
- 		clock-names = "pclk", "timer";
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index 3bd5bc860..ac43bc3f7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -513,7 +513,7 @@
- 		status = "disabled";
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index bad41bc6f..d9490f417 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -142,7 +142,7 @@
- 		};
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index a0df61c61..2079e877a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -136,7 +136,7 @@
- 		};
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 33cc21fcf..63355ba7c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -197,7 +197,7 @@
- 		#clock-cells = <0>;
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
+Looking at the driver source, it indeed has no support related to clocks at all.
+
+> Does this below makes more sense, than?
+>
+>     video-receiver@70 {
+>         compatible = "adi,adv7482";
+>         clocks = <&rcar_sound 3>;
+>         clock-names = "clk-hdmi-video";
+>         adv748x_mclk: mclk {
+>             compatible = "fixed-clock";
+>             #clock-cells =  <0>;
+>             /* frequency hard-coded for illustration */
+>             clock-frequency = <12288000>;
+>             clock-output-names = "clk-hdmi-i2s-mclk";
+>         };
+>     };
+
+The #clock-cells should be in the main video-receiver node.
+Probably there is more than one clock output, so #clock-cells may be 1?
+There is no need for a fixed-clock compatible, nor for clock-frequency
+and clock-output-names.
+
+But most important: this should be documented in the adv748x DT bindings,
+and implemented in the adv748x driver.
+
+> Now I'm a bit hazy on how to declare that the MCLK output of the
+> video-receiver@70 is connected to the Audio Clock C of the SoC...
+> Probably remove use of "audio_clk_c" completely?
+
+Yes, the current audio_clk_c definition in the DTS assumes a fixed
+crystal.
+
+> > > > > @@ -686,7 +700,8 @@
+> > > > >         };
+> > > > >
+> > > > >         sound_pins: sound {
+> > > > > -               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
+> > > > > +               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
+> > > > > +                        "ssi4_data";
+> > > >
+> > > > Missing "ss4_ctrl", for the SCK4 and WS4 pins.
+> > >
+> > > I'll add them.
+> > > As the device seems to function even without thoes, does this mean the
+> > > pins in the group are used "on demand" by whatever needs them?
+> >
+> > Probably the SCK4/WS4 functions are the reset-state defaults.
+>
+> That ... might require some trial and testing: when I add them to the group,
+> the reset defaults will be overridden by the platform initialization, which is
+> not necessarily the reset default. Will see.
+
+Or by the boot loader.  Anyway, you need to specify these in the DTS.
+
+> > > Does a "clocks = ..." statement always mean input clocks?
+> >
+> > Yes it does.
+> > If a device has clock outputs and is thus a clock provider, it should
+> > have a #clock-cells property, and this should be documented in the bindings.
+> >
+> > A clock consumer will refer to clocks of a provider using the "clocks"
+> > property, specifying a clock specifier (phandle and zero or more indices)
+> > for each clock referenced.
+>
+> Something like this?
+>
+>     &rcar_sound {
+>         clocks = ...,
+>                  <&adv748x_mclk>,
+>                  <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
+>         clock-names = ...,
+>                       "clk_c",
+>                       "clk_i";
+>     };
+
+More or less.
+
+Might become
+
+    find_a_better_label_choice: video-receiver@70 {
+            ...
+    };
+
+    &rcar_sound {
+            clock = ...,
+                    <&find_a_better_label_choice 0>,
+                    ...
+    };
+
+as there may be multiple clock outputs on the ADV7482.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.11.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
