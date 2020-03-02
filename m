@@ -1,143 +1,189 @@
-Return-Path: <SRS0=3r9R=4S=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9B1C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 23:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8A0C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 00:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1415246A1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Mar 2020 23:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D487524697
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 00:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sifgC5yj"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="carO0kFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgCAXhq (ORCPT
+        id S1726592AbgCBAL5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Mar 2020 18:37:46 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:43913 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgCAXho (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 18:37:44 -0500
-Received: by mail-qv1-f65.google.com with SMTP id eb12so98578qvb.10
-        for <devicetree@vger.kernel.org>; Sun, 01 Mar 2020 15:37:42 -0800 (PST)
+        Sun, 1 Mar 2020 19:11:57 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41899 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbgCBAL5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Mar 2020 19:11:57 -0500
+Received: by mail-qk1-f194.google.com with SMTP id b5so8491258qkh.8
+        for <devicetree@vger.kernel.org>; Sun, 01 Mar 2020 16:11:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TC7BEViNIrcgBvuSmYhgXNOgon/ByWdiyAfu39Qw0gI=;
-        b=sifgC5yjaTaKGjMMp7QGl5KEVty3Byu3M9vc6veJC4Pvx+yyfl2ewt+f7PEvr+2Ua9
-         /Zu3+sKj/v8xoetMba3DVOD+gGvu3ukwnaIPbbKr4uo1tDN4GUidaq5FeIerMbMAzst8
-         +1swJo7ADn3BNzQSc8mP5zhdo64QRryiOi+NJsNuqCcfMe6zgeVdUF95GZpaHq+9DDF9
-         /lmBSdAFqqJtlsfHxRmAG9/619H6+hAQeN/ZL9FVOnzWObEKIIrueVdM0ZzDPlJNP5MV
-         Ivp2I6KgQRREU/EoDuTtPASSZSnvQu82GDfSgbWrG12zrhyebAXjqTpjQNPTfyYvi2gA
-         nxew==
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4/YCjZ1oaKRZgdjhxl8DLn+nRy9DD18mNfW/zomwFzE=;
+        b=carO0kFs1H4HE9z1tt2Yn3Llcx8sXHWgu5rJipogdsli2uizchBvU9ydf+1yIw0U6v
+         TWQX65v4oKXz2HMztMrBG0qDyINAkfqwHMP1ELbl2rfBOAcyCXVJ9PWgXioNq1G093n/
+         ieXrYGXG1eB2G/RR66betZPBripGPC0rjJPwLWFHDx15AEr9WO3UHafFLhHLAYBWXky/
+         NbPSlUCy7vKAbC88dlDfnWd9uFqrSQgCgAKCXZDeFspnznj560BIkUBGKNjF0AOfqYPD
+         +dyJi0/wrT+tvMKe+OvuaIEvrHqJl83v1crOZMRW3DT6jkpvu3t0SBMcZ5AeRPLAMVDO
+         iihQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=TC7BEViNIrcgBvuSmYhgXNOgon/ByWdiyAfu39Qw0gI=;
-        b=ek1SA6tYxfkiMhRZLvWliCxGmJnbYQEO/ze9S61BmjqyAPdGu2xI96DtI0DcNiapfu
-         iZGtrcTh71b3F22o335VyIiNFxdqtZ8D7nlitPw8D1HMGnXYDy8l+SDPbJkuv0pCFuLH
-         8FyQFDXJce+nB/uuedd+njlhmvbv0BsmAPI74lSdhlmPbg1yG3FHewS91NmReG0VvvSp
-         9flm0DIuW+j/OL547o0z0qpwu4TqoKds8eMnDFvkRJTGnULfEpJtq2Thp0kNJKjeptBY
-         KcfyqWoYqhoqfrlNbZ2P7rV/ty+DhqQiIyBqc6FXNKW/B4Efb99pfZQ+zuV0RQEus3/V
-         QzKw==
-X-Gm-Message-State: APjAAAUucx0BbYAZxYBK7TpQwoZIuj7VqaddPHKHsLO/lAXoHF5nrWZ6
-        2dQzA7mSbUa9gPxFNrdhv7oR0A==
-X-Google-Smtp-Source: APXvYqzxiOWmMA3NTcZgpNR77r+DSpz2rxbV/GDVOsae/oUiX/qEMP7ZKGXG35a8uPMcbyWud/KObw==
-X-Received: by 2002:ad4:48c6:: with SMTP id v6mr12512731qvx.207.1583105861532;
-        Sun, 01 Mar 2020 15:37:41 -0800 (PST)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id g185sm9079153qkd.16.2020.03.01.15.37.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 15:37:40 -0800 (PST)
-Subject: Re: [Patch v4 6/7] dt-bindings: soc: qcom: Extend RPMh power
- controller binding to describe thermal warming device
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org>
- <1574254593-16078-7-git-send-email-thara.gopinath@linaro.org>
- <CAPDyKFrZ9QM9L4OEFuseRTC+mBqourv11Rcu3Ua95ZPKoNFgng@mail.gmail.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <4ab0463f-0fc3-6717-9b10-2ff7bd745fcd@linaro.org>
-Date:   Sun, 1 Mar 2020 18:37:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=4/YCjZ1oaKRZgdjhxl8DLn+nRy9DD18mNfW/zomwFzE=;
+        b=TbD1aEigfkKR4rNfTMmRYYECkosi5hQB9oxJS870ggTjVttFaGLOERkEPquo7MUkAX
+         oFpz72Trqscemx+eFANHoUoAS83KtBx/uKlrwx3sUUGFV1yR0t76PT312gKEZiJwjF3d
+         dQUx0zKWoAdPmcdJtZdws8HUK5PWTDxGhIwesEeuejFwNFqpP9aD+0zN0Mbd5KHFOty5
+         Pc/a0eJF6zsWP6RnPcb1RD8YlyxBy713SCsJcU+yhnW/EVgChjTT44jknIdgSDTVBe8i
+         VYALpXNOfgEzRkbHCx1SeD/H1tdzuqIvDDpOVobc2qsUCw+wb3bIuiVrFdNfyR+vru/Q
+         JrsQ==
+X-Gm-Message-State: APjAAAWhzjaKeCGzEPNLr0vsOi+/abURvH9q7RKhPLomQ/SfzcHBFHeV
+        Hb08g/yGNq2YPrZsks/ynReB2vpZnqwA8JAH
+X-Google-Smtp-Source: APXvYqx6If6whTCbu1kaCgR0TRrpOFIWdC6fmEUBVEcHG8zBm14f496mkUEMnQZ/aYydOZrT1VUKcw==
+X-Received: by 2002:a05:620a:22cc:: with SMTP id o12mr14087296qki.331.1583107915740;
+        Sun, 01 Mar 2020 16:11:55 -0800 (PST)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id l16sm4921372qke.68.2020.03.01.16.11.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 16:11:55 -0800 (PST)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com, marco.franchi@nxp.com,
+        linux-imx@nxp.com, lkcamp@lists.libreplanetbr.org
+Subject: [PATCH v2] arm64: dts: freescale: add gpio-fan/thermal support for Google i.MX 8MQ Phanbell
+Date:   Sun,  1 Mar 2020 21:11:49 -0300
+Message-Id: <20200302001150.27952-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFrZ9QM9L4OEFuseRTC+mBqourv11Rcu3Ua95ZPKoNFgng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+It was based on Google Source Code for Coral Edge TPU Mendel release:
+https://coral.googlesource.com/linux-imx/
 
+It was tested on Coral Dev Board using this command:
+  sudo stress --cpu 4 --timeout 3600
 
-On 2/4/20 12:41 PM, Ulf Hansson wrote:
-> On Wed, 20 Nov 2019 at 13:57, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->>
->> RPMh power controller hosts mx domain that can be used as thermal warming
->> device. Add #cooling-cells property to the power domain provider node to
->> indicate this.
->>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+v2:
+ * Fix underscore in property name;
+ * Add pinctrl entry for gpio-fan;
+ * Removes undocumented property.
 
-Thanks! This file does not exist anymore. It has been moved to yaml 
-format! I will resend this in the correct file.
+BR,
+Vitor
+---
+ .../boot/dts/freescale/imx8mq-phanbell.dts    | 64 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  2 +-
+ 2 files changed, 65 insertions(+), 1 deletion(-)
 
-> 
-> Kind regards
-> Uffe
-> 
->> ---
->> v3->v4:
->>          - Removed subnode to indicate that mx power domain is a warming
->>            device. Instead #cooling-cells is used as a power domain
->>            provider property to indicate if the provider hosts a power
->>            domain that can be used as a warming device.
->>
->>   Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->> index bc75bf4..a193d33 100644
->> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->> @@ -19,6 +19,11 @@ Required Properties:
->>   Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
->>   various OPPs for different platforms as well as Power domain indexes
->>
->> +Optional Properties
->> + - #cooling-cells: must be 2
->> +       RPMh also hosts power domains that can behave as thermal warming
->> +       device. If so, indicate this by specifying #cooling-cells.
->> +
->>   Example: rpmh power domain controller and OPP table
->>
->>   #include <dt-bindings/power/qcom-rpmhpd.h>
->> --
->> 2.1.4
->>
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+index 3f2a489a4ad8..3302e5c127ca 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+@@ -35,6 +35,16 @@
+ 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	fan: gpio-fan {
++		compatible = "gpio-fan";
++		gpio-fan,speed-map = <0 0 8600 1>;
++		gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
++		#cooling-cells = <2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_fan>;
++		status = "okay";
++	};
+ };
+ 
+ &A53_0 {
+@@ -373,4 +383,58 @@
+ 			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
+ 		>;
+ 	};
++
++	pinctrl_gpio_fan: gpiofanp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5 0x01
++		>;
++	};
+ };
++
++&cpu_thermal {
++	trips {
++		cpu_alert0: trip0 {
++			temperature = <75000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++
++		cpu_alert1: trip1 {
++			temperature = <80000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++
++		cpu_crit0: trip3 {
++			temperature = <90000>;
++			hysteresis = <2000>;
++			type = "critical";
++		};
++
++		fan_toggle0: trip4 {
++			temperature = <65000>;
++			hysteresis = <10000>;
++			type = "active";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device =
++			<&A53_0 0 1>; /* Exclude highest OPP */
++		};
++
++		map1 {
++			trip = <&cpu_alert1>;
++			cooling-device =
++			<&A53_0 0 2>; /* Exclude two highest OPPs */
++		};
++
++		map4 {
++			trip = <&fan_toggle0>;
++			cooling-device = <&fan 0 1>;
++		};
++	};
++};
++
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 6a1e83922c71..a3bb17a6b9df 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -198,7 +198,7 @@
+ 	};
+ 
+ 	thermal-zones {
+-		cpu-thermal {
++		cpu_thermal: cpu-thermal {
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <2000>;
+ 			thermal-sensors = <&tmu 0>;
 -- 
-Warm Regards
-Thara
+2.21.1
+
