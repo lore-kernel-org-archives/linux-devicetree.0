@@ -2,209 +2,166 @@ Return-Path: <SRS0=6Sr8=4T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1A7C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 12:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139E1C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 12:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B342173E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 12:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7DD22B48
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Mar 2020 12:40:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nYaQcCZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbgCBM20 (ORCPT
+        id S1727484AbgCBMkk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:28:26 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39418 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbgCBM20 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 07:28:26 -0500
-Received: by mail-ot1-f65.google.com with SMTP id x97so9474162ota.6;
-        Mon, 02 Mar 2020 04:28:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=wZYZAbcqMvd207t9hfFOk6y3G0CkgQqD0dKaK71lZb4=;
-        b=b8tJf91m5c3kzr113GHXr/pAavv5rJ5P40NxWsZnX/o0QmxGZqOzl9I7tbZj+7oJw4
-         wGdoAOORM3cRDswZw1+u5JGK3B6PgZLHWw3MAXqYVfrt5N+ge47B6wbTAj26yREcB1aA
-         ZY9ol0cmH29JWpvKk95ZAnEg1PRj8s+a8VTDSLhL1hRGiyzyOLaUV/KzhR3dHj6lNNM7
-         S4Vs6cg7E4evriSyUgVQSIcZG3uuBAl7wg6xN2jICGKF/iPF1+mGABJSfctaAI36XMLe
-         Exhfb4qImwgNaUNV9ukXo3vYma02JhDULxsRjjRMqsb/G4YxEfjO2EsWb+RdzkhxGdcf
-         nrbw==
-X-Gm-Message-State: APjAAAXrj65GOHJWbTRZgBabLF3EcLHz+i7EBi+f0Dy/E5bIwLePf0Kt
-        JN368l897hYx56lmCZjD7XiFa6DFVOLPXr3X3Ec=
-X-Google-Smtp-Source: APXvYqzN+m0jue0ZTokoqurX7tBCYT/bfoG/F9HvM0fLl2C7tpJvdjqoMETuKvoCS8cUYtBFAfQ6dPbGSXXYJ4em2mQ=
-X-Received: by 2002:a05:6830:1d4:: with SMTP id r20mr12476739ota.107.1583152104944;
- Mon, 02 Mar 2020 04:28:24 -0800 (PST)
+        Mon, 2 Mar 2020 07:40:40 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43640 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727361AbgCBMkj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 07:40:39 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022CRZP1031014;
+        Mon, 2 Mar 2020 13:40:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=od867/NqQ0zAhpHSh/6j6bad1lhZJnIKCi8AtM5gVIw=;
+ b=nYaQcCZhWBqb0nnxjzdyHnMifIGYDGQmQCWWG5kdWwKEKVrNwC3nRiXqsAi90ofqa3xj
+ Z2UsyY28A1h8UIB63mu4eEJ5ksxdcuhzyFZJ3rgH2dLzu2pHs0hMtJJxpm76LgCPxBg7
+ RGUKdLHwmMEBjLy+KjYAPeQVGkKWuzYRr5aCrh+bR3c7WQ4RUGYHUaD9gn7X5Z6rBdka
+ ZiCS6Um2JKrBMYxenV9juKDDpeO3x6hpaTG2JSlz3I3Xhv46QEk7oCJSBj97bo+3wL+Z
+ 616UieuuMdLVeQjCMYab5TuNyw2lp2cSMZbMqVTe5fGjBTj4sg3bpI9tMTiiR241Fpo5 aw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yfea6khun-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 13:40:09 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A724D100034;
+        Mon,  2 Mar 2020 13:40:03 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 943FD2C38B1;
+        Mon,  2 Mar 2020 13:40:03 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 2 Mar
+ 2020 13:40:02 +0100
+Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
+ information
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+CC:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Simon Glass <sjg@chromium.org>, <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Ian Lepore <ian@freebsd.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-2-alexandre.torgue@st.com>
+ <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+ <CAL_JsqJuj1=ae+_-L7_R6+ZfcbNW99BDUDSvuYSsN1=gRcvQqQ@mail.gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <866a8137-4152-da6e-f6d6-03aa245ddbb0@st.com>
+Date:   Mon, 2 Mar 2020 13:40:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <cover.1578924232.git.alexander.riesen@cetitec.com> <20200113141556.GI3606@pflmari>
-In-Reply-To: <20200113141556.GI3606@pflmari>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 2 Mar 2020 13:28:13 +0100
-Message-ID: <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_JsqJuj1=ae+_-L7_R6+ZfcbNW99BDUDSvuYSsN1=gRcvQqQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_03:2020-03-02,2020-03-02 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alex,
 
-Thanks for your patch!
 
-On Mon, Jan 13, 2020 at 3:24 PM Alex Riesen
-<alexander.riesen@cetitec.com> wrote:
-> Not sure if all variants of the Salvator board have the HDMI decoder
-> chip (the ADV7482) connected to the SSI4 on R-Car SoC, as it is on
-> Salvator-X ES1, so the the ADV7482 endpoint and connection definitions
-> are placed in the board file.
+On 2/21/20 8:38 PM, Rob Herring wrote:
+> On Fri, Feb 21, 2020 at 11:52 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+>>> This commit adds a new script to create a file (in dts file directory) with
+>>> some information (date, Linux version, user). This file could then be used
+>>> to populate "build-info" property in every dts file that would use this
+>>> build information:
+>>>
+>>> Example:
+>>>
+>>> / {
+>>>        ...
+>>>        build-info = /incbin/("dtb-build.txt");
+>>
+>> s/.txt/.dtsi/
+>>
+>> and same wherever the file name is used.
+>>
+>>
+>>>        ...
+>>> };
+>>>
+>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>>
+>>> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+>>> index bae62549e3d2..a5af84ef4ffc 100644
+>>> --- a/scripts/Makefile.lib
+>>> +++ b/scripts/Makefile.lib
+>>> @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
+>>>   # DTC
+>>>   # ---------------------------------------------------------------------------
+>>>   DTC ?= $(objtree)/scripts/dtc/dtc
+>>> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
+>>>
+>>>   # Disable noisy checks by default
+>>>   ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+>>> @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+>>>
+>>>   quiet_cmd_dtc = DTC     $@
+>>>   cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+>>> +     $(DTB_GEN_INFO) $(src) ; \
+>>>        $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+>>>        $(DTC) -O $(2) -o $@ -b 0 \
+>>>                $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+>>> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
+>>> new file mode 100755
+>>> index 000000000000..0cd8bd98e410
+>>> --- /dev/null
+>>> +++ b/scripts/gen_dtb_build_info.sh
+>>> @@ -0,0 +1,10 @@
+>>> +#!/bin/bash
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +
+>>> +set -o nounset
+>>> +
+>>> +DTB_DIR=$1
+>>> +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
+>>> +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
+>>
+>> I would remove the filler words "From", "by", "the", and the trailing
+>> period ('.').
+>>
+>> <bikeshed>
+>> You might consider using a format more like the Linux
+>> kernel version line, which puts parenthesis around the
+>> compiled by info.
+> 
+> IMO, we should use exactly the Linux kernel version line. Or exactly
+> the u-boot version line when built in u-boot.
 
-Both Salvator-X and Salvator-XS have SSI4 wired to the ADV7482.
+I agree to keep the same format than Linux banner. But does it make 
+sense to keep uts version, config flags ?
 
-> I do assume though that all Salvator variants have the CLK_C clock line
-> hard-wired to the ADV7482 HDMI decoder, and remove it from the list of
-> clocks provided by the R-Car sound system.
+regards
+Alex
 
-Yes, both Salvator-X and Salvator-XS have it wired that way.  But please
-see below.
-
-> The I2C wiring is also likely to persist across the variants (similar
-> to ak4613, connected to the same interface), so that is in the common
-> file.
->
-> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-
-Below are my comments w.r.t. the board-specific wiring.
-I'll defer to the multimedia people for commenting on the audio parts.
-
-BTW, what is the status of the other patches in this series?
-
-> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> @@ -322,6 +322,10 @@
->         clock-frequency = <22579200>;
->  };
->
-> +&audio_clk_c {
-> +       clock-frequency = <12288000>;
-> +};
-
-Does the ADV7482 always generate a 12.288 MHz clock signal?
-Or is this programmable?
-
-> +
->  &avb {
->         pinctrl-0 = <&avb_pins>;
->         pinctrl-names = "default";
-> @@ -471,12 +475,14 @@
->
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> +               #sound-dai-cells = <0>;
->
->                 interrupt-parent = <&gpio6>;
->                 interrupt-names = "intrq1", "intrq2";
->                 interrupts = <30 IRQ_TYPE_LEVEL_LOW>,
->                              <31 IRQ_TYPE_LEVEL_LOW>;
-> -
-> +               clocks = <&rcar_sound 3>, <&audio_clk_c>;
-> +               clock-names = "clk-hdmi-video", "clk-hdmi-i2s-mclk";
-
-The above declares the Audio CLK C to be a clock input of the ADV7482, while
-it is an output.
-Furthermore, the DT bindings do not document that clocks can be specified.
-
->                 port@7 {
->                         reg = <7>;
->
-> @@ -512,6 +518,14 @@
->                                 remote-endpoint = <&csi20_in>;
->                         };
->                 };
-> +
-> +               port@c {
-> +                       reg = <12>;
-> +
-> +                       adv7482_i2s: endpoint {
-> +                               /* remote-endpoint defined in the board file */
-> +                       };
-> +               };
->         };
->
->         csa_vdd: adc@7c {
-> @@ -686,7 +700,8 @@
->         };
->
->         sound_pins: sound {
-> -               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
-> +               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
-> +                        "ssi4_data";
-
-Missing "ss4_ctrl", for the SCK4 and WS4 pins.
-
->                 function = "ssi";
->         };
->
-> @@ -735,8 +750,8 @@
->         pinctrl-0 = <&sound_pins &sound_clk_pins>;
->         pinctrl-names = "default";
->
-> -       /* Single DAI */
-> -       #sound-dai-cells = <0>;
-> +       /* multi DAI */
-> +       #sound-dai-cells = <1>;
->
->         /* audio_clkout0/1/2/3 */
->         #clock-cells = <1>;
-> @@ -760,8 +775,18 @@
->                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
->                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
->                  <&audio_clk_a>, <&cs2000>,
-> -                <&audio_clk_c>,
-
-Why remove it? This is the list of clock inputs, not outputs.
-
->                  <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
-> +       clock-names = "ssi-all",
-> +                     "ssi.9", "ssi.8", "ssi.7", "ssi.6",
-> +                     "ssi.5", "ssi.4", "ssi.3", "ssi.2",
-> +                     "ssi.1", "ssi.0",
-> +                     "src.9", "src.8", "src.7", "src.6",
-> +                     "src.5", "src.4", "src.3", "src.2",
-> +                     "src.1", "src.0",
-> +                     "mix.1", "mix.0",
-> +                     "ctu.1", "ctu.0",
-> +                     "dvc.0", "dvc.1",
-> +                     "clk_a", "clk_b", "clk_i";
->
->         ports {
->                 #address-cells = <1>;
-> --
-> 2.24.1.508.g91d2dafee0
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> Rob
+> 
