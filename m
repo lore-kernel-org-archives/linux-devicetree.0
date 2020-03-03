@@ -2,183 +2,173 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B457DC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82DDC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88CB62080C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA332083E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583255211;
-	bh=bHx7WOw2u+pHo6r6BJrOT3vX91Lv+OGXAAZOfK8msnY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zMyi+Y0S+1+HEfD4c4NToY9breYA4IRweN7OyYABPrOVRRw/ADD92GLNltdKnm1nJ
-	 U9Y5FaTHHKzqgZDeQAdFKfyKvxcklNPUe+DRu6PYFRy7ZoTJ2bUUEor53SlzRKRy7p
-	 O97O/o8Z1wXt/zpFwMYNBNTDFO/BHFMadHxC+ixQ=
+	s=default; t=1583255227;
+	bh=IrpmFs+0/+bn4sD7somCGB6rxRCplaHxuMiqdN38XOM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=y7Sk4tbeJQL8V4a8TMJ4XnJH6Qr6Qa+509qSq9CEHu6xI70+b8P9Jf8g/AbChPGeC
+	 PG/uOlgSF7uj49dlRQwlnAcEH9QNtjFWhXm+f4nSLPABVx8Cg31cuw/LB66nFtTRPV
+	 HQfZ0X8otHLx/gqZDu16RQa1Tmb3IpESe/gYmNIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbgCCRGv (ORCPT
+        id S1730530AbgCCRHH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:06:51 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36273 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729755AbgCCRGv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 12:06:51 -0500
-Received: by mail-oi1-f196.google.com with SMTP id t24so3780514oij.3;
-        Tue, 03 Mar 2020 09:06:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DsM/9fpFyAO2iYRTuSlT0pMCuni5v+nLkViTKnIpANc=;
-        b=hnc/nZN0fmOf6BTON898RdGb44m8ze7SokXyakqAVZ0YhsufiBrctXX3rZdn5qjXp4
-         0bvT6Trkm2FMdBcrKwgQvONIv2kZ7SHCLjVNux4ANW9brv2o4U4miawzYYcX0eOyOV28
-         iDo241g5LW94sja6MgJEmwelXLqyusbTeIdUbjHXlAABA70Aj/bJkgegiwAgRqrr3y81
-         STL19MoyP+X9snZO+HlBJuH8Aott1q+dnSgLkZ9mc7eZ0SgEB5gtTnuLGGwEfuAOe8mL
-         wvuAnefmw6wx9LB5QU2utsjyOx42dtM6Gr19b64sNM/sgdq6EFwunkj9TW34V1+x8Cmd
-         eVOw==
-X-Gm-Message-State: ANhLgQ1tWdRqxJY13SpT7pnnSpvD65scQM7b9hHoAHNIpnCRCbKw7lqk
-        f07O/f4PKJQAMFiUMcj0Vw==
-X-Google-Smtp-Source: ADFU+vtXzfjSUoQIMPTzsJQN6DazR7wiN8f6rigrCtFfxy3/pt1bNjvY6jtYyUv1/ycbuFFIr3wH4A==
-X-Received: by 2002:aca:4b47:: with SMTP id y68mr1756760oia.38.1583255210172;
-        Tue, 03 Mar 2020 09:06:50 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l8sm8049274otn.31.2020.03.03.09.06.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 09:06:43 -0800 (PST)
-Received: (nullmailer pid 11907 invoked by uid 1000);
-        Tue, 03 Mar 2020 17:06:41 -0000
-Date:   Tue, 3 Mar 2020 11:06:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        devicetree@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 5/7] dt-bindings: arm: Fixup the DT bindings for
- hierarchical PSCI states
-Message-ID: <20200303170641.GC26191@bogus>
-References: <20200303150749.30566-1-ulf.hansson@linaro.org>
- <20200303150749.30566-6-ulf.hansson@linaro.org>
+        Tue, 3 Mar 2020 12:07:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729755AbgCCRHG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:07:06 -0500
+Received: from onda.lan (tmo-101-56.customers.d1-online.com [80.187.101.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E872080C;
+        Tue,  3 Mar 2020 17:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583255226;
+        bh=IrpmFs+0/+bn4sD7somCGB6rxRCplaHxuMiqdN38XOM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pxrk51gfNUerXnSfOy7TNMJJsorC6Is70R8g/JDGLPL+S5iTPE9aArmPesiSUJtMH
+         u5uXUDSRcrIYUy5aDxxOxiKFIe3PyNlV+M3MqgzmOiG7akeGOkqPUvSsLe2EHXVz+b
+         lXKmUTDKrrtLKzthCNsfOiCEYuqCT8JrW9RFLcrA=
+Date:   Tue, 3 Mar 2020 18:07:02 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] Convert some DT documentation files to ReST
+Message-ID: <20200303180702.677ba664@onda.lan>
+In-Reply-To: <20200303180109.670ad7f8@onda.lan>
+References: <cover.1583135507.git.mchehab+huawei@kernel.org>
+        <20200302123554.08ac0c34@lwn.net>
+        <20200303080947.5f381004@onda.lan>
+        <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
+        <20200303180109.670ad7f8@onda.lan>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303150749.30566-6-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 04:07:47PM +0100, Ulf Hansson wrote:
-> The hierarchical topology with power-domain should be described through
-> child nodes, rather than as currently described in the PSCI root node. Fix
-> this by adding a patternProperties with a corresponding reference to the
-> power-domain DT binding.
-> 
-> Additionally, update the example to conform to the new pattern, but also to
-> the adjusted domain-idle-state DT binding.
-> 
-> Fixes: a3f048b5424e ("dt: psci: Update DT bindings to support hierarchical PSCI states")
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  .../devicetree/bindings/arm/psci.yaml         | 33 +++++++++----------
->  1 file changed, 15 insertions(+), 18 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
-> index 0bc3c43a525a..cae668b61265 100644
-> --- a/Documentation/devicetree/bindings/arm/psci.yaml
-> +++ b/Documentation/devicetree/bindings/arm/psci.yaml
-> @@ -102,11 +102,15 @@ properties:
->        [1] Kernel documentation - ARM idle states bindings
->          Documentation/devicetree/bindings/arm/idle-states.yaml
->  
-> -  "#power-domain-cells":
-> -    description:
-> -      The number of cells in a PM domain specifier as per binding in [3].
-> -      Must be 0 as to represent a single PM domain.
-> +required:
-> +  - compatible
-> +  - method
+Em Tue, 3 Mar 2020 18:01:09 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-No need to move this.
-
->  
-> +patternProperties:
-> +  "^(power-controller|power-domain)([@-].*)?$":
-> +    $ref: "../power/power-domain.yaml#"
-
-This has to be under an 'allOf' or the rest of the properties are 
-ignored.
-
-> +    type: object
-> +    description: |
->        ARM systems can have multiple cores, sometimes in an hierarchical
->        arrangement. This often, but not always, maps directly to the processor
->        power topology of the system. Individual nodes in a topology have their
-> @@ -122,19 +126,9 @@ properties:
->        helps to implement support for OSI mode and OS implementations may choose
->        to mandate it.
->  
-> -      [3] Documentation/devicetree/bindings/power/power_domain.txt
-> +      [3] Documentation/devicetree/bindings/power/power-domain.yaml
->        [4] Documentation/devicetree/bindings/power/domain-idle-state.yaml
->  
-> -  power-domains:
-> -    $ref: '/schemas/types.yaml#/definitions/phandle-array'
-> -    description:
-> -      List of phandles and PM domain specifiers, as defined by bindings of the
-> -      PM domain provider.
-> -
-> -required:
-> -  - compatible
-> -  - method
-> -
->  allOf:
->    - if:
->        properties:
-> @@ -224,6 +218,9 @@ examples:
->            exit-latency-us = <10>;
->            min-residency-us = <100>;
->          };
-> +      };
-> +
-> +      domain-idle-states {
->  
->          CLUSTER_RET: cluster-retention {
->            compatible = "domain-idle-state";
-> @@ -247,19 +244,19 @@ examples:
->        compatible = "arm,psci-1.0";
->        method = "smc";
->  
-> -      CPU_PD0: cpu-pd0 {
-> +      CPU_PD0: power-domain-cpu0 {
->          #power-domain-cells = <0>;
->          domain-idle-states = <&CPU_PWRDN>;
->          power-domains = <&CLUSTER_PD>;
->        };
->  
-> -      CPU_PD1: cpu-pd1 {
-> +      CPU_PD1: power-domain-cpu1 {
->          #power-domain-cells = <0>;
->          domain-idle-states =  <&CPU_PWRDN>;
->          power-domains = <&CLUSTER_PD>;
->        };
->  
-> -      CLUSTER_PD: cluster-pd {
-> +      CLUSTER_PD: power-domain-cluster {
->          #power-domain-cells = <0>;
->          domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWRDN>;
->        };
-> -- 
-> 2.20.1
+> Em Tue, 3 Mar 2020 10:20:25 -0600
+> Rob Herring <robh@kernel.org> escreveu:
 > 
+> > On Tue, Mar 3, 2020 at 1:09 AM Mauro Carvalho Chehab
+> > <mchehab+huawei@kernel.org> wrote:  
+> > >
+> > > Em Mon, 2 Mar 2020 12:35:54 -0700
+> > > Jonathan Corbet <corbet@lwn.net> escreveu:
+> > >    
+> > > > On Mon,  2 Mar 2020 08:59:25 +0100
+> > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > > >    
+> > > > > While most of the devicetree stuff has its own format (with is now being
+> > > > > converted to YAML format), some documents there are actually
+> > > > > describing the DT concepts and how to contribute to it.
+> > > > >
+> > > > > IMHO, those documents would fit perfectly as part of the documentation
+> > > > > body, as part of the firmare documents set.
+> > > > >
+> > > > > This patch series manually converts some DT documents that, on my
+> > > > > opinion, would belong to it.    
+> > > >
+> > > > Did you consider putting this stuff into the firmware-guide while you were
+> > > > at it?  It's not a perfect fit, I guess, but it doesn't seem too awkward
+> > > > either.    
+> > >
+> > > I placed it just below the firmware-guide at the main index file.
+> > >
+> > > I have split thoughts about moving the files to there, though. From
+> > > one side, it may fit better from the PoV of organizing the documentation.
+> > >
+> > > From other side, newcomers working with DT may expect looking at the
+> > > text files inside Documentation/devicetree/.
+> > >
+> > > Maybe I could add an extra patch at the end of this series with the
+> > > move, adding a "RFC" on his title. This way, we can better discuss it,
+> > > and either merge the last one or not depending on the comments.    
+> > 
+> > Keep in mind that we generate a standalone DT only tree[1] with the
+> > documentation, dts files and headers. So things should be structured
+> > such that all the DT documentation could be built by itself without
+> > dependencies on the 'kernel documentation'. I'm not asking for that to
+> > be done in this series, but just don't do anything to make that
+> > harder. I don't *think* have, but just want to make sure that's clear.  
+> 
+> So, I guess it is better to keep the .rst files under Documentation/devicetree,
+> instead of moving them to Documentation/firmware-guide.
+> 
+> Well, if moved, I guess it would be easy to modify the scripts that produce
+> the documentation to also parse something a new directory inside
+> Documentation/firmware-guide.
+> 
+> >   
+> > > > It also seems like it would be good to CC the devicetree folks, or at
+> > > > least the devicetree mailing list?    
+> > 
+> > I was wondering what happened to the cover letter on v2...
+> >   
+> > > Yeah, that would make sense. I'm using get-maintainers script to
+> > > prepare the c/c list, as it is simply too much work to find the
+> > > right maintainers by hand, for every single patch.
+> > >
+> > > I just noticed today that there's just *one entry* at MAINTAINERS
+> > > file for Documentation/devicetree, and that points to you:
+> > >
+> > >         DOCUMENTATION
+> > >         M:      Jonathan Corbet <corbet@lwn.net>
+> > >         L:      linux-doc@vger.kernel.org
+> > >         S:      Maintained
+> > >         F:      Documentation/
+> > >         F:      scripts/documentation-file-ref-check
+> > >         F:      scripts/kernel-doc
+> > >         F:      scripts/sphinx-pre-install
+> > >         X:      Documentation/ABI/
+> > >         X:      Documentation/firmware-guide/acpi/
+> > >         X:      Documentation/devicetree/    
+> > 
+> > You mean doesn't point to Jon as 'X' is exclude. You missed this entry:
+> > 
+> > OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> > M:      Rob Herring <robh+dt@kernel.org>
+> > M:      Mark Rutland <mark.rutland@arm.com>
+> > L:      devicetree@vger.kernel.org
+> > T:      git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+> > Q:      http://patchwork.ozlabs.org/project/devicetree-bindings/list/
+> > S:      Maintained
+> > F:      Documentation/devicetree/
+> > F:      arch/*/boot/dts/
+> > F:      include/dt-bindings/  
+> 
+> Yeah, I remember I saw something like the above in the past. However,
+> I'm not seeing this entry at the MAINTAINERS file at next-20200303 anymore.
+> 
+> Did someone removed such entry?
+
+Sorry, false alarm. 
+
+It is there at next. 
+
+I guess it is time for call it a day.
+
+That doesn't explain why I didn't add DT ML to the c/c. I'll try to 
+verify what's going on tomorrow.
+
+Regards,
+Mauro
