@@ -7,36 +7,35 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1497C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881A2C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 19:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7AC7206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CDD206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 19:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="n+e9/HdH"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YGv1MK/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgCCSzy (ORCPT
+        id S1728726AbgCCTAX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:55:54 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:53030 "EHLO
+        Tue, 3 Mar 2020 14:00:23 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53078 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCCSzx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 13:55:53 -0500
+        with ESMTP id S1728783AbgCCTAX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 14:00:23 -0500
 Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 268082AF;
-        Tue,  3 Mar 2020 19:55:52 +0100 (CET)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1A4632AF;
+        Tue,  3 Mar 2020 20:00:21 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583261752;
-        bh=noy1WADc0ET4QwWSlF8Wtcknw2DcH2OWioSBI/pWkjc=;
+        s=mail; t=1583262021;
+        bh=uSydvVjoCnKH1jjRz35LIwmd54EEtom3m51nnbDtjWk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n+e9/HdHilEFMQIN0V+Cyum7cPa4meETRYSjov9d8t8btYaAW01uq3IQiPX0Rfmwz
-         zZBqG+9PF5OCQFc9TcukzgXxTkiVFKNzWlOvA3eqsjVmuI0sVx97Li/drc4MBgTC9C
-         WfbFakiGAjB7B33Cfdzj69j8ibXDj6cKpHf1TSmw=
-Date:   Tue, 3 Mar 2020 20:55:31 +0200
+        b=YGv1MK/q0AKSAi2CgJmU2d6R/SnIYq0LHVH+IobbI7bOQ7ouiH4a1Kir4ABqaawaD
+         scGJ5OA7YHp4ml0/PZoQald8P4EMH3P+EU9ut+n0+l391ruZxgGIT4mehjjlG176nm
+         03nztfEiVI7dlfxHAQRKrsaWa3fHHzb24pp/WayA=
+Date:   Tue, 3 Mar 2020 21:00:00 +0200
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+Cc:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org,
         Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -44,17 +43,14 @@ Cc:     Rob Herring <robh@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Steffen Trumtrar <s.trumtrar@pengutronix.de>,
         Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 4/5] dt-bindings: display: add data-mapping to
- panel-dpi
-Message-ID: <20200303185531.GJ11333@pendragon.ideasonboard.com>
+Subject: Re: [RFC PATCH v3 5/5] drm/panel: simple: add panel-dpi support
+Message-ID: <20200303190000.GK11333@pendragon.ideasonboard.com>
 References: <20200216181513.28109-1-sam@ravnborg.org>
- <20200216181513.28109-5-sam@ravnborg.org>
- <CAL_Jsq+AbXEiLCYiAvwr5qzbSnuo9G8bTwAM3G9J4cPYz1_FMw@mail.gmail.com>
- <20200218221638.GA27927@ravnborg.org>
+ <20200216181513.28109-6-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200218221638.GA27927@ravnborg.org>
+In-Reply-To: <20200216181513.28109-6-sam@ravnborg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -63,75 +59,160 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Sam,
 
-On Tue, Feb 18, 2020 at 11:16:38PM +0100, Sam Ravnborg wrote:
-> On Tue, Feb 18, 2020 at 02:13:45PM -0600, Rob Herring wrote:
-> > On Sun, Feb 16, 2020 at 12:15 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > >
-> > > Add data-mapping property that can be used to specify
-> > > the media format used for the connection betwwen the
-> > > display controller (connector) and the panel.
-> > > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> > 
-> > Missing blank line.
-> > 
-> > > ---
-> > >  .../devicetree/bindings/display/panel/panel-dpi.yaml | 12 +++++++++++-
-> > >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-> > > index 40079fc24a63..6a03d2449701 100644
-> > > --- a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-> > > +++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-> > > @@ -21,6 +21,16 @@ properties:
-> > >        - {}
-> > >        - const: panel-dpi
-> > >
-> > > +  data-mapping:
-> > > +    enum:
-> > > +      - rgb24
-> > > +      - rgb565
-> > > +      - bgr666
-> > > +      - lvds666
-> > 
-> > Doesn't lvds666 come from i.MX IPU which as I remember has built-in
-> > LVDS block? I'd think this format would be implicit when using the
-> > LVDS block and panel. It doesn't seem this is actually used anywhere
-> > either.
->
-> I must admit that I just copied this list from Oleksandrs original
-> patch. The MEDIA type it identifies(MEDIA_BUS_FMT_RGB666_1X24_CPADHI) looks special.
-> I will drop lvds666 while applying, unless I get other feedback.
-> (Note: travelling, earliest in the weekend)
+Thank you for the patch.
 
-There are different data mappings defined for LVDS, we should follow
-them. lvds666 is wrong in any case, and doesn't apply to a DPI panel
-anyway.
-
-I don't like the name data-mapping much for DPI panels I'm afraid. It
-made sense for LVDS as it's really about how the different data bits are
-mapped to LVDS time slots, but for DPI, what we need to describe is the
-format. I also wonder whether multiple formats wouldn't be required when
-the panel supports more than one, but that may not apply to panels
-covered by these bindings.
-
-If a panel expects RGB888 and receives RGB666 with the two LSBs of each
-component hardwired to GND on the PCB, should DT report RGB888 or RGB666
-on the panel side ? I'm tempted by the former, and specifying the latter
-on the transmitting side.
-
-Please also note that this case is already described by
-Documentation/devicetree/bindings/media/video-interfaces.txt through two
-entirely different properties, bus-width and data-shift. I think we
-should try to standardize mappings between display and capture. This new
-property should be reconsidered in my opinion, I think it was merged too
-soon.
-
-> Btw. anyway I can add data-mapping to panel-common - and then list the
-> allowed enum values in each binding?
+On Sun, Feb 16, 2020 at 07:15:13PM +0100, Sam Ravnborg wrote:
+> RFC only - not tested yet!
 > 
-> I would love to have a central definition of data-mapping, and then let
-> the users only allow the relevant subset so we catch errors in DT files
-> early.
+> The panel-dpi compatible is a fallback that
+> allows the DT to specify the timing.
+> 
+> When matching panel-dpi expect the device tree to include the
+> timing information for the display-panel.
+> 
+> Background for this change:
+> There are a lot of panels and new models hits the market very often.
+> It is a lost cause trying to chase them all and users of new panels
+> will often find them in situations that the panel they ues are not
+
+s/ues/use/
+
+> supported by the kernel.
+> On top of this a lot of panels are customized based on customer
+> specifications.
+> 
+> Including the panel timing in the device tree allows for a simple
+> way to describe the actual HW and use this description in a generic
+> way in the kernel.
+> This allows uses of proprietary panels, or panels which are not
+> included in the kernel, to specify the timing in the device tree
+> together with all the other HW descriptions.
+> And thus, using the device tree it is then easy to add support
+> for an otherwise unknown panel.
+> 
+> The current support expect panels that do not require any
+> delays for prepare/enable/disable/unprepare.
+
+I've proposed something similar a few times in the past, so I can't
+disagree :-)
+
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 74 +++++++++++++++++++++++++++-
+>  1 file changed, 72 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 82363d05bad4..188526637398 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -351,6 +351,65 @@ static const struct drm_panel_funcs panel_simple_funcs = {
+>  	.get_timings = panel_simple_get_timings,
+>  };
+>  
+> +static struct panel_desc panel_dpi;
+
+Do you need this, can't you set data to 0 in the panel-dpi entry ?
+
+> +
+> +static int panel_dpi_probe(struct device *dev,
+> +			   struct panel_simple *panel)
+> +{
+> +	struct display_timing *timing;
+> +	const struct device_node *np;
+> +	struct panel_desc *desc;
+> +	unsigned int bus_flags;
+> +	struct videomode vm;
+> +	const char *mapping;
+> +	int ret;
+> +
+> +	np = dev->of_node;
+> +	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
+> +	if (!desc)
+> +		return -ENOMEM;
+> +
+> +	timing = devm_kzalloc(dev, sizeof(*timing), GFP_KERNEL);
+> +	if (!timing)
+> +		return -ENOMEM;
+> +
+> +	ret = of_get_display_timing(np, "panel-timing", timing);
+> +	if (ret < 0) {
+> +		dev_err(dev, "%pOF: no panel-timing node found for \"panel-dpi\" binding\n",
+> +			np);
+> +		return ret;
+> +	}
+> +
+> +	desc->timings = timing;
+> +	desc->num_timings = 1;
+> +
+> +	of_property_read_u32(np, "width-mm", &desc->size.width);
+> +	of_property_read_u32(np, "height-mm", &desc->size.height);
+> +
+> +	of_property_read_string(np, "data-mapping", &mapping);
+> +	if (!strcmp(mapping, "rgb24"))
+> +		desc->bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> +	else if (!strcmp(mapping, "rgb565"))
+> +		desc->bus_format = MEDIA_BUS_FMT_RGB565_1X16;
+> +	else if (!strcmp(mapping, "bgr666"))
+> +		desc->bus_format = MEDIA_BUS_FMT_RGB666_1X18;
+> +	else if (!strcmp(mapping, "lvds666"))
+> +		desc->bus_format = MEDIA_BUS_FMT_RGB666_1X24_CPADHI;
+
+I think you've dropped lvds666 in the DT bindings, so this should be
+dropped too. Furthermore, I think the data-mapping property should be
+reconsidered (see my review of the bindings), so this would need to
+change too.
+
+> +
+> +	/* Extract bus_flags from display_timing */
+> +	bus_flags = 0;
+> +	vm.flags = timing->flags;
+> +	drm_bus_flags_from_videomode(&vm, &bus_flags);
+> +	desc->bus_flags = bus_flags;
+> +
+> +	/* We do not know the connector for the DT node, so guess it */
+> +	desc->connector_type = DRM_MODE_CONNECTOR_DPI;
+> +
+> +	panel->desc = desc;
+> +
+> +	return 0;
+> +}
+> +
+>  #define PANEL_SIMPLE_BOUNDS_CHECK(to_check, bounds, field) \
+>  	(to_check->field.typ >= bounds->field.min && \
+>  	 to_check->field.typ <= bounds->field.max)
+> @@ -437,8 +496,15 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
+>  			return -EPROBE_DEFER;
+>  	}
+>  
+> -	if (!of_get_display_timing(dev->of_node, "panel-timing", &dt))
+> -		panel_simple_parse_panel_timing_node(dev, panel, &dt);
+> +	if (desc == &panel_dpi) {
+> +		/* Handle the generic panel-dpi binding */
+> +		err = panel_dpi_probe(dev, panel);
+> +		if (err)
+> +			goto free_ddc;
+> +	} else {
+> +		if (!of_get_display_timing(dev->of_node, "panel-timing", &dt))
+> +			panel_simple_parse_panel_timing_node(dev, panel, &dt);
+> +	}
+>  
+>  	drm_panel_init(&panel->base, dev, &panel_simple_funcs,
+>  		       desc->connector_type);
+> @@ -3688,6 +3754,10 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "winstar,wf35ltiacd",
+>  		.data = &winstar_wf35ltiacd,
+> +	}, {
+> +		/* Must be the last entry */
+> +		.compatible = "panel-dpi",
+> +		.data = &panel_dpi,
+>  	}, {
+>  		/* sentinel */
+>  	}
 
 -- 
 Regards,
