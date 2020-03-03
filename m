@@ -2,134 +2,105 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD15C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99988C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE07A20848
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EE4E20842
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WQs8CSKC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zQ7H2iVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731989AbgCCUuq (ORCPT
+        id S1731604AbgCCUxu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:50:46 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:34819 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731268AbgCCUup (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 15:50:45 -0500
-Received: by mail-ua1-f68.google.com with SMTP id y23so1705562ual.2
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 12:50:45 -0800 (PST)
+        Tue, 3 Mar 2020 15:53:50 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:34349 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731435AbgCCUxt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 15:53:49 -0500
+Received: by mail-vs1-f66.google.com with SMTP id y204so3387791vsy.1
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 12:53:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XD3hDQ0araAq5zv8njvI5qg6v85AS493J1Kabe5n9XU=;
-        b=WQs8CSKCVyivgzPN2r8nm7npkTrOFE4qfJa67otUlcSCrwaKSlDrF3gGH8TEf+fF84
-         v/9skIV1L0DMfuSSIQZjLFKzht8F/ZGa+MgsCy08Bx+vWOgIqBpxJ/PDPdFuev8VqNyA
-         h41lMLtPkCTJOhtkGYI7uguOfjiLVSYgoZMlkhibAvlNRLKb6mtXn/YHo9rJuDgJ+Uny
-         i00XJnN1ZkX4aEaM8574pbADLLmr065IX3iexNFRyOCjEx8Hq1B13jzs7IFm8K61v/Oj
-         6ZXxP3hlFdm4pJYpgHUOC5+zIERiPT/vE9AGPanw3vpwqL5GPZDR4HF/ypGuwGF88vIc
-         R8fQ==
+        bh=vI+3uqtALMSmALpWLnGWke8tkMxf5efx+ZTp2G9Sook=;
+        b=zQ7H2iVKiGhs1VsV1hpWcZUWXL3X5p4asnAO/kn8amUe/ygRYWOepzBBgd7DVgHR/d
+         YYkJdpRhhU4B/T3+gGuEnJsvKukwb0KHk1qcCHpdkeDVN3etR+6Zb4JJHAz0rinjCh75
+         FPd/KhrlB23XWHK5jWZ+cuvUoAIqQJ1ESH8gdHk8WY+2JTDLnpDKEG5mEOIefUKA33nY
+         QTuybiUx53Yu68keH7MQTgTrBxazoiQlEAdSgFQJu1V/R7IQ60Gt7yFp2/TuY9qhjGX/
+         PUfryvhzkSklIh7aZwS/62BbrA5pwhKxAH1exnZlCJcbPT2hYKZt3tF6W941Wj6b8xwY
+         s2QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XD3hDQ0araAq5zv8njvI5qg6v85AS493J1Kabe5n9XU=;
-        b=KZApLBtnmEExivL/SU37s/gdycX3yWqQaHFy4o/9dwuzYO9jy8gYcaU7UtXbFGZ649
-         yFCG7xJ935tCqRLFK7eGLxu7pvnQ42BU38TYhs3qFRwODi7Yx4kzHg3WwqpFOioZnd4L
-         1ouZpHPbj55MJSGNM5P+97LzHsfevRw9vtcC6SG9HLhJi3LUoUzmeMZjCpinRR3sVzu8
-         c7OpdpqgrVjz66fxaWPmZQoW9FCnIxt1bJXdecXz2XRnHsuZmpApMPJYndwTrSY49OWL
-         AoVcEGt/jqwIgvtqc27RkDgowXA54mtMQNilBCRLKlUbQjV6HszttCYuupZyZJN4DQHd
-         Rrfw==
-X-Gm-Message-State: ANhLgQ0mYnv3WUmuwQnsb/T2q1ftDR6bx3nuBDo4ntFqTILhmAbeOrNv
-        owxMsNlbrx+NaFNXJsSDYf3Fmw6h7bR21/0abBDEYw==
-X-Google-Smtp-Source: ADFU+vuNcnNmh6x5IJ5M2yTWp4kLMylcBxLsMM68UQIba35vDPyCmNWmxoJ2HjjVcEPSIT6lr5mW0JrpuYGpEQbi/z0=
-X-Received: by 2002:ab0:7802:: with SMTP id x2mr3988409uaq.100.1583268644577;
- Tue, 03 Mar 2020 12:50:44 -0800 (PST)
+        bh=vI+3uqtALMSmALpWLnGWke8tkMxf5efx+ZTp2G9Sook=;
+        b=DkztkZbfpSD5AIGDZYxhLpLbx/FTLf+TwuCdN1EarxQEui6Pow2LWlAs4XyJDd++Pt
+         tKfz1KyfuYTtocNS6qrQ0lP6LlF0bt1Ck6kdBjmIHi5SCTedXOYcrK5o/+vPXuoG2FIo
+         2dI/RICQ1K5Fu9Bhjjk8YoK6pOSw4iO4k3jEMZdIgKiR4YoLGnYnqHAtkRpzHU2N5j4W
+         bt2QHiqcSpkLkpou4e5UAXUTzRImGJ+wwk5tOnfzyotKiGdfitv74rmuQLkWndm+S7Kp
+         a6dErZTKuQ6ZMYBO82+ptEEDZpYIZlK+jGoBIY3PMhkuREe77OLzCPJAOHAYNuNG24x4
+         9NCA==
+X-Gm-Message-State: ANhLgQ2Cm7W1vy612+N2NlFq1QqOlOMgAlnxWL0dDA5scK5lsjdO0NEp
+        IY+AHDm2EQb0EflDPt1CyrapsvRltfsosm0cLFBwIg==
+X-Google-Smtp-Source: ADFU+vu3WUOrZlLZ0gfxuUVQ88HHcL9ESL+KhUTSd90Hqct++5Qybf7V0kW8Ce5eMdPC1a3PHUMmYFnsn6I2wcm7RlI=
+X-Received: by 2002:a67:646:: with SMTP id 67mr3548791vsg.34.1583268827146;
+ Tue, 03 Mar 2020 12:53:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20200303150749.30566-1-ulf.hansson@linaro.org>
- <20200303150749.30566-6-ulf.hansson@linaro.org> <20200303170641.GC26191@bogus>
-In-Reply-To: <20200303170641.GC26191@bogus>
+References: <20200108150920.14547-1-faiz_abbas@ti.com> <7edb2c28-11fd-e282-a8d7-e61aad8cace2@ti.com>
+In-Reply-To: <7edb2c28-11fd-e282-a8d7-e61aad8cace2@ti.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 3 Mar 2020 21:50:08 +0100
-Message-ID: <CAPDyKFrzy=88fPgesS0_S45rr4SdWthQRcjwnqJzRcMBKCo4=A@mail.gmail.com>
-Subject: Re: [PATCH 5/7] dt-bindings: arm: Fixup the DT bindings for
- hierarchical PSCI states
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+Date:   Tue, 3 Mar 2020 21:53:11 +0100
+Message-ID: <CAPDyKFpxVXqtcTC1oRfHxNy=mBHhR-jhOu9VrT86-_5NV2dv9A@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Update phy configuration for AM65x
+To:     Faiz Abbas <faiz_abbas@ti.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         DTML <devicetree@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 3 Mar 2020 at 18:06, Rob Herring <robh@kernel.org> wrote:
+On Mon, 2 Mar 2020 at 20:11, Faiz Abbas <faiz_abbas@ti.com> wrote:
 >
-> On Tue, Mar 03, 2020 at 04:07:47PM +0100, Ulf Hansson wrote:
-> > The hierarchical topology with power-domain should be described through
-> > child nodes, rather than as currently described in the PSCI root node. Fix
-> > this by adding a patternProperties with a corresponding reference to the
-> > power-domain DT binding.
-> >
-> > Additionally, update the example to conform to the new pattern, but also to
-> > the adjusted domain-idle-state DT binding.
-> >
-> > Fixes: a3f048b5424e ("dt: psci: Update DT bindings to support hierarchical PSCI states")
-> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > ---
-> >  .../devicetree/bindings/arm/psci.yaml         | 33 +++++++++----------
-> >  1 file changed, 15 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
-> > index 0bc3c43a525a..cae668b61265 100644
-> > --- a/Documentation/devicetree/bindings/arm/psci.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/psci.yaml
-> > @@ -102,11 +102,15 @@ properties:
-> >        [1] Kernel documentation - ARM idle states bindings
-> >          Documentation/devicetree/bindings/arm/idle-states.yaml
-> >
-> > -  "#power-domain-cells":
-> > -    description:
-> > -      The number of cells in a PM domain specifier as per binding in [3].
-> > -      Must be 0 as to represent a single PM domain.
-> > +required:
-> > +  - compatible
-> > +  - method
+> Uffe,
 >
-> No need to move this.
-
-Okay.
-
->
+> On 08/01/20 8:39 pm, Faiz Abbas wrote:
+> > The following patches update phy configurations for AM65x as given in
+> > the latest data manual.
 > >
-> > +patternProperties:
-> > +  "^(power-controller|power-domain)([@-].*)?$":
-> > +    $ref: "../power/power-domain.yaml#"
+> > The patches depend on my fixes series posted just before this:
+> > https://patchwork.kernel.org/project/linux-mmc/list/?series=225425
+> >
+> > Device tree patch updating the actual otap values will be posted
+> > separately.
+> >
+> > Tested with Am65x-evm and J721e-evm.
+> >
+> > Faiz Abbas (3):
+> >   dt-bindings: mmc: sdhci-am654: Update Output tap delay binding
+> >   mmc: sdhci_am654: Update OTAPDLY writes
+> >   mmc: sdhci_am654: Enable DLL only for some speed modes
+> >
+> >  .../devicetree/bindings/mmc/sdhci-am654.txt   |  21 +-
+> >  drivers/mmc/host/sdhci_am654.c                | 247 ++++++++++++------
+> >  include/linux/mmc/host.h                      |   2 +
+> >  3 files changed, 192 insertions(+), 78 deletions(-)
+> >
 >
-> This has to be under an 'allOf' or the rest of the properties are
-> ignored.
+> Can you help merge this?
 
-Sure, I had the feeling that something was missing. Thanks for reviewing!
+Apologize with the delay, still focused on fixing various regressions in v5.6.
 
-[...]
-
-Looks like I should a v2 of the series, or do you prefer to apply some
-of the patches before I resend?
+I start catching up on my mmc backlog as of tomorrow. Thanks for pinging me.
 
 Kind regards
 Uffe
