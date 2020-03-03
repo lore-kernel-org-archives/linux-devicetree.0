@@ -2,301 +2,137 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EE9C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 09:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5155EC3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 09:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEBC20848
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 09:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A97C20866
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 09:59:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QMoEOu2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgCCJsy (ORCPT
+        id S1728070AbgCCJ7G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:48:54 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:60370 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgCCJsy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 04:48:54 -0500
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id 9loq2200M5USYZQ01loqNa; Tue, 03 Mar 2020 10:48:50 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j94AU-0006lE-6p; Tue, 03 Mar 2020 10:48:50 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j94AU-0006AV-4H; Tue, 03 Mar 2020 10:48:50 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] dt-bindings: clock: renesas: cpg-mssr: Convert to json-schema
-Date:   Tue,  3 Mar 2020 10:48:48 +0100
-Message-Id: <20200303094848.23670-1-geert+renesas@glider.be>
+        Tue, 3 Mar 2020 04:59:06 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45764 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727818AbgCCJ7G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 04:59:06 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0239wx30004669;
+        Tue, 3 Mar 2020 03:58:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583229539;
+        bh=HjAC8m8mX74yllGfOtb45JtP+3cyFygiTL2RJv5MW4Y=;
+        h=From:To:CC:Subject:Date;
+        b=QMoEOu2IzDhbbAKCm0zIKDGwcPfkGun13PpUJ0QLbITwyBQSPpn/aGRj7g+Wsd2Dx
+         00O18d6neLeC3/y74/QTUwe2BNaYDjaoWEEBlaT5L2SX1mWYbk4k0eRJ0KBDf2Iqjg
+         DPKq825ZT69sczuilbr6hitsRsWbSOKtW7SGqv1o=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0239wwDG104273
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Mar 2020 03:58:58 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 03:58:58 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 03:58:58 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 0239wtHk052895;
+        Tue, 3 Mar 2020 03:58:56 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v4 0/4] dt-bindings: Convert Cadence PCIe RC/EP to DT Schema
+Date:   Tue, 3 Mar 2020 15:33:23 +0530
+Message-ID: <20200303100327.3603-1-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Renesas Clock Pulse Generator / Module Standby and Software
-Reset Device Tree binding documentation to json-schema.
+Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
+themselves have a validation platform for validating the PCIe IP which
+is already in the upstream kernel. Right now the binding only exists for
+Cadence platform and this will result in adding redundant binding schema
+for any platform using Cadence PCIe core.
 
-Note that #reset-cells was incorrecty marked a required property for
-RZ/A2 before.
+This series:
+1) Create cdns-pcie.yaml which includes properties that are applicable
+   to both host mode and endpoint mode of Cadence PCIe core.
+2) Create cdns-pcie-host.yaml to include properties that are specific to
+   host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
+   cdns-pcie.yaml.
+3) Create cdns-pcie-ep.yaml to include properties that are specific to
+   endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
+   cdns-pcie.yaml.
+4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
+   the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
+   and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
+   for Cadence platform then includes schema for Cadence PCIe core.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-To be queued in clk-renesas-for-v5.7.
+Changes from v3:
+*) Add "Reviewed-by: Rob Herring <robh@kernel.org>"
+*) Fix typo in SPDX header
 
-v2:
-  - Remove complex if-construct implementing per-SoC clocks/clock-names
-    constraints; list all possible clock-names upfront instead,
-  - Drop Clock Domain member example.
----
- .../bindings/clock/renesas,cpg-mssr.txt       | 100 ---------------
- .../bindings/clock/renesas,cpg-mssr.yaml      | 119 ++++++++++++++++++
- 2 files changed, 119 insertions(+), 100 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+Changes from v2:
+*) Created "pci-ep.yaml" for common endpoint controller bindings
+*) Deprecate "cdns,max-outbound-regions" and "cdns,no-bar-match-nbits"
+   binding
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-deleted file mode 100644
-index f4d153f24a0ff803..0000000000000000
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-+++ /dev/null
-@@ -1,100 +0,0 @@
--* Renesas Clock Pulse Generator / Module Standby and Software Reset
--
--On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
--and MSSR (Module Standby and Software Reset) blocks are intimately connected,
--and share the same register block.
--
--They provide the following functionalities:
--  - The CPG block generates various core clocks,
--  - The MSSR block provides two functions:
--      1. Module Standby, providing a Clock Domain to control the clock supply
--	 to individual SoC devices,
--      2. Reset Control, to perform a software reset of individual SoC devices.
--
--Required Properties:
--  - compatible: Must be one of:
--      - "renesas,r7s9210-cpg-mssr" for the r7s9210 SoC (RZ/A2)
--      - "renesas,r8a7743-cpg-mssr" for the r8a7743 SoC (RZ/G1M)
--      - "renesas,r8a7744-cpg-mssr" for the r8a7744 SoC (RZ/G1N)
--      - "renesas,r8a7745-cpg-mssr" for the r8a7745 SoC (RZ/G1E)
--      - "renesas,r8a77470-cpg-mssr" for the r8a77470 SoC (RZ/G1C)
--      - "renesas,r8a774a1-cpg-mssr" for the r8a774a1 SoC (RZ/G2M)
--      - "renesas,r8a774b1-cpg-mssr" for the r8a774b1 SoC (RZ/G2N)
--      - "renesas,r8a774c0-cpg-mssr" for the r8a774c0 SoC (RZ/G2E)
--      - "renesas,r8a7790-cpg-mssr" for the r8a7790 SoC (R-Car H2)
--      - "renesas,r8a7791-cpg-mssr" for the r8a7791 SoC (R-Car M2-W)
--      - "renesas,r8a7792-cpg-mssr" for the r8a7792 SoC (R-Car V2H)
--      - "renesas,r8a7793-cpg-mssr" for the r8a7793 SoC (R-Car M2-N)
--      - "renesas,r8a7794-cpg-mssr" for the r8a7794 SoC (R-Car E2)
--      - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC (R-Car H3)
--      - "renesas,r8a7796-cpg-mssr" for the r8a77960 SoC (R-Car M3-W)
--      - "renesas,r8a77961-cpg-mssr" for the r8a77961 SoC (R-Car M3-W+)
--      - "renesas,r8a77965-cpg-mssr" for the r8a77965 SoC (R-Car M3-N)
--      - "renesas,r8a77970-cpg-mssr" for the r8a77970 SoC (R-Car V3M)
--      - "renesas,r8a77980-cpg-mssr" for the r8a77980 SoC (R-Car V3H)
--      - "renesas,r8a77990-cpg-mssr" for the r8a77990 SoC (R-Car E3)
--      - "renesas,r8a77995-cpg-mssr" for the r8a77995 SoC (R-Car D3)
--
--  - reg: Base address and length of the memory resource used by the CPG/MSSR
--    block
--
--  - clocks: References to external parent clocks, one entry for each entry in
--    clock-names
--  - clock-names: List of external parent clock names. Valid names are:
--      - "extal" (r7s9210, r8a7743, r8a7744, r8a7745, r8a77470, r8a774a1,
--		 r8a774b1, r8a774c0, r8a7790, r8a7791, r8a7792, r8a7793,
--		 r8a7794, r8a7795, r8a77960, r8a77961, r8a77965, r8a77970,
--		 r8a77980, r8a77990, r8a77995)
--      - "extalr" (r8a774a1, r8a774b1, r8a7795, r8a77960, r8a77961, r8a77965,
--		  r8a77970, r8a77980)
--      - "usb_extal" (r8a7743, r8a7744, r8a7745, r8a77470, r8a7790, r8a7791,
--		     r8a7793, r8a7794)
--
--  - #clock-cells: Must be 2
--      - For CPG core clocks, the two clock specifier cells must be "CPG_CORE"
--	and a core clock reference, as defined in
--	<dt-bindings/clock/*-cpg-mssr.h>.
--      - For module clocks, the two clock specifier cells must be "CPG_MOD" and
--	a module number, as defined in the datasheet.
--
--  - #power-domain-cells: Must be 0
--      - SoC devices that are part of the CPG/MSSR Clock Domain and can be
--	power-managed through Module Standby should refer to the CPG device
--	node in their "power-domains" property, as documented by the generic PM
--	Domain bindings in
--	Documentation/devicetree/bindings/power/power-domain.yaml.
--
--  - #reset-cells: Must be 1
--      - The single reset specifier cell must be the module number, as defined
--	in the datasheet.
--
--
--Examples
----------
--
--  - CPG device node:
--
--	cpg: clock-controller@e6150000 {
--		compatible = "renesas,r8a7795-cpg-mssr";
--		reg = <0 0xe6150000 0 0x1000>;
--		clocks = <&extal_clk>, <&extalr_clk>;
--		clock-names = "extal", "extalr";
--		#clock-cells = <2>;
--		#power-domain-cells = <0>;
--		#reset-cells = <1>;
--	};
--
--
--  - CPG/MSSR Clock Domain member device node:
--
--	scif2: serial@e6e88000 {
--		compatible = "renesas,scif-r8a7795", "renesas,scif";
--		reg = <0 0xe6e88000 0 64>;
--		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cpg CPG_MOD 310>;
--		clock-names = "fck";
--		dmas = <&dmac1 0x13>, <&dmac1 0x12>;
--		dma-names = "tx", "rx";
--		power-domains = <&cpg>;
--		resets = <&cpg 310>;
--	};
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-new file mode 100644
-index 0000000000000000..4c1e6ac272196e97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-@@ -0,0 +1,119 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/clock/renesas,cpg-mssr.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Renesas Clock Pulse Generator / Module Standby and Software Reset
-+
-+maintainers:
-+  - Geert Uytterhoeven <geert+renesas@glider.be>
-+
-+description: |
-+  On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
-+  and MSSR (Module Standby and Software Reset) blocks are intimately connected,
-+  and share the same register block.
-+
-+  They provide the following functionalities:
-+    - The CPG block generates various core clocks,
-+    - The MSSR block provides two functions:
-+        1. Module Standby, providing a Clock Domain to control the clock supply
-+           to individual SoC devices,
-+        2. Reset Control, to perform a software reset of individual SoC devices.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - renesas,r7s9210-cpg-mssr  # RZ/A2
-+      - renesas,r8a7743-cpg-mssr  # RZ/G1M
-+      - renesas,r8a7744-cpg-mssr  # RZ/G1N
-+      - renesas,r8a7745-cpg-mssr  # RZ/G1E
-+      - renesas,r8a77470-cpg-mssr # RZ/G1C
-+      - renesas,r8a774a1-cpg-mssr # RZ/G2M
-+      - renesas,r8a774b1-cpg-mssr # RZ/G2N
-+      - renesas,r8a774c0-cpg-mssr # RZ/G2E
-+      - renesas,r8a7790-cpg-mssr  # R-Car H2
-+      - renesas,r8a7791-cpg-mssr  # R-Car M2-W
-+      - renesas,r8a7792-cpg-mssr  # R-Car V2H
-+      - renesas,r8a7793-cpg-mssr  # R-Car M2-N
-+      - renesas,r8a7794-cpg-mssr  # R-Car E2
-+      - renesas,r8a7795-cpg-mssr  # R-Car H3
-+      - renesas,r8a7796-cpg-mssr  # R-Car M3-W
-+      - renesas,r8a77961-cpg-mssr # R-Car M3-W+
-+      - renesas,r8a77965-cpg-mssr # R-Car M3-N
-+      - renesas,r8a77970-cpg-mssr # R-Car V3M
-+      - renesas,r8a77980-cpg-mssr # R-Car V3H
-+      - renesas,r8a77990-cpg-mssr # R-Car E3
-+      - renesas,r8a77995-cpg-mssr # R-Car D3
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      enum:
-+        - extal     # All
-+        - extalr    # Most R-Car Gen3 and RZ/G2
-+        - usb_extal # Most R-Car Gen2 and RZ/G1
-+
-+  '#clock-cells':
-+    description: |
-+      - For CPG core clocks, the two clock specifier cells must be "CPG_CORE"
-+        and a core clock reference, as defined in
-+        <dt-bindings/clock/*-cpg-mssr.h>
-+      - For module clocks, the two clock specifier cells must be "CPG_MOD" and
-+        a module number, as defined in the datasheet.
-+    const: 2
-+
-+  '#power-domain-cells':
-+    description:
-+      SoC devices that are part of the CPG/MSSR Clock Domain and can be
-+      power-managed through Module Standby should refer to the CPG device node
-+      in their "power-domains" property, as documented by the generic PM Domain
-+      bindings in Documentation/devicetree/bindings/power/power-domain.yaml.
-+    const: 0
-+
-+  '#reset-cells':
-+    description:
-+      The single reset specifier cell must be the module number, as defined in
-+      the datasheet.
-+    const: 1
-+
-+if:
-+  not:
-+    properties:
-+      compatible:
-+        items:
-+          enum:
-+            - renesas,r7s9210-cpg-mssr
-+then:
-+  required:
-+    - '#reset-cells'
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+  - '#power-domain-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    cpg: clock-controller@e6150000 {
-+            compatible = "renesas,r8a7795-cpg-mssr";
-+            reg = <0xe6150000 0x1000>;
-+            clocks = <&extal_clk>, <&extalr_clk>;
-+            clock-names = "extal", "extalr";
-+            #clock-cells = <2>;
-+            #power-domain-cells = <0>;
-+            #reset-cells = <1>;
-+    };
+Changes from v1:
+*) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
+*) Fix example DT node for PCIe Endpoint.
+
+Ref: Patches to convert Cadence driver to library
+     https://lkml.org/lkml/2019/11/11/317
+
+Some of this was initially part of [1], but to accelerate it getting
+into upstream, sending this as a separate series.
+
+[1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+
+Kishon Vijay Abraham I (4):
+  dt-bindings: PCI: Add PCI Endpoint Controller Schema
+  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+  dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
+    schema
+  dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+    bindings
+
+ .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 49 ++++++++++++
+ .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     | 75 +++++++++++++++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 28 +++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    | 32 ++++++++
+ .../devicetree/bindings/pci/pci-ep.yaml       | 41 ++++++++++
+ MAINTAINERS                                   |  2 +-
+ 8 files changed, 226 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
+
 -- 
 2.17.1
 
