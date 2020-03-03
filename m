@@ -2,82 +2,124 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D6EC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EA6C3F2D9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCB820863
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE5120863
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:20:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="g1EySrC0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgCCPKT (ORCPT
+        id S1729401AbgCCPUQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:10:19 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42300 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgCCPKT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 10:10:19 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so3286730otd.9;
-        Tue, 03 Mar 2020 07:10:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Kca1ycYP9hx1ciCp/Eg/F25DgiVO44FVhWaPbRYxPU=;
-        b=MGpH+b4/qMf16bHmH1A7gs4FaOxMcOAXopZcSwgNVyKZdFZZKgb+Il9qKBgVEyEC5U
-         QOKGWt92CVWJdaIlvpXrJyCFUnko5Zf81xtR2tAIWbATUH6KaWc0PiaTosyolcifuh6i
-         uy8zY7WH7azasEGYg0hDlUQE+jrLZ76hUanU3I6BIaDFz7Kv/6fTwDPjj8XJEK5lt1iA
-         KyVVvqE/STuYR2sg3O5kDrBLOHmJ+TaGxuZHYhEU2p/6gcpBBYzaU16x9wjJJgzPGS0i
-         lQq2ZkBHhgjb3NmHu6RB3PKtcsD/NaulwV/eUJA7+G1Klb186+xWK0VkgnIL/8AkB5QV
-         Zyzg==
-X-Gm-Message-State: ANhLgQ2w/a0jt9NPBXYGmRQXnfuLvmaIu5rigOx6Cl8tDc+THcu2yht+
-        bGiGQGcnzMSfFfdMxcr3mZvI+cpzDy4oNRr1eDw=
-X-Google-Smtp-Source: ADFU+vsjLmSFCjHTsjuoqrUuFQxZRfHMpmUpBKx5AXsN6z/FTWlqxSa34xUOvoolY68R52SGPfoHlQRIAKInM1tjicU=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr3707646otk.145.1583248218506;
- Tue, 03 Mar 2020 07:10:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20200303134351.22270-1-geert+renesas@glider.be> <20200303134351.22270-3-geert+renesas@glider.be>
-In-Reply-To: <20200303134351.22270-3-geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Mar 2020 16:10:07 +0100
-Message-ID: <CAMuHMdXzyp1KCzztbifFgg5N6diHKFnMUihbu_cVOFkTzyf9Yg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: serial: Convert slave-device bindings to json-schema
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Tue, 3 Mar 2020 10:20:16 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:26988 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729026AbgCCPUQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 10:20:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583248812;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=rKMD7BQOvvf2EnNvM4tQSBZbaPpVD8OTqQcL6Q0plyw=;
+        b=g1EySrC0Ixnhoqm3wyXUEqSdTpbhbZ9bCrOUSuYfAVPAI4K3gfe9M5nYW/s9ltxSd/
+        nENcQvFen70s4ikYiBtb2CoVKw9hjFm/55AVrFxRVpsIa67lbQ1eJw7ap9+SQdMsZ6EU
+        2RPWNs+s7qCoO2lXU4waa+hOwyjcjXHEhitzssXbQFagmW6tJjtlsj4omoEasjF9XJGx
+        zcc5hY2zShc4TqmwnZMhZFDRkyYcAMEG/DP+69Evuj8v7Di6yrbaNnoJOWi40bunSl8V
+        n9XdGU238TsxVgLmbYWVWtzFhTcMJZzBwZ4Z2yYGj9fsQfXSy1sou8O5tRy8DQAw27Mf
+        JxUQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDGvxw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw23FJxJxq
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 3 Mar 2020 16:19:59 +0100 (CET)
+Subject: Re: [RFC 0/8] MIPS: CI20: add HDMI out support
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200303145848.GA13796@bogus>
+Date:   Tue, 3 Mar 2020 16:19:59 +0100
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <6A9DD709-DF42-4A68-9EA4-A2F9C7A49DBA@goldelico.com>
+References: <cover.1582744379.git.hns@goldelico.com> <20200227122325.GA7587@ravnborg.org> <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com> <20200303145848.GA13796@bogus>
+To:     Rob Herring <robh@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 2:43 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Convert the serial slave-device Device Tree binding documentation to
-> json-schema, and incorporate it into the generic serial bindings.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  .../devicetree/bindings/serial/serial.yaml    | 53 +++++++++++++++++++
->  .../bindings/serial/slave-device.txt          | 45 ----------------
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 54 insertions(+), 46 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/serial/slave-device.txt
+Hi Rob,
 
-There are a few references to slave-device.txt that need to be updated.
+> Am 03.03.2020 um 15:58 schrieb Rob Herring <robh@kernel.org>:
+> 
+> On Thu, Feb 27, 2020 at 01:56:56PM +0100, H. Nikolaus Schaller wrote:
+>> Hi Sam,
+>> 
+>> 
+>> Or that there will appear good tools soon. E.g. some GUI
+>> based editor tool would be very helpful so that you don't have
+>> to fight with the yaml indentation rules. Like there are XML
+>> and DTD editors. And even HTML is rarely written manually any more.
+>> 
+>> IMHO such tools should have been developed and in place *before*
+>> the rule to provide DT schemata is enforced.
+> 
+> You mean tools like what is discussed here:
+> 
+> https://www.redhat.com/sysadmin/yaml-tips
+> 
+> There's also yaml-format in the dtschema repo which will reformat a file 
+> to the desired formatting. It is just a wrapper around ruamel yaml 
+> library.
 
-Gr{oetje,eeting}s,
+What I dream of is a higher level higher abstraction than a YAML
+editor because the problems I face are not only YAML syntax but that
+I don't know what should be where in a scheme file and why.
 
-                        Geert
+So I'd like to have a Schema editor. I.e. some editor where I
+can edit a list of properties and can e.g. checkmark "required".
+And simply type a description into some text field.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+And the editor knows where to place the keywords -item -enum
+-oneOf -description etc. when doing a Save operation.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Basically what I dream of is more like MarkDown where you write text,
+titles paragraphs etc. and that gets magically translated into 
+valid HTML. Or even better analogy: OpenOffice where you just
+write and format your text and one does not have to edit PostScript
+printer commands.
+
+But it is likely to stay a dream.
+
+BR and thanks,
+Nikolaus
+
