@@ -2,137 +2,92 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2459AC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 04:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244B6C3F2D8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 05:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBDFE215A4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 04:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA144214DB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 05:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Yly52uOa"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OyNBrK10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgCCE4b (ORCPT
+        id S1725845AbgCCF2L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:56:31 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37001 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgCCE4b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 23:56:31 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q23so2024392ljm.4
-        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 20:56:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hwMP5oZox6Y4kOGUdZo8BHcMoyromC78BYS7tU+3+Fk=;
-        b=Yly52uOaENemYmwtIDMOdmo+8VrTj5xg18Z7UUH9uiXajRoem4QSxRLPJFruhRYRYd
-         hdrpfzLuELidowjJAHZFwnCNPKVWkmkQT5CDniucu3T9czdQp5LfCU8weeHwijgWWDRt
-         8YahMYVv+4tGjxuE6Wc1HGjXpsdeM81uGySPE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hwMP5oZox6Y4kOGUdZo8BHcMoyromC78BYS7tU+3+Fk=;
-        b=q27BdcfvRZOjgOSiZavQBf0r8p+5C5ZtQq3xuX00irwuYKecSraUMuEg3/19yPtr1d
-         zXKRZLy95m2R2IFfO4YNdi99jN4/rcnVsy1C9Yw7arrS/OuP/BX/fX2TgXTDSV9g/F9S
-         k5vKsdpQR5rw5upB49pGQOxAcAeSV11YneMr0D0UgK5+Etc234bXfZ5tNSe0fGlWgNrl
-         1sXyttF2/tGlmQ6/uucOFOT6/EVD0g58U11kkug7/t40RQZDQvmWQTnrspqQlYelSvAf
-         mHcBY4/9yKGbtChtaZ2t/uRGcO5+psTd0KitIVo4b8ZysZ2BfWraGe86O7aRgTuKbs18
-         63dA==
-X-Gm-Message-State: ANhLgQ11R5o1z/QzmueUHZY1ZpUH9vO16GXKBQfC5cQwOcOjaxDEIuwQ
-        MFkCdkkCVEcNuhe0e24x9e+49u9N2DaNKpBEJ0Lsbg==
-X-Google-Smtp-Source: ADFU+vuIE9xrn+W2Q9MlLUg9pq2k3PM91Oafv76TMl6rksWSbmRHriyiiNAtHik7F2jm+2shZYnZGhd1BrDCWEmcjXM=
-X-Received: by 2002:a2e:2243:: with SMTP id i64mr1219121lji.264.1583211389300;
- Mon, 02 Mar 2020 20:56:29 -0800 (PST)
+        Tue, 3 Mar 2020 00:28:11 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:49579 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725807AbgCCF2L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 00:28:11 -0500
+X-UUID: f70c6fa231a94c35b137fb8ec908cc21-20200303
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=38YX+l28Zy41XgygYxcUNL1rC8VyK8Gyz4X920RtfiQ=;
+        b=OyNBrK108YKO5DbtLCJYsFg5hG7og3qC5aLmxHchL4J8/Gu1a66JQ3pO0YSeLkk2wj6sA6iz2nlEUtWio1DMAFiKKKyueDJPyEBMZnsWC8QWEsRzqZZSS7Pwa2ssqVSIA5LnmFwSRpLHe31LMJY1aG+GT3ibkrQDdhmvC8dcFBY=;
+X-UUID: f70c6fa231a94c35b137fb8ec908cc21-20200303
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 788522752; Tue, 03 Mar 2020 13:28:00 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 3 Mar
+ 2020 13:23:27 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Tue, 3 Mar 2020 13:28:20 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v12 3/6] dt-bindings: display: mediatek: dpi sample data in dual edge support
+Date:   Tue, 3 Mar 2020 13:27:19 +0800
+Message-ID: <20200303052722.94795-4-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200303052722.94795-1-jitao.shi@mediatek.com>
+References: <20200303052722.94795-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com> <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com>
-In-Reply-To: <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com>
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date:   Tue, 3 Mar 2020 10:26:17 +0530
-Message-ID: <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 8738D68F04DD779C3FF5C35B5432C8B06436CA13C2030E58F4827DA4FC02124B2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 7:20 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
-> <rayagonda.kokatanur@broadcom.com> wrote:
-> >
-> > Generally i2c addr should not be greater than 10-bit. The highest 2 bits
-> > are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
-> > these flags if check slave addr valid.
-> >
-> > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> > ---
-> >  scripts/dtc/Makefile | 2 +-
-> >  scripts/dtc/checks.c | 5 +++++
-> >  2 files changed, 6 insertions(+), 1 deletion(-)
->
-> dtc changes must be submitted against upstream dtc.
+QWRkIHByb3BlcnR5ICJwY2xrLXNhbXBsZSIgdG8gY29uZmlnIHRoZSBkcGkgc2FtcGxlIG9uIGZh
+bGxpbmcgKDApLA0KcmlzaW5nICgxKSwgYm90aCBmYWxsaW5nIGFuZCByaXNpbmcgKDIpLg0KDQpB
+Y2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NClNpZ25lZC1vZmYtYnk6IEpp
+dGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dCAgICAgfCA0ICsrKy0NCiAx
+IGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9t
+ZWRpYXRlayxkcGkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KaW5kZXggNzdjYTMyYTMyMzk5Li40ZWVlYWQx
+ZDM5ZGIgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0DQpAQCAtMTks
+NyArMTksOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIA0KIE9wdGlvbmFsIHByb3BlcnRpZXM6
+DQogLSBwaW5jdHJsLW5hbWVzOiBDb250YWluICJncGlvbW9kZSIgYW5kICJkcGltb2RlIi4NCi0g
+IHBpbmN0cmwtbmFtZXMgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5j
+dHJscGluY3RybC1iaW5kaW5ncy50eHQNCisgIHBpbmN0cmwtbmFtZXMgc2VlIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtYmluZGluZ3MudHh0DQorLSBw
+Y2xrLXNhbXBsZTogcmVmZXIgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlh
+L3ZpZGVvLWludGVyZmFjZXMudHh0Lg0KIA0KIEV4YW1wbGU6DQogDQpAQCAtMzcsNiArMzgsNyBA
+QCBkcGkwOiBkcGlAMTQwMWQwMDAgew0KIA0KIAlwb3J0IHsNCiAJCWRwaTBfb3V0OiBlbmRwb2lu
+dCB7DQorCQkJcGNsay1zYW1wbGUgPSA8MD47DQogCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1p
+MF9pbj47DQogCQl9Ow0KIAl9Ow0KLS0gDQoyLjIxLjANCg==
 
-Please let me know link to clone the upstream dtc branch.
->
->
-> > diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> > index 3acbb410904c..c5e8d6a9e73c 100644
-> > --- a/scripts/dtc/Makefile
-> > +++ b/scripts/dtc/Makefile
-> > @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
-> >  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
-> >
-> >  # Source files need to get at the userspace version of libfdt_env.h to compile
-> > -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
-> > +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
-> >
-> >  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
-> >  ifneq ($(CHECK_DTBS),)
-> > diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-> > index 756f0fa9203f..17c9ed4137b5 100644
-> > --- a/scripts/dtc/checks.c
-> > +++ b/scripts/dtc/checks.c
-> > @@ -3,6 +3,7 @@
-> >   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
-> >   */
-> >
-> > +#include <linux/bits.h>
->
-> Not a UAPI header not that that would be much better as dtc also builds on Mac.
->
-> >  #include "dtc.h"
-> >  #include "srcpos.h"
-> >
-> > @@ -17,6 +18,9 @@
-> >  #define TRACE(c, fmt, ...)     do { } while (0)
-> >  #endif
-> >
-> > +#define I2C_TEN_BIT_ADDRESS    BIT(31)
-> > +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
-> > +
-> >  enum checkstatus {
-> >         UNCHECKED = 0,
-> >         PREREQ,
-> > @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
-> >
-> >         for (len = prop->val.len; len > 0; len -= 4) {
-> >                 reg = fdt32_to_cpu(*(cells++));
-> > +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
->
-> I'd just mask the top byte so we don't have to update on the next flag we add.
-Do you mean something like this, shown below ?
-reg &= 0xFFFF_FC000;
-
->
-> Rob
