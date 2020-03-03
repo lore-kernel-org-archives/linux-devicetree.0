@@ -2,129 +2,101 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A1EC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C725C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332F8208C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC2B20CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:00:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UGiVRK6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgCCPz7 (ORCPT
+        id S1729537AbgCCQAl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:55:59 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:33710 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729987AbgCCPzq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:55:46 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9BE8F201463;
-        Tue,  3 Mar 2020 16:55:43 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8F0B8201460;
-        Tue,  3 Mar 2020 16:55:43 +0100 (CET)
-Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E71B620414;
-        Tue,  3 Mar 2020 16:55:42 +0100 (CET)
-From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH net 1/4] dt-bindings: net: FMan erratum A050385
-Date:   Tue,  3 Mar 2020 17:55:36 +0200
-Message-Id: <1583250939-24645-2-git-send-email-madalin.bucur@oss.nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1583250939-24645-1-git-send-email-madalin.bucur@oss.nxp.com>
-References: <1583250939-24645-1-git-send-email-madalin.bucur@oss.nxp.com>
-Content-Type: text/plain; charset="us-ascii"
-Reply-to: madalin.bucur@oss.nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 3 Mar 2020 11:00:41 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56840 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729449AbgCCQAl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 11:00:41 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023G0cEW086942;
+        Tue, 3 Mar 2020 10:00:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583251238;
+        bh=HOj/EzId8wXlbX2yukSDaFJ94slyk8N2M7YFoG5EhpM=;
+        h=From:To:CC:Subject:Date;
+        b=UGiVRK6SSiuZQ+J3hCm6tehu+XxkvZMfoHQbjQpTzLe4NplPyRzJKmymsyV357jPg
+         QHV/U1UzH4ocVZ5+HEuZ/StoTOZlZ1HDKjKI2xp9CQxWXJU/bprWXIeKKyU5jkzNKV
+         N1E4PDh+uYfHS/bn6e+kqEDx7/DWijudcUpFzHU0=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023G0b8L103985;
+        Tue, 3 Mar 2020 10:00:37 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 10:00:37 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 10:00:37 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023G0aFb126032;
+        Tue, 3 Mar 2020 10:00:37 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Murali Karicheri <m-karicheri2@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        netdev <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [for-next PATCH v2 0/5] phy: ti: gmii-sel: add support for am654x/j721e soc
+Date:   Tue, 3 Mar 2020 18:00:24 +0200
+Message-ID: <20200303160029.345-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+Hi Kishon,
 
-FMAN DMA read or writes under heavy traffic load may cause FMAN
-internal resource leak; thus stopping further packet processing.
+This series adds support for TI K3 AM654x/J721E SoCs in TI phy-gmii-sel PHY
+driver, which is required for future adding networking support.
 
-The FMAN internal queue can overflow when FMAN splits single
-read or write transactions into multiple smaller transactions
-such that more than 17 AXI transactions are in flight from FMAN
-to interconnect. When the FMAN internal queue overflows, it can
-stall further packet processing. The issue can occur with any one
-of the following three conditions:
+depends on:
+ [PATCH 0/2] phy: ti: gmii-sel: two fixes
+ https://lkml.org/lkml/2020/2/14/2510
 
-  1. FMAN AXI transaction crosses 4K address boundary (Errata
-     A010022)
-  2. FMAN DMA address for an AXI transaction is not 16 byte
-     aligned, i.e. the last 4 bits of an address are non-zero
-  3. Scatter Gather (SG) frames have more than one SG buffer in
-     the SG list and any one of the buffers, except the last
-     buffer in the SG list has data size that is not a multiple
-     of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
+Changes in v2:
+ - fixed comments
 
-With any one of the above three conditions present, there is
-likelihood of stalled FMAN packet processing, especially under
-stress with multiple ports injecting line-rate traffic.
+v1: https://lkml.org/lkml/2020/2/22/100
 
-To avoid situations that stall FMAN packet processing, all of the
-above three conditions must be avoided; therefore, configure the
-system with the following rules:
+Grygorii Strashko (5):
+  phy: ti: gmii-sel: simplify config dependencies between net drivers
+    and gmii phy
+  dt-bindings: phy: ti: gmii-sel: add support for am654x/j721e soc
+  phy: ti: gmii-sel: add support for am654x/j721e soc
+  arm64: dts: ti: k3-am65-mcu: add phy-gmii-sel node
+  arm64: dts: ti: k3-j721e-mcu: add scm node and phy-gmii-sel nodes
 
-  1. Frame buffers must not span a 4KB address boundary, unless
-     the frame start address is 256 byte aligned
-  2. All FMAN DMA start addresses (for example, BMAN buffer
-     address, FD[address] + FD[offset]) are 16B aligned
-  3. SG table and buffer addresses are 16B aligned and the size
-     of SG buffers are multiple of 16 bytes, except for the last
-     SG buffer that can be of any size.
+ .../bindings/phy/ti-phy-gmii-sel.txt          |  1 +
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  6 ++++++
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      | 14 ++++++++++++++
+ drivers/net/ethernet/ti/Kconfig               |  1 +
+ drivers/phy/ti/Kconfig                        |  3 ---
+ drivers/phy/ti/phy-gmii-sel.c                 | 19 +++++++++++++++++++
+ 6 files changed, 41 insertions(+), 3 deletions(-)
 
-Additional workaround notes:
-- Address alignment of 64 bytes is recommended for maximally
-efficient system bus transactions (although 16 byte alignment is
-sufficient to avoid the stall condition)
-- To support frame sizes that are larger than 4K bytes, there are
-two options:
-  1. Large single buffer frames that span a 4KB page boundary can
-     be converted into SG frames to avoid transaction splits at
-     the 4KB boundary,
-  2. Align the large single buffer to 256B address boundaries,
-     ensure that the frame address plus offset is 256B aligned.
-- If software generated SG frames have buffers that are unaligned
-and with random non-multiple of 16 byte lengths, before
-transmitting such frames via FMAN, frames will need to be copied
-into a new single buffer or multiple buffer SG frame that is
-compliant with the three rules listed above.
-
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
----
- Documentation/devicetree/bindings/net/fsl-fman.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/fsl-fman.txt b/Documentation/devicetree/bindings/net/fsl-fman.txt
-index 250f8d8cdce4..c00fb0d22c7b 100644
---- a/Documentation/devicetree/bindings/net/fsl-fman.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-fman.txt
-@@ -110,6 +110,13 @@ PROPERTIES
- 		Usage: required
- 		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
- 
-+- fsl,erratum-a050385
-+		Usage: optional
-+		Value type: boolean
-+		Definition: A boolean property. Indicates the presence of the
-+		erratum A050385 which indicates that DMA transactions that are
-+		split can result in a FMan lock.
-+
- =============================================================================
- FMan MURAM Node
- 
 -- 
-2.1.0
+2.17.1
 
