@@ -2,363 +2,99 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA98EC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A8AC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 08:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B065A215A4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlBo0b/g"
+	by mail.kernel.org (Postfix) with ESMTP id 9848B24671
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 08:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbgCCHvU (ORCPT
+        id S1727654AbgCCIEQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:51:20 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45182 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbgCCHvT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 02:51:19 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v19so2040583oic.12;
-        Mon, 02 Mar 2020 23:51:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dJERuTx1vkullBpFrugyde96NXj+cKMvr59e+mu+WbM=;
-        b=MlBo0b/gyWKdLjihurXMRLLS62RKM7eV0he7zU20AHef4Kj7yXi5eRUfziwsvY97bP
-         kCsaQVDZ6xFN2um0uw8PfiPhho7tEsNP5XjZ8fzz69lct+JY0Cg01vzu8Ie9QWSwB7B7
-         5wB0EJ6dW6HfuKtnF3gyDWMzFBQlMpF5emVrF7MLh0Go77qle0a9V1bPiPt/YC0h+rs9
-         YsBMjg1XQ9le4oq3unR+jMqDJSgYu+jPvpMfvkG2vjYUg9gYmnYnLiqQZBSQjV2nobTp
-         aDxOam0ON6lMsPNfvsTzCJhslNgQh02i963gQmpmkV3HeHOrx2X1t+lzDo1/SgtYZ3ms
-         CPDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dJERuTx1vkullBpFrugyde96NXj+cKMvr59e+mu+WbM=;
-        b=Hy5iyOJCzu7iJYS/LACXR3+K2YaC7RE+d44rRs0AnMcrgwj0Ilaw28VEdzPNwKo27D
-         7nDLYzn2ToQ8IgG2u+fDTBgAm2CAT0olkfxyeLYYqaJlDL3PYHMv00dtavlp0Vv3KhaW
-         0LskDBAV4EYJPvzZ2aEmif8Zd7QqX98m4oA3vAarKiDPwgyUwcqfqUOyPgzEpvditJEf
-         n1s7LkEbOhsW9g9OmBxGyqcpTQiuKsTRk0QiGbTdL9VuKy3DSoOKvqKrEt/MxWie5zBz
-         Q2yXpAudsqXRHgaer1e9eUajT3Wb6tY843ewFVcmNSHLaHume4VTnax+cuDDzfceWUkl
-         fJFw==
-X-Gm-Message-State: ANhLgQ1dW1lqv42sjFHYgQ1tsZ6kXQM87Xgx5Js8qt6BNNewYQ5mby54
-        XiSg/T57xDsVoAerHUEI3IQUM937EcjPErU5alY=
-X-Google-Smtp-Source: ADFU+vvfbkXj9GPHK9S6fg3tKEYes3+kVrH58hc6DAWJUCxC/mk23r7PfL8YDItBVc4eUdfv9Ulavx8aCkysABUlWoA=
-X-Received: by 2002:aca:524a:: with SMTP id g71mr1625639oib.7.1583221878584;
- Mon, 02 Mar 2020 23:51:18 -0800 (PST)
+        Tue, 3 Mar 2020 03:04:16 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:48760 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbgCCIEP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 03:04:15 -0500
+X-AuditID: c0a8fbf4-473ff70000004419-ca-5e5e0f7e1834
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 57.74.17433.E7F0E5E5; Tue,  3 Mar 2020 09:04:14 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0487.000; Tue, 3 Mar 2020 09:04:09 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH v3 5/8] regulator: use linear_ranges helper
+Thread-Topic: [RFC PATCH v3 5/8] regulator: use linear_ranges helper
+Thread-Index: AQHV58CCun7qdt/zDkaUtOc73neHtagqMwKAgAE06ACAAJmVgIAKguIA
+Date:   Tue, 3 Mar 2020 08:04:08 +0000
+Message-ID: <13a6781b02f847669d4923b1cbd069d112105070.camel@fi.rohmeurope.com>
+References: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+         <ba2eb2d7363b386136a546a769a6e2d077558094.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200224115751.GE6215@sirena.org.uk>
+         <d5e63ea6935991d855e2ae12915b3b4614e8f3aa.camel@fi.rohmeurope.com>
+         <20200225153309.GE4633@sirena.org.uk>
+In-Reply-To: <20200225153309.GE4633@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <994A4A7EC2E7C440AB179A6703ECBB61@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200228170210.18252-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUn9njDRWZPcSD87YuejmhNvDK3pUqL5kXNX6KA-8Y72g@mail.gmail.com>
-In-Reply-To: <CAMuHMdUn9njDRWZPcSD87YuejmhNvDK3pUqL5kXNX6KA-8Y72g@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 3 Mar 2020 07:50:52 +0000
-Message-ID: <CA+V-a8tZaAp3q0JtavGK0MV4MxcZqNMkuvY=dMj8CFu7k3w0NA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add support for
- AISTARVISION MIPI Adapter V2.1
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOJsWRmVeSWpSXmKPExsVyYMXvTbp1/HFxBlsn81lMffiEzWL+kXOs
+        Fs2L17NZfLvSwWRxedccNovPvUcYLZZev8hkMWfpCRaLuV+mMlu07j3CbnF6d4kDt8eaeWsY
+        PXbOusvusWlVJ5vH/rlr2D0+b5ILYI3itklKLCkLzkzP07dL4M74/W0zS8Ey7orjZ++yNTA2
+        cHcxcnJICJhIzLh8k6WLkYtDSOAqo8SGK63sEM5xRonZx78BORwcbAI2El032UEaRAR0Jab+
+        WswGUsMs8I5F4k7bQlaQGmEBZ4kdJ+whalwkXu1tYoWw3STWfp/PBmKzCKhI7Hz2DMzmFfCT
+        OLr8DBPErt1MElO/TQdbwClgJHH21xomEJtRQFais+EdmM0sIC6x6dl3VoirBSSW7DnPDGGL
+        Srx8/A8qriix/fs6FpB7mAU0Jdbv0ododZA4cPkFG4StKDGl+yE7xA2CEidnPmGZwCg2C8mG
+        WQjds5B0z0LSPQtJ9wJG1lWMErmJmTnpiSWphnpFqaV6RfkZuUAqOT93EyMkor/sYPx/yPMQ
+        IxMH4yFGSQ4mJVHeD/6xcUJ8SfkplRmJxRnxRaU5qcWHGCU4mJVEeH05o+OEeFMSK6tSi/Jh
+        UtIcLErivOoPJ8YKCYDsyk5NLUgtgsnKcHAoSfBy8MXFCQkWpaanVqRl5pQgpJk4OEGGc0mJ
+        FKfmpaQWJZaWZMSD0kd8MTCBgKR4gPaa8QC18xYXJOYCRSFaTzFqc0x4OXcRM8eRuUsXMQux
+        5OXnpUqJ817mBioVACnNKM2DW/SKUZyDUUmYdyIvUJYHmNrh5rwCWsEEtKLnOchrxSWJCCmp
+        BkaTHWuvbvj//6lS9PfNr7rynrKU67vJRoZcSY8TiIw2LuOVasl4M1Px6n37L28dGg/WV4Sn
+        dTO8dZE12tBX/qsiqlW75bXuy9ofpx+1fTh4eucDxeQ5Myy3byjO//ijaWr2gjN2h0viSvY2
+        RzwUTrizbPqMXWvNjuxl59j1RjvnX7PtTYOVS+SVWIozEg21mIuKEwGLqjrGqgMAAA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thank you for the review.
-
-On Mon, Mar 2, 2020 at 3:57 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Lad,
->
-> CC linux-media
->
-> On Fri, Feb 28, 2020 at 6:02 PM Lad Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > This patch adds support AISTARVISION MIPI Adapter V2.1 board connected
-> > to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-> > which have the camera endpoint nodes with disabled status and in
-> > r8a774c0-ek874-mipi-2.1.dts file VIN/CSI nodes are enabled. By default
-> > imx219 endpoint is tied with CSI2.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > Geert/Rob since the imx219 driver is yet to make into mainline
-> > but has been merged into media-subsystem I would like to take
-> > this patch via media-tree.
->
-> Usually DTS patches are merged through renesas-devel and arm-soc, not
-> through a driver's subsystems tree.  This is done to avoid merge
-> conflicts.  I prefer not to deviate from that, unless there is a very
-> good reason to do so.
->
-> Is there any dependency on the code in the media tree that I'm missing?
-> Once DT bindings have been accepted in a subsystem maintainer's tree,
-> you can start using them in DTS files.
->
-In that case lets take this patch via renesas-devel, as the
-DT-bindings patch has
-been accepted.
-
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-> > @@ -0,0 +1,98 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for the AISTARVISION MIPI Adapter V2.1
-> > + *
-> > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > + */
-> > +
-> > +/ {
-> > +       ov5645_vdddo_1v8: 1p8v {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "camera_vdddo";
-> > +               regulator-min-microvolt = <1800000>;
-> > +               regulator-max-microvolt = <1800000>;
-> > +               regulator-always-on;
-> > +       };
-> > +
-> > +       ov5645_vdda_2v8: 2p8v {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "camera_vdda";
-> > +               regulator-min-microvolt = <2800000>;
-> > +               regulator-max-microvolt = <2800000>;
-> > +               regulator-always-on;
-> > +       };
-> > +
-> > +       ov5645_vddd_1v5: 1p5v {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "camera_vddd";
-> > +               regulator-min-microvolt = <1500000>;
-> > +               regulator-max-microvolt = <1500000>;
-> > +               regulator-always-on;
-> > +       };
-> > +
-> > +       imx219_vana_2v8: 2p8v {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "camera_vana";
-> > +               regulator-min-microvolt = <2800000>;
-> > +               regulator-max-microvolt = <2800000>;
-> > +               regulator-always-on;
-> > +       };
-> > +
-> > +       imx219_vdig_1v8: 1p8v {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "camera_vdig";
-> > +               regulator-min-microvolt = <1500000>;
-> > +               regulator-max-microvolt = <1500000>;
-> > +               regulator-always-on;
-> > +       };
-> > +
-> > +       imx219_vddl_1v2: 1p2v {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "camera_vddl";
-> > +               regulator-min-microvolt = <1200000>;
-> > +               regulator-max-microvolt = <1200000>;
-> > +               regulator-always-on;
-> > +       };
-> > +
-> > +       imx219_clk: imx219_clk {
-> > +               compatible = "fixed-clock";
-> > +               #clock-cells = <0>;
-> > +               clock-frequency = <24000000>;
-> > +       };
-> > +};
-> > +
-> > +&MIPI_PARENT_I2C {
-> > +       ov5645: ov5645@3c {
-> > +               compatible = "ovti,ov5645";
-> > +               reg = <0x3c>;
-> > +               status = "disabled";
->
-> Is there any real need to disable this node here?
-> Do you envision anyone including this .dtsi file, and not enabling this
-> node?
->
-Agreed will drop it.
-
-> > +
-> > +               clock-names = "xclk";
-> > +
-> > +               vdddo-supply = <&ov5645_vdddo_1v8>;
-> > +               vdda-supply = <&ov5645_vdda_2v8>;
-> > +               vddd-supply = <&ov5645_vddd_1v5>;
-> > +
-> > +               port@0 {
->
-> DT bindings say "port", without unit-address.
->
-shall drop it.
-
-> > +                       ov5645_ep: endpoint {
-> > +                       };
-> > +               };
-> > +       };
-> > +
-> > +       rpi_v2_camera: imx219@10 {
-> > +               compatible = "sony,imx219";
-> > +               reg = <0x10>;
-> > +               status = "disabled";
->
-> Likewise.
->
-> > +
-> > +               VANA-supply = <&imx219_vana_2v8>;
-> > +               VDIG-supply = <&imx219_vdig_1v8>;
-> > +               VDDL-supply = <&imx219_vddl_1v2>;
-> > +               clocks = <&imx219_clk>;
-> > +
-> > +               port@0 {
->
-> DT bindings say "port", without unit-address...
->
-> > +                       reg = <0>;
->
-> ... and thus no "reg" property.
->
-shall drop it.
-
-> > +                       imx219_ep0: endpoint {
-> > +                       };
-> > +               };
-> > +       };
-> > +};
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-> > new file mode 100644
-> > index 000000000000..435b7f62d88d
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-> > @@ -0,0 +1,86 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-> > + * connected with aistarvision-mipi-v2-adapter board
-> > + *
-> > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "r8a774c0-ek874.dts"
-> > +#define MIPI_PARENT_I2C i2c3
-> > +#include "aistarvision-mipi-adapter-2.1.dtsi"
-> > +
-> > +/ {
-> > +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-> > +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-> > +};
-> > +
-> > +&i2c3 {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&vin4 {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&vin5 {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&csi40 {
-> > +       status = "okay";
-> > +
-> > +       ports {
-> > +               port@0 {
-> > +                       reg = <0>;
-> > +
-> > +                       csi40_in: endpoint {
-> > +                               clock-lanes = <0>;
-> > +                               data-lanes = <1 2>;
-> > +                               remote-endpoint = <&imx219_ep0>;
-> > +                       };
-> > +               };
-> > +       };
-> > +};
-> > +
-> > +&ov5645 {
-> > +       /* uncomment status and remote-endpoint properties to tie ov5645
-> > +        * to CSI2 also make sure remote-endpoint for imx219 camera is
-> > +        * commented and remote endpoint in csi40_in is ov5645_ep
-> > +        */
-> > +       /* status = "okay"; */
-> > +
-> > +       #address-cells = <1>;
-> > +       #size-cells = <0>;
->
-> #{address,size}-cells not needed.
->
-agreed will drop it.
-
-> > +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-> > +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-> > +
-> > +       clocks = <&cpg CPG_MOD 716>;
-> > +       clock-frequency = <24000000>;
->
-> I know this is dictated by the DT bindings for the ov5645 camera, but
-> specifying a clock rate is usually done through assigned-clock-rates,
-> cfr.  Documentation/devicetree/bindings/clock/clock-bindings.txt.
->
-agreed will replace it.
-
-Cheers,
---Prabhakar
-
-> > +
-> > +       port@0 {
->
-> port {
->
-> > +               ov5645_ep: endpoint {
-> > +                       clock-lanes = <0>;
-> > +                       data-lanes = <1 2>;
-> > +                       /* remote-endpoint = <&csi40_in>; */
-> > +               };
-> > +       };
-> > +};
-> > +
-> > +&rpi_v2_camera {
-> > +       status = "okay";
-> > +
-> > +       #address-cells = <1>;
-> > +       #size-cells = <0>;
-> > +
-> > +       port@0 {
-> > +               reg = <0>;
->
-> port {
->
-> > +               imx219_ep0: endpoint {
-> > +                       clock-lanes = <0>;
-> > +                       data-lanes = <1 2>;
-> > +                       remote-endpoint = <&csi40_in>;
-> > +                       link-frequencies = /bits/ 64 <456000000>;
-> > +               };
-> > +       };
-> > +};
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+SGVsbG8gTWFyaywNCg0KT24gVHVlLCAyMDIwLTAyLTI1IGF0IDE1OjMzICswMDAwLCBNYXJrIEJy
+b3duIHdyb3RlOg0KPiBPbiBUdWUsIEZlYiAyNSwgMjAyMCBhdCAwNjoyMzozMUFNICswMDAwLCBW
+YWl0dGluZW4sIE1hdHRpIHdyb3RlOg0KPiANCj4gPiBPbmx5IGNoYW5nZSByZXF1aXJlZCBvbiBp
+bmRpdmlkdWFsIHJlZ3VsYXRvciBkcml2ZXJzIHNob3VsZCBiZQ0KPiA+IHJlbmFtaW5nDQo+ID4g
+dGhlIHN0cnVjdCByZWd1bGF0b3JfbGluZWFyX3JhbmdlIHRvIGxpbmVhcl9yYW5nZS4gUmVzdCBv
+ZiB0aGUNCj4gPiBjaGFuZ2VzDQo+ID4gc2hvdWxkIGJlIGludGVybmFsIHRvIHJlZ3VsYXRvciBm
+cmFtZXdvcmssIHJpZ2h0Pw0KPiANCj4gUmlnaHQsIGl0J3MgdGhhdCB0eXBlIHJlcGxhY2VtZW50
+IHRoYXQgc2hvdWxkIGJlIGRvbmUgYXRvbWljYWxseS4NCg0KWWVzLiBBbmQgdGhlIHR5cGUgcmVw
+bGFjZW1lbnQgaXMgZG9uZSBvbmx5IGluIHRoaXMgcGF0Y2ggd2hlcmUgdGhlDQpzdHJ1Y3QgaXMg
+cmVtb3ZlZCBmcm9tIHJlZ3VsYXRvciBkcml2ZXIuaCBoZWFkZXIgLSBhbmQgdGhlIGxpbmVhcl9y
+YW5nZQ0KaGVhZGVyIHByb3ZpZGluZyB0aGlzIG5ldyBzdHJ1Y3QgaXMgaW5jbHVkZWQuIFByZXZp
+b3VzIHBhdGNoIGRpZCBub3QNCmNoYW5nZSB0aGUgdHlwZSAtIGp1c3QgcmVuYW1lZCB0aGUgc3Ry
+dWN0Lg0KDQpBbnl3YXlzLCBJIGRpZCBjb21waWxlIHRlc3QgdGhlIHBhdGNoIHY0IGZvciB0aGVz
+ZSBjb21taXRzIGFuZCB0aGVyZQ0Kd2VyZSBubyBwcm9ibGVtcyBpbiByZWd1bGF0b3IgZHJpdmVy
+cy4gVGhlIEJENzA1MjggY2hhcmdlciBkcml2ZXIgaGFkDQphbiBpc3N1ZSBhcyB0aGUgbGluZWFy
+X3JhbmdlIHN0cnVjdCB3YXMgZHVibGljYXRlZCB0aGVyZSAtIGJ1dCB0aGlzDQpzaG91bGQgYmUg
+Zml4ZWQgYnkgdGhlIHY0IHdoZXJlIEkgYWRkZWQgb25lIGV4dHJhIHBhdGNoIGRvaW5nIHJlbmFt
+aW5nDQpmb3IgdGhpcyBCRDcwNTI4IGNoYXJnZXIgaW50ZXJuYWwgc3RydWN0dXJlLg0KDQpCZXN0
+IFJlZ2FyZHMNCglNYXR0aSBWYWl0dGluZW4NCg==
