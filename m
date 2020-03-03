@@ -2,136 +2,123 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1453C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116B1C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC1520870
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD327208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EMPB6VLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbgCCRcl (ORCPT
+        id S1729762AbgCCRnW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:32:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44474 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730375AbgCCRcl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:32:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D0F79B028;
-        Tue,  3 Mar 2020 17:32:38 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Tue, 3 Mar 2020 12:43:22 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:41849 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729463AbgCCRnW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 12:43:22 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id D7C1C231D9;
+        Tue,  3 Mar 2020 18:43:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583257399;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/SS0Mpitdw47OknrMdnyVNGnPtzEQcsJ+qOlq2fN2jQ=;
+        b=EMPB6VLynHXmYFxKp/ONkM14baAzs5ZaCvqFD/iFs09cuXslOkpOh9Iw3zyk+Pt/xYIfXK
+        0fkrfGlazORExVvOcTQEwlC+8NmN3+DP/MFu53+G/CkM9/Zj+jA8EgeHYcN2D1fCR5681+
+        /6RGigOxmRBKGX4DyhS21DvMk2DCCc4=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     wahrenst@gmx.net, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
-Date:   Tue,  3 Mar 2020 18:32:16 +0100
-Message-Id: <20200303173217.3987-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.25.1
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Yuan Yao <yao.yuan@nxp.com>, Michael Walle <michael@walle.cc>
+Subject: [PATCH v3 0/9] tty: serial: fsl_lpuart various fixes and LS1028A support
+Date:   Tue,  3 Mar 2020 18:42:57 +0100
+Message-Id: <20200303174306.6015-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: D7C1C231D9
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.504];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[14];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The register based driver turned out to be unstable, specially on RPi3a+
-but not limited to it. While a fix is being worked on, we roll back to
-using firmware based scheme.
+These are various fixes for problems I found during development of the
+LS1028A support for the LPUART.
 
-Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM driver instead of firmware")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+Also, I'm not sure if this series should be split between the "tty:
+serial: fsl_lpuart" patches and the devicetree patches. So unless
+someone tell me otherwise I keep them together to avoid mention any
+dependencies.
 
-See https://github.com/raspberrypi/linux/issues/3046 for more reference.
-Note: I tested this on RPi3b, RPi3a+ and RPi2b.
+Changes since v2:
+Changed DMA channel request handling. Spotted by Rob Herring. Thanks.
 
- arch/arm/boot/dts/bcm2835-common.dtsi     |  1 -
- arch/arm/boot/dts/bcm2835-rpi-common.dtsi | 12 ++++++++++++
- arch/arm/boot/dts/bcm2835.dtsi            |  1 +
- arch/arm/boot/dts/bcm2836.dtsi            |  1 +
- arch/arm/boot/dts/bcm2837.dtsi            |  1 +
- 5 files changed, 15 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+Modified patches:
+  tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
 
-diff --git a/arch/arm/boot/dts/bcm2835-common.dtsi b/arch/arm/boot/dts/bcm2835-common.dtsi
-index 2b1d9d4c0cde..4119271c979d 100644
---- a/arch/arm/boot/dts/bcm2835-common.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-common.dtsi
-@@ -130,7 +130,6 @@ v3d: v3d@7ec00000 {
- 			compatible = "brcm,bcm2835-v3d";
- 			reg = <0x7ec00000 0x1000>;
- 			interrupts = <1 10>;
--			power-domains = <&pm BCM2835_POWER_DOMAIN_GRAFX_V3D>;
- 		};
- 
- 		vc4: gpu {
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-common.dtsi b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
-new file mode 100644
-index 000000000000..b78a57534611
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * This include file covers the common peripherals and configuration between
-+ * bcm2835, bcm2836 and bcm2837 implementations that interact with RPi's
-+ * firmware interface.
-+ */
-+
-+#include <dt-bindings/power/raspberrypi-power.h>
-+
-+&v3d {
-+	power-domains = <&power RPI_POWER_DOMAIN_V3D>;
-+};
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index 53bf4579cc22..0549686134ea 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "bcm283x.dtsi"
- #include "bcm2835-common.dtsi"
-+#include "bcm2835-rpi-common.dtsi"
- 
- / {
- 	compatible = "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
-index 82d6c4662ae4..b390006aef79 100644
---- a/arch/arm/boot/dts/bcm2836.dtsi
-+++ b/arch/arm/boot/dts/bcm2836.dtsi
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "bcm283x.dtsi"
- #include "bcm2835-common.dtsi"
-+#include "bcm2835-rpi-common.dtsi"
- 
- / {
- 	compatible = "brcm,bcm2836";
-diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
-index 9e95fee78e19..0199ec98cd61 100644
---- a/arch/arm/boot/dts/bcm2837.dtsi
-+++ b/arch/arm/boot/dts/bcm2837.dtsi
-@@ -1,5 +1,6 @@
- #include "bcm283x.dtsi"
- #include "bcm2835-common.dtsi"
-+#include "bcm2835-rpi-common.dtsi"
- 
- / {
- 	compatible = "brcm,bcm2837";
+Changes since v1:
+DMA support fixes.
+
+New patches:
+  tty: serial: fsl_lpuart: fix DMA mapping
+  arm64: dts: ls1028a: add "fsl,vf610-edma" compatible
+
+Modified patches:
+  arm64: dts: ls1028a: add missing LPUART nodes
+   - add dma phandles
+
+Michael Walle (9):
+  Revert "tty: serial: fsl_lpuart: drop EARLYCON_DECLARE"
+  tty: serial: fsl_lpuart: free IDs allocated by IDA
+  tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
+  tty: serial: fsl_lpuart: fix DMA mapping
+  dt-bindings: serial: lpuart: add ls1028a compatibility
+  tty: serial: fsl_lpuart: add LS1028A support
+  tty: serial: fsl_lpuart: add LS1028A earlycon support
+  arm64: dts: ls1028a: add "fsl,vf610-edma" compatible
+  arm64: dts: ls1028a: add missing LPUART nodes
+
+ .../devicetree/bindings/serial/fsl-lpuart.txt |  10 +-
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  75 +++++-
+ drivers/tty/serial/fsl_lpuart.c               | 251 ++++++++++++------
+ 3 files changed, 255 insertions(+), 81 deletions(-)
+
 -- 
-2.25.1
+2.20.1
 
