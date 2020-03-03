@@ -2,245 +2,249 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E8BC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 21:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2B4C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 21:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E93621775
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 21:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BCE20870
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 21:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583269861;
-	bh=9dEoSv6yhh8eJqi6eAzmQv1Qv1OJbIQTQcJqOl9NTSE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZbyMTmQ24nrnjSZqcRtvx+wRg7lk2btJYL3AUNsvYYVOwg62IvVnONSAccEy+7Xfj
-	 i9r3B5Vx8pvTUmM2P2yKJcH2x4nhQBjgNFAgXa3EqRP9jt4+bvBWBV6xbpR200/hiH
-	 0PA3FNHzZXeX31g8t1hUrgvtbQSBNJaP5Syb+/94=
+	s=default; t=1583270276;
+	bh=u+IJrtkDmmILKrB777JfXIiXu/1W6oLqMP+I5yJnh2M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wlG27XeK/ltofiJfLT0cNft/O/w6d44/DgyIglPuzL2y/PiUSaC8W/0vqerUPcKH2
+	 H+8673n/foZfoltQN2n72DAHr4uE4ITB4NjpIcpbs139N38vTe8LQ7AJablnAT969n
+	 RY9sB0Ae/6NNR6QMH+gqDtw2f2MfvD7cOAsYXFuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732424AbgCCVLA (ORCPT
+        id S1732361AbgCCVR4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:11:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46908 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 16:17:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732393AbgCCVK4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:10:56 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1732075AbgCCVR4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Mar 2020 16:17:56 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 016A120848;
-        Tue,  3 Mar 2020 21:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79354208C3;
+        Tue,  3 Mar 2020 21:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583269855;
-        bh=9dEoSv6yhh8eJqi6eAzmQv1Qv1OJbIQTQcJqOl9NTSE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KVIb0g+Ahx/1VYlGJAxPd5CEkpyzquEQtzufQEAaJxDeduvzknsXvzBpqSFcPWAwX
-         +l4Eox4toEbgMQlt3Dy/JBBgiG6lB58k0nHc5FfZG2q+usUKI+sGH2zM2sq7sVVRdI
-         j/GZ0Kwc1Bi2Ytwg6pK5n+QUK/QWjpnOO2HpMWno=
-Date:   Tue, 3 Mar 2020 21:10:45 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH 5/5] dt-bindings: iio: Add adis16475 documentation
-Message-ID: <20200303211045.31f977bb@archlinux>
-In-Reply-To: <20200225124152.270914-6-nuno.sa@analog.com>
-References: <20200225124152.270914-1-nuno.sa@analog.com>
-        <20200225124152.270914-6-nuno.sa@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1583270274;
+        bh=u+IJrtkDmmILKrB777JfXIiXu/1W6oLqMP+I5yJnh2M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=n7g6PctrjHyalDBnUVzVVtTQjjls7cc/u2J+8JdC+r3e1d5flgOXBXR4FZ7tLvpMA
+         7b6gwv5T1fiWDXqgIKGMuRwTHLdGVZ3flfrT6tvxBWzb4Z7zLJ2u8aar3WcPRYv3Rh
+         3GQsCWIQ0Zl4mpqcqP4EnNO2W3gTAEZjygyMVAfo=
+Received: by mail-qk1-f170.google.com with SMTP id m9so4984697qke.4;
+        Tue, 03 Mar 2020 13:17:54 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0ybcFzbMYYXxVHeFOokuvsBorvorNaWGJdp+Qxzp7FW0xibqCM
+        qXpNFPwqRGhiLfanDzXO4REnes+83MchjvN8pQ==
+X-Google-Smtp-Source: ADFU+vtMU23sEGul4xIS3cOxg5HrzR9E2uToGkQ9bXIiwRYCwLzdQ482f+A1Bjc2x/VSMmCDsUDzaUn2JS5rGNey7YY=
+X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr31904qki.254.1583270273440;
+ Tue, 03 Mar 2020 13:17:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200303150749.30566-1-ulf.hansson@linaro.org>
+ <20200303150749.30566-4-ulf.hansson@linaro.org> <20200303170232.GA26191@bogus>
+ <CAPDyKFrgbnDR2q2Aw7HPhosBprgR43ohXmNMLya_bRry4GqtoQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFrgbnDR2q2Aw7HPhosBprgR43ohXmNMLya_bRry4GqtoQ@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 3 Mar 2020 15:17:42 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+T0VxPMRAvmEOnKi14eQiciRqOEQAo1GT8EG9jp=BNng@mail.gmail.com>
+Message-ID: <CAL_Jsq+T0VxPMRAvmEOnKi14eQiciRqOEQAo1GT8EG9jp=BNng@mail.gmail.com>
+Subject: Re: [PATCH 3/7] dt-bindings: power: Convert domain-idle-states
+ bindings to json-schema
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Feb 2020 13:41:52 +0100
-Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+On Tue, Mar 3, 2020 at 2:46 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Tue, 3 Mar 2020 at 18:02, Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, Mar 03, 2020 at 04:07:45PM +0100, Ulf Hansson wrote:
+> > > While converting to the json-schema, let's also take the opportunity to
+> > > further specify/clarify some more details about the DT binding.
+> > >
+> > > For example, let's define the label where to put the states nodes, set a
+> > > pattern for nodename of the state nodes and finally add an example.
+> > >
+> > > Fixes: a3f048b5424e ("dt: psci: Update DT bindings to support hierarchical PSCI states")
+> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > > ---
+> > >  .../devicetree/bindings/arm/psci.yaml         |  2 +-
+> > >  .../bindings/power/domain-idle-state.txt      | 33 ---------
+> > >  .../bindings/power/domain-idle-state.yaml     | 67 +++++++++++++++++++
+> > >  .../bindings/power/power-domain.yaml          | 22 +++---
+> > >  .../bindings/power/power_domain.txt           |  2 +-
+> > >  5 files changed, 79 insertions(+), 47 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
+> > > index 540211a080d4..0bc3c43a525a 100644
+> > > --- a/Documentation/devicetree/bindings/arm/psci.yaml
+> > > +++ b/Documentation/devicetree/bindings/arm/psci.yaml
+> > > @@ -123,7 +123,7 @@ properties:
+> > >        to mandate it.
+> > >
+> > >        [3] Documentation/devicetree/bindings/power/power_domain.txt
+> > > -      [4] Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > > +      [4] Documentation/devicetree/bindings/power/domain-idle-state.yaml
+> > >
+> > >    power-domains:
+> > >      $ref: '/schemas/types.yaml#/definitions/phandle-array'
+> > > diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > > deleted file mode 100644
+> > > index eefc7ed22ca2..000000000000
+> > > --- a/Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > > +++ /dev/null
+> > > @@ -1,33 +0,0 @@
+> > > -PM Domain Idle State Node:
+> > > -
+> > > -A domain idle state node represents the state parameters that will be used to
+> > > -select the state when there are no active components in the domain.
+> > > -
+> > > -The state node has the following parameters -
+> > > -
+> > > -- compatible:
+> > > -     Usage: Required
+> > > -     Value type: <string>
+> > > -     Definition: Must be "domain-idle-state".
+> > > -
+> > > -- entry-latency-us
+> > > -     Usage: Required
+> > > -     Value type: <prop-encoded-array>
+> > > -     Definition: u32 value representing worst case latency in
+> > > -                 microseconds required to enter the idle state.
+> > > -                 The exit-latency-us duration may be guaranteed
+> > > -                 only after entry-latency-us has passed.
+> > > -
+> > > -- exit-latency-us
+> > > -     Usage: Required
+> > > -     Value type: <prop-encoded-array>
+> > > -     Definition: u32 value representing worst case latency
+> > > -                 in microseconds required to exit the idle state.
+> > > -
+> > > -- min-residency-us
+> > > -     Usage: Required
+> > > -     Value type: <prop-encoded-array>
+> > > -     Definition: u32 value representing minimum residency duration
+> > > -                 in microseconds after which the idle state will yield
+> > > -                 power benefits after overcoming the overhead in entering
+> > > -i                the idle state.
+> > > diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.yaml b/Documentation/devicetree/bindings/power/domain-idle-state.yaml
+> > > new file mode 100644
+> > > index 000000000000..27da43076b85
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/power/domain-idle-state.yaml
+> > > @@ -0,0 +1,67 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/power/domain-idle-state.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: PM Domain Idle States binding description
+> > > +
+> > > +maintainers:
+> > > +  - Ulf Hansson <ulf.hansson@linaro.org>
+> > > +
+> > > +description:
+> > > +  A domain idle state node represents the state parameters that will be used to
+> > > +  select the state when there are no active components in the PM domain.
+> > > +
+> > > +properties:
+> > > +  $nodename:
+> > > +    const: domain-idle-states
+> > > +
+> > > +patternProperties:
+> > > +  "^(cpu|cluster|domain)-":
+> > > +    type: object
+> > > +    description:
+> > > +      Each state node represents a domain idle state description.
+> > > +
+> > > +    properties:
+> > > +      compatible:
+> > > +        const: domain-idle-state
+> > > +
+> > > +      entry-latency-us:
+> > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> >
+> > You don't need a type because the core schema defines it for all
+> > standard units.
+>
+> Okay, I noticed some skips this, but wanted rather to clear and fuzzy.
+>
+> In any case, yes, let's remove it.
+>
+> >
+> > > +        description:
+> > > +          The worst case latency in microseconds required to enter the idle
+> > > +          state. Note that, the exit-latency-us duration may be guaranteed only
+> > > +          after the entry-latency-us has passed.
+> > > +
+> > > +      exit-latency-us:
+> > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > +        description:
+> > > +          The worst case latency in microseconds required to exit the idle
+> > > +          state.
+> > > +
+> > > +      min-residency-us:
+> > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > +        description:
+> > > +          The minimum residency duration in microseconds after which the idle
+> > > +          state will yield power benefits, after overcoming the overhead while
+> > > +          entering the idle state.
+> > > +
+> > > +    required:
+> > > +      - compatible
+> > > +      - entry-latency-us
+> > > +      - exit-latency-us
+> > > +      - min-residency-us
+> >
+> >        additionalProperties: false
+> >
+> > Do we have cases of adding additional properties?
+>
+> I might, but I am not sure what's the correct way to deal with that.
 
-> Document the ADIS16475 device devicetree bindings.
->=20
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+I was thinking more like a vendor adding properties. Is this a base
+class that can be extended or every possible property is defined here.
+Actually, with the matching on $nodename, we have to put any additions
+in here or do a custom 'select'. In any case, I think we can cross
+than when/if we get there.
 
-One thing inline on the burst mode stuff.
+> What I am wondering about is the "arm,psci-suspend-param" property,
+> currently defined as part of the PSCI bindings (psci.yaml).
+>
+> I am not sure that's correct to define it as a PSCI binding. Shouldn't
+> it rather be a part of the idle state bindings (idle-states.yaml) and
+> the domain idle states binding ($subject patch)?
 
-Thanks,
+Indeed it should be moved here.
 
-Jonathan
+>
+> What do you think?
+>
+> In any case, we probably want to fix this on top, if we should care.
 
-> ---
->  .../bindings/iio/imu/adi,adis16475.yaml       | 130 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 131 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis164=
-75.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml=
- b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-> new file mode 100644
-> index 000000000000..c0f2146e000c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-> @@ -0,0 +1,130 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/imu/adi,adis16475.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADIS16475 and similar IMUs
-> +
-> +maintainers:
-> +  - Nuno S=C3=A1 <nuno.sa@analog.com>
-> +
-> +description: |
-> +  Analog Devices ADIS16475 and similar IMUs
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD=
-IS16475.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adis16475-1
-> +      - adi,adis16475-2
-> +      - adi,adis16475-3
-> +      - adi,adis16477-1
-> +      - adi,adis16477-2
-> +      - adi,adis16477-3
-> +      - adi,adis16470
-> +      - adi,adis16465-1
-> +      - adi,adis16465-2
-> +      - adi,adis16465-3
-> +      - adi,adis16467-1
-> +      - adi,adis16467-2
-> +      - adi,adis16467-3
-> +      - adi,adis16500
-> +      - adi,adis16505-1
-> +      - adi,adis16505-2
-> +      - adi,adis16505-3
-> +      - adi,adis16507-1
-> +      - adi,adis16507-2
-> +      - adi,adis16507-3
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spi-cpha: true
-> +
-> +  spi-cpol: true
-> +
-> +  spi-max-frequency:
-> +    maximum: 2000000
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - const: sync
-> +      - const: direct-sync
-> +      - const: pulse-sync
-> +      - const: scaled-sync
-> +
-> +  reset-gpios:
-> +    description:
-> +      Must be the device tree identifier of the RESET pin. If specified,
-> +      it will be asserted during driver probe. As the line is active low,
-> +      it should be marked GPIO_ACTIVE_LOW.
-> +    maxItems: 1
-> +
-> +  adi,scaled-output-hz:
-> +    description:
-> +      This property must be present if the clock mode is scaled-sync thr=
-ough
-> +      clock-names property. In this mode, the input clock can have a ran=
-ge
-> +      of 1Hz to 128HZ which must be scaled to originate an allowable sam=
-ple
-> +      rate. This property specifies that rate.
-> +    minimum: 1900
-> +    maximum: 2100
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - spi-cpha
-> +  - spi-cpol
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - adi,adis16500
-> +          - adi,adis16505-1
-> +          - adi,adis16505-2
-> +          - adi,adis16505-3
-> +          - adi,adis16507-1
-> +          - adi,adis16507-2
-> +          - adi,adis16507-3
-> +
-> +then:
-> +  properties:
-> +    clock-names:
-> +      oneOf:
-> +        - const: sync
-> +        - const: direct-sync
-> +        - const: scaled-sync
-> +
-> +    adi,burst32-enable:
-> +      description:
-> +        Enable burst32 mode. In this mode, a burst reading contains cali=
-brated
-> +        gyroscope and accelerometer data in 32-bit format.
+Yes, that's fine.
 
-Why is this in DT?  Is it not a runtime decision
-(ideally automatically selected)
-
-> +      type: boolean
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    spi {
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <0>;
-> +
-> +            adis16475: adis16475-3@0 {
-> +                    compatible =3D "adi,adis16475-3";
-> +                    reg =3D <0>;
-> +                    spi-cpha;
-> +                    spi-cpol;
-> +                    spi-max-frequency =3D <2000000>;
-> +                    interrupts =3D <4 IRQ_TYPE_EDGE_RISING>;
-> +                    interrupt-parent =3D <&gpio>;
-> +            };
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f11262f1f3bb..f8ccc92ab378 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1015,6 +1015,7 @@ W:	http://ez.analog.com/community/linux-device-driv=
-ers
->  S:	Supported
->  F:	drivers/iio/imu/adis16475.c
->  F:	Documentation/ABI/testing/sysfs-bus-iio-imu-adis16475
-> +F:	Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-> =20
->  ANALOG DEVICES INC ADM1177 DRIVER
->  M:	Beniamin Bia <beniamin.bia@analog.com>
-
+Rob
