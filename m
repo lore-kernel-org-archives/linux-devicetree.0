@@ -2,92 +2,98 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD45C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE503C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579BC2083E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583247567;
-	bh=Po21GpAsxJXHa8omSA0fH0AF3jSqp6NBSXKyNPFTq40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HVCEFSYuzVFrBZWPWsH7j+7vvMHhCst1p78xjAVVkgMLgwzFeuu/76q5zPXFJecFe
-	 4yVQk1x7wRbxpK7RontrsMVEAsYLE7KGPh227JW27sjScNuoshXGugoicsMxHm6Tdb
-	 FH6UFdrLyxx+Ju2fA676iUdWQJSrdwUUQurL/XgY=
+	by mail.kernel.org (Postfix) with ESMTP id CB09420828
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgCCO7X (ORCPT
+        id S1728589AbgCCPCS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:59:23 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40330 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728975AbgCCO7X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 09:59:23 -0500
-Received: by mail-ot1-f65.google.com with SMTP id x19so3270759otp.7;
-        Tue, 03 Mar 2020 06:59:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jxXZabJF36zBqHLvSkp1BT+uIXDUsdzVqIFAD0M2EXo=;
-        b=Ec0whZDOP87o26kq8TtpXG6lXy8JX2l9/TEDXRM3pM6nb9lBbOKZOxZvVrdZ5I2eUi
-         RZ4BaU0h7pqdc+x3TvbVYaWGa26lk/KgwS6boEnOidBJnKiss4o/G8PWvdC8zqUl2IfT
-         nn1zhdr0QKcF7Qd/32SA+83cKF6cPoEvaNJLWOUbbnVivV9OA2YAi29MJZJpW1FKtbsB
-         MBfoBHXQxON3UNjwz4FpL8qw/0MSHC0o4K2AXT0x0y6JVKjxwxSehYmzOmjiBbkGh0ZA
-         V3hPphBqgKm6MCnDHiJJzUua/MDZJHuA8AQfoVdN46qrpHlXSETdRlILcX3ek95A02TG
-         wVig==
-X-Gm-Message-State: ANhLgQ0wg6VVuqTcbxvNCkxCa6ldIRtMQbQ0WPG7k8TDM4MM/GN+koWI
-        G7blP8ffL/8ZigRuQh6ppg==
-X-Google-Smtp-Source: ADFU+vs0akez33tRS244m5eGi3FSV87z7OM5KR9hAV09veZ9Jb9+CkWsSjCrP6apKPamqlw3XwLehQ==
-X-Received: by 2002:a9d:748c:: with SMTP id t12mr3506779otk.38.1583247562238;
-        Tue, 03 Mar 2020 06:59:22 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c7sm7904442otm.63.2020.03.03.06.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:59:21 -0800 (PST)
-Received: (nullmailer pid 32405 invoked by uid 1000);
-        Tue, 03 Mar 2020 14:59:20 -0000
-Date:   Tue, 3 Mar 2020 08:59:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
-Message-ID: <20200303145920.GA32328@bogus>
-References: <robh@kernel.org>
- <20200226214812.390-1-ansuelsmth@gmail.com>
+        Tue, 3 Mar 2020 10:02:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:48366 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728183AbgCCPCS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:02:18 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49A8AFEC;
+        Tue,  3 Mar 2020 07:02:17 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DE6E3F6C4;
+        Tue,  3 Mar 2020 07:02:15 -0800 (PST)
+Date:   Tue, 3 Mar 2020 15:02:09 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
+        robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com,
+        kishon@ti.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4 0/5] Add support for PCIe endpoint mode in Tegra194
+Message-ID: <20200303150209.GA6334@e121166-lin.cambridge.arm.com>
+References: <20200303105418.2840-1-vidyas@nvidia.com>
+ <20200303134053.GC2854899@ulmo>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226214812.390-1-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200303134053.GC2854899@ulmo>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 26 Feb 2020 22:48:12 +0100, Ansuel Smith wrote:
-> Add missing definition of rpm clk for ipq806x soc
+On Tue, Mar 03, 2020 at 02:40:53PM +0100, Thierry Reding wrote:
+> On Tue, Mar 03, 2020 at 04:24:13PM +0530, Vidya Sagar wrote:
+> > Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
+> > either in root port mode or in end point mode but only in one mode at a time.
+> > Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
+> > patch series adds support for PCIe endpoint mode in both the driver as well as
+> > in DT.
+> > This patch series depends on the changes made for Synopsys DesignWare endpoint
+> > mode subsystem that are recently accepted.
+> > @ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
+> > which in turn depends on the patch made by Kishon
+> > @ https://patchwork.kernel.org/patch/10975123/
+> > which is also under review.
+> > 
+> > V4:
+> > * Started using threaded irqs instead of kthreads
+> > 
+> > V3:
+> > * Re-ordered patches in the series to make the driver change as the last patch
+> > * Took care of Thierry's review comments
+> > 
+> > V2:
+> > * Addressed Thierry & Bjorn's review comments
+> > * Added EP mode specific binding documentation to already existing binding documentation file
+> > * Removed patch that enables GPIO controller nodes explicitly as they are enabled already
+> > 
+> > Vidya Sagar (5):
+> >   soc/tegra: bpmp: Update ABI header
+> >   dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
+> >   arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+> >   arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
+> >     platform
+> >   PCI: tegra: Add support for PCIe endpoint mode in Tegra194
 > 
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Acked-by: John Crispin <john@phrozen.org>
-> ---
->  .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
->  drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
->  include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
->  3 files changed, 40 insertions(+)
+> Hi Lorenzo,
 > 
+> I've acked patches 1, 2 and 5 of the series. I think you're going to
+> need to apply patch 1 in order to satisfy a build-time dependency from
+> patch 5. I can apply patches 3 and 4 to the Tegra tree since they're
+> only adding device tree content that may conflict with some other
+> patches that I have in the Tegra tree.
+> 
+> Does that sound reasonable?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Sure, that's absolutely fine by me, I will do.
+
+Thanks,
+Lorenzo
