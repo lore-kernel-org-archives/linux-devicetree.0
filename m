@@ -2,105 +2,122 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5220AC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F97DC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E3A20838
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6358C20848
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583243193;
-	bh=vGEryNKJXcCT8a512mUV3y5gUnsXj9RciNHteo1Sa94=;
+	s=default; t=1583243303;
+	bh=YbJhYyGD3Tryt/jo3wFVNtGaIGAS6BaTuAlj6GrUjxM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cezHQoKnQSpCQV7nICVLXZFGTwUUUnqH8xmzAhndbCtuVDFNUuo+6s1LXPfNosXy2
-	 JErkOsojpiLBnepS9p2dN1R2qjt2SYOGa8tNs1AXxj+ufli+Fi7pkVkDeSIsrR4zsI
-	 LaL5pAnbld4YMGoOyDzYTfnfNv3xWqsJpRq9wqFw=
+	b=dcKbkO2afSsqIl7cfFnYoq7FO8vMDxb7axicMiaNMLmktImbHEVi4WhzCK0lm+isv
+	 owCyVolHDAt+lMW8fhTS1aqR3DUJNusGqKOY1mUru8OsciV85CpQkoBNRgvfYT1v+N
+	 p9oibxR12aqxjHya62Z+6stptEkI3x6GRKNI4A00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgCCNqc (ORCPT
+        id S1727585AbgCCNsU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:46:32 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:38270 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbgCCNqc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 08:46:32 -0500
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 023DkNuj001527;
-        Tue, 3 Mar 2020 22:46:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 023DkNuj001527
+        Tue, 3 Mar 2020 08:48:20 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:17398 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgCCNsU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 08:48:20 -0500
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 023DmF3Q024927;
+        Tue, 3 Mar 2020 22:48:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 023DmF3Q024927
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583243184;
-        bh=I0dB0E0Ppgz9TfglvmGFKRBJvWtxB1020ETEw+zES8k=;
+        s=dec2015msa; t=1583243296;
+        bh=xTxEoE0DqYqg792ecc95uiMjXvkkzaqownbqCwALg+w=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r8faXJ+BlS6Qk+t3Ed1/ouhSRxGoBFaiF3DCRJ25taCMU7nJDnr+svsg8p3eaXn2r
-         g9BYXlTOmA5MbqSfx+e4QRvyFdJQwqyaVx3+h/2O4V4ZhgE0uRpdd0xQq8iqgr5Dn/
-         moY4CpHlo+ip6adRt843TeyP2hQU+psGsVqQLeMiov/uEweC4zIDD+SfU1Yo+CTK3W
-         LUHPuOKsZE25mE+t/IkFyBA+dQDZdrz6VB1JBbSC5Q89dSDl6Cgikzf09kYKLQGp+H
-         6ZgiwtdWDmdQaAU/Z/qcGoo4dmQeQ2VRYlGEiWFJV7qX4M9LNVCzK3eg42X74ppr8W
-         7g9nY8pNNlmUw==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id w142so2352836vsw.9;
-        Tue, 03 Mar 2020 05:46:24 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0xII2jz37IHuddeWaFM0hKABhW8mm+Oz4AyHMpqGAsRH769vMz
-        XSTMcEzRYvvG3vDNS3XNSdvuWVT380W+vpHclik=
-X-Google-Smtp-Source: ADFU+vsjmSig+hI85BfC9o+2I1Nt3rsoH9lkQysVJ+WWf8bKa68CI2DD2CprMOpxEX7H5tqzk/VJC2tBrHCTfTlcbI0=
-X-Received: by 2002:a67:bc0c:: with SMTP id t12mr2269458vsn.215.1583243183172;
- Tue, 03 Mar 2020 05:46:23 -0800 (PST)
+        b=265LoLA2SezrWcr3PUYz0KDYjQC6dNQeOp7xBBiptKIlo5DGo4nO+4R1fveYDvrXH
+         duXNhB4ay7CGmgVufSJD1tyoHnKyyNlsLHeXl50HoAn+Isj5a/GkF8+ntrY1i4XKoM
+         2q72e0yvnC+mvWK5NXvIcd0e2jhgmhlhVFdMMi4uw7fQ4M0lryJy15opX6w+1xejjQ
+         OHS5ssayNNQux9RBsnnzozutuOh7df1pI+ZIV0BvglOL2NX/Sso3sJr63AjKOWbKzF
+         YbR7PQ66efTqSdj37cYQ7R/zx4n+zmY1l5c+IB6dldQLVCE8bukGQ6rFuJMnY82y4J
+         NokNQV+gqaVWQ==
+X-Nifty-SrcIP: [209.85.221.174]
+Received: by mail-vk1-f174.google.com with SMTP id x62so868675vkg.11;
+        Tue, 03 Mar 2020 05:48:16 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3CZgbM2DJBEc3/pkMoVoIsAUWEjVIAN+pQg4V2KEtT+LIKUSgH
+        iL2YkozVM2Bx4MBuUwStMd58acHoop4kHYoSdVo=
+X-Google-Smtp-Source: ADFU+vtXBk0momfM4duMHdkHroEOqDdFo7/vIJTOegKIurOSydDddzPRY//2dkZbcFzZmOWMb4KFV2ITAFYULGGJFGw=
+X-Received: by 2002:a1f:b401:: with SMTP id d1mr2769067vkf.26.1583243294990;
+ Tue, 03 Mar 2020 05:48:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20200229003731.2728-1-robh@kernel.org> <CAK7LNAQUbfVvYYSuMNnB2OyNbuYZkzY0gsKRybe-0P9GuYZN2w@mail.gmail.com>
- <CAL_JsqLqZYZXGg8-FnoV8EFKSK8moQjEWe93+FazEbh9GTxQpw@mail.gmail.com>
-In-Reply-To: <CAL_JsqLqZYZXGg8-FnoV8EFKSK8moQjEWe93+FazEbh9GTxQpw@mail.gmail.com>
+References: <20200226175325.8787-1-masahiroy@kernel.org>
+In-Reply-To: <20200226175325.8787-1-masahiroy@kernel.org>
 From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 3 Mar 2020 22:45:47 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATr5TX+CnxHhoa5qcNes6mTp9h0TJ_5=0fGzzq3M8FKxg@mail.gmail.com>
-Message-ID: <CAK7LNATr5TX+CnxHhoa5qcNes6mTp9h0TJ_5=0fGzzq3M8FKxg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
+Date:   Tue, 3 Mar 2020 22:47:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARVX6bJPO0yPo7k_ateDNmk_bXGfoR8nmkEUbkCVtJTLw@mail.gmail.com>
+Message-ID: <CAK7LNARVX6bJPO0yPo7k_ateDNmk_bXGfoR8nmkEUbkCVtJTLw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: remove trailing slash from devicetree/binding/
+ for descending
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 1:06 AM Rob Herring <robh@kernel.org> wrote:
+On Thu, Feb 27, 2020 at 2:53 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> On Fri, Feb 28, 2020 at 10:25 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Hi Rob,
-> >
-> > On Sat, Feb 29, 2020 at 9:37 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > Most folks only run dt_binding_check on the single schema they care about
-> > > by setting DT_SCHEMA_FILES. That means example is only checked against
-> > > that one schema which is not always sufficient.
-> > >
-> > > Let's address this by splitting processed-schema.yaml into 2 files: one
-> > > that's always all schemas for the examples and one that's just the schema
-> > > in DT_SCHEMA_FILES for dtbs.
-> > >
-> > > Cc: Michal Marek <michal.lkml@markovi.net>
-> > > Cc: linux-kbuild@vger.kernel.org
-> > > Co-developed-by: Masahiro Yamada <masahiroy@kernel.org>
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > Masahiro, given you pretty much re-wrote this, I added you as
-> > > Co-developed-by.
-> >
-> >
-> >
-> > I can apply both to my kbuild tree.
+> obj-* needs a trailing slash for a directory, but subdir-* does not
+> because it already implies a directory.
 >
-> Please apply to your tree.
+> Also, change subdir-y to subdir- to ensure this is effective only
+> for cleaning targets.
+>
+> This makes the cleaning log consistent. (no trailing slash)
+>
+> Before:
+>
+>   $ make clean
+>   CLEAN   Documentation/devicetree/bindings/
+>
+> After:
+>
+>   $ make clean
+>   CLEAN   Documentation/devicetree/bindings
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
 
-Done.
-Thanks.
+Applied to linux-kbuild.
+
+
+
+>
+>  Documentation/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/Makefile b/Documentation/Makefile
+> index d77bb607aea4..39569a2e1953 100644
+> --- a/Documentation/Makefile
+> +++ b/Documentation/Makefile
+> @@ -2,7 +2,8 @@
+>  # Makefile for Sphinx documentation
+>  #
+>
+> -subdir-y := devicetree/bindings/
+> +# for cleaning
+> +subdir- := devicetree/bindings
+>
+>  # Check for broken documentation file references
+>  ifeq ($(CONFIG_WARN_MISSING_DOCUMENTS),y)
+> --
+> 2.17.1
+>
 
 
 -- 
