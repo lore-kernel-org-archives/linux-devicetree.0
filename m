@@ -2,82 +2,83 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A131AC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D75AC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8144820863
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D6421556
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uLwSXjc/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgCCMcf (ORCPT
+        id S1728451AbgCCMfG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:32:35 -0500
-Received: from elvis.franken.de ([193.175.24.41]:49595 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgCCMcf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:32:35 -0500
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1j96iu-0003ir-00; Tue, 03 Mar 2020 13:32:32 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 43958C0EC5; Tue,  3 Mar 2020 13:32:14 +0100 (CET)
-Date:   Tue, 3 Mar 2020 13:32:14 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>,
-        Paul Cercueil <paul@crapouillou.net>,
+        Tue, 3 Mar 2020 07:35:06 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:57298 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728547AbgCCMfG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 07:35:06 -0500
+X-UUID: 8b14ac13378043b99e5610dc3af33df6-20200303
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=GaJflJ+2Rxwghotqp7Z2Yh0hJVib/vuajeUPw3js15E=;
+        b=uLwSXjc/D2weXykZr+dTileho7CZSgv3wj35IKM0ex+6Pcd2ZA8yYdlIPsUekXUdg048IRep75en3I10gc/0YG/EFlBnt1TPxsLzAB2swvouwULIdOGsTpbjIV8lQz58t42Fpoxucb+UUlrTWp4ddfOcDtyVFcTFBf/OO5t3ITA=;
+X-UUID: 8b14ac13378043b99e5610dc3af33df6-20200303
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 617703403; Tue, 03 Mar 2020 20:34:57 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 3 Mar 2020 20:34:05 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 3 Mar 2020 20:35:37 +0800
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v5 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-Message-ID: <20200303123214.GA15333@alpha.franken.de>
-References: <cover.1583005548.git.hns@goldelico.com>
- <02f18080fa0e0c214b40431749ca1ce514c53d37.1583005548.git.hns@goldelico.com>
- <20200303101818.GA12103@alpha.franken.de>
- <85F9D066-EAF6-4840-8F54-24E6D8A534DC@goldelico.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        <srv_heupstream@mediatek.com>, Xia Jiang <xia.jiang@mediatek.com>
+Subject: [PATCH v7 01/11] media: platform: Improve subscribe event flow for bug fixing
+Date:   Tue, 3 Mar 2020 20:34:36 +0800
+Message-ID: <20200303123446.20095-2-xia.jiang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200303123446.20095-1-xia.jiang@mediatek.com>
+References: <20200303123446.20095-1-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85F9D066-EAF6-4840-8F54-24E6D8A534DC@goldelico.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 01:10:22PM +0100, H. Nikolaus Schaller wrote:
-> > And please seperate fixes from improvments, thank you.
-> 
-> What do you mean by "separate"? Two separate patches?
-> This patch only contains fixes (which I would consider
-> all of them to be improvements).
+TGV0IHY0bDJfY3RybF9zdWJzY3JpYmVfZXZlbnQoKSBkbyB0aGUgam9iIGZvciBvdGhlciB0eXBl
+cyBleGNlcHQNClY0TDJfRVZFTlRfU09VUkNFX0NIQU5HRS4NCg0KU2lnbmVkLW9mZi1ieTogWGlh
+IEppYW5nIDx4aWEuamlhbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9tZWRpYS9wbGF0
+Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMgfCA0ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwg
+MiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
+ZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMgYi9kcml2ZXJzL21lZGlhL3Bs
+YXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KaW5kZXggZWU4MDJmYzNiY2RmLi5jZGU1
+OTI3NWQ0OWMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210
+a19qcGVnX2NvcmUuYw0KKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtf
+anBlZ19jb3JlLmMNCkBAIC00NDYsOSArNDQ2LDkgQEAgc3RhdGljIGludCBtdGtfanBlZ19zdWJz
+Y3JpYmVfZXZlbnQoc3RydWN0IHY0bDJfZmggKmZoLA0KIAlzd2l0Y2ggKHN1Yi0+dHlwZSkgew0K
+IAljYXNlIFY0TDJfRVZFTlRfU09VUkNFX0NIQU5HRToNCiAJCXJldHVybiB2NGwyX3NyY19jaGFu
+Z2VfZXZlbnRfc3Vic2NyaWJlKGZoLCBzdWIpOw0KLQlkZWZhdWx0Og0KLQkJcmV0dXJuIC1FSU5W
+QUw7DQogCX0NCisNCisJcmV0dXJuIHY0bDJfY3RybF9zdWJzY3JpYmVfZXZlbnQoZmgsIHN1Yik7
+DQogfQ0KIA0KIHN0YXRpYyBpbnQgbXRrX2pwZWdfZ19zZWxlY3Rpb24oc3RydWN0IGZpbGUgKmZp
+bGUsIHZvaWQgKnByaXYsDQotLSANCjIuMTguMA0K
 
-There are two patches with Fixes tag, which IMHO should go
-into 5.6 via mips-fixes branch. All others are going
-via mips-next into 5.7. So it helps me, if they come in different
-patch series (or as single patches).
-
-I see other DT changes in your other patch series. Are the changes
-there independent from each other or do they require correct order
-when appling them ?
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
