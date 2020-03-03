@@ -2,98 +2,177 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE89C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13612C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FCB20CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D630B2073D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sOIG1o9G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvMOlYXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbgCCQAw (ORCPT
+        id S1729680AbgCCQL1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:00:52 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54078 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729543AbgCCQAt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 11:00:49 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023G0kC9091121;
-        Tue, 3 Mar 2020 10:00:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583251246;
-        bh=oehu8Dp5oKYIE3wzZN60BoP+9zoo0QNkg4JLEASppoM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=sOIG1o9G2U58Z90c2BjeCbnkGgxAigmJUGefa2FO/qyUrv/YQ7M/LQlCce3SiRrhC
-         s9ybkO3NUkC/mVLzJn6OGTDO0gI5PrOUYhO7ZCSDZKisIaL8G+Gtw+3HwSu4lD/T5R
-         aAcP+SDwKV4wXjLTB9OaFxtR8T8TFz6IHWVkSNgM=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023G0kXn104100;
-        Tue, 3 Mar 2020 10:00:46 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 10:00:45 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 10:00:46 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023G0jLL126279;
-        Tue, 3 Mar 2020 10:00:45 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Murali Karicheri <m-karicheri2@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        netdev <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [for-next PATCH v2 2/5] dt-bindings: phy: ti: gmii-sel: add support for am654x/j721e soc
-Date:   Tue, 3 Mar 2020 18:00:26 +0200
-Message-ID: <20200303160029.345-3-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200303160029.345-1-grygorii.strashko@ti.com>
-References: <20200303160029.345-1-grygorii.strashko@ti.com>
+        Tue, 3 Mar 2020 11:11:27 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34625 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbgCCQL1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 11:11:27 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z15so5110852wrl.1;
+        Tue, 03 Mar 2020 08:11:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+SzpTWQT3Ru6kg4f8Uj442Z+FLl17Fjj2BOSrwBP2tA=;
+        b=JvMOlYXWMq0Xw1p+AMSLlLQea6qJWe/imSAwECDX0rMvjouX6tXhiTzi6l9PrEOKZH
+         mdkAi2TI7TwqRHeOSAeN4q9w+Mfvk/US67aBFw14KS0w9HiygV3cRD7xJ9z5VRS3PXBr
+         1jaA30b2hzUR0OE/6lXyX2IVnqwBLNuda+OJC4XozRGsax9OtpUhBPfs8c9xgxYWsIqA
+         VuTKw5sjUPmNkpaU06pgtELNoVNP1YKm/LPYmN5gz9+5lVtFmcvVqJxFf5crA986u4HC
+         RRz7ZOhDNXYl+enXW+x20gh545dfWhHil10Ywy6BIlDvrtAIwOqafQWOWpl3U18e7JhH
+         mXOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+SzpTWQT3Ru6kg4f8Uj442Z+FLl17Fjj2BOSrwBP2tA=;
+        b=HFOvzmfMPAd44Y/EP9xF5KFdE4WA+USwNtRHyiKzDfODsEds1EdgXDUvXol3Oye5Wu
+         CqZnBHwlyLkWmrgemRW8E+JfBpT9hNpaKITHRqOb376DXcoPIDaEv3yQl7mPSziXhlrt
+         cf6jFTQARLQyGIESqNYNqVetT0Q5piJZkFi4jmuKCh7MfXrbvVhO6+mMKTrNzJvu5xXV
+         ZhdkXn1Vcr3rFdyP+d0fhNsHclrrG0rDS8rdtRi4b6ZuXP7Jy64PshDHhkkDMMuKjJUj
+         PsNCSEpcP4OnFeRphIlkK1Gyx256uEyiiRKmXJzVQrB3dxudqsMJfejxROg7Qn2bhRUx
+         5ORQ==
+X-Gm-Message-State: ANhLgQ2mYYUxOsQNK5No6A8/+TjgZUCvB0t99Pqd93b+IwPVdk9bseZn
+        uM+kUBZ5ZNnr9UGJYYA1ijDwBLcb
+X-Google-Smtp-Source: ADFU+vsxfAPm/x+IV3Wuxbup+iavPIjBhYZz58QDdng5ipw9V1mPOt2TMllv6EsxNgKf3ODQBhebjg==
+X-Received: by 2002:a5d:5743:: with SMTP id q3mr6227104wrw.135.1583251884664;
+        Tue, 03 Mar 2020 08:11:24 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id s5sm32669295wru.39.2020.03.03.08.11.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 08:11:23 -0800 (PST)
+Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: Add initial support for
+ Pinebook Pro
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     Tobias Schramm <t.schramm@manjaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andy Yan <andy.yan@rock-chips.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nick Xie <nick@khadas.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>
+References: <20200229144817.355678-1-t.schramm@manjaro.org>
+ <20200229144817.355678-3-t.schramm@manjaro.org>
+ <bcc2c8d4-a2cd-58c1-89af-e42439f8f344@gmail.com>
+Message-ID: <850e60b0-c260-c184-839f-93b064388e32@gmail.com>
+Date:   Tue, 3 Mar 2020 17:11:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <bcc2c8d4-a2cd-58c1-89af-e42439f8f344@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TI AM654x/J721E SoCs have the same PHY interface selection mechanism for
-CPSWx subsystem as TI SoCs (AM3/4/5/DRA7), but registers and bit-fields
-placement is different.
+Hi,
 
-This patch adds corresponding compatible strings to enable support for TI
-AM654x/J721E SoCs.
+Add more reg = <..>
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt | 1 +
- 1 file changed, 1 insertion(+)
+On 3/3/20 4:37 PM, Johan Jonker wrote:
+> Hi Tobias,
+> 
+> Some minor style issues.
+> This dts file contains a partition node.
+> Question for the maintainers (Heiko?):
+> Should that partition be included or not?
 
-diff --git a/Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt b/Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt
-index 50ce9ae0f7a5..83b78c1c0644 100644
---- a/Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt
-+++ b/Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt
-@@ -40,6 +40,7 @@ Required properties:
- 			  "ti,dra7xx-phy-gmii-sel" for dra7xx/am57xx platform
- 			  "ti,am43xx-phy-gmii-sel" for am43xx platform
- 			  "ti,dm814-phy-gmii-sel" for dm814x platform
-+			  "ti,am654-phy-gmii-sel" for AM654x/J721E platform
- - reg			: Address and length of the register set for the device
- - #phy-cells		: must be 2.
- 			  cell 1 - CPSW port number (starting from 1)
--- 
-2.17.1
+[..]
+
+>> +&i2c4 {
+>> +	i2c-scl-falling-time-ns = <20>;
+>> +	i2c-scl-rising-time-ns = <600>;
+>> +	status = "okay";
+>> +
+>> +	fusb0: fusb30x@22 {
+>> +		compatible = "fcs,fusb302";
+>> +		reg = <0x22>;
+>> +		fcs,int_n = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&fusb0_int_gpio>;
+> 
+>> +		status = "okay";
+> 
+> Remove or else status below.
+> New nodes are already okay I think.
+> If insure check compiled flat dts output to see if it is still there.
+> 
+>> +		vbus-supply = <&vbus_typec>;
+>> +
+>> +		connector {
+>> +			compatible = "usb-c-connector";
+>> +			label = "USB-C";
+>> +			op-sink-microwatt = <1000000>;
+>> +			power-role = "dual";
+>> +			sink-pdos =
+>> +				<PDO_FIXED(5000, 2500, PDO_FIXED_USB_COMM)>;
+>> +			source-pdos =
+>> +				<PDO_FIXED(5000, 1400, PDO_FIXED_USB_COMM)>;
+>> +			try-power-role = "sink";
+>> +
+>> +			ports {
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +
+>> +				port@0 {
+
+reg = <0>;
+
+>> +					usbc_hs: endpoint {
+>> +						remote-endpoint =
+>> +							<&u2phy0_typec_hs>;
+>> +					};
+>> +				};
+>> +
+>> +				port@1 {
+
+reg = <1>;
+
+>> +					usbc_ss: endpoint {
+>> +						remote-endpoint =
+>> +							<&tcphy0_typec_ss>;
+>> +					};
+>> +				};
+>> +
+>> +				port@2 {
+
+reg = <2>;
+
+>> +					usbc_dp: endpoint {
+>> +						remote-endpoint =
+>> +							<&tcphy0_typec_dp>;
+>> +					};
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>> +};
 
