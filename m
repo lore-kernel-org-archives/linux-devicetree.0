@@ -2,173 +2,163 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A20BC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD9FC3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C99224654
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3100820836
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583254406;
-	bh=A5k8NgDfW4vP6HHsC18TUa8eR7KVaZT1eZZCQVgBYL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cqcw4DOWG+D8sOOcoq7Aic/RpkX+9Gab/jdsQ9G9KJ9/pyAPpR/aa/JbcYJ+ZMqN/
-	 7QA/HM3eSFQkpBj8lW/j/r1FdAly3UE1X2qPybCwnJIZAgSyRGyBpgISIkF6VzDpWe
-	 ZiiJ3Gk26hqwAJMf6IzGmEM3BDitZB1qlxx6qzWM=
+	s=default; t=1583254881;
+	bh=M8qxYvgQXX14YLcGf+b9l7zWzEL047vLx9YwgV80qkY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YiySNQZ4SosFL8FM0BZ3FEMnPNpc4WUoDQPHxIA34pNO1yxNLSb8/hbI1f+HD4f62
+	 a7qx+kjjBXwaY3NhuOXr6I+f/r+Q/4NtqFZgOPJGzvvMEBv3OZ/i919sWm8uDI42FT
+	 dMMHw63+JgTA9OuDHrbTF9PWSEitgpVWCTBjthhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730411AbgCCQxZ (ORCPT
+        id S1728368AbgCCRBP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:53:25 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35583 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbgCCQxZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 11:53:25 -0500
-Received: by mail-ot1-f65.google.com with SMTP id v10so3710640otp.2;
-        Tue, 03 Mar 2020 08:53:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UO6q1WI8Phcj/IcENQphH46oCI8xjrDVJnO/bSc3SAQ=;
-        b=kCEdUlbhCpPtJb+l4oFaYiHSf1rYOALarqCy6SaiFPxdX8cL5csWVim6Borz+1ft5V
-         wjoLWbs+RMf4e3LQ25+1cOkf+cn+n8ax0WNs6fNf5lhgx77ye98DI417U/6YBtV8hMnl
-         2pPABnr7ttBdB3KHb+s+Xfti4P5e0CHbWXeiLM18ZRs/3LDOwCx0SsHgxJjwFKU+9+na
-         2NcfVunjlx43EsQzDUs+q9MJTWUnbtHr2i1sHNArmzoNgqaBfbGnZ7dGrZbk+JKV7r3D
-         bRQpuQQSESlydTaD0z2GSxrUI2RIBgmvM8bvqluF1XUWT9bUWkB+U9myeoXAk/pP37Ye
-         w46Q==
-X-Gm-Message-State: ANhLgQ3huxz+sl6atuBglhZeEuED9Oro2DiRJ4kVu6QgRJYMQ3o55aBv
-        QuKaAyLyoPMcKq86FOTsug==
-X-Google-Smtp-Source: ADFU+vtKffzJaK+qHxe336nH4kj7mS752gyMBxM59RExFd9VPTCue7HZNBWX4B5GOdQr+y6Kuficsg==
-X-Received: by 2002:a9d:70d5:: with SMTP id w21mr4179326otj.65.1583254404567;
-        Tue, 03 Mar 2020 08:53:24 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c18sm467608otr.0.2020.03.03.08.53.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 08:53:24 -0800 (PST)
-Received: (nullmailer pid 25933 invoked by uid 1000);
-        Tue, 03 Mar 2020 16:53:23 -0000
-Date:   Tue, 3 Mar 2020 10:53:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jic23@kernel.org
-Subject: Re: [PATCH v3 6/8] dt-bindings: iio: adc: add bindings doc for AXI
- ADC driver
-Message-ID: <20200303165323.GA32472@bogus>
-References: <20200227082719.6343-1-alexandru.ardelean@analog.com>
- <20200227082719.6343-7-alexandru.ardelean@analog.com>
+        Tue, 3 Mar 2020 12:01:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727077AbgCCRBP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:01:15 -0500
+Received: from onda.lan (ip-109-40-2-133.web.vodafone.de [109.40.2.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D98C42073B;
+        Tue,  3 Mar 2020 17:01:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583254874;
+        bh=M8qxYvgQXX14YLcGf+b9l7zWzEL047vLx9YwgV80qkY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ij4l8jdmw3wvTqvzDeg4XCG0yQ/8CNU3l6XB0WknejV9BHw7CN7/PryP49fNkSByc
+         QJHqbfwsD+82fRjGFSui6SLFqGTUmMa9y3MSTYCX/5Xt+qEnNVOM9zpjk2JcERiD6d
+         7jJ8XMod4+mmrSYonMkS+j+q23vqR3BUsH1n+wEk=
+Date:   Tue, 3 Mar 2020 18:01:09 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] Convert some DT documentation files to ReST
+Message-ID: <20200303180109.670ad7f8@onda.lan>
+In-Reply-To: <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
+References: <cover.1583135507.git.mchehab+huawei@kernel.org>
+        <20200302123554.08ac0c34@lwn.net>
+        <20200303080947.5f381004@onda.lan>
+        <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227082719.6343-7-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 10:27:17AM +0200, Alexandru Ardelean wrote:
-> This change adds the bindings documentation for the AXI ADC driver.
+Em Tue, 3 Mar 2020 10:20:25 -0600
+Rob Herring <robh@kernel.org> escreveu:
+
+> On Tue, Mar 3, 2020 at 1:09 AM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> >
+> > Em Mon, 2 Mar 2020 12:35:54 -0700
+> > Jonathan Corbet <corbet@lwn.net> escreveu:
+> >  
+> > > On Mon,  2 Mar 2020 08:59:25 +0100
+> > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > >  
+> > > > While most of the devicetree stuff has its own format (with is now being
+> > > > converted to YAML format), some documents there are actually
+> > > > describing the DT concepts and how to contribute to it.
+> > > >
+> > > > IMHO, those documents would fit perfectly as part of the documentation
+> > > > body, as part of the firmare documents set.
+> > > >
+> > > > This patch series manually converts some DT documents that, on my
+> > > > opinion, would belong to it.  
+> > >
+> > > Did you consider putting this stuff into the firmware-guide while you were
+> > > at it?  It's not a perfect fit, I guess, but it doesn't seem too awkward
+> > > either.  
+> >
+> > I placed it just below the firmware-guide at the main index file.
+> >
+> > I have split thoughts about moving the files to there, though. From
+> > one side, it may fit better from the PoV of organizing the documentation.
+> >
+> > From other side, newcomers working with DT may expect looking at the
+> > text files inside Documentation/devicetree/.
+> >
+> > Maybe I could add an extra patch at the end of this series with the
+> > move, adding a "RFC" on his title. This way, we can better discuss it,
+> > and either merge the last one or not depending on the comments.  
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  .../bindings/iio/adc/adi-axi-adc.yaml         | 69 +++++++++++++++++++
+> Keep in mind that we generate a standalone DT only tree[1] with the
+> documentation, dts files and headers. So things should be structured
+> such that all the DT documentation could be built by itself without
+> dependencies on the 'kernel documentation'. I'm not asking for that to
+> be done in this series, but just don't do anything to make that
+> harder. I don't *think* have, but just want to make sure that's clear.
 
-Follow the compatible string: adi,axi-adc.yaml 
+So, I guess it is better to keep the .rst files under Documentation/devicetree,
+instead of moving them to Documentation/firmware-guide.
 
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
+Well, if moved, I guess it would be easy to modify the scripts that produce
+the documentation to also parse something a new directory inside
+Documentation/firmware-guide.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
-> new file mode 100644
-> index 000000000000..d45d41f4f08e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi-axi-adc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AXI ADC IP core
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>
-> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +
-> +description: |
-> +  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
-> +  with a high speed serial (JESD204B/C) or source synchronous parallel
-> +  interface (LVDS/CMOS).
-> +  Usually, some other interface type (i.e SPI) is used as a control
-> +  interface for the actual ADC, while this IP core will interface
-> +  to the data-lines of the ADC and handle the streaming of data into
-> +  memory via DMA.
-> +
-> +  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,axi-adc-10.0.a
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    minItems: 1
-> +    maxItems: 1
-
-Just maxItems is enough.
-
-> +
-> +  dma-names:
-> +    maxItems: 1
-> +    items:
-> +      - const: rx
-> +
-> +  adi-axi-adc-client:
-
-adi,axi-adc-client
-
-Though I think 'adi,adc-dev' would be better name.
-
-> +    description:
-> +      A reference to a the actual ADC to which this FPGA ADC interfaces to.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - dmas
-> +  - reg
-> +  - adi-axi-adc-client
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    fpga_axi {
-
-You can drop this node.
-
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        axi-adc@44a00000 {
-> +          compatible = "adi,axi-adc-10.0.a";
-> +          reg = <0x44a00000 0x10000>;
-> +          dmas = <&rx_dma 0>;
-> +          dma-names = "rx";
-> +
-> +          adi-axi-adc-client = <&spi_adc>;
-> +        };
-> +    };
-> +...
-> -- 
-> 2.20.1
+> > > It also seems like it would be good to CC the devicetree folks, or at
+> > > least the devicetree mailing list?  
 > 
+> I was wondering what happened to the cover letter on v2...
+> 
+> > Yeah, that would make sense. I'm using get-maintainers script to
+> > prepare the c/c list, as it is simply too much work to find the
+> > right maintainers by hand, for every single patch.
+> >
+> > I just noticed today that there's just *one entry* at MAINTAINERS
+> > file for Documentation/devicetree, and that points to you:
+> >
+> >         DOCUMENTATION
+> >         M:      Jonathan Corbet <corbet@lwn.net>
+> >         L:      linux-doc@vger.kernel.org
+> >         S:      Maintained
+> >         F:      Documentation/
+> >         F:      scripts/documentation-file-ref-check
+> >         F:      scripts/kernel-doc
+> >         F:      scripts/sphinx-pre-install
+> >         X:      Documentation/ABI/
+> >         X:      Documentation/firmware-guide/acpi/
+> >         X:      Documentation/devicetree/  
+> 
+> You mean doesn't point to Jon as 'X' is exclude. You missed this entry:
+> 
+> OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> M:      Rob Herring <robh+dt@kernel.org>
+> M:      Mark Rutland <mark.rutland@arm.com>
+> L:      devicetree@vger.kernel.org
+> T:      git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+> Q:      http://patchwork.ozlabs.org/project/devicetree-bindings/list/
+> S:      Maintained
+> F:      Documentation/devicetree/
+> F:      arch/*/boot/dts/
+> F:      include/dt-bindings/
+
+Yeah, I remember I saw something like the above in the past. However,
+I'm not seeing this entry at the MAINTAINERS file at next-20200303 anymore.
+
+Did someone removed such entry?
+
+> 
+> 
+> Rob
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
