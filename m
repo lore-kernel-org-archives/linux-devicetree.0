@@ -4,69 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5486FC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12E1C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C80D20866
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B048320866
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wzZyOfUm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O4Z5cHiK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgCCRMd (ORCPT
+        id S1730710AbgCCRMM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:12:33 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50628 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730704AbgCCRMM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 12:12:12 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a5so4173964wmb.0
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 09:12:10 -0800 (PST)
+        Tue, 3 Mar 2020 12:12:12 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36535 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730697AbgCCRMK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 12:12:10 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g83so3668819wme.1
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 09:12:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hGNTAFqXsi7D5stT0DNXt+Hv8uO5S+gOsoBxWrDsv3g=;
-        b=wzZyOfUmn3V6z5p5vP7MOmOL0F5Cmh1jDgzI3QD1HjW+4XjQ8Hev1ljsBgZu1dYG7t
-         IYXAnG+Moabo3pR78T0cZ926kKAZ218rmfHQxxZsZerHxft0NAPyF1g04v0RIM5NXKx9
-         7etEFcEJ9yiYVk/aVi0M5xgvmOPkj3X+trPhrNuML1SkFkg1OwaVZ3Jwj66Te4DJnud2
-         Fh2GJhBP9qpQ5p9mXYgsTKj1z5QgNzD6hRlyOh0Mu7oNgFba46xQc1olp9THJAybTBlK
-         61MlGYnd+dw0YI086BjClDk9kqrftZdL7U30Vr9NOAR9wt47ACb5al2hN/e8BZHu91r8
-         NLLA==
+        bh=ZPPGYFMns8Eb0BtCoPm4VW2OpZkSSM3j58axdU/IfuM=;
+        b=O4Z5cHiKkmQ+bOXomT4Adnlla/zpvUnnHKnHRiJnc6HZTMgS+s64KjrD0M8dizGJqV
+         j5txUXYCbMwC0ewUXeOU5rWc01TJ7Z8aOaq9k7AgqTX3dHGJKl+nDI+Px+zmfLUB93No
+         6V+FPk3IlLwU1Tb93BqMY4eEMPQo5dCK5sNPvJc4VKvhWklHRc4atynyw4dhv+F59rBZ
+         d1FSUMwEv4u2WY6HmyTgBuQSHVeka0aHAFnx5+Rlszhgb043lefR5OG3GQVKubNVOvd2
+         JiekvG3L/Q5JTPWwm5DQimOsM3kCC+Zwy7HRWvzEFFfZgBx3w5x3vk3+WDZ9qzoE1jux
+         bSPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hGNTAFqXsi7D5stT0DNXt+Hv8uO5S+gOsoBxWrDsv3g=;
-        b=sHwJOaCMwkqX4oMIJMhm4cNEFeMu63Zd4CmT5qgOKd9w/syO7pOefqe0QeIPp0fbu7
-         Be6fJicVNmonkQBVIzzGkQuB+FgA+ruRecZj2g3e9vhvTPesR5yDZqg0juOEdKEKRXx8
-         PMiyHA1eHZqFYNpj0wgc3yUiycurQvNfD+N84lv0mmYIEftiw+XSusL+/UeBXaUE2zay
-         pE9dzwh4sFSp85DJkyS4qdqrMe87ZfLW9F4pvtWiC3c0luugZSt4KRD+/WWlNj8mE5Bx
-         iJPrkt3tPWtTejg/nUqR3+uvU3ZfOgtqlngt/92CAjqN0cmqu2Bq9axGRSb6ryD7H18K
-         28Og==
-X-Gm-Message-State: ANhLgQ1ILQ54f3LREh5UgOYcNTnLJNcuvF6qquMi8ypTsEVjruy1+IZ8
-        4ycPYUFaTWq/7D2LtREjnJWwzw==
-X-Google-Smtp-Source: ADFU+vvOhzRL7NuzophBFliwar9a0QIHZz0rYBsuA6eN/MXyW5ytE5FgayCW4lonuqLSp6ucIdKeuA==
-X-Received: by 2002:a05:600c:4108:: with SMTP id j8mr5114959wmi.188.1583255529920;
-        Tue, 03 Mar 2020 09:12:09 -0800 (PST)
+        bh=ZPPGYFMns8Eb0BtCoPm4VW2OpZkSSM3j58axdU/IfuM=;
+        b=pvsgZ9EHOBov0imebxFDTlyVro5kXX2Duf6jKZaF6CEuWIAaEkm57kpv2rJanSmMSR
+         FyoVb5uqLq53pgtkhQvrh623M2Z6G6/cppM4jHjmOmby+NlvZOY9GyBKMCqP2auK9EIL
+         gqAcn+aZ6rCtiNGX4tsOCj+ghYUsxdsHYiPpOBSmSmgvb+8jWP2aA6enjni2DcTk2PsT
+         0RXwhYGpJMENUwHVysqEmJZ9z07Y95wWsG6LVzfcCE3PhklYyzX21uTeIKGbi4p0qd80
+         DC/uep9hrEfVzf+2+WTS3lvR4RmrnLvgvJh08MG1V/7xjBd8SVbPJaggRE/yxTkz23q7
+         AuHA==
+X-Gm-Message-State: ANhLgQ1TFGtJKxK9GV5yZBouW+4Z/PkMdcEPLqw3jTpVhfrHPW6/A5U1
+        tfnpeRqYllimYmUGTKoCwPZpdw==
+X-Google-Smtp-Source: ADFU+vuwH+JcmOTaQLUODIvWjX4q6nDSP8HAuS2wT0wkvezVz/0ZPyUMB33aF5CDrTBv/59NuT/y7A==
+X-Received: by 2002:a05:600c:230d:: with SMTP id 13mr5133837wmo.11.1583255528580;
+        Tue, 03 Mar 2020 09:12:08 -0800 (PST)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id z13sm5425319wrw.88.2020.03.03.09.12.08
+        by smtp.gmail.com with ESMTPSA id z13sm5425319wrw.88.2020.03.03.09.12.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 09:12:09 -0800 (PST)
+        Tue, 03 Mar 2020 09:12:07 -0800 (PST)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
         bjorn.andersson@linaro.org, robh@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+Cc:     linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v7 14/18] arm64: dts: qcom: qcs404-evb: Define VBUS pins
-Date:   Tue,  3 Mar 2020 17:11:55 +0000
-Message-Id: <20200303171159.246992-15-bryan.odonoghue@linaro.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH v7 13/18] arm64: dts: qcom: qcs404: Add USB devices and PHYs
+Date:   Tue,  3 Mar 2020 17:11:54 +0000
+Message-Id: <20200303171159.246992-14-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
 References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
@@ -77,18 +79,16 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Defines VBUS detect and VBUS boost for the QCS404 EVB.
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Detect:
-VBUS present/absent is presented to the SoC via a GPIO on the EVB. Define
-the pin mapping for later use by gpio-usb-conn.
+QCS404 sports HS and SS USB controllers based on dwc3 block with two HS
+PHYs and one SS PHY. Add nodes for these devices and enable them for
+EVB board.
 
-Boost:
-An external regulator is used to trigger VBUS on/off via GPIO. This patch
-defines the relevant GPIO in the EVB dts.
-
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: linux-arm-msm@vger.kernel.org
@@ -96,49 +96,127 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 100 +++++++++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 522d3ef72df5..62ef9c34b04e 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -4,6 +4,8 @@
- #include <dt-bindings/gpio/gpio.h>
- #include "qcs404.dtsi"
- #include "pms405.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index 4ee1e3d5f123..d3347ce2b94f 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -323,6 +323,48 @@ rpm_msg_ram: memory@60000 {
+ 			reg = <0x00060000 0x6000>;
+ 		};
  
- / {
- 	aliases {
-@@ -271,6 +273,26 @@ rclk {
- 	};
- };
- 
-+&pms405_gpios {
-+	usb_vbus_boost_pin: usb-vbus-boost-pin {
-+		pinconf {
-+			pins = "gpio3";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			output-low;
-+			power-source = <1>;
++		usb3_phy: phy@78000 {
++			compatible = "qcom,usb-ss-28nm-phy";
++			reg = <0x00078000 0x400>;
++			#phy-cells = <0>;
++			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
++				 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
++				 <&gcc GCC_USB3_PHY_PIPE_CLK>;
++			clock-names = "ref", "ahb", "pipe";
++			resets = <&gcc GCC_USB3_PHY_BCR>,
++				 <&gcc GCC_USB3PHY_PHY_BCR>;
++			reset-names = "com", "phy";
++			status = "disabled";
 +		};
-+	};
-+	usb3_vbus_pin: usb3-vbus-pin {
-+		pinconf {
-+			pins = "gpio12";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			input-enable;
-+			bias-pull-down;
-+			power-source = <1>;
-+		};
-+	};
-+};
 +
- &wifi {
- 	status = "okay";
- 	vdd-0.8-cx-mx-supply = <&vreg_l2_1p275>;
++		usb2_phy_prim: phy@7a000 {
++			compatible = "qcom,usb-hs-28nm-femtophy";
++			reg = <0x0007a000 0x200>;
++			#phy-cells = <0>;
++			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
++				 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
++				 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
++			clock-names = "ref", "ahb", "sleep";
++			resets = <&gcc GCC_USB_HS_PHY_CFG_AHB_BCR>,
++				 <&gcc GCC_USB2A_PHY_BCR>;
++			reset-names = "phy", "por";
++			status = "disabled";
++		};
++
++		usb2_phy_sec: phy@7c000 {
++			compatible = "qcom,usb-hs-28nm-femtophy";
++			reg = <0x0007c000 0x200>;
++			#phy-cells = <0>;
++			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
++				 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
++				 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
++			clock-names = "ref", "ahb", "sleep";
++			resets = <&gcc GCC_QUSB2_PHY_BCR>,
++				 <&gcc GCC_USB2_HS_PHY_ONLY_BCR>;
++			reset-names = "phy", "por";
++			status = "disabled";
++		};
++
+ 		qfprom: qfprom@a4000 {
+ 			compatible = "qcom,qfprom";
+ 			reg = <0x000a4000 0x1000>;
+@@ -486,6 +528,64 @@ glink-edge {
+ 			};
+ 		};
+ 
++		usb3: usb@7678800 {
++			compatible = "qcom,dwc3";
++			reg = <0x07678800 0x400>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&gcc GCC_USB30_MASTER_CLK>,
++				 <&gcc GCC_SYS_NOC_USB3_CLK>,
++				 <&gcc GCC_USB30_SLEEP_CLK>,
++				 <&gcc GCC_USB30_MOCK_UTMI_CLK>;
++			clock-names = "core", "iface", "sleep", "mock_utmi";
++			assigned-clocks = <&gcc GCC_USB20_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB30_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <200000000>;
++			status = "disabled";
++
++			dwc3@7580000 {
++				compatible = "snps,dwc3";
++				reg = <0x07580000 0xcd00>;
++				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++				phys = <&usb2_phy_sec>, <&usb3_phy>;
++				phy-names = "usb2-phy", "usb3-phy";
++				snps,has-lpm-erratum;
++				snps,hird-threshold = /bits/ 8 <0x10>;
++				snps,usb3_lpm_capable;
++				dr_mode = "otg";
++			};
++		};
++
++		usb2: usb@79b8800 {
++			compatible = "qcom,dwc3";
++			reg = <0x079b8800 0x400>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&gcc GCC_USB_HS_SYSTEM_CLK>,
++				 <&gcc GCC_PCNOC_USB2_CLK>,
++				 <&gcc GCC_USB_HS_INACTIVITY_TIMERS_CLK>,
++				 <&gcc GCC_USB20_MOCK_UTMI_CLK>;
++			clock-names = "core", "iface", "sleep", "mock_utmi";
++			assigned-clocks = <&gcc GCC_USB20_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB_HS_SYSTEM_CLK>;
++			assigned-clock-rates = <19200000>, <133333333>;
++			status = "disabled";
++
++			dwc3@78c0000 {
++				compatible = "snps,dwc3";
++				reg = <0x078c0000 0xcc00>;
++				interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++				phys = <&usb2_phy_prim>;
++				phy-names = "usb2-phy";
++				snps,has-lpm-erratum;
++				snps,hird-threshold = /bits/ 8 <0x10>;
++				snps,usb3_lpm_capable;
++				dr_mode = "peripheral";
++			};
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,qcs404-pinctrl";
+ 			reg = <0x01000000 0x200000>,
 -- 
 2.25.1
 
