@@ -2,149 +2,118 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C556C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7305AC3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535882083E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D8B20838
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583252439;
-	bh=Zro81PjZvB79s/jq+XpT7vaGwIFOydrEpcLyBTIre54=;
+	s=default; t=1583252807;
+	bh=vsJgbdruHgBK38fy10b+tkrHQs0nqfHXmYGGdSdCSeg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=puQlLHiJV1E7KqZcbuMkmMuq7OkuXOtt4W3MYViNyP/Qfqfk465L4ArNqoD2N2ROz
-	 RrCSRf5JOkK66f5KjlVfaGl2xwXaPr9FlXKDIi+C+FXASrtpG4y9/r1vOaZKCXVx4/
-	 goPkUSf3zXQNSPrZzFTPQEeSzIYVd5o0xGvbbAaE=
+	b=r1iWmBFU/K9A8qEwZNvYYRA2jc99W5atAhdgnKNwMkJScNWYGj46mR+dN33hO0+t8
+	 iCOmQ0Q2P6EZ6Q2cGRCK1JzvVeD/VAoBWIr0QLxsO2Q1j0+6E8Opvi8UF0Wa/QHAzB
+	 KeufJtucBR3FtAADom8UIWTAwYN9FT7dRJYJl7XM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgCCQUi (ORCPT
+        id S1730164AbgCCQ0q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:20:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 11:26:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729382AbgCCQUi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:20:38 -0500
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        id S1729438AbgCCQ0q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:26:46 -0500
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 950FF2083E;
-        Tue,  3 Mar 2020 16:20:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3770820838;
+        Tue,  3 Mar 2020 16:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583252437;
-        bh=Zro81PjZvB79s/jq+XpT7vaGwIFOydrEpcLyBTIre54=;
+        s=default; t=1583252806;
+        bh=vsJgbdruHgBK38fy10b+tkrHQs0nqfHXmYGGdSdCSeg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sZ3DrP5arT5Uda74vumLAa2MSbiNfVIz2luVx9rFYxLtcTC+Oo7EmkFLEhd6nGgtt
-         As4a7DIpa9oZD61Zh6Lupbal35pfS6oGqT702EMqmCMvq6nNUoTNDo0IooWVwvyBVr
-         TTmvdioo2VKymQ3tSv+czlZGw+dYuvwe1sLSIV20=
-Received: by mail-qk1-f171.google.com with SMTP id p62so3978147qkb.0;
-        Tue, 03 Mar 2020 08:20:37 -0800 (PST)
-X-Gm-Message-State: ANhLgQ30HbpvgZ6+2NJAJr37vQ32zfIyyMHCWTMWRtxKBGg3Zqv4K/C5
-        ghrd5CixpyySh60F5F08gxlu0PshloXEEFHJkg==
-X-Google-Smtp-Source: ADFU+vuMjEgENnYXMgZ0DZmjYOU7SV2y7ndmmk013/U+mJxM6sg3qyyrWb9wOcVBJrSmdtBfV9DfCHaWZOqInJyC6r0=
-X-Received: by 2002:a05:620a:1015:: with SMTP id z21mr4780777qkj.393.1583252436658;
- Tue, 03 Mar 2020 08:20:36 -0800 (PST)
+        b=pDllV1J8OXCSRDaFN2N41EicTiO4sV62Yiw/EnbjRRv7EEZ3gNFpH1qclkwO2g6wx
+         HvD54cok0M1NIkhdv04OBgkG+Pso+gq/5VSuSerEDjxALhgxpWDCv9XHEsWS3VO9ux
+         +bfMDfUflURBCeKcEAC3KUGbezLqZaH9wpY2VXm8=
+Received: by mail-qt1-f179.google.com with SMTP id v22so3234512qtp.10;
+        Tue, 03 Mar 2020 08:26:46 -0800 (PST)
+X-Gm-Message-State: ANhLgQ17n/u1E+g/nxy3/Y9n54dJaKJ5733L+IAGs/oCvuD6yNhah3jF
+        BvwhKVRJ6ivXWBITcyo0HZHkUPeQsUhj5T7pKg==
+X-Google-Smtp-Source: ADFU+vv6Z0CBR5iu3C7uWQHlG/BBUbvUvPQTZbGd9V3M1spWP53cW66vgSQC33LfMLGBhIwiJL3sMSwIm1iScABBrMY=
+X-Received: by 2002:ac8:7c9b:: with SMTP id y27mr5318510qtv.300.1583252805245;
+ Tue, 03 Mar 2020 08:26:45 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
- <20200302123554.08ac0c34@lwn.net> <20200303080947.5f381004@onda.lan>
-In-Reply-To: <20200303080947.5f381004@onda.lan>
+References: <cover.1583127977.git.eswara.kota@linux.intel.com>
+ <9f049a5fccd080bd5d8e9a697b96d4c40a413a0a.1583127977.git.eswara.kota@linux.intel.com>
+ <20200303015051.GA780@bogus> <5b71670d-91a6-9760-f4da-1b6f014a1ea2@linux.intel.com>
+In-Reply-To: <5b71670d-91a6-9760-f4da-1b6f014a1ea2@linux.intel.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 3 Mar 2020 10:20:25 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
-Message-ID: <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] Convert some DT documentation files to ReST
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
+Date:   Tue, 3 Mar 2020 10:26:33 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLKFbaiaeNAq_b9xDQRWVG8dXkWt2+cKucRPEzynC20XQ@mail.gmail.com>
+Message-ID: <CAL_JsqLKFbaiaeNAq_b9xDQRWVG8dXkWt2+cKucRPEzynC20XQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] dt-bindings: phy: Add YAML schemas for Intel Combophy
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 1:09 AM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
+On Tue, Mar 3, 2020 at 3:24 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
 >
-> Em Mon, 2 Mar 2020 12:35:54 -0700
-> Jonathan Corbet <corbet@lwn.net> escreveu:
 >
-> > On Mon,  2 Mar 2020 08:59:25 +0100
-> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> On 3/3/2020 9:50 AM, Rob Herring wrote:
+> > On Mon, Mar 02, 2020 at 04:43:24PM +0800, Dilip Kota wrote:
+> >> Combophy subsystem provides PHY support to various
+> >> controllers, viz. PCIe, SATA and EMAC.
+> >> Adding YAML schemas for the same.
+> >>
+> >> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> >> ---
+> >> Changes on v4:
+> >>    No changes.
+> ...
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include <dt-bindings/phy/phy-intel-combophy.h>
+> >> +    combophy@d0a00000 {
+> >> +        compatible = "intel,combophy-lgm", "intel,combo-phy";
+> >> +        clocks = <&cgu0 1>;
+> >> +        reg = <0xd0a00000 0x40000>,
+> >> +              <0xd0a40000 0x1000>;
+> >> +        reg-names = "core", "app";
+> >> +        resets = <&rcu0 0x50 6>,
+> >> +                 <&rcu0 0x50 17>;
+> >> +        reset-names = "phy", "core";
+> >> +        intel,syscfg = <&sysconf 0>;
+> >> +        intel,hsio = <&hsiol 0>;
+> >> +        intel,phy-mode = <COMBO_PHY_PCIE>;
+> >> +
+> >> +        phy@0 {
+> > You need a 'reg' property to go with a unit-address.
 > >
-> > > While most of the devicetree stuff has its own format (with is now being
-> > > converted to YAML format), some documents there are actually
-> > > describing the DT concepts and how to contribute to it.
-> > >
-> > > IMHO, those documents would fit perfectly as part of the documentation
-> > > body, as part of the firmare documents set.
-> > >
-> > > This patch series manually converts some DT documents that, on my
-> > > opinion, would belong to it.
-> >
-> > Did you consider putting this stuff into the firmware-guide while you were
-> > at it?  It's not a perfect fit, I guess, but it doesn't seem too awkward
-> > either.
->
-> I placed it just below the firmware-guide at the main index file.
->
-> I have split thoughts about moving the files to there, though. From
-> one side, it may fit better from the PoV of organizing the documentation.
->
-> From other side, newcomers working with DT may expect looking at the
-> text files inside Documentation/devicetree/.
->
-> Maybe I could add an extra patch at the end of this series with the
-> move, adding a "RFC" on his title. This way, we can better discuss it,
-> and either merge the last one or not depending on the comments.
+> > Really, I'd just simplify this to make parent 'resets' be 4 entries and
+> > put '#phy-cells = <1>;' in the parent. Then you don't need these child
+> > nodes.
+> If child nodes are not present, use case like PCIe controller-0 using
+> phy@0 and PCIe controller-1 using phy@1 wont be possible.
 
-Keep in mind that we generate a standalone DT only tree[1] with the
-documentation, dts files and headers. So things should be structured
-such that all the DT documentation could be built by itself without
-dependencies on the 'kernel documentation'. I'm not asking for that to
-be done in this series, but just don't do anything to make that
-harder. I don't *think* have, but just want to make sure that's clear.
+Yes, it will be.
 
-> > It also seems like it would be good to CC the devicetree folks, or at
-> > least the devicetree mailing list?
+For controller-0:
+phys = <&phy 0>;
 
-I was wondering what happened to the cover letter on v2...
-
-> Yeah, that would make sense. I'm using get-maintainers script to
-> prepare the c/c list, as it is simply too much work to find the
-> right maintainers by hand, for every single patch.
->
-> I just noticed today that there's just *one entry* at MAINTAINERS
-> file for Documentation/devicetree, and that points to you:
->
->         DOCUMENTATION
->         M:      Jonathan Corbet <corbet@lwn.net>
->         L:      linux-doc@vger.kernel.org
->         S:      Maintained
->         F:      Documentation/
->         F:      scripts/documentation-file-ref-check
->         F:      scripts/kernel-doc
->         F:      scripts/sphinx-pre-install
->         X:      Documentation/ABI/
->         X:      Documentation/firmware-guide/acpi/
->         X:      Documentation/devicetree/
-
-You mean doesn't point to Jon as 'X' is exclude. You missed this entry:
-
-OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-M:      Rob Herring <robh+dt@kernel.org>
-M:      Mark Rutland <mark.rutland@arm.com>
-L:      devicetree@vger.kernel.org
-T:      git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-Q:      http://patchwork.ozlabs.org/project/devicetree-bindings/list/
-S:      Maintained
-F:      Documentation/devicetree/
-F:      arch/*/boot/dts/
-F:      include/dt-bindings/
-
+For controller-1:
+phys = <&phy 1>;
 
 Rob
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
