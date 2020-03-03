@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580BAC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14DDC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE7620873
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9841A208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k/Z9gXXq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPul6xha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbgCCPIB (ORCPT
+        id S1729602AbgCCPIE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:08:01 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35628 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729452AbgCCPIB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 10:08:01 -0500
-Received: by mail-lf1-f66.google.com with SMTP id z9so3064728lfa.2
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 07:08:00 -0800 (PST)
+        Tue, 3 Mar 2020 10:08:04 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40279 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729517AbgCCPIE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 10:08:04 -0500
+Received: by mail-lf1-f65.google.com with SMTP id p5so3040546lfc.7
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 07:08:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B30v3NBJ89pTZvCRAyGguiMnt+PH3RI+BA4eDrldRLY=;
-        b=k/Z9gXXqNlqfswOQwls9gp/b1woar1i2f5V8G/kc56ZdmRjSnj8PGdrlMoAhZe/J5Y
-         K3fnFzs2hsZawrNoqYblo5+8ztsKhuNfmaaKe6W30Yncrf1lUS1bi/qcTsTX+uQTxnZf
-         GBWAQSh35JRJkc3KU8ZbmX420ykXl8bYoMw4i9nc0egLBhA/s25pvvJQUb0KcUGUuklf
-         uw5itk1tZg8MnPhLaM153kWr6hd9P2c1H7Gbpe+/JRrvEeP3P/kX3HD6eg89gpryUjp7
-         pabbouy0baZYlRoExtpecn9l0khYWrqTkAMHIGsEMDkKI9lrpD/5duiHzSScjUnRrWXc
-         bUUQ==
+        bh=oH2DPw9yOnkNvy1Ktf77A4iViJfMOE/P09y2cJqfUP0=;
+        b=mPul6xhaNAuxo8T2+NE+xGn8787mHR5kxItdLJQJgLjWA7RHBJv120FuQ0vlz6JeMi
+         L86z/EMCuNHoLke+7BgdQPJLpMsDrJY4PNNIR4KHK/5id2D6YAD4T+9SbyZ/nEvaDU+3
+         epDaF59obqiYBlfBmYhFIi5QVk/ZNTprB/WeyY83K/5ILFe5xaQ2Vj9aVWajv4R+iESZ
+         JeO21O78P8bErOdDEp5lNIkLGaGrtMc/pQ4/tusG+B/6aOnA0XkiAi90SxaWaztVSOHj
+         1sBD75JH05+mvHNLxdeTL1b7Th5uQowbmcuJJDknrkNnHyWmwp8THQeBzYamGO3C+TyE
+         o/fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B30v3NBJ89pTZvCRAyGguiMnt+PH3RI+BA4eDrldRLY=;
-        b=Xx/r5roRqS5WCpdETDG/crSX5wnNM0l8pF/Br9Ea9oWH23gQ0bSziK+YwF66FdbOWw
-         7I9lxPJhOr+NY1VmsTzgCFUBKtieogGPp/CB4tUGdk4PQv+YTt2luHzNW/Q1v3sHitp5
-         JPprHKMEbP7WYN7I0VngzmlKo1IU6hdlvKpkTNQil8oJNeuybs2krq+Y8QJxpapfOHA1
-         830atd1WF+SzAmB6H5ogtCA2C+mXEaL4kpFaPl8Gk+6Q0Kuxp4ACX3uJXs/UvG9Ckn4j
-         6VJRJH8MLNkX7Y6SB9D3CRnd0hbb2Xm9GS9APdWoKiId4UukJl6gY670Uui7kqu7vpwa
-         lLgw==
-X-Gm-Message-State: ANhLgQ2yP1kDabyryXKiaFUJkF/1EYKUd7EMR5Br5QJ614SfaM1eH9xj
-        YUJZwhCdmHdsAZU13gC+/yB+Hg==
-X-Google-Smtp-Source: ADFU+vsNa2Cmu28UnbH+m7iPEgdhqmX6OprzfWRZhA31z6e3MSYvdgClxx8aL3JsLOL6vHbmRtGbDg==
-X-Received: by 2002:a05:6512:304c:: with SMTP id b12mr2036672lfb.196.1583248079201;
-        Tue, 03 Mar 2020 07:07:59 -0800 (PST)
+        bh=oH2DPw9yOnkNvy1Ktf77A4iViJfMOE/P09y2cJqfUP0=;
+        b=bzJQzVzJ7GMBPetao1X0pDPRw7s3cX9xroZhl3u87uqH+7HmLnZt1LRJjYQkxo9iCK
+         t1xx7GOhWAVlTFH+utiGP61YWSV64HHINiJFCEFo+EB/6EPJ8NOc0mQQx370wMNHvJ4K
+         Nbh41G6gxByEiRKYfcr24Q4DuHV8mNgy9k8zj67n5DDP0wD4/tEg+Cd7SjT0BVeL2i6A
+         Zze6St2ATPEUSE+sEaGrT8V5kISIb9SSdDsbem2c5xlXYnkSzfTiuLrOczqxTE2YpD5m
+         R/1aFcLQ6QyxkRzo4lyIvV1sI0JT5eHElntSm4E+WRs7FYrVSbkekRJ2lmBN6rEl0Ufw
+         X5Og==
+X-Gm-Message-State: ANhLgQ2OjRPb7Tykzloks5CGAsVrnzYyTlgDGjZS0Ds6RpcMICVYIwgS
+        bXyCub+EalKq5ZU6/7WWu9hJSA==
+X-Google-Smtp-Source: ADFU+vvodELrLn3K9Dksie5B3U4dnmjJWJrhxSD42Lo+ggn0ROi0yWlkIY+w/726ufnV7RZRHghSUw==
+X-Received: by 2002:ac2:5ca5:: with SMTP id e5mr2984605lfq.122.1583248082142;
+        Tue, 03 Mar 2020 07:08:02 -0800 (PST)
 Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id n189sm12143135lfa.14.2020.03.03.07.07.58
+        by smtp.gmail.com with ESMTPSA id n189sm12143135lfa.14.2020.03.03.07.08.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 07:07:58 -0800 (PST)
+        Tue, 03 Mar 2020 07:08:01 -0800 (PST)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Sudeep Holla <sudeep.holla@arm.com>,
@@ -68,9 +68,9 @@ Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Benjamin Gaignard <benjamin.gaignard@st.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: [PATCH 2/7] dt-bindings: arm: Fix cpu compatibles in the hierarchical example for PSCI
-Date:   Tue,  3 Mar 2020 16:07:44 +0100
-Message-Id: <20200303150749.30566-3-ulf.hansson@linaro.org>
+Subject: [PATCH 4/7] dt-bindings: power: Extend nodename pattern for power-domain providers
+Date:   Tue,  3 Mar 2020 16:07:46 +0100
+Message-Id: <20200303150749.30566-5-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303150749.30566-1-ulf.hansson@linaro.org>
 References: <20200303150749.30566-1-ulf.hansson@linaro.org>
@@ -81,34 +81,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The existing binding requires the nodename to have a '@', which is a bit
+limiting for the wider use case. Therefore, let's extend the pattern to
+allow either '@' or '-'.
+
+Additionally, let's update one of the examples to show how the updated
+pattern could be used.
+
 Fixes: a3f048b5424e ("dt: psci: Update DT bindings to support hierarchical PSCI states")
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- Documentation/devicetree/bindings/arm/psci.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/power/power-domain.yaml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
-index f8218e60e3e2..540211a080d4 100644
---- a/Documentation/devicetree/bindings/arm/psci.yaml
-+++ b/Documentation/devicetree/bindings/arm/psci.yaml
-@@ -199,7 +199,7 @@ examples:
+diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/Documentation/devicetree/bindings/power/power-domain.yaml
+index 207e63ae10f9..dc232759013e 100644
+--- a/Documentation/devicetree/bindings/power/power-domain.yaml
++++ b/Documentation/devicetree/bindings/power/power-domain.yaml
+@@ -25,7 +25,7 @@ description: |+
  
-       CPU0: cpu@0 {
-         device_type = "cpu";
--        compatible = "arm,cortex-a53", "arm,armv8";
-+        compatible = "arm,cortex-a53";
-         reg = <0x0>;
-         enable-method = "psci";
-         power-domains = <&CPU_PD0>;
-@@ -208,7 +208,7 @@ examples:
+ properties:
+   $nodename:
+-    pattern: "^(power-controller|power-domain)(@.*)?$"
++    pattern: "^(power-controller|power-domain)([@-].*)?$"
  
-       CPU1: cpu@1 {
-         device_type = "cpu";
--        compatible = "arm,cortex-a57", "arm,armv8";
-+        compatible = "arm,cortex-a53";
-         reg = <0x100>;
-         enable-method = "psci";
-         power-domains = <&CPU_PD1>;
+   domain-idle-states:
+     $ref: /schemas/types.yaml#/definitions/phandle-array
+@@ -71,13 +71,13 @@ required:
+ 
+ examples:
+   - |
+-    power: power-controller@12340000 {
+-        compatible = "foo,power-controller";
++    power: power-domain-foo {
++        compatible = "foo,power-domain";
+         reg = <0x12340000 0x1000>;
+         #power-domain-cells = <1>;
+     };
+ 
+-    // The node above defines a power controller that is a PM domain provider and
++    // The node above defines a power domain that is a PM domain provider and
+     // expects one cell as its phandle argument.
+ 
+   - |
 -- 
 2.20.1
 
