@@ -2,137 +2,115 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2ADC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01E7C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDF520828
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F2620842
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="in2YL3sM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgCCPDu (ORCPT
+        id S1726079AbgCCPH6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:03:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:48408 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgCCPDu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:03:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75598101E;
-        Tue,  3 Mar 2020 07:03:49 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F1493F6C4;
-        Tue,  3 Mar 2020 07:03:47 -0800 (PST)
-Date:   Tue, 3 Mar 2020 15:03:45 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Remi Pommarel <repk@triplefau.lt>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
- platforms
-Message-ID: <20200303150345.GB6334@e121166-lin.cambridge.arm.com>
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
- <7h8sklbcmo.fsf@baylibre.com>
+        Tue, 3 Mar 2020 10:07:58 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37637 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728902AbgCCPH5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 10:07:57 -0500
+Received: by mail-lf1-f67.google.com with SMTP id j11so3054222lfg.4
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 07:07:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hDm62swX1e309emODy6IWYyN9SUd3dpgxKcG7xrdMlk=;
+        b=in2YL3sMp9ZVb0HypyT3fkJ9WJ/6VzmQFhOYfvsHYSCWwDcmFgMBm4A+f2vGlZR0Tl
+         8dp9f/h62FrCz+jVZmP57bNnCJKUAsN2srwZWsFmlmQiYWbt6hgkzjiIqUMcRIu90KRo
+         fLsDdbq8PPNnkJc3mk/8F+X+FuVDZqiBUnRS+TnoT9IijkwNcCetU8dZl3PAf+cRf7uk
+         z1lYnF5mSUy4vsH/jgEbKH7cgPjMhUr7bKLbMweo5dPA4EqMBmIL8MSzbwzMwxDVELeA
+         FLOmUqM6yRDS/WpYQfafp9a6QjeMFRNSa59bJqCP5/CbCLSDeKhj8toVJ65l1+Yat3St
+         xBZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hDm62swX1e309emODy6IWYyN9SUd3dpgxKcG7xrdMlk=;
+        b=Y9b90KPjuW+lLAvJpdQ/0OdXonqKLgwotEqthG1QqYByeF222gB4JTyTpghkVG1zls
+         aCOefLL3O+yo+wP9Vjpg4Rp6pRr2RXZNdWm8k53McMxdW0TTHVTzTll9FHMbzbfJZVH0
+         hqvoCIfo9VfFDN7mkRwSiKOB7zw3Hp46w2oa6yYXWnFsetY80jPpeCO4ys+G+/qXb9KA
+         dbuRgC+5hhHbCWNpf/8XWdQDhQu/JhQRaLYZf6fySyyhq/7InNSA9rl27rwrhkLake7U
+         rpKjBIvMD85a9G2UBLwrVmRN7VkruXSYSDRXZ/2aF0q+uavDJ1Xez2tyxtmUaK0NMg9T
+         xwDA==
+X-Gm-Message-State: ANhLgQ1CIeZiQlorHNEZQDW7GuQ7sMIs6VrKyzYUZYtKaqRhNNPgtfd7
+        ZKo40fdUOWZ9TafQkWsukfkZ0Q==
+X-Google-Smtp-Source: ADFU+vu+xJCKU5jcGXcrD4NY7owa0bMU7ehQwZMdVV0PPkkCq1EGue6j/E/+90n6hI6Upie+o5FZJw==
+X-Received: by 2002:ac2:454f:: with SMTP id j15mr3108670lfm.20.1583248075820;
+        Tue, 03 Mar 2020 07:07:55 -0800 (PST)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id n189sm12143135lfa.14.2020.03.03.07.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 07:07:55 -0800 (PST)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        devicetree@vger.kernel.org
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: [PATCH 0/7] dt-bindings: arm: Fix bindings used for hierarchical PSCI states
+Date:   Tue,  3 Mar 2020 16:07:42 +0100
+Message-Id: <20200303150749.30566-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7h8sklbcmo.fsf@baylibre.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 05:07:43PM +0100, Kevin Hilman wrote:
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
-> 
-> > On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
-> >> PCIe device probing failures have been seen on AXG platforms and were
-> >> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
-> >> in MIPI's PHY registers solved the problem. This bit controls band gap
-> >> reference.
-> >> 
-> >> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
-> >> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
-> >> a PHY driver to control this bit instead, as well as setting the band
-> >> gap one in order to get reliable PCIE communication.
-> >> 
-> >> While at it add another PHY driver to control PCIE only PHY registers,
-> >> making AXG code more similar to G12A platform thus allowing to remove
-> >> some specific platform handling in pci-meson driver.
-> >> 
-> >> Please note that CLKID_MIPI_ENABLE removable will be done in a different
-> >> serie.
-> >> 
-> >> Changes since v5:
-> >>  - Add additionalProperties in device tree binding documentation
-> >>  - Make analog PHY required
-> >> 
-> >> Changes since v4:
-> >>  - Rename the shared MIPI/PCIe PHY to analog
-> >>  - Chain the MIPI/PCIe PHY to the PCIe one
-> >> 
-> >> Changes since v3:
-> >>  - Go back to the shared MIPI/PCIe phy driver solution from v2
-> >>  - Remove syscon usage
-> >>  - Add all dt-bindings documentation
-> >> 
-> >> Changes since v2:
-> >>  - Remove shared MIPI/PCIE device driver and use syscon to access register
-> >>    in PCIE only driver instead
-> >>  - Include devicetree documentation
-> >> 
-> >> Changes sinve v1:
-> >>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
-> >>  - Add a PHY driver for PCIE_PHY registers
-> >>  - Modify pci-meson.c to make use of both PHYs and remove specific
-> >>    handling for AXG and G12A
-> >> 
-> >> [1] https://lkml.org/lkml/2019/12/16/119
-> >> 
-> >> Remi Pommarel (7):
-> >>   dt-bindings: Add AXG PCIE PHY bindings
-> >>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
-> >>   dt-bindings: PCI: meson: Update PCIE bindings documentation
-> >>   arm64: dts: meson-axg: Add PCIE PHY nodes
-> >>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
-> >>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-> >>   PCI: amlogic: Use AXG PCIE
-> >> 
-> >>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
-> >>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
-> >>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
-> >>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
-> >>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
-> >>  drivers/phy/amlogic/Kconfig                   |  22 ++
-> >>  drivers/phy/amlogic/Makefile                  |  12 +-
-> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
-> >>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
-> >>  9 files changed, 543 insertions(+), 112 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
-> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
-> >
-> > Hi Remi,
-> >
-> > I am ready to pull this series in, do you want me to ? Or you prefer
-> > it to go via a different tree upstream ?
-> 
-> To avoid conflicts, I'll take the DT patch (PATCH 4/7) through my
-> amlogic tree, but feel free to take the rest.
+The recently updated bindings to support hierarchical PSCI states, had a poor
+quality from the json-schema point of view. This series fixup the related
+bindings and silence various errors/warnings from "make dt_binding_check".
 
-That works for me Kevin, thanks !
+The two last patches updates some DTS files from a QCOM SoC, which is the first
+one that uses these new bindings. Perhaps those should be queued via arm-soc
+instead, but in any case there are included for reference. 
 
-Lorenzo
+Kind regards
+Ulf Hansson
+
+Ulf Hansson (7):
+  dt-bindings: arm: Correct links to idle states definitions
+  dt-bindings: arm: Fix cpu compatibles in the hierarchical example for
+    PSCI
+  dt-bindings: power: Convert domain-idle-states bindings to json-schema
+  dt-bindings: power: Extend nodename pattern for power-domain providers
+  dt-bindings: arm: Fixup the DT bindings for hierarchical PSCI states
+  arm64: dts: msm8916: Conform to the domain-idle-state DT binding
+  arm64: dts: msm8916: Conform to the nodename pattern for power-domain
+
+ .../devicetree/bindings/arm/cpus.yaml         |  2 +-
+ .../bindings/arm/msm/qcom,idle-state.txt      |  2 +-
+ .../devicetree/bindings/arm/psci.yaml         | 41 ++++++------
+ .../bindings/power/domain-idle-state.txt      | 33 ---------
+ .../bindings/power/domain-idle-state.yaml     | 67 +++++++++++++++++++
+ .../bindings/power/power-domain.yaml          | 30 ++++-----
+ .../bindings/power/power_domain.txt           |  2 +-
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         | 13 ++--
+ 8 files changed, 111 insertions(+), 79 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
+ create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.yaml
+
+-- 
+2.20.1
+
