@@ -4,84 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07641C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 01:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C52DC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 01:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B3B24673
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 01:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104C424673
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 01:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583198909;
-	bh=n4apYBCVrZ5g5EQLM4MQiFRZoU/6FZvGRX0yQps0rR0=;
+	s=default; t=1583198931;
+	bh=QWDE+nzYRxLAQJZxFllK2UFEo1q2CQ4KZMXrIGbE3Bs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z82/80h0uXOZJecmSfzFE8zpxVfKfz6KEV7rl+lMJZSeoEW3fkdmbtpByJ0ZH9XO2
-	 x9wFxBXTTqiOw46+Drn6TYp+QGbKIlUp2b6/hx9N/2wxRH61oDg1ivDs9P9/tLogyT
-	 0n/JY1tYgr811QIFrWOxY8T9SGb8rNN6x0Z28OME=
+	b=1AeQr0AjDOYcRd8Y4v5qvNsvL30+ePO+mOe1liLCU/RCIFbRj0klXPveILMxpCCs5
+	 PnUp6LBtzH4eBB4bCYqSvIYz4PEu/3NtloktQG+Ppb7OBu7c9p2J+dc1zP7qEIrcaS
+	 5cY762j9uxq6C7TVIHJFWrPziJiYQyly8zMalFSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgCCB21 (ORCPT
+        id S1726816AbgCCB2u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 20:28:27 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44380 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgCCB20 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 20:28:26 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so1301387oia.11;
-        Mon, 02 Mar 2020 17:28:24 -0800 (PST)
+        Mon, 2 Mar 2020 20:28:50 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46776 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbgCCB2u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 20:28:50 -0500
+Received: by mail-ot1-f67.google.com with SMTP id g96so1349051otb.13;
+        Mon, 02 Mar 2020 17:28:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+1KyOHwBn/viSAsJSh8AjzAW83mdyjNjKZ1smKP6L5I=;
-        b=gowULXKi1t2SA+eZriCLpHwrimvmr4FW+HFillEdE7x1kqJD2VaOom5qKx9Eob0WAP
-         UroPv2PWNLU7TsH1GljP8OeHs2LQ6U8nSbhIF6QNus0Z1pZDYylyjIgSI30T3w6DlMFd
-         HH0kCZVQeOQDoQBuSlzoWOakxmoG6WIh+kMGEJ+bJ0YbqID6+6tglial1yc1Mfx+ahCt
-         /llVDTIb9Gvscmzp4N5ViHWTc6wsmXrY3DeJB3L6hZIlA180IFvQkXu4UTxifB1Sj62S
-         2NcalEhmyyR1lSZTq6apg29V4IBsq5UBqJV041qrWrc/HfrlJvsq0If0w9Jq3ezgViLa
-         GQpA==
-X-Gm-Message-State: ANhLgQ1gsu9M7yvWhknj1GjaqtQK8+8qhI+6+m4nhpJlyZxWuubmBt8f
-        zgRBt/yb5aNaTvavzkuqTg==
-X-Google-Smtp-Source: ADFU+vuXH/1hxcsxPMVP9wigrFZpla2XwPEdAwOWERbHAnI6m6fNRmH5HugZb8pe9eB5At7zzu07xA==
-X-Received: by 2002:aca:1204:: with SMTP id 4mr891001ois.143.1583198904510;
-        Mon, 02 Mar 2020 17:28:24 -0800 (PST)
+        bh=eet9lZNdchN33q+dEpaXmuVlgsvcHvBcNPBCflfSjxo=;
+        b=f8mwstks/wkvSrxETMQDFJhZ+G7HdALKjPZlig4vEiHnVktAJiSdsd3OJbT+3SRleb
+         eGSuHz/hPQ2CLOlae37xYRo1PFAHUegsjyRHFb2XhaI518ynOi5mNc8YwTrZEubjQanS
+         OJ2YcaOCREdRz9v5Pj7gD+TogSMo6KCQK2yK7fzdtrSuaEVQr82piWHOlvMfRCc7wej8
+         DGDotukOv2BfJiCHT7rqmwJjwFonx57xGXWA3lrXOaRiwLuTi1tbicXhi1/4sgH8Qqla
+         2nV4l4wZvou82kppJMWEq6W9Ny67I5TK5fGTdFEU0j/62wCR76A1/1swV/Mx3Wx/WUg8
+         Vvgg==
+X-Gm-Message-State: ANhLgQ0nFU6MCjvGYQJs9Hedg1/QhbtYDTSX1jUC6cWpOvXTiRjxErRv
+        dx1dxmnGicDmqycrU4IOiQ==
+X-Google-Smtp-Source: ADFU+vvoin64lIvmLgeV8610QkmyYB0ZPZYEy2jhHQOrLVViftZhZeuOjY2eOqe7Pu/6/ZOSTijj1w==
+X-Received: by 2002:a05:6830:145:: with SMTP id j5mr1531326otp.242.1583198929345;
+        Mon, 02 Mar 2020 17:28:49 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s23sm1981432oie.0.2020.03.02.17.28.23
+        by smtp.gmail.com with ESMTPSA id k16sm712675otp.52.2020.03.02.17.28.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 17:28:24 -0800 (PST)
-Received: (nullmailer pid 7901 invoked by uid 1000);
-        Tue, 03 Mar 2020 01:28:23 -0000
-Date:   Mon, 2 Mar 2020 19:28:23 -0600
+        Mon, 02 Mar 2020 17:28:48 -0800 (PST)
+Received: (nullmailer pid 8615 invoked by uid 1000);
+        Tue, 03 Mar 2020 01:28:47 -0000
+Date:   Mon, 2 Mar 2020 19:28:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: clock: Add binding documentation for
- TI EHRPWM TBCLK
-Message-ID: <20200303012823.GA7863@bogus>
-References: <20200227053529.16479-1-vigneshr@ti.com>
- <20200227053529.16479-2-vigneshr@ti.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vkoul@kernel.org, daniel.lezcano@linaro.org,
+        bjorn.andersson@linaro.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: tsens: Add entry for sc7180
+ tsens to binding
+Message-ID: <20200303012847.GA8556@bogus>
+References: <cover.1582871139.git.amit.kucheria@linaro.org>
+ <8309e39737c480b0835454cbc6db345c5a27ecd4.1582871139.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227053529.16479-2-vigneshr@ti.com>
+In-Reply-To: <8309e39737c480b0835454cbc6db345c5a27ecd4.1582871139.git.amit.kucheria@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 27 Feb 2020 11:05:28 +0530, Vignesh Raghavendra wrote:
-> Add DT bindings for TI EHRPWM's TimeBase clock (TBCLK) on TI's AM654 SoC.
+On Fri, 28 Feb 2020 12:02:40 +0530, Amit Kucheria wrote:
+> The qcom-tsens binding requires a SoC-specific and a TSENS
+> family-specific binding to be specified in the compatible string.
 > 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> Since qcom,sc7180-tsens is not listed in the YAML binding, we see the
+> following warnings in 'make dtbs_check'. Fix them.
+> 
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible: ['qcom,sc7180-tsens',
+> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
+> causes of the failure):
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v0_1' was expected
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v1' was expected
+> 
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible: ['qcom,sc7180-tsens',
+> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
+> causes of the failure):
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v0_1' was expected
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v1' was expected
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  .../bindings/clock/ti,am654-ehrpwm-tbclk.yaml | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
