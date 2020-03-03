@@ -2,162 +2,246 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F83C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8206AC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF00214D8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583268052;
-	bh=a5nfcX73QbvjFRQnPto+rWfMP4FTO3469EjUA9I/mp4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yWdrCfre6Cfwo4/8GbWHgB18ggAeHaz8D8IZQ/pWmvDt9+UG2m9qM3qTuRsgiTsaH
-	 L1/P9qIKTjEMZQ6B4VzNweZhJ99K+I278dIBJa/yEgIuoftH1ao2jc+4ewBQ/q11Ts
-	 8WwEgDgx/jotHVIAwwYPw2tV7UBkUVXHdqk/5vAo=
+	by mail.kernel.org (Postfix) with ESMTP id 4D2DC20848
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:46:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EajGJc2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731927AbgCCUkv (ORCPT
+        id S1728176AbgCCUqP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:40:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729681AbgCCUkv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 15:40:51 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 424AF20848;
-        Tue,  3 Mar 2020 20:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583268050;
-        bh=a5nfcX73QbvjFRQnPto+rWfMP4FTO3469EjUA9I/mp4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ia2LMR4knzbJOc3ZcWX0FULw0WUZiwmQVl/s7npgzxQtU1v279jihV+Zj5rxc9pzC
-         2LsNWGuxex++ISzDqTE7/N+qlymnPyYvjauXWaNTmeJoJpIV3P+dIaaMXSrYU+8OHy
-         I8cH2JRr/p5OHdJCj9ALgB+chGbj4vqeETLke7Lw=
-Date:   Tue, 3 Mar 2020 20:40:41 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH 2/5] iio: imu: adis: Add irq mask variable
-Message-ID: <20200303204041.36a1bc6a@archlinux>
-In-Reply-To: <20200225124152.270914-3-nuno.sa@analog.com>
-References: <20200225124152.270914-1-nuno.sa@analog.com>
-        <20200225124152.270914-3-nuno.sa@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 3 Mar 2020 15:46:15 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:40751 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731920AbgCCUqO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 15:46:14 -0500
+Received: by mail-vs1-f66.google.com with SMTP id c18so3356463vsq.7
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 12:46:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7L4eJdYzEWt9OU7Eb6955CnoA1Bc4Uk+/BMUtBI5Efw=;
+        b=EajGJc2UriF5GG1JUfXsGdRCrJrlHHOSrWyfJ88FE1mCrdqfTUHe44b+g5uDWOWE1P
+         OHAPcvPTYYVHavrAPdMA7YfBas8pD2G6Q0qt/RVqbzRGZ/+crz3s2RFuJKtOVgHGIgFs
+         uE6ekqsvvRTNIRqD1vs+x/nVKEsgbiJ+y9HXufoGQ7ETMPTCYXe8q+GPsGpv0QO+kgzi
+         k0oUKOf9qRGCy2ND98qTJssy8yVPIbe07vuHwwdIU2bMY/6pDKyJNXq4YFQgdPwiJAEt
+         Tr3yNrqTGMta2JPQtHizVe+3rjTu5CW+Orf+2vU8yELfXOQdomU9M5ukneMjkg70HfQC
+         GlFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7L4eJdYzEWt9OU7Eb6955CnoA1Bc4Uk+/BMUtBI5Efw=;
+        b=YwRMH8gTcyZiO9RPUIvvS4ft84ewjOK2fM4TlCz57aWkvn60kltGfAdLLllGB0EQyt
+         BSvoVKnvQxbP5R65t21FrawVHT2NEFvJsfOCsdGoOHhIpANwcHsOaRqqJFK6c7fUo86m
+         TTp/EzJpcZ+ANSbQim9vNENgUsdPG9sijVX4Mortw535b6aYF4onxsCpD+fe5R7fdKNL
+         uNaGuacnWX4d5uuEQbFUahRWO4YGkBmZX/JUvWamwl6kxxZOqilR/JkqVyH2e80Rxmv3
+         9WwzT1f4kqbaNZNUvSY5C1tqotCa499zDqjXb5scEZWGWQpA/Ic/CvGKyvBcLh6tsHVn
+         NH6Q==
+X-Gm-Message-State: ANhLgQ3efUJau6HAjsIOW1n1PDEXZUQocG2Cf4pM6l2qU81KiaC5pA4J
+        U8K6cJP6c9CjwBqjZemEO0JXQa9vtPp6FNjs5CT8fw==
+X-Google-Smtp-Source: ADFU+vs5Geo/nfXYUy3+nQ5/6sjz1pvP6CtSd2BjNvOeDErJnDZvTjqTBd0O+W+/8FOZxGqhfYYRBraBqmjwiLn2eTA=
+X-Received: by 2002:a67:800e:: with SMTP id b14mr2363089vsd.191.1583268371719;
+ Tue, 03 Mar 2020 12:46:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200303150749.30566-1-ulf.hansson@linaro.org>
+ <20200303150749.30566-4-ulf.hansson@linaro.org> <20200303170232.GA26191@bogus>
+In-Reply-To: <20200303170232.GA26191@bogus>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 3 Mar 2020 21:45:35 +0100
+Message-ID: <CAPDyKFrgbnDR2q2Aw7HPhosBprgR43ohXmNMLya_bRry4GqtoQ@mail.gmail.com>
+Subject: Re: [PATCH 3/7] dt-bindings: power: Convert domain-idle-states
+ bindings to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Feb 2020 13:41:49 +0100
-Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+On Tue, 3 Mar 2020 at 18:02, Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Mar 03, 2020 at 04:07:45PM +0100, Ulf Hansson wrote:
+> > While converting to the json-schema, let's also take the opportunity to
+> > further specify/clarify some more details about the DT binding.
+> >
+> > For example, let's define the label where to put the states nodes, set a
+> > pattern for nodename of the state nodes and finally add an example.
+> >
+> > Fixes: a3f048b5424e ("dt: psci: Update DT bindings to support hierarchical PSCI states")
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > ---
+> >  .../devicetree/bindings/arm/psci.yaml         |  2 +-
+> >  .../bindings/power/domain-idle-state.txt      | 33 ---------
+> >  .../bindings/power/domain-idle-state.yaml     | 67 +++++++++++++++++++
+> >  .../bindings/power/power-domain.yaml          | 22 +++---
+> >  .../bindings/power/power_domain.txt           |  2 +-
+> >  5 files changed, 79 insertions(+), 47 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
+> >  create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
+> > index 540211a080d4..0bc3c43a525a 100644
+> > --- a/Documentation/devicetree/bindings/arm/psci.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/psci.yaml
+> > @@ -123,7 +123,7 @@ properties:
+> >        to mandate it.
+> >
+> >        [3] Documentation/devicetree/bindings/power/power_domain.txt
+> > -      [4] Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > +      [4] Documentation/devicetree/bindings/power/domain-idle-state.yaml
+> >
+> >    power-domains:
+> >      $ref: '/schemas/types.yaml#/definitions/phandle-array'
+> > diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > deleted file mode 100644
+> > index eefc7ed22ca2..000000000000
+> > --- a/Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > +++ /dev/null
+> > @@ -1,33 +0,0 @@
+> > -PM Domain Idle State Node:
+> > -
+> > -A domain idle state node represents the state parameters that will be used to
+> > -select the state when there are no active components in the domain.
+> > -
+> > -The state node has the following parameters -
+> > -
+> > -- compatible:
+> > -     Usage: Required
+> > -     Value type: <string>
+> > -     Definition: Must be "domain-idle-state".
+> > -
+> > -- entry-latency-us
+> > -     Usage: Required
+> > -     Value type: <prop-encoded-array>
+> > -     Definition: u32 value representing worst case latency in
+> > -                 microseconds required to enter the idle state.
+> > -                 The exit-latency-us duration may be guaranteed
+> > -                 only after entry-latency-us has passed.
+> > -
+> > -- exit-latency-us
+> > -     Usage: Required
+> > -     Value type: <prop-encoded-array>
+> > -     Definition: u32 value representing worst case latency
+> > -                 in microseconds required to exit the idle state.
+> > -
+> > -- min-residency-us
+> > -     Usage: Required
+> > -     Value type: <prop-encoded-array>
+> > -     Definition: u32 value representing minimum residency duration
+> > -                 in microseconds after which the idle state will yield
+> > -                 power benefits after overcoming the overhead in entering
+> > -i                the idle state.
+> > diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.yaml b/Documentation/devicetree/bindings/power/domain-idle-state.yaml
+> > new file mode 100644
+> > index 000000000000..27da43076b85
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/domain-idle-state.yaml
+> > @@ -0,0 +1,67 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/power/domain-idle-state.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: PM Domain Idle States binding description
+> > +
+> > +maintainers:
+> > +  - Ulf Hansson <ulf.hansson@linaro.org>
+> > +
+> > +description:
+> > +  A domain idle state node represents the state parameters that will be used to
+> > +  select the state when there are no active components in the PM domain.
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    const: domain-idle-states
+> > +
+> > +patternProperties:
+> > +  "^(cpu|cluster|domain)-":
+> > +    type: object
+> > +    description:
+> > +      Each state node represents a domain idle state description.
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        const: domain-idle-state
+> > +
+> > +      entry-latency-us:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+>
+> You don't need a type because the core schema defines it for all
+> standard units.
 
-> There are some ADIS devices that can configure the data ready pin
-> polarity. Hence, we cannot hardcode our IRQ mask as IRQF_TRIGGER_RISING
-> since we might want to have it as IRQF_TRIGGER_FALLING.
->=20
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Okay, I noticed some skips this, but wanted rather to clear and fuzzy.
 
-Missing docs for the addition to struct adis.
+In any case, yes, let's remove it.
 
-Otherwise, looks good to me.
+>
+> > +        description:
+> > +          The worst case latency in microseconds required to enter the idle
+> > +          state. Note that, the exit-latency-us duration may be guaranteed only
+> > +          after the entry-latency-us has passed.
+> > +
+> > +      exit-latency-us:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description:
+> > +          The worst case latency in microseconds required to exit the idle
+> > +          state.
+> > +
+> > +      min-residency-us:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description:
+> > +          The minimum residency duration in microseconds after which the idle
+> > +          state will yield power benefits, after overcoming the overhead while
+> > +          entering the idle state.
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - entry-latency-us
+> > +      - exit-latency-us
+> > +      - min-residency-us
+>
+>        additionalProperties: false
+>
+> Do we have cases of adding additional properties?
 
-thanks,
+I might, but I am not sure what's the correct way to deal with that.
 
-Jonathan
+What I am wondering about is the "arm,psci-suspend-param" property,
+currently defined as part of the PSCI bindings (psci.yaml).
 
-> ---
->  drivers/iio/imu/adis_trigger.c | 26 ++++++++++++++++++++++++--
->  include/linux/iio/imu/adis.h   |  1 +
->  2 files changed, 25 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/adis_trigger.c b/drivers/iio/imu/adis_trigge=
-r.c
-> index a07dcc365c18..ae5a4f66752f 100644
-> --- a/drivers/iio/imu/adis_trigger.c
-> +++ b/drivers/iio/imu/adis_trigger.c
-> @@ -34,6 +34,20 @@ static inline void adis_trigger_setup(struct adis *adi=
-s)
->  	iio_trigger_set_drvdata(adis->trig, adis);
->  }
-> =20
-> +static inline int __adis_validate_irq_mask(struct adis *adis)
-> +{
-> +	if (!adis->irq_mask) {
-> +		adis->irq_mask =3D IRQF_TRIGGER_RISING;
-> +		return 0;
-> +	} else if (adis->irq_mask !=3D IRQF_TRIGGER_RISING &&
-> +		   adis->irq_mask !=3D IRQF_TRIGGER_FALLING) {
-> +		dev_err(&adis->spi->dev, "Invalid IRQ mask:%08lx\n",
-> +			adis->irq_mask);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
->  /**
->   * adis_probe_trigger() - Sets up trigger for a adis device
->   * @adis: The adis device
-> @@ -54,9 +68,13 @@ int adis_probe_trigger(struct adis *adis, struct iio_d=
-ev *indio_dev)
-> =20
->  	adis_trigger_setup(adis);
-> =20
-> +	ret =3D __adis_validate_irq_mask(adis);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret =3D request_irq(adis->spi->irq,
->  			  &iio_trigger_generic_data_rdy_poll,
-> -			  IRQF_TRIGGER_RISING,
-> +			  adis->irq_mask,
->  			  indio_dev->name,
->  			  adis->trig);
->  	if (ret)
-> @@ -95,9 +113,13 @@ int devm_adis_probe_trigger(struct adis *adis, struct=
- iio_dev *indio_dev)
-> =20
->  	adis_trigger_setup(adis);
-> =20
-> +	ret =3D __adis_validate_irq_mask(adis);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret =3D devm_request_irq(&adis->spi->dev, adis->spi->irq,
->  			       &iio_trigger_generic_data_rdy_poll,
-> -			       IRQF_TRIGGER_RISING,
-> +			       adis->irq_mask,
->  			       indio_dev->name,
->  			       adis->trig);
->  	if (ret)
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index 741512b28aaa..b4c35d137e2a 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -84,6 +84,7 @@ struct adis {
->  	struct spi_message	msg;
->  	struct spi_transfer	*xfer;
->  	unsigned int		current_page;
-> +	unsigned long		irq_mask;
+I am not sure that's correct to define it as a PSCI binding. Shouldn't
+it rather be a part of the idle state bindings (idle-states.yaml) and
+the domain idle states binding ($subject patch)?
 
-This structure has kernel-doc. Please add this new element.
+What do you think?
 
->  	void			*buffer;
-> =20
->  	uint8_t			tx[10] ____cacheline_aligned;
+In any case, we probably want to fix this on top, if we should care.
 
+>
+> I can fix these up when applying.
+
+Thanks a lot!
+
+Kind regards
+Uffe
