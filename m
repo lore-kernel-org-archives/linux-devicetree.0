@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9286CC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 09:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958F2C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 09:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7900220842
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 09:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701DA22522
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 09:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgCCJDr (ORCPT
+        id S1727706AbgCCJDu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:03:47 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:39864 "EHLO inva021.nxp.com"
+        Tue, 3 Mar 2020 04:03:50 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:36806 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728018AbgCCJDo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:03:44 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 049C5201334;
-        Tue,  3 Mar 2020 10:03:43 +0100 (CET)
+        id S1728068AbgCCJDt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:03:49 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A55681A1467;
+        Tue,  3 Mar 2020 10:03:48 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EAFC4201332;
-        Tue,  3 Mar 2020 10:03:42 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 97CC81A09DD;
+        Tue,  3 Mar 2020 10:03:48 +0100 (CET)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id EFAE520414;
-        Tue,  3 Mar 2020 10:03:41 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 859F320414;
+        Tue,  3 Mar 2020 10:03:47 +0100 (CET)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <kernel@pengutronix.de>,
@@ -42,9 +42,9 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [RFC 06/11] clk: imx: Add helpers for passing the device as argument
-Date:   Tue,  3 Mar 2020 11:03:21 +0200
-Message-Id: <1583226206-19758-7-git-send-email-abel.vesa@nxp.com>
+Subject: [RFC 11/11] arm64: dts: imx8mp: Add audiomix reset controller node
+Date:   Tue,  3 Mar 2020 11:03:26 +0200
+Message-Id: <1583226206-19758-12-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
 References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
@@ -54,68 +54,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-All the imx clocks that need to be registered by the audiomix need to pass
-on the device so that the runtime PM support could work properly.
+Add the audiomix reset controller as part of the audiomix MFD.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- drivers/clk/imx/clk.h | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index cb28f06..42960a9 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -321,6 +321,13 @@ static inline struct clk_hw *imx_clk_hw_gate(const char *name, const char *paren
- 				    shift, 0, &imx_ccm_lock);
- }
- 
-+static inline struct clk_hw *imx_dev_clk_hw_gate(struct device *dev, const char *name,
-+						const char *parent, void __iomem *reg, u8 shift)
-+{
-+	return clk_hw_register_gate(dev, name, parent, CLK_SET_RATE_PARENT, reg,
-+				    shift, 0, &imx_ccm_lock);
-+}
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index f27acf9..ca7fc73 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -632,6 +632,11 @@
+ 						      "audio_ahb",
+ 						      "audio_axi_div";
+ 				};
 +
- static inline struct clk_hw *imx_clk_hw_gate_dis(const char *name, const char *parent,
- 		void __iomem *reg, u8 shift)
- {
-@@ -422,6 +429,15 @@ static inline struct clk_hw *imx_clk_hw_mux(const char *name, void __iomem *reg,
- 			width, 0, &imx_ccm_lock);
- }
++				audiomix_reset: reset-controller {
++					compatible = "fsl,imx8mp-audiomix-reset";
++					#reset-cells = <1>;
++				};
+ 			};
+ 		};
  
-+static inline struct clk_hw *imx_dev_clk_hw_mux(struct device *dev, const char *name,
-+                        void __iomem *reg, u8 shift, u8 width,
-+                        const char * const *parents, int num_parents)
-+{
-+        return clk_hw_register_mux(dev, name, parents, num_parents,
-+                        CLK_SET_RATE_NO_REPARENT | CLK_SET_PARENT_GATE,
-+                        reg, shift, width, 0, &imx_ccm_lock);
-+}
-+
- static inline struct clk *imx_clk_mux2(const char *name, void __iomem *reg,
- 			u8 shift, u8 width, const char * const *parents,
- 			int num_parents)
-@@ -484,6 +500,19 @@ static inline struct clk_hw *imx_clk_hw_mux_flags(const char *name,
- 				   reg, shift, width, 0, &imx_ccm_lock);
- }
- 
-+static inline struct clk_hw *imx_dev_clk_hw_mux_flags(struct device *dev,
-+						  const char *name,
-+						  void __iomem *reg, u8 shift,
-+						  u8 width,
-+						  const char * const *parents,
-+						  int num_parents,
-+						  unsigned long flags)
-+{
-+	return clk_hw_register_mux(dev, name, parents, num_parents,
-+				   flags | CLK_SET_RATE_NO_REPARENT,
-+				   reg, shift, width, 0, &imx_ccm_lock);
-+}
-+
- struct clk_hw *imx_clk_hw_cpu(const char *name, const char *parent_name,
- 		struct clk *div, struct clk *mux, struct clk *pll,
- 		struct clk *step);
 -- 
 2.7.4
 
