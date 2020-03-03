@@ -2,105 +2,82 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2ECC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D6EC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD41E2073D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:10:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HEcMEkLe"
+	by mail.kernel.org (Postfix) with ESMTP id 3DCB820863
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgCCPKJ (ORCPT
+        id S1728261AbgCCPKT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:10:09 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36143 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729512AbgCCPII (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 10:08:08 -0500
-Received: by mail-lf1-f68.google.com with SMTP id s1so3065296lfd.3
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 07:08:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qu4L8psLtSRHjye4pOVUdt2rrul0W+hLv//Rfvk00vc=;
-        b=HEcMEkLePpCimF/wMPTy6RBLp8JWPVNYRK/KypW9Sck6/wveKYdTxCa+/MyCnUfXBW
-         ah2N9pSfaLtd3Bw9+2lHnhxHfLARz7jZbSSTW7KSnO2utGxuxVn6402arMsh3xYDkoPD
-         XM+K30b1kvZ2odWMm4C4iajwsfHp4mEoPRUIXxh/AGWPbbpdUA+2dZ+CzxloN2dpDqo7
-         rzWp8CnMnXm1qSFt13BEPeVMl1UHOu/hbG8q5L+kPHYmtyWVdqhsxawWiYMdEOx6Dmh7
-         xwnHceszl2o7zAgiyFTJsf3qjXL3qT66sJ+6oHrOYXGRq7SRzxa/I7tpR4knhVWXafv2
-         O5Bg==
+        Tue, 3 Mar 2020 10:10:19 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42300 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbgCCPKT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 10:10:19 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 66so3286730otd.9;
+        Tue, 03 Mar 2020 07:10:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qu4L8psLtSRHjye4pOVUdt2rrul0W+hLv//Rfvk00vc=;
-        b=YvgefSucUX7XlrTegApjukqwhHmv0DH2627jrbywwMbdxd9oEXPkZfBf+8OKMO9iQW
-         eY8lklSaf08tRmfF/YdVH7s54SQWTekwRXZ9fAtVJrvffDb5VxKMNxXS7Qo56X+jrklt
-         /c3Wy9A/8P9zFGNClTDBET9neqHvGgUDcZGdeZoY37esfrsNL0/x/EU1JQnirai796fd
-         GgQGc54PjZYAAILvc12f+7ye47s/3GYto1AR83SdZQ0SF3Ii6ZDynGvRHQpWPpUBlTgb
-         xfD/V84oRzjt3YAkjvwkPut5EcI3I/6JSLSNFU061yoW6PpKR2FPKancKW6KFza6fsmR
-         jEkw==
-X-Gm-Message-State: ANhLgQ3YSeowN/0+z8lRg9eH8fRJxORZara1fZ0OPLxG43nCxv+9P7Nn
-        gGmdbmRq6BSYoTsG15Npm5Fi7A==
-X-Google-Smtp-Source: ADFU+vuOY7tLHeptjMrYBw0cHHhnzrTWWdK/Vlk+y170lgD8Gex04FZPWMeMr83K9o8b8EHO3e5u1w==
-X-Received: by 2002:a19:6144:: with SMTP id m4mr3018922lfk.192.1583248085004;
-        Tue, 03 Mar 2020 07:08:05 -0800 (PST)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id n189sm12143135lfa.14.2020.03.03.07.08.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 07:08:04 -0800 (PST)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        devicetree@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: [PATCH 6/7] arm64: dts: msm8916: Conform to the domain-idle-state DT binding
-Date:   Tue,  3 Mar 2020 16:07:48 +0100
-Message-Id: <20200303150749.30566-7-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303150749.30566-1-ulf.hansson@linaro.org>
-References: <20200303150749.30566-1-ulf.hansson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1Kca1ycYP9hx1ciCp/Eg/F25DgiVO44FVhWaPbRYxPU=;
+        b=MGpH+b4/qMf16bHmH1A7gs4FaOxMcOAXopZcSwgNVyKZdFZZKgb+Il9qKBgVEyEC5U
+         QOKGWt92CVWJdaIlvpXrJyCFUnko5Zf81xtR2tAIWbATUH6KaWc0PiaTosyolcifuh6i
+         uy8zY7WH7azasEGYg0hDlUQE+jrLZ76hUanU3I6BIaDFz7Kv/6fTwDPjj8XJEK5lt1iA
+         KyVVvqE/STuYR2sg3O5kDrBLOHmJ+TaGxuZHYhEU2p/6gcpBBYzaU16x9wjJJgzPGS0i
+         lQq2ZkBHhgjb3NmHu6RB3PKtcsD/NaulwV/eUJA7+G1Klb186+xWK0VkgnIL/8AkB5QV
+         Zyzg==
+X-Gm-Message-State: ANhLgQ2w/a0jt9NPBXYGmRQXnfuLvmaIu5rigOx6Cl8tDc+THcu2yht+
+        bGiGQGcnzMSfFfdMxcr3mZvI+cpzDy4oNRr1eDw=
+X-Google-Smtp-Source: ADFU+vsjLmSFCjHTsjuoqrUuFQxZRfHMpmUpBKx5AXsN6z/FTWlqxSa34xUOvoolY68R52SGPfoHlQRIAKInM1tjicU=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr3707646otk.145.1583248218506;
+ Tue, 03 Mar 2020 07:10:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200303134351.22270-1-geert+renesas@glider.be> <20200303134351.22270-3-geert+renesas@glider.be>
+In-Reply-To: <20200303134351.22270-3-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 3 Mar 2020 16:10:07 +0100
+Message-ID: <CAMuHMdXzyp1KCzztbifFgg5N6diHKFnMUihbu_cVOFkTzyf9Yg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: serial: Convert slave-device bindings to json-schema
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fixes: a3f048b5424e ("dt: psci: Update DT bindings to support hierarchical PSCI states")
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+On Tue, Mar 3, 2020 at 2:43 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Convert the serial slave-device Device Tree binding documentation to
+> json-schema, and incorporate it into the generic serial bindings.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/serial/serial.yaml    | 53 +++++++++++++++++++
+>  .../bindings/serial/slave-device.txt          | 45 ----------------
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 54 insertions(+), 46 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/slave-device.txt
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 9f31064f2374..8f3f19e66cd8 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -165,6 +165,9 @@
- 				min-residency-us = <2000>;
- 				local-timer-stop;
- 			};
-+		};
-+
-+		domain-idle-states {
- 
- 			CLUSTER_RET: cluster-retention {
- 				compatible = "domain-idle-state";
+There are a few references to slave-device.txt that need to be updated.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
