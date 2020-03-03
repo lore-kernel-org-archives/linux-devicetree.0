@@ -2,141 +2,210 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD298C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FE2C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B96622072D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B/CFMRuv"
+	by mail.kernel.org (Postfix) with ESMTP id 614EE20656
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbgCCSOH (ORCPT
+        id S1730880AbgCCSRW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:14:07 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7598 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731646AbgCCSOG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 13:14:06 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e5e9e450000>; Tue, 03 Mar 2020 10:13:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 03 Mar 2020 10:14:06 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 03 Mar 2020 10:14:06 -0800
-Received: from [10.25.75.175] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
- 2020 18:14:01 +0000
-Subject: Re: [PATCH V4 0/5] Add support for PCIe endpoint mode in Tegra194
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <andrew.murray@arm.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200303105418.2840-1-vidyas@nvidia.com>
- <20200303170103.GA9641@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <d1e3a42f-c179-fd03-fac0-7cd449580e5b@nvidia.com>
-Date:   Tue, 3 Mar 2020 23:43:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 13:17:22 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:41769 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730530AbgCCSRV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 13:17:21 -0500
+Received: from [192.168.1.183] ([37.4.249.171]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M3UdI-1j8ds32MFO-000b6V; Tue, 03 Mar 2020 19:17:05 +0100
+Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wahrenst@gmx.net, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <736f0c59-352b-03b2-f77f-bfc22171b3fb@i2se.com>
+Date:   Tue, 3 Mar 2020 19:17:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200303170103.GA9641@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583259205; bh=3LnLpivKc9OM9v6zIN6nnfGAUgWdkTbhy7nEOq/+B0s=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=B/CFMRuv7JlCYSA0Wkq/F0VWN5UFk8YsJJ7+/5gB9YNb3BHV0EEUhjRvSDFlhPE1+
-         Qzlh1b1H8U5n9iTNleElru4F59pcRXY5ojnQzn277lQ0PXavk+os4CSAZHsXssjK2Z
-         XMbEXXdI+HHCdX5El0mcj9kZTqAJDyoP//b7sXv52C2ZxMJjTKQBUrgjm9ShFosZek
-         mLwUKDWXtWL13U5LU5A2S8ipJtX1bd361lpvufMmPwRKFAv8zdIDJ38Rj+lmRBxjQL
-         PUS9x+kLY/Kfr2FbVOONBTxn8QoYolUksOn2WytXKafC/2/3tcH4qGyz9pMFJdpZgo
-         vuBkUZAx1fn4A==
+X-Provags-ID: V03:K1:tHaZlzBYnQQ7ozFJRk2l9T+p1xctV61HjSZXbmUpPOdeTgdbwPU
+ oYmgpY+86RmTHZc+lvzekJg+9yMur5QsDj/RW8jmOvZHuOWqejiikdi/Ike9t4cwk1HR77h
+ QT+GvVFjhJxuGgSYMtORM0vHP85L5CCEf6AGr0uAMGDA/nOtYPr2sOwD2jLGdLbgF8YzX/d
+ +Q6cWu1dRO9MmVSMepP1Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FfmjNUweXJs=:EnXoeKrN8xSla3uku/bqRV
+ zGN+QhzEV+QApHgH5A7fM2DfZWM2nA1bgU6vSW9OxPTaAAAwpkozeJWeAv0GjzLphLKsdDfJh
+ 31QUZrbAPn50tr8Nan5kZBBMCZR7v98oDJ65iUctLRUHJUhrcU3wLhCNFrhS7IBEhAMwPACGE
+ 4e8x72tT4a9Sh8HNIYnrnfeSC6wRZHNa3WgvUrRvS1pvXpLDeR5XjWJBR/R2kxTY/Q3oon/sK
+ e30qdeZo2qKL5YepXyYGnwOEHVER7obCDGSJT2lYLn2kEmiiNuATKEjNWPBb/SejOj+LAzE2I
+ IrOyY63QtPT/pvy5Ocibk0Mo1Z/CtFO0i+eBIC8u0mDtUHQj+gC/JcwwolF0GcTCkoT8E+wTR
+ ccLBPY1MbzKfpJ/WcA0cbCWLxHy4iTuLQtJ21To7chPMui1UDok54Jlf71BQcbURVBhIKmDFQ
+ 4x/wdblB+1wHPg9Y4ruJu4H/tmTa7icf6ogdLpk9Eub8TJaOJO4i9hLaRx+5guasqcGe9g968
+ 2jESNK2Xgmm0uQSz1uu3qb/YucZKJmad3RvAOBk/FxOSsfX5yy1VIraG7nyoKTfegAVnpOwGr
+ B/SRIpeEp+qKAA+RZA4QAXiASRdjzCU3YUiTS/XsaKNfouIwtElbi6BZ3HVqwY8xUAKOFgkKA
+ +QtZZW43poiGpPukBY47ZBWo55ws6iCb/GpbvU65XsyDe0mQWk57blaZJUrkKzv8p5U+seyjh
+ riRb4h7f75HESw7Y/dqbbAsEQySKP6D4DFlYXekTx1bHItQNnEAJ7CSoDw1AGplzfcDzLuhIa
+ GM+96oc7CggoJGOlykeldApqJ2U1PNtKy6I+U1+09KTegbvW3pLFCs6mHYuekewdK4LF04m
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Nicolas,
 
+Am 03.03.20 um 18:32 schrieb Nicolas Saenz Julienne:
+> The register based driver turned out to be unstable, specially on RPi3a+
+> but not limited to it. While a fix is being worked on, we roll back to
+> using firmware based scheme.
+>
+> Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM driver instead of firmware")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>
+> See https://github.com/raspberrypi/linux/issues/3046 for more reference.
+> Note: I tested this on RPi3b, RPi3a+ and RPi2b.
 
-On 3/3/2020 10:31 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Tue, Mar 03, 2020 at 04:24:13PM +0530, Vidya Sagar wrote:
->> Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
->> either in root port mode or in end point mode but only in one mode at a time.
->> Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
->> patch series adds support for PCIe endpoint mode in both the driver as well as
->> in DT.
->> This patch series depends on the changes made for Synopsys DesignWare endpoint
->> mode subsystem that are recently accepted.
->> @ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
->> which in turn depends on the patch made by Kishon
->> @ https://patchwork.kernel.org/patch/10975123/
->> which is also under review.
->>
->> V4:
->> * Started using threaded irqs instead of kthreads
-> 
-> Hi Vidya,
-> 
-> sorry for the bother, may I ask you to rebase the series (after
-> answering Thierry's query) on top of my pci/endpoint branch please ?
-> 
-> Please resend it and I will merge patches {1,2,5} then.
-Sure.
-I just sent V5 series rebasing patches on top of your pci/endpoint branch.
+as i already wrote this prevent X to start on current Raspbian on my
+Raspberry Pi 3A+ (multi_v7_defconfig, no u-boot). We must be careful here.
 
-Thanks,
-Vidya Sagar
-> 
-> Thanks,
-> Lorenzo
-> 
->> V3:
->> * Re-ordered patches in the series to make the driver change as the last patch
->> * Took care of Thierry's review comments
->>
->> V2:
->> * Addressed Thierry & Bjorn's review comments
->> * Added EP mode specific binding documentation to already existing binding documentation file
->> * Removed patch that enables GPIO controller nodes explicitly as they are enabled already
->>
->> Vidya Sagar (5):
->>    soc/tegra: bpmp: Update ABI header
->>    dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
->>    arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
->>    arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
->>      platform
->>    PCI: tegra: Add support for PCIe endpoint mode in Tegra194
->>
->>   .../bindings/pci/nvidia,tegra194-pcie.txt     | 125 +++-
->>   .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  18 +
->>   arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  99 +++
->>   drivers/pci/controller/dwc/Kconfig            |  30 +-
->>   drivers/pci/controller/dwc/pcie-tegra194.c    | 681 +++++++++++++++++-
->>   include/soc/tegra/bpmp-abi.h                  |  10 +-
->>   6 files changed, 918 insertions(+), 45 deletions(-)
->>
->> --
->> 2.17.1
->>
+I will take a look at the debug UART. Maybe there are more helpful
+information.
+
+Regards
+Stefan
+
+>
+>  arch/arm/boot/dts/bcm2835-common.dtsi     |  1 -
+>  arch/arm/boot/dts/bcm2835-rpi-common.dtsi | 12 ++++++++++++
+>  arch/arm/boot/dts/bcm2835.dtsi            |  1 +
+>  arch/arm/boot/dts/bcm2836.dtsi            |  1 +
+>  arch/arm/boot/dts/bcm2837.dtsi            |  1 +
+>  5 files changed, 15 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+>
+> diff --git a/arch/arm/boot/dts/bcm2835-common.dtsi b/arch/arm/boot/dts/bcm2835-common.dtsi
+> index 2b1d9d4c0cde..4119271c979d 100644
+> --- a/arch/arm/boot/dts/bcm2835-common.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-common.dtsi
+> @@ -130,7 +130,6 @@ v3d: v3d@7ec00000 {
+>  			compatible = "brcm,bcm2835-v3d";
+>  			reg = <0x7ec00000 0x1000>;
+>  			interrupts = <1 10>;
+> -			power-domains = <&pm BCM2835_POWER_DOMAIN_GRAFX_V3D>;
+>  		};
+>  
+>  		vc4: gpu {
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi-common.dtsi b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+> new file mode 100644
+> index 000000000000..b78a57534611
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+> @@ -0,0 +1,12 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * This include file covers the common peripherals and configuration between
+> + * bcm2835, bcm2836 and bcm2837 implementations that interact with RPi's
+> + * firmware interface.
+> + */
+> +
+> +#include <dt-bindings/power/raspberrypi-power.h>
+> +
+> +&v3d {
+> +	power-domains = <&power RPI_POWER_DOMAIN_V3D>;
+> +};
+> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+> index 53bf4579cc22..0549686134ea 100644
+> --- a/arch/arm/boot/dts/bcm2835.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "bcm283x.dtsi"
+>  #include "bcm2835-common.dtsi"
+> +#include "bcm2835-rpi-common.dtsi"
+>  
+>  / {
+>  	compatible = "brcm,bcm2835";
+> diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
+> index 82d6c4662ae4..b390006aef79 100644
+> --- a/arch/arm/boot/dts/bcm2836.dtsi
+> +++ b/arch/arm/boot/dts/bcm2836.dtsi
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "bcm283x.dtsi"
+>  #include "bcm2835-common.dtsi"
+> +#include "bcm2835-rpi-common.dtsi"
+>  
+>  / {
+>  	compatible = "brcm,bcm2836";
+> diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
+> index 9e95fee78e19..0199ec98cd61 100644
+> --- a/arch/arm/boot/dts/bcm2837.dtsi
+> +++ b/arch/arm/boot/dts/bcm2837.dtsi
+> @@ -1,5 +1,6 @@
+>  #include "bcm283x.dtsi"
+>  #include "bcm2835-common.dtsi"
+> +#include "bcm2835-rpi-common.dtsi"
+>  
+>  / {
+>  	compatible = "brcm,bcm2837";
+
