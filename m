@@ -2,88 +2,93 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51F5C3F2DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 22:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBBFC3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 22:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9480D206E6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 22:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7BC20848
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 22:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583274977;
+	bh=1RmM1ILSD1palSIH6nLnajQtKg/9lquC1UT1vAN8NpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=muZK8NH9U1uUgZHGS3ThftFWVt/AIp/70XMj1Z9+80IQPJ9qzyhqp1yZS3YWZ6jPz
+	 8ewMDduqI+91cK9gfrQHG/nePhqsptl2iX1hB13XSTJg96CmcBzcDdB5CbaE6+vkFW
+	 3tCJXF0BW7t70e5TJaJpDWemPSGVlPvm7UnduIKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgCCWPw (ORCPT
+        id S1727199AbgCCWgQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:15:52 -0500
-Received: from muru.com ([72.249.23.125]:58722 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgCCWPw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:15:52 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 5DAF381BD;
-        Tue,  3 Mar 2020 22:16:37 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 13/14] ARM: dts: Configure interconnect target module for dra7 tptc1
-Date:   Tue,  3 Mar 2020 14:15:27 -0800
-Message-Id: <20200303221528.49099-14-tony@atomide.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303221528.49099-1-tony@atomide.com>
-References: <20200303221528.49099-1-tony@atomide.com>
+        Tue, 3 Mar 2020 17:36:16 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35314 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgCCWgQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 17:36:16 -0500
+Received: by mail-ot1-f68.google.com with SMTP id v10so84910otp.2;
+        Tue, 03 Mar 2020 14:36:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jswyzVaGX0gLXelQ0bE73MWedKjiFHl8054jCn5Ou6o=;
+        b=OCJWzqIO2UjTqD+7sezgPGbKAaloKce1lHTIAhr/jnqtCp4sWSxS3EveMaA7WFySPp
+         CGZFwpLjR9Ae7v/VDo248QFuFpnAuA+LyR2gwwgBivK20SqcYqeAeDwTfL7P2alg+Dyk
+         Cne05YeMdPSR15l9iufIhD/ytgWp0jZ/C9kiGGOOra37NK7N77/LxMvEUDXXAQvFJoQf
+         FW4nP4Nm9B0ENtclLQbKd97MGHM1D6mQlTv+L9kvDbBKdptWh7jVVzN4uYh0LDpHJk61
+         5Mv52j7mvoQy/+AVYqayzDYbC5iAgeLivzCfaPeV7agOrq1R4ivKXvvKWpc01IYh6LxK
+         GqHg==
+X-Gm-Message-State: ANhLgQ3wLdEHE4cn2gQbOqygiv4RAeCTC4lqVx8SbOort8iKPWjkBCv4
+        aOIkDWrOJBFYJZC5ejDl8Q==
+X-Google-Smtp-Source: ADFU+vvw+qDN1aLQe0w8OZRSpXaMjd0hvD0koKaHo/6g+ONvJLL7zXTQv/zYDr0EfWdXK7af7goXNQ==
+X-Received: by 2002:a9d:3b09:: with SMTP id z9mr86170otb.195.1583274973853;
+        Tue, 03 Mar 2020 14:36:13 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z3sm7043723oia.46.2020.03.03.14.36.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:36:13 -0800 (PST)
+Received: (nullmailer pid 15769 invoked by uid 1000);
+        Tue, 03 Mar 2020 22:36:12 -0000
+Date:   Tue, 3 Mar 2020 16:36:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: arm: Convert UniPhier System Cache to
+ json-schema
+Message-ID: <20200303223612.GA15666@bogus>
+References: <20200227123648.12785-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227123648.12785-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We can now probe devices with device tree only configuration using
-ti-sysc interconnect target module driver. Let's configure the
-module, but keep the legacy "ti,hwmods" peroperty to avoid new boot
-time warnings. The legacy property will be removed in later patches
-together with the legacy platform data.
+On Thu, 27 Feb 2020 21:36:48 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier System Cache binding to DT schema format.
+> This is a full-custom outer cache (L2 and L3) used on UniPhier
+> ARM 32-bit SoCs.
+> 
+> While I was here, I added the interrupts property. This is not
+> used in Linux, but the hardware has interrupt lines at least.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  .../bindings/arm/socionext/cache-uniphier.txt |  60 -----------
+>  .../socionext,uniphier-system-cache.yaml      | 102 ++++++++++++++++++
+>  2 files changed, 102 insertions(+), 60 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/socionext/cache-uniphier.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/socionext/socionext,uniphier-system-cache.yaml
+> 
 
-Let's also correct the custom node name to use generic node name dma.
+Applied, thanks.
 
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/dra7.dtsi | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -384,12 +384,23 @@ edma_tptc0: dma@0 {
- 			};
- 		};
- 
--		edma_tptc1: tptc@43500000 {
--			compatible = "ti,edma3-tptc";
-+		target-module@43500000 {
-+			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "tptc1";
--			reg =	<0x43500000 0x100000>;
--			interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "edma3_tcerrint";
-+			reg = <0x43500000 0x4>;
-+			reg-names = "rev";
-+			clocks = <&l3main1_clkctrl DRA7_L3MAIN1_TPTC1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x43500000 0x100000>;
-+
-+			edma_tptc1: dma@0 {
-+				compatible = "ti,edma3-tptc";
-+				reg = <0 0x100000>;
-+				interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "edma3_tcerrint";
-+			};
- 		};
- 
- 		dmm@4e000000 {
--- 
-2.25.1
+Rob
