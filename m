@@ -2,163 +2,92 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D504C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD45C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24AA320828
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 579BC2083E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583247535;
-	bh=XcnPtotkEVIDFWaz2KdV+CGIVicto2TAK1oKQnmw+7M=;
+	s=default; t=1583247567;
+	bh=Po21GpAsxJXHa8omSA0fH0AF3jSqp6NBSXKyNPFTq40=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dXLsHV5S5jcMXaMkweyvfP2raPSVcF6svnzCCLcGC4sR7Ey4HhyiCVAGZa+k+clN8
-	 eO7BGIDCEtbbPYPZS7g2iiz//EQL5ldluxb+iHly+FH3+wJzc1SrG9m0eW02cUg2e4
-	 97aDoFuEgecTrSRo/ojm/y19FVDgL6BvhfqfeXMg=
+	b=HVCEFSYuzVFrBZWPWsH7j+7vvMHhCst1p78xjAVVkgMLgwzFeuu/76q5zPXFJecFe
+	 4yVQk1x7wRbxpK7RontrsMVEAsYLE7KGPh227JW27sjScNuoshXGugoicsMxHm6Tdb
+	 FH6UFdrLyxx+Ju2fA676iUdWQJSrdwUUQurL/XgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgCCO6w (ORCPT
+        id S1729206AbgCCO7X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:58:52 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39373 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgCCO6w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 09:58:52 -0500
-Received: by mail-oi1-f194.google.com with SMTP id r16so3285923oie.6;
-        Tue, 03 Mar 2020 06:58:51 -0800 (PST)
+        Tue, 3 Mar 2020 09:59:23 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40330 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728975AbgCCO7X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 09:59:23 -0500
+Received: by mail-ot1-f65.google.com with SMTP id x19so3270759otp.7;
+        Tue, 03 Mar 2020 06:59:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HxYfnK8zgVmnkmuPybEMmldIypjikhPJCdUr+htsJJY=;
-        b=AQcti3dNavBx+hC2vh/8gLnHHCiCzNfR6k2msjeRmTrPqt1gwoaW0mZdTScmbgpa6a
-         2tyqH1byCVJxl2dNWZA2+bpiLs4ZRHs473alfOZ1jpW4z1URnGb91qgKDj+KsTjR4MAx
-         xePCw7xCShGyIfPwIcUXaMbASu4jeLmxPF3J6G58MMJcUuNm9a/hMfwQ7tdo5YK19voc
-         kM9HeF3ty5Qy1i1D5//2nnn3kCqSrXypWv8c7ax2+Vi6j6JjHrG9EUVir+6Jfjot3WJd
-         fke2q60PwfdjtdVr/841NQ7LwUicp3rLWRQ/x0m7gb/4ufUHrrfkxzJ6MWSJHbvqSP4l
-         uDWg==
-X-Gm-Message-State: ANhLgQ0XB6xPkMZo43s6sPsnIWuFXYwGCtLaWdFeLwSy5jqtMc83L/dU
-        DfKmp5KL46qb+614NgD/2g==
-X-Google-Smtp-Source: ADFU+vsNrW8VLQ1ZuwqDkt7czhKZ/Buqrf2aEO084qIkKlMwfgtTqE0s+XvEn0/xjyizTznoEYeHeg==
-X-Received: by 2002:a54:4791:: with SMTP id o17mr2613096oic.70.1583247530753;
-        Tue, 03 Mar 2020 06:58:50 -0800 (PST)
+        bh=jxXZabJF36zBqHLvSkp1BT+uIXDUsdzVqIFAD0M2EXo=;
+        b=Ec0whZDOP87o26kq8TtpXG6lXy8JX2l9/TEDXRM3pM6nb9lBbOKZOxZvVrdZ5I2eUi
+         RZ4BaU0h7pqdc+x3TvbVYaWGa26lk/KgwS6boEnOidBJnKiss4o/G8PWvdC8zqUl2IfT
+         nn1zhdr0QKcF7Qd/32SA+83cKF6cPoEvaNJLWOUbbnVivV9OA2YAi29MJZJpW1FKtbsB
+         MBfoBHXQxON3UNjwz4FpL8qw/0MSHC0o4K2AXT0x0y6JVKjxwxSehYmzOmjiBbkGh0ZA
+         V3hPphBqgKm6MCnDHiJJzUua/MDZJHuA8AQfoVdN46qrpHlXSETdRlILcX3ek95A02TG
+         wVig==
+X-Gm-Message-State: ANhLgQ0wg6VVuqTcbxvNCkxCa6ldIRtMQbQ0WPG7k8TDM4MM/GN+koWI
+        G7blP8ffL/8ZigRuQh6ppg==
+X-Google-Smtp-Source: ADFU+vs0akez33tRS244m5eGi3FSV87z7OM5KR9hAV09veZ9Jb9+CkWsSjCrP6apKPamqlw3XwLehQ==
+X-Received: by 2002:a9d:748c:: with SMTP id t12mr3506779otk.38.1583247562238;
+        Tue, 03 Mar 2020 06:59:22 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c12sm7744056oic.27.2020.03.03.06.58.49
+        by smtp.gmail.com with ESMTPSA id c7sm7904442otm.63.2020.03.03.06.59.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:58:49 -0800 (PST)
-Received: (nullmailer pid 31539 invoked by uid 1000);
-        Tue, 03 Mar 2020 14:58:48 -0000
-Date:   Tue, 3 Mar 2020 08:58:48 -0600
+        Tue, 03 Mar 2020 06:59:21 -0800 (PST)
+Received: (nullmailer pid 32405 invoked by uid 1000);
+        Tue, 03 Mar 2020 14:59:20 -0000
+Date:   Tue, 3 Mar 2020 08:59:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kernel@pyra-handheld.com,
-        letux-kernel@openphoenux.org
-Subject: Re: [RFC 0/8] MIPS: CI20: add HDMI out support
-Message-ID: <20200303145848.GA13796@bogus>
-References: <cover.1582744379.git.hns@goldelico.com>
- <20200227122325.GA7587@ravnborg.org>
- <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com>
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
+Message-ID: <20200303145920.GA32328@bogus>
+References: <robh@kernel.org>
+ <20200226214812.390-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com>
+In-Reply-To: <20200226214812.390-1-ansuelsmth@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 01:56:56PM +0100, H. Nikolaus Schaller wrote:
-> Hi Sam,
+On Wed, 26 Feb 2020 22:48:12 +0100, Ansuel Smith wrote:
+> Add missing definition of rpm clk for ipq806x soc
 > 
-> > Am 27.02.2020 um 13:23 schrieb Sam Ravnborg <sam@ravnborg.org>:
-> > 
-> > Hi Nikolaus.
-> > 
-> > On Wed, Feb 26, 2020 at 08:12:52PM +0100, H. Nikolaus Schaller wrote:
-> >> This patch series adds HDMI output to the jz4780/CI20 board.
-> >> 
-> >> It is based on taking the old 3.18 vendor kernel and trying
-> >> to achieve the same with modern DTS setup and new/modified
-> >> drivers.
-> >> 
-> >> Unfortunately, in this first RFC, only EDID and creation of
-> >> /dev/fb0 are working. Also, HDMI hot plugging is detected.
-> >> 
-> >> But there is no HDMI output signal. So some tiny piece seems
-> >> to be missing to enable/configure the Synposys HDMI controller.
-> >> 
-> >> We need help from the community to fix this.
-> >> 
-> >> Note: device tree bindings are from 2015 and still seem to
-> >> fit - except they are not in yaml format.
-> >> 
-> >> Original authors of most patches are
-> >> * Paul Boddie <paul@boddie.org.uk>
-> >> * Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> >> 
-> >> 
-> >> H. Nikolaus Schaller (2):
-> >>  drm: ingenic-drm: add MODULE_DEVICE_TABLE
-> >>  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
-> >> 
-> >> Paul Boddie (4):
-> >>  drm: ingenic: add jz4780 Synopsys HDMI driver.
-> >>  pinctrl: ingenic: add hdmi-ddc pin control group
-> >>  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
-> >>  MIPS: DTS: CI20: add HDMI setup
-> >> 
-> >> Zubair Lutfullah Kakakhel (2):
-> >>  dt-bindings: video: Add jz4780-lcd binding
-> >>  dt-bindings: video: Add jz4780-hdmi binding
-> >> 
-> >> .../bindings/display/ingenic-jz4780-hdmi.txt  |  41 ++++++
-> >> .../bindings/display/ingenic-jz4780-lcd.txt   |  39 ++++++
-> > New bindings in DT Schema format please...
-> > We want to have then in a formal launguage so we can use these
-> > to verify the DT files.
+> Signed-off-by: John Crispin <john@phrozen.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Acked-by: John Crispin <john@phrozen.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+>  drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
+>  include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
+>  3 files changed, 40 insertions(+)
 > 
-> Yes, I know. And I fully support the goal.
-> 
-> But I personally do not have the time to learn the (IMHO brain-twisting)
-> way the Schema format is working. Especially, I am not interested
-> in becoming volunteer translator for .txt based schemas developed
-> by someone else.
-> 
-> So I hope that someone from the community can and is willing to do
-> that.
-> 
-> Or that there will appear good tools soon. E.g. some GUI
-> based editor tool would be very helpful so that you don't have
-> to fight with the yaml indentation rules. Like there are XML
-> and DTD editors. And even HTML is rarely written manually any more.
-> 
-> IMHO such tools should have been developed and in place *before*
-> the rule to provide DT schemata is enforced.
 
-You mean tools like what is discussed here:
-
-https://www.redhat.com/sysadmin/yaml-tips
-
-There's also yaml-format in the dtschema repo which will reformat a file 
-to the desired formatting. It is just a wrapper around ruamel yaml 
-library.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
