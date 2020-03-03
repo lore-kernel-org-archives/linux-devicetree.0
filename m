@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE988C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5632C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0CC720838
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA6C20838
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iYf79LP+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fWM3pN1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729658AbgCCOrB (ORCPT
+        id S1729724AbgCCOrD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:47:01 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41190 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgCCOrB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 09:47:01 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v4so4663171wrs.8
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 06:46:58 -0800 (PST)
+        Tue, 3 Mar 2020 09:47:03 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53951 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729709AbgCCOrC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 09:47:02 -0500
+Received: by mail-wm1-f67.google.com with SMTP id g134so2178491wme.3
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 06:47:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=YlXpdgCgCxVLbA0DWJljFI84zXiu8Z8tgW6virKJ4Wk=;
-        b=iYf79LP++ES4zBL+18dxHew7hPg1bIQ51mQWazVrzMt61tlkZ9TdL5Uq5oqfFl3oNf
-         oyrQOXdycmXUk6cIxcKy1fxxTC8NJbF4UEGfzQwfFPTCkiRCIEBtcWbwvoLqrRkE+b1i
-         AsAkIycsx/bW718h09BbrcCXlrRAyiuGPDO5iGWxYqlZuKS5ioLD84lHc1pKLqSBUvKj
-         m6sIdb+IjdsiIpEEIa++UoIL9che0Hg403sO713dZOKcMgbEckFrW0wNWCIT55THbvBd
-         yTw/280159Kleewia3ifO+j5ywrtR3XuvVIx/WU46iSeLAUKuTQyInuO8UoBp6Inoj8O
-         tQUg==
+        b=fWM3pN1Liiw7P+RsrLZV0sx3vSL8Gfxk8RYxUZTy/m3YfftRwfoFpLcTk2gJEyDkpC
+         89SxVXqEr94WDra8Ht5l7ST9dqTl33q7W4vVKxYmOYAuyq5t11EdqEa7Dbe99XzOUswG
+         gmTjMyNSNiiw3NS3g/TA2zdj7yC1RdV92hzJZioEFf7H6PeAkVoHs80lMdytn0aSkWGt
+         qwKb9sXid5AlCw8gbsD9Ev1/wE88JS4dDAy9SJc2+/FSnFhl4OTxd0j5f8j5Va0FHxi+
+         3aEYoLokBUwKg6AfKw2q/kzXilRr5lx/QnusTbLJnko61ajJlNSfbile55YspmSDeGdF
+         022A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
         bh=YlXpdgCgCxVLbA0DWJljFI84zXiu8Z8tgW6virKJ4Wk=;
-        b=dX4BVSHHqbmhOpPTUH6TrsXv9EreO4LLJM7Y49Augc/MiOYKCulwuoH2Fp9F8GETo2
-         Aykrhpq7tRTJkLNBmCC8ehegwYeDPMZ/GsBLY3dhzV/fbPEwwrjHQpwA1xIWG1itVrmN
-         zIAU0pvWect/k4riaZRgcVXhPM985gVjTBNzsIZsfK9VY47KUarRYbXMVdmc8qbrhnUz
-         sl1Sspmi8qAaoNLB38S8KcrxsUPOkEJlr9z+Z/wleNMb0TE4I4pNXYIhwOpY/EoF+sYt
-         qUHRe4diEosZm2346EYquATkGmoPxXSpBhLY707GcqZr2Fqo0WLYYCKRWZ64+rU59ndy
-         Bfzg==
-X-Gm-Message-State: ANhLgQ3/Reiqt4LSriuPjGJRtYh+IVpNuKniNqruJtY2JVKvQvaU/UVT
-        xkymP3Zazz10D4O7lpbxwYMYMA==
-X-Google-Smtp-Source: ADFU+vuRF4o/jkOwxoVmpsKmQ76Ktr+aziVd8deRYdZyS+ly/VI0IxBp55+MqNBu9dYFLzvABJ6/nA==
-X-Received: by 2002:a5d:4902:: with SMTP id x2mr6199315wrq.301.1583246817859;
-        Tue, 03 Mar 2020 06:46:57 -0800 (PST)
+        b=OGXQZoEy86Vvk4SjvtDu8EhakKQm+p+z6riL/0TuMvn7yuU+iWT9DWGJ1rLvmwMYNB
+         zlg1ZccIxivOz+2S2Cw2gFUHjaWXHLxORO21f6+rBRsdc6VmEQzsrPuiTx1t7QYnnzJR
+         Sliq659XGZ+wnXIG0Szz7AL4s5705M0KUS1iZODLtyOvgctjhvijnHwgkV/YxNQXxDQc
+         fNtcKo/TgFfixF7ofgzOsjgzKWOlY8OGYkf3oPHNzIm+CfnPtXd48TmIvz5Sd71vVUYF
+         gSlAIAhtH8ewPOWQ1bXcE38Pa9B3pRVfJkWBmEPKbjKHdnWNUlo3cf8YH6VpyxKmlmsT
+         TkUA==
+X-Gm-Message-State: ANhLgQ1vwDmBT1jKo5TZcmoMMWZOT97BMx94bngLKKCkBnnsPazFaqFt
+        S1iBJoG+iLLwiyZDXLk0E9aDaQ==
+X-Google-Smtp-Source: ADFU+vvh7/PaURdnuFL+i+9XISLHL0nTX0Lw+/NkudNgdA8FVNTkd31x5p5gfohBudNtQPvBZONbMA==
+X-Received: by 2002:a05:600c:2056:: with SMTP id p22mr4407231wmg.136.1583246820646;
+        Tue, 03 Mar 2020 06:47:00 -0800 (PST)
 Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id p16sm33803254wrw.15.2020.03.03.06.46.56
+        by smtp.gmail.com with ESMTPSA id b197sm4489573wmd.10.2020.03.03.06.46.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 06:46:57 -0800 (PST)
+        Tue, 03 Mar 2020 06:47:00 -0800 (PST)
 Subject: Re: [PATCH v6 3/3] arm64: dts: meson: add support for the SmartLabs
  SML-5442TW
 To:     Christian Hewitt <christianshewitt@gmail.com>,
@@ -120,8 +120,8 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <047e8315-9782-82a4-f14a-f7fa40ca854a@baylibre.com>
-Date:   Tue, 3 Mar 2020 15:46:56 +0100
+Message-ID: <71666393-43c8-6ddf-5efb-05f418d68866@baylibre.com>
+Date:   Tue, 3 Mar 2020 15:46:59 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
