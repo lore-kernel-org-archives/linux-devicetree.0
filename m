@@ -2,108 +2,138 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A745FC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E972C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB3820CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583220689;
-	bh=1T0/XnPDbJDk2pBKVErlNQNAmU8fCNU87LT0UhuUwwc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ybx2+XqKZiKW99WwNXKQxcaMYBtPvKlSRK32hwHQaQVNJ7iYVZRU86j6yXOMX8Ug1
-	 v3z0Q3RMa6KMdrkl5LkObXz0gnBdbrdsSCfxSY1Jpw6ZKcX/JlEG1Q6cO92OaASTfn
-	 m40WmL93f8rN92ocSmSwRbSKoijx8xU9N5kw5ZSQ=
+	by mail.kernel.org (Postfix) with ESMTP id 23B4320842
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:38:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2hhA1DH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgCCHb3 (ORCPT
+        id S1727653AbgCCHiJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:31:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbgCCHb3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:31:29 -0500
-Received: from onda.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3929F20CC7;
-        Tue,  3 Mar 2020 07:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583220688;
-        bh=1T0/XnPDbJDk2pBKVErlNQNAmU8fCNU87LT0UhuUwwc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Xyih+dCXVSGNn5XEPLi6Zc+a9ZY8ES8LVEzV1hUqsu9xNdZKXuDyOoemqaem9P0pm
-         yByEJcMpzAA5WsPqsEIf1BneOKPdfsvarmXzB0SUPSPGBtHmJ+q3CPheRHs0diFl0i
-         5B4/VCRFdSKGNYx/+gKsOCTRvpR0EkdRQx1mU9Aw=
-Date:   Tue, 3 Mar 2020 08:31:22 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 03/12] docs: dt: usage_model.rst: fix link for DT
- usage
-Message-ID: <20200303083122.10637da3@onda.lan>
-In-Reply-To: <CAL_JsqJwKcR4UVit=VBnvOcKx0z9UuUw5aXd0Y7+2nMgk3X_zw@mail.gmail.com>
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
-        <a7e0a5597ace97503c8ff67cdab2351151c7f267.1583135507.git.mchehab+huawei@kernel.org>
-        <7a4d92e5-a1e2-6bd2-9a40-dcdb52e80801@gmail.com>
-        <CAL_JsqJwKcR4UVit=VBnvOcKx0z9UuUw5aXd0Y7+2nMgk3X_zw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 3 Mar 2020 02:38:09 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46936 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgCCHiJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 02:38:09 -0500
+Received: by mail-pf1-f194.google.com with SMTP id o24so1013979pfp.13;
+        Mon, 02 Mar 2020 23:38:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lp++SjSydgt9rFdJFF3CB/lDlkmkywlwzPGaMF0zRlA=;
+        b=N2hhA1DHJRr48b03MdRwK7wZT+y/IIbu0elhvz7gKyVzfWBwfAl0mdXhHechKW3w5h
+         wBxpbplnqcGuRCe2aCyqhLZ2wpo+o2zcRsqCG1KdGYHdSJxY32PohGGlo4aMczuoJHna
+         CMWMl9Exwvu57I8hyLPt/3Q4RBQTH5w67lBRMPCFvGriXxlrcvaH322RGt4kpMoBHUxh
+         3E4JEzdChP8g3QMeRMTmn351CirQyx390iw1AbTyvsytm9dZSNigQYXyPmQAa74sAYIC
+         Pj+UjOdxqIfBRBpzjWssycX5jwrJViK8MAIoJf3vZquhGT10/uKK0BZsNZxEY15fRJdw
+         35Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lp++SjSydgt9rFdJFF3CB/lDlkmkywlwzPGaMF0zRlA=;
+        b=GrxvhCUgqmbfu92ZHnn3Uhi0H8/0NLyGayk+Grwljm0TAlkMYMnDi85iJpM6Sw2ZLu
+         T9rZYu9gmrd1EzervZA0Bg4fgGVpIEIMn2Tq3mqVUVguWPJzUJjVD/Xt4Ll6ZcKsTPrm
+         0RxWjBNcBkSVNkBAc1j562QIK78E5WfFiptxsTkcrjRvCKUqgGUxnaCefB4YgdX9VZe9
+         RzwyYm1hMGHYFYIuLbBU2tLuiB/5MJ69QJN5Q2z9u12pP4YY/5eBFd0XNtspkCapGQ6J
+         Ax+qW0S+hJFagAkh+7JFQ/k+fMVkoxJpETmMLbo0EKHQ9TopbsZ710wBflM7HHqGPbu/
+         yR9A==
+X-Gm-Message-State: ANhLgQ1wU/99vVINgFmqAuFhn3iCYq0LA3TS4ED/8oQlChE7Nrp/2RL6
+        a6b5qDfGmYvUouStd6Oigo4=
+X-Google-Smtp-Source: ADFU+vvzwWp+30x2055lNCAa+QhYWY8R2yyZZoSUjWYJZln5Koehw7RijTiQ1fkyuH3SDxsLzC7qTQ==
+X-Received: by 2002:aa7:8582:: with SMTP id w2mr2820931pfn.89.1583221088207;
+        Mon, 02 Mar 2020 23:38:08 -0800 (PST)
+Received: from Asurada (c-73-162-191-63.hsd1.ca.comcast.net. [73.162.191.63])
+        by smtp.gmail.com with ESMTPSA id p94sm1516093pjp.15.2020.03.02.23.38.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Mar 2020 23:38:07 -0800 (PST)
+Date:   Mon, 2 Mar 2020 23:37:46 -0800
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-imx@nxp.com,
+        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/8] ASoC: dt-bindings: fsl_asrc: Change asrc-width to
+ asrc-format
+Message-ID: <20200303073745.GA2868@Asurada>
+References: <cover.1583039752.git.shengjiu.wang@nxp.com>
+ <872c2e1082de6348318e14ccd31884d62355c282.1583039752.git.shengjiu.wang@nxp.com>
+ <20200303014133.GA24596@bogus>
+ <CAA+D8ANgECaz=tRtRwNP=jMXBD0XciAE0HUYROH8uuo03iDejg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA+D8ANgECaz=tRtRwNP=jMXBD0XciAE0HUYROH8uuo03iDejg@mail.gmail.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Em Mon, 2 Mar 2020 15:40:37 -0600
-Rob Herring <robh+dt@kernel.org> escreveu:
-
-> On Mon, Mar 2, 2020 at 3:11 PM Frank Rowand <frowand.list@gmail.com> wrote:
+On Tue, Mar 03, 2020 at 11:59:30AM +0800, Shengjiu Wang wrote:
+> Hi
+> 
+> On Tue, Mar 3, 2020 at 9:43 AM Rob Herring <robh@kernel.org> wrote:
 > >
-> > On 3/2/20 1:59 AM, Mauro Carvalho Chehab wrote:  
-> > > The devicetree.org doesn't host the Device_Tree_Usage page
-> > > anymore. So, fix the link to point to a new address.
+> > On Sun, Mar 01, 2020 at 01:24:12PM +0800, Shengjiu Wang wrote:
+> > > asrc_format is more inteligent, which is align with the alsa
+> > > definition snd_pcm_format_t, we don't need to convert it to
+> > > format in driver, and it can distinguish S24_LE & S24_3LE.
 > > >
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 > > > ---
-> > >  Documentation/devicetree/usage-model.rst | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
 > > >
-> > > diff --git a/Documentation/devicetree/usage-model.rst b/Documentation/devicetree/usage-model.rst
-> > > index 326d7af10c5b..e1b42dc63f01 100644
-> > > --- a/Documentation/devicetree/usage-model.rst
-> > > +++ b/Documentation/devicetree/usage-model.rst
-> > > @@ -12,7 +12,7 @@ This article describes how Linux uses the device tree.  An overview of
-> > >  the device tree data format can be found on the device tree usage page
-> > >  at devicetree.org\ [1]_.  
+> > > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > index cb9a25165503..0cbb86c026d5 100644
+> > > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > @@ -38,7 +38,9 @@ Required properties:
+> > >
+> > >     - fsl,asrc-rate   : Defines a mutual sample rate used by DPCM Back Ends.
+> > >
+> > > -   - fsl,asrc-width  : Defines a mutual sample width used by DPCM Back Ends.
+> > > +   - fsl,asrc-format : Defines a mutual sample format used by DPCM Back
+> > > +                       Ends. The value is one of SNDRV_PCM_FORMAT_XX in
+> > > +                       "include/uapi/sound/asound.h"
 > >
-> > s/devicetree.org/elinux.org/  
+> > You can't just change properties. They are an ABI.
 > 
-> I wonder if we should make the devicetree.org link work again instead.
-> Primarily just to avoid the appearance of it being Linux specific.
+> I have updated all the things related with this ABI in this patch series.
+> What else should I do?
 
-Makes sense to me. Another alternative would be to convert this file to
-ReST and add to the Kernel docs (it should be easy to convert with pandoc).
+You probably should add one beside the old one. And all
+the existing drivers would have to continue to support
+"fsl,asrc-width", even if they start to support the new
+"fsl,asrc-format". The ground rule here is that a newer
+kernel should be able to work with an old DTB, IIRC.
 
-Yet, as those references are part of the Linux Kernel documentation, it 
-doesn't sound wrong to me to have them pointing to a linux-specific site.
-
-In any case, I'll update this patch, placing all such changes altogether.
-This way, if you decide to re-add this at devicetree.org, we could simply
-drop (or revert) it.
-
-> 
-> The website is hosted on github[1] and I'd assume there's a way to do
-> redirects as a start.
-> 
-> Rob
-> 
-> [1] https://github.com/devicetree-org/devicetree-website
+One more concern here is about the format value. Though
+I don't think those values, defined in asound.h, would
+be changed, yet I am not sure if it's legit to align DT
+bindings to a subsystem header file -- I only know that
+usually we keep shared macros under include/dt-bindings
+folder. I won't have any problem, if either Rob or Mark
+has no objection.
