@@ -2,109 +2,254 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265D9C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 11:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8576EC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 11:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC5B206E6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 11:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D71F20863
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 11:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9DQytk5"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="jrZNGq8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgCCLSB (ORCPT
+        id S1728558AbgCCLdB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 06:18:01 -0500
-Received: from mail-pg1-f178.google.com ([209.85.215.178]:39040 "EHLO
-        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727896AbgCCLSA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 06:18:00 -0500
-Received: by mail-pg1-f178.google.com with SMTP id s2so1391404pgv.6
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 03:18:00 -0800 (PST)
+        Tue, 3 Mar 2020 06:33:01 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:33717 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728199AbgCCLdB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 06:33:01 -0500
+Received: by mail-ua1-f68.google.com with SMTP id 94so989096uat.0
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 03:33:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6LpPu+7mzHDbzzNZ3vNWrKJy3N6+UnYE5W0wfZ5TDvA=;
-        b=X9DQytk52qZ6DQRmc5okitpNMgHqG6s8o4bhvGC/XRa0ECQDG91tyC0uTDPgvD5O1k
-         AUuMxfLAJyrLqXfrAp5dKlhSuhJd+75XMDpEpOhrHrfJ3hNdoOJBM9SxQNB3jHDPbsD8
-         DhiRPCC1dISZWIga0LihFWuRrO+DF9g8G3LAFp5NaoxJuVYG6DS7xohhSh+k7UWyF562
-         YPqgCzzzuUmbeQKhJvCRRs0x4f4+fnOrjIpvEtN8uYJfnHqRy6MgFt55MQn41GYLpstR
-         fMeTQE2yvj0EyS4Bx0uHfr0FdNMEMZDwY5XPTrtOrDQpG/auu4hOrJn2TkWWAD4aZ+Pr
-         r/pA==
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jJ/XV2usCbxItuxEMH0XzvQohk58MuRc/TCdKnge5Ms=;
+        b=jrZNGq8mHiKGxago1Y0w61XHNZ69z5yL/vRklU2RUrUlT1l04s3o1HTS/pJS3iKfLy
+         U2XMJxcr+VDosSHrFasFV6MNshoOFxJmjy2XKEvrMBjQoWXpu9S1P0qWN0fBqogVkvjN
+         Zt5EfAIOAe8LJBY4GaTzY+PuiDS83rpOuxyAAvfEGpmAs2kv9yagnFCToj9HfXemCWl0
+         ghBIxt1/cZYywR641ndZA4YXziBtL/ODq5JHK+lxKk9CBIIsGgBn7XZVewTjHJzQSQQQ
+         LXFXo1k7M4/tYmE0phGJdcqF2ha10XioTTct5NRQTyq3cnFuNxscpBc7vbFy/aAH7Yoo
+         8AVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6LpPu+7mzHDbzzNZ3vNWrKJy3N6+UnYE5W0wfZ5TDvA=;
-        b=Zdv6wCf2bg9qvrVGlzu80uhxtd+b56annG13IpyaNwJGPYqzxTxziadJUlWtd/yLWF
-         sx6TkI1rFW0rkmzDz0wEA0RfN6pV1o7YWSxCI9u5RJW7tbbnEUAv11+J/9r9xPRbCwAa
-         TK4oP1FqjQ6zrUv0SeiYm70OUOTMinYi8fOXuZydacBKhd2KVaKPF2uamfvIbIATwsSF
-         kiDgiDoaVO+pz3Uu3eVNmHtjwtt0g+b/0biN5LEuAwQ+EAqL3YjalKrPxNzdo4wRfAoE
-         96r9Il0U+y60mxw1XEP/SF+bzVmWucoRWkrM5VpqtLrEOD0qkRMGJYzOQA/Wqs9ltsAZ
-         wOXA==
-X-Gm-Message-State: ANhLgQ3eUDFK7dUPFfghEUg5wuDlbzc1RKJeze6Nf/WRKn/LfOjPD1xK
-        sZxVEYYgG1728+SDDbaW+hw3iw==
-X-Google-Smtp-Source: ADFU+vtX4ocvGPjD4lCipeCvf6Ndh/Qq0CPh8PdfYnJjc4X0n5KlKRfZpxjGrKkVvOS0v1sBH1rFJA==
-X-Received: by 2002:a63:4103:: with SMTP id o3mr3271939pga.199.1583234279527;
-        Tue, 03 Mar 2020 03:17:59 -0800 (PST)
-Received: from localhost ([122.167.24.230])
-        by smtp.gmail.com with ESMTPSA id d4sm2138730pjg.19.2020.03.03.03.17.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Mar 2020 03:17:58 -0800 (PST)
-Date:   Tue, 3 Mar 2020 16:47:56 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 0/3] Convert i.MX6Q cpufreq to use nvmem API
-Message-ID: <20200303111756.eikekt7vg2js7emw@vireshk-i7>
-References: <1583201690-16068-1-git-send-email-peng.fan@nxp.com>
- <20200303054547.4wpnzmgnuo7jd2qa@vireshk-i7>
- <AM0PR04MB4481FDAD041F6476FFFC0F6788E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jJ/XV2usCbxItuxEMH0XzvQohk58MuRc/TCdKnge5Ms=;
+        b=qaacMhVNAFH9YL1hyx7Xhun0q6ZSw689U0G13AIY05gAC4L/6Yds25mpi369OUTUOs
+         4NgFJ4XWTiNkFqfAFzrb9kJlXkBtPItvM6Lc+VnMOQOo4eW/2jFDrvv+7VcxV5KFf0k9
+         OqdjbhsqADzkRgswmr3/FT02W9DwAFpWP05D+MBlLgfU1B0TowtYpSYVjpR4VjqTl6i1
+         9/FDork+0We3EuwDh9f6TDYpK9ZfZF4f3k3Fy302UUji6et18G2uzi2ij5kEtCPOPDvh
+         PMx/ElywXCzfHySq+Dsr4jFGxQDsqrObqjr19scWRpzugphN25P5rrEFNLyEH5zGRF1u
+         sSDw==
+X-Gm-Message-State: ANhLgQ2r2DdjOYXwotpAABHDqI/M7ZntPrMECoctlX8DxozhQAarYdtu
+        QCS/RbAazbbjcBtONTi1Pz0F1XWjsqaDc/2jyBGDuw==
+X-Google-Smtp-Source: ADFU+vvCOZEB1IBzeQKCkx6+4afvyQ0UKXW5F91HHzefz5Aood5oq3IPnTEmdiCHkodr93n+ajeziwa36SEJk1q3kzA=
+X-Received: by 2002:ab0:634c:: with SMTP id f12mr2464856uap.48.1583235179522;
+ Tue, 03 Mar 2020 03:32:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4481FDAD041F6476FFFC0F6788E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <1583226996-24747-1-git-send-email-rkambl@codeaurora.org> <1583226996-24747-2-git-send-email-rkambl@codeaurora.org>
+In-Reply-To: <1583226996-24747-2-git-send-email-rkambl@codeaurora.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 3 Mar 2020 17:02:48 +0530
+Message-ID: <CAHLCerMsFBye12zgadZRq-69m=NkuuHfNZCrsr+grZzWOSxuWw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: sc7180: Changed all sensor values
+ Thermal-zones node
+To:     Rajeshwari <rkambl@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        sanm@codeaurora.org, sivaa@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 03-03-20, 06:16, Peng Fan wrote:
-> Hi Viresh,
-> 
-> > Subject: Re: [PATCH 0/3] Convert i.MX6Q cpufreq to use nvmem API
-> > 
-> > On 03-03-20, 10:14, peng.fan@nxp.com wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > Use nvmem API is better compared with direclty accessing OCOTP registers.
-> > > nvmem could handle OCOTP clk, defer probe.
-> > >
-> > > Patch 1/3 is dts changes to add nvmem related properties Patch 2/3 is
-> > > a bug fix Patch 3/3 is convert to nvmem API
-> > 
-> > Should I apply patch 2 and 3 ? And you can take 1/3 via ARM Soc tree as this
-> > shouldn't break anything.
-> 
-> Please take patch 2 and 3. Without patch 1, it just use legacy method,
-> not break things.
+On Tue, Mar 3, 2020 at 2:47 PM Rajeshwari <rkambl@codeaurora.org> wrote:
+>
+> To enable kernel critical shutdown feature all sensors threshold values
+> should be 110C to perform shutdown in orderly manner and changed trip
+> point from hot to critical.
 
-Applied. Thanks.
+IMO, we should keep the hot trip at 90 so we can potentially use it
+for notifications via the ops->notify callback in the future.
 
--- 
-viresh
+Just add a new critical trip section to all these non-CPU thermal
+zones if you want to trigger the orderly shutdown when one of them
+reaches the threshold.
+
+> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 52 ++++++++++++++++++------------------
+>  1 file changed, 26 insertions(+), 26 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index d068584..55fd156 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1952,9 +1952,9 @@
+>
+>                         trips {
+>                                 aoss0_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2007,9 +2007,9 @@
+>
+>                         trips {
+>                                 gpuss0_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2022,9 +2022,9 @@
+>
+>                         trips {
+>                                 gpuss1_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2037,9 +2037,9 @@
+>
+>                         trips {
+>                                 aoss1_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2052,9 +2052,9 @@
+>
+>                         trips {
+>                                 cwlan_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2067,9 +2067,9 @@
+>
+>                         trips {
+>                                 audio_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2082,9 +2082,9 @@
+>
+>                         trips {
+>                                 ddr_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2097,9 +2097,9 @@
+>
+>                         trips {
+>                                 q6_hvx_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2112,9 +2112,9 @@
+>
+>                         trips {
+>                                 camera_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2127,9 +2127,9 @@
+>
+>                         trips {
+>                                 mdm_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2142,9 +2142,9 @@
+>
+>                         trips {
+>                                 mdm_dsp_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2157,9 +2157,9 @@
+>
+>                         trips {
+>                                 npu_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> @@ -2172,9 +2172,9 @@
+>
+>                         trips {
+>                                 video_alert0: trip-point0 {
+> -                                       temperature = <90000>;
+> +                                       temperature = <110000>;
+>                                         hysteresis = <2000>;
+> -                                       type = "hot";
+> +                                       type = "critical";
+>                                 };
+>                         };
+>                 };
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
