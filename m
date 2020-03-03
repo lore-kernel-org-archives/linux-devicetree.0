@@ -2,163 +2,273 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338ECC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 19:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF82C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 19:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072242072D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 19:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583263622;
-	bh=S23seZZ+F0rhstqMDwu37JiEu/Gt0WN7ghAUIOFxxME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s+ob+31ieg5yZUxDgY20UBbAM+kU+BkgYZDjcKI4/URjfKX41dRYqETKCFxPxfp93
-	 qkxYvgPsDdsU9pY6TeESvFSoGfhYsO9LY2fldcREiU5Vs08CZg0UAPxhMiOSzrlmG8
-	 l2Nj9iguvkNpi6mpPEIaiqcRutlyB8juMtfoXCj0=
+	by mail.kernel.org (Postfix) with ESMTP id 5D8EA20CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 19:37:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K402ctgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbgCCT1B (ORCPT
+        id S1730898AbgCCThj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:27:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729803AbgCCT1A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:27:00 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 253F42072D;
-        Tue,  3 Mar 2020 19:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583263619;
-        bh=S23seZZ+F0rhstqMDwu37JiEu/Gt0WN7ghAUIOFxxME=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bT/gp7f0P3cfOffymaU/w4anjKUzVAorinFP9Qjiewkk14jyntSzvsSynt5ctPFec
-         85fdsIUrh9KseU1S0jcUosx9UhH6Zqfopw7FWT5hPb0o5qeo89+39cFs3Q8kU3uQpD
-         tb7Ntj+axxD+SkPVtHb0awJaPC3ATL4aZ+djYlnI=
-Received: by mail-qk1-f174.google.com with SMTP id f198so4558057qke.11;
-        Tue, 03 Mar 2020 11:26:59 -0800 (PST)
-X-Gm-Message-State: ANhLgQ2PNBPQaGbwaCMb7qHikNM9wXINMvSonjdqUs50qnX6pSCfjXYX
-        FFuT3QogF7JYvx9w54UjD0vYRdxKBAKGnSCJ5w==
-X-Google-Smtp-Source: ADFU+vtjJbOMk1EoX+3tC0WiPLOyEXu84LZLuGuqJ/pkNtHGvxR+Q00nCC+1JwclklG4DfJTkGP1K7bhBzR68Gigx+M=
-X-Received: by 2002:a05:620a:15a2:: with SMTP id f2mr5790107qkk.223.1583263618266;
- Tue, 03 Mar 2020 11:26:58 -0800 (PST)
+        Tue, 3 Mar 2020 14:37:39 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52940 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbgCCThi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 14:37:38 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so4640139wmc.2;
+        Tue, 03 Mar 2020 11:37:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=23MiElBzYrRDX6GbaN3mzTmTyaDErM01gV6N0qWTyOs=;
+        b=K402ctgr533n/aShK2zPSW4yr2YmCl5EY+y91DxqTQJMtMbddxUvg6Ecbraka4RNfd
+         RlmrFzIkkJqMOVIu7HoPqb3SikFEWv/QYrblfvKVFUpL5KCkenldecc3c+UKGSVQ9BVQ
+         lRicpitiZ3brWjnPJgPU8SlCkvVLQeGYziILRRmaqOi5O7ofMmDDn1C4v69y+F266Lqo
+         Og2clmlCbcb6OpEzSq8QPA4v1iH7iCMSLuUWyxdgVnHEGPLbx6A2acevIvzgwTzH5qu2
+         nPSD4zQ1INrXgPeN8HG5IaO1kvjyOOlTu6dcjz6yhGG7rUTu5pRGziLwlM8Gh0GdYxkj
+         QeYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=23MiElBzYrRDX6GbaN3mzTmTyaDErM01gV6N0qWTyOs=;
+        b=A1ta2h77/ZHkEbbdILbb+jK6l3nLaBi8xX4pzaf8fEYXkT8sEdaiEDVSFiiUTIoTK5
+         t9bTn1FBPxtwuQ2an1DHIpYLizdQpw25yU4rqJFZQEM3zJigVC6J+C+fnguyXAyWaWDC
+         qdBsyAc22wdMzu/NNUZbPk1cdIvHH5mVxAzyY3NJmZaSBrGDnzLXYHNLJAPhINDdsCWN
+         6KHawXV33NJX+JVu2oLgNntDrmYDDbWSZ3gqT/jn5Hc1tK4MXg+le7mQtAGIM+wxe/lU
+         VR8c1ZhVXZL3xn6duUjg5KRDqTXG/j8JaDAGpdjxnwr6rFwpeIAfwCWZK0q0aY94RPfF
+         RA3Q==
+X-Gm-Message-State: ANhLgQ2/QnPEfbXAgZIYSgLfZ25Lyn5gRhNqyggF7N2rfoTsu1MrsHD7
+        04DHCBP5v9bFzeiWNC7lmEc=
+X-Google-Smtp-Source: ADFU+vvzxVrmx7dyEqm0jIt9LuWxol3cQUoT/i9O8ly+llE6lY+JsSPgHEPAI81/bFuOXhZEoux6fQ==
+X-Received: by 2002:a05:600c:215:: with SMTP id 21mr101192wmi.119.1583264254408;
+        Tue, 03 Mar 2020 11:37:34 -0800 (PST)
+Received: from [192.168.1.23] (acen79.neoplus.adsl.tpnet.pl. [83.9.189.79])
+        by smtp.gmail.com with ESMTPSA id m25sm119337wml.35.2020.03.03.11.37.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 11:37:33 -0800 (PST)
+Subject: Re: [PATCH RFC v2 3/3] drivers: leds: add support for apa102c leds
+To:     Nicolas Belin <nbelin@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io
+References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
+ <1582727592-4510-4-git-send-email-nbelin@baylibre.com>
+ <85f536f0-0078-08a5-5eeb-e401d1ed8782@gmail.com>
+ <CAJZgTGFMks7Fm+tWpYAAjxBLgD0nk9cfBiVZcAhojaXCvqfLPA@mail.gmail.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7b2a8b79-3c91-220f-2e61-e2a7cbf4cc75@gmail.com>
+Date:   Tue, 3 Mar 2020 20:37:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com> <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
- <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com> <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
- <20200217132133.GA27134@lst.de> <b3c56884-128e-a7e1-2e09-0e8de3c3512d@ti.com>
- <CAL_JsqLxECRKWG3SoORADtZ-gVbqCHyx9mhGzrCPO+X=--w8AQ@mail.gmail.com>
- <15d0ac5f-4919-5852-cd95-93c24d8bdbb9@ti.com> <827fa19d-1990-16bc-33f5-fc82ac0d4a8a@arm.com>
- <3d8ea578-2ecb-1126-3bf0-2dc695687245@ti.com> <e898cf0a-6f52-8550-c73e-b78bc413bcc7@ti.com>
- <98db4748-63cb-79db-50c3-a6a37d624eaa@arm.com>
-In-Reply-To: <98db4748-63cb-79db-50c3-a6a37d624eaa@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 3 Mar 2020 13:26:46 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+zx5qkv1DZdj1p2HHz5siYZwv6WGLe1F7xw9b019UWbQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+zx5qkv1DZdj1p2HHz5siYZwv6WGLe1F7xw9b019UWbQ@mail.gmail.com>
-Subject: Re: dma_mask limited to 32-bits with OF platform device
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Roger Quadros <rogerq@ti.com>, Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAJZgTGFMks7Fm+tWpYAAjxBLgD0nk9cfBiVZcAhojaXCvqfLPA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 8:06 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 03/03/2020 8:27 am, Roger Quadros wrote:
-> [...]
-> >> With the patch (in the end). dev->bus_dma_limit is still set to 0 and
-> >> so is not being used.
-> >>
-> >> from of_dma_configure()
-> >>          ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-> >> ...
-> >>          /* ...but only set bus limit if we found valid dma-ranges
-> >> earlier */
-> >>          if (!ret)
-> >>                  dev->bus_dma_limit = end;
-> >>
-> >> There is no other place bus_dma_limit is set. Looks like every device
-> >> should inherit that
-> >> from it's parent right?
-> >
-> > Any ideas how to expect this to work?
->
-> Is of_dma_get_range() actually succeeding, or is it tripping up on some
-> aspect of the DT (in which case there should be errors in the log)?
->
-> Looking again at the fragment below, are you sure it's correct? It
-> appears to me like it might actually be defining a 1-byte-long DMA
-> range, which indeed I wouldn't really expect to work.
+Hi Nicolas,
 
-Indeed, though it took me a minute to see why.
+On 3/3/20 11:30 AM, Nicolas Belin wrote:
+> Hi Jacek,
+> 
+> That's a shame that it is not going to be upstreamed soon as it making
+> my led driver much nicer :)
 
->
-> Robin.
->
-> >>
-> >> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> >> index 64a0f90f5b52..5418c31d4da7 100644
-> >> --- a/arch/arm/boot/dts/dra7.dtsi
-> >> +++ b/arch/arm/boot/dts/dra7.dtsi
-> >> @@ -680,15 +680,22 @@
-> >>           };
-> >>
-> >>           /* OCP2SCP3 */
-> >> -        sata: sata@4a141100 {
-> >> -            compatible = "snps,dwc-ahci";
-> >> -            reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+Now when we clarified interface related issues I hope it will
+be rather weeks than months when it is ready.
 
-Based on this, the parent address size is 1 cell...
+> So what's the plan with the multicolor framework?
+> I am happy to send a new version to fix your remark and then adapt my
+> driver to the future changes in the Framework.
 
-> >> -            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> >> -            phys = <&sata_phy>;
-> >> -            phy-names = "sata-phy";
-> >> -            clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
-> >> -            ti,hwmods = "sata";
-> >> -            ports-implemented = <0x1>;
-> >> +        sata_aux_bus {
-> >> +            #address-cells = <2>;
-> >> +            #size-cells = <2>;
-> >> +            compatible = "simple-bus";
-> >> +            ranges = <0x0 0x0 0x4a140000 0x0 0x1200>;
-> >> +            dma-ranges = <0x0 0x0 0x0 0x0 0x1 0x00000000>;
+Just rework the driver to create one LED class device per LED color.
+After LED mc framework is upstream you will be free to add the
+support for it to your driver.
 
-So this is:
-child addr: 0x0 0x0
-parent addr: 0x0
-size: 0x0 0x1
+Best regards,
+Jacek Anaszewski
 
-The last cell is just ignored I guess if you aren't seeing any errors.
-We check this in dtc for ranges, but not dma-ranges. So I'm fixing
-that.
+> Let me know what you think.
+> 
+> Thanks,
+> 
+> Regards,
+> 
+> Nicolas
+> 
+> Le mer. 26 févr. 2020 à 21:14, Jacek Anaszewski
+> <jacek.anaszewski@gmail.com> a écrit :
+>>
+>> Hi Nicolas,
+>>
+>> Regardless of the fact that LED mc framework in current shape
+>> will probably not materialize in mainline, I have single
+>> remark regarding LED initialization. Please take a look below.
+>>
+>> On 2/26/20 3:33 PM, Nicolas Belin wrote:
+>>> Initilial commit in order to support the apa102c RGB leds. This
+>>> is based on the Multicolor Framework.
+>>>
+>>> Reviewed-by: Corentin Labbe <clabbe@baylibre.com>
+>>> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+>>> ---
+>>>  drivers/leds/Kconfig        |   7 ++
+>>>  drivers/leds/Makefile       |   1 +
+>>>  drivers/leds/leds-apa102c.c | 291 ++++++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 299 insertions(+)
+>>>  create mode 100644 drivers/leds/leds-apa102c.c
+>>>
+>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>> index 5dc6535a88ef..71e29727c6ec 100644
+>>> --- a/drivers/leds/Kconfig
+>>> +++ b/drivers/leds/Kconfig
+>>> @@ -79,6 +79,13 @@ config LEDS_AN30259A
+>>>         To compile this driver as a module, choose M here: the module
+>>>         will be called leds-an30259a.
+>>>
+>>> +config LEDS_APA102C
+>>> +     tristate "LED Support for Shiji APA102C"
+>>> +     depends on SPI
+>>> +     depends on LEDS_CLASS_MULTI_COLOR
+>>> +     help
+>>> +       This option enables support for APA102C LEDs.
+>>> +
+>>>  config LEDS_APU
+>>>       tristate "Front panel LED support for PC Engines APU/APU2/APU3 boards"
+>>>       depends on LEDS_CLASS
+>>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>>> index b5305b7d43fb..8334cb6dc7e8 100644
+>> [...]
+>>> +
+>>> +             led->priv                       = priv;
+>>> +             led->ldev.max_brightness        = MAX_BRIGHTNESS;
+>>> +             fwnode_property_read_string(child, "linux,default-trigger",
+>>> +                                         &led->ldev.default_trigger);
+>>> +
+>>> +             init_data.fwnode = child;
+>>> +             init_data.devicename = APA_DEV_NAME;
+>>> +             init_data.default_label = ":";
+>>
+>> devicename property should be filled in new drivers only in case
+>> devname_mandatory is set to true.
+>> default_label property is for legacy drivers, for backward compatibility
+>> with old LED naming convention.
+>>
+>> For more information please refer to:
+>> - Documentation/leds/leds-class.rst, "LED Device Naming" section
+>> - struct led_init_data documention in linux/leds.h
+>>
+>> In effect you need only fwnode here,
+>>
+>>> +
+>>> +             num_colors = 0;
+>>> +             fwnode_for_each_child_node(child, grandchild) {
+>>> +                     ret = fwnode_property_read_u32(grandchild, "color",
+>>> +                                                    &color_id);
+>>> +                     if (ret) {
+>>> +                             dev_err(priv->dev, "Cannot read color\n");
+>>> +                             goto child_out;
+>>> +                     }
+>>> +
+>>> +                     set_bit(color_id, &led->mc_cdev.available_colors);
+>>> +                     num_colors++;
+>>> +             }
+>>> +
+>>> +             if (num_colors != 3) {
+>>> +                     ret = -EINVAL;
+>>> +                     dev_err(priv->dev, "There should be 3 colors\n");
+>>> +                     goto child_out;
+>>> +             }
+>>> +
+>>> +             if (led->mc_cdev.available_colors != IS_RGB) {
+>>> +                     ret = -EINVAL;
+>>> +                     dev_err(priv->dev, "The led is expected to be RGB\n");
+>>> +                     goto child_out;
+>>> +             }
+>>> +
+>>> +             led->mc_cdev.num_leds = num_colors;
+>>> +             led->mc_cdev.led_cdev = &led->ldev;
+>>> +             led->ldev.brightness_set_blocking = apa102c_brightness_set;
+>>> +             ret = devm_led_classdev_multicolor_register_ext(priv->dev,
+>>
+>> --
+>> Best regards,
+>> Jacek Anaszewski
+> 
+> 
+> 
 
-> >> +            sata: sata@4a141100 {
-> >> +                compatible = "snps,dwc-ahci";
-> >> +                reg = <0x0 0x0 0x0 0x1100>, <0x0 0x1100 0x0 0x7>;
-> >> +                interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                phys = <&sata_phy>;
-> >> +                phy-names = "sata-phy";
-> >> +                clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
-> >> +                ti,hwmods = "sata";
-> >> +                ports-implemented = <0x1>;
-> >> +            };
-> >>           };
-> >>
-> >>           /* OCP2SCP1 */
-> >>
-> >
