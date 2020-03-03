@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037BBC3F2D8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE89C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE20721741
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FCB20CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oGAEoToA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sOIG1o9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgCCQBH (ORCPT
+        id S1729449AbgCCQAw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:01:07 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56898 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730197AbgCCQBD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 11:01:03 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023G110K087011;
-        Tue, 3 Mar 2020 10:01:01 -0600
+        Tue, 3 Mar 2020 11:00:52 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54078 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729543AbgCCQAt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 11:00:49 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023G0kC9091121;
+        Tue, 3 Mar 2020 10:00:46 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583251261;
-        bh=kMGzEG3llNgQuXMud+pl3UcHifoB2y/ZMOSZK0Quy3A=;
+        s=ti-com-17Q1; t=1583251246;
+        bh=oehu8Dp5oKYIE3wzZN60BoP+9zoo0QNkg4JLEASppoM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=oGAEoToAiFkyZqc9hJqPrWskitemoDFntb6OHwV4d93i6/+EiiyNNFMMsHH6GmTYs
-         KmI+Wunoslp9I4+cxYcPReqI0wu/2feH/q197LNsthIPIeC63TaI/lQ3/Unt2kbFpr
-         DbVAUti+oLQbJsbGC9Rj3U7gycRuNdkjszCHsS18=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023G119P112162
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Mar 2020 10:01:01 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        b=sOIG1o9G2U58Z90c2BjeCbnkGgxAigmJUGefa2FO/qyUrv/YQ7M/LQlCce3SiRrhC
+         s9ybkO3NUkC/mVLzJn6OGTDO0gI5PrOUYhO7ZCSDZKisIaL8G+Gtw+3HwSu4lD/T5R
+         aAcP+SDwKV4wXjLTB9OaFxtR8T8TFz6IHWVkSNgM=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023G0kXn104100;
+        Tue, 3 Mar 2020 10:00:46 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 10:01:00 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 10:00:45 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 10:01:01 -0600
+ Frontend Transport; Tue, 3 Mar 2020 10:00:46 -0600
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 023G10jb030402;
-        Tue, 3 Mar 2020 10:01:00 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023G0jLL126279;
+        Tue, 3 Mar 2020 10:00:45 -0600
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Murali Karicheri <m-karicheri2@ti.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -56,9 +55,9 @@ CC:     Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>,
         netdev <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [for-next PATCH v2 5/5] arm64: dts: ti: k3-j721e-mcu: add scm node and phy-gmii-sel nodes
-Date:   Tue, 3 Mar 2020 18:00:29 +0200
-Message-ID: <20200303160029.345-6-grygorii.strashko@ti.com>
+Subject: [for-next PATCH v2 2/5] dt-bindings: phy: ti: gmii-sel: add support for am654x/j721e soc
+Date:   Tue, 3 Mar 2020 18:00:26 +0200
+Message-ID: <20200303160029.345-3-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200303160029.345-1-grygorii.strashko@ti.com>
 References: <20200303160029.345-1-grygorii.strashko@ti.com>
@@ -70,39 +69,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT node for MCU System Control module DT node and DT node for the TI
-J721E SoC phy-gmii-sel PHY required for Ethernet ports mode selection.
+TI AM654x/J721E SoCs have the same PHY interface selection mechanism for
+CPSWx subsystem as TI SoCs (AM3/4/5/DRA7), but registers and bit-fields
+placement is different.
+
+This patch adds corresponding compatible strings to enable support for TI
+AM654x/J721E SoCs.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 16c874bfd49a..6f961d5f077a 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -34,6 +34,20 @@
- 		};
- 	};
- 
-+	mcu_conf: syscon@40f00000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0x0 0x40f00000 0x0 0x20000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x40f00000 0x20000>;
-+
-+		phy_gmii_sel: phy@4040 {
-+			compatible = "ti,am654-phy-gmii-sel";
-+			reg = <0x4040 0x4>;
-+			#phy-cells = <1>;
-+		};
-+	};
-+
- 	wkup_pmx0: pinmux@4301c000 {
- 		compatible = "pinctrl-single";
- 		/* Proxy 0 addressing */
+diff --git a/Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt b/Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt
+index 50ce9ae0f7a5..83b78c1c0644 100644
+--- a/Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt
++++ b/Documentation/devicetree/bindings/phy/ti-phy-gmii-sel.txt
+@@ -40,6 +40,7 @@ Required properties:
+ 			  "ti,dra7xx-phy-gmii-sel" for dra7xx/am57xx platform
+ 			  "ti,am43xx-phy-gmii-sel" for am43xx platform
+ 			  "ti,dm814-phy-gmii-sel" for dm814x platform
++			  "ti,am654-phy-gmii-sel" for AM654x/J721E platform
+ - reg			: Address and length of the register set for the device
+ - #phy-cells		: must be 2.
+ 			  cell 1 - CPSW port number (starting from 1)
 -- 
 2.17.1
 
