@@ -2,223 +2,107 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9EEC3F2D9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5220AC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F94420848
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E3A20838
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583243193;
+	bh=vGEryNKJXcCT8a512mUV3y5gUnsXj9RciNHteo1Sa94=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cezHQoKnQSpCQV7nICVLXZFGTwUUUnqH8xmzAhndbCtuVDFNUuo+6s1LXPfNosXy2
+	 JErkOsojpiLBnepS9p2dN1R2qjt2SYOGa8tNs1AXxj+ufli+Fi7pkVkDeSIsrR4zsI
+	 LaL5pAnbld4YMGoOyDzYTfnfNv3xWqsJpRq9wqFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgCCNn4 (ORCPT
+        id S1727835AbgCCNqc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:43:56 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:37116 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbgCCNn4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 08:43:56 -0500
-Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id 9pjt2200y5USYZQ06pjtH1; Tue, 03 Mar 2020 14:43:54 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j97px-0001GU-Qp; Tue, 03 Mar 2020 14:43:53 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j97px-0005oA-Pp; Tue, 03 Mar 2020 14:43:53 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] dt-bindings: serial: Convert generic bindings to json-schema
-Date:   Tue,  3 Mar 2020 14:43:50 +0100
-Message-Id: <20200303134351.22270-2-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200303134351.22270-1-geert+renesas@glider.be>
-References: <20200303134351.22270-1-geert+renesas@glider.be>
+        Tue, 3 Mar 2020 08:46:32 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:38270 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbgCCNqc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 08:46:32 -0500
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 023DkNuj001527;
+        Tue, 3 Mar 2020 22:46:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 023DkNuj001527
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583243184;
+        bh=I0dB0E0Ppgz9TfglvmGFKRBJvWtxB1020ETEw+zES8k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r8faXJ+BlS6Qk+t3Ed1/ouhSRxGoBFaiF3DCRJ25taCMU7nJDnr+svsg8p3eaXn2r
+         g9BYXlTOmA5MbqSfx+e4QRvyFdJQwqyaVx3+h/2O4V4ZhgE0uRpdd0xQq8iqgr5Dn/
+         moY4CpHlo+ip6adRt843TeyP2hQU+psGsVqQLeMiov/uEweC4zIDD+SfU1Yo+CTK3W
+         LUHPuOKsZE25mE+t/IkFyBA+dQDZdrz6VB1JBbSC5Q89dSDl6Cgikzf09kYKLQGp+H
+         6ZgiwtdWDmdQaAU/Z/qcGoo4dmQeQ2VRYlGEiWFJV7qX4M9LNVCzK3eg42X74ppr8W
+         7g9nY8pNNlmUw==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id w142so2352836vsw.9;
+        Tue, 03 Mar 2020 05:46:24 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0xII2jz37IHuddeWaFM0hKABhW8mm+Oz4AyHMpqGAsRH769vMz
+        XSTMcEzRYvvG3vDNS3XNSdvuWVT380W+vpHclik=
+X-Google-Smtp-Source: ADFU+vsjmSig+hI85BfC9o+2I1Nt3rsoH9lkQysVJ+WWf8bKa68CI2DD2CprMOpxEX7H5tqzk/VJC2tBrHCTfTlcbI0=
+X-Received: by 2002:a67:bc0c:: with SMTP id t12mr2269458vsn.215.1583243183172;
+ Tue, 03 Mar 2020 05:46:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20200229003731.2728-1-robh@kernel.org> <CAK7LNAQUbfVvYYSuMNnB2OyNbuYZkzY0gsKRybe-0P9GuYZN2w@mail.gmail.com>
+ <CAL_JsqLqZYZXGg8-FnoV8EFKSK8moQjEWe93+FazEbh9GTxQpw@mail.gmail.com>
+In-Reply-To: <CAL_JsqLqZYZXGg8-FnoV8EFKSK8moQjEWe93+FazEbh9GTxQpw@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 3 Mar 2020 22:45:47 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATr5TX+CnxHhoa5qcNes6mTp9h0TJ_5=0fGzzq3M8FKxg@mail.gmail.com>
+Message-ID: <CAK7LNATr5TX+CnxHhoa5qcNes6mTp9h0TJ_5=0fGzzq3M8FKxg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the generic serial interface Device Tree binding documentation
-to json-schema.
+On Tue, Mar 3, 2020 at 1:06 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Feb 28, 2020 at 10:25 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Sat, Feb 29, 2020 at 9:37 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > Most folks only run dt_binding_check on the single schema they care about
+> > > by setting DT_SCHEMA_FILES. That means example is only checked against
+> > > that one schema which is not always sufficient.
+> > >
+> > > Let's address this by splitting processed-schema.yaml into 2 files: one
+> > > that's always all schemas for the examples and one that's just the schema
+> > > in DT_SCHEMA_FILES for dtbs.
+> > >
+> > > Cc: Michal Marek <michal.lkml@markovi.net>
+> > > Cc: linux-kbuild@vger.kernel.org
+> > > Co-developed-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Masahiro, given you pretty much re-wrote this, I added you as
+> > > Co-developed-by.
+> >
+> >
+> >
+> > I can apply both to my kbuild tree.
+>
+> Please apply to your tree.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- .../devicetree/bindings/serial/serial.txt     | 56 -----------
- .../devicetree/bindings/serial/serial.yaml    | 95 +++++++++++++++++++
- 2 files changed, 95 insertions(+), 56 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/serial.txt
- create mode 100644 Documentation/devicetree/bindings/serial/serial.yaml
 
-diff --git a/Documentation/devicetree/bindings/serial/serial.txt b/Documentation/devicetree/bindings/serial/serial.txt
-deleted file mode 100644
-index 863c2893759e7151..0000000000000000
---- a/Documentation/devicetree/bindings/serial/serial.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--Generic Serial DT Bindings
--
--This document lists a set of generic properties for describing UARTs in a
--device tree.  Whether these properties apply to a particular device depends on
--the DT bindings for the actual device.
--
--Optional properties:
--  - cts-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
--    used as the UART's CTS line.
--  - dcd-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
--    used as the UART's DCD line.
--  - dsr-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
--    used as the UART's DSR line.
--  - dtr-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
--    used as the UART's DTR line.
--  - rng-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
--    used as the UART's RNG line.
--  - rts-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
--    used as the UART's RTS line.
--
--  - uart-has-rtscts: The presence of this property indicates that the
--    UART has dedicated lines for RTS/CTS hardware flow control, and that
--    they are available for use (wired and enabled by pinmux configuration).
--    This depends on both the UART hardware and the board wiring.
--    Note that this property is mutually-exclusive with "cts-gpios" and
--    "rts-gpios" above, unless support is provided to switch between modes
--    dynamically.
--
--
--Examples:
--
--	uart1: serial@48022000 {
--		compatible = "ti,am3352-uart", "ti,omap3-uart";
--		ti,hwmods = "uart2";
--		clock-frequency = <48000000>;
--		reg = <0x48022000 0x2000>;
--		interrupts = <73>;
--		dmas = <&edma 28 0>, <&edma 29 0>;
--		dma-names = "tx", "rx";
--		dtr-gpios = <&gpio2 22 GPIO_ACTIVE_LOW>;
--		dsr-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
--		dcd-gpios = <&gpio2 24 GPIO_ACTIVE_LOW>;
--		rng-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;
--		cts-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
--		rts-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
--	};
--
--	scifa4: serial@e6c80000 {
--		compatible = "renesas,scifa-sh73a0", "renesas,scifa";
--		reg = <0xe6c80000 0x100>;
--		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp2_clks SH73A0_CLK_SCIFA4>;
--		clock-names = "fck";
--		power-domains = <&pd_a3sp>;
--		uart-has-rtscts;
--	};
-diff --git a/Documentation/devicetree/bindings/serial/serial.yaml b/Documentation/devicetree/bindings/serial/serial.yaml
-new file mode 100644
-index 0000000000000000..d408335319f00215
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/serial.yaml
-@@ -0,0 +1,95 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/serial/serial.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Serial Interface Generic DT Bindings
-+
-+maintainers:
-+  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-+
-+description:
-+  This document lists a set of generic properties for describing UARTs in a
-+  device tree.  Whether these properties apply to a particular device depends
-+  on the DT bindings for the actual device.
-+
-+properties:
-+  $nodename:
-+    pattern: "^serial@[0-9a-f]+$"
-+
-+  cts-gpios:
-+    description:
-+      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-+      the UART's CTS line.
-+
-+  dcd-gpios:
-+    description:
-+      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-+      the UART's DCD line.
-+
-+  dsr-gpios:
-+    description:
-+      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-+      the UART's DSR line.
-+
-+  dtr-gpios:
-+    description:
-+      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-+      the UART's DTR line.
-+
-+  rng-gpios:
-+    description:
-+      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-+      the UART's RNG line.
-+
-+  rts-gpios:
-+    description:
-+      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-+      the UART's RTS line.
-+
-+  uart-has-rtscts:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      The presence of this property indicates that the UART has dedicated lines
-+      for RTS/CTS hardware flow control, and that they are available for use
-+      (wired and enabled by pinmux configuration).  This depends on both the
-+      UART hardware and the board wiring.
-+      Note that this property is mutually-exclusive with "cts-gpios" and
-+      "rts-gpios" above, unless support is provided to switch between modes
-+      dynamically.
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    serial@48022000 {
-+            compatible = "ti,am3352-uart", "ti,omap3-uart";
-+            ti,hwmods = "uart2";
-+            clock-frequency = <48000000>;
-+            reg = <0x48022000 0x2000>;
-+            interrupts = <73>;
-+            dmas = <&edma 28 0>, <&edma 29 0>;
-+            dma-names = "tx", "rx";
-+            dtr-gpios = <&gpio2 22 GPIO_ACTIVE_LOW>;
-+            dsr-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
-+            dcd-gpios = <&gpio2 24 GPIO_ACTIVE_LOW>;
-+            rng-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;
-+            cts-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-+            rts-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-+    };
-+
-+  - |
-+    #include <dt-bindings/clock/sh73a0-clock.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    serial@e6c80000 {
-+            compatible = "renesas,scifa-sh73a0", "renesas,scifa";
-+            reg = <0xe6c80000 0x100>;
-+            interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&mstp2_clks SH73A0_CLK_SCIFA4>;
-+            clock-names = "fck";
-+            power-domains = <&pd_a3sp>;
-+            uart-has-rtscts;
-+    };
+Done.
+Thanks.
+
+
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
