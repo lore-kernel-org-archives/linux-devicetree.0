@@ -4,80 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4067C3F2D8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A59FC3F2D8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2EB214DB
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D4320863
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uomHMbW9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JESZm0OD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730675AbgCCRMG (ORCPT
+        id S1729280AbgCCRNE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:12:06 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44089 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730667AbgCCRMG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 12:12:06 -0500
-Received: by mail-wr1-f65.google.com with SMTP id n7so5283257wrt.11
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 09:12:05 -0800 (PST)
+        Tue, 3 Mar 2020 12:13:04 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37293 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729810AbgCCRMC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 12:12:02 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q8so5359105wrm.4
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 09:12:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tOKDkyUmAMjWXMziJpbUMfDorD9PY/k8abOKzPT2TKY=;
-        b=uomHMbW9ekhiV44ysS9cyvZ9tL7y1E7JYc1HMpdfBMEbT9d5Ow3RKbO/B8VpiBo/ok
-         48kCLGVn+SmsTKdBNKKQxImm+QjMO4TsQsSwFmy+G9wTNd616cPPYznUNBWfAZWdcG98
-         UDiYvF7+Zr6yHblKJX0HN8NFZrPNNG+pfiJ7X5M+T2PUBMAKQWGQkoHPYWFZURCg9z3y
-         9/GWeSiAiAJJM+JT8N8d7OrrZZYT5KZkrpqg9BeuN6e7QX6FATpVOeI9bdnrsIT4tRq3
-         CckH1Ef/gk/QRw/ooSmH1yXzfkXe+/roCqZDcRAn/68HO1z8g873SF5KuYnxsPM8tcUP
-         13qQ==
+        bh=M9ph+jxDzGgiRBaVZmmvpJl00qLHRlJZThV1uDOFG5s=;
+        b=JESZm0ODS2Wm7MZiY4M3IuSgt7PNoSjHXo837QenUUOzfHs/QHUj/jR17XCEOiVJ+a
+         tQMteKC3CnrOfDP/skWKbp9W0o99P636IhP6hA3XhoiZ3h4Hy5fqpRr0c30ZklkAquWk
+         pnxskvkCkqW7EXKxJot4f6oqRt8J2NThyVUlJflJ9iSVr+TQf/APq6nXzLYk1RMl6iAU
+         dB/EAuFG9Ikdw3FWAgCftX/CnFHu+3zQgabJXAR3IqRqKxeiYan8bbtlo8HDzu+lOckp
+         +GhECXgGpvEWsk0lB5JfQ81SikrfkfvaTzcSSOXDPObqdz7f9p58gkZ7yrxYEBs+QeCy
+         mb3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tOKDkyUmAMjWXMziJpbUMfDorD9PY/k8abOKzPT2TKY=;
-        b=eD31XLTW4fGcAaDK1VmprJ6iKjEf4WlSRBWPnrClepez97t+I279nX9ddOExYfJKau
-         Uu8iEQ+iBB+xiiyYnGKfuq2pm14H+Itn8pdfDJCv+XrKFPXxG7GjDqALfnh6CXGH6zl3
-         v1iBxh82x2x651Oey/9l2wQwx41YcqLvqTxQtOqZAza5yJjIMogwivdm5zIyR32o2M1n
-         Mr7lUo5NuZhh+APbj4BvkyRafJkDmBhgvkZYe3n3TfP1q0IhVSc3DyCGqDZsiO94t8Pt
-         VfEoLpl0v/0tj7/o4Xi5BE3u6oTDlRuIyKoDouWZUJ1EYt7MZRSg1DWFKD7iaU17aKUF
-         ftzw==
-X-Gm-Message-State: ANhLgQ3JopqgNiePpQB1P/lD7CN74fNGQidTS9Sarigw6iv6EVpo0ujP
-        27sEJVelS730288/dfHAzm1Qmw==
-X-Google-Smtp-Source: ADFU+vsxxytqy/j85IVjnrdfu0A9gIGsCA9PPaP2vsFxVyxsBQHwkxnO09aDb/KALLKDPd3+l8vjww==
-X-Received: by 2002:adf:f504:: with SMTP id q4mr6131687wro.28.1583255524715;
-        Tue, 03 Mar 2020 09:12:04 -0800 (PST)
+        bh=M9ph+jxDzGgiRBaVZmmvpJl00qLHRlJZThV1uDOFG5s=;
+        b=cHQpwbvyYk/of2Y70MgnhGLNn69ujGoEiMewLRja9oj+jtmCp6p1emXmsk581l7qpl
+         n6uwRw/6NjafeH/q5oIv3r9Yxaw1NAePqtkNbG6fJUmFeQ9FvUQjrkxil9N0bvKelwYz
+         tYqVl1bFHY0RO9pMgr6A6cGsVHKJyn6MRgYdxyByIAXpOWTYLVOLlUN+RWsXz5sBXPGX
+         BkVJ9xVIx3zWyB6AYz7qzsOooXXHj6LrGZVyZkjp5k3GpMlsOtv/czKVpw4nlrvb8EK3
+         jNa/EX2cautTI471an5YQE1gy1t8Drif8lqc0x5AJML5Q2p2NZqLyjtVRpMlQR7YfHOR
+         Pi7w==
+X-Gm-Message-State: ANhLgQ2gE+Iarhm+hpGdaS8HU905FmJBuXfl6YESWvz7pOEKFDfov5hs
+        EOunLQZrJSF+Md1mrHpV0nUu8A==
+X-Google-Smtp-Source: ADFU+vvIlGOYOSdxmZ7huKTi44WJjdKX+SA2RUsm5n1QYKm9tOTrG8aeAJXsYMbwIDZOTphtucsoEQ==
+X-Received: by 2002:adf:fd08:: with SMTP id e8mr6166791wrr.43.1583255520866;
+        Tue, 03 Mar 2020 09:12:00 -0800 (PST)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id z13sm5425319wrw.88.2020.03.03.09.12.03
+        by smtp.gmail.com with ESMTPSA id z13sm5425319wrw.88.2020.03.03.09.11.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 09:12:04 -0800 (PST)
+        Tue, 03 Mar 2020 09:12:00 -0800 (PST)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
         bjorn.andersson@linaro.org, robh@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v7 10/18] usb: dwc3: Add support for usb-conn-gpio connectors
-Date:   Tue,  3 Mar 2020 17:11:51 +0000
-Message-Id: <20200303171159.246992-11-bryan.odonoghue@linaro.org>
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH v7 07/18] dt-bindings: usb: dwc3: Add a gpio-usb-connector example
+Date:   Tue,  3 Mar 2020 17:11:48 +0000
+Message-Id: <20200303171159.246992-8-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
 References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
@@ -88,94 +76,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the ability to probe and enumerate a connector based on
-usb-conn-gpio.
+A USB connector should be a child node of the USB controller
+connector/usb-connector.txt. This patch adds an example of how to do this
+to the dwc3 binding descriptions.
 
-You would use usb-conn-gpio when a regulator in your system provides VBUS
-directly to the connector instead of supplying via the USB PHY.
+It is necessary to declare a connector as a child-node of a USB controller
+for role-switching to work, so this example should be helpful to others
+implementing that.
 
-The parent device must have the "usb-role-switch" property, so that when
-the usb-conn-gpio driver calls usb_role_switch_set_role() the notification
-in dwc3 will run and the block registers will be updated to match the state
-detected at the connector.
-
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-CC: ShuFan Lee <shufan_lee@richtek.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jack Pham <jackp@codeaurora.org>
 Cc: linux-usb@vger.kernel.org
 Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- drivers/usb/dwc3/drd.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ Documentation/devicetree/bindings/usb/dwc3.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index 331c6e997f0c..2ec1ae30bcc5 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -11,6 +11,7 @@
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/of_platform.h>
- 
- #include "debug.h"
- #include "core.h"
-@@ -538,9 +539,30 @@ static int dwc3_setup_role_switch(struct dwc3 *dwc)
- 	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 66780a47ad85..4e1e4afccee6 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -121,4 +121,12 @@ dwc3@4a030000 {
+ 	interrupts = <0 92 4>
+ 	usb-phy = <&usb2_phy>, <&usb3,phy>;
+ 	snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
 +
-+static int dwc3_register_gpio_usb_connector(struct dwc3 *dwc)
-+{
-+	struct device		*dev = dwc->dev;
-+	struct device_node	*np = dev->of_node, *conn_np;
-+	int			ret = 0;
-+
-+	conn_np = of_get_child_by_name(np, "connector");
-+	if (!conn_np) {
-+		dev_dbg(dev, "no connector child node specified\n");
-+		goto done;
-+	}
-+
-+	if (of_device_is_compatible(conn_np, "gpio-usb-b-connector"))
-+		ret = of_platform_populate(np, NULL, NULL, dev);
-+done:
-+	of_node_put(conn_np);
-+	return ret;
-+}
-+
- #else
- #define ROLE_SWITCH 0
- #define dwc3_setup_role_switch(x) 0
-+#define dwc3_register_gpio_usb_connector(x) 0
- #endif
- 
- int dwc3_drd_init(struct dwc3 *dwc)
-@@ -556,6 +578,9 @@ int dwc3_drd_init(struct dwc3 *dwc)
- 		ret = dwc3_setup_role_switch(dwc);
- 		if (ret < 0)
- 			return ret;
-+		ret = dwc3_register_gpio_usb_connector(dwc);
-+		if (ret < 0)
-+			return ret;
- 	} else if (dwc->edev) {
- 		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
- 		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
++	usb_con: connector {
++		compatible = "gpio-usb-b-connector";
++		id-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
++		vbus-supply = <&usb3_vbus_reg>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb3_id_pin>, <&usb3_vbus_pin>;
++	};
+ };
 -- 
 2.25.1
 
