@@ -2,138 +2,363 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E972C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA98EC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B4320842
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B065A215A4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2hhA1DH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlBo0b/g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgCCHiJ (ORCPT
+        id S1727656AbgCCHvU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:38:09 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46936 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgCCHiJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 02:38:09 -0500
-Received: by mail-pf1-f194.google.com with SMTP id o24so1013979pfp.13;
-        Mon, 02 Mar 2020 23:38:08 -0800 (PST)
+        Tue, 3 Mar 2020 02:51:20 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45182 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbgCCHvT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 02:51:19 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v19so2040583oic.12;
+        Mon, 02 Mar 2020 23:51:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lp++SjSydgt9rFdJFF3CB/lDlkmkywlwzPGaMF0zRlA=;
-        b=N2hhA1DHJRr48b03MdRwK7wZT+y/IIbu0elhvz7gKyVzfWBwfAl0mdXhHechKW3w5h
-         wBxpbplnqcGuRCe2aCyqhLZ2wpo+o2zcRsqCG1KdGYHdSJxY32PohGGlo4aMczuoJHna
-         CMWMl9Exwvu57I8hyLPt/3Q4RBQTH5w67lBRMPCFvGriXxlrcvaH322RGt4kpMoBHUxh
-         3E4JEzdChP8g3QMeRMTmn351CirQyx390iw1AbTyvsytm9dZSNigQYXyPmQAa74sAYIC
-         Pj+UjOdxqIfBRBpzjWssycX5jwrJViK8MAIoJf3vZquhGT10/uKK0BZsNZxEY15fRJdw
-         35Ng==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dJERuTx1vkullBpFrugyde96NXj+cKMvr59e+mu+WbM=;
+        b=MlBo0b/gyWKdLjihurXMRLLS62RKM7eV0he7zU20AHef4Kj7yXi5eRUfziwsvY97bP
+         kCsaQVDZ6xFN2um0uw8PfiPhho7tEsNP5XjZ8fzz69lct+JY0Cg01vzu8Ie9QWSwB7B7
+         5wB0EJ6dW6HfuKtnF3gyDWMzFBQlMpF5emVrF7MLh0Go77qle0a9V1bPiPt/YC0h+rs9
+         YsBMjg1XQ9le4oq3unR+jMqDJSgYu+jPvpMfvkG2vjYUg9gYmnYnLiqQZBSQjV2nobTp
+         aDxOam0ON6lMsPNfvsTzCJhslNgQh02i963gQmpmkV3HeHOrx2X1t+lzDo1/SgtYZ3ms
+         CPDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lp++SjSydgt9rFdJFF3CB/lDlkmkywlwzPGaMF0zRlA=;
-        b=GrxvhCUgqmbfu92ZHnn3Uhi0H8/0NLyGayk+Grwljm0TAlkMYMnDi85iJpM6Sw2ZLu
-         T9rZYu9gmrd1EzervZA0Bg4fgGVpIEIMn2Tq3mqVUVguWPJzUJjVD/Xt4Ll6ZcKsTPrm
-         0RxWjBNcBkSVNkBAc1j562QIK78E5WfFiptxsTkcrjRvCKUqgGUxnaCefB4YgdX9VZe9
-         RzwyYm1hMGHYFYIuLbBU2tLuiB/5MJ69QJN5Q2z9u12pP4YY/5eBFd0XNtspkCapGQ6J
-         Ax+qW0S+hJFagAkh+7JFQ/k+fMVkoxJpETmMLbo0EKHQ9TopbsZ710wBflM7HHqGPbu/
-         yR9A==
-X-Gm-Message-State: ANhLgQ1wU/99vVINgFmqAuFhn3iCYq0LA3TS4ED/8oQlChE7Nrp/2RL6
-        a6b5qDfGmYvUouStd6Oigo4=
-X-Google-Smtp-Source: ADFU+vvzwWp+30x2055lNCAa+QhYWY8R2yyZZoSUjWYJZln5Koehw7RijTiQ1fkyuH3SDxsLzC7qTQ==
-X-Received: by 2002:aa7:8582:: with SMTP id w2mr2820931pfn.89.1583221088207;
-        Mon, 02 Mar 2020 23:38:08 -0800 (PST)
-Received: from Asurada (c-73-162-191-63.hsd1.ca.comcast.net. [73.162.191.63])
-        by smtp.gmail.com with ESMTPSA id p94sm1516093pjp.15.2020.03.02.23.38.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 23:38:07 -0800 (PST)
-Date:   Mon, 2 Mar 2020 23:37:46 -0800
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dJERuTx1vkullBpFrugyde96NXj+cKMvr59e+mu+WbM=;
+        b=Hy5iyOJCzu7iJYS/LACXR3+K2YaC7RE+d44rRs0AnMcrgwj0Ilaw28VEdzPNwKo27D
+         7nDLYzn2ToQ8IgG2u+fDTBgAm2CAT0olkfxyeLYYqaJlDL3PYHMv00dtavlp0Vv3KhaW
+         0LskDBAV4EYJPvzZ2aEmif8Zd7QqX98m4oA3vAarKiDPwgyUwcqfqUOyPgzEpvditJEf
+         n1s7LkEbOhsW9g9OmBxGyqcpTQiuKsTRk0QiGbTdL9VuKy3DSoOKvqKrEt/MxWie5zBz
+         Q2yXpAudsqXRHgaer1e9eUajT3Wb6tY843ewFVcmNSHLaHume4VTnax+cuDDzfceWUkl
+         fJFw==
+X-Gm-Message-State: ANhLgQ1dW1lqv42sjFHYgQ1tsZ6kXQM87Xgx5Js8qt6BNNewYQ5mby54
+        XiSg/T57xDsVoAerHUEI3IQUM937EcjPErU5alY=
+X-Google-Smtp-Source: ADFU+vvfbkXj9GPHK9S6fg3tKEYes3+kVrH58hc6DAWJUCxC/mk23r7PfL8YDItBVc4eUdfv9Ulavx8aCkysABUlWoA=
+X-Received: by 2002:aca:524a:: with SMTP id g71mr1625639oib.7.1583221878584;
+ Mon, 02 Mar 2020 23:51:18 -0800 (PST)
+MIME-Version: 1.0
+References: <20200228170210.18252-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUn9njDRWZPcSD87YuejmhNvDK3pUqL5kXNX6KA-8Y72g@mail.gmail.com>
+In-Reply-To: <CAMuHMdUn9njDRWZPcSD87YuejmhNvDK3pUqL5kXNX6KA-8Y72g@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 3 Mar 2020 07:50:52 +0000
+Message-ID: <CA+V-a8tZaAp3q0JtavGK0MV4MxcZqNMkuvY=dMj8CFu7k3w0NA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add support for
+ AISTARVISION MIPI Adapter V2.1
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-imx@nxp.com,
-        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 1/8] ASoC: dt-bindings: fsl_asrc: Change asrc-width to
- asrc-format
-Message-ID: <20200303073745.GA2868@Asurada>
-References: <cover.1583039752.git.shengjiu.wang@nxp.com>
- <872c2e1082de6348318e14ccd31884d62355c282.1583039752.git.shengjiu.wang@nxp.com>
- <20200303014133.GA24596@bogus>
- <CAA+D8ANgECaz=tRtRwNP=jMXBD0XciAE0HUYROH8uuo03iDejg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA+D8ANgECaz=tRtRwNP=jMXBD0XciAE0HUYROH8uuo03iDejg@mail.gmail.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 11:59:30AM +0800, Shengjiu Wang wrote:
-> Hi
-> 
-> On Tue, Mar 3, 2020 at 9:43 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sun, Mar 01, 2020 at 01:24:12PM +0800, Shengjiu Wang wrote:
-> > > asrc_format is more inteligent, which is align with the alsa
-> > > definition snd_pcm_format_t, we don't need to convert it to
-> > > format in driver, and it can distinguish S24_LE & S24_3LE.
-> > >
-> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > > index cb9a25165503..0cbb86c026d5 100644
-> > > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > > @@ -38,7 +38,9 @@ Required properties:
-> > >
-> > >     - fsl,asrc-rate   : Defines a mutual sample rate used by DPCM Back Ends.
-> > >
-> > > -   - fsl,asrc-width  : Defines a mutual sample width used by DPCM Back Ends.
-> > > +   - fsl,asrc-format : Defines a mutual sample format used by DPCM Back
-> > > +                       Ends. The value is one of SNDRV_PCM_FORMAT_XX in
-> > > +                       "include/uapi/sound/asound.h"
-> >
-> > You can't just change properties. They are an ABI.
-> 
-> I have updated all the things related with this ABI in this patch series.
-> What else should I do?
+Hi Geert,
 
-You probably should add one beside the old one. And all
-the existing drivers would have to continue to support
-"fsl,asrc-width", even if they start to support the new
-"fsl,asrc-format". The ground rule here is that a newer
-kernel should be able to work with an old DTB, IIRC.
+Thank you for the review.
 
-One more concern here is about the format value. Though
-I don't think those values, defined in asound.h, would
-be changed, yet I am not sure if it's legit to align DT
-bindings to a subsystem header file -- I only know that
-usually we keep shared macros under include/dt-bindings
-folder. I won't have any problem, if either Rob or Mark
-has no objection.
+On Mon, Mar 2, 2020 at 3:57 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Lad,
+>
+> CC linux-media
+>
+> On Fri, Feb 28, 2020 at 6:02 PM Lad Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> > This patch adds support AISTARVISION MIPI Adapter V2.1 board connected
+> > to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
+> > which have the camera endpoint nodes with disabled status and in
+> > r8a774c0-ek874-mipi-2.1.dts file VIN/CSI nodes are enabled. By default
+> > imx219 endpoint is tied with CSI2.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > Geert/Rob since the imx219 driver is yet to make into mainline
+> > but has been merged into media-subsystem I would like to take
+> > this patch via media-tree.
+>
+> Usually DTS patches are merged through renesas-devel and arm-soc, not
+> through a driver's subsystems tree.  This is done to avoid merge
+> conflicts.  I prefer not to deviate from that, unless there is a very
+> good reason to do so.
+>
+> Is there any dependency on the code in the media tree that I'm missing?
+> Once DT bindings have been accepted in a subsystem maintainer's tree,
+> you can start using them in DTS files.
+>
+In that case lets take this patch via renesas-devel, as the
+DT-bindings patch has
+been accepted.
+
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
+> > @@ -0,0 +1,98 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the AISTARVISION MIPI Adapter V2.1
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/ {
+> > +       ov5645_vdddo_1v8: 1p8v {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "camera_vdddo";
+> > +               regulator-min-microvolt = <1800000>;
+> > +               regulator-max-microvolt = <1800000>;
+> > +               regulator-always-on;
+> > +       };
+> > +
+> > +       ov5645_vdda_2v8: 2p8v {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "camera_vdda";
+> > +               regulator-min-microvolt = <2800000>;
+> > +               regulator-max-microvolt = <2800000>;
+> > +               regulator-always-on;
+> > +       };
+> > +
+> > +       ov5645_vddd_1v5: 1p5v {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "camera_vddd";
+> > +               regulator-min-microvolt = <1500000>;
+> > +               regulator-max-microvolt = <1500000>;
+> > +               regulator-always-on;
+> > +       };
+> > +
+> > +       imx219_vana_2v8: 2p8v {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "camera_vana";
+> > +               regulator-min-microvolt = <2800000>;
+> > +               regulator-max-microvolt = <2800000>;
+> > +               regulator-always-on;
+> > +       };
+> > +
+> > +       imx219_vdig_1v8: 1p8v {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "camera_vdig";
+> > +               regulator-min-microvolt = <1500000>;
+> > +               regulator-max-microvolt = <1500000>;
+> > +               regulator-always-on;
+> > +       };
+> > +
+> > +       imx219_vddl_1v2: 1p2v {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "camera_vddl";
+> > +               regulator-min-microvolt = <1200000>;
+> > +               regulator-max-microvolt = <1200000>;
+> > +               regulator-always-on;
+> > +       };
+> > +
+> > +       imx219_clk: imx219_clk {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <24000000>;
+> > +       };
+> > +};
+> > +
+> > +&MIPI_PARENT_I2C {
+> > +       ov5645: ov5645@3c {
+> > +               compatible = "ovti,ov5645";
+> > +               reg = <0x3c>;
+> > +               status = "disabled";
+>
+> Is there any real need to disable this node here?
+> Do you envision anyone including this .dtsi file, and not enabling this
+> node?
+>
+Agreed will drop it.
+
+> > +
+> > +               clock-names = "xclk";
+> > +
+> > +               vdddo-supply = <&ov5645_vdddo_1v8>;
+> > +               vdda-supply = <&ov5645_vdda_2v8>;
+> > +               vddd-supply = <&ov5645_vddd_1v5>;
+> > +
+> > +               port@0 {
+>
+> DT bindings say "port", without unit-address.
+>
+shall drop it.
+
+> > +                       ov5645_ep: endpoint {
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> > +       rpi_v2_camera: imx219@10 {
+> > +               compatible = "sony,imx219";
+> > +               reg = <0x10>;
+> > +               status = "disabled";
+>
+> Likewise.
+>
+> > +
+> > +               VANA-supply = <&imx219_vana_2v8>;
+> > +               VDIG-supply = <&imx219_vdig_1v8>;
+> > +               VDDL-supply = <&imx219_vddl_1v2>;
+> > +               clocks = <&imx219_clk>;
+> > +
+> > +               port@0 {
+>
+> DT bindings say "port", without unit-address...
+>
+> > +                       reg = <0>;
+>
+> ... and thus no "reg" property.
+>
+shall drop it.
+
+> > +                       imx219_ep0: endpoint {
+> > +                       };
+> > +               };
+> > +       };
+> > +};
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+> > new file mode 100644
+> > index 000000000000..435b7f62d88d
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+> > @@ -0,0 +1,86 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
+> > + * connected with aistarvision-mipi-v2-adapter board
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "r8a774c0-ek874.dts"
+> > +#define MIPI_PARENT_I2C i2c3
+> > +#include "aistarvision-mipi-adapter-2.1.dtsi"
+> > +
+> > +/ {
+> > +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
+> > +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
+> > +};
+> > +
+> > +&i2c3 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&vin4 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&vin5 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&csi40 {
+> > +       status = "okay";
+> > +
+> > +       ports {
+> > +               port@0 {
+> > +                       reg = <0>;
+> > +
+> > +                       csi40_in: endpoint {
+> > +                               clock-lanes = <0>;
+> > +                               data-lanes = <1 2>;
+> > +                               remote-endpoint = <&imx219_ep0>;
+> > +                       };
+> > +               };
+> > +       };
+> > +};
+> > +
+> > +&ov5645 {
+> > +       /* uncomment status and remote-endpoint properties to tie ov5645
+> > +        * to CSI2 also make sure remote-endpoint for imx219 camera is
+> > +        * commented and remote endpoint in csi40_in is ov5645_ep
+> > +        */
+> > +       /* status = "okay"; */
+> > +
+> > +       #address-cells = <1>;
+> > +       #size-cells = <0>;
+>
+> #{address,size}-cells not needed.
+>
+agreed will drop it.
+
+> > +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
+> > +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
+> > +
+> > +       clocks = <&cpg CPG_MOD 716>;
+> > +       clock-frequency = <24000000>;
+>
+> I know this is dictated by the DT bindings for the ov5645 camera, but
+> specifying a clock rate is usually done through assigned-clock-rates,
+> cfr.  Documentation/devicetree/bindings/clock/clock-bindings.txt.
+>
+agreed will replace it.
+
+Cheers,
+--Prabhakar
+
+> > +
+> > +       port@0 {
+>
+> port {
+>
+> > +               ov5645_ep: endpoint {
+> > +                       clock-lanes = <0>;
+> > +                       data-lanes = <1 2>;
+> > +                       /* remote-endpoint = <&csi40_in>; */
+> > +               };
+> > +       };
+> > +};
+> > +
+> > +&rpi_v2_camera {
+> > +       status = "okay";
+> > +
+> > +       #address-cells = <1>;
+> > +       #size-cells = <0>;
+> > +
+> > +       port@0 {
+> > +               reg = <0>;
+>
+> port {
+>
+> > +               imx219_ep0: endpoint {
+> > +                       clock-lanes = <0>;
+> > +                       data-lanes = <1 2>;
+> > +                       remote-endpoint = <&csi40_in>;
+> > +                       link-frequencies = /bits/ 64 <456000000>;
+> > +               };
+> > +       };
+> > +};
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
