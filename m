@@ -2,88 +2,131 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243EAC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 06:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252BFC3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF14214D8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 06:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED71620CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583219393;
+	bh=25tK8WOoFxs0713ihIp2v/ZITVby64PNqh7BHCke+Yc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sM9KBhlhHex8EhNQ5oT4BBdAtW6D89MwPiITBSDEzz2My294p34uamcRgKlKie9fO
+	 pnzzosdammr+rdT8ssi343Ner1EWk6pgMaf/9dPLtkVY+RShqOzDQQvgo+TAY0oRON
+	 TA07yuGNS1q6xSYnbNU4hg7TQkLBw+As/Vh8ZBjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725308AbgCCGjI (ORCPT
+        id S1726164AbgCCHJw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:39:08 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:55124 "EHLO inva020.nxp.com"
+        Tue, 3 Mar 2020 02:09:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbgCCGjI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:39:08 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9150C1A13E1;
-        Tue,  3 Mar 2020 07:39:06 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 42C1F1A13EF;
-        Tue,  3 Mar 2020 07:39:02 +0100 (CET)
-Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 66A1A40366;
-        Tue,  3 Mar 2020 14:38:41 +0800 (SGT)
-From:   Kuldeep Singh <kuldeep.singh@nxp.com>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuldeep Singh <kuldeep.singh@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: lx2160aqds: Add FSPI node properties
-Date:   Tue,  3 Mar 2020 12:08:32 +0530
-Message-Id: <1583217512-27994-2-git-send-email-kuldeep.singh@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583217512-27994-1-git-send-email-kuldeep.singh@nxp.com>
-References: <1583217512-27994-1-git-send-email-kuldeep.singh@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725840AbgCCHJw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Mar 2020 02:09:52 -0500
+Received: from onda.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6196A20CC7;
+        Tue,  3 Mar 2020 07:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583219391;
+        bh=25tK8WOoFxs0713ihIp2v/ZITVby64PNqh7BHCke+Yc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZbJbnpZz2MfKVFBPbmxrq+1xY9Pdkkw/QUQp9bomOyWUw/rJb6q+yiJPtpjPlhC+c
+         HdpxKkmIGdmb8A75J6BmmPcZ6cm/Z5Ag2Z823D5MBBix+R6E6ip8SHUlCvshtm7aRK
+         bUSTNRkHrZ6tvkDBrlLApaZ0wenZ3dUqkkRyUXlw=
+Date:   Tue, 3 Mar 2020 08:09:47 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] Convert some DT documentation files to ReST
+Message-ID: <20200303080947.5f381004@onda.lan>
+In-Reply-To: <20200302123554.08ac0c34@lwn.net>
+References: <cover.1583135507.git.mchehab+huawei@kernel.org>
+        <20200302123554.08ac0c34@lwn.net>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-lx2160a-qds has 2 micron "mt35xu512aba" flashes of size 64M each
-connected on A0 and B1 i.e on CS0 and CS3. Since flashes are connected
-on different buses, only one flash can be probed at a time.
+Em Mon, 2 Mar 2020 12:35:54 -0700
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-Add fspi node properties aligned with LX2160A-RDB fspi properties.
+> On Mon,  2 Mar 2020 08:59:25 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+>=20
+> > While most of the devicetree stuff has its own format (with is now being
+> > converted to YAML format), some documents there are actually
+> > describing the DT concepts and how to contribute to it.
+> >=20
+> > IMHO, those documents would fit perfectly as part of the documentation
+> > body, as part of the firmare documents set.
+> >=20
+> > This patch series manually converts some DT documents that, on my
+> > opinion, would belong to it. =20
+>=20
+> Did you consider putting this stuff into the firmware-guide while you were
+> at it?  It's not a perfect fit, I guess, but it doesn't seem too awkward
+> either.
 
-Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+I placed it just below the firmware-guide at the main index file.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-index 1a5acf6..3b88e1e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-@@ -43,6 +43,21 @@
- 	status = "okay";
- };
- 
-+&fspi {
-+	status = "okay";
+I have split thoughts about moving the files to there, though. From
+one side, it may fit better from the PoV of organizing the documentation.
+
+=46rom other side, newcomers working with DT may expect looking at the
+text files inside Documentation/devicetree/.
+
+Maybe I could add an extra patch at the end of this series with the
+move, adding a "RFC" on his title. This way, we can better discuss it,
+and either merge the last one or not depending on the comments.
+
+>=20
+> It also seems like it would be good to CC the devicetree folks, or at
+> least the devicetree mailing list?
+
+Yeah, that would make sense. I'm using get-maintainers script to
+prepare the c/c list, as it is simply too much work to find the
+right maintainers by hand, for every single patch.
+
+I just noticed today that there's just *one entry* at MAINTAINERS
+file for Documentation/devicetree, and that points to you:
+
+	DOCUMENTATION
+	M:	Jonathan Corbet <corbet@lwn.net>
+	L:      linux-doc@vger.kernel.org
+	S:	Maintained
+	F:      Documentation/
+	F:	scripts/documentation-file-ref-check
+	F:	scripts/kernel-doc
+	F:	scripts/sphinx-pre-install
+	X:      Documentation/ABI/
+	X:	Documentation/firmware-guide/acpi/
+	X:	Documentation/devicetree/
+
+So, perhaps we should add something like this to MAINTAINERS:
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fe3ab10354c2..64deb23dbb13 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12394,6 +12394,11 @@ L:	linux-rdma@vger.kernel.org
+ S:	Supported
+ F:	drivers/infiniband/ulp/opa_vnic
+=20
++OPEN FIRMWARE
++L:	devicetree@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree
 +
-+	mt35xu512aba0: flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		m25p,fast-read;
-+		spi-max-frequency = <50000000>;
-+		reg = <0>;
-+		spi-rx-bus-width = <8>;
-+		spi-tx-bus-width = <8>;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
--- 
-2.7.4
-
+ OPEN FIRMWARE AND DEVICE TREE OVERLAYS
+ M:	Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+ M:	Frank Rowand <frowand.list@gmail.com>
