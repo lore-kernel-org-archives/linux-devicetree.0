@@ -2,99 +2,211 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E4CC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 00:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC04CC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 00:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9CA24677
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 00:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D67E24673
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 00:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="W0p5qP9q"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="EAXXXRg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgCCAjN (ORCPT
+        id S1726859AbgCCAqh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Mar 2020 19:39:13 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43151 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgCCAjN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 19:39:13 -0500
-Received: by mail-qt1-f195.google.com with SMTP id v22so1546560qtp.10
-        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 16:39:12 -0800 (PST)
+        Mon, 2 Mar 2020 19:46:37 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36931 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgCCAqg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Mar 2020 19:46:36 -0500
+Received: by mail-qk1-f196.google.com with SMTP id m9so1785984qke.4
+        for <devicetree@vger.kernel.org>; Mon, 02 Mar 2020 16:46:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=vmXMiyHRd+s4le5oCNXMH07H08dpqiYbcUYjQsqlz/Q=;
-        b=W0p5qP9qAFgt34ZcsbZ6TF4Q1bne3M/D8Aa83WUxZ+2iFLPjefkCe+q+rwtj+f66EB
-         UdPGtukSArhxSzcg5/GdzWSnKUgShDTIuDCXBb1Z9wB15HTeAweazI8ABIxV1fYbeGOP
-         P1qs//RLwLc6zcxngxgDQhng/SnoOcDZzZDQsbd6pQDhA87YI7AQ4pyrqAYj9iWIdgbl
-         Djkq0k9+uDMPvWB2vMnuvZfrNR/2Py/hARBArvmo8ezqQTFMRyVm0wV5voCgiwZ7D8Lb
-         FWL4AJRTnUBEEQRD0+GT523b6M9PUlxQx2d8FdJYJbIuNETyQ6JEbludCFfIxuEzql9F
-         jphg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FJzJAEuKHPY6L62lnbjtAROsD95ktjZMnZsb3UGNdoo=;
+        b=EAXXXRg9yWE/eu15wdXFiqqdRa8fvC7j6/kiQ+sZ5+8VcUZulKti8KEB12QryZBORD
+         qPVfEjioSfSlwMQikCxVTN/PQedu3dYDAnrBbf8RdCzvLZl0erDdcS8qK8occGQEqIM9
+         JOxL5KH2n1UfL9ekZ9hDNZflV3kW5hyRkH3rFhw6ALROthslfQW7vWcKmVN6sLQV70po
+         +ejYu9Uk99kD7EEOr8xSkDlM1jVYKV4R3gs89mvA/WKrGk33OvPEGewFf5KW4L4bhWOI
+         /dmOHA97nBl34b1RwpNzhJmyqUwICIkRL9fN/zGnhdN5dfc6am8LZbY9ce/irTlo97QZ
+         0f2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=vmXMiyHRd+s4le5oCNXMH07H08dpqiYbcUYjQsqlz/Q=;
-        b=kDpo7IVkzk/xcJTbK+F3KsOCMuq49VWkRAxOXO8nxtaiW8cGBR2J14MMMCcJ1nzFFP
-         h3T16IujLRRAfjkE6VGPljE145tWGE13ZEWQk2eLxUEX0tkNr2e0Dy8OH84yWOW3NukS
-         5YwyZxPxLFaUe73qy+h4zME6cAGAnCwuhyB32YPkW34md+Z76wCk0lsuorXq/lZ2zsiH
-         uRlTLXvQsExEPqpARXZ0RBrTTYfZ2TUXfsBtA7IoB8UtAB+G2mko6x8IeqkqTdqXTkDU
-         7IPVOg0/rcwgbqGG6ACpH4Abm3WLzjWCcTK5JSzcRAKdA3nr6dXDAVQ8c/AHqIfeWN8S
-         YdOw==
-X-Gm-Message-State: ANhLgQ14WQPkCZRlMbCGf9MkzDP8CMc8z35vQDImK4JWKBnBwFPqQfCn
-        2zZ0CL6q+E2zVx06MHzZf/3ZOg==
-X-Google-Smtp-Source: ADFU+vvkNzyybiWgvsCcNIeVyNrG//8gjsWTZ5452Pk1YJwHUxv+KGOZmjX25lOGoraowFO3ewRcUw==
-X-Received: by 2002:ac8:7511:: with SMTP id u17mr2119926qtq.316.1583195952253;
-        Mon, 02 Mar 2020 16:39:12 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FJzJAEuKHPY6L62lnbjtAROsD95ktjZMnZsb3UGNdoo=;
+        b=XwQddHilUBUNIy1TvBzX6J17Y6eui8CsRq2zIKKyKngGxQB6HcLcRWCRJEvpfvTslI
+         yIBWpPYFvaV+RWIpQCUBP50fPQjvrZ3yHPrc5mGfQwArNHIprmlHoz64WV0TI+8AK0M+
+         0TiJVrJexzaOGgjnt7YtWsLC4gAiy8UNanOkYL9906IQUpTJnBGaHCnrXj6FT8NcTt0u
+         bv7ty+r7TwxZ0371mGglGY5IoXmWDYb669Rx0jHvigtkuo8515tW6XcPV/3oKhjKvj2C
+         JZB2cb9OaNHgYTKueuNE0dDRA9LjIZZiBWrRSBN93h/eQLSm4smainduzkWYeHo7xGwr
+         Or0A==
+X-Gm-Message-State: ANhLgQ0vZFeEYdlLi5+Tw5UtaGt0hYXoOR/Eamv8DLW1x1RSLYd4q1BZ
+        Onw2K982MYnqgN0Q9CWUX52AZVodPxDFStvj
+X-Google-Smtp-Source: ADFU+vt190SBEdDRnqimw8AigTuE5fSCYYi1HXhNY+pZ3S7DEWJhp2+r7BeEN2P7CAIlnUuqjkLXSQ==
+X-Received: by 2002:a05:620a:15cf:: with SMTP id o15mr1899012qkm.140.1583196395553;
+        Mon, 02 Mar 2020 16:46:35 -0800 (PST)
 Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id r20sm149057qtk.58.2020.03.02.16.39.06
+        by smtp.gmail.com with ESMTPSA id s139sm7167406qke.70.2020.03.02.16.46.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 16:39:11 -0800 (PST)
-Message-ID: <bf48bd19e7687fb0f0a4784c0d4941810190f3c4.camel@massaru.org>
-Subject: Re: [PATCH v3] arm64: dts: imx8mq-phanbell: Add gpio-fan/thermal
- support
+        Mon, 02 Mar 2020 16:46:34 -0800 (PST)
 From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Marco Franchi <marco.franchi@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        lkcamp@lists.libreplanetbr.org
-Date:   Mon, 02 Mar 2020 21:39:05 -0300
-In-Reply-To: <CAOMZO5BqvmRpTbq-gGgnKC2gFTRxS0mK0=W3tBSfZKQ-MUXMzA@mail.gmail.com>
-References: <20200302213557.11128-1-vitor@massaru.org>
-         <CAOMZO5BqvmRpTbq-gGgnKC2gFTRxS0mK0=W3tBSfZKQ-MUXMzA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com, marco.franchi@nxp.com,
+        linux-imx@nxp.com, lkcamp@lists.libreplanetbr.org
+Subject: [PATCH v4] arm64: dts: imx8mq-phanbell: Add gpio-fan/thermal support
+Date:   Mon,  2 Mar 2020 21:46:30 -0300
+Message-Id: <20200303004630.13663-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabio,
+It was based on Google Source Code for Coral Edge TPU Mendel release:
+https://coral.googlesource.com/linux-imx/
 
-On Mon, 2020-03-02 at 19:46 -0300, Fabio Estevam wrote:
-> Hi Vitor,
-> 
-> On Mon, Mar 2, 2020 at 6:36 PM Vitor Massaru Iha <vitor@massaru.org>
-> wrote:
-> 
-> > +&cpu_thermal {
-> 
-> You missed to place cpu_thermal prior to i2c1 to keep the nodes
-> sorted.
+It was tested on Coral Dev Board using this command:
+  sudo stress --cpu 4 --timeout 3600
 
-Sorry my bad, I'll fix it.
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+v2:
+ * Fix underscore in property name;
+ * Add pinctrl entry for gpio-fan;
+ * Removes undocumented property;
+
+v3:
+ * Fix subject pattern;
+ * Fix order of pinctrl entries;
+ * Fix MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5 flags;
+ * Typo pattern (from "gpiofanp" to "gpiofangrp");
+ * Fix tabs on MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5 line;
+
+v4:
+ * Fix cpu_thermal order;
+
+BR,
+Vitor
+---
+ .../boot/dts/freescale/imx8mq-phanbell.dts    | 64 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  2 +-
+ 2 files changed, 65 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+index 3f2a489a4ad8..f1fce2b1b5c8 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+@@ -35,6 +35,16 @@
+ 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	fan: gpio-fan {
++		compatible = "gpio-fan";
++		gpio-fan,speed-map = <0 0 8600 1>;
++		gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
++		#cooling-cells = <2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_fan>;
++		status = "okay";
++	};
+ };
+ 
+ &A53_0 {
+@@ -53,6 +63,53 @@
+ 	cpu-supply = <&buck2>;
+ };
+ 
++&cpu_thermal {
++	trips {
++		cpu_alert0: trip0 {
++			temperature = <75000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++
++		cpu_alert1: trip1 {
++			temperature = <80000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++
++		cpu_crit0: trip3 {
++			temperature = <90000>;
++			hysteresis = <2000>;
++			type = "critical";
++		};
++
++		fan_toggle0: trip4 {
++			temperature = <65000>;
++			hysteresis = <10000>;
++			type = "active";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device =
++			<&A53_0 0 1>; /* Exclude highest OPP */
++		};
++
++		map1 {
++			trip = <&cpu_alert1>;
++			cooling-device =
++			<&A53_0 0 2>; /* Exclude two highest OPPs */
++		};
++
++		map4 {
++			trip = <&fan_toggle0>;
++			cooling-device = <&fan 0 1>;
++		};
++	};
++};
++
+ &i2c1 {
+ 	clock-frequency = <400000>;
+ 	pinctrl-names = "default";
+@@ -254,6 +311,12 @@
+ };
+ 
+ &iomuxc {
++	pinctrl_gpio_fan: gpiofangrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5			0x16
++		>;
++	};
++
+ 	pinctrl_i2c1: i2c1grp {
+ 		fsl,pins = <
+ 			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
+@@ -374,3 +437,4 @@
+ 		>;
+ 	};
+ };
++
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 6a1e83922c71..a3bb17a6b9df 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -198,7 +198,7 @@
+ 	};
+ 
+ 	thermal-zones {
+-		cpu-thermal {
++		cpu_thermal: cpu-thermal {
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <2000>;
+ 			thermal-sensors = <&tmu 0>;
+-- 
+2.21.1
 
