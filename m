@@ -2,356 +2,128 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FE0C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD60C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39282072D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:47:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="J9tCIWgh"
+	by mail.kernel.org (Postfix) with ESMTP id 901BE20842
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583261262;
+	bh=lSa7np7Lnx2hwojjbDQUicjfMs6ZAecuviJeb+Mjxno=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uTcgzhkzqIhzCtTTqsEsdeKjexOBRzKlHrrBnkdl9H8lepTkAv3YrD/0ndnhOeHx2
+	 GghPRohb786CnOAgl+ApUbxP3a/Tjz73dNmcE2vBemIg3Urn/vlDXOj43ovSnIw6NG
+	 l9+mzrDRd6Xc1wRiwUbMe9fuPYIT2LzoNOHRSVf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgCCSrN (ORCPT
+        id S1728953AbgCCSrm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:47:13 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52950 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgCCSrN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 13:47:13 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 72EC32AF;
-        Tue,  3 Mar 2020 19:47:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583261230;
-        bh=U/Og/71bdeBJxFVqfT9cTiJGEF4Dp+GH3QbsZDHKb/0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J9tCIWgh0w8kGnEMwDaF8cd9frQ5hd8uhKmHzPuuh8TFY9mzgFgGEGOGVOqHi4V4d
-         hO19JB/Sz8OZHv6cErjD6liV9jB7dnkfxGg6S9kY5ZrZa5MDoqIxYZ20NC9K+Nu+jW
-         Mgh2k026EFlXSp/t8qsgsEl32jmcVx/8QoApL5qo=
-Date:   Tue, 3 Mar 2020 20:46:49 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 2/5] dt-bindings: display: convert display-timings to
- DT schema
-Message-ID: <20200303184649.GH11333@pendragon.ideasonboard.com>
-References: <20200216181513.28109-1-sam@ravnborg.org>
- <20200216181513.28109-3-sam@ravnborg.org>
+        Tue, 3 Mar 2020 13:47:42 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39430 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgCCSrl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 13:47:41 -0500
+Received: by mail-ot1-f65.google.com with SMTP id x97so4082438ota.6;
+        Tue, 03 Mar 2020 10:47:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V16aal7zag3kMsr09Mn6Pwm+yaS63ymnYzw5shFWl8o=;
+        b=hPPd8kp79gKGNtyGE61o3kO8/xGa4wfSN3K9mSGqWCAuX5YjJl9JxKZfNSNkQyukGY
+         xmoawkOIa7R97kUou2yF+hYqHRU++xU90KvpDYN/dxDT+MbOX/vsd0VJOvwSQYjUkwI2
+         tx8y0lc1kRM/D/GIBr8ee/0I6XcnnlldgpUEZisVaPo3cFDeTB2/bdVowCP56XtZUlHT
+         y7jHymiZFOK1/DDA0ocsUTQoEgzm9gcadgyVZ59bx363QHN6luHtiKoPffFuzk+ZMruA
+         iJWySNHhe/SkbvfwAQZJKNGOWDK0hX5FiIbjtZ5b7VmNnqY1lL2W/QuB/UNqZlww+fGr
+         87CQ==
+X-Gm-Message-State: ANhLgQ1tXVTvr/fMzxrTM9KbRV4BLFvw+oKAuhSO688q+kSWOl83ID3Y
+        s8LH3NfOTG2F9l1auIoeyQ==
+X-Google-Smtp-Source: ADFU+vtZ2kBjLYMbCupGtxnCYEydzNp//c2n2ytmjC5DrFRFmsm+XNsR1sLMnsSr9bp4FbQOOdzObw==
+X-Received: by 2002:a9d:5e82:: with SMTP id f2mr4317186otl.240.1583261259115;
+        Tue, 03 Mar 2020 10:47:39 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s2sm766013otp.35.2020.03.03.10.47.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 10:47:38 -0800 (PST)
+Received: (nullmailer pid 20625 invoked by uid 1000);
+        Tue, 03 Mar 2020 18:47:37 -0000
+Date:   Tue, 3 Mar 2020 12:47:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Yuan Yao <yao.yuan@nxp.com>
+Subject: Re: [PATCH v3 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for
+ DMA
+Message-ID: <20200303184737.GD26191@bogus>
+References: <20200303174306.6015-1-michael@walle.cc>
+ <20200303174306.6015-4-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200216181513.28109-3-sam@ravnborg.org>
+In-Reply-To: <20200303174306.6015-4-michael@walle.cc>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
+On Tue, Mar 03, 2020 at 06:43:00PM +0100, Michael Walle wrote:
+> The DMA channel might not be available at probe time. This is esp. the
+> case if the DMA controller has an IOMMU mapping.
 
-Thank you for the patch.
+The subject should be updated as this doesn't involve deferred probe any 
+more. 
 
-On Sun, Feb 16, 2020 at 07:15:10PM +0100, Sam Ravnborg wrote:
-> Add display-timings.yaml - that references panel-timings.yaml.
-> display-timings.yaml will be used for display bindings
-> when they are converted to meta-schema format.
+> There is also another caveat. If there is no DMA controller at all,
+> dma_request_chan() will also return -EPROBE_DEFER. Thus we cannot test
+> for -EPROBE_DEFER in probe(). Otherwise the lpuart driver will fail to
+> probe if, for example, the DMA driver is not enabled in the kernel
+> configuration.
 > 
-> For now the old display-timing.txt points to the new
-> display-timings.yaml - and all users are left as-is.
+> To workaround this, we request the DMA channel in _startup(). Other
+> serial drivers do it the same way.
 > 
-> v2:
->   - Updated native-mode description
-> 
-> v3:
->   - Simpler "^timing" pattern (Rob)
->   - timing node is of type object (Rob)
->   - added display-timings to panel-common.yaml
->   - added yaml document terminator "..."
-> 
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Michael Walle <michael@walle.cc>
 > ---
->  .../bindings/display/panel/display-timing.txt | 124 +-----------------
->  .../display/panel/display-timings.yaml        |  77 +++++++++++
->  .../bindings/display/panel/panel-common.yaml  |   8 ++
->  3 files changed, 86 insertions(+), 123 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/display-timings.yaml
+>  drivers/tty/serial/fsl_lpuart.c | 84 +++++++++++++++++++++------------
+>  1 file changed, 53 insertions(+), 31 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/display-timing.txt b/Documentation/devicetree/bindings/display/panel/display-timing.txt
-> index 78222ced1874..7f55ad4a40c4 100644
-> --- a/Documentation/devicetree/bindings/display/panel/display-timing.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/display-timing.txt
-> @@ -1,123 +1 @@
-> -display-timing bindings
-> -=======================
-> -
-> -display-timings node
-> ---------------------
-> -
-> -required properties:
-> - - none
-> -
-> -optional properties:
-> - - native-mode: The native mode for the display, in case multiple modes are
-> -		provided. When omitted, assume the first node is the native.
-> -
-> -timing subnode
-> ---------------
-> -
-> -required properties:
-> - - hactive, vactive: display resolution
-> - - hfront-porch, hback-porch, hsync-len: horizontal display timing parameters
-> -   in pixels
-> -   vfront-porch, vback-porch, vsync-len: vertical display timing parameters in
-> -   lines
-> - - clock-frequency: display clock in Hz
-> -
-> -optional properties:
-> - - hsync-active: hsync pulse is active low/high/ignored
-> - - vsync-active: vsync pulse is active low/high/ignored
-> - - de-active: data-enable pulse is active low/high/ignored
-> - - pixelclk-active: with
-> -			- active high = drive pixel data on rising edge/
-> -					sample data on falling edge
-> -			- active low  = drive pixel data on falling edge/
-> -					sample data on rising edge
-> -			- ignored     = ignored
-> - - syncclk-active: with
-> -			- active high = drive sync on rising edge/
-> -					sample sync on falling edge of pixel
-> -					clock
-> -			- active low  = drive sync on falling edge/
-> -					sample sync on rising edge of pixel
-> -					clock
-> -			- omitted     = same configuration as pixelclk-active
-> - - interlaced (bool): boolean to enable interlaced mode
-> - - doublescan (bool): boolean to enable doublescan mode
-> - - doubleclk (bool): boolean to enable doubleclock mode
-> -
-> -All the optional properties that are not bool follow the following logic:
-> -    <1>: high active
-> -    <0>: low active
-> -    omitted: not used on hardware
-> -
-> -There are different ways of describing the capabilities of a display. The
-> -devicetree representation corresponds to the one commonly found in datasheets
-> -for displays. If a display supports multiple signal timings, the native-mode
-> -can be specified.
-> -
-> -The parameters are defined as:
-> -
-> -  +----------+-------------------------------------+----------+-------+
-> -  |          |        ^                            |          |       |
-> -  |          |        |vback_porch                 |          |       |
-> -  |          |        v                            |          |       |
-> -  +----------#######################################----------+-------+
-> -  |          #        ^                            #          |       |
-> -  |          #        |                            #          |       |
-> -  |  hback   #        |                            #  hfront  | hsync |
-> -  |   porch  #        |       hactive              #  porch   |  len  |
-> -  |<-------->#<-------+--------------------------->#<-------->|<----->|
-> -  |          #        |                            #          |       |
-> -  |          #        |vactive                     #          |       |
-> -  |          #        |                            #          |       |
-> -  |          #        v                            #          |       |
-> -  +----------#######################################----------+-------+
-> -  |          |        ^                            |          |       |
-> -  |          |        |vfront_porch                |          |       |
-> -  |          |        v                            |          |       |
-> -  +----------+-------------------------------------+----------+-------+
-> -  |          |        ^                            |          |       |
-> -  |          |        |vsync_len                   |          |       |
-> -  |          |        v                            |          |       |
-> -  +----------+-------------------------------------+----------+-------+
-> -
-> -Note: In addition to being used as subnode(s) of display-timings, the timing
-> -      subnode may also be used on its own. This is appropriate if only one mode
-> -      need be conveyed. In this case, the node should be named 'panel-timing'.
-> -
-> -
-> -Example:
-> -
-> -	display-timings {
-> -		native-mode = <&timing0>;
-> -		timing0: 1080p24 {
-> -			/* 1920x1080p24 */
-> -			clock-frequency = <52000000>;
-> -			hactive = <1920>;
-> -			vactive = <1080>;
-> -			hfront-porch = <25>;
-> -			hback-porch = <25>;
-> -			hsync-len = <25>;
-> -			vback-porch = <2>;
-> -			vfront-porch = <2>;
-> -			vsync-len = <2>;
-> -			hsync-active = <1>;
-> -		};
-> -	};
-> -
-> -Every required property also supports the use of ranges, so the commonly used
-> -datasheet description with minimum, typical and maximum values can be used.
-> -
-> -Example:
-> -
-> -	timing1: timing {
-> -		/* 1920x1080p24 */
-> -		clock-frequency = <148500000>;
-> -		hactive = <1920>;
-> -		vactive = <1080>;
-> -		hsync-len = <0 44 60>;
-> -		hfront-porch = <80 88 95>;
-> -		hback-porch = <100 148 160>;
-> -		vfront-porch = <0 4 6>;
-> -		vback-porch = <0 36 50>;
-> -		vsync-len = <0 5 6>;
-> -	};
-> +See display-timings.yaml in this directory.
-> diff --git a/Documentation/devicetree/bindings/display/panel/display-timings.yaml b/Documentation/devicetree/bindings/display/panel/display-timings.yaml
-> new file mode 100644
-> index 000000000000..c8c0c9cb0492
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/display-timings.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/display-timings.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: display timing bindings
-
-s/timing/timings/
-
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> +  - Sam Ravnborg <sam@ravnborg.org>
-> +
-> +description: |
-> +  A display panel may be able to handle several display timings,
-> +  with different resolutions.
-> +  The display-timings node makes it possible to specify the timing
-
-s/the timing/the timings/
-
-> +  and to specify the timing that is native for the display.
-> +
-> +properties:
-> +  $nodename:
-> +    const: display-timings
-> +
-> +  native-mode:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: |
-> +      The default display timing is the one specified as native-mode.
-> +      If no native-mode is specified then the first node is assumed the
-
-s/assumed the/assumed to be the/
-
-> +      native mode.
-> +
-> +patternProperties:
-> +  "^timing":
-
-Should this be "^timing[0-9]*$", or do we want to allow or names ?
-
-> +    type: object
-> +    allOf:
-> +      - $ref: panel-timing.yaml#
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |+
-> +
-> +    /*
-> +     * Example that specifies panel timing using minimum, typical,
-> +     * maximum values as commonly used in datasheet description.
-> +     * timing1 is the native-mode.
-> +     */
-> +    display-timings {
-> +        native-mode = <&timing1>;
-
-Does this compile, as there's no phandle named timing1 ?
-
-> +        timing0 {
-> +            /* 1920x1080p24 */
-> +            clock-frequency = <148500000>;
-> +            hactive = <1920>;
-> +            vactive = <1080>;
-> +            hsync-len = <0 44 60>;
-> +            hfront-porch = <80 88 95>;
-> +            hback-porch = <100 148 160>;
-> +            vfront-porch = <0 4 6>;
-> +            vback-porch = <0 36 50>;
-> +            vsync-len = <0 5 6>;
-> +        };
-> +        timing1 {
-> +            /* 1920x1080p24 */
-> +            clock-frequency = <52000000>;
-> +            hactive = <1920>;
-> +            vactive = <1080>;
-> +            hfront-porch = <25>;
-> +            hback-porch = <25>;
-> +            hsync-len = <0 25 25>;
-> +            vback-porch = <2>;
-> +            vfront-porch = <2>;
-> +            vsync-len = <2>;
-> +            hsync-active = <1>;
-> +            pixelclk-active = <1>;
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> index 8070c439adbd..ed051ba12084 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> @@ -61,6 +61,14 @@ properties:
->      allOf:
->        - $ref: panel-timing.yaml#
+> diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+> index c31b8f3db6bf..0b8c477b32a3 100644
+> --- a/drivers/tty/serial/fsl_lpuart.c
+> +++ b/drivers/tty/serial/fsl_lpuart.c
+> @@ -1493,36 +1493,63 @@ static void rx_dma_timer_init(struct lpuart_port *sport)
+>  static void lpuart_tx_dma_startup(struct lpuart_port *sport)
+>  {
+>  	u32 uartbaud;
+> +	int ret;
 >  
-> +  display-timings:
-> +    description:
-> +      Some display panels supports several resolutions with different timing.
+> -	if (sport->dma_tx_chan && !lpuart_dma_tx_request(&sport->port)) {
+> -		init_waitqueue_head(&sport->dma_wait);
+> -		sport->lpuart_dma_tx_use = true;
+> -		if (lpuart_is_32(sport)) {
+> -			uartbaud = lpuart32_read(&sport->port, UARTBAUD);
+> -			lpuart32_write(&sport->port,
+> -				       uartbaud | UARTBAUD_TDMAE, UARTBAUD);
+> -		} else {
+> -			writeb(readb(sport->port.membase + UARTCR5) |
+> -				UARTCR5_TDMAS, sport->port.membase + UARTCR5);
+> -		}
+> +	sport->dma_tx_chan = dma_request_slave_channel(sport->port.dev, "tx");
+> +	if (!sport->dma_tx_chan) {
+> +		dev_info_once(sport->port.dev,
+> +			      "DMA tx channel request failed, operating without tx DMA\n");
 
-s/timing/timings/
+Might be useful to print the errno too.
 
-> +      The display-timings bindings supports specifying several timings and
-> +      optional specify which is the native mode.
-
-s/optional/optionally/
-
-With these small issues fixed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Great work !
-
-> +    allOf:
-> +      - $ref: display-timings.yaml#
-> +
->    # Connectivity
->    port:
->      type: object
-
--- 
-Regards,
-
-Laurent Pinchart
+Rob
