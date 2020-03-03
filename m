@@ -2,183 +2,145 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E71C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FA4C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B6C214D8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9FB20656
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NR4qiscK"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lW0tSYl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbgCCRnz (ORCPT
+        id S2388327AbgCCSLG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:43:55 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:55853 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729748AbgCCRnX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 12:43:23 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C4F5523E2C;
-        Tue,  3 Mar 2020 18:43:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583257401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VX93nZn2AbWIOGGDfDdsClKAztru9C3qnY5D3he52bw=;
-        b=NR4qiscKZUDwQDviE1N9ER57qxAxZX5tWQuROndkUU9z1oBkjiPm9gR0mfr3FasiSbucDq
-        xE7PELfGe9uxGXq755rO+y8/Onh65xmQeGslOwc8019olRW+JITn15ak0CjA6fheEawiey
-        s8U71K4vXEUAeFvrqQLNZrUcvAMdsv0=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Yuan Yao <yao.yuan@nxp.com>, Michael Walle <michael@walle.cc>
-Subject: [PATCH v3 2/9] tty: serial: fsl_lpuart: free IDs allocated by IDA
-Date:   Tue,  3 Mar 2020 18:42:59 +0100
-Message-Id: <20200303174306.6015-3-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303174306.6015-1-michael@walle.cc>
-References: <20200303174306.6015-1-michael@walle.cc>
+        Tue, 3 Mar 2020 13:11:06 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5871 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731860AbgCCSLF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 13:11:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5e9d650000>; Tue, 03 Mar 2020 10:09:41 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 03 Mar 2020 10:11:05 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 03 Mar 2020 10:11:05 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
+ 2020 18:11:04 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 3 Mar 2020 18:11:04 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e5e9db40021>; Tue, 03 Mar 2020 10:11:04 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V5 1/5] soc/tegra: bpmp: Update ABI header
+Date:   Tue, 3 Mar 2020 23:40:48 +0530
+Message-ID: <20200303181052.16134-2-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200303181052.16134-1-vidyas@nvidia.com>
+References: <20200303181052.16134-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: C4F5523E2C
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         NEURAL_SPAM(0.00)[0.504];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[14];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583258981; bh=XUQcmVU2DhS8rtI3qwBuPWvGBmBm8sm2EFYBWL3lXzQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=lW0tSYl+OiW/sKB01NwG6K4zxTMZibNXeEQcbE+4eXc32UbmFHxN8tJPuSfQp9FgO
+         26JuRSvtpT2g9CJZym6MN4zTs7qbRQWEiRiVulnbbdJQJv2/gDyHqGJIalZNwPCFau
+         TO3x/mgqoBFfURMOm2FeNiC0Hs4iMnJ2JC0E2xZTegpMCHS+cPHLznwrYsYNjtfpt0
+         Dn9a5tC6gK0KuWTPhNWie63qxfUafEcbLzeqtKnMhqNIJWUFUWMfKmd+VUibx8y75R
+         qVBCHJ0ChViG2eWO0m7dRHX2XLfGemWrRhWCyuz9DjqKSRvkrajlr9RYKC6YcTHKR2
+         9MyQRKLRO31XQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since commit 3bc3206e1c0f ("serial: fsl_lpuart: Remove the alias node
-dependence") the port line number can also be allocated by IDA, but in
-case of an error the ID will no be removed again. More importantly, any
-ID will be freed in remove(), even if it wasn't allocated but instead
-fetched by of_alias_get_id(). If it was not allocated by IDA there will
-be a warning:
-  WARN(1, "ida_free called for id=%d which is not allocated.\n", id);
+Update the firmware header to support uninitialization of UPHY PLL
+when the PCIe controller is operating in endpoint mode and host cuts
+the PCIe reference clock.
 
-Move the ID allocation more to the end of the probe() so that we still
-can use plain return in the first error cases.
-
-Fixes: 3bc3206e1c0f ("serial: fsl_lpuart: Remove the alias node dependence")
-Signed-off-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/tty/serial/fsl_lpuart.c | 39 ++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+V5:
+* None
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 27fdc131c352..c31b8f3db6bf 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -264,6 +264,7 @@ struct lpuart_port {
- 	int			rx_dma_rng_buf_len;
- 	unsigned int		dma_tx_nents;
- 	wait_queue_head_t	dma_wait;
-+	bool			id_allocated;
+V4:
+* None
+
+V3:
+* Added Acked-by: Thierry Reding <treding@nvidia.com>
+
+V2:
+* Changed Copyright year from 2019 to 2020
+
+ include/soc/tegra/bpmp-abi.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/include/soc/tegra/bpmp-abi.h b/include/soc/tegra/bpmp-abi.h
+index cac6f610b3fe..8f8e73e5cd45 100644
+--- a/include/soc/tegra/bpmp-abi.h
++++ b/include/soc/tegra/bpmp-abi.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * Copyright (c) 2014-2018, NVIDIA CORPORATION.  All rights reserved.
++ * Copyright (c) 2014-2020, NVIDIA CORPORATION.  All rights reserved.
+  */
+ 
+ #ifndef _ABI_BPMP_ABI_H_
+@@ -2119,6 +2119,7 @@ enum {
+ 	CMD_UPHY_PCIE_LANE_MARGIN_STATUS = 2,
+ 	CMD_UPHY_PCIE_EP_CONTROLLER_PLL_INIT = 3,
+ 	CMD_UPHY_PCIE_CONTROLLER_STATE = 4,
++	CMD_UPHY_PCIE_EP_CONTROLLER_PLL_OFF = 5,
+ 	CMD_UPHY_MAX,
  };
  
- struct lpuart_soc_data {
-@@ -2422,19 +2423,6 @@ static int lpuart_probe(struct platform_device *pdev)
- 	if (!sport)
- 		return -ENOMEM;
+@@ -2151,6 +2152,11 @@ struct cmd_uphy_pcie_controller_state_request {
+ 	uint8_t enable;
+ } __ABI_PACKED;
  
--	ret = of_alias_get_id(np, "serial");
--	if (ret < 0) {
--		ret = ida_simple_get(&fsl_lpuart_ida, 0, UART_NR, GFP_KERNEL);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "port line is full, add device failed\n");
--			return ret;
--		}
--	}
--	if (ret >= ARRAY_SIZE(lpuart_ports)) {
--		dev_err(&pdev->dev, "serial%d out of range\n", ret);
--		return -EINVAL;
--	}
--	sport->port.line = ret;
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	sport->port.membase = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(sport->port.membase))
-@@ -2479,9 +2467,25 @@ static int lpuart_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	ret = of_alias_get_id(np, "serial");
-+	if (ret < 0) {
-+		ret = ida_simple_get(&fsl_lpuart_ida, 0, UART_NR, GFP_KERNEL);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "port line is full, add device failed\n");
-+			return ret;
-+		}
-+		sport->id_allocated = true;
-+	}
-+	if (ret >= ARRAY_SIZE(lpuart_ports)) {
-+		dev_err(&pdev->dev, "serial%d out of range\n", ret);
-+		ret = -EINVAL;
-+		goto failed_out_of_range;
-+	}
-+	sport->port.line = ret;
++struct cmd_uphy_ep_controller_pll_off_request {
++	/** @brief EP controller number, valid: 0, 4, 5 */
++	uint8_t ep_controller;
++} __ABI_PACKED;
 +
- 	ret = lpuart_enable_clks(sport);
- 	if (ret)
--		return ret;
-+		goto failed_clock_enable;
- 	sport->port.uartclk = lpuart_get_baud_clk_rate(sport);
+ /**
+  * @ingroup UPHY
+  * @brief Request with #MRQ_UPHY
+@@ -2165,6 +2171,7 @@ struct cmd_uphy_pcie_controller_state_request {
+  * |CMD_UPHY_PCIE_LANE_MARGIN_STATUS     |                                        |
+  * |CMD_UPHY_PCIE_EP_CONTROLLER_PLL_INIT |cmd_uphy_ep_controller_pll_init_request |
+  * |CMD_UPHY_PCIE_CONTROLLER_STATE       |cmd_uphy_pcie_controller_state_request  |
++ * |CMD_UPHY_PCIE_EP_CONTROLLER_PLL_OFF  |cmd_uphy_ep_controller_pll_off_request  |
+  *
+  */
  
- 	lpuart_ports[sport->port.line] = sport;
-@@ -2531,6 +2535,10 @@ static int lpuart_probe(struct platform_device *pdev)
- failed_attach_port:
- failed_irq_request:
- 	lpuart_disable_clks(sport);
-+failed_clock_enable:
-+failed_out_of_range:
-+	if (sport->id_allocated)
-+		ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
- 	return ret;
- }
- 
-@@ -2540,7 +2548,8 @@ static int lpuart_remove(struct platform_device *pdev)
- 
- 	uart_remove_one_port(&lpuart_reg, &sport->port);
- 
--	ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
-+	if (sport->id_allocated)
-+		ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
- 
- 	lpuart_disable_clks(sport);
+@@ -2178,6 +2185,7 @@ struct mrq_uphy_request {
+ 		struct cmd_uphy_margin_control_request uphy_set_margin_control;
+ 		struct cmd_uphy_ep_controller_pll_init_request ep_ctrlr_pll_init;
+ 		struct cmd_uphy_pcie_controller_state_request controller_state;
++		struct cmd_uphy_ep_controller_pll_off_request ep_ctrlr_pll_off;
+ 	} __UNION_ANON;
+ } __ABI_PACKED;
  
 -- 
-2.20.1
+2.17.1
 
