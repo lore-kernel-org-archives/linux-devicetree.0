@@ -2,58 +2,59 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01E7C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E445C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F2620842
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E102073D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 15:08:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="in2YL3sM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BSPGSq+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgCCPH6 (ORCPT
+        id S1729370AbgCCPH7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:07:58 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37637 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728902AbgCCPH5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 10:07:57 -0500
-Received: by mail-lf1-f67.google.com with SMTP id j11so3054222lfg.4
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 07:07:56 -0800 (PST)
+        Tue, 3 Mar 2020 10:07:59 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35627 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729171AbgCCPH7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 10:07:59 -0500
+Received: by mail-lf1-f68.google.com with SMTP id z9so3064658lfa.2
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 07:07:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hDm62swX1e309emODy6IWYyN9SUd3dpgxKcG7xrdMlk=;
-        b=in2YL3sMp9ZVb0HypyT3fkJ9WJ/6VzmQFhOYfvsHYSCWwDcmFgMBm4A+f2vGlZR0Tl
-         8dp9f/h62FrCz+jVZmP57bNnCJKUAsN2srwZWsFmlmQiYWbt6hgkzjiIqUMcRIu90KRo
-         fLsDdbq8PPNnkJc3mk/8F+X+FuVDZqiBUnRS+TnoT9IijkwNcCetU8dZl3PAf+cRf7uk
-         z1lYnF5mSUy4vsH/jgEbKH7cgPjMhUr7bKLbMweo5dPA4EqMBmIL8MSzbwzMwxDVELeA
-         FLOmUqM6yRDS/WpYQfafp9a6QjeMFRNSa59bJqCP5/CbCLSDeKhj8toVJ65l1+Yat3St
-         xBZg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=f9Z9RNVVgVoDIqftNG2lvo/XggBGLbBYVP8IgzDMszc=;
+        b=BSPGSq+HX2g9M4ZlxaDoemDr8Dz6O+eSQs7Uf1rceEG2bgyvCwbjnVMj4gIZxtkyf2
+         Rj0QvE2AGrJz81Nd00mPtfww6yy1l3TXEHbUNwhc5Ui65lz1pGmM3BFAnb/DWXv3fZqD
+         TMq0+rA0l/NXxviYxxVo8wGV585FrX0PQWFhAUh4W/kelp4v7YFvcElzWVGq/+rz7KQc
+         nHN8hIg2v8t+gRBMErWzfsp9cCrKGtxGhpCeX0d1rYPFJ3H9mQbXdzpsdAWqNK2VDdex
+         QPvjOXGLbxOEa0xITt05GwPXoWWMWkWoMQX4U/cQXOLb5t6z7+RIOJpA4o43MFsp9nm0
+         OBeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hDm62swX1e309emODy6IWYyN9SUd3dpgxKcG7xrdMlk=;
-        b=Y9b90KPjuW+lLAvJpdQ/0OdXonqKLgwotEqthG1QqYByeF222gB4JTyTpghkVG1zls
-         aCOefLL3O+yo+wP9Vjpg4Rp6pRr2RXZNdWm8k53McMxdW0TTHVTzTll9FHMbzbfJZVH0
-         hqvoCIfo9VfFDN7mkRwSiKOB7zw3Hp46w2oa6yYXWnFsetY80jPpeCO4ys+G+/qXb9KA
-         dbuRgC+5hhHbCWNpf/8XWdQDhQu/JhQRaLYZf6fySyyhq/7InNSA9rl27rwrhkLake7U
-         rpKjBIvMD85a9G2UBLwrVmRN7VkruXSYSDRXZ/2aF0q+uavDJ1Xez2tyxtmUaK0NMg9T
-         xwDA==
-X-Gm-Message-State: ANhLgQ1CIeZiQlorHNEZQDW7GuQ7sMIs6VrKyzYUZYtKaqRhNNPgtfd7
-        ZKo40fdUOWZ9TafQkWsukfkZ0Q==
-X-Google-Smtp-Source: ADFU+vu+xJCKU5jcGXcrD4NY7owa0bMU7ehQwZMdVV0PPkkCq1EGue6j/E/+90n6hI6Upie+o5FZJw==
-X-Received: by 2002:ac2:454f:: with SMTP id j15mr3108670lfm.20.1583248075820;
-        Tue, 03 Mar 2020 07:07:55 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=f9Z9RNVVgVoDIqftNG2lvo/XggBGLbBYVP8IgzDMszc=;
+        b=S1NpqXndj08pNLE11y5rRxGVR31ve5FMpCMEs1I8Ug66ubjC0wvlQWhZznGy2sRCGd
+         wb1FkC8H/plzAy21hVrLacFiUzz46CHJHacKZWD6pqfjB9i50QzgtJEBFOeolGZrQG8y
+         oCqpLSnmxHawnnK94kzd5mM+cihDZ48ufLNpqVorAxduCWpsrtKFZAnmOBOeFZWGtNm3
+         k2UZISOTi7mRsZpICVmC+cWr7AG2FyAHTE8JA4ua+KQvyY0aSI1KNFs1tH4VLbrESpt1
+         JMuIHRqLS/Y0f1vScyY4CQFTD0A2sGQ9ii1EaDM69Pw/s+o+S2XzdS08CmZMygEgT/Jf
+         S0RA==
+X-Gm-Message-State: ANhLgQ2RC9m5wQ1C8u7g5wXTmcrArq/jbLppVi5iDXiZvsT0dwZ74epV
+        VHRWVWNzByrjK/mn3fJdHjJUMw==
+X-Google-Smtp-Source: ADFU+vuSEKODHBkzB2d1lf+KfhiTMnwxEHTiiFLZyi65LbNLma9/oxtjmtdonRIpOtHBUTQL8dBbEg==
+X-Received: by 2002:ac2:5328:: with SMTP id f8mr3028680lfh.47.1583248077205;
+        Tue, 03 Mar 2020 07:07:57 -0800 (PST)
 Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id n189sm12143135lfa.14.2020.03.03.07.07.54
+        by smtp.gmail.com with ESMTPSA id n189sm12143135lfa.14.2020.03.03.07.07.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 07:07:55 -0800 (PST)
+        Tue, 03 Mar 2020 07:07:56 -0800 (PST)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Sudeep Holla <sudeep.holla@arm.com>,
@@ -67,10 +68,12 @@ Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Benjamin Gaignard <benjamin.gaignard@st.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: [PATCH 0/7] dt-bindings: arm: Fix bindings used for hierarchical PSCI states
-Date:   Tue,  3 Mar 2020 16:07:42 +0100
-Message-Id: <20200303150749.30566-1-ulf.hansson@linaro.org>
+Subject: [PATCH 1/7] dt-bindings: arm: Correct links to idle states definitions
+Date:   Tue,  3 Mar 2020 16:07:43 +0100
+Message-Id: <20200303150749.30566-2-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200303150749.30566-1-ulf.hansson@linaro.org>
+References: <20200303150749.30566-1-ulf.hansson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -78,39 +81,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The recently updated bindings to support hierarchical PSCI states, had a poor
-quality from the json-schema point of view. This series fixup the related
-bindings and silence various errors/warnings from "make dt_binding_check".
+The arm,idle-state DT bindings recently got converted to the json-schema,
+but some links are still pointing to the old, non-existing, txt file. Let's
+update the links to fix this.
 
-The two last patches updates some DTS files from a QCOM SoC, which is the first
-one that uses these new bindings. Perhaps those should be queued via arm-soc
-instead, but in any case there are included for reference. 
+Fixes: baac82fe06db ("dt-bindings: arm: Convert arm,idle-state binding to DT schema")
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.yaml               | 2 +-
+ Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt | 2 +-
+ Documentation/devicetree/bindings/arm/psci.yaml               | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Kind regards
-Ulf Hansson
-
-Ulf Hansson (7):
-  dt-bindings: arm: Correct links to idle states definitions
-  dt-bindings: arm: Fix cpu compatibles in the hierarchical example for
-    PSCI
-  dt-bindings: power: Convert domain-idle-states bindings to json-schema
-  dt-bindings: power: Extend nodename pattern for power-domain providers
-  dt-bindings: arm: Fixup the DT bindings for hierarchical PSCI states
-  arm64: dts: msm8916: Conform to the domain-idle-state DT binding
-  arm64: dts: msm8916: Conform to the nodename pattern for power-domain
-
- .../devicetree/bindings/arm/cpus.yaml         |  2 +-
- .../bindings/arm/msm/qcom,idle-state.txt      |  2 +-
- .../devicetree/bindings/arm/psci.yaml         | 41 ++++++------
- .../bindings/power/domain-idle-state.txt      | 33 ---------
- .../bindings/power/domain-idle-state.yaml     | 67 +++++++++++++++++++
- .../bindings/power/power-domain.yaml          | 30 ++++-----
- .../bindings/power/power_domain.txt           |  2 +-
- arch/arm64/boot/dts/qcom/msm8916.dtsi         | 13 ++--
- 8 files changed, 111 insertions(+), 79 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
- create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.yaml
-
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index f61a5a13fb42..31b391a24b70 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -226,7 +226,7 @@ properties:
+     $ref: '/schemas/types.yaml#/definitions/phandle-array'
+     description: |
+       List of phandles to idle state nodes supported
+-      by this cpu (see ./idle-states.txt).
++      by this cpu (see ./idle-states.yaml).
+ 
+   capacity-dmips-mhz:
+     $ref: '/schemas/types.yaml#/definitions/uint32'
+diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt b/Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
+index 06df04cc827a..6ce0b212ec6d 100644
+--- a/Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
++++ b/Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
+@@ -81,4 +81,4 @@ Example:
+ 		};
+ 	};
+ 
+-[1]. Documentation/devicetree/bindings/arm/idle-states.txt
++[1]. Documentation/devicetree/bindings/arm/idle-states.yaml
+diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
+index 8ef85420b2ab..f8218e60e3e2 100644
+--- a/Documentation/devicetree/bindings/arm/psci.yaml
++++ b/Documentation/devicetree/bindings/arm/psci.yaml
+@@ -100,7 +100,7 @@ properties:
+       bindings in [1]) must specify this property.
+ 
+       [1] Kernel documentation - ARM idle states bindings
+-        Documentation/devicetree/bindings/arm/idle-states.txt
++        Documentation/devicetree/bindings/arm/idle-states.yaml
+ 
+   "#power-domain-cells":
+     description:
 -- 
 2.20.1
 
