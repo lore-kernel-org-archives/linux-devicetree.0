@@ -2,173 +2,159 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82DDC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951F4C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA332083E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583255227;
-	bh=IrpmFs+0/+bn4sD7somCGB6rxRCplaHxuMiqdN38XOM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y7Sk4tbeJQL8V4a8TMJ4XnJH6Qr6Qa+509qSq9CEHu6xI70+b8P9Jf8g/AbChPGeC
-	 PG/uOlgSF7uj49dlRQwlnAcEH9QNtjFWhXm+f4nSLPABVx8Cg31cuw/LB66nFtTRPV
-	 HQfZ0X8otHLx/gqZDu16RQa1Tmb3IpESe/gYmNIU=
+	by mail.kernel.org (Postfix) with ESMTP id 6C3102080C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 17:07:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JK9/bKqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbgCCRHH (ORCPT
+        id S1729235AbgCCRHS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:07:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729755AbgCCRHG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:07:06 -0500
-Received: from onda.lan (tmo-101-56.customers.d1-online.com [80.187.101.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 3 Mar 2020 12:07:18 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:62294 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728158AbgCCRHR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 12:07:17 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583255236; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=t7pxhES6CtD8FX+tKI1sCtQUz5kRFPV7u657mPloMv4=; b=JK9/bKqqaq2ea801vVzqB5NIM/fk9Wp/1K7ZIK5x9gCv/PEqMe/lLCnIvcLf2uRShdn+v4iK
+ yqlUwFxG1w38Aj9nE535IDljhEInbnefV/oaLtAYgUDUXsjhR6guMzbeg0NMdIGotqIGhtPL
+ HqrfcvhtZ1+vu55Vlv/LPKORRfA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5e8d8c.7f5d3b7dece0-smtp-out-n01;
+ Tue, 03 Mar 2020 17:02:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7BD26C447A2; Tue,  3 Mar 2020 17:02:03 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12E872080C;
-        Tue,  3 Mar 2020 17:07:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583255226;
-        bh=IrpmFs+0/+bn4sD7somCGB6rxRCplaHxuMiqdN38XOM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pxrk51gfNUerXnSfOy7TNMJJsorC6Is70R8g/JDGLPL+S5iTPE9aArmPesiSUJtMH
-         u5uXUDSRcrIYUy5aDxxOxiKFIe3PyNlV+M3MqgzmOiG7akeGOkqPUvSsLe2EHXVz+b
-         lXKmUTDKrrtLKzthCNsfOiCEYuqCT8JrW9RFLcrA=
-Date:   Tue, 3 Mar 2020 18:07:02 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] Convert some DT documentation files to ReST
-Message-ID: <20200303180702.677ba664@onda.lan>
-In-Reply-To: <20200303180109.670ad7f8@onda.lan>
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
-        <20200302123554.08ac0c34@lwn.net>
-        <20200303080947.5f381004@onda.lan>
-        <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
-        <20200303180109.670ad7f8@onda.lan>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85D94C43383;
+        Tue,  3 Mar 2020 17:02:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85D94C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Tue, 3 Mar 2020 10:01:59 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
+        DTML <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [Freedreno] [PATCH v3 1/2] dt-bindings: display: msm: Convert
+ GMU bindings to YAML
+Message-ID: <20200303170159.GA13109@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Brian Masney <masneyb@onstation.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
+        DTML <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+References: <1583173424-21832-1-git-send-email-jcrouse@codeaurora.org>
+ <1583173424-21832-2-git-send-email-jcrouse@codeaurora.org>
+ <20200302204906.GA32123@ravnborg.org>
+ <20200303154321.GA24212@jcrouse1-lnx.qualcomm.com>
+ <CAOCk7NpP8chviZ0eM_4Fm3b2Jn+ngtVq=EYB=7yMK0H7rnfWMg@mail.gmail.com>
+ <20200303155405.GA11841@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303155405.GA11841@onstation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Em Tue, 3 Mar 2020 18:01:09 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
-
-> Em Tue, 3 Mar 2020 10:20:25 -0600
-> Rob Herring <robh@kernel.org> escreveu:
-> 
-> > On Tue, Mar 3, 2020 at 1:09 AM Mauro Carvalho Chehab
-> > <mchehab+huawei@kernel.org> wrote:  
+On Tue, Mar 03, 2020 at 10:54:05AM -0500, Brian Masney wrote:
+> On Tue, Mar 03, 2020 at 08:50:28AM -0700, Jeffrey Hugo wrote:
+> > On Tue, Mar 3, 2020 at 8:43 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 > > >
-> > > Em Mon, 2 Mar 2020 12:35:54 -0700
-> > > Jonathan Corbet <corbet@lwn.net> escreveu:
-> > >    
-> > > > On Mon,  2 Mar 2020 08:59:25 +0100
-> > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > > >    
-> > > > > While most of the devicetree stuff has its own format (with is now being
-> > > > > converted to YAML format), some documents there are actually
-> > > > > describing the DT concepts and how to contribute to it.
-> > > > >
-> > > > > IMHO, those documents would fit perfectly as part of the documentation
-> > > > > body, as part of the firmare documents set.
-> > > > >
-> > > > > This patch series manually converts some DT documents that, on my
-> > > > > opinion, would belong to it.    
+> > > On Mon, Mar 02, 2020 at 09:49:06PM +0100, Sam Ravnborg wrote:
+> > > > Hi Jordan.
 > > > >
-> > > > Did you consider putting this stuff into the firmware-guide while you were
-> > > > at it?  It's not a perfect fit, I guess, but it doesn't seem too awkward
-> > > > either.    
+> > > > On Mon, Mar 02, 2020 at 11:23:43AM -0700, Jordan Crouse wrote:
+> > > > > Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
+> > > > > text bindings.
+> > > > >
+> > > > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > > > ---
+> > > > >
+> > > > >  .../devicetree/bindings/display/msm/gmu.txt        | 116 -------------------
+> > > > > -
+> > > > > -Required properties:
+> > > > > -- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
+> > > > > -    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
+> > > > > -  Note that you need to list the less specific "qcom,adreno-gmu"
+> > > > > -  for generic matches and the more specific identifier to identify
+> > > > > -  the specific device.
+> > > > > -- reg: Physical base address and length of the GMU registers.
+> > > > > -- reg-names: Matching names for the register regions
+> > > > > -  * "gmu"
+> > > > > -  * "gmu_pdc"
+> > > > > -  * "gmu_pdc_seg"
+> > > > > -- interrupts: The interrupt signals from the GMU.
+> > > > > -- interrupt-names: Matching names for the interrupts
+> > > > > -  * "hfi"
+> > > > > -  * "gmu"
+> > > > > -- clocks: phandles to the device clocks
+> > > > > -- clock-names: Matching names for the clocks
+> > > > > -   * "gmu"
+> > > > > -   * "cxo"
+> > > > > -   * "axi"
+> > > > > -   * "mnoc"
+> > > > The new binding - and arch/arm64/boot/dts/qcom/sdm845.dtsi agrees that
+> > > > "mnoc" is wrong.
+> > > >
+> > > > > -- power-domains: should be:
+> > > > > -   <&clock_gpucc GPU_CX_GDSC>
+> > > > > -   <&clock_gpucc GPU_GX_GDSC>
+> > > > > -- power-domain-names: Matching names for the power domains
+> > > > > -- iommus: phandle to the adreno iommu
+> > > > > -- operating-points-v2: phandle to the OPP operating points
+> > > > > -
+> > > > > -Optional properties:
+> > > > > -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+> > > > > -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+> > > > This property is not included in the new binding.
 > > >
-> > > I placed it just below the firmware-guide at the main index file.
-> > >
-> > > I have split thoughts about moving the files to there, though. From
-> > > one side, it may fit better from the PoV of organizing the documentation.
-> > >
-> > > From other side, newcomers working with DT may expect looking at the
-> > > text files inside Documentation/devicetree/.
-> > >
-> > > Maybe I could add an extra patch at the end of this series with the
-> > > move, adding a "RFC" on his title. This way, we can better discuss it,
-> > > and either merge the last one or not depending on the comments.    
+> > > Yeah, that guy shouldn't be here. I'm not sure how it got there in the first
+> > > place but I'll update the commit log. Thanks for the poke.
 > > 
-> > Keep in mind that we generate a standalone DT only tree[1] with the
-> > documentation, dts files and headers. So things should be structured
-> > such that all the DT documentation could be built by itself without
-> > dependencies on the 'kernel documentation'. I'm not asking for that to
-> > be done in this series, but just don't do anything to make that
-> > harder. I don't *think* have, but just want to make sure that's clear.  
+> > I thought this was something Brian M added for older targets (A4XX?).
+> > Perhaps he should chime in?
 > 
-> So, I guess it is better to keep the .rst files under Documentation/devicetree,
-> instead of moving them to Documentation/firmware-guide.
-> 
-> Well, if moved, I guess it would be easy to modify the scripts that produce
-> the documentation to also parse something a new directory inside
-> Documentation/firmware-guide.
-> 
-> >   
-> > > > It also seems like it would be good to CC the devicetree folks, or at
-> > > > least the devicetree mailing list?    
-> > 
-> > I was wondering what happened to the cover letter on v2...
-> >   
-> > > Yeah, that would make sense. I'm using get-maintainers script to
-> > > prepare the c/c list, as it is simply too much work to find the
-> > > right maintainers by hand, for every single patch.
-> > >
-> > > I just noticed today that there's just *one entry* at MAINTAINERS
-> > > file for Documentation/devicetree, and that points to you:
-> > >
-> > >         DOCUMENTATION
-> > >         M:      Jonathan Corbet <corbet@lwn.net>
-> > >         L:      linux-doc@vger.kernel.org
-> > >         S:      Maintained
-> > >         F:      Documentation/
-> > >         F:      scripts/documentation-file-ref-check
-> > >         F:      scripts/kernel-doc
-> > >         F:      scripts/sphinx-pre-install
-> > >         X:      Documentation/ABI/
-> > >         X:      Documentation/firmware-guide/acpi/
-> > >         X:      Documentation/devicetree/    
-> > 
-> > You mean doesn't point to Jon as 'X' is exclude. You missed this entry:
-> > 
-> > OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> > M:      Rob Herring <robh+dt@kernel.org>
-> > M:      Mark Rutland <mark.rutland@arm.com>
-> > L:      devicetree@vger.kernel.org
-> > T:      git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-> > Q:      http://patchwork.ozlabs.org/project/devicetree-bindings/list/
-> > S:      Maintained
-> > F:      Documentation/devicetree/
-> > F:      arch/*/boot/dts/
-> > F:      include/dt-bindings/  
-> 
-> Yeah, I remember I saw something like the above in the past. However,
-> I'm not seeing this entry at the MAINTAINERS file at next-20200303 anymore.
-> 
-> Did someone removed such entry?
+> Yes, this is needed for older systems with a3xx and a4xx GPUs.
 
-Sorry, false alarm. 
+Okay, this got added to the wrong place.  The GMU is a specific entity only
+valid for a6xx targets. From the looks of the example the sram should be in the
+GPU definition. Do you want to submit a patch to move it or should I (and lets
+hope Rob doesn't insist on converting GPU to YAML).
 
-It is there at next. 
+Jordan
 
-I guess it is time for call it a day.
+> Brian
 
-That doesn't explain why I didn't add DT ML to the c/c. I'll try to 
-verify what's going on tomorrow.
-
-Regards,
-Mauro
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
