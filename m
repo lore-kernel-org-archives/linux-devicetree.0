@@ -2,188 +2,201 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB9DC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 10:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC6BC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 10:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C29214DB
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 10:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC6620CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 10:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e5DWXpio"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jzn3p0gi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgCCKRf (ORCPT
+        id S1728531AbgCCKa7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:17:35 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47790 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728398AbgCCKRf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 05:17:35 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023AHY1N008824;
-        Tue, 3 Mar 2020 04:17:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583230654;
-        bh=Gazm1fCjWKKVAP1r8qZ4V2j24TrklAk5xdbzpu4IUoc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=e5DWXpioGYoPDdzm341CGQZTxVz/okqbX6Fzg8NBCOl0uLz4GNZ2xrulGt1z6G7St
-         CRT7HLtPjapIm1Nq9PqXi5j4vepnyZCoJxwF4uB2jWBOPgVO2v0WbWrH4bxe7SNyck
-         O6zfziPhXoZzC/GpY+TJqqi4eUUavlAsx/1xUJaw=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023AHXht105579
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Mar 2020 04:17:34 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 04:17:33 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 04:17:33 -0600
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023AHONe004649;
-        Tue, 3 Mar 2020 04:17:31 -0600
-From:   Roger Quadros <rogerq@ti.com>
-To:     <t-kristo@ti.com>
-CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <nsekhar@ti.com>,
-        <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 3/6] arm64: dts: ti: k3-j721e-main: Add serdes_ln_ctrl node to select SERDES lane mux
-Date:   Tue, 3 Mar 2020 12:17:19 +0200
-Message-ID: <20200303101722.26052-4-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200303101722.26052-1-rogerq@ti.com>
-References: <20200303101722.26052-1-rogerq@ti.com>
+        Tue, 3 Mar 2020 05:30:59 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42386 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728102AbgCCKa6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 05:30:58 -0500
+Received: by mail-io1-f67.google.com with SMTP id q128so2953624iof.9
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 02:30:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rcEtCWKyY4PJ5b6fVubScAwepmUAP7J4BWcDeedIssM=;
+        b=jzn3p0giF74SiOTaPBBqqwDI1b0SOsC+P1EyQ68f0CbyR7bE9oYIbB+0a6w6cfEYrJ
+         oOtgh0b/CBrALw3Q455v/s8fp+IZB3q1rztlabfaJxxrERqw9t1k711MRMmoZpgC9+w6
+         zq0cUxoA8/TpF5j/xaBuAcvWlYMMvIbGcE96RSB4e2nI0qt+eRRAvntl4R8+9+58ugwJ
+         1kzV/4Md7+Iq4J52YfoPSjWx9T1XTDxsOe9nOqwhf6k7+kwFI9xZ+LyzWuWwYxB68AC8
+         PWXghlepTFKWHKMihlXM8ZAAUOFIc9vO9bIAL1kAW3cxxsN+leusc3D69V35udeAzLvL
+         6VgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rcEtCWKyY4PJ5b6fVubScAwepmUAP7J4BWcDeedIssM=;
+        b=MgPb4rq2vemrFqpsBW+bK+GZFfxxi+R1HJNlFDfM5ImP8cT8XBGq1NRiBAbaW6C1aL
+         I1Fp3hY3SfSN8Q0c2n8m268L1Ml/VrHY+ytE7n1rnMhiJ+/S7cPdu3qq++Ck3ZFFXAMS
+         p+n6JW7migZsxDNH163f5FD2kbCh5hcf2Z6kjrtP7EkwYuc5I9VulyxNPtoOG+DLuoKI
+         hwedXkN8vF2jPYZ1LFBrq7dcn/wVJU97vThc8/FPsZP6D17KPGIMVbSZC8SUK05Du9T2
+         /YXOcDwnp8yajXrOloMsrEYMhe48PfFHgxd/9MUIDPbr1LbpZNkWlhnT+Zb1hhQtej1O
+         foSA==
+X-Gm-Message-State: ANhLgQ0LiLsU8EwrhARUoX15Js6mo/SIB1EKO8qSLMkLwy8adClUiaXg
+        pqxqEmMTqabjTSRKlebP9rIdphSYJZRtmfMy1pF8sQ==
+X-Google-Smtp-Source: ADFU+vt0bR6kRdtKjr1dnQJ/JQs/OxNGUrTFNgAlZs41aO3YFGhwEoeDQRPPXNaqFM9Mz1ZZRQzyrph169enxq6eJXM=
+X-Received: by 2002:a6b:f209:: with SMTP id q9mr3506518ioh.197.1583231455856;
+ Tue, 03 Mar 2020 02:30:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
+ <1582727592-4510-4-git-send-email-nbelin@baylibre.com> <85f536f0-0078-08a5-5eeb-e401d1ed8782@gmail.com>
+In-Reply-To: <85f536f0-0078-08a5-5eeb-e401d1ed8782@gmail.com>
+From:   Nicolas Belin <nbelin@baylibre.com>
+Date:   Tue, 3 Mar 2020 11:30:45 +0100
+Message-ID: <CAJZgTGFMks7Fm+tWpYAAjxBLgD0nk9cfBiVZcAhojaXCvqfLPA@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 3/3] drivers: leds: add support for apa102c leds
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+Hi Jacek,
 
-Add serdes_ln_ctrl node used for selecting SERDES lane mux.
+That's a shame that it is not going to be upstreamed soon as it making
+my led driver much nicer :)
+So what's the plan with the multicolor framework?
+I am happy to send a new version to fix your remark and then adapt my
+driver to the future changes in the Framework.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 27 ++++++++++++
- include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
+Let me know what you think.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index cbaadee5bfdc..c5d54af37e91 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -5,6 +5,8 @@
-  * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
-  */
- #include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/mux/mux.h>
-+#include <dt-bindings/mux/mux-j721e-wiz.h>
- 
- &cbass_main {
- 	msmc_ram: sram@70000000 {
-@@ -19,6 +21,31 @@
- 		};
- 	};
- 
-+	scm_conf: scm-conf@100000 {
-+		compatible = "syscon", "simple-mfd", "ti,j721e-system-controller";
-+		reg = <0 0x00100000 0 0x1c000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x00100000 0x1c000>;
-+
-+		serdes_ln_ctrl: serdes-ln-ctrl@4080 {
-+			compatible = "mmio-mux";
-+			reg = <0x00004080 0x50>;
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x4080 0x3>, <0x4084 0x3>, /* SERDES0 lane0/1 select */
-+					<0x4090 0x3>, <0x4094 0x3>, /* SERDES1 lane0/1 select */
-+					<0x40a0 0x3>, <0x40a4 0x3>, /* SERDES2 lane0/1 select */
-+					<0x40b0 0x3>, <0x40b4 0x3>, /* SERDES3 lane0/1 select */
-+					<0x40c0 0x3>, <0x40c4 0x3>, <0x40c8 0x3>, <0x40cc 0x3>;
-+					/* SERDES4 lane0/1/2/3 select */
-+			idle-states = <SERDES0_LANE0_PCIE0_LANE0>, <SERDES0_LANE1_PCIE0_LANE1>,
-+				      <SERDES1_LANE0_PCIE1_LANE0>, <SERDES1_LANE1_PCIE1_LANE1>,
-+				      <SERDES2_LANE0_PCIE2_LANE0>, <SERDES2_LANE1_PCIE2_LANE1>,
-+				      <MUX_IDLE_AS_IS>, <SERDES3_LANE1_USB3_0>,
-+				      <SERDES4_LANE0_EDP_LANE0>, <SERDES4_LANE1_EDP_LANE1>, <SERDES4_LANE2_EDP_LANE2>, <SERDES4_LANE3_EDP_LANE3>;
-+		};
-+	};
-+
- 	gic500: interrupt-controller@1800000 {
- 		compatible = "arm,gic-v3";
- 		#address-cells = <2>;
-diff --git a/include/dt-bindings/mux/mux-j721e-wiz.h b/include/dt-bindings/mux/mux-j721e-wiz.h
-new file mode 100644
-index 000000000000..fd1c4ea9fc7f
---- /dev/null
-+++ b/include/dt-bindings/mux/mux-j721e-wiz.h
-@@ -0,0 +1,53 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * This header provides constants for J721E WIZ.
-+ */
-+
-+#ifndef _DT_BINDINGS_J721E_WIZ
-+#define _DT_BINDINGS_J721E_WIZ
-+
-+#define SERDES0_LANE0_QSGMII_LANE1	0x0
-+#define SERDES0_LANE0_PCIE0_LANE0	0x1
-+#define SERDES0_LANE0_USB3_0_SWAP	0x2
-+
-+#define SERDES0_LANE1_QSGMII_LANE2	0x0
-+#define SERDES0_LANE1_PCIE0_LANE1	0x1
-+#define SERDES0_LANE1_USB3_0		0x2
-+
-+#define SERDES1_LANE0_QSGMII_LANE3	0x0
-+#define SERDES1_LANE0_PCIE1_LANE0	0x1
-+#define SERDES1_LANE0_USB3_1_SWAP	0x2
-+#define SERDES1_LANE0_SGMII_LANE0	0x3
-+
-+#define SERDES1_LANE1_QSGMII_LANE4	0x0
-+#define SERDES1_LANE1_PCIE1_LANE1	0x1
-+#define SERDES1_LANE1_USB3_1		0x2
-+#define SERDES1_LANE1_SGMII_LANE1	0x3
-+
-+#define SERDES2_LANE0_PCIE2_LANE0	0x1
-+#define SERDES2_LANE0_SGMII_LANE0	0x3
-+#define SERDES2_LANE0_USB3_1_SWAP	0x2
-+
-+#define SERDES2_LANE1_PCIE2_LANE1	0x1
-+#define SERDES2_LANE1_USB3_1		0x2
-+#define SERDES2_LANE1_SGMII_LANE1	0x3
-+
-+#define SERDES3_LANE0_PCIE3_LANE0	0x1
-+#define SERDES3_LANE0_USB3_0_SWAP	0x2
-+
-+#define SERDES3_LANE1_PCIE3_LANE1	0x1
-+#define SERDES3_LANE1_USB3_0		0x2
-+
-+#define SERDES4_LANE0_EDP_LANE0		0x0
-+#define SERDES4_LANE0_QSGMII_LANE5	0x2
-+
-+#define SERDES4_LANE1_EDP_LANE1		0x0
-+#define SERDES4_LANE1_QSGMII_LANE6	0x2
-+
-+#define SERDES4_LANE2_EDP_LANE2		0x0
-+#define SERDES4_LANE2_QSGMII_LANE7	0x2
-+
-+#define SERDES4_LANE3_EDP_LANE3		0x0
-+#define SERDES4_LANE3_QSGMII_LANE8	0x2
-+
-+#endif /* _DT_BINDINGS_J721E_WIZ */
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks,
 
+Regards,
+
+Nicolas
+
+Le mer. 26 f=C3=A9vr. 2020 =C3=A0 21:14, Jacek Anaszewski
+<jacek.anaszewski@gmail.com> a =C3=A9crit :
+>
+> Hi Nicolas,
+>
+> Regardless of the fact that LED mc framework in current shape
+> will probably not materialize in mainline, I have single
+> remark regarding LED initialization. Please take a look below.
+>
+> On 2/26/20 3:33 PM, Nicolas Belin wrote:
+> > Initilial commit in order to support the apa102c RGB leds. This
+> > is based on the Multicolor Framework.
+> >
+> > Reviewed-by: Corentin Labbe <clabbe@baylibre.com>
+> > Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+> > ---
+> >  drivers/leds/Kconfig        |   7 ++
+> >  drivers/leds/Makefile       |   1 +
+> >  drivers/leds/leds-apa102c.c | 291 ++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 299 insertions(+)
+> >  create mode 100644 drivers/leds/leds-apa102c.c
+> >
+> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> > index 5dc6535a88ef..71e29727c6ec 100644
+> > --- a/drivers/leds/Kconfig
+> > +++ b/drivers/leds/Kconfig
+> > @@ -79,6 +79,13 @@ config LEDS_AN30259A
+> >         To compile this driver as a module, choose M here: the module
+> >         will be called leds-an30259a.
+> >
+> > +config LEDS_APA102C
+> > +     tristate "LED Support for Shiji APA102C"
+> > +     depends on SPI
+> > +     depends on LEDS_CLASS_MULTI_COLOR
+> > +     help
+> > +       This option enables support for APA102C LEDs.
+> > +
+> >  config LEDS_APU
+> >       tristate "Front panel LED support for PC Engines APU/APU2/APU3 bo=
+ards"
+> >       depends on LEDS_CLASS
+> > diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> > index b5305b7d43fb..8334cb6dc7e8 100644
+> [...]
+> > +
+> > +             led->priv                       =3D priv;
+> > +             led->ldev.max_brightness        =3D MAX_BRIGHTNESS;
+> > +             fwnode_property_read_string(child, "linux,default-trigger=
+",
+> > +                                         &led->ldev.default_trigger);
+> > +
+> > +             init_data.fwnode =3D child;
+> > +             init_data.devicename =3D APA_DEV_NAME;
+> > +             init_data.default_label =3D ":";
+>
+> devicename property should be filled in new drivers only in case
+> devname_mandatory is set to true.
+> default_label property is for legacy drivers, for backward compatibility
+> with old LED naming convention.
+>
+> For more information please refer to:
+> - Documentation/leds/leds-class.rst, "LED Device Naming" section
+> - struct led_init_data documention in linux/leds.h
+>
+> In effect you need only fwnode here,
+>
+> > +
+> > +             num_colors =3D 0;
+> > +             fwnode_for_each_child_node(child, grandchild) {
+> > +                     ret =3D fwnode_property_read_u32(grandchild, "col=
+or",
+> > +                                                    &color_id);
+> > +                     if (ret) {
+> > +                             dev_err(priv->dev, "Cannot read color\n")=
+;
+> > +                             goto child_out;
+> > +                     }
+> > +
+> > +                     set_bit(color_id, &led->mc_cdev.available_colors)=
+;
+> > +                     num_colors++;
+> > +             }
+> > +
+> > +             if (num_colors !=3D 3) {
+> > +                     ret =3D -EINVAL;
+> > +                     dev_err(priv->dev, "There should be 3 colors\n");
+> > +                     goto child_out;
+> > +             }
+> > +
+> > +             if (led->mc_cdev.available_colors !=3D IS_RGB) {
+> > +                     ret =3D -EINVAL;
+> > +                     dev_err(priv->dev, "The led is expected to be RGB=
+\n");
+> > +                     goto child_out;
+> > +             }
+> > +
+> > +             led->mc_cdev.num_leds =3D num_colors;
+> > +             led->mc_cdev.led_cdev =3D &led->ldev;
+> > +             led->ldev.brightness_set_blocking =3D apa102c_brightness_=
+set;
+> > +             ret =3D devm_led_classdev_multicolor_register_ext(priv->d=
+ev,
+>
+> --
+> Best regards,
+> Jacek Anaszewski
+
+
+
+--=20
+Nicolas Belin
+Software design engineer
+BayLibre
+www.baylibre.com
