@@ -2,227 +2,151 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7003FC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400DFC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E4820726
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:22:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="tDly5Q0r"
+	by mail.kernel.org (Postfix) with ESMTP id 10C5C2146E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 07:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583220363;
+	bh=JxpPQT87nGKVa5+tlOfbk4aq2l+X21pKlEqMcbKdh5o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kxa1dkqVbZ1ChITVjbAyVSc1+VHrZ29iWV1n9xUOS9hCamlVnG6IhrbZ+FKhLFhnZ
+	 ArUxy2Leok55iPV0vN8EqI70RTJD7u4Hu+fi18pD0qLUJxIxWK39dIWa2FKdc98A4s
+	 RRSb/9ZmqIq/QGmTfywdJDVI4kIMdByOalemc6DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgCCHWI (ORCPT
+        id S1727531AbgCCHZ7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:22:08 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:8795 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCCHWI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 02:22:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583220123;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=/FFJp29E0bM3pvHTu+JTqNaYJ7aZHkmiAWb7IBx82t4=;
-        b=tDly5Q0rgQXnp5SE2SQtiMZKkTKELlzQ1ExyaOKdk/JoMKZ/DZBhDg8xmu35Lg87dN
-        5fydczeSnZWO1+K96MiJpNJLQIA7Ma8+/D886QNuh4IdNw/wnXVn4c5QRGBd9ifyDbI/
-        FmEUAbpBOnJ9LHcARrsiVTZUln+0+vbyDmsWwzHQD0oOy+UVQIjNje/dFijBC82/IgmJ
-        nfn9UYWGMbclQEkRtvmxwC0/9cbFBuEtimt/3AAKpAMPMgCA0Ry1wfYKaFP7yrJqMwm/
-        Bn4G6zAmNzctHUlbgIf+pa5zmExYU5U+wW5r9ry+YcTxMHFRAhAPp3rImrxp3zPELszD
-        N50Q==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDGvxw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw237LkFyR
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Tue, 3 Mar 2020 08:21:46 +0100 (CET)
-Subject: Re: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT Schema
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1583176247.3.2@crapouillou.net>
-Date:   Tue, 3 Mar 2020 08:21:37 +0100
-Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Tue, 3 Mar 2020 02:25:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727340AbgCCHZ7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Mar 2020 02:25:59 -0500
+Received: from onda.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 245F620CC7;
+        Tue,  3 Mar 2020 07:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583220357;
+        bh=JxpPQT87nGKVa5+tlOfbk4aq2l+X21pKlEqMcbKdh5o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qRHf+C6p1okj+l9swFCoe2AM65STx5uPFUna7a1tTSZpJFU7/pSBulE6f43pZNaFK
+         5QG11n0kbpvZENHgp5/cyilLFBV4PrZByj4/bnd7JpDOb96c5uY7OQH188rk0djnW4
+         Hhar5HIn2Xo67SVaOXb/B/TsRyCLWsPKILTZArm4=
+Date:   Tue, 3 Mar 2020 08:25:53 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, Sam Ravnborg <sam@ravnborg.org>,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        Rob Herring <robh@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <12E78333-0940-4F20-863E-91272C477B58@goldelico.com>
-References: <cover.1582913973.git.hns@goldelico.com> <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com> <1583176247.3.2@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 02/12] docs: dt: convert usage-model.txt to ReST
+Message-ID: <20200303082553.6698b29c@onda.lan>
+In-Reply-To: <33664e07-c3e4-12fa-9cbe-a3225bb6f343@gmail.com>
+References: <cover.1583135507.git.mchehab+huawei@kernel.org>
+        <0432bc8cdb6abb8618eac89d68db7441b613106d.1583135507.git.mchehab+huawei@kernel.org>
+        <33664e07-c3e4-12fa-9cbe-a3225bb6f343@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+Em Mon, 2 Mar 2020 15:18:51 -0600
+Frank Rowand <frowand.list@gmail.com> escreveu:
 
-> Am 02.03.2020 um 20:10 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
->=20
-> Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> From: Sam Ravnborg <sam@ravnborg.org>
->> Add DT bindings for the LCD controller on the jz4780 SoC
->> Based on .txt binding from Zubair Lutfullah Kakakhel
->=20
-> If you mean Documentation/devicetree/bindings/display/ingenic,lcd.txt =
-then it was written by me.
+> On 3/2/20 1:59 AM, Mauro Carvalho Chehab wrote:
+> > - Add a SPDX header;
+> > - Adjust document title;
+> > - Use footnoote markups;
+> > - Some whitespace fixes and new line breaks;
+> > - Mark literal blocks as such;
+> > - Add it to devicetree/index.rst.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  Documentation/devicetree/index.rst            |  1 +
+> >  Documentation/devicetree/of_unittest.txt      |  2 +-
+> >  .../{usage-model.txt => usage-model.rst}      | 35 +++++++++++--------
+> >  include/linux/mfd/core.h                      |  2 +-
+> >  4 files changed, 23 insertions(+), 17 deletions(-)
+> >  rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
+> > 
+> > diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
+> > index a11efe26f205..7a6aad7d384a 100644
+> > --- a/Documentation/devicetree/index.rst
+> > +++ b/Documentation/devicetree/index.rst
+> > @@ -7,4 +7,5 @@ Open Firmware and Device Tree
+> >  .. toctree::
+> >     :maxdepth: 1
+> >  
+> > +   usage-model
+> >     writing-schema
+> > diff --git a/Documentation/devicetree/of_unittest.txt b/Documentation/devicetree/of_unittest.txt
+> > index 3e4e7d48ae93..9fdd2de9b770 100644
+> > --- a/Documentation/devicetree/of_unittest.txt
+> > +++ b/Documentation/devicetree/of_unittest.txt
+> > @@ -11,7 +11,7 @@ architecture.
+> >  
+> >  It is recommended to read the following documents before moving ahead.
+> >  
+> > -[1] Documentation/devicetree/usage-model.txt
+> > +[1] Documentation/devicetree/usage-model.rst
+> >  [2] http://www.devicetree.org/Device_Tree_Usage
+> >  
+> >  OF Selftest has been designed to test the interface (include/linux/of.h)
+> > diff --git a/Documentation/devicetree/usage-model.txt b/Documentation/devicetree/usage-model.rst
+> > similarity index 97%
+> > rename from Documentation/devicetree/usage-model.txt
+> > rename to Documentation/devicetree/usage-model.rst
+> > index 33a8aaac02a8..326d7af10c5b 100644
+> > --- a/Documentation/devicetree/usage-model.txt
+> > +++ b/Documentation/devicetree/usage-model.rst
+> > @@ -1,14 +1,18 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=========================
+> >  Linux and the Device Tree
+> > --------------------------
+> > +=========================
+> > +
+> >  The Linux usage model for device tree data
+> >  
+> > -Author: Grant Likely <grant.likely@secretlab.ca>
+> > +:Author: Grant Likely <grant.likely@secretlab.ca>
+> >  
+> >  This article describes how Linux uses the device tree.  An overview of
+> >  the device tree data format can be found on the device tree usage page
+> > -at devicetree.org[1].
+> > +at devicetree.org\ [1]_.
+> >  
+> > -[1] http://devicetree.org/Device_Tree_Usage
+> > +.. [1] http://devicetree.org/Device_Tree_Usage  
+> 
+> I don't know the proper ReST syntax for footnotes, but on the html page
+> you kindly provided in 00/12, '.. [1]' is shown as '1(1,2)'.
+> 
+> -Frank
 
-Ah, ok. We didn't recognise this before. 6 eyes see more than 4...
+The syntax is simple: just add an  underline at the end, when referencing
+it, like [1]_. The definitions should start with "..", like ".. [1] something".
 
-I just did cherry-pick this old 4.0 patch from 2015 by Zubair
-and it created a ingenic-jz4780-lcd.txt:
+Sphinx will automatically generate the reverse reference(s) at the html output.
 
-https://lore.kernel.org/patchwork/patch/547872/
+Yet, sometimes (like the above), it needs to be escaped by a "\ ", as ReST would
+recognize "foo[1]_" as something else.
 
-and Sam was so kind to convert it to yaml.
+Ps.: it also accepts an "auto-numbered" references like [#]_, but such syntax
+require some care, in order to avoid wrong cross-references.
 
->=20
->> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
->> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
->> Cc: H. Nikolaus Schaller <hns@goldelico.com>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> ---
->> .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 =
-+++++++++++++++++++
->> 1 file changed, 78 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
->> diff --git =
-a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml =
-b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
->> new file mode 100644
->> index 000000000000..c71415a3a342
->> --- /dev/null
->> +++ =
-b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
->> @@ -0,0 +1,78 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-lcd.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Bindings for Ingenic JZ4780 LCD Controller
->> +
->> +maintainers:
->> +  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
->> +  - H. Nikolaus Schaller <hns@goldelico.com>
->=20
-> I'm the author of the driver, please put me here; and remove Zubair, =
-which 1. didn't touch the DRM driver at all, and 2. isn't working at =
-ImgTec anymore.
-
-Yes that is true.
-
-> Also, no need to put yourself here, unless you maintain the Ingenic =
-DRM/KMS driver.
-
-Agreed. That was suggested by Sam.
-
->=20
->> +
->> +description: |
->> +  LCD Controller is the Display Controller for the Ingenic JZ4780 =
-SoC
->> +
->> +properties:
->=20
-> You should add a '$nodename' property.
->=20
->> +  compatible:
->> +    items:
->> +      - const: ingenic,jz4780-lcd
->=20
-> The .txt lists more compatible strings. Please add them all.
->=20
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description: the address & size of the LCD controller registers
->=20
-> Drop the description here,
->=20
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +    description: Specifies the interrupt provided by parent
->=20
-> and here.
->=20
->> +
->> +  clocks:
->> +    maxItems: 2
->> +    description: Clock specifiers for the JZ4780_CLK_TVE =
-JZ4780_CLK_LCD0PIXCLK
->=20
-> Add one 'description:' per item.
->=20
->> +
->> +  clock-names:
->> +    items:
->> +      - const: lcd_clk
->> +      - const: lcd_pixclk
->> +
->> +  port:
->> +    type: object
->> +    description: |
->> +      A port node with endpoint definitions as defined in
->> +      Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +required:
->> +    - compatible
->> +    - reg
->> +    - interrupts
->> +    - clocks
->> +    - clock-names
->> +    - port
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/jz4780-cgu.h>
->> +    lcd: jz4780-lcdk@0x13050000 {
->=20
-> The node name does not comply with the DT spec, it should be =
-'lcd-controller'.
-
-Ok, I think I'll review all so that it does match/replace
-Documentation/devicetree/bindings/display/ingenic,lcd.txt
-and no information is lost.
-=20
->=20
-> Cheers,
-> -Paul
-
-BR and thanks,
-Nikolaus
-
+Regards,
+Mauro
