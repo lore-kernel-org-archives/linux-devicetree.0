@@ -2,163 +2,257 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02733C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 08:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C25C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 08:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C592E2064A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 08:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YWJJtnk4"
+	by mail.kernel.org (Postfix) with ESMTP id EFC8820CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 08:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbgCCIFc (ORCPT
+        id S1727738AbgCCIIv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:05:32 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37244 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbgCCIFb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 03:05:31 -0500
-Received: by mail-wr1-f65.google.com with SMTP id q8so3110608wrm.4
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 00:05:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wH+5lFBm9CEvGGSqvKqtQhGdLapPLA0zXQ4SUEmJ+2o=;
-        b=YWJJtnk4CLhon9XUWTqcIgRSVyexafkl7e4VnK6eetGqhDWYZYiVtxRMobzA/YPIYB
-         P37FFK2PNvTki1OSahQkm/L1Ui2PH4jL5Eciv+S11oqgY4V3kR3Wu9ReChUnmm2JRYOI
-         EMDcF/E1N3HrtCtHBTHg9q0gyfh8aQO2OeeZgPEPO531dm1+t7AnOpf8TABYFkLMB532
-         LJcPc38LZeVhn3JKSQN1hUV8AXPxWf9zF2W06Gyfp8C1K4ahs8T20XqHQLY4QkhFQcaN
-         eQuEoItRWxSpQ7g3zlsXz6hJK8enNxHDrMk8SJ3yPFhSszllPb/wjAO23kWbMy/MiOB3
-         q3Ag==
+        Tue, 3 Mar 2020 03:08:51 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43999 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727577AbgCCIIv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 03:08:51 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j5so2097654otn.10;
+        Tue, 03 Mar 2020 00:08:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wH+5lFBm9CEvGGSqvKqtQhGdLapPLA0zXQ4SUEmJ+2o=;
-        b=AZ52U6CnJNef05rym3217r4zlTPNefot1BpeYHBIiq7mhMuNCj+jR7RYR/gFy5a3BJ
-         7DuR3dNjS9XhD2iU5FupZAhTCVe60XiKwz+F4z4tIec7DFBUoxhVsnL1uygoTsJp8HE0
-         i//8UoGDbYfdVDA7eNaZ1JXeA29md/LnkWGSCbEicy1NJs2n5v7ecpu0brDMgYA+fRm4
-         oBHPnVw2GaV/V5mKzSNpJmq2FjAv2rJ8QuSWP13S63MhewCcph5zqq+G0knhTqRl61PM
-         3FiyT4+rCNXpl0jdkzxw8wPW0vEU45mz5rEyDLk00k7GhyQSEQqdwiLW5XMs4XuGX9UM
-         v/4g==
-X-Gm-Message-State: ANhLgQ3d9Xl2aU2ShSMlgiP+Ijo6RJjCCqFKNgokfJhnxZmZw+Uaf8Rv
-        mm/waFm39BhDgkkMVLymY/1g6c46YIM=
-X-Google-Smtp-Source: ADFU+vsR7kvMo6VeBdR3mzCfkmAADpnsen2dNS5ZhSSWpQs1bG8psWmpy4WoU3vjun/qErgYHHy/zw==
-X-Received: by 2002:adf:c44a:: with SMTP id a10mr3943107wrg.279.1583222728389;
-        Tue, 03 Mar 2020 00:05:28 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:995:2d3a:cb24:4f79? ([2a01:e34:ed2f:f020:995:2d3a:cb24:4f79])
-        by smtp.googlemail.com with ESMTPSA id u25sm2476449wml.17.2020.03.03.00.05.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 00:05:27 -0800 (PST)
-Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: tsens: Add entry for sc7180
- tsens to binding
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vkoul@kernel.org, bjorn.andersson@linaro.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-References: <cover.1582871139.git.amit.kucheria@linaro.org>
- <8309e39737c480b0835454cbc6db345c5a27ecd4.1582871139.git.amit.kucheria@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a3903db0-302d-a0f3-0515-b248e24e19cd@linaro.org>
-Date:   Tue, 3 Mar 2020 09:05:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tnsLoZ2+ZJ9fFHKXi3EF1/dm4uTQYUq+JzUajRZ2h+c=;
+        b=r+x1IY6wSBVuqF8oqOY1lk9P1pjwo0pEyuKIUW4O+kOU1HDMU2J8ZECMFWiIiSaI8c
+         rHMzRM3KZ0QrpwSPLbzg/Y3/2auhjr86kmrSIm7fP38UJjSH2P4RLZ5EgtRoGmG/9aRt
+         gM2/6IbNubBpf492QNtEhImM2dCj1WqhrTmho+URPOnc4YPAEJjv8enD8Hpp4NSrNjVV
+         MlRYX2qwNpqz3ILQZ87IDDqOtc++Y6iH9vbss9CBUL6oDdLf/a8BpF/AuAFnJC0m9Qjp
+         4jxtFKK7V/G/Z8oQVXVG0IPqDLmyGJ6vPz/A4zH2b+iQtSygbUXoKkIqolYyqA/Ge/Ab
+         I10Q==
+X-Gm-Message-State: ANhLgQ2SJwFD+Ib/I9v9uwee4Kgndzpi4hbbZh+jYFh5HSLkmFTyaxZi
+        aLpN0CYudGD4rRW6GESr4G0OVr3d7SrT1hMYZrM=
+X-Google-Smtp-Source: ADFU+vshWGB7tPqasQr01SWBNXK56E3VM6/cuuVC0u24ieCvps6JZtv6VLhiWLuVyOUAdH9lC6gJYjnAPytMnwsJu9M=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr2475400ots.250.1583222929855;
+ Tue, 03 Mar 2020 00:08:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <8309e39737c480b0835454cbc6db345c5a27ecd4.1582871139.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200224152640.1318-1-geert+renesas@glider.be>
+ <158265013473.177367.4512247165308399202@swboyd.mtv.corp.google.com>
+ <CAMuHMdUDjWKYaQ_MN+AvYg8vimZKMcck3SdHUSg8tPCCAEieJQ@mail.gmail.com> <20200302202609.GA24264@bogus>
+In-Reply-To: <20200302202609.GA24264@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 3 Mar 2020 09:08:38 +0100
+Message-ID: <CAMuHMdWZ=_p2qfv+Q1XCXts88SUgR3ote=7PQ5sHRR7pM4U0Yw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clock: renesas: cpg-mssr: Convert to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 28/02/2020 07:32, Amit Kucheria wrote:
+Hi Rob,
 
-[ ... ]
+On Mon, Mar 2, 2020 at 9:26 PM Rob Herring <robh@kernel.org> wrote:
+> On Thu, Feb 27, 2020 at 12:12:36PM +0100, Geert Uytterhoeven wrote:
+> > On Tue, Feb 25, 2020 at 6:02 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > Quoting Geert Uytterhoeven (2020-02-24 07:26:40)
+> > > > diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+> > > > new file mode 100644
+> > > > index 0000000000000000..dfbd1933f1bc56de
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+> > > > @@ -0,0 +1,204 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: "http://devicetree.org/schemas/clock/renesas,cpg-mssr.yaml#"
+> > > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > > +
+> > > > +title: Renesas Clock Pulse Generator / Module Standby and Software Reset
+> > > > +
+> > > > +maintainers:
+> > > > +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > +
+> > > > +description: |
+> > > > +  On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
+> > > > +  and MSSR (Module Standby and Software Reset) blocks are intimately connected,
+> > > > +  and share the same register block.
+> > > > +
+> > > > +  They provide the following functionalities:
+> > > > +    - The CPG block generates various core clocks,
+> > > > +    - The MSSR block provides two functions:
+> > > > +        1. Module Standby, providing a Clock Domain to control the clock supply
+> > > > +           to individual SoC devices,
+> > > > +        2. Reset Control, to perform a software reset of individual SoC devices.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - renesas,r7s9210-cpg-mssr  # RZ/A2
+> > > > +      - renesas,r8a7743-cpg-mssr  # RZ/G1M
+> > > > +      - renesas,r8a7744-cpg-mssr  # RZ/G1N
+> > > > +      - renesas,r8a7745-cpg-mssr  # RZ/G1E
+> > > > +      - renesas,r8a77470-cpg-mssr # RZ/G1C
+> > > > +      - renesas,r8a774a1-cpg-mssr # RZ/G2M
+> > > > +      - renesas,r8a774b1-cpg-mssr # RZ/G2N
+> > > > +      - renesas,r8a774c0-cpg-mssr # RZ/G2E
+> > > > +      - renesas,r8a7790-cpg-mssr  # R-Car H2
+> > > > +      - renesas,r8a7791-cpg-mssr  # R-Car M2-W
+> > > > +      - renesas,r8a7792-cpg-mssr  # R-Car V2H
+> > > > +      - renesas,r8a7793-cpg-mssr  # R-Car M2-N
+> > > > +      - renesas,r8a7794-cpg-mssr  # R-Car E2
+> > > > +      - renesas,r8a7795-cpg-mssr  # R-Car H3
+> > > > +      - renesas,r8a7796-cpg-mssr  # R-Car M3-W
+> > > > +      - renesas,r8a77961-cpg-mssr # R-Car M3-W+
+> > > > +      - renesas,r8a77965-cpg-mssr # R-Car M3-N
+> > > > +      - renesas,r8a77970-cpg-mssr # R-Car V3M
+> > > > +      - renesas,r8a77980-cpg-mssr # R-Car V3H
+> > > > +      - renesas,r8a77990-cpg-mssr # R-Car E3
+> > > > +      - renesas,r8a77995-cpg-mssr # R-Car D3
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  clocks:
+> > > > +    minItems: 1
+> > > > +    maxItems: 2
+> > > > +
+> > > > +  clock-names:
+> > > > +    minItems: 1
+> > > > +    maxItems: 2
+> > >
+> > > Do we need this here and also below? Why can't it just be below with the
+> > > more specific constraints?
+> >
+> > With the above removed:
+> >
+> >     Documentation/devicetree/bindings/clock/renesas,cpg-mssr.example.dt.yaml:
+> > clock-controller@e6150000: 'clock-names', 'clocks' do not match any of
+> > the regexes: 'pinctrl-[0-9]+'
+> >
+> > while the "if" below overriding minItems did trigger, as removing entries from
+> > clocks/clock-names in the example causes more errors.
+> >
+> > So it seems all properties must be listed in the main, unconditional,
+> > properties section at the top.
+> >
+> > > > +allOf:
+> > > > +  - if:
+> > > > +      properties:
+> > > > +        compatible:
+> > > > +          items:
+> > > > +            enum:
+> > > > +              - renesas,r7s9210-cpg-mssr
+> > > > +              - renesas,r8a774c0-cpg-mssr
+> > > > +              - renesas,r8a7792-cpg-mssr
+> > > > +              - renesas,r8a77990-cpg-mssr
+> > > > +              - renesas,r8a77995-cpg-mssr
+> > > > +
+> > > > +    then:
+> > > > +      properties:
+> > > > +        clock:
+> > > > +          maxItems: 1
+> > > > +        clock-names:
+> > > > +          maxItems: 1
+> > > > +          items:
+> > > > +            - const: extal
+> > > > +
+> > > > +  - if:
+> > > > +      properties:
+> > > > +        compatible:
+> > > > +          contains:
+> > > > +            enum:
+> > > > +              - renesas,r8a7743-cpg-mssr
+> > > > +              - renesas,r8a7744-cpg-mssr
+> > > > +              - renesas,r8a7745-cpg-mssr
+> > > > +              - renesas,r8a77470-cpg-mssr
+> > > > +              - renesas,r8a7790-cpg-mssr
+> > > > +              - renesas,r8a7791-cpg-mssr
+> > > > +              - renesas,r8a7793-cpg-mssr
+> > > > +              - renesas,r8a7794-cpg-mssr
+> > > > +
+> > > > +    then:
+> > > > +      properties:
+> > > > +        clock:
+> > > > +          minItems: 2
+> > > > +        clock-names:
+> > > > +          minItems: 2
+> > > > +          items:
+> > > > +            - const: extal
+> > > > +            - const: usb_extal
+> > > > +
+> > > > +  - if:
+> > > > +      properties:
+> > > > +        compatible:
+> > > > +          items:
+> > > > +            enum:
+> > > > +              - renesas,r8a774a1-cpg-mssr
+> > > > +              - renesas,r8a774b1-cpg-mssr
+> > > > +              - renesas,r8a7795-cpg-mssr
+> > > > +              - renesas,r8a7796-cpg-mssr
+> > > > +              - renesas,r8a77961-cpg-mssr
+> > > > +              - renesas,r8a77965-cpg-mssr
+> > > > +              - renesas,r8a77970-cpg-mssr
+> > > > +              - renesas,r8a77980-cpg-mssr
+> > > > +
+> > > > +    then:
+> > > > +      properties:
+> > > > +        clock:
+> > > > +          minItems: 2
+> > > > +        clock-names:
+> > > > +          minItems: 2
+> > > > +          items:
+> > > > +            - const: extal
+> > > > +            - const: extalr
+> > > > +
+> > > > +  - if:
+> > > > +      not:
+> > > > +        properties:
+> > > > +          compatible:
+> > > > +            items:
+> > > > +              enum:
+> > > > +                - renesas,r7s9210-cpg-mssr
+> > > > +    then:
+> > > > +      required:
+> > > > +        - '#reset-cells'
+> > >
+> > > It may make sense to split this binding up into multiple bindings so
+> > > that we don't have deeply nested if/else/then.
+> >
+> > Note that the above is not a nested if, but the yaml-equivalent of a switch()
+> > statement.
+> >
+> > If this is to be split, how to split it?
+> > Each if contains SoCs from multiple families, and each family of SoCs is
+> > split across multiple ifs.
+>
+> Looks like 3 files based on the first 3 if's above.
 
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> index eef13b9446a8..13e294328932 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> @@ -39,6 +39,7 @@ properties:
->                - qcom,msm8996-tsens
->                - qcom,msm8998-tsens
->                - qcom,sdm845-tsens
-> +              - qcom,sc7180-tsens
+Yeah, but how to name them: renesas,cpg-mssr-[123].yaml?
 
-This change is already done by
+> Personally, I'd be fine with just a single schema without all the if's.
+> It wouldn't be as strict as to what's allowed for each compatible, but
+> good enough IMO.
 
-https://patchwork.kernel.org/patch/11319259/
+OK, that seems sensible to me, too.
 
-I've applied it.
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
