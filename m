@@ -2,107 +2,108 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE04FC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F4DC3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC68B20857
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6121920857
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:10:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="bHJTJlPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgCCMIe (ORCPT
+        id S1729153AbgCCMK2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:08:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44776 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgCCMIe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:08:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D37C7AEE7;
-        Tue,  3 Mar 2020 12:08:31 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     phil@raspberrypi.org, florian.fainelli@broadcom.com,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] DTS: bcm2711: Move emmc2 into its own bus
-Date:   Tue,  3 Mar 2020 13:08:20 +0100
-Message-Id: <20200303120820.4377-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 3 Mar 2020 07:10:28 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:22467 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729141AbgCCMK2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 07:10:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583237426;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=3mMB/nNVi0z8+CG/KyauyvUCLnkwQ+0FkBfzbfehBPw=;
+        b=bHJTJlPR7zkJEKfZX+qM/uKwKiG1YeRW2itLAEZwn4Eyy7fuZjvFI3M9gGMOM29wV4
+        EVjd6McnM90OSor4fvFw5tjFhAnkl6CRBq+iemfbgb+CNoBATC7htLKymKlxdbUV5vy1
+        a+ZLTtrGzfTsd+MJActzN0XsHHlMihfSjtO83J2UnRsoODc4gk0F7Xzdd2Ri4xElPgdx
+        ltQMHAAcBOgg+FHQmejjpm7uz13Q8dzqEEgsyYxjxo1EC2y+HE9760TA4oJ0gQoohKQV
+        H4Zpt7JG5j5yeEdn617kPxXCKWfCvF3p/ocXaga2IhkK3L+hjkSC5IrnWAaa2qr2Wava
+        WsHA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDGvxw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw23CANI4n
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 3 Mar 2020 13:10:23 +0100 (CET)
+Subject: Re: [PATCH v5 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200303101818.GA12103@alpha.franken.de>
+Date:   Tue, 3 Mar 2020 13:10:22 +0100
+Cc:     Paul Boddie <paul@boddie.org.uk>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, stable <stable@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <85F9D066-EAF6-4840-8F54-24E6D8A534DC@goldelico.com>
+References: <cover.1583005548.git.hns@goldelico.com> <02f18080fa0e0c214b40431749ca1ce514c53d37.1583005548.git.hns@goldelico.com> <20200303101818.GA12103@alpha.franken.de>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Depending on bcm2711's revision its emmc2 controller might have
-different DMA constraints. Raspberry Pi 4's firmware will take care of
-updating those, but only if a certain alias is found in the device tree.
-So, move emmc2 into its own bus, so as not to pollute other devices with
-dma-ranges changes and create the emmc2bus alias.
+Hi Thomas,
 
-Based in Phil ELwell's downstream implementation.
+> Am 03.03.2020 um 11:18 schrieb Thomas Bogendoerfer =
+<tsbogend@alpha.franken.de>:
+>=20
+> On Sat, Feb 29, 2020 at 08:45:45PM +0100, H. Nikolaus Schaller wrote:
+>> There is a ACT8600 on the CI20 board and the bindings of the
+>> ACT8865 driver have changed without updating the CI20 device
+>> tree. Therefore the PMU can not be probed successfully and
+>> is running in power-on reset state.
+>>=20
+>> Fix DT to match the latest act8865-regulator bindings.
+>>=20
+>> Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+>=20
+> I see checkpatch warnings in this patch, could please fix them ?
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  1 +
- arch/arm/boot/dts/bcm2711.dtsi        | 19 ++++++++++++++-----
- 2 files changed, 15 insertions(+), 5 deletions(-)
+Ah, ok. The comment. Well, on a 5k screen this 80 character limit
+is really outdated. But checkpatch is the king :)
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index 1d4b589fe233..e26ea9006378 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -20,6 +20,7 @@ memory@0 {
- 	};
- 
- 	aliases {
-+		emmc2bus = &emmc2bus;
- 		ethernet0 = &genet;
- 		pcie0 = &pcie0;
- 	};
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-index d1e684d0acfd..61ea8b44c51e 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -241,17 +241,26 @@ pwm1: pwm@7e20c800 {
- 			status = "disabled";
- 		};
- 
-+		hvs@7e400000 {
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+
-+	emmc2bus: emmc2bus {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+
-+		ranges = <0x0 0x7e000000  0x0 0xfe000000  0x01800000>;
-+		dma-ranges = <0x0 0xc0000000  0x0 0x00000000  0x40000000>;
-+
- 		emmc2: emmc2@7e340000 {
- 			compatible = "brcm,bcm2711-emmc2";
--			reg = <0x7e340000 0x100>;
-+			reg = <0x0 0x7e340000 0x100>;
- 			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clocks BCM2711_CLOCK_EMMC2>;
- 			status = "disabled";
- 		};
--
--		hvs@7e400000 {
--			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
--		};
- 	};
- 
- 	arm-pmu {
--- 
-2.25.1
+Noted for v6.
+
+> And please seperate fixes from improvments, thank you.
+
+What do you mean by "separate"? Two separate patches?
+This patch only contains fixes (which I would consider
+all of them to be improvements).
+
+>=20
+> Thomas.
+
+BR and thanks,
+Nikolaus
 
