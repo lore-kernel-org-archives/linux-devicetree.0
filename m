@@ -2,205 +2,340 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926DBC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44477C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A48320873
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 12:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F56720848
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 13:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="w4Bzhtx2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jp8Mh8ZY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgCCM4S (ORCPT
+        id S1729172AbgCCNSq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:56:18 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36030 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728921AbgCCM4S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 07:56:18 -0500
-Received: by mail-lj1-f194.google.com with SMTP id 195so3422558ljf.3
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 04:56:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=pqV06LQZUd28i1cTxW0Gc1ZSuLC1L8sbXgs7z0l8GAc=;
-        b=w4Bzhtx2iPmqZTeVbcoWPtSMyw7Zj1fw4RtKD0zWxxI9s2ysXUWOC+1k6ZE9Br43nF
-         TCn9q+ASnbrewxJnd3ytFaFiP/vlRttu/GdccU/hNnDZz5UXjoyA7KNIt8abwxNc8hCa
-         KSRj+dY9wcIyXFTmPDwXJcJsRmeKOfWwaORQ+0DVUO24G0f/Mx4l73vgpPKDOuoHV4l9
-         q/IN47eyfYhr4VLxTBydRewx7EI8PamoicBQgE1TRVe3x9ZgicKDPaw45uocesjvcKqY
-         kTs8bkh7L3Tt5JF9AAscjIK8Lb3LHY6PXMNcrc9BE+VW6zwJhy+AEnGjvPFfHfwDpK18
-         4/MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=pqV06LQZUd28i1cTxW0Gc1ZSuLC1L8sbXgs7z0l8GAc=;
-        b=KBuJeh/BkQ4PV0ivC+wtCDiS4cvo613WFOPfep3jUJApa7ymePUoDGINw6KS9kR47w
-         N01yE0aRpEFchKIUtMOgk1Hq1qI/YFMZATPglT+BcldLbs7tl/ZAklzktluQFL10Xs4S
-         PgFIaTL/4FUiFL99JE6GPU2SkiU0Heo0uHOleffRmbyogNXmlNM59De5GROmuRuw3HA0
-         AOFQYWZ2bk99v+ryNNqzwUIiMR2PEm0arz2mFdlzdZa/2YuVyP6eDphxpwMM/h1fPXKm
-         EqMZ5nX3oLbNeth5uh3zlRMyntjSpeM500ErD/Q0B1KvtCJjkftgl2bMKoEyr1SLjZig
-         dD8A==
-X-Gm-Message-State: ANhLgQ1WIo6LYTuACg+TZVXROK/u1hE5q0qD4YibstGaBc2oAjq2xi1X
-        bls60pq78DMhfaSqWpiimmz29w==
-X-Google-Smtp-Source: ADFU+vswquO+8MQTyhuHCYQBrwIlqLoyrpsDzoJjRsfVzZgxnXwwwvTm4N2QEn7BI1apENCJyG5/gA==
-X-Received: by 2002:a2e:8790:: with SMTP id n16mr2393069lji.190.1583240176200;
-        Tue, 03 Mar 2020 04:56:16 -0800 (PST)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id w20sm11912400lfk.25.2020.03.03.04.56.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 04:56:15 -0800 (PST)
-Date:   Tue, 3 Mar 2020 13:56:15 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Tue, 3 Mar 2020 08:18:46 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57868 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728980AbgCCNSq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 08:18:46 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583241525; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=vS5FREU8OUuKyaXwL6wpyuNMG5hSFrJXEvv0TsTyWlY=; b=jp8Mh8ZYt5qfAotyDPDaGL/mK1KRkczG8y7MaXbsy2bCyKgm0BtBJ0YPAl88fSWIOFmGr5nB
+ +Z/8noCmb7H/P6NMpdqQS75FtrlJ+mLVW8HDhiZs6890YiNnEuQwj0k/f92Es1HzadpFZBnR
+ LniMztf/kuK7Q1wKqrYXhN1UkYI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5e5935.7f27a08abc38-smtp-out-n03;
+ Tue, 03 Mar 2020 13:18:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 13284C447A0; Tue,  3 Mar 2020 13:18:44 +0000 (UTC)
+Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: okukatla)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86461C433A2;
+        Tue,  3 Mar 2020 13:18:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86461C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
+From:   Odelu Kukatla <okukatla@codeaurora.org>
+To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: power: apmu: Convert to json-schema
-Message-ID: <20200303125615.GC571445@oden.dyn.berto.se>
-References: <20200221121221.31298-1-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200221121221.31298-1-geert+renesas@glider.be>
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-arm-msm-owner@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: [v5, 1/3] dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
+Date:   Tue,  3 Mar 2020 18:48:11 +0530
+Message-Id: <1583241493-21212-2-git-send-email-okukatla@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1583241493-21212-1-git-send-email-okukatla@codeaurora.org>
+References: <1583241493-21212-1-git-send-email-okukatla@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+The Qualcomm SC7180 platform has several bus fabrics that could be
+controlled and tuned dynamically according to the bandwidth demand.
 
-Thanks for your patch.
+Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/interconnect/qcom,sc7180.yaml         |  85 +++++++++++
+ include/dt-bindings/interconnect/qcom,sc7180.h     | 161 +++++++++++++++++++++
+ 2 files changed, 246 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+ create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
 
-On 2020-02-21 13:12:21 +0100, Geert Uytterhoeven wrote:
-> Convert the Renesas Advanced Power Management Unit Device Tree binding
-> documentation to json-schema.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
->  .../bindings/power/renesas,apmu.txt           | 35 ------------
->  .../bindings/power/renesas,apmu.yaml          | 55 +++++++++++++++++++
->  2 files changed, 55 insertions(+), 35 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/renesas,apmu.txt
->  create mode 100644 Documentation/devicetree/bindings/power/renesas,apmu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/power/renesas,apmu.txt b/Documentation/devicetree/bindings/power/renesas,apmu.txt
-> deleted file mode 100644
-> index 5f24586c8cf33fcf..0000000000000000
-> --- a/Documentation/devicetree/bindings/power/renesas,apmu.txt
-> +++ /dev/null
-> @@ -1,35 +0,0 @@
-> -DT bindings for the Renesas Advanced Power Management Unit
-> -
-> -Renesas R-Car and RZ/G1 SoCs utilize one or more APMU hardware units
-> -for CPU core power domain control including SMP boot and CPU Hotplug.
-> -
-> -Required properties:
-> -
-> -- compatible: Should be "renesas,<soctype>-apmu", "renesas,apmu" as fallback.
-> -	      Examples with soctypes are:
-> -		- "renesas,r8a7743-apmu" (RZ/G1M)
-> -		- "renesas,r8a7744-apmu" (RZ/G1N)
-> -		- "renesas,r8a7745-apmu" (RZ/G1E)
-> -		- "renesas,r8a77470-apmu" (RZ/G1C)
-> -		- "renesas,r8a7790-apmu" (R-Car H2)
-> -		- "renesas,r8a7791-apmu" (R-Car M2-W)
-> -		- "renesas,r8a7792-apmu" (R-Car V2H)
-> -		- "renesas,r8a7793-apmu" (R-Car M2-N)
-> -		- "renesas,r8a7794-apmu" (R-Car E2)
-> -
-> -- reg: Base address and length of the I/O registers used by the APMU.
-> -
-> -- cpus: This node contains a list of CPU cores, which should match the order
-> -  of CPU cores used by the WUPCR and PSTR registers in the Advanced Power
-> -  Management Unit section of the device's datasheet.
-> -
-> -
-> -Example:
-> -
-> -This shows the r8a7791 APMU that can control CPU0 and CPU1.
-> -
-> -	apmu@e6152000 {
-> -		compatible = "renesas,r8a7791-apmu", "renesas,apmu";
-> -		reg = <0 0xe6152000 0 0x188>;
-> -		cpus = <&cpu0 &cpu1>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/power/renesas,apmu.yaml b/Documentation/devicetree/bindings/power/renesas,apmu.yaml
-> new file mode 100644
-> index 0000000000000000..09328d311d16422f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/renesas,apmu.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/renesas,apmu.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: DT bindings for the Renesas Advanced Power Management Unit
-> +
-> +maintainers:
-> +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> +  - Magnus Damm <magnus.damm@gmail.com>
-> +
-> +description:
-> +  Renesas R-Car Gen2 and RZ/G1 SoCs utilize one or more APMU hardware units for
-> +  CPU core power domain control including SMP boot and CPU Hotplug.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - renesas,r8a7743-apmu  # RZ/G1M
-> +          - renesas,r8a7744-apmu  # RZ/G1N
-> +          - renesas,r8a7745-apmu  # RZ/G1E
-> +          - renesas,r8a77470-apmu # RZ/G1C
-> +          - renesas,r8a7790-apmu  # R-Car H2
-> +          - renesas,r8a7791-apmu  # R-Car M2-W
-> +          - renesas,r8a7792-apmu  # R-Car V2H
-> +          - renesas,r8a7793-apmu  # R-Car M2-N
-> +          - renesas,r8a7794-apmu  # R-Car E2
-> +      - const: renesas,apmu
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  cpus:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: |
-> +      Array of phandles pointing to CPU cores, which should match the order of
-> +      CPU cores used by the WUPCR and PSTR registers in the Advanced Power
-> +      Management Unit section of the device's datasheet.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - cpus
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    apmu@e6152000 {
-> +            compatible = "renesas,r8a7791-apmu", "renesas,apmu";
-> +            reg = <0xe6152000 0x188>;
-> +            cpus = <&cpu0 &cpu1>;
-> +    };
-> -- 
-> 2.17.1
-> 
-
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+new file mode 100644
+index 0000000..50f78f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+@@ -0,0 +1,85 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title:  Qualcomm SC7180 Network-On-Chip Interconnect
++
++maintainers:
++  - Odelu Kukatla <okukatla@codeaurora.org>
++
++description: |
++   SC7180 interconnect providers support system bandwidth requirements through
++   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
++   able to communicate with the BCM through the Resource State Coordinator (RSC)
++   associated with each execution environment. Provider nodes must point to at
++   least one RPMh device child node pertaining to their RSC and each provider
++   can map to multiple RPMh resources.
++
++properties:
++  reg:
++    maxItems: 1
++
++  compatible:
++    enum:
++      - qcom,sc7180-aggre1-noc
++      - qcom,sc7180-aggre2-noc
++      - qcom,sc7180-camnoc-virt
++      - qcom,sc7180-compute-noc
++      - qcom,sc7180-config-noc
++      - qcom,sc7180-dc-noc
++      - qcom,sc7180-gem-noc
++      - qcom,sc7180-ipa-virt
++      - qcom,sc7180-mc-virt
++      - qcom,sc7180-mmss-noc
++      - qcom,sc7180-npu-noc
++      - qcom,sc7180-qup-virt
++      - qcom,sc7180-system-noc
++
++  '#interconnect-cells':
++    const: 1
++
++  qcom,bcm-voters:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      List of phandles to qcom,bcm-voter nodes that are required by
++      this interconnect to send RPMh commands.
++
++  qcom,bcm-voter-names:
++    $ref: /schemas/types.yaml#/definitions/string-array
++    description: |
++      Names for each of the qcom,bcm-voters specified.
++
++required:
++  - compatible
++  - reg
++  - '#interconnect-cells'
++  - qcom,bcm-voters
++
++additionalProperties: false
++
++examples:
++  - |
++      #include <dt-bindings/interconnect/qcom,sc7180.h>
++
++      config_noc: interconnect@1500000 {
++            compatible = "qcom,sc7180-config-noc";
++            reg = <0 0x01500000 0 0x28000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      system_noc: interconnect@1620000 {
++            compatible = "qcom,sc7180-system-noc";
++            reg = <0 0x01620000 0 0x17080>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      mmss_noc: interconnect@1740000 {
++            compatible = "qcom,sc7180-mmss-noc";
++            reg = <0 0x01740000 0 0x1c100>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
+diff --git a/include/dt-bindings/interconnect/qcom,sc7180.h b/include/dt-bindings/interconnect/qcom,sc7180.h
+new file mode 100644
+index 0000000..f9970f6
+--- /dev/null
++++ b/include/dt-bindings/interconnect/qcom,sc7180.h
+@@ -0,0 +1,161 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Qualcomm SC7180 interconnect IDs
++ *
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
++#define __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
++
++#define MASTER_A1NOC_CFG			0
++#define MASTER_QSPI			1
++#define MASTER_QUP_0			2
++#define MASTER_SDCC_2			3
++#define MASTER_EMMC			4
++#define MASTER_UFS_MEM			5
++#define SLAVE_A1NOC_SNOC			6
++#define SLAVE_SERVICE_A1NOC			7
++
++#define MASTER_A2NOC_CFG			0
++#define MASTER_QDSS_BAM			1
++#define MASTER_QUP_1			2
++#define MASTER_USB3			3
++#define MASTER_CRYPTO			4
++#define MASTER_IPA			5
++#define MASTER_QDSS_ETR			6
++#define SLAVE_A2NOC_SNOC			7
++#define SLAVE_SERVICE_A2NOC			8
++
++#define MASTER_CAMNOC_HF0_UNCOMP			0
++#define MASTER_CAMNOC_HF1_UNCOMP			1
++#define MASTER_CAMNOC_SF_UNCOMP			2
++#define SLAVE_CAMNOC_UNCOMP			3
++
++#define MASTER_NPU			0
++#define MASTER_NPU_PROC			1
++#define SLAVE_CDSP_GEM_NOC			2
++
++#define MASTER_SNOC_CNOC			0
++#define MASTER_QDSS_DAP			1
++#define SLAVE_A1NOC_CFG			2
++#define SLAVE_A2NOC_CFG			3
++#define SLAVE_AHB2PHY_SOUTH			4
++#define SLAVE_AHB2PHY_CENTER			5
++#define SLAVE_AOP			6
++#define SLAVE_AOSS			7
++#define SLAVE_BOOT_ROM			8
++#define SLAVE_CAMERA_CFG				9
++#define SLAVE_CAMERA_NRT_THROTTLE_CFG			10
++#define SLAVE_CAMERA_RT_THROTTLE_CFG			11
++#define SLAVE_CLK_CTL			12
++#define SLAVE_RBCPR_CX_CFG			13
++#define SLAVE_RBCPR_MX_CFG			14
++#define SLAVE_CRYPTO_0_CFG			15
++#define SLAVE_DCC_CFG			16
++#define SLAVE_CNOC_DDRSS			17
++#define SLAVE_DISPLAY_CFG			18
++#define SLAVE_DISPLAY_RT_THROTTLE_CFG			19
++#define SLAVE_DISPLAY_THROTTLE_CFG			20
++#define SLAVE_EMMC_CFG			21
++#define SLAVE_GLM					22
++#define SLAVE_GFX3D_CFG			23
++#define SLAVE_IMEM_CFG			24
++#define SLAVE_IPA_CFG			25
++#define SLAVE_CNOC_MNOC_CFG			26
++#define SLAVE_CNOC_MSS			27
++#define SLAVE_NPU_CFG			28
++#define SLAVE_NPU_DMA_BWMON_CFG			29
++#define SLAVE_NPU_PROC_BWMON_CFG			30
++#define SLAVE_PDM			31
++#define SLAVE_PIMEM_CFG			32
++#define SLAVE_PRNG			33
++#define SLAVE_QDSS_CFG			34
++#define SLAVE_QM_CFG			35
++#define SLAVE_QM_MPU_CFG			36
++#define SLAVE_QSPI_0			37
++#define SLAVE_QUP_0			38
++#define SLAVE_QUP_1			39
++#define SLAVE_SDCC_2			40
++#define SLAVE_SECURITY			41
++#define SLAVE_SNOC_CFG			42
++#define SLAVE_TCSR			43
++#define SLAVE_TLMM_WEST			44
++#define SLAVE_TLMM_NORTH			45
++#define SLAVE_TLMM_SOUTH			46
++#define SLAVE_UFS_MEM_CFG			47
++#define SLAVE_USB3			48
++#define SLAVE_VENUS_CFG			49
++#define SLAVE_VENUS_THROTTLE_CFG			50
++#define SLAVE_VSENSE_CTRL_CFG			51
++#define SLAVE_SERVICE_CNOC			52
++
++#define MASTER_CNOC_DC_NOC			0
++#define SLAVE_GEM_NOC_CFG			1
++#define SLAVE_LLCC_CFG			2
++
++#define MASTER_APPSS_PROC		0
++#define MASTER_SYS_TCU			1
++#define MASTER_GEM_NOC_CFG			2
++#define MASTER_COMPUTE_NOC			3
++#define MASTER_MNOC_HF_MEM_NOC			4
++#define MASTER_MNOC_SF_MEM_NOC			5
++#define MASTER_SNOC_GC_MEM_NOC			6
++#define MASTER_SNOC_SF_MEM_NOC			7
++#define MASTER_GFX3D			8
++#define SLAVE_MSS_PROC_MS_MPU_CFG			9
++#define SLAVE_GEM_NOC_SNOC			10
++#define SLAVE_LLCC			11
++#define SLAVE_SERVICE_GEM_NOC			12
++
++#define MASTER_IPA_CORE			0
++#define SLAVE_IPA_CORE			1
++
++#define MASTER_LLCC			0
++#define SLAVE_EBI1			1
++
++#define MASTER_CNOC_MNOC_CFG			0
++#define MASTER_CAMNOC_HF0			1
++#define MASTER_CAMNOC_HF1			2
++#define MASTER_CAMNOC_SF			3
++#define MASTER_MDP0			4
++#define MASTER_ROTATOR			5
++#define MASTER_VIDEO_P0			6
++#define MASTER_VIDEO_PROC			7
++#define SLAVE_MNOC_HF_MEM_NOC			8
++#define SLAVE_MNOC_SF_MEM_NOC			9
++#define SLAVE_SERVICE_MNOC			10
++
++#define MASTER_NPU_SYS			0
++#define MASTER_NPU_NOC_CFG			1
++#define SLAVE_NPU_CAL_DP0			2
++#define SLAVE_NPU_CP			3
++#define SLAVE_NPU_INT_DMA_BWMON_CFG			4
++#define SLAVE_NPU_DPM			5
++#define SLAVE_ISENSE_CFG			6
++#define SLAVE_NPU_LLM_CFG			7
++#define SLAVE_NPU_TCM			8
++#define SLAVE_NPU_COMPUTE_NOC			9
++#define SLAVE_SERVICE_NPU_NOC			10
++
++#define MASTER_QUP_CORE_0			0
++#define MASTER_QUP_CORE_1			1
++#define SLAVE_QUP_CORE_0			2
++#define SLAVE_QUP_CORE_1			3
++
++#define MASTER_SNOC_CFG			0
++#define MASTER_A1NOC_SNOC			1
++#define MASTER_A2NOC_SNOC			2
++#define MASTER_GEM_NOC_SNOC			3
++#define MASTER_PIMEM			4
++#define SLAVE_APPSS			5
++#define SLAVE_SNOC_CNOC			6
++#define SLAVE_SNOC_GEM_NOC_GC			7
++#define SLAVE_SNOC_GEM_NOC_SF			8
++#define SLAVE_IMEM			9
++#define SLAVE_PIMEM			10
++#define SLAVE_SERVICE_SNOC			11
++#define SLAVE_QDSS_STM			12
++#define SLAVE_TCU			13
++
++#endif
 -- 
-Regards,
-Niklas Söderlund
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
