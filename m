@@ -2,322 +2,193 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD55AC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247A3C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7202214D8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30D0214D8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 16:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583253069;
-	bh=M4UUid7URLJzI65r89j9OlKfunud6VLBNpQJ5cIznLc=;
+	s=default; t=1583253276;
+	bh=040NxJov27zi2kpuEFE/fkgPEuBn6cFOe57ed0NlmXw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eNDiksNy4u7znH16AzT/iRg+gnYtkmOusFsW0fed6QcWAztuoU5NCle45Ad453T5V
-	 eWS9q+3wQ5k948Yv5w/ZxQn09LRjl8yhpqlHxjF811JYRm2ux2gI4XQQemkChUvi43
-	 HhrvkVyZcajc3/OFYF9gJNu/davFnEEHRZajZ+0Y=
+	b=Efvk0Ock0gVH5L/TqWNA+EH29ZB4oUnAI/qKV0szqmadRZRmZ5O1K3qjFA34zvxH0
+	 rWlCQBPIivioHnEsfy8OA9BPIoqGQpMni4soVbVa9OUNgnGtwaRsMqae+IS7kFQQMY
+	 4HDZxItvNI6V2HHEG+V12BokNhfmGGi4B1GT8sUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbgCCQbJ (ORCPT
+        id S1729417AbgCCQef (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:31:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43540 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 11:34:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbgCCQbI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:31:08 -0500
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        id S1729382AbgCCQef (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:34:35 -0500
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F881217F4;
-        Tue,  3 Mar 2020 16:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A89E214D8;
+        Tue,  3 Mar 2020 16:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583253067;
-        bh=M4UUid7URLJzI65r89j9OlKfunud6VLBNpQJ5cIznLc=;
+        s=default; t=1583253274;
+        bh=040NxJov27zi2kpuEFE/fkgPEuBn6cFOe57ed0NlmXw=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Q6/YYdyICjYQuGSUi71sQ7RNk8xBdEBtd5Ykq5D7G09n/jlRTu/AEWt0cxY3YhgW7
-         zcXwrn8r2US8MV8k2RRTuaPiG5/V6F5dTsL8Bjn2XWrc9k9WOZo5OBQfj2nHYEndVd
-         B8QewoodnSVx6hDuys5BCtt4Cw0nTj6WjmCwEvjE=
-Received: by mail-qv1-f46.google.com with SMTP id r15so1952407qve.3;
-        Tue, 03 Mar 2020 08:31:07 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0BoNAnJnWYcrrfa7B2wD7yLJzJzRg93TK4APW7zk08iZbcfghY
-        IIDQFTkTNx23dJEKVN0ZBQrRJedsuJjL+3niMw==
-X-Google-Smtp-Source: ADFU+vutKDjmsaxU5hYaSz/ewKlff3yc8qlL9gYjYDN0Waoeyc1JAUaPF7rmkKajIRf/6cL1e6hN3d6uUDM4FCUBeoA=
-X-Received: by 2002:ad4:42cd:: with SMTP id f13mr4414134qvr.136.1583253066278;
- Tue, 03 Mar 2020 08:31:06 -0800 (PST)
+        b=0OkZ88X7x23SXQDFnEHTH7GYDZfGoMfVmrHt+OIFTKRzij5MSL40RB88NY1VOd6lj
+         s+xGB1l+P9dENTDQS2MJ42gwFRwS/d8AkVRep5dVOgXHMLXA3ZBKJ1aQGd/XFErQHn
+         c0sDitgPhUsEBwgaeh/+BASrNzQADeqqiFzHHAVo=
+Received: by mail-qv1-f48.google.com with SMTP id ea1so1943921qvb.7;
+        Tue, 03 Mar 2020 08:34:34 -0800 (PST)
+X-Gm-Message-State: ANhLgQ1isXFEuRJW4wZiu6U7s5s0vFt5hh1gxiVnJZxjKR9695acW0n2
+        pBTAkcvwcAh5HJAKfEvlPggXiUe0DW3vHAGCFA==
+X-Google-Smtp-Source: ADFU+vuUWwCQpXqxzwroYvAR0PB55wCGn+p0NXTooSsdWNMkPzFMrO6gdKsWNueviXZ4c8D6stIkxMpo4uQsvUjbAsk=
+X-Received: by 2002:ad4:4593:: with SMTP id x19mr1088256qvu.79.1583253273312;
+ Tue, 03 Mar 2020 08:34:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20200228105809.23254-1-benjamin.gaignard@st.com>
- <20200303013945.GA8727@bogus> <d54e7799-a092-63d5-01f1-907a9999a776@st.com>
-In-Reply-To: <d54e7799-a092-63d5-01f1-907a9999a776@st.com>
+References: <20200225124152.270914-1-nuno.sa@analog.com> <20200225124152.270914-6-nuno.sa@analog.com>
+ <20200302222254.GA27619@bogus> <1054e87af61518d73dfcb0995e7aab7484e81630.camel@analog.com>
+ <5661b3f80a7fd041989b30d2f9ca76bfa762499d.camel@analog.com>
+In-Reply-To: <5661b3f80a7fd041989b30d2f9ca76bfa762499d.camel@analog.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 3 Mar 2020 10:30:54 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+G=E48MCp3X=dknF=4sETSt2VCkNvvKdo1o7wjcDF+zw@mail.gmail.com>
-Message-ID: <CAL_Jsq+G=E48MCp3X=dknF=4sETSt2VCkNvvKdo1o7wjcDF+zw@mail.gmail.com>
-Subject: Re: [PATCH v4] dt-bindings: mfd: Convert stpmic1 bindings to json-schema
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+Date:   Tue, 3 Mar 2020 10:34:19 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJU_C6OU+x1LxSX=rBjLtiaOcmdwR+_8LyKd094XMJ08A@mail.gmail.com>
+Message-ID: <CAL_JsqJU_C6OU+x1LxSX=rBjLtiaOcmdwR+_8LyKd094XMJ08A@mail.gmail.com>
+Subject: Re: [PATCH 5/5] dt-bindings: iio: Add adis16475 documentation
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 2:17 AM Benjamin GAIGNARD
-<benjamin.gaignard@st.com> wrote:
+On Tue, Mar 3, 2020 at 3:59 AM Sa, Nuno <Nuno.Sa@analog.com> wrote:
 >
->
->
-> On 3/3/20 2:39 AM, Rob Herring wrote:
-> > On Fri, Feb 28, 2020 at 11:58:09AM +0100, Benjamin Gaignard wrote:
-> >> Convert stpmic1 bindings to json-schema.
-> >>
-> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> >> ---
-> >> version 4:
-> >> - move on uppder node $ref: ../regulator/regulator.yaml
-> >> - move fixed strings under properties field
-> >> - remove unneeded () in patternProperties
-> >> - keep ldo3 separate from other ldo properties
-> >> Note:
-> >> - 'st,mask-reset' property stay in each subnode, I don't find
-> >>    the syntax to avoid dupliquate it.
-> >> - ldo6-supply and all possible *-supply are describe by this regular
-> >>    expression: ^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])-supply$":
-> >>
-> >> version 3:
-> >> - put $ref under allOf keyword
-> >> - for each regulator node add the list of supported regulator properties
-> >>
-> >>   .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 --
-> >>   .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ----
-> >>   .../devicetree/bindings/mfd/st,stpmic1.yaml        | 338 +++++++++++++++++++++
-> >>   .../bindings/regulator/st,stpmic1-regulator.txt    |  64 ----
-> >>   .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 -
-> >>   5 files changed, 338 insertions(+), 164 deletions(-)
-> >>   delete mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-> >>   delete mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
-> >>   delete mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
-> >>   delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-> >> deleted file mode 100644
-> >> index eb8e83736c02..000000000000
-> >> --- a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-> >> +++ /dev/null
-> >> @@ -1,28 +0,0 @@
-> >> -STMicroelectronics STPMIC1 Onkey
-> >> -
-> >> -Required properties:
-> >> -
-> >> -- compatible = "st,stpmic1-onkey";
-> >> -- interrupts: interrupt line to use
-> >> -- interrupt-names = "onkey-falling", "onkey-rising"
-> >> -    onkey-falling: happens when onkey is pressed; IT_PONKEY_F of pmic
-> >> -    onkey-rising: happens when onkey is released; IT_PONKEY_R of pmic
-> >> -
-> >> -Optional properties:
-> >> -
-> >> -- st,onkey-clear-cc-flag: onkey is able power on after an
-> >> -  over-current shutdown event.
-> >> -- st,onkey-pu-inactive: onkey pull up is not active
-> >> -- power-off-time-sec: Duration in seconds which the key should be kept
-> >> -        pressed for device to power off automatically (from 1 to 16 seconds).
-> >> -        see See Documentation/devicetree/bindings/input/input.yaml
-> >> -
-> >> -Example:
-> >> -
-> >> -onkey {
-> >> -    compatible = "st,stpmic1-onkey";
-> >> -    interrupt-parent = <&pmic>;
-> >> -    interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
-> >> -    interrupt-names = "onkey-falling", "onkey-rising";
-> >> -    power-off-time-sec = <10>;
-> >> -};
-> >> diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
-> >> deleted file mode 100644
-> >> index afd45c089585..000000000000
-> >> --- a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
-> >> +++ /dev/null
-> >> @@ -1,61 +0,0 @@
-> >> -* STMicroelectronics STPMIC1 Power Management IC
-> >> -
-> >> -Required properties:
-> >> -- compatible:               : "st,stpmic1"
-> >> -- reg:                      : The I2C slave address for the STPMIC1 chip.
-> >> -- interrupts:               : The interrupt line the device is connected to.
-> >> -- #interrupt-cells: : Should be 1.
-> >> -- interrupt-controller:     : Marks the device node as an interrupt controller.
-> >> -                        Interrupt numbers are defined at
-> >> -                        dt-bindings/mfd/st,stpmic1.h.
-> >> -
-> >> -STPMIC1 consists in a varied group of sub-devices.
-> >> -Each sub-device binding is be described in own documentation file.
-> >> -
-> >> -Device                       Description
-> >> -------                      ------------
-> >> -st,stpmic1-onkey    : Power on key, see ../input/st,stpmic1-onkey.txt
-> >> -st,stpmic1-regulators       : Regulators, see ../regulator/st,stpmic1-regulator.txt
-> >> -st,stpmic1-wdt              : Watchdog, see ../watchdog/st,stpmic1-wdt.txt
-> >> -
-> >> -Example:
-> >> -
-> >> -#include <dt-bindings/mfd/st,stpmic1.h>
-> >> -
-> >> -pmic: pmic@33 {
-> >> -    compatible = "st,stpmic1";
-> >> -    reg = <0x33>;
-> >> -    interrupt-parent = <&gpioa>;
-> >> -    interrupts = <0 2>;
-> >> -
-> >> -    interrupt-controller;
-> >> -    #interrupt-cells = <2>;
-> >> -
-> >> -    onkey {
-> >> -            compatible = "st,stpmic1-onkey";
-> >> -            interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
-> >> -            interrupt-names = "onkey-falling", "onkey-rising";
-> >> -            power-off-time-sec = <10>;
-> >> -    };
-> >> -
-> >> -    watchdog {
-> >> -            compatible = "st,stpmic1-wdt";
-> >> -    };
-> >> -
-> >> -    regulators {
-> >> -            compatible = "st,stpmic1-regulators";
-> >> -
-> >> -            vdd_core: buck1 {
-> >> -                    regulator-name = "vdd_core";
-> >> -                    regulator-boot-on;
-> >> -                    regulator-min-microvolt = <700000>;
-> >> -                    regulator-max-microvolt = <1200000>;
-> >> -            };
-> >> -            vdd: buck3 {
-> >> -                    regulator-name = "vdd";
-> >> -                    regulator-min-microvolt = <3300000>;
-> >> -                    regulator-max-microvolt = <3300000>;
-> >> -                    regulator-boot-on;
-> >> -                    regulator-pull-down;
-> >> -            };
-> >> -    };
-> >> diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
-> >> new file mode 100644
-> >> index 000000000000..e9adcd04a48d
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
-> >> @@ -0,0 +1,338 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/mfd/st,stpmic1.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: STMicroelectonics STPMIC1 Power Management IC bindings
-> >> +
-> >> +description: STMicroelectronics STPMIC1 Power Management IC
-> >> +
-> >> +maintainers:
-> >> +  - pascal Paillet <p.paillet@st.com>
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: st,stpmic1
-> >> +
-> >> +  reg:
-> >> +    const: 0x33
-> >> +
-> >> +  interrupts:
-> >> +    maxItems: 1
-> >> +
-> >> +  "#interrupt-cells":
-> >> +    const: 2
-> >> +
-> >> +  interrupt-controller: true
-> >> +
-> >> +  onkey:
-> >> +    type: object
-> >> +
-> >> +    allOf:
-> >> +      - $ref: ../input/input.yaml
-> >> +
-> >> +    properties:
-> >> +      compatible:
-> >> +        const: st,stpmic1-onkey
-> >> +
-> >> +      interrupts:
-> >> +        items:
-> >> +          - description: onkey-falling, happens when onkey is pressed. IT_PONKEY_F of pmic
-> >> +          - description: onkey-rising, happens when onkey is released. IT_PONKEY_R of pmic
-> >> +
-> >> +      interrupt-names:
-> >> +        items:
-> >> +          - const: onkey-falling
-> >> +          - const: onkey-rising
-> >> +
-> >> +      st,onkey-clear-cc-flag:
-> >> +        description: onkey is able power on after an over-current shutdown event.
-> >> +        $ref: /schemas/types.yaml#/definitions/flag
-> >> +
-> >> +      st,onkey-pu-inactive:
-> >> +        description: onkey pull up is not active
-> >> +        $ref: /schemas/types.yaml#/definitions/flag
-> >> +
-> >> +      power-off-time-sec:
-> >> +        minimum: 1
-> >> +        maximum: 16
-> >> +
-> >> +    required:
-> >> +      - compatible
-> >> +      - interrupts
-> >> +      - interrupt-names
-> >> +
-> >> +    additionalProperties: false
-> >> +
-> >> +  watchdog:
-> >> +    type: object
-> >> +
-> >> +    allOf:
-> >> +      - $ref: ../watchdog/watchdog.yaml
-> >> +
-> >> +    properties:
-> >> +      compatible:
-> >> +        const: st,stpmic1-wdt
-> >> +
-> >> +      timeout-sec: true
-> >> +
-> >> +    required:
-> >> +      - compatible
-> >> +
-> >> +    additionalProperties: false
-> >> +
-> >> +  regulators:
-> >> +    type: object
-> >> +
-> >> +    allOf:
-> >> +      - $ref: ../regulator/regulator.yaml
-> > Sigh. Haven't I already said this was at the wrong level once before?
+> On Tue, 2020-03-03 at 09:43 +0000, Sa, Nuno wrote:
+> > [External]
 > >
-> > My suggestion was to put this under
-> > "^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])-supply$".
-> Yes but "^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])-supply$" node doesn't
-> need regulators properties.
-> Only the nodes without '-supply' need these properties and they are at
-> the same level than the -supply nodes.
-> I have put the reference to the regulator upper as I can.
+> > On Mon, 2020-03-02 at 16:22 -0600, Rob Herring wrote:
+> > > On Tue, Feb 25, 2020 at 01:41:52PM +0100, Nuno S=C3=A1 wrote:
+> > > > Document the ADIS16475 device devicetree bindings.
+> > > >
+> > > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > > > ---
+> > > >  .../bindings/iio/imu/adi,adis16475.yaml       | 130
+> > > > ++++++++++++++++++
+> > > >  MAINTAINERS                                   |   1 +
+> > > >  2 files changed, 131 insertions(+)
+> > > >  create mode 100644
+> > > > Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+> > > >
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+> > > > b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..c0f2146e000c
+> > > > --- /dev/null
+> > > > +++
+> > > > b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+> > > > @@ -0,0 +1,130 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/iio/imu/adi,adis16475.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Analog Devices ADIS16475 and similar IMUs
+> > > > +
+> > > > +maintainers:
+> > > > +  - Nuno S=C3=A1 <nuno.sa@analog.com>
+> > > > +
+> > > > +description: |
+> > > > +  Analog Devices ADIS16475 and similar IMUs
+> > > > +
+> > > > https://www.analog.com/media/en/technical-documentation/data-sheets=
+/ADIS16475.pdf
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - adi,adis16475-1
+> > > > +      - adi,adis16475-2
+> > > > +      - adi,adis16475-3
+> > > > +      - adi,adis16477-1
+> > > > +      - adi,adis16477-2
+> > > > +      - adi,adis16477-3
+> > > > +      - adi,adis16470
+> > > > +      - adi,adis16465-1
+> > > > +      - adi,adis16465-2
+> > > > +      - adi,adis16465-3
+> > > > +      - adi,adis16467-1
+> > > > +      - adi,adis16467-2
+> > > > +      - adi,adis16467-3
+> > > > +      - adi,adis16500
+> > > > +      - adi,adis16505-1
+> > > > +      - adi,adis16505-2
+> > > > +      - adi,adis16505-3
+> > > > +      - adi,adis16507-1
+> > > > +      - adi,adis16507-2
+> > > > +      - adi,adis16507-3
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  spi-cpha: true
+> > > > +
+> > > > +  spi-cpol: true
+> > > > +
+> > > > +  spi-max-frequency:
+> > > > +    maximum: 2000000
+> > > > +
+> > > > +  interrupts:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  clocks:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  clock-names:
+> > > > +    oneOf:
+> > > > +      - const: sync
+> > > > +      - const: direct-sync
+> > > > +      - const: pulse-sync
+> > > > +      - const: scaled-sync
+> > >
+> > > According to the datasheet I looked at, the input is called 'sync'.
+> > > It
+> > > looks like you are mixing operating mode and clock connection.
+> >
+> > The sync pin is where the external clock should be connected (when
+> > available). I'm kinda of using the clock-name property as a way of
+> > selecting the mode the user wants to use as done in other devices (
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
+> > ). In the end, what we should have in the sync pin is an external
+> > clock
+> > with the exception of the `sync` mode. I guess this one could be
+> > called
+> > output-sync and, in this case, the sync pin is actually an output pin
+> > pulsing when the internal processor collects data.
+> >
+> > I'm ok in changing it if there's a better way of doing it... Do you
+> > have any suggestion?
+> >
+> > -Nuno S=C3=A1
+>
+> So, you mean having the clock-name only as "sync" (or maybe even
+> removing it?) and having a dedicated property like clock-mode?
 
-Sorry, I meant they should be under a
-"^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])$" property.
+Yes. Though it needs a vendor prefix: adi,clock-mode. Or perhaps adi,sync-m=
+ode?
 
 Rob
