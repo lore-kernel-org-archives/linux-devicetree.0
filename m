@@ -2,161 +2,174 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71062C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 22:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EE5C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 22:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E1A20866
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 22:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Af0JZZlJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5A5612072A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 22:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583275630;
+	bh=QZOieU6c52vjWUI4QscGZ5yoTaS6UUPn0GvyDS8MBMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2Hu6JASr8eqC4iz42iPWGrwQo73ihQJ28zHDLw7AaacjzX5nw5NsI1svr79sFIzWq
+	 sHXXCCYI6qvv1ItL8JVyY4bL6I+eSDsvRu6VVWWxPliFdszerleYZGBvnZVwlKlyNg
+	 9npS92BEp1F41NKHBkyOcfRpYLdPmHaV/9v+Jgh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgCCWnU (ORCPT
+        id S1727604AbgCCWrJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:43:20 -0500
-Received: from mail-am6eur05on2042.outbound.protection.outlook.com ([40.107.22.42]:51584
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbgCCWnU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:43:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i4bIRiOZDf7JlGd5Z9sGhQhJMFjlVQuF0g5JoFIrgwPv6AlX1CWMujYJIBbds9PFdMtbM5oQKhj2skTjJcsET1nDIPLv3SvYJwjI+muDz07rVjwAuFLeaQRATwUDYhFiORvDAWd8F4ih5vbTxDkKO83bBl5BTaxg+qxidjX0AcHiKowgYs4VrPWo4Ob86OlJX3IOyE8qjb4JtzfI+z/Z01FAJfTua8WTJTOxgbM1jV3FuqUu25ABLYx1FgscJkvj70JI1tdsJiH9fkrDDirqOyWdpzsh4gF6m9wNkKgtrLfpf3peBPGtBl3Ou5CbbB3NDDZPMQhv9tEuNdHqmBm0vA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bRGNM/6Q4FAeMS+OD8oZg1UrMD2a0m+34mqWV+T66vo=;
- b=nklG32qGDCZO8zqrKM2uOw6Koiz787tDl2OHSbg6+eYr9mawdTSotHKa+5EGRBdPnk/1+RbPRxbp7yGcVg1p6CjPYiT4K5iPRqOfXvVsWQR3lXgyoallOLXS9kA4T9qyIg5YPCFvLxyB9lgFuJv5id24Mt9LvqBGVsD+t1sYCmcsUd2+46VOgMxxM8oiKRdBSI6R7DMIjWADdxdJOpUk29zYCBg1Kcm8bzJpahqEzqWmVH1o+pObSLIoa3tzj68Rc+d53X92NlP6vcl5S7kymP6LSYRx47gH/axAb1WWcXXbONpoc+PJfBmOdJH5jT6dCqQ05h1LO2OxqttJ890Mcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bRGNM/6Q4FAeMS+OD8oZg1UrMD2a0m+34mqWV+T66vo=;
- b=Af0JZZlJ6zszftrGmMPZ+1KVDAFxDHV21V7y0ZR7LMjFwrywp6au+QiVNJKHUNJAjgNJsALN6bqJqBmSn+mcGhwm4FePCy1FbMuRQNz3lt/X7TjmfLA0gu0VQJp7qy6HlC173DSZfq+VoegMbUKzZ0xwJl9HZVtcgck0/jDWPsU=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
- VE1PR04MB6765.eurprd04.prod.outlook.com (20.179.235.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.14; Tue, 3 Mar 2020 22:43:16 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::b896:5bc0:c4dd:bd23]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::b896:5bc0:c4dd:bd23%2]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
- 22:43:16 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Michael Walle <michael@walle.cc>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Yuan Yao <yao.yuan@nxp.com>
-Subject: RE: [PATCH v3 8/9] arm64: dts: ls1028a: add "fsl,vf610-edma"
- compatible
-Thread-Topic: [PATCH v3 8/9] arm64: dts: ls1028a: add "fsl,vf610-edma"
- compatible
-Thread-Index: AQHV8YM+rjjpH1ep4E+nXaFwPvP5Z6g3di1A
-Date:   Tue, 3 Mar 2020 22:43:16 +0000
-Message-ID: <VE1PR04MB668748A35B0611CFC0C21CA38FE40@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20200303174306.6015-1-michael@walle.cc>
- <20200303174306.6015-9-michael@walle.cc>
-In-Reply-To: <20200303174306.6015-9-michael@walle.cc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b3d34b14-6880-4ebb-aa5f-08d7bfc443a1
-x-ms-traffictypediagnostic: VE1PR04MB6765:|VE1PR04MB6765:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6765FA63A337626A324ADA068FE40@VE1PR04MB6765.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 03319F6FEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(189003)(199004)(9686003)(7696005)(8936002)(81156014)(316002)(110136005)(76116006)(54906003)(2906002)(71200400001)(66556008)(478600001)(66946007)(8676002)(66476007)(86362001)(81166006)(33656002)(4326008)(55016002)(5660300002)(64756008)(53546011)(6506007)(52536014)(66446008)(7416002)(186003)(26005)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6765;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zjqrXFLv/K21G4Nb8jnGUCGKSQf+3EBpwVxjUQ0baWjTLq0RAOLlsTraNpXXD4ETGZckgMM9L/VuNVcmEurKhJcIU3KnPeyiCuVCC5cX/1UuAzZpLYpqxesHyjqsIwZ62rMUnlZbrWKT6OPUJjVmL9Amwy2iLpDwWRCVAnPNoW6pOB2Zlgk5VXbuoldv9FFBzavnZQ/m1njdT6q0pTGr74x6N7bY4EqsEs4v+LUYOvapZMX1eiaTNUaF7UOY9y6iqcSog8q9XEWMSxNqV66Lr/sJgOxTO2JVaCajEUpkiv8VPbT84esiwGeqecHK4hHa3FEOPm4gOQfN6zLVuio/RVq1OEwZNmvLUckKnH8fVsgFeurJYq/JYQ54czxHcybrRPHJlhd0j0XavT/BQhFYa9F6T2fab4u3z72J4dxKSWVq8ZgkP/ia3wM4vHNMAvITP9zV9djDv9zzJ0BfH+L8fAA3tJNyLneGWN9/g/8gC0eFP1Xi6HM3L/EJO1XNp9Cb
-x-ms-exchange-antispam-messagedata: D0qelNDjuMFbYoukyWjznD4bToAf5FztoB/bgYjdXYEp0/8V+iFJuk/rbTaHG4IoZ85CvFc94mWJjcVjVKCTLy20e++R1YOgMKD/5re9PvI7Rc/01ygtAlltFlXORtOVdRjCpH1MoEMtNsUiYpPOEQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Mar 2020 17:47:09 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32836 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgCCWrJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 17:47:09 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a20so121783otl.0;
+        Tue, 03 Mar 2020 14:47:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z0du2wcxyjg7iRH0s/qpIMsj7X0YCwaBDvE2vsxIrbk=;
+        b=ptKay2zTXDuwv4sLGKm+yU3NkVByKaqrWKWW8+yMBqmbO7bGEAsTuOxCR9dOc1Mopm
+         qpnJxckMJyfIvQgVZw6JW85HJpsVJMWhhUe0bqiNX2JUp2dU8N3+fx34f7MbEHkSZwyA
+         5GUOMeaVzIiq1084X6YvAC6NH+tuklJF1c5nPBGj81i9cZWGx7CFzFRcsT+6XGGTODsN
+         KRxwYnvQKbs7gNQsr+mRquu4PkSmkCuVhoM7vTTpZAkSBfdUEgk9PiV2HzRQJ9IAmhtx
+         kvJhfmAch4hWexgOHY5W3VI/ddbI8+2c7/kQyRq6Gylyqvsv0fwgRz231c8UcLqPKO9k
+         Ehew==
+X-Gm-Message-State: ANhLgQ21VIBHaKa3T+u+yr7vPTojh5vTOw9jtx4qb5MQnU9Vwh3PiZri
+        ARfE9upaUW6Un71mAgWMHA==
+X-Google-Smtp-Source: ADFU+vuU+JCOVQpYg1AlYEQdEKGSsg5SLhgtKZoaS1dScWhKEQWMAhE4l5CbjQlxM9gWy34zkZG6zg==
+X-Received: by 2002:a9d:4c92:: with SMTP id m18mr129586otf.168.1583275628368;
+        Tue, 03 Mar 2020 14:47:08 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b2sm5879600oii.20.2020.03.03.14.47.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:47:07 -0800 (PST)
+Received: (nullmailer pid 32174 invoked by uid 1000);
+        Tue, 03 Mar 2020 22:47:06 -0000
+Date:   Tue, 3 Mar 2020 16:47:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/4] dt-bindings: convert mtk-quadspi binding doc for
+ spi-mtk-nor
+Message-ID: <20200303224706.GA22867@bogus>
+References: <20200228043636.559915-1-gch981213@gmail.com>
+ <20200228043636.559915-4-gch981213@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3d34b14-6880-4ebb-aa5f-08d7bfc443a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2020 22:43:16.3779
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RbNogP6wJHy79TKcRipYtOHRHjUgPe97DkInCUbYNAxcTVgIjmAcGFVgKecYzAagNSVFm9J+pmO3lqDkR5eOMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6765
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228043636.559915-4-gch981213@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Feb 28, 2020 at 12:36:35PM +0800, Chuanhong Guo wrote:
+> spi-mtk-nor is a driver to replace mtk-quadspi and they have almost
+> the same device-tree bindings. Reuse this binding documentation and
+> convert it for new driver:
+> 
+> 1. "Mediatek SoCs" -> "Mediatek ARM SoCs" because MTK MIPS SoCs
+>    use different controllers.
+> 2. document "interrupts" as a required property because it's
+>    available on all SoCs with this controller and new driver takes
+>    advantages of it. It's implemented as optional only to maintain
+>    backward compatibility.
+> 3. replace binding example with a mt7629 one because this is the
+>    only one I know the interrupt assignment.
 
+That doesn't really matter. It would be less churn without that change 
+and examples are just examples.
 
-> -----Original Message-----
-> From: Michael Walle <michael@walle.cc>
-> Sent: Tuesday, March 3, 2020 11:43 AM
-> To: linux-serial@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Rob Herring
-> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Shawn
-> Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; Jiri Slaby
-> <jslaby@suse.com>; Peng Fan <peng.fan@nxp.com>; Vabhav Sharma
-> <vabhav.sharma@nxp.com>; Yuan Yao <yao.yuan@nxp.com>; Michael Walle
-> <michael@walle.cc>
-> Subject: [PATCH v3 8/9] arm64: dts: ls1028a: add "fsl,vf610-edma" compati=
-ble
->=20
-> The bootloader does the IOMMU fixup and dynamically adds the "iommus"
-> property to devices according to its compatible string. In case of the eD=
-MA
-> controller this property is missing. Add it. After that the IOMMU will wo=
-rk
-> with the eDMA core.
-
-It probably makes sense to have the fsl,vf610-edma as a secondary compatibl=
-e.  But I think it probably need an update to the binding document too(espe=
-cially the compatible is required to function).  Also looks like the recent=
- update for the binding has a typo for " fsl,fsl,ls1028a-edma", can you als=
-o fix that all together?
-
->=20
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> 
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 0bf375ec959b..0843cfbe7ae1 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -335,7 +335,7 @@
->=20
->  		edma0: dma-controller@22c0000 {
->  			#dma-cells =3D <2>;
-> -			compatible =3D "fsl,ls1028a-edma";
-> +			compatible =3D "fsl,ls1028a-edma", "fsl,vf610-edma";
->  			reg =3D <0x0 0x22c0000 0x0 0x10000>,
->  			      <0x0 0x22d0000 0x0 0x10000>,
->  			      <0x0 0x22e0000 0x0 0x10000>;
-> --
-> 2.20.1
+> Change since v1:
+>  none
+> 
+>  .../mtk-quadspi.txt => spi/spi-mtk-nor.txt}   | 34 ++++++++-----------
+>  1 file changed, 15 insertions(+), 19 deletions(-)
+>  rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt => spi/spi-mtk-nor.txt} (62%)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+> similarity index 62%
+> rename from Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> rename to Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+> index a12e3b5c495d..829da480b9a9 100644
+> --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+> @@ -1,4 +1,4 @@
+> -* Serial NOR flash controller for MediaTek SoCs
+> +* SPI NOR flash controller for MediaTek ARM SoCs
+>  
+>  Required properties:
+>  - compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
+> @@ -13,6 +13,7 @@ Required properties:
+>  		  "mediatek,mt7629-nor", "mediatek,mt8173-nor"
+>  		  "mediatek,mt8173-nor"
+>  - reg: 		  physical base address and length of the controller's register
+> +- interrupts:	  Interrupt number used by the controller.
+>  - clocks: 	  the phandle of the clocks needed by the nor controller
+>  - clock-names: 	  the names of the clocks
+>  		  the clocks should be named "spi" and "sf". "spi" is used for spi bus,
+> @@ -22,29 +23,24 @@ Required properties:
+>  - #address-cells: should be <1>
+>  - #size-cells:	  should be <0>
+>  
+> -The SPI flash must be a child of the nor_flash node and must have a
+> -compatible property. Also see jedec,spi-nor.txt.
+> -
+> -Required properties:
+> -- compatible:	  May include a device-specific string consisting of the manufacturer
+> -		  and name of the chip. Must also include "jedec,spi-nor" for any
+> -		  SPI NOR flash that can be identified by the JEDEC READ ID opcode (0x9F).
+> -- reg :		  Chip-Select number
+> +There should be only one spi slave device following generic spi bindings.
+> +It's not recommended to use this controller for devices other than SPI NOR
+> +flash due to limited transfer capability of this controller.
+>  
+>  Example:
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/mt7629-clk.h>
+>  
+> -nor_flash: spi@1100d000 {
+> -	compatible = "mediatek,mt8173-nor";
+> -	reg = <0 0x1100d000 0 0xe0>;
+> -	clocks = <&pericfg CLK_PERI_SPI>,
+> -		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+> +spi_nor: spi@11014000 {
+> +	compatible = "mediatek,mt7629-nor",
+> +		     "mediatek,mt8173-nor";
+> +	reg = <0x11014000 0xe0>;
+> +	interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_LOW>;
+> +	clocks = <&pericfg CLK_PERI_FLASH_PD>,
+> +		 <&topckgen CLK_TOP_FLASH_SEL>;
+>  	clock-names = "spi", "sf";
+>  	#address-cells = <1>;
+>  	#size-cells = <0>;
+> -
+> -	flash@0 {
+> -		compatible = "jedec,spi-nor";
+> -		reg = <0>;
+> -	};
 
+Better to leave this in the example IMO.
+
+Rob
