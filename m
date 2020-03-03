@@ -2,212 +2,134 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C46E1C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD15C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A47C215A4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583268509;
-	bh=eRhj8iCSE+FnwgT+1LUDs3GuksPLbB2hh4dzgtVvPgs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oSgkEkGkcSGngBQa+UseHYYOVF2DT8fzCrV8zg0yYmErxbDjJdg8wxRR3+zI0kycS
-	 tOH0S8tpT3ylqH7KzV29lMLvVm+2h8ZqGenm7wWg8HfpIt/G/lk0M0feS9CE1tKKpP
-	 F/FVR7IDAzsz3Yr1Pcd+P0xtHJ8DNSKDcdfDMMPw=
+	by mail.kernel.org (Postfix) with ESMTP id AE07A20848
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:50:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WQs8CSKC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731890AbgCCUs3 (ORCPT
+        id S1731989AbgCCUuq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:48:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730274AbgCCUs2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 15:48:28 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0894720848;
-        Tue,  3 Mar 2020 20:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583268507;
-        bh=eRhj8iCSE+FnwgT+1LUDs3GuksPLbB2hh4dzgtVvPgs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2VN/CMzYdSWZ/7sPR/63gvOYjv0shjKYWHIF1aIy+L1ILt5ZV6IJXDj4zPWt/zs31
-         Xv6pwgkY2wCBMEcwzvtreu8QwqZxo/LYCFoZMkxA2xu5pwfttJQzUDJzDkdK88w9t0
-         Grfg97oemE0DQ7vsN8DS6yQPzIX4MsvWLChGg15Y=
-Date:   Tue, 3 Mar 2020 20:48:20 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH 3/5] iio: adis: Add adis_update_bits() APIs
-Message-ID: <20200303204820.272d2235@archlinux>
-In-Reply-To: <20200225124152.270914-4-nuno.sa@analog.com>
-References: <20200225124152.270914-1-nuno.sa@analog.com>
-        <20200225124152.270914-4-nuno.sa@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 3 Mar 2020 15:50:46 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:34819 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731268AbgCCUup (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 15:50:45 -0500
+Received: by mail-ua1-f68.google.com with SMTP id y23so1705562ual.2
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 12:50:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XD3hDQ0araAq5zv8njvI5qg6v85AS493J1Kabe5n9XU=;
+        b=WQs8CSKCVyivgzPN2r8nm7npkTrOFE4qfJa67otUlcSCrwaKSlDrF3gGH8TEf+fF84
+         v/9skIV1L0DMfuSSIQZjLFKzht8F/ZGa+MgsCy08Bx+vWOgIqBpxJ/PDPdFuev8VqNyA
+         h41lMLtPkCTJOhtkGYI7uguOfjiLVSYgoZMlkhibAvlNRLKb6mtXn/YHo9rJuDgJ+Uny
+         i00XJnN1ZkX4aEaM8574pbADLLmr065IX3iexNFRyOCjEx8Hq1B13jzs7IFm8K61v/Oj
+         6ZXxP3hlFdm4pJYpgHUOC5+zIERiPT/vE9AGPanw3vpwqL5GPZDR4HF/ypGuwGF88vIc
+         R8fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XD3hDQ0araAq5zv8njvI5qg6v85AS493J1Kabe5n9XU=;
+        b=KZApLBtnmEExivL/SU37s/gdycX3yWqQaHFy4o/9dwuzYO9jy8gYcaU7UtXbFGZ649
+         yFCG7xJ935tCqRLFK7eGLxu7pvnQ42BU38TYhs3qFRwODi7Yx4kzHg3WwqpFOioZnd4L
+         1ouZpHPbj55MJSGNM5P+97LzHsfevRw9vtcC6SG9HLhJi3LUoUzmeMZjCpinRR3sVzu8
+         c7OpdpqgrVjz66fxaWPmZQoW9FCnIxt1bJXdecXz2XRnHsuZmpApMPJYndwTrSY49OWL
+         AoVcEGt/jqwIgvtqc27RkDgowXA54mtMQNilBCRLKlUbQjV6HszttCYuupZyZJN4DQHd
+         Rrfw==
+X-Gm-Message-State: ANhLgQ0mYnv3WUmuwQnsb/T2q1ftDR6bx3nuBDo4ntFqTILhmAbeOrNv
+        owxMsNlbrx+NaFNXJsSDYf3Fmw6h7bR21/0abBDEYw==
+X-Google-Smtp-Source: ADFU+vuNcnNmh6x5IJ5M2yTWp4kLMylcBxLsMM68UQIba35vDPyCmNWmxoJ2HjjVcEPSIT6lr5mW0JrpuYGpEQbi/z0=
+X-Received: by 2002:ab0:7802:: with SMTP id x2mr3988409uaq.100.1583268644577;
+ Tue, 03 Mar 2020 12:50:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200303150749.30566-1-ulf.hansson@linaro.org>
+ <20200303150749.30566-6-ulf.hansson@linaro.org> <20200303170641.GC26191@bogus>
+In-Reply-To: <20200303170641.GC26191@bogus>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 3 Mar 2020 21:50:08 +0100
+Message-ID: <CAPDyKFrzy=88fPgesS0_S45rr4SdWthQRcjwnqJzRcMBKCo4=A@mail.gmail.com>
+Subject: Re: [PATCH 5/7] dt-bindings: arm: Fixup the DT bindings for
+ hierarchical PSCI states
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Feb 2020 13:41:50 +0100
-Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+On Tue, 3 Mar 2020 at 18:06, Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Mar 03, 2020 at 04:07:47PM +0100, Ulf Hansson wrote:
+> > The hierarchical topology with power-domain should be described through
+> > child nodes, rather than as currently described in the PSCI root node. Fix
+> > this by adding a patternProperties with a corresponding reference to the
+> > power-domain DT binding.
+> >
+> > Additionally, update the example to conform to the new pattern, but also to
+> > the adjusted domain-idle-state DT binding.
+> >
+> > Fixes: a3f048b5424e ("dt: psci: Update DT bindings to support hierarchical PSCI states")
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > ---
+> >  .../devicetree/bindings/arm/psci.yaml         | 33 +++++++++----------
+> >  1 file changed, 15 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
+> > index 0bc3c43a525a..cae668b61265 100644
+> > --- a/Documentation/devicetree/bindings/arm/psci.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/psci.yaml
+> > @@ -102,11 +102,15 @@ properties:
+> >        [1] Kernel documentation - ARM idle states bindings
+> >          Documentation/devicetree/bindings/arm/idle-states.yaml
+> >
+> > -  "#power-domain-cells":
+> > -    description:
+> > -      The number of cells in a PM domain specifier as per binding in [3].
+> > -      Must be 0 as to represent a single PM domain.
+> > +required:
+> > +  - compatible
+> > +  - method
+>
+> No need to move this.
 
-> This patch adds a `regmap_update_bits()` like API to the ADIS library.
-> It provides locked and unlocked variant.
->=20
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-Mostly fine, but I wonder if we can avoid the need to have comments
-on handling of 1 and 8 byte values by explicitly avoiding them happening.
+Okay.
 
-Thanks,
+>
+> >
+> > +patternProperties:
+> > +  "^(power-controller|power-domain)([@-].*)?$":
+> > +    $ref: "../power/power-domain.yaml#"
+>
+> This has to be under an 'allOf' or the rest of the properties are
+> ignored.
 
-Jonathan
+Sure, I had the feeling that something was missing. Thanks for reviewing!
 
-> ---
->  drivers/iio/imu/adis.c       | 26 +++++++++++++++
->  include/linux/iio/imu/adis.h | 61 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 87 insertions(+)
->=20
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index a8afd01de4f3..fa0ee35d96f0 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -223,6 +223,32 @@ int __adis_read_reg(struct adis *adis, unsigned int =
-reg,
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(__adis_read_reg);
-> +/**
-> + * __adis_update_bits_base() - ADIS Update bits function - Unlocked vers=
-ion
-> + * @adis: The adis device
-> + * @reg: The address of the lower of the two registers
-> + * @mask: Bitmask to change
-> + * @val: Value to be written
-> + * @size: Size of the register to update
-> + *
-> + * Updates the desired bits of @reg in accordance with @mask and @val.
-> + */
-> +int __adis_update_bits_base(struct adis *adis, unsigned int reg, const u=
-32 mask,
-> +			    const u32 val, u8 size)
-> +{
-> +	int ret;
-> +	u32 __val;
-> +
-> +	ret =3D __adis_read_reg(adis, reg, &__val, size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	__val &=3D ~mask;
-> +	__val |=3D val & mask;
-> +
-> +	return __adis_write_reg(adis, reg, __val, size);
-> +}
-> +EXPORT_SYMBOL_GPL(__adis_update_bits_base);
-> =20
->  #ifdef CONFIG_DEBUG_FS
-> =20
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index b4c35d137e2a..07073f698718 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -303,6 +303,67 @@ static inline int adis_read_reg_32(struct adis *adis=
-, unsigned int reg,
->  	return ret;
->  }
-> =20
-> +int __adis_update_bits_base(struct adis *adis, unsigned int reg, const u=
-32 mask,
-> +			    const u32 val, u8 size);
-> +/**
-> + * adis_update_bits_base() - ADIS Update bits function - Locked version
-> + * @adis: The adis device
-> + * @reg: The address of the lower of the two registers
-> + * @mask: Bitmask to change
-> + * @val: Value to be written
-> + * @size: Size of the register to update
-> + *
-> + * Updates the desired bits of @reg in accordance with @mask and @val.
-> + */
-> +static inline int adis_update_bits_base(struct adis *adis, unsigned int =
-reg,
-> +					const u32 mask, const u32 val, u8 size)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&adis->state_lock);
-> +	ret =3D __adis_update_bits_base(adis, reg, mask, val, size);
-> +	mutex_unlock(&adis->state_lock);
-> +	return ret;
-> +}
-> +
-> +/**
-> + * adis_update_bits() - Wrapper macro for adis_update_bits_base - Locked=
- version
-> + * @adis: The adis device
-> + * @reg: The address of the lower of the two registers
-> + * @mask: Bitmask to change
-> + * @val: Value to be written
-> + *
-> + * This macro evaluates the sizeof of @val at compile time and calls
-> + * adis_update_bits_base() accordingly. Be aware that using MACROS/DEFIN=
-ES for
-> + * @val can lead to undesired behavior if the register to update is 16bi=
-t. Also
-> + * note that a 64bit value will be treated as an integer. In the same wa=
-y,
-> + * a char is seen as a short.
+[...]
 
-Are these 'edge' conditions desirable?  If not can we use the compile
-time checking tricks to trigger a build failure if they occur?
-BUILD_BUG_ON(sizeof(val) =3D=3D 1) etc.
+Looks like I should a v2 of the series, or do you prefer to apply some
+of the patches before I resend?
 
-> + */
-> +#define adis_update_bits(adis, reg, mask, val) ({			\
-> +	__builtin_choose_expr(sizeof(val) =3D=3D 8 || sizeof(val) =3D=3D 4,	\
-> +		adis_update_bits_base(adis, reg, mask, val, 4),         \
-> +		adis_update_bits_base(adis, reg, mask, val, 2));	\
-> +})
-> +
-> +/**
-> + * adis_update_bits() - Wrapper macro for adis_update_bits_base
-> + * @adis: The adis device
-> + * @reg: The address of the lower of the two registers
-> + * @mask: Bitmask to change
-> + * @val: Value to be written
-> + *
-> + * This macro evaluates the sizeof of @val at compile time and calls
-> + * adis_update_bits_base() accordingly. Be aware that using MACROS/DEFIN=
-ES for
-> + * @val can lead to undesired behavior if the register to update is 16bi=
-t. Also
-> + * note that a 64bit value will be treated as an integer. In the same wa=
-y,
-> + * a char is seen as a short.
-> + */
-> +#define __adis_update_bits(adis, reg, mask, val) ({			\
-> +	__builtin_choose_expr(sizeof(val) =3D=3D 8 || sizeof(val) =3D=3D 4,	\
-> +		__adis_update_bits_base(adis, reg, mask, val, 4),	\
-> +		__adis_update_bits_base(adis, reg, mask, val, 2));	\
-> +})
-> +
->  int adis_enable_irq(struct adis *adis, bool enable);
->  int __adis_check_status(struct adis *adis);
->  int __adis_initial_startup(struct adis *adis);
-
+Kind regards
+Uffe
