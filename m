@@ -2,273 +2,185 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF82C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 19:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2C3C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8EA20CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 19:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A684120CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 20:16:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K402ctgr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AuVQRqcC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbgCCThj (ORCPT
+        id S1731541AbgCCUQd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:37:39 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52940 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbgCCThi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 14:37:38 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p9so4640139wmc.2;
-        Tue, 03 Mar 2020 11:37:35 -0800 (PST)
+        Tue, 3 Mar 2020 15:16:33 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40314 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731522AbgCCUQd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 15:16:33 -0500
+Received: by mail-pg1-f194.google.com with SMTP id t24so2056391pgj.7
+        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 12:16:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=23MiElBzYrRDX6GbaN3mzTmTyaDErM01gV6N0qWTyOs=;
-        b=K402ctgr533n/aShK2zPSW4yr2YmCl5EY+y91DxqTQJMtMbddxUvg6Ecbraka4RNfd
-         RlmrFzIkkJqMOVIu7HoPqb3SikFEWv/QYrblfvKVFUpL5KCkenldecc3c+UKGSVQ9BVQ
-         lRicpitiZ3brWjnPJgPU8SlCkvVLQeGYziILRRmaqOi5O7ofMmDDn1C4v69y+F266Lqo
-         Og2clmlCbcb6OpEzSq8QPA4v1iH7iCMSLuUWyxdgVnHEGPLbx6A2acevIvzgwTzH5qu2
-         nPSD4zQ1INrXgPeN8HG5IaO1kvjyOOlTu6dcjz6yhGG7rUTu5pRGziLwlM8Gh0GdYxkj
-         QeYQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CQpBh1BNcIaWkFGF7Hg6jRb7icXAaxhnvR9Kqee2mNU=;
+        b=AuVQRqcC2Blxz+vgF1Jv82r0s2gQaEJ3DRSp4jN5A9hzDHnra/BBJRf8nfGvljLxTk
+         1XOc+P35r0bI0cuDZOhUEsdbbey6F/+gUcbyH6S4nrKXn1dp94dlxpMmTx5+oorTDWLC
+         SzWd6mHnXWb2u6IErT8SuFU1UDVJo2IoXbxzI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=23MiElBzYrRDX6GbaN3mzTmTyaDErM01gV6N0qWTyOs=;
-        b=A1ta2h77/ZHkEbbdILbb+jK6l3nLaBi8xX4pzaf8fEYXkT8sEdaiEDVSFiiUTIoTK5
-         t9bTn1FBPxtwuQ2an1DHIpYLizdQpw25yU4rqJFZQEM3zJigVC6J+C+fnguyXAyWaWDC
-         qdBsyAc22wdMzu/NNUZbPk1cdIvHH5mVxAzyY3NJmZaSBrGDnzLXYHNLJAPhINDdsCWN
-         6KHawXV33NJX+JVu2oLgNntDrmYDDbWSZ3gqT/jn5Hc1tK4MXg+le7mQtAGIM+wxe/lU
-         VR8c1ZhVXZL3xn6duUjg5KRDqTXG/j8JaDAGpdjxnwr6rFwpeIAfwCWZK0q0aY94RPfF
-         RA3Q==
-X-Gm-Message-State: ANhLgQ2/QnPEfbXAgZIYSgLfZ25Lyn5gRhNqyggF7N2rfoTsu1MrsHD7
-        04DHCBP5v9bFzeiWNC7lmEc=
-X-Google-Smtp-Source: ADFU+vvzxVrmx7dyEqm0jIt9LuWxol3cQUoT/i9O8ly+llE6lY+JsSPgHEPAI81/bFuOXhZEoux6fQ==
-X-Received: by 2002:a05:600c:215:: with SMTP id 21mr101192wmi.119.1583264254408;
-        Tue, 03 Mar 2020 11:37:34 -0800 (PST)
-Received: from [192.168.1.23] (acen79.neoplus.adsl.tpnet.pl. [83.9.189.79])
-        by smtp.gmail.com with ESMTPSA id m25sm119337wml.35.2020.03.03.11.37.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CQpBh1BNcIaWkFGF7Hg6jRb7icXAaxhnvR9Kqee2mNU=;
+        b=Bpv60TuvsX3yPno4JxXyfFJChMD0p99TMYOoKYDLCYl4rMYwkSgjAPv1wftY4m6IGP
+         6eyUbDVMwQsntruJ+xd/CnJPeRWAh9wZG2IpqRqzIHzH34I3sG7v2qLnlbfQ0TUAYinp
+         TGhs/me6h76mrhIbNOJs5LYqLpB40YMeHeK42NLn48ifecVVBhmovUS675T3aDZwpHnQ
+         RJN/o1KYuecSgG+p/UVQSLQvePy5sUcw9Zk5LY2CSVLTJN8HezC5pq1YvC9WvQP4ZSTl
+         3xJVf2ModI/0I3c/9jfLoUbY98Sj1OgMbr8gDHURo72IqRoSWCwo1C6HgUdNq2Q0dznJ
+         y84g==
+X-Gm-Message-State: ANhLgQ3/sBWG08wFmQvax4uh7ZZmHMo6uAcZgqbtWMg1CMCEftYcX0Zi
+        dA23CCeQe+kfrpdnS0wpJnCWVg==
+X-Google-Smtp-Source: ADFU+vvmbkzkJuM0o8H4jqUXysXLgPO20sGie81ragjOYgB7rWyU8SuVNO1IhdYEsUGuBzU4ixEf3Q==
+X-Received: by 2002:a63:7e09:: with SMTP id z9mr5563746pgc.383.1583266591922;
+        Tue, 03 Mar 2020 12:16:31 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id u23sm25250820pfm.29.2020.03.03.12.16.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 11:37:33 -0800 (PST)
-Subject: Re: [PATCH RFC v2 3/3] drivers: leds: add support for apa102c leds
-To:     Nicolas Belin <nbelin@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io
-References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
- <1582727592-4510-4-git-send-email-nbelin@baylibre.com>
- <85f536f0-0078-08a5-5eeb-e401d1ed8782@gmail.com>
- <CAJZgTGFMks7Fm+tWpYAAjxBLgD0nk9cfBiVZcAhojaXCvqfLPA@mail.gmail.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7b2a8b79-3c91-220f-2e61-e2a7cbf4cc75@gmail.com>
-Date:   Tue, 3 Mar 2020 20:37:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 03 Mar 2020 12:16:31 -0800 (PST)
+Date:   Tue, 3 Mar 2020 12:16:29 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?utf-8?B?wqA=?= <mturquette@baylibre.com>,
+        robh@kernel.org, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v1 2/2] clk: qcom: dispcc: Remove support of
+ disp_cc_mdss_rscc_ahb_clk
+Message-ID: <20200303201629.GP24720@google.com>
+References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
+ <1581423236-21341-2-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <CAJZgTGFMks7Fm+tWpYAAjxBLgD0nk9cfBiVZcAhojaXCvqfLPA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <1581423236-21341-2-git-send-email-tdas@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nicolas,
+On Tue, Feb 11, 2020 at 05:43:56PM +0530, Taniya Das wrote:
+> The disp_cc_mdss_rscc_ahb_clk is default enabled from hardware and thus
+> does not require to be marked CRITICAL. This which would allow the RCG to
+> be turned OFF when the display turns OFF and not blocking XO.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/clk/qcom/dispcc-sc7180.c | 19 -------------------
+>  1 file changed, 19 deletions(-)
+> 
+> diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
+> index dd7af41..0a5d395 100644
+> --- a/drivers/clk/qcom/dispcc-sc7180.c
+> +++ b/drivers/clk/qcom/dispcc-sc7180.c
+> @@ -592,24 +592,6 @@ static struct clk_branch disp_cc_mdss_rot_clk = {
+>  	},
+>  };
+> 
+> -static struct clk_branch disp_cc_mdss_rscc_ahb_clk = {
+> -	.halt_reg = 0x400c,
+> -	.halt_check = BRANCH_HALT,
+> -	.clkr = {
+> -		.enable_reg = 0x400c,
+> -		.enable_mask = BIT(0),
+> -		.hw.init = &(struct clk_init_data){
+> -			.name = "disp_cc_mdss_rscc_ahb_clk",
+> -			.parent_data = &(const struct clk_parent_data){
+> -				.hw = &disp_cc_mdss_ahb_clk_src.clkr.hw,
+> -			},
+> -			.num_parents = 1,
+> -			.flags = CLK_IS_CRITICAL | CLK_SET_RATE_PARENT,
+> -			.ops = &clk_branch2_ops,
+> -		},
+> -	},
+> -};
+> -
+>  static struct clk_branch disp_cc_mdss_rscc_vsync_clk = {
+>  	.halt_reg = 0x4008,
+>  	.halt_check = BRANCH_HALT,
+> @@ -687,7 +669,6 @@ static struct clk_regmap *disp_cc_sc7180_clocks[] = {
+>  	[DISP_CC_MDSS_PCLK0_CLK_SRC] = &disp_cc_mdss_pclk0_clk_src.clkr,
+>  	[DISP_CC_MDSS_ROT_CLK] = &disp_cc_mdss_rot_clk.clkr,
+>  	[DISP_CC_MDSS_ROT_CLK_SRC] = &disp_cc_mdss_rot_clk_src.clkr,
+> -	[DISP_CC_MDSS_RSCC_AHB_CLK] = &disp_cc_mdss_rscc_ahb_clk.clkr,
+>  	[DISP_CC_MDSS_RSCC_VSYNC_CLK] = &disp_cc_mdss_rscc_vsync_clk.clkr,
+>  	[DISP_CC_MDSS_VSYNC_CLK] = &disp_cc_mdss_vsync_clk.clkr,
+>  	[DISP_CC_MDSS_VSYNC_CLK_SRC] = &disp_cc_mdss_vsync_clk_src.clkr,
 
-On 3/3/20 11:30 AM, Nicolas Belin wrote:
-> Hi Jacek,
-> 
-> That's a shame that it is not going to be upstreamed soon as it making
-> my led driver much nicer :)
+We found that this change leads to a panic at boot time on SC7180 devices
+without display configuration (e.g. the SC7180 IDP with the current DT):
 
-Now when we clarified interface related issues I hope it will
-be rather weeks than months when it is ready.
-
-> So what's the plan with the multicolor framework?
-> I am happy to send a new version to fix your remark and then adapt my
-> driver to the future changes in the Framework.
-
-Just rework the driver to create one LED class device per LED color.
-After LED mc framework is upstream you will be free to add the
-support for it to your driver.
-
-Best regards,
-Jacek Anaszewski
-
-> Let me know what you think.
-> 
-> Thanks,
-> 
-> Regards,
-> 
-> Nicolas
-> 
-> Le mer. 26 févr. 2020 à 21:14, Jacek Anaszewski
-> <jacek.anaszewski@gmail.com> a écrit :
->>
->> Hi Nicolas,
->>
->> Regardless of the fact that LED mc framework in current shape
->> will probably not materialize in mainline, I have single
->> remark regarding LED initialization. Please take a look below.
->>
->> On 2/26/20 3:33 PM, Nicolas Belin wrote:
->>> Initilial commit in order to support the apa102c RGB leds. This
->>> is based on the Multicolor Framework.
->>>
->>> Reviewed-by: Corentin Labbe <clabbe@baylibre.com>
->>> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
->>> ---
->>>  drivers/leds/Kconfig        |   7 ++
->>>  drivers/leds/Makefile       |   1 +
->>>  drivers/leds/leds-apa102c.c | 291 ++++++++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 299 insertions(+)
->>>  create mode 100644 drivers/leds/leds-apa102c.c
->>>
->>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->>> index 5dc6535a88ef..71e29727c6ec 100644
->>> --- a/drivers/leds/Kconfig
->>> +++ b/drivers/leds/Kconfig
->>> @@ -79,6 +79,13 @@ config LEDS_AN30259A
->>>         To compile this driver as a module, choose M here: the module
->>>         will be called leds-an30259a.
->>>
->>> +config LEDS_APA102C
->>> +     tristate "LED Support for Shiji APA102C"
->>> +     depends on SPI
->>> +     depends on LEDS_CLASS_MULTI_COLOR
->>> +     help
->>> +       This option enables support for APA102C LEDs.
->>> +
->>>  config LEDS_APU
->>>       tristate "Front panel LED support for PC Engines APU/APU2/APU3 boards"
->>>       depends on LEDS_CLASS
->>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
->>> index b5305b7d43fb..8334cb6dc7e8 100644
->> [...]
->>> +
->>> +             led->priv                       = priv;
->>> +             led->ldev.max_brightness        = MAX_BRIGHTNESS;
->>> +             fwnode_property_read_string(child, "linux,default-trigger",
->>> +                                         &led->ldev.default_trigger);
->>> +
->>> +             init_data.fwnode = child;
->>> +             init_data.devicename = APA_DEV_NAME;
->>> +             init_data.default_label = ":";
->>
->> devicename property should be filled in new drivers only in case
->> devname_mandatory is set to true.
->> default_label property is for legacy drivers, for backward compatibility
->> with old LED naming convention.
->>
->> For more information please refer to:
->> - Documentation/leds/leds-class.rst, "LED Device Naming" section
->> - struct led_init_data documention in linux/leds.h
->>
->> In effect you need only fwnode here,
->>
->>> +
->>> +             num_colors = 0;
->>> +             fwnode_for_each_child_node(child, grandchild) {
->>> +                     ret = fwnode_property_read_u32(grandchild, "color",
->>> +                                                    &color_id);
->>> +                     if (ret) {
->>> +                             dev_err(priv->dev, "Cannot read color\n");
->>> +                             goto child_out;
->>> +                     }
->>> +
->>> +                     set_bit(color_id, &led->mc_cdev.available_colors);
->>> +                     num_colors++;
->>> +             }
->>> +
->>> +             if (num_colors != 3) {
->>> +                     ret = -EINVAL;
->>> +                     dev_err(priv->dev, "There should be 3 colors\n");
->>> +                     goto child_out;
->>> +             }
->>> +
->>> +             if (led->mc_cdev.available_colors != IS_RGB) {
->>> +                     ret = -EINVAL;
->>> +                     dev_err(priv->dev, "The led is expected to be RGB\n");
->>> +                     goto child_out;
->>> +             }
->>> +
->>> +             led->mc_cdev.num_leds = num_colors;
->>> +             led->mc_cdev.led_cdev = &led->ldev;
->>> +             led->ldev.brightness_set_blocking = apa102c_brightness_set;
->>> +             ret = devm_led_classdev_multicolor_register_ext(priv->dev,
->>
->> --
->> Best regards,
->> Jacek Anaszewski
-> 
-> 
-> 
-
+[    2.412820] SError Interrupt on CPU6, code 0xbe000411 -- SError
+[    2.412822] CPU: 6 PID: 1 Comm: swapper/0 Tainted: G S                5.4.22 #103
+[    2.412822] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+[    2.412823] pstate: 20c00089 (nzCv daIf +PAN +UAO)
+[    2.412823] pc : regmap_mmio_read32le+0x28/0x40
+[    2.412823] lr : regmap_mmio_read+0x44/0x6c
+[    2.412824] sp : ffffffc01005ba90
+[    2.412824] x29: ffffffc01005ba90 x28: 0000000000000000
+[    2.412825] x27: 0000000000000000 x26: 0000000000000000
+[    2.412826] x25: 0000000000000000 x24: ffffffd1f4aed018
+[    2.412827] x23: ffffffd1f4c12148 x22: ffffff8177a6c800
+[    2.412827] x21: 0000000000002048 x20: ffffff8177489e00
+[    2.412828] x19: 0000000000002048 x18: 000000004a746f4b
+[    2.412829] x17: 00000000d0e09034 x16: 000000005079b450
+[    2.412830] x15: 000000003e3bf7ed x14: 0000000000007fff
+[    2.412830] x13: ffffff8177309b40 x12: 0000000000000000
+[    2.412831] x11: 0000000000000000 x10: 0000000000000000
+[    2.412831] x9 : 0000000000000001 x8 : ffffffc011c02048
+[    2.412832] x7 : aaaaaaaaaaaaaaaa x6 : 0000000000000000
+[    2.412833] x5 : 0000000000000000 x4 : 0000000000000000
+[    2.412834] x3 : 0000000000000000 x2 : ffffffc01005bb84
+[    2.412834] x1 : 0000000000002048 x0 : 0000000080000000
+[    2.412835] Kernel panic - not syncing: Asynchronous SError Interrupt
+[    2.412836] CPU: 6 PID: 1 Comm: swapper/0 Tainted: G S                5.4.22 #103
+[    2.412836] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+[    2.412836] Call trace:
+[    2.412837]  dump_backtrace+0x0/0x150
+[    2.412837]  show_stack+0x20/0x2c
+[    2.412837]  dump_stack+0xa0/0xd8
+[    2.412838]  panic+0x158/0x360
+[    2.412838]  panic+0x0/0x360
+[    2.412838]  arm64_serror_panic+0x78/0x84
+[    2.412839]  do_serror+0x110/0x118
+[    2.412839]  el1_error+0x84/0xf8
+[    2.412839]  regmap_mmio_read32le+0x28/0x40
+[    2.412840]  regmap_mmio_read+0x44/0x6c
+[    2.412840]  _regmap_bus_reg_read+0x34/0x44
+[    2.412841]  _regmap_read+0x88/0x164
+[    2.412841]  regmap_read+0x54/0x78
+[    2.412841]  clk_is_enabled_regmap+0x3c/0x8c
+[    2.412842]  clk_core_is_enabled+0x68/0xac
+[    2.412842]  clk_disable_unused_subtree+0x90/0x22c
+[    2.412843]  clk_disable_unused_subtree+0x34/0x22c
+[    2.412843]  clk_disable_unused+0x74/0x108
+[    2.412843]  do_one_initcall+0x13c/0x2c8
+[    2.412844]  do_initcall_level+0x144/0x16c
+[    2.412844]  do_basic_setup+0x30/0x48
+[    2.412844]  kernel_init_freeable+0xc4/0x140
+[    2.412845]  kernel_init+0x14/0x100
+[    2.412845]  ret_from_fork+0x10/0x18
+[    2.412858] SMP: stopping secondary CPUs
+[    2.412859] Kernel Offset: 0x11e3a00000 from 0xffffffc010000000
+[    2.412859] PHYS_OFFSET: 0xffffffe780000000
+[    2.412860] CPU features: 0x0006,2a80aa18
+[    2.412860] Memory Limit: none
