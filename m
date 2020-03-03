@@ -2,128 +2,121 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD60C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6E8C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901BE20842
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583261262;
-	bh=lSa7np7Lnx2hwojjbDQUicjfMs6ZAecuviJeb+Mjxno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uTcgzhkzqIhzCtTTqsEsdeKjexOBRzKlHrrBnkdl9H8lepTkAv3YrD/0ndnhOeHx2
-	 GghPRohb786CnOAgl+ApUbxP3a/Tjz73dNmcE2vBemIg3Urn/vlDXOj43ovSnIw6NG
-	 l9+mzrDRd6Xc1wRiwUbMe9fuPYIT2LzoNOHRSVf0=
+	by mail.kernel.org (Postfix) with ESMTP id 84BC220848
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 18:48:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kio74RpW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgCCSrm (ORCPT
+        id S1730052AbgCCSs3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:47:42 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39430 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgCCSrl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 13:47:41 -0500
-Received: by mail-ot1-f65.google.com with SMTP id x97so4082438ota.6;
-        Tue, 03 Mar 2020 10:47:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V16aal7zag3kMsr09Mn6Pwm+yaS63ymnYzw5shFWl8o=;
-        b=hPPd8kp79gKGNtyGE61o3kO8/xGa4wfSN3K9mSGqWCAuX5YjJl9JxKZfNSNkQyukGY
-         xmoawkOIa7R97kUou2yF+hYqHRU++xU90KvpDYN/dxDT+MbOX/vsd0VJOvwSQYjUkwI2
-         tx8y0lc1kRM/D/GIBr8ee/0I6XcnnlldgpUEZisVaPo3cFDeTB2/bdVowCP56XtZUlHT
-         y7jHymiZFOK1/DDA0ocsUTQoEgzm9gcadgyVZ59bx363QHN6luHtiKoPffFuzk+ZMruA
-         iJWySNHhe/SkbvfwAQZJKNGOWDK0hX5FiIbjtZ5b7VmNnqY1lL2W/QuB/UNqZlww+fGr
-         87CQ==
-X-Gm-Message-State: ANhLgQ1tXVTvr/fMzxrTM9KbRV4BLFvw+oKAuhSO688q+kSWOl83ID3Y
-        s8LH3NfOTG2F9l1auIoeyQ==
-X-Google-Smtp-Source: ADFU+vtZ2kBjLYMbCupGtxnCYEydzNp//c2n2ytmjC5DrFRFmsm+XNsR1sLMnsSr9bp4FbQOOdzObw==
-X-Received: by 2002:a9d:5e82:: with SMTP id f2mr4317186otl.240.1583261259115;
-        Tue, 03 Mar 2020 10:47:39 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s2sm766013otp.35.2020.03.03.10.47.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 10:47:38 -0800 (PST)
-Received: (nullmailer pid 20625 invoked by uid 1000);
-        Tue, 03 Mar 2020 18:47:37 -0000
-Date:   Tue, 3 Mar 2020 12:47:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Yuan Yao <yao.yuan@nxp.com>
-Subject: Re: [PATCH v3 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for
- DMA
-Message-ID: <20200303184737.GD26191@bogus>
-References: <20200303174306.6015-1-michael@walle.cc>
- <20200303174306.6015-4-michael@walle.cc>
+        Tue, 3 Mar 2020 13:48:29 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:52976 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729203AbgCCSs2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 13:48:28 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9C28F2AF;
+        Tue,  3 Mar 2020 19:48:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1583261306;
+        bh=xjKfkm7MxwxqOq3hL/YppNzZPfz7ORMU2D6/8zU5i0c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kio74RpWJCIG2E3/srA2XV969ivzkOnx8qTgtvnpNEgFX0ue4/9dKtz0NtevE7t0e
+         V2sUj56NQWIv2cri1AxUBek2MaoGLvuwzj9xpMHSXv/WQLn6XzHpK/kVRjBwZB4uhK
+         WzAC3wL3usPjAIub2XrxFJXerni1TDZjctYwnUwE=
+Date:   Tue, 3 Mar 2020 20:48:05 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v3 0/5] dt-bindings: convert timing + panel-dpi to DT
+ schema
+Message-ID: <20200303184805.GI11333@pendragon.ideasonboard.com>
+References: <20200216181513.28109-1-sam@ravnborg.org>
+ <20200229181320.GA14589@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200303174306.6015-4-michael@walle.cc>
+In-Reply-To: <20200229181320.GA14589@ravnborg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:43:00PM +0100, Michael Walle wrote:
-> The DMA channel might not be available at probe time. This is esp. the
-> case if the DMA controller has an IOMMU mapping.
+Hi Sam,
 
-The subject should be updated as this doesn't involve deferred probe any 
-more. 
-
-> There is also another caveat. If there is no DMA controller at all,
-> dma_request_chan() will also return -EPROBE_DEFER. Thus we cannot test
-> for -EPROBE_DEFER in probe(). Otherwise the lpuart driver will fail to
-> probe if, for example, the DMA driver is not enabled in the kernel
-> configuration.
+On Sat, Feb 29, 2020 at 07:13:20PM +0100, Sam Ravnborg wrote:
+> On Sun, Feb 16, 2020 at 07:15:08PM +0100, Sam Ravnborg wrote:
+> > This set of patches convert display-timing.txt to DT schema.
+> > To do that add a panel-timing.yaml file that include all the
+> > panel-timing properties and use this in panel-common and in display-timings.
+> > 
+> > panel-dpi was also converted so we have no .txt users left of panel-timing
+> > in panel/
+> > 
+> > Everything passed dt_binding_check - and the trivial errors I tried in
+> > the examples was all catched during validation.
+> > 
+> > This work was triggered by a patch-set from Oleksandr Suvorov aiming
+> > at updating panel-lvds to support panel-dpi.
+> > This will make it simple to add additional properties to panel-dpi.
+> > 
+> > Thanks for the quick responses on v2 and likewise the quick
+> > feedback on the request for the license change!
+> > 
+> > Highlight from v3 - se individual patches for details.
+> > - Added panel-dpi support to panel-simple.
+> >   We can now add a simple panel just by addding timing parameters
+> >   in a DT node
+> >   The patch [5/5] is RFC as test is pending
+> > - To support panel-dpi in panel-simple - add a data-mapping
+> >   property to panel-dpi
+> > 
+> > Highlights from v2 - see individual patches for details.
+> > - Got acks for the license change
+> > - Simplfied panel-timings bindings
+> > - panel-dpi can now be used without a panel specific compatible
+> >   So panel-dpi can be used as a generic binding for dumb panels
+> > 
+> > Feedback welcome!
+> > 
+> > 	Sam
+> > 
+> > Sam Ravnborg (5):
+> >       dt-bindings: display: add panel-timing.yaml
+> >       dt-bindings: display: convert display-timings to DT schema
+> >       dt-bindings: display: convert panel-dpi to DT schema
+> >       dt-bindings: display: add data-mapping to panel-dpi
+> >       drm/panel: simple: add panel-dpi support
 > 
-> To workaround this, we request the DMA channel in _startup(). Other
-> serial drivers do it the same way.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/tty/serial/fsl_lpuart.c | 84 +++++++++++++++++++++------------
->  1 file changed, 53 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-> index c31b8f3db6bf..0b8c477b32a3 100644
-> --- a/drivers/tty/serial/fsl_lpuart.c
-> +++ b/drivers/tty/serial/fsl_lpuart.c
-> @@ -1493,36 +1493,63 @@ static void rx_dma_timer_init(struct lpuart_port *sport)
->  static void lpuart_tx_dma_startup(struct lpuart_port *sport)
->  {
->  	u32 uartbaud;
-> +	int ret;
->  
-> -	if (sport->dma_tx_chan && !lpuart_dma_tx_request(&sport->port)) {
-> -		init_waitqueue_head(&sport->dma_wait);
-> -		sport->lpuart_dma_tx_use = true;
-> -		if (lpuart_is_32(sport)) {
-> -			uartbaud = lpuart32_read(&sport->port, UARTBAUD);
-> -			lpuart32_write(&sport->port,
-> -				       uartbaud | UARTBAUD_TDMAE, UARTBAUD);
-> -		} else {
-> -			writeb(readb(sport->port.membase + UARTCR5) |
-> -				UARTCR5_TDMAS, sport->port.membase + UARTCR5);
-> -		}
-> +	sport->dma_tx_chan = dma_request_slave_channel(sport->port.dev, "tx");
-> +	if (!sport->dma_tx_chan) {
-> +		dev_info_once(sport->port.dev,
-> +			      "DMA tx channel request failed, operating without tx DMA\n");
+> All patches now pushed to drm-misc-next.
+> Dropped lvds666 when applying the patches.
 
-Might be useful to print the errno too.
+My feedback is a bit late. Would you like to still take it into
+consideration yourself, or would you like me to submit patches ?
 
-Rob
+> > 
+> >  .../bindings/display/panel/display-timing.txt      | 124 +----------
+> >  .../bindings/display/panel/display-timings.yaml    |  77 +++++++
+> >  .../bindings/display/panel/panel-common.yaml       |  15 +-
+> >  .../bindings/display/panel/panel-dpi.txt           |  50 -----
+> >  .../bindings/display/panel/panel-dpi.yaml          |  82 ++++++++
+> >  .../bindings/display/panel/panel-timing.yaml       | 227 +++++++++++++++++++++
+> >  drivers/gpu/drm/panel/panel-simple.c               |  74 ++++++-
+> >  7 files changed, 470 insertions(+), 179 deletions(-)
+
+-- 
+Regards,
+
+Laurent Pinchart
