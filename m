@@ -2,157 +2,544 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB24C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0DBC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B042083E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57CCA2083E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 14:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MW2mTsXD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tq4sEZTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbgCCOud (ORCPT
+        id S1729221AbgCCO4C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:50:33 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39459 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbgCCOud (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 09:50:33 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j1so1691693wmi.4
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 06:50:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:autocrypt:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=95qYeRJ+EqgeIXpFElFGwO6Mzf1AwrTksppp0Wb/3Ic=;
-        b=MW2mTsXDxJgpJP9zD2yidQQr6W3aDEvzV9+bW76HRAKRq3iHYe/RK8T5ISunb5pcJZ
-         M4UT1WWHuL1g59APzkkcurRfuOo5XfaRQMFwQ3u41HnYv4UPS/fwtp0urYGZgMQwgFUM
-         AzTG9JO2zbHiXfwSSDbjvUAqExvzu5X3iO/Q2TFu56qiIx7qL48IGiqW20lgvpnirSYF
-         PA3+IxmsfPlyK7tPbQqbZdXDChhz/Aqy/Ld+wgfObzXj4WejwBT4h/utPlJOpuf6ZRRp
-         AvWLdTtctOPFoaUVXfwTdzSiuzK1eNJhfmRfNfcA6kJj9TxRQpfZBjmflLquSejPOw9m
-         Vg0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=95qYeRJ+EqgeIXpFElFGwO6Mzf1AwrTksppp0Wb/3Ic=;
-        b=r2EQn8efxGXaRRxZ0ibZwsjwPsikDys9OsBq/JSJHkV8cH5rTvMh9D/a6ht+XR6lRN
-         mmv4SUC+hXHHTf35P6QfCH13VwvQABcwHmWX8rFEl7xdpE3HUQM8UvtbEoDaDGfugCUz
-         XL+tpafCyRGkTy2HA5r8uEie7k8q1GuNAa4U6JOZwqB5isfuUErsnxwzkZyVZw+r1XU0
-         GB6XpPlMJf32q68Ych+fWshNOY+nvOCRYA22x32PPpxjg4lKEfSDk/GOmw8kozeugdB4
-         OknncXBpAdlxuWCGob+VJJ50yxfsjb8tY3kdvl8e1ome0G6ARg8SymOjo3RdsLmPdzom
-         UySw==
-X-Gm-Message-State: ANhLgQ0+piF8Me4qYT2Rg/ujCsBJUiZhr8pFeUVVNBvmYMjwB5CDeR+R
-        /3gv30D29Ollr2kNdjwRBHN+Kg==
-X-Google-Smtp-Source: ADFU+vv1VI7ZYNZH0PZA6DiT24j1TFj+59KahgZVzwD2Y8KEHkyGKOD5nMG6V+xPjWJaJ0hILFx7RQ==
-X-Received: by 2002:a7b:c18f:: with SMTP id y15mr4958689wmi.168.1583247030313;
-        Tue, 03 Mar 2020 06:50:30 -0800 (PST)
-Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id i12sm19708508wrw.64.2020.03.03.06.50.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 06:50:29 -0800 (PST)
-Subject: Re: [PATCH 1/2] dt-bindings: arm: amlogic: add support for the
- Beelink GT-King
-To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Tue, 3 Mar 2020 09:56:02 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:34252 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727369AbgCCO4B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 09:56:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583247359; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AAy3IlmrAFK3a4+aHxpmQgIRzKexr2F5y/1Lp8D2ueY=;
+        b=tq4sEZTR3RFAdnpBmCvnwzCqpbOuft58rLDOSI8pTIVRjOpQTX7yaAu57rHLBshX6u81Vk
+        CC244tv8KOI8w2WFpUdPrJ4R5+PldarVItVDvzUTTRAHVqN1/rcd7GDVOiMyuCmYOg85Ob
+        61bUBN0/sWwjTon26z5RJqeFYkC+kEk=
+Date:   Tue, 03 Mar 2020 11:55:43 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1582985353-83371-1-git-send-email-christianshewitt@gmail.com>
- <1582985353-83371-2-git-send-email-christianshewitt@gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <e5f7ca01-af85-bb39-b12f-93469da54b83@baylibre.com>
-Date:   Tue, 3 Mar 2020 15:50:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        od@zcrc.me, =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
+Message-Id: <1583247343.3.1@crapouillou.net>
+In-Reply-To: <20200302200551.19845-1-paul@crapouillou.net>
+References: <20200302200551.19845-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <1582985353-83371-2-git-send-email-christianshewitt@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/02/2020 15:09, Christian Hewitt wrote:
-> The Shenzen AZW (Beelink) GT-King is based on the Amlogic W400 reference
-> board with an S922X chip.
-> 
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-> index f74aba4..6bf9bbc 100644
-> --- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-> +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-> @@ -148,6 +148,7 @@ properties:
->        - description: Boards with the Amlogic Meson G12B S922X SoC
->          items:
->            - enum:
-> +              - azw,gtking
->                - hardkernel,odroid-n2
->                - khadas,vim3
->                - ugoos,am6
-> 
+@Rob:
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Le lun., mars 2, 2020 at 17:05, Paul Cercueil <paul@crapouillou.net> a=20
+=E9crit :
+> Convert the ingenic,tcu.txt file to YAML.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>=20
+> @Daniel:
+>=20
+> As for v1, if Rob acks it, please take this patch to your tree, since
+> the .txt file was modified there. Going through your tree would avoid=20
+> a
+> merge conflict.
+>=20
+> Thanks,
+> -Paul
+>=20
+> Changelog:
+>     v2:	- Add missing 'reg' properties to child nodes
+>     	- Removed 'additionalProperties: false' on child objects which
+>     	  included external YAML
+>     	- Add description of interrupts
+>     	- Fix pattern regex
+>     	- Add missing ingenic,jz4780-tcu compatible string (which=20
+> requires
+>     	  fallback to ingenic,jz4770-tcu)
+>     	- Add 'select' to fix matching of schema
+>=20
+>  .../devicetree/bindings/timer/ingenic,tcu.txt | 138 ---------
+>  .../bindings/timer/ingenic,tcu.yaml           | 269=20
+> ++++++++++++++++++
+>  2 files changed, 269 insertions(+), 138 deletions(-)
+>  delete mode 100644=20
+> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>  create mode 100644=20
+> Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt=20
+> b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> deleted file mode 100644
+> index 91f704951845..000000000000
+> --- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> +++ /dev/null
+> @@ -1,138 +0,0 @@
+> -Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> -
+> -For a description of the TCU hardware and drivers, have a look at
+> -Documentation/mips/ingenic-tcu.rst.
+> -
+> -Required properties:
+> -
+> -- compatible: Must be one of:
+> -  * ingenic,jz4740-tcu
+> -  * ingenic,jz4725b-tcu
+> -  * ingenic,jz4770-tcu
+> -  * ingenic,x1000-tcu
+> -  followed by "simple-mfd".
+> -- reg: Should be the offset/length value corresponding to the TCU=20
+> registers
+> -- clocks: List of phandle & clock specifiers for clocks external to=20
+> the TCU.
+> -  The "pclk", "rtc" and "ext" clocks should be provided. The "tcu"=20
+> clock
+> -  should be provided if the SoC has it.
+> -- clock-names: List of name strings for the external clocks.
+> -- #clock-cells: Should be <1>;
+> -  Clock consumers specify this argument to identify a clock. The=20
+> valid values
+> -  may be found in <dt-bindings/clock/ingenic,tcu.h>.
+> -- interrupt-controller : Identifies the node as an interrupt=20
+> controller
+> -- #interrupt-cells : Specifies the number of cells needed to encode=20
+> an
+> -  interrupt source. The value should be 1.
+> -- interrupts : Specifies the interrupt the controller is connected=20
+> to.
+> -
+> -Optional properties:
+> -
+> -- ingenic,pwm-channels-mask: Bitmask of TCU channels reserved for=20
+> PWM use.
+> -  Default value is 0xfc.
+> -
+> -
+> -Children nodes
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> -
+> -
+> -PWM node:
+> ----------
+> -
+> -Required properties:
+> -
+> -- compatible: Must be one of:
+> -  * ingenic,jz4740-pwm
+> -  * ingenic,jz4725b-pwm
+> -- #pwm-cells: Should be 3. See ../pwm/pwm.yaml for a description of=20
+> the cell
+> -  format.
+> -- clocks: List of phandle & clock specifiers for the TCU clocks.
+> -- clock-names: List of name strings for the TCU clocks.
+> -
+> -
+> -Watchdog node:
+> ---------------
+> -
+> -Required properties:
+> -
+> -- compatible: Must be "ingenic,jz4740-watchdog"
+> -- clocks: phandle to the WDT clock
+> -- clock-names: should be "wdt"
+> -
+> -
+> -OS Timer node:
+> ----------
+> -
+> -Required properties:
+> -
+> -- compatible: Must be one of:
+> -  * ingenic,jz4725b-ost
+> -  * ingenic,jz4770-ost
+> -- clocks: phandle to the OST clock
+> -- clock-names: should be "ost"
+> -- interrupts : Specifies the interrupt the OST is connected to.
+> -
+> -
+> -Example
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> -
+> -#include <dt-bindings/clock/jz4770-cgu.h>
+> -#include <dt-bindings/clock/ingenic,tcu.h>
+> -
+> -/ {
+> -	tcu: timer@10002000 {
+> -		compatible =3D "ingenic,jz4770-tcu", "simple-mfd";
+> -		reg =3D <0x10002000 0x1000>;
+> -		#address-cells =3D <1>;
+> -		#size-cells =3D <1>;
+> -		ranges =3D <0x0 0x10002000 0x1000>;
+> -
+> -		#clock-cells =3D <1>;
+> -
+> -		clocks =3D <&cgu JZ4770_CLK_RTC
+> -			  &cgu JZ4770_CLK_EXT
+> -			  &cgu JZ4770_CLK_PCLK>;
+> -		clock-names =3D "rtc", "ext", "pclk";
+> -
+> -		interrupt-controller;
+> -		#interrupt-cells =3D <1>;
+> -
+> -		interrupt-parent =3D <&intc>;
+> -		interrupts =3D <27 26 25>;
+> -
+> -		watchdog: watchdog@0 {
+> -			compatible =3D "ingenic,jz4740-watchdog";
+> -			reg =3D <0x0 0xc>;
+> -
+> -			clocks =3D <&tcu TCU_CLK_WDT>;
+> -			clock-names =3D "wdt";
+> -		};
+> -
+> -		pwm: pwm@40 {
+> -			compatible =3D "ingenic,jz4740-pwm";
+> -			reg =3D <0x40 0x80>;
+> -
+> -			#pwm-cells =3D <3>;
+> -
+> -			clocks =3D <&tcu TCU_CLK_TIMER0
+> -				  &tcu TCU_CLK_TIMER1
+> -				  &tcu TCU_CLK_TIMER2
+> -				  &tcu TCU_CLK_TIMER3
+> -				  &tcu TCU_CLK_TIMER4
+> -				  &tcu TCU_CLK_TIMER5
+> -				  &tcu TCU_CLK_TIMER6
+> -				  &tcu TCU_CLK_TIMER7>;
+> -			clock-names =3D "timer0", "timer1", "timer2", "timer3",
+> -				      "timer4", "timer5", "timer6", "timer7";
+> -		};
+> -
+> -		ost: timer@e0 {
+> -			compatible =3D "ingenic,jz4770-ost";
+> -			reg =3D <0xe0 0x20>;
+> -
+> -			clocks =3D <&tcu TCU_CLK_OST>;
+> -			clock-names =3D "ost";
+> -
+> -			interrupts =3D <15>;
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml=20
+> b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> new file mode 100644
+> index 000000000000..14b68c87319f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> @@ -0,0 +1,269 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/ingenic,tcu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Ingenic SoCs Timer/Counter Unit (TCU) devicetree bindings
+> +
+> +description: |
+> +  For a description of the TCU hardware and drivers, have a look at
+> +  Documentation/mips/ingenic-tcu.rst.
+> +
+> +maintainers:
+> +  - Paul Cercueil <paul@crapouillou.net>
+> +
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - ingenic,jz4740-tcu
+> +          - ingenic,jz4725b-tcu
+> +          - ingenic,jz4770-tcu
+> +          - ingenic,jz4780-tcu
+> +          - ingenic,x1000-tcu
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^timer@[0-9a-f]+$"
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  ranges: true
+> +
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +        - enum:
+> +          - ingenic,jz4740-tcu
+> +          - ingenic,jz4725b-tcu
+> +          - ingenic,jz4770-tcu
+> +          - ingenic,x1000-tcu
+> +        - const: simple-mfd
+> +      - items:
+> +        - const: ingenic,jz4780-tcu
+> +        - const: ingenic,jz4770-tcu
+> +        - const: simple-mfd
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: RTC clock
+> +      - description: EXT clock
+> +      - description: PCLK clock
+> +      - description: TCU clock
+> +    minItems: 3
+> +
+> +  clock-names:
+> +    items:
+> +      - const: rtc
+> +      - const: ext
+> +      - const: pclk
+> +      - const: tcu
+> +    minItems: 3
+> +
+> +  interrupts:
+> +    items:
+> +      - description: TCU0 interrupt
+> +      - description: TCU1 interrupt
+> +      - description: TCU2 interrupt
+> +    minItems: 1
+> +
+> +  ingenic,pwm-channels-mask:
+> +    description: Bitmask of TCU channels reserved for PWM use.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0x00
+> +      - maximum: 0xff
+> +      - default: 0xfc
+> +
+> +patternProperties:
+> +  "^watchdog@[a-f0-9]+$":
+> +    type: object
+> +    allOf: [ $ref: ../watchdog/watchdog.yaml# ]
+> +    properties:
+> +      compatible:
+> +        oneOf:
+> +          - enum:
+> +            - ingenic,jz4740-watchdog
+> +            - ingenic,jz4780-watchdog
+> +          - items:
+> +            - const: ingenic,jz4770-watchdog
+> +            - const: ingenic,jz4740-watchdog
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      clocks:
+> +        maxItems: 1
+> +
+> +      clock-names:
+> +        const: wdt
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +      - clocks
+> +      - clock-names
+> +
+> +  "^pwm@[a-f0-9]+$":
+> +    type: object
+> +    allOf: [ $ref: ../pwm/pwm.yaml# ]
+> +    properties:
+> +      compatible:
+> +        oneOf:
+> +          - enum:
+> +            - ingenic,jz4740-pwm
+> +          - items:
+> +            - enum:
+> +              - ingenic,jz4770-pwm
+> +              - ingenic,jz4780-pwm
+> +            - const: ingenic,jz4740-pwm
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      clocks:
+> +        minItems: 6
+> +        maxItems: 8
+> +
+> +      clock-names:
+> +        items:
+> +          - const: timer0
+> +          - const: timer1
+> +          - const: timer2
+> +          - const: timer3
+> +          - const: timer4
+> +          - const: timer5
+> +          - const: timer6
+> +          - const: timer7
+> +        minItems: 6
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +      - clocks
+> +      - clock-names
+> +
+> +  "^timer@[a-f0-9]+$":
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        oneOf:
+> +          - enum:
+> +            - ingenic,jz4725b-ost
+> +            - ingenic,jz4770-ost
+> +          - items:
+> +            - const: ingenic,jz4780-ost
+> +            - const: ingenic,jz4770-ost
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      clocks:
+> +        maxItems: 1
+> +
+> +      clock-names:
+> +        const: ost
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +      - clocks
+> +      - clock-names
+> +      - interrupts
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - "#clock-cells"
+> +  - "#interrupt-cells"
+> +  - interrupt-controller
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +additionalProperties: false
+
+Actually this prevents the 'assigned-clock' properties from being=20
+added. I was expecting these to be always accepted, akin to the=20
+'pinctrl-*' properties.
+
+Should I add entries for these here?
+
+-Paul
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4770-cgu.h>
+> +    #include <dt-bindings/clock/ingenic,tcu.h>
+> +    tcu: timer@10002000 {
+> +      compatible =3D "ingenic,jz4770-tcu", "simple-mfd";
+> +      reg =3D <0x10002000 0x1000>;
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <1>;
+> +      ranges =3D <0x0 0x10002000 0x1000>;
+> +
+> +      #clock-cells =3D <1>;
+> +
+> +      clocks =3D <&cgu JZ4770_CLK_RTC>,
+> +               <&cgu JZ4770_CLK_EXT>,
+> +               <&cgu JZ4770_CLK_PCLK>;
+> +      clock-names =3D "rtc", "ext", "pclk";
+> +
+> +      interrupt-controller;
+> +      #interrupt-cells =3D <1>;
+> +
+> +      interrupt-parent =3D <&intc>;
+> +      interrupts =3D <27 26 25>;
+> +
+> +      watchdog: watchdog@0 {
+> +        compatible =3D "ingenic,jz4770-watchdog",=20
+> "ingenic,jz4740-watchdog";
+> +        reg =3D <0x0 0xc>;
+> +
+> +        clocks =3D <&tcu TCU_CLK_WDT>;
+> +        clock-names =3D "wdt";
+> +      };
+> +
+> +      pwm: pwm@40 {
+> +        compatible =3D "ingenic,jz4770-pwm", "ingenic,jz4740-pwm";
+> +        reg =3D <0x40 0x80>;
+> +
+> +        #pwm-cells =3D <3>;
+> +
+> +        clocks =3D <&tcu TCU_CLK_TIMER0>,
+> +                 <&tcu TCU_CLK_TIMER1>,
+> +                 <&tcu TCU_CLK_TIMER2>,
+> +                 <&tcu TCU_CLK_TIMER3>,
+> +                 <&tcu TCU_CLK_TIMER4>,
+> +                 <&tcu TCU_CLK_TIMER5>,
+> +                 <&tcu TCU_CLK_TIMER6>,
+> +                 <&tcu TCU_CLK_TIMER7>;
+> +        clock-names =3D "timer0", "timer1", "timer2", "timer3",
+> +                "timer4", "timer5", "timer6", "timer7";
+> +      };
+> +
+> +      ost: timer@e0 {
+> +        compatible =3D "ingenic,jz4770-ost";
+> +        reg =3D <0xe0 0x20>;
+> +
+> +        clocks =3D <&tcu TCU_CLK_OST>;
+> +        clock-names =3D "ost";
+> +
+> +        interrupts =3D <15>;
+> +      };
+> +    };
+> --
+> 2.25.1
+>=20
+
+=
+
