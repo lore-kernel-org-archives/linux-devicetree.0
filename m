@@ -2,107 +2,108 @@ Return-Path: <SRS0=BDx3=4U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C63EC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 10:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D7AC3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 10:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFECB2187F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 10:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE42821556
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Mar 2020 10:17:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EEdL3hEq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgCCKJi (ORCPT
+        id S1728372AbgCCKR3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:09:38 -0500
-Received: from mga05.intel.com ([192.55.52.43]:21993 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727820AbgCCKJi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:09:38 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 02:09:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
-   d="scan'208";a="351792132"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Mar 2020 02:09:34 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1j94Ua-006WAi-JV; Tue, 03 Mar 2020 12:09:36 +0200
-Date:   Tue, 3 Mar 2020 12:09:36 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, mturquette@baylibre.com,
-        sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        rtanwar <rahul.tanwar@intel.com>
-Subject: Re: [PATCH v5 2/2] clk: intel: Add CGU clock driver for a new SoC
-Message-ID: <20200303100936.GL1224808@smile.fi.intel.com>
-References: <cover.1582096982.git.rahul.tanwar@linux.intel.com>
- <6148b5b25d4a6833f0a72801d569ed97ac6ca55b.1582096982.git.rahul.tanwar@linux.intel.com>
- <e8259928-cb2a-a453-8f2a-1b57c8abdb8c@infradead.org>
- <4fb7a643-cbe1-da82-2629-2dbd0c0d143b@linux.intel.com>
- <20200227100239.GD1224808@smile.fi.intel.com>
- <12c16eb0-04aa-79cf-fa76-3f45b8972319@linux.intel.com>
+        Tue, 3 Mar 2020 05:17:29 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36656 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728102AbgCCKR3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 05:17:29 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023AHR9V010777;
+        Tue, 3 Mar 2020 04:17:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583230647;
+        bh=obAxkwX8Z4EF6e6mbeHR2LT0eEAUVXPL0QL8g5fEm9E=;
+        h=From:To:CC:Subject:Date;
+        b=EEdL3hEqqdjll6q1LlBkqcp3BgCk80oLMSSx1C4EQ9f1+vQgbZU5egi8mo4HC9vtP
+         OuUHu1JxZVAHu61DxW37/a4XWpm9vjd00ODWSu7x/epCSYkaQ1hrUmDrZMBX4fN22A
+         4a0NycbROkGUGkQAlBgvnD+OtJMi0vTYLkJbYI5k=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023AHRZm005453
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Mar 2020 04:17:27 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 04:17:27 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 04:17:27 -0600
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023AHONb004649;
+        Tue, 3 Mar 2020 04:17:25 -0600
+From:   Roger Quadros <rogerq@ti.com>
+To:     <t-kristo@ti.com>
+CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <nsekhar@ti.com>,
+        <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 0/6] arm64: ti: k3-j721e: Add SERDES PHY and USB3.0 support
+Date:   Tue, 3 Mar 2020 12:17:16 +0200
+Message-ID: <20200303101722.26052-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12c16eb0-04aa-79cf-fa76-3f45b8972319@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 11:37:23AM +0800, Tanwar, Rahul wrote:
-> On 27/2/2020 6:02 PM, Andy Shevchenko wrote:
-> > On Thu, Feb 27, 2020 at 03:19:26PM +0800, Tanwar, Rahul wrote:
-> >> On 19/2/2020 3:59 PM, Randy Dunlap wrote:
-> >>> On 2/18/20 11:40 PM, Rahul Tanwar wrote:
-> >>>
-> >>>> +config CLK_LGM_CGU
-> >>>> +	depends on (OF && HAS_IOMEM) || COMPILE_TEST
-> >>> This "depends on" looks problematic to me. I guess we shall see when
-> >>> all the build bots get to it.
-> >> At the moment, i am not able to figure out possible problems in this..
-> > COMPILE_TEST should be accompanied by non-generic dependency.
-> > There is none.
-> >
-> > So, I quite agree with Randy.
-> 
-> I see COMPILE_TEST is mostly ORed with ARCH_xx. How about below?
-> 
-> depends on OF && HAS_IOMEM && (CONFIG_X86 || COMPILE_TEST)
+Hi Tero,
 
-How about to leave logical parts separately?
-How is OF related to architecture?
+This series adds SERDES PHY support. The relevant PHY driver
+and bindings are already in v5.6.
 
-On top of that, is this code only for x86 for sure?
+It also adds Super-Speed support to the Type-C port on the EVM.
+The USB Type-C related driver support is in v5.6.
 
-> >>>> +	select OF_EARLY_FLATTREE
-> >>> If OF is not set and HAS_IOMEM is not set, but COMPILE_TEST is set,
-> >>> I expect that this should not be attempting to select OF_EARLY_FLATTREE.
-> >>>
-> >>> Have you tried such a config combination?
-> >> Agree, that would be a problem. I will change it to
-> >>
-> >> select OF_EARLY_FLATTREE if OF
-> > Nope, I think this is wrong work around.
-> > See above.
-> 
-> With above proposed change, i can simply switch to
-> select OF_EARLY_FLATTREE since all dependencies are already
-> in place..
+Please queue this for v5.7 if no objections. Thanks.
 
-Right.
+cheers,
+-roger
+
+Changelog:
+v2:
+- Addressed Rob's comments.
+- Changed type-C debounce delay from 300ms to 700ms as 300ms is not
+sufficient on EVM.
+
+
+Kishon Vijay Abraham I (3):
+  dt-bindings: syscon: Add TI's J721E specific compatible string
+  arm64: dts: ti: k3-j721e-main: Add WIZ and SERDES PHY nodes
+  arm64: dts: ti: k3-j721e-main: Add serdes_ln_ctrl node to select
+    SERDES lane mux
+
+Roger Quadros (3):
+  arm64: dts: ti: k3-j721e-main.dtsi: Add USB to SERDES MUX
+  arm64: dts: ti: k3-j721e: Enable Super-Speed support for USB0
+  arm64: dts: k3-j721e-proc-board: Add wait time for sampling Type-C DIR
+    line
+
+ .../devicetree/bindings/mfd/syscon.yaml       |   1 +
+ .../dts/ti/k3-j721e-common-proc-board.dts     |  33 ++-
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 275 ++++++++++++++++++
+ include/dt-bindings/mux/mux-j721e-wiz.h       |  53 ++++
+ 4 files changed, 360 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
