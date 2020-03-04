@@ -2,109 +2,275 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A16C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EB7C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A94D2073D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE4A2146E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgCDLWn (ORCPT
+        id S1729380AbgCDLlm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:22:43 -0500
-Received: from out28-194.mail.aliyun.com ([115.124.28.194]:44833 "EHLO
-        out28-194.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgCDLWn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 06:22:43 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08880497|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.103441-0.00660654-0.889953;DS=CONTINUE|ham_system_inform|0.00489006-0.000231126-0.994879;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.Gw2Hmn-_1583320951;
-Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gw2Hmn-_1583320951)
-          by smtp.aliyun-inc.com(10.147.41.199);
-          Wed, 04 Mar 2020 19:22:32 +0800
-Subject: Re: [PATCH 4/4] irqchip: Ingenic: Add support for TCU of X1000.
-To:     Marc Zyngier <maz@kernel.org>
-References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1582100974-129559-6-git-send-email-zhouyanjie@wanyeetech.com>
- <cf9434a075ee7efa6430bc39877c416c@kernel.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net, sboyd@kernel.org,
-        mturquette@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        daniel.lezcano@linaro.org, paul@crapouillou.net,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        dongsheng.qiu@ingenic.com
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5E5F8F76.6060803@wanyeetech.com>
-Date:   Wed, 4 Mar 2020 19:22:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Wed, 4 Mar 2020 06:41:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44585 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729377AbgCDLlm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 06:41:42 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j9SP7-0001eR-T3; Wed, 04 Mar 2020 12:41:33 +0100
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j9SP7-0005kZ-6Z; Wed, 04 Mar 2020 12:41:33 +0100
+Message-ID: <ac6eb54c01cce4ec52560ac622e024ab47f2136c.camel@pengutronix.de>
+Subject: Re: [RFC 10/11] reset: imx: Add audiomix reset controller support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Abel Vesa <abel.vesa@nxp.com>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>
+Cc:     devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Wed, 04 Mar 2020 12:41:33 +0100
+In-Reply-To: <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+         <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <cf9434a075ee7efa6430bc39877c416c@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marc,
+Hi Abel,
 
-On 2020年03月04日 18:58, Marc Zyngier wrote:
-> On 2020-02-19 08:29, 周琰杰 wrote:
->> X1000 has a different TCU containing OST, since X1000, OST has been
->> independent of TCU. This patch is prepare for later OST driver.
->
-> You keep on talking about OST (whatever that is), but never deals with 
-> it.
+On Tue, 2020-03-03 at 11:03 +0200, Abel Vesa wrote:
+> The imx-mix MFD driver registers some devices, one of which, in case of
+> audiomix, maps correctly to a reset controller type. This driver registers
+> a reset controller for that. For now, only the EARC specific resets are added.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+>  drivers/reset/Kconfig                          |   7 ++
+>  drivers/reset/Makefile                         |   1 +
+>  drivers/reset/reset-imx-audiomix.c             | 122 +++++++++++++++++++++++++
+>  include/dt-bindings/reset/imx-audiomix-reset.h |  15 +++
+>  4 files changed, 145 insertions(+)
+>  create mode 100644 drivers/reset/reset-imx-audiomix.c
+>  create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index d9efbfd..2f8d9b3 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -81,6 +81,13 @@ config RESET_INTEL_GW
+>  	  Say Y to control the reset signals provided by reset controller.
+>  	  Otherwise, say N.
+>  
+> +config RESET_IMX_AUDIOMIX
+> +	bool "i.MX Audiomix Reset Driver" if COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	default ARCH_MXC
+> +	help
+> +	  This enables the audiomix reset controller driver for i.MX SoCs.
+> +
+>  config RESET_LANTIQ
+>  	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
+>  	default SOC_TYPE_XWAY
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 249ed35..cf23d38 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
+>  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>  obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
+> +obj-$(CONFIG_RESET_IMX_AUDIOMIX) += reset-imx-audiomix.o
+>  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
+>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>  obj-$(CONFIG_RESET_MESON) += reset-meson.o
+> diff --git a/drivers/reset/reset-imx-audiomix.c b/drivers/reset/reset-imx-audiomix.c
+> new file mode 100644
+> index 00000000..d1c62ef
+> --- /dev/null
+> +++ b/drivers/reset/reset-imx-audiomix.c
+> @@ -0,0 +1,122 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#include <dt-bindings/reset/imx-audiomix-reset.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#define IMX_AUDIOMIX_EARC_CTRL_REG	0x200
+> +
+> +#define IMX_AUDIOMIX_EARC_RESET_BIT	0x0
+> +#define IMX_AUDIOMIX_EARC_PHY_RESET_BIT	0x1
+> +
+> +struct imx_audiomix_reset_data {
+> +	void __iomem *base;
+> +	struct reset_controller_dev rcdev;
+> +	spinlock_t lock;
+> +};
+> +
+> +static int imx_audiomix_reset_set(struct reset_controller_dev *rcdev,
+> +			  unsigned long id, bool assert)
+> +{
+> +	struct imx_audiomix_reset_data *drvdata = container_of(rcdev,
+> +			struct imx_audiomix_reset_data, rcdev);
+> +	void __iomem *reg_addr = drvdata->base;
+> +	unsigned long flags;
+> +	unsigned int offset;
+> +	u32 reg;
+> +
+> +	switch (id) {
+> +	case IMX_AUDIOMIX_EARC_PHY_RESET:
+> +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
+> +		offset = IMX_AUDIOMIX_EARC_PHY_RESET_BIT;
+> +		break;
+> +	case IMX_AUDIOMIX_EARC_RESET:
+> +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
+> +		offset = IMX_AUDIOMIX_EARC_RESET_BIT;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (assert) {
+> +		pm_runtime_get_sync(rcdev->dev);
 
-Sorry, I didn't make it clear. My intention was to explain why we need 
-to add an IRQCHIP_DECLARE to x1000 separately.
+This seems wrong. Why is the runtime PM reference count incremented when
+a reset is asserted ...
 
-> Why don't you just say
->
-> "Enable TCU support for Ingenic X1000, which can be supported by
-> the existing driver."
->
-> as this is what the patch is doing?
+> +		spin_lock_irqsave(&drvdata->lock, flags);
+> +		reg = readl(reg_addr);
+> +		writel(reg & ~BIT(offset), reg_addr);
+> +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> +	} else {
+> +		spin_lock_irqsave(&drvdata->lock, flags);
+> +		reg = readl(reg_addr);
+> +		writel(reg | BIT(offset), reg_addr);
+> +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> +		pm_runtime_put(rcdev->dev);
 
-Yes, this patch is to ensure that TCU can be used normally when the new 
-OST driver is merged, thank you for your suggestion.
+... and decremented when a reset is deasserted?
 
-Thanks and best regards!
+Apart from the runtime PM handling this looks like it could reuse reset-
+simple.
 
->
->>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> ---
->>  drivers/irqchip/irq-ingenic-tcu.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/irqchip/irq-ingenic-tcu.c
->> b/drivers/irqchip/irq-ingenic-tcu.c
->> index 6d05cef..7a7222d 100644
->> --- a/drivers/irqchip/irq-ingenic-tcu.c
->> +++ b/drivers/irqchip/irq-ingenic-tcu.c
->> @@ -180,3 +180,4 @@ static int __init ingenic_tcu_irq_init(struct
->> device_node *np,
->>  IRQCHIP_DECLARE(jz4740_tcu_irq, "ingenic,jz4740-tcu", 
->> ingenic_tcu_irq_init);
->>  IRQCHIP_DECLARE(jz4725b_tcu_irq, "ingenic,jz4725b-tcu", 
->> ingenic_tcu_irq_init);
->>  IRQCHIP_DECLARE(jz4770_tcu_irq, "ingenic,jz4770-tcu", 
->> ingenic_tcu_irq_init);
->> +IRQCHIP_DECLARE(x1000_tcu_irq, "ingenic,x1000-tcu", 
->> ingenic_tcu_irq_init);
->
-> Otherwise,
->
-> Acked-by: Marc Zyngier <maz@kernel.org>
->
-> I expect this to go via the MIPS tree as a series.
->
-> Thanks,
->
->         M.
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_audiomix_reset_assert(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
+> +{
+> +	return imx_audiomix_reset_set(rcdev, id, true);
+> +}
+> +
+> +static int imx_audiomix_reset_deassert(struct reset_controller_dev *rcdev,
+> +			       unsigned long id)
+> +{
+> +	return imx_audiomix_reset_set(rcdev, id, false);
+> +}
+> +
+> +static const struct reset_control_ops imx_audiomix_reset_ops = {
+> +	.assert		= imx_audiomix_reset_assert,
+> +	.deassert	= imx_audiomix_reset_deassert,
+> +};
+> +
+> +static int imx_audiomix_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct imx_audiomix_reset_data *drvdata;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (drvdata == NULL)
+> +		return -ENOMEM;
+> +
+> +	drvdata->base = dev_get_drvdata(dev->parent);
+> +
+> +	platform_set_drvdata(pdev, drvdata);
+> +
+> +	pm_runtime_enable(dev);
+> +
+> +	spin_lock_init(&drvdata->lock);
+> +
+> +	drvdata->rcdev.owner     = THIS_MODULE;
+> +	drvdata->rcdev.nr_resets = IMX_AUDIOMIX_RESET_NUM;
+> +	drvdata->rcdev.ops       = &imx_audiomix_reset_ops;
+> +	drvdata->rcdev.of_node   = dev->of_node;
+> +	drvdata->rcdev.dev	 = dev;
+> +
+> +	return devm_reset_controller_register(dev, &drvdata->rcdev);
+> +}
+> +
+> +static const struct of_device_id imx_audiomix_reset_dt_ids[] = {
+> +	{ .compatible = "fsl,imx8mp-audiomix-reset", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver imx_audiomix_reset_driver = {
+> +	.probe	= imx_audiomix_reset_probe,
+> +	.driver = {
+> +		.name		= KBUILD_MODNAME,
+> +		.of_match_table	= imx_audiomix_reset_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(imx_audiomix_reset_driver);
+> diff --git a/include/dt-bindings/reset/imx-audiomix-reset.h b/include/dt-bindings/reset/imx-audiomix-reset.h
+> new file mode 100644
+> index 00000000..2e26878
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/imx-audiomix-reset.h
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#ifndef DT_BINDING_RESET_IMX_AUDIOMIX_H
+> +#define DT_BINDING_RESET_IMX_AUDIOMIX_H
+> +
+> +#define IMX_AUDIOMIX_EARC_RESET		0x0
+> +#define IMX_AUDIOMIX_EARC_PHY_RESET	0x1
+> +
+> +#define IMX_AUDIOMIX_RESET_NUM		2
+> +
+> +#endif
+> +
 
+The imx-audiomix-reset.h change should go into a separate patch,
+together with the binding docs for fsl,imx8mp-audiomix-reset.
+
+regards
+Philipp
