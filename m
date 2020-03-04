@@ -2,165 +2,117 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFFCC3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81340C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D1D21739
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583338697;
-	bh=rkEU4eLVPSGyjC+W5QQXVir/h4v8Bes9tXj7f/O6jSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xi56PFMgURV7tdHdhmG6mbpdyu3409o6pEMATAoKDvFsKKF7+2wJuTQSgC20Fx0xK
-	 ZDsYj1mTVhXla/bSQlEvFaOedTywXrSb8EpKyMjmyPDisNgut47sFWgi+5Bt/z1Ool
-	 zgeXie2Km8ECInBtiVUItv42dZuVXdjfhx/WR9gM=
+	by mail.kernel.org (Postfix) with ESMTP id 58F66215A4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387776AbgCDQSR (ORCPT
+        id S2388019AbgCDQVC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:18:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55274 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 11:21:02 -0500
+Received: from muru.com ([72.249.23.125]:58760 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgCDQSR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:18:17 -0500
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBF4A21739;
-        Wed,  4 Mar 2020 16:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583338695;
-        bh=rkEU4eLVPSGyjC+W5QQXVir/h4v8Bes9tXj7f/O6jSk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dBr54LAnn55gniSieBFpR/b0Ke8+EqQyDZO9+0o3LMC83AcG6pl5rPTwzvraciZfp
-         N6PFmoXmvDA7/qCZnHEV56WMwA/9p4RXS0L7Z472UM/bw2VNO9Z71ghAd1WcFl7287
-         TBGWZgcK48wRwkkXwRhAmdvqQxIIEmY1tX3t+1gE=
-Received: by mail-qk1-f177.google.com with SMTP id e16so2163029qkl.6;
-        Wed, 04 Mar 2020 08:18:15 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0y+h9qyRnT792B9Fep3JYFLQxGyVws2Hl7Dt7lOCNOrgV1FqM+
-        tYOehhhzGpmZnoPcX0sn2HuHzT5CE/KnZKtjlQ==
-X-Google-Smtp-Source: ADFU+vsjnswSGP2m60kwTzWnFzRxFJmlLh7GF6JHFk0NmQeplvYVYnDswx1IFykpcXGAhgSdECAQY+TKoUoOtoR6z50=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr3729521qkg.152.1583338694869;
- Wed, 04 Mar 2020 08:18:14 -0800 (PST)
+        id S1726275AbgCDQVC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:21:02 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 2870080F5;
+        Wed,  4 Mar 2020 16:21:46 +0000 (UTC)
+Date:   Wed, 4 Mar 2020 08:20:57 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     yan-liu@ti.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
+Message-ID: <20200304162057.GV37466@atomide.com>
+References: <20200304090031.30360-1-rogerq@ti.com>
 MIME-Version: 1.0
-References: <20200227082719.6343-1-alexandru.ardelean@analog.com>
- <20200227082719.6343-7-alexandru.ardelean@analog.com> <20200303165323.GA32472@bogus>
- <e8075f2fc949b541ccc369bc0cc5d3726ea0a3bf.camel@analog.com>
-In-Reply-To: <e8075f2fc949b541ccc369bc0cc5d3726ea0a3bf.camel@analog.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 4 Mar 2020 10:18:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJrzjKbKF3A1EGFVpP=KgeRY97yWf_k+T4t-nWZ3=n0zg@mail.gmail.com>
-Message-ID: <CAL_JsqJrzjKbKF3A1EGFVpP=KgeRY97yWf_k+T4t-nWZ3=n0zg@mail.gmail.com>
-Subject: Re: [PATCH v3 6/8] dt-bindings: iio: adc: add bindings doc for AXI
- ADC driver
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304090031.30360-1-rogerq@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 1:55 AM Ardelean, Alexandru
-<alexandru.Ardelean@analog.com> wrote:
->
-> On Tue, 2020-03-03 at 10:53 -0600, Rob Herring wrote:
-> > On Thu, Feb 27, 2020 at 10:27:17AM +0200, Alexandru Ardelean wrote:
-> > > This change adds the bindings documentation for the AXI ADC driver.
-> > >
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > ---
-> > >  .../bindings/iio/adc/adi-axi-adc.yaml         | 69 +++++++++++++++++++
-> >
-> > Follow the compatible string: adi,axi-adc.yaml
->
-> ack
->
-> >
-> > >  1 file changed, 69 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi-axi-
-> > > adc.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
-> > > b/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
-> > > new file mode 100644
-> > > index 000000000000..d45d41f4f08e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
-> > > @@ -0,0 +1,69 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/adc/adi-axi-adc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Analog Devices AXI ADC IP core
-> > > +
-> > > +maintainers:
-> > > +  - Michael Hennerich <michael.hennerich@analog.com>
-> > > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > +
-> > > +description: |
-> > > +  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
-> > > +  with a high speed serial (JESD204B/C) or source synchronous parallel
-> > > +  interface (LVDS/CMOS).
-> > > +  Usually, some other interface type (i.e SPI) is used as a control
-> > > +  interface for the actual ADC, while this IP core will interface
-> > > +  to the data-lines of the ADC and handle the streaming of data into
-> > > +  memory via DMA.
-> > > +
-> > > +  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - adi,axi-adc-10.0.a
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  dmas:
-> > > +    minItems: 1
-> > > +    maxItems: 1
-> >
-> > Just maxItems is enough.
->
-> ack
->
-> >
-> > > +
-> > > +  dma-names:
-> > > +    maxItems: 1
-> > > +    items:
-> > > +      - const: rx
-> > > +
-> > > +  adi-axi-adc-client:
-> >
-> > adi,axi-adc-client
-> >
-> > Though I think 'adi,adc-dev' would be better name.
->
-> works for me
-> one question though; this still gives:
->
->   CHKDT   Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> /home/sandu/work/linux/upstream/Documentation/devicetree/bindings/iio/adc/adi,ax
-> i-adc.yaml: properties:adi,adc-dev: {'description': 'A reference to a the actual
-> ADC to which this FPGA ADC interfaces to.', 'maxItems': 1} is not valid under
-> any of the given schemas (Possible causes of the failure):
->         /home/sandu/work/linux/upstream/Documentation/devicetree/bindings/iio/ad
-> c/adi,axi-adc.yaml: properties:adi,adc-dev: 'not' is a required property
+* Roger Quadros <rogerq@ti.com> [200304 09:01]:
+> Even though the TRM says that SATA IP has 36 address bits
+> wired in the SoC, we see bus errors whenever any address
+> greater than 32-bit is given to the controller.
+> 
+> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
+> 
+> As a workaround we limit the DMA address range to 32-bits
+> for SATA.
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Reported-by: Yan Liu <yan-liu@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+> 
+> NOTE: Currently ARM dma-mapping code doesn't account for devices
+> bus_dma_limit. This is fixed in [1].
+> 
+> [1] https://lkml.org/lkml/2020/2/18/712
 
-Yes, not the most helpful errors I know. You need a type reference and
-'maxItems' should be dropped.
+So is this dts patch safe to apply without the series above?
 
-$ref: /schemas/types.yaml#/definitions/phandle
+And should this dts patch be applied as a fix or can it wait
+until the merge window?
 
-Rob
+Regards,
+
+Tony
+
+>  arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index d78b684e7fca..895462c22d1c 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -642,15 +642,22 @@
+>  		};
+>  
+>  		/* OCP2SCP3 */
+> -		sata: sata@4a141100 {
+> -			compatible = "snps,dwc-ahci";
+> -			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+> -			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> -			phys = <&sata_phy>;
+> -			phy-names = "sata-phy";
+> -			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+> -			ti,hwmods = "sata";
+> -			ports-implemented = <0x1>;
+> +		sata_aux_bus {
+> +			#address-cells = <1>;
+> +			#size-cells = <2>;
+> +			compatible = "simple-bus";
+> +			ranges = <0x0 0x4a140000 0x0 0x1200>;
+> +			dma-ranges = <0x0 0x0 0x1 0x00000000>;
+> +			sata: sata@4a141100 {
+> +				compatible = "snps,dwc-ahci";
+> +				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
+> +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +				phys = <&sata_phy>;
+> +				phy-names = "sata-phy";
+> +				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+> +				ti,hwmods = "sata";
+> +				ports-implemented = <0x1>;
+> +			};
+>  		};
+>  
+>  		/* OCP2SCP1 */
+> -- 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
