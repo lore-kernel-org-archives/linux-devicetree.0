@@ -2,120 +2,126 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AB1C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED248C3F2D8
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9728920732
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C678920848
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583334001;
-	bh=wvxq/vGbzNiq8n/RK5/EhcHV3z/kcMg9Bm6arutZxwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iaJAe966sFoTPbIlgTYPuJoANO24CTrzFslzie8QNANxqfN8I28jcubJ41QirvGP+
-	 uD8pwsHsiYOELLFq+DnLatyJbX/LtQzlpNyHxNt4gf/O77m04EHfVe5epXzSxmV9N3
-	 BkKsPy4qUQL8gdJzXscjXuL6PxrV9GPkZBEPn2Mo=
+	s=default; t=1583334790;
+	bh=6nHkKIgF1vsNZMlc30HiQy8/oHhvCgNZjVYENzB1bhs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=T8gfmEZeURcmTnIvBhBas7aM+8xQXX8xAGj7VoRYJSL6/wO6kg4pD7OFX/YdG/rIn
+	 /Jok0viSBHFPYUDfLznGCuPrs2F/qGQ4oAvDfP2M8IlOp57NmA9P/8zRlCuXJ1gi5d
+	 ompiLfs+Osds1XDmntqJrgrZi+//ggpijB1+uRxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgCDPAB (ORCPT
+        id S1725795AbgCDPNK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:00:01 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43275 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgCDPAB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 10:00:01 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p125so2335677oif.10;
-        Wed, 04 Mar 2020 07:00:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5kzs+suiXGOLM6214SN1xySZQC2yuoHuAv+kXNmxnJI=;
-        b=lcRtyXlcvbKwgeaV9KVnIuJXQjvC/Jf5lmd69MWPJEk5efZonlrtTATuknOsOFZKbp
-         fSESkjBWIKORTGhEyq93mJt02ujRmICM2NwL8BbsBoMugDv7kqqHItpecZxQyW0UVo0t
-         9jXCZulEF4Fx5KjbpX/j0WtBXYTXQj+77Q3RHZoMltx41B/kv1RpMwRLGXTGQpPQUYzA
-         kCFS9GFYbNeX9qXR9dNEscSAtnZLfOjm6WL2uHp66CgATHyrvauCkUnRo7poE4/sH/sQ
-         lG1Bl/xttv6whB6Eqb2yRydxJvZHEdBpoVXPGKdmJTRkv7T1P0WIb5NbONvkTsKOZiLY
-         Sl2g==
-X-Gm-Message-State: ANhLgQ2WZhcmYr6mDtJQlE5tnQ08EkzoXTF097kTE69GX4q8DvggxZxc
-        YOH7mDIlUm4ojluZBzgYig==
-X-Google-Smtp-Source: ADFU+vv8e6bqzfrEUfhRglZm6ics/VgmQ0DWwpgysZeN1Q7F7AyUjL7HRD+dgHJdDUz55H2/3Q1G6Q==
-X-Received: by 2002:aca:5194:: with SMTP id f142mr2089262oib.100.1583333999966;
-        Wed, 04 Mar 2020 06:59:59 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b15sm6358282oic.52.2020.03.04.06.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 06:59:59 -0800 (PST)
-Received: (nullmailer pid 20406 invoked by uid 1000);
-        Wed, 04 Mar 2020 14:59:58 -0000
-Date:   Wed, 4 Mar 2020 08:59:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
-Subject: Re: [PATCH v12 2/6] dt-bindings: display: mediatek: control dpi pins
- mode to avoid leakage
-Message-ID: <20200304145958.GA17716@bogus>
-References: <20200303052722.94795-1-jitao.shi@mediatek.com>
- <20200303052722.94795-3-jitao.shi@mediatek.com>
+        Wed, 4 Mar 2020 10:13:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728278AbgCDPNJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:13:09 -0500
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 698DB21775;
+        Wed,  4 Mar 2020 15:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583334788;
+        bh=6nHkKIgF1vsNZMlc30HiQy8/oHhvCgNZjVYENzB1bhs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SPLQE7kLkIYLoHDSVo9HJW6lzcb6Xpbkvj6Zlza0tl/i2imebXMGmhs4ZjKsILPy4
+         92hwY3MoXIkBms8WGPQFxq8otGURHcqiHBgDaK3pAK8bXyhVeWA3NOgvUbeMxuCUsB
+         0YzE4pxX9vnEvkCDdbMAJi82JM4bfxGdStDaBBLo=
+Received: by mail-qt1-f176.google.com with SMTP id t13so1594998qto.3;
+        Wed, 04 Mar 2020 07:13:08 -0800 (PST)
+X-Gm-Message-State: ANhLgQ1opzT3Dbnr+o/0Cm1VEpyr4jS0dGMGYJyD04bHylwzYBalDVn6
+        vJHhnCO/+9TELx0qelnMgYf4E3RxolnK7aA47A==
+X-Google-Smtp-Source: ADFU+vsrisSxpdfCxVHVTsRHNqfoOTZdjiFvfSdN1ZN87TkLYBvb8wR+oVW+bts6vXbefL5Ibwlc+/rZ10p1FfkB2ME=
+X-Received: by 2002:aed:2344:: with SMTP id i4mr2875858qtc.136.1583334787520;
+ Wed, 04 Mar 2020 07:13:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303052722.94795-3-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200303094522.23180-1-geert+renesas@glider.be>
+ <20200303094522.23180-2-geert+renesas@glider.be> <CAL_JsqL+9Tcqm_bsorRwqvWZyJXAZmJhXb=EmJ+nZ44kCFp6Kg@mail.gmail.com>
+ <CAMuHMdUBTVZGNtdc0dhUz5d+P2_Fr89MvBCz8=9oQK1EOi7s2w@mail.gmail.com>
+In-Reply-To: <CAMuHMdUBTVZGNtdc0dhUz5d+P2_Fr89MvBCz8=9oQK1EOi7s2w@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 4 Mar 2020 09:12:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLw4yvkmU+imifQX4XSwd21ofaDVm=0LawH9oK-_ym8ng@mail.gmail.com>
+Message-ID: <CAL_JsqLw4yvkmU+imifQX4XSwd21ofaDVm=0LawH9oK-_ym8ng@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] spi: dt-bindings: spi-controller: Fix
+ #address-cells for slave mode
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 01:27:18PM +0800, Jitao Shi wrote:
-> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
-> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
-> disabled.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt  | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> index 58914cf681b8..77ca32a32399 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> @@ -17,6 +17,10 @@ Required properties:
->    Documentation/devicetree/bindings/graph.txt. This port should be connected
->    to the input port of an attached HDMI or LVDS encoder chip.
->  
-> +Optional properties:
-> +- pinctrl-names: Contain "gpiomode" and "dpimode".
+On Wed, Mar 4, 2020 at 6:50 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Mar 3, 2020 at 10:05 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > On Tue, Mar 3, 2020 at 3:45 AM Geert Uytterhoeven
+> > <geert+renesas@glider.be> wrote:
+> > > Currently, the DT bindings for an SPI controller specify that
+> > > "#address-cells" must be fixed to one.  However, that applies to an SPI
+> > > controller in master mode only.  When running in SPI slave mode,
+> > > "#address-cells" should be zero.
+> > >
+> > > Fix this making the value of "#address-cells" dependent on the presence
+> > > of "spi-slave".
+> > >
+> > > Fixes: 0a1b929356830257 ("spi: Add YAML schemas for the generic SPI options")
+> > > Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > ---
+> > > v2:
+> > >   - Use "enum: [0, 1]" instead of min/max limit,
+> > >   - use "- spi-slave" instead of "[ spi-slave ]".
+> > >
+> > > As of dtc commit 403cc79f06a135ae ("checks: Update SPI bus check for
+> > > 'spi-slave'") and Linux commit c2e7075ca8303631 ("scripts/dtc: Update to
+> > > upstream version v1.4.7-57-gf267e674d145"), dtc knows about SPI slave.
+> > >
+> > > However, when using "#address-cells = <0>" with W=1:
+> > >
+> > >     Warning (avoid_unnecessary_addr_size): /soc/spi@e6e10000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+> >
+> > What was the point in having #address-cells in the first place for
+> > slaves?
+>
+> I don't know, commit a8830cb19cfea04e ("spi: Document DT bindings for
+> SPI controllers in slave mode") doesn't require any #address-cells for
+> slave mode.
+>
+> Perhaps because node_addr_cells() in dtc defaults to 2?
+> Or because of_bus_n_addr_cells() walks up the parent chain and thus
+> defaults to the first found parent value?
+>
+> > Seems like we should make it mutually exclusive with 'spi-slave'.
+>
+> Sounds like a good idea. How to express that in yaml?
 
-Doesn't match the example.
+oneOf:
+  - required:
+      - "#address-cells"
+  - required:
+      - spi-slave
 
-> +  pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
-> +
->  Example:
->  
->  dpi0: dpi@1401d000 {
-> @@ -27,6 +31,9 @@ dpi0: dpi@1401d000 {
->  		 <&mmsys CLK_MM_DPI_ENGINE>,
->  		 <&apmixedsys CLK_APMIXED_TVDPLL>;
->  	clock-names = "pixel", "engine", "pll";
-> +	pinctrl-names = "active", "idle";
-> +	pinctrl-0 = <&dpi_pin_func>;
-> +	pinctrl-1 = <&dpi_pin_idle>;
->  
->  	port {
->  		dpi0_out: endpoint {
-> -- 
-> 2.21.0
+Rob
