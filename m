@@ -2,218 +2,87 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCB8C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB3CC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B0320674
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B6D20674
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583340987;
-	bh=IDuwultc5UnTGYzdw6ahwuogLsiUryQThMDeD6nOTaQ=;
+	s=default; t=1583341028;
+	bh=C2CddSrtRznh8XRpIeRL3aTU+1Zm12E9YjYWxBIDQ50=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zfgDoAO6czhTKQUG4Kmnjzh3g6n8zK7EDHD+hxXImJvENUNASdhtK3sSD9TPhpnkF
-	 RnfwEcYFfBBE+u3z8H89fPtPi2zqd3+GgxoFT99Lt9WNmAKMestEKbUqyhZpwi4Alz
-	 6V0DhMIvN9c8O+gx0YC36VoNcVr57oNl04yjpNsY=
+	b=d0s+fjgHJ1YGHEMPmJ6etkJkcA5Q4iS6izqvpX3h7mlNOfpRw1dONB7CruTzHyJ89
+	 0rGtvPU+wfIXS2qS2ZfB7hpvvWSw+iSEPFqh9/PR4IhfiokA8O8NOcKvfNVXTvDRuW
+	 9Lpp+LJ9Chmzr0CXyY4ywycuMHR+CZEZyWNru9lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgCDQ41 (ORCPT
+        id S1726661AbgCDQ5I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:56:27 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39306 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgCDQ41 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:56:27 -0500
-Received: by mail-oi1-f196.google.com with SMTP id r16so2776962oie.6
-        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 08:56:26 -0800 (PST)
+        Wed, 4 Mar 2020 11:57:08 -0500
+Received: from mail-oi1-f175.google.com ([209.85.167.175]:37879 "EHLO
+        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgCDQ5H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:57:07 -0500
+Received: by mail-oi1-f175.google.com with SMTP id q65so2788529oif.4;
+        Wed, 04 Mar 2020 08:57:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1x6Tl4FkquqbFK2U7e561blQbQkLtLaOfZkxuV3Uifk=;
-        b=PRkkbTcmDSjnPW3rWJDqE5v+Ei0eFMLCWJVjV5pg3c3oce612WqptRkwZezeSvfeVl
-         4k8FJKpLSokIMm4VR1efLWk/qSEGwUiXzZDaODYyPNjtCWdH/8zZjHSEuJVYK5gfHQvs
-         odA0kV20LE567y68pGRjfQCPCpzf4F/AfJovEEytlVi5jG4gxTRzKAU31Jx7uwCyqw27
-         u7o7JMqkrHL4NtyFw9nB03bQD6AdsXuOw57ydbe8N3OXmd7NWONS6pzBQ4Lw1IBVSVkB
-         V6Xe8JLbSdJ2nlYc3S2PI4d+WgmrnVTXIy75bPquk9wbeNLkKgPdDXnMQORmjeAmpKbD
-         Pgxw==
-X-Gm-Message-State: ANhLgQ0tifkk5DB5T3oKnlOAonl1dtOlPsJraWOlt07sNidyPeCGFoUW
-        Sth7snXdJ2/aRnNNJtrrfA1QhXI=
-X-Google-Smtp-Source: ADFU+vvN0s8xtsegXAsk83hpqJfBSA3bQkx7dF0MVL1rhBScQPKr6TdRvIrDvNFvUBC3bmvtUvwhqg==
-X-Received: by 2002:aca:c0c5:: with SMTP id q188mr2299956oif.169.1583340986232;
-        Wed, 04 Mar 2020 08:56:26 -0800 (PST)
+        bh=v56tNbaf27S3vsJCZpK0lDpbd6dC6biMMvnBq59fAOw=;
+        b=oRuNtB6ll/BixhQQZMrUdbHr5O0Nynm9xq2ILXcpalUNkA4mDcUcD3rlS9JB/GCkMc
+         LDrMTQjBC3Om00/8FuLi5FS4nL3hdFpFFXz0kcTM084RWNc2oJD19Hi0oVPws7r7wH6Z
+         ONTz6i6FylKkLu/mZ1eBnFHH6m7mWVQ6Rdf7SZj2AOVLBXxGZ2sgxTE9M02B/avbl9GD
+         cPCJijd/wSUA/M/eT/wqMAt7PpOm0uLpclAxXzHALLE2sK9Jq2XAQ0XAo4favW04nugF
+         J9qU6hiqfl/vVyFZrdex52szeA16KOKK3ga9L14FW+puWLPewh1fq0NRlkB2axg1jIjy
+         8CUQ==
+X-Gm-Message-State: ANhLgQ05Xi82kARnctGUXR9eFwX/68lVH/M5pqb7Ahnd8eBSn8KK2c1p
+        2wLHG34rCoQCxVLbRpsnMg==
+X-Google-Smtp-Source: ADFU+vuq6LTSjctHGWYdpBagVO2mWD6V/pN+nXSJfZEGYnGz547pSblqr5DAPWLVCdCXURaCM/KV6w==
+X-Received: by 2002:a05:6808:298:: with SMTP id z24mr2285480oic.101.1583341026709;
+        Wed, 04 Mar 2020 08:57:06 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y14sm8992584oih.23.2020.03.04.08.56.25
+        by smtp.gmail.com with ESMTPSA id i185sm5371438oib.51.2020.03.04.08.57.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:56:25 -0800 (PST)
-Received: (nullmailer pid 18755 invoked by uid 1000);
-        Wed, 04 Mar 2020 16:56:24 -0000
-Date:   Wed, 4 Mar 2020 10:56:24 -0600
+        Wed, 04 Mar 2020 08:57:05 -0800 (PST)
+Received: (nullmailer pid 19811 invoked by uid 1000);
+        Wed, 04 Mar 2020 16:57:04 -0000
+Date:   Wed, 4 Mar 2020 10:57:04 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
-        heiko@sntech.de, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: mtd: Describe Rockchip RK3xxx NAND
- flash controller
-Message-ID: <20200304165624.GA2630@bogus>
-References: <20200303094736.7490-1-yifeng.zhao@rock-chips.com>
- <20200303094736.7490-3-yifeng.zhao@rock-chips.com>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: Re: [v3,1/2] dt-bindings: pwm: Update bindings for MT7629 SoC
+Message-ID: <20200304165704.GA19695@bogus>
+References: <1583319973-20694-1-git-send-email-sam.shih@mediatek.com>
+ <1583319973-20694-2-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303094736.7490-3-yifeng.zhao@rock-chips.com>
+In-Reply-To: <1583319973-20694-2-git-send-email-sam.shih@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 05:47:35PM +0800, Yifeng Zhao wrote:
-> Documentation support for Rockchip RK3xxx NAND flash controllers
+On Wed, 4 Mar 2020 19:06:12 +0800, Sam Shih wrote:
+> This updates bindings for MT7629 pwm controller.
 > 
-> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 > ---
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> Changes in v3:
-> -change the title for the dt-bindings
-> 
-> Changes in v2: None
-> 
->  .../bindings/mtd/rockchip,nand.yaml           | 95 +++++++++++++++++++
->  1 file changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
-> new file mode 100644
-> index 000000000000..9a81f682ac01
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
-> @@ -0,0 +1,95 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Dual license new bindings:
+Applied, thanks.
 
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mtd/rockchip,nand.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip SoCs NAND FLASH Controller (NFC) Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "nand-controller.yaml"
-> +
-> +maintainers:
-> +  - Yifeng Zhao <yifeng.zhao@rock-chips.com>
-> +
-> +properties:
-> +  "#address-cells": true
-> +  "#size-cells": true
-> +
-> +  compatible:
-> +    const: rockchip,nfc
-
-Should be SoC specific.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module Clock
-> +      - description: Bus Clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: clk_nfc
-> +      - const: clk_ahb
-
-'clk_' is redundant.
-
-> +
-> +  clock-rates:
-> +      maximum: 150000000
-
-Not a standard property. Should be implied by the compatible string.
-
-> +
-> +  pinctrl-names: true
-
-No need to specify this, pinctrl properties are allowed on any node and 
-added by the tool.
-
-> +
-> +patternProperties:
-> +  "^pinctrl-[0-9]+$": true
-
-Same here.
-
-> +
-> +  "^nand@[a-f0-9]$":
-
-Based on reg, should be only '[0-3]'
-
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 3
-> +
-> +      nand-ecc-step-size:
-> +        const: 1024
-> +
-> +      nand-ecc-strength:
-> +        enum: [16, 24 , 40, 60, 70]
-> +
-> +      nand-bus-width:
-> +        const: 8
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/rk3308-cru.h>
-> +    nfc: nand-controller@ff4b0000 {
-> +      compatible = "rockchip,nfc";
-> +      reg = <0x0 0xff4b0000 0x0 0x4000>;
-> +      interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&cru SCLK_NANDC>, <&cru HCLK_NANDC>;
-> +      clock-names = "clk_nfc", "clk_ahb";
-> +      clock-rates = <150000000>;
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&flash_csn0 &flash_rdy &flash_ale &flash_cle
-> +                  &flash_wrn &flash_rdn &flash_bus8>;
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      nand@0 {
-> +        reg = <0>;
-> +        nand-ecc-mode = "hw";
-> +        nand-ecc-strength = <16>;
-> +        nand-ecc-step-size = <1024>;
-> +        nand-bus-width = <8>;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.17.1
-> 
-> 
-> 
+Rob
