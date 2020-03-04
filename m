@@ -2,91 +2,241 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66835C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF434C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3036F22B48
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9737C2166E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583339741;
-	bh=tOFJvLY9RH4hMUR4uSuuD0+HIcm6GvVBhY9luIFNp0Q=;
+	s=default; t=1583340265;
+	bh=uHsZBpuxW47c+kniszmu0bbX85bmoLgTWGyflQgfHZI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a5SKYRCC4SqmMHgLSyvZV/qTLwbw5k3VyGOXDDyW8f8QbfVXAb/Zcdk6URwO4ebyZ
-	 aOvt5mGmVKWsUrTPhBvy0O1x6a8BHtf0wmo5e0Pc+x1yWrJcL4HXXrS+cjdGqbaVh3
-	 +C1EnsWaK8x1y0xk2gT5A7pvQcvITBJqeRCf+Auc=
+	b=OUoPL6p9y0btlHeTVaX6yVkDZNCVICLZLKqITPjrw8G/Lb3IJP7VvzCZhH52XPDJz
+	 Ir8QB+6kFy9N5fMgBxaO6KjNjJWY/XWC1XGFt5JLwzbUKs/9QEo7qFC50uwCHNX+v1
+	 nLGOIpI04Kya9vDRKcBn0iBuqk0W4MF4Xn4sO9fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbgCDQfk (ORCPT
+        id S2388063AbgCDQoY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:35:40 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43588 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbgCDQfk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:35:40 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j5so2605452otn.10
-        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 08:35:40 -0800 (PST)
+        Wed, 4 Mar 2020 11:44:24 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44515 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgCDQoY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:44:24 -0500
+Received: by mail-ot1-f67.google.com with SMTP id v22so2629529otq.11;
+        Wed, 04 Mar 2020 08:44:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h1Gvo7Uhl99kC+f2DHRk2dtpXA+8wwG3dDT0Nr8Q1sw=;
-        b=iQuwPEf0l7gdOZ2ILADDA1tMQjNoC5zFjxZkadUxhEDFYXIGHAqKknSrpvqbZjKUvJ
-         JJj0hNb1La0R+RKZWFlrlfKeteCKmHYT/Rcxt1z00isJ3U/JDtn4xD/y2UbXytGUT+3l
-         T6uNjRamx4IOoOqZe4R9qJDUBgHWy5kEQm/DJihrZDs0KfNQYmkjk5Db1EaYkCzTqNUp
-         BOpWE/4Lr2v1gfZslzOoOtVxWcGdtPjRlgbySzetrvnrCjVKgH/fwQ6K6Nma4vfV4jNg
-         gk3OSsf3WunK9jsiBDhE647a57z08eQLXEQ30sOmfl1nsG9CG9VXPoVF7/eHdDC4HZIP
-         WCEA==
-X-Gm-Message-State: ANhLgQ2oxYH1Zui4bRqLAr8j8zR4cRCbr6rEqqJl9pb6o4FMuEOqit6r
-        XDJEyhQpIlouIf7GqL/7kA==
-X-Google-Smtp-Source: ADFU+vvs0zKwSe7pdBbmhxfAEsM04vKmv9ZOGaPA/anuEGyMrANs8OpulogLb0VTYVxwyF6vIThI4w==
-X-Received: by 2002:a9d:aa7:: with SMTP id 36mr3152106otq.52.1583339739892;
-        Wed, 04 Mar 2020 08:35:39 -0800 (PST)
+        bh=Xb+WTf9GeDLciLGuzbzOFdnxs2bgaxMAq58iwewkmSE=;
+        b=Xx29nz8+FCROu86dxEE5FtksgKCb8RkJGQCzJQ03cgKOBzFVrpUz74/FQ80x3F71CG
+         /cMr3B2AN6du10BCoRV3CZrrQTSToXGWMcnw2DuY7nASGIiRwA9gEJqqhqFs9Vty+RQD
+         qxY6jlM7Vm9OQHwGQxzlYK34Nk9JBCd5FKywWSlhnCtJ9acKPIRuxKQVOrXt9y6xTFeb
+         tQOyZjs+B9DMKvxzPzw+EM2y5clyQzE3+vDfwZlBSmeZAdyQzntQ1QTuHxCFJ1m5GY5p
+         jIi1XvZoo22PlwNvuL1kG3W3yaNKacjbYzghdfknBqccL8DieH5pmwAcblw1WUtpcefg
+         aNxA==
+X-Gm-Message-State: ANhLgQ1l6GUkrTjnsx5jUVFBzmFzXI8pZ5JSfjasljLHvVSyROYcKFhP
+        +ASTHKrYDCOQlVnL4mrBaHNyA9c=
+X-Google-Smtp-Source: ADFU+vuiT7+LIdq6B0NAZpXtbUdD2n1oG/8PxkA2cyOy3nnwJtiJJ8AQrkFJJ2jsopkDmkVnwxRlIg==
+X-Received: by 2002:a9d:3f8:: with SMTP id f111mr3146428otf.204.1583340263091;
+        Wed, 04 Mar 2020 08:44:23 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p24sm4959687oth.21.2020.03.04.08.35.38
+        by smtp.gmail.com with ESMTPSA id n25sm9021954oic.6.2020.03.04.08.44.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:35:39 -0800 (PST)
-Received: (nullmailer pid 22504 invoked by uid 1000);
-        Wed, 04 Mar 2020 16:35:38 -0000
-Date:   Wed, 4 Mar 2020 10:35:38 -0600
+        Wed, 04 Mar 2020 08:44:22 -0800 (PST)
+Received: (nullmailer pid 1900 invoked by uid 1000);
+        Wed, 04 Mar 2020 16:44:21 -0000
+Date:   Wed, 4 Mar 2020 10:44:21 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     dri-devel@lists.freedesktop.org, thierry.reding@gmail.com,
-        sam@ravnborg.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, christoph.muellner@theobroma-systems.com,
-        robin.murphy@arm.com, linux-rockchip@lists.infradead.org,
-        heiko@sntech.de, francescolavra.fl@gmail.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: display: panel: Add binding document
- for Elida KD35T133
-Message-ID: <20200304163538.GA22445@bogus>
-References: <20200229151506.750242-1-heiko@sntech.de>
- <20200229151506.750242-2-heiko@sntech.de>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] dt-bindings: input: Add docs for ADC driven
+ joystick.
+Message-ID: <20200304164421.GA22591@bogus>
+References: <20200301150920.55993-1-contact@artur-rojek.eu>
+ <20200301150920.55993-4-contact@artur-rojek.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200229151506.750242-2-heiko@sntech.de>
+In-Reply-To: <20200301150920.55993-4-contact@artur-rojek.eu>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 29 Feb 2020 16:15:05 +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+On Sun, Mar 01, 2020 at 04:09:19PM +0100, Artur Rojek wrote:
+> Add documentation for the adc-joystick driver, used to provide support
+> for joysticks connected over ADC.
 > 
-> The KD35T133 is a 3.5" 320x480 DSI display used in the RK3326-based
-> Odroid Go Advance handheld device.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  .../display/panel/elida,kd35t133.yaml         | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml
 > 
+>  Changes:
+> 
+>  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
+>      - rename `linux,abs-code` property to `linux,code`,
+>      - drop `linux,` prefix from the remaining properties of axis subnode
+> 
+>  v3: no change
+> 
+>  .../bindings/input/adc-joystick.yaml          | 117 ++++++++++++++++++
+>  1 file changed, 117 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/input/adc-joystick.yaml b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+> new file mode 100644
+> index 000000000000..91fc87dcbddb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+> @@ -0,0 +1,117 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019-2020 Artur Rojek
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/bindings/input/adc-joystick.yaml#"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Drop 'bindings'.
+
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: ADC attached joystick
+> +
+> +maintainers:
+> +  - Artur Rojek <contact@artur-rojek.eu>
+> +
+> +description: |
+> +  Bindings for joystick devices connected to ADC controllers supporting
+> +  the Industrial I/O subsystem.
+> +
+> +properties:
+> +  compatible:
+> +    const: adc-joystick
+> +
+> +  io-channels:
+> +    description: |
+> +      List of phandle and IIO specifier pairs.
+> +      Each pair defines one ADC channel to which a joystick axis is connected.
+> +      See Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
+
+How many?
+
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - io-channels
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +
+> +additionalProperties: false
+> +
+> +patternProperties:
+> +  "^axis@([0-9])$":
+
+Up to 10 axis?
+
+> +    type: object
+> +    description: |
+> +      Represents a joystick axis bound to the given ADC channel.
+> +      For each entry in the io-channels list, one axis subnode with a matching
+> +      reg property must be specified.
+> +
+> +    properties:
+> +      reg:
+> +        items:
+> +          description: Index of an io-channels list entry bound to this axis.
+
+reg:
+  enum: [ 0, 1 ]
+
+Or use minimum/maximum
+
+> +
+> +      linux,code:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: EV_ABS specific event code generated by the axis.
+> +
+> +      abs-range:
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+
+Needs to be under an 'allOf'.
+
+> +        items:
+> +          - description: minimum value
+> +          - description: maximum value
+> +        description: |
+> +          Minimum and maximum values produced by the axis.
+> +          For an ABS_X axis this will be the left-most and right-most
+> +          inclination of the joystick. If min > max, it is left to userspace to
+> +          treat the axis as inverted.
+> +          This property is interpreted as two signed 32 bit values.
+> +
+> +      abs-fuzz:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: |
+> +          Amount of noise in the input value.
+> +          Omitting this property indicates the axis is precise.
+> +
+> +      abs-flat:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: |
+> +          Axial "deadzone", or area around the center position, where the axis
+> +          is considered to be at rest.
+> +          Omitting this property indicates the axis always returns to exactly
+> +          the center position.
+> +
+> +    required:
+> +      - reg
+> +      - linux,code
+> +      - abs-range
+> +
+> +    additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
+> +    #include <dt-bindings/input/input.h>
+> +
+> +    joystick: adc-joystick {
+> +      compatible = "adc-joystick";
+> +      io-channels = <&adc INGENIC_ADC_TOUCH_XP>,
+> +                    <&adc INGENIC_ADC_TOUCH_YP>;
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      axis@0 {
+> +              reg = <0>;
+> +              linux,code = <ABS_X>;
+> +              abs-range = <3300 0>;
+> +              abs-fuzz = <4>;
+> +              abs-flat = <200>;
+> +      };
+> +      axis@1 {
+> +              reg = <1>;
+> +              linux,code = <ABS_Y>;
+> +              abs-range = <0 3300>;
+> +              abs-fuzz = <4>;
+> +              abs-flat = <200>;
+> +      };
+> +    };
+> -- 
+> 2.25.1
+> 
