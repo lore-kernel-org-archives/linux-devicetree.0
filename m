@@ -2,82 +2,116 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DDDC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98332C3F2D8
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99322465D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583336160;
-	bh=xrHg6a6gcAx1kZXMHV9BB7FHa0jzGDwxjARU5ukTksg=;
-	h=Date:From:To:To:To:CC:Cc:Cc:Subject:In-Reply-To:References:
-	 List-ID:From;
-	b=xKKeFuxZ0DSogH0VkGSoJNSJrim7EX5koYNW4ozZ2fndWpgUq3nCWPY/rnDIpx6oZ
-	 F4nk0fx68CA9xH8tE0qhJHOuycKpGXdW6vS5sCVejn4NrsFo5uRZDssYTQYIZMf5b9
-	 oNl59sP73cueBgpg7ZzEMUys/SQ7G9dvBmsRoakQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6EB9E217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388221AbgCDPgA (ORCPT
+        id S1726748AbgCDPoO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:36:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388151AbgCDPgA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:36:00 -0500
-Received: from localhost (unknown [137.135.114.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F76D21741;
-        Wed,  4 Mar 2020 15:35:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583336159;
-        bh=xrHg6a6gcAx1kZXMHV9BB7FHa0jzGDwxjARU5ukTksg=;
-        h=Date:From:To:To:To:CC:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=fwQ6HI6YyeO5m6pEtD8iLmuOByf5PXSfJLuV4dlKVzp1biFTN9sW1UxU0u5YuCI1V
-         faqyNC0oYVNBu1297ktVfxj2MaY77QO25UheSvz3Nt/L+OuJoHuFfXtS59IyHYzrPX
-         cmDcNYkXaNxUTMzT4eiWT+sNFx3XW/Qsg9opUBEo=
-Date:   Wed, 04 Mar 2020 15:35:58 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>
-Cc:     stable <stable@vger.kernel.org>
-Cc:     stable@vger.kernel.org
-Subject: Re: [Patch 1/1] media: ti-vpe: cal: fix disable_irqs to only the intended target
-In-Reply-To: <20200302135652.9365-1-bparrot@ti.com>
-References: <20200302135652.9365-1-bparrot@ti.com>
-Message-Id: <20200304153559.4F76D21741@mail.kernel.org>
+        Wed, 4 Mar 2020 10:44:14 -0500
+Received: from relmlor1.renesas.com ([210.160.252.171]:42611 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726561AbgCDPoO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 10:44:14 -0500
+X-IronPort-AV: E=Sophos;i="5.70,514,1574089200"; 
+   d="scan'208";a="40971363"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 05 Mar 2020 00:44:12 +0900
+Received: from marian-VirtualBox.ree.adwin.renesas.com (unknown [10.226.36.164])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id CFEAD400A6CD;
+        Thu,  5 Mar 2020 00:44:10 +0900 (JST)
+From:   Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
+To:     geert@linux-m68k.org
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <chris.paterson2@renesas.com>,
+        prabhakar.mahadev-lad.rj@bp.renesas.com, dmitry.torokhov@gmail.com,
+        linux-input@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2] ARM: dts: iwg22d-sodimm: Enable touchscreen
+Date:   Wed,  4 Mar 2020 15:44:10 +0000
+Message-Id: <1583336650-25848-1-git-send-email-marian-cristian.rotariu.rb@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
+In one of the iWave-G22D development board variants, called Generic SODIMM
+Development Platform, we have an LCD with touchscreen. The resistive touch
+controller, STMPE811 is on the development board and is connected through
+the i2c5 of the RZ-G1E.
 
-[This is an automated email]
+Additionally, this controller should generate an interrupt to the CPU and
+it is connected through GPIO4,4 to the GIC.
 
-This commit has been processed because it contains a -stable tag.
-The stable tag indicates that it's relevant for the following trees: all
+Touch was tested with one of our iW-RainboW-G22D-SODIMM RZ/G1E development
+platforms.
 
-The bot has tested the following trees: v5.5.7, v5.4.23, v4.19.107, v4.14.172, v4.9.215, v4.4.215.
+More details on the iWave website:
+https://www.iwavesystems.com/rz-g1e-sodimm-development-kit.html
 
-v5.5.7: Build OK!
-v5.4.23: Build OK!
-v4.19.107: Build OK!
-v4.14.172: Build OK!
-v4.9.215: Build OK!
-v4.4.215: Failed to apply! Possible dependencies:
-    343e89a792a5 ("[media] media: ti-vpe: Add CAL v4l2 camera capture driver")
+Changes from v1:
+ -remove redundant GPIO code
+ -remove obsolete and unused properties
+ -sync property values with the comments & the bindings
 
+Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 33 +++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
+diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+index 872f8a6..ab38b39 100644
+--- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
++++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+@@ -172,6 +172,39 @@
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+ 
++	stmpe811@44 {
++		compatible = "st,stmpe811";
++		reg = <0x44>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
++
++		/* 3.25 MHz ADC clock speed */
++		st,adc-freq = <1>;
++		/* ADC converstion time: 80 clocks */
++		st,sample-time = <4>;
++		/* 12-bit ADC */
++		st,mod-12b = <1>;
++		/* internal ADC reference */
++		st,ref-sel = <0>;
++
++		stmpe_touchscreen {
++			compatible = "st,stmpe-ts";
++			/* 8 sample average control */
++			st,ave-ctrl = <3>;
++			/* 7 length fractional part in z */
++			st,fraction-z = <7>;
++			/*
++			 * 50 mA typical 80 mA max touchscreen drivers
++			 * current limit value
++			 */
++			st,i-drive = <1>;
++			/* 1 ms panel driver settling time */
++			st,settling = <3>;
++			/* 5 ms touch detect interrupt delay */
++			st,touch-det-delay = <5>;
++		};
++	};
++
+ 	sgtl5000: codec@a {
+ 		compatible = "fsl,sgtl5000";
+ 		#sound-dai-cells = <0>;
 -- 
-Thanks
-Sasha
+2.7.4
+
