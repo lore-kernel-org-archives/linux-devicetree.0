@@ -4,110 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E18C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB5C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4770121739
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D701821775
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583338575;
-	bh=5b+K82CUnfrW/6WQimAd8HNrMVzMfD2pSGzyAiEGsDA=;
+	s=default; t=1583338632;
+	bh=C2C+R02yEsgoXAWifMf8o5sos/JWiXubq9zkoTrdw+8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xaG4sLgbaCEiNIlTxGJnUlvpLboJV2HhnKCcbDDbOM8g14hsuSltlAdt/fFlN6nA7
-	 ltMemGnZqCS/1Q+1X1TQO4vTjdQuJB3O376f9/fUb44eIuEz8VaNOdCp8f2y6npesL
-	 rsqo6u1yk57RQineDVPM5D5LGu07bYZAUyqYTalY=
+	b=rVFVdvxUvxdKAeYqxnqlqI0qNFsvXw1pLL9SH4S/46eFydhxVvBJ7arrBuZ3jQgDR
+	 bGSsyjNprmyjwu/56XwWO33OVB1kgiJ2hb95OYS3kIiFMCvczwCSNp8ln2HS2roh+f
+	 NXERAxiGdwWZTBFolcTAfrrArNRcorw5T30NItyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgCDQQO (ORCPT
+        id S2388147AbgCDQRM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:16:14 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42673 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgCDQQO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:16:14 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l12so2616162oil.9;
-        Wed, 04 Mar 2020 08:16:12 -0800 (PST)
+        Wed, 4 Mar 2020 11:17:12 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37396 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388042AbgCDQRM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:17:12 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q65so2642092oif.4;
+        Wed, 04 Mar 2020 08:17:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GhAsniKvYUMptrJyDO+p1c/FdpaCICij3vPs9vpAABc=;
-        b=AM/n4YR00J/Wy1i49Km/cUAwb+B0QZnL2VFTA2dq2ZpNR8oRTzr16Ursul74awi/a6
-         6ilnUfUmh9XyF3aO6ydFSZv0P4tfvb9cWlr/BGF8YrW/BsjaTomBl4nMhm/mWZlSfsuq
-         Y1ZznhItVa5nrzSwP+6E5oHVDOa5mjY1tTTLpTDs8N8jfmA4Y1v4L1YLnydYIpRQtId/
-         R254ipFeUijAknWmM0snIiJn/hV16qgv74bi8+4tlPmn7O08W0aD7vAZpM5/U8z9FwPZ
-         AjebC5mQcXI2XHgv77Jiaa8y+1xeNK6mI4o7flrhZQPodbEixf99Q/MyvXl1JNKl3g1o
-         UJew==
-X-Gm-Message-State: ANhLgQ1TLz5Glzy8oVAZqS7z5pIYgt3X0r9blZsHkFMj0LLMy4jVygQ7
-        nezqOtilgFTiaEdpyQZTxg==
-X-Google-Smtp-Source: ADFU+vscMM6br/Xn3C+U6tfhoqQLV4NMo3JZu/sSuSbhBxEB3/oNdCr4+Z6EvzgPb0uWjeursQTGaw==
-X-Received: by 2002:aca:4f8e:: with SMTP id d136mr2309174oib.77.1583338572096;
-        Wed, 04 Mar 2020 08:16:12 -0800 (PST)
+        bh=hPJMFKMZOVY1sSzz68ERLW9GZKjEL6tZJX3IPiL2Z04=;
+        b=sywg4ZC37VlDDuS6EbhtJw0Dhyqmns5kqMLlFUzOt6f52zknFCclnY1OQvDV9H4X+X
+         TN/K7r4mQ4q7WK8fLU7YubGj3MyJdWSF0ig7N4W/JbIH5UamzRD2g1ilABkO5YRU0Yum
+         GiFvPEDQbzBoYhIooWyJCEKa7ivehewO5Ol/Nt/va4VKFVfaK0UMOAuIGbulS8Dus354
+         5743tkWk1NVSohgqLzUaFRROGAj+H5FZO1o0/25G2NsOf6t9otOS66iVBZWP9GV3XptP
+         P0zfRjCo3CGWNHla6j6y46LPEokS9m7WU6fdFqgKMhSoAI87RPahxd0yb61/R2gp/akF
+         zz6Q==
+X-Gm-Message-State: ANhLgQ2FgJ/yLQQFhoAFFjoMEp+craSPvhtrFv4rbhYiRr9QFxydX4zb
+        lmlTYsTK8X4SHVJTAg5MRg==
+X-Google-Smtp-Source: ADFU+vt7hO9gxCqHxYY58e/pDKaHri4ZUKZOVFtBpHwZYFAM+cGK8HNV0cjIru21nI6P0NSvNckMrA==
+X-Received: by 2002:aca:3554:: with SMTP id c81mr180849oia.0.1583338630985;
+        Wed, 04 Mar 2020 08:17:10 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s83sm8891708oif.33.2020.03.04.08.16.10
+        by smtp.gmail.com with ESMTPSA id z10sm8898540oih.1.2020.03.04.08.17.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:16:11 -0800 (PST)
-Received: (nullmailer pid 26946 invoked by uid 1000);
-        Wed, 04 Mar 2020 16:16:10 -0000
-Date:   Wed, 4 Mar 2020 10:16:10 -0600
+        Wed, 04 Mar 2020 08:17:10 -0800 (PST)
+Received: (nullmailer pid 28440 invoked by uid 1000);
+        Wed, 04 Mar 2020 16:17:09 -0000
+Date:   Wed, 4 Mar 2020 10:17:09 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     rentao.bupt@gmail.com
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com, Tao Ren <rentao.bupt@gmail.com>
-Subject: Re: [PATCH v7 7/7] dt-bindings: usb: add documentation for aspeed
- usb-vhub
-Message-ID: <20200304161610.GA26873@bogus>
-References: <20200303062336.7361-1-rentao.bupt@gmail.com>
- <20200303062336.7361-8-rentao.bupt@gmail.com>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v7 04/18] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Message-ID: <20200304161709.GA28382@bogus>
+References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
+ <20200303171159.246992-5-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303062336.7361-8-rentao.bupt@gmail.com>
+In-Reply-To: <20200303171159.246992-5-bryan.odonoghue@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  2 Mar 2020 22:23:36 -0800, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
+On Tue,  3 Mar 2020 17:11:45 +0000, Bryan O'Donoghue wrote:
+> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > 
-> Add device tree binding documentation for the Aspeed USB 2.0 Virtual HUb
-> Controller.
+> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed PHY. This PHY
+> appears in a number of SoCs on various flavors of 20nm and 28nm nodes.
 > 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
+> This commit adds information related to the 28nm node only.
+> 
+> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+> definitions.
+> 
+> [bod: converted to yaml format]
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 > ---
->  Changes in v7:
->    - updated to dual license.
->    - removed description for "reg" and "clocks" properties.
->    - Added constraints (minimum/maximum/default) for vendor specific
->      properties.
->  Changes in v6:
->    - added 2 required properties into example and passed "make
->      dt_binding_check".
->  Changes in v5:
->    - updated maintainer to Ben.
->    - refined patch description per Joel's suggestion.
->  No change in v2/v3/v4:
->    - the patch is added to the patch series since v4.
-> 
->  .../bindings/usb/aspeed,usb-vhub.yaml         | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+>  .../devicetree/bindings/phy/qcom,usb-ss.yaml  | 83 +++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
