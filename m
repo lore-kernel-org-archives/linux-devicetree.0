@@ -2,123 +2,82 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306A5C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DDDC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B422467F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nCiMaYRE"
+	by mail.kernel.org (Postfix) with ESMTP id B99322465D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583336160;
+	bh=xrHg6a6gcAx1kZXMHV9BB7FHa0jzGDwxjARU5ukTksg=;
+	h=Date:From:To:To:To:CC:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=xKKeFuxZ0DSogH0VkGSoJNSJrim7EX5koYNW4ozZ2fndWpgUq3nCWPY/rnDIpx6oZ
+	 F4nk0fx68CA9xH8tE0qhJHOuycKpGXdW6vS5sCVejn4NrsFo5uRZDssYTQYIZMf5b9
+	 oNl59sP73cueBgpg7ZzEMUys/SQ7G9dvBmsRoakQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388174AbgCDPfX (ORCPT
+        id S2388221AbgCDPgA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:35:23 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:35375 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388204AbgCDPfV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 10:35:21 -0500
-Received: by mail-vs1-f66.google.com with SMTP id u26so1417214vsg.2
-        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 07:35:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=00Rmwnfg0e8r9SY74u4uZcoPfhjgx61DXTReZJdbiIk=;
-        b=nCiMaYREzujENq6r9s3oF6FobXuqD+FjnzxchAvr0xEXY3BDosEUmf0+KT3MiYXaJE
-         u6FRN2vn3Gag82PCLB6dOe/67ac8j6AYYwYH/FJHy6IX/AxlXrWSPtmLfjHuIAR4s0dv
-         fGGG7ByifG5zUY+D0jTOjIhUOVQO+vp8wk6GBYytGWwtLUTZ4pY9f8/2gbkZLks8cG7d
-         AmPheQioOaLxCiKBCB9Y0U79GQXzhXDKLz6y8RMUSEbmwDNWLZzVBOHFve/MsqFc4ZX9
-         jAQPleE++XM4XCrTKuEN5jE/ipg/CDvvhpI4y2TgGv3PweP86DhQS9/JUyYiCleXy5nP
-         saYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=00Rmwnfg0e8r9SY74u4uZcoPfhjgx61DXTReZJdbiIk=;
-        b=fUoa9N5rlfoxGVaxFOO6CDEH/K/JU4BePHTKas/mHNrMPWItNSj6ihgNw3EY+KPzh3
-         7LBidbrtRhIURPKmi8QCac+dbjFqazqGNvS6cilqWwIay+2R+/kqNK57msCmtva1vEz4
-         Tm9M6UZ3RP7FUBCByeQjrNEBeOx6g7f37gNZqh5Br8o517oDHER2Tgm+IwBNWY2lzeHU
-         9Uci2LUs2qCQTXyB7ua7T7l7yzOwPQo20BW1bt8LA/OZfjQhKHS9U2zg2v+fC1CC3pZ0
-         G1/arE4kFGLCDlH1kQaCKqcARMDWaX36oomZi1gQisuGmsDbPxQJhx0rmTgH41dK0/Ti
-         0MZw==
-X-Gm-Message-State: ANhLgQ0OguhNJO3sKuMobsei+T+GDT7O2nrhzojxp4Te51KF0gRpbGvS
-        T+lG+zpzDNIBkNZALcNZPP02GJWeRRlvznbvkQXauQ==
-X-Google-Smtp-Source: ADFU+vs9hDVln8eSdHw8W62ASMunkWacXNAeeWvHb8JN1bWM8m+X51t4UiXom4UigR9Y6SsrcdqmR8ZMgpiqOySQX6s=
-X-Received: by 2002:a67:f4cf:: with SMTP id s15mr2024818vsn.165.1583336119283;
- Wed, 04 Mar 2020 07:35:19 -0800 (PST)
-MIME-Version: 1.0
-References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org> <1582545470-11530-1-git-send-email-vbadigan@codeaurora.org>
-In-Reply-To: <1582545470-11530-1-git-send-email-vbadigan@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 4 Mar 2020 16:34:43 +0100
-Message-ID: <CAPDyKFok8p+yuokLBZX3RF5U6SQYMKKeDf=co1-WzotBQzprQg@mail.gmail.com>
-Subject: Re: [PATCH V3] dt-bindings: mmc: sdhci-msm: Add CQE reg map
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
-        Ram Prakash Gupta <rampraka@codeaurora.org>,
-        Doug Anderson <dianders@google.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Mar 2020 10:36:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388151AbgCDPgA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:36:00 -0500
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F76D21741;
+        Wed,  4 Mar 2020 15:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583336159;
+        bh=xrHg6a6gcAx1kZXMHV9BB7FHa0jzGDwxjARU5ukTksg=;
+        h=Date:From:To:To:To:CC:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=fwQ6HI6YyeO5m6pEtD8iLmuOByf5PXSfJLuV4dlKVzp1biFTN9sW1UxU0u5YuCI1V
+         faqyNC0oYVNBu1297ktVfxj2MaY77QO25UheSvz3Nt/L+OuJoHuFfXtS59IyHYzrPX
+         cmDcNYkXaNxUTMzT4eiWT+sNFx3XW/Qsg9opUBEo=
+Date:   Wed, 04 Mar 2020 15:35:58 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>
+Cc:     stable <stable@vger.kernel.org>
+Cc:     stable@vger.kernel.org
+Subject: Re: [Patch 1/1] media: ti-vpe: cal: fix disable_irqs to only the intended target
+In-Reply-To: <20200302135652.9365-1-bparrot@ti.com>
+References: <20200302135652.9365-1-bparrot@ti.com>
+Message-Id: <20200304153559.4F76D21741@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2020 at 12:58, Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
->
-> CQE feature has been enabled on sdhci-msm. Add CQE reg map
-> and reg names that need to be supplied for supporting CQE feature.
->
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Hi
 
-Applied for next, thanks!
+[This is an automated email]
 
-Kind regards
-Uffe
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
+
+The bot has tested the following trees: v5.5.7, v5.4.23, v4.19.107, v4.14.172, v4.9.215, v4.4.215.
+
+v5.5.7: Build OK!
+v5.4.23: Build OK!
+v4.19.107: Build OK!
+v4.14.172: Build OK!
+v4.9.215: Build OK!
+v4.4.215: Failed to apply! Possible dependencies:
+    343e89a792a5 ("[media] media: ti-vpe: Add CAL v4l2 camera capture driver")
 
 
-> ---
-> Changes since V2:
->         - Dropped _mem suffix to reg names.
->
-> Changes since V1:
->         - Updated description for more clarity & Fixed typos.
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index 7ee639b..5445931 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -26,7 +26,13 @@ Required properties:
->
->  - reg: Base address and length of the register in the following order:
->         - Host controller register map (required)
-> -       - SD Core register map (required for msm-v4 and below)
-> +       - SD Core register map (required for controllers earlier than msm-v5)
-> +       - CQE register map (Optional, CQE support is present on SDHC instance meant
-> +                           for eMMC and version v4.2 and above)
-> +- reg-names: When CQE register map is supplied, below reg-names are required
-> +       - "hc" for Host controller register map
-> +       - "core" for SD core register map
-> +       - "cqhci" for CQE register map
->  - interrupts: Should contain an interrupt-specifiers for the interrupts:
->         - Host controller interrupt (required)
->  - pinctrl-names: Should contain only one value - "default".
-> --
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
