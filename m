@@ -2,130 +2,97 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E574BC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4271C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48642166E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711D024655
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583338229;
+	bh=HV1k+UuV+bDXQzId5WwKuGvBGn5dDTBSjXxwhqXriaU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2nCr8/VEHpgkf8L4erHBEYz1DURC2LBMXraYkM6Lr2GN0Au0nAP6yK2fHY5n0lNS+
+	 deHTu3Ag14kZiMYgg4KzGSDjfTOeoxJ1eOp4Ktd3pPbnBkmSraIFmh2It60W5i/noQ
+	 OVitOqVNUQhmstYOyhphq99ivJV5M7nsM9XJmX3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgCDQEe (ORCPT
+        id S1729675AbgCDQK3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:04:34 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:60254 "EHLO inva021.nxp.com"
+        Wed, 4 Mar 2020 11:10:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbgCDQEe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:04:34 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BC7AA20020D;
-        Wed,  4 Mar 2020 17:04:31 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AEEB9200224;
-        Wed,  4 Mar 2020 17:04:31 +0100 (CET)
-Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 1CC94202D2;
-        Wed,  4 Mar 2020 17:04:31 +0100 (CET)
-From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>
-Subject: [PATCH net v2 0/4] QorIQ DPAA FMan erratum A050385 workaround
-Date:   Wed,  4 Mar 2020 18:04:24 +0200
-Message-Id: <1583337868-3320-1-git-send-email-madalin.bucur@oss.nxp.com>
-X-Mailer: git-send-email 2.1.0
-Content-Type: text/plain; charset="us-ascii"
-Reply-to: madalin.bucur@oss.nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726561AbgCDQK2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:10:28 -0500
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB2F215A4;
+        Wed,  4 Mar 2020 16:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583338228;
+        bh=HV1k+UuV+bDXQzId5WwKuGvBGn5dDTBSjXxwhqXriaU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wq/gLwDBl189a6sIBnQ9062LI4MxpZW7iIh4HaQV4YdFdHeyTXqPG9k/v8Qo+KvEl
+         D+Jc6XtOcB7BznfLvO3wTcv9BZEcACnDml0SQ0D214gPCuDl7iu5shyghv7UVLyc1D
+         17FBBYszg6+BOsXYHk0wprExjY98oaF/imfzndy0=
+Received: by mail-qk1-f177.google.com with SMTP id e11so2121458qkg.9;
+        Wed, 04 Mar 2020 08:10:27 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3gZcdYiG3EY+MB2kFA/sFXD6SI1P/7vRzDOoBmr3+CvtBUo/YZ
+        i5SSYXuz+gv5O5WmSb/4yngdk3h6iyT0cUJB0g==
+X-Google-Smtp-Source: ADFU+vsFWy5BtFwqt6beGig/xn6nSLKSdhRCTGjxy84zCHhWecCpustVSn/BpiBgEtLg8viFjCvcaTRW/Kurrn1//kU=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr3690948qkg.152.1583338227056;
+ Wed, 04 Mar 2020 08:10:27 -0800 (PST)
+MIME-Version: 1.0
+References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-3-masahiroy@kernel.org>
+In-Reply-To: <20200304032038.14424-3-masahiroy@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 4 Mar 2020 10:10:15 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKrdC7B_8TfbgESq1ZR3TVxR9bGvpxUDVVmMxi6tceQ=A@mail.gmail.com>
+Message-ID: <CAL_JsqKrdC7B_8TfbgESq1ZR3TVxR9bGvpxUDVVmMxi6tceQ=A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] kbuild: allow to run dt_binding_check and dtbs_check
+ in a single command
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Changes in v2:
- - added CONFIG_DPAA_ERRATUM_A050385
- - removed unnecessary parenthesis
- - changed alignment defines to use only decimal values
+On Tue, Mar 3, 2020 at 9:20 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Since commit 93512dad334d ("dt-bindings: Improve validation build error
+> handling"), 'make dtbs_check' does not validate the schema fully.
+>
+> If you want to check everything, you need to run two commands.
+>
+>   $ make ARCH=arm dt_binding_check
+>   $ make ARCH=arm dtbs_check
+>
+> They are exclusive each other, so you cannot do like this:
+>
+>   $ make ARCH=arm dt_binding_check dtbs_check
+>
+> In this case, dt-doc-validate and dt-extract-example are skipped
+> because CHECK_DTBS is set.
+>
+> Let's make it possible to run those two targets simultaneously.
+> It will be useful for schema writers.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  Documentation/devicetree/bindings/Makefile  | 8 +++-----
+>  Documentation/devicetree/writing-schema.rst | 4 ++++
+>  Makefile                                    | 6 +++++-
+>  3 files changed, 12 insertions(+), 6 deletions(-)
 
-The patch set implements the workaround for FMan erratum A050385:
-
-FMAN DMA read or writes under heavy traffic load may cause FMAN
-internal resource leak; thus stopping further packet processing.
-To reproduce this issue when the workaround is not applied, one
-needs to ensure the FMan DMA transaction queue is already full
-when a transaction split occurs so the system must be under high
-traffic load (i.e. multiple ports at line rate). After the errata
-occurs, the traffic stops. The only SoC impacted by this is the
-LS1043A, the other ARM DPAA 1 SoC or the PPC DPAA 1 SoCs do not
-have this erratum.
-
-The FMAN internal queue can overflow when FMAN splits single
-read or write transactions into multiple smaller transactions
-such that more than 17 AXI transactions are in flight from FMAN
-to interconnect. When the FMAN internal queue overflows, it can
-stall further packet processing. The issue can occur with any one
-of the following three conditions:
-
-  1. FMAN AXI transaction crosses 4K address boundary (Errata
-         A010022)
-  2. FMAN DMA address for an AXI transaction is not 16 byte
-         aligned, i.e. the last 4 bits of an address are non-zero
-  3. Scatter Gather (SG) frames have more than one SG buffer in
-         the SG list and any one of the buffers, except the last
-         buffer in the SG list has data size that is not a multiple
-         of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
-
-With any one of the above three conditions present, there is
-likelihood of stalled FMAN packet processing, especially under
-stress with multiple ports injecting line-rate traffic.
-
-To avoid situations that stall FMAN packet processing, all of the
-above three conditions must be avoided; therefore, configure the
-system with the following rules:
-
-  1. Frame buffers must not span a 4KB address boundary, unless
-         the frame start address is 256 byte aligned
-  2. All FMAN DMA start addresses (for example, BMAN buffer
-         address, FD[address] + FD[offset]) are 16B aligned
-  3. SG table and buffer addresses are 16B aligned and the size
-         of SG buffers are multiple of 16 bytes, except for the last
-         SG buffer that can be of any size.
-
-Additional workaround notes:
-- Address alignment of 64 bytes is recommended for maximally
-efficient system bus transactions (although 16 byte alignment is
-sufficient to avoid the stall condition)
-- To support frame sizes that are larger than 4K bytes, there are
-two options:
-  1. Large single buffer frames that span a 4KB page boundary can
-         be converted into SG frames to avoid transaction splits at
-         the 4KB boundary,
-  2. Align the large single buffer to 256B address boundaries,
-         ensure that the frame address plus offset is 256B aligned.
-- If software generated SG frames have buffers that are unaligned
-and with random non-multiple of 16 byte lengths, before
-transmitting such frames via FMAN, frames will need to be copied
-into a new single buffer or multiple buffer SG frame that is
-compliant with the three rules listed above.
-
-Madalin Bucur (4):
-  dt-bindings: net: FMan erratum A050385
-  arm64: dts: ls1043a: FMan erratum A050385
-  fsl/fman: detect FMan erratum A050385
-  dpaa_eth: FMan erratum A050385 workaround
-
- Documentation/devicetree/bindings/net/fsl-fman.txt |   7 ++
- arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi |   2 +
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c     | 110 ++++++++++++++++++++-
- drivers/net/ethernet/freescale/fman/Kconfig        |  28 ++++++
- drivers/net/ethernet/freescale/fman/fman.c         |  18 ++++
- drivers/net/ethernet/freescale/fman/fman.h         |   5 +
- 6 files changed, 167 insertions(+), 3 deletions(-)
-
--- 
-2.1.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
