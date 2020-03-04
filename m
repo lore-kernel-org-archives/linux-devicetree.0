@@ -2,150 +2,88 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F735C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB15EC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAB821741
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8416D2166E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:09:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yJiakj4S"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rRQN1wuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388097AbgCDNGU (ORCPT
+        id S2387776AbgCDNJR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:06:20 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53820 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388048AbgCDNGT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 08:06:19 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 024D6IhF011908;
-        Wed, 4 Mar 2020 07:06:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583327178;
-        bh=YXzQppbglr+xPKbiEaDdJH1kY4n3UhI0W2ajY77vJNE=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=yJiakj4S7Opplp7tEymkkymcUSmZfZgIn20p0umYvd2cAWhubn2acqBd/7yfIh5sv
-         dfer8+oCOgvgRkJsXOrGGk2VUQHwvskVj+ZVM3cBn5csRRpUV7exL/AXez2Qf+DW3h
-         4e5u4m5SAtUN1H/dGJE8CBVJbgJ7CIHoZ48Itx/4=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 024D6IWQ070658
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 07:06:18 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 07:06:18 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 07:06:18 -0600
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id 024D6Icj099558;
-        Wed, 4 Mar 2020 07:06:18 -0600
-Date:   Wed, 4 Mar 2020 07:10:53 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-Subject: Re: [Patch] media: ti-vpe: cal: fix a kernel oops when unloading
- module
-Message-ID: <20200304131053.k76vivpwv3tvr52d@ti.com>
-References: <20200303172629.21339-1-bparrot@ti.com>
- <4010c13f-6a32-f3c3-5b6d-62a4e3782c64@ti.com>
- <f7f6dd87-147f-b9e9-aaa7-c063a8f3c11e@ti.com>
- <a2e6510f-ffd9-060e-ab03-cdc261ecc778@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <a2e6510f-ffd9-060e-ab03-cdc261ecc778@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 4 Mar 2020 08:09:17 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:60628 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726440AbgCDNJR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 08:09:17 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583327356; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=/9KMV4bz9yQQBdDYMd242fhFL2hzub31ZngWvFmtQFc=; b=rRQN1wucB9D01WyM9zW7DuAh31eTaH6zdV9YCmSOVmCKwwLk3y7483LGz7WpVwG363bE3owC
+ IRVvAtUE7ollA0jyOz/flWxYRsdEWPsRWm+Y722IposH96kL2Dp9A2Z9AwteZSG2vc3R2xR0
+ KK3byaMDl1pGJ51jsrsRuOJAA8w=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5fa87b.7f7aaec8ec70-smtp-out-n02;
+ Wed, 04 Mar 2020 13:09:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 469DBC447A2; Wed,  4 Mar 2020 13:09:15 +0000 (UTC)
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F2E8C43383;
+        Wed,  4 Mar 2020 13:09:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F2E8C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V2 0/2] Add support for WLED5
+Date:   Wed,  4 Mar 2020 18:38:53 +0530
+Message-Id: <1583327335-26899-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tomi,
+Currently, WLED driver supports only WLED4 peripherals that is present
+on pmi8998 and pm660L. This patch series  converts the existing WLED4
+bindings from .txt to .yaml format and adds the support for WLED5 peripheral
+that is present on PM8150L.
 
-Thanks for the review, and fix!
+PM8150L WLED supports the following.
+    - Two modulators and each sink can use any of the modulator
+    - Multiple CABC selection options
+    - Multiple brightness width selection (12 bits to 15 bits)
 
-Tomi Valkeinen <tomi.valkeinen@ti.com> wrote on Wed [2020-Mar-04 11:22:26 +0200]:
-> On 04/03/2020 10:41, Tomi Valkeinen wrote:
-> 
-> >> Thanks, this fixes the crash for me.
-> >>
-> >> It does look a bit odd that something is allocated with kzalloc, and then it's freed somewhere 
-> >> inside v4l2_async_notifier_cleanup, though. But if that's how it supposed to be used, looks fine 
-> >> to me.
-> > 
-> > Well, sent that a few seconds too early... With this patch, I see kmemleaks.
-> 
-> This is caused by allocating asd for all ports, even if the port is not used, causing the allocated asd to be forgotten. Also, any error there would cause leak too.
-> 
-> I think something like this fixes both the unused port case and error paths:
-> 
+Changes from V1:
+	- Rebased on top of the below commit.
+	  backlight: qcom-wled: Fix unsigned comparison to zero
 
-Yes I see that now. Good catch.
-I'll fix it in v2.
+Kiran Gunda (2):
+  backlight: qcom-wled: convert the wled bindings to .yaml format
+  backlight: qcom-wled: Add support for WLED5 peripheral in PM8150L
 
-Benoit
+ .../bindings/leds/backlight/qcom-wled.txt          | 154 -------
+ .../bindings/leds/backlight/qcom-wled.yaml         | 223 ++++++++++
+ drivers/video/backlight/qcom-wled.c                | 459 ++++++++++++++++++---
+ 3 files changed, 634 insertions(+), 202 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
 
-> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> index a928c9d66d5d..4b89dd53d2b4 100644
-> --- a/drivers/media/platform/ti-vpe/cal.c
-> +++ b/drivers/media/platform/ti-vpe/cal.c
-> @@ -372,8 +372,6 @@ struct cal_ctx {
->  	struct v4l2_subdev	*sensor;
->  	struct v4l2_fwnode_endpoint	endpoint;
->  
-> -	struct v4l2_async_subdev asd;
-> -
->  	struct v4l2_fh		fh;
->  	struct cal_dev		*dev;
->  	struct cc_data		*cc;
-> @@ -2020,7 +2018,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
->  
->  	parent = pdev->dev.of_node;
->  
-> -	asd = &ctx->asd;
->  	endpoint = &ctx->endpoint;
->  
->  	ep_node = NULL;
-> @@ -2067,8 +2064,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
->  		ctx_dbg(3, ctx, "can't get remote parent\n");
->  		goto cleanup_exit;
->  	}
-> -	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> -	asd->match.fwnode = of_fwnode_handle(sensor_node);
->  
->  	v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), endpoint);
->  
-> @@ -2098,9 +2093,17 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
->  
->  	v4l2_async_notifier_init(&ctx->notifier);
->  
-> +	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
-> +	if (!asd)
-> +		goto cleanup_exit;
-> +
-> +	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> +	asd->match.fwnode = of_fwnode_handle(sensor_node);
-> +
->  	ret = v4l2_async_notifier_add_subdev(&ctx->notifier, asd);
->  	if (ret) {
->  		ctx_err(ctx, "Error adding asd\n");
-> +		kfree(asd);
->  		goto cleanup_exit;
->  	}
->  
->  Tomi
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
