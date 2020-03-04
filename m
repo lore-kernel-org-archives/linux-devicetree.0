@@ -2,98 +2,159 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F54C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 07:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1D6C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 07:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5D0207FD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 07:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583305264;
-	bh=5dSFTcmBx6dmmeOBWTXYE4TNNsxJSM/YZDSHZwHtaKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jzIWg0VT1IulAw+EuwkgCIFwSENy08okysDmMXZm1a18IvssQZH8LZayHx8/8Zj+/
-	 24KQDTOyJoLbGYJm4IeM3L1s4xwncBQWgcrvStiwpXipcaa2PP2KvoGULcLVarJVH9
-	 ++eG4W5h9banwqJiPSRQex97zaUzdtFrgwPhWHhQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2170221739
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 07:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uiQLWorU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgCDHBD (ORCPT
+        id S1728319AbgCDH2N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:01:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbgCDHBD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:01:03 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C1C2073D;
-        Wed,  4 Mar 2020 07:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583305262;
-        bh=5dSFTcmBx6dmmeOBWTXYE4TNNsxJSM/YZDSHZwHtaKo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oMbeQr/f9y11OFuloHo6j+F4ckDHepijvQWmviM8nCY+FBuVPiYYm1Iq/NftJ7QmQ
-         0BH+HhXlzibQpqItSEm521mf+2xcx/8xSQbGxiAoEzO6YGkShMGe0QQ3oQBNp/Xyox
-         UFPT20xGyZG9Lu/kJx2eWvHTcw0x2lnhETWSfXxA=
-Date:   Wed, 4 Mar 2020 08:01:00 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Nagarjuna Kristam <nkristam@nvidia.com>, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V5 00/21] Tegra XUSB OTG support
-Message-ID: <20200304070100.GA1271591@kroah.com>
-References: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
- <20200217085130.GJ1339021@ulmo>
- <20200227173226.GA1114616@ulmo>
+        Wed, 4 Mar 2020 02:28:13 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33244 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgCDH2N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 02:28:13 -0500
+Received: by mail-pg1-f195.google.com with SMTP id m5so579946pgg.0;
+        Tue, 03 Mar 2020 23:28:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GQ+CUp+1AMSQaNMNgIbviSQx1y9loRr5fUvJb8ibZj8=;
+        b=uiQLWorUiGOdPnaOOQlgkFoHplLC6t7myellJvAWKMqtP4ZS4J7gpqQdmuWCoQ9UE6
+         pzq6Tq+YcDvDiPls+QKJKDDSxPMfZb7H7g0cKTxR43zHm63Mv219RTwruHUjKXb7xdtA
+         jmqAKdUsJ7NMtjm8qiUHoe/t8KR/SoZXkDx4bbm8+WqYaEsjIzIHLBxKuonkf9pV8RMU
+         osOGeQtOc8BQAHzDxbJJE75YCEVXjqVIJWkjj4RNe+W33RzKie/qXizqEy+ZytvCjmwC
+         a2nrYDVxFZkmiG2qncdRM7TFvShT18y5ObxmJDc53mpOAZWkDUGGkofupP8n746iuxii
+         CBEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GQ+CUp+1AMSQaNMNgIbviSQx1y9loRr5fUvJb8ibZj8=;
+        b=bKq3rmm518j9SoYNNEz7U6PFXXrXQ6/vhX+0QKAE5Yn7xJWIPXVtgIL3xYix66BbXA
+         2vEyKF61mSeK4NUqTTF4HNp9h+segjWQAzdS5TRJ7kYs5ygjiwMevh4AlhRHyKWBdW+Z
+         oVc1ZXUH31zS9hr8an22GMTb1EiTDgC0h/g8IR+03aqqR0x+XmHAjhVIoVyGTRn82QWp
+         bWbL4qThAikdY9av81xVoiMTy/q24CKnGCIK5FULMZjLpq2TFw/nMdIXVEhG/b91rncK
+         /qZ6yOFEMO1CxtEB123rf6mHdXuH3Ush+5VrKMM+YlapKq43x0ThyO90AkfJJipsTSzo
+         HHVw==
+X-Gm-Message-State: ANhLgQ1sp+83OTLJZgsM+LAg7D229o4Ju166nVwl/ZD7r5MGEcm8U/8c
+        RSIVgul2+O3H3t4+kCRlDGIquivu
+X-Google-Smtp-Source: ADFU+vvtZwUp3H8qcdnnIzv+yvtHwIMTB9mu+belfvosBk7NPcEGmuHjXbVDPSNa+wrVld1kfeg8Kw==
+X-Received: by 2002:a62:cfc1:: with SMTP id b184mr1795452pfg.55.1583306892166;
+        Tue, 03 Mar 2020 23:28:12 -0800 (PST)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id j38sm23435859pgi.51.2020.03.03.23.28.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 23:28:11 -0800 (PST)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH v6 0/7] Add clocks for Unisoc's SC9863A
+Date:   Wed,  4 Mar 2020 15:27:23 +0800
+Message-Id: <20200304072730.9193-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227173226.GA1114616@ulmo>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 06:32:26PM +0100, Thierry Reding wrote:
-> On Mon, Feb 17, 2020 at 09:51:30AM +0100, Thierry Reding wrote:
-> > On Mon, Feb 10, 2020 at 01:41:26PM +0530, Nagarjuna Kristam wrote:
-> > > This patch series adds OTG support on XUSB hardware used in Tegra210 and
-> > > Tegra186 SoCs.
-> > > 
-> > > This patchset is composed with :
-> > >  - dt bindings of XUSB Pad Controller
-> > >  - dt bindings for XUSB device Driver
-> > >  - Tegra PHY driver for usb-role-switch and usb-phy
-> > >  - Tegra XUSB host mode driver to support OTG mode
-> > >  - Tegra XUSB device mode driver to use usb-phy and multi device mode
-> > >  - dts for XUSB pad controller
-> > >  - dts for xudc for Jetson TX1 and TX2
-> > >  - dts for Jetson-TK1
-> > >  - dts for Jetson-Nano
-> > > 
-> > > Tegra Pad controller driver register for role switch updates for
-> > > OTG/peripheral capable USB ports and adds usb-phy for that corresponding
-> > > USB ports.
-> > > 
-> > > Host and Device mode drivers gets usb-phy from USB2's phy and registers
-> > > notifier for role changes to perform corresponding role tasks.
-> > > 
-> > > Order of merging Patches:
-> > > Please merge DT changes first followed Tegra PHY driver changes and then
-> > > USB driver changes.
-> > 
-> > Felipe, Greg, Kishon,
-> > 
-> > Given the runtime dependencies between these various parts, I could pick
-> > these up into the Tegra tree if you provide an Acked-by.
-> 
-> Ping. Are you guys okay if I pick these up into the Tegra tree?
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-That's up to Felipe, I have no opinion :)
+Add SC9863A specific clock driver and devicetree bindings for it,
+this patch add to support the new way of specifying parents
+without name strings of clocks.
+
+Also this patchset added support gate clock for pll which need to
+wait a certain time for stable after being switched on.
+
+Changes from v5:
+* Addressed comments from Rob:
+- Removed description from "clock-names" and "reg" properties;
+- Added maxItem to "reg" property.
+* Modified the descriptions for those clocks which are a child node of
+  a syscon.
+
+Changes from v4:
+* Fixed dt_binding_check warnings.
+
+Changes from v3:
+* Rebased onto v5.6-rc1.
+
+Changes from v2:
+* Addressed comments from Stephen:
+- Remove ununsed header file from sc9863a-clk.c;
+- Added comments for clocks which were marked with CLK_IGNORE_UNUSED,
+  and removed some unnecessary CLK_IGNORE_UNUSED;
+- Added error checking for sprd_clk_regmap_init().
+
+* Addressed comments from Rob:
+- Put some clocks under syscon nodes, since these clocks have the same
+  physical address base with the syscon;
+- Added clocks maxItems and listed out clock-names.
+
+* Added Rob's reviewed-by on patch 4.
+
+Changes from v1:
+* Addressed comments:
+- Removed redefine things;
+- Switched DT bindings to yaml schema;
+- Added macros for the new way of specifying clk parents; 
+- Switched to use the new way of specifying clk parents;
+- Clean CLK_IGNORE_UNUSED flags for some SC9863A clocks;
+- Dropped the module alias;
+- Use device_get_match_data() instead of of_match_node();
+
+* Added Rob's Acked-by on patch 2.
+
+Chunyan Zhang (6):
+  dt-bindings: clk: sprd: rename the common file name sprd.txt to SoC
+    specific
+  dt-bindings: clk: sprd: add bindings for sc9863a clock controller
+  clk: sprd: Add dt-bindings include file for SC9863A
+  clk: sprd: Add macros for referencing parents without strings
+  clk: sprd: support to get regmap from parent node
+  clk: sprd: add clocks support for SC9863A
+
+Xiaolong Zhang (1):
+  clk: sprd: add gate for pll clocks
+
+ .../clock/{sprd.txt => sprd,sc9860-clk.txt}   |    2 +-
+ .../bindings/clock/sprd,sc9863a-clk.yaml      |  105 +
+ drivers/clk/sprd/Kconfig                      |    8 +
+ drivers/clk/sprd/Makefile                     |    1 +
+ drivers/clk/sprd/common.c                     |   10 +-
+ drivers/clk/sprd/composite.h                  |   39 +-
+ drivers/clk/sprd/div.h                        |   20 +-
+ drivers/clk/sprd/gate.c                       |   17 +
+ drivers/clk/sprd/gate.h                       |  120 +-
+ drivers/clk/sprd/mux.h                        |   28 +-
+ drivers/clk/sprd/pll.h                        |   55 +-
+ drivers/clk/sprd/sc9863a-clk.c                | 1772 +++++++++++++++++
+ include/dt-bindings/clock/sprd,sc9863a-clk.h  |  334 ++++
+ 13 files changed, 2457 insertions(+), 54 deletions(-)
+ rename Documentation/devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} (98%)
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+ create mode 100644 drivers/clk/sprd/sc9863a-clk.c
+ create mode 100644 include/dt-bindings/clock/sprd,sc9863a-clk.h
+
+-- 
+2.20.1
+
