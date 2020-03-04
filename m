@@ -2,123 +2,136 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503BEC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BE3C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3124220870
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7BD20870
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:05:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kz3ZoEts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgCDNBq (ORCPT
+        id S1729386AbgCDNFb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:01:46 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40547 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729175AbgCDNBq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 08:01:46 -0500
-Received: by mail-ot1-f67.google.com with SMTP id x19so1886147otp.7;
-        Wed, 04 Mar 2020 05:01:46 -0800 (PST)
+        Wed, 4 Mar 2020 08:05:31 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:45106 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729175AbgCDNFb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 08:05:31 -0500
+Received: by mail-vs1-f68.google.com with SMTP id m4so1046051vsa.12
+        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 05:05:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y6V/ThFMEUQVv4pGKZWOlNFwrQHTHd/Cjm8+feJdCcI=;
+        b=Kz3ZoEtsx/w9PtpTfMWI8BfIvHJpdI9eqfduNdgSwzkFoNOvf5mynamxJMQ38s1scq
+         UG5FlR10x0pBG5V1AFPAdPmP0MOEpxBmXzWx7P7RmWNYCu4XmNn6TTtWxhX7VSYioDlK
+         wEcFWuz1KtLJRddXeMmM++EC+8fDJOiJlgk+zDB8nWuDmYPwY4OX5/qowiZ948/V+kxU
+         9IUoYDeOARIZkvwXc5m99BVtXs8ZzFhifpP2vb1byNKWfJ9JZBThXmMUnc6lTfQjIsKu
+         167dPumst3rTtZBc9uDOXmDzBFJItYEmLl1hwTjdK/BEIWqYTDx9KTbELZK9I7NV8XN+
+         RenA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=opM8Fy++1GyzDxf+EPvf/wCqRO4m4i5PhEYBUHthtOc=;
-        b=qMIHC9SBj3BlqcAS5KgiznPD16M9p5WxOiNy4VeLO13vJCIVFXBr6m/GrwrLi+q949
-         KhojqiXeDxYsjVvjqOAsWjP8YDLoHqC5k/47EkoQSLx6iqPFN/3/03Mjs5GZ/c4+orxr
-         IIchzrz7EkOmzHGk2LwMvtIlE0Sa6r1FDLHCbEJDCfYgUMpSz+8WSJE3Bf1d+qqWV6tj
-         y/b3Jmt9+9lAdlqRRP75O37FM3FUpKhvibPtpgm/wSxBWQGG6tw7fGN78Tg7tZ7vJmQS
-         M99dL19cdvMyIJnTPHl2qYfUKiGk+TrFNQl7giRo16PHimoHh2eP8zOdqX7hUe6A59TG
-         ilEg==
-X-Gm-Message-State: ANhLgQ34Jqu5/WzG0d1pUedwvH4EbLckvMLq+tjqUlP0f0MxmSzj+V3/
-        Qlw1/mCLU2CxB74M/us+ZDIirwAFH940pnA+GDQ=
-X-Google-Smtp-Source: ADFU+vsU78gBsz9h37aXui1CkbXyoggabSJPcX+7H2jLG4oKFbmh2MhIgJsb02nVhmQvV8gDrE04gu8SZZFHKiU3/u8=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr2229894ots.250.1583326905599;
- Wed, 04 Mar 2020 05:01:45 -0800 (PST)
+        bh=y6V/ThFMEUQVv4pGKZWOlNFwrQHTHd/Cjm8+feJdCcI=;
+        b=nn8sDv+bwjB2FLnzrfAUjgAgeLYWbGGgnM4oUZ2znXpzR/kZww9kH0oYNmuiLd/m6I
+         vyQDvv+zES5SafaCCSUz65IiTCOdHkbObgMZ8o7Fj+eXEyaPzjWD0tUdiol2UUgDWABV
+         dn75MyU5ukc6BwJaYF7TYZTBscPdJ223PgUNCLi/qBQMx/ecLMW5cEqzP9UuW30kB9LV
+         EMMRcWLaSICz3C7HtIZthuhBYgLbdOV3HvnzOfJW3t/EgnrR3kv4YVsFFh9rY+QUQmYV
+         qLK9AhgdAK8xu1rzfFuLh5cAbPQpuLIXUN9Hr3DzBYQigAZYYi98vzDN/paGZvuEWRzB
+         dUKw==
+X-Gm-Message-State: ANhLgQ3GjUnfWcKmj5nvRvMR4OyDEZ+bemZQj5oHn5Q3+KoeLDtttUPI
+        f6SNxPCzmUzALBKyZC4ZCd7yTQg947TLGqFrNYhLqA==
+X-Google-Smtp-Source: ADFU+vutcotJyTUK5tPrXTH7n8AgfiQgisISlV0zrVV7kZWnuc9rR3DZfocZpWM1AQk8GeUV02RcRhWp4SBgvRUJOTA=
+X-Received: by 2002:a67:800e:: with SMTP id b14mr1606080vsd.191.1583327129997;
+ Wed, 04 Mar 2020 05:05:29 -0800 (PST)
 MIME-Version: 1.0
-References: <1580808174-11289-1-git-send-email-marian-cristian.rotariu.rb@bp.renesas.com>
- <CAMuHMdVmsDVJRWp2uzVs0BKp-CjAcc6PS-1wBPT8J+UZr1O7CA@mail.gmail.com> <OSAPR01MB502876C5213B528A95A5B912AEE50@OSAPR01MB5028.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSAPR01MB502876C5213B528A95A5B912AEE50@OSAPR01MB5028.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Mar 2020 14:01:34 +0100
-Message-ID: <CAMuHMdWarWksbXsAaGpG7wunGdNb7DA=EL2NPE4gNrS+P7zufg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: iwg22d-sodimm: Enable touchscreen
-To:     Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+References: <1581922564-24914-1-git-send-email-chun-hung.wu@mediatek.com> <1581922564-24914-2-git-send-email-chun-hung.wu@mediatek.com>
+In-Reply-To: <1581922564-24914-2-git-send-email-chun-hung.wu@mediatek.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 4 Mar 2020 14:04:53 +0100
+Message-ID: <CAPDyKFpyah+oA-GtXNmdkrhwnGN_syU1JqRHn-9gk=HK0fV8EQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] mmc: core: expose MMC_CAP2_CQE* to dt
+To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marian,
-
-On Wed, Mar 4, 2020 at 1:38 PM Marian-Cristian Rotariu
-<marian-cristian.rotariu.rb@bp.renesas.com> wrote:
-> > > --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> > > +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> > > @@ -128,6 +128,47 @@
-> > >         status = "okay";
-> > >         clock-frequency = <400000>;
-> > >
-> > > +       stmpe811@44 {
-> > > +               compatible = "st,stmpe811";
-> >
-> > According to the DT bindings, this must be "st,stmpe-ts", but the example
-> > also uses "st,stmpe811"?
+On Mon, 17 Feb 2020 at 07:56, Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
 >
-> The device is a MFD and the bindings doc is here:
-> Documentation/devicetree/bindings/mfd/stmpe.txt
+> Expose MMC_CAP2_CQE and MMC_CAP2_CQE_DCMD
+> to host->caps2 if
+> 1. "supports-cqe" is defined in dt and
+> 2. "disable-cqe-dcmd" is not defined in dt.
 
-Thanks, I hadn't considered that file when looking for "st,stmpe811",
-due to the regex used in the document.
+Both of these DT properties are defined as common mmc DT properties,
+so the above isn't really correct. Please clarify this.
 
-> You need to add its specific function as a child node of the mfd dt node. In our
-> case it is a touchscreen:
-> Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+Moreover, I suggest to update commit message header into "mmc: core:
+Extend mmc_of_parse() to parse CQE bindings", as I think it better
+describes the change.
 
-OK.
-
-> > > +               reg = <0x44>;
-> > > +               interrupt-parent = <&gpio4>;
-> > > +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> >
-> > This should be "<4 IRQ_TYPE_LEVEL_LOW>", to refer to GP4_4.
 >
-> Indeed, I will fix it in v2.
+> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> ---
+>  drivers/mmc/core/host.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
-> >
-> > > +               irq-gpio = <&gpio4 4 IRQ_TYPE_LEVEL_LOW>;
-> >
-> > "irq-gpio" is not documented in the DT bindings.
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index 105b7a7..efb0dbe 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -319,6 +319,14 @@ int mmc_of_parse(struct mmc_host *host)
+>                 host->caps2 |= MMC_CAP2_NO_SD;
+>         if (device_property_read_bool(dev, "no-mmc"))
+>                 host->caps2 |= MMC_CAP2_NO_MMC;
+> +       if (device_property_read_bool(dev, "supports-cqe"))
+> +               host->caps2 |= MMC_CAP2_CQE;
+> +
+> +       /* Must be after "supports-cqe" check */
+> +       if (!device_property_read_bool(dev, "disable-cqe-dcmd")) {
+> +               if (host->caps2 & MMC_CAP2_CQE)
+
+Does it really doesn't matter if we set this cap, even if MMC_CAP2_CQE
+isn't set? You can probably skip the check above.
+
+> +                       host->caps2 |= MMC_CAP2_CQE_DCMD;
+> +       }
 >
-> See "Documentation/devicetree/bindings/mfd/stmpe.txt"
+>         /* Must be after "non-removable" check */
+>         if (device_property_read_u32(dev, "fixed-emmc-driver-type", &drv_type) == 0) {
+> --
+> 1.9.1
 
-I believe you cannot use the same GPIO as an interrupt and as a GPIO at
-the same time.  Don't you get a -EBUSY somewhere?
-Perhaps it worked due to the typo above?
-
-As both interrupts and irq-gpio are documented to be optional
-properties, probably they are mutually exclusive, and you can drop
-irq-gpio?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Kind regards
+Uffe
