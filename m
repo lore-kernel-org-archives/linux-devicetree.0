@@ -2,122 +2,138 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8418CC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 09:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675E4C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 09:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6189C20705
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 09:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B96D20732
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 09:22:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aQSKRBoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgCDJQ1 (ORCPT
+        id S1727734AbgCDJWd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:16:27 -0500
-Received: from mga04.intel.com ([192.55.52.120]:20949 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgCDJQ1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:16:27 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 01:16:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
-   d="scan'208";a="229258701"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 04 Mar 2020 01:16:26 -0800
-Received: from [10.226.39.43] (unknown [10.226.39.43])
-        by linux.intel.com (Postfix) with ESMTP id 4364158029F;
-        Wed,  4 Mar 2020 01:16:24 -0800 (PST)
-Subject: Re: [PATCH v4 2/3] dt-bindings: phy: Add YAML schemas for Intel
- Combophy
-To:     Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
-References: <cover.1583127977.git.eswara.kota@linux.intel.com>
- <9f049a5fccd080bd5d8e9a697b96d4c40a413a0a.1583127977.git.eswara.kota@linux.intel.com>
- <20200303015051.GA780@bogus>
- <5b71670d-91a6-9760-f4da-1b6f014a1ea2@linux.intel.com>
- <CAL_JsqLKFbaiaeNAq_b9xDQRWVG8dXkWt2+cKucRPEzynC20XQ@mail.gmail.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <068bcf8c-83b0-57ee-3fb8-c0fe1bf6e5d8@linux.intel.com>
-Date:   Wed, 4 Mar 2020 17:16:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 4 Mar 2020 04:22:33 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56776 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387644AbgCDJWd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 04:22:33 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0249MVVd021446;
+        Wed, 4 Mar 2020 03:22:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583313751;
+        bh=2d9mOhOZdqG8REHoaeHfSFUIKR7jOmqd2Qz00FQ0jJE=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=aQSKRBoJaka7PthutzerBCcYwSqMPCyIAkRlyUA5H5ZTkNVvr5JAjg04o0qQw8R+b
+         k4yBrVBRu3DbxFxE9EYR60+C52NubKXBqewWc1V8X4YQ3a7on3xD8vuBvM5PZdAvCM
+         qplNtgS9gG57XCSEgxIA1mZBNR5kbCV8lTazCXew=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0249MVlA123075;
+        Wed, 4 Mar 2020 03:22:31 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
+ 2020 03:22:31 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Mar 2020 03:22:31 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0249MRMo067256;
+        Wed, 4 Mar 2020 03:22:28 -0600
+Subject: Re: [Patch] media: ti-vpe: cal: fix a kernel oops when unloading
+ module
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20200303172629.21339-1-bparrot@ti.com>
+ <4010c13f-6a32-f3c3-5b6d-62a4e3782c64@ti.com>
+ <f7f6dd87-147f-b9e9-aaa7-c063a8f3c11e@ti.com>
+Message-ID: <a2e6510f-ffd9-060e-ab03-cdc261ecc778@ti.com>
+Date:   Wed, 4 Mar 2020 11:22:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLKFbaiaeNAq_b9xDQRWVG8dXkWt2+cKucRPEzynC20XQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f7f6dd87-147f-b9e9-aaa7-c063a8f3c11e@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 04/03/2020 10:41, Tomi Valkeinen wrote:
 
-On 3/4/2020 12:26 AM, Rob Herring wrote:
-> On Tue, Mar 3, 2020 at 3:24 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>> Thanks, this fixes the crash for me.
 >>
->> On 3/3/2020 9:50 AM, Rob Herring wrote:
->>> On Mon, Mar 02, 2020 at 04:43:24PM +0800, Dilip Kota wrote:
->>>> Combophy subsystem provides PHY support to various
->>>> controllers, viz. PCIe, SATA and EMAC.
->>>> Adding YAML schemas for the same.
->>>>
->>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>>> ---
->>>> Changes on v4:
->>>>     No changes.
->> ...
->>>> +additionalProperties: false
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    #include <dt-bindings/phy/phy-intel-combophy.h>
->>>> +    combophy@d0a00000 {
->>>> +        compatible = "intel,combophy-lgm", "intel,combo-phy";
->>>> +        clocks = <&cgu0 1>;
->>>> +        reg = <0xd0a00000 0x40000>,
->>>> +              <0xd0a40000 0x1000>;
->>>> +        reg-names = "core", "app";
->>>> +        resets = <&rcu0 0x50 6>,
->>>> +                 <&rcu0 0x50 17>;
->>>> +        reset-names = "phy", "core";
->>>> +        intel,syscfg = <&sysconf 0>;
->>>> +        intel,hsio = <&hsiol 0>;
->>>> +        intel,phy-mode = <COMBO_PHY_PCIE>;
->>>> +
->>>> +        phy@0 {
->>> You need a 'reg' property to go with a unit-address.
->>>
->>> Really, I'd just simplify this to make parent 'resets' be 4 entries and
->>> put '#phy-cells = <1>;' in the parent. Then you don't need these child
->>> nodes.
->> If child nodes are not present, use case like PCIe controller-0 using
->> phy@0 and PCIe controller-1 using phy@1 wont be possible.
-> Yes, it will be.
->
-> For controller-0:
-> phys = <&phy 0>;
->
-> For controller-1:
-> phys = <&phy 1>;
+>> It does look a bit odd that something is allocated with kzalloc, and then it's freed somewhere 
+>> inside v4l2_async_notifier_cleanup, though. But if that's how it supposed to be used, looks fine 
+>> to me.
+> 
+> Well, sent that a few seconds too early... With this patch, I see kmemleaks.
 
-OH got it, arg cell can be utilized for PHY id.
-I started working on your suggestion in simplifying it, but below point 
-is haunting while doing the changes. So felt to check with you whether 
-the better one is going with existing DT node or the one without child 
-nodes!.
-      Existing DT node skeleton, replicates hardware design ComboPhy 
-with 2 PHYs. (ComboPhy as parent node and 2PHYs as child nodes)
+This is caused by allocating asd for all ports, even if the port is not used, causing the allocated asd to be forgotten. Also, any error there would cause leak too.
 
-Regards,
-Dilip
+I think something like this fixes both the unused port case and error paths:
 
->
-> Rob
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index a928c9d66d5d..4b89dd53d2b4 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -372,8 +372,6 @@ struct cal_ctx {
+ 	struct v4l2_subdev	*sensor;
+ 	struct v4l2_fwnode_endpoint	endpoint;
+ 
+-	struct v4l2_async_subdev asd;
+-
+ 	struct v4l2_fh		fh;
+ 	struct cal_dev		*dev;
+ 	struct cc_data		*cc;
+@@ -2020,7 +2018,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+ 
+ 	parent = pdev->dev.of_node;
+ 
+-	asd = &ctx->asd;
+ 	endpoint = &ctx->endpoint;
+ 
+ 	ep_node = NULL;
+@@ -2067,8 +2064,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+ 		ctx_dbg(3, ctx, "can't get remote parent\n");
+ 		goto cleanup_exit;
+ 	}
+-	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+-	asd->match.fwnode = of_fwnode_handle(sensor_node);
+ 
+ 	v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), endpoint);
+ 
+@@ -2098,9 +2093,17 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+ 
+ 	v4l2_async_notifier_init(&ctx->notifier);
+ 
++	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
++	if (!asd)
++		goto cleanup_exit;
++
++	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
++	asd->match.fwnode = of_fwnode_handle(sensor_node);
++
+ 	ret = v4l2_async_notifier_add_subdev(&ctx->notifier, asd);
+ 	if (ret) {
+ 		ctx_err(ctx, "Error adding asd\n");
++		kfree(asd);
+ 		goto cleanup_exit;
+ 	}
+ 
+ Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
