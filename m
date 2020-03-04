@@ -2,118 +2,109 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E6CC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 03:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6E6C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 05:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC0320726
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 03:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DCD215A4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 05:25:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="krmkkN4V"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F6tELzmi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387650AbgCDDpv (ORCPT
+        id S1725839AbgCDFZK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 22:45:51 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44665 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387640AbgCDDpu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 22:45:50 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n7so540761wrt.11
-        for <devicetree@vger.kernel.org>; Tue, 03 Mar 2020 19:45:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dl4yIvdbNV8zUEZF0iJKHHNN3Cn7sHrjK08gaKgENUM=;
-        b=krmkkN4V5zPIpMl1EPpZRD1webC/631MVKogbzCnK4d3YjLOrLOZDWnsNmM0IRwePB
-         u5+remgX6B5Eyqy3000CS47e+Kuyh/oI4sNBIieCN5H+74G63bcAhvFyKLz5Diq/791C
-         YGVGx3dST5jJ25lsJomJdOvOkADYQmUdBo5j3cDRmtGuXZZ4i8bdxBean3nmBoigyKHL
-         avDmfaDxbG0Zf8KtISwZmadDC0AbpK5ft/vqa+VAqW1axj3EdTP+g7B9C8VgaOhwQvfI
-         WWiwk7Y1or5Hmq42pVli4ci+9t82SN0Y5T0gz2/GbLHlS1Ao2uggNWioPKIkx/A/7OG6
-         BfBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dl4yIvdbNV8zUEZF0iJKHHNN3Cn7sHrjK08gaKgENUM=;
-        b=G7bPOuCtbdBer4h3U6AbMvs/damPOXta2s/HR7tARvuho8PV5/tavRZLVoZ2OZNHEW
-         iXa0Pz7oYIg2a6+hpfQ4FpYd4YyOOGZ5T5x1hqu877bkSyPrpxoEjVHaXETm63QiUJ1n
-         4kiIjmYVHf62rv0Hlca6FEgKcbiz9Op1DAskqxIjErsr5BAVqsNndRztjb5/Q4TCxZJw
-         fRPJGq1DKgPIQhMEAZ6inB2EljSUmdv9UKNW4KSSR4QeCOwOmhvYtRcekJcJ+TzfY1OX
-         94J2PJh1BwPTO/e/UPCYDf5yZ3HrWD02CR+VlUvIZfvmzTdbHPMaA2YTa8NzojnhA/eI
-         z0JA==
-X-Gm-Message-State: ANhLgQ0dnv08I67dlc4Hf4LRD/2VoLbfaWnOHEH5C7xrLtZDWrwDcYvl
-        nbxhQAUE/hmFqN/5C31VD+7VzOW2bT2WqaEr1lkVTQ==
-X-Google-Smtp-Source: ADFU+vvJT3jupIF+x5Oj1qF5HLpZyr9Rp5nN4jMR5lQXgXCYyIIUg56PeBlrGlO8WTISClOKWSw3x4YkD0iH1eNa1gA=
-X-Received: by 2002:adf:e90d:: with SMTP id f13mr1649750wrm.0.1583293549186;
- Tue, 03 Mar 2020 19:45:49 -0800 (PST)
+        Wed, 4 Mar 2020 00:25:10 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23367 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725791AbgCDFZK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 00:25:10 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583299509; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=oihPKp8ryrKXx/gJOsIWTwnq9rmnQIjm1elo0OxWhdQ=; b=F6tELzmiCZNUZfaOVHwKQ2svMxnTBa8gJxT3aqDcYcghKuBE4g+9CuQEsX5ceSxsozygJdho
+ QG10cU51SaCzrGDSYJxHpDHXD6Msd7IQ9MHheYQSjjEv9H3+FWSpe3T7Zuvp8bA5GZTeB0HH
+ W48WNa4EHaKKAHuqGHDxD8QEOek=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5f3baf.7f29cfba42d0-smtp-out-n03;
+ Wed, 04 Mar 2020 05:25:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8F097C447A0; Wed,  4 Mar 2020 05:25:02 +0000 (UTC)
+Received: from [192.168.0.105] (unknown [49.206.126.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A36ABC43383;
+        Wed,  4 Mar 2020 05:24:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A36ABC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
+ controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
+ <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
+ <20200227171425.GA4211@bogus>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <b4e3fad9-414f-ce90-26b0-ba8498d21ade@codeaurora.org>
+Date:   Wed, 4 Mar 2020 10:54:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <1582084147-24516-1-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1582084147-24516-1-git-send-email-yash.shah@sifive.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 4 Mar 2020 09:15:38 +0530
-Message-ID: <CAAhSdy0jGQ+PZnwjb63Wpu-pyhUWCJdnspNJOwMbYyOxBTnJfQ@mail.gmail.com>
-Subject: Re: [PATCH] riscv: dts: Add GPIO reboot method to HiFive Unleashed
- DTS file
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atish.patra@wdc.com>, devicetree@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200227171425.GA4211@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 9:19 AM Yash Shah <yash.shah@sifive.com> wrote:
->
-> Add the ability to reboot the HiFive Unleashed board via GPIO.
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Hi Rob,
 
-LGTM.
+I ran make dt_binding_check and dtbs_check both on mainline(5.6-rc4) and 
+linux-next both are successful.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+The file qcom,gcc-ipq6018.h is merged in 5.6, not sure what is going wrong.
 
-Regards,
-Anup
+Could you please help?
 
-> ---
->  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 5 +++++
->  1 file changed, 5 insertions(+)
+Thanks,
+
+Siva
+
+On 2/27/2020 10:44 PM, Rob Herring wrote:
+> On Thu, 27 Feb 2020 15:25:17 +0530, Sivaprakash Murugesan wrote:
+>> add dt-binding for ipq6018 apss clock controller
+>>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 ++++++++++++++++++++++
+>>   include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
+>>   2 files changed, 84 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>>   create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
+>>
+> My bot found errors running 'make dt_binding_check' on your patch:
 >
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> index 609198c..4a2729f 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> @@ -2,6 +2,7 @@
->  /* Copyright (c) 2018-2019 SiFive, Inc */
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> Documentation/devicetree/bindings/clock/qcom,apsscc.example.dts:17:10: fatal error: dt-bindings/clock/qcom,gcc-ipq6018.h: No such file or directory
+>   #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+>            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/clock/qcom,apsscc.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/clock/qcom,apsscc.example.dt.yaml] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
 >
->  #include "fu540-c000.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
->
->  /* Clock frequency (in Hz) of the PCB crystal for rtcclk */
->  #define RTCCLK_FREQ            1000000
-> @@ -41,6 +42,10 @@
->                 clock-frequency = <RTCCLK_FREQ>;
->                 clock-output-names = "rtcclk";
->         };
-> +       gpio-restart {
-> +               compatible = "gpio-restart";
-> +               gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
-> +       };
->  };
->
->  &uart0 {
-> --
-> 2.7.4
->
+> See https://patchwork.ozlabs.org/patch/1245691
+> Please check and re-submit.
