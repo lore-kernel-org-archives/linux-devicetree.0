@@ -2,133 +2,77 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9157C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBEBC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADA02146E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:33:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XcxwlXf0"
+	by mail.kernel.org (Postfix) with ESMTP id 5CC7F22522
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:34:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgCDQdf (ORCPT
+        id S1729898AbgCDQeU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:33:35 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40483 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729573AbgCDQde (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:33:34 -0500
-Received: by mail-wr1-f67.google.com with SMTP id r17so3178761wrj.7
-        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 08:33:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BHchrLo/7ZlaCChaLE0D9hwD/kw/KPHijBr4CtIcxqg=;
-        b=XcxwlXf0sM8+GRX4/lSRgC3H59wkNyY57Tep1bEl0y0fEaIU/i80EuiMlmrvcmPy6P
-         +DlnCb4Ij0XqCmASMcIGyWs8W0zLQfPx8GDOokByirrl+RG/i/v+9O04UyQOj6TiLi/o
-         /3VNYNTpNyA5yxHEXkDCMcb8H6MwtigNjJGb8jXzTQ5jAZNpXu3YYde5YQwku8mOc1ED
-         UGCecxz2tJ+2PqatxhLYaQZI6SBKTNlH5t4Npp65JsqqR8PGpccmULXEndEvYnNbYhuz
-         X+xxItQF2014z6p0bix1gJN4scthFybnoQbO5sk0FU0JAHMNRiz5fTxsG+U5V3VEtmIT
-         FWkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BHchrLo/7ZlaCChaLE0D9hwD/kw/KPHijBr4CtIcxqg=;
-        b=P4wY2oUZwL7fHoRbRuLoD/rkZMF0Xk6NWmAl5G7IA8qUxehL5eBTqr7WW8EiSjNtF8
-         j+1PmyEKHJIAqItqroEBmjU+xrCuhJl5yD7x0aKoJ2zfKhPHxKe07vkxENPG6Pt+QodS
-         WN5b86Ss45MIP32a8D4ALXRjW68quf79T8vRKtGKjD1sKtqVRbbz9MKBvJ2LV8AFTD6T
-         AjIPOH9y7qcfSUOoISTbjrcv43JySGb2Ti6ba+tH01A4OPCLfXIkUmbFoxza+OdKysSk
-         LrMJwHZsZ4oUH1yFfPJOMuch/5chFMrTy8VvG3Tz0Wcdwgby4TqKLr8bgtAmG2iScDDT
-         N8kg==
-X-Gm-Message-State: ANhLgQ12syaT+dsH0aBMVBPpvK01MOhZ+HXKS1JU4oC709UzPAXVuGCg
-        NjJdHRqFZNOIiBvvgCki8RTQow==
-X-Google-Smtp-Source: ADFU+vsfnSveiumxQf2o5tK7WyY4IAkLi5j7LcOOBdqwqDmtjrjziIGUFBziRQy+zThvv13f94LNTg==
-X-Received: by 2002:a5d:45d1:: with SMTP id b17mr4867837wrs.59.1583339613232;
-        Wed, 04 Mar 2020 08:33:33 -0800 (PST)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id b197sm5266802wmd.10.2020.03.04.08.33.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Mar 2020 08:33:32 -0800 (PST)
-Subject: Re: [PATCH v5 7/7] arm64: dts: qcom: sc7180: Add OSM L3 interconnect
- provider
-To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org
-Cc:     robh+dt@kernel.org, evgreen@chromium.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        saravanak@google.com, viresh.kumar@linaro.org,
-        okukatla@codeaurora.org
-References: <20200227105632.15041-1-sibis@codeaurora.org>
- <20200227105632.15041-8-sibis@codeaurora.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <25802788-6bfd-fed7-41db-9dbecf4788bb@linaro.org>
-Date:   Wed, 4 Mar 2020 18:33:31 +0200
+        Wed, 4 Mar 2020 11:34:20 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:42431 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbgCDQeU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:34:20 -0500
+Received: from [10.18.90.110] (10.18.90.110) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 5 Mar 2020
+ 00:34:48 +0800
+Subject: Re: [PATCH v2] dt-bindings: power: Fix dt_binding_check error
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>, SoC Team <soc@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        <devicetree@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1583164448-83438-1-git-send-email-jianxin.pan@amlogic.com>
+ <20200302201554.GA22028@bogus>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <4fb6a6c2-5df3-9cff-eb00-a6d00963426d@amlogic.com>
+Date:   Thu, 5 Mar 2020 00:34:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200227105632.15041-8-sibis@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200302201554.GA22028@bogus>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.90.110]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/27/20 12:56, Sibi Sankar wrote:
-> Add Operation State Manager (OSM) L3 interconnect provider on SC7180 SoCs.
+Hi Rob,
+
+On 2020/3/3 4:15, Rob Herring wrote:
+> On Mon, 2 Mar 2020 23:54:08 +0800, Jianxin Pan wrote:
+>> Missing ';' in the end of secure-monitor example node.
+>>
+>> Fixes: 165b5fb294e8 ("dt-bindings: power: add Amlogic secure power domains bindings")
+>> Reported-by: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> ---
+>>  Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+Sorry to forget the tag, Kevin has added it for me, and I will keep it in mind next time.
+> If a tag was not added on purpose, please state why and what changed.
+> 
+> .
+> 
 
-Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
-
-Thanks,
-Georgi
