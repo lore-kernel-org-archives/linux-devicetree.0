@@ -4,88 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B2DC3F2D8
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410F4C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3A021741
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1418220848
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ziaLQQMT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g8SWXvPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgCDOIn (ORCPT
+        id S1726440AbgCDOJt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:08:43 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32818 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgCDOIn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 09:08:43 -0500
-Received: by mail-wr1-f66.google.com with SMTP id x7so2587516wrr.0
-        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 06:08:41 -0800 (PST)
+        Wed, 4 Mar 2020 09:09:49 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35838 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgCDOJt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 09:09:49 -0500
+Received: by mail-wr1-f68.google.com with SMTP id r7so2583700wro.2
+        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 06:09:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=TdUvMeA1bV5hMUNi9Uc9NGFwMrBhsdhhT6ZmBGFQFek=;
-        b=ziaLQQMTnCJ7YSxd5sV95qsFJ5sMZH3rtvhOIq0q24OYVAeSN/juNgdJKUXVth7dmC
-         +1cTjWWP/8vKz1/4KANL8PnAFbMAGOTkEIQvePO7fVK5ahr5EsdFhICYSslnU6Q/U3YP
-         eaY+UNIzqcl1QfHqCD3sojdDlJ5DGbhtfT0Zz1unRHzAIht9z91VeCVs9QSOLqrFrm47
-         yYvlbSX/dMxmGH7JaXW06sQkDqq+gICORzdo63QS61gI1f3znBgEbBwZYbXIUzNXW34m
-         9I41VXjpTFujhXGbhcU+sCmTSxEf+GPlgeOR7llOnK3kpBjcJOHvuvpYAM84w3umrZVW
-         WibQ==
+        bh=EpXtvX1PfW3FZz13OtRHOjQvZ2fsaz2TnoP+n0E2ZUg=;
+        b=g8SWXvPTyPZzLcsUAC4+i3gEYS7VjOjujoBVioj8kKYK73oXfKh+MAvo8mRWnu071C
+         gxiMmhvSdwjKzrw34AWvhgikZX0Hrhz4jre0uVLyzI7CZYL/VDsf5gHJObclPdLagxZi
+         s+6qEVWA3DXyXew+YkVb+rgAVC49YN8D3mPAbPfbz2b2vq1fO6ty0UB+H65pdv6FjJ6Y
+         v3/70bPC/jxD75YgWO2V9B7pyWv0bv8SImmbScC8XftPtCDEBeJXHlj8SYkcVTIy6y7V
+         32lZyBoyNgNFy1f0QHfB5NbM0+cCHEojMhPDvMZmAXMM6fqrb+f7yzzdQe1b3vIru/ak
+         r5Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TdUvMeA1bV5hMUNi9Uc9NGFwMrBhsdhhT6ZmBGFQFek=;
-        b=JrnKNdJE7EURYrCd/ULjdBeKLGvyFAOHsWgXUJAIkmDB1lRyEY3WROXwMLAAr8jKMe
-         uiuICpmJkwHGKWboxdFgQcaVbOimZKeiRgz3a/ZV7yj9sq1Yhhl2ateLyFPAPsmWZ4qu
-         BTgfGw1OQfzL2I2U2VRH8w14a65OTqsdyu4S5N0hUKkamvxCnfulelUqPpqn2rK+0r8x
-         4dw9/jg5w+fVlHysC2jWCnyqexTb6wZTWkadEFLpcmVt8hrSnp7TfwJzzF854y1DFkSM
-         a9C49Uil9OraZydqGqeUc4xgOvnBFzCsiZgWGI09eM7vxuo7yjNo5PXgtIA1lS9PkfIi
-         4eVw==
-X-Gm-Message-State: ANhLgQ1ByEofKKqGpvVOBKZ0iWYNoxrpe50qn3SXJH2e9Mnpseq2Sujw
-        0csknVnSmdxtZ9qhLl62WX2ApA==
-X-Google-Smtp-Source: ADFU+vv0sKAwmtjvye94x9YIogv5zw/a9rZvkYsOZEBQWXGc8PUw1JEbwM9HPDBC/WwH/q9h2REFKg==
-X-Received: by 2002:a5d:4b82:: with SMTP id b2mr4303504wrt.102.1583330920810;
-        Wed, 04 Mar 2020 06:08:40 -0800 (PST)
+        bh=EpXtvX1PfW3FZz13OtRHOjQvZ2fsaz2TnoP+n0E2ZUg=;
+        b=m7XUKefnW9HwPXgzLZSL8fyPsx+w7mrq04IfSavFSAF2xb2k3sizSl4GrA4zksh4La
+         WV3JBioSbCN8R4OtZmJ+6wcWRtbLhkyTb/vanJhCtF5X5FDZev3xXtp5Yj0izT0cDDvd
+         wfVKIJpriMRYIesKEBre8wJcsu/0TrpoxLZA1q7vkBJpZd0utuHXPoGn4EOevJITvQBh
+         Tmwcx6oAcomTwz5sDmG+IkR++Q9MmykfFnVmlkd2lcYBcIT5fCeR4QP2q86YTbtJJmyn
+         PLpiRVc9M0g6Ltdua0bD0/xjNom/CafC9bsbOX3aWNM91Iit16XHDo1lK9/Xg6wM8XeV
+         DLJQ==
+X-Gm-Message-State: ANhLgQ3E+qo8FxYYIY/X85VcvpBcAJemMJpfnjfSOZvRnR4VXJlP6+3M
+        cIVt1HqIgnSxdhJOESaBeHAzKg==
+X-Google-Smtp-Source: ADFU+vtZMIq6Jg8tdrdLMObmNELyKi8gzYZ2wKQ8Qt7PTkGgWzXVAaeuMwK7RkrXzELghSD1BcL3DQ==
+X-Received: by 2002:adf:e542:: with SMTP id z2mr4532686wrm.150.1583330987727;
+        Wed, 04 Mar 2020 06:09:47 -0800 (PST)
 Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id p17sm36750450wre.89.2020.03.04.06.08.39
+        by smtp.gmail.com with ESMTPSA id q12sm41792293wrg.71.2020.03.04.06.09.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 06:08:39 -0800 (PST)
-Date:   Wed, 4 Mar 2020 15:08:33 +0100
+        Wed, 04 Mar 2020 06:09:46 -0800 (PST)
+Date:   Wed, 4 Mar 2020 15:09:40 +0100
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Xu Zaibo <xuzaibo@huawei.com>
 Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, jacob.jun.pan@linux.intel.com,
-        christian.koenig@amd.com, yi.l.liu@intel.com,
-        zhangfei.gao@linaro.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+        linux-mm@kvack.org, mark.rutland@arm.com, kevin.tian@intel.com,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        catalin.marinas@arm.com, robin.murphy@arm.com, robh+dt@kernel.org,
+        zhangfei.gao@linaro.org, will@kernel.org, christian.koenig@amd.com
 Subject: Re: [PATCH v4 23/26] iommu/arm-smmu-v3: Add stall support for
  platform devices
-Message-ID: <20200304140833.GB646000@myrica>
+Message-ID: <20200304140940.GC646000@myrica>
 References: <20200224182401.353359-1-jean-philippe@linaro.org>
  <20200224182401.353359-24-jean-philippe@linaro.org>
- <20200227181726.00007c9a@Huawei.com>
+ <db6fc8c2-2ff3-631f-2294-c1b49acd27aa@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227181726.00007c9a@Huawei.com>
+In-Reply-To: <db6fc8c2-2ff3-631f-2294-c1b49acd27aa@huawei.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 06:17:26PM +0000, Jonathan Cameron wrote:
-> On Mon, 24 Feb 2020 19:23:58 +0100
-> Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+On Wed, Feb 26, 2020 at 04:44:53PM +0800, Xu Zaibo wrote:
+> Hi,
 > 
+> 
+> On 2020/2/25 2:23, Jean-Philippe Brucker wrote:
 > > From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 > > 
 > > The SMMU provides a Stall model for handling page faults in platform
@@ -99,78 +97,29 @@ On Thu, Feb 27, 2020 at 06:17:26PM +0000, Jonathan Cameron wrote:
 > > the stall.
 > > 
 > > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> One question inline.
-> 
-> Thanks,
-> 
 > > ---
-> >  drivers/iommu/arm-smmu-v3.c | 271 ++++++++++++++++++++++++++++++++++--
-> >  drivers/iommu/of_iommu.c    |   5 +-
-> >  include/linux/iommu.h       |   2 +
-> >  3 files changed, 269 insertions(+), 9 deletions(-)
+> >   drivers/iommu/arm-smmu-v3.c | 271 ++++++++++++++++++++++++++++++++++--
+> >   drivers/iommu/of_iommu.c    |   5 +-
+> >   include/linux/iommu.h       |   2 +
+> >   3 files changed, 269 insertions(+), 9 deletions(-)
 > > 
 > > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
 > > index 6a5987cce03f..da5dda5ba26a 100644
 > > --- a/drivers/iommu/arm-smmu-v3.c
 > > +++ b/drivers/iommu/arm-smmu-v3.c
 > > @@ -374,6 +374,13 @@
-> 
-> 
-> > +/*
-> > + * arm_smmu_flush_evtq - wait until all events currently in the queue have been
-> > + *                       consumed.
-> > + *
-> > + * Wait until the evtq thread finished a batch, or until the queue is empty.
-> > + * Note that we don't handle overflows on q->batch. If it occurs, just wait for
-> > + * the queue to be empty.
-> > + */
-> > +static int arm_smmu_flush_evtq(void *cookie, struct device *dev, int pasid)
+> >   #define CMDQ_PRI_1_GRPID		GENMASK_ULL(8, 0)
+> >   #define CMDQ_PRI_1_RESP			GENMASK_ULL(13, 12)
+> [...]
+> > +static int arm_smmu_page_response(struct device *dev,
+> > +				  struct iommu_fault_event *unused,
+> > +				  struct iommu_page_response *resp)
 > > +{
-> > +	int ret;
-> > +	u64 batch;
-> > +	struct arm_smmu_device *smmu = cookie;
-> > +	struct arm_smmu_queue *q = &smmu->evtq.q;
-> > +
-> > +	spin_lock(&q->wq.lock);
-> > +	if (queue_sync_prod_in(q) == -EOVERFLOW)
-> > +		dev_err(smmu->dev, "evtq overflow detected -- requests lost\n");
-> > +
-> > +	batch = q->batch;
-> 
-> So this is trying to be sure we have advanced the queue 2 spots?
+> > +	struct arm_smmu_cmdq_ent cmd = {0};
+> > +	struct arm_smmu_master *master = dev_iommu_fwspec_get(dev)->iommu_priv;
+> Here can use 'dev_to_master' ?
 
-So we call arm_smmu_flush_evtq() before decommissioning a PASID, to make
-sure that there aren't any pending event for this PASID languishing in the
-fault queues.
-
-The main test is queue_empty(). If that succeeds then we know that there
-aren't any pending event (and the PASID is safe to reuse). But if new
-events are constantly added to the queue then we wait for the evtq thread
-to handle a full batch, where one batch corresponds to the queue size. For
-that we take the batch number when entering flush(), and wait for the evtq
-thread to increment it twice.
-
-> Is there a potential race here?  q->batch could have updated before we take
-> a local copy.
-
-Yes we're just checking on the progress of the evtq thread. All accesses
-to batch are made while holding the wq lock.
-
-Flush is a rare event so the lock isn't contended, but the wake_up() that
-this patch introduces in arm_smmu_evtq_thread() does add some overhead
-(0.85% of arm_smmu_evtq_thread(), according to perf). It would be nice to
-get rid of it but I haven't found anything clever yet.
+Certainly, good catch
 
 Thanks,
 Jean
-
-> 
-> > +	ret = wait_event_interruptible_locked(q->wq, queue_empty(&q->llq) ||
-> > +					      q->batch >= batch + 2);
-> > +	spin_unlock(&q->wq.lock);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> ...
-> 
