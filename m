@@ -2,90 +2,91 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD85C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66835C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B1322B48
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3036F22B48
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583339741;
+	bh=tOFJvLY9RH4hMUR4uSuuD0+HIcm6GvVBhY9luIFNp0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a5SKYRCC4SqmMHgLSyvZV/qTLwbw5k3VyGOXDDyW8f8QbfVXAb/Zcdk6URwO4ebyZ
+	 aOvt5mGmVKWsUrTPhBvy0O1x6a8BHtf0wmo5e0Pc+x1yWrJcL4HXXrS+cjdGqbaVh3
+	 +C1EnsWaK8x1y0xk2gT5A7pvQcvITBJqeRCf+Auc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbgCDQfc (ORCPT
+        id S1729870AbgCDQfk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:35:32 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:43444 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbgCDQfc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:35:32 -0500
-Received: from [10.18.90.110] (10.18.90.110) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 5 Mar 2020
- 00:36:00 +0800
-Subject: Re: [PATCH v2] dt-bindings: power: Fix dt_binding_check error
-To:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     <linux-amlogic@lists.infradead.org>, SoC Team <soc@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        <devicetree@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1583164448-83438-1-git-send-email-jianxin.pan@amlogic.com>
- <20200302201554.GA22028@bogus> <7h5zflrfp3.fsf@baylibre.com>
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-Message-ID: <b1fc2451-7eec-aa03-3d4d-3a7ae186105c@amlogic.com>
-Date:   Thu, 5 Mar 2020 00:35:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 4 Mar 2020 11:35:40 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43588 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbgCDQfk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:35:40 -0500
+Received: by mail-ot1-f68.google.com with SMTP id j5so2605452otn.10
+        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 08:35:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h1Gvo7Uhl99kC+f2DHRk2dtpXA+8wwG3dDT0Nr8Q1sw=;
+        b=iQuwPEf0l7gdOZ2ILADDA1tMQjNoC5zFjxZkadUxhEDFYXIGHAqKknSrpvqbZjKUvJ
+         JJj0hNb1La0R+RKZWFlrlfKeteCKmHYT/Rcxt1z00isJ3U/JDtn4xD/y2UbXytGUT+3l
+         T6uNjRamx4IOoOqZe4R9qJDUBgHWy5kEQm/DJihrZDs0KfNQYmkjk5Db1EaYkCzTqNUp
+         BOpWE/4Lr2v1gfZslzOoOtVxWcGdtPjRlgbySzetrvnrCjVKgH/fwQ6K6Nma4vfV4jNg
+         gk3OSsf3WunK9jsiBDhE647a57z08eQLXEQ30sOmfl1nsG9CG9VXPoVF7/eHdDC4HZIP
+         WCEA==
+X-Gm-Message-State: ANhLgQ2oxYH1Zui4bRqLAr8j8zR4cRCbr6rEqqJl9pb6o4FMuEOqit6r
+        XDJEyhQpIlouIf7GqL/7kA==
+X-Google-Smtp-Source: ADFU+vvs0zKwSe7pdBbmhxfAEsM04vKmv9ZOGaPA/anuEGyMrANs8OpulogLb0VTYVxwyF6vIThI4w==
+X-Received: by 2002:a9d:aa7:: with SMTP id 36mr3152106otq.52.1583339739892;
+        Wed, 04 Mar 2020 08:35:39 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p24sm4959687oth.21.2020.03.04.08.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 08:35:39 -0800 (PST)
+Received: (nullmailer pid 22504 invoked by uid 1000);
+        Wed, 04 Mar 2020 16:35:38 -0000
+Date:   Wed, 4 Mar 2020 10:35:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     dri-devel@lists.freedesktop.org, thierry.reding@gmail.com,
+        sam@ravnborg.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, christoph.muellner@theobroma-systems.com,
+        robin.murphy@arm.com, linux-rockchip@lists.infradead.org,
+        heiko@sntech.de, francescolavra.fl@gmail.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: display: panel: Add binding document
+ for Elida KD35T133
+Message-ID: <20200304163538.GA22445@bogus>
+References: <20200229151506.750242-1-heiko@sntech.de>
+ <20200229151506.750242-2-heiko@sntech.de>
 MIME-Version: 1.0
-In-Reply-To: <7h5zflrfp3.fsf@baylibre.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.90.110]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200229151506.750242-2-heiko@sntech.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020/3/3 16:43, Kevin Hilman wrote:
-> Rob Herring <robh@kernel.org> writes:
+On Sat, 29 Feb 2020 16:15:05 +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 > 
->> On Mon, 2 Mar 2020 23:54:08 +0800, Jianxin Pan wrote:
->>> Missing ';' in the end of secure-monitor example node.
->>>
->>> Fixes: 165b5fb294e8 ("dt-bindings: power: add Amlogic secure power domains bindings")
->>> Reported-by: Rob Herring <robh+dt@kernel.org>
->>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->>> ---
->>>  Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>
->> Please add Acked-by/Reviewed-by tags when posting new versions. However,
->> there's no need to repost patches *only* to add the tags. The upstream
->> maintainer will do that for acks received on the version they apply.
->>
->> If a tag was not added on purpose, please state why and what changed.
+> The KD35T133 is a 3.5" 320x480 DSI display used in the RK3326-based
+> Odroid Go Advance handheld device.
 > 
-> I've (re)added these tags:
-> 
->   Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->   Acked-by: Rob Herring <robh@kernel.org>
-> 
-> when applying this time.
-> 
-> Jianxin, please collect the tags in the future and add when you send
-> follow-up versions.
-OK, I will do it next time, thanks for your time.
-> 
-> Thanks,
-> 
-> Kevin
-> 
-> .
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  .../display/panel/elida,kd35t133.yaml         | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml
 > 
 
+Reviewed-by: Rob Herring <robh@kernel.org>
