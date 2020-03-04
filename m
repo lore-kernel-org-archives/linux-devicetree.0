@@ -2,124 +2,119 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F691C3F2E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 06:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2171C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 06:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18558215A4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 06:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A755215A4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 06:42:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="nFbn1CVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgCDGmW (ORCPT
+        id S1726233AbgCDGmc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 01:42:22 -0500
-Received: from relmlor1.renesas.com ([210.160.252.171]:51067 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbgCDGmW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 01:42:22 -0500
-X-IronPort-AV: E=Sophos;i="5.70,513,1574089200"; 
-   d="scan'208";a="40932658"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 04 Mar 2020 15:42:18 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 7962441CBB61;
-        Wed,  4 Mar 2020 15:42:18 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 3/4] clk: renesas: rcar-usb2-clock-sel: Add multiple clocks management
-Date:   Wed,  4 Mar 2020 15:42:16 +0900
-Message-Id: <1583304137-28482-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583304137-28482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1583304137-28482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Wed, 4 Mar 2020 01:42:32 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56611 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgCDGmc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Mar 2020 01:42:32 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 48XPSj5HhVz9sR4; Wed,  4 Mar 2020 17:42:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1583304149;
+        bh=5Tn+MXqcA8IMQp7yDG4OfRBIOmBQXGXZ2xvSoQSavU0=;
+        h=Date:From:To:Subject:From;
+        b=nFbn1CViPj1Pm/BbLOShPY3TPKSSpr4it4rhWfrMHlRRW1zhbD/qkB/pIGbilDFtU
+         eagNpKZeNESH4WpL+ZjwkBsS6Y0GZIzHXUDjtlkbTVOJQyF+AGGon1BzQwBeGoQ3aS
+         CwtIOSb2vntFJDo6Z8SMaDuJsrCxhxTIJySOdaMk=
+Date:   Wed, 4 Mar 2020 17:42:20 +1100
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     devicetree@vger.kernel.org, devicetree-compiler@vger.kernel.org
+Subject: DTC 1.6.0
+Message-ID: <20200304064220.GD593957@umbus.fritz.box>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Km1U/tdNT/EmXiR1"
+Content-Disposition: inline
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This hardware needs to enable clocks of both host and peripheral.
-So, this patch adds multiple clocks management.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/clk/renesas/rcar-usb2-clock-sel.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+--Km1U/tdNT/EmXiR1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/clk/renesas/rcar-usb2-clock-sel.c b/drivers/clk/renesas/rcar-usb2-clock-sel.c
-index b97f5f9..d5f47ab 100644
---- a/drivers/clk/renesas/rcar-usb2-clock-sel.c
-+++ b/drivers/clk/renesas/rcar-usb2-clock-sel.c
-@@ -26,9 +26,15 @@
- #define CLKSET0_PRIVATE		BIT(0)
- #define CLKSET0_EXTAL_ONLY	(CLKSET0_INTCLK_EN | CLKSET0_PRIVATE)
- 
-+static const struct clk_bulk_data rcar_usb2_clocks[] = {
-+	{ .id = "ehci_ohci", },
-+	{ .id = "hs-usb-if", },
-+};
-+
- struct usb2_clock_sel_priv {
- 	void __iomem *base;
- 	struct clk_hw hw;
-+	struct clk_bulk_data clks[ARRAY_SIZE(rcar_usb2_clocks)];
- 	bool extal;
- 	bool xtal;
- };
-@@ -53,14 +59,25 @@ static void usb2_clock_sel_disable_extal_only(struct usb2_clock_sel_priv *priv)
- 
- static int usb2_clock_sel_enable(struct clk_hw *hw)
- {
--	usb2_clock_sel_enable_extal_only(to_priv(hw));
-+	struct usb2_clock_sel_priv *priv = to_priv(hw);
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(priv->clks), priv->clks);
-+	if (ret)
-+		return ret;
-+
-+	usb2_clock_sel_enable_extal_only(priv);
- 
- 	return 0;
- }
- 
- static void usb2_clock_sel_disable(struct clk_hw *hw)
- {
--	usb2_clock_sel_disable_extal_only(to_priv(hw));
-+	struct usb2_clock_sel_priv *priv = to_priv(hw);
-+
-+	usb2_clock_sel_disable_extal_only(priv);
-+
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(priv->clks), priv->clks);
- }
- 
- /*
-@@ -119,6 +136,7 @@ static int rcar_usb2_clock_sel_probe(struct platform_device *pdev)
- 	struct usb2_clock_sel_priv *priv;
- 	struct clk *clk;
- 	struct clk_init_data init;
-+	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -128,6 +146,11 @@ static int rcar_usb2_clock_sel_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
-+	memcpy(priv->clks, rcar_usb2_clocks, sizeof(priv->clks));
-+	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(priv->clks), priv->clks);
-+	if (ret < 0)
-+		return ret;
-+
- 	pm_runtime_enable(dev);
- 	pm_runtime_get_sync(dev);
- 
--- 
-2.7.4
+I've just tagged and packaged v1.6.0 of the device tree compiler.
 
+Git tree available at the usual place:
+   git://git.kernel.org/pub/scm/utils/dtc/dtc.git
+And tarballs available at:
+   https://kernel.org/pub/software/utils/dtc/
+
+DTC 1.6.0
+
+Changes since v1.5.1. include:
+ * Some provision for out of tree builds (useful with meson)
+ * Some fixes for win32 builds
+ * Some improvements for FreeBSD builds:
+   * Work with byacc as well as bison
+   * Fix some compilation failures with clang
+   * Default to cc instead of gcc
+   * Add FreeBSD testing via Cirrus CI
+ * Add non-x86 testing on Travis
+ * Add options to allow builds of libfdt which sacrifice safety on bad
+   inputs for reduced size and improved speed.  This is important for
+   some embedded cases.
+ * Allow testsuite to be executed on an already-installed dtc/libfdt,
+   rather than just the one built in the source tree
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5fSlEACgkQbDjKyiDZ
+s5LXoQ//bKkaXf/OpF7nMfCb1/vRKtR5FiL6D90bBnP3k1ROZNDfiCyNT3JMLaa4
+QVVhY1tXOe4z15x+aJmE4ft8ak0y88JQEk+NWc+9MIUN4bBYTdxoQBBGdxW+atNz
+ycldlwMxAD5im9jRvHnXKFnxKZDr7i/w5qn1YJ2iVFjdeJtx4FFUDKUkE56Jjged
+MmPdkXvQ0MMAtEri2QT8O6R5eiAyko6jE0QYSrCLSIaFyt6V48GvevQnW1B3nQ+u
+fy59TTSGduNVjXwZfoobGmRegZrN/4F6zHhyfbQYITkeVdBVn6SS5zYk1fAVvc4a
+SV/IgzFsBCNG0tiNLlxnZn13OiFUf7toJ6Nd0C+ivo1UhzyUQ2g1EQrMXySwYaTD
+lWA5hK7xNWob9q6EDbRpXg8Xbw4YppC/mtJ2YakDFezgAKprVfuNgTuk18szTuqH
+XgDpyQHEaMfCtY8kwgOF7kB5dDfEn8kjy8xbV6+mHa7y2pK40ZDML45FYTjt94hT
+S768b2oZQZ3H/NFQc7k3SMmUJCGfAsTPqr3fJOp/Eoa7i2CLRROoiJKwUqfGqKmo
+HEv36PDyVPeoooUyKqTeyqxo6vkzhwV2sjxXuflG96pgF6pFQzD73eplc5agNszF
+Sh2rWToVPO7AAooQv+uROUwD2oQOenMPZa7Fxs1gjYHOjTHk6RI=3D
+=3DgOZC
+-----END PGP SIGNATURE-----
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--Km1U/tdNT/EmXiR1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5fTcsACgkQbDjKyiDZ
+s5IfDxAA0PpDqXH51AAmT85MFyC+olGEIWyzm6B/+0AfEyvazCeeIHlxxSQlgLKd
+Zbe+XieaSKyRcMZMHfVTqBS2AAcM+dhC0ih1NiGV5KCrnN8uIPZyNAEHsuToTvYe
+zthvHjI7v+1vK3YTRI2YIlBPTo4Y8mRigQ+e9ePkG1lvo7JGzD+0Fpres1usTMkj
+BChwwbUiiVZoPiI9Joej5LrQZUCFhEoLHpdTT4c/f0FC11rcgc+2f3bPEJtMjkbQ
+nr6VTlWhh9wdjSG40JQlV7iMVFIZ+heUJA2B7BhXAzy8/GL33f+u9oaEkg2Df3OA
+TI/tldfy7eGVgPkA1/DCH97Eq/xFeIcieUqrDT2zWgQR6CFMiUIOuxzBqX3OApcS
+pWgKBcLTdezE3ONvlIf7pFjNMVRlVJkPXpfn67FCe8oNgzBcxfqhlVkMjzAPI6EU
+Aj6ohWLln2rgOWM5+GoZAL587roElMjPlnjsRj7OG1zm7MUVHYU9VkF5e+AftAFT
+vM1wqJi9Imaf7cnA6AZDES9hYeEtXMNp9+PsdHNz1dCD2fB+E6TTzQpR6vMplM1Z
+2NNihIUdcw6UQQmHvh6+/L9i8+oxwhQhfLoOP1V9N5VW5vj9EuWOem2HFyTKTDHH
+iJJ2qvNT8gUVRWmR/7og8PbOLkUGjvrsj6SE33YSIsn9UcNyG5s=
+=r10Q
+-----END PGP SIGNATURE-----
+
+--Km1U/tdNT/EmXiR1--
