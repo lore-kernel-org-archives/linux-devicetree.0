@@ -2,108 +2,165 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB5C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFFCC3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D701821775
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D1D21739
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583338632;
-	bh=C2C+R02yEsgoXAWifMf8o5sos/JWiXubq9zkoTrdw+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rVFVdvxUvxdKAeYqxnqlqI0qNFsvXw1pLL9SH4S/46eFydhxVvBJ7arrBuZ3jQgDR
-	 bGSsyjNprmyjwu/56XwWO33OVB1kgiJ2hb95OYS3kIiFMCvczwCSNp8ln2HS2roh+f
-	 NXERAxiGdwWZTBFolcTAfrrArNRcorw5T30NItyc=
+	s=default; t=1583338697;
+	bh=rkEU4eLVPSGyjC+W5QQXVir/h4v8Bes9tXj7f/O6jSk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Xi56PFMgURV7tdHdhmG6mbpdyu3409o6pEMATAoKDvFsKKF7+2wJuTQSgC20Fx0xK
+	 ZDsYj1mTVhXla/bSQlEvFaOedTywXrSb8EpKyMjmyPDisNgut47sFWgi+5Bt/z1Ool
+	 zgeXie2Km8ECInBtiVUItv42dZuVXdjfhx/WR9gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388147AbgCDQRM (ORCPT
+        id S2387776AbgCDQSR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:17:12 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37396 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388042AbgCDQRM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:17:12 -0500
-Received: by mail-oi1-f196.google.com with SMTP id q65so2642092oif.4;
-        Wed, 04 Mar 2020 08:17:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hPJMFKMZOVY1sSzz68ERLW9GZKjEL6tZJX3IPiL2Z04=;
-        b=sywg4ZC37VlDDuS6EbhtJw0Dhyqmns5kqMLlFUzOt6f52zknFCclnY1OQvDV9H4X+X
-         TN/K7r4mQ4q7WK8fLU7YubGj3MyJdWSF0ig7N4W/JbIH5UamzRD2g1ilABkO5YRU0Yum
-         GiFvPEDQbzBoYhIooWyJCEKa7ivehewO5Ol/Nt/va4VKFVfaK0UMOAuIGbulS8Dus354
-         5743tkWk1NVSohgqLzUaFRROGAj+H5FZO1o0/25G2NsOf6t9otOS66iVBZWP9GV3XptP
-         P0zfRjCo3CGWNHla6j6y46LPEokS9m7WU6fdFqgKMhSoAI87RPahxd0yb61/R2gp/akF
-         zz6Q==
-X-Gm-Message-State: ANhLgQ2FgJ/yLQQFhoAFFjoMEp+craSPvhtrFv4rbhYiRr9QFxydX4zb
-        lmlTYsTK8X4SHVJTAg5MRg==
-X-Google-Smtp-Source: ADFU+vt7hO9gxCqHxYY58e/pDKaHri4ZUKZOVFtBpHwZYFAM+cGK8HNV0cjIru21nI6P0NSvNckMrA==
-X-Received: by 2002:aca:3554:: with SMTP id c81mr180849oia.0.1583338630985;
-        Wed, 04 Mar 2020 08:17:10 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z10sm8898540oih.1.2020.03.04.08.17.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:17:10 -0800 (PST)
-Received: (nullmailer pid 28440 invoked by uid 1000);
-        Wed, 04 Mar 2020 16:17:09 -0000
-Date:   Wed, 4 Mar 2020 10:17:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v7 04/18] dt-bindings: Add Qualcomm USB SuperSpeed PHY
- bindings
-Message-ID: <20200304161709.GA28382@bogus>
-References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
- <20200303171159.246992-5-bryan.odonoghue@linaro.org>
+        Wed, 4 Mar 2020 11:18:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgCDQSR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:18:17 -0500
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBF4A21739;
+        Wed,  4 Mar 2020 16:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583338695;
+        bh=rkEU4eLVPSGyjC+W5QQXVir/h4v8Bes9tXj7f/O6jSk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dBr54LAnn55gniSieBFpR/b0Ke8+EqQyDZO9+0o3LMC83AcG6pl5rPTwzvraciZfp
+         N6PFmoXmvDA7/qCZnHEV56WMwA/9p4RXS0L7Z472UM/bw2VNO9Z71ghAd1WcFl7287
+         TBGWZgcK48wRwkkXwRhAmdvqQxIIEmY1tX3t+1gE=
+Received: by mail-qk1-f177.google.com with SMTP id e16so2163029qkl.6;
+        Wed, 04 Mar 2020 08:18:15 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0y+h9qyRnT792B9Fep3JYFLQxGyVws2Hl7Dt7lOCNOrgV1FqM+
+        tYOehhhzGpmZnoPcX0sn2HuHzT5CE/KnZKtjlQ==
+X-Google-Smtp-Source: ADFU+vsjnswSGP2m60kwTzWnFzRxFJmlLh7GF6JHFk0NmQeplvYVYnDswx1IFykpcXGAhgSdECAQY+TKoUoOtoR6z50=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr3729521qkg.152.1583338694869;
+ Wed, 04 Mar 2020 08:18:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303171159.246992-5-bryan.odonoghue@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200227082719.6343-1-alexandru.ardelean@analog.com>
+ <20200227082719.6343-7-alexandru.ardelean@analog.com> <20200303165323.GA32472@bogus>
+ <e8075f2fc949b541ccc369bc0cc5d3726ea0a3bf.camel@analog.com>
+In-Reply-To: <e8075f2fc949b541ccc369bc0cc5d3726ea0a3bf.camel@analog.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 4 Mar 2020 10:18:03 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJrzjKbKF3A1EGFVpP=KgeRY97yWf_k+T4t-nWZ3=n0zg@mail.gmail.com>
+Message-ID: <CAL_JsqJrzjKbKF3A1EGFVpP=KgeRY97yWf_k+T4t-nWZ3=n0zg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/8] dt-bindings: iio: adc: add bindings doc for AXI
+ ADC driver
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "jic23@kernel.org" <jic23@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  3 Mar 2020 17:11:45 +0000, Bryan O'Donoghue wrote:
-> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> 
-> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed PHY. This PHY
-> appears in a number of SoCs on various flavors of 20nm and 28nm nodes.
-> 
-> This commit adds information related to the 28nm node only.
-> 
-> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
-> definitions.
-> 
-> [bod: converted to yaml format]
-> 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  .../devicetree/bindings/phy/qcom,usb-ss.yaml  | 83 +++++++++++++++++++
->  1 file changed, 83 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
-> 
+On Wed, Mar 4, 2020 at 1:55 AM Ardelean, Alexandru
+<alexandru.Ardelean@analog.com> wrote:
+>
+> On Tue, 2020-03-03 at 10:53 -0600, Rob Herring wrote:
+> > On Thu, Feb 27, 2020 at 10:27:17AM +0200, Alexandru Ardelean wrote:
+> > > This change adds the bindings documentation for the AXI ADC driver.
+> > >
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > ---
+> > >  .../bindings/iio/adc/adi-axi-adc.yaml         | 69 +++++++++++++++++++
+> >
+> > Follow the compatible string: adi,axi-adc.yaml
+>
+> ack
+>
+> >
+> > >  1 file changed, 69 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi-axi-
+> > > adc.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
+> > > b/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
+> > > new file mode 100644
+> > > index 000000000000..d45d41f4f08e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
+> > > @@ -0,0 +1,69 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/iio/adc/adi-axi-adc.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Analog Devices AXI ADC IP core
+> > > +
+> > > +maintainers:
+> > > +  - Michael Hennerich <michael.hennerich@analog.com>
+> > > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > +
+> > > +description: |
+> > > +  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
+> > > +  with a high speed serial (JESD204B/C) or source synchronous parallel
+> > > +  interface (LVDS/CMOS).
+> > > +  Usually, some other interface type (i.e SPI) is used as a control
+> > > +  interface for the actual ADC, while this IP core will interface
+> > > +  to the data-lines of the ADC and handle the streaming of data into
+> > > +  memory via DMA.
+> > > +
+> > > +  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - adi,axi-adc-10.0.a
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  dmas:
+> > > +    minItems: 1
+> > > +    maxItems: 1
+> >
+> > Just maxItems is enough.
+>
+> ack
+>
+> >
+> > > +
+> > > +  dma-names:
+> > > +    maxItems: 1
+> > > +    items:
+> > > +      - const: rx
+> > > +
+> > > +  adi-axi-adc-client:
+> >
+> > adi,axi-adc-client
+> >
+> > Though I think 'adi,adc-dev' would be better name.
+>
+> works for me
+> one question though; this still gives:
+>
+>   CHKDT   Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+> /home/sandu/work/linux/upstream/Documentation/devicetree/bindings/iio/adc/adi,ax
+> i-adc.yaml: properties:adi,adc-dev: {'description': 'A reference to a the actual
+> ADC to which this FPGA ADC interfaces to.', 'maxItems': 1} is not valid under
+> any of the given schemas (Possible causes of the failure):
+>         /home/sandu/work/linux/upstream/Documentation/devicetree/bindings/iio/ad
+> c/adi,axi-adc.yaml: properties:adi,adc-dev: 'not' is a required property
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes, not the most helpful errors I know. You need a type reference and
+'maxItems' should be dropped.
+
+$ref: /schemas/types.yaml#/definitions/phandle
+
+Rob
