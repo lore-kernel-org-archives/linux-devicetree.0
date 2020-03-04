@@ -2,117 +2,139 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81340C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC7FC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F66215A4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373282146E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:23:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TLyB/QQ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388019AbgCDQVC (ORCPT
+        id S1729554AbgCDQXs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:21:02 -0500
-Received: from muru.com ([72.249.23.125]:58760 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgCDQVC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:21:02 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2870080F5;
-        Wed,  4 Mar 2020 16:21:46 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 08:20:57 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     yan-liu@ti.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
-Message-ID: <20200304162057.GV37466@atomide.com>
-References: <20200304090031.30360-1-rogerq@ti.com>
+        Wed, 4 Mar 2020 11:23:48 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56199 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgCDQXs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:23:48 -0500
+Received: by mail-wm1-f68.google.com with SMTP id 6so2794558wmi.5
+        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 08:23:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Yu7TBohBFammMQ5U/37U59+ZpffYPceErIyYR5cHG6k=;
+        b=TLyB/QQ9ZmH1ttGlz0a7M3nm1X36N/X7Q4JndefBnOcB6IF7GUFFIBrLroP8ig8oUz
+         p/FxWDAKuoEBQ7/HqylO/Ox8KNc+g37oqLdj7lJmADzxxP4egp36hg8IgWPJQNojhwnQ
+         hM2appY+mFTN4/2F9VBqmK7924+K+ejDSB+yHVWyJYJ1HNK7yCBpbf8DD8QRLXlGAdOS
+         jUDgjDm7jeKMN4M/I58pm5KzhCeoYK79Fen0t5EFmnWM/7lBNgs5cLEXR/CeCH+g+v1T
+         pohzcT6sZM5spG+rPqhmQu7WYoswW/+pbB/N27q+kYqqFjMF+TXt0xeS/FYrAnDDVjOO
+         PXvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Yu7TBohBFammMQ5U/37U59+ZpffYPceErIyYR5cHG6k=;
+        b=nKMobj/nCCsM+b4FGsqABOl19SW/A1pe8XY7fqus+YPUrypwopEf81SIJngqIAucOQ
+         qdBLOpt1QtsOnKo6G/J9Poj/Ain+zeQhEDHKPxwBrrlMbT+FqUv77p4FomfxPOiz7W78
+         x7d3hTXLAeRAfFvBdzFLgAgRlwFt3oiCeu7xDbrvSI5ECthtB9eBtmWyHATevGeDyUk3
+         BtS+tPT7ZL5SsUTBFA7ceAUNXysy60xvHxRvjacltQcFwiI38NCVYNCshmCNcaH7WfGD
+         B6rnZHH2n9CSoYuXSI85IkXgmi7hY8BNskXMYf1zW2Y9yxHdi3g/v31QhIJv9WpkLgt/
+         luzw==
+X-Gm-Message-State: ANhLgQ18Paisvql0W67zEBql4npROOMOgh9WSpfXjm4oo7zPUSxYo5JP
+        INl/gBgeE21T7tZKDHQV0BtRog==
+X-Google-Smtp-Source: ADFU+vumRIGwm+zI4SodqbfNIiAqd5CjMCV6Qxs6+MTISOeydrYmXPLaAQ9OPIqlHsDCVZpY9AdvPQ==
+X-Received: by 2002:a7b:ca55:: with SMTP id m21mr4386951wml.162.1583339026096;
+        Wed, 04 Mar 2020 08:23:46 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id b7sm39020656wrs.97.2020.03.04.08.23.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Mar 2020 08:23:45 -0800 (PST)
+Subject: Re: [PATCH v3 0/6] Split SDM845 interconnect nodes and consolidate
+ RPMh support
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>, robh+dt@kernel.org,
+        evgreen@chromium.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        daidavid1@codeaurora.org, saravanak@google.com, mka@chromium.org,
+        linux-pm@vger.kernel.org
+References: <20200209183411.17195-1-sibis@codeaurora.org>
+ <20200225051645.GX3948@builder>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <2f8560a4-7879-0b6f-475e-c7d5edbbd645@linaro.org>
+Date:   Wed, 4 Mar 2020 18:23:43 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304090031.30360-1-rogerq@ti.com>
+In-Reply-To: <20200225051645.GX3948@builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [200304 09:01]:
-> Even though the TRM says that SATA IP has 36 address bits
-> wired in the SoC, we see bus errors whenever any address
-> greater than 32-bit is given to the controller.
+On 2/25/20 07:16, Bjorn Andersson wrote:
+> On Sun 09 Feb 10:34 PST 2020, Sibi Sankar wrote:
 > 
-> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
+> Hi Georgi,
 > 
-> As a workaround we limit the DMA address range to 32-bits
-> for SATA.
+> Will you pick up the bindings and driver patches for v5.7? So that I can
+> apply the dts patches.
 > 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Reported-by: Yan Liu <yan-liu@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
-> 
-> NOTE: Currently ARM dma-mapping code doesn't account for devices
-> bus_dma_limit. This is fixed in [1].
-> 
-> [1] https://lkml.org/lkml/2020/2/18/712
 
-So is this dts patch safe to apply without the series above?
+Hi Bjorn,
 
-And should this dts patch be applied as a fix or can it wait
-until the merge window?
+Yes, please apply the dts patch with my Ack.
 
-Regards,
-
-Tony
-
->  arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
->  1 file changed, 16 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index d78b684e7fca..895462c22d1c 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -642,15 +642,22 @@
->  		};
->  
->  		/* OCP2SCP3 */
-> -		sata: sata@4a141100 {
-> -			compatible = "snps,dwc-ahci";
-> -			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
-> -			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> -			phys = <&sata_phy>;
-> -			phy-names = "sata-phy";
-> -			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
-> -			ti,hwmods = "sata";
-> -			ports-implemented = <0x1>;
-> +		sata_aux_bus {
-> +			#address-cells = <1>;
-> +			#size-cells = <2>;
-> +			compatible = "simple-bus";
-> +			ranges = <0x0 0x4a140000 0x0 0x1200>;
-> +			dma-ranges = <0x0 0x0 0x1 0x00000000>;
-> +			sata: sata@4a141100 {
-> +				compatible = "snps,dwc-ahci";
-> +				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
-> +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +				phys = <&sata_phy>;
-> +				phy-names = "sata-phy";
-> +				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
-> +				ti,hwmods = "sata";
-> +				ports-implemented = <0x1>;
-> +			};
->  		};
->  
->  		/* OCP2SCP1 */
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+Thanks,
+Georgi
