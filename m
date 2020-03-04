@@ -2,72 +2,96 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B37DC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 10:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB15C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 10:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B0C2072D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 10:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC0021741
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 10:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgCDKkO (ORCPT
+        id S2387780AbgCDKmB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:40:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:60634 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbgCDKkO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:40:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBDD530E;
-        Wed,  4 Mar 2020 02:40:13 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7FC03F534;
-        Wed,  4 Mar 2020 02:40:12 -0800 (PST)
-Date:   Wed, 4 Mar 2020 10:40:05 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     peng.fan@nxp.com
-Cc:     robh+dt@kernel.org, viresh.kumar@linaro.org, f.fainelli@gmail.com,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
-Message-ID: <20200304103954.GA25004@bogus>
-References: <1583201219-15839-1-git-send-email-peng.fan@nxp.com>
- <1583201219-15839-3-git-send-email-peng.fan@nxp.com>
+        Wed, 4 Mar 2020 05:42:01 -0500
+Received: from out28-5.mail.aliyun.com ([115.124.28.5]:48265 "EHLO
+        out28-5.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387776AbgCDKmB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 05:42:01 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2020651|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.351558-0.00513039-0.643312;DS=CONTINUE|ham_system_inform|0.0595886-0.000272615-0.940139;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.Gw1wbHL_1583318513;
+Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gw1wbHL_1583318513)
+          by smtp.aliyun-inc.com(10.147.41.121);
+          Wed, 04 Mar 2020 18:41:54 +0800
+Subject: Re: [PATCH 2/4] clk: Ingenic: Add support for TCU of X1000.
+To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, linux-mips@vger.kernel.org
+References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1582100974-129559-4-git-send-email-zhouyanjie@wanyeetech.com>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de, maz@kernel.org,
+        jason@lakedaemon.net, sboyd@kernel.org, mturquette@baylibre.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        daniel.lezcano@linaro.org, paul@crapouillou.net,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        dongsheng.qiu@ingenic.com
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E5F85F0.5060605@wanyeetech.com>
+Date:   Wed, 4 Mar 2020 18:41:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583201219-15839-3-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1582100974-129559-4-git-send-email-zhouyanjie@wanyeetech.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:06:59AM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->
-> Take arm,smc-id as the 1st arg, leave the other args as zero for now.
-> There is no Rx, only Tx because of smc/hvc not support Rx.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Hi,
 
-[...]
+On 2020年02月19日 16:29, 周琰杰 (Zhou Yanjie) wrote:
+> X1000 has a different TCU containing OST, since X1000, OST has been
+> independent of TCU. This patch is prepare for later OST driver.
+>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 
-> +static int smc_send_message(struct scmi_chan_info *cinfo,
-> +			    struct scmi_xfer *xfer)
-> +{
-> +	struct scmi_smc *scmi_info = cinfo->transport_info;
-> +	struct arm_smccc_res res;
+Any review/ack from clock framework subsystem?
+
+
+Thanks and best regards!
+
+> ---
+>   drivers/clk/ingenic/tcu.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
+> index ad7daa4..8799907 100644
+> --- a/drivers/clk/ingenic/tcu.c
+> +++ b/drivers/clk/ingenic/tcu.c
+> @@ -317,10 +317,17 @@ static const struct ingenic_soc_info jz4770_soc_info = {
+>   	.has_tcu_clk = false,
+>   };
+>   
+> +static const struct ingenic_soc_info x1000_soc_info = {
+> +	.num_channels = 8,
+> +	.has_ost = false, /* X1000 has OST, but it not belong TCU */
+> +	.has_tcu_clk = false,
+> +};
 > +
-> +	shmem_tx_prepare(scmi_info->shmem, xfer);
+>   static const struct of_device_id ingenic_tcu_of_match[] __initconst = {
+>   	{ .compatible = "ingenic,jz4740-tcu", .data = &jz4740_soc_info, },
+>   	{ .compatible = "ingenic,jz4725b-tcu", .data = &jz4725b_soc_info, },
+>   	{ .compatible = "ingenic,jz4770-tcu", .data = &jz4770_soc_info, },
+> +	{ .compatible = "ingenic,x1000-tcu", .data = &x1000_soc_info, },
+>   	{ /* sentinel */ }
+>   };
+>   
+> @@ -471,3 +478,4 @@ static void __init ingenic_tcu_init(struct device_node *np)
+>   CLK_OF_DECLARE_DRIVER(jz4740_cgu, "ingenic,jz4740-tcu", ingenic_tcu_init);
+>   CLK_OF_DECLARE_DRIVER(jz4725b_cgu, "ingenic,jz4725b-tcu", ingenic_tcu_init);
+>   CLK_OF_DECLARE_DRIVER(jz4770_cgu, "ingenic,jz4770-tcu", ingenic_tcu_init);
+> +CLK_OF_DECLARE_DRIVER(x1000_cgu, "ingenic,x1000-tcu", ingenic_tcu_init);
 
-How do we protect another thread/process on another CPU going and
-modifying the same shmem with another request ? We may need notion
-of channel with associated shmem and it is protected with some lock.
-
---
-Regards,
-Sudeep
