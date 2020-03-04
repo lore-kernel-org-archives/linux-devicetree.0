@@ -2,161 +2,131 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34172C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 08:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB5BC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 09:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0F9217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 08:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE49214D8
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 09:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WCIUYoHd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EZ0jXAZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgCDIt7 (ORCPT
+        id S1728482AbgCDJA5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:49:59 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46652 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgCDIt7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 03:49:59 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0248nw7H078347;
-        Wed, 4 Mar 2020 02:49:58 -0600
+        Wed, 4 Mar 2020 04:00:57 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44212 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbgCDJA5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 04:00:57 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02490k32090738;
+        Wed, 4 Mar 2020 03:00:46 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583311798;
-        bh=0JcGB+sYExQaFDZtjuC7bhrD3uXfF+I4qmWNu5FYtd4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WCIUYoHdET3ZvnYO4hTmE0npbgepCGNOICZagrx+WL27oSvGeuT2yfSFeXC6XXcdZ
-         PLfqJJ8+FHRiSz4ZVxRFHh6e0dzDWCHwpjKL7Ivk1OIMfD9CFD6aFcFloA7edUUIgn
-         E3czcYeAvtI6XwEOTOq3MJfCSVR1MlY4VEzbcrIY=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0248nwtX093196
+        s=ti-com-17Q1; t=1583312447;
+        bh=ha9OQnDcooAmHEgCcB9O6rbxK86frAqOmsgVJJ3RY+E=;
+        h=From:To:CC:Subject:Date;
+        b=EZ0jXAZCXO4y5aS1mftire1uwF1aP/rNpADio3gg6IYo11C3tJkqKyRKbwq4xj6tB
+         vkhAiAAZPeQT7bd6PIx8FDbT3wL7QVHsaD/ENqGv7zlkmRIFKcPQ7B0QNwP7dFpW68
+         uBVVPc0KZaTNwNCzSp3RglAAQSLfkC54VdhSgcrk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02490kSf126521
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 02:49:58 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 4 Mar 2020 03:00:46 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 02:49:57 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 03:00:46 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 02:49:57 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0248nu2i052181;
-        Wed, 4 Mar 2020 02:49:56 -0600
-Subject: Re: [Patch 1/1] media: ti-vpe: cal: fix disable_irqs to only the
- intended target
-To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
-References: <20200302135652.9365-1-bparrot@ti.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <678cb62a-4fdf-3b57-2fe5-699c6bf02b2f@ti.com>
-Date:   Wed, 4 Mar 2020 10:49:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Frontend Transport; Wed, 4 Mar 2020 03:00:46 -0600
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02490hm9093867;
+        Wed, 4 Mar 2020 03:00:43 -0600
+From:   Roger Quadros <rogerq@ti.com>
+To:     <tony@atomide.com>
+CC:     <yan-liu@ti.com>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Roger Quadros <rogerq@ti.com>, Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
+Date:   Wed, 4 Mar 2020 11:00:31 +0200
+Message-ID: <20200304090031.30360-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200302135652.9365-1-bparrot@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 02/03/2020 15:56, Benoit Parrot wrote:
-> disable_irqs() was mistakenly disabling all interrupts when called.
-> This cause all port stream to stop even if only stopping one of them.
-> 
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->   drivers/media/platform/ti-vpe/cal.c | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> index 6e009e479be3..6d4cbb8782ed 100644
-> --- a/drivers/media/platform/ti-vpe/cal.c
-> +++ b/drivers/media/platform/ti-vpe/cal.c
-> @@ -722,16 +722,16 @@ static void enable_irqs(struct cal_ctx *ctx)
->   
->   static void disable_irqs(struct cal_ctx *ctx)
->   {
-> +	u32 val;
-> +
->   	/* Disable IRQ_WDMA_END 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_CLR(2),
-> -			CAL_HL_IRQ_CLEAR,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	val = 0;
-> +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), val);
->   	/* Disable IRQ_WDMA_START 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_CLR(3),
-> -			CAL_HL_IRQ_CLEAR,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	val = 0;
-> +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), val);
->   	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
->   	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
->   }
-> 
+Even though the TRM says that SATA IP has 36 address bits
+wired in the SoC, we see bus errors whenever any address
+greater than 32-bit is given to the controller.
 
-I think the above works. But the enable_irqs is broken too, even if it doesn't cause any issues. Both IRQ_SET and IRQ_CLR are not supposed to be "modified" by a read-mod-write operation, but just written to.
+This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
 
-The macros used also make the code very difficult to read. Something like this fixes both irq enable and disable, and makes it readable:
+As a workaround we limit the DMA address range to 32-bits
+for SATA.
 
-diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index c8b1290c9e2b..660653031a0b 100644
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -707,15 +707,9 @@ static void cal_quickdump_regs(struct cal_dev *dev)
- static void enable_irqs(struct cal_ctx *ctx)
- {
- 	/* Enable IRQ_WDMA_END 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_SET(2),
--			CAL_HL_IRQ_ENABLE,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(2), 1 << (ctx->csi2_port - 1));
- 	/* Enable IRQ_WDMA_START 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_SET(3),
--			CAL_HL_IRQ_ENABLE,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(3), 1 << (ctx->csi2_port - 1));
- 	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
- 	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0xFF000000);
- }
-@@ -723,15 +717,9 @@ static void enable_irqs(struct cal_ctx *ctx)
- static void disable_irqs(struct cal_ctx *ctx)
- {
- 	/* Disable IRQ_WDMA_END 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(2),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), 1 << (ctx->csi2_port - 1));
- 	/* Disable IRQ_WDMA_START 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(3),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), 1 << (ctx->csi2_port - 1));
- 	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
- 	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
- }
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Reported-by: Yan Liu <yan-liu@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
 
- Tomi
+NOTE: Currently ARM dma-mapping code doesn't account for devices
+bus_dma_limit. This is fixed in [1].
 
+[1] https://lkml.org/lkml/2020/2/18/712
+
+ arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index d78b684e7fca..895462c22d1c 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -642,15 +642,22 @@
+ 		};
+ 
+ 		/* OCP2SCP3 */
+-		sata: sata@4a141100 {
+-			compatible = "snps,dwc-ahci";
+-			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+-			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-			phys = <&sata_phy>;
+-			phy-names = "sata-phy";
+-			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+-			ti,hwmods = "sata";
+-			ports-implemented = <0x1>;
++		sata_aux_bus {
++			#address-cells = <1>;
++			#size-cells = <2>;
++			compatible = "simple-bus";
++			ranges = <0x0 0x4a140000 0x0 0x1200>;
++			dma-ranges = <0x0 0x0 0x1 0x00000000>;
++			sata: sata@4a141100 {
++				compatible = "snps,dwc-ahci";
++				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
++				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				phys = <&sata_phy>;
++				phy-names = "sata-phy";
++				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
++				ti,hwmods = "sata";
++				ports-implemented = <0x1>;
++			};
+ 		};
+ 
+ 		/* OCP2SCP1 */
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
 Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
