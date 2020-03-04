@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE959C3F2DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 06:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48966C3F2DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 06:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03082465D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 06:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D4821744
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 06:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725797AbgCDGmV (ORCPT
+        id S1727176AbgCDGmV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 4 Mar 2020 01:42:21 -0500
-Received: from relmlor2.renesas.com ([210.160.252.172]:37535 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbgCDGmU (ORCPT
+Received: from relmlor1.renesas.com ([210.160.252.171]:51067 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725797AbgCDGmU (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 01:42:20 -0500
 X-IronPort-AV: E=Sophos;i="5.70,513,1574089200"; 
-   d="scan'208";a="40717179"
+   d="scan'208";a="40932655"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 04 Mar 2020 15:42:18 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 04 Mar 2020 15:42:18 +0900
 Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8B0B541CBB7A;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5659841CBCC4;
         Wed,  4 Mar 2020 15:42:18 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
@@ -33,9 +33,9 @@ To:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
 Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 4/4] clk: renesas: rcar-usb2-clock-sel: Add reset_control
-Date:   Wed,  4 Mar 2020 15:42:17 +0900
-Message-Id: <1583304137-28482-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 1/4] dt-bindings: clock: renesas: rcar-usb2-clock-sel: Fix clock[-name]s properties
+Date:   Wed,  4 Mar 2020 15:42:14 +0900
+Message-Id: <1583304137-28482-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583304137-28482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1583304137-28482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
@@ -44,85 +44,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This hardware needs to deassert resets of both host and peripheral.
-So, this patch adds reset control.
+Since the hardware requires to enable both USB 2.0 host and peripheral
+functional clock, this patch fixes the documentation.
+Fortunately, no one has this device node for now, so that we don't
+need to think of backward compatibility.
 
+Fixes: 311accb64570 ("clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0 clock selector PHY")
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/renesas/Kconfig               |  1 +
- drivers/clk/renesas/rcar-usb2-clock-sel.c | 15 ++++++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt     | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
-index 879d96e..ac2dd92 100644
---- a/drivers/clk/renesas/Kconfig
-+++ b/drivers/clk/renesas/Kconfig
-@@ -161,6 +161,7 @@ config CLK_RCAR_GEN3_CPG
- config CLK_RCAR_USB2_CLOCK_SEL
- 	bool "Renesas R-Car USB2 clock selector support"
- 	depends on ARCH_RENESAS || COMPILE_TEST
-+	select RESET_CONTROLLER
- 	help
- 	  This is a driver for R-Car USB2 clock selector
- 
-diff --git a/drivers/clk/renesas/rcar-usb2-clock-sel.c b/drivers/clk/renesas/rcar-usb2-clock-sel.c
-index d5f47ab..d4c0298 100644
---- a/drivers/clk/renesas/rcar-usb2-clock-sel.c
-+++ b/drivers/clk/renesas/rcar-usb2-clock-sel.c
-@@ -19,6 +19,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- 
- #define USB20_CLKSET0		0x00
-@@ -35,6 +36,7 @@ struct usb2_clock_sel_priv {
- 	void __iomem *base;
- 	struct clk_hw hw;
- 	struct clk_bulk_data clks[ARRAY_SIZE(rcar_usb2_clocks)];
-+	struct reset_control *rsts;
- 	bool extal;
- 	bool xtal;
- };
-@@ -62,10 +64,16 @@ static int usb2_clock_sel_enable(struct clk_hw *hw)
- 	struct usb2_clock_sel_priv *priv = to_priv(hw);
- 	int ret;
- 
--	ret = clk_bulk_prepare_enable(ARRAY_SIZE(priv->clks), priv->clks);
-+	ret = reset_control_deassert(priv->rsts);
- 	if (ret)
- 		return ret;
- 
-+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(priv->clks), priv->clks);
-+	if (ret) {
-+		reset_control_assert(priv->rsts);
-+		return ret;
-+	}
-+
- 	usb2_clock_sel_enable_extal_only(priv);
- 
- 	return 0;
-@@ -78,6 +86,7 @@ static void usb2_clock_sel_disable(struct clk_hw *hw)
- 	usb2_clock_sel_disable_extal_only(priv);
- 
- 	clk_bulk_disable_unprepare(ARRAY_SIZE(priv->clks), priv->clks);
-+	reset_control_assert(priv->rsts);
- }
- 
- /*
-@@ -151,6 +160,10 @@ static int rcar_usb2_clock_sel_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	priv->rsts = devm_reset_control_array_get(dev, true, false);
-+	if (IS_ERR(priv->rsts))
-+		return PTR_ERR(priv->rsts);
-+
- 	pm_runtime_enable(dev);
- 	pm_runtime_get_sync(dev);
- 
+diff --git a/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
+index 83f6c6a..5c1903f 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
+@@ -38,7 +38,8 @@ Required properties:
+ - reg: offset and length of the USB 2.0 clock selector register block.
+ - clocks: A list of phandles and specifier pairs.
+ - clock-names: Name of the clocks.
+- - The functional clock must be "ehci_ohci"
++ - The functional clock of USB 2.0 host side must be "ehci_ohci"
++ - The functional clock of HS-USB side must be "hs-usb-if"
+  - The USB_EXTAL clock pin must be "usb_extal"
+  - The USB_XTAL clock pin must be "usb_xtal"
+ - #clock-cells: Must be 0
+@@ -49,7 +50,8 @@ Example (R-Car H3):
+ 		compatible = "renesas,r8a7795-rcar-usb2-clock-sel",
+ 			     "renesas,rcar-gen3-usb2-clock-sel";
+ 		reg = <0 0xe6590630 0 0x02>;
+-		clocks = <&cpg CPG_MOD 703>, <&usb_extal>, <&usb_xtal>;
+-		clock-names = "ehci_ohci", "usb_extal", "usb_xtal";
++		clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>,
++			 <&usb_extal>, <&usb_xtal>;
++		clock-names = "ehci_ohci", "hs-usb-if", "usb_extal", "usb_xtal";
+ 		#clock-cells = <0>;
+ 	};
 -- 
 2.7.4
 
