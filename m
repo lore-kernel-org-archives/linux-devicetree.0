@@ -2,105 +2,131 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B16C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 07:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93E9C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 07:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A33214D8
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 07:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5E8207FD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 07:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="OcC3n5a1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipv6JMiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgCDHeI (ORCPT
+        id S1728554AbgCDHlC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:34:08 -0500
-Received: from mout.gmx.net ([212.227.15.15]:36485 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbgCDHeI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:34:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583307238;
-        bh=y6n4po5Alwq3VMFio5BEbbgBVfEtj5n/bbVdCcRd/+I=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=OcC3n5a12+eK10lEyJwC/TARtjatN6EPDOSWxjU1aVqb5Wbebq6/FcYG0ijKnrheE
-         veeKLXpSPfP8o/2HckJ4b3hmo4rLdB7zaSaMs/WxWayBhdB+nMRhkDZW2zHOHf7kmb
-         x6iqnNhSr4MX//M69wZNTgH6HZSoNzPsT2t1jfDA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.0.43] ([188.223.33.120]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MKbkM-1ioQHJ3hFM-00Kukw; Wed, 04
- Mar 2020 08:33:58 +0100
-Subject: Re: [PATCH] define rpi0w sdhci pinctrl state
-From:   Nick Hudson <nick.hudson@gmx.co.uk>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <c34db439-3539-88c0-99f1-308d75afd1aa@gmx.co.uk>
- <23a936db-fc89-6259-3991-5791fa88beb7@i2se.com>
- <bd4bd5dc-307f-d058-8f94-00b61a8b8c87@gmx.co.uk>
-Message-ID: <c97f3704-a671-be70-4323-181f84d657f8@gmx.co.uk>
-Date:   Wed, 4 Mar 2020 07:33:55 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <bd4bd5dc-307f-d058-8f94-00b61a8b8c87@gmx.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nLv9yfsm5lvOIhWzxRz31QdaSxTY/XyD93XIAgdBmTPOcSaqx27
- hUhyOa44vulsq5f3aLk3bVYVwRokx5VSfZyo+/0Ev8HgrHQ3wTbDMi8tzgVZIq3llXec3cJ
- 6d24o2nBS3ZTFzhdil1frjM3+FxICIkahWGlxHf6a4K190taW+TldZhIsuQ2HdHGCB/bTqk
- foif8YM5ZFLJcsWniYkOQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4spx8eQL8tg=:wmxU2yu/UX6tch62SyMkVZ
- 3JuxYqCYHiMX89rqg3nYZplMK3WXbOapt93+lse23d5EhdSveeENbF5NCHd1cf3RQ4AcgBGLP
- yBjDo88Ix5FMwH8yRqmzyIkgoJO5JTj+/SlR1Tk2PA2juKTGvCDhVI2t4BN4ZOKMmOBYVqi02
- EZveMzMBgmWRf8EwloS+ES8I9MisJK0kgsyKYimXL2KFFRXCNGlgWIj88HFjJFmL91w2IVgqQ
- Li88trYJEyNPP763UtNYb6YAuR/a8p4N94p8DYM/BA5mLEW1i2hh+GLKPBr3mXA7xODCCoVuD
- s7MS9ffgDWOrpz2oFhS6HZN+Kf69i4nZIoLzoG5YnlghoPxU7rZ5JzZPs82cq1itZ886XIWvA
- ATEXOOaz5Be9B0x1rLRAI9Zgl602afR28AfHMiFDTf16cbxsqQdCeomMAn3vWnB8rocbBd9JB
- 0MCos75H2TLZsTLtsLPyPVNFof88IOMRCGnPc9PbDkJ4WepXLvIZbLgCKOe8DwZixRZ3QKu+T
- 7C47PRQepcG3DebCFRf/fbLCpUHEa3UqnEKXyhhMDnJWnOdIO689Ehn4cI3PMDAo8k4WgIsTe
- Jh1oXw4UPPO4F7ojOeZ0zggoQAeTpUlihuVIargzTTmajXxYs9KwX5AOCYF21iHtEdJTNtvH1
- E86Kla6vBVAF1BxhBY3XWekDrqSUF0ivOD0fA45YI+kWZXa9Ddu2UGysHsoBtLE3jpmBdxDPf
- KD9IKrrFpvYGZdMZNtc8fV9xMaiGWZ01Qx97wneksohxGjH9cWmegjaFGkyUcgyPt6t6nLYLW
- d0vDvLYV/fb/eED5bjJ9KUM2EkroBqONvu7OY62ISmnYcb1czQW2natdzCysDARRNj2CY1J1n
- YPKJTqEoD3y265ZNAaZw5mBfQUnIJRCAEsWnlgHKPlhl9t2huFPCnfrr664PwxUyCbOanO68W
- XtBdxYU3GFo6s9ODNMkJvM/pXzsZ8dCPMu+ZlNrUi+iU1/1+8MynT4eWc8eu7HwgCNy7IeTKZ
- MHubLi23Pt5H/tMfUKVfvuJWJEvizIWO22ugNSzgm5cGD7UUrLb0xMQL2yAsOfpFcNGSJerIL
- snf0jcZKVCy87cQsyyD5+pf+no1sg7J2NmL8PvROmwHtyZW+N8v69Hu4qCp0YJSGns3pXtnhV
- DiEiAtOAB3XvozhxGPnBAgoAg5+wiyGfu8iNQ2kImQixz2f44Cgzk/spULXc4tB8KXAZdjM+8
- aMeqyJhvAEmMFQ3Il
+        Wed, 4 Mar 2020 02:41:02 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34548 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728499AbgCDHlC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 02:41:02 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z15so1094593wrl.1;
+        Tue, 03 Mar 2020 23:41:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CrHAGg7xO0NT1A0T82S72pHlkMFHuRzLgTSmN7ed1nE=;
+        b=ipv6JMiDw6jP42BqOvDDy9Yh3RXYzZGPYyDcU9jXEqL4JxdqaTmfpcYntDy+H33beR
+         2f0GsEhs7IsntUPTAfnYI33ifPrYDREXuxlsb3vVIEOu/NhxBcW14ekLXlN1tn3uRxEQ
+         rfG14QpPV2D07MSU0WGqQV0A9EpuwEzueZF/uIBBK6FQTvQPCYYB+vVBGAgt7GoKJsOr
+         qf/8dgdyaoCc4cHLCTFG5CFuWSCbhQP0H0R6mE5k/N2ahBwO1tBdxSPqHaBUGzGz6iqp
+         JfAlYBFJaoyPJ0EkhHQDoawMGHk657Jnl4ifI2eGN3IkzFC65H1mQfCKcRoH5v1VTjbg
+         SxKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CrHAGg7xO0NT1A0T82S72pHlkMFHuRzLgTSmN7ed1nE=;
+        b=a3Xayg7ZYpD6XfhTFY7gRC5PYY5zEDDr4lDMqEcQl0fM0m3Dq55QfLsO3lfJzaYsTd
+         NORGsZ/fZ9dmIu0AgiSzQ+GvG6tKOGEwNB9aw3JePOBjyXhI4TbsEH5ke39EVnp62ryy
+         0sujdJCpnyJb68lUHBVpjMmxaSNrMkl5okFlruXy2ufIhB1q/TiMGz3x7f9JI2/gH2la
+         1JSqQLAu7MuAK0bHtbEkajfydUkNA0f2Ou7MQgFZkopk6ZanBaVvB+WvUj7DP0cTAy6p
+         j8+Kp0rQJnsVWDqIsL6QYV6nZVcyE6dmxAQ7Zy9dW1w3nJQXSdgyrdmlzBhZw0fA1EOc
+         my2w==
+X-Gm-Message-State: ANhLgQ0k3/8cchoobv9oOodJQQeekoGYezw9cCxtijtgby8vDP1aXH3B
+        Cv6KYPWnufszkwCPhNVwFh8=
+X-Google-Smtp-Source: ADFU+vs1bZk9bnffIwK2hnQ7f7/N9rjAEGy/0M/3YUa4nM2yYGwzhot/uOrj5R/5NG1RttDv7QCOWw==
+X-Received: by 2002:a5d:410f:: with SMTP id l15mr2638334wrp.245.1583307660517;
+        Tue, 03 Mar 2020 23:41:00 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id m16sm6410530wrs.67.2020.03.03.23.40.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2020 23:40:59 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] ARM: dts: rockchip: add missing model properties
+Date:   Wed,  4 Mar 2020 08:40:49 +0100
+Message-Id: <20200304074051.8742-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+A test with the command below gives these errors:
 
+arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: /: 'model'
+is a required property
+arch/arm/boot/dts/rk3288-evb-rk808.dt.yaml: /: 'model'
+is a required property
+arch/arm/boot/dts/rk3288-r89.dt.yaml: /: 'model'
+is a required property
 
-On 28/02/2020 11:52, Nick Hudson wrote:
->
->
-> On 27/02/2020 17:53, Stefan Wahren wrote:
->> Hi Nick,
->>
->> Am 27.02.20 um 00:33 schrieb Nick Hudson:
->>> I'm still not sure where I should be sending this, but here goes.
->>
->> the addresses are right. Please rebase your change against recent Linux
->> git tree and generate a git patch, otherwise we cannot apply your it.
-> Oops, I see I sent the comletely the wrong diff... will fix.
->
->>
->> I suggest the following subject:
->>
->> ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
+Fix this error by adding the missing model properties to
+the involved dts files.
 
-So, I did this, but it's stuck pending ML moderator approval :(
-I sent it on Saturday.
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
+schemas/root-node.yaml
 
-Do I need to try again?
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3288-evb-act8846.dts | 1 +
+ arch/arm/boot/dts/rk3288-evb-rk808.dts   | 1 +
+ arch/arm/boot/dts/rk3288-r89.dts         | 1 +
+ 3 files changed, 3 insertions(+)
 
-Thanks,
-Nick
+diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts b/arch/arm/boot/dts/rk3288-evb-act8846.dts
+index 80080767c..be695b8c1 100644
+--- a/arch/arm/boot/dts/rk3288-evb-act8846.dts
++++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
+@@ -4,6 +4,7 @@
+ #include "rk3288-evb.dtsi"
+ 
+ / {
++	model = "Rockchip RK3288 EVB ACT8846";
+ 	compatible = "rockchip,rk3288-evb-act8846", "rockchip,rk3288";
+ 
+ 	vcc_lcd: vcc-lcd {
+diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+index 167882096..42384ea4c 100644
+--- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
++++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+@@ -4,6 +4,7 @@
+ #include "rk3288-evb.dtsi"
+ 
+ / {
++	model = "Rockchip RK3288 EVB RK808";
+ 	compatible = "rockchip,rk3288-evb-rk808", "rockchip,rk3288";
+ };
+ 
+diff --git a/arch/arm/boot/dts/rk3288-r89.dts b/arch/arm/boot/dts/rk3288-r89.dts
+index a6ffc381a..a258c7ae5 100644
+--- a/arch/arm/boot/dts/rk3288-r89.dts
++++ b/arch/arm/boot/dts/rk3288-r89.dts
+@@ -9,6 +9,7 @@
+ #include "rk3288.dtsi"
+ 
+ / {
++	model = "Netxeon R89";
+ 	compatible = "netxeon,r89", "rockchip,rk3288";
+ 
+ 	memory@0 {
+-- 
+2.11.0
+
