@@ -2,155 +2,89 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB11C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 21:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EFFC3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 21:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF492084E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 21:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5F920828
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 21:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgCDV1l (ORCPT
+        id S2388281AbgCDVaI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:27:41 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:42315 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387762AbgCDV1l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 16:27:41 -0500
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 1C0AE60002;
-        Wed,  4 Mar 2020 21:27:38 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 22:27:37 +0100
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, tsahee@annapurnalabs.com,
-        antoine.tenart@bootlin.com, mchehab+samsung@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, tglx@linutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, dwmw@amazon.co.uk,
-        benh@amazon.com, ronenk@amazon.com, talel@amazon.com,
-        jonnyc@amazon.com, hanochu@amazon.com, eitan@amazon.com
-Subject: Re: [PATCH v4 6/6] arm64: dts: amazon: add Amazon's Annapurna Labs
- Alpine v3 support
-Message-ID: <20200304212737.GN3179@kwain>
-References: <20200225112926.16518-1-hhhawa@amazon.com>
- <20200225112926.16518-7-hhhawa@amazon.com>
+        Wed, 4 Mar 2020 16:30:08 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:47918 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388237AbgCDVaI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Mar 2020 16:30:08 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 84C4237019F4;
+        Wed,  4 Mar 2020 22:30:06 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3W5thPF20-qO; Wed,  4 Mar 2020 22:29:59 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Johan Jonker <jbx6244@gmail.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nick Xie <nick@khadas.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Tobias Schramm <t.schramm@manjaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Emmanuel Vadot <manu@freebsd.org>
+Subject: [PATCH v4 0/2] Add support for the pine64 Pinebook Pro
+Date:   Wed,  4 Mar 2020 22:29:16 +0100
+Message-Id: <20200304212918.689936-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200225112926.16518-7-hhhawa@amazon.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+This patchset adds an initial dts and compatible string for the rk3399
+based Pinebook Pro 14" laptop.
 
-Sorry, I'm a bit late to the party...
+This is version 4 of the original patchset with more fixes proposed
+by Johan. Additionally the dt-bindings doc patch has been replaced by
+one from Emmanuel since that patch has already been reviewed by Rob.
 
-On Tue, Feb 25, 2020 at 01:29:26PM +0200, Hanna Hawa wrote:
-> diff --git a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-> +     arch-timer {                                                    
+Contrary to the Rockchip BSP dts proposed mid January this dts has a
+power tree reflecting the actual schematic of the device and features
+full display, audio and WiFi/Bluetooth support.
 
-Please use 'timer' instead.
+Changelog:
+ v2: Incorporate review by Heiko
+ v3: Add fixes suggested by Johan
+ v4: More fixes by Johan, set data-role on typec connector,
+     use compatible doc patch by Emmanuel
 
-> +             compatible = "arm,armv8-timer";                         
-> +             interrupts = <GIC_PPI 0xd IRQ_TYPE_LEVEL_LOW>,          
-> +                          <GIC_PPI 0xe IRQ_TYPE_LEVEL_LOW>,          
-> +                          <GIC_PPI 0xb IRQ_TYPE_LEVEL_LOW>,          
-> +                          <GIC_PPI 0xa IRQ_TYPE_LEVEL_LOW>;          
-> +     };
+Emmanuel Vadot (1):
+  dt-bindings: Add doc for Pine64 Pinebook Pro
 
-> +		gic: interrupt-controller@f0000000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <0>;
+Tobias Schramm (1):
+  arm64: dts: rockchip: Add initial support for Pinebook Pro
 
-No need for this.
-
-> +			interrupt-controller;
-> +			reg = <0x0 0xf0800000 0 0x10000>,
-> +			      <0x0 0xf0a00000 0 0x200000>,
-> +			      <0x0 0xf0000000 0 0x2000>,
-> +			      <0x0 0xf0010000 0 0x1000>,
-> +			      <0x0 0xf0020000 0 0x2000>;
-
-Please add comments here, see alpine-v2.dtsi (or other dtsi in
-arch/arm64).
-
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		msix: msix@fbe00000 {
-> +			compatible = "al,alpine-msix";
-> +			reg = <0x0 0xfbe00000 0x0 0x100000>;
-> +			interrupt-controller;
-> +			msi-controller;
-> +			al,msi-base-spi = <160>;
-> +			al,msi-num-spis = <800>;
-> +			interrupt-parent = <&gic>;
-> +		};
-> +
-> +		uart0: serial@fd883000 {
-
-Looking at the Alpine v2 dtsi, this node was put in an io-fabric bus. It
-seems to me the Alpine v3 dtsi is very similar. Would it apply as well?
-
-> +			compatible = "ns16550a";
-> +			reg = <0x0 0xfd883000 0x0 0x1000>;
-> +			clock-frequency = <0>;
-
-Is the frequency set to 0 on purpose? Or is it set by a firmware at boot
-time (if so please add a comment)?
-
-> +			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-> +			reg-shift = <2>;
-> +			reg-io-width = <4>;
-
-Since you're enabling this node explicitly in the dts, you can set it to
-disabled by default.
-
-> +		};
-> +
-> +		pcie@fbd00000 {
-
-Please order the nodes in increasing order.
-
-> +			compatible = "pci-host-ecam-generic";
-> +			device_type = "pci";
-> +			#size-cells = <2>;
-> +			#address-cells = <3>;
-> +			#interrupt-cells = <1>;
-> +			reg = <0x0 0xfbd00000 0x0 0x100000>;
-> +			interrupt-map-mask = <0xf800 0 0 7>;
-> +			/* 8 x legacy interrupts for SATA only */
-> +			interrupt-map = <0x4000 0 0 1 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0x4800 0 0 1 &gic 0 58 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0x5000 0 0 1 &gic 0 59 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0x5800 0 0 1 &gic 0 60 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0x6000 0 0 1 &gic 0 61 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0x6800 0 0 1 &gic 0 62 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0x7000 0 0 1 &gic 0 63 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0x7800 0 0 1 &gic 0 64 IRQ_TYPE_LEVEL_HIGH>;
-> +			ranges = <0x02000000 0x0 0xfe000000 0x0 0xfe000000 0x0 0x1000000>;
-> +			bus-range = <0x00 0x00>;
-> +			msi-parent = <&msix>;
-> +		};
-> +	};
-> +};
-
-The rest of the series looks good.
-
-Thanks!
-Antoine
+ .../devicetree/bindings/arm/rockchip.yaml     |    5 +
+ arch/arm64/boot/dts/rockchip/Makefile         |    1 +
+ .../boot/dts/rockchip/rk3399-pinebook-pro.dts | 1096 +++++++++++++++++
+ 3 files changed, 1102 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
 
 -- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.24.1
+
