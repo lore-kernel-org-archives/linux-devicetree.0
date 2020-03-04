@@ -2,99 +2,92 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41425C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 08:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B350BC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DDC20866
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 08:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D03B2166E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="u6FbvwLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbgCDIEE (ORCPT
+        id S1728762AbgCDIK2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:04:04 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:41518 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728779AbgCDIEA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 03:04:00 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024805dq004097;
-        Wed, 4 Mar 2020 03:03:58 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52a8tr-1
+        Wed, 4 Mar 2020 03:10:28 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:18098 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728387AbgCDIK1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 03:10:27 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02487rv0032631;
+        Wed, 4 Mar 2020 09:10:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Ic1C52dxdRVd8hopKHFmxL20NCwaptXElaVaPhP+rUE=;
+ b=u6FbvwLMTti9eJsDBmKkvCAdcWlQHcVPaTZQa1CAlCVWbdVsR8z3WQm8rWX5mGHprAzY
+ UDheNAzsQerzo9oF26Gt0wPFywt8/XZ8BjXzsvcrApxtZmqQmPxK/jrIIe3XEcf9hYsH
+ /i38IKdL5CbjyNHVzaPQgSH4yxBwz7SQB82pKilAtkB+Ci+iO1L3echhIDpDBHE1Btur
+ 39xwg/rAuASlDHFKre50CDyR4vzHZqNqEtT1DFyp4gfiWDOBlQk1+ovqlN/ksAsZk/Og
+ lO+89gvrrYTulefBJICTaWWZliGQqVRxot335MocEGI9kCJh0jP5BxNKQXMJswScNrMS lg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yfem0ybx2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Mar 2020 03:03:58 -0500
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 02483uKe035042
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 4 Mar 2020 03:03:56 -0500
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 4 Mar 2020
- 00:03:55 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 4 Mar 2020 00:03:55 -0800
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02483joe021268;
-        Wed, 4 Mar 2020 03:03:51 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH v4 3/8] iio: buffer-dmaengine: use %zu specifier for sprintf(align)
-Date:   Wed, 4 Mar 2020 10:06:42 +0200
-Message-ID: <20200304080647.16501-4-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200304080647.16501-1-alexandru.ardelean@analog.com>
-References: <20200304080647.16501-1-alexandru.ardelean@analog.com>
+        Wed, 04 Mar 2020 09:10:10 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 01392100038;
+        Wed,  4 Mar 2020 09:10:05 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF0AC21FE85;
+        Wed,  4 Mar 2020 09:10:05 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Mar 2020 09:10:05
+ +0100
+From:   Yann Gautier <yann.gautier@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Yann Gautier <yann.gautier@st.com>
+Subject: [PATCH 0/3] Update SDMMC nodes on STM32MP1 boards 
+Date:   Wed, 4 Mar 2020 09:09:53 +0100
+Message-ID: <20200304080956.7699-1-yann.gautier@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-03-04_01:2020-03-03,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=807 mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
- impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040062
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The 'size_t' type behaves differently on 64-bit architectures, and causes
-compiler a warning of the sort "format '%u' expects argument of type
-'unsigned int', but argument 3 has type 'size_t {aka long unsigned int}'".
+This patchset updates the sdmmc nodes for STM32MP1.
+For SD cards nodes, the cd-gpio property is used instead of broken-cd,
+and the disable-wp property is added.
+The last patch corrects the vqmmc regulator for eMMC on ED1/EV1 boards.
 
-This change adds the correct specifier for the 'align' field.
+Yann Gautier (3):
+  ARM:dts: stm32: add cd-gpios properties for SD-cards on STM32MP1
+    boards
+  ARM: dts: stm32: add disable-wp property for SD-card on STM32MP1
+    boards
+  ARM: dts: stm32: use correct vqmmc regu for eMMC on stm32mp1 ED1/EV1
+    boards
 
-Fixes: 4538c18568099 ("iio: buffer-dmaengine: Report buffer length requirements")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/buffer/industrialio-buffer-dmaengine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32mp157a-avenger96.dts | 3 ++-
+ arch/arm/boot/dts/stm32mp157c-ed1.dts       | 5 +++--
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi      | 3 ++-
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-index b129693af0fd..94da3b1ca3a2 100644
---- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-@@ -134,7 +134,7 @@ static ssize_t iio_dmaengine_buffer_get_length_align(struct device *dev,
- 	struct dmaengine_buffer *dmaengine_buffer =
- 		iio_buffer_to_dmaengine_buffer(indio_dev->buffer);
- 
--	return sprintf(buf, "%u\n", dmaengine_buffer->align);
-+	return sprintf(buf, "%zu\n", dmaengine_buffer->align);
- }
- 
- static IIO_DEVICE_ATTR(length_align_bytes, 0444,
 -- 
-2.20.1
+2.17.1
 
