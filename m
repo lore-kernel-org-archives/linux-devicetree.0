@@ -2,84 +2,109 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF602C3F2D8
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A16C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B822521D56
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RP0IXVs4"
+	by mail.kernel.org (Postfix) with ESMTP id 0A94D2073D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387925AbgCDLG1 (ORCPT
+        id S1729175AbgCDLWn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:06:27 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:34119 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387871AbgCDLG0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 06:06:26 -0500
-X-UUID: 460880ae0256496392175c97120b7525-20200304
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=0gDwytnNc7xdLpYdN0G7nziQA18TsZeFTPgsLeoCwAM=;
-        b=RP0IXVs4n9JthNcDkjCfrmoFWHFnoqnFqoFiOt7amA3cO0N9mpZ518DGhhHnRNMkKpECHrPWJgt1++b0d6BVykYHdEYibDQ+U0D155I5/EJPtzxaaBvME/Gm3oFt5N72buVQwKy3cG2mUjrT69rjkYmd2g2mHrCKiSr5OSgqL9c=;
-X-UUID: 460880ae0256496392175c97120b7525-20200304
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1866659304; Wed, 04 Mar 2020 19:06:21 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Mar 2020 19:05:12 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Mar 2020 19:06:19 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [v3,2/2] arm: dts: mediatek: add mt7629 pwm support
-Date:   Wed, 4 Mar 2020 19:06:13 +0800
-Message-ID: <1583319973-20694-3-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1583319973-20694-1-git-send-email-sam.shih@mediatek.com>
-References: <1583319973-20694-1-git-send-email-sam.shih@mediatek.com>
+        Wed, 4 Mar 2020 06:22:43 -0500
+Received: from out28-194.mail.aliyun.com ([115.124.28.194]:44833 "EHLO
+        out28-194.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbgCDLWn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 06:22:43 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08880497|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.103441-0.00660654-0.889953;DS=CONTINUE|ham_system_inform|0.00489006-0.000231126-0.994879;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.Gw2Hmn-_1583320951;
+Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gw2Hmn-_1583320951)
+          by smtp.aliyun-inc.com(10.147.41.199);
+          Wed, 04 Mar 2020 19:22:32 +0800
+Subject: Re: [PATCH 4/4] irqchip: Ingenic: Add support for TCU of X1000.
+To:     Marc Zyngier <maz@kernel.org>
+References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1582100974-129559-6-git-send-email-zhouyanjie@wanyeetech.com>
+ <cf9434a075ee7efa6430bc39877c416c@kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, jason@lakedaemon.net, sboyd@kernel.org,
+        mturquette@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        daniel.lezcano@linaro.org, paul@crapouillou.net,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        dongsheng.qiu@ingenic.com
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E5F8F76.6060803@wanyeetech.com>
+Date:   Wed, 4 Mar 2020 19:22:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <cf9434a075ee7efa6430bc39877c416c@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHB3bSBzdXBwb3J0IGZvciBNVDc2MjkuDQoNClNpZ25lZC1vZmYtYnk6IFNhbSBT
-aGloIDxzYW0uc2hpaEBtZWRpYXRlay5jb20+DQotLS0NClVzZWQ6DQpodHRwczovL3BhdGNod29y
-ay5rZXJuZWwub3JnL3BhdGNoLzExMTYwODUxLw0KDQpDaGFuZ2Ugc2luY2UgdjI6DQpVcGRhdGVk
-IGJpbmRpbmdzIGZvciBNVDc2MjkgcHdtIGNvbnRyb2xsZXIuDQoNCi0tLQ0KIGFyY2gvYXJtL2Jv
-b3QvZHRzL210NzYyOS5kdHNpIHwgMTQgKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwg
-MTQgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5
-LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9tdDc2MjkuZHRzaQ0KaW5kZXggODY3Yjg4MTAzYjlk
-Li5hMjY1OGZiYWRlY2EgMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9tdDc2MjkuZHRz
-aQ0KKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5LmR0c2kNCkBAIC0yNDEsNiArMjQxLDIw
-IEBADQogCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAJCX07DQogDQorCQlwd206IHB3bUAxMTAw
-NjAwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDc2MjktcHdtIjsNCisJCQlyZWcg
-PSA8MHgxMTAwNjAwMCAweDEwMDA+Ow0KKwkJCSNwd20tY2VsbHMgPSA8Mj47DQorCQkJY2xvY2tz
-ID0gPCZ0b3Bja2dlbiBDTEtfVE9QX1BXTV9TRUw+LA0KKwkJCQkgPCZwZXJpY2ZnIENMS19QRVJJ
-X1BXTV9QRD4sDQorCQkJCSA8JnBlcmljZmcgQ0xLX1BFUklfUFdNMV9QRD47DQorCQkJY2xvY2st
-bmFtZXMgPSAidG9wIiwgIm1haW4iLCAicHdtMSI7DQorCQkJYXNzaWduZWQtY2xvY2tzID0gPCZ0
-b3Bja2dlbiBDTEtfVE9QX1BXTV9TRUw+Ow0KKwkJCWFzc2lnbmVkLWNsb2NrLXBhcmVudHMgPQ0K
-KwkJCQkJPCZ0b3Bja2dlbiBDTEtfVE9QX1VOSVZQTEwyX0Q0PjsNCisJCQlzdGF0dXMgPSAiZGlz
-YWJsZWQiOw0KKwkJfTsNCisNCiAJCWkyYzogaTJjQDExMDA3MDAwIHsNCiAJCQljb21wYXRpYmxl
-ID0gIm1lZGlhdGVrLG10NzYyOS1pMmMiLA0KIAkJCQkgICAgICJtZWRpYXRlayxtdDI3MTItaTJj
-IjsNCi0tIA0KMi4xNy4xDQo=
+Hi Marc,
+
+On 2020年03月04日 18:58, Marc Zyngier wrote:
+> On 2020-02-19 08:29, 周琰杰 wrote:
+>> X1000 has a different TCU containing OST, since X1000, OST has been
+>> independent of TCU. This patch is prepare for later OST driver.
+>
+> You keep on talking about OST (whatever that is), but never deals with 
+> it.
+
+Sorry, I didn't make it clear. My intention was to explain why we need 
+to add an IRQCHIP_DECLARE to x1000 separately.
+
+> Why don't you just say
+>
+> "Enable TCU support for Ingenic X1000, which can be supported by
+> the existing driver."
+>
+> as this is what the patch is doing?
+
+Yes, this patch is to ensure that TCU can be used normally when the new 
+OST driver is merged, thank you for your suggestion.
+
+Thanks and best regards!
+
+>
+>>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> ---
+>>  drivers/irqchip/irq-ingenic-tcu.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/irqchip/irq-ingenic-tcu.c
+>> b/drivers/irqchip/irq-ingenic-tcu.c
+>> index 6d05cef..7a7222d 100644
+>> --- a/drivers/irqchip/irq-ingenic-tcu.c
+>> +++ b/drivers/irqchip/irq-ingenic-tcu.c
+>> @@ -180,3 +180,4 @@ static int __init ingenic_tcu_irq_init(struct
+>> device_node *np,
+>>  IRQCHIP_DECLARE(jz4740_tcu_irq, "ingenic,jz4740-tcu", 
+>> ingenic_tcu_irq_init);
+>>  IRQCHIP_DECLARE(jz4725b_tcu_irq, "ingenic,jz4725b-tcu", 
+>> ingenic_tcu_irq_init);
+>>  IRQCHIP_DECLARE(jz4770_tcu_irq, "ingenic,jz4770-tcu", 
+>> ingenic_tcu_irq_init);
+>> +IRQCHIP_DECLARE(x1000_tcu_irq, "ingenic,x1000-tcu", 
+>> ingenic_tcu_irq_init);
+>
+> Otherwise,
+>
+> Acked-by: Marc Zyngier <maz@kernel.org>
+>
+> I expect this to go via the MIPS tree as a series.
+>
+> Thanks,
+>
+>         M.
 
