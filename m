@@ -6,57 +6,62 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D560AC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 22:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D02C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 22:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B842A20848
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 22:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A1A20716
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 22:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388369AbgCDWPt (ORCPT
+        id S2388389AbgCDWjw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:15:49 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:46732 "EHLO
+        Wed, 4 Mar 2020 17:39:52 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:46952 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387931AbgCDWPt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 17:15:49 -0500
+        with ESMTP id S2388281AbgCDWjw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 17:39:52 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C1A7E15AD71B2;
-        Wed,  4 Mar 2020 14:15:47 -0800 (PST)
-Date:   Wed, 04 Mar 2020 14:15:47 -0800 (PST)
-Message-Id: <20200304.141547.1905642444413562833.davem@davemloft.net>
-To:     elder@linaro.org
-Cc:     arnd@arndb.de, bjorn.andersson@linaro.org, agross@kernel.org,
-        johannes@sipsolutions.net, dcbw@redhat.com, evgreen@google.com,
-        ejcaruso@google.com, syadagir@codeaurora.org,
-        cpratapa@codeaurora.org, subashab@codeaurora.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, ohad@wizery.com,
-        sidgup@codeaurora.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/17] net: introduce Qualcomm IPA driver (UPDATED)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D6FE015ADAAEA;
+        Wed,  4 Mar 2020 14:39:51 -0800 (PST)
+Date:   Wed, 04 Mar 2020 14:39:51 -0800 (PST)
+Message-Id: <20200304.143951.1102411401290807167.davem@davemloft.net>
+To:     grygorii.strashko@ti.com
+Cc:     m-karicheri2@ti.com, kishon@ti.com, t-kristo@ti.com,
+        nsekhar@ti.com, robh+dt@kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [for-next PATCH v2 0/5] phy: ti: gmii-sel: add support for
+ am654x/j721e soc
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200228224204.17746-1-elder@linaro.org>
-References: <20200228224204.17746-1-elder@linaro.org>
+In-Reply-To: <20200303160029.345-1-grygorii.strashko@ti.com>
+References: <20200303160029.345-1-grygorii.strashko@ti.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 04 Mar 2020 14:15:48 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 04 Mar 2020 14:39:52 -0800 (PST)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
-Date: Fri, 28 Feb 2020 16:41:47 -0600
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Date: Tue, 3 Mar 2020 18:00:24 +0200
 
-> This series presents the driver for the Qualcomm IP Accelerator (IPA).
+> Hi Kishon,
+> 
+> This series adds support for TI K3 AM654x/J721E SoCs in TI phy-gmii-sel PHY
+> driver, which is required for future adding networking support.
+> 
+> depends on:
+>  [PATCH 0/2] phy: ti: gmii-sel: two fixes
+>  https://lkml.org/lkml/2020/2/14/2510
+> 
+> Changes in v2:
+>  - fixed comments
+> 
+> v1: https://lkml.org/lkml/2020/2/22/100
 
-This doesn't apply cleanly to the net-next tree if that's where you want
-this applied, can you respin?
-
-Thanks.
+This is mostly DT updates and not much networking code changes, will some other
+tree take this?
