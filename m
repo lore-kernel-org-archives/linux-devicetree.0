@@ -2,102 +2,120 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777DCC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AB1C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA7820732
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9728920732
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583333879;
-	bh=mmQIEtJSNzi4WtTVzf/8bIKeoW0Fm2DWMyxwg87FxQM=;
+	s=default; t=1583334001;
+	bh=wvxq/vGbzNiq8n/RK5/EhcHV3z/kcMg9Bm6arutZxwM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZqzFWDii820Me8dMlm1909OgX4trROlUaR2d8bpBlORu+Gv4gyz7AGhdFAqQZkqwC
-	 XaTd9LzzN+ZbGtVzQ1pxj5YVG1CxReadnLSsLUQsnVHdimV763NO3svvrQDYwgAfl/
-	 VmL4jaXNrBKAwk3aA9gSZOheazJo5SGKqJyNipG8=
+	b=iaJAe966sFoTPbIlgTYPuJoANO24CTrzFslzie8QNANxqfN8I28jcubJ41QirvGP+
+	 uD8pwsHsiYOELLFq+DnLatyJbX/LtQzlpNyHxNt4gf/O77m04EHfVe5epXzSxmV9N3
+	 BkKsPy4qUQL8gdJzXscjXuL6PxrV9GPkZBEPn2Mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387432AbgCDO56 (ORCPT
+        id S1726915AbgCDPAB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:57:58 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41846 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgCDO56 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 09:57:58 -0500
-Received: by mail-oi1-f196.google.com with SMTP id i1so2337320oie.8;
-        Wed, 04 Mar 2020 06:57:58 -0800 (PST)
+        Wed, 4 Mar 2020 10:00:01 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43275 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgCDPAB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 10:00:01 -0500
+Received: by mail-oi1-f194.google.com with SMTP id p125so2335677oif.10;
+        Wed, 04 Mar 2020 07:00:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DmcoZNUJxxsS5LTSsyiiqENx6EIP1OPlgM367MTeK8I=;
-        b=LfCBzxIQ8WzX+TFAeheZYWPj7a+6aLUYdys0KxSQXX3caQxK7LsvQE3PA+LnNzHJCk
-         RSj5rh0tt5JG7Ak0tSdDlnmfNSn5KD33ddWAqUx7ZdL4WH1EHiS9Dcsbyphi9b8jgzFO
-         f0pLTUKKXETfUlRv6B+GtFNlJrYgoiKvEeSanuAqU79sYqw0mjQzQlKGPUCsMxm/9NEE
-         Uav2xvs2uhnsNLqwH972fMi81mArWIGPill7gsW7HKhta4DLa3j9nX8uLuPcVQhefAkx
-         DhAgflMCUEIq+YwPUcQ09inpHIVv/lDlAj00ENChzi4lGnGaeMCXPe+pkJH/G2CYb05/
-         ZKpw==
-X-Gm-Message-State: ANhLgQ13rwoGGPCvr1hCRwlcdN4+WYajaxIpwsgoly9h2e4tu60kVF2S
-        j3I7eYps4qV93iTfB20HtA==
-X-Google-Smtp-Source: ADFU+vt4gqhc3KDXQ3ks19GyfY1ioyJVdrTyDw9Oyh68DIp1bWp9tTZzshgCw7rze/fFoCaTdgQKdQ==
-X-Received: by 2002:aca:f1c2:: with SMTP id p185mr2037926oih.87.1583333877779;
-        Wed, 04 Mar 2020 06:57:57 -0800 (PST)
+        bh=5kzs+suiXGOLM6214SN1xySZQC2yuoHuAv+kXNmxnJI=;
+        b=lcRtyXlcvbKwgeaV9KVnIuJXQjvC/Jf5lmd69MWPJEk5efZonlrtTATuknOsOFZKbp
+         fSESkjBWIKORTGhEyq93mJt02ujRmICM2NwL8BbsBoMugDv7kqqHItpecZxQyW0UVo0t
+         9jXCZulEF4Fx5KjbpX/j0WtBXYTXQj+77Q3RHZoMltx41B/kv1RpMwRLGXTGQpPQUYzA
+         kCFS9GFYbNeX9qXR9dNEscSAtnZLfOjm6WL2uHp66CgATHyrvauCkUnRo7poE4/sH/sQ
+         lG1Bl/xttv6whB6Eqb2yRydxJvZHEdBpoVXPGKdmJTRkv7T1P0WIb5NbONvkTsKOZiLY
+         Sl2g==
+X-Gm-Message-State: ANhLgQ2WZhcmYr6mDtJQlE5tnQ08EkzoXTF097kTE69GX4q8DvggxZxc
+        YOH7mDIlUm4ojluZBzgYig==
+X-Google-Smtp-Source: ADFU+vv8e6bqzfrEUfhRglZm6ics/VgmQ0DWwpgysZeN1Q7F7AyUjL7HRD+dgHJdDUz55H2/3Q1G6Q==
+X-Received: by 2002:aca:5194:: with SMTP id f142mr2089262oib.100.1583333999966;
+        Wed, 04 Mar 2020 06:59:59 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i20sm9072512otp.14.2020.03.04.06.57.56
+        by smtp.gmail.com with ESMTPSA id b15sm6358282oic.52.2020.03.04.06.59.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 06:57:57 -0800 (PST)
-Received: (nullmailer pid 17602 invoked by uid 1000);
-        Wed, 04 Mar 2020 14:57:56 -0000
-Date:   Wed, 4 Mar 2020 08:57:56 -0600
+        Wed, 04 Mar 2020 06:59:59 -0800 (PST)
+Received: (nullmailer pid 20406 invoked by uid 1000);
+        Wed, 04 Mar 2020 14:59:58 -0000
+Date:   Wed, 4 Mar 2020 08:59:58 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 07/18] dt-bindings: usb: dwc3: Add a
- gpio-usb-connector example
-Message-ID: <20200304145756.GA17484@bogus>
-References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
- <20200303171159.246992-8-bryan.odonoghue@linaro.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
+Subject: Re: [PATCH v12 2/6] dt-bindings: display: mediatek: control dpi pins
+ mode to avoid leakage
+Message-ID: <20200304145958.GA17716@bogus>
+References: <20200303052722.94795-1-jitao.shi@mediatek.com>
+ <20200303052722.94795-3-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303171159.246992-8-bryan.odonoghue@linaro.org>
+In-Reply-To: <20200303052722.94795-3-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  3 Mar 2020 17:11:48 +0000, Bryan O'Donoghue wrote:
-> A USB connector should be a child node of the USB controller
-> connector/usb-connector.txt. This patch adds an example of how to do this
-> to the dwc3 binding descriptions.
+On Tue, Mar 03, 2020 at 01:27:18PM +0800, Jitao Shi wrote:
+> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
+> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
+> disabled.
 > 
-> It is necessary to declare a connector as a child-node of a USB controller
-> for role-switching to work, so this example should be helpful to others
-> implementing that.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Acked-by: Felipe Balbi <balbi@kernel.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt  | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> index 58914cf681b8..77ca32a32399 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> @@ -17,6 +17,10 @@ Required properties:
+>    Documentation/devicetree/bindings/graph.txt. This port should be connected
+>    to the input port of an attached HDMI or LVDS encoder chip.
+>  
+> +Optional properties:
+> +- pinctrl-names: Contain "gpiomode" and "dpimode".
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Doesn't match the example.
 
-If a tag was not added on purpose, please state why and what changed.
+> +  pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
+> +
+>  Example:
+>  
+>  dpi0: dpi@1401d000 {
+> @@ -27,6 +31,9 @@ dpi0: dpi@1401d000 {
+>  		 <&mmsys CLK_MM_DPI_ENGINE>,
+>  		 <&apmixedsys CLK_APMIXED_TVDPLL>;
+>  	clock-names = "pixel", "engine", "pll";
+> +	pinctrl-names = "active", "idle";
+> +	pinctrl-0 = <&dpi_pin_func>;
+> +	pinctrl-1 = <&dpi_pin_idle>;
+>  
+>  	port {
+>  		dpi0_out: endpoint {
+> -- 
+> 2.21.0
