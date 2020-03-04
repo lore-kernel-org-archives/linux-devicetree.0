@@ -2,109 +2,75 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6E6C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 05:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCA7C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 05:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2DCD215A4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 05:25:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F6tELzmi"
+	by mail.kernel.org (Postfix) with ESMTP id 6FE1E217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 05:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725839AbgCDFZK (ORCPT
+        id S1725776AbgCDFz0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 00:25:10 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:23367 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725791AbgCDFZK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 00:25:10 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583299509; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=oihPKp8ryrKXx/gJOsIWTwnq9rmnQIjm1elo0OxWhdQ=; b=F6tELzmiCZNUZfaOVHwKQ2svMxnTBa8gJxT3aqDcYcghKuBE4g+9CuQEsX5ceSxsozygJdho
- QG10cU51SaCzrGDSYJxHpDHXD6Msd7IQ9MHheYQSjjEv9H3+FWSpe3T7Zuvp8bA5GZTeB0HH
- W48WNa4EHaKKAHuqGHDxD8QEOek=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5f3baf.7f29cfba42d0-smtp-out-n03;
- Wed, 04 Mar 2020 05:25:03 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8F097C447A0; Wed,  4 Mar 2020 05:25:02 +0000 (UTC)
-Received: from [192.168.0.105] (unknown [49.206.126.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 4 Mar 2020 00:55:26 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:44226 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgCDFz0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 00:55:26 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A36ABC43383;
-        Wed,  4 Mar 2020 05:24:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A36ABC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
- controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
- <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
- <20200227171425.GA4211@bogus>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <b4e3fad9-414f-ce90-26b0-ba8498d21ade@codeaurora.org>
-Date:   Wed, 4 Mar 2020 10:54:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 7851680558;
+        Wed,  4 Mar 2020 06:55:22 +0100 (CET)
+Date:   Wed, 4 Mar 2020 06:55:21 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH 2/3] kbuild: allow to run dt_binding_check and dtbs_check
+ in a single command
+Message-ID: <20200304055520.GA28911@ravnborg.org>
+References: <20200304032038.14424-1-masahiroy@kernel.org>
+ <20200304032038.14424-3-masahiroy@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200227171425.GA4211@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304032038.14424-3-masahiroy@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=T9RiHNw9UjFK13vW5GoA:9 a=CjuIK1q_8ugA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Masahiro
 
-I ran make dt_binding_check and dtbs_check both on mainline(5.6-rc4) and 
-linux-next both are successful.
+Thanks for the nice improvements to the dt infrastructure.
 
-The file qcom,gcc-ipq6018.h is merged in 5.6, not sure what is going wrong.
+Stealing a thread here..
 
-Could you please help?
+>  It is also possible to run checks with a single schema file by setting the
+>  ``DT_SCHEMA_FILES`` variable to a specific schema file.
+Would it be simple to enable the use of dirs for DT_SCHEMA_FILES?
 
-Thanks,
+So I for example could do:
 
-Siva
+make dt_bindings_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
 
-On 2/27/2020 10:44 PM, Rob Herring wrote:
-> On Thu, 27 Feb 2020 15:25:17 +0530, Sivaprakash Murugesan wrote:
->> add dt-binding for ipq6018 apss clock controller
->>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 ++++++++++++++++++++++
->>   include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
->>   2 files changed, 84 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->>   create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
->>
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> Documentation/devicetree/bindings/clock/qcom,apsscc.example.dts:17:10: fatal error: dt-bindings/clock/qcom,gcc-ipq6018.h: No such file or directory
->   #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
->            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/clock/qcom,apsscc.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/clock/qcom,apsscc.example.dt.yaml] Error 1
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
-> See https://patchwork.ozlabs.org/patch/1245691
-> Please check and re-submit.
+I did a very quick look add it but failed to dechiper all the
+makefile logic.
+
+It is a corner case when one wants to check a full dir,
+so unless it is very simple the current logic should not
+be complicated by this (if you take the bait and look at it).
+
+	Sam
