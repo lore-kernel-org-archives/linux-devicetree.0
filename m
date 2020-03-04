@@ -4,85 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB3CC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473CDC3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B6D20674
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3DC24658
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583341028;
-	bh=C2CddSrtRznh8XRpIeRL3aTU+1Zm12E9YjYWxBIDQ50=;
+	s=default; t=1583341182;
+	bh=D3DWAzE7lXzBXa6MkDZ1aHSTdDK/3GCq1FpOc5RvoQE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d0s+fjgHJ1YGHEMPmJ6etkJkcA5Q4iS6izqvpX3h7mlNOfpRw1dONB7CruTzHyJ89
-	 0rGtvPU+wfIXS2qS2ZfB7hpvvWSw+iSEPFqh9/PR4IhfiokA8O8NOcKvfNVXTvDRuW
-	 9Lpp+LJ9Chmzr0CXyY4ywycuMHR+CZEZyWNru9lk=
+	b=L0lBjp68AxPQy+sj5smTH4mWEjwhinc+w1wP/09wJI/T/nguzKSw3XeA+chk4T2vc
+	 7HcPzoAR4e1CdI5K8Vr5w+IDkM558hAAzEakBT54jHO4ggPLmZKLT8EYymPjQ0NClD
+	 ON5TgYlmClbHprhzRBg6XrPagffnGx308MOiT63Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgCDQ5I (ORCPT
+        id S1730080AbgCDQ7h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:57:08 -0500
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:37879 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgCDQ5H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:57:07 -0500
-Received: by mail-oi1-f175.google.com with SMTP id q65so2788529oif.4;
-        Wed, 04 Mar 2020 08:57:07 -0800 (PST)
+        Wed, 4 Mar 2020 11:59:37 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43920 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730107AbgCDQ73 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:59:29 -0500
+Received: by mail-oi1-f196.google.com with SMTP id p125so2767392oif.10;
+        Wed, 04 Mar 2020 08:59:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v56tNbaf27S3vsJCZpK0lDpbd6dC6biMMvnBq59fAOw=;
-        b=oRuNtB6ll/BixhQQZMrUdbHr5O0Nynm9xq2ILXcpalUNkA4mDcUcD3rlS9JB/GCkMc
-         LDrMTQjBC3Om00/8FuLi5FS4nL3hdFpFFXz0kcTM084RWNc2oJD19Hi0oVPws7r7wH6Z
-         ONTz6i6FylKkLu/mZ1eBnFHH6m7mWVQ6Rdf7SZj2AOVLBXxGZ2sgxTE9M02B/avbl9GD
-         cPCJijd/wSUA/M/eT/wqMAt7PpOm0uLpclAxXzHALLE2sK9Jq2XAQ0XAo4favW04nugF
-         J9qU6hiqfl/vVyFZrdex52szeA16KOKK3ga9L14FW+puWLPewh1fq0NRlkB2axg1jIjy
-         8CUQ==
-X-Gm-Message-State: ANhLgQ05Xi82kARnctGUXR9eFwX/68lVH/M5pqb7Ahnd8eBSn8KK2c1p
-        2wLHG34rCoQCxVLbRpsnMg==
-X-Google-Smtp-Source: ADFU+vuq6LTSjctHGWYdpBagVO2mWD6V/pN+nXSJfZEGYnGz547pSblqr5DAPWLVCdCXURaCM/KV6w==
-X-Received: by 2002:a05:6808:298:: with SMTP id z24mr2285480oic.101.1583341026709;
-        Wed, 04 Mar 2020 08:57:06 -0800 (PST)
+        bh=5qYk5LV2HvuAA3RTvLtS19iOY2vZnT+j3lgBzg3rO4c=;
+        b=buQk3IbGrVhX3hiDhYj8wTpE20naBpN5eBF7DpN0rHW57XbOUR6GV0qnzW5e863bv6
+         50QmPY/PIRouDrVW10bPjvrGBN1sLE2555Loc1boCZK/Hr3jJSCEnhukDrSC3J4lYOy5
+         JBAzcf/dB90Rtx4m0+4jlOEnoiGlFP+hJ1Yql0C0Dab4raVtQ0XGUb9oLZVhi9Iw6XbQ
+         h4EVUvjYikrz8EZ+wm18cwspCxDjY4Eu9NzrE3mzR2pX6ERu7/pfM9hSW9/qmsDYa0j2
+         w7E0g6eyRxaTyDKnfdfC0tbHQYTtFUlm+FYHUXi4atRMsrxQTNk5Pm6KjmchLGqMVEVD
+         VI6g==
+X-Gm-Message-State: ANhLgQ2ewS4jz2Onr8+IO6eNMvtu5Y+8H6ZgmVThMNxrVMffkxdcub95
+        YRHwR0bINESGecJ2E+Yhcw==
+X-Google-Smtp-Source: ADFU+vsKQFMOosgtut1nZId+XHZ8todM3IQNc5Wao4BclwyECDbEk4J28eYRkQGV/GnWhctr6BaXdg==
+X-Received: by 2002:aca:b7d5:: with SMTP id h204mr2357293oif.130.1583341168216;
+        Wed, 04 Mar 2020 08:59:28 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i185sm5371438oib.51.2020.03.04.08.57.04
+        by smtp.gmail.com with ESMTPSA id i10sm3415857otc.8.2020.03.04.08.59.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:57:05 -0800 (PST)
-Received: (nullmailer pid 19811 invoked by uid 1000);
-        Wed, 04 Mar 2020 16:57:04 -0000
-Date:   Wed, 4 Mar 2020 10:57:04 -0600
+        Wed, 04 Mar 2020 08:59:27 -0800 (PST)
+Received: (nullmailer pid 23363 invoked by uid 1000);
+        Wed, 04 Mar 2020 16:59:26 -0000
+Date:   Wed, 4 Mar 2020 10:59:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: Re: [v3,1/2] dt-bindings: pwm: Update bindings for MT7629 SoC
-Message-ID: <20200304165704.GA19695@bogus>
-References: <1583319973-20694-1-git-send-email-sam.shih@mediatek.com>
- <1583319973-20694-2-git-send-email-sam.shih@mediatek.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Document JZ4770 PHY bindings
+Message-ID: <20200304165926.GA23292@bogus>
+References: <20200229161820.17824-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583319973-20694-2-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <20200229161820.17824-1-paul@crapouillou.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 4 Mar 2020 19:06:12 +0800, Sam Shih wrote:
-> This updates bindings for MT7629 pwm controller.
+On Sat, 29 Feb 2020 13:18:19 -0300, Paul Cercueil wrote:
+> Add documentation for the devicetree bindings of the
+> Ingenic JZ4770 USB transceiver.
 > 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> 
+> Notes:
+>     v2: No change
+> 
+>  .../bindings/usb/ingenic,jz4770-phy.yaml      | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
