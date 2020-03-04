@@ -7,236 +7,213 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF434C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCB8C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9737C2166E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B0320674
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583340265;
-	bh=uHsZBpuxW47c+kniszmu0bbX85bmoLgTWGyflQgfHZI=;
+	s=default; t=1583340987;
+	bh=IDuwultc5UnTGYzdw6ahwuogLsiUryQThMDeD6nOTaQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OUoPL6p9y0btlHeTVaX6yVkDZNCVICLZLKqITPjrw8G/Lb3IJP7VvzCZhH52XPDJz
-	 Ir8QB+6kFy9N5fMgBxaO6KjNjJWY/XWC1XGFt5JLwzbUKs/9QEo7qFC50uwCHNX+v1
-	 nLGOIpI04Kya9vDRKcBn0iBuqk0W4MF4Xn4sO9fI=
+	b=zfgDoAO6czhTKQUG4Kmnjzh3g6n8zK7EDHD+hxXImJvENUNASdhtK3sSD9TPhpnkF
+	 RnfwEcYFfBBE+u3z8H89fPtPi2zqd3+GgxoFT99Lt9WNmAKMestEKbUqyhZpwi4Alz
+	 6V0DhMIvN9c8O+gx0YC36VoNcVr57oNl04yjpNsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388063AbgCDQoY (ORCPT
+        id S1726915AbgCDQ41 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:44:24 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44515 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgCDQoY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:44:24 -0500
-Received: by mail-ot1-f67.google.com with SMTP id v22so2629529otq.11;
-        Wed, 04 Mar 2020 08:44:23 -0800 (PST)
+        Wed, 4 Mar 2020 11:56:27 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39306 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgCDQ41 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:56:27 -0500
+Received: by mail-oi1-f196.google.com with SMTP id r16so2776962oie.6
+        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 08:56:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xb+WTf9GeDLciLGuzbzOFdnxs2bgaxMAq58iwewkmSE=;
-        b=Xx29nz8+FCROu86dxEE5FtksgKCb8RkJGQCzJQ03cgKOBzFVrpUz74/FQ80x3F71CG
-         /cMr3B2AN6du10BCoRV3CZrrQTSToXGWMcnw2DuY7nASGIiRwA9gEJqqhqFs9Vty+RQD
-         qxY6jlM7Vm9OQHwGQxzlYK34Nk9JBCd5FKywWSlhnCtJ9acKPIRuxKQVOrXt9y6xTFeb
-         tQOyZjs+B9DMKvxzPzw+EM2y5clyQzE3+vDfwZlBSmeZAdyQzntQ1QTuHxCFJ1m5GY5p
-         jIi1XvZoo22PlwNvuL1kG3W3yaNKacjbYzghdfknBqccL8DieH5pmwAcblw1WUtpcefg
-         aNxA==
-X-Gm-Message-State: ANhLgQ1l6GUkrTjnsx5jUVFBzmFzXI8pZ5JSfjasljLHvVSyROYcKFhP
-        +ASTHKrYDCOQlVnL4mrBaHNyA9c=
-X-Google-Smtp-Source: ADFU+vuiT7+LIdq6B0NAZpXtbUdD2n1oG/8PxkA2cyOy3nnwJtiJJ8AQrkFJJ2jsopkDmkVnwxRlIg==
-X-Received: by 2002:a9d:3f8:: with SMTP id f111mr3146428otf.204.1583340263091;
-        Wed, 04 Mar 2020 08:44:23 -0800 (PST)
+        bh=1x6Tl4FkquqbFK2U7e561blQbQkLtLaOfZkxuV3Uifk=;
+        b=PRkkbTcmDSjnPW3rWJDqE5v+Ei0eFMLCWJVjV5pg3c3oce612WqptRkwZezeSvfeVl
+         4k8FJKpLSokIMm4VR1efLWk/qSEGwUiXzZDaODYyPNjtCWdH/8zZjHSEuJVYK5gfHQvs
+         odA0kV20LE567y68pGRjfQCPCpzf4F/AfJovEEytlVi5jG4gxTRzKAU31Jx7uwCyqw27
+         u7o7JMqkrHL4NtyFw9nB03bQD6AdsXuOw57ydbe8N3OXmd7NWONS6pzBQ4Lw1IBVSVkB
+         V6Xe8JLbSdJ2nlYc3S2PI4d+WgmrnVTXIy75bPquk9wbeNLkKgPdDXnMQORmjeAmpKbD
+         Pgxw==
+X-Gm-Message-State: ANhLgQ0tifkk5DB5T3oKnlOAonl1dtOlPsJraWOlt07sNidyPeCGFoUW
+        Sth7snXdJ2/aRnNNJtrrfA1QhXI=
+X-Google-Smtp-Source: ADFU+vvN0s8xtsegXAsk83hpqJfBSA3bQkx7dF0MVL1rhBScQPKr6TdRvIrDvNFvUBC3bmvtUvwhqg==
+X-Received: by 2002:aca:c0c5:: with SMTP id q188mr2299956oif.169.1583340986232;
+        Wed, 04 Mar 2020 08:56:26 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n25sm9021954oic.6.2020.03.04.08.44.22
+        by smtp.gmail.com with ESMTPSA id y14sm8992584oih.23.2020.03.04.08.56.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:44:22 -0800 (PST)
-Received: (nullmailer pid 1900 invoked by uid 1000);
-        Wed, 04 Mar 2020 16:44:21 -0000
-Date:   Wed, 4 Mar 2020 10:44:21 -0600
+        Wed, 04 Mar 2020 08:56:25 -0800 (PST)
+Received: (nullmailer pid 18755 invoked by uid 1000);
+        Wed, 04 Mar 2020 16:56:24 -0000
+Date:   Wed, 4 Mar 2020 10:56:24 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] dt-bindings: input: Add docs for ADC driven
- joystick.
-Message-ID: <20200304164421.GA22591@bogus>
-References: <20200301150920.55993-1-contact@artur-rojek.eu>
- <20200301150920.55993-4-contact@artur-rojek.eu>
+To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: mtd: Describe Rockchip RK3xxx NAND
+ flash controller
+Message-ID: <20200304165624.GA2630@bogus>
+References: <20200303094736.7490-1-yifeng.zhao@rock-chips.com>
+ <20200303094736.7490-3-yifeng.zhao@rock-chips.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200301150920.55993-4-contact@artur-rojek.eu>
+In-Reply-To: <20200303094736.7490-3-yifeng.zhao@rock-chips.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 01, 2020 at 04:09:19PM +0100, Artur Rojek wrote:
-> Add documentation for the adc-joystick driver, used to provide support
-> for joysticks connected over ADC.
+On Tue, Mar 03, 2020 at 05:47:35PM +0800, Yifeng Zhao wrote:
+> Documentation support for Rockchip RK3xxx NAND flash controllers
 > 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
 > ---
 > 
->  Changes:
+> Changes in v3:
+> -change the title for the dt-bindings
 > 
->  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
->      - rename `linux,abs-code` property to `linux,code`,
->      - drop `linux,` prefix from the remaining properties of axis subnode
+> Changes in v2: None
 > 
->  v3: no change
+>  .../bindings/mtd/rockchip,nand.yaml           | 95 +++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
 > 
->  .../bindings/input/adc-joystick.yaml          | 117 ++++++++++++++++++
->  1 file changed, 117 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/input/adc-joystick.yaml b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+> diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
 > new file mode 100644
-> index 000000000000..91fc87dcbddb
+> index 000000000000..9a81f682ac01
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/adc-joystick.yaml
-> @@ -0,0 +1,117 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019-2020 Artur Rojek
+> +++ b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/bindings/input/adc-joystick.yaml#"
-
-Drop 'bindings'.
-
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +$id: http://devicetree.org/schemas/mtd/rockchip,nand.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: ADC attached joystick
+> +title: Rockchip SoCs NAND FLASH Controller (NFC) Device Tree Bindings
+> +
+> +allOf:
+> +  - $ref: "nand-controller.yaml"
 > +
 > +maintainers:
-> +  - Artur Rojek <contact@artur-rojek.eu>
-> +
-> +description: |
-> +  Bindings for joystick devices connected to ADC controllers supporting
-> +  the Industrial I/O subsystem.
+> +  - Yifeng Zhao <yifeng.zhao@rock-chips.com>
 > +
 > +properties:
+> +  "#address-cells": true
+> +  "#size-cells": true
+> +
 > +  compatible:
-> +    const: adc-joystick
-> +
-> +  io-channels:
-> +    description: |
-> +      List of phandle and IIO specifier pairs.
-> +      Each pair defines one ADC channel to which a joystick axis is connected.
-> +      See Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
+> +    const: rockchip,nfc
 
-How many?
+Should be SoC specific.
 
 > +
-> +  '#address-cells':
-> +    const: 1
+> +  reg:
+> +    maxItems: 1
 > +
-> +  '#size-cells':
-> +    const: 0
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Module Clock
+> +      - description: Bus Clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: clk_nfc
+> +      - const: clk_ahb
+
+'clk_' is redundant.
+
+> +
+> +  clock-rates:
+> +      maximum: 150000000
+
+Not a standard property. Should be implied by the compatible string.
+
+> +
+> +  pinctrl-names: true
+
+No need to specify this, pinctrl properties are allowed on any node and 
+added by the tool.
+
+> +
+> +patternProperties:
+> +  "^pinctrl-[0-9]+$": true
+
+Same here.
+
+> +
+> +  "^nand@[a-f0-9]$":
+
+Based on reg, should be only '[0-3]'
+
+> +    type: object
+> +    properties:
+> +      reg:
+> +        minimum: 0
+> +        maximum: 3
+> +
+> +      nand-ecc-step-size:
+> +        const: 1024
+> +
+> +      nand-ecc-strength:
+> +        enum: [16, 24 , 40, 60, 70]
+> +
+> +      nand-bus-width:
+> +        const: 8
 > +
 > +required:
 > +  - compatible
-> +  - io-channels
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +
-> +additionalProperties: false
-> +
-> +patternProperties:
-> +  "^axis@([0-9])$":
-
-Up to 10 axis?
-
-> +    type: object
-> +    description: |
-> +      Represents a joystick axis bound to the given ADC channel.
-> +      For each entry in the io-channels list, one axis subnode with a matching
-> +      reg property must be specified.
-> +
-> +    properties:
-> +      reg:
-> +        items:
-> +          description: Index of an io-channels list entry bound to this axis.
-
-reg:
-  enum: [ 0, 1 ]
-
-Or use minimum/maximum
-
-> +
-> +      linux,code:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: EV_ABS specific event code generated by the axis.
-> +
-> +      abs-range:
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-
-Needs to be under an 'allOf'.
-
-> +        items:
-> +          - description: minimum value
-> +          - description: maximum value
-> +        description: |
-> +          Minimum and maximum values produced by the axis.
-> +          For an ABS_X axis this will be the left-most and right-most
-> +          inclination of the joystick. If min > max, it is left to userspace to
-> +          treat the axis as inverted.
-> +          This property is interpreted as two signed 32 bit values.
-> +
-> +      abs-fuzz:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +          Amount of noise in the input value.
-> +          Omitting this property indicates the axis is precise.
-> +
-> +      abs-flat:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +          Axial "deadzone", or area around the center position, where the axis
-> +          is considered to be at rest.
-> +          Omitting this property indicates the axis always returns to exactly
-> +          the center position.
-> +
-> +    required:
-> +      - reg
-> +      - linux,code
-> +      - abs-range
-> +
-> +    additionalProperties: false
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
-> +    #include <dt-bindings/input/input.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/rk3308-cru.h>
+> +    nfc: nand-controller@ff4b0000 {
+> +      compatible = "rockchip,nfc";
+> +      reg = <0x0 0xff4b0000 0x0 0x4000>;
+> +      interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+> +      clocks = <&cru SCLK_NANDC>, <&cru HCLK_NANDC>;
+> +      clock-names = "clk_nfc", "clk_ahb";
+> +      clock-rates = <150000000>;
+> +      pinctrl-names = "default";
+> +      pinctrl-0 = <&flash_csn0 &flash_rdy &flash_ale &flash_cle
+> +                  &flash_wrn &flash_rdn &flash_bus8>;
 > +
-> +    joystick: adc-joystick {
-> +      compatible = "adc-joystick";
-> +      io-channels = <&adc INGENIC_ADC_TOUCH_XP>,
-> +                    <&adc INGENIC_ADC_TOUCH_YP>;
 > +      #address-cells = <1>;
 > +      #size-cells = <0>;
-> +
-> +      axis@0 {
-> +              reg = <0>;
-> +              linux,code = <ABS_X>;
-> +              abs-range = <3300 0>;
-> +              abs-fuzz = <4>;
-> +              abs-flat = <200>;
-> +      };
-> +      axis@1 {
-> +              reg = <1>;
-> +              linux,code = <ABS_Y>;
-> +              abs-range = <0 3300>;
-> +              abs-fuzz = <4>;
-> +              abs-flat = <200>;
+> +      nand@0 {
+> +        reg = <0>;
+> +        nand-ecc-mode = "hw";
+> +        nand-ecc-strength = <16>;
+> +        nand-ecc-step-size = <1024>;
+> +        nand-bus-width = <8>;
 > +      };
 > +    };
+> +
+> +...
 > -- 
-> 2.25.1
+> 2.17.1
+> 
+> 
 > 
