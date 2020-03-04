@@ -2,139 +2,136 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE414C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 03:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3D8C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 03:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A2020838
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 03:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="R1m1Kaji"
+	by mail.kernel.org (Postfix) with ESMTP id 12C4D2146E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 03:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583292052;
+	bh=fxNureI0SDMgNHiWeGL7qS5Vck84hlUIsKAyHtA/trs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OshcgP91VQfCPAFoenaY93lVjzkYMCJL4mk+0B7Mv8+EdVKqi+BjIp62yVkli1SSi
+	 3Ro06OAgjxZU3A0cIhEz4FFiPrrJcFRmqePTA0xXQxxJMgbDTgCwT41p2LtA0+g9aD
+	 NMjifCSklHkQL0B1hc+uva+qR6asxA+gSpF1W/xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387459AbgCDDFf (ORCPT
+        id S2387492AbgCDDUv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Mar 2020 22:05:35 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:49191 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387397AbgCDDFf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 22:05:35 -0500
-X-UUID: 05b93ba8f8584d23bd1d7e0ef70eba83-20200304
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=uV6XAfR45kceIz/xzf1Y2H5SW6enf8ExjM5OoLYTjuM=;
-        b=R1m1Kaji0qro6LvyKkTo0iX3Zu3IK6TbdIOdIEPuHlaiIycUB8H4h9lhhkXJxTo6DEkrKGtLdyBp7YOC9DmRu8LDdi8vDSM944v7r9p/fm89cYFSTPTcinz9ug+tjiMmTHTLHb75gMgNjGTbGNbYiOAKdWxs0LQdIuR9pMWIV8s=;
-X-UUID: 05b93ba8f8584d23bd1d7e0ef70eba83-20200304
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 256793080; Wed, 04 Mar 2020 11:05:27 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Mar 2020 11:04:25 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Mar 2020 11:02:54 +0800
-Message-ID: <1583291126.1062.7.camel@mtksdaap41>
-Subject: Re: [PATCH v4 12/13] soc: mediatek: cmdq: add clear option in
- cmdq_pkt_wfe api
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <dri-devel@lists.freedesktop.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        HS Liao <hs.liao@mediatek.com>
-Date:   Wed, 4 Mar 2020 11:05:26 +0800
-In-Reply-To: <1583233125-7827-13-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1583233125-7827-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1583233125-7827-13-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 3 Mar 2020 22:20:51 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:63010 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387400AbgCDDUv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Mar 2020 22:20:51 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 0243Kef4018747;
+        Wed, 4 Mar 2020 12:20:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0243Kef4018747
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583292043;
+        bh=j/IEXPyN2YTrKsama+5BMbGYiocPgs/XNZE+gIHR2cA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pTXMER0/QLCdEHNuzY3kb6EAOgk8Xb1FCck1+8E3Vfb9UvnmM4t2vJQEJLG7/1RZc
+         QIw3hiPC+fMK2r6RokLrKcykZ4Gj/ZCkb01kLcu5NcTDTOcPo8etJNtWgqypLGeIP7
+         3+3kPVAkwf3nYqzOxSNprLzAi22qAuXZMZVlJFjKPj2SdveH8BhAM4efooY0vbVWM1
+         Op2cLYSogk3tDbY8mmFrA1vTRHJOCZp8eg4vzAwvUl162qJUt8A2lZPu2EkkzIsn4w
+         hLHbDWnuah52ycOZLHxOiDLEtU/bPgi+Hylh8J0t2WEPDWZCQZJByERfnZ0RcDkDi3
+         p6CxSY1HCFv/A==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH 1/3] kbuild: avoid concurrency issue in parallel building dtbs and dtbs_check
+Date:   Wed,  4 Mar 2020 12:20:36 +0900
+Message-Id: <20200304032038.14424-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200304032038.14424-1-masahiroy@kernel.org>
+References: <20200304032038.14424-1-masahiroy@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gVHVlLCAyMDIwLTAzLTAzIGF0IDE4OjU4ICswODAwLCBEZW5uaXMg
-WUMgSHNpZWggd3JvdGU6DQo+IEFkZCBjbGVhciBwYXJhbWV0ZXIgdG8gbGV0IGNsaWVudCBkZWNp
-ZGUgaWYNCj4gZXZlbnQgc2hvdWxkIGJlIGNsZWFyIHRvIDAgYWZ0ZXIgR0NFIHJlY2VpdmUgaXQu
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBt
-ZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-Y3J0Yy5jICB8IDIgKy0NCj4gIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5j
-ICAgfCA1ICsrKy0tDQo+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5o
-IHwgMyArLS0NCj4gIGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggICAgfCA1
-ICsrKy0tDQo+ICA0IGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMo
-LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9j
-cnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gaW5kZXgg
-N2RhYWFiYzI2ZWIxLi40OTE2YTdmNzVkMjMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9jcnRjLmMNCj4gQEAgLTQ4OCw3ICs0ODgsNyBAQCBzdGF0aWMgdm9pZCBtdGtf
-ZHJtX2NydGNfaHdfY29uZmlnKHN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiAgCWlm
-IChtdGtfY3J0Yy0+Y21kcV9jbGllbnQpIHsNCj4gIAkJY21kcV9oYW5kbGUgPSBjbWRxX3BrdF9j
-cmVhdGUobXRrX2NydGMtPmNtZHFfY2xpZW50LCBQQUdFX1NJWkUpOw0KPiAgCQljbWRxX3BrdF9j
-bGVhcl9ldmVudChjbWRxX2hhbmRsZSwgbXRrX2NydGMtPmNtZHFfZXZlbnQpOw0KPiAtCQljbWRx
-X3BrdF93ZmUoY21kcV9oYW5kbGUsIG10a19jcnRjLT5jbWRxX2V2ZW50KTsNCj4gKwkJY21kcV9w
-a3Rfd2ZlKGNtZHFfaGFuZGxlLCBtdGtfY3J0Yy0+Y21kcV9ldmVudCwgdHJ1ZSk7DQoNClRoZXJl
-IGlzIGFsd2F5cyBjbGVhciBldmVudCBiZWZvcmUgd2FpdCBldmVudCwgc28gdGhlcmUgaXMgbm8g
-bmVlZCB0bw0KY2xlYXIgZXZlbnQgYWZ0ZXIgZXZlbnQgaXMgd2FpdGVkLiBTbyB0aGlzIHNob3Vs
-ZCBiZQ0KDQpjbWRxX3BrdF93ZmUoY21kcV9oYW5kbGUsIG10a19jcnRjLT5jbWRxX2V2ZW50LCBm
-YWxzZSk7DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICAJCW10a19jcnRjX2RkcF9jb25maWcoY3J0Yywg
-Y21kcV9oYW5kbGUpOw0KPiAgCQljbWRxX3BrdF9maW5hbGl6ZShjbWRxX2hhbmRsZSk7DQo+ICAJ
-CWNtZHFfcGt0X2ZsdXNoX2FzeW5jKGNtZHFfaGFuZGxlLCBkZHBfY21kcV9jYiwgY21kcV9oYW5k
-bGUpOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVy
-LmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiBpbmRleCBmMjdj
-NjcwMzQ4ODAuLjRmNzY3MTk4ZDBmYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0
-ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNt
-ZHEtaGVscGVyLmMNCj4gQEAgLTI5NSwxNSArMjk1LDE2IEBAIGludCBjbWRxX3BrdF93cml0ZV9z
-X3ZhbHVlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsDQo+ICB9
-DQo+ICBFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X3dyaXRlX3NfdmFsdWUpOw0KPiAgDQo+IC1pbnQg
-Y21kcV9wa3Rfd2ZlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgZXZlbnQpDQo+ICtpbnQgY21k
-cV9wa3Rfd2ZlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgZXZlbnQsIGJvb2wgY2xlYXIpDQo+
-ICB7DQo+ICAJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+ICsJdTMy
-IGNsZWFyX29wdGlvbiA9IGNsZWFyID8gQ01EUV9XRkVfVVBEQVRFIDogMDsNCj4gIA0KPiAgCWlm
-IChldmVudCA+PSBDTURRX01BWF9FVkVOVCkNCj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ICANCj4g
-IAlpbnN0Lm9wID0gQ01EUV9DT0RFX1dGRTsNCj4gLQlpbnN0LnZhbHVlID0gQ01EUV9XRkVfT1BU
-SU9OOw0KPiArCWluc3QudmFsdWUgPSBDTURRX1dGRV9PUFRJT04gfCBjbGVhcl9vcHRpb247DQo+
-ICAJaW5zdC5ldmVudCA9IGV2ZW50Ow0KPiAgDQo+ICAJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9j
-b21tYW5kKHBrdCwgaW5zdCk7DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gv
-bXRrLWNtZHEtbWFpbGJveC5oIGIvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxi
-b3guaA0KPiBpbmRleCAzZjZiYzBkZmQ1ZGEuLjQyZDJhMzBlNmE3MCAxMDA2NDQNCj4gLS0tIGEv
-aW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiArKysgYi9pbmNsdWRl
-L2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+IEBAIC0yNyw4ICsyNyw3IEBADQo+
-ICAgKiBiaXQgMTYtMjc6IHVwZGF0ZSB2YWx1ZQ0KPiAgICogYml0IDMxOiAxIC0gdXBkYXRlLCAw
-IC0gbm8gdXBkYXRlDQo+ICAgKi8NCj4gLSNkZWZpbmUgQ01EUV9XRkVfT1BUSU9OCQkJKENNRFFf
-V0ZFX1VQREFURSB8IENNRFFfV0ZFX1dBSVQgfCBcDQo+IC0JCQkJCUNNRFFfV0ZFX1dBSVRfVkFM
-VUUpDQo+ICsjZGVmaW5lIENNRFFfV0ZFX09QVElPTgkJCShDTURRX1dGRV9XQUlUIHwgQ01EUV9X
-RkVfV0FJVF9WQUxVRSkNCj4gIA0KPiAgLyoqIGNtZHEgZXZlbnQgbWF4aW11bSAqLw0KPiAgI2Rl
-ZmluZSBDTURRX01BWF9FVkVOVAkJCTB4M2ZmDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4
-L3NvYy9tZWRpYXRlay9tdGstY21kcS5oIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRr
-LWNtZHEuaA0KPiBpbmRleCAxYTZjNTZmM2JlYzEuLmQ2Mzc0OTQ0MDY5NyAxMDA2NDQNCj4gLS0t
-IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiArKysgYi9pbmNsdWRl
-L2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+IEBAIC0xNTIsMTEgKzE1MiwxMiBAQCBp
-bnQgY21kcV9wa3Rfd3JpdGVfc192YWx1ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGhpZ2hf
-YWRkcl9yZWdfaWR4LA0KPiAgLyoqDQo+ICAgKiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0
-IGZvciBldmVudCBjb21tYW5kIHRvIHRoZSBDTURRIHBhY2tldA0KPiAgICogQHBrdDoJdGhlIENN
-RFEgcGFja2V0DQo+IC0gKiBAZXZlbnQ6CXRoZSBkZXNpcmVkIGV2ZW50IHR5cGUgdG8gIndhaXQg
-YW5kIENMRUFSIg0KPiArICogQGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0eXBlIHRvIHdhaXQN
-Cj4gKyAqIEBjbGVhcjoJY2xlYXIgZXZlbnQgb3Igbm90IGFmdGVyIGV2ZW50IGFycml2ZQ0KPiAg
-ICoNCj4gICAqIFJldHVybjogMCBmb3Igc3VjY2VzczsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyBy
-ZXR1cm5lZA0KPiAgICovDQo+IC1pbnQgY21kcV9wa3Rfd2ZlKHN0cnVjdCBjbWRxX3BrdCAqcGt0
-LCB1MTYgZXZlbnQpOw0KPiAraW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwg
-dTE2IGV2ZW50LCBib29sIGNsZWFyKTsNCj4gIA0KPiAgLyoqDQo+ICAgKiBjbWRxX3BrdF9jbGVh
-cl9ldmVudCgpIC0gYXBwZW5kIGNsZWFyIGV2ZW50IGNvbW1hbmQgdG8gdGhlIENNRFEgcGFja2V0
-DQoNCg==
+'make dtbs_check' checks the shecma in addition to building *.dtb files,
+in other words, 'make dtbs_check' is a super-set of 'make dtbs'.
+So, you do not have to do 'make dtbs dtbs_check', but I want to keep
+the build system robust in any use.
+
+Currently, 'dtbs' and 'dtbs_check' are independent of each other.
+In parallel building, two threads descend into arch/*/boot/dts/,
+one for dtbs and the other for dtbs_check, then end up with building
+the same DTB simultaneously.
+
+This commit fixes the concurrency issue. Otherwise, I see build errors
+like follows:
+
+$ make ARCH=arm64 defconfig
+$ make -j16 ARCH=arm64 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dtbs dtbs_check
+  <snip>
+  DTC     arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mn-evk.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+  DTC     arch/arm64/boot/dts/zte/zx296718-pcbox.dtb
+  DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+  CHECK   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+fixdep: error opening file: arch/arm64/boot/dts/allwinner/.sun50i-h6-orangepi-lite2.dtb.d: No such file or directory
+make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb] Error 2
+make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb'
+make[2]: *** Waiting for unfinished jobs....
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dtb
+fixdep: parse error; no targets found
+make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb] Error 1
+make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb'
+make[1]: *** [scripts/Makefile.build:505: arch/arm64/boot/dts/allwinner] Error 2
+make[1]: *** Waiting for unfinished jobs....
+  DTC     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Makefile | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 1a1a0d271697..e94d4fe3ef77 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1240,11 +1240,15 @@ ifneq ($(dtstree),)
+ 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+ 
+ PHONY += dtbs dtbs_install dtbs_check
+-dtbs dtbs_check: include/config/kernel.release scripts_dtc
++dtbs: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree)
+ 
++ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
++dtbs: dt_binding_check
++endif
++
+ dtbs_check: export CHECK_DTBS=1
+-dtbs_check: dt_binding_check
++dtbs_check: dtbs
+ 
+ dtbs_install:
+ 	$(Q)$(MAKE) $(dtbinst)=$(dtstree)
+-- 
+2.17.1
 
