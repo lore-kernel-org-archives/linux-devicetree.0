@@ -2,178 +2,118 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4606DC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D4CC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B332166E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DubHYOaB"
+	by mail.kernel.org (Postfix) with ESMTP id D6BC02166E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 13:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388094AbgCDNMk (ORCPT
+        id S2387776AbgCDNYo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:12:40 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50584 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388091AbgCDNMk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 08:12:40 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 024DCdEa075120;
-        Wed, 4 Mar 2020 07:12:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583327559;
-        bh=5xGBvCCNbOxlYfM2cTKcfGoxokVXH8qQTRieJmYkdlg=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=DubHYOaBXGOe56OgUD+HfTAcAgbMAcRmFrTqEGeg3Or0Ad+oKwXhnILlkcYiAsUgX
-         EUCPwA9HajZR39olpcWoh+6Md8snf3mG+Mkth8EZkLMrvnv0uWMvNlmaAAfQeeYH9U
-         yZYTLnSe/OiZIGPgy9IjSFSGxMcjUUakemAcwiBk=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 024DCdSZ005491
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 07:12:39 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 07:12:39 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 07:12:39 -0600
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id 024DCdxK092569;
-        Wed, 4 Mar 2020 07:12:39 -0600
-Date:   Wed, 4 Mar 2020 07:17:14 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [Patch 1/1] media: ti-vpe: cal: fix disable_irqs to only the
- intended target
-Message-ID: <20200304131714.rpykdxhgqxmaxyx5@ti.com>
-References: <20200302135652.9365-1-bparrot@ti.com>
- <678cb62a-4fdf-3b57-2fe5-699c6bf02b2f@ti.com>
+        Wed, 4 Mar 2020 08:24:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51328 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbgCDNYo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Mar 2020 08:24:44 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 28610AAC7;
+        Wed,  4 Mar 2020 13:24:42 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     phil@raspberrypi.org, f.fainelli@gmail.com,
+        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ARM: dts: bcm2711: Move emmc2 into its own bus
+Date:   Wed,  4 Mar 2020 14:24:37 +0100
+Message-Id: <20200304132437.20164-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <678cb62a-4fdf-3b57-2fe5-699c6bf02b2f@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tomi,
+Depending on bcm2711's revision its emmc2 controller might have
+different DMA constraints. Raspberry Pi 4's firmware will take care of
+updating those, but only if a certain alias is found in the device tree.
+So, move emmc2 into its own bus, so as not to pollute other devices with
+dma-ranges changes and create the emmc2bus alias.
 
-Thanks for the review.
+Based in Phil ELwell's downstream implementation.
 
-Tomi Valkeinen <tomi.valkeinen@ti.com> wrote on Wed [2020-Mar-04 10:49:55 +0200]:
-> On 02/03/2020 15:56, Benoit Parrot wrote:
-> > disable_irqs() was mistakenly disabling all interrupts when called.
-> > This cause all port stream to stop even if only stopping one of them.
-> > 
-> > Cc: stable <stable@vger.kernel.org>
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >   drivers/media/platform/ti-vpe/cal.c | 16 ++++++++--------
-> >   1 file changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> > index 6e009e479be3..6d4cbb8782ed 100644
-> > --- a/drivers/media/platform/ti-vpe/cal.c
-> > +++ b/drivers/media/platform/ti-vpe/cal.c
-> > @@ -722,16 +722,16 @@ static void enable_irqs(struct cal_ctx *ctx)
-> >   
-> >   static void disable_irqs(struct cal_ctx *ctx)
-> >   {
-> > +	u32 val;
-> > +
-> >   	/* Disable IRQ_WDMA_END 0/1 */
-> > -	reg_write_field(ctx->dev,
-> > -			CAL_HL_IRQENABLE_CLR(2),
-> > -			CAL_HL_IRQ_CLEAR,
-> > -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> > +	val = 0;
-> > +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-> > +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), val);
-> >   	/* Disable IRQ_WDMA_START 0/1 */
-> > -	reg_write_field(ctx->dev,
-> > -			CAL_HL_IRQENABLE_CLR(3),
-> > -			CAL_HL_IRQ_CLEAR,
-> > -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> > +	val = 0;
-> > +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-> > +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), val);
-> >   	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
-> >   	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
-> >   }
-> > 
-> 
-> I think the above works. But the enable_irqs is broken too, even if it doesn't cause any issues. Both IRQ_SET and IRQ_CLR are not supposed to be "modified" by a read-mod-write operation, but just written to.
->
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
-Well maybe not consistent now, that disable_irqs has been modified but not
-broken per se.
+Changes since v1:
+ - Add comment in dt
+ - Fix commit title
 
-> The macros used also make the code very difficult to read. Something like this fixes both irq enable and disable, and makes it readable:
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  1 +
+ arch/arm/boot/dts/bcm2711.dtsi        | 25 ++++++++++++++++++++-----
+ 2 files changed, 21 insertions(+), 5 deletions(-)
 
-Ah but the mask macro are all consistent with each other, whether that
-create one too many level of abstraction is a different subject. This setup
-was oroginally requested by the maintainer. So I'll "fix" enable_irqs also
-but I'll keep the macro as is.
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+index 1d4b589fe233..e26ea9006378 100644
+--- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+@@ -20,6 +20,7 @@ memory@0 {
+ 	};
+ 
+ 	aliases {
++		emmc2bus = &emmc2bus;
+ 		ethernet0 = &genet;
+ 		pcie0 = &pcie0;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+index d1e684d0acfd..a91cf68e3c4c 100644
+--- a/arch/arm/boot/dts/bcm2711.dtsi
++++ b/arch/arm/boot/dts/bcm2711.dtsi
+@@ -241,17 +241,32 @@ pwm1: pwm@7e20c800 {
+ 			status = "disabled";
+ 		};
+ 
++		hvs@7e400000 {
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++		};
++	};
++
++	/*
++	 * emmc2 has different DMA constraints based on SoC revisions. It was
++	 * moved into its own bus, so as for RPi4's firmware to update them.
++	 * The firmware will find whether the emmc2bus alias is defined, and if
++	 * so, it'll edit the dma-ranges property below accordingly.
++	 */
++	emmc2bus: emmc2bus {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <1>;
++
++		ranges = <0x0 0x7e000000  0x0 0xfe000000  0x01800000>;
++		dma-ranges = <0x0 0xc0000000  0x0 0x00000000  0x40000000>;
++
+ 		emmc2: emmc2@7e340000 {
+ 			compatible = "brcm,bcm2711-emmc2";
+-			reg = <0x7e340000 0x100>;
++			reg = <0x0 0x7e340000 0x100>;
+ 			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clocks BCM2711_CLOCK_EMMC2>;
+ 			status = "disabled";
+ 		};
+-
+-		hvs@7e400000 {
+-			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+ 	};
+ 
+ 	arm-pmu {
+-- 
+2.25.1
 
-Benoit
-
-> 
-> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> index c8b1290c9e2b..660653031a0b 100644
-> --- a/drivers/media/platform/ti-vpe/cal.c
-> +++ b/drivers/media/platform/ti-vpe/cal.c
-> @@ -707,15 +707,9 @@ static void cal_quickdump_regs(struct cal_dev *dev)
->  static void enable_irqs(struct cal_ctx *ctx)
->  {
->  	/* Enable IRQ_WDMA_END 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_SET(2),
-> -			CAL_HL_IRQ_ENABLE,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(2), 1 << (ctx->csi2_port - 1));
->  	/* Enable IRQ_WDMA_START 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_SET(3),
-> -			CAL_HL_IRQ_ENABLE,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(3), 1 << (ctx->csi2_port - 1));
->  	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
->  	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0xFF000000);
->  }
-> @@ -723,15 +717,9 @@ static void enable_irqs(struct cal_ctx *ctx)
->  static void disable_irqs(struct cal_ctx *ctx)
->  {
->  	/* Disable IRQ_WDMA_END 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_CLR(2),
-> -			CAL_HL_IRQ_CLEAR,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), 1 << (ctx->csi2_port - 1));
->  	/* Disable IRQ_WDMA_START 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_CLR(3),
-> -			CAL_HL_IRQ_CLEAR,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), 1 << (ctx->csi2_port - 1));
->  	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
->  	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
->  }
-> 
->  Tomi
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
