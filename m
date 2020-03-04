@@ -2,141 +2,200 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25685C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D98C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F6922B48
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B687324654
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPtvWklQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lk2kj+Wg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgCDRIf (ORCPT
+        id S1729823AbgCDRJn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:08:35 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37366 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgCDRIf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 12:08:35 -0500
-Received: by mail-pf1-f195.google.com with SMTP id p14so1268868pfn.4;
-        Wed, 04 Mar 2020 09:08:34 -0800 (PST)
+        Wed, 4 Mar 2020 12:09:43 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35281 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729811AbgCDRJn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 12:09:43 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so1285561plt.2
+        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 09:09:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WcXiDjy33PYge8hUsXuS+/8NVEyCDj8/Q41XwHVNKcw=;
-        b=nPtvWklQt9QghWJiSdW0QkhlOrTOjZ3+Pds6ZlGJMH65EhPXyR/CLtQPDyWFP6vkVk
-         WBs9KyqFwr2826o1eb60HIE/D7eB88nLn5qItsO4QRJum9NW2rUgoDgdu2C/+OBnAOSm
-         7VGNMVXMqTvDsGKcEVAvHD4xY3TNY3Ecoz0Qo3LB+REQP+1vkTxrkDtf35T1c8a3WTAq
-         sLvRu06xnTEnC5SFMLwJEPp9umUI7fdjZNSUghVcNxaa2fnjI1marOElFj9M6v17L6Tc
-         cDQfQ0dSZIo4z57MzT4QliTFyIk634DnwZVwEEfcMAlNnN7o5KsNQ0HOvPjIMqpmRcrW
-         VDkw==
+        bh=dItOkhPJDUpYFTNol2a7MlqjygGGU4rVaI43p4O8xZ0=;
+        b=Lk2kj+Wg+uxMhy6Op8iAbbhlA8OkY+U+/Kd6XDKA/s3lLf1+RAk7ViRlew9D/jd2wU
+         3B+RGi42mLqFZKGzVy+YwUH3Ygz1l3OMhTGYPak5tBdTS/sAnjuu7i85Uh+KinCTQ/iy
+         mHWta6g92+tBAWR2INwAWXhrv5NBCbGkWsrsA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WcXiDjy33PYge8hUsXuS+/8NVEyCDj8/Q41XwHVNKcw=;
-        b=LtxuIWkB7jA7iRBbH6itoPJdHforyXTj/PopdN5BWPKOWqc8XqIXJ/ZbsznIscN52q
-         cR7aDVeZm5wYrXIhEz/9IigxyWt0MSBq+tTAN9ujucnvE2HAsLaU2wxwvtLBGDZscEJH
-         0UhyZrANerWSeYWlm+wohZI6muLvDxCigOj5hfdn3oxXGMI8s8lypbvwJC0bp6NJIQyH
-         XcwAp5PqVG1+4L2nb8rEPSR4da95/AP+m15hr0ujyQC8iGuhzVA5AAmFeHKzFIAawdFx
-         TINtFEQPeRZrbdhXUH2CQ3siRsRvvq2+/cewYI9mgyjKNuzlZBQ7Qj9EGVgzb/hk59yI
-         AeeA==
-X-Gm-Message-State: ANhLgQ369ya3bfrbkODjHrg40I9W6sxjFPb9gJ8ZEL3P8TsbSAbjx2/N
-        zLHijcR3W8Lw+KE51x19E7o=
-X-Google-Smtp-Source: ADFU+vv+Df31P92V8d+K3fXU/m2exn8CF+UTDgAxezww+iG60GrEAezFnJETx5JbDF0id9d06IG8bw==
-X-Received: by 2002:aa7:91d7:: with SMTP id z23mr1179323pfa.160.1583341714250;
-        Wed, 04 Mar 2020 09:08:34 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h8sm1192994pfn.59.2020.03.04.09.08.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Mar 2020 09:08:33 -0800 (PST)
-Date:   Wed, 4 Mar 2020 09:08:32 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     wim@linux-watchdog.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        joel@jms.id.au, avifishman70@gmail.com, tali.perry1@gmail.com,
-        yuenn@google.com, benjaminfair@google.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v2 1/3] dt-binding: watchdog: add bootstatus reset type
- documentation
-Message-ID: <20200304170832.GA22914@roeck-us.net>
-References: <20200303100114.87786-1-tmaimon77@gmail.com>
- <20200303100114.87786-2-tmaimon77@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dItOkhPJDUpYFTNol2a7MlqjygGGU4rVaI43p4O8xZ0=;
+        b=eAm2uYqSTArm/mhlHYcdtsbOwnul4fya6RE7ZSNHf6vXH1k1jxrqiPJr8wmsiGcd4L
+         kxEGdkSsPihgr6eqhFJ9ymzz68oUcZcYNRy5N4CVstklJB4Wq6/WtclWsejjkk5tn6pC
+         bdt92NtT71cQxmxNz8CJMPypgxjn78GfCc1V8wG00pGgl8GTxKB+KcrrDACgfaRe3dKl
+         qEPED7iM0G8a6QIjV3JMLtdUVbBzz01w/LJppuJ6zXLs0L+V0W9zzUvgWBbMUVtvCw08
+         MwTEGuTbs6ghzvbWaFuXVvC3PRvyR6tfK2SwAmig+N76xjyy7O71WyM5lUPOnwF7WIif
+         MkKA==
+X-Gm-Message-State: ANhLgQ0bwUJHZGAx1YWjQgas0H2/YwIQyivKT9s9+OW08ph/psBPp1Df
+        76l2pkUexIeMyYqLiZrVUFLMSQ==
+X-Google-Smtp-Source: ADFU+vuwSSZRhhuCIdCdTpxc70BFCzAww+Ka2DRFQelVw8/RNXMZWG1fdqh/hpdtP+zmh3NaYQ4kqQ==
+X-Received: by 2002:a17:90a:eb0b:: with SMTP id j11mr3946783pjz.145.1583341781976;
+        Wed, 04 Mar 2020 09:09:41 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id e189sm24245654pfa.139.2020.03.04.09.09.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 09:09:40 -0800 (PST)
+Date:   Wed, 4 Mar 2020 09:09:39 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>, robh@kernel.org,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v1 2/2] clk: qcom: dispcc: Remove support of
+ disp_cc_mdss_rscc_ahb_clk
+Message-ID: <20200304170939.GR24720@google.com>
+References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
+ <1581423236-21341-2-git-send-email-tdas@codeaurora.org>
+ <20200303201629.GP24720@google.com>
+ <f0529793-c51d-4baf-5217-173c552f4cbe@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200303100114.87786-2-tmaimon77@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <f0529793-c51d-4baf-5217-173c552f4cbe@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 12:01:12PM +0200, Tomer Maimon wrote:
-> Add device tree three bootstatus reset types documentation.
+Hi Taniya,
+
+On Wed, Mar 04, 2020 at 09:05:20AM +0530, Taniya Das wrote:
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../bindings/watchdog/nuvoton,npcm-wdt.txt    | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
+> On 3/4/2020 1:46 AM, Matthias Kaehlcke wrote:
+> > On Tue, Feb 11, 2020 at 05:43:56PM +0530, Taniya Das wrote:
+> > > The disp_cc_mdss_rscc_ahb_clk is default enabled from hardware and thus
+> > > does not require to be marked CRITICAL. This which would allow the RCG to
+> > > be turned OFF when the display turns OFF and not blocking XO.
+> > > 
+> > > Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> > > ---
+> > >   drivers/clk/qcom/dispcc-sc7180.c | 19 -------------------
+> > >   1 file changed, 19 deletions(-)
+> > > 
+> > > diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
+> > > index dd7af41..0a5d395 100644
+> > > --- a/drivers/clk/qcom/dispcc-sc7180.c
+> > > +++ b/drivers/clk/qcom/dispcc-sc7180.c
+> > > @@ -592,24 +592,6 @@ static struct clk_branch disp_cc_mdss_rot_clk = {
+> > >   	},
+> > >   };
+> > > 
+> > > -static struct clk_branch disp_cc_mdss_rscc_ahb_clk = {
+> > > -	.halt_reg = 0x400c,
+> > > -	.halt_check = BRANCH_HALT,
+> > > -	.clkr = {
+> > > -		.enable_reg = 0x400c,
+> > > -		.enable_mask = BIT(0),
+> > > -		.hw.init = &(struct clk_init_data){
+> > > -			.name = "disp_cc_mdss_rscc_ahb_clk",
+> > > -			.parent_data = &(const struct clk_parent_data){
+> > > -				.hw = &disp_cc_mdss_ahb_clk_src.clkr.hw,
+> > > -			},
+> > > -			.num_parents = 1,
+> > > -			.flags = CLK_IS_CRITICAL | CLK_SET_RATE_PARENT,
+> > > -			.ops = &clk_branch2_ops,
+> > > -		},
+> > > -	},
+> > > -};
+> > > -
+> > >   static struct clk_branch disp_cc_mdss_rscc_vsync_clk = {
+> > >   	.halt_reg = 0x4008,
+> > >   	.halt_check = BRANCH_HALT,
+> > > @@ -687,7 +669,6 @@ static struct clk_regmap *disp_cc_sc7180_clocks[] = {
+> > >   	[DISP_CC_MDSS_PCLK0_CLK_SRC] = &disp_cc_mdss_pclk0_clk_src.clkr,
+> > >   	[DISP_CC_MDSS_ROT_CLK] = &disp_cc_mdss_rot_clk.clkr,
+> > >   	[DISP_CC_MDSS_ROT_CLK_SRC] = &disp_cc_mdss_rot_clk_src.clkr,
+> > > -	[DISP_CC_MDSS_RSCC_AHB_CLK] = &disp_cc_mdss_rscc_ahb_clk.clkr,
+> > >   	[DISP_CC_MDSS_RSCC_VSYNC_CLK] = &disp_cc_mdss_rscc_vsync_clk.clkr,
+> > >   	[DISP_CC_MDSS_VSYNC_CLK] = &disp_cc_mdss_vsync_clk.clkr,
+> > >   	[DISP_CC_MDSS_VSYNC_CLK_SRC] = &disp_cc_mdss_vsync_clk_src.clkr,
+> > 
+> > We found that this change leads to a panic at boot time on SC7180 devices
+> > without display configuration (e.g. the SC7180 IDP with the current DT):
+> > 
+> > [    2.412820] SError Interrupt on CPU6, code 0xbe000411 -- SError
+> > [    2.412822] CPU: 6 PID: 1 Comm: swapper/0 Tainted: G S                5.4.22 #103
+> > [    2.412822] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+> > [    2.412823] pstate: 20c00089 (nzCv daIf +PAN +UAO)
+> > [    2.412823] pc : regmap_mmio_read32le+0x28/0x40
+> > [    2.412823] lr : regmap_mmio_read+0x44/0x6c
+> > [    2.412824] sp : ffffffc01005ba90
+> > [    2.412824] x29: ffffffc01005ba90 x28: 0000000000000000
+> > [    2.412825] x27: 0000000000000000 x26: 0000000000000000
+> > [    2.412826] x25: 0000000000000000 x24: ffffffd1f4aed018
+> > [    2.412827] x23: ffffffd1f4c12148 x22: ffffff8177a6c800
+> > [    2.412827] x21: 0000000000002048 x20: ffffff8177489e00
+> > [    2.412828] x19: 0000000000002048 x18: 000000004a746f4b
+> > [    2.412829] x17: 00000000d0e09034 x16: 000000005079b450
+> > [    2.412830] x15: 000000003e3bf7ed x14: 0000000000007fff
+> > [    2.412830] x13: ffffff8177309b40 x12: 0000000000000000
+> > [    2.412831] x11: 0000000000000000 x10: 0000000000000000
+> > [    2.412831] x9 : 0000000000000001 x8 : ffffffc011c02048
+> > [    2.412832] x7 : aaaaaaaaaaaaaaaa x6 : 0000000000000000
+> > [    2.412833] x5 : 0000000000000000 x4 : 0000000000000000
+> > [    2.412834] x3 : 0000000000000000 x2 : ffffffc01005bb84
+> > [    2.412834] x1 : 0000000000002048 x0 : 0000000080000000
+> > [    2.412835] Kernel panic - not syncing: Asynchronous SError Interrupt
+> > [    2.412836] CPU: 6 PID: 1 Comm: swapper/0 Tainted: G S                5.4.22 #103
+> > [    2.412836] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+> > [    2.412836] Call trace:
+> > [    2.412837]  dump_backtrace+0x0/0x150
+> > [    2.412837]  show_stack+0x20/0x2c
+> > [    2.412837]  dump_stack+0xa0/0xd8
+> > [    2.412838]  panic+0x158/0x360
+> > [    2.412838]  panic+0x0/0x360
+> > [    2.412838]  arm64_serror_panic+0x78/0x84
+> > [    2.412839]  do_serror+0x110/0x118
+> > [    2.412839]  el1_error+0x84/0xf8
+> > [    2.412839]  regmap_mmio_read32le+0x28/0x40
+> > [    2.412840]  regmap_mmio_read+0x44/0x6c
+> > [    2.412840]  _regmap_bus_reg_read+0x34/0x44
+> > [    2.412841]  _regmap_read+0x88/0x164
+> > [    2.412841]  regmap_read+0x54/0x78
+> > [    2.412841]  clk_is_enabled_regmap+0x3c/0x8c
+> > [    2.412842]  clk_core_is_enabled+0x68/0xac
+> > [    2.412842]  clk_disable_unused_subtree+0x90/0x22c
+> > [    2.412843]  clk_disable_unused_subtree+0x34/0x22c
+> > [    2.412843]  clk_disable_unused+0x74/0x108
+> > [    2.412843]  do_one_initcall+0x13c/0x2c8
+> > [    2.412844]  do_initcall_level+0x144/0x16c
+> > [    2.412844]  do_basic_setup+0x30/0x48
+> > [    2.412844]  kernel_init_freeable+0xc4/0x140
+> > [    2.412845]  kernel_init+0x14/0x100
+> > [    2.412845]  ret_from_fork+0x10/0x18
+> > [    2.412858] SMP: stopping secondary CPUs
+> > [    2.412859] Kernel Offset: 0x11e3a00000 from 0xffffffc010000000
+> > [    2.412859] PHYS_OFFSET: 0xffffffe780000000
+> > [    2.412860] CPU features: 0x0006,2a80aa18
+> > [    2.412860] Memory Limit: none
+> > 
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
-> index 6d593003c933..65e24a80ee70 100644
-> --- a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
-> @@ -17,6 +17,33 @@ Required clocking property, have to be one of:
->  
->  Optional properties:
->  - timeout-sec : Contains the watchdog timeout in seconds
-> +- nuvoton,card-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
-> +  Contains the card reset type for checking and indicating
-> +  the last card reset status (WDIOF_CARDRESET)
-> +
-> +  If 'nuvoton,card-reset-type' is not specified the default is porst
-> +
-> +  Reset types:
-> +       - porst: Power reset
-> +       - corst: Core reset
-> +	   - wdX : Watchdog reset X (X represante 0-2)
-> +	   - swX : Software reset X (X represante 1-4)
-> +
-> +- nuvoton,ext1-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
-> +  Contains the external 2 reset type for checking and indicating
-> +  the last external 2 reset status (WDIOF_EXTERN1)
-> +
-> +  If 'nuvoton,card-reset-type' is not specified the default is wd0.
-> +
-> +  Reset types are the same as in nuvoton,card-reset-type property.
-> +
-> +- nuvoton,ext2-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
-> +  Contains the external 2 reset type for checking and indicating
-> +  the last external 2 reset status (WDIOF_EXTERN2)
-> +
-> +  If 'nuvoton,card-reset-type' is not specified the default is sw1.
-> +
-> +  Reset types are the same as in nuvoton,card-reset-type property.
->  
->  Example:
->  
-> @@ -25,4 +52,7 @@ timer@f000801c {
->      interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
->      reg = <0xf000801c 0x4>;
->      clocks = <&clk NPCM7XX_CLK_TIMER>;
-> +	nuvoton,card-reset-type = "porst";
-> +	nuvoton,ext1-reset-type = "wd1";
-> +	nuvoton,ext2-reset-type = "sw2";
+> Hi Matthias,
+> 
+> The display device node is not present and we encounter this crash, would it
+> be possible to add ALWAYS_ON for the MDSS GDSC and give it a try.
 
-This set of properties maps chip reset types to reset types defined
-by the Linux watchdog subsystem (ie WDIOF_CARDRESET, WDIOF_EXTERN1,
-and WDIOF_EXTERN2). It is neither a hardware description nor a system
-configuration.
-
-It is up to Rob to decide, but I personally don't think it is appropriate.
-
-Guenter
+It still crashes when ALWAYS_ON is set for the MDSS GDSC.
