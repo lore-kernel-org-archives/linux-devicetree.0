@@ -7,84 +7,86 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473CDC3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF51C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3DC24658
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C93024654
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583341182;
-	bh=D3DWAzE7lXzBXa6MkDZ1aHSTdDK/3GCq1FpOc5RvoQE=;
+	s=default; t=1583341254;
+	bh=ZrfvetvtjFk5ow86mYzwAEVKeCp5g9Tvkh2QVDrFkPE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L0lBjp68AxPQy+sj5smTH4mWEjwhinc+w1wP/09wJI/T/nguzKSw3XeA+chk4T2vc
-	 7HcPzoAR4e1CdI5K8Vr5w+IDkM558hAAzEakBT54jHO4ggPLmZKLT8EYymPjQ0NClD
-	 ON5TgYlmClbHprhzRBg6XrPagffnGx308MOiT63Q=
+	b=LWdLTE/9U90/ALrsT6zV5mVOSq0tsyaLQz5d7BbiV53pdTr1KafUoEMY8s/fvn95b
+	 0Nbwua0xciG6idU7eJ9P+SZPwMkGckEf/vgbCvrsCQnElsuKoVIJ1w8KjuaI95hYea
+	 wgOmFUkajuToo4cob4ERDqb/PTWloGS9z7Pe9PWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbgCDQ7h (ORCPT
+        id S2388333AbgCDRAt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:59:37 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43920 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730107AbgCDQ73 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 11:59:29 -0500
-Received: by mail-oi1-f196.google.com with SMTP id p125so2767392oif.10;
-        Wed, 04 Mar 2020 08:59:28 -0800 (PST)
+        Wed, 4 Mar 2020 12:00:49 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39044 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388477AbgCDRAt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 12:00:49 -0500
+Received: by mail-oi1-f194.google.com with SMTP id r16so2793000oie.6;
+        Wed, 04 Mar 2020 09:00:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5qYk5LV2HvuAA3RTvLtS19iOY2vZnT+j3lgBzg3rO4c=;
-        b=buQk3IbGrVhX3hiDhYj8wTpE20naBpN5eBF7DpN0rHW57XbOUR6GV0qnzW5e863bv6
-         50QmPY/PIRouDrVW10bPjvrGBN1sLE2555Loc1boCZK/Hr3jJSCEnhukDrSC3J4lYOy5
-         JBAzcf/dB90Rtx4m0+4jlOEnoiGlFP+hJ1Yql0C0Dab4raVtQ0XGUb9oLZVhi9Iw6XbQ
-         h4EVUvjYikrz8EZ+wm18cwspCxDjY4Eu9NzrE3mzR2pX6ERu7/pfM9hSW9/qmsDYa0j2
-         w7E0g6eyRxaTyDKnfdfC0tbHQYTtFUlm+FYHUXi4atRMsrxQTNk5Pm6KjmchLGqMVEVD
-         VI6g==
-X-Gm-Message-State: ANhLgQ2ewS4jz2Onr8+IO6eNMvtu5Y+8H6ZgmVThMNxrVMffkxdcub95
-        YRHwR0bINESGecJ2E+Yhcw==
-X-Google-Smtp-Source: ADFU+vsKQFMOosgtut1nZId+XHZ8todM3IQNc5Wao4BclwyECDbEk4J28eYRkQGV/GnWhctr6BaXdg==
-X-Received: by 2002:aca:b7d5:: with SMTP id h204mr2357293oif.130.1583341168216;
-        Wed, 04 Mar 2020 08:59:28 -0800 (PST)
+        bh=bvUO0xB3VGYu4Z2CRkBy08hE9OAN6dg9T4shXkHV/8s=;
+        b=A45c3U47ZW3now/2ZVwmZXpzGco2DOd/CWWr2oS3DpOET+s1212dpJ/0Qm0fAMoJiI
+         2ivwZoxFcwdBbxLJf898S8BG+K5Mq8iBtyoLodw7Gsf25vByH1Yih5N2wGc+J4HJv7MY
+         GTz3cUdPIfPDKUSb3uBC4Pz+SVxyopxrIqmkjzLoAQMz7sfOuDhykrtTMdihIUG5khov
+         X56d8/vmDxNmYhYrU6CdjxyAr7JIQScJv7Wf0nILd8UwWHPLqkwrCZi/J7fNkgkE/FiD
+         z4/WyQxCV0S5GwOsdvM4JWXtXSeTsNGqbplS0I/sl74+mpBhQQWBo5jePy8lzg0z9wYj
+         MoVw==
+X-Gm-Message-State: ANhLgQ130h/qa1yBBJWLPUfAu/08qiS7FS4lvliFKQBMERj1ADN681NG
+        WAPP0hciaVwaxteTwR9heg==
+X-Google-Smtp-Source: ADFU+vu5jR7LujK8P5X0FKafcLM7pYgZwcvHPs+Vyd8d91tSDJ6u0F2ruymgkLi6GWrxyPaChe9Qsg==
+X-Received: by 2002:aca:4a4b:: with SMTP id x72mr1141376oia.86.1583341247943;
+        Wed, 04 Mar 2020 09:00:47 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i10sm3415857otc.8.2020.03.04.08.59.27
+        by smtp.gmail.com with ESMTPSA id t20sm8895859oij.19.2020.03.04.09.00.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:59:27 -0800 (PST)
-Received: (nullmailer pid 23363 invoked by uid 1000);
-        Wed, 04 Mar 2020 16:59:26 -0000
-Date:   Wed, 4 Mar 2020 10:59:26 -0600
+        Wed, 04 Mar 2020 09:00:47 -0800 (PST)
+Received: (nullmailer pid 25284 invoked by uid 1000);
+        Wed, 04 Mar 2020 17:00:46 -0000
+Date:   Wed, 4 Mar 2020 11:00:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Felipe Balbi <balbi@kernel.org>,
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Document JZ4770 PHY bindings
-Message-ID: <20200304165926.GA23292@bogus>
-References: <20200229161820.17824-1-paul@crapouillou.net>
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] devicetree: bindings: exynos: Add new compatible
+ for Exynos5420 dwc3 clocks support
+Message-ID: <20200304170046.GA25246@bogus>
+References: <20200301212019.2248-1-linux.amoon@gmail.com>
+ <20200301212019.2248-2-linux.amoon@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200229161820.17824-1-paul@crapouillou.net>
+In-Reply-To: <20200301212019.2248-2-linux.amoon@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 29 Feb 2020 13:18:19 -0300, Paul Cercueil wrote:
-> Add documentation for the devicetree bindings of the
-> Ingenic JZ4770 USB transceiver.
+On Sun,  1 Mar 2020 21:20:16 +0000, Anand Moon wrote:
+> This patch adds the new compatible string for Exynos5422 DWC3
+> to support enable/disable of core and suspend clk by DWC3 driver.
+> Also updated the clock names for compatible samsung,exynos5420-dwusb3.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
-> 
-> Notes:
->     v2: No change
-> 
->  .../bindings/usb/ingenic,jz4770-phy.yaml      | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+> Previous changes:
+> 	Added the missing clock name for Exynos5420 complatible
+> ---
+>  Documentation/devicetree/bindings/usb/exynos-usb.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
