@@ -2,275 +2,199 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EB7C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E625C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 12:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE4A2146E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 11:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2DD20732
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 12:01:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m/BfncmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgCDLlm convert rfc822-to-8bit (ORCPT
+        id S1728953AbgCDMBe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:41:42 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44585 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729377AbgCDLlm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 06:41:42 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1j9SP7-0001eR-T3; Wed, 04 Mar 2020 12:41:33 +0100
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1j9SP7-0005kZ-6Z; Wed, 04 Mar 2020 12:41:33 +0100
-Message-ID: <ac6eb54c01cce4ec52560ac622e024ab47f2136c.camel@pengutronix.de>
-Subject: Re: [RFC 10/11] reset: imx: Add audiomix reset controller support
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Abel Vesa <abel.vesa@nxp.com>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>
-Cc:     devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Date:   Wed, 04 Mar 2020 12:41:33 +0100
-In-Reply-To: <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
-References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
-         <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 4 Mar 2020 07:01:34 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44418 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgCDMBe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 07:01:34 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 024C1QT5059394;
+        Wed, 4 Mar 2020 06:01:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583323286;
+        bh=qmSDebbg1BWjoHoTvzc2bbmCZ4PfTbx0tskdmETuTFs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=m/BfncmVQYsGwnq5dJ2EipLlrXchzC1v+I2GjFeW3lG18IY4MFDeLv+6r5mEWd6U4
+         q5QDhIe3NW5UnNh0Ngsiqi9XVELouVZycOGDPWh3SrLbQXhqNhAySyl84qfAr0+gv3
+         47qe20tz9kAVUVEv9LSHf7Egd7+dQT8QE7/fxt9w=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 024C1QMo041834
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Mar 2020 06:01:26 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
+ 2020 06:01:25 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Mar 2020 06:01:25 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 024C1MZP106164;
+        Wed, 4 Mar 2020 06:01:23 -0600
+Subject: Re: [PATCH v4 00/13] PHY: Update Cadence Torrent PHY driver with
+ reconfiguration
+To:     Yuti Amonkar <yamonkar@cadence.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <maxime@cerno.tech>
+CC:     <jsarha@ti.com>, <tomi.valkeinen@ti.com>, <praneeth@ti.com>,
+        <mparab@cadence.com>, <sjakhade@cadence.com>
+References: <1580969461-16981-1-git-send-email-yamonkar@cadence.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <f9dc8d82-0a61-62c2-c0b4-2f301ef9b949@ti.com>
+Date:   Wed, 4 Mar 2020 17:35:57 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <1580969461-16981-1-git-send-email-yamonkar@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Abel,
 
-On Tue, 2020-03-03 at 11:03 +0200, Abel Vesa wrote:
-> The imx-mix MFD driver registers some devices, one of which, in case of
-> audiomix, maps correctly to a reset controller type. This driver registers
-> a reset controller for that. For now, only the EARC specific resets are added.
+
+On 06/02/20 11:40 am, Yuti Amonkar wrote:
+> This patch series applies to the Cadence SD0801 PHY driver.
+> Cadence SD0801 PHY is also known as Torrent PHY. Torrent PHY
+> is a multiprotocol PHY supporting PHY configurations including
+> Display Port, USB and PCIe.
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-> ---
->  drivers/reset/Kconfig                          |   7 ++
->  drivers/reset/Makefile                         |   1 +
->  drivers/reset/reset-imx-audiomix.c             | 122 +++++++++++++++++++++++++
->  include/dt-bindings/reset/imx-audiomix-reset.h |  15 +++
->  4 files changed, 145 insertions(+)
->  create mode 100644 drivers/reset/reset-imx-audiomix.c
->  create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
+> This patch series converts SD0801 PHY driver for DisplayPort into a
+> generic Torrent PHY driver, updates DisplayPort functionality with
+> reconfiguration support and finally adds platform dependent initialization
+> for TI J7 SoCs.
+
+merged now, Thanks!
+
+-Kishon
 > 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index d9efbfd..2f8d9b3 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -81,6 +81,13 @@ config RESET_INTEL_GW
->  	  Say Y to control the reset signals provided by reset controller.
->  	  Otherwise, say N.
->  
-> +config RESET_IMX_AUDIOMIX
-> +	bool "i.MX Audiomix Reset Driver" if COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	default ARCH_MXC
-> +	help
-> +	  This enables the audiomix reset controller driver for i.MX SoCs.
-> +
->  config RESET_LANTIQ
->  	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
->  	default SOC_TYPE_XWAY
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 249ed35..cf23d38 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
->  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
->  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
->  obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
-> +obj-$(CONFIG_RESET_IMX_AUDIOMIX) += reset-imx-audiomix.o
->  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
->  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
->  obj-$(CONFIG_RESET_MESON) += reset-meson.o
-> diff --git a/drivers/reset/reset-imx-audiomix.c b/drivers/reset/reset-imx-audiomix.c
-> new file mode 100644
-> index 00000000..d1c62ef
-> --- /dev/null
-> +++ b/drivers/reset/reset-imx-audiomix.c
-> @@ -0,0 +1,122 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 NXP.
-> + */
-> +
-> +#include <dt-bindings/reset/imx-audiomix-reset.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/reset-controller.h>
-> +
-> +#define IMX_AUDIOMIX_EARC_CTRL_REG	0x200
-> +
-> +#define IMX_AUDIOMIX_EARC_RESET_BIT	0x0
-> +#define IMX_AUDIOMIX_EARC_PHY_RESET_BIT	0x1
-> +
-> +struct imx_audiomix_reset_data {
-> +	void __iomem *base;
-> +	struct reset_controller_dev rcdev;
-> +	spinlock_t lock;
-> +};
-> +
-> +static int imx_audiomix_reset_set(struct reset_controller_dev *rcdev,
-> +			  unsigned long id, bool assert)
-> +{
-> +	struct imx_audiomix_reset_data *drvdata = container_of(rcdev,
-> +			struct imx_audiomix_reset_data, rcdev);
-> +	void __iomem *reg_addr = drvdata->base;
-> +	unsigned long flags;
-> +	unsigned int offset;
-> +	u32 reg;
-> +
-> +	switch (id) {
-> +	case IMX_AUDIOMIX_EARC_PHY_RESET:
-> +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
-> +		offset = IMX_AUDIOMIX_EARC_PHY_RESET_BIT;
-> +		break;
-> +	case IMX_AUDIOMIX_EARC_RESET:
-> +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
-> +		offset = IMX_AUDIOMIX_EARC_RESET_BIT;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (assert) {
-> +		pm_runtime_get_sync(rcdev->dev);
-
-This seems wrong. Why is the runtime PM reference count incremented when
-a reset is asserted ...
-
-> +		spin_lock_irqsave(&drvdata->lock, flags);
-> +		reg = readl(reg_addr);
-> +		writel(reg & ~BIT(offset), reg_addr);
-> +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> +	} else {
-> +		spin_lock_irqsave(&drvdata->lock, flags);
-> +		reg = readl(reg_addr);
-> +		writel(reg | BIT(offset), reg_addr);
-> +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> +		pm_runtime_put(rcdev->dev);
-
-... and decremented when a reset is deasserted?
-
-Apart from the runtime PM handling this looks like it could reuse reset-
-simple.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_audiomix_reset_assert(struct reset_controller_dev *rcdev,
-> +			     unsigned long id)
-> +{
-> +	return imx_audiomix_reset_set(rcdev, id, true);
-> +}
-> +
-> +static int imx_audiomix_reset_deassert(struct reset_controller_dev *rcdev,
-> +			       unsigned long id)
-> +{
-> +	return imx_audiomix_reset_set(rcdev, id, false);
-> +}
-> +
-> +static const struct reset_control_ops imx_audiomix_reset_ops = {
-> +	.assert		= imx_audiomix_reset_assert,
-> +	.deassert	= imx_audiomix_reset_deassert,
-> +};
-> +
-> +static int imx_audiomix_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct imx_audiomix_reset_data *drvdata;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
-> +	if (drvdata == NULL)
-> +		return -ENOMEM;
-> +
-> +	drvdata->base = dev_get_drvdata(dev->parent);
-> +
-> +	platform_set_drvdata(pdev, drvdata);
-> +
-> +	pm_runtime_enable(dev);
-> +
-> +	spin_lock_init(&drvdata->lock);
-> +
-> +	drvdata->rcdev.owner     = THIS_MODULE;
-> +	drvdata->rcdev.nr_resets = IMX_AUDIOMIX_RESET_NUM;
-> +	drvdata->rcdev.ops       = &imx_audiomix_reset_ops;
-> +	drvdata->rcdev.of_node   = dev->of_node;
-> +	drvdata->rcdev.dev	 = dev;
-> +
-> +	return devm_reset_controller_register(dev, &drvdata->rcdev);
-> +}
-> +
-> +static const struct of_device_id imx_audiomix_reset_dt_ids[] = {
-> +	{ .compatible = "fsl,imx8mp-audiomix-reset", },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver imx_audiomix_reset_driver = {
-> +	.probe	= imx_audiomix_reset_probe,
-> +	.driver = {
-> +		.name		= KBUILD_MODNAME,
-> +		.of_match_table	= imx_audiomix_reset_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(imx_audiomix_reset_driver);
-> diff --git a/include/dt-bindings/reset/imx-audiomix-reset.h b/include/dt-bindings/reset/imx-audiomix-reset.h
-> new file mode 100644
-> index 00000000..2e26878
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/imx-audiomix-reset.h
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 NXP.
-> + */
-> +
-> +#ifndef DT_BINDING_RESET_IMX_AUDIOMIX_H
-> +#define DT_BINDING_RESET_IMX_AUDIOMIX_H
-> +
-> +#define IMX_AUDIOMIX_EARC_RESET		0x0
-> +#define IMX_AUDIOMIX_EARC_PHY_RESET	0x1
-> +
-> +#define IMX_AUDIOMIX_RESET_NUM		2
-> +
-> +#endif
-> +
-
-The imx-audiomix-reset.h change should go into a separate patch,
-together with the binding docs for fsl,imx8mp-audiomix-reset.
-
-regards
-Philipp
+> The patch series has following patches which applies the changes
+> in the below sequence
+> 1. 001-dt-bindings-phy-Remove-Cadence-MHDP-PHY-dt-binding
+> This patch removes the MHDP PHY binding.
+> 2. 002-dt-bindings-phy-Add-Cadence-MHDP-PHY-bindings-in-YAML-format.
+> This patch converts the MHDP PHY device tree bindings to yaml schemas
+> 3. 003-phy-cadence-dp-Rename-to-phy-Cadence-Torrent
+> Rename Cadence DP PHY driver from phy-cadence-dp to phy-cadence-torrent
+> 4. 004-phy-cadence-torrent-Adopt-Torrent-nomenclature
+> Update private data structures, module descriptions and functions prefix to Torrent
+> 5. 005-phy-cadence-torrent-Add-wrapper-for-PHY-register-access
+> Add a wrapper function to write Torrent PHY registers to improve code readability.
+> 6. 006-phy-cadence-torrent-Add-wrapper-for-DPTX-register-access
+> Add wrapper functions to read, write DisplayPort specific PHY registers to improve code
+> readability.
+> 7. 007-phy-cadence-torrent-Refactor-code-for-reusability
+> Add separate function to set different power state values.
+> Use of uniform polling timeout value. Check return values of functions for error handling.
+> 8. 008-phy-cadence-torrent-Add-19.2-MHz-reference-clock-support
+> Add configuration functions for 19.2 MHz reference clock support. Add register configurations
+> for SSC support.
+> 9. 009-phy-cadence-torrent-Implement-phy-configure-APIs
+> Add PHY configuration APIs for link rate, number of lanes, voltage swing and pre-emphasis values.
+> 10. 010-phy-cadence-torrent-Use-regmap-to-read-and-write-Torrent-PHY-registers 
+> Use regmap for accessing Torrent PHY registers. Update register offsets. Abstract address
+> calculation using regmap APIs.
+> 11. 011-phy: cadence-torrent-Use-regmap-to-read-and-write-DPTX-PHY-registers
+> Use regmap to read and write DPTX specific PHY registers.
+> 12. 012-phy-cadence-torrent-Add-platform-dependent-initialization-structure
+> Add platform dependent initialization data for Torrent PHY used in TI's J721E SoC.
+> 13. 013-phy: cadence-torrent-Add-support-for-subnode-bindings
+> Implement single link subnode support to the phy driver.
+> 
+> Version History:
+> 
+> v4:
+> - Add separate patch to remove old binding.
+> - Add new patch to add new binding in YAML format.
+> - Squashed "dt-bindings: phy: phy-cadence-torrent: Add platform dependent
+>   compatible string" with "dt-bindings: phy: Add Cadence MHDP PHY bindings
+>   in YAML format".
+> - Added SPDX dual license tag to YAML bindings.
+> - Updated resets property description and removed reset-names
+>   property.
+> - Added enum to cdns,phy-type property adding all the currently
+>   known phy-type values.
+> - Updated the child node resets property to support one reset
+>   per lane.
+> - Added default values for cdns,num-lanes and cdns,max-bit-rate properties.
+> 
+> 
+> v3:
+> - Removed "Add clock binding" patch from the series and merged it with
+>   "Convert-Cadence-MHDP-PHY-bindings-to-YAML" patch.
+> - Added reset and reset-names properties to YAML file.
+> - Updated dptx_phy reg entry as optional in YAML.
+> - Renamed reg-names from sd0801_phy to torrent_phy.
+> - Added subnode property for each group of PHY lanes based on PHY
+>   type to the YAML. Renamed num_lanes and max_bit_rate to cdns,num-lanes
+>   and cdns,max-bit-rate and moved it to subnode properties.
+> - Added cdns,phy-type property in subnode. Currently cdns,phy-type supports only
+>   PHY_TYPE_DP.
+> - Added subnode instance structure to the driver in reference to the dts change.
+> - Updated functions to read properties from child node instead of parent node.
+> - Added num_lanes as argument to the cdns_torrent_dp_run function.
+> 
+> v2:
+> - Remove patch [1] from this series and send for a separate review.
+> - Use enum in compatible property of YAML file.
+> - Remove quotes in clock-names property "refclk" -> refclk in YAML file.
+> - Add reg-names property to YAML file
+> - Add additionalProperties:false to YAML file.
+> - No change in the driver code.
+> 
+> This patch series is dependent on PHY DisplayPort configuration patch [1].
+> 
+> [1]
+> 
+> https://lkml.org/lkml/2020/1/6/279
+> 
+> Swapnil Jakhade (10):
+>   phy: cadence-torrent: Adopt Torrent nomenclature
+>   phy: cadence-torrent: Add wrapper for PHY register access
+>   phy: cadence-torrent: Add wrapper for DPTX register access
+>   phy: cadence-torrent: Refactor code for reusability
+>   phy: cadence-torrent: Add 19.2 MHz reference clock support
+>   phy: cadence-torrent: Implement PHY configure APIs
+>   phy: cadence-torrent: Use regmap to read and write Torrent PHY
+>     registers
+>   phy: cadence-torrent: Use regmap to read and write DPTX PHY registers
+>   phy: cadence-torrent: Add platform dependent initialization structure
+>   phy: cadence-torrent: Add support for subnode bindings
+> 
+> Yuti Amonkar (3):
+>   dt-bindings: phy: Remove Cadence MHDP PHY dt binding
+>   dt-bindings: phy: Add Cadence MHDP PHY bindings in YAML format.
+>   phy: cadence-dp: Rename to phy-cadence-torrent
+> 
+>  .../bindings/phy/phy-cadence-dp.txt           |   30 -
+>  .../bindings/phy/phy-cadence-torrent.yaml     |  143 ++
+>  drivers/phy/cadence/Kconfig                   |    6 +-
+>  drivers/phy/cadence/Makefile                  |    2 +-
+>  drivers/phy/cadence/phy-cadence-dp.c          |  541 -----
+>  drivers/phy/cadence/phy-cadence-torrent.c     | 1944 +++++++++++++++++
+>  6 files changed, 2091 insertions(+), 575 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+>  delete mode 100644 drivers/phy/cadence/phy-cadence-dp.c
+>  create mode 100644 drivers/phy/cadence/phy-cadence-torrent.c
+> 
