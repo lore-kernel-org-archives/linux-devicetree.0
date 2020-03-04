@@ -2,93 +2,155 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98941C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 21:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB11C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 21:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B06F20828
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 21:24:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OajD2LPf"
+	by mail.kernel.org (Postfix) with ESMTP id EBF492084E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 21:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbgCDVYi (ORCPT
+        id S1726440AbgCDV1l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:24:38 -0500
-Received: from mail-vk1-f174.google.com ([209.85.221.174]:39305 "EHLO
-        mail-vk1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgCDVYi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 16:24:38 -0500
-Received: by mail-vk1-f174.google.com with SMTP id t129so1010122vkg.6
-        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 13:24:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=4t+a10DBQdipoQlomK8+kIWiVyd5bkVTFvmH69b0JCo=;
-        b=OajD2LPfSTB/kFbxrXR7pZlRwA1R69Ie/OL3cLOx9TS+jZax/+6QyJhK66K7vx1wO9
-         ZfeqcGwFvlSGhITyAM7QAJ0odr4n0g8FA7ZaP3lmGAUstAdqRLQkn8FIprAicqBhWF+M
-         p3Mphgmrt3BmQwtZp3pZi13EzGI+zqin3kqdmhdN7VwOebwcbybeCc9oqkcMlvEdZpqk
-         +d6C+2kVc8y/4xg0fN9z5EABodbNvq+BnEK8XfqkT6IHW+R6CWK3R6aJjcIM2WpY4ACD
-         n+QuGzaKnW1xFTNkBeiUr2csdimG3FHLPiPlGj8cCjYUk9VJj3YzJfOgFfgeTxNP6jA8
-         XFpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=4t+a10DBQdipoQlomK8+kIWiVyd5bkVTFvmH69b0JCo=;
-        b=ZWN6sFoIw4eAoWl4bQxeNyvroozc61eyox9BnzFeZlLkz7hTYAT2JvMvchlVVxxJeT
-         j1ElKDrIk3m2crTjaf6a3RwBb+Byd5TlRqdZUNEJ8ydeyR8UzqQ41sLnY5BbE2zcUDyL
-         yTqOMlc+48zvabxxDR+BiFOV9inUvY0O4z4C1rTyp6AaGKrK1m/hoKJL2UN1ZPo8MKBJ
-         a71LJHLtVDHT0QKkegTvvunaQdEAViBPGJLxpeCrW/xFNmh0RbDj0eG1PZYnpTQPbGw4
-         dSduWlu73g4+UMveBHeNphxUtHXtD/uTv4d/AGZ9kmGLIJeedZe3nq6Pxc6iXSRqbYWR
-         2e7Q==
-X-Gm-Message-State: ANhLgQ0tPSe5a5+2fscobo566/FH/gbVSUPbptHmTJh763XUM5trmEIf
-        56wO9jEkXguO3IYdobaeC7CCvJx9crSU95/EvQ4n5EAX2k0=
-X-Google-Smtp-Source: ADFU+vsmBU86dviusXbtKBM0PamclS9GhpocffyaS+Nwv3v7luZK92piirfQeOmUhRl3+wry0BKBuChSsmXdndoTfoI=
-X-Received: by 2002:a1f:788c:: with SMTP id t134mr2865086vkc.46.1583357076907;
- Wed, 04 Mar 2020 13:24:36 -0800 (PST)
+        Wed, 4 Mar 2020 16:27:41 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:42315 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387762AbgCDV1l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 16:27:41 -0500
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 1C0AE60002;
+        Wed,  4 Mar 2020 21:27:38 +0000 (UTC)
+Date:   Wed, 4 Mar 2020 22:27:37 +0100
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, tsahee@annapurnalabs.com,
+        antoine.tenart@bootlin.com, mchehab+samsung@kernel.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, dwmw@amazon.co.uk,
+        benh@amazon.com, ronenk@amazon.com, talel@amazon.com,
+        jonnyc@amazon.com, hanochu@amazon.com, eitan@amazon.com
+Subject: Re: [PATCH v4 6/6] arm64: dts: amazon: add Amazon's Annapurna Labs
+ Alpine v3 support
+Message-ID: <20200304212737.GN3179@kwain>
+References: <20200225112926.16518-1-hhhawa@amazon.com>
+ <20200225112926.16518-7-hhhawa@amazon.com>
 MIME-Version: 1.0
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 5 Mar 2020 02:54:25 +0530
-Message-ID: <CAHLCerPCyYMmUttfz5mPrJiu3ApzoijTERLYjdZYau=EFVNDPw@mail.gmail.com>
-Subject: Permission to relicense thermal bindings to GPL-v2 + BSD-2-Clause
-To:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh@kernel.org>, malat@debian.org,
-        wxt@rock-chips.com, punit.agrawal@arm.com,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225112926.16518-7-hhhawa@amazon.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-Everyone on CC has contributed to the thermal bindings[1] in the
-kernel. They are currently licensed under GPLv2 but we'd like to
-relicense them as GPLv2 and BSD-2-Clause.
+Sorry, I'm a bit late to the party...
 
-If you agree, could you please send your ack to relicense the binding
-as GPLv2 + BSD-2-Clause. I will then add the BSD-2-Clause license to
-the yaml bindings sent to the list.[2]
+On Tue, Feb 25, 2020 at 01:29:26PM +0200, Hanna Hawa wrote:
+> diff --git a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
+> +     arch-timer {                                                    
 
-Regards,
-Amit
+Please use 'timer' instead.
 
-[1] git log --no-merges
-Documentation/devicetree/bindings/thermal/thermal.txt | grep Author |
-uniq
-Author: Amit Kucheria <amit.kucheria@linaro.org>
-Author: Viresh Kumar <viresh.kumar@linaro.org>
-Author: Rob Herring <robh@kernel.org>
-Author: Mathieu Malaterre <malat@debian.org>
-Author: Caesar Wang <wxt@rock-chips.com>
-Author: Punit Agrawal <punit.agrawal@arm.com>
-Author: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Author: Eduardo Valentin <eduardo.valentin@ti.com>
+> +             compatible = "arm,armv8-timer";                         
+> +             interrupts = <GIC_PPI 0xd IRQ_TYPE_LEVEL_LOW>,          
+> +                          <GIC_PPI 0xe IRQ_TYPE_LEVEL_LOW>,          
+> +                          <GIC_PPI 0xb IRQ_TYPE_LEVEL_LOW>,          
+> +                          <GIC_PPI 0xa IRQ_TYPE_LEVEL_LOW>;          
+> +     };
 
-[2] https://lkml.org/lkml/2020/2/24/104
+> +		gic: interrupt-controller@f0000000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <0>;
+
+No need for this.
+
+> +			interrupt-controller;
+> +			reg = <0x0 0xf0800000 0 0x10000>,
+> +			      <0x0 0xf0a00000 0 0x200000>,
+> +			      <0x0 0xf0000000 0 0x2000>,
+> +			      <0x0 0xf0010000 0 0x1000>,
+> +			      <0x0 0xf0020000 0 0x2000>;
+
+Please add comments here, see alpine-v2.dtsi (or other dtsi in
+arch/arm64).
+
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		msix: msix@fbe00000 {
+> +			compatible = "al,alpine-msix";
+> +			reg = <0x0 0xfbe00000 0x0 0x100000>;
+> +			interrupt-controller;
+> +			msi-controller;
+> +			al,msi-base-spi = <160>;
+> +			al,msi-num-spis = <800>;
+> +			interrupt-parent = <&gic>;
+> +		};
+> +
+> +		uart0: serial@fd883000 {
+
+Looking at the Alpine v2 dtsi, this node was put in an io-fabric bus. It
+seems to me the Alpine v3 dtsi is very similar. Would it apply as well?
+
+> +			compatible = "ns16550a";
+> +			reg = <0x0 0xfd883000 0x0 0x1000>;
+> +			clock-frequency = <0>;
+
+Is the frequency set to 0 on purpose? Or is it set by a firmware at boot
+time (if so please add a comment)?
+
+> +			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+
+Since you're enabling this node explicitly in the dts, you can set it to
+disabled by default.
+
+> +		};
+> +
+> +		pcie@fbd00000 {
+
+Please order the nodes in increasing order.
+
+> +			compatible = "pci-host-ecam-generic";
+> +			device_type = "pci";
+> +			#size-cells = <2>;
+> +			#address-cells = <3>;
+> +			#interrupt-cells = <1>;
+> +			reg = <0x0 0xfbd00000 0x0 0x100000>;
+> +			interrupt-map-mask = <0xf800 0 0 7>;
+> +			/* 8 x legacy interrupts for SATA only */
+> +			interrupt-map = <0x4000 0 0 1 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x4800 0 0 1 &gic 0 58 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x5000 0 0 1 &gic 0 59 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x5800 0 0 1 &gic 0 60 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x6000 0 0 1 &gic 0 61 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x6800 0 0 1 &gic 0 62 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x7000 0 0 1 &gic 0 63 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x7800 0 0 1 &gic 0 64 IRQ_TYPE_LEVEL_HIGH>;
+> +			ranges = <0x02000000 0x0 0xfe000000 0x0 0xfe000000 0x0 0x1000000>;
+> +			bus-range = <0x00 0x00>;
+> +			msi-parent = <&msix>;
+> +		};
+> +	};
+> +};
+
+The rest of the series looks good.
+
+Thanks!
+Antoine
+
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
