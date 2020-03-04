@@ -2,130 +2,110 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ACEC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FBEC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F166121739
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583335520;
-	bh=ZumlGMcBmAVs+fBT0aWZfIg+A2t7B3lHLFRmYusJrmM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RqazBVyegRElMv76jr0+8w9u4vI5vLtrZkfSA84DZ8kJ3Vnw7VFw8xtsRqkYLOG/U
-	 YjddWM9+4mkPoR8plgC2wkG+1UJHI6kY1JiNGztgAMiLu0lvR6CVDYAuS3XyDl7rDM
-	 WmbGOmDt9uQqlPADGQY367tTY/09hPvEwiiO/eE8=
+	by mail.kernel.org (Postfix) with ESMTP id 6BBA224658
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 15:34:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IviQc9iq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgCDPZT (ORCPT
+        id S1729621AbgCDPex (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:25:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgCDPZT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:25:19 -0500
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EEE7217F4;
-        Wed,  4 Mar 2020 15:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583335518;
-        bh=ZumlGMcBmAVs+fBT0aWZfIg+A2t7B3lHLFRmYusJrmM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QdKv8fpiPzelRasvXYQYduHy1HtpRJFB/do486BVeN6dh1HIo5wN5nyDc4YFz+MbV
-         U1slqVJXuCpDun27GAhCCxkmS/+PiQGDGzOJU3c5o+P5RMIDxGGTq4zTVUFSOiwodS
-         1tSDanrvqFh6iT6UX6YVCLJdlSsWUI4nsHdyLd9g=
-Received: by mail-qv1-f50.google.com with SMTP id r8so932090qvs.12;
-        Wed, 04 Mar 2020 07:25:18 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3gSkbkELZEDWvpkqj+nzdlJSfvwtGex46xHNsz9QxJ6gVzQmLJ
-        b9ANYh4qbAHWOr2Zc/HFSSqzfcVyr5r1ZSxX2g==
-X-Google-Smtp-Source: ADFU+vtW6eH2lMW1v5UZ2ywbP709qBKs59VL/I7EP4ShzFBY269q/YEygQz3Hie30VlnYHvQUn3WzoF/MDSrL5uju4k=
-X-Received: by 2002:a0c:fecb:: with SMTP id z11mr2534654qvs.85.1583335517496;
- Wed, 04 Mar 2020 07:25:17 -0800 (PST)
+        Wed, 4 Mar 2020 10:34:53 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:33710 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgCDPew (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 10:34:52 -0500
+Received: by mail-vk1-f194.google.com with SMTP id i78so680685vke.0
+        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 07:34:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fIJVEAVVaV8+1KTQ4VSxAJV6cC1N0MZepqVqzZDRzz0=;
+        b=IviQc9iq4hefPyctoluYF6imwJrLeOsKMTTMkb7fQwxpTRrY2OM9RRExAv6iZdToeO
+         hRSWvEkObNO3dMg3mqbmOYRHtK/yBt/TQg64bL1Ua5+4b0VdstGBLRXCfu1+gSmwJYQW
+         3sI+XOlVY69iAuSRd08Wl8KKJs3mOOTlH+g7eUGPLJGK8VdKBL6acXXHhoQ3QdGOBErb
+         bcwpLWtF3gQFi3mNRZ5sfyMQEHxHTo+jN4F5aY8THFoswDnM9aHVqn+TzWH/34UVQSo8
+         5dGGAbJHDGiRUw9F76H555r7F123oOdHITs2XtLMvBwa4DEh/t3RGveW8kekF2Dd/Wk3
+         7LPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fIJVEAVVaV8+1KTQ4VSxAJV6cC1N0MZepqVqzZDRzz0=;
+        b=ra6g33se7g+yb8u9K7RR4PZnr7bIDAmBJetPL1VUxqYd6M5P3Z51kckEvT3O7bsOLh
+         GPOJwy8vBc1Eky2MuVAYZCz5rZuPV8yduk2ERL9oafCMCz70sEvFmg+qa4BH13mQVVcW
+         wV9tNAN9tDWnZedNx29fp0i+QnsbSoVlxlTT1tUj+zih/01XSm/6SJSDMxj/z/2+P5Ch
+         iDdg72pWev8CmDdEwDt7mSUeMyZ3Fk/IhGpjmefKteY79NyCoMKMTfcx7YnX0l0I9SY1
+         /WZDEwhXCDqzo7y8ndZqny9ELqYUPbPiiAl1RyY66KEZB4MPfW6xkkRVdO6wwceI3K9u
+         MolQ==
+X-Gm-Message-State: ANhLgQ2rVwN/BZFz0oa1LAc2cv6C6hlVOrBgNc9kX5uvbQh8I3DC1KpB
+        DNNuYQUsmSZ/I8wHSuzL0v+62g81UzxQWUZyijVsNA==
+X-Google-Smtp-Source: ADFU+vuSliPnQWMxFtDiOJdiWUdv7l0GqaMSjN4n/lYfyMirS9Qnruhwqrv0AxIelaoc9scRZorUVPFJ14Wu1OeT35M=
+X-Received: by 2002:a1f:78c5:: with SMTP id t188mr1798337vkc.43.1583336089860;
+ Wed, 04 Mar 2020 07:34:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-4-masahiroy@kernel.org>
-In-Reply-To: <20200304032038.14424-4-masahiroy@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 4 Mar 2020 09:25:06 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKt1K6nOED2TeUfyxkbWHi_KrbZFDW-ZxwgHZX-Og7-DA@mail.gmail.com>
-Message-ID: <CAL_JsqKt1K6nOED2TeUfyxkbWHi_KrbZFDW-ZxwgHZX-Og7-DA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] kbuild: allow to run dt_binding_check without kernel configuration
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>
+References: <20200108150920.14547-1-faiz_abbas@ti.com> <7edb2c28-11fd-e282-a8d7-e61aad8cace2@ti.com>
+ <CAPDyKFpxVXqtcTC1oRfHxNy=mBHhR-jhOu9VrT86-_5NV2dv9A@mail.gmail.com>
+In-Reply-To: <CAPDyKFpxVXqtcTC1oRfHxNy=mBHhR-jhOu9VrT86-_5NV2dv9A@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 4 Mar 2020 16:34:13 +0100
+Message-ID: <CAPDyKFqPDDe9+1e7E4F+J3eCq2JefJFKYYB2xtQFQFb3ERvaFw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Update phy configuration for AM65x
+To:     Faiz Abbas <faiz_abbas@ti.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 9:21 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Tue, 3 Mar 2020 at 21:53, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 >
-> The dt_binding_check target is located outside of the
-> 'ifneq ($(dtstree),) ... endif' block.
+> On Mon, 2 Mar 2020 at 20:11, Faiz Abbas <faiz_abbas@ti.com> wrote:
+> >
+> > Uffe,
+> >
+> > On 08/01/20 8:39 pm, Faiz Abbas wrote:
+> > > The following patches update phy configurations for AM65x as given in
+> > > the latest data manual.
+> > >
+> > > The patches depend on my fixes series posted just before this:
+> > > https://patchwork.kernel.org/project/linux-mmc/list/?series=225425
+> > >
+> > > Device tree patch updating the actual otap values will be posted
+> > > separately.
+> > >
+> > > Tested with Am65x-evm and J721e-evm.
+> > >
+> > > Faiz Abbas (3):
+> > >   dt-bindings: mmc: sdhci-am654: Update Output tap delay binding
+> > >   mmc: sdhci_am654: Update OTAPDLY writes
+> > >   mmc: sdhci_am654: Enable DLL only for some speed modes
+> > >
+> > >  .../devicetree/bindings/mmc/sdhci-am654.txt   |  21 +-
+> > >  drivers/mmc/host/sdhci_am654.c                | 247 ++++++++++++------
+> > >  include/linux/mmc/host.h                      |   2 +
+> > >  3 files changed, 192 insertions(+), 78 deletions(-)
+> > >
+> >
+> > Can you help merge this?
 >
-> Hence, you can run 'make dt_binding_check' on any architecture.
-> This makes a perfect sense because the dt-schema is arch-agnostic.
+> Apologize with the delay, still focused on fixing various regressions in v5.6.
 >
-> The only one problem I see is that scripts/dtc/dtc is not always built.
-> For example, ARCH=x86 defconfig does not define CONFIG_DTC. Kbuild
-> descends into scripts/dtc/, but does nothing. Then, it fails to build
-> *.example.dt.yaml files.
+> I start catching up on my mmc backlog as of tomorrow. Thanks for pinging me.
 
-Yeah, I've just worked around this by doing 'make CONFIG_DTC=y
-dt_binding_check'.
+Applied for next, thanks!
 
-The only thing I'd come up with was just always building dtc, but I
-didn't want to do that.
-
-> Let's build scripts/dtc/dtc forcibly when running dt_binding_check.
->
-> The dt-schema does not depend on any CONFIG option either, so you
-> should be able to run dt_binding_check without the .config file.
->
-> Going forward, you can directly run 'make dt_binding_check' in a
-> pristine source tree.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  Makefile             | 2 +-
->  scripts/dtc/Makefile | 5 +++--
->  2 files changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 7dec7b343842..190f595c7bfc 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -255,7 +255,7 @@ clean-targets := %clean mrproper cleandocs
->  no-dot-config-targets := $(clean-targets) \
->                          cscope gtags TAGS tags help% %docs check% coccicheck \
->                          $(version_h) headers headers_% archheaders archscripts \
-> -                        %asm-generic kernelversion %src-pkg
-> +                        %asm-generic kernelversion %src-pkg dt_binding_check
->  no-sync-config-targets := $(no-dot-config-targets) install %install \
->                            kernelrelease
->  single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.s %.symtypes %/
-> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> index 3acbb410904c..2f3c3a7e1620 100644
-> --- a/scripts/dtc/Makefile
-> +++ b/scripts/dtc/Makefile
-> @@ -1,8 +1,9 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # scripts/dtc makefile
->
-> -hostprogs              := dtc
-> -always-$(CONFIG_DTC)   := $(hostprogs)
-> +hostprogs                      := dtc
-> +always-$(CONFIG_DTC)           += $(hostprogs)
-> +always-$(CHECK_DT_BINDING)     += $(hostprogs)
-
-This looks like a good solution.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Kind regards
+Uffe
