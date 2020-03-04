@@ -2,141 +2,141 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062E8C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25685C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D996922B48
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F6922B48
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 17:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPtvWklQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbgCDRDY (ORCPT
+        id S1727308AbgCDRIf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:03:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:37294 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbgCDRDY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:03:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6697E31B;
-        Wed,  4 Mar 2020 09:03:23 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3073A3F6CF;
-        Wed,  4 Mar 2020 09:03:22 -0800 (PST)
-Date:   Wed, 4 Mar 2020 17:03:20 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
-Message-ID: <20200304170319.GB44525@bogus>
-References: <1583201219-15839-1-git-send-email-peng.fan@nxp.com>
- <1583201219-15839-3-git-send-email-peng.fan@nxp.com>
- <20200304103954.GA25004@bogus>
- <AM0PR04MB4481A6DB7339C22A848DAFC988E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <AM0PR04MB44814B71E92C02956F4BED4588E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        Wed, 4 Mar 2020 12:08:35 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37366 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbgCDRIf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 12:08:35 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p14so1268868pfn.4;
+        Wed, 04 Mar 2020 09:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WcXiDjy33PYge8hUsXuS+/8NVEyCDj8/Q41XwHVNKcw=;
+        b=nPtvWklQt9QghWJiSdW0QkhlOrTOjZ3+Pds6ZlGJMH65EhPXyR/CLtQPDyWFP6vkVk
+         WBs9KyqFwr2826o1eb60HIE/D7eB88nLn5qItsO4QRJum9NW2rUgoDgdu2C/+OBnAOSm
+         7VGNMVXMqTvDsGKcEVAvHD4xY3TNY3Ecoz0Qo3LB+REQP+1vkTxrkDtf35T1c8a3WTAq
+         sLvRu06xnTEnC5SFMLwJEPp9umUI7fdjZNSUghVcNxaa2fnjI1marOElFj9M6v17L6Tc
+         cDQfQ0dSZIo4z57MzT4QliTFyIk634DnwZVwEEfcMAlNnN7o5KsNQ0HOvPjIMqpmRcrW
+         VDkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WcXiDjy33PYge8hUsXuS+/8NVEyCDj8/Q41XwHVNKcw=;
+        b=LtxuIWkB7jA7iRBbH6itoPJdHforyXTj/PopdN5BWPKOWqc8XqIXJ/ZbsznIscN52q
+         cR7aDVeZm5wYrXIhEz/9IigxyWt0MSBq+tTAN9ujucnvE2HAsLaU2wxwvtLBGDZscEJH
+         0UhyZrANerWSeYWlm+wohZI6muLvDxCigOj5hfdn3oxXGMI8s8lypbvwJC0bp6NJIQyH
+         XcwAp5PqVG1+4L2nb8rEPSR4da95/AP+m15hr0ujyQC8iGuhzVA5AAmFeHKzFIAawdFx
+         TINtFEQPeRZrbdhXUH2CQ3siRsRvvq2+/cewYI9mgyjKNuzlZBQ7Qj9EGVgzb/hk59yI
+         AeeA==
+X-Gm-Message-State: ANhLgQ369ya3bfrbkODjHrg40I9W6sxjFPb9gJ8ZEL3P8TsbSAbjx2/N
+        zLHijcR3W8Lw+KE51x19E7o=
+X-Google-Smtp-Source: ADFU+vv+Df31P92V8d+K3fXU/m2exn8CF+UTDgAxezww+iG60GrEAezFnJETx5JbDF0id9d06IG8bw==
+X-Received: by 2002:aa7:91d7:: with SMTP id z23mr1179323pfa.160.1583341714250;
+        Wed, 04 Mar 2020 09:08:34 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h8sm1192994pfn.59.2020.03.04.09.08.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Mar 2020 09:08:33 -0800 (PST)
+Date:   Wed, 4 Mar 2020 09:08:32 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     wim@linux-watchdog.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, avifishman70@gmail.com, tali.perry1@gmail.com,
+        yuenn@google.com, benjaminfair@google.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v2 1/3] dt-binding: watchdog: add bootstatus reset type
+ documentation
+Message-ID: <20200304170832.GA22914@roeck-us.net>
+References: <20200303100114.87786-1-tmaimon77@gmail.com>
+ <20200303100114.87786-2-tmaimon77@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB44814B71E92C02956F4BED4588E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <20200303100114.87786-2-tmaimon77@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Peng,
-
-On Wed, Mar 04, 2020 at 02:16:00PM +0000, Peng Fan wrote:
-> > Subject: RE: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
-> >
-> > Hi Sudeep,
-> >
-> > > Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
-> > >
-> > > On Tue, Mar 03, 2020 at 10:06:59AM +0800, peng.fan@nxp.com wrote:
-> > > > From: Peng Fan <peng.fan@nxp.com>
-> > > >
-> > > > Take arm,smc-id as the 1st arg, leave the other args as zero for now.
-> > > > There is no Rx, only Tx because of smc/hvc not support Rx.
-> > > >
-> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > [...]
-> > >
-> > > > +static int smc_send_message(struct scmi_chan_info *cinfo,
-> > > > +			    struct scmi_xfer *xfer)
-> > > > +{
-> > > > +	struct scmi_smc *scmi_info = cinfo->transport_info;
-> > > > +	struct arm_smccc_res res;
-> > > > +
-> > > > +	shmem_tx_prepare(scmi_info->shmem, xfer);
-> > >
-> > > How do we protect another thread/process on another CPU going and
-> > > modifying the same shmem with another request ? We may need notion of
-> > > channel with associated shmem and it is protected with some lock.
-> >
-> > This is valid concern. But I think if shmem is shared bwteen protocols, the
-> > access to shmem should be protected in
-> > drivers/firmware/arm_scmi/driver.c: scmi_do_xfer, because send_message
-> > and fetch_response both touches shmem
-> >
-> > The mailbox transport also has the issue you mentioned, I think.
-
-No, it doesn't. I hope you realised that now based on your statement below.
-
->
-> Ignore my upper comments. How do think the following diff based on current patch?
->
-> If ok, I'll squash it with current patch and send out v5.
->
-> diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
-> index 88f91b68f297..7d770112f339 100644
-> --- a/drivers/firmware/arm_scmi/smc.c
-> +++ b/drivers/firmware/arm_scmi/smc.c
-> @@ -29,6 +29,8 @@ struct scmi_smc {
->         u32 func_id;
->  };
->
-> +static DEFINE_MUTEX(smc_mutex);
+On Tue, Mar 03, 2020 at 12:01:12PM +0200, Tomer Maimon wrote:
+> Add device tree three bootstatus reset types documentation.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  .../bindings/watchdog/nuvoton,npcm-wdt.txt    | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> index 6d593003c933..65e24a80ee70 100644
+> --- a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> @@ -17,6 +17,33 @@ Required clocking property, have to be one of:
+>  
+>  Optional properties:
+>  - timeout-sec : Contains the watchdog timeout in seconds
+> +- nuvoton,card-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
+> +  Contains the card reset type for checking and indicating
+> +  the last card reset status (WDIOF_CARDRESET)
 > +
->  static bool smc_chan_available(struct device *dev, int idx)
->  {
->         return true;
-> @@ -99,11 +101,15 @@ static int smc_send_message(struct scmi_chan_info *cinfo,
->         struct scmi_smc *scmi_info = cinfo->transport_info;
->         struct arm_smccc_res res;
->
-> +       mutex_lock(&smc_mutex);
+> +  If 'nuvoton,card-reset-type' is not specified the default is porst
 > +
->         shmem_tx_prepare(scmi_info->shmem, xfer);
->
->         arm_smccc_1_1_invoke(scmi_info->func_id, 0, 0, 0, 0, 0, 0, 0, &res);
->         scmi_rx_callback(scmi_info->cinfo, shmem_read_header(scmi_info->shmem));
->
-> +       mutex_unlock(&smc_mutex);
+> +  Reset types:
+> +       - porst: Power reset
+> +       - corst: Core reset
+> +	   - wdX : Watchdog reset X (X represante 0-2)
+> +	   - swX : Software reset X (X represante 1-4)
 > +
->         return res.a0;
->  }
->
+> +- nuvoton,ext1-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
+> +  Contains the external 2 reset type for checking and indicating
+> +  the last external 2 reset status (WDIOF_EXTERN1)
+> +
+> +  If 'nuvoton,card-reset-type' is not specified the default is wd0.
+> +
+> +  Reset types are the same as in nuvoton,card-reset-type property.
+> +
+> +- nuvoton,ext2-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
+> +  Contains the external 2 reset type for checking and indicating
+> +  the last external 2 reset status (WDIOF_EXTERN2)
+> +
+> +  If 'nuvoton,card-reset-type' is not specified the default is sw1.
+> +
+> +  Reset types are the same as in nuvoton,card-reset-type property.
+>  
+>  Example:
+>  
+> @@ -25,4 +52,7 @@ timer@f000801c {
+>      interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+>      reg = <0xf000801c 0x4>;
+>      clocks = <&clk NPCM7XX_CLK_TIMER>;
+> +	nuvoton,card-reset-type = "porst";
+> +	nuvoton,ext1-reset-type = "wd1";
+> +	nuvoton,ext2-reset-type = "sw2";
 
-Yes, this may fix the issue. However I would like to know if we need to
-support multiple channels/shared memory simultaneously. It is fair
-requirement and may need some work which should be fine. I just want to
-make sure we don't need anything more from DT or if we need to add more
-to DT bindings, we need to ensure it won't break single channel. I will
-think about that, but I would like to hear from other users of this SMC
-for SCMI.
+This set of properties maps chip reset types to reset types defined
+by the Linux watchdog subsystem (ie WDIOF_CARDRESET, WDIOF_EXTERN1,
+and WDIOF_EXTERN2). It is neither a hardware description nor a system
+configuration.
 
---
-Regards,
-Sudeep
+It is up to Rob to decide, but I personally don't think it is appropriate.
+
+Guenter
