@@ -2,220 +2,175 @@ Return-Path: <SRS0=c2W6=4V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F84CC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B2DC3F2D8
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3683C21741
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583330609;
-	bh=c/7PbKWljRp0trpq1iIHJMt5H9ohH4AXeljh80TNni0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q3exE3Q+v/0rjK7pOdoU69/KCjBivfcpZaRQjRI5Y0Nqo+b56AeD+IwHAde/fZ77+
-	 MgxYiT+C3yGA0JfWeS8gURtnapjtFRaUM8cFnBAE7B7wlM9S04pyU0zKlivjVK7H5g
-	 zCpzYIe7M4CgOlJTwj95577jFSKkQAgA24v+jytk=
+	by mail.kernel.org (Postfix) with ESMTP id 4A3A021741
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Mar 2020 14:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ziaLQQMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387910AbgCDOD2 (ORCPT
+        id S1726275AbgCDOIn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:03:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbgCDOD2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:03:28 -0500
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B01120838;
-        Wed,  4 Mar 2020 14:03:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583330607;
-        bh=c/7PbKWljRp0trpq1iIHJMt5H9ohH4AXeljh80TNni0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=X2qaS1m0mn4bOQZcNPXvuutE1rY1DG0eK+e7r1ATiAFki2kUvFLIWISAnVJ1nQc85
-         l/LiUfu7HlJ3gvS5CdVk2vvQy/fU8LuFp1JFDqpd4c+1R/TuxPMxOCX9kzoC3ZWMvJ
-         CMJCycFiiGIIwvdA7E4mqk3/a2RE3+2aXvZ1Bwx8=
-Received: by mail-qt1-f175.google.com with SMTP id h16so1370632qtr.11;
-        Wed, 04 Mar 2020 06:03:27 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1m1evlek1CRSxV1OELvvioxGNE5qzpk91CxpA4h3a3FiCKG/Bb
-        Ug+cUxowZGdvxPuK2RRTbbNZK+Am7w0+33IGwg==
-X-Google-Smtp-Source: ADFU+vvkXmsZ7+dChOIng8XdX7Ybtyzwvh/1OvNSw/vFtYgEGvGFLxsUZgfeBBWYmteauSXqvDObiftDHxbxhfhdKdA=
-X-Received: by 2002:aed:2344:: with SMTP id i4mr2563203qtc.136.1583330606186;
- Wed, 04 Mar 2020 06:03:26 -0800 (PST)
+        Wed, 4 Mar 2020 09:08:43 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32818 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgCDOIn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Mar 2020 09:08:43 -0500
+Received: by mail-wr1-f66.google.com with SMTP id x7so2587516wrr.0
+        for <devicetree@vger.kernel.org>; Wed, 04 Mar 2020 06:08:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TdUvMeA1bV5hMUNi9Uc9NGFwMrBhsdhhT6ZmBGFQFek=;
+        b=ziaLQQMTnCJ7YSxd5sV95qsFJ5sMZH3rtvhOIq0q24OYVAeSN/juNgdJKUXVth7dmC
+         +1cTjWWP/8vKz1/4KANL8PnAFbMAGOTkEIQvePO7fVK5ahr5EsdFhICYSslnU6Q/U3YP
+         eaY+UNIzqcl1QfHqCD3sojdDlJ5DGbhtfT0Zz1unRHzAIht9z91VeCVs9QSOLqrFrm47
+         yYvlbSX/dMxmGH7JaXW06sQkDqq+gICORzdo63QS61gI1f3znBgEbBwZYbXIUzNXW34m
+         9I41VXjpTFujhXGbhcU+sCmTSxEf+GPlgeOR7llOnK3kpBjcJOHvuvpYAM84w3umrZVW
+         WibQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TdUvMeA1bV5hMUNi9Uc9NGFwMrBhsdhhT6ZmBGFQFek=;
+        b=JrnKNdJE7EURYrCd/ULjdBeKLGvyFAOHsWgXUJAIkmDB1lRyEY3WROXwMLAAr8jKMe
+         uiuICpmJkwHGKWboxdFgQcaVbOimZKeiRgz3a/ZV7yj9sq1Yhhl2ateLyFPAPsmWZ4qu
+         BTgfGw1OQfzL2I2U2VRH8w14a65OTqsdyu4S5N0hUKkamvxCnfulelUqPpqn2rK+0r8x
+         4dw9/jg5w+fVlHysC2jWCnyqexTb6wZTWkadEFLpcmVt8hrSnp7TfwJzzF854y1DFkSM
+         a9C49Uil9OraZydqGqeUc4xgOvnBFzCsiZgWGI09eM7vxuo7yjNo5PXgtIA1lS9PkfIi
+         4eVw==
+X-Gm-Message-State: ANhLgQ1ByEofKKqGpvVOBKZ0iWYNoxrpe50qn3SXJH2e9Mnpseq2Sujw
+        0csknVnSmdxtZ9qhLl62WX2ApA==
+X-Google-Smtp-Source: ADFU+vv0sKAwmtjvye94x9YIogv5zw/a9rZvkYsOZEBQWXGc8PUw1JEbwM9HPDBC/WwH/q9h2REFKg==
+X-Received: by 2002:a5d:4b82:: with SMTP id b2mr4303504wrt.102.1583330920810;
+        Wed, 04 Mar 2020 06:08:40 -0800 (PST)
+Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id p17sm36750450wre.89.2020.03.04.06.08.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 06:08:39 -0800 (PST)
+Date:   Wed, 4 Mar 2020 15:08:33 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, jacob.jun.pan@linux.intel.com,
+        christian.koenig@amd.com, yi.l.liu@intel.com,
+        zhangfei.gao@linaro.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH v4 23/26] iommu/arm-smmu-v3: Add stall support for
+ platform devices
+Message-ID: <20200304140833.GB646000@myrica>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+ <20200224182401.353359-24-jean-philippe@linaro.org>
+ <20200227181726.00007c9a@Huawei.com>
 MIME-Version: 1.0
-References: <20200303134351.22270-1-geert+renesas@glider.be> <20200303134351.22270-2-geert+renesas@glider.be>
-In-Reply-To: <20200303134351.22270-2-geert+renesas@glider.be>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 4 Mar 2020 08:03:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL7x-XevypLxUUksOCyezbn8=NpL9rMfo0rCQyYzrUxmw@mail.gmail.com>
-Message-ID: <CAL_JsqL7x-XevypLxUUksOCyezbn8=NpL9rMfo0rCQyYzrUxmw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: serial: Convert generic bindings to json-schema
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227181726.00007c9a@Huawei.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 7:43 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> Convert the generic serial interface Device Tree binding documentation
-> to json-schema.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  .../devicetree/bindings/serial/serial.txt     | 56 -----------
->  .../devicetree/bindings/serial/serial.yaml    | 95 +++++++++++++++++++
->  2 files changed, 95 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/serial/serial.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/serial.yaml
+On Thu, Feb 27, 2020 at 06:17:26PM +0000, Jonathan Cameron wrote:
+> On Mon, 24 Feb 2020 19:23:58 +0100
+> Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+> 
+> > From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> > 
+> > The SMMU provides a Stall model for handling page faults in platform
+> > devices. It is similar to PCI PRI, but doesn't require devices to have
+> > their own translation cache. Instead, faulting transactions are parked and
+> > the OS is given a chance to fix the page tables and retry the transaction.
+> > 
+> > Enable stall for devices that support it (opt-in by firmware). When an
+> > event corresponds to a translation error, call the IOMMU fault handler. If
+> > the fault is recoverable, it will call us back to terminate or continue
+> > the stall.
+> > 
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> One question inline.
+> 
+> Thanks,
+> 
+> > ---
+> >  drivers/iommu/arm-smmu-v3.c | 271 ++++++++++++++++++++++++++++++++++--
+> >  drivers/iommu/of_iommu.c    |   5 +-
+> >  include/linux/iommu.h       |   2 +
+> >  3 files changed, 269 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> > index 6a5987cce03f..da5dda5ba26a 100644
+> > --- a/drivers/iommu/arm-smmu-v3.c
+> > +++ b/drivers/iommu/arm-smmu-v3.c
+> > @@ -374,6 +374,13 @@
+> 
+> 
+> > +/*
+> > + * arm_smmu_flush_evtq - wait until all events currently in the queue have been
+> > + *                       consumed.
+> > + *
+> > + * Wait until the evtq thread finished a batch, or until the queue is empty.
+> > + * Note that we don't handle overflows on q->batch. If it occurs, just wait for
+> > + * the queue to be empty.
+> > + */
+> > +static int arm_smmu_flush_evtq(void *cookie, struct device *dev, int pasid)
+> > +{
+> > +	int ret;
+> > +	u64 batch;
+> > +	struct arm_smmu_device *smmu = cookie;
+> > +	struct arm_smmu_queue *q = &smmu->evtq.q;
+> > +
+> > +	spin_lock(&q->wq.lock);
+> > +	if (queue_sync_prod_in(q) == -EOVERFLOW)
+> > +		dev_err(smmu->dev, "evtq overflow detected -- requests lost\n");
+> > +
+> > +	batch = q->batch;
+> 
+> So this is trying to be sure we have advanced the queue 2 spots?
 
-> diff --git a/Documentation/devicetree/bindings/serial/serial.yaml b/Documentation/devicetree/bindings/serial/serial.yaml
-> new file mode 100644
-> index 0000000000000000..d408335319f00215
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/serial.yaml
-> @@ -0,0 +1,95 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/serial/serial.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Serial Interface Generic DT Bindings
-> +
-> +maintainers:
-> +  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> +
-> +description:
-> +  This document lists a set of generic properties for describing UARTs in a
-> +  device tree.  Whether these properties apply to a particular device depends
-> +  on the DT bindings for the actual device.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^serial@[0-9a-f]+$"
+So we call arm_smmu_flush_evtq() before decommissioning a PASID, to make
+sure that there aren't any pending event for this PASID languishing in the
+fault queues.
 
-',' is also possible in unit-address. Probably shouldn't be defining
-unit-address format at all here, so:
+The main test is queue_empty(). If that succeeds then we know that there
+aren't any pending event (and the PASID is safe to reuse). But if new
+events are constantly added to the queue then we wait for the evtq thread
+to handle a full batch, where one batch corresponds to the queue size. For
+that we take the batch number when entering flush(), and wait for the evtq
+thread to increment it twice.
 
-"^serial(@.*)?$"
+> Is there a potential race here?  q->batch could have updated before we take
+> a local copy.
 
-> +
-> +  cts-gpios:
-> +    description:
-> +      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-> +      the UART's CTS line.
+Yes we're just checking on the progress of the evtq thread. All accesses
+to batch are made while holding the wq lock.
 
-These all need a 'maxItems: 1'.
+Flush is a rare event so the lock isn't contended, but the wake_up() that
+this patch introduces in arm_smmu_evtq_thread() does add some overhead
+(0.85% of arm_smmu_evtq_thread(), according to perf). It would be nice to
+get rid of it but I haven't found anything clever yet.
 
-> +
-> +  dcd-gpios:
-> +    description:
-> +      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-> +      the UART's DCD line.
-> +
-> +  dsr-gpios:
-> +    description:
-> +      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-> +      the UART's DSR line.
-> +
-> +  dtr-gpios:
-> +    description:
-> +      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-> +      the UART's DTR line.
-> +
-> +  rng-gpios:
-> +    description:
-> +      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-> +      the UART's RNG line.
-> +
-> +  rts-gpios:
-> +    description:
-> +      Must contain a GPIO specifier, referring to the GPIO pin to be used as
-> +      the UART's RTS line.
-> +
-> +  uart-has-rtscts:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      The presence of this property indicates that the UART has dedicated lines
-> +      for RTS/CTS hardware flow control, and that they are available for use
-> +      (wired and enabled by pinmux configuration).  This depends on both the
-> +      UART hardware and the board wiring.
-> +      Note that this property is mutually-exclusive with "cts-gpios" and
-> +      "rts-gpios" above, unless support is provided to switch between modes
-> +      dynamically.
+Thanks,
+Jean
 
-This can be expressed as:
-
-oneOf:
-  - {} # None of the properties present
-  - required:
-      - uart-has-rtscts
-  - anyOf:
-      - required:
-          - cts-gpios
-      - required:
-          - rts-gpios
-
-Or probably more clearly:
-
-if:
-  required:
-    - uart-has-rtscts
-then:
-  properties:
-    rts-gpios: false
-    cts-gpios: false
-
-(Untested)
-
-> +
-> +examples:
-
-Personally, I'd just drop examples from schemas that aren't complete.
-
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    serial@48022000 {
-> +            compatible = "ti,am3352-uart", "ti,omap3-uart";
-> +            ti,hwmods = "uart2";
-> +            clock-frequency = <48000000>;
-> +            reg = <0x48022000 0x2000>;
-> +            interrupts = <73>;
-> +            dmas = <&edma 28 0>, <&edma 29 0>;
-> +            dma-names = "tx", "rx";
-> +            dtr-gpios = <&gpio2 22 GPIO_ACTIVE_LOW>;
-> +            dsr-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
-> +            dcd-gpios = <&gpio2 24 GPIO_ACTIVE_LOW>;
-> +            rng-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;
-> +            cts-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-> +            rts-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-> +    };
-> +
-> +  - |
-> +    #include <dt-bindings/clock/sh73a0-clock.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    serial@e6c80000 {
-> +            compatible = "renesas,scifa-sh73a0", "renesas,scifa";
-> +            reg = <0xe6c80000 0x100>;
-> +            interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-> +            clocks = <&mstp2_clks SH73A0_CLK_SCIFA4>;
-> +            clock-names = "fck";
-> +            power-domains = <&pd_a3sp>;
-> +            uart-has-rtscts;
-> +    };
-> --
-> 2.17.1
->
+> 
+> > +	ret = wait_event_interruptible_locked(q->wq, queue_empty(&q->llq) ||
+> > +					      q->batch >= batch + 2);
+> > +	spin_unlock(&q->wq.lock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> ...
+> 
