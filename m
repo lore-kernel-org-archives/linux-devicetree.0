@@ -2,1236 +2,1131 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FB3C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 22:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE8BC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 23:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09FCA20801
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 22:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848282070E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 23:35:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KLjHdxYz"
+	dkim=pass (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="MqnHC5kA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgCEWs1 (ORCPT
+        id S1726243AbgCEXfm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:48:27 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:45076 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgCEWs1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 17:48:27 -0500
-Received: by mail-yw1-f67.google.com with SMTP id d206so373318ywa.12;
-        Thu, 05 Mar 2020 14:48:25 -0800 (PST)
+        Thu, 5 Mar 2020 18:35:42 -0500
+Received: from mx0b-00010702.pphosted.com ([148.163.158.57]:39896 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726162AbgCEXfl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 18:35:41 -0500
+X-Greylist: delayed 1382 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Mar 2020 18:35:39 EST
+Received: from pps.filterd (m0098779.ppops.net [127.0.0.1])
+        by mx0b-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025NBuEV021517;
+        Thu, 5 Mar 2020 17:12:26 -0600
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2059.outbound.protection.outlook.com [104.47.46.59])
+        by mx0b-00010702.pphosted.com with ESMTP id 2yfpnare03-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Mar 2020 17:12:26 -0600
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y7b2UqHrv7U5fckp8YQfVtYYjd8BLyY6zrLNFh81+8kb/7QRbixjqKiLMdW45iVvrWkZm3Wtf4Pag7VmAVBs9o+XvgPNbcZHkFsRn7bPcVvNE62fbh9dLKB+45CM+gGWnLca5jUcFhz6WnWWcuxVrBB5fCohW/PSU45rhhCNMDKwDEH6tkvqCp+GzQ4oz20m2yzjDDHPPt+d5bqwq2r2sNj9J0DGcnqfgQ/2h9xoEop4WN7srtiztjyODSxqLbeKvvT3g9DrQ6yS8j4NFLlNBOWMF6cl2dWk9X3tZJSrrt0u9hCuUoYmQvmQT31/W8Mnu8g9429lINrOC2Ci4ZAFFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bO8BTFrVsILbEcREt1gxpVPCuiTTDbvDnxOzUwZ0i8g=;
+ b=c7OqrKNL0ewxdaw7yEQ5WX4zgU+BwHzUDoCJwkNnhwAG8GBcx6eciyajmmqF9Bi0NBWh+80jr75PJ9L2bGcOIpwyoRBXtS0Hw+gN9VLJel4sDdVzFQCv8q+BgxLM+BUkBxZqS3EwCV/LCjzsh9+GsdD4fO/L9c1HYt2kfqk8bi7+GkeR5kMuagP+9khiWzDqfb380BE41MUL4FHeOAisbuOGCmDZam3M3IYtgykxk3bZRxLr0foz+Zf/N1WCMQPGRIiwx+aqPO1ns4FLRZB4eThUr1giyiYV7pMhJWbMrwirl8E/gESMndyJqyW4a4n4a3vKGpPpwat1oZ+729Pfng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
+ header.d=ni.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TVOCiGXcdxBhhcVDrQJd8dh1Qat7CLOUHkOiJdrEaAE=;
-        b=KLjHdxYzHle0evPgQJ5UFi0nIL8jeklcGsgSmYDhVD0ylaSRo+X0R4+6BEGerS40Xv
-         Ip3OrUd2Y5uk/qkAUtcHuGg2SeQtJUk4R2TNMj7EAMZ9UfHQC2bd9k7bfvSv3/R/upFb
-         NCQHoGK9F5TUuDriJfUqSW8++0CyWxEh2Sg1xWKcfXC6EVBGmbJ01SJQPUwvzIfj0OiD
-         44FsSMEaUnf9nKpzckDgVn36J7hDEFwqt1HQFRaoTXzFaHYjgRfnYvEGwyXY6g5wTeF9
-         auj5AARrbAooz/wikjhkWnc5K8bEh8OnfJs5lhK7KOaN8t3IDkdcJZ+9H9277u31JNz6
-         YHow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TVOCiGXcdxBhhcVDrQJd8dh1Qat7CLOUHkOiJdrEaAE=;
-        b=fdrHNs97QX+2NvR8IKBWj5lKlJHCObjdBMwrQ/5LMjvPxn8Wy7Rjr+JV/ckA6b8D6B
-         qA/Z6xDoKtNdjh9nrRyHGYNhoJwNJhfUrAemUgrgNCrZK1JopG80D6TXBq4aNouXnsP1
-         nl/bhzqRZWHoe7oVACgid9R8QuvUNFBC2Q2zPTx5f0M4OAsWJ+ALNtQ+hfsYOI86UGpl
-         Afd+UHDTBO4+UrIiAk0Qtt7ciYQgFkzIab/6Xp+BTvhoCHppl4UIdUEOQ19HWSzQdeY5
-         uAy6yctrOWu0wUgequmIi54PNbuycDIvDdKLd8aKnsnM9S/oE7Wt4BEb86z2DJ16tIY9
-         kZaw==
-X-Gm-Message-State: ANhLgQ0HW5Rc7yHV/DqeGsAtfax52HHnerNumfAhdm2jNdrR7qTp4aR3
-        oKVKckrOrmUGzYI0NnzDHxk=
-X-Google-Smtp-Source: ADFU+vs48dx/j7KqePgxJjuQJUUeqBYs4LQcGCFMxDUoJWxEDCLuocBS9Pk/siW/2UMsfOKHt97xHQ==
-X-Received: by 2002:a25:dbc1:: with SMTP id g184mr617217ybf.415.1583448504805;
-        Thu, 05 Mar 2020 14:48:24 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id k8sm12149940ywa.4.2020.03.05.14.48.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Mar 2020 14:48:24 -0800 (PST)
-Subject: Re: [PATCH] dt: Remove booting-without-of.txt
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20200304184525.7643-1-robh@kernel.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <1b7f5ee0-b955-698e-2fe8-be6e775e0f49@gmail.com>
-Date:   Thu, 5 Mar 2020 16:48:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bO8BTFrVsILbEcREt1gxpVPCuiTTDbvDnxOzUwZ0i8g=;
+ b=MqnHC5kAWqYuZiObKb1OxkabZ4osnUlgUZoT3JxA0vrLQveYUC0M9O04yyetPpmvO1ecGLMtnwzcHSx6sEq/CUk86AxVl9RHo3TVyPyA41PStEMa7zGAzoD471crZcHH7E5rcOZHcHTjv2U7rDDEJqrqbIYAKZolK4gXJKOE1vM=
+Received: from DM6PR04MB4553.namprd04.prod.outlook.com (2603:10b6:5:21::29) by
+ DM6PR04MB7034.namprd04.prod.outlook.com (2603:10b6:5:24e::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.14; Thu, 5 Mar 2020 23:12:24 +0000
+Received: from DM6PR04MB4553.namprd04.prod.outlook.com
+ ([fe80::bcf1:ec5e:65f8:8fbb]) by DM6PR04MB4553.namprd04.prod.outlook.com
+ ([fe80::bcf1:ec5e:65f8:8fbb%7]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
+ 23:12:24 +0000
+Date:   Thu, 5 Mar 2020 17:12:23 -0600
+From:   Michael Auchter <michael.auchter@ni.com>
+To:     Ben Levinsky <ben.levinsky@xilinx.com>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org,
+        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jason Wu <j.wu@xilinx.com>,
+        Wendy Liang <wendy.liang@xilinx.com>,
+        Ed Mooring <ed.mooring@xilinx.com>
+Subject: Re: [PATCH 5/5] remoteproc: Add initial zynqmp R5 remoteproc driver
+Message-ID: <20200305231223.GA197334@xaphan.ni.corp.natinst.com>
+References: <1582566751-13118-1-git-send-email-ben.levinsky@xilinx.com>
+ <1582566751-13118-6-git-send-email-ben.levinsky@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582566751-13118-6-git-send-email-ben.levinsky@xilinx.com>
+X-ClientProxiedBy: SN6PR01CA0005.prod.exchangelabs.com (2603:10b6:805:b6::18)
+ To DM6PR04MB4553.namprd04.prod.outlook.com (2603:10b6:5:21::29)
 MIME-Version: 1.0
-In-Reply-To: <20200304184525.7643-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (130.164.62.185) by SN6PR01CA0005.prod.exchangelabs.com (2603:10b6:805:b6::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11 via Frontend Transport; Thu, 5 Mar 2020 23:12:24 +0000
+X-Originating-IP: [130.164.62.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 87154ef7-8332-4806-30b2-08d7c15aaa54
+X-MS-TrafficTypeDiagnostic: DM6PR04MB7034:
+X-Microsoft-Antispam-PRVS: <DM6PR04MB703437DB729DFFD3918342FA87E20@DM6PR04MB7034.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:873;
+X-Forefront-PRVS: 03333C607F
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39850400004)(396003)(346002)(136003)(199004)(189003)(4326008)(5660300002)(54906003)(81156014)(81166006)(6916009)(66556008)(66946007)(66476007)(8676002)(86362001)(2906002)(26005)(16526019)(186003)(478600001)(52116002)(7416002)(956004)(6486002)(6496006)(9686003)(44832011)(30864003)(8936002)(1076003)(33656002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR04MB7034;H:DM6PR04MB4553.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: ni.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ihEsRLf0+xiWNLWr06iEIVYGC9YeEMfhnkFYul4iHvK4Vr1vbAR/mivCTj5buZjqeQ+Qz92PsZOLrEZrSGQUTD6Pt/sLbufNeo1MS1xWCW1YToMv9oR7rswjLM1WuDfl9CZL/Ai5q7nN0KDNBR5cLbVJbLRXO0hjVjc2AvqGeFf4zhBKNFPhyuJPkR0X2ur/1h/L74d3Ile3hsK9r8uZ7e4gBMwTfTIs5b520EBRo+G2K+YJeYSWTGDREH9jYTBdmxfyePQO2epSkP+D/g80AnhpBLZeQ7DWkwoURdY8RL0/+EqulKB9m9COBAWdMogv4GYifZU4vcKQ1vH/dIks0Rb1sdZegX8uk5JQ3yndhNTBBn+NPVOTVSnuh3OKMBNCuE1RezsOP0X4d211C0+Pg5sPHqpjlp+Jimwq4QJA5mRAFk3ssd5aBD0tsBHAZf+2
+X-MS-Exchange-AntiSpam-MessageData: +4yns6Iw7MYPzAMfyoT0Tps0B5EtcXY2lIcuvO9afzNdxEG82DPipn2TkyuZW7l+7WoFrbBv5nRNO5ZNmbPJHkl3Int1Zct1bjJdbJI9ngbmPTMYhab7KRUPEYRHn1vs/o65Eg2rRd+6rNFzvjmFBQ==
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87154ef7-8332-4806-30b2-08d7c15aaa54
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 23:12:24.7884
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ARiIUuh3e1Vz/SdsR3zZjSb4xp2g+e+NAvT3Rg9f+6Y37dvNaLcn1U+PsympWDaIvniLxKcvgM3sgPxnp9ph7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB7034
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-05_08:2020-03-05,2020-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30 mlxlogscore=999
+ impostorscore=0 priorityscore=1501 phishscore=0 malwarescore=0
+ adultscore=0 bulkscore=0 suspectscore=7 spamscore=0 lowpriorityscore=0
+ clxscore=1011 mlxscore=0 classifier=spam adjust=30 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050129
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/4/20 12:45 PM, Rob Herring wrote:
-> Well, not quite removed yet... Mauro is looking at moving this to ReST,
-> but I think it would be better to trim or remove it.
-> 
-> boot-without-of.txt is an ancient document that first outlined
-> Flattened DeviceTree. The DT world has evolved a lot in the 15 years
-> since and boot-without-of.txt is pretty stale. The name of the document
-> itself is confusing if you don't understand the evolution from real
-> 'OpenFirmware'. Much of what booting-without-of.txt contains is now in
-> the DT specification (which evolved out of the ePAPR).
-> 
-> This is a first pass of removing everything that has a DT spec
-> equivalent or is no longer standard practice (e.g. soc<SoCName> for SoC
-> nodes) in order to see what's left. This is what I have:
-> 
-> TODO
-> - Move boot interface details to arch specific docs
-> - Document 'serial-number' property in DT spec
-> - Document the 'hotpluggable' memory property in DT spec
-> - Document the 'sleep' property (PPC only)
-> - Document the 'dma-coherent' property in DT spec
-> - Need the history of node names and 'name' property?
-> - Need how addresses work?
+Hello Ben,
 
-Looks good.  Since this is a first pass, I'm expecting that polishing
-(things like updating section numbers) would happen in subsequent
-patches after more of the content changes are done, so no need
-to do so in this patch.
+I hope to give this a try soon! I've added some comments inline.
 
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-
--Frank
-
+On Mon, Feb 24, 2020 at 09:52:31AM -0800, Ben Levinsky wrote:
+> From: Jason Wu <j.wu@xilinx.com>
 > 
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> R5 is included in Xilinx Zynq UltraScale MPSoC so by adding this
+> remotproc driver, we can boot the R5 sub-system in different
+> configurations.
+> 
+> Signed-off-by: Jason Wu <j.wu@xilinx.com>
+> 
+> Acked-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+> Acked-by: Ben Levinsky <ben.levinsky@xilinx.com>
+> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
+> Signed-off-by: Wendy Liang <wendy.liang@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Ed Mooring <ed.mooring@xilinx.com>
+> Tested-by: Ben Levinsky <ben.levinsky@xilinx.com>
 > ---
->  .../devicetree/booting-without-of.txt         | 1027 +----------------
->  1 file changed, 1 insertion(+), 1026 deletions(-)
+>  drivers/remoteproc/Kconfig                |  10 +
+>  drivers/remoteproc/Makefile               |   1 +
+>  drivers/remoteproc/zynqmp_r5_remoteproc.c | 913 ++++++++++++++++++++++++++++++
+>  3 files changed, 924 insertions(+)
+>  create mode 100644 drivers/remoteproc/zynqmp_r5_remoteproc.c
 > 
-> diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
-> index 4660ccee35a3..97beee828ba4 100644
-> --- a/Documentation/devicetree/booting-without-of.txt
-> +++ b/Documentation/devicetree/booting-without-of.txt
-> @@ -19,44 +19,17 @@ Table of Contents
->      5) Entry point for arch/sh
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index de3862c..be14eba 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -206,6 +206,16 @@ config ST_REMOTEPROC
+>  	  processor framework.
+>  	  This can be either built-in or a loadable module.
 >  
->    II - The DT block format
-> -    1) Header
->      2) Device tree generalities
-> -    3) Device tree "structure" block
-> -    4) Device tree "strings" block
->  
->    III - Required content of the device tree
->      1) Note about cells and address representation
-> -    2) Note about "compatible" properties
-> -    3) Note about "name" properties
-> -    4) Note about node and property names and character set
->      5) Required nodes and properties
->        a) The root node
-> -      b) The /cpus node
-> -      c) The /cpus/* nodes
-> -      d) the /memory node(s)
-> -      e) The /chosen node
-> -      f) the /soc<SOCname> node
-> -
-> -  IV - "dtc", the device tree compiler
-> -
-> -  V - Recommendations for a bootloader
-> -
-> -  VI - System-on-a-chip devices and nodes
-> -    1) Defining child nodes of an SOC
-> -    2) Representing devices without a current OF specification
-> -
-> -  VII - Specifying interrupt information for devices
-> -    1) interrupts property
-> -    2) interrupt-parent property
-> -    3) OpenPIC Interrupt Controllers
-> -    4) ISA Interrupt Controllers
->  
->    VIII - Specifying device power management information (sleep property)
->  
->    IX - Specifying dma bus information
->  
-> -  Appendix A - Sample SOC node for MPC8540
-> -
->  
->  Revision Information
->  ====================
-> @@ -105,19 +78,6 @@ Revision Information
->  			 - Added chapter VI
->  
->  
-> - ToDo:
-> -	- Add some definitions of interrupt tree (simple/complex)
-> -	- Add some definitions for PCI host bridges
-> -	- Add some common address format examples
-> -	- Add definitions for standard properties and "compatible"
-> -	  names for cells that are not already defined by the existing
-> -	  OF spec.
-> -	- Compare FSL SOC use of PCI to standard and make sure no new
-> -	  node definition required.
-> -	- Add more information about node definitions for SOC devices
-> -  	  that currently have no standard, like the FSL CPM.
-> -
-> -
->  I - Introduction
->  ================
->  
-> @@ -333,196 +293,17 @@ II - The DT block format
->  ========================
->  
->  
-> -This chapter defines the actual format of the flattened device-tree
-> -passed to the kernel. The actual content of it and kernel requirements
-> -are described later. You can find example of code manipulating that
-> -format in various places, including arch/powerpc/kernel/prom_init.c
-> -which will generate a flattened device-tree from the Open Firmware
-> -representation, or the fs2dt utility which is part of the kexec tools
-> -which will generate one from a filesystem representation. It is
-> -expected that a bootloader like uboot provides a bit more support,
-> -that will be discussed later as well.
-> -
->  Note: The block has to be in main memory. It has to be accessible in
->  both real mode and virtual mode with no mapping other than main
->  memory. If you are writing a simple flash bootloader, it should copy
->  the block to RAM before passing it to the kernel.
->  
->  
-> -1) Header
-> ----------
-> -
-> -   The kernel is passed the physical address pointing to an area of memory
-> -   that is roughly described in include/linux/of_fdt.h by the structure
-> -   boot_param_header:
-> -
-> -struct boot_param_header {
-> -        u32     magic;                  /* magic word OF_DT_HEADER */
-> -        u32     totalsize;              /* total size of DT block */
-> -        u32     off_dt_struct;          /* offset to structure */
-> -        u32     off_dt_strings;         /* offset to strings */
-> -        u32     off_mem_rsvmap;         /* offset to memory reserve map
-> -                                           */
-> -        u32     version;                /* format version */
-> -        u32     last_comp_version;      /* last compatible version */
-> -
-> -        /* version 2 fields below */
-> -        u32     boot_cpuid_phys;        /* Which physical CPU id we're
-> -                                           booting on */
-> -        /* version 3 fields below */
-> -        u32     size_dt_strings;        /* size of the strings block */
-> -
-> -        /* version 17 fields below */
-> -        u32	size_dt_struct;		/* size of the DT structure block */
-> -};
-> -
-> -   Along with the constants:
-> -
-> -/* Definitions used by the flattened device tree */
-> -#define OF_DT_HEADER            0xd00dfeed      /* 4: version,
-> -						   4: total size */
-> -#define OF_DT_BEGIN_NODE        0x1             /* Start node: full name
-> -						   */
-> -#define OF_DT_END_NODE          0x2             /* End node */
-> -#define OF_DT_PROP              0x3             /* Property: name off,
-> -                                                   size, content */
-> -#define OF_DT_END               0x9
-> -
-> -   All values in this header are in big endian format, the various
-> -   fields in this header are defined more precisely below. All
-> -   "offset" values are in bytes from the start of the header; that is
-> -   from the physical base address of the device tree block.
-> -
-> -   - magic
-> -
-> -     This is a magic value that "marks" the beginning of the
-> -     device-tree block header. It contains the value 0xd00dfeed and is
-> -     defined by the constant OF_DT_HEADER
-> -
-> -   - totalsize
-> -
-> -     This is the total size of the DT block including the header. The
-> -     "DT" block should enclose all data structures defined in this
-> -     chapter (who are pointed to by offsets in this header). That is,
-> -     the device-tree structure, strings, and the memory reserve map.
-> -
-> -   - off_dt_struct
-> -
-> -     This is an offset from the beginning of the header to the start
-> -     of the "structure" part the device tree. (see 2) device tree)
-> -
-> -   - off_dt_strings
-> -
-> -     This is an offset from the beginning of the header to the start
-> -     of the "strings" part of the device-tree
-> -
-> -   - off_mem_rsvmap
-> -
-> -     This is an offset from the beginning of the header to the start
-> -     of the reserved memory map. This map is a list of pairs of 64-
-> -     bit integers. Each pair is a physical address and a size. The
-> -     list is terminated by an entry of size 0. This map provides the
-> -     kernel with a list of physical memory areas that are "reserved"
-> -     and thus not to be used for memory allocations, especially during
-> -     early initialization. The kernel needs to allocate memory during
-> -     boot for things like un-flattening the device-tree, allocating an
-> -     MMU hash table, etc... Those allocations must be done in such a
-> -     way to avoid overriding critical things like, on Open Firmware
-> -     capable machines, the RTAS instance, or on some pSeries, the TCE
-> -     tables used for the iommu. Typically, the reserve map should
-> -     contain _at least_ this DT block itself (header,total_size). If
-> -     you are passing an initrd to the kernel, you should reserve it as
-> -     well. You do not need to reserve the kernel image itself. The map
-> -     should be 64-bit aligned.
-> -
-> -   - version
-> -
-> -     This is the version of this structure. Version 1 stops
-> -     here. Version 2 adds an additional field boot_cpuid_phys.
-> -     Version 3 adds the size of the strings block, allowing the kernel
-> -     to reallocate it easily at boot and free up the unused flattened
-> -     structure after expansion. Version 16 introduces a new more
-> -     "compact" format for the tree itself that is however not backward
-> -     compatible. Version 17 adds an additional field, size_dt_struct,
-> -     allowing it to be reallocated or moved more easily (this is
-> -     particularly useful for bootloaders which need to make
-> -     adjustments to a device tree based on probed information). You
-> -     should always generate a structure of the highest version defined
-> -     at the time of your implementation. Currently that is version 17,
-> -     unless you explicitly aim at being backward compatible.
-> -
-> -   - last_comp_version
-> -
-> -     Last compatible version. This indicates down to what version of
-> -     the DT block you are backward compatible. For example, version 2
-> -     is backward compatible with version 1 (that is, a kernel build
-> -     for version 1 will be able to boot with a version 2 format). You
-> -     should put a 1 in this field if you generate a device tree of
-> -     version 1 to 3, or 16 if you generate a tree of version 16 or 17
-> -     using the new unit name format.
-> -
-> -   - boot_cpuid_phys
-> -
-> -     This field only exist on version 2 headers. It indicate which
-> -     physical CPU ID is calling the kernel entry point. This is used,
-> -     among others, by kexec. If you are on an SMP system, this value
-> -     should match the content of the "reg" property of the CPU node in
-> -     the device-tree corresponding to the CPU calling the kernel entry
-> -     point (see further chapters for more information on the required
-> -     device-tree contents)
-> -
-> -   - size_dt_strings
-> -
-> -     This field only exists on version 3 and later headers.  It
-> -     gives the size of the "strings" section of the device tree (which
-> -     starts at the offset given by off_dt_strings).
-> -
-> -   - size_dt_struct
-> -
-> -     This field only exists on version 17 and later headers.  It gives
-> -     the size of the "structure" section of the device tree (which
-> -     starts at the offset given by off_dt_struct).
-> -
-> -   So the typical layout of a DT block (though the various parts don't
-> -   need to be in that order) looks like this (addresses go from top to
-> -   bottom):
-> -
-> -
-> -             ------------------------------
-> -     base -> |  struct boot_param_header  |
-> -             ------------------------------
-> -             |      (alignment gap) (*)   |
-> -             ------------------------------
-> -             |      memory reserve map    |
-> -             ------------------------------
-> -             |      (alignment gap)       |
-> -             ------------------------------
-> -             |                            |
-> -             |    device-tree structure   |
-> -             |                            |
-> -             ------------------------------
-> -             |      (alignment gap)       |
-> -             ------------------------------
-> -             |                            |
-> -             |     device-tree strings    |
-> -             |                            |
-> -      -----> ------------------------------
-> -      |
-> -      |
-> -      --- (base + totalsize)
-> -
-> -  (*) The alignment gaps are not necessarily present; their presence
-> -      and size are dependent on the various alignment requirements of
-> -      the individual data blocks.
->  
->  
->  2) Device tree generalities
->  ---------------------------
->  
-> -This device-tree itself is separated in two different blocks, a
-> -structure block and a strings block. Both need to be aligned to a 4
-> -byte boundary.
-> -
->  First, let's quickly describe the device-tree concept before detailing
->  the storage format. This chapter does _not_ describe the detail of the
->  required types of nodes & properties for the kernel, this is done
-> @@ -574,128 +355,6 @@ is) is also required to have a "compatible" property indicating the
->  specific hardware and an optional list of devices it is fully
->  backwards compatible with.
->  
-> -Finally, every node that can be referenced from a property in another
-> -node is required to have either a "phandle" or a "linux,phandle"
-> -property. Real Open Firmware implementations provide a unique
-> -"phandle" value for every node that the "prom_init()" trampoline code
-> -turns into "linux,phandle" properties. However, this is made optional
-> -if the flattened device tree is used directly. An example of a node
-> -referencing another node via "phandle" is when laying out the
-> -interrupt tree which will be described in a further version of this
-> -document.
-> -
-> -The "phandle" property is a 32-bit value that uniquely
-> -identifies a node. You are free to use whatever values or system of
-> -values, internal pointers, or whatever to generate these, the only
-> -requirement is that every node for which you provide that property has
-> -a unique value for it.
-> -
-> -Here is an example of a simple device-tree. In this example, an "o"
-> -designates a node followed by the node unit name. Properties are
-> -presented with their name followed by their content. "content"
-> -represents an ASCII string (zero terminated) value, while <content>
-> -represents a 32-bit value, specified in decimal or hexadecimal (the
-> -latter prefixed 0x). The various nodes in this example will be
-> -discussed in a later chapter. At this point, it is only meant to give
-> -you a idea of what a device-tree looks like. I have purposefully kept
-> -the "name" and "linux,phandle" properties which aren't necessary in
-> -order to give you a better idea of what the tree looks like in
-> -practice.
-> -
-> -  / o device-tree
-> -      |- name = "device-tree"
-> -      |- model = "MyBoardName"
-> -      |- compatible = "MyBoardFamilyName"
-> -      |- #address-cells = <2>
-> -      |- #size-cells = <2>
-> -      |- linux,phandle = <0>
-> -      |
-> -      o cpus
-> -      | | - name = "cpus"
-> -      | | - linux,phandle = <1>
-> -      | | - #address-cells = <1>
-> -      | | - #size-cells = <0>
-> -      | |
-> -      | o PowerPC,970@0
-> -      |   |- name = "PowerPC,970"
-> -      |   |- device_type = "cpu"
-> -      |   |- reg = <0>
-> -      |   |- clock-frequency = <0x5f5e1000>
-> -      |   |- 64-bit
-> -      |   |- linux,phandle = <2>
-> -      |
-> -      o memory@0
-> -      | |- name = "memory"
-> -      | |- device_type = "memory"
-> -      | |- reg = <0x00000000 0x00000000 0x00000000 0x20000000>
-> -      | |- linux,phandle = <3>
-> -      |
-> -      o chosen
-> -        |- name = "chosen"
-> -        |- bootargs = "root=/dev/sda2"
-> -        |- linux,phandle = <4>
-> -
-> -This tree is almost a minimal tree. It pretty much contains the
-> -minimal set of required nodes and properties to boot a linux kernel;
-> -that is, some basic model information at the root, the CPUs, and the
-> -physical memory layout.  It also includes misc information passed
-> -through /chosen, like in this example, the platform type (mandatory)
-> -and the kernel command line arguments (optional).
-> -
-> -The /cpus/PowerPC,970@0/64-bit property is an example of a
-> -property without a value. All other properties have a value. The
-> -significance of the #address-cells and #size-cells properties will be
-> -explained in chapter IV which defines precisely the required nodes and
-> -properties and their content.
-> -
-> -
-> -3) Device tree "structure" block
-> -
-> -The structure of the device tree is a linearized tree structure. The
-> -"OF_DT_BEGIN_NODE" token starts a new node, and the "OF_DT_END_NODE"
-> -ends that node definition. Child nodes are simply defined before
-> -"OF_DT_END_NODE" (that is nodes within the node). A 'token' is a 32
-> -bit value. The tree has to be "finished" with a OF_DT_END token
-> -
-> -Here's the basic structure of a single node:
-> -
-> -     * token OF_DT_BEGIN_NODE (that is 0x00000001)
-> -     * for version 1 to 3, this is the node full path as a zero
-> -       terminated string, starting with "/". For version 16 and later,
-> -       this is the node unit name only (or an empty string for the
-> -       root node)
-> -     * [align gap to next 4 bytes boundary]
-> -     * for each property:
-> -        * token OF_DT_PROP (that is 0x00000003)
-> -        * 32-bit value of property value size in bytes (or 0 if no
-> -          value)
-> -        * 32-bit value of offset in string block of property name
-> -        * property value data if any
-> -        * [align gap to next 4 bytes boundary]
-> -     * [child nodes if any]
-> -     * token OF_DT_END_NODE (that is 0x00000002)
-> -
-> -So the node content can be summarized as a start token, a full path,
-> -a list of properties, a list of child nodes, and an end token. Every
-> -child node is a full node structure itself as defined above.
-> -
-> -NOTE: The above definition requires that all property definitions for
-> -a particular node MUST precede any subnode definitions for that node.
-> -Although the structure would not be ambiguous if properties and
-> -subnodes were intermingled, the kernel parser requires that the
-> -properties come first (up until at least 2.6.22).  Any tools
-> -manipulating a flattened tree must take care to preserve this
-> -constraint.
-> -
-> -4) Device tree "strings" block
-> -
-> -In order to save space, property names, which are generally redundant,
-> -are stored separately in the "strings" block. This block is simply the
-> -whole bunch of zero terminated strings for all property names
-> -concatenated together. The device-tree property definitions in the
-> -structure block will contain offset values from the beginning of the
-> -strings block.
-> -
->  
->  III - Required content of the device tree
->  =========================================
-> @@ -792,568 +451,14 @@ registers are visible on the parent bus using an identity mapping
->  translation.  In other words, the parent bus address space is the same
->  as the child bus address space.
->  
-> -2) Note about "compatible" properties
-> --------------------------------------
-> -
-> -These properties are optional, but recommended in devices and the root
-> -node. The format of a "compatible" property is a list of concatenated
-> -zero terminated strings. They allow a device to express its
-> -compatibility with a family of similar devices, in some cases,
-> -allowing a single driver to match against several devices regardless
-> -of their actual names.
-> -
-> -3) Note about "name" properties
-> --------------------------------
-> -
-> -While earlier users of Open Firmware like OldWorld macintoshes tended
-> -to use the actual device name for the "name" property, it's nowadays
-> -considered a good practice to use a name that is closer to the device
-> -class (often equal to device_type). For example, nowadays, Ethernet
-> -controllers are named "ethernet", an additional "model" property
-> -defining precisely the chip type/model, and "compatible" property
-> -defining the family in case a single driver can driver more than one
-> -of these chips. However, the kernel doesn't generally put any
-> -restriction on the "name" property; it is simply considered good
-> -practice to follow the standard and its evolutions as closely as
-> -possible.
-> -
-> -Note also that the new format version 16 makes the "name" property
-> -optional. If it's absent for a node, then the node's unit name is then
-> -used to reconstruct the name. That is, the part of the unit name
-> -before the "@" sign is used (or the entire unit name if no "@" sign
-> -is present).
-> -
-> -4) Note about node and property names and character set
-> --------------------------------------------------------
-> -
-> -While Open Firmware provides more flexible usage of 8859-1, this
-> -specification enforces more strict rules. Nodes and properties should
-> -be comprised only of ASCII characters 'a' to 'z', '0' to
-> -'9', ',', '.', '_', '+', '#', '?', and '-'. Node names additionally
-> -allow uppercase characters 'A' to 'Z' (property names should be
-> -lowercase. The fact that vendors like Apple don't respect this rule is
-> -irrelevant here). Additionally, node and property names should always
-> -begin with a character in the range 'a' to 'z' (or 'A' to 'Z' for node
-> -names).
-> -
-> -The maximum number of characters for both nodes and property names
-> -is 31. In the case of node names, this is only the leftmost part of
-> -a unit name (the pure "name" property), it doesn't include the unit
-> -address which can extend beyond that limit.
-> -
->  
->  5) Required nodes and properties
->  --------------------------------
-> -  These are all that are currently required. However, it is strongly
-> -  recommended that you expose PCI host bridges as documented in the
-> -  PCI binding to Open Firmware, and your interrupt tree as documented
-> -  in OF interrupt tree specification.
-> -
-> -  a) The root node
-> -
-> -  The root node requires some properties to be present:
-> -
-> -    - model : this is your board name/model
-> -    - #address-cells : address representation for "root" devices
-> -    - #size-cells: the size representation for "root" devices
-> -    - compatible : the board "family" generally finds its way here,
-> -      for example, if you have 2 board models with a similar layout,
-> -      that typically get driven by the same platform code in the
-> -      kernel, you would specify the exact board model in the
-> -      compatible property followed by an entry that represents the SoC
-> -      model.
-> -
-> -  The root node is also generally where you add additional properties
-> -  specific to your board like the serial number if any, that sort of
-> -  thing. It is recommended that if you add any "custom" property whose
-> -  name may clash with standard defined ones, you prefix them with your
-> -  vendor name and a comma.
->  
->    Additional properties for the root node:
->  
->      - serial-number : a string representing the device's serial number
->  
-> -  b) The /cpus node
-> -
-> -  This node is the parent of all individual CPU nodes. It doesn't
-> -  have any specific requirements, though it's generally good practice
-> -  to have at least:
-> -
-> -               #address-cells = <00000001>
-> -               #size-cells    = <00000000>
-> -
-> -  This defines that the "address" for a CPU is a single cell, and has
-> -  no meaningful size. This is not necessary but the kernel will assume
-> -  that format when reading the "reg" properties of a CPU node, see
-> -  below
-> -
-> -  c) The /cpus/* nodes
-> -
-> -  So under /cpus, you are supposed to create a node for every CPU on
-> -  the machine. There is no specific restriction on the name of the
-> -  CPU, though it's common to call it <architecture>,<core>. For
-> -  example, Apple uses PowerPC,G5 while IBM uses PowerPC,970FX.
-> -  However, the Generic Names convention suggests that it would be
-> -  better to simply use 'cpu' for each cpu node and use the compatible
-> -  property to identify the specific cpu core.
-> -
-> -  Required properties:
-> -
-> -    - device_type : has to be "cpu"
-> -    - reg : This is the physical CPU number, it's a single 32-bit cell
-> -      and is also used as-is as the unit number for constructing the
-> -      unit name in the full path. For example, with 2 CPUs, you would
-> -      have the full path:
-> -        /cpus/PowerPC,970FX@0
-> -        /cpus/PowerPC,970FX@1
-> -      (unit addresses do not require leading zeroes)
-> -    - d-cache-block-size : one cell, L1 data cache block size in bytes (*)
-> -    - i-cache-block-size : one cell, L1 instruction cache block size in
-> -      bytes
-> -    - d-cache-size : one cell, size of L1 data cache in bytes
-> -    - i-cache-size : one cell, size of L1 instruction cache in bytes
-> -
-> -(*) The cache "block" size is the size on which the cache management
-> -instructions operate. Historically, this document used the cache
-> -"line" size here which is incorrect. The kernel will prefer the cache
-> -block size and will fallback to cache line size for backward
-> -compatibility.
-> -
-> -  Recommended properties:
-> -
-> -    - timebase-frequency : a cell indicating the frequency of the
-> -      timebase in Hz. This is not directly used by the generic code,
-> -      but you are welcome to copy/paste the pSeries code for setting
-> -      the kernel timebase/decrementer calibration based on this
-> -      value.
-> -    - clock-frequency : a cell indicating the CPU core clock frequency
-> -      in Hz. A new property will be defined for 64-bit values, but if
-> -      your frequency is < 4Ghz, one cell is enough. Here as well as
-> -      for the above, the common code doesn't use that property, but
-> -      you are welcome to re-use the pSeries or Maple one. A future
-> -      kernel version might provide a common function for this.
-> -    - d-cache-line-size : one cell, L1 data cache line size in bytes
-> -      if different from the block size
-> -    - i-cache-line-size : one cell, L1 instruction cache line size in
-> -      bytes if different from the block size
-> -
-> -  You are welcome to add any property you find relevant to your board,
-> -  like some information about the mechanism used to soft-reset the
-> -  CPUs. For example, Apple puts the GPIO number for CPU soft reset
-> -  lines in there as a "soft-reset" property since they start secondary
-> -  CPUs by soft-resetting them.
-> -
-> -
-> -  d) the /memory node(s)
-> -
-> -  To define the physical memory layout of your board, you should
-> -  create one or more memory node(s). You can either create a single
-> -  node with all memory ranges in its reg property, or you can create
-> -  several nodes, as you wish. The unit address (@ part) used for the
-> -  full path is the address of the first range of memory defined by a
-> -  given node. If you use a single memory node, this will typically be
-> -  @0.
-> -
-> -  Required properties:
-> -
-> -    - device_type : has to be "memory"
-> -    - reg : This property contains all the physical memory ranges of
-> -      your board. It's a list of addresses/sizes concatenated
-> -      together, with the number of cells of each defined by the
-> -      #address-cells and #size-cells of the root node. For example,
-> -      with both of these properties being 2 like in the example given
-> -      earlier, a 970 based machine with 6Gb of RAM could typically
-> -      have a "reg" property here that looks like:
-> -
-> -      00000000 00000000 00000000 80000000
-> -      00000001 00000000 00000001 00000000
-> -
-> -      That is a range starting at 0 of 0x80000000 bytes and a range
-> -      starting at 0x100000000 and of 0x100000000 bytes. You can see
-> -      that there is no memory covering the IO hole between 2Gb and
-> -      4Gb. Some vendors prefer splitting those ranges into smaller
-> -      segments, but the kernel doesn't care.
-> -
-> -  Additional properties:
-> -
-> -    - hotpluggable : The presence of this property provides an explicit
-> -      hint to the operating system that this memory may potentially be
-> -      removed later. The kernel can take this into consideration when
-> -      doing nonmovable allocations and when laying out memory zones.
-> -
-> -  e) The /chosen node
-> -
-> -  This node is a bit "special". Normally, that's where Open Firmware
-> -  puts some variable environment information, like the arguments, or
-> -  the default input/output devices.
-> -
-> -  This specification makes a few of these mandatory, but also defines
-> -  some linux-specific properties that would be normally constructed by
-> -  the prom_init() trampoline when booting with an OF client interface,
-> -  but that you have to provide yourself when using the flattened format.
-> -
-> -  Recommended properties:
-> -
-> -    - bootargs : This zero-terminated string is passed as the kernel
-> -      command line
-> -    - linux,stdout-path : This is the full path to your standard
-> -      console device if any. Typically, if you have serial devices on
-> -      your board, you may want to put the full path to the one set as
-> -      the default console in the firmware here, for the kernel to pick
-> -      it up as its own default console.
-> -
-> -  Note that u-boot creates and fills in the chosen node for platforms
-> -  that use it.
-> -
-> -  (Note: a practice that is now obsolete was to include a property
-> -  under /chosen called interrupt-controller which had a phandle value
-> -  that pointed to the main interrupt controller)
-> -
-> -  f) the /soc<SOCname> node
-> -
-> -  This node is used to represent a system-on-a-chip (SoC) and must be
-> -  present if the processor is a SoC. The top-level soc node contains
-> -  information that is global to all devices on the SoC. The node name
-> -  should contain a unit address for the SoC, which is the base address
-> -  of the memory-mapped register set for the SoC. The name of an SoC
-> -  node should start with "soc", and the remainder of the name should
-> -  represent the part number for the soc.  For example, the MPC8540's
-> -  soc node would be called "soc8540".
-> -
-> -  Required properties:
-> -
-> -    - ranges : Should be defined as specified in 1) to describe the
-> -      translation of SoC addresses for memory mapped SoC registers.
-> -    - bus-frequency: Contains the bus frequency for the SoC node.
-> -      Typically, the value of this field is filled in by the boot
-> -      loader.
-> -    - compatible : Exact model of the SoC
-> -
-> -
-> -  Recommended properties:
-> -
-> -    - reg : This property defines the address and size of the
-> -      memory-mapped registers that are used for the SOC node itself.
-> -      It does not include the child device registers - these will be
-> -      defined inside each child node.  The address specified in the
-> -      "reg" property should match the unit address of the SOC node.
-> -    - #address-cells : Address representation for "soc" devices.  The
-> -      format of this field may vary depending on whether or not the
-> -      device registers are memory mapped.  For memory mapped
-> -      registers, this field represents the number of cells needed to
-> -      represent the address of the registers.  For SOCs that do not
-> -      use MMIO, a special address format should be defined that
-> -      contains enough cells to represent the required information.
-> -      See 1) above for more details on defining #address-cells.
-> -    - #size-cells : Size representation for "soc" devices
-> -    - #interrupt-cells : Defines the width of cells used to represent
-> -       interrupts.  Typically this value is <2>, which includes a
-> -       32-bit number that represents the interrupt number, and a
-> -       32-bit number that represents the interrupt sense and level.
-> -       This field is only needed if the SOC contains an interrupt
-> -       controller.
-> -
-> -  The SOC node may contain child nodes for each SOC device that the
-> -  platform uses.  Nodes should not be created for devices which exist
-> -  on the SOC but are not used by a particular platform. See chapter VI
-> -  for more information on how to specify devices that are part of a SOC.
-> -
-> -  Example SOC node for the MPC8540:
-> -
-> -	soc8540@e0000000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		#interrupt-cells = <2>;
-> -		device_type = "soc";
-> -		ranges = <0x00000000 0xe0000000 0x00100000>
-> -		reg = <0xe0000000 0x00003000>;
-> -		bus-frequency = <0>;
-> -	}
-> -
-> -
-> -
-> -IV - "dtc", the device tree compiler
-> -====================================
-> -
-> -
-> -dtc source code can be found at
-> -<http://git.jdl.com/gitweb/?p=dtc.git>
-> -
-> -WARNING: This version is still in early development stage; the
-> -resulting device-tree "blobs" have not yet been validated with the
-> -kernel. The current generated block lacks a useful reserve map (it will
-> -be fixed to generate an empty one, it's up to the bootloader to fill
-> -it up) among others. The error handling needs work, bugs are lurking,
-> -etc...
-> -
-> -dtc basically takes a device-tree in a given format and outputs a
-> -device-tree in another format. The currently supported formats are:
-> -
-> -  Input formats:
-> -  -------------
-> -
-> -     - "dtb": "blob" format, that is a flattened device-tree block
-> -       with
-> -        header all in a binary blob.
-> -     - "dts": "source" format. This is a text file containing a
-> -       "source" for a device-tree. The format is defined later in this
-> -        chapter.
-> -     - "fs" format. This is a representation equivalent to the
-> -        output of /proc/device-tree, that is nodes are directories and
-> -	properties are files
-> -
-> - Output formats:
-> - ---------------
-> -
-> -     - "dtb": "blob" format
-> -     - "dts": "source" format
-> -     - "asm": assembly language file. This is a file that can be
-> -       sourced by gas to generate a device-tree "blob". That file can
-> -       then simply be added to your Makefile. Additionally, the
-> -       assembly file exports some symbols that can be used.
-> -
-> -
-> -The syntax of the dtc tool is
-> -
-> -    dtc [-I <input-format>] [-O <output-format>]
-> -        [-o output-filename] [-V output_version] input_filename
-> -
-> -
-> -The "output_version" defines what version of the "blob" format will be
-> -generated. Supported versions are 1,2,3 and 16. The default is
-> -currently version 3 but that may change in the future to version 16.
-> -
-> -Additionally, dtc performs various sanity checks on the tree, like the
-> -uniqueness of linux, phandle properties, validity of strings, etc...
-> -
-> -The format of the .dts "source" file is "C" like, supports C and C++
-> -style comments.
-> -
-> -/ {
-> -}
-> -
-> -The above is the "device-tree" definition. It's the only statement
-> -supported currently at the toplevel.
-> -
-> -/ {
-> -  property1 = "string_value";	/* define a property containing a 0
-> -                                 * terminated string
-> -				 */
-> -
-> -  property2 = <0x1234abcd>;	/* define a property containing a
-> -                                 * numerical 32-bit value (hexadecimal)
-> -				 */
-> -
-> -  property3 = <0x12345678 0x12345678 0xdeadbeef>;
-> -                                /* define a property containing 3
-> -                                 * numerical 32-bit values (cells) in
-> -                                 * hexadecimal
-> -				 */
-> -  property4 = [0x0a 0x0b 0x0c 0x0d 0xde 0xea 0xad 0xbe 0xef];
-> -                                /* define a property whose content is
-> -                                 * an arbitrary array of bytes
-> -                                 */
-> -
-> -  childnode@address {	/* define a child node named "childnode"
-> -                                 * whose unit name is "childnode at
-> -				 * address"
-> -                                 */
-> -
-> -    childprop = "hello\n";      /* define a property "childprop" of
-> -                                 * childnode (in this case, a string)
-> -                                 */
-> -  };
-> -};
-> -
-> -Nodes can contain other nodes etc... thus defining the hierarchical
-> -structure of the tree.
-> -
-> -Strings support common escape sequences from C: "\n", "\t", "\r",
-> -"\(octal value)", "\x(hex value)".
-> -
-> -It is also suggested that you pipe your source file through cpp (gcc
-> -preprocessor) so you can use #include's, #define for constants, etc...
-> -
-> -Finally, various options are planned but not yet implemented, like
-> -automatic generation of phandles, labels (exported to the asm file so
-> -you can point to a property content and change it easily from whatever
-> -you link the device-tree with), label or path instead of numeric value
-> -in some cells to "point" to a node (replaced by a phandle at compile
-> -time), export of reserve map address to the asm file, ability to
-> -specify reserve map content at compile time, etc...
-> -
-> -We may provide a .h include file with common definitions of that
-> -proves useful for some properties (like building PCI properties or
-> -interrupt maps) though it may be better to add a notion of struct
-> -definitions to the compiler...
-> -
-> -
-> -V - Recommendations for a bootloader
-> -====================================
-> -
-> -
-> -Here are some various ideas/recommendations that have been proposed
-> -while all this has been defined and implemented.
-> -
-> -  - The bootloader may want to be able to use the device-tree itself
-> -    and may want to manipulate it (to add/edit some properties,
-> -    like physical memory size or kernel arguments). At this point, 2
-> -    choices can be made. Either the bootloader works directly on the
-> -    flattened format, or the bootloader has its own internal tree
-> -    representation with pointers (similar to the kernel one) and
-> -    re-flattens the tree when booting the kernel. The former is a bit
-> -    more difficult to edit/modify, the later requires probably a bit
-> -    more code to handle the tree structure. Note that the structure
-> -    format has been designed so it's relatively easy to "insert"
-> -    properties or nodes or delete them by just memmoving things
-> -    around. It contains no internal offsets or pointers for this
-> -    purpose.
-> -
-> -  - An example of code for iterating nodes & retrieving properties
-> -    directly from the flattened tree format can be found in the kernel
-> -    file drivers/of/fdt.c.  Look at the of_scan_flat_dt() function,
-> -    its usage in early_init_devtree(), and the corresponding various
-> -    early_init_dt_scan_*() callbacks. That code can be re-used in a
-> -    GPL bootloader, and as the author of that code, I would be happy
-> -    to discuss possible free licensing to any vendor who wishes to
-> -    integrate all or part of this code into a non-GPL bootloader.
-> -    (reference needed; who is 'I' here? ---gcl Jan 31, 2011)
-> -
-> -
-> -
-> -VI - System-on-a-chip devices and nodes
-> -=======================================
-> -
-> -Many companies are now starting to develop system-on-a-chip
-> -processors, where the processor core (CPU) and many peripheral devices
-> -exist on a single piece of silicon.  For these SOCs, an SOC node
-> -should be used that defines child nodes for the devices that make
-> -up the SOC. While platforms are not required to use this model in
-> -order to boot the kernel, it is highly encouraged that all SOC
-> -implementations define as complete a flat-device-tree as possible to
-> -describe the devices on the SOC.  This will allow for the
-> -genericization of much of the kernel code.
-> -
-> -
-> -1) Defining child nodes of an SOC
-> ----------------------------------
-> -
-> -Each device that is part of an SOC may have its own node entry inside
-> -the SOC node.  For each device that is included in the SOC, the unit
-> -address property represents the address offset for this device's
-> -memory-mapped registers in the parent's address space.  The parent's
-> -address space is defined by the "ranges" property in the top-level soc
-> -node. The "reg" property for each node that exists directly under the
-> -SOC node should contain the address mapping from the child address space
-> -to the parent SOC address space and the size of the device's
-> -memory-mapped register file.
-> -
-> -For many devices that may exist inside an SOC, there are predefined
-> -specifications for the format of the device tree node.  All SOC child
-> -nodes should follow these specifications, except where noted in this
-> -document.
-> -
-> -See appendix A for an example partial SOC node definition for the
-> -MPC8540.
-> -
-> -
-> -2) Representing devices without a current OF specification
-> -----------------------------------------------------------
-> -
-> -Currently, there are many devices on SoCs that do not have a standard
-> -representation defined as part of the Open Firmware specifications,
-> -mainly because the boards that contain these SoCs are not currently
-> -booted using Open Firmware.  Binding documentation for new devices
-> -should be added to the Documentation/devicetree/bindings directory.
-> -That directory will expand as device tree support is added to more and
-> -more SoCs.
-> -
-> -
-> -VII - Specifying interrupt information for devices
-> -===================================================
-> -
-> -The device tree represents the buses and devices of a hardware
-> -system in a form similar to the physical bus topology of the
-> -hardware.
-> -
-> -In addition, a logical 'interrupt tree' exists which represents the
-> -hierarchy and routing of interrupts in the hardware.
-> -
-> -The interrupt tree model is fully described in the
-> -document "Open Firmware Recommended Practice: Interrupt
-> -Mapping Version 0.9".  The document is available at:
-> -<http://www.devicetree.org/open-firmware/practice/>
-> -
-> -1) interrupts property
-> -----------------------
-> -
-> -Devices that generate interrupts to a single interrupt controller
-> -should use the conventional OF representation described in the
-> -OF interrupt mapping documentation.
-> -
-> -Each device which generates interrupts must have an 'interrupt'
-> -property.  The interrupt property value is an arbitrary number of
-> -of 'interrupt specifier' values which describe the interrupt or
-> -interrupts for the device.
-> -
-> -The encoding of an interrupt specifier is determined by the
-> -interrupt domain in which the device is located in the
-> -interrupt tree.  The root of an interrupt domain specifies in
-> -its #interrupt-cells property the number of 32-bit cells
-> -required to encode an interrupt specifier.  See the OF interrupt
-> -mapping documentation for a detailed description of domains.
-> -
-> -For example, the binding for the OpenPIC interrupt controller
-> -specifies  an #interrupt-cells value of 2 to encode the interrupt
-> -number and level/sense information. All interrupt children in an
-> -OpenPIC interrupt domain use 2 cells per interrupt in their interrupts
-> -property.
-> -
-> -The PCI bus binding specifies a #interrupt-cells value of 1 to encode
-> -which interrupt pin (INTA,INTB,INTC,INTD) is used.
-> -
-> -2) interrupt-parent property
-> -----------------------------
-> -
-> -The interrupt-parent property is specified to define an explicit
-> -link between a device node and its interrupt parent in
-> -the interrupt tree.  The value of interrupt-parent is the
-> -phandle of the parent node.
-> -
-> -If the interrupt-parent property is not defined for a node, its
-> -interrupt parent is assumed to be an ancestor in the node's
-> -_device tree_ hierarchy.
-> -
-> -3) OpenPIC Interrupt Controllers
-> ---------------------------------
-> -
-> -OpenPIC interrupt controllers require 2 cells to encode
-> -interrupt information.  The first cell defines the interrupt
-> -number.  The second cell defines the sense and level
-> -information.
-> -
-> -Sense and level information should be encoded as follows:
-> -
-> -	0 = low to high edge sensitive type enabled
-> -	1 = active low level sensitive type enabled
-> -	2 = active high level sensitive type enabled
-> -	3 = high to low edge sensitive type enabled
-> -
-> -4) ISA Interrupt Controllers
-> -----------------------------
-> -
-> -ISA PIC interrupt controllers require 2 cells to encode
-> -interrupt information.  The first cell defines the interrupt
-> -number.  The second cell defines the sense and level
-> -information.
-> -
-> -ISA PIC interrupt controllers should adhere to the ISA PIC
-> -encodings listed below:
-> -
-> -	0 =  active low level sensitive type enabled
-> -	1 =  active high level sensitive type enabled
-> -	2 =  high to low edge sensitive type enabled
-> -	3 =  low to high edge sensitive type enabled
->  
->  VIII - Specifying Device Power Management Information (sleep property)
->  ===================================================================
-> @@ -1386,6 +491,7 @@ reasonably grouped in this manner, then create a virtual sleep controller
->  (similar to an interrupt nexus, except that defining a standardized
->  sleep-map should wait until its necessity is demonstrated).
->  
+> +config ZYNQMP_R5_REMOTEPROC
+> +	tristate "ZynqMP_r5 remoteproc support"
+> +	depends on ARM64 && PM && ARCH_ZYNQMP
+> +	select RPMSG_VIRTIO
+> +	select MAILBOX
+> +	select ZYNQMP_IPI_MBOX
+> +	help
+> +	  Say y here to support ZynqMP R5 remote processors via the remote
+> +	  processor framework.
 > +
->  IX - Specifying dma bus information
+>  config ST_SLIM_REMOTEPROC
+>  	tristate
 >  
->  Some devices may have DMA memory range shifted relatively to the beginning of
-> @@ -1420,134 +526,3 @@ Optional property:
->  - dma-ranges: <empty> value. if present - It means that DMA addresses
->  	translation has to be enabled for this device.
->  - dma-coherent: Present if dma operations are coherent
-> -
-> -Example:
-> -soc {
-> -		compatible = "ti,keystone","simple-bus";
-> -		ranges = <0x0 0x0 0x0 0xc0000000>;
-> -		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
-> -
-> -		[...]
-> -
-> -		usb: usb@2680000 {
-> -			compatible = "ti,keystone-dwc3";
-> -
-> -			[...]
-> -			dma-coherent;
-> -		};
-> -};
-> -
-> -Appendix A - Sample SOC node for MPC8540
-> -========================================
-> -
-> -	soc@e0000000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		compatible = "fsl,mpc8540-ccsr", "simple-bus";
-> -		device_type = "soc";
-> -		ranges = <0x00000000 0xe0000000 0x00100000>
-> -		bus-frequency = <0>;
-> -		interrupt-parent = <&pic>;
-> -
-> -		ethernet@24000 {
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			device_type = "network";
-> -			model = "TSEC";
-> -			compatible = "gianfar", "simple-bus";
-> -			reg = <0x24000 0x1000>;
-> -			local-mac-address = [ 0x00 0xE0 0x0C 0x00 0x73 0x00 ];
-> -			interrupts = <0x29 2 0x30 2 0x34 2>;
-> -			phy-handle = <&phy0>;
-> -			sleep = <&pmc 0x00000080>;
-> -			ranges;
-> -
-> -			mdio@24520 {
-> -				reg = <0x24520 0x20>;
-> -				compatible = "fsl,gianfar-mdio";
-> -
-> -				phy0: ethernet-phy@0 {
-> -					interrupts = <5 1>;
-> -					reg = <0>;
-> -				};
-> -
-> -				phy1: ethernet-phy@1 {
-> -					interrupts = <5 1>;
-> -					reg = <1>;
-> -				};
-> -
-> -				phy3: ethernet-phy@3 {
-> -					interrupts = <7 1>;
-> -					reg = <3>;
-> -				};
-> -			};
-> -		};
-> -
-> -		ethernet@25000 {
-> -			device_type = "network";
-> -			model = "TSEC";
-> -			compatible = "gianfar";
-> -			reg = <0x25000 0x1000>;
-> -			local-mac-address = [ 0x00 0xE0 0x0C 0x00 0x73 0x01 ];
-> -			interrupts = <0x13 2 0x14 2 0x18 2>;
-> -			phy-handle = <&phy1>;
-> -			sleep = <&pmc 0x00000040>;
-> -		};
-> -
-> -		ethernet@26000 {
-> -			device_type = "network";
-> -			model = "FEC";
-> -			compatible = "gianfar";
-> -			reg = <0x26000 0x1000>;
-> -			local-mac-address = [ 0x00 0xE0 0x0C 0x00 0x73 0x02 ];
-> -			interrupts = <0x41 2>;
-> -			phy-handle = <&phy3>;
-> -			sleep = <&pmc 0x00000020>;
-> -		};
-> -
-> -		serial@4500 {
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			compatible = "fsl,mpc8540-duart", "simple-bus";
-> -			sleep = <&pmc 0x00000002>;
-> -			ranges;
-> -
-> -			serial@4500 {
-> -				device_type = "serial";
-> -				compatible = "ns16550";
-> -				reg = <0x4500 0x100>;
-> -				clock-frequency = <0>;
-> -				interrupts = <0x42 2>;
-> -			};
-> -
-> -			serial@4600 {
-> -				device_type = "serial";
-> -				compatible = "ns16550";
-> -				reg = <0x4600 0x100>;
-> -				clock-frequency = <0>;
-> -				interrupts = <0x42 2>;
-> -			};
-> -		};
-> -
-> -		pic: pic@40000 {
-> -			interrupt-controller;
-> -			#address-cells = <0>;
-> -			#interrupt-cells = <2>;
-> -			reg = <0x40000 0x40000>;
-> -			compatible = "chrp,open-pic";
-> -			device_type = "open-pic";
-> -		};
-> -
-> -		i2c@3000 {
-> -			interrupts = <0x43 2>;
-> -			reg = <0x3000 0x100>;
-> -			compatible  = "fsl-i2c";
-> -			dfsrr;
-> -			sleep = <&pmc 0x00000004>;
-> -		};
-> -
-> -		pmc: power@e0070 {
-> -			compatible = "fsl,mpc8540-pmc", "fsl,mpc8548-pmc";
-> -			reg = <0xe0070 0x20>;
-> -		};
-> -	};
-> 
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index e30a1b1..ee18d26 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -26,5 +26,6 @@ obj-$(CONFIG_QCOM_WCNSS_PIL)		+= qcom_wcnss_pil.o
+>  qcom_wcnss_pil-y			+= qcom_wcnss.o
+>  qcom_wcnss_pil-y			+= qcom_wcnss_iris.o
+>  obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
+> +obj-$(CONFIG_ZYNQMP_R5_REMOTEPROC)	+= zynqmp_r5_remoteproc.o
+>  obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
+>  obj-$(CONFIG_STM32_RPROC)		+= stm32_rproc.o
+> diff --git a/drivers/remoteproc/zynqmp_r5_remoteproc.c b/drivers/remoteproc/zynqmp_r5_remoteproc.c
+> new file mode 100644
+> index 0000000..a84ee8e
+> --- /dev/null
+> +++ b/drivers/remoteproc/zynqmp_r5_remoteproc.c
+> @@ -0,0 +1,913 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Zynq R5 Remote Processor driver
+> + *
+> + * Copyright (C) 2015 - 2018 Xilinx Inc.
+> + * Copyright (C) 2015 Jason Wu <j.wu@xilinx.com>
+> + *
+> + * Based on origin OMAP and Zynq Remote Processor driver
+> + *
+> + * Copyright (C) 2012 Michal Simek <monstr@monstr.eu>
+> + * Copyright (C) 2012 PetaLogix
+> + * Copyright (C) 2011 Texas Instruments, Inc.
+> + * Copyright (C) 2011 Google, Inc.
+> + */
+> +
+> +#include <linux/atomic.h>
+> +#include <linux/cpu.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/firmware/xlnx-zynqmp.h>
+> +#include <linux/genalloc.h>
+> +#include <linux/idr.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/mailbox/zynqmp-ipi-message.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_reserved_mem.h>
+> +#include <linux/pfn.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/remoteproc.h>
+> +#include <linux/skbuff.h>
+> +#include <linux/slab.h>
+> +#include <linux/sysfs.h>
+> +
+> +#include "remoteproc_internal.h"
+> +
+> +#define MAX_RPROCS	2 /* Support up to 2 RPU */
+> +#define MAX_MEM_PNODES	4 /* Max power nodes for one RPU memory instance */
+> +
+> +/* PM proc states */
+> +#define PM_PROC_STATE_ACTIVE 1U
+> +
+> +/* IPI buffer MAX length */
+> +#define IPI_BUF_LEN_MAX	32U
+> +/* RX mailbox client buffer max length */
+> +#define RX_MBOX_CLIENT_BUF_MAX	(IPI_BUF_LEN_MAX + \
+> +				 sizeof(struct zynqmp_ipi_message))
+> +
+> +#define PM_HIVEC_MASK 0xF0000000
+> +
+> +#define TCM_BASE_ADDR  0xFFE00000
+> +#define TCM_LOW_BITMASK 0x000FFFFF
+> +#define TCM_BANK1_BITMASK 0x80000
+> +#define TCM_BANK1_HIGHBIT_BITMASK 0x90000
+> +
+> +static bool autoboot __read_mostly;
+> +
+> +static const struct zynqmp_eemi_ops *eemi_ops;
+> +
+> +/**
+> + * struct zynqmp_r5_mem - zynqmp rpu memory data
+> + * @pnode_id: TCM power domain ids
+> + * @res: memory resource
+> + * @node: list node
+> + */
+> +struct zynqmp_r5_mem {
+> +	u32 pnode_id[MAX_MEM_PNODES];
+> +	struct resource res;
+> +	struct list_head node;
+> +};
+> +
+> +/**
+> + * struct zynqmp_r5_pdata - zynqmp rpu remote processor private data
+> + * @dev: device of RPU instance
+> + * @rproc: rproc handle
+> + * @parent: RPU slot platform data
+> + * @pnode_id: RPU CPU power domain id
+> + * @mems: memory resources
+> + * @is_r5_mode_set: indicate if r5 operation mode is set
+> + * @tx_mc: tx mailbox client
+> + * @rx_mc: rx mailbox client
+> + * @tx_chan: tx mailbox channel
+> + * @rx_chan: rx mailbox channel
+> + * @workqueue: workqueue for the RPU remoteproc
+> + * @tx_mc_skbs: socket buffers for tx mailbox client
+> + * @rx_mc_buf: rx mailbox client buffer to save the rx message
+> + */
+> +struct zynqmp_r5_pdata {
+> +	struct device dev;
+> +	struct rproc *rproc;
+> +	struct zynqmp_rpu_domain_pdata *parent;
+> +	u32 pnode_id;
+> +	struct list_head mems;
+> +	bool is_r5_mode_set;
+> +	struct mbox_client tx_mc;
+> +	struct mbox_client rx_mc;
+> +	struct mbox_chan *tx_chan;
+> +	struct mbox_chan *rx_chan;
+> +	struct work_struct workqueue;
+> +	struct sk_buff_head tx_mc_skbs;
+> +	unsigned char rx_mc_buf[RX_MBOX_CLIENT_BUF_MAX];
+> +};
+> +
+> +/**
+> + * struct zynqmp_rpu_domain_pdata - zynqmp rpu platform data
+> + * @rpus: table of RPUs
+> + * @rpu_mode: RPU core configuration
+> + */
+> +struct zynqmp_rpu_domain_pdata {
+> +	struct zynqmp_r5_pdata rpus[MAX_RPROCS];
+> +	enum rpu_oper_mode rpu_mode;
+> +};
+> +
+> +/*
+> + * r5_set_mode - set RPU operation mode
+> + * @pdata: Remote processor private data
+> + *
+> + * set RPU operation mode
+> + *
+> + * Return: 0 for success, negative value for failure
+> + */
+> +static int r5_set_mode(struct zynqmp_r5_pdata *pdata)
+> +{
+> +	u32 val[PAYLOAD_ARG_CNT] = {0}, expect;
+> +	struct zynqmp_rpu_domain_pdata *parent;
+> +	struct device *dev = &pdata->dev;
+> +	int ret;
+> +
+> +	if (pdata->is_r5_mode_set)
+> +		return 0;
+> +	parent = pdata->parent;
+> +	expect = (u32)parent->rpu_mode;
+> +	ret = eemi_ops->ioctl(pdata->pnode_id, IOCTL_GET_RPU_OPER_MODE,
+> +			  0, 0, val);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to get RPU oper mode.\n");
+> +		return ret;
+> +	}
+> +	if (val[0] == expect) {
+> +		dev_dbg(dev, "RPU mode matches: %x\n", val[0]);
+> +	} else {
+> +		ret = eemi_ops->ioctl(pdata->pnode_id,
+> +				  IOCTL_SET_RPU_OPER_MODE,
+> +				  expect, 0, val);
+> +		if (ret < 0) {
+> +			dev_err(dev,
+> +				"failed to set RPU oper mode.\n");
+> +			return ret;
+> +		}
+> +	}
+> +	if (expect == (u32)PM_RPU_MODE_LOCKSTEP)
+> +		expect = (u32)PM_RPU_TCM_COMB;
+> +	else
+> +		expect = (u32)PM_RPU_TCM_SPLIT;
+> +	ret = eemi_ops->ioctl(pdata->pnode_id, IOCTL_TCM_COMB_CONFIG,
+> +			  expect, 0, val);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to config TCM to %x.\n",
+> +			expect);
+> +		return ret;
+> +	}
+> +	pdata->is_r5_mode_set = true;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * r5_is_running - check if r5 is running
+> + * @pdata: Remote processor private data
+> + *
+> + * check if R5 is running
+> + *
+> + * Return: true if r5 is running, false otherwise
+> + */
+> +static bool r5_is_running(struct zynqmp_r5_pdata *pdata)
+> +{
+> +	u32 status, requirements, usage;
+> +	struct device *dev = &pdata->dev;
+> +
+> +	if (eemi_ops->get_node_status(pdata->pnode_id,
+> +				      &status, &requirements, &usage)) {
+> +		dev_err(dev, "Failed to get RPU node %d status.\n",
+> +			pdata->pnode_id);
+> +		return false;
+> +	} else if (status != PM_PROC_STATE_ACTIVE) {
+> +		dev_dbg(dev, "RPU is not running.\n");
+> +		return false;
+> +	}
+> +
+> +	dev_dbg(dev, "RPU is running.\n");
+> +	return true;
+> +}
+> +
+> +/*
+> + * ZynqMP R5 remoteproc memory release function
+> + */
+> +static int zynqmp_r5_mem_release(struct rproc *rproc,
+> +				 struct rproc_mem_entry *mem)
+> +{
+> +	struct zynqmp_r5_mem *priv;
+> +	int i, ret;
+> +	struct device *dev = &rproc->dev;
+> +
+> +	priv = mem->priv;
+> +	if (!priv)
+> +		return 0;
+> +	for (i = 0; i < MAX_MEM_PNODES; i++) {
+> +		if (priv->pnode_id[i]) {
+> +			dev_dbg(dev, "%s, pnode %d\n",
+> +				__func__, priv->pnode_id[i]);
+> +			ret = eemi_ops->release_node(priv->pnode_id[i]);
+> +			if (ret < 0) {
+> +				dev_err(dev,
+> +					"failed to release power node: %u\n",
+> +					priv->pnode_id[i]);
+> +				return ret;
+> +			}
+> +		} else {
+> +			break;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +/*
+> + * ZynqMP R5 remoteproc operations
+> + */
+> +static int zynqmp_r5_rproc_start(struct rproc *rproc)
+> +{
+> +	struct device *dev = rproc->dev.parent;
+> +	struct zynqmp_r5_pdata *local = rproc->priv;
+> +	enum rpu_boot_mem bootmem;
+> +	int ret;
+> +
+> +	/* Set up R5 */
+> +	ret = r5_set_mode(local);
+> +	if (ret) {
+> +		dev_err(dev, "failed to set R5 operation mode.\n");
+> +		return ret;
+> +	}
+> +	if ((rproc->bootaddr & PM_HIVEC_MASK) == PM_HIVEC_MASK)
+> +		bootmem = PM_RPU_BOOTMEM_HIVEC;
+> +	else
+> +		bootmem = PM_RPU_BOOTMEM_LOVEC;
+> +	dev_info(dev, "RPU boot from %s.",
+> +		 bootmem == PM_RPU_BOOTMEM_HIVEC ? "OCM" : "TCM");
+> +
+> +	ret = eemi_ops->request_wakeup(local->pnode_id, 1, bootmem,
+> +				       ZYNQMP_PM_REQUEST_ACK_NO);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to boot R5.\n");
+> +		return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int zynqmp_r5_rproc_stop(struct rproc *rproc)
+> +{
+> +	struct zynqmp_r5_pdata *local = rproc->priv;
+> +	int ret;
+> +
+> +	ret = eemi_ops->force_powerdown(local->pnode_id,
+> +					ZYNQMP_PM_REQUEST_ACK_BLOCKING);
+> +	if (ret < 0) {
+> +		dev_err(&local->dev, "failed to shutdown R5.\n");
+> +		return ret;
+> +	}
+> +	local->is_r5_mode_set = false;
+> +	return 0;
+> +}
+> +
+> +
+> +static int zynqmp_r5_parse_fw(struct rproc *rproc, const struct firmware *fw)
+> +{
+> +	struct zynqmp_r5_pdata *pdata = rproc->priv;
+> +	struct zynqmp_r5_mem *zynqmp_mem;
+> +	struct device *dev = &pdata->dev;
+> +	struct device_node *np = dev->of_node;
+> +	int num_mems;
+> +	int ret, i, dma_pool_index = 0;
+> +	struct reserved_mem *rmem;
+> +	struct rproc_mem_entry *mem;
+> +	struct device_node *child;
+> +	struct resource rsc;
+> +
+> +	num_mems = of_count_phandle_with_args(np, "memory-region", NULL);
+> +	if (num_mems <= 0)
+> +		return 0;
+> +	for (i = 0; i < num_mems; i++) {
+> +		struct device_node *node;
+> +		int ret;
+> +
+> +		node = of_parse_phandle(np, "memory-region", i);
+> +		rmem = of_reserved_mem_lookup(node);
+> +		if (!rmem) {
+> +			dev_err(dev, "unable to acquire memory-region\n");
+> +			return -EINVAL;
+> +		}
+> +		if (strstr(node->name, "vdev") &&
+> +			strstr(node->name, "buffer")) {
+> +			int id;
+> +			char name[16];
+> +
+> +			id = node->name[8] - 48;
 
+Hm, so the node name is significant? This doesn't look to be documented
+in the binding, and seems a bit weird to me...
+
+node->name[8] - '0' might also make the intent more obvious.
+
+> +			snprintf(name, sizeof(name), "vdev%dbuffer", id);
+> +			/* Register DMA region */
+> +			mem = rproc_mem_entry_init(dev, NULL,
+> +						   (dma_addr_t)rmem->base,
+> +						   rmem->size, rmem->base,
+> +						   NULL, NULL,
+> +						   name);
+> +			if (!mem) {
+> +				dev_err(dev, "unable to initialize memory-region %s\n",
+> +						name);
+> +				return -EINVAL;
+> +			}
+> +
+> +			rproc_add_carveout(rproc, mem);
+> +			continue;
+
+If the intent of the "continue" is to skip the "non-DMA" case below,
+why not drop the "continue" and instead move the "non-DMA" case into the
+body of the "else" below?
+
+> +		} else {
+> +			mem = rproc_of_resm_mem_entry_init(dev, i,
+> +							rmem->size,
+> +							rmem->base,
+> +							node->name);
+> +			if (!mem) {
+> +				dev_err(dev, "unable to initialize memory-region %s\n",
+> +						node->name);
+> +				return -EINVAL;
+> +			}
+> +
+> +			mem->va = devm_ioremap_wc(dev, rmem->base, rmem->size);
+> +			if (!mem->va) {
+> +				dev_err(dev, "unable to map va for %s\n",
+> +						node->name);
+> +				return -EINVAL;
+> +			}
+> +
+> +			rproc_add_carveout(rproc, mem);
+> +		}
+> +		if (!mem)
+> +			return -ENOMEM;
+
+It doesn't seem like this is reachable.
+
+> +
+> +
+> +		/*
+> +		 * It is non-DMA memory, used for firmware loading.
+> +		 * It will be added to the R5 remoteproc mappings later.
+> +		 */
+> +		zynqmp_mem = devm_kzalloc(dev, sizeof(*zynqmp_mem), GFP_KERNEL);
+> +		if (!zynqmp_mem)
+> +			return -ENOMEM;
+> +		ret = of_address_to_resource(node, 0, &zynqmp_mem->res);
+> +		if (ret) {
+> +			dev_err(dev, "unable to resolve memory region.\n");
+> +			return ret;
+> +		}
+> +		list_add_tail(&zynqmp_mem->node, &pdata->mems);
+> +		dev_dbg(dev, "%s, non-dma mem %s\n",
+> +			__func__, of_node_full_name(node));
+
+Use %pOF instead?
+
+> +	}
+> +
+> +	/* map TCM memories */
+> +	for_each_available_child_of_node(np, child) {
+> +		ret = of_address_to_resource(child, 0, &rsc);
+> +		struct property *prop;
+> +		const __be32 *cur;
+> +		u32 pnode_id;
+> +		void *va;
+> +		dma_addr_t dma;
+> +		resource_size_t size;
+> +
+> +		i = 0;
+> +		of_property_for_each_u32(child, "pnode-id", prop, cur,
+> +								pnode_id) {
+> +			ret = eemi_ops->request_node(pnode_id,
+> +						ZYNQMP_PM_CAPABILITY_ACCESS, 0,
+> +						ZYNQMP_PM_REQUEST_ACK_BLOCKING);
+> +			if (ret < 0) {
+> +				dev_err(dev, "failed to request power node: %u\n",
+> +						pnode_id);
+> +				return ret;
+> +			}
+> +			ret = r5_set_mode(pdata);
+> +			if (ret < 0) {
+> +				dev_err(dev, "failed to set R5 operation mode.\n");
+> +				return ret;
+> +			}
+> +		}
+> +		size = resource_size(&rsc);
+> +
+> +		va = devm_ioremap_wc(dev, rsc.start, size);
+> +		if (!va) {
+> +			dev_err(dev, "unable to map va for TCM\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		/* zero out tcm base address */
+> +		if (rsc.start & TCM_BASE_ADDR) {
+> +			rsc.start &= TCM_LOW_BITMASK; /*wipe low bits */
+> +		/* handle tcm banks 1 a and b (0xffe9000 and oxffeb0000) */
+> +				if (rsc.start & TCM_BANK1_BITMASK)
+> +	/* wipe high bits as RPU only sees relative addr from 0x0 to 0x20000 */
+> +					rsc.start -= TCM_BANK1_HIGHBIT_BITMASK;
+> +		}
+
+Indentation above looks wrong...
+
+> +
+> +		dma = (dma_addr_t)rsc.start;
+> +		mem = rproc_mem_entry_init(dev, va, dma, (int)size, rsc.start,
+> +						 NULL, zynqmp_r5_mem_release,
+> +						 rsc.name);
+> +		if (!mem)
+> +			return NULL;
+
+return -ENOMEM?
+
+> +		rproc_add_carveout(rproc, mem);
+> +	}
+> +
+> +	ret = rproc_elf_load_rsc_table(rproc, fw);
+> +	if (ret == -EINVAL)
+> +		ret = 0;
+> +	return ret;
+> +}
+> +
+> +/* kick a firmware */
+> +static void zynqmp_r5_rproc_kick(struct rproc *rproc, int vqid)
+> +{
+> +	struct device *dev = rproc->dev.parent;
+> +	struct zynqmp_r5_pdata *local = rproc->priv;
+> +
+> +	dev_dbg(dev, "KICK Firmware to start send messages vqid %d\n", vqid);
+> +
+> +	if (vqid < 0) {
+> +		/* If vqid is negative, does not pass the vqid to
+> +		 * mailbox. As vqid is supposed to be 0 or possive.
+> +		 * It also gives a way to just kick instead but
+> +		 * not use the IPI buffer. It is better to provide
+> +		 * a proper way to pass the short message, which will
+> +		 * need to sync to upstream first, for now,
+> +		 * use negative vqid to assume no message will be
+> +		 * passed with IPI buffer, but just raise interrupt.
+> +		 * This will be faster as it doesn't need to copy the
+> +		 * message to the IPI buffer.
+> +		 *
+> +		 * It will ignore the return, as failure is due to
+> +		 * there already kicks in the mailbox queue.
+> +		 */
+> +		(void)mbox_send_message(local->tx_chan, NULL);
+> +	} else {
+> +		struct sk_buff *skb;
+> +		unsigned int skb_len;
+> +		struct zynqmp_ipi_message *mb_msg;
+> +		int ret;
+> +
+> +		skb_len = (unsigned int)(sizeof(vqid) + sizeof(mb_msg));
+> +		skb = alloc_skb(skb_len, GFP_ATOMIC);
+> +		if (!skb) {
+> +			dev_err(dev,
+> +				"Failed to allocate skb to kick remote.\n");
+> +			return;
+> +		}
+> +		mb_msg = (struct zynqmp_ipi_message *)skb_put(skb, skb_len);
+> +		mb_msg->len = sizeof(vqid);
+> +		memcpy(mb_msg->data, &vqid, sizeof(vqid));
+> +		skb_queue_tail(&local->tx_mc_skbs, skb);
+> +		ret = mbox_send_message(local->tx_chan, mb_msg);
+> +		if (ret < 0) {
+> +			dev_warn(dev, "Failed to kick remote.\n");
+> +			skb_dequeue_tail(&local->tx_mc_skbs);
+> +			kfree_skb(skb);
+> +		}
+> +	}
+> +}
+> +
+> +static struct rproc_ops zynqmp_r5_rproc_ops = {
+> +	.start		= zynqmp_r5_rproc_start,
+> +	.stop		= zynqmp_r5_rproc_stop,
+> +	.load		= rproc_elf_load_segments,
+> +	.parse_fw	= zynqmp_r5_parse_fw,
+> +	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
+> +	.sanity_check	= rproc_elf_sanity_check,
+> +	.get_boot_addr	= rproc_elf_get_boot_addr,
+> +	.kick		= zynqmp_r5_rproc_kick,
+> +};
+> +
+> +/* zynqmp_r5_mem_probe() - probes RPU TCM memory device
+> + * @pdata: pointer to the RPU remoteproc private data
+> + * @node: pointer to the memory node
+> + *
+> + * Function to retrieve memories resources for RPU TCM memory device.
+> + */
+> +static int zynqmp_r5_mem_probe(struct zynqmp_r5_pdata *pdata,
+> +			       struct device_node *node)
+> +{
+> +	struct device *dev;
+> +	struct zynqmp_r5_mem *mem;
+> +	int ret;
+> +
+> +	dev = &pdata->dev;
+> +	mem = devm_kzalloc(dev, sizeof(*mem), GFP_KERNEL);
+> +	if (!mem)
+> +		return -ENOMEM;
+> +	ret = of_address_to_resource(node, 0, &mem->res);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to get resource of memory %s",
+> +			of_node_full_name(node));
+
+Use %pOF instead?
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Get the power domain id */
+> +	if (of_find_property(node, "pnode-id", NULL)) {
+> +		struct property *prop;
+> +		const __be32 *cur;
+> +		u32 val;
+> +		int i = 0;
+> +
+> +		of_property_for_each_u32(node, "pnode-id", prop, cur, val)
+> +			mem->pnode_id[i++] = val;
+> +	}
+> +	list_add_tail(&mem->node, &pdata->mems);
+> +	return 0;
+> +}
+> +
+> +/**
+> + * zynqmp_r5_release() - ZynqMP R5 device release function
+> + * @dev: pointer to the device struct of ZynqMP R5
+> + *
+> + * Function to release ZynqMP R5 device.
+> + */
+> +static void zynqmp_r5_release(struct device *dev)
+> +{
+> +	struct zynqmp_r5_pdata *pdata;
+> +	struct rproc *rproc;
+> +	struct sk_buff *skb;
+> +
+> +	pdata = dev_get_drvdata(dev);
+> +	rproc = pdata->rproc;
+> +	if (rproc) {
+> +		rproc_del(rproc);
+> +		rproc_free(rproc);
+> +	}
+> +	if (pdata->tx_chan)
+> +		mbox_free_channel(pdata->tx_chan);
+> +	if (pdata->rx_chan)
+> +		mbox_free_channel(pdata->rx_chan);
+> +	/* Discard all SKBs */
+> +	while (!skb_queue_empty(&pdata->tx_mc_skbs)) {
+> +		skb = skb_dequeue(&pdata->tx_mc_skbs);
+> +		kfree_skb(skb);
+> +	}
+> +
+> +	put_device(dev->parent);
+> +}
+> +
+> +/**
+> + * event_notified_idr_cb() - event notified idr callback
+> + * @id: idr id
+> + * @ptr: pointer to idr private data
+> + * @data: data passed to idr_for_each callback
+> + *
+> + * Pass notification to remtoeproc virtio
+> + *
+> + * Return: 0. having return is to satisfy the idr_for_each() function
+> + *          pointer input argument requirement.
+> + **/
+> +static int event_notified_idr_cb(int id, void *ptr, void *data)
+> +{
+> +	struct rproc *rproc = data;
+> +
+> +	(void)rproc_vq_interrupt(rproc, id);
+> +	return 0;
+> +}
+> +
+> +/**
+> + * handle_event_notified() - remoteproc notification work funciton
+> + * @work: pointer to the work structure
+> + *
+> + * It checks each registered remoteproc notify IDs.
+> + */
+> +static void handle_event_notified(struct work_struct *work)
+> +{
+> +	struct rproc *rproc;
+> +	struct zynqmp_r5_pdata *local;
+> +
+> +	local = container_of(work, struct zynqmp_r5_pdata, workqueue);
+> +
+> +	(void)mbox_send_message(local->rx_chan, NULL);
+> +	rproc = local->rproc;
+> +
+> +	/*
+> +	 * We only use IPI for interrupt. The firmware side may or may
+> +	 * not write the notifyid when it trigger IPI.
+> +	 * And thus, we scan through all the registered notifyids.
+> +	 */
+> +	idr_for_each(&rproc->notifyids, event_notified_idr_cb, rproc);
+> +}
+> +
+> +/**
+> + * zynqmp_r5_mb_rx_cb() - Receive channel mailbox callback
+> + * @cl: mailbox client
+> + * @mssg: message pointer
+> + *
+> + * It will schedule the R5 notification work.
+> + */
+> +static void zynqmp_r5_mb_rx_cb(struct mbox_client *cl, void *mssg)
+> +{
+> +	struct zynqmp_r5_pdata *local;
+> +
+> +	local = container_of(cl, struct zynqmp_r5_pdata, rx_mc);
+> +	if (mssg) {
+> +		struct zynqmp_ipi_message *ipi_msg, *buf_msg;
+> +		size_t len;
+> +
+> +		ipi_msg = (struct zynqmp_ipi_message *)mssg;
+> +		buf_msg = (struct zynqmp_ipi_message *)local->rx_mc_buf;
+> +		len = (ipi_msg->len >= IPI_BUF_LEN_MAX) ?
+> +		      IPI_BUF_LEN_MAX : ipi_msg->len;
+> +		buf_msg->len = len;
+> +		memcpy(buf_msg->data, ipi_msg->data, len);
+> +	}
+> +	schedule_work(&local->workqueue);
+> +}
+> +
+> +/**
+> + * zynqmp_r5_mb_tx_done() - Request has been sent to the remote
+> + * @cl: mailbox client
+> + * @mssg: pointer to the message which has been sent
+> + * @r: status of last TX - OK or error
+> + *
+> + * It will be called by the mailbox framework when the last TX has done.
+> + */
+> +static void zynqmp_r5_mb_tx_done(struct mbox_client *cl, void *mssg, int r)
+> +{
+> +	struct zynqmp_r5_pdata *local;
+> +	struct sk_buff *skb;
+> +
+> +	if (!mssg)
+> +		return;
+> +	local = container_of(cl, struct zynqmp_r5_pdata, tx_mc);
+> +	skb = skb_dequeue(&local->tx_mc_skbs);
+> +	kfree_skb(skb);
+> +}
+> +
+> +/**
+> + * zynqmp_r5_setup_mbox() - Setup mailboxes
+> + *
+> + * @pdata: pointer to the ZynqMP R5 processor platform data
+> + * @node: pointer of the device node
+> + *
+> + * Function to setup mailboxes to talk to RPU.
+> + *
+> + * Return: 0 for success, negative value for failure.
+> + */
+> +static int zynqmp_r5_setup_mbox(struct zynqmp_r5_pdata *pdata)
+> +{
+> +	struct device *dev = &pdata->dev;
+> +	struct mbox_client *mclient;
+> +
+> +	/* Setup TX mailbox channel client */
+> +	mclient = &pdata->tx_mc;
+> +	mclient->dev = dev;
+> +	mclient->rx_callback = NULL;
+> +	mclient->tx_block = false;
+> +	mclient->knows_txdone = false;
+> +	mclient->tx_done = zynqmp_r5_mb_tx_done;
+> +
+> +	/* Setup TX mailbox channel client */
+> +	mclient = &pdata->rx_mc;
+> +	mclient->dev = dev;
+> +	mclient->rx_callback = zynqmp_r5_mb_rx_cb;
+> +	mclient->tx_block = false;
+> +	mclient->knows_txdone = false;
+> +
+> +	INIT_WORK(&pdata->workqueue, handle_event_notified);
+> +
+> +	/* Request TX and RX channels */
+> +	pdata->tx_chan = mbox_request_channel_byname(&pdata->tx_mc, "tx");
+> +	if (IS_ERR(pdata->tx_chan)) {
+> +		dev_err(dev, "failed to request mbox tx channel.\n");
+> +		pdata->tx_chan = NULL;
+> +		return -EINVAL;
+> +	}
+> +	pdata->rx_chan = mbox_request_channel_byname(&pdata->rx_mc, "rx");
+> +	if (IS_ERR(pdata->rx_chan)) {
+> +		dev_err(dev, "failed to request mbox rx channel.\n");
+> +		pdata->rx_chan = NULL;
+> +		return -EINVAL;
+> +	}
+> +	skb_queue_head_init(&pdata->tx_mc_skbs);
+> +	return 0;
+> +}
+> +
+> +/**
+> + * zynqmp_r5_probe() - Probes ZynqMP R5 processor device node
+> + * @pdata: pointer to the ZynqMP R5 processor platform data
+> + * @pdev: parent RPU domain platform device
+> + * @node: pointer of the device node
+> + *
+> + * Function to retrieve the information of the ZynqMP R5 device node.
+> + *
+> + * Return: 0 for success, negative value for failure.
+> + */
+> +static int zynqmp_r5_probe(struct zynqmp_r5_pdata *pdata,
+> +			   struct platform_device *pdev,
+> +			   struct device_node *node)
+> +{
+> +	struct device *dev = &pdata->dev;
+> +	struct rproc *rproc;
+> +	struct device_node *nc;
+> +	int ret;
+> +
+> +	/* Create device for ZynqMP R5 device */
+> +	dev->parent = &pdev->dev;
+> +	dev->release = zynqmp_r5_release;
+> +	dev->of_node = node;
+> +	dev_set_name(dev, "%s", of_node_full_name(node));
+> +	dev_set_drvdata(dev, pdata);
+> +	ret = device_register(dev);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register device.\n");
+> +		return ret;
+> +	}
+> +	get_device(&pdev->dev);
+> +
+> +	/* Allocate remoteproc instance */
+> +	rproc = rproc_alloc(dev, dev_name(dev), &zynqmp_r5_rproc_ops, NULL, 0);
+> +	if (!rproc) {.
+> +		dev_err(dev, "rproc allocation failed.\n");
+> +		ret = -ENOMEM;
+> +		goto error;
+> +	}
+> +	rproc->auto_boot = autoboot;
+> +	pdata->rproc = rproc;
+> +	rproc->priv = pdata;
+> +
+> +	/*
+> +	 * The device has not been spawned from a device tree, so
+> +	 * arch_setup_dma_ops has not been not called, thus leaving
+> +	 * the device with dummy DMA ops.
+> +	 * Fix this by inheriting the parent's DMA ops and mask.
+> +	 */
+> +	rproc->dev.dma_mask = pdev->dev.dma_mask;
+> +	set_dma_ops(&rproc->dev, get_dma_ops(&pdev->dev));
+> +
+> +	/* Probe R5 memory devices */
+> +	INIT_LIST_HEAD(&pdata->mems);
+> +	for_each_available_child_of_node(node, nc) {
+> +		ret = zynqmp_r5_mem_probe(pdata, nc);
+> +		if (ret) {
+> +			dev_err(dev, "failed to probe memory %s.\n",
+> +				of_node_full_name(nc));
+
+Use %pOF instead?
+
+> +			goto error;
+> +		}
+> +	}
+> +
+> +	/* Set up DMA mask */
+> +	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+> +	if (ret) {
+> +		dev_warn(dev, "dma_set_coherent_mask failed: %d\n", ret);
+> +		/* If DMA is not configured yet, try to configure it. */
+> +		ret = of_dma_configure(dev, node, true);
+> +		if (ret) {
+> +			dev_err(dev, "failed to configure DMA.\n");
+> +			goto error;
+> +		}
+> +	}
+> +
+> +	/* Get R5 power domain node */
+> +	ret = of_property_read_u32(node, "pnode-id", &pdata->pnode_id);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get power node id.\n");
+> +		goto error;
+> +	}
+> +
+> +	/* Check if R5 is running */
+> +	if (r5_is_running(pdata)) {
+> +		atomic_inc(&rproc->power);
+> +		rproc->state = RPROC_RUNNING;
+> +	}
+> +
+> +	if (!of_get_property(dev->of_node, "mboxes", NULL)) {
+> +		dev_info(dev, "no mailboxes.\n");
+> +	} else {
+> +		ret = zynqmp_r5_setup_mbox(pdata);
+> +		if (ret < 0)
+> +			goto error;
+> +	}
+> +
+> +	/* Add R5 remoteproc */
+> +	ret = rproc_add(rproc);
+> +	if (ret) {
+> +		dev_err(dev, "rproc registration failed\n");
+> +		goto error;
+> +	}
+> +
+> +	return 0;
+> +error:
+> +	if (pdata->rproc)
+> +		rproc_free(pdata->rproc);
+> +	pdata->rproc = NULL;
+> +	device_unregister(dev);
+> +	put_device(&pdev->dev);
+> +	return ret;
+> +}
+> +
+> +static int zynqmp_r5_remoteproc_probe(struct platform_device *pdev)
+> +{
+> +	const unsigned char *prop;
+> +	int ret = 0, i;
+> +	struct zynqmp_rpu_domain_pdata *local;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *nc;
+> +
+> +	eemi_ops = zynqmp_pm_get_eemi_ops();
+> +	if (IS_ERR(eemi_ops))
+> +		return PTR_ERR(eemi_ops);
+> +
+> +	local = devm_kzalloc(dev, sizeof(*local), GFP_KERNEL);
+> +	if (!local)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, local);
+> +
+> +	prop = of_get_property(dev->of_node, "core_conf", NULL);
+> +	if (!prop) {
+> +		dev_err(&pdev->dev, "core_conf is not used.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_info(dev, "RPU core_conf: %s\n", prop);
+> +	if (!strcmp(prop, "split")) {
+> +		local->rpu_mode = PM_RPU_MODE_SPLIT;
+> +	} else if (!strcmp(prop, "lockstep")) {
+> +		local->rpu_mode = PM_RPU_MODE_LOCKSTEP;
+> +	} else {
+> +		dev_err(dev,
+> +			"Invalid core_conf mode provided - %s , %d\n",
+> +			prop, (int)local->rpu_mode);
+
+local->rpu_mode will always be 0 here, so it doesn't seem worthwhile to
+trace it.
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	i = 0;
+> +	for_each_available_child_of_node(dev->of_node, nc) {
+> +		if (i > 1) {
+> +			dev_err(dev, "Max number allowed RPUs described is 2.\n");
+> +			return -EINVAL;
+> +		}
+> +		local->rpus[i].parent = local;
+> +		ret = zynqmp_r5_probe(&local->rpus[i], pdev, nc);
+> +		if (ret) {
+> +			dev_err(dev, "failed to probe rpu %s.\n",
+> +				of_node_full_name(nc));
+
+Use %pOF instead?
+
+> +			return ret;
+> +		}
+> +		i++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int zynqmp_r5_remoteproc_remove(struct platform_device *pdev)
+> +{
+> +	struct zynqmp_rpu_domain_pdata *local = platform_get_drvdata(pdev);
+> +	int i;
+> +
+> +	for (i = 0; i < MAX_RPROCS; i++) {
+> +		struct zynqmp_r5_pdata *rpu = &local->rpus[i];
+> +		struct rproc *rproc;
+> +
+> +		rproc = rpu->rproc;
+> +		if (rproc) {
+> +			rproc_del(rproc);
+> +			rproc_free(rproc);
+> +			rpu->rproc = NULL;
+> +		}
+> +		if (rpu->tx_chan) {
+> +			mbox_free_channel(rpu->tx_chan);
+> +			rpu->tx_chan = NULL;
+> +		}
+> +		if (rpu->rx_chan) {
+> +			mbox_free_channel(rpu->rx_chan);
+> +			rpu->rx_chan = NULL;
+> +		}
+> +
+> +		device_unregister(&rpu->dev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/* Match table for OF platform binding */
+> +static const struct of_device_id zynqmp_r5_remoteproc_match[] = {
+> +	{ .compatible = "xlnx,zynqmp-r5-remoteproc-1.0", },
+> +	{ /* end of list */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, zynqmp_r5_remoteproc_match);
+> +
+> +static struct platform_driver zynqmp_r5_remoteproc_driver = {
+> +	.probe = zynqmp_r5_remoteproc_probe,
+> +	.remove = zynqmp_r5_remoteproc_remove,
+> +	.driver = {
+> +		.name = "zynqmp_r5_remoteproc",
+> +		.of_match_table = zynqmp_r5_remoteproc_match,
+> +	},
+> +};
+> +module_platform_driver(zynqmp_r5_remoteproc_driver);
+> +
+> +module_param_named(autoboot,  autoboot, bool, 0444);
+> +MODULE_PARM_DESC(autoboot,
+> +		 "enable | disable autoboot. (default: true)");
+> +
+> +MODULE_AUTHOR("Jason Wu <j.wu@xilinx.com>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("ZynqMP R5 remote processor control driver");
+> -- 
+> 2.7.4
+> 
