@@ -4,59 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3BAC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 17:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F79C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 17:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A1320870
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 17:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FA3208CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 17:55:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nJGM09Je"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yEcRzx34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgCERxN (ORCPT
+        id S1725948AbgCERzQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:53:13 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36225 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgCERxN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 12:53:13 -0500
-Received: by mail-wm1-f65.google.com with SMTP id g83so6712390wme.1
-        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 09:53:12 -0800 (PST)
+        Thu, 5 Mar 2020 12:55:16 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39199 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbgCERzQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 12:55:16 -0500
+Received: by mail-wm1-f66.google.com with SMTP id j1so6702434wmi.4
+        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 09:55:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zOLC9otCZ1SIV9HUGqyUtds0dA8IbLQFlalxBZvds9o=;
-        b=nJGM09JeeGN/bIiSjLDTgOQ9n9N7i5SV+K6n7BXvNhRMbK8aV9wkXOy1j6MkwbmHng
-         m0BykEBGpy7Y9cK596I3j33SD929OLAr3SA2xlw5QbQYglRM5Hs2P0YkmkCGREf43/Ck
-         4DDo2p/8IYSYfNGlLi07+SKK/tDdEziRuDmVZiHdJejy5gHV04rOkig+75S1iDibDnte
-         DhgnuRGldrOEb06uWJ5YsFD3+AWrSDTvo1VeK0zxCA+DOnLo4n8pxcIFbnX6G/zhNcNa
-         KMN7Sy9VF2ojFS3atTNRYS8XL+HYYKF17tX36W/imoEghPdwv7CJEVdH7Tgu/7KR2k7F
-         aFvw==
+        bh=fHBpesZTfJ6mKcWi00bWDILKSsEsVfAhb2bNBmir3Uk=;
+        b=yEcRzx34oEY0MIxdeSv4UP8BF0gJMpDCn6WZD+fCY7zu+uqg0wYs1LopL9OtaE2xhz
+         Urgl67efLMFYrfCAMDfkHf5Fd9k8bk4XPp7dd6EnEuy6h75rlhUxOARvwB8UhIlSnDd6
+         HjzO/rYByVTO2Rqg5uVOFxl7aOcXIaiRgD5WOTnLDR6+anjX7odFjnkMLEfqGsS0+Th+
+         ON55fMYa1Zs/QprDipf7F2lqOGCzjhGNoPAoEFWV3f6yzbBrZiYTFOb7IRxweflMITla
+         qsUR41WBs257WRFRdkSaOsmM1eobhstWjSe7o25oPZW/hr0Cr+/YlZjAnRwUZlYWx5Pe
+         0gKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=zOLC9otCZ1SIV9HUGqyUtds0dA8IbLQFlalxBZvds9o=;
-        b=XnXdVb+ef5JwvLQMdBFaEIsJMvYPiKZRw5dHQ/XNRsdDDi4gQThSIgIYXcZ3xH2pek
-         TM1GDxggIzfoKkaQaAP+mV1KSg94xoeXqTPGbp7FAOy9gScpWtAjgUDHsp+KRlTdaQJT
-         Q2gYPwPhJVzFqP9mSBZEDlOBHlY8V17jBi735vrLU7wBZNKQ4jg9XQJMJzM/LIWx8G/G
-         flydyG64zWgl/qxp0QUs4H2B/pI38RFi0j2J7Tu9N9l+lHilHWwAXE9UDUjcT1fOpUXG
-         HoOGAWVrZSD3mL1XbSGND+GzH99IU+S2HA8JhoQOOC5jq51FI2Djv51Vvl/Cw3eyaEGM
-         DXJg==
-X-Gm-Message-State: ANhLgQ3RfnDOorivLL5TZ/fNmYx9kY+VUOFmMQE8DbrnFhdaiLvksLoH
-        DCKiN6Mm/sH6RNe3iXXUlo5HAg==
-X-Google-Smtp-Source: ADFU+vuKmO6BoAfVtg5Ag4cHIkSD0MIjwghSUnCuGd4DlW1wi44m02J8f7mrrm2Zda3VZN7BoN7Ozg==
-X-Received: by 2002:a1c:6a13:: with SMTP id f19mr11079317wmc.134.1583430791173;
-        Thu, 05 Mar 2020 09:53:11 -0800 (PST)
+        bh=fHBpesZTfJ6mKcWi00bWDILKSsEsVfAhb2bNBmir3Uk=;
+        b=HY9kuTQjEqVcSUyCFn2XJc+bA2d9nN2wokeCNnkGsGs9dfTnoLM4dRoB7IJSmuIE0l
+         ulmy43ZhqHpTJ2rZQCTq+bb/69I7YYbkZ19GHJa2efGvNJTdOKhFdVQueefKNLs97RAe
+         Hbht07s/k9mjjEqmpShNudzGt5HzodVbkmb+wdApoi2heJAHrt6neVZgIZk7gmH5E7u+
+         Flic6S4JD3mU4jHfVRCWgEOTRyvthsOrXhPTVGSnx1c53TBQKBhaUY4S9g7vN9NGVmpZ
+         XU3fMfyWtSbumLK+cNhuMP32gUJ1OUH03otatQ+LE5v1I+i2hSh0KSPZ1ZqjWgVR543d
+         asqw==
+X-Gm-Message-State: ANhLgQ31rs8o5I3v/01b/FQ3ZRA7AeNJ9hzl/gJHwv1EhGQVypv0XKCK
+        w5qO0kJJ8qPZDxHeaIm5bnLv+g==
+X-Google-Smtp-Source: ADFU+vtp3ZeU9yc0Pk2bmRUnySPmTNZKNaB3BjkVR8s8SVb8uArIqVRmBUEcxJLKksj0YY16FGcMFg==
+X-Received: by 2002:a05:600c:48c:: with SMTP id d12mr8889884wme.183.1583430914521;
+        Thu, 05 Mar 2020 09:55:14 -0800 (PST)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id l5sm10165746wml.3.2020.03.05.09.53.09
+        by smtp.googlemail.com with ESMTPSA id q4sm719751wro.56.2020.03.05.09.55.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Mar 2020 09:53:10 -0800 (PST)
-Subject: Re: [PATCH v8 2/7] nvmem: add driver for JZ4780 efuse
+        Thu, 05 Mar 2020 09:55:13 -0800 (PST)
+Subject: Re: [PATCH v8 4/7] Documentation: ABI: nvmem: add documentation for
+ JZ4780 efuse ABI
 To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
         PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
         Andreas Kemnade <andreas@kemnade.info>,
@@ -78,14 +79,14 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
 References: <cover.1582905653.git.hns@goldelico.com>
- <86886abd9493d0d3b7c9b2eba4e928c2aa4be5d7.1582905653.git.hns@goldelico.com>
+ <08f3bb4e0fe5499907c4e07fa6751bfb2016f23d.1582905653.git.hns@goldelico.com>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <e1c70dc7-05e4-ce64-d683-04aa7fc37e82@linaro.org>
-Date:   Thu, 5 Mar 2020 17:53:09 +0000
+Message-ID: <b7c8567b-5d51-1646-6d0d-8f034839460a@linaro.org>
+Date:   Thu, 5 Mar 2020 17:55:12 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <86886abd9493d0d3b7c9b2eba4e928c2aa4be5d7.1582905653.git.hns@goldelico.com>
+In-Reply-To: <08f3bb4e0fe5499907c4e07fa6751bfb2016f23d.1582905653.git.hns@goldelico.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -100,21 +101,14 @@ On 28/02/2020 16:00, H. Nikolaus Schaller wrote:
 > From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 > 
 > This patch brings support for the JZ4780 efuse. Currently it only exposes
-> a read only access to the entire 8K bits efuse memory and nvmem cells.
-> 
-> To fetch for example the MAC address:
-> 
-> dd if=/sys/devices/platform/134100d0.efuse/jz4780-efuse0/nvmem bs=1 skip=34 count=6 status=none | xxd
+> a read only access to the entire 8K bits efuse memory.
 > 
 > Tested-by: Mathieu Malaterre <malat@debian.org>
 > Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 > Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->   drivers/nvmem/Kconfig        |  12 ++
->   drivers/nvmem/Makefile       |   2 +
->   drivers/nvmem/jz4780-efuse.c | 239 +++++++++++++++++++++++++++++++++++
+>   .../ABI/testing/sysfs-driver-jz4780-efuse        | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
 
 Applied thanks,
 --srini
