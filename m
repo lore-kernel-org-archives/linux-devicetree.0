@@ -2,55 +2,116 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA35CC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 15:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3C3C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 15:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F322073D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 15:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E47F2073D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 15:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583422689;
+	bh=pFOZLiv0mIVHTNZOWfiOPa3A/ridTd7fa+fuzsFhe40=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F8p8NCie35q0ht7RPeskk1e54xx5fVL6Q4H698XNP8NN4HrznPKWGrbZfIwKMEs25
+	 kSVdcVk4xZyDEWSeGgNkl37F/NojVM1jxkPjz7fU0rvyoYELnc9i471p1J5CeLnzkZ
+	 5Rcmi0F4LLfQFKIY5OY1Z4vrykf7PLbqQeJ1XyaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgCEPQk (ORCPT
+        id S1726650AbgCEPiI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:16:40 -0500
-Received: from verein.lst.de ([213.95.11.211]:59929 "EHLO verein.lst.de"
+        Thu, 5 Mar 2020 10:38:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgCEPQj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:16:39 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 820DF68B05; Thu,  5 Mar 2020 16:16:36 +0100 (CET)
-Date:   Thu, 5 Mar 2020 16:16:36 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Christoph Hellwig <hch@lst.de>, yan-liu@ti.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        "Nori, Sekhar" <nsekhar@ti.com>
-Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
-Message-ID: <20200305151636.GA4870@lst.de>
-References: <20200304090031.30360-1-rogerq@ti.com> <20200304162057.GV37466@atomide.com> <145c0448-ea33-8704-4fde-03fb180100d6@ti.com> <00951cc4-6cbf-a3cf-5f2c-007d5b43ac5b@arm.com>
+        id S1726563AbgCEPiI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Mar 2020 10:38:08 -0500
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 219032073D;
+        Thu,  5 Mar 2020 15:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583422687;
+        bh=pFOZLiv0mIVHTNZOWfiOPa3A/ridTd7fa+fuzsFhe40=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K44rhoDh34OpJhwV62dvPm3zfh+dqxbN7xwYVMhfZ6ZtnzxuPOWZhfpLyZuQqa7WQ
+         NichaLzvxHrJDLkeBwtLMNXQRtD3/TVjiW+oqlRAriWQjYEti6aP1BLgLq7zNI2mxx
+         7X85qsau8d6izShQ8AZil0GgKS4OYGGK784FwZKk=
+Received: by mail-qt1-f176.google.com with SMTP id v22so4418939qtp.10;
+        Thu, 05 Mar 2020 07:38:07 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2FibSRIUifkvXSwNNXPqj3BiEkiU0K5UsMqj3iNdJIoZQzflF+
+        XnAF6ndI/ERNChGJMKgDxTS5X3oR3gg7Ko7M8w==
+X-Google-Smtp-Source: ADFU+vsQsV656cyzVfl1AIRiy+kSqBsXm03AeKkd3MEkLkSKnRjRFBKeqrqHktEL6J028OlhKaosK6M+LVN7lOLFI+w=
+X-Received: by 2002:ac8:7c9b:: with SMTP id y27mr7976141qtv.300.1583422686231;
+ Thu, 05 Mar 2020 07:38:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00951cc4-6cbf-a3cf-5f2c-007d5b43ac5b@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <cover.1582528977.git.amit.kucheria@linaro.org>
+ <59d24f8ec98e29d119c5cbdb2abe6d4644cc51cf.1582528977.git.amit.kucheria@linaro.org>
+ <20200224184003.GA3607@bogus> <CAHLCerP1_xESMbLuSBsVz1XkrA0j_okbX+SxbefVSo4ttvX_fg@mail.gmail.com>
+In-Reply-To: <CAHLCerP1_xESMbLuSBsVz1XkrA0j_okbX+SxbefVSo4ttvX_fg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 5 Mar 2020 09:37:54 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK_8MbxwKb9D4U0Cfv1m61zHWku4hJwiLaeOO6wkS8WCQ@mail.gmail.com>
+Message-ID: <CAL_JsqK_8MbxwKb9D4U0Cfv1m61zHWku4hJwiLaeOO6wkS8WCQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 3/3] dt-bindings: thermal: Add yaml bindings for
+ thermal zones
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 12:30:56PM +0000, Robin Murphy wrote:
-> Right - LPAE configs should be getting dma-direct ops since 5.3, which 
-> already respect the limit. For non-LPAE configs it means you go from being 
-> broken from having no limit at all, to having a limit set but not 
-> respected, which is still equally broken, but no *more* so than before.
+On Thu, Mar 5, 2020 at 6:50 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> On Tue, Feb 25, 2020 at 12:10 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Mon, 24 Feb 2020 12:55:37 +0530, Amit Kucheria wrote:
+> > > As part of moving the thermal bindings to YAML, split it up into 3
+> > > bindings: thermal sensors, cooling devices and thermal zones.
+> > >
+> > > The thermal-zone binding is a software abstraction to capture the
+> > > properties of each zone - how often they should be checked, the
+> > > temperature thresholds (trips) at which mitigation actions need to be
+> > > taken and the level of mitigation needed at those thresholds.
+> > >
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > ---
+> > >  .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
+> > >  1 file changed, 302 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+>
+> This one isn't due to my patch, I believe.
 
-Actually, dma-direct doesn't automatically respect the bus limit.  For
-various architectures including arm it uses the arch_dma_alloc callout,
-which for arm just uses the existing arm coherent allocator.
+Right, that's the one known warning...
 
-Thay being said I'm still looking for reviewers for the arm dma coherent
-allocator bus limit fix..
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupt-names: ['uplow'] is too short
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupts: [[0, 506, 4]] is too short
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupt-names: ['uplow'] is too short
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupts: [[0, 507, 4]] is too short
+>
+> Fixed. Just for my information, did the check somehow figure out that
+> this (incomplete) example needed the qcom-tsens.yaml binding (based on
+> compatible string?) and then apply those rules to throw this error?
+
+Yes. And setting DT_SCHEMA_FILES did change that to only check with
+the specified schema file. However, that's now changed in linux-next
+such that examples are always checked by all schemas and
+DT_SCHEMA_FILES just limits which bindings to build and check.
+
+Rob
