@@ -2,124 +2,78 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1B4C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E764C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A252072D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BC62073B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgCEQEL (ORCPT
+        id S1726049AbgCEQGV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:04:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:50626 "EHLO foss.arm.com"
+        Thu, 5 Mar 2020 11:06:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:50682 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbgCEQEK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:04:10 -0500
+        id S1726007AbgCEQGV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Mar 2020 11:06:21 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06B9330E;
-        Thu,  5 Mar 2020 08:04:10 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C202F3F534;
-        Thu,  5 Mar 2020 08:04:08 -0800 (PST)
-Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
-To:     Roger Quadros <rogerq@ti.com>, tony@atomide.com
-Cc:     yan-liu@ti.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200304090031.30360-1-rogerq@ti.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
-Date:   Thu, 5 Mar 2020 16:04:06 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 177C930E;
+        Thu,  5 Mar 2020 08:06:21 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B31CF3F534;
+        Thu,  5 Mar 2020 08:06:19 -0800 (PST)
+Date:   Thu, 5 Mar 2020 16:06:14 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
+Message-ID: <20200305160613.GA53631@bogus>
+References: <1583201219-15839-1-git-send-email-peng.fan@nxp.com>
+ <1583201219-15839-3-git-send-email-peng.fan@nxp.com>
+ <20200304103954.GA25004@bogus>
+ <AM0PR04MB4481A6DB7339C22A848DAFC988E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <AM0PR04MB44814B71E92C02956F4BED4588E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200304170319.GB44525@bogus>
+ <AM0PR04MB4481B90D03D1F68573B05BE088E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200304090031.30360-1-rogerq@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4481B90D03D1F68573B05BE088E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 04/03/2020 9:00 am, Roger Quadros wrote:
-> Even though the TRM says that SATA IP has 36 address bits
-> wired in the SoC, we see bus errors whenever any address
-> greater than 32-bit is given to the controller.
+On Thu, Mar 05, 2020 at 11:25:35AM +0000, Peng Fan wrote:
 
-Actually, is it really just SATA? I pulled up a couple of DRA7xx TRMs 
-out of curiosity - thanks for having such easy-to-access documentation 
-by the way :) - and they both give me a clear impression that the entire 
-L3_MAIN interconnect is limited to 32-bit addresses and thus pretty much 
-all the DMA masters should only be able to touch the lower 2GB of DRAM. 
-Especially the bit that explicitly says "This is a high address range 
-(Q8 – Q15) that requires an address greater than 32 bits. This space is 
-visible only for the MPU Subsystem."
+[...]
 
-Is it in fact the case that the SATA driver happens to be the only one 
-to set a >32-bit DMA mask on your system?
+> >
+> > Yes, this may fix the issue. However I would like to know if we need to support
+> > multiple channels/shared memory simultaneously. It is fair requirement and
+> > may need some work which should be fine.
+>
+> Do you have any suggestions? Currently I have not worked out an good
+> solution.
+>
 
-Robin.
+TBH, I haven't given it a much thought. I would like to know if people
+are happy with just one SMC channel for SCMI or do they need more ?
+If they need it, we can try to solve it. Otherwise, what you have will
+suffice IMO.
 
-> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
-> 
-> As a workaround we limit the DMA address range to 32-bits
-> for SATA.
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Reported-by: Yan Liu <yan-liu@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
-> 
-> NOTE: Currently ARM dma-mapping code doesn't account for devices
-> bus_dma_limit. This is fixed in [1].
-> 
-> [1] https://lkml.org/lkml/2020/2/18/712
-> 
->   arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
->   1 file changed, 16 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index d78b684e7fca..895462c22d1c 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -642,15 +642,22 @@
->   		};
->   
->   		/* OCP2SCP3 */
-> -		sata: sata@4a141100 {
-> -			compatible = "snps,dwc-ahci";
-> -			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
-> -			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> -			phys = <&sata_phy>;
-> -			phy-names = "sata-phy";
-> -			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
-> -			ti,hwmods = "sata";
-> -			ports-implemented = <0x1>;
-> +		sata_aux_bus {
-> +			#address-cells = <1>;
-> +			#size-cells = <2>;
-> +			compatible = "simple-bus";
-> +			ranges = <0x0 0x4a140000 0x0 0x1200>;
-> +			dma-ranges = <0x0 0x0 0x1 0x00000000>;
-> +			sata: sata@4a141100 {
-> +				compatible = "snps,dwc-ahci";
-> +				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
-> +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +				phys = <&sata_phy>;
-> +				phy-names = "sata-phy";
-> +				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
-> +				ti,hwmods = "sata";
-> +				ports-implemented = <0x1>;
-> +			};
->   		};
->   
->   		/* OCP2SCP1 */
-> 
+--
+Regards,
+Sudeep
