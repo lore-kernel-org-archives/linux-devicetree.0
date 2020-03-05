@@ -2,300 +2,181 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37356C3F2D7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512E2C3F2D1
 	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 041882465D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583419014;
-	bh=TAsIGEZL6E+7pAkZ1Wjc9bkHoJJQBIpPCdKfUm6XSX0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=hlFlqBKFHWiEX0PquBel5GR3tC0KIhOPldj754WhBW0yRhs5RiuS0zfI7wO9oP3VJ
-	 SJJhfTDaUPj7jp1SQJR4/Cb5cU9r7IED7nwa4goa4ASQyzzzT7B6GIXAGqtfO08apa
-	 mon6WX9pi/u//+sF01m7tJ+Eaq/o4uolqBogLd74=
+	by mail.kernel.org (Postfix) with ESMTP id 33C57208CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbgCEOgt (ORCPT
+        id S1726954AbgCEOgn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:36:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:49218 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbgCEOgt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:36:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E4101045;
-        Thu,  5 Mar 2020 06:36:48 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 207613F534;
-        Thu,  5 Mar 2020 06:36:47 -0800 (PST)
-Date:   Thu, 05 Mar 2020 14:36:46 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     broonie@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org
-Subject: Applied "dt-bindings: spi: convert rockchip spi bindings to yaml" to the spi tree
-In-Reply-To:  <20200304184203.9548-1-jbx6244@gmail.com>
-Message-Id:  <applied-20200304184203.9548-1-jbx6244@gmail.com>
-X-Patchwork-Hint: ignore
+        Thu, 5 Mar 2020 09:36:43 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:60317 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgCEOgm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 09:36:42 -0500
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MkYsS-1jeGjj40v0-00m1dA; Thu, 05 Mar 2020 15:36:30 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 4C17D65007B;
+        Thu,  5 Mar 2020 14:36:29 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TuPCA_-QNJ3X; Thu,  5 Mar 2020 15:36:28 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id DD21B64F3BB;
+        Thu,  5 Mar 2020 15:36:28 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.10.2.141) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 5 Mar 2020 15:36:28 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 85278804EF; Thu,  5 Mar 2020 15:36:28 +0100 (CET)
+Date:   Thu, 5 Mar 2020 15:36:28 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Driver Development <devel@driverdev.osuosl.org>,
+        Linux Media <linux-media@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Renesas SoC <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
+ adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <20200305143628.GB25741@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Driver Development <devel@driverdev.osuosl.org>,
+        Linux Media <linux-media@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Renesas SoC <linux-renesas-soc@vger.kernel.org>
+References: <cover.1578924232.git.alexander.riesen@cetitec.com>
+ <20200113141556.GI3606@pflmari>
+ <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+ <20200302134011.GA3717@pflmari>
+ <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+ <20200302150706.GB3717@pflmari>
+ <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
+ <20200302160906.GC3717@pflmari>
+ <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
+X-Originating-IP: [10.10.2.141]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29536F936F637367
+X-Provags-ID: V03:K1:89pAwl+MGQIIUBHltXlUW/W8nwgm0att8RcwyUmT97Nq5Uh6QfA
+ Cao/sAEAcgeUGTCWZAGVEVO+ZB68y8ulEc9SSSMy6RI4da/n/jVJVkavJKD8Jj5Z52ijCHP
+ zqxu5prvzW3aRp7kLbE+iui2QyQM7VaIh2xxYo/G7i07KYlWQbatOw8k/e/vEMzIzD9N2AD
+ SKuGXYI4F+AQ+3VKgRlEQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oQ4Mw24lMPY=:ED7Cu+cwK558t9q4OZzyFK
+ qa3OZ3XCPSovu6NVhb0CL01nZqasgqIvg1USKZOveCeTRgmRUa0YK82vGTUpDs5YnxE+OwPFQ
+ K/WJiKnBXhNTme8d6KXpHi4xCf4KxjsOX/kOY+uyA0BVfK5gm/ebjU7LkJfrj73ZaX7F812v2
+ omZeOCKRATZBIha5wAGBoSY9a9hHLGco8rtk/4JGCfIdILZjOQT0OYVd/d+eyRvAzcrMIkvaR
+ QlfR8I2e0coYwvt9m7jbv5v/GXK8Oh+A2CJyvbKzCVuvXc4B2YxFv7fBM5CV8xfMakCfij95h
+ qqcD7cWVxlHpNbljro/Rg/Ub5sWQedtXcWRPfpMt2GiyK9ERuVYfpk6wvR2gJLUpoQf6XwD7z
+ w5wXMPDdClitHvqkgFLrDNtaaXRmsqCsW+UJIAig8hN4GKH5a4csKbsNVS8VARIL7U+UfAd8i
+ JZwFgvU2uAFA5LiQ4ckESKg3rbisVDo/xV26uMMgy0mWb7oG/BnSw5yFx4lRSbP55USfCpS0I
+ IDcLMDA4dhl8kfa5AoyHiV2kH21UkrEjyfrb+Sxlhz6u2bHZ3mDT519vJ2l3hB6jkLulq+gTD
+ IBYaXqGch9x4MOR7YXavq/RWhe1cd2LhrWqiT4djW2R3IrGNRdsndnZiHjvKEfLrH2Aj6/PYV
+ L9I+ZtvXtbKPVs7NE59OcJA/dBsEYxOHQgURyWtkspyDf+ZtLQL+Tibfi9MztM8e3It5aybdg
+ hyOjqxs4GsdI89In369H4gIlLPVq4gLZkoWYLgLKQEduOuGnTD/Tjr6iaH5+vv1HIb2G7Oo8/
+ XWta5CNRXvHS0G5BEMeYSLRUSOYPvseq4JzgjguFF6DD7WGrhjIfgDVRz7arwbO8LBHO9Pk
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Hi Geert,
 
-   dt-bindings: spi: convert rockchip spi bindings to yaml
+Geert Uytterhoeven, Mon, Mar 02, 2020 17:13:30 +0100:
+> On Mon, Mar 2, 2020 at 5:09 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > Geert Uytterhoeven, Mon, Mar 02, 2020 16:32:32 +0100:
+> > >
+> > > The #clock-cells should be in the main video-receiver node.
+> > > Probably there is more than one clock output, so #clock-cells may be 1?
+> >
+> > AFAICS, the device can provide only this one clock line (audio master clock
+> > for I2S output)... I shall re-check, just in case.
 
-has been applied to the spi tree at
+And you're right, of course: the audio output formatting module of the ADV748x
+devices provides a set of clock lines related to the I2S pins: the already
+discussed master clock, left-right channel clock and the serial clock (bit
+clock?).
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+> > > There is no need for a fixed-clock compatible, nor for clock-frequency
+> > > and clock-output-names.
+> > >
+> > > But most important: this should be documented in the adv748x DT bindings,
+> > > and implemented in the adv748x driver.
+> >
+> > So if the driver is to export that clock for the kernel (like in this case),
+> > it must implement its support?
+> 
+> Exactly.  Unless that pin is hardcoded to output a fixed clock, in which case
+> you can just override the existing audio_clk_c rate.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Just to try it out (I'll set #clock-cells to 1), I registered a fixed rate
+clock in the driver, added a clock provider:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+adv748x_probe:
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+    clk = clk_register_fixed_rate(state->dev,
+				  "clk-hdmi-i2s-mclk",
+				  NULL     /* parent_name */,
+				  0        /* flags */,
+				  12288000 /* rate */);
+    of_clk_add_provider(state->dev->of_node, of_clk_src_simple_get, clk);
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+And removed the audio_clk_c frequency setting. I also replaced the audio_clk_c
+in the list of input clocks of the R-Car-side sound card with the phandle of
+the adv7482 main node:
 
-Thanks,
-Mark
+salvator-common.dtsi:
 
-From 5de04175fa2720bacf34196275123be5f32e2b82 Mon Sep 17 00:00:00 2001
-From: Johan Jonker <jbx6244@gmail.com>
-Date: Wed, 4 Mar 2020 19:42:01 +0100
-Subject: [PATCH] dt-bindings: spi: convert rockchip spi bindings to yaml
+    &i2c4 {
+	status = "okay";
 
-Current dts files with 'spi' nodes are manually verified.
-In order to automate this process spi-rockchip.txt
-has to be converted to yaml. In the new setup
-spi-rockchip.yaml will inherit properties from
-spi-controller.yaml.
+	adv7482_hdmi_decoder: video-receiver@70 {
+	    #clock-cells = <0>; // to be replaced with <1>
+	};
+    };
 
-Add document to MAINTAINERS.
+    &rcar_sound {
+	clocks = ..., <&adv7482_hdmi_decoder>, ...;
+    };
 
-Also rk3188.dtsi, rk3288.dtsi, rk3368.dtsi and rk3399.dtsi
-use an extra fallback string, so change this in the documentation.
+As everything continues to work as before, I assume that at least the clock
+dependencies were resolved.
 
-Changed:
-"rockchip,rk3188-spi", "rockchip,rk3066-spi"
-"rockchip,rk3288-spi", "rockchip,rk3066-spi"
-"rockchip,rk3368-spi", "rockchip,rk3066-spi"
-"rockchip,rk3399-spi", "rockchip,rk3066-spi"
+Is there a way to verify that the added input clock is actually used?
+IOW, if its frequency is actually has been programmed into the ssi4 (R-Car
+receiving hardware) registers, and not just a left-over from previuos attempts
+or plain default setting?
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200304184203.9548-1-jbx6244@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/spi/spi-rockchip.txt  |  58 ----------
- .../devicetree/bindings/spi/spi-rockchip.yaml | 105 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 3 files changed, 106 insertions(+), 58 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-rockchip.txt
- create mode 100644 Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+As the ADV748x devices seem to provide also the clocks for video outputs, will
+it make any sense to place the clock definition into the port node?
+Or should all provided clocks be indexed in the main device node?
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-deleted file mode 100644
-index a0edac12d8df..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-+++ /dev/null
-@@ -1,58 +0,0 @@
--* Rockchip SPI Controller
--
--The Rockchip SPI controller is used to interface with various devices such as flash
--and display controllers using the SPI communication interface.
--
--Required Properties:
--
--- compatible: should be one of the following.
--    "rockchip,rv1108-spi" for rv1108 SoCs.
--    "rockchip,px30-spi", "rockchip,rk3066-spi" for px30 SoCs.
--    "rockchip,rk3036-spi" for rk3036 SoCS.
--    "rockchip,rk3066-spi" for rk3066 SoCs.
--    "rockchip,rk3188-spi" for rk3188 SoCs.
--    "rockchip,rk3228-spi" for rk3228 SoCS.
--    "rockchip,rk3288-spi" for rk3288 SoCs.
--    "rockchip,rk3368-spi" for rk3368 SoCs.
--    "rockchip,rk3399-spi" for rk3399 SoCs.
--- reg: physical base address of the controller and length of memory mapped
--       region.
--- interrupts: The interrupt number to the cpu. The interrupt specifier format
--              depends on the interrupt controller.
--- clocks: Must contain an entry for each entry in clock-names.
--- clock-names: Shall be "spiclk" for the transfer-clock, and "apb_pclk" for
--			   the peripheral clock.
--- #address-cells: should be 1.
--- #size-cells: should be 0.
--
--Optional Properties:
--
--- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
--		Documentation/devicetree/bindings/dma/dma.txt
--- dma-names: DMA request names should include "tx" and "rx" if present.
--- rx-sample-delay-ns: nanoseconds to delay after the SCLK edge before sampling
--		Rx data (may need to be fine tuned for high capacitance lines).
--		No delay (0) by default.
--- pinctrl-names: Names for the pin configuration(s); may be "default" or
--		"sleep", where the "sleep" configuration may describe the state
--		the pins should be in during system suspend. See also
--		pinctrl/pinctrl-bindings.txt.
--
--
--Example:
--
--	spi0: spi@ff110000 {
--		compatible = "rockchip,rk3066-spi";
--		reg = <0xff110000 0x1000>;
--		dmas = <&pdma1 11>, <&pdma1 12>;
--		dma-names = "tx", "rx";
--		rx-sample-delay-ns = <10>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
--		clock-names = "spiclk", "apb_pclk";
--		pinctrl-0 = <&spi1_pins>;
--		pinctrl-1 = <&spi1_sleep>;
--		pinctrl-names = "default", "sleep";
--	};
-diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-new file mode 100644
-index 000000000000..bd1450c1274c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/spi-rockchip.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip SPI Controller
-+
-+description:
-+  The Rockchip SPI controller is used to interface with various devices such
-+  as flash and display controllers using the SPI communication interface.
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+# Everything else is described in the common file
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: rockchip,rk3036-spi
-+      - const: rockchip,rk3066-spi
-+      - const: rockchip,rk3228-spi
-+      - const: rockchip,rv1108-spi
-+      - items:
-+          - enum:
-+            - rockchip,px30-spi
-+            - rockchip,rk3188-spi
-+            - rockchip,rk3288-spi
-+            - rockchip,rk3368-spi
-+            - rockchip,rk3399-spi
-+          - const: rockchip,rk3066-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: transfer-clock
-+      - description: peripheral clock
-+
-+  clock-names:
-+    items:
-+      - const: spiclk
-+      - const: apb_pclk
-+
-+  dmas:
-+    items:
-+      - description: TX DMA Channel
-+      - description: RX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+  rx-sample-delay-ns:
-+    default: 0
-+    description:
-+      Nano seconds to delay after the SCLK edge before sampling Rx data
-+      (may need to be fine tuned for high capacitance lines).
-+      If not specified 0 will be used.
-+
-+  pinctrl-names:
-+    minItems: 1
-+    items:
-+      - const: default
-+      - const: sleep
-+    description:
-+      Names for the pin configuration(s); may be "default" or "sleep",
-+      where the "sleep" configuration may describe the state
-+      the pins should be in during system suspend.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3188-cru-common.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    spi0: spi@ff110000 {
-+      compatible = "rockchip,rk3066-spi";
-+      reg = <0xff110000 0x1000>;
-+      interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
-+      clock-names = "spiclk", "apb_pclk";
-+      dmas = <&pdma1 11>, <&pdma1 12>;
-+      dma-names = "tx", "rx";
-+      pinctrl-0 = <&spi1_pins>;
-+      pinctrl-1 = <&spi1_sleep>;
-+      pinctrl-names = "default", "sleep";
-+      rx-sample-delay-ns = <10>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 48c372e7c718..7c1080015943 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2276,6 +2276,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
- S:	Maintained
- F:	Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
- F:	Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
-+F:	Documentation/devicetree/bindings/spi/spi-rockchip.yaml
- F:	arch/arm/boot/dts/rk3*
- F:	arch/arm/boot/dts/rv1108*
- F:	arch/arm/mach-rockchip/
--- 
-2.20.1
-
+Regards,
+Alex
