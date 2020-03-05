@@ -2,180 +2,127 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30741C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 22:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB06C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 22:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F393D207FD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 22:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0520520801
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 22:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EW642PHI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjlglfJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgCEWKT (ORCPT
+        id S1726179AbgCEWV5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:10:19 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51934 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgCEWKT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 17:10:19 -0500
-Received: by mail-pj1-f66.google.com with SMTP id l8so181051pjy.1
-        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 14:10:18 -0800 (PST)
+        Thu, 5 Mar 2020 17:21:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43817 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgCEWV5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 17:21:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id v9so39952wrf.10;
+        Thu, 05 Mar 2020 14:21:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wP8ZLcoVfjRLy2wd1F6p7whOnIttnSe9o981shhqduQ=;
-        b=EW642PHINIK0QQBXUVu9+0zYb98h6yXBQ6W1ECVmuPNBpv+xTNekh/mPEorDGkXbrP
-         8R/GZTy5gtZKaGotUgRHMrfabg8VJ1UKudix3XnEE4X0wo4xpwsNgzn259YyN7kdpphX
-         +NkbZc+7O2mRuEKZocKBF4+CZJu68vbYYfirA=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Z7TiigNdjz+orfMlREKYMBZDrTKamsieMAuLprR2Fyw=;
+        b=DjlglfJNJgBMOUmIioZMi+av2xMFnc/T2klMGdKaUEe06g41gCfZe+GdBgLANYqHFX
+         YEy+LhwwPcxS+IzUlpR7Yu0fPJoFIsO/YtQgKWkHJPOux8wQCWy4uMX1phLX2cozPtbA
+         rZ6TESS/7JM35YzciXup4yFqEK6ME98LnEQfT41dSfiIBHJd3vvhqaYwm4Z1jOJ8+YJ1
+         hO2mdK6OiIT0dZmXXy/Ll4eoQYtZhPg7DTU/hoVFRNrzQ6GTnIe9O838s6bWWtTKQMJm
+         /mx8ecIwB4CdKPG+vxVFkqaknTLQhfHIg6DRiLB+ENIwkvWiqj7rj1GnLe6WvxhvV8AD
+         3+aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wP8ZLcoVfjRLy2wd1F6p7whOnIttnSe9o981shhqduQ=;
-        b=K0c7/iCLarloVjPktZOWpkIYjnDJxR8Io+Zk95+rnFwAT6BhmzWPg1jOqa19S+8kh0
-         ete9qrtbSDJJ032tKvS0IE2/iy42pwNTEaPJ23G+ZzmZSTCortnqJkUwq0h5EDT8V9+I
-         IiflUy6Cd7GMKWhk1LH8ksroF5KSq8O5EfyCqZPiwiYhYRyhg9CEVgPbW2YB4NePAWbr
-         SyFAMedCnmVIrVt3LShqD0KPclNdtFukS1q1Ms+r7bpTJzSWzf6u/r65PEz+rNgGjfFL
-         RcoHq1ZZ93/dW21OrYbJ1VYdLaPNnHdEWSfpAy5W3TlTqzIiMl1yYkI59eiCmE9NJREv
-         Dprg==
-X-Gm-Message-State: ANhLgQ3x+T6pNBYxbgjKOrR70pXFpqgARGs4DBZVs31ryfuD1DIpAVoJ
-        fXLtyP37ggcevfZaAvTIOJ5KKw==
-X-Google-Smtp-Source: ADFU+vsGiwCvQZPWkXv7TRZ4jmXWr6psRLovg1wV5hcbdmqIqfAlL8UTuWw6Uuwi0lyBRg1ClCAohw==
-X-Received: by 2002:a17:90a:9416:: with SMTP id r22mr293883pjo.2.1583446217711;
-        Thu, 05 Mar 2020 14:10:17 -0800 (PST)
-Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id q9sm32286268pgs.89.2020.03.05.14.10.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 14:10:17 -0800 (PST)
-Date:   Thu, 5 Mar 2020 14:10:16 -0800
-From:   Prashant Malani <pmalani@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2] dt-bindings: Convert usb-connector to YAML format.
-Message-ID: <20200305221016.GE142502@google.com>
-References: <20200305030135.210675-1-pmalani@chromium.org>
- <CAL_JsqJcJf0JZVHEuY5y0eHLyw3e0Wr2ZDJvPs4=cZaSMWg97A@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Z7TiigNdjz+orfMlREKYMBZDrTKamsieMAuLprR2Fyw=;
+        b=NhC7ezAQ53FGACFE5l3zMh9frzYcv+rVsfNSRXn7cIY/sM6hneN4hXol6C+hbqKBNb
+         4sh2gBsMq77k1cKXg9Ab1QYEvu54ePG8dVujxIPWM09R6oRu4Nvdaovu0HQLvG63mwAH
+         rcH0ib5Izpdisba24oBQBVVonPA/8TyMo5oDZrAYvKVu3f5lgtTGKsyzAeYwdGurOPQk
+         uoeWlp1NcMLZ8B9IOvdgFS+oCqadCcO+fNFahiqj8gbZcEeqv0RNq8AJFqgnnSKA5Im3
+         uAcsffMcqUu527V9ib5CthQayTGmjy0/amrFjoVQfhJImCiLPOJnkyBoPQ3cfjICoJGW
+         JjsQ==
+X-Gm-Message-State: ANhLgQ2NCGlnx3Af74WKFxoOSEI7jlzYQ0G8Iz8o8L76Tv8NB096F71p
+        7OSxfLh1ESCLfQPm79Yc9R9CRk15
+X-Google-Smtp-Source: ADFU+vsPqjTKstCk+aKgW/j6ZMymiLJfuaIaKNq2Eq1mnpCpBxTW05y745VZ2m97812uXc1VuwMZOg==
+X-Received: by 2002:a5d:518b:: with SMTP id k11mr132122wrv.114.1583446914878;
+        Thu, 05 Mar 2020 14:21:54 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id l5sm11017229wml.3.2020.03.05.14.21.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 14:21:54 -0800 (PST)
+Subject: Re: [PATCH 2/3] ARM: dts: rockchip: add missing @0 to memory
+ nodenames
+To:     Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200304074051.8742-1-jbx6244@gmail.com>
+ <20200304074051.8742-2-jbx6244@gmail.com> <1784340.9KJLpVao5L@phil>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <2a5ef6fc-2487-91ef-24ce-97dd47b0a137@gmail.com>
+Date:   Thu, 5 Mar 2020 23:21:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJcJf0JZVHEuY5y0eHLyw3e0Wr2ZDJvPs4=cZaSMWg97A@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1784340.9KJLpVao5L@phil>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob, Kindly see inline. Thanks as always.
+Hi Heiko,
 
+Goal was to reduce the error output of existing code a little bit,
+so that we can use it for the review of new patches.
+Some questions:
+As I don't have the hardware, where else is coreboot used?
+Is this a rk3288-veyron.dtsi problem only?
+ie. Is it a option to produce a patch serie v2 without veyron?
+Can someone help testing?
 
-On Thu, Mar 05, 2020 at 03:29:00PM -0600, Rob Herring wrote:
-> On Wed, Mar 4, 2020 at 9:01 PM Prashant Malani <pmalani@chromium.org> wrote:
-> >
-> > Convert the usb-connector.txt bindings file to YAML format. This allows
-> > it to be used in dt_bindings_check verification. This patch was
-> > born out of a patch series for the addition of a Type C connector
-> > class port driver[1].
-> >
-> > An attempt has been made to maintain the same documentation text and
-> > example structure as was in the .txt file, but wherever needed
-> > modifications have been made to satisfy dt_bindings_check.
-> >
-> > Also, update all references to usb-connector.txt to now use
-> > usb-connector.yaml.
-> >
-> > [1]: https://lkml.org/lkml/2020/2/19/1232
-> >
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> > ---
-> >
-> > Changes in v2:
-> > - Added type references for some properties.
-> > - Removed pinctrl properties.
-> > - Updated power-role, try-power-role and data-role properties to be in
-> >   valid schema format.
-> > - Added OF graph data bus binding property according to reviewer
-> >   suggestions.
-> >
-> >  .../connector/samsung,usb-connector-11pin.txt |   2 +-
-> >  .../bindings/connector/usb-connector.txt      | 135 ------------
-> >  .../bindings/connector/usb-connector.yaml     | 203 ++++++++++++++++++
-> >  .../devicetree/bindings/usb/fcs,fusb302.txt   |   2 +-
-> >  .../devicetree/bindings/usb/generic.txt       |   2 +-
-> >  .../devicetree/bindings/usb/mediatek,mtu3.txt |   2 +-
-> >  .../devicetree/bindings/usb/mediatek,musb.txt |   2 +-
-> >  .../bindings/usb/richtek,rt1711h.txt          |   2 +-
-> >  .../devicetree/bindings/usb/ti,hd3ss3220.txt  |   2 +-
-> >  .../devicetree/bindings/usb/typec-tcpci.txt   |   2 +-
-> >  .../devicetree/bindings/usb/usb-conn-gpio.txt |   4 +-
-> >  11 files changed, 213 insertions(+), 145 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/connector/usb-connector.txt
-> >  create mode 100644 Documentation/devicetree/bindings/connector/usb-connector.yaml
-> 
-> 
-> > diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> > new file mode 100644
-> > index 0000000000000..b386e2880405c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> > @@ -0,0 +1,203 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/connector/usb-connector.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: USB Connector
-> > +
-> > +maintainers:
-> > +  - linux-usb@vger.kernel.org
-> 
-> Person please. You can put me if no one else.
-> 
+Johan
 
-I will list you as the maintainer.
-> > +description:
-> > +  A USB connector node represents a physical USB connector. It should be a child
-> > +  of a USB interface controller.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - usb-a-connector
-> > +      - usb-b-connector
-> > +      - usb-c-connector
-> > +
-> > +  label:
-> > +    description: Symbolic name for the connector.
-> > +
-> > +  type:
-> > +    description: Size of the connector, should be specified in case of USB-A,
-> > +      USB-B non-fullsize connectors.
-> > +    $ref: /schemas/types.yaml#definitions/string
-> 
-> Needs to be under an 'allOf' or the enum is ignored.
+On 3/5/20 10:31 PM, Heiko Stuebner wrote:
+> Hi Johan,
+>
+> Am Mittwoch, 4. März 2020, 08:40:50 CET schrieb Johan Jonker:
+>> A test with the command below gives for example this error:
+>>
+>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
+>> False schema does not allow
+>> {'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
+>>
+>> The memory nodes all have a reg property that requires '@' in
+>> the nodename. Fix this error by adding the missing '@0' to
+>> the involved memory nodenames.
+>>
+>> make ARCH=arm dtbs_check
+>> DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
+>> schemas/root-node.yaml
+>
+> changes to memory nodes you sadly cannot do in such an automated fashion.
+> If you read the comment in rk3288-veyron.dtsi you'll see that a previous
+> similar iteration broke all of those machines as their coreboot doesn't
+> copy with memory@0 and would insert another memory node without @0
+>
+> In the past iteration the consensus then was that memory without @0
+> is also ok (as it isn't changeable anyway).
+>
 
-Done.
-> 
-> Rob
+> As I don't really want to repeat that, I'd like actual hardware tests
+> before touching memory nodes.
+
+Any suggestion/feedback rapport welcome.
+
+>
+> Heiko
+>
+>
