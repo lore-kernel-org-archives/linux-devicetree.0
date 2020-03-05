@@ -1,110 +1,109 @@
-Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1067C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 23:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A67C3F2D8
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 00:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF352073D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 23:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80AF220714
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 00:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCEX7B convert rfc822-to-8bit (ORCPT
+        id S1726300AbgCFARA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 18:59:01 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:54964 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgCEX7B (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 18:59:01 -0500
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jA0OH-0006dd-3m; Fri, 06 Mar 2020 00:58:57 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] ARM: dts: rockchip: add missing @0 to memory nodenames
-Date:   Fri, 06 Mar 2020 00:58:56 +0100
-Message-ID: <7869677.iSBujUIW6u@phil>
-In-Reply-To: <2a5ef6fc-2487-91ef-24ce-97dd47b0a137@gmail.com>
-References: <20200304074051.8742-1-jbx6244@gmail.com> <1784340.9KJLpVao5L@phil> <2a5ef6fc-2487-91ef-24ce-97dd47b0a137@gmail.com>
+        Thu, 5 Mar 2020 19:17:00 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.1]:57677 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726317AbgCFARA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 19:17:00 -0500
+Received: from [100.113.1.43] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-a.eu-central-1.aws.symcld.net id C6/C5-28499-576916E5; Fri, 06 Mar 2020 00:16:53 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAIsWRWlGSWpSXmKPExsVy8MN7Xd3SaYl
+  xBqv6+SzmnG9hsZh/5ByrxeFFLxgtmhevZ7O4//Uoo8XNT99YLS7vmsNm0b5xNqvF0usXmSze
+  f+pksmjde4Td4v+eHewWP3fNY7G4PXEyowOfx5p5axg9tqy8yeSxc9Zddo9NqzrZPO5c28Pms
+  X/uGnaP/r8GHp83yQVwRLFm5iXlVySwZhzbfJax4At7xf5jnUwNjO9Zuxi5OIQE1jBKLDn5na
+  WLkRPIqZTY+u05I4jNK2AqMePxEjCbTUBH4tHM9UwgNouAisS0M/fB6oUFrCTubGgGGyQicJJ
+  ZovPeVxYQh1lgGqPEno+HmSEmCUqcnPkErINZQELi4IsXzBDbtCTOrVnFOIGRexaSsllIyhYw
+  Mq1itEwqykzPKMlNzMzRNTQw0DU0NNYFkkZmeolVuol6qaW6yal5JUWJQFm9xPJiveLK3OScF
+  L281JJNjMDATylkqNvB+GfNe71DjJIcTEqivDviE+OE+JLyUyozEosz4otKc1KLDzHKcHAoSf
+  BaTwHKCRalpqdWpGXmAKMQJi3BwaMkwhs9FSjNW1yQmFucmQ6ROsWoy3H9/d6lzEIsefl5qVL
+  ivKkgRQIgRRmleXAjYAnhEqOslDAvIwMDgxBPQWpRbmYJqvwrRnEORiVhXm+QS3gy80rgNr0C
+  OoIJ6Ij7d+JBjihJREhJNTDZydlM7Z63IW3tSQbjpS1Hbf2sJNo6z5fwHFTNX5oel+WmeulGV
+  Z7r1Fh/T96j18Q4HARjbFNPLz+dIFGZ9T9k3+2tiZffezW/+7DV6Kf6ma0F01x7J2TESbmE2B
+  7jZLrU03pT5+SKpPyVJ2c9eX221rq4Vl94hegW6+NiV0o+l/ZbzE54+vBK1KNVSo7z8q38GJo
+  lz7WUv82NVzVs/8TMlKxWtEplK9NhkWnSdyaXscxV/5m++Hxc6YMmu3n/7izTuXX2QPz9E/9u
+  3AtZtpbhi/Cv7Madsxs+zP9buq5117aaxeyPAs9clf15JCwk8uKJf4ofXKa63tdYIuQRZNk29
+  8XsytUV7YuFOPb3ZvMqsRRnJBpqMRcVJwIAriHUA4MDAAA=
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-31.tower-229.messagelabs.com!1583453812!553913!1
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 9156 invoked from network); 6 Mar 2020 00:16:53 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-31.tower-229.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 6 Mar 2020 00:16:53 -0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Fri, 6 Mar 2020 01:16:51 +0100
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 4FEDE13F671; Fri,  6 Mar 2020 09:16:50 +0900 (KST)
+Message-ID: <cover.1583425388.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Fri, 6 Mar 2020 01:23:08 +0900
+Subject: [PATCH V10 0/3]  da7280: haptic driver submission
+To:     "David S. Miller" <davem@davemloft.net>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Johan, Rob,
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-Am Donnerstag, 5. März 2020, 23:21:52 CET schrieb Johan Jonker:
-> Goal was to reduce the error output of existing code a little bit,
-> so that we can use it for the review of new patches.
-> Some questions:
-> As I don't have the hardware, where else is coreboot used?
-> Is this a rk3288-veyron.dtsi problem only?
-> ie. Is it a option to produce a patch serie v2 without veyron?
-> Can someone help testing?
+In this patch set the following is provided:
 
-I believe that is more question for @Rob :
+[PATCH V10 1/3] MAINTAINERS file update for DA7280
+[PATCH V10 2/3] DA7280 DT Binding
+[PATCH V10 3/3] DA7280 Driver
 
-In the past we said that it would be ok to have "memory" nodes without
-address, so "memory {}" instead of "memory@0 {}", simply because
-bootloaders mess up sometimes.
+This patch applies against linux-next and v5.5
 
-Question now would be how to make the yaml bindings happy.
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
 
-Thanks
-Heiko
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
 
+ .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1892 ++++++++++++++++++++
+ 5 files changed, 2017 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
 
-> 
-> Johan
-> 
-> On 3/5/20 10:31 PM, Heiko Stuebner wrote:
-> > Hi Johan,
-> >
-> > Am Mittwoch, 4. März 2020, 08:40:50 CET schrieb Johan Jonker:
-> >> A test with the command below gives for example this error:
-> >>
-> >> arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
-> >> False schema does not allow
-> >> {'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
-> >>
-> >> The memory nodes all have a reg property that requires '@' in
-> >> the nodename. Fix this error by adding the missing '@0' to
-> >> the involved memory nodenames.
-> >>
-> >> make ARCH=arm dtbs_check
-> >> DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
-> >> schemas/root-node.yaml
-> >
-> > changes to memory nodes you sadly cannot do in such an automated fashion.
-> > If you read the comment in rk3288-veyron.dtsi you'll see that a previous
-> > similar iteration broke all of those machines as their coreboot doesn't
-> > copy with memory@0 and would insert another memory node without @0
-> >
-> > In the past iteration the consensus then was that memory without @0
-> > is also ok (as it isn't changeable anyway).
-> >
-> 
-> > As I don't really want to repeat that, I'd like actual hardware tests
-> > before touching memory nodes.
-> 
-> Any suggestion/feedback rapport welcome.
-> 
-> >
-> > Heiko
-> >
-> >
-> 
-
-
-
+-- 
+end-of-patch for PATCH V10
 
