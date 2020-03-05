@@ -2,145 +2,269 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B617FC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 10:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22BBC3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 10:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9334A2073D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 10:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76212073D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 10:50:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="jldVkt3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgCEKoa (ORCPT
+        id S1725946AbgCEKut (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:44:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45842 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgCEKo3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:44:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BEF25B239;
-        Thu,  5 Mar 2020 10:44:26 +0000 (UTC)
-Message-ID: <f2ec22160ac86aec8d252ade7d6eb8789777cc42.camel@suse.de>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wahrenst@gmx.net
-Date:   Thu, 05 Mar 2020 11:44:23 +0100
-In-Reply-To: <d3d40174-9c08-f42f-e088-08e23c2dc029@i2se.com>
-References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
-         <736f0c59-352b-03b2-f77f-bfc22171b3fb@i2se.com>
-         <03fcb1e2bc7f3ff389b6dfbf3964e159a93ae835.camel@suse.de>
-         <d3d40174-9c08-f42f-e088-08e23c2dc029@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-1e/ycMxHHlpwCahVXF7n"
-User-Agent: Evolution 3.34.4 
+        Thu, 5 Mar 2020 05:50:49 -0500
+Received: from www381.your-server.de ([78.46.137.84]:48582 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgCEKut (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 05:50:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=IZDIDcAsD/+MtQ6OgW2dCs7MZLssCvVkDO7Sf2CJc+M=; b=jldVkt3Q96LJnbhNrSNoZdiOAT
+        C3qeSKqNB46A5kK4gqEn+U7VaTLbSkBmJtuRcmPQAv8Z2XqEu7SFOzA3OJzpiw5fSR43wmVF3HjEv
+        kFiTSNpqvR/Hwe/W7D8642kLIo5F2+6zTi8lkPFQLhDnqPx3gzN9Kf1GlWtXqv1tp4E8NtNoKQaie
+        5nGSE89xltJeioo+i5WRjyvC7yy1a1/PTFBaTlYRrQ3f2C8i086JIAnQESoe+MqwjOsV8OWCvJrXa
+        ibW+q3wwe6N83K1OjbMdym8Pnm35fPR9ZKgoRoE0Bfbj4RSd2FMT2bmUsKYEh62LPCvrRp5489Utq
+        1k1f0sOA==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1j9npO-0007m7-1m; Thu, 05 Mar 2020 11:34:06 +0100
+Received: from [93.104.100.159] (helo=[192.168.178.20])
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1j9npN-000TFJ-K0; Thu, 05 Mar 2020 11:34:05 +0100
+Subject: Re: [PATCH 5/5] dt-bindings: iio: Add adis16475 documentation
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>
+Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+References: <20200225124152.270914-1-nuno.sa@analog.com>
+ <20200225124152.270914-6-nuno.sa@analog.com>
+ <20200303211045.31f977bb@archlinux>
+ <9b9e18f279edbcb60122a0b0d4c067975868194a.camel@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <63b5c766-78a2-59c4-6efb-3eb35031a351@metafoo.de>
+Date:   Thu, 5 Mar 2020 11:34:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <9b9e18f279edbcb60122a0b0d4c067975868194a.camel@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25741/Wed Mar  4 15:15:26 2020)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 3/4/20 7:00 PM, Sa, Nuno wrote:
+> On Tue, 2020-03-03 at 21:10 +0000, Jonathan Cameron wrote:
+>> [External]
+>>
+>> On Tue, 25 Feb 2020 13:41:52 +0100
+>> Nuno Sá <nuno.sa@analog.com> wrote:
+>>
+>>> Document the ADIS16475 device devicetree bindings.
+>>>
+>>> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+>> One thing inline on the burst mode stuff.
+>>
+>> Thanks,
+>>
+>> Jonathan
+>>
+>>> ---
+>>>   .../bindings/iio/imu/adi,adis16475.yaml       | 130
+>>> ++++++++++++++++++
+>>>   MAINTAINERS                                   |   1 +
+>>>   2 files changed, 131 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+>>> b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+>>> new file mode 100644
+>>> index 000000000000..c0f2146e000c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+>>> @@ -0,0 +1,130 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/iio/imu/adi,adis16475.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Analog Devices ADIS16475 and similar IMUs
+>>> +
+>>> +maintainers:
+>>> +  - Nuno Sá <nuno.sa@analog.com>
+>>> +
+>>> +description: |
+>>> +  Analog Devices ADIS16475 and similar IMUs
+>>> +
+>>> https://www.analog.com/media/en/technical-documentation/data-sheets/ADIS16475.pdf
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - adi,adis16475-1
+>>> +      - adi,adis16475-2
+>>> +      - adi,adis16475-3
+>>> +      - adi,adis16477-1
+>>> +      - adi,adis16477-2
+>>> +      - adi,adis16477-3
+>>> +      - adi,adis16470
+>>> +      - adi,adis16465-1
+>>> +      - adi,adis16465-2
+>>> +      - adi,adis16465-3
+>>> +      - adi,adis16467-1
+>>> +      - adi,adis16467-2
+>>> +      - adi,adis16467-3
+>>> +      - adi,adis16500
+>>> +      - adi,adis16505-1
+>>> +      - adi,adis16505-2
+>>> +      - adi,adis16505-3
+>>> +      - adi,adis16507-1
+>>> +      - adi,adis16507-2
+>>> +      - adi,adis16507-3
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  spi-cpha: true
+>>> +
+>>> +  spi-cpol: true
+>>> +
+>>> +  spi-max-frequency:
+>>> +    maximum: 2000000
+>>> +
+>>> +  interrupts:
+>>> +    maxItems: 1
+>>> +
+>>> +  clocks:
+>>> +    maxItems: 1
+>>> +
+>>> +  clock-names:
+>>> +    oneOf:
+>>> +      - const: sync
+>>> +      - const: direct-sync
+>>> +      - const: pulse-sync
+>>> +      - const: scaled-sync
+>>> +
+>>> +  reset-gpios:
+>>> +    description:
+>>> +      Must be the device tree identifier of the RESET pin. If
+>>> specified,
+>>> +      it will be asserted during driver probe. As the line is
+>>> active low,
+>>> +      it should be marked GPIO_ACTIVE_LOW.
+>>> +    maxItems: 1
+>>> +
+>>> +  adi,scaled-output-hz:
+>>> +    description:
+>>> +      This property must be present if the clock mode is scaled-
+>>> sync through
+>>> +      clock-names property. In this mode, the input clock can have
+>>> a range
+>>> +      of 1Hz to 128HZ which must be scaled to originate an
+>>> allowable sample
+>>> +      rate. This property specifies that rate.
+>>> +    minimum: 1900
+>>> +    maximum: 2100
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +  - interrupts
+>>> +  - spi-cpha
+>>> +  - spi-cpol
+>>> +
+>>> +if:
+>>> +  properties:
+>>> +    compatible:
+>>> +      contains:
+>>> +        enum:
+>>> +          - adi,adis16500
+>>> +          - adi,adis16505-1
+>>> +          - adi,adis16505-2
+>>> +          - adi,adis16505-3
+>>> +          - adi,adis16507-1
+>>> +          - adi,adis16507-2
+>>> +          - adi,adis16507-3
+>>> +
+>>> +then:
+>>> +  properties:
+>>> +    clock-names:
+>>> +      oneOf:
+>>> +        - const: sync
+>>> +        - const: direct-sync
+>>> +        - const: scaled-sync
+>>> +
+>>> +    adi,burst32-enable:
+>>> +      description:
+>>> +        Enable burst32 mode. In this mode, a burst reading
+>>> contains calibrated
+>>> +        gyroscope and accelerometer data in 32-bit format.
+>> Why is this in DT?  Is it not a runtime decision
+>> (ideally automatically selected)
+> So, you mean just have this mode by default on parts that support it?
 
---=-1e/ycMxHHlpwCahVXF7n
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Maybe lets start with explaining what burst32 mode is, so everybody is 
+on the same page.
 
-Hi Stefan,
+The way registers are usually accessed for this chip is that you first 
+write the address you want to read on the SPI bus and then read the 
+selected register. This can be quite slow though if you want to read 
+multiple registers and is too slow to be able to read all the data at 
+full data rate. So there is a special burst mode which allows to read 
+all the data registers in one go.
 
-On Tue, 2020-03-03 at 20:24 +0100, Stefan Wahren wrote:
-> > > > Note: I tested this on RPi3b, RPi3a+ and RPi2b.
-> > > as i already wrote this prevent X to start on current Raspbian on my
-> > > Raspberry Pi 3A+ (multi_v7_defconfig, no u-boot). We must be careful =
-here.
-> > >=20
-> > > I will take a look at the debug UART. Maybe there are more helpful
-> > > information.
-> > It seems we're seeing different things, I tested this on raspbian
-> > (multi_v7_defconfig) and on arm64. I'll try again from scratch tomorrow=
-.
->=20
-> My modifications to the Raspbian image (from 13.2.2020) are little:
->=20
-> - specify devicetree to config.txt
-> - change console to ttyS1 and remove "silent" in cmdline.txt
-> - rename all original kernel7*.img
-> - copy dtb and kernel7.img to boot partition
-> - copy kernel modules to root partition
+Now by default the data registers are 16-bit. But there is an internal 
+decimation filter and the extra bits produced by the decimation filter 
+go into additional data registers making the data 32-bit wide. The chip 
+allows to configure whether to read the only 16-bit MSBs or the full 
+32-bit register.
 
-Would you mind retesting with the latest linux-next? I validated an image b=
-ased
-on 5.6.0-rc4-next-20200305-00001-g285a7a64cd56 and a fresh raspbian downloa=
-d on
-RPi3a+ without X issues.
+So the decision whether a user wants to use 32-bit or 16-bit depends on 
+whether the extra 16-bit are needed or if they are even available. E.g. 
+if the decimation filter is off there wont be any extra bits.
 
-> The debug UART works fine, maybe the dmesg gives us a hint:
+This means ideally it would be user configurable whether to use 16-bit 
+or 32-bit burst mode, since it is application specific. The problem is 
+we don't have an interface for changing the bit width of a buffer 
+channel. Adding such an interface would require quite a bit of effort 
+since the assumption currently is that the bit width does not chance. 
+E.g. libiio assumes this and would stop working if it did change.
 
-[...]
+Maybe as a compromise for now. Use 32-bit burst when there is actually 
+meaningful data is the LSBs, i.e. the decimation filter is used and 
+disable it otherwise. And then think about how to make it configurable 
+as a follow up action.
 
-> [    8.451520] vc4_hdmi 3f902000.hdmi: vc4-hdmi-hifi <-> 3f902000.hdmi
-> mapping ok
-> [    8.451541] vc4_hdmi 3f902000.hdmi: ASoC: no DMI vendor name!
-> [    8.465617] vc4-drm soc:gpu: bound 3f902000.hdmi (ops vc4_hdmi_ops
-> [vc4])
-> [    8.466033] vc4-drm soc:gpu: bound 3f806000.vec (ops vc4_vec_ops [vc4]=
-)
-> [    8.466159] vc4-drm soc:gpu: bound 3f004000.txp (ops vc4_txp_ops [vc4]=
-)
-> [    8.466292] vc4-drm soc:gpu: bound 3f400000.hvs (ops vc4_hvs_ops [vc4]=
-)
-> [    8.466649] vc4-drm soc:gpu: bound 3f206000.pixelvalve (ops
-> vc4_crtc_ops [vc4])
-> [    8.466889] vc4-drm soc:gpu: bound 3f207000.pixelvalve (ops
-> vc4_crtc_ops [vc4])
-> [    8.467154] vc4-drm soc:gpu: bound 3f807000.pixelvalve (ops
-> vc4_crtc_ops [vc4])
-> [    8.467262] vc4-drm soc:gpu: bound 3fc00000.v3d (ops vc4_v3d_ops [vc4]=
-)
-> [    8.467272] checking generic (1e330000 8ca000) vs hw (0 ffffffff)
-> [    8.467278] fb0: switching to vc4drmfb from simple
-> [    8.473639] Console: switching to colour dummy device 80x30
-> [    8.473714] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013)=
-.
-> [    8.473718] [drm] Driver supports precise vblank timestamp query.
-> [    8.476777] [drm] Initialized vc4 0.0.0 20140616 for soc:gpu on minor =
-0
-> [    8.534359] Console: switching to colour frame buffer device 90x30
-> [    8.550245] vc4-drm soc:gpu: fb0: vc4drmfb frame buffer device
+In my opinion there is should not be a difference in the userspace 
+interface for chips that do support 32-bit burst and those that don't. 
+For devices that don't support 32-bit burst it should be emulated by 
+reading the LSB bits registers manually.
 
-I get the exact same results as you here.
-
-Regards,
-Nicolas
-
-
---=-1e/ycMxHHlpwCahVXF7n
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5g2AcACgkQlfZmHno8
-x/4IlQgApYGk9IyBIGZXZU7cjQ4U0IGcYwkZZIy8r4vLrNLOKHCg8uEZpLk8Kvim
-wux9hWhjqbuYV1Q7/MEgioV+IUv4mkKOZxZodXy8/cf8Zq8mPV3FgY6hX2IlVXdt
-CkSlN4cth5Kq35oQm+W6NNWAdOQTabix30MRbfZ4sL8JAoL12DBdt1DQpMkEN2az
-zsxwZDV5LBe655F75XcBBCnWnrSQWeAZySsBtwsJidSqfepsdiVSAlYonoD+4tiW
-a05qYn+C51jrnxQqMtkfuFxfz8q5Kjd+zS8Mb9lhAqtS7mVPM1XMlJd401+fYdq4
-RMUXbtQ0juTl/b7yJowqjUiacvGwWg==
-=Rxs/
------END PGP SIGNATURE-----
-
---=-1e/ycMxHHlpwCahVXF7n--
+- Lars
 
