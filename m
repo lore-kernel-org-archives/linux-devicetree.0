@@ -2,107 +2,98 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73804C3F2D9
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C65C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 09:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D02A21556
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klpt5eD0"
+	by mail.kernel.org (Postfix) with ESMTP id 01F782073D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 09:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgCEJHH (ORCPT
+        id S1726861AbgCEJiv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:07:07 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54210 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbgCEJHG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 04:07:06 -0500
-Received: by mail-pj1-f66.google.com with SMTP id cx7so2217825pjb.3;
-        Thu, 05 Mar 2020 01:07:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CwWk3rymKlBi7YMKzGNb1n6EmY/0fOhsKyM88/tetFg=;
-        b=klpt5eD0lOtMOlCD5w9upzN5MpEqELB1VFCJEfVhkmU5Zh/Z5kIcGB7jZfHR+c/LaH
-         2kbROwAXGEZ//027FUQT6zMBJ6GPWY5L5Ur9TWzhA8NqJ7ht6cAI1ecJx0meCQ89YnnE
-         GEAKxEwX29TwLSK7YklkkL49IlUuVx9FseHC/XmkfBjvfRQfl76UvxWb6NS7S8f1NWrz
-         VF37gLXVlQrlvF74m+789A/fhF/f4HTvK+WIdYq9d2QcuD6AUm0rLvW6t3qH/oWpMVo6
-         Erubp45bmBx1/yw43tBtBM47YbmTEIVEUT0faLSCHSqOMKXuI8DErOZlRkaHyPxOrtmc
-         E9eg==
+        Thu, 5 Mar 2020 04:38:51 -0500
+Received: from mail-ot1-f43.google.com ([209.85.210.43]:45130 "EHLO
+        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbgCEJiv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 04:38:51 -0500
+Received: by mail-ot1-f43.google.com with SMTP id f21so5005688otp.12
+        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 01:38:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CwWk3rymKlBi7YMKzGNb1n6EmY/0fOhsKyM88/tetFg=;
-        b=kS951B6rNfUESNgq1bH4FA2bHhuhrPjsNK4EEDI6SLnacWBD4Hzyew/k6wsMmP7/d+
-         /+ndgMEDJVFDJSM6Ce8FMzxgFG9ZG9+lLzuHxYdNsCe9IfZ8P5CZo1o+HzFmImqRY8tg
-         o7m7r81BAV5I4kSW6PDE8xNKKfj8JZYZwWGacWIk8eE8qG3Oh2qqh8LyC4qXHQUI4/pE
-         z9IyDz9fIUZj7jJPscpgdrFvZ/MOUMaUnYbJNDCVrjcbqPbuYtEO/IHI8RTFGLjIf2IE
-         iwTaGHpBmb+P3p6pjgDNDuKSOLkorFLvQBjIiNb6hfPizfXkMBSlHaSEdcgutbGEP0dM
-         hPxQ==
-X-Gm-Message-State: ANhLgQ0m2tzZe0YyE0vJC/Me1FwURfQvot9jvn8kNyVREP7zuY4Dj6YY
-        kE17TN+ZIxWSs+eFUa0sZkZAmCWw
-X-Google-Smtp-Source: ADFU+vvbk9XiN+e5NS1NkizYhrxuArSYCMucjcPDA/Qy+EnS7Ar6iKHF9uTwRCjX+df5AMO+yMHWlg==
-X-Received: by 2002:a17:902:bd95:: with SMTP id q21mr7267961pls.148.1583399223859;
-        Thu, 05 Mar 2020 01:07:03 -0800 (PST)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id r14sm10626822pfh.119.2020.03.05.01.07.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 01:07:03 -0800 (PST)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH] arm64: dts: specify console via command line
-Date:   Thu,  5 Mar 2020 17:06:35 +0800
-Message-Id: <20200305090635.30569-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cjlW6oSP+p3MkzDBeG47zElrm9PNtmQ5zIOohaSll+E=;
+        b=AHFhjGfzKoyg4yi1aHw1LEtlstgVdL0k6F494DuEkd6E/pfvKM/hl5bKjqst8CLUVO
+         chIbT/m2ZGLqMl4XnqJ2JSGrOeI586XqiYaOhaiZ0EyepB6ZhcWm9BKzjNZztKrp0/BQ
+         9LLFD9S8Phl/pxQjc2f8DJUKFEg6ofRR/89rlBWDCyzzYdhV5TrIPr228BnEEtFNm1EQ
+         BgBo5jrbRZ1aG85HTHlseIz3rSh8G7fbCHDksXJHht9d4CyFLkJTSPzCOIPS/sObSRyI
+         D+FS6oFSHe09BOdMcdLSk9/E5XydhsFBwgFlNEPk0vPlvc4BLTH9DoJ/kcotNKCDCZMN
+         skLQ==
+X-Gm-Message-State: ANhLgQ0UzMCglcwirPNnEDLu9a9AQsZKrrsdk7ETcssErG+WwpW6E4D9
+        tmEyLXpwWCwK0jKT/doRvX+B45L/52xYZ8vfHlo=
+X-Google-Smtp-Source: ADFU+vukGxNqz/hVg1TX9R/UMeg4cCb39dRu9Y7cq43L5hp/KdEXM/1mCCEm0Ji/y1a9a/a2AZ3+Hh366IC9Nrn3s7k=
+X-Received: by 2002:a05:6830:129a:: with SMTP id z26mr6120035otp.179.1583401129253;
+ Thu, 05 Mar 2020 01:38:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHLCerPCyYMmUttfz5mPrJiu3ApzoijTERLYjdZYau=EFVNDPw@mail.gmail.com>
+ <CAL_JsqJ47Cm=XCaW2DXMtqcdm4+sdErpQsqgqb2jJyzEgmywuQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqJ47Cm=XCaW2DXMtqcdm4+sdErpQsqgqb2jJyzEgmywuQ@mail.gmail.com>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Thu, 5 Mar 2020 10:38:37 +0100
+Message-ID: <CA+7wUsy1ajjydta7xAc25C+KA5W4Gj5UoZ6xZXO4-CELcH3+FQ@mail.gmail.com>
+Subject: Re: Permission to relicense thermal bindings to GPL-v2 + BSD-2-Clause
+To:     Rob Herring <robh@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Caesar Wang <wxt@rock-chips.com>,
+        Punit Agrawal <punit.agrawal@arm.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+On Thu, Mar 5, 2020 at 12:06 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Mar 4, 2020 at 3:24 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> >
+> > Hi,
+> >
+> > Everyone on CC has contributed to the thermal bindings[1] in the
+> > kernel. They are currently licensed under GPLv2 but we'd like to
+> > relicense them as GPLv2 and BSD-2-Clause.
+> >
+> > If you agree, could you please send your ack to relicense the binding
+> > as GPLv2 + BSD-2-Clause. I will then add the BSD-2-Clause license to
+> > the yaml bindings sent to the list.[2]
+> >
+> > Regards,
+> > Amit
+> >
+> > [1] git log --no-merges
+> > Documentation/devicetree/bindings/thermal/thermal.txt | grep Author |
+> > uniq
+> > Author: Amit Kucheria <amit.kucheria@linaro.org>
+> > Author: Viresh Kumar <viresh.kumar@linaro.org>
+> > Author: Rob Herring <robh@kernel.org>
+> > Author: Mathieu Malaterre <malat@debian.org>
+> > Author: Caesar Wang <wxt@rock-chips.com>
+> > Author: Punit Agrawal <punit.agrawal@arm.com>
+> > Author: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > Author: Eduardo Valentin <eduardo.valentin@ti.com>
+>
+> Generally, the copyright is owned by the companies. I've already
+> gotten okays on any bindings from Linaro and Arm. Looks like it is
+> mainly Eduardo/TI that needs to agree. The remainder look to be
+> trivial changes.
 
-The SPRD serial driver need to know which port would be used as console
-in an early period during initialization, otherwise console init would
-fail since we added this feature[1].
+No copyright attached to my trivial changes.
 
-So this patch add console to command line via devicetree.
-
-[1] https://lore.kernel.org/lkml/20190826072929.7696-4-zhang.lyra@gmail.com/
-
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- arch/arm64/boot/dts/sprd/sp9863a-1h10.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-index 2047f7a74265..510f65f4d8b8 100644
---- a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-+++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-@@ -28,7 +28,7 @@
- 
- 	chosen {
- 		stdout-path = "serial1:115200n8";
--		bootargs = "earlycon";
-+		bootargs = "earlycon console=ttyS1";
- 	};
- };
- 
--- 
-2.20.1
-
+Acked-by: Mathieu Malaterre <malat@debian.org>
