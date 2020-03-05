@@ -2,149 +2,97 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D824C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 12:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DD8C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AABF2072D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 12:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B025D20848
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="kLRRJFht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgCEMa7 (ORCPT
+        id S1725993AbgCEMnK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:30:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:48022 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgCEMa7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:30:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68E754B2;
-        Thu,  5 Mar 2020 04:30:58 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 453383F6C4;
-        Thu,  5 Mar 2020 04:30:57 -0800 (PST)
-Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
-To:     Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     yan-liu@ti.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        "Nori, Sekhar" <nsekhar@ti.com>
-References: <20200304090031.30360-1-rogerq@ti.com>
- <20200304162057.GV37466@atomide.com>
- <145c0448-ea33-8704-4fde-03fb180100d6@ti.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <00951cc4-6cbf-a3cf-5f2c-007d5b43ac5b@arm.com>
-Date:   Thu, 5 Mar 2020 12:30:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 5 Mar 2020 07:43:10 -0500
+Received: from www381.your-server.de ([78.46.137.84]:39352 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgCEMnK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 07:43:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7WrM2w+Spkm40Ar8dDt2aeThFbKRXodYzorwjvvpeoE=; b=kLRRJFhtSleNZQh8uJxuRUh0Gt
+        mrg7DndD6muHeQdQQEbiZBTFymKeh8RwjjUzNCp6ztIZsZQ73Ypj23v+lAMBaeiLF5Bf3Iq8HUMoh
+        tgRsnshB2Th2Ily2ixXUSN2YfSFafoM3Xe4zIY1dLYna3SUmTw9uMYPSdUEyKyJbzsZIVlcNrg2Lg
+        zZKcul/ybk+tgr1m4uNxgt+qpOjWmk7igrBbTzWr8SGFh2pNMQMm8eBhVB6HgarAr7xS+lRenJweF
+        ZhQ1ujjJjDMkkxRqdgJJrjgu6Ho+lyTQhwv9FuCM1qchpijqq7J9j4s9ooHq4WJ3VZxZAgMTKmmFk
+        puO8/KzQ==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1j9pqD-0000yM-8t; Thu, 05 Mar 2020 13:43:05 +0100
+Received: from [93.104.100.159] (helo=[192.168.178.20])
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1j9pqC-000HxZ-Sa; Thu, 05 Mar 2020 13:43:04 +0100
+Subject: Re: [PATCH 5/5] dt-bindings: iio: Add adis16475 documentation
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>
+Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+References: <20200225124152.270914-1-nuno.sa@analog.com>
+ <20200225124152.270914-6-nuno.sa@analog.com>
+ <20200303211045.31f977bb@archlinux>
+ <9b9e18f279edbcb60122a0b0d4c067975868194a.camel@analog.com>
+ <63b5c766-78a2-59c4-6efb-3eb35031a351@metafoo.de>
+ <3bdae6c113381c7dd0645b7b98c67fac734b92ab.camel@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <13e355c6-af60-772a-92ec-aff17d0255ee@metafoo.de>
+Date:   Thu, 5 Mar 2020 13:43:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <145c0448-ea33-8704-4fde-03fb180100d6@ti.com>
+In-Reply-To: <3bdae6c113381c7dd0645b7b98c67fac734b92ab.camel@analog.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25741/Wed Mar  4 15:15:26 2020)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05/03/2020 12:05 pm, Roger Quadros wrote:
-> Tony, Christoph,
-> 
-> On 04/03/2020 18:20, Tony Lindgren wrote:
->> * Roger Quadros <rogerq@ti.com> [200304 09:01]:
->>> Even though the TRM says that SATA IP has 36 address bits
->>> wired in the SoC, we see bus errors whenever any address
->>> greater than 32-bit is given to the controller.
->>>
->>> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
->>>
->>> As a workaround we limit the DMA address range to 32-bits
->>> for SATA.
->>>
->>> Cc: Christoph Hellwig <hch@lst.de>
->>> Cc: Robin Murphy <robin.murphy@arm.com>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Reported-by: Yan Liu <yan-liu@ti.com>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>>
->>> NOTE: Currently ARM dma-mapping code doesn't account for devices
->>> bus_dma_limit. This is fixed in [1].
->>>
->>> [1] https://lkml.org/lkml/2020/2/18/712
->>
->> So is this dts patch safe to apply without the series above?
->>
-> 
-> Yes. To my surprise this patch fixes the SATA issue even without [1].
-> Without this patch dev->bus_dma_limit was being set to 0 and with the patch
-> it is being set to 0xffffffff.
+On 3/5/20 1:27 PM, Sa, Nuno wrote:
+>
+>> In my opinion there is should not be a difference in the userspace
+>> interface for chips that do support 32-bit burst and those that
+>> don't.
+>> For devices that don't support 32-bit burst it should be emulated by
+>> reading the LSB bits registers manually.
+> Hmm. In terms of interface I think there is no difference. We always
+> report 32bits channels (for accel and gyro). However, what we do right
+> know is just to set the LSB to 0 if burst32 is not supported. So, we
+> can be just ignoring the LSB bits if they are being used...
 
-Right - LPAE configs should be getting dma-direct ops since 5.3, which 
-already respect the limit. For non-LPAE configs it means you go from 
-being broken from having no limit at all, to having a limit set but not 
-respected, which is still equally broken, but no *more* so than before.
+What I meant was that somebody might still want to get the full 32-bit 
+values in buffered mode, even if the device does not support burst32. In 
+that case you can first do a 16-bit burst read to get the MSBs and then 
+do manual reads of all the LSB registers and then put both into the buffer.
 
-Robin.
+- Lars
 
->> And should this dts patch be applied as a fix or can it wait
->> until the merge window?
-> 
-> I think we should mark it for stable and apply it right away as fix for 
-> v5.6.
-> 
-> Cc: stable@kernel.org
-> 
-> cheers,
-> -roger
->>
->> Regards,
->>
->> Tony
->>
->>>   arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
->>>   1 file changed, 16 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->>> index d78b684e7fca..895462c22d1c 100644
->>> --- a/arch/arm/boot/dts/dra7.dtsi
->>> +++ b/arch/arm/boot/dts/dra7.dtsi
->>> @@ -642,15 +642,22 @@
->>>           };
->>>           /* OCP2SCP3 */
->>> -        sata: sata@4a141100 {
->>> -            compatible = "snps,dwc-ahci";
->>> -            reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
->>> -            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->>> -            phys = <&sata_phy>;
->>> -            phy-names = "sata-phy";
->>> -            clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->>> -            ti,hwmods = "sata";
->>> -            ports-implemented = <0x1>;
->>> +        sata_aux_bus {
->>> +            #address-cells = <1>;
->>> +            #size-cells = <2>;
->>> +            compatible = "simple-bus";
->>> +            ranges = <0x0 0x4a140000 0x0 0x1200>;
->>> +            dma-ranges = <0x0 0x0 0x1 0x00000000>;
->>> +            sata: sata@4a141100 {
->>> +                compatible = "snps,dwc-ahci";
->>> +                reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
->>> +                interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->>> +                phys = <&sata_phy>;
->>> +                phy-names = "sata-phy";
->>> +                clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->>> +                ti,hwmods = "sata";
->>> +                ports-implemented = <0x1>;
->>> +            };
->>>           };
->>>           /* OCP2SCP1 */
->>> -- 
->>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>>
-> 
