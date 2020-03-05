@@ -2,71 +2,163 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAC1C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7853C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09B5207FD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4802072D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UJibfdPp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L82TiN1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbgCEQgd (ORCPT
+        id S1725993AbgCEQq6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:36:33 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:56310 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgCEQgd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 11:36:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IN0z5lvxX3vfG4LlR2OLwyz2tFIOaeyOpNZ/LAjxDFE=; b=UJibfdPpIN84IhGGV66FPK3zNA
-        yzVJpxyXzBbrmM5EvaVqPmPWHjvZR+sV4xZ14YVEOnaN8OOkCuH8q0AT4VeUlWx807tTEAH18J6Bk
-        JIm5SKt7rEZQ/hDAgkoqur9CPBKLhHBF0YRspnJbyni4rW7a0oT944GJJS+12KbkBkGC1Pl5FSBJz
-        Uoh08v2WTHIfTMXi9KnTDqdE1vEo42kw5RuS+Jtq9QWJOxyAF4F7VkX3oViG/23kudgEKDkxvvzmm
-        Z392HeGdJZ+fM7Twz/UX0YPWV3KCG1aAU+wMcKjeXQ0m7rUdsK6NwE13/Yc86vw33q6rAJ3JLag1t
-        /FLdA+0A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9tU5-0006i6-Lu; Thu, 05 Mar 2020 16:36:29 +0000
-Date:   Thu, 5 Mar 2020 08:36:29 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        yi.l.liu@intel.com, zhangfei.gao@linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dimitri Sivanich <sivanich@sgi.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200305163629.GA14299@infradead.org>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-2-jean-philippe@linaro.org>
+        Thu, 5 Mar 2020 11:46:58 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34580 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbgCEQq6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 11:46:58 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025GkkKE102543;
+        Thu, 5 Mar 2020 10:46:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583426806;
+        bh=dLFUF+hs+lohm/Cy6tRRvf897Y3mN6z0nkcwCI41Suc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=L82TiN1RIfnn7kmuwg7lIQk58WqJrf2UENT7X++AbV7KhQr6RrLWHAto6743DqU10
+         29Z21bS0cz0D515Ns09f10dXHBcDpVzO6Gp82bMWGKK0jwoaF+LdQnt8uQqGHjbXCb
+         uLhMST0d/sfxrGm2/Zri8vPmMzIFMMzWm0SkPiIA=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025Gkk6G047305
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Mar 2020 10:46:46 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
+ 2020 10:46:45 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Mar 2020 10:46:45 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025Gkhkl105579;
+        Thu, 5 Mar 2020 10:46:43 -0600
+Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
+To:     Robin Murphy <robin.murphy@arm.com>, <tony@atomide.com>,
+        Nishanth Menon <nm@ti.com>
+CC:     <yan-liu@ti.com>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Nori, Sekhar" <nsekhar@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+References: <20200304090031.30360-1-rogerq@ti.com>
+ <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <eb4e97f2-9afd-41a9-e239-88798c326a86@ti.com>
+Date:   Thu, 5 Mar 2020 18:46:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224182401.353359-2-jean-philippe@linaro.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 07:23:36PM +0100, Jean-Philippe Brucker wrote:
-> -static struct mmu_notifier *gru_alloc_notifier(struct mm_struct *mm)
-> +static struct mmu_notifier *gru_alloc_notifier(struct mm_struct *mm, void *privdata)
++Nishanth
 
-Pleae don't introduce any > 80 char lines.  Not here, and not anywhere
-else in this patch or the series.
+Robin,
+
+On 05/03/2020 18:04, Robin Murphy wrote:
+> On 04/03/2020 9:00 am, Roger Quadros wrote:
+>> Even though the TRM says that SATA IP has 36 address bits
+>> wired in the SoC, we see bus errors whenever any address
+>> greater than 32-bit is given to the controller.
+> 
+> Actually, is it really just SATA? I pulled up a couple of DRA7xx TRMs out of curiosity - thanks for having such easy-to-access documentation by the way :) - and they both give me a clear impression that the entire L3_MAIN interconnect is limited to 32-bit addresses and thus pretty much all the DMA masters should only be able to touch the lower 2GB of DRAM. Especially the bit that explicitly says "This is a high address range (Q8 – Q15) that requires an address greater than 32 bits. This space is visible only for the MPU Subsystem."
+
+You are right that L3 interconnect can only access first 2GB of DRAM.
+Which means we should add the bus_dma_limit to the entire L3 bus
+instead of just SATA?
+
+> 
+> Is it in fact the case that the SATA driver happens to be the only one to set a >32-bit DMA mask on your system?
+
+This looks like the case. Other device drivers might not be overriding
+dma_mask at all thus using the default 32-bit dma_mask.
+
+cheers,
+-roger
+
+> 
+> Robin.
+> 
+>> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
+>>
+>> As a workaround we limit the DMA address range to 32-bits
+>> for SATA.
+>>
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Cc: Robin Murphy <robin.murphy@arm.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Reported-by: Yan Liu <yan-liu@ti.com>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>
+>> NOTE: Currently ARM dma-mapping code doesn't account for devices
+>> bus_dma_limit. This is fixed in [1].
+>>
+>> [1] https://lkml.org/lkml/2020/2/18/712
+>>
+>>   arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
+>>   1 file changed, 16 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>> index d78b684e7fca..895462c22d1c 100644
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>> @@ -642,15 +642,22 @@
+>>           };
+>>           /* OCP2SCP3 */
+>> -        sata: sata@4a141100 {
+>> -            compatible = "snps,dwc-ahci";
+>> -            reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+>> -            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+>> -            phys = <&sata_phy>;
+>> -            phy-names = "sata-phy";
+>> -            clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+>> -            ti,hwmods = "sata";
+>> -            ports-implemented = <0x1>;
+>> +        sata_aux_bus {
+>> +            #address-cells = <1>;
+>> +            #size-cells = <2>;
+>> +            compatible = "simple-bus";
+>> +            ranges = <0x0 0x4a140000 0x0 0x1200>;
+>> +            dma-ranges = <0x0 0x0 0x1 0x00000000>;
+>> +            sata: sata@4a141100 {
+>> +                compatible = "snps,dwc-ahci";
+>> +                reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
+>> +                interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+>> +                phys = <&sata_phy>;
+>> +                phy-names = "sata-phy";
+>> +                clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+>> +                ti,hwmods = "sata";
+>> +                ports-implemented = <0x1>;
+>> +            };
+>>           };
+>>           /* OCP2SCP1 */
+>>
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
