@@ -2,97 +2,113 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DD8C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4498C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 12:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B025D20848
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD6C21D56
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 12:50:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="kLRRJFht"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fy5hwIsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbgCEMnK (ORCPT
+        id S1726177AbgCEMuy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:43:10 -0500
-Received: from www381.your-server.de ([78.46.137.84]:39352 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgCEMnK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 07:43:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7WrM2w+Spkm40Ar8dDt2aeThFbKRXodYzorwjvvpeoE=; b=kLRRJFhtSleNZQh8uJxuRUh0Gt
-        mrg7DndD6muHeQdQQEbiZBTFymKeh8RwjjUzNCp6ztIZsZQ73Ypj23v+lAMBaeiLF5Bf3Iq8HUMoh
-        tgRsnshB2Th2Ily2ixXUSN2YfSFafoM3Xe4zIY1dLYna3SUmTw9uMYPSdUEyKyJbzsZIVlcNrg2Lg
-        zZKcul/ybk+tgr1m4uNxgt+qpOjWmk7igrBbTzWr8SGFh2pNMQMm8eBhVB6HgarAr7xS+lRenJweF
-        ZhQ1ujjJjDMkkxRqdgJJrjgu6Ho+lyTQhwv9FuCM1qchpijqq7J9j4s9ooHq4WJ3VZxZAgMTKmmFk
-        puO8/KzQ==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1j9pqD-0000yM-8t; Thu, 05 Mar 2020 13:43:05 +0100
-Received: from [93.104.100.159] (helo=[192.168.178.20])
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1j9pqC-000HxZ-Sa; Thu, 05 Mar 2020 13:43:04 +0100
-Subject: Re: [PATCH 5/5] dt-bindings: iio: Add adis16475 documentation
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-References: <20200225124152.270914-1-nuno.sa@analog.com>
- <20200225124152.270914-6-nuno.sa@analog.com>
- <20200303211045.31f977bb@archlinux>
- <9b9e18f279edbcb60122a0b0d4c067975868194a.camel@analog.com>
- <63b5c766-78a2-59c4-6efb-3eb35031a351@metafoo.de>
- <3bdae6c113381c7dd0645b7b98c67fac734b92ab.camel@analog.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <13e355c6-af60-772a-92ec-aff17d0255ee@metafoo.de>
-Date:   Thu, 5 Mar 2020 13:43:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 07:50:54 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:43318 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgCEMuy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 07:50:54 -0500
+Received: by mail-vk1-f195.google.com with SMTP id o2so1551863vka.10
+        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 04:50:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+maOR+AepgKRd4QlRgZ+R5o7Ks/CO7J6rgykLOQhg3o=;
+        b=Fy5hwIsSVhanXjlLscLM66eenX+BCtRtAYQCsCxjZKETTFVL603yeJm9AFRLD+sAAS
+         2wCyCE5SzA4P6OHNlMe8oMswbyXdzcCCcwhvas/r/37ooGvLGxcOmm2m7x59fDE1LGlo
+         fUDuYL5anWHgBbi+EgIpIN9dzRwP7IDMZRBne7yKfT51oHStdbSTwPcNjC+cxCMqCnJd
+         wFbVHtcPnf3cR45aDau0mW4usFyVX06o29igp6GHGzgyWrkBrrNRt5s3KTIexsRyLZy8
+         f1GgC2pag/n7Sno/FT+PEJx3l/sXaGnM1cdS4fSX0XqZOqiQDbYcttOuEvpS2XCqeVVD
+         MZLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+maOR+AepgKRd4QlRgZ+R5o7Ks/CO7J6rgykLOQhg3o=;
+        b=e/Tnq3ZMKA9MT2qt5ptTnUDBVcSG/JXCDJhbkxTESPEEAt6nmvFMX3jCBwHjLkgnPN
+         nJUmb/agO6TLQtuPdIGXbko8b+4YiV6Bh5N3L6p95jqdzw9CxtCBqI+hN04eiXESDMyf
+         DDVUxwK7GK11OMN22srwEcFi29nAnAg8UqqIiuWQGJVUu6tT7FglVWGJyRVzCos9CTmo
+         9uqcSQvRa5aEKEGkyVVZA28BwqBjM2UHrPAiVG1pOVP89xa9TwBdTr4IVZcvk63hYBwj
+         HTo/dl74rAdavtHKoAQ//NaMN+niwA1kKgkOsWqzrQ8LwJPBC/u+R6726H+6sYSpwUK8
+         9yiA==
+X-Gm-Message-State: ANhLgQ1ehnj208Y4mumdxv7F98RWXNkgiSYgkRRet3ioclFoOzowqd78
+        VpvF2zk4scyEWiY1CwjxaxB0cVyuE014i939+sBo0w==
+X-Google-Smtp-Source: ADFU+vsfx2UzBfGovuaSXLUze7lcuI9cYphDPyIxas1YBiaNucPu3Q6rG2VUsSQJWjDBQnBGc8WRyzuMSoSg7SJIEcM=
+X-Received: by 2002:ac5:c94f:: with SMTP id s15mr3982555vkm.79.1583412651049;
+ Thu, 05 Mar 2020 04:50:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <3bdae6c113381c7dd0645b7b98c67fac734b92ab.camel@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25741/Wed Mar  4 15:15:26 2020)
+References: <cover.1582528977.git.amit.kucheria@linaro.org>
+ <59d24f8ec98e29d119c5cbdb2abe6d4644cc51cf.1582528977.git.amit.kucheria@linaro.org>
+ <20200224184003.GA3607@bogus>
+In-Reply-To: <20200224184003.GA3607@bogus>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 5 Mar 2020 18:20:40 +0530
+Message-ID: <CAHLCerP1_xESMbLuSBsVz1XkrA0j_okbX+SxbefVSo4ttvX_fg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 3/3] dt-bindings: thermal: Add yaml bindings for
+ thermal zones
+To:     Rob Herring <robh@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/5/20 1:27 PM, Sa, Nuno wrote:
+On Tue, Feb 25, 2020 at 12:10 AM Rob Herring <robh@kernel.org> wrote:
 >
->> In my opinion there is should not be a difference in the userspace
->> interface for chips that do support 32-bit burst and those that
->> don't.
->> For devices that don't support 32-bit burst it should be emulated by
->> reading the LSB bits registers manually.
-> Hmm. In terms of interface I think there is no difference. We always
-> report 32bits channels (for accel and gyro). However, what we do right
-> know is just to set the LSB to 0 if burst32 is not supported. So, we
-> can be just ignoring the LSB bits if they are being used...
+> On Mon, 24 Feb 2020 12:55:37 +0530, Amit Kucheria wrote:
+> > As part of moving the thermal bindings to YAML, split it up into 3
+> > bindings: thermal sensors, cooling devices and thermal zones.
+> >
+> > The thermal-zone binding is a software abstraction to capture the
+> > properties of each zone - how often they should be checked, the
+> > temperature thresholds (trips) at which mitigation actions need to be
+> > taken and the level of mitigation needed at those thresholds.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
+> >  1 file changed, 302 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
 
-What I meant was that somebody might still want to get the full 32-bit 
-values in buffered mode, even if the device does not support burst32. In 
-that case you can first do a 16-bit burst read to get the MSBs and then 
-do manual reads of all the LSB registers and then put both into the buffer.
+This one isn't due to my patch, I believe.
 
-- Lars
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupt-names: ['uplow'] is too short
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupts: [[0, 506, 4]] is too short
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupt-names: ['uplow'] is too short
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupts: [[0, 507, 4]] is too short
 
+Fixed. Just for my information, did the check somehow figure out that
+this (incomplete) example needed the qcom-tsens.yaml binding (based on
+compatible string?) and then apply those rules to throw this error?
+
+Regards,
+Amit
