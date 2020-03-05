@@ -2,37 +2,38 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1487BC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 21:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FCEC3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 21:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0ED8207FD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 21:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680B420728
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 21:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgCEVcG convert rfc822-to-8bit (ORCPT
+        id S1725991AbgCEVf4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:32:06 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:53744 "EHLO gloria.sntech.de"
+        Thu, 5 Mar 2020 16:35:56 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:53792 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725991AbgCEVcG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:32:06 -0500
+        id S1726049AbgCEVfz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Mar 2020 16:35:55 -0500
 Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1j9y64-00064u-IE; Thu, 05 Mar 2020 22:32:00 +0100
+        id 1j9y9o-00066C-8b; Thu, 05 Mar 2020 22:35:52 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] ARM: dts: rockchip: add missing @0 to memory nodenames
-Date:   Thu, 05 Mar 2020 22:31:59 +0100
-Message-ID: <1784340.9KJLpVao5L@phil>
-In-Reply-To: <20200304074051.8742-2-jbx6244@gmail.com>
-References: <20200304074051.8742-1-jbx6244@gmail.com> <20200304074051.8742-2-jbx6244@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: rockchip: add missing model properties
+Date:   Thu, 05 Mar 2020 22:35:51 +0100
+Message-ID: <5155217.YDJUN7Zz9T@phil>
+In-Reply-To: <20200304074051.8742-1-jbx6244@gmail.com>
+References: <20200304074051.8742-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="iso-8859-1"
@@ -41,34 +42,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Johan,
-
-Am Mittwoch, 4. März 2020, 08:40:50 CET schrieb Johan Jonker:
-> A test with the command below gives for example this error:
+Am Mittwoch, 4. März 2020, 08:40:49 CET schrieb Johan Jonker:
+> A test with the command below gives these errors:
 > 
-> arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
-> False schema does not allow
-> {'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
+> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: /: 'model'
+> is a required property
+> arch/arm/boot/dts/rk3288-evb-rk808.dt.yaml: /: 'model'
+> is a required property
+> arch/arm/boot/dts/rk3288-r89.dt.yaml: /: 'model'
+> is a required property
 > 
-> The memory nodes all have a reg property that requires '@' in
-> the nodename. Fix this error by adding the missing '@0' to
-> the involved memory nodenames.
+> Fix this error by adding the missing model properties to
+> the involved dts files.
 > 
 > make ARCH=arm dtbs_check
 > DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
 > schemas/root-node.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-changes to memory nodes you sadly cannot do in such an automated fashion.
-If you read the comment in rk3288-veyron.dtsi you'll see that a previous
-similar iteration broke all of those machines as their coreboot doesn't
-copy with memory@0 and would insert another memory node without @0
+applied for 5.7
 
-In the past iteration the consensus then was that memory without @0
-is also ok (as it isn't changeable anyway).
-
-As I don't really want to repeat that, I'd like actual hardware tests
-before touching memory nodes.
-
+Thanks
 Heiko
 
 
