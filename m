@@ -2,86 +2,311 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53C6C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D603C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA222146E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFCD20732
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGAZujSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgCEN7m (ORCPT
+        id S1726282AbgCEOgX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:59:42 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:49196 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgCEN7m (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:59:42 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7E2462006FA;
-        Thu,  5 Mar 2020 14:59:40 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 70B4820057C;
-        Thu,  5 Mar 2020 14:59:40 +0100 (CET)
-Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id DDE322059D;
-        Thu,  5 Mar 2020 14:59:39 +0100 (CET)
-From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] ARM: dts: imx: use generic name for crypto node
-Date:   Thu,  5 Mar 2020 15:59:04 +0200
-Message-Id: <20200305135909.8180-1-horia.geanta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 5 Mar 2020 09:36:23 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54869 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgCEOgX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 09:36:23 -0500
+Received: by mail-wm1-f65.google.com with SMTP id i9so6576590wml.4;
+        Thu, 05 Mar 2020 06:36:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Fzw97o/L2ddgOD9Mk5ZgJ4mz/W2IqpyyO7RKo3ExDqI=;
+        b=eGAZujSpLYN9hufM9nxWLtaND6o9cSpt+JU/hD4JLIn4WthADj76OEuPkhLFqQlGd9
+         oMT5VpoAMrgSKvfmlBhBsFTqW88Ew4UHfRuTcR0GL1s7pnVZYNkqGDEijmLnqSHdL5gB
+         7u7eqswqR7ezXwbyCBuYzXKFWIAinvGgoZNyhTHX2nYq7adyiTSXSbdUqn72zZy93iNp
+         F0t+mLrEBZgySNr/cLo8rWmYaALeWt/vCC5FYUpH1UZz1mqw95qJYHFew/o8Xd2RkGUM
+         i9lJQipeqZz2lZXEDcEQOADzGDludU75qctFHTIS5rwBQT/AIo6V95MiT4Nb37PIOht4
+         M/JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Fzw97o/L2ddgOD9Mk5ZgJ4mz/W2IqpyyO7RKo3ExDqI=;
+        b=hHNF3CkA/tdhGqxydm95L4zy1RroopzGwP8aozTWZQDDXN8EeY2siqHb1GAEp6vETV
+         bGNNOI15iPcCHoBpIAbGv/CebQPNP0IstOHBjJZ5uLGrB4lCsJzeSiTI/NIY03MjdZEs
+         nEVOLQ3XOEq8MDacgqVl7N2R0u3POChHFde4oTI5lPQIM+o7gTDiX81avTfGbjJ5zxqI
+         xeDXNpsS0Tn9pHpX3zDsyRfnudHlQ8+6WvZSW5QXdzhnN83p8aOZOH+Thhqxc5AOg8Op
+         7FtYubWy3F59w3E32J2t6/UCeSkNmQx9uDl40ECU2fHkgSRSFndhFgSfTLNedvCC8/el
+         v0Tg==
+X-Gm-Message-State: ANhLgQ3u1rlfJsar4PYsGyUI2IQBnrGdljsn+E9DJ7AonKTFrS1RH/jI
+        XX3iDBf0iC6Jd7e5IZbSOX4=
+X-Google-Smtp-Source: ADFU+vuyVhCo3qL7TfM1oGCbV9+9jXtHRiIy6N9lQU97La20DxCBKFLnBjzVm2081txVHj9hMj8+yQ==
+X-Received: by 2002:a05:600c:22cd:: with SMTP id 13mr10338852wmg.51.1583418980518;
+        Thu, 05 Mar 2020 06:36:20 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id g201sm9365124wme.23.2020.03.05.06.36.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Mar 2020 06:36:20 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/5] dt-bindings: i2c: convert rockchip i2c bindings to yaml
+Date:   Thu,  5 Mar 2020 15:36:07 +0100
+Message-Id: <20200305143611.10733-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch set aligns / fixes the naming of the crypto node
-(and its child nodes) for sahara, dcp and caam crypto engines
-used in i.MX SoCs.
+Current dts files with 'i2c' nodes are manually verified.
+In order to automate this process i2c-rk3x.txt
+has to be converted to yaml. In the new setup
+i2c-rk3x.yaml will inherit properties from
+i2c-controller.yaml.
 
-Horia Geantă (4):
-  dt-bindings: crypto: sahara: use generic node name
-  dt-bindings: crypto: dcp: use generic node name
-  dt-bindings: crypto: caam: use generic node name
-  ARM: dts: imx: align name for crypto node and child nodes
+Also change document name in MAINTAINERS.
 
-Silvano di Ninno (1):
-  arm64: dts: imx8mn: align name for crypto child nodes
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  68 -----------
+ .../devicetree/bindings/i2c/i2c-rk3x.yaml          | 129 +++++++++++++++++++++
+ MAINTAINERS                                        |   2 +-
+ 3 files changed, 130 insertions(+), 69 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
 
- Documentation/devicetree/bindings/crypto/fsl-dcp.txt      | 2 +-
- .../devicetree/bindings/crypto/fsl-imx-sahara.txt         | 2 +-
- Documentation/devicetree/bindings/crypto/fsl-sec4.txt     | 2 +-
- arch/arm/boot/dts/imx23.dtsi                              | 2 +-
- arch/arm/boot/dts/imx27.dtsi                              | 2 +-
- arch/arm/boot/dts/imx28.dtsi                              | 2 +-
- arch/arm/boot/dts/imx6qdl.dtsi                            | 6 +++---
- arch/arm/boot/dts/imx6sl.dtsi                             | 2 +-
- arch/arm/boot/dts/imx6sll.dtsi                            | 2 +-
- arch/arm/boot/dts/imx6sx.dtsi                             | 6 +++---
- arch/arm/boot/dts/imx6ul.dtsi                             | 8 ++++----
- arch/arm/boot/dts/imx7s.dtsi                              | 8 ++++----
- arch/arm/boot/dts/imx7ulp.dtsi                            | 4 ++--
- arch/arm64/boot/dts/freescale/imx8mn.dtsi                 | 6 +++---
- 14 files changed, 27 insertions(+), 27 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt b/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
+deleted file mode 100644
+index 22f2eeb2c..000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
++++ /dev/null
+@@ -1,68 +0,0 @@
+-* Rockchip RK3xxx I2C controller
+-
+-This driver interfaces with the native I2C controller present in Rockchip
+-RK3xxx SoCs.
+-
+-Required properties :
+-
+- - reg : Offset and length of the register set for the device
+- - compatible: should be one of the following:
+-   - "rockchip,rv1108-i2c": for rv1108
+-   - "rockchip,rk3066-i2c": for rk3066
+-   - "rockchip,rk3188-i2c": for rk3188
+-   - "rockchip,rk3228-i2c": for rk3228
+-   - "rockchip,rk3288-i2c": for rk3288
+-   - "rockchip,rk3328-i2c", "rockchip,rk3399-i2c": for rk3328
+-   - "rockchip,rk3399-i2c": for rk3399
+- - interrupts : interrupt number
+- - clocks: See ../clock/clock-bindings.txt
+-   - For older hardware (rk3066, rk3188, rk3228, rk3288):
+-     - There is one clock that's used both to derive the functional clock
+-       for the device and as the bus clock.
+-   - For newer hardware (rk3399): specified by name
+-     - "i2c": This is used to derive the functional clock.
+-     - "pclk": This is the bus clock.
+-
+-Required on RK3066, RK3188 :
+-
+- - rockchip,grf : the phandle of the syscon node for the general register
+-		  file (GRF)
+- - on those SoCs an alias with the correct I2C bus ID (bit offset in the GRF)
+-   is also required.
+-
+-Optional properties :
+-
+- - clock-frequency : SCL frequency to use (in Hz). If omitted, 100kHz is used.
+- - i2c-scl-rising-time-ns : Number of nanoseconds the SCL signal takes to rise
+-	(t(r) in I2C specification). If not specified this is assumed to be
+-	the maximum the specification allows(1000 ns for Standard-mode,
+-	300 ns for Fast-mode) which might cause slightly slower communication.
+- - i2c-scl-falling-time-ns : Number of nanoseconds the SCL signal takes to fall
+-	(t(f) in the I2C specification). If not specified this is assumed to
+-	be the maximum the specification allows (300 ns) which might cause
+-	slightly slower communication.
+- - i2c-sda-falling-time-ns : Number of nanoseconds the SDA signal takes to fall
+-	(t(f) in the I2C specification). If not specified we'll use the SCL
+-	value since they are the same in nearly all cases.
+-
+-Example:
+-
+-aliases {
+-	i2c0 = &i2c0;
+-}
+-
+-i2c0: i2c@2002d000 {
+-	compatible = "rockchip,rk3188-i2c";
+-	reg = <0x2002d000 0x1000>;
+-	interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	rockchip,grf = <&grf>;
+-
+-	clock-names = "i2c";
+-	clocks = <&cru PCLK_I2C0>;
+-
+-	i2c-scl-rising-time-ns = <800>;
+-	i2c-scl-falling-time-ns = <100>;
+-};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml b/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
+new file mode 100644
+index 000000000..962aefb7d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
+@@ -0,0 +1,129 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i2c/i2c-rk3x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip RK3xxx I2C controller
++
++description:
++  This driver interfaces with the native I2C controller present in Rockchip
++  RK3xxx SoCs.
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
++maintainers:
++  - Heiko Stuebner <heiko@sntech.de>
++
++# Everything else is described in the common file
++properties:
++  compatible:
++    oneOf:
++      - const: rockchip,rv1108-i2c
++      - const: rockchip,rk3066-i2c
++      - const: rockchip,rk3188-i2c
++      - const: rockchip,rk3228-i2c
++      - const: rockchip,rk3288-i2c
++      - const: rockchip,rk3399-i2c
++      - items:
++          - enum:
++            - rockchip,rk3328-i2c
++          - const: rockchip,rk3399-i2c
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    items:
++      - description:
++          For older hardware (rk3066, rk3188, rk3228, rk3288)
++          there is one clock that is used both to derive the functional clock
++          for the device and as the bus clock.
++          For newer hardware (rk3399) this clock is used to derive
++          the functional clock
++      - description:
++          For newer hardware (rk3399) this is the bus clock
++
++  clock-names:
++    minItems: 1
++    items:
++      - const: i2c
++      - const: pclk
++
++  rockchip,grf:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Required on RK3066, RK3188 the phandle of the syscon node for
++      the general register file (GRF)
++      On those SoCs an alias with the correct I2C bus ID
++      (bit offset in the GRF) is also required.
++
++  clock-frequency:
++    default: 100000
++    description:
++      SCL frequency to use (in Hz). If omitted, 100kHz is used.
++
++  i2c-scl-rising-time-ns:
++    default: 1000
++    description:
++      Number of nanoseconds the SCL signal takes to rise
++      (t(r) in I2C specification). If not specified this is assumed to be
++      the maximum the specification allows(1000 ns for Standard-mode,
++      300 ns for Fast-mode) which might cause slightly slower communication.
++
++  i2c-scl-falling-time-ns:
++    default: 300
++    description:
++      Number of nanoseconds the SCL signal takes to fall
++      (t(f) in the I2C specification). If not specified this is assumed to
++      be the maximum the specification allows (300 ns) which might cause
++      slightly slower communication.
++
++  i2c-sda-falling-time-ns:
++    default: 300
++    description:
++      Number of nanoseconds the SDA signal takes to fall
++      (t(f) in the I2C specification). If not specified we will use the SCL
++      value since they are the same in nearly all cases.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - rockchip,rk3066-i2c
++          - rockchip,rk3188-i2c
++
++then:
++  required:
++    - rockchip,grf
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3188-cru-common.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c0: i2c@2002d000 {
++      compatible = "rockchip,rk3188-i2c";
++      reg = <0x2002d000 0x1000>;
++      interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru PCLK_I2C0>;
++      clock-names = "i2c";
++      rockchip,grf = <&grf>;
++      i2c-scl-falling-time-ns = <100>;
++      i2c-scl-rising-time-ns = <800>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 42c21184d..a480cec62 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2279,7 +2279,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	linux-rockchip@lists.infradead.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
++F:	Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
+ F:	Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+ F:	Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+ F:	arch/arm/boot/dts/rk3*
 -- 
-2.17.1
+2.11.0
 
