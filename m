@@ -2,181 +2,89 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512E2C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36966C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C57208CD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F65A208CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yewZkC5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCEOgn (ORCPT
+        id S1726004AbgCEOxx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:36:43 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:60317 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgCEOgm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 09:36:42 -0500
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MkYsS-1jeGjj40v0-00m1dA; Thu, 05 Mar 2020 15:36:30 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 4C17D65007B;
-        Thu,  5 Mar 2020 14:36:29 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TuPCA_-QNJ3X; Thu,  5 Mar 2020 15:36:28 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id DD21B64F3BB;
-        Thu,  5 Mar 2020 15:36:28 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.10.2.141) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 5 Mar 2020 15:36:28 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 85278804EF; Thu,  5 Mar 2020 15:36:28 +0100 (CET)
-Date:   Thu, 5 Mar 2020 15:36:28 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-Message-ID: <20200305143628.GB25741@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
- <20200113141556.GI3606@pflmari>
- <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
- <20200302134011.GA3717@pflmari>
- <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
- <20200302150706.GB3717@pflmari>
- <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
- <20200302160906.GC3717@pflmari>
- <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
+        Thu, 5 Mar 2020 09:53:53 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:43335 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgCEOxw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 09:53:52 -0500
+Received: by mail-wr1-f53.google.com with SMTP id v9so776864wrf.10
+        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 06:53:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lCZ4HBLcDjnL0GdiZ5dsCCZ5Ed4ecHOyKpkVxr2Wiks=;
+        b=yewZkC5Pn9QnislGnz/uZFfnAAGZWyd7Ao8vvhbNkIKtHlSvMCkKMmeqn2RnBR749E
+         Q/Tsersijkoxdqb56hKlHqu8Y6xz0TKDRw78BcLFLdeRtsS8LqnQmKOdMmFpGJSVy5I6
+         xMC6STJnPA+hgvvcxotH0AS1oagHWOHjuNiwoGEtOOLYYysTPnaLwD78XH9mnWKH15JM
+         Z4cHOLiZpLFdN2nqzAtofFYq8Kf8nXLPAFEnKEnQG/Vlc2Vu08qESciVnElHIZrKnU06
+         tUPrTHwcbX/ifBZ8bQj9KwplZ4xVmzhjYFRz8+Mrg5ACXuHP4Qs7T6qCiSKoH0Pihbgx
+         M83w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lCZ4HBLcDjnL0GdiZ5dsCCZ5Ed4ecHOyKpkVxr2Wiks=;
+        b=YpkXecCl9OC3l7nAIwBba/rnqOd03rEU2Xpn7tVsa3OHO0LbDZFyYFWAvHOLoBbEuW
+         1rsttdVDn5tjId3ZECmQw+2id/9iWqCFqWiZbSVTJ2z9WoO+Hsb3zUA93Q0NyufSgvkf
+         XHRCxI3SgESIuR/aQSLxNyxEyCj+yGTbxxEcNPHZGeXwHxk4/2Ws43MReRugmB+EEn3F
+         vZUYf+A2B1Qek0QFBSpRbdznbuqPne6PZ+QbQYUOTr6FgwSCkOx+VxeNZ8IcipTKS8ov
+         1S1yHyDG5nBaNAPGh/N0H0FtX0XLOGY6MX8GZ46/vObPYuwCxmpYbp8bafN33yT01EvK
+         NgpQ==
+X-Gm-Message-State: ANhLgQ09cR8K8xTDM0AcRlcTXfXSM35M1uoAvwwzDj0aBKkpXDauqTjC
+        955xZUHHa8Jmtmt+cigCtNp02QO+aek=
+X-Google-Smtp-Source: ADFU+vsfm72FlPKo2DedsUpzOgx9vtyfPB8peWEuftgmEYyDsNFyRjk9QP5ylKJRXp0nOMtr/hbdHw==
+X-Received: by 2002:adf:e3d0:: with SMTP id k16mr10701691wrm.260.1583420030754;
+        Thu, 05 Mar 2020 06:53:50 -0800 (PST)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id f16sm35785985wrx.25.2020.03.05.06.53.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 06:53:50 -0800 (PST)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 0/4] arm64: dts: qcom: sdm845: add audio support
+Date:   Thu,  5 Mar 2020 14:53:40 +0000
+Message-Id: <20200305145344.14670-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
-X-Originating-IP: [10.10.2.141]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29536F936F637367
-X-Provags-ID: V03:K1:89pAwl+MGQIIUBHltXlUW/W8nwgm0att8RcwyUmT97Nq5Uh6QfA
- Cao/sAEAcgeUGTCWZAGVEVO+ZB68y8ulEc9SSSMy6RI4da/n/jVJVkavJKD8Jj5Z52ijCHP
- zqxu5prvzW3aRp7kLbE+iui2QyQM7VaIh2xxYo/G7i07KYlWQbatOw8k/e/vEMzIzD9N2AD
- SKuGXYI4F+AQ+3VKgRlEQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oQ4Mw24lMPY=:ED7Cu+cwK558t9q4OZzyFK
- qa3OZ3XCPSovu6NVhb0CL01nZqasgqIvg1USKZOveCeTRgmRUa0YK82vGTUpDs5YnxE+OwPFQ
- K/WJiKnBXhNTme8d6KXpHi4xCf4KxjsOX/kOY+uyA0BVfK5gm/ebjU7LkJfrj73ZaX7F812v2
- omZeOCKRATZBIha5wAGBoSY9a9hHLGco8rtk/4JGCfIdILZjOQT0OYVd/d+eyRvAzcrMIkvaR
- QlfR8I2e0coYwvt9m7jbv5v/GXK8Oh+A2CJyvbKzCVuvXc4B2YxFv7fBM5CV8xfMakCfij95h
- qqcD7cWVxlHpNbljro/Rg/Ub5sWQedtXcWRPfpMt2GiyK9ERuVYfpk6wvR2gJLUpoQf6XwD7z
- w5wXMPDdClitHvqkgFLrDNtaaXRmsqCsW+UJIAig8hN4GKH5a4csKbsNVS8VARIL7U+UfAd8i
- JZwFgvU2uAFA5LiQ4ckESKg3rbisVDo/xV26uMMgy0mWb7oG/BnSw5yFx4lRSbP55USfCpS0I
- IDcLMDA4dhl8kfa5AoyHiV2kH21UkrEjyfrb+Sxlhz6u2bHZ3mDT519vJ2l3hB6jkLulq+gTD
- IBYaXqGch9x4MOR7YXavq/RWhe1cd2LhrWqiT4djW2R3IrGNRdsndnZiHjvKEfLrH2Aj6/PYV
- L9I+ZtvXtbKPVs7NE59OcJA/dBsEYxOHQgURyWtkspyDf+ZtLQL+Tibfi9MztM8e3It5aybdg
- hyOjqxs4GsdI89In369H4gIlLPVq4gLZkoWYLgLKQEduOuGnTD/Tjr6iaH5+vv1HIb2G7Oo8/
- XWta5CNRXvHS0G5BEMeYSLRUSOYPvseq4JzgjguFF6DD7WGrhjIfgDVRz7arwbO8LBHO9Pk
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+First 3 patches in this patchset adds support to audio via wcd934x codec.
+Last patch adds support to i2c/spi buses on Low speed expansion.
 
-Geert Uytterhoeven, Mon, Mar 02, 2020 17:13:30 +0100:
-> On Mon, Mar 2, 2020 at 5:09 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > Geert Uytterhoeven, Mon, Mar 02, 2020 16:32:32 +0100:
-> > >
-> > > The #clock-cells should be in the main video-receiver node.
-> > > Probably there is more than one clock output, so #clock-cells may be 1?
-> >
-> > AFAICS, the device can provide only this one clock line (audio master clock
-> > for I2S output)... I shall re-check, just in case.
 
-And you're right, of course: the audio output formatting module of the ADV748x
-devices provides a set of clock lines related to the I2S pins: the already
-discussed master clock, left-right channel clock and the serial clock (bit
-clock?).
+Srinivas Kandagatla (4):
+  arm64: dts: qcom: sdm845: Add ADSP audio support
+  arm64: dts: qcom: c630: Enable audio support
+  arm64: dts: qcom: db845c: add analog audio support
+  arm64: dts: qcom: db845c: add Low speed expansion i2c and spi nodes
 
-> > > There is no need for a fixed-clock compatible, nor for clock-frequency
-> > > and clock-output-names.
-> > >
-> > > But most important: this should be documented in the adv748x DT bindings,
-> > > and implemented in the adv748x driver.
-> >
-> > So if the driver is to export that clock for the kernel (like in this case),
-> > it must implement its support?
-> 
-> Exactly.  Unless that pin is hardcoded to output a fixed clock, in which case
-> you can just override the existing audio_clk_c rate.
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts    | 147 ++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 338 ++++++++++++++++++
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts |  91 +++++
+ 3 files changed, 576 insertions(+)
 
-Just to try it out (I'll set #clock-cells to 1), I registered a fixed rate
-clock in the driver, added a clock provider:
+-- 
+2.21.0
 
-adv748x_probe:
-
-    clk = clk_register_fixed_rate(state->dev,
-				  "clk-hdmi-i2s-mclk",
-				  NULL     /* parent_name */,
-				  0        /* flags */,
-				  12288000 /* rate */);
-    of_clk_add_provider(state->dev->of_node, of_clk_src_simple_get, clk);
-
-And removed the audio_clk_c frequency setting. I also replaced the audio_clk_c
-in the list of input clocks of the R-Car-side sound card with the phandle of
-the adv7482 main node:
-
-salvator-common.dtsi:
-
-    &i2c4 {
-	status = "okay";
-
-	adv7482_hdmi_decoder: video-receiver@70 {
-	    #clock-cells = <0>; // to be replaced with <1>
-	};
-    };
-
-    &rcar_sound {
-	clocks = ..., <&adv7482_hdmi_decoder>, ...;
-    };
-
-As everything continues to work as before, I assume that at least the clock
-dependencies were resolved.
-
-Is there a way to verify that the added input clock is actually used?
-IOW, if its frequency is actually has been programmed into the ssi4 (R-Car
-receiving hardware) registers, and not just a left-over from previuos attempts
-or plain default setting?
-
-As the ADV748x devices seem to provide also the clocks for video outputs, will
-it make any sense to place the clock definition into the port node?
-Or should all provided clocks be indexed in the main device node?
-
-Regards,
-Alex
