@@ -2,359 +2,220 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA0EC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0A8C3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D65420637
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8261221744
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="C6AcNVIg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgCEQ6B (ORCPT
+        id S1727761AbgCEROl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:58:01 -0500
-Received: from mga02.intel.com ([134.134.136.20]:47489 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgCEQ6B (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:58:01 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 08:58:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="352395418"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 05 Mar 2020 08:57:54 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 05 Mar 2020 18:57:52 +0200
-Date:   Thu, 5 Mar 2020 18:57:52 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
-        bleung@chromium.org, devicetree@vger.kernel.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: Add cros-ec Type C port driver
-Message-ID: <20200305165752.GB68079@kuha.fi.intel.com>
-References: <20200220003102.204480-1-pmalani@chromium.org>
- <20200220003102.204480-2-pmalani@chromium.org>
- <158279287307.177367.4599344664477592900@swboyd.mtv.corp.google.com>
- <20200227163825.GB18240@kuha.fi.intel.com>
- <158284127336.4688.623067902277673206@swboyd.mtv.corp.google.com>
- <20200228162400.GA27904@kuha.fi.intel.com>
- <158293703400.112031.11453499974796783579@swboyd.mtv.corp.google.com>
+        Thu, 5 Mar 2020 12:14:41 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:15276 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727678AbgCEROl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 12:14:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1583428481; x=1614964481;
+  h=from:subject:to:cc:references:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=5fApbeaqTcP0p/hHQ0KDa3FOcjpecfzaTtmdMnU8Cg4=;
+  b=C6AcNVIgYxXMhAd+acEWJ/3LrP08LYHfFpmpLtLpyZ+6R2NXa9ihLt4J
+   S41VCgOjMj7quo69lFNe2N+b4kP+q2tDI0ynQG2GPW1aneafJF9r3wkde
+   ecDgTq6QiN8QoailrtC47Xo5UDEQombHTuFVnXLsuRyIb0/CBybhhHq7h
+   U=;
+IronPort-SDR: EtTtVXXh4nhSPq0l+1rlC6IjpDmotIhfWTqDYxh6jbBOZoG+jtgmHMuPXMXz4dXEWL2ImWfocY
+ 4HYs/ioX7lAg==
+X-IronPort-AV: E=Sophos;i="5.70,518,1574121600"; 
+   d="scan'208";a="19767269"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 Mar 2020 17:14:18 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id A5A5CA2090;
+        Thu,  5 Mar 2020 17:14:14 +0000 (UTC)
+Received: from EX13D13UWB001.ant.amazon.com (10.43.161.156) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Mar 2020 17:14:13 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D13UWB001.ant.amazon.com (10.43.161.156) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 5 Mar 2020 17:14:13 +0000
+Received: from [10.107.3.22] (10.107.3.22) by mail-relay.amazon.com
+ (10.43.161.249) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Thu, 5 Mar 2020 17:14:08 +0000
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Subject: Re: [EXTERNAL][PATCH v4 6/6] arm64: dts: amazon: add Amazon's
+ Annapurna Labs Alpine v3 support
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <tsahee@annapurnalabs.com>, <mchehab+samsung@kernel.org>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <Jonathan.Cameron@huawei.com>, <tglx@linutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <eitan@amazon.com>
+References: <20200225112926.16518-1-hhhawa@amazon.com>
+ <20200225112926.16518-7-hhhawa@amazon.com> <20200304212737.GN3179@kwain>
+Message-ID: <7a1c1b59-f12d-5839-beea-6af5e7998640@amazon.com>
+Date:   Thu, 5 Mar 2020 19:14:06 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158293703400.112031.11453499974796783579@swboyd.mtv.corp.google.com>
+In-Reply-To: <20200304212737.GN3179@kwain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 04:43:54PM -0800, Stephen Boyd wrote:
-> Quoting Heikki Krogerus (2020-02-28 08:24:00)
-> > On Thu, Feb 27, 2020 at 02:07:53PM -0800, Stephen Boyd wrote:
-> > > Quoting Heikki Krogerus (2020-02-27 08:38:25)
-> > > > No.
-> > > > 
-> > > > The above follows the usb-connector bindings, so it is correct:
-> > > > Documentation/devicetree/bindings/connector/usb-connector.txt
-> > > > 
-> > > > So the connector is always a child of the "CC controller" with the USB
-> > > > Type-C connectors, which in this case is the EC (from operating systems
-> > > > perspective). The "CC controller" controls connectors, and it doesn't
-> > > > actually do anything else. So placing the connectors under the
-> > > > "connector controller" is also logically correct.
-> > > 
-> > > Ah ok I see. The graph binding is for describing the data path, not the
-> > > control path. Makes sense. 
-> > > 
-> > > > 
-> > > > > Yes, the connector is intimately involved with the EC here, but I would
-> > > > > think that we would have an OF graph connection from the USB controller
-> > > > > on the SoC to the USB connector, traversing through anything that may be
-> > > > > in that path, such as a USB hub. Maybe the connector node itself can
-> > > > > point to the EC type-c controller with some property like
-> > > > 
-> > > > I think your idea here is that there should be only a single node for
-> > > > each connector that is then linked with every component that it is
-> > > > physically connected to (right?), but please note that that is not
-> > > > enough. Every component attached to the connector must have its own
-> > > > child node that represents the "port" that is physically connected to
-> > > > the USB Type-C connector.
-> > > > 
-> > > > So for example, the USB controller nodes have child nodes for every
-> > > > USB2 port as well as for every USB3 port. Similarly, the GPU
-> > > > controllers have child node for every DisplayPort, etc. And I believe
-> > > > that is already how it has been done in DT (and also in ACPI).
-> > > 
-> > > It looks like perhaps you're conflating ports in USB spec with the OF
-> > > graph port? I want there to be one node per type-c connector that I can
-> > > physically see on the device. Is that not sufficient?
-> > 
-> > It is. We don't need more than one node that represents the physical
-> > connector (and we should not have more than one node for that). And
-> > actually, I was not mixing the OF graph ports and USB ports... I
-> > think I should be talking about PHY instead of "port". That is
-> > probable more clear.
-> > 
-> > My point is that every PHY that is connected to a Type-C connector
-> > must still be represented with its own node in devicetree and ACPI. So
-> > there still needs to be a node for the USB2 PHY, USB3 PHY, DisplayPort
-> > PHY, etc., on top of the connector node. I got the picture that you
-> > are proposing that we don't need those PHY nodes anymore since we have
-> > the connector nodes, but maybe I misunderstood?
+Hi Antonie,
+
+Thanks for reviewing,
+
+On 3/4/2020 11:27 PM, Antoine Tenart wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
 > 
-> Alright. Maybe a full example will help. See below. I think I understand
-> how it's supposed to look.
 > 
-> > 
-> > > Are there any examples of the type-c connector in DT? I see some
-> > > NXP/Freescale boards and one Renesas board so far. Maybe there are other
-> > > discussions I can read up on?
-> > > 
-> > > > 
-> > > > Those "port" nodes then just need to be linked with the "connector"
-> > > > node. I think for that the idea was to use OF graph, but I'm really
-> > > > sceptical about that. The problem is that with the USB Type-C
-> > > > connectors we have to be able to identify the connections, i.e. which
-> > > > endpoint is the USB2 port, which is the DisplayPort and so on, and OF
-> > > > graph does not give any means to do that on its own. We will have to
-> > > > rely on separate device properties in order to do the identification.
-> > > > Currently it is not documented anywhere which property should be used
-> > > > for that.
-> > > 
-> > > I hope that this patch series can document this.
-> > 
-> > Well, we do need that to be documented, but do we really need to block
-> > this series because of that? This driver does not depend on OF graph
-> > yet.
 > 
-> I don't know. I think this binding patch will go for another round so
-> maybe it's blocked in other ways?
-
-Let me put it this way: Since the code in this series does not utilize
-the connection description, it actually should _not_ propose the
-binding for it. The connection description is out side the scope of
-the series.
-
-The connection description is still far from being clear in any case.
-
-> > > Why can't that work by having multiple OF graph ports for USB2 port,
-> > > DisplayPort, USB3 port, etc? The data path goes to the connector and
-> > > we can attach more information to each port node to describe what
-> > > type of endpoint is there like a DisplayPort capable type-c
-> > > connector for example.
-> > 
-> > The PHY nodes we must still always have. So the OF graph will always
-> > describe the connection between the PHY and the connector, and the
-> > connection between the PHY and the controller must be described
-> > separately.
+> Hello,
 > 
-> Got it.
+> Sorry, I'm a bit late to the party...
 > 
-> Here's the same example that hopefully shows how all this stuff can
-> work. I've added more nonsense to try and make it as complicated as
-> possible.
-
-You are not suggesting anything for the identification problem below,
-so how do we know where does an endpoint actually go to in the code?
-
-But could you actually please first explain what exactly is the
-benefit from using OF graph with with the USB Type-C connector? Why
-not just use good old phandles, i.e. device properties that return
-reference to a node? With those the device property name by itself is
-the identifier.
-
->  / {
+> On Tue, Feb 25, 2020 at 01:29:26PM +0200, Hanna Hawa wrote:
+>> diff --git a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
+>> +     arch-timer {
 > 
-> 	// Expand single usb2/usb3 from SoC to 4 port hub
->         usb-hub {
-> 		compatible = "vendor,usb-hub-4-port";
-> 		usb-vid = <0xaaad>;
-> 		usb-pid = <0xffed>;
-> 		vdd-supply = <&pp3300_usb>;
-> 		reset-gpios = <&gpio_controller 50 GPIO_ACTIVE_LOW>;
+> Please use 'timer' instead.
+
+Will be fixed
+
 > 
-> 		ports { 
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
+>> +             compatible = "arm,armv8-timer";
+>> +             interrupts = <GIC_PPI 0xd IRQ_TYPE_LEVEL_LOW>,
+>> +                          <GIC_PPI 0xe IRQ_TYPE_LEVEL_LOW>,
+>> +                          <GIC_PPI 0xb IRQ_TYPE_LEVEL_LOW>,
+>> +                          <GIC_PPI 0xa IRQ_TYPE_LEVEL_LOW>;
+>> +     };
 > 
-> 			port@0 {
-> 				reg = <0>;
-> 				usb2_hub0: endpoint0 {
-> 					remote-endpoint = <&left_typec2>;
-> 				};
+>> +             gic: interrupt-controller@f0000000 {
+>> +                     compatible = "arm,gic-v3";
+>> +                     #interrupt-cells = <3>;
+>> +                     #address-cells = <0>;
 > 
-> 				usb3_hub0: endpoint1 {
-> 					remote-endpoint = <&left_typec3>;
-> 				};
-> 			};
+> No need for this.
 
-Note. USB2 and USB3 are separate ports.
+Will be removed
 
-> 			port@1 {
-> 				reg = <1>;
-> 				usb2_hub1: endpoint0 {
-> 					remote-endpoint = <&right_typec2>;
-> 				};
 > 
-> 				usb3_hub1: endpoint1 {
-> 					remote-endpoint = <&right_typec3>;
-> 				};
-> 			};
+>> +                     interrupt-controller;
+>> +                     reg = <0x0 0xf0800000 0 0x10000>,
+>> +                           <0x0 0xf0a00000 0 0x200000>,
+>> +                           <0x0 0xf0000000 0 0x2000>,
+>> +                           <0x0 0xf0010000 0 0x1000>,
+>> +                           <0x0 0xf0020000 0 0x2000>;
 > 
-> 			port@2 {
-> 				reg = <2>;
-> 				usb2_hub2: endpoint0 {
-> 					remote-endpoint = <&left_typea2>;
-> 				};
-> 				usb3_hub2: endpoint1 {
-> 					remote-endpoint = <&left_typea3>;
-> 				};
-> 			};
+> Please add comments here, see alpine-v2.dtsi (or other dtsi in
+> arch/arm64).
+
+Will be added.
+
 > 
-> 			port@3 {
-> 				reg = <3>;
-> 				usb2_hub3: endpoint0 {
-> 					// Not connected
-> 				};
-> 				usb3_hub3: endpoint1 {
-> 					// Not connected
-> 				};
-> 			};
+>> +                     interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>> +             };
+>> +
+>> +             msix: msix@fbe00000 {
+>> +                     compatible = "al,alpine-msix";
+>> +                     reg = <0x0 0xfbe00000 0x0 0x100000>;
+>> +                     interrupt-controller;
+>> +                     msi-controller;
+>> +                     al,msi-base-spi = <160>;
+>> +                     al,msi-num-spis = <800>;
+>> +                     interrupt-parent = <&gic>;
+>> +             };
+>> +
+>> +             uart0: serial@fd883000 {
 > 
-> 			port@4 {
-> 				reg = <4>;
-> 				usb2_hub_in: endpoint0 {
-> 					remote-endpoint = <&usb2_phy_out>;
-> 				};
-> 				usb3_hub_in: endpoint1 {
-> 					remote-endpoint = <&usb3_phy_out>;
-> 				};
-> 			};
-> 		};
-> 	};
+> Looking at the Alpine v2 dtsi, this node was put in an io-fabric bus. It
+> seems to me the Alpine v3 dtsi is very similar. Would it apply as well?
 
-I don't still see any kind of independent device nodes for the USB
-ports? Is the idea to only have the OF graph "ports" to represent the
-physical USB ports?
+V3 very similar to V2, will add to io-fabric bus and will add missing 
+uart devices.
 
-It was clearly a mistake to talk about PHY, but in any case...
-
-All the physical ports really need to have their own device nodes. If
-we are to use OF graph, then a OF graph "port" is an interface to a
-physical USB port, DisplayPort, Thunderbolt 3 port, whatever port,
-that then has an endpoint to the connector. OF graph ports are
-generic, and they can not represent physical points on the hardware,
-while the USB, DP, whatever ports are specific and represent the
-physical points on the hardware.
-
-So basically, the OF graph describes the connection (the interconnect)
-between the physical ports on the components and the connector, but it
-does _not_ describe the connectors nor the physical ports themselves.
-
-That is the only way I see this ever working. Otherwise you don't have
-a clear place where to put for example device nodes describing
-integrated USB devices, or even a clear way to describe port specific
-properties.
-
-> 	// Maybe this should go under EC node too if EC controls it
-> 	// somehow?
-> 	connector {
-> 		compatible = "usb-a-connector";
-> 		label = "type-A-left"
 > 
-> 		ports {
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 			port@0 {
-> 				reg = <0>;
-> 				left_typea2: endpoint0 {
-> 					remote-endpoint = <&usb2_hub2>;
-> 				};
-> 				left_typea3: endpoint1 {
-> 					remote-endpoint = <&usb3_hub2>;
-> 				};
-> 			};
+>> +                     compatible = "ns16550a";
+>> +                     reg = <0x0 0xfd883000 0x0 0x1000>;
+>> +                     clock-frequency = <0>;
 > 
-> 	};
+> Is the frequency set to 0 on purpose? Or is it set by a firmware at boot
+> time (if so please add a comment)?
 
-Is this actually necessary? You will never associate the connector in
-this case with a real device entry (struct device), so why define the
-node at all?
+It's updated by firmware, will add a comment.
 
-The node will give you the connector type, but since (AFAIK) that
-information is not used anywhere in case of Type-A, why bother?
-
-> 	// Steer DP to either left or right type-c port
-> 	mux {
-> 		compatible = "vendor,dp-mux";
-> 		// Inactive: port 0
-> 		// Active: port 1
-> 		mux-gpios = <&gpio_controller 23 GPIO_ACTIVE_HIGH>;
 > 
-> 		ports {
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 			port@0 {
-> 				reg = <0>;
-> 				mux_dp_0: endpoint {
-> 					remote-endpoint = <&right_typec_dp>;
-> 				};
-> 			};
+>> +                     interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+>> +                     reg-shift = <2>;
+>> +                     reg-io-width = <4>;
 > 
-> 			port@1 {
-> 				reg = <1>;
-> 				mux_dp_1: endpoint {
-> 					remote-endpoint = <&left_typec_dp>;
-> 				};
-> 			};
+> Since you're enabling this node explicitly in the dts, you can set it to
+> disabled by default.
+
+Ack
+
 > 
-> 			port@2 {
-> 				reg = <1>;
-> 				mux_dp_in: endpoint {
-> 					remote-endpoint = <&dp_phy_out>;
-> 				};
-> 			};
-> 		};
-> 	};
+>> +             };
+>> +
+>> +             pcie@fbd00000 {
+> 
+> Please order the nodes in increasing order.
 
-If you use the mux between the DP and the connector, then you actually
-should do the same with the USB ports as well. They will after all go
-trough the same mux, right?
+Ack
 
-But using the mux in the middle even with the DP is problematic. We
-will simply not always have a mux to control. Therefore our plan was
-to always describe the connections directly from the connector to
-whatever location they ultimately go to without the mux in the middle.
-The mux will have its connection described in the connector node, but
-in parallel.
+> 
+>> +                     compatible = "pci-host-ecam-generic";
+>> +                     device_type = "pci";
+>> +                     #size-cells = <2>;
+>> +                     #address-cells = <3>;
+>> +                     #interrupt-cells = <1>;
+>> +                     reg = <0x0 0xfbd00000 0x0 0x100000>;
+>> +                     interrupt-map-mask = <0xf800 0 0 7>;
+>> +                     /* 8 x legacy interrupts for SATA only */
+>> +                     interrupt-map = <0x4000 0 0 1 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                     <0x4800 0 0 1 &gic 0 58 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                     <0x5000 0 0 1 &gic 0 59 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                     <0x5800 0 0 1 &gic 0 60 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                     <0x6000 0 0 1 &gic 0 61 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                     <0x6800 0 0 1 &gic 0 62 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                     <0x7000 0 0 1 &gic 0 63 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                     <0x7800 0 0 1 &gic 0 64 IRQ_TYPE_LEVEL_HIGH>;
+>> +                     ranges = <0x02000000 0x0 0xfe000000 0x0 0xfe000000 0x0 0x1000000>;
+>> +                     bus-range = <0x00 0x00>;
+>> +                     msi-parent = <&msix>;
+>> +             };
+>> +     };
+>> +};
+> 
+> The rest of the series looks good.
+Thanks
 
-I'll skip the rest if it's OK. I think at this point we really need an
-explanation to the question: why do we have to use OF graph with the
-USB Type-C connectors at all?
+Regards,
+Hanna
 
-The identification problem has to be solved if it is to be used in any
-case, but in the end, what value does OF graph add? Right now it looks
-like something that just adds unnecessary complexity.
-
-I'm sure that it is useful when it is possible to predict where the
-endpoints actually go. For example with the cameras, every endpoint
-an image processor has is most likely a sensor. But the USB Type-C
-connectors can go anywhere (I guess even to the image processor).
-
-With USB Type-C connector, the good old reference properties would
-simply be superior.
-
-
-thanks,
-
--- 
-heikki
+> 
+> Thanks!
+> Antoine
+> 
+> --
+> Antoine Ténart, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> 
