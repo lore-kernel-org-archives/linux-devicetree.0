@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DB2C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EBFC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38502073D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C05A208CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLCvUgvq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcG4pFkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgCEOgb (ORCPT
+        id S1726674AbgCEOgZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:36:31 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39653 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgCEOg1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 09:36:27 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j1so5988351wmi.4;
-        Thu, 05 Mar 2020 06:36:25 -0800 (PST)
+        Thu, 5 Mar 2020 09:36:25 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53578 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgCEOgY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 09:36:24 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g134so6572421wme.3;
+        Thu, 05 Mar 2020 06:36:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QlXzIeykIQUpEBdYcwxd+wvAWmRVIxL3eGhm6mPv2tU=;
-        b=bLCvUgvqw8iVKbPkM4EtHEjlr9hoXI6ts2HiI7NyS33acPByckia3FvdKNdmCw+shk
-         dzqU7y7L3wfAuvNZSkXea2DmXqj9gOftfhhf3HnhWtGd5rQgdfsWBmyIvQpcTFftHPYr
-         Yy2JE8V7sk/cTfBwh0xdC4AX7qlqgQAqPpUyOikjfX4/zrT0gDtySOja6ziWgHJZS7TF
-         THFlRkQYf2xwcxogTqSRleSo5Tsxrdc5y+ksVnpEU38JWpZVU4NbBZH+hSfcYeqZ3oto
-         inPT+91oHpIhwEjHmow5anaiUDsBUjQPRKyQv7iJ+9RFwOB7JR28vmSJIx7EqUGuay9f
-         X79A==
+        bh=ByZXWnJHqaW7QVpVISE1TPiyXWuEjtw6nBQAA8Pn/yI=;
+        b=XcG4pFklevBZFiwQ6VxGoiuKj8EdOdh9pLAwZKRrUmgBTtXJbaREGmq0Omyy5TxaWx
+         PBnDljF54O+cSB+tlHQskFAqnvwwKOmRIsulOPwUCG/k11jSzC2yrI71R3FcKCYHQEdI
+         XqQoCiVfCsJUB9fZZ1cBHvtXaDPgywJl/aUo0/iJsjWMsXUbVD9AmmHOBK5wuIGTTuti
+         3WojWYi8OOcBOtmfbM/hYuDhwlYvd8kEcxIdIMSeeadS7ikx1dL7DgxRKghwolx0MqiT
+         r0XVg7/vWEXA4BUHG2rOU04BHOFWNQY1RmGlAPL6ixmYj9JpPEhSkTOiEIGY4PuzWK/A
+         ZJdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=QlXzIeykIQUpEBdYcwxd+wvAWmRVIxL3eGhm6mPv2tU=;
-        b=KVy8ZaYAnP6yoPhwdk1sC6ZAHsAUN3ZgAaedb5uF16FzJaCyh/W2WpsNLtGzh8JUir
-         UtOP93zCdL77Iux8rGbMQpiwbXRjTUcPBU0f0NM/k6kP4NfoAMNFdEFKNOjCrJw8h/eT
-         Ujf2hzVfwtkFWFOOtBpo+GvgnP5oHcPoKcCT9ehUUrJDM4v9bXMlT/W/WscfTOClsb9X
-         Gq4yxqjI4Ja3iFOyQ6+mWw3YZkynArSSEjzRZlg+Ac4TNqsICFznfZeHQUDkgVVvYJqY
-         ShAc1nL9lnqTxbSFuMYzcKBxfUDUjYVPaoDVsy/6qRZSHtHgvjdRRM+pk1vVADc6DGOe
-         rv0Q==
-X-Gm-Message-State: ANhLgQ3UZZlj4X4P/J+vcXUDbyfjt4NT5VGO+7QFmjVA5AeeQq5w2Ism
-        HRESlNWdBhi9dhOrk40oTpo=
-X-Google-Smtp-Source: ADFU+vsdfwf4i6qjYFXBcYbvtQoEzb0ZAfQyCvkvWDrzRecAr1kQ48Dp8uEzHOKDHtF8X0uY5u9yIg==
-X-Received: by 2002:a7b:c3d4:: with SMTP id t20mr4123131wmj.102.1583418984953;
-        Thu, 05 Mar 2020 06:36:24 -0800 (PST)
+        bh=ByZXWnJHqaW7QVpVISE1TPiyXWuEjtw6nBQAA8Pn/yI=;
+        b=P7A5tZ7XMXRpWjKyHyRzzsCoKcZfjPxLUHSQL1t8ctT/S2l2LAklmgSH8nyxldmf2o
+         swd11v3a1HR36ccvaxO3M8RsFTOqoY12U+BNE1fMQvWIkUskoc6iH5iw5pfM6IC9rnhJ
+         LEN00+lsbOb0JBAIU5T6wiNSj8mDviY4A99WpDmhl2ZfeL41x+sO97rv2phzBGVAG2Nh
+         XdTm2OAl61huIRBKCJq4lLOlcYtlK1zx6raBMUT7HJhZvxb+lvRf1QXC7wfVBagwrI/X
+         AnHMWBcJUuAX/mx3RnorM+jcu1ZntDcAEnmMDCM7Yz2JhLuGiMVmVfBvmBYAnNkjCegZ
+         NxHg==
+X-Gm-Message-State: ANhLgQ1EAT5qqU+uLoXuzAENtcsyy25lcLTIRoPxjSVWQLdCM9909LWw
+        ViCwHsXcZ3oW6NOfqiTsSVq6hkWr
+X-Google-Smtp-Source: ADFU+vu5AhrM5tdRcpL7UhKvY/QyM1wRgxmPaDdySYrsRaXKPbUJz5eJJdKvYOS9N2HnrUL9zq5Q6Q==
+X-Received: by 2002:a1c:df45:: with SMTP id w66mr9866981wmg.171.1583418983047;
+        Thu, 05 Mar 2020 06:36:23 -0800 (PST)
 Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g201sm9365124wme.23.2020.03.05.06.36.24
+        by smtp.gmail.com with ESMTPSA id g201sm9365124wme.23.2020.03.05.06.36.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Mar 2020 06:36:24 -0800 (PST)
+        Thu, 05 Mar 2020 06:36:22 -0800 (PST)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, linux-i2c@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 5/5] dt-bindings: i2c: i2c-rk3x: add description for px30
-Date:   Thu,  5 Mar 2020 15:36:11 +0100
-Message-Id: <20200305143611.10733-5-jbx6244@gmail.com>
+Subject: [PATCH v1 3/5] dt-bindings: i2c: i2c-rk3x: add description for rk3368
+Date:   Thu,  5 Mar 2020 15:36:09 +0100
+Message-Id: <20200305143611.10733-3-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200305143611.10733-1-jbx6244@gmail.com>
 References: <20200305143611.10733-1-jbx6244@gmail.com>
@@ -71,10 +71,10 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The description below is already in use for px30.dtsi,
+The description below is already in use for rk3368.dtsi,
 but was somehow never added to a document, so add
-"rockchip,px30-i2c", "rockchip,rk3399-i2c"
-for i2c nodes on a px30 platform to i2c-rk3x.yaml.
+"rockchip,rk3368-i2c", "rockchip,rk3288-i2c"
+for i2c nodes on a rk3368 platform to i2c-rk3x.yaml.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
@@ -82,17 +82,17 @@ Signed-off-by: Johan Jonker <jbx6244@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml b/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
-index edee8f699..61eac76c8 100644
+index 0bba39998..67cdce8fb 100644
 --- a/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
 +++ b/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
-@@ -33,6 +33,7 @@ properties:
+@@ -29,6 +29,7 @@ properties:
+       - items:
+           - enum:
+             - rockchip,rk3036-i2c
++            - rockchip,rk3368-i2c
            - const: rockchip,rk3288-i2c
        - items:
            - enum:
-+            - rockchip,px30-i2c
-             - rockchip,rk3308-i2c
-             - rockchip,rk3328-i2c
-           - const: rockchip,rk3399-i2c
 -- 
 2.11.0
 
