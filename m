@@ -2,163 +2,99 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7853C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D52C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4802072D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:46:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L82TiN1R"
+	by mail.kernel.org (Postfix) with ESMTP id 3D014207FD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583426934;
+	bh=uTJIAf0Zk1trNzHdjBfKoDR9e5pAGkCgd5UWUupWf5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sl5AP02U3I21HGZZlzFpPIV4vZJHKWpRh0Wj+EVOpi5y0UoJxRTdFRaKargaOmxtf
+	 9kE0rDatx9VCmjoZO5TiAfKPLPCQwn9unMkxqj0JyIDxIvGoyEfDDKTWZ8vQGgQHWe
+	 J+ZyPceD6GSyQoHTLc+uYCAXYhuddq/Vqhg9ECEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbgCEQq6 (ORCPT
+        id S1726080AbgCEQsx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:46:58 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34580 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgCEQq6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 11:46:58 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025GkkKE102543;
-        Thu, 5 Mar 2020 10:46:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583426806;
-        bh=dLFUF+hs+lohm/Cy6tRRvf897Y3mN6z0nkcwCI41Suc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=L82TiN1RIfnn7kmuwg7lIQk58WqJrf2UENT7X++AbV7KhQr6RrLWHAto6743DqU10
-         29Z21bS0cz0D515Ns09f10dXHBcDpVzO6Gp82bMWGKK0jwoaF+LdQnt8uQqGHjbXCb
-         uLhMST0d/sfxrGm2/Zri8vPmMzIFMMzWm0SkPiIA=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025Gkk6G047305
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Mar 2020 10:46:46 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
- 2020 10:46:45 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Mar 2020 10:46:45 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025Gkhkl105579;
-        Thu, 5 Mar 2020 10:46:43 -0600
-Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
-To:     Robin Murphy <robin.murphy@arm.com>, <tony@atomide.com>,
-        Nishanth Menon <nm@ti.com>
-CC:     <yan-liu@ti.com>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Nori, Sekhar" <nsekhar@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-References: <20200304090031.30360-1-rogerq@ti.com>
- <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <eb4e97f2-9afd-41a9-e239-88798c326a86@ti.com>
-Date:   Thu, 5 Mar 2020 18:46:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 5 Mar 2020 11:48:53 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39972 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbgCEQsx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 11:48:53 -0500
+Received: by mail-ot1-f66.google.com with SMTP id x19so6360403otp.7;
+        Thu, 05 Mar 2020 08:48:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BtQukosipCDTJRpxM8+GlvjNBpGQ+/37Y87CzXVM5fI=;
+        b=K0Qe8v3gnX2QOrWMM4TSV9hZ9UUYU59KMCxryY+vZSympuCrbEcgh1pMPAcW1w/MM7
+         AmqMtLv/lN9x6HwRyETeGc38cL7L7y+KIKLL2zk+eI5NQgX1EPReeDnrIvszAbo91ViJ
+         vI8lHm0VYacKRwJ5TdOmK2S6fPyMXsVZsrRrUKIUVojYM3+fWniduP3hRgXQ8M1lmBgr
+         sVU69WFYIgmDSlqle1pPj5az+ccX4lfLsyXO/zwo3cr9TIrUa8wNmoJHLeDrMwjOb/C3
+         2FmK1pmoI7mDu/VsuQIXOgAePk3EIheR0GhpGaY+SIRau48gjI4GoqfkoybHqTfA0q0w
+         K+gg==
+X-Gm-Message-State: ANhLgQ3NWBbrm5oBi0Cq7dTRfELzF4GeNjD5Z9h6W3s2iMYMaGQwaTab
+        lv3rYHB9i8qlYyN3YKZuVQ==
+X-Google-Smtp-Source: ADFU+vtd3fQT1+nzrSFrLjVe44wc6SUOPiqtdKD4EpcpFIzGHq+NsraOJqFcRaWgHNQr7Z3TBxWM3A==
+X-Received: by 2002:a9d:73d1:: with SMTP id m17mr7441548otk.19.1583426932494;
+        Thu, 05 Mar 2020 08:48:52 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 16sm9528186otc.33.2020.03.05.08.48.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 08:48:51 -0800 (PST)
+Received: (nullmailer pid 26752 invoked by uid 1000);
+        Thu, 05 Mar 2020 16:48:50 -0000
+Date:   Thu, 5 Mar 2020 10:48:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     devicetree@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        linux-input@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
+Subject: Re: [PATCH v6] dt-bindings: mfd: Convert ChromeOS EC bindings to
+ json-schema
+Message-ID: <20200305164850.GA21459@bogus>
+References: <20200305075302.200959-1-ikjn@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305075302.200959-1-ikjn@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+Nishanth
-
-Robin,
-
-On 05/03/2020 18:04, Robin Murphy wrote:
-> On 04/03/2020 9:00 am, Roger Quadros wrote:
->> Even though the TRM says that SATA IP has 36 address bits
->> wired in the SoC, we see bus errors whenever any address
->> greater than 32-bit is given to the controller.
+On Thu,  5 Mar 2020 15:53:02 +0800, Ikjoon Jang wrote:
+> Convert the ChromeOS EC bindings to json-schema.
 > 
-> Actually, is it really just SATA? I pulled up a couple of DRA7xx TRMs out of curiosity - thanks for having such easy-to-access documentation by the way :) - and they both give me a clear impression that the entire L3_MAIN interconnect is limited to 32-bit addresses and thus pretty much all the DMA masters should only be able to touch the lower 2GB of DRAM. Especially the bit that explicitly says "This is a high address range (Q8 – Q15) that requires an address greater than 32 bits. This space is visible only for the MPU Subsystem."
-
-You are right that L3 interconnect can only access first 2GB of DRAM.
-Which means we should add the bus_dma_limit to the entire L3 bus
-instead of just SATA?
-
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> ---
+> v6: adjust property dependencies, drop duplicated definitions,
+>     and set additionalProperties
+> v5: unset additionalProperties
+> v4: text reflows, add type references, and fix examples
+> v3: node name changed in rpmsg example
+> v2: cleanup description, fix typos, remove LPC, and add RPMSG example
+> ---
+>  .../devicetree/bindings/mfd/cros-ec.txt       |  76 -----------
+>  .../devicetree/bindings/mfd/cros-ec.yaml      | 125 ++++++++++++++++++
+>  2 files changed, 125 insertions(+), 76 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
 > 
-> Is it in fact the case that the SATA driver happens to be the only one to set a >32-bit DMA mask on your system?
 
-This looks like the case. Other device drivers might not be overriding
-dma_mask at all thus using the default 32-bit dma_mask.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-cheers,
--roger
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/cros-ec.example.dt.yaml: cros-ec@0: 'spi-max-frequency' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-> 
-> Robin.
-> 
->> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
->>
->> As a workaround we limit the DMA address range to 32-bits
->> for SATA.
->>
->> Cc: Christoph Hellwig <hch@lst.de>
->> Cc: Robin Murphy <robin.murphy@arm.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Reported-by: Yan Liu <yan-liu@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>
->> NOTE: Currently ARM dma-mapping code doesn't account for devices
->> bus_dma_limit. This is fixed in [1].
->>
->> [1] https://lkml.org/lkml/2020/2/18/712
->>
->>   arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
->>   1 file changed, 16 insertions(+), 9 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index d78b684e7fca..895462c22d1c 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -642,15 +642,22 @@
->>           };
->>           /* OCP2SCP3 */
->> -        sata: sata@4a141100 {
->> -            compatible = "snps,dwc-ahci";
->> -            reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
->> -            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->> -            phys = <&sata_phy>;
->> -            phy-names = "sata-phy";
->> -            clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->> -            ti,hwmods = "sata";
->> -            ports-implemented = <0x1>;
->> +        sata_aux_bus {
->> +            #address-cells = <1>;
->> +            #size-cells = <2>;
->> +            compatible = "simple-bus";
->> +            ranges = <0x0 0x4a140000 0x0 0x1200>;
->> +            dma-ranges = <0x0 0x0 0x1 0x00000000>;
->> +            sata: sata@4a141100 {
->> +                compatible = "snps,dwc-ahci";
->> +                reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
->> +                interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->> +                phys = <&sata_phy>;
->> +                phy-names = "sata-phy";
->> +                clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->> +                ti,hwmods = "sata";
->> +                ports-implemented = <0x1>;
->> +            };
->>           };
->>           /* OCP2SCP1 */
->>
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+See https://patchwork.ozlabs.org/patch/1249450
+Please check and re-submit.
