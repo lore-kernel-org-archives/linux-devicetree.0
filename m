@@ -2,168 +2,124 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250F3C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1B4C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECDDB208CD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 15:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lKqr2+6Y"
+	by mail.kernel.org (Postfix) with ESMTP id 88A252072D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCEPn2 (ORCPT
+        id S1726317AbgCEQEL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:43:28 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:42761 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgCEPn2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 10:43:28 -0500
-Received: by mail-ua1-f65.google.com with SMTP id p2so2225207uao.9
-        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 07:43:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BtkP4rjLPJJ3tMCB0I86aLFGaPPlP5RT1g3Fl+k0ezY=;
-        b=lKqr2+6Y70nMAQIyJl5JRc7tIiLa+hzIz7tEvf/tovFCfmf+e7RuHwdMVi4tryYNTD
-         +pymGTN4XbCQi1CQ2PWP9jPf1sDURpvJEBqC59VhPJF1ZTtb8ifBnbcHDu7/o3b8UX+/
-         BupJMhndJtlKuYaGJ/ZOifRB1mOciw3bd+8KEN2jkk5w0PbDET9x7GDPdVZcHA4HMCSU
-         DIrYETeAQerh3c1CrVA3ipFhiuj7XLqCfmLKdZLc/gC2IxdYCTgy6CmtM3Qa7kLf6ltZ
-         yiKe1i/cC5h5GYiBTHxi3IJSLiLC9sGHsOuncMXK3UHEnqsauLAX3vSUQXR1vMznxLBR
-         Q4YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BtkP4rjLPJJ3tMCB0I86aLFGaPPlP5RT1g3Fl+k0ezY=;
-        b=qgF47j+BTk1YuW+zCt1+kjcPLvo1xi3Qgex9vLEcPDZ3mDDt+LVrBVlAvi8T1Hfp3R
-         Y6KroXtsbSz4m9doNIc1zpzgQ222fZUy2aLfX38SDTHsTuc1gYcpff8Yl3Y05pSVzEY+
-         3rzWROSgSQXETIe8V51+cKgrd3Hp3H2tM3Dbrmmo3Zh0cbFx3L1bWaG6hH5uXmM7N8fY
-         unG8mb+Wir0hlcf9+7wVDKPS57LovjMmqvuku43uFGyh6pwKFKVp7d1bD08KzL5MxfuH
-         EP3lhX0QnU39/DkudvRe8SN6TQDyLHZ3DNIxQR9bBA2HlSdJHWdm32uZme5z8dnif0De
-         nS4A==
-X-Gm-Message-State: ANhLgQ1Ba7sYE+q2KGcb9y7Mcvj1t8CvLJDXp5u3oJ2TbC4l9TGTX2Pm
-        VJNt8lwZTepWsQrUAGo4p2a72LBy3+lqiHxhdYQGwQ==
-X-Google-Smtp-Source: ADFU+vtnAS2M6fsz0X4CPT/qujFk6wJUPdYM8Pmr5JuuT0heSqdLkpUK6njwODFUJ11mFbZK5GofJhtZiCjNvuUC940=
-X-Received: by 2002:ab0:7518:: with SMTP id m24mr4824318uap.60.1583423006775;
- Thu, 05 Mar 2020 07:43:26 -0800 (PST)
+        Thu, 5 Mar 2020 11:04:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:50626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgCEQEK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Mar 2020 11:04:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06B9330E;
+        Thu,  5 Mar 2020 08:04:10 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C202F3F534;
+        Thu,  5 Mar 2020 08:04:08 -0800 (PST)
+Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
+To:     Roger Quadros <rogerq@ti.com>, tony@atomide.com
+Cc:     yan-liu@ti.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200304090031.30360-1-rogerq@ti.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
+Date:   Thu, 5 Mar 2020 16:04:06 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <cover.1582528977.git.amit.kucheria@linaro.org>
- <59d24f8ec98e29d119c5cbdb2abe6d4644cc51cf.1582528977.git.amit.kucheria@linaro.org>
- <20200224184003.GA3607@bogus> <CAHLCerP1_xESMbLuSBsVz1XkrA0j_okbX+SxbefVSo4ttvX_fg@mail.gmail.com>
- <CAL_JsqK_8MbxwKb9D4U0Cfv1m61zHWku4hJwiLaeOO6wkS8WCQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqK_8MbxwKb9D4U0Cfv1m61zHWku4hJwiLaeOO6wkS8WCQ@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 5 Mar 2020 21:13:15 +0530
-Message-ID: <CAHLCerOeSx2hkB5QUhj_iK1sU=X9EWFLVgof2XsLhhy3CmbpNg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 3/3] dt-bindings: thermal: Add yaml bindings for
- thermal zones
-To:     Rob Herring <robh@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200304090031.30360-1-rogerq@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 9:08 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Mar 5, 2020 at 6:50 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> >
-> > On Tue, Feb 25, 2020 at 12:10 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Mon, 24 Feb 2020 12:55:37 +0530, Amit Kucheria wrote:
-> > > > As part of moving the thermal bindings to YAML, split it up into 3
-> > > > bindings: thermal sensors, cooling devices and thermal zones.
-> > > >
-> > > > The thermal-zone binding is a software abstraction to capture the
-> > > > properties of each zone - how often they should be checked, the
-> > > > temperature thresholds (trips) at which mitigation actions need to be
-> > > > taken and the level of mitigation needed at those thresholds.
-> > > >
-> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > ---
-> > > >  .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
-> > > >  1 file changed, 302 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-> > > >
-> > >
-> > > My bot found errors running 'make dt_binding_check' on your patch:
-> > >
-> > > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> >
-> > This one isn't due to my patch, I believe.
->
-> Right, that's the one known warning...
->
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupt-names: ['uplow'] is too short
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupts: [[0, 506, 4]] is too short
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupt-names: ['uplow'] is too short
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupts: [[0, 507, 4]] is too short
-> >
-> > Fixed. Just for my information, did the check somehow figure out that
-> > this (incomplete) example needed the qcom-tsens.yaml binding (based on
-> > compatible string?) and then apply those rules to throw this error?
->
-> Yes. And setting DT_SCHEMA_FILES did change that to only check with
-> the specified schema file. However, that's now changed in linux-next
-> such that examples are always checked by all schemas and
-> DT_SCHEMA_FILES just limits which bindings to build and check.
+On 04/03/2020 9:00 am, Roger Quadros wrote:
+> Even though the TRM says that SATA IP has 36 address bits
+> wired in the SoC, we see bus errors whenever any address
+> greater than 32-bit is given to the controller.
 
-DT_SCHEMA_FILES doesn't seem to take wildcards. Individual yaml files
-worked fine.
+Actually, is it really just SATA? I pulled up a couple of DRA7xx TRMs 
+out of curiosity - thanks for having such easy-to-access documentation 
+by the way :) - and they both give me a clear impression that the entire 
+L3_MAIN interconnect is limited to 32-bit addresses and thus pretty much 
+all the DMA masters should only be able to touch the lower 2GB of DRAM. 
+Especially the bit that explicitly says "This is a high address range 
+(Q8 – Q15) that requires an address greater than 32 bits. This space is 
+visible only for the MPU Subsystem."
 
-$ make -k -j`nproc` ARCH=arm64 CROSS_COMPILE="ccache
-aarch64-linux-gnu-" O=~/work/builds/build-aarch64/ dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/thermal/thermal*.yaml
-make[1]: Entering directory '/home/amit/work/builds/build-aarch64'
-make[2]: Circular
-Documentation/devicetree/bindings/processed-schema.yaml <-
-Documentation/devicetree/bindings/thermal/thermal-sensor.example.dt.yaml
-dependency dropped.
-make[2]: Circular
-Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml
-<- Documentation/devicetree/bindings/processed-schema.yaml dependency
-dropped.
-make[2]: Circular
-Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml
-<- Documentation/devicetree/bindings/processed-schema.yaml dependency
-dropped.
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-Traceback (most recent call last):
-  File "/home/amit/.local/bin/dt-mk-schema", line 7, in <module>
-    exec(compile(f.read(), __file__, 'exec'))
-  File "/home/amit/work/sources/tools-dt-schema.git/tools/dt-mk-schema",
-line 32, in <module>
-    schemas = dtschema.process_schemas(args.schemas, core_schema=(not
-args.useronly))
-  File "/home/amit/work/sources/tools-dt-schema.git/dtschema/lib.py",
-line 475, in process_schemas
-    sch = process_schema(os.path.abspath(filename))
-  File "/home/amit/work/sources/tools-dt-schema.git/dtschema/lib.py",
-line 435, in process_schema
-    DTValidator.check_schema(schema)
-  File "/home/amit/work/sources/tools-dt-schema.git/dtschema/lib.py",
-line 582, in check_schema
-    meta_schema = cls.resolver.resolve_from_url(schema['$schema'])
-TypeError: list indices must be integers or slices, not str
-make[2]: *** [/home/amit/work/sources/linux-amit.git/Documentation/devicetree/bindings/Makefile:34:
-Documentation/devicetree/bindings/processed-schema.yaml] Error 1
-make[2]: Target '__build' not remade because of errors.
-make[1]: *** [/home/amit/work/sources/linux-amit.git/Makefile:1262:
-dt_binding_check] Error 2
-make[1]: Leaving directory '/home/amit/work/builds/build-aarch64'
-make: *** [Makefile:179: sub-make] Error 2
-make: Target 'dt_binding_check' not remade because of errors.
+Is it in fact the case that the SATA driver happens to be the only one 
+to set a >32-bit DMA mask on your system?
+
+Robin.
+
+> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
+> 
+> As a workaround we limit the DMA address range to 32-bits
+> for SATA.
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Reported-by: Yan Liu <yan-liu@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+> 
+> NOTE: Currently ARM dma-mapping code doesn't account for devices
+> bus_dma_limit. This is fixed in [1].
+> 
+> [1] https://lkml.org/lkml/2020/2/18/712
+> 
+>   arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
+>   1 file changed, 16 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index d78b684e7fca..895462c22d1c 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -642,15 +642,22 @@
+>   		};
+>   
+>   		/* OCP2SCP3 */
+> -		sata: sata@4a141100 {
+> -			compatible = "snps,dwc-ahci";
+> -			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+> -			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> -			phys = <&sata_phy>;
+> -			phy-names = "sata-phy";
+> -			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+> -			ti,hwmods = "sata";
+> -			ports-implemented = <0x1>;
+> +		sata_aux_bus {
+> +			#address-cells = <1>;
+> +			#size-cells = <2>;
+> +			compatible = "simple-bus";
+> +			ranges = <0x0 0x4a140000 0x0 0x1200>;
+> +			dma-ranges = <0x0 0x0 0x1 0x00000000>;
+> +			sata: sata@4a141100 {
+> +				compatible = "snps,dwc-ahci";
+> +				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
+> +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +				phys = <&sata_phy>;
+> +				phy-names = "sata-phy";
+> +				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+> +				ti,hwmods = "sata";
+> +				ports-implemented = <0x1>;
+> +			};
+>   		};
+>   
+>   		/* OCP2SCP1 */
+> 
