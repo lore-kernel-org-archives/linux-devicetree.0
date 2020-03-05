@@ -2,193 +2,100 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07262C3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9A5C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D494221744
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A5D207FD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 14:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VX47RGMY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="esoOeJ8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgCEOyS (ORCPT
+        id S1725965AbgCEO6z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:54:18 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38294 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgCEOxz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 09:53:55 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t11so7385571wrw.5
-        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 06:53:54 -0800 (PST)
+        Thu, 5 Mar 2020 09:58:55 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35577 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgCEO6z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 09:58:55 -0500
+Received: by mail-il1-f193.google.com with SMTP id g126so5276531ilh.2
+        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 06:58:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/7GaYG1V9yvlGZRAenw2HkEK2JVAUFF5h5EVPufKqGg=;
-        b=VX47RGMYDdzThxyXqhwBxJcO0pcrOV+YjLetQkI/TCXk/3mFWV83ILoz7U8HwXukvR
-         g/aILl08N6i6TFT4UB4WbkiSqE0xGwSxsZ0G7q4WxD0xSssSoxfRXvjtwtAVhsU7EQOc
-         lX5P8yY/GwFEhagbCQKLiWk26ERm7r15TXpNXCtnaN/MFROhZVng/ivNk/WHAcKpTtFK
-         Krum9oEe6d21Dw7OLGFoPmG5UDxwXpWiDo3sowhVjevEIlCxNaYudzJ3LfopHgBU+YhF
-         jP6JzHId2++YhOELM9ikmQQHr91b4nk8DoRI9hhNvDjI3a37Cw3/ghNKOPTM661/AdID
-         uKXA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4bV4e2J0Fj77NrhTqn4U15G8AA1APxJOoLr6qnKhOMc=;
+        b=esoOeJ8vk39jzQbYXfJq1SFqiVch6RalQvjHVWANNM+olC7WkFv8UUMuQ4k+3AeujU
+         ldsf+SXtvo2g8fplfXNBTqV+HxFYw6ytavS9Yi7rvCgn997XMPTs3uiEzZjmgelDYMCA
+         xNyZd/mKHxBuLL6JVZzGh0lwA3OO4C0t8vi2Pt+RiDN9vgxbT+NiW1IRO5iE9ITrZ2w3
+         UP+RFRkwFWKqt51wrEKEBUiHwdgDyL+BIAkI+DrfdBZ+kU6HSCM1xHd8nnrR+rguCUE5
+         lW+cVrCGK3+K8UgQ9iuIpsdovS8ZDK3sNetDv3lVs7x9KFBjvTXoLDXZhTOxKkb3wbQR
+         PWwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/7GaYG1V9yvlGZRAenw2HkEK2JVAUFF5h5EVPufKqGg=;
-        b=K8zp5C+uU6ABmL0UyhSxsLtIDBRfAKS2EMYD1mnWGgtGh+cic8xYnEEm2H5sSb//se
-         ifSM2nJkK5llLDhXje84IJiz5tcntRQgT0AHEmfcbpHVO1/Vd6K04UAnO0mVymN1hhom
-         XfOgsSunw/s98XEq0fOOuiIcFXjgAoNXodaTxJl26R+r5Pa4ujn55na7teRRmrOlPl7C
-         AX7O8vZK+/cnohPwmvbBzI8X3g+vKdcR8hbOTw2x9cIyHOnlyzTXir7FVZXrPbR9WHWa
-         +LffG5Auvsvx8DYuu6/Z/evRmKNjXVK0YP/aK+QSQTwWrnuYfKVis5KX4F7Y1vf0kNpR
-         uIlw==
-X-Gm-Message-State: ANhLgQ0dS6RXM5ZptHKXK/9g7+NtdVLfOf/XKBTs0ni/PeFEhXy/3sS8
-        pQxxWtyHuM4aHRZnosQT35MEfbl6mYI=
-X-Google-Smtp-Source: ADFU+vt5FvrEnGBWVeZKz6mJ0TXnqCrAyCnnG8ke4oq2YnIDlLLvui9t+E72hFQLLa9Iys3wkfTD3Q==
-X-Received: by 2002:a5d:494c:: with SMTP id r12mr9965765wrs.50.1583420033496;
-        Thu, 05 Mar 2020 06:53:53 -0800 (PST)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id f16sm35785985wrx.25.2020.03.05.06.53.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 06:53:52 -0800 (PST)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/4] arm64: dts: qcom: c630: Enable audio support
-Date:   Thu,  5 Mar 2020 14:53:42 +0000
-Message-Id: <20200305145344.14670-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200305145344.14670-1-srinivas.kandagatla@linaro.org>
-References: <20200305145344.14670-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4bV4e2J0Fj77NrhTqn4U15G8AA1APxJOoLr6qnKhOMc=;
+        b=GJ1aSg8UAGEEUt/54NXQCb7cfLQEJ2qyBYLipd9ziTYyeVOVq9BsGm5czQfyf0wx1g
+         JWKERdxz2CxaKzczuB0Kt9tF7JtpG4yFPkQnE0eviOQWH5IOiBtqMln1oHR4r9ceFlJe
+         w/GU67HocUq4msxnXLFbbkUZtMWXcD8b1+yXAoklfRXESRb4NjBZUG/3G49QdXUbYoTt
+         ghfi0KYVeRqMnchBDYXjBbX3Eg3Op+WdYtvVepjIOleVvdWWo0XRLbS3UtE6YYtsDzUt
+         97ZuVWZRfVDPsCWUXXSw1jjny+25KcNPBYxq73sLj7ouFGPhsERKnwgNF8V4Q4JVnrNH
+         g0TA==
+X-Gm-Message-State: ANhLgQ2LbpTRobZtaunZ5ZRWoYLRfOybwZmujI5OuOB8QXiGli/CZUEX
+        +gySmOLIq3baEWBapVVJsoV2/TtbTYo=
+X-Google-Smtp-Source: ADFU+vtpeY9CxlaepFzd4eHxFzmg0UDavlbEE426APDD8aZtC+Rwtl+OAoe0AHeKrotvehazhLMiPw==
+X-Received: by 2002:a92:981b:: with SMTP id l27mr8649435ili.118.1583420334176;
+        Thu, 05 Mar 2020 06:58:54 -0800 (PST)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id p78sm6860932ilk.76.2020.03.05.06.58.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 06:58:53 -0800 (PST)
+Subject: Re: [PATCH 00/17] net: introduce Qualcomm IPA driver (UPDATED)
+To:     David Miller <davem@davemloft.net>
+Cc:     arnd@arndb.de, bjorn.andersson@linaro.org, agross@kernel.org,
+        johannes@sipsolutions.net, dcbw@redhat.com, evgreen@google.com,
+        ejcaruso@google.com, syadagir@codeaurora.org,
+        cpratapa@codeaurora.org, subashab@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, ohad@wizery.com,
+        sidgup@codeaurora.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200228224204.17746-1-elder@linaro.org>
+ <20200304.141547.1905642444413562833.davem@davemloft.net>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <d422e872-ed97-76a0-e8d8-457e8932f4ff@linaro.org>
+Date:   Thu, 5 Mar 2020 08:58:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304.141547.1905642444413562833.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch add support to audio via WSA881x Speakers and Headset.
+On 3/4/20 4:15 PM, David Miller wrote:
+> From: Alex Elder <elder@linaro.org>
+> Date: Fri, 28 Feb 2020 16:41:47 -0600
+> 
+>> This series presents the driver for the Qualcomm IP Accelerator (IPA).
+> 
+> This doesn't apply cleanly to the net-next tree if that's where you want
+> this applied, can you respin?
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 91 +++++++++++++++++++
- 1 file changed, 91 insertions(+)
+Yes I will do that today.  Thanks.	-Alex
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index b255be3a4a0a..99f5836b9331 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -8,6 +8,8 @@
- /dts-v1/;
- 
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include <dt-bindings/sound/qcom,q6afe.h>
-+#include <dt-bindings/sound/qcom,q6asm.h>
- #include "sdm845.dtsi"
- #include "pm8998.dtsi"
- 
-@@ -353,6 +355,95 @@
- 	status = "okay";
- };
- 
-+&slim_msm {
-+	ngd@1 {
-+		wcd9340: codec@1{
-+			clock-names = "extclk";
-+			clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
-+			vdd-buck-supply = <&vreg_s4a_1p8>;
-+			vdd-buck-sido-supply = <&vreg_s4a_1p8>;
-+			vdd-tx-supply = <&vreg_s4a_1p8>;
-+			vdd-rx-supply = <&vreg_s4a_1p8>;
-+			vdd-io-supply = <&vreg_s4a_1p8>;
-+			swm: swm@c85 {
-+				left_spkr:wsa8810-left{
-+					compatible = "sdw10217211000";
-+					reg = <0 3>;
-+					powerdown-gpios = <&wcdpinctrl 2 0>;
-+					#thermal-sensor-cells = <0>;
-+					sound-name-prefix = "SpkrLeft";
-+					#sound-dai-cells = <0>;
-+				};
-+
-+				right_spkr:wsa8810-right{
-+					compatible = "sdw10217211000";
-+					powerdown-gpios = <&wcdpinctrl 3 0>;
-+					reg = <0 4>;
-+					#thermal-sensor-cells = <0>;
-+					sound-name-prefix = "SpkrRight";
-+					#sound-dai-cells = <0>;
-+				};
-+			};
-+
-+		};
-+	};
-+};
-+
-+&sound {
-+	compatible = "qcom,db845c-sndcard";
-+	model = "Lenovo-YOGA-C630-13Q50";
-+
-+	audio-routing =
-+		"RX_BIAS", "MCLK",
-+		"AMIC2", "MIC BIAS2",
-+		"SpkrLeft IN", "SPK1 OUT",
-+		"SpkrRight IN", "SPK2 OUT";
-+
-+	mm1-dai-link {
-+		link-name = "MultiMedia1";
-+		cpu {
-+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA1>;
-+		};
-+	};
-+
-+	mm2-dai-link {
-+		link-name = "MultiMedia2";
-+		cpu {
-+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA2>;
-+		};
-+	};
-+
-+	slim-dai-link {
-+		link-name = "SLIM Playback";
-+		cpu {
-+			sound-dai = <&q6afedai SLIMBUS_0_RX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+
-+		codec {
-+			sound-dai =  <&left_spkr>, <&right_spkr>, <&swm 0>, <&wcd9340 0>;
-+		};
-+	};
-+
-+	slimcap-dai-link {
-+		link-name = "SLIM Capture";
-+		cpu {
-+			sound-dai = <&q6afedai SLIMBUS_0_TX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+
-+		codec {
-+			sound-dai = <&wcd9340 1>;
-+		};
-+	};
-+};
-+
- &tlmm {
- 	gpio-reserved-ranges = <0 4>, <81 4>;
- 
--- 
-2.21.0
+> 
+> Thanks.
+> 
 
