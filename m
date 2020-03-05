@@ -2,78 +2,71 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E764C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAC1C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BC62073B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09B5207FD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 16:36:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UJibfdPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgCEQGV (ORCPT
+        id S1725993AbgCEQgd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:06:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:50682 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbgCEQGV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:06:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 177C930E;
-        Thu,  5 Mar 2020 08:06:21 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B31CF3F534;
-        Thu,  5 Mar 2020 08:06:19 -0800 (PST)
-Date:   Thu, 5 Mar 2020 16:06:14 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
-Message-ID: <20200305160613.GA53631@bogus>
-References: <1583201219-15839-1-git-send-email-peng.fan@nxp.com>
- <1583201219-15839-3-git-send-email-peng.fan@nxp.com>
- <20200304103954.GA25004@bogus>
- <AM0PR04MB4481A6DB7339C22A848DAFC988E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <AM0PR04MB44814B71E92C02956F4BED4588E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200304170319.GB44525@bogus>
- <AM0PR04MB4481B90D03D1F68573B05BE088E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        Thu, 5 Mar 2020 11:36:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56310 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgCEQgd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 11:36:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=IN0z5lvxX3vfG4LlR2OLwyz2tFIOaeyOpNZ/LAjxDFE=; b=UJibfdPpIN84IhGGV66FPK3zNA
+        yzVJpxyXzBbrmM5EvaVqPmPWHjvZR+sV4xZ14YVEOnaN8OOkCuH8q0AT4VeUlWx807tTEAH18J6Bk
+        JIm5SKt7rEZQ/hDAgkoqur9CPBKLhHBF0YRspnJbyni4rW7a0oT944GJJS+12KbkBkGC1Pl5FSBJz
+        Uoh08v2WTHIfTMXi9KnTDqdE1vEo42kw5RuS+Jtq9QWJOxyAF4F7VkX3oViG/23kudgEKDkxvvzmm
+        Z392HeGdJZ+fM7Twz/UX0YPWV3KCG1aAU+wMcKjeXQ0m7rUdsK6NwE13/Yc86vw33q6rAJ3JLag1t
+        /FLdA+0A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9tU5-0006i6-Lu; Thu, 05 Mar 2020 16:36:29 +0000
+Date:   Thu, 5 Mar 2020 08:36:29 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        yi.l.liu@intel.com, zhangfei.gao@linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200305163629.GA14299@infradead.org>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+ <20200224182401.353359-2-jean-philippe@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4481B90D03D1F68573B05BE088E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200224182401.353359-2-jean-philippe@linaro.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 11:25:35AM +0000, Peng Fan wrote:
+On Mon, Feb 24, 2020 at 07:23:36PM +0100, Jean-Philippe Brucker wrote:
+> -static struct mmu_notifier *gru_alloc_notifier(struct mm_struct *mm)
+> +static struct mmu_notifier *gru_alloc_notifier(struct mm_struct *mm, void *privdata)
 
-[...]
-
-> >
-> > Yes, this may fix the issue. However I would like to know if we need to support
-> > multiple channels/shared memory simultaneously. It is fair requirement and
-> > may need some work which should be fine.
->
-> Do you have any suggestions? Currently I have not worked out an good
-> solution.
->
-
-TBH, I haven't given it a much thought. I would like to know if people
-are happy with just one SMC channel for SCMI or do they need more ?
-If they need it, we can try to solve it. Otherwise, what you have will
-suffice IMO.
-
---
-Regards,
-Sudeep
+Pleae don't introduce any > 80 char lines.  Not here, and not anywhere
+else in this patch or the series.
