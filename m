@@ -7,135 +7,113 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBFFC3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5657C3F2D7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 18:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD5D20716
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEFD522B48
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 18:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T6R/TbBM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oJhNIxjk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgCESvf (ORCPT
+        id S1726020AbgCES5M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:51:35 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39635 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgCESvf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 13:51:35 -0500
-Received: by mail-pg1-f195.google.com with SMTP id s2so3173443pgv.6
-        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 10:51:34 -0800 (PST)
+        Thu, 5 Mar 2020 13:57:12 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37720 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgCES5L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 13:57:11 -0500
+Received: by mail-pl1-f196.google.com with SMTP id b8so3019591plx.4
+        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 10:57:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=b2SYpooN63pazq0FfnqZHc+uxwAjM4uCksmrGzVts2w=;
-        b=T6R/TbBMZV7uHQBepmxCCgBZMqhYWNOwyyeTy6uM9j1D7K8dLSXPY8913e8XdQFyyg
-         E6BBrRRQnHNtFaJCY1Nq+VriqP8MXlCgyeUSLUrHSh0mDaOmKtQgks/c4kQVmyH+B3e/
-         /okMrvgeUcd/pXFsCkPBD9L9oB07xFAkt2LE4=
+        bh=E18amESejxX3SO9T1u/Ey86tZ4T9qm09N4I6qlp3t+E=;
+        b=oJhNIxjkqCp00rgv7+T6qNzQ1Y4wBZqD21uHULGW2pzerjXJTGGcIWh06lvbzlHq8S
+         kM8h76cFQ5LOb1x4kFLSSW2u9+2r2RmdwbDxzS3i/LkqfbRYwGgLDNGSv8KbB44Dxc1A
+         Q7reKw2bg/dUDV8mjQ7bFCfGy+E3do9yOjAA0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b2SYpooN63pazq0FfnqZHc+uxwAjM4uCksmrGzVts2w=;
-        b=VIPL4sOtPy6HYTyTJmL8E2rCDPvxzqZVhPf2cNlqUx/uWOAOxFzy4cEPxk4uI9WVMu
-         xcD2BT5eKLyq/sdiLdbqPCinACcNBCXKjrNNZZkq93e0mGNn/Zb3pmWwTjt8XyThp8MB
-         d1BmdYq+10eFo+ctO3RioKRlUcke2iNczBWq+qzwpdD5Az1DC1pH7aGDwdMNy/ktBE9Y
-         hzlcaTeqNu08xFF/1EVBoMYfBGrGpkwEXqv6hmJqwRcwCK5PJx85Fv0Z9VxR3w+T2j2h
-         C2t1fDTWQopK9okNuY89P8PDtYK8bl+ALuIXsIhuOUdMS0TKfpbJPjBabRjL+fQa6TF/
-         vbvg==
-X-Gm-Message-State: ANhLgQ1L4uIvClK/brLz2/LUpZYXSie2ZPWEH4LuQFDhAXnO5SkH4gxP
-        aZK4KBBJMw/YmZvyh3n+pf9IGQ==
-X-Google-Smtp-Source: ADFU+vuQNeWvfy1Ogmc1Uka7w7eUI2r4KaKy912PspK9k/vyYD+DBZjUL7iC552BrrUD9Cmofq3a7g==
-X-Received: by 2002:a63:de4c:: with SMTP id y12mr8908651pgi.107.1583434294313;
-        Thu, 05 Mar 2020 10:51:34 -0800 (PST)
+        bh=E18amESejxX3SO9T1u/Ey86tZ4T9qm09N4I6qlp3t+E=;
+        b=tNTh+MQAkZl62BMOQBvwKR6sFBPa25SvHw/kvZssAHXXK1NvZA7wRDA9siKXdU2fUM
+         VCe7R6FgfAuo9DFPjWCbQOYBkIoD7aI0sv3ZoRFMmo6hRNpjMXr3POzIPiAHaDPBi7Wq
+         hjQ9SQYxuuIuCTEAu1tnXwS2lRXIeZpTxTEf30Ip7SPfG4A50GGQ213+LUWDBOAYyYmN
+         XquYp37LRKz3VuiSUv3nIhH/4E+4VdQbv2BN9VNk5FSE8vyX4Om9H61JqYg8waqKHnCu
+         54ZZZmj2H9q4jjesy8qmjdtLYG3BD8RLpm9lKAMGsdNGXJfkwSWxPHZ5Xv0i9sEzvu/1
+         qBww==
+X-Gm-Message-State: ANhLgQ2N0l1b1kK82jD7ueRVN6oU63QKd/+DuA96Tn6oddxu31MDLtCl
+        MeSpgN6LD5C2vPXBogghC62WYQ==
+X-Google-Smtp-Source: ADFU+vv289MpugXlGsG6o7w2uERW2NVWNqrzvR82E0YfS1myAamsIGSEDKT1hLNOBGj6yz67f8OzdA==
+X-Received: by 2002:a17:902:76c8:: with SMTP id j8mr9175038plt.273.1583434630838;
+        Thu, 05 Mar 2020 10:57:10 -0800 (PST)
 Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id f81sm29905073pfa.44.2020.03.05.10.51.33
+        by smtp.gmail.com with ESMTPSA id r198sm35307970pfr.54.2020.03.05.10.57.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 10:51:33 -0800 (PST)
-Date:   Thu, 5 Mar 2020 10:51:32 -0800
+        Thu, 05 Mar 2020 10:57:09 -0800 (PST)
+Date:   Thu, 5 Mar 2020 10:57:08 -0800
 From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Stephen Boyd <swboyd@chromium.org>,
         Doug Anderson <dianders@chromium.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 0/8] Add QUSB2 PHY support for SC7180
-Message-ID: <20200305185132.GT24720@google.com>
-References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
- <20200203185649.GK3948@builder>
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 0/4] Add QMP V3 USB3 PHY support for SC7180
+Message-ID: <20200305185708.GU24720@google.com>
+References: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200203185649.GK3948@builder>
+In-Reply-To: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 10:56:49AM -0800, Bjorn Andersson wrote:
-> On Wed 29 Jan 05:51 PST 2020, Sandeep Maheswaram wrote:
-> 
-> Kishon, afaict this is all reviewed, let me know when you're taking the
-> phy pieces and I'll pick up the dts changes.
+Hi Sandeep,
 
-The series has a few minor comments. Sandeep, could you respin the
-series so that it can be landed?
+this series has a few minor outstanding comments that prevent it from
+landing. Do you plan to respin it soon?
 
 Thanks
 
 Matthias
 
-> > Converting dt binding to yaml.
-> > Adding compatible for SC7180 in dt bindings.
-> > Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
-> > 
-> > Changes in v4:
-> > *Addressed Rob Herrings comments in dt bindings.
-> > *Added new structure for all the overriding tuning params.
-> > *Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
-> > *Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
-> > 
-> > Changes in v3:
-> > *Using the generic phy cfg table for QUSB2 V2 phy.
-> > *Added support for overriding tuning parameters in QUSB2 V2 PHY
-> > from device tree.
-> > 
-> > Changes in v2:
-> > Sorted the compatible in driver.
-> > Converted dt binding to yaml.
-> > Added compatible in yaml.
-> > 
-> > Sandeep Maheswaram (8):
-> >   dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
-> >   dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
-> >     SC7180
-> >   phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
-> >   dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
-> >     parameters
-> >   phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
-> >     V2 PHY
-> >   arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
-> >   arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
-> >   arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
-> >     device
-> > 
-> >  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 182 +++++++++++++++++++++
-> >  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
-> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
-> >  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
-> >  drivers/phy/qualcomm/phy-qcom-qusb2.c              | 143 +++++++++++-----
-> >  6 files changed, 291 insertions(+), 114 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-> > 
-> > -- 
-> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > of Code Aurora Forum, hosted by The Linux Foundation
-> > 
+On Wed, Feb 12, 2020 at 04:51:24PM +0530, Sandeep Maheswaram wrote:
+> Add QMP V3 USB3 PHY entries for SC7180 in phy driver and
+> device tree bindings.
+> 
+> changes in v3:
+> *Addressed Rob's comments in yaml file.
+> *Sepearated the SC7180 support in yaml patch.
+> *corrected the phy reset entries in device tree.
+> 
+> changes in v2:
+> *Remove global phy reset in QMP phy.
+> *Convert QMP phy bindings to yaml.
+> 
+> Sandeep Maheswaram (4):
+>   dt-bindings: phy: qcom,qmp: Convert QMP phy bindings to yaml
+>   dt-bindings: phy: qcom,qmp: Add support for SC7180
+>   phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
+>   arm64: dts: qcom: sc7180: Correct qmp phy reset entries
+> 
+>  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 287 +++++++++++++++++++++
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 227 ----------------
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   4 +-
+>  drivers/phy/qualcomm/phy-qcom-qmp.c                |  38 +++
+>  4 files changed, 327 insertions(+), 229 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
