@@ -2,269 +2,109 @@ Return-Path: <SRS0=vtql=4W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22BBC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 10:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDC6C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 10:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76212073D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 10:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010F5208C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Mar 2020 10:55:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="jldVkt3Q"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FsxuKIay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgCEKut (ORCPT
+        id S1726170AbgCEKze (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:50:49 -0500
-Received: from www381.your-server.de ([78.46.137.84]:48582 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgCEKut (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 05:50:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=IZDIDcAsD/+MtQ6OgW2dCs7MZLssCvVkDO7Sf2CJc+M=; b=jldVkt3Q96LJnbhNrSNoZdiOAT
-        C3qeSKqNB46A5kK4gqEn+U7VaTLbSkBmJtuRcmPQAv8Z2XqEu7SFOzA3OJzpiw5fSR43wmVF3HjEv
-        kFiTSNpqvR/Hwe/W7D8642kLIo5F2+6zTi8lkPFQLhDnqPx3gzN9Kf1GlWtXqv1tp4E8NtNoKQaie
-        5nGSE89xltJeioo+i5WRjyvC7yy1a1/PTFBaTlYRrQ3f2C8i086JIAnQESoe+MqwjOsV8OWCvJrXa
-        ibW+q3wwe6N83K1OjbMdym8Pnm35fPR9ZKgoRoE0Bfbj4RSd2FMT2bmUsKYEh62LPCvrRp5489Utq
-        1k1f0sOA==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1j9npO-0007m7-1m; Thu, 05 Mar 2020 11:34:06 +0100
-Received: from [93.104.100.159] (helo=[192.168.178.20])
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1j9npN-000TFJ-K0; Thu, 05 Mar 2020 11:34:05 +0100
-Subject: Re: [PATCH 5/5] dt-bindings: iio: Add adis16475 documentation
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-References: <20200225124152.270914-1-nuno.sa@analog.com>
- <20200225124152.270914-6-nuno.sa@analog.com>
- <20200303211045.31f977bb@archlinux>
- <9b9e18f279edbcb60122a0b0d4c067975868194a.camel@analog.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <63b5c766-78a2-59c4-6efb-3eb35031a351@metafoo.de>
-Date:   Thu, 5 Mar 2020 11:34:04 +0100
+        Thu, 5 Mar 2020 05:55:34 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49278 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgCEKze (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 05:55:34 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025AtT2Z010220;
+        Thu, 5 Mar 2020 04:55:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583405729;
+        bh=UMh1opH6tmYxUIx/AyWNlJuD6bLG+NyY4/gGWFJ85Nk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FsxuKIay7I+ZBVLkyPl3LpD5Y6p6SDnF7fgG7qfZn9e/Qs3/UODQ+ema+spkam3Dm
+         oC4R744c+dIqSRHYZnxu5jf01hUAn0nfY6BHAbjA6S5zx166YKmyg2ooK905vnVZDD
+         j0PrP1WJl3Du/jaaMLEghlYQ0SpRkTBwFXWdVH04=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025AtTDL030404
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Mar 2020 04:55:29 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
+ 2020 04:55:29 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Mar 2020 04:55:29 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025AtQuu006736;
+        Thu, 5 Mar 2020 04:55:27 -0600
+Subject: Re: [for-next PATCH v2 0/5] phy: ti: gmii-sel: add support for
+ am654x/j721e soc
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        David Miller <davem@davemloft.net>
+CC:     <m-karicheri2@ti.com>, <t-kristo@ti.com>, <nsekhar@ti.com>,
+        <robh+dt@kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200303160029.345-1-grygorii.strashko@ti.com>
+ <20200304.143951.1102411401290807167.davem@davemloft.net>
+ <71a6fea9-65c1-3a3c-a35b-9432208b3ee5@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <7c5395a6-56cb-1d2a-0243-99a6b0fed2a7@ti.com>
+Date:   Thu, 5 Mar 2020 12:55:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <9b9e18f279edbcb60122a0b0d4c067975868194a.camel@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <71a6fea9-65c1-3a3c-a35b-9432208b3ee5@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25741/Wed Mar  4 15:15:26 2020)
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/4/20 7:00 PM, Sa, Nuno wrote:
-> On Tue, 2020-03-03 at 21:10 +0000, Jonathan Cameron wrote:
->> [External]
+
+
+On 05/03/2020 07:17, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On 05/03/20 4:09 am, David Miller wrote:
+>> From: Grygorii Strashko <grygorii.strashko@ti.com>
+>> Date: Tue, 3 Mar 2020 18:00:24 +0200
 >>
->> On Tue, 25 Feb 2020 13:41:52 +0100
->> Nuno Sá <nuno.sa@analog.com> wrote:
->>
->>> Document the ADIS16475 device devicetree bindings.
+>>> Hi Kishon,
 >>>
->>> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
->> One thing inline on the burst mode stuff.
->>
->> Thanks,
->>
->> Jonathan
->>
->>> ---
->>>   .../bindings/iio/imu/adi,adis16475.yaml       | 130
->>> ++++++++++++++++++
->>>   MAINTAINERS                                   |   1 +
->>>   2 files changed, 131 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+>>> This series adds support for TI K3 AM654x/J721E SoCs in TI phy-gmii-sel PHY
+>>> driver, which is required for future adding networking support.
 >>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
->>> b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
->>> new file mode 100644
->>> index 000000000000..c0f2146e000c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
->>> @@ -0,0 +1,130 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/iio/imu/adi,adis16475.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Analog Devices ADIS16475 and similar IMUs
->>> +
->>> +maintainers:
->>> +  - Nuno Sá <nuno.sa@analog.com>
->>> +
->>> +description: |
->>> +  Analog Devices ADIS16475 and similar IMUs
->>> +
->>> https://www.analog.com/media/en/technical-documentation/data-sheets/ADIS16475.pdf
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - adi,adis16475-1
->>> +      - adi,adis16475-2
->>> +      - adi,adis16475-3
->>> +      - adi,adis16477-1
->>> +      - adi,adis16477-2
->>> +      - adi,adis16477-3
->>> +      - adi,adis16470
->>> +      - adi,adis16465-1
->>> +      - adi,adis16465-2
->>> +      - adi,adis16465-3
->>> +      - adi,adis16467-1
->>> +      - adi,adis16467-2
->>> +      - adi,adis16467-3
->>> +      - adi,adis16500
->>> +      - adi,adis16505-1
->>> +      - adi,adis16505-2
->>> +      - adi,adis16505-3
->>> +      - adi,adis16507-1
->>> +      - adi,adis16507-2
->>> +      - adi,adis16507-3
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  spi-cpha: true
->>> +
->>> +  spi-cpol: true
->>> +
->>> +  spi-max-frequency:
->>> +    maximum: 2000000
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  clocks:
->>> +    maxItems: 1
->>> +
->>> +  clock-names:
->>> +    oneOf:
->>> +      - const: sync
->>> +      - const: direct-sync
->>> +      - const: pulse-sync
->>> +      - const: scaled-sync
->>> +
->>> +  reset-gpios:
->>> +    description:
->>> +      Must be the device tree identifier of the RESET pin. If
->>> specified,
->>> +      it will be asserted during driver probe. As the line is
->>> active low,
->>> +      it should be marked GPIO_ACTIVE_LOW.
->>> +    maxItems: 1
->>> +
->>> +  adi,scaled-output-hz:
->>> +    description:
->>> +      This property must be present if the clock mode is scaled-
->>> sync through
->>> +      clock-names property. In this mode, the input clock can have
->>> a range
->>> +      of 1Hz to 128HZ which must be scaled to originate an
->>> allowable sample
->>> +      rate. This property specifies that rate.
->>> +    minimum: 1900
->>> +    maximum: 2100
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - interrupts
->>> +  - spi-cpha
->>> +  - spi-cpol
->>> +
->>> +if:
->>> +  properties:
->>> +    compatible:
->>> +      contains:
->>> +        enum:
->>> +          - adi,adis16500
->>> +          - adi,adis16505-1
->>> +          - adi,adis16505-2
->>> +          - adi,adis16505-3
->>> +          - adi,adis16507-1
->>> +          - adi,adis16507-2
->>> +          - adi,adis16507-3
->>> +
->>> +then:
->>> +  properties:
->>> +    clock-names:
->>> +      oneOf:
->>> +        - const: sync
->>> +        - const: direct-sync
->>> +        - const: scaled-sync
->>> +
->>> +    adi,burst32-enable:
->>> +      description:
->>> +        Enable burst32 mode. In this mode, a burst reading
->>> contains calibrated
->>> +        gyroscope and accelerometer data in 32-bit format.
->> Why is this in DT?  Is it not a runtime decision
->> (ideally automatically selected)
-> So, you mean just have this mode by default on parts that support it?
+>>> depends on:
+>>>   [PATCH 0/2] phy: ti: gmii-sel: two fixes
+>>>   https://lkml.org/lkml/2020/2/14/2510
+>>>
+>>> Changes in v2:
+>>>   - fixed comments
+>>>
+>>> v1: https://lkml.org/lkml/2020/2/22/100
+>>
+>> This is mostly DT updates and not much networking code changes, will some other
+>> tree take this?
+> 
+> I can take the phy related changes. Grygorii, can you split the dt
+> patches into a separate series?
 
-Maybe lets start with explaining what burst32 mode is, so everybody is 
-on the same page.
+sure. Could pls, pick up 1-3 and I'll resend 4-5.
+Or you want me re-send once again?
 
-The way registers are usually accessed for this chip is that you first 
-write the address you want to read on the SPI bus and then read the 
-selected register. This can be quite slow though if you want to read 
-multiple registers and is too slow to be able to read all the data at 
-full data rate. So there is a special burst mode which allows to read 
-all the data registers in one go.
-
-Now by default the data registers are 16-bit. But there is an internal 
-decimation filter and the extra bits produced by the decimation filter 
-go into additional data registers making the data 32-bit wide. The chip 
-allows to configure whether to read the only 16-bit MSBs or the full 
-32-bit register.
-
-So the decision whether a user wants to use 32-bit or 16-bit depends on 
-whether the extra 16-bit are needed or if they are even available. E.g. 
-if the decimation filter is off there wont be any extra bits.
-
-This means ideally it would be user configurable whether to use 16-bit 
-or 32-bit burst mode, since it is application specific. The problem is 
-we don't have an interface for changing the bit width of a buffer 
-channel. Adding such an interface would require quite a bit of effort 
-since the assumption currently is that the bit width does not chance. 
-E.g. libiio assumes this and would stop working if it did change.
-
-Maybe as a compromise for now. Use 32-bit burst when there is actually 
-meaningful data is the LSBs, i.e. the decimation filter is used and 
-disable it otherwise. And then think about how to make it configurable 
-as a follow up action.
-
-In my opinion there is should not be a difference in the userspace 
-interface for chips that do support 32-bit burst and those that don't. 
-For devices that don't support 32-bit burst it should be emulated by 
-reading the LSB bits registers manually.
-
-- Lars
-
+-- 
+Best regards,
+grygorii
