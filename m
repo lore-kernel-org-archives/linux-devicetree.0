@@ -2,127 +2,88 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A28BC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568E6C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EAB20848
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF4920848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583503025;
+	bh=Y6OCmSPbA3jD52JAF+3WqvAQi2n/qqzlxvjWBCbtPNw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XIJ95wdcNvC6Gv+a796OLYKffwrA3BD9UNkp5RMzcj7mSnPOo6kJvcAY4ljH9DvbV
+	 4avcWEgg/sM8Zp6kuqyNccNd8jkvhpay7R3rpyE/VipkkewiSgmvlG81YYuMG6f6LU
+	 cbrC6jozWwQ+ytQbKIdRb1Jf2uu6GxkVHYyFb8lA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgCFNys (ORCPT
+        id S1726171AbgCFN5E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:54:48 -0500
-Received: from mga17.intel.com ([192.55.52.151]:41481 "EHLO mga17.intel.com"
+        Fri, 6 Mar 2020 08:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgCFNys (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:54:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 05:54:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
-   d="scan'208";a="287977630"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Mar 2020 05:54:43 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jADR7-007NGR-NA; Fri, 06 Mar 2020 15:54:45 +0200
-Date:   Fri, 6 Mar 2020 15:54:45 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1726108AbgCFN5E (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:57:04 -0500
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68E120848;
+        Fri,  6 Mar 2020 13:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583503023;
+        bh=Y6OCmSPbA3jD52JAF+3WqvAQi2n/qqzlxvjWBCbtPNw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RCwFyKtLLVfrc7ymRU4nisTJcyXBwGlM7KTbIeYIW7QHK78RO7eWYhlKEcrKspb+D
+         zIU/t/o7tucig6QnSOS1gAWU1haVn6DYe4v+aaJDfnrShlWLM8yyfTvFZCYTKGJvN5
+         3tGejaYsAEgve1HcnDPgAe1LkUimZapdhW6bw27A=
+Received: by mail-qk1-f175.google.com with SMTP id e16so2327578qkl.6;
+        Fri, 06 Mar 2020 05:57:03 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2XkHUI/s/kY5DcoG9Or8DhzqE5vPbFHzK12uamBDOUFQVA2pmW
+        9AVgJpuW7oPnitawuz0BMAq+CLl7AqOiV1HL/w==
+X-Google-Smtp-Source: ADFU+vtsSDRikZpWPwBiQSZP0IHFW9C5JQmmRvCJ+DsH8dgxQVxMDbmTildHObv/rXXT7ImeYIPAFCIfIDj/lIR+Rj8=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr3090956qkg.152.1583503022804;
+ Fri, 06 Mar 2020 05:57:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru> <20200306124823.38C2A80307C4@mail.baikalelectronics.ru>
+In-Reply-To: <20200306124823.38C2A80307C4@mail.baikalelectronics.ru>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 6 Mar 2020 07:56:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLSC818+vxgn7Yk0XOAk=NC057VGsFCBt-H65DDkc1W6w@mail.gmail.com>
+Message-ID: <CAL_JsqLSC818+vxgn7Yk0XOAk=NC057VGsFCBt-H65DDkc1W6w@mail.gmail.com>
+Subject: Re: [PATCH 01/22] dt-bindings: Permit platform devices in the
+ trivial-devices bindings
 To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] i2c: designeware: Add Baikal-T1 SoC DW I2C specifics
- support
-Message-ID: <20200306135445.GE1748204@smile.fi.intel.com>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-First of all, I got only 3 out of 6 patches. Are you sure you properly prepared
-the series?
+On Fri, Mar 6, 2020 at 6:48 AM <Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>
+> Indeed there are a log of trivial devices amongst platform controllers,
+> IP-blocks, etc. If they satisfy the trivial devices bindings requirements
+> like consisting of a compatible field, an address and possibly an interrupt
+> line why not having them in the generic trivial-devices bindings file?
 
-On Fri, Mar 06, 2020 at 04:19:49PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <fancer.lancer@gmail.com>
+NAK.
 
-Same comment as per DMA series, try next time to link the cover letter to the
-series correctly.
+Do you have some documentation on what a platform bus is? Last I
+checked, that's a Linux thing.
 
-> There are three DW I2C controllers embedded into the Baikal-T1 SoC. Two
-> of them are normal with standard DW I2C IP-core configurations and registers
-> accessible over normal MMIO space - so they are acceptable by the available
-> DW I2C driver with no modification.
+If anything, we'd move toward getting rid of trivial-devices.yaml. For
+example, I'd like to start defining the node name which wouldn't work
+for trivial-devices.yaml unless we split by class.
 
-> But there is a third, which is a bit
-> different. Its registers are indirectly accessed be means of "command/data
-> in/data out" registers tuple. In order to have it also supported by the DW
-> I2C driver, we must modify the code a bit. This is a main purpose of this
-> patchset.
-> 
-> First of all traditionally we replaced the legacy plain text-based dt-binding
-> file with yaml-based one. Then we found and fixed a bug in the DW I2C FIFO size
-> detection algorithm which tried to do it too early before dw_readl/dw_writel
-> methods could be used.
-
-So far so good (looks like, I think colleagues of mine and myself will review
-individual patches later on).
-
-> Finally we introduced a platform-specific flag
-> ACCESS_INDIRECT, which would enable the indirect access to the DW I2C registers
-> implemented for one of the Baikal-T1 SoC DW I2C controllers. See the commit
-> message of the corresponding patch for details.
-
-This is quite questionable. In Intel SoCs we have indirect I²C controllers to
-access (inside PMIC, for example). The approach used to do that is usually to
-have an IPC mechanism and specific bus controller driver. See i2c-cht-wc.c for
-instance.
-
-I'm not sure if it makes a lot of duplication and if actually switching I²C
-DesignWare driver to regmap API will solve it. At least that is the second
-approach I would consider.
-
-But I'll wait others to comment on this. We have to settle the solution before
-going further.
-
-> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> commit 98d54f81e36b ("Linux 5.6-rc4").
-
-`git format-patch --base ...` should do the job.
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-
-Same comment as per UART patch. Who is the Alexey in relation to the work done?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Rob
