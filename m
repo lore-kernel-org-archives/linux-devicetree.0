@@ -2,203 +2,148 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FORGED_MSGID_YAHOO,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,WEIRD_QUOTING autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5112BC10F26
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 16:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D958C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341DD206E2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 16:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9911208C3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:02:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E578MAb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgCFQaY (ORCPT
+        id S1726231AbgCFRCm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:30:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40092 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgCFQaX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 11:30:23 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 098DD29681D
-Subject: Re: [PATCH v11 3/5] soc: mediatek: Move mt8173 MMSYS to platform
- driver
-To:     Stephen Boyd <sboyd@kernel.org>, airlied@linux.ie,
-        ck.hu@mediatek.com, laurent.pinchart@ideasonboard.com,
-        mark.rutland@arm.com, mturquette@baylibre.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        ulrich.hecht+renesas@gmail.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>, rdunlap@infradead.org,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
+        Fri, 6 Mar 2020 12:02:42 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41906 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgCFRCm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 12:02:42 -0500
+Received: by mail-ot1-f66.google.com with SMTP id v19so3073589ote.8;
+        Fri, 06 Mar 2020 09:02:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0huqSOOM6TQWT/uaipc+FS4s16ouSaOa4nymxBl//rs=;
+        b=E578MAb7Yr42MvvPNFo3yDbFhNAT2AbVP9J18ov7OwRiwaeS0UWnAdlPX7xu42IjK/
+         55M6bqYkOS6SbkVuoPSZX5YpTLKcRGUDvUw/7zZN3UVyrhTUpMmrUyj8i94atSmzhhpJ
+         LZS7Je07zTvXE46VUBdwzDh1ojHEGF/bC5WDBDx2bvne42OuXymWdMKOLknROBzFnuEs
+         kVmS+VH+7OSgqPcA7L/mffmoSTi6QxV1nOpuD8qsY9QbuFRe3WBsYJFHQyWP0Gxm9Lyw
+         QWN6bf2APE3id1PWNFTsri3m4NlprvDfX2HxBVF12A+vF6mp3FT1oY7bPkk3byvq6Lf4
+         CD4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0huqSOOM6TQWT/uaipc+FS4s16ouSaOa4nymxBl//rs=;
+        b=ELzq5XDmEj4DTbJAHsL1KR5HD7W9W9cpitpVjbxEV3rMrJZBoS3qvlHNfLFJlv6K8f
+         ggs+fv7ypExkH5Q0r3W90N62p1voxWcCidYTbhBqQIkaQuoguEzLPVGfV3M9XJ69IlZ/
+         qUft63CEU4M/B9iFAKA7Jpc2egi6CZ8XqDKpBWhOelj5usK3adj5DjG2pkYGjMkBa3UM
+         OmxDSZEDwBKXzmNiuqvyWOSX7eedmk6+y1G7l34BvSQ2u7ddItw5kzb/YQ1DRo2G5Yw3
+         JnLRmu/DNy15xOu8pCOjSW6Mbng6IHbs7BJMtxGPVfmKLwZPnG1iBz37me500guseT0r
+         apdA==
+X-Gm-Message-State: ANhLgQ2tTlMc9Lak7f/48wPTLK6ywAN8fPu8/yHssM2OFOjDRnBioJDq
+        KT3gC9jaUri/YKXto2cm/lk=
+X-Google-Smtp-Source: ADFU+vsoao5aucvzlM9qEqT53U96NcowhLRZAwGIJeWQMdIOpwMlemrRqJtLU3zoSd8q9SxSQrbZdQ==
+X-Received: by 2002:a9d:6c94:: with SMTP id c20mr3429727otr.285.1583514160968;
+        Fri, 06 Mar 2020 09:02:40 -0800 (PST)
+Received: from andrews-mbp-2.austin.ibm.com ([129.41.86.0])
+        by smtp.gmail.com with ESMTPSA id t9sm11550743otm.76.2020.03.06.09.02.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Mar 2020 09:02:40 -0800 (PST)
+From:   Andrew Geissler <geissonator@gmail.com>
+X-Google-Original-From: Andrew Geissler <geissonator@yahoo.com>
+To:     joel@jms.id.au, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20200302110128.2664251-1-enric.balletbo@collabora.com>
- <20200302110128.2664251-4-enric.balletbo@collabora.com>
- <158344207340.7173.8369925839829696256@swboyd.mtv.corp.google.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <8bfc4350-6e92-e657-18f2-3624a2558521@collabora.com>
-Date:   Fri, 6 Mar 2020 17:30:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Geissler <geissonator@yahoo.com>, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: aspeed: romulus: Add gpio line names
+Date:   Fri,  6 Mar 2020 11:02:17 -0600
+Message-Id: <20200306170218.79698-1-geissonator@yahoo.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-In-Reply-To: <158344207340.7173.8369925839829696256@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
+Name the GPIOs to help userspace work with them. The names describe the
+functionality the lines provide, not the net or ball name. This makes it
+easier to share userspace code across different systems and makes the
+use of the lines more obvious.
 
-On 5/3/20 22:01, Stephen Boyd wrote:
-> Quoting Enric Balletbo i Serra (2020-03-02 03:01:26)
->> From: Matthias Brugger <mbrugger@suse.com>
->>
->> There is no strong reason for this to use CLK_OF_DECLARE instead of
->> being a platform driver.
-> 
-> Cool.
-> 
->> Plus, this driver provides clocks but also
->> a shared register space for the mediatek-drm and the mediatek-mdp
->> driver. So move to drivers/soc/mediatek as a platform driver.
->>
->> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> Reviewed-by: CK Hu <ck.hu@mediatek.com>
->> ---
->>
->> Changes in v11: None
->> Changes in v10:
->> - Renamed to be generic mtk-mmsys
->> - Add driver data support to be able to support diferent SoCs
->>
->> Changes in v9:
->> - Move mmsys to drivers/soc/mediatek (CK)
->>
->> Changes in v8:
->> - Be a builtin_platform_driver like other mediatek mmsys drivers.
->>
->> Changes in v7:
->> - Free clk_data->clks as well
->> - Get rid of private data structure
->>
->>  drivers/clk/mediatek/clk-mt8173.c | 104 --------------------
->>  drivers/soc/mediatek/Kconfig      |   7 ++
->>  drivers/soc/mediatek/Makefile     |   1 +
->>  drivers/soc/mediatek/mtk-mmsys.c  | 154 ++++++++++++++++++++++++++++++
-> 
-> Can you generate with -M so that we can see what has actually changed?
-> 
+Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts | 35 ++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-Sure, sorry about that.
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+index edfa44fe1f75..fd2e014dae75 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+@@ -231,23 +231,52 @@
+ };
+ 
+ &gpio {
++	gpio-line-names =
++	/*A0-A7*/	"","cfam-reset","","","","","fsi-mux","",
++	/*B0-B7*/	"","","","","","","","",
++	/*C0-C7*/	"","","","","","","","",
++	/*D0-D7*/	"fsi-enable","","","nic_func_mode0","nic_func_mode1","","","",
++	/*E0-E7*/	"","","","","","","","",
++	/*F0-F7*/	"","","","","","","","",
++	/*G0-G7*/	"","","","","","","","",
++	/*H0-H7*/	"","","","","","","","",
++	/*I0-I7*/	"","","","power-button","","","","",
++	/*J0-J7*/	"","","checkstop","","","","","",
++	/*K0-K7*/	"","","","","","","","",
++	/*L0-L7*/	"","","","","","","","",
++	/*M0-M7*/	"","","","","","","","",
++	/*N0-N7*/	"","","led-fault","",
++				"led-identify","","","",
++	/*O0-O7*/	"","","","","","","","",
++	/*P0-P7*/	"","","","","","","","",
++	/*Q0-Q7*/	"","","","","","","","id-button",
++	/*R0-R7*/	"","","fsi-trans","","","led-power","","",
++	/*S0-S7*/	"","","","","","","","seq_cont",
++	/*T0-T7*/	"","","","","","","","",
++	/*U0-U7*/	"","","","","","","","",
++	/*V0-V7*/	"","","","","","","","",
++	/*W0-W7*/	"","","","","","","","",
++	/*X0-X7*/	"","","","","","","","",
++	/*Y0-Y7*/	"","","","","","","","",
++	/*Z0-Z7*/	"","","","","","","","",
++	/*AA0-AA7*/	"fsi-clock","","fsi-data","","","","","",
++	/*AB0-AB7*/	"","","","","","","","",
++	/*AC0-AC7*/	"","","","","","","","";
++
+ 	nic_func_mode0 {
+ 		gpio-hog;
+ 		gpios = <ASPEED_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
+ 		output-low;
+-		line-name = "nic_func_mode0";
+ 	};
+ 	nic_func_mode1 {
+ 		gpio-hog;
+ 		gpios = <ASPEED_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
+ 		output-low;
+-		line-name = "nic_func_mode1";
+ 	};
+ 	seq_cont {
+ 		gpio-hog;
+ 		gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
+ 		output-low;
+-		line-name = "seq_cont";
+ 	};
+ };
+ 
+-- 
+2.21.0 (Apple Git-122)
 
->>  4 files changed, 162 insertions(+), 104 deletions(-)
->>  create mode 100644 drivers/soc/mediatek/mtk-mmsys.c
->>
->> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
->> index 2114b563478c..7a156944d50e 100644
->> --- a/drivers/soc/mediatek/Kconfig
->> +++ b/drivers/soc/mediatek/Kconfig
->> @@ -44,4 +44,11 @@ config MTK_SCPSYS
->>           Say yes here to add support for the MediaTek SCPSYS power domain
->>           driver.
->>  
->> +config MTK_MMSYS
->> +       bool "MediaTek MMSYS Support"
->> +       depends on COMMON_CLK_MT8173
-> 
-> Does it need some default so that defconfig updates don't break things?
-> 
-
-Right.
-
->> +       help
->> +         Say yes here to add support for the MediaTek Multimedia
->> +         Subsystem (MMSYS).
->> +
->>  endmenu
->> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
->> index b01733074ad6..01f9f873634a 100644
->> --- a/drivers/soc/mediatek/Makefile
->> +++ b/drivers/soc/mediatek/Makefile
->> @@ -3,3 +3,4 @@ obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
->>  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
->>  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->>  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
->> +obj-$(CONFIG_MTK_MMSYS) += mtk-mmsys.o
->> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
->> new file mode 100644
->> index 000000000000..473cdf732fb5
->> --- /dev/null
->> +++ b/drivers/soc/mediatek/mtk-mmsys.c
->> @@ -0,0 +1,154 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2014 MediaTek Inc.
->> + * Author: James Liao <jamesjj.liao@mediatek.com>
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +
->> +#include "../../clk/mediatek/clk-gate.h"
->> +#include "../../clk/mediatek/clk-mtk.h"
-> 
-> Why not use include/linux/clk/?
-> 
-
-I can move these files to include, this will impact a lot more of drivers but,
-yes, I think is the right way.
-
-> But I also don't understand why the clk driver is moved outside of
-> drivers/clk/ into drivers/soc/. Commit text saying that it has shared
-> registers doesn't mean it can't still keep the clk driver part in the
-> drivers/clk/ area.
-> 
-
-Actually moving this to the soc directory has been requested by CK (mediatek) as
-a change in v8. You can see the discussion in [1]
-
-Thanks,
- Enric
-
-[1] https://patchwork.kernel.org/cover/11394709/
-
->> +
->> +#include <dt-bindings/clock/mt8173-clk.h>
->> +
->> +static const struct mtk_gate_regs mm0_cg_regs = {
->> +       .set_ofs = 0x0104,
->> +       .clr_ofs = 0x0108,
->> +       .sta_ofs = 0x0100,
->> +};
->> +
->> +static const struct mtk_gate_regs mm1_cg_regs = {
->> +       .set_ofs = 0x0114,
->> +       .clr_ofs = 0x0118,
->> +       .sta_ofs = 0x0110,
->> +};
