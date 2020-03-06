@@ -2,117 +2,78 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4F1C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 09:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878FCC10F25
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 09:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB952070A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 09:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF16207FD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 09:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgCFJ2F convert rfc822-to-8bit (ORCPT
+        id S1726140AbgCFJd0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:28:05 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:59582 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgCFJ2F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:28:05 -0500
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jA9Gj-0000Pu-CY; Fri, 06 Mar 2020 10:27:45 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Tobias Schramm <t.schramm@manjaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Alexis Ballier <aballier@gentoo.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nick Xie <nick@khadas.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Emmanuel Vadot <manu@freebsd.org>
-Subject: Re: [PATCH v4 2/2] arm64: dts: rockchip: Add initial support for Pinebook Pro
-Date:   Fri, 06 Mar 2020 10:27:44 +0100
-Message-ID: <4053849.MTJ45Pz6JY@diego>
-In-Reply-To: <7a799284-92ab-ea04-285e-37d655064118@gmail.com>
-References: <20200304213023.689983-2-t.schramm@manjaro.org> <6168222.Wuk326WHQK@phil> <7a799284-92ab-ea04-285e-37d655064118@gmail.com>
+        Fri, 6 Mar 2020 04:33:26 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11190 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726070AbgCFJd0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 04:33:26 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BD4911C0AA932FE648A1;
+        Fri,  6 Mar 2020 17:33:22 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Mar 2020
+ 17:33:12 +0800
+Subject: Re: [PATCH 00/10] PCI/ATS: Device-tree support and other improvements
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        <bhelgaas@google.com>, <will@kernel.org>, <robh+dt@kernel.org>,
+        <lorenzo.pieralisi@arm.com>, <joro@8bytes.org>,
+        <baolu.lu@linux.intel.com>, <linux-doc@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+CC:     <corbet@lwn.net>, <mark.rutland@arm.com>, <liviu.dudau@arm.com>,
+        <sudeep.holla@arm.com>, <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <robin.murphy@arm.com>, <dwmw2@infradead.org>,
+        <amurray@thegoodpenguin.co.uk>, <frowand.list@gmail.com>,
+        Linuxarm <linuxarm@huawei.com>
+References: <20200213165049.508908-1-jean-philippe@linaro.org>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <b898317c-c534-aad8-5b0d-45723e0b8e89@huawei.com>
+Date:   Fri, 6 Mar 2020 17:32:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20200213165049.508908-1-jean-philippe@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Johan,
+On 2020/2/14 0:50, Jean-Philippe Brucker wrote:
+> Enable ATS on device-tree based systems, and factor the common ATS
+> enablement checks into pci_enable_ats().
+> 
+> ATS support in PCIe endpoints is discovered through the ATS capability,
+> but there is no common method for discovering whether the host bridge
+> supports ATS. Each vendor provides their own ACPI method:
+> * DMAR (Intel) reports ATS support per domain or per root port.
+> * IVRS (AMD) reports negative ATS support for a range of devices.
+> * IORT (ARM) reports ATS support for a root complex.
 
-Am Freitag, 6. März 2020, 08:22:00 CET schrieb Johan Jonker:
-> Hi,
-> 
-> Missing #address-cells, #size-cells
-> Can you still fix that?
-> 
-> On 3/6/20 1:23 AM, Heiko Stuebner wrote:
-> > Am Mittwoch, 4. März 2020, 22:30:23 CET schrieb Tobias Schramm:
-> >> This commit adds initial dt support for the rk3399 based Pinebook Pro.
-> >>
-> >> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
-> > 
-> > applied for 5.7
-> > 
-> > Thanks
-> > Heiko
-> > 
-> > 
-> 
-> > +&edp {
-> > +	force-hpd;
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&edp_hpd>;
-> > +	status = "okay";
-> > +
-> > +	ports {
-> 
-> #address-cells = <1>;
-> #size-cells = <0>;
-> 
-> Don't forget that extra empty line here.
+Tested this patch set against 5.6-rc2 on a Kunpeng920 ARM server,
+I just confirmed that this patch set didn't break anything in
+my box with ACPI booting, PCI devices work as expected, FWIW,
 
-The edp ports node does get its address+size cells already from the main
-node in rk3399.dtsi, so isn't needed here.
+Tested-by: Hanjun Guo <guohanjun@huawei.com>
 
-
-Heiko
-
-> 
-> 
-> > +		edp_out: port@1 {
-> > +			reg = <1>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +
-> > +			edp_out_panel: endpoint@0 {
-> > +				reg = <0>;
-> > +				remote-endpoint = <&panel_in_edp>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> 
-> 
-
-
-
+Thanks
+Hanjun
 
