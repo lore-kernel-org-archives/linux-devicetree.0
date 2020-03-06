@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606C1C10F25
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6255CC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8AD2051A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318802051A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="O/w1lI9P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="gej49vhs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgCFR3p (ORCPT
+        id S1726359AbgCFR3y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:29:45 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:27607 "EHLO
+        Fri, 6 Mar 2020 12:29:54 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:20002 "EHLO
         mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCFR3o (ORCPT
+        with ESMTP id S1726171AbgCFR3o (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 12:29:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583515781;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=HnNPqD5yo9W35H/FixWc+0XP7wAdWZANIC6iGgREJ7k=;
-        b=O/w1lI9PNX7RvSTvBJ5DZAgRYvFjvluFcNTLKiAmPI+KsJPHg1IMvVGI5S9wGX8gHz
-        GZL4Yb+gY3bOn+PBj8oP2k8h2RFvl/UjRLnKe0rRRLTRkzrkDLIqd6cNtMZvSxq+SCoU
-        J6+oWh2octsXWuZDrnsCY15qJdAI9J4mUMN7WbPS4Zglxy2eszNtu6dMdA0+D2TE2YCF
-        9q2s0+3liB5yfEDU3BoXp0y3TdZaekRBqk6VP+WaCsxm+KfhB7QtcBzZWGEntJa7w1CT
-        ZXj3N3pgjhX2D8zPytJnq9r446BnAHIjKbwCf6Q81Nk3gOQf0/z/nrgdD9plSmhxy7Fq
-        Maaw==
+        bh=lEE++eKlyuzECuicW9tbfiPKM1IUQEvd+ZMWJoo7aec=;
+        b=gej49vhsuQqRpCdwO2O7p1wOynthv85FgmKmRoPt3Rfkn9m5T4n0rZcgpTcc0+M7tG
+        WalhozaA5U4f1G5qauMhUWAXIHQZjIUSM3bGGnsceT2u1PDePmqiVp7KHm04cnltzSwh
+        LQ1N/MsUkCFK7y+YG94SHp6XZBpq6VJoDcgg9jNHSG95v7js2J0UgBwD8MFjM4QxFkKP
+        JqrCY56gAiDWE5rTWpYAwJ/uWB37JH6um5bO9DLwKVK943OpJ/ooKBuzHPiz9d3N5Dlz
+        uwF+nCimfnAAyHsUwnrdfzd8Y8OVTNENmqu3yMViDE13U0BejIUaXhZTeLBuypFRlGCG
+        BykQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6GQjzrz4="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw26HTYZtc
+        with ESMTPSA id y0a02cw26HTXZtb
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 6 Mar 2020 18:29:34 +0100 (CET)
+        Fri, 6 Mar 2020 18:29:33 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -52,10 +52,11 @@ To:     Paul Cercueil <paul@crapouillou.net>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
-Subject: [PATCH v6 2/3] MIPS: DTS: CI20: multiple DTS improvements
-Date:   Fri,  6 Mar 2020 18:29:31 +0100
-Message-Id: <9c5ab093f6e94741db1aed591687df08426c3266.1583515771.git.hns@goldelico.com>
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        Alex Smith <alex.smith@imgtec.com>
+Subject: [PATCH v6 1/3] MIPS: DTS: CI20: add DT node for IR sensor
+Date:   Fri,  6 Mar 2020 18:29:30 +0100
+Message-Id: <0cc9510007f85a8d38d176d835d82c9baef132e4.1583515771.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1583515771.git.hns@goldelico.com>
 References: <cover.1583515771.git.hns@goldelico.com>
@@ -66,63 +67,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-a) add DT node for SW1 as Enter button
+From: Alex Smith <alex.smith@imgtec.com>
 
-The SW1 button can be used as a simple one-button keyboard
-and is connected to PD17.
+The infrared sensor on the CI20 board is connected to a GPIO and can
+be operated by using the gpio-ir-recv driver. Add a DT node for the
+sensor to allow that driver to be used.
 
-Note: SW1 has a second meaning to change the boot sequence
-when pressed while powering on.
-
-b) give eth0_power a defined voltage.
-
-This is a 3.3V power switch (DVNET3.3V).
-
+Signed-off-by: Alex Smith <alex.smith@imgtec.com>
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index e6ae08c979ea..a18c7650c489 100644
+index c340f947baa0..e6ae08c979ea 100644
 --- a/arch/mips/boot/dts/ingenic/ci20.dts
 +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -4,6 +4,7 @@
- #include "jz4780.dtsi"
- #include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/regulator/active-semi,8865-regulator.h>
- 
-@@ -27,6 +28,17 @@
- 		       0x30000000 0x30000000>;
- 	};
- 
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		sw1 {
-+			label = "ci20:sw1";
-+			linux,code = <KEY_F13>;
-+			gpios = <&gpd 17 GPIO_ACTIVE_HIGH>;
-+			wakeup-source;
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -58,6 +70,8 @@
- 	eth0_power: fixedregulator@0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "eth0_power";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
- 		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
+@@ -62,6 +62,11 @@
  		enable-active-high;
  	};
+ 
++	ir: ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
++	};
++
+ 	wlan0_power: fixedregulator@1 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "wlan0_power";
 -- 
 2.23.0
 
