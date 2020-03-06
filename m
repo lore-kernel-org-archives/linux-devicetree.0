@@ -2,194 +2,308 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F5DC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72AFC10F26
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96CAD2073B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583508931;
-	bh=iNFqdKLv+eRvs3H2Mi3RchCyVRMkK9tatJ+t/BU07yk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Li6OEjwDyqvEh9fPv7UuEN0CkTqflWfNiFkVtZPsEqilRFmCBeGm8nVdSjNJN6LIf
-	 oe+wYNerPhRR1sPhUZaDBwDhCovP7wTE9Sxn6ZnxdjmZ8knowKrVBs66NI10FcFwRk
-	 q4Mbdh29TrjtKG0wuMtQHDVJ00mRoSzur5R3QCtI=
+	by mail.kernel.org (Postfix) with ESMTP id A4CBA2073D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="T13lPKXq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCFPfb (ORCPT
+        id S1725935AbgCFP6U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:35:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727060AbgCFPfb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:35:31 -0500
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12F432073D;
-        Fri,  6 Mar 2020 15:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583508930;
-        bh=iNFqdKLv+eRvs3H2Mi3RchCyVRMkK9tatJ+t/BU07yk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iRtX8L9N2ARyt/i4JwDyOinTaKffwSoBdwG2XQievED77xfIsOBUuRbLWg5OznX6Z
-         HbgZqkv0uPQ1LlDHbTLY+oID44WU8dj4nvhopLhTynSYXRqnpITMsdGBw4eKOPbzJZ
-         TAJk/vvYcGjz4r2UZqPNbtrwahqJZjCJ2VgoC9u8=
-Received: by mail-qv1-f50.google.com with SMTP id g16so1107973qvz.5;
-        Fri, 06 Mar 2020 07:35:30 -0800 (PST)
-X-Gm-Message-State: ANhLgQ31rs7u+LrFFlyELK156faOXBnesiHusJYOLPMk8diSVLqpP8Rt
-        TZQUjcrh27bgCrSmgspew+2ZYts42CsCT2zSLA==
-X-Google-Smtp-Source: ADFU+vuhZOwle3B1BdZhiJMPa1o4Ows241SJR8YEgkbTjVTAQFPyg8WmNmCIyOgO1eykQ9B8gJHEPH/0gdrGV5yipJg=
-X-Received: by 2002:ad4:4593:: with SMTP id x19mr3274776qvu.79.1583508929178;
- Fri, 06 Mar 2020 07:35:29 -0800 (PST)
+        Fri, 6 Mar 2020 10:58:20 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42828 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgCFP6U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 10:58:20 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l12so2976525oil.9
+        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 07:58:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V1+6fz7momKdjDKRLqw8BplaQOzNVOpCnEBk52cR68k=;
+        b=T13lPKXqnNZA59yIPmcWAvKkYxPbFJQE//C8CuWxSSA8Eryr9CjcGHr59f+vzEsplC
+         rRw87sCAHXLcwHm4zXgKv2p66+F36erpOXSanqygBXQXMjnpKQRzWAT/+sxCFGJfFo2N
+         uOHIBEON7sHSiK1F5ZoB9htmkQ/j5Am4ReDlUxOcwG0M+xSxXwFGKDBVXRhaukVUodEC
+         udVuRgtU58l7Z5L2JTSmxKsHDyaLWNg1vRlLjywcVWWROoquqxIkIzPlXB3XQKCMXIyO
+         8bycVdDw24Tu4/bZpYnLfxDP1wnCFYMJryKl1M53ad78js6TpLseSmUMdPTOf/pWzSpC
+         NFZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V1+6fz7momKdjDKRLqw8BplaQOzNVOpCnEBk52cR68k=;
+        b=LmPsWd9dvPsgDNXMVB0scFtJ2f0F0r9YFMkZtXUmcVHqXwgZX1k7ZV5O4eODG7wG49
+         xb2yn8EK1+NfCktDb8+3E2g8g8EOXY6p9dyAPncdB5rfcgq9etUUoyq29/m8mvehD6+Q
+         /8GfYG7U12OxD9Qk0FUg5TArYFAYgZ9MkjPtTgoTdkx5yBfSTn1wZ1k5y6D0P7zSEvLu
+         PGwUAg8gro52Assm/OYAsOJYZJYIBz1wX9iQJenTuEuf359tBlivO4+oEDtrQof3KT+d
+         yL/GzN+b/3v2+D8/V+o0OpEFp5uw7l5XZ11tRIzIfMZgyqcaUl6Zh8CkWZDsuRgTICKP
+         3d0g==
+X-Gm-Message-State: ANhLgQ1QVrKGhkgzm83O78y9GuQqCsOYDOEcRgCLy0cDxBaxnfjK4v3c
+        1saSD+Eay+6UfOiMOT/zHkksEPYv9kG/frdDY/Ek3Q==
+X-Google-Smtp-Source: ADFU+vuurdK1tLYKRHZySVDtkBsBts5O21phnWVSyzdskxYRWATOvZ9qJ0gvvcLFvlEeFknTq1uWLIeBBdhGqgGFm9c=
+X-Received: by 2002:aca:fc44:: with SMTP id a65mr2929862oii.119.1583510297120;
+ Fri, 06 Mar 2020 07:58:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20200306144400.4269-1-ajay.kathat@microchip.com> <20200306144400.4269-2-ajay.kathat@microchip.com>
-In-Reply-To: <20200306144400.4269-2-ajay.kathat@microchip.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 6 Mar 2020 09:35:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKP-9bBMpkvMfphyAfdeVd44=pYDSOY=fSsx5xYkJPCjA@mail.gmail.com>
-Message-ID: <CAL_JsqKP-9bBMpkvMfphyAfdeVd44=pYDSOY=fSsx5xYkJPCjA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] staging: wilc1000: use 'interrupts' property instead
- of 'irq-gpio'
-To:     Ajay.Kathat@microchip.com
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+References: <1582577665-13554-1-git-send-email-tharvey@gateworks.com>
+ <1582577665-13554-2-git-send-email-tharvey@gateworks.com> <20200302204949.GA6649@bogus>
+In-Reply-To: <20200302204949.GA6649@bogus>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Fri, 6 Mar 2020 07:58:06 -0800
+Message-ID: <CAJ+vNU2ySjAP3q-4rgGy1U=iJeswv1kx6bKCy+Zw7V7oArkumw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: mfd: Add Gateworks System Controller bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
         devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Adham.Abozaeid@microchip.com,
-        Johannes Berg <johannes@sipsolutions.net>
+        open list <linux-kernel@vger.kernel.org>,
+        Robert Jones <rjones@gateworks.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 8:44 AM <Ajay.Kathat@microchip.com> wrote:
+On Mon, Mar 2, 2020 at 12:49 PM Rob Herring <robh@kernel.org> wrote:
 >
-> From: Ajay Singh <ajay.kathat@microchip.com>
+
+Rob,
+
+Thanks for the review! Some questions below:
+
+> On Mon, Feb 24, 2020 at 12:54:23PM -0800, Tim Harvey wrote:
+> > This patch adds documentation of device-tree bindings for the
+> > Gateworks System Controller (GSC).
+> >
+> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> > ---
+> > v5:
+> >  - resolve dt_binding_check issues
+> >
+> > v4:
+> >  - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+> >  - remove unncessary resolution/scaling properties for ADCs
+> >  - update to yaml
+> >  - remove watchdog
+> >
+> > v3:
+> >  - replaced _ with -
+> >  - remove input bindings
+> >  - added full description of hwmon
+> >  - fix unit address of hwmon child nodes
+> > ---
+> >  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 158 +++++++++++++++++++++
+> >  1 file changed, 158 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> > new file mode 100644
+> > index 00000000..f7c1a05
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> > @@ -0,0 +1,158 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mfd/gateworks-gsc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Gateworks System Controller multi-function device
+> > +
+> > +description: |
+> > +  The GSC is a Multifunction I2C slave device with the following submodules:
+> > +   - Watchdog Timer
+> > +   - GPIO
+> > +   - Pushbutton controller
+> > +   - Hardware Monitore with ADC's for temperature and voltage rails and
 >
-> Make use of 'interrupts' property instead of using gpio for handling
-> the interrupt as suggested in [1].
+> typo
+
+will fix
+
 >
-> [1]. https://lore.kernel.org/linux-wireless/20200303015558.GA6876@bogus/
+> > +     fan controller
+> > +
+> > +maintainers:
+> > +  - Tim Harvey <tharvey@gateworks.com>
+> > +  - Robert Jones <rjones@gateworks.com>
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "gsc@[0-9a-f]{1,2}"
+> > +  compatible:
+> > +    const: gw,gsc
 >
-> Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-> ---
->  .../net/wireless/microchip,wilc1000.yaml      | 79 +++++++++++++++++++
->  .../wilc1000/microchip,wilc1000,sdio.yaml     |  8 +-
->  .../wilc1000/microchip,wilc1000,spi.yaml      |  8 +-
-
-Bindings should be a separate patch.
-
->  drivers/staging/wilc1000/netdev.c             | 24 ++----
->  drivers/staging/wilc1000/netdev.h             |  1 -
->  drivers/staging/wilc1000/sdio.c               | 31 +++-----
->  drivers/staging/wilc1000/spi.c                | 15 +---
->  drivers/staging/wilc1000/wlan.h               |  1 -
->  8 files changed, 108 insertions(+), 59 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
+> That's not very specific.
 >
-> diff --git a/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml b/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
-> new file mode 100644
-> index 000000000000..a1914449ad07
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
-> @@ -0,0 +1,79 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/wireless/microchip,wilc1000.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip WILC wireless devicetree bindings
-> +
-> +maintainers:
-> +  - Adham Abozaeid <adham.abozaeid@microchip.com>
-> +  - Ajay Singh <ajay.kathat@microchip.com>
-> +
-> +description:
-> +  The wilc1000 chips can be connected via SPI or SDIO. This document
-> +  describes the binding to connect wilc devices.
-> +
-> +properties:
-> +  compatible:
-> +    const: microchip,wilc1000
-> +
-> +  spi-max-frequency:
-> +    description: Maximum SPI clocking speed of device in Hz.
-> +    maxItems: 1
 
-No need to redefine a common property. Just:
-
-spi-max-frequency: true
+Do you mean something like 'gw,system-controller' would be better
+instead of the gsc abbreviation for 'Gateworks System Controller'?
 
 > +
-> +  reg:
-> +    description: Chip select address of device.
+> > +  reg:
+> > +    description: I2C device address
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  "#interrupt-cells":
+> > +    const: 1
+> > +    description: The IRQ number
+>
+> description is wrong. You can just drop it.
+>
 
-Drop this.
+ok
 
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: phandle to the clock connected on rtc clock line.
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: rtc
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    spi1: spi@fc018000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      cs-gpios = <&pioB 21 0>;
-> +      wifi@0 {
-> +        compatible = "microchip,wilc1000";
-> +        spi-max-frequency = <48000000>;
-> +        reg = <0>;
-> +        interrupt-parent = <&pioC>;
-> +        interrupts = <27 0>;
-> +        clocks = <&pck1>;
-> +        clock-names = "rtc";
-> +      };
-> +    };
-> +
-> +  - |
-> +    mmc1: mmc@fc000000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3>;
-> +      non-removable;
-> +      vmmc-supply = <&vcc_mmc1_reg>;
-> +      vqmmc-supply = <&vcc_3v3_reg>;
-> +      bus-width = <4>;
-> +      wifi@0 {
-> +        compatible = "microchip,wilc1000";
-> +        reg = <0>;
-> +        interrupt-parent = <&pioC>;
-> +        interrupts = <27 0>;
-> +        clocks = <&pck1>;
-> +        clock-names = "rtc";
-> +      };
-> +    };
-> diff --git a/drivers/staging/wilc1000/microchip,wilc1000,sdio.yaml b/drivers/staging/wilc1000/microchip,wilc1000,sdio.yaml
-> index b338f569f7e2..9df7327bc668 100644
-> --- a/drivers/staging/wilc1000/microchip,wilc1000,sdio.yaml
-> +++ b/drivers/staging/wilc1000/microchip,wilc1000,sdio.yaml
+> > +
+> > +  hwmon:
+>
+> 'hwmon' is a Linux thing. I'm suspicious...
+>
 
-Why aren't you just removing this file and the spi one?
+Yes, we've discussed this before and I understand that DT shouldn't
+use terminology that is Linux specific (which is why I replaced
+'hwmon' with 'adc' in the ADC nodes below) but I still see a long of
+dt bindings in Documentation/devicetree/bindings with the word 'hwmon'
+in them.
 
-Rob
+Perhaps this makes more sense?
+
+adc {
+  compatible = "gw,gsc-adc";
+  #address-cells = <1>;
+  #size-cells = <0>;
+
+  channel@6 {
+    type = "gw,hwmon-temperature";
+    reg = <0x06>;
+    label = "temp";
+  };
+  ...
+};
+
+
+> > +    type: object
+> > +    description: Optional Hardware Monitoring module
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        const: gw,gsc-hwmon
+> > +
+> > +      "#address-cells":
+> > +        const: 1
+> > +
+> > +      "#size-cells":
+> > +        const: 0
+> > +
+> > +      gw,fan-base:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description: The fan controller base address
+>
+> Shouldn't this be described as a node in the DT or be implied by the
+> compatible?
+
+It does look out of place there. Would adding another subnode outside
+of the (perhaps misnamed) 'hwmon' node make more sense?:
+
+fan:
+ properties:
+   compatible: gw,gsc-fancontroller
+   reg:
+     description: address of the fan controller base register
+     maxItems: 1
+
+>
+> > +
+> > +    patternProperties:
+> > +      "^adc@[0-2]$":
+>
+> There's only one number space at any level. So if you ever need anything
+> else at this level, it can't have an address. Just something to
+> consider.
+>
+
+yes, one number space is ok if I understand what you mean but I meant
+this to be "^adc@[0-9]+$" to support the number of ADC pins the part
+supports.
+
+> > +        type: object
+> > +        description: |
+> > +          Properties for a single ADC which can report cooked values
+> > +          (ie temperature sensor based on thermister), raw values
+> > +          (ie voltage rail with a pre-scaling resistor divider).
+> > +
+> > +        properties:
+> > +          reg:
+> > +            description: Register of the ADC
+> > +            maxItems: 1
+> > +
+> > +          label:
+> > +            description: Name of the ADC input
+> > +
+> > +          type:
+>
+> Very generic property name, but it's not generic. Needs a vendor prefix
+> at least.
+
+You mean the property name of 'type' is fine, but the values will need
+to be vendor specific like 'gw,temperature', 'gw,voltage',
+'gw,voltage-raw' or is it inappropriate to use 'type'?
+
+>
+> > +            description: |
+> > +              temperature in C*10 (temperature),
+> > +              pre-scaled voltage value (voltage),
+> > +              or scaled based on an optional resistor divider and optional
+> > +              offset (voltage-raw)
+> > +            enum:
+> > +              - temperature
+> > +              - voltage
+> > +              - voltage-raw
+> > +
+> > +          gw,voltage-divider:
+> > +            allOf:
+> > +              - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +            description: values of resistors for divider on raw ADC input
+> > +            items:
+> > +              - description: R1
+> > +              - description: R2
+>
+> Needs a standard unit suffix. With that, you can drop the type
+> reference.
+
+I understand the unit suffix but not sure what you mean by type
+reference. Do you mean:
+
+gw,voltage-divider-milli-ohms:
+  description: values of resistors for divider on raw ADC input
+    items:
+      - description: R1
+      - description: R2
+
+>
+> > +
+> > +          gw,voltage-offset:
+> > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > +            description: |
+> > +              A positive uV voltage offset to apply to a raw ADC
+> > +              (ie to compensate for a diode drop).
+>
+> Needs a unit suffix.
+
+ok
+
+Thanks!
+
+Tim
