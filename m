@@ -2,86 +2,94 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD60C10F26
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBEBC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB2342084E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE99A2084E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pmq4K6KD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgCFKjW (ORCPT
+        id S1726635AbgCFKlf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:39:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44058 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726359AbgCFKjW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:39:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id ABC6EAC46;
-        Fri,  6 Mar 2020 10:39:20 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     ulf.hansson@linaro.org, f.fainelli@gmail.com, phil@raspberrypi.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/10] mmc: sdhci: Add quirk SDHCI_QUIRK2_SET_BUS_VOLTAGE
-Date:   Fri,  6 Mar 2020 11:38:46 +0100
-Message-Id: <20200306103857.23962-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200306103857.23962-1-nsaenzjulienne@suse.de>
-References: <20200306103857.23962-1-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 6 Mar 2020 05:41:35 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43087 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgCFKlf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 05:41:35 -0500
+Received: by mail-qt1-f195.google.com with SMTP id v22so1330196qtp.10;
+        Fri, 06 Mar 2020 02:41:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=al7age2oTXgYTympMQW4jKiNWfRyppUJjWuKVFSzTq4=;
+        b=Pmq4K6KDvmWg+QImisnIgA7B7RmumCDCRG1Xkl53KFpEcY+WMWtEh6qtXRWE89kD8/
+         ablkdKssUXeOAw8KzuISRSoznT0nsDNPDsLJbAd+B89tQXU4CPT0nu/wacgsNiy3Akd/
+         wObt8muPZYIaPjFpZlh6ILWyiB2ueb07kRcxCTQSFuM7vXzlu0p8RWFbfPFE4j1RwgXO
+         vTDpN0GhxFl39+h/8HFJr1sgpjk+8bdS1aYTI7a4icPjgzjWmOU/E05T7+h0FuPPr0+F
+         fAQD1xEnyBoMLWMAoZBI3XK4nkWE4axsjGsEJ7KsUjYuE1C2+HZiG9qq407qRGkn1qyf
+         xPnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=al7age2oTXgYTympMQW4jKiNWfRyppUJjWuKVFSzTq4=;
+        b=GaPVML/K50+BqtaCFuvD2fsHYOODgvAGYNmfICzaQxrTNUYc6vWZnHeCxzhraQYQV8
+         9yWNX9gwd09+VRa1SRE6mebTOylLi7jAGVmVjzUCLvMPclD7SfC2jWJ/SqG4KAZf1t0s
+         BTK0+xQHdOxVDMFMRo0bxC4rvBmybwZO/W2CqhZm81Q+dDyl6otAHZIg0usFpth+BIGb
+         fBzWl0u80yF9Oiet01BmF5Hc37UFcTKE+f2pf8qIM4nsx7oAAn7qbVYVvDx6Z5UJ83sO
+         73m9woy7xdiTG/atyZfHJdwsE6W7dODOqa5Cw0ahlJlXuVfmaXz8sb+Zzsgb9P3nZGuR
+         iQRQ==
+X-Gm-Message-State: ANhLgQ0s51YXsVEK+3ZYNxV6yHm8SoCKGMvcMI7kH23EATBt7UalJD30
+        Qnb7SscaYHV84sBnQxfe2Mo=
+X-Google-Smtp-Source: ADFU+vuSKVKDhCno4+Mq0uvE1KVuExpu4oA+/WFezYFdXs9rfgVJNmqSirh5K9SNW5BgkOeQFHON2A==
+X-Received: by 2002:ac8:4659:: with SMTP id f25mr2248175qto.273.1583491293109;
+        Fri, 06 Mar 2020 02:41:33 -0800 (PST)
+Received: from L-E5450.nxp.com ([177.221.114.206])
+        by smtp.gmail.com with ESMTPSA id u5sm17096932qkf.32.2020.03.06.02.41.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 02:41:32 -0800 (PST)
+From:   Alifer Moraes <alifer.wsdm@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        marco.franchi@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alifer Moraes <alifer.wsdm@gmail.com>
+Subject: [PATCH] arm64: dts: imx8mq-phanbell: Fix Ethernet PHY post-reset duration
+Date:   Fri,  6 Mar 2020 07:42:19 -0300
+Message-Id: <20200306104219.6434-1-alifer.wsdm@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds quirk for controllers whose bus power select register has to be set
-even when powering SD cards from a regulator.
+i.MX8MQ Phanbell board uses Realtek RTL8211FD as Ethernet PHY.
+Its datasheet states that the proper post reset duration should be at least 50 ms.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Fixes: f34d4bfab354 ("arm64: dts: imx8mq-phanbell: Add support for ethernet")
+Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
 ---
- drivers/mmc/host/sdhci.c | 5 +++++
- drivers/mmc/host/sdhci.h | 2 ++
- 2 files changed, 7 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index c59566363a42..c7fd87447457 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1920,6 +1920,11 @@ static void sdhci_set_power_reg(struct sdhci_host *host, unsigned char mode,
- 
- 	mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
- 
-+	if (host->quirks2 & SDHCI_QUIRK2_SET_BUS_VOLTAGE) {
-+		sdhci_set_power_noreg(host, mode, vdd);
-+		return;
-+	}
-+
- 	if (mode != MMC_POWER_OFF)
- 		sdhci_writeb(host, SDHCI_POWER_ON, SDHCI_POWER_CONTROL);
- 	else
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index cac2d97782e6..9531a4e5b148 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -484,6 +484,8 @@ struct sdhci_host {
-  * block count.
-  */
- #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
-+/* Set bus voltage even when powering from an external regulator */
-+#define SDHCI_QUIRK2_SET_BUS_VOLTAGE			(1<<19)
- 
- 	int irq;		/* Device IRQ */
- 	void __iomem *ioaddr;	/* Mapped address */
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+index 16ed13c44a47..06e248b95ada 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+@@ -207,7 +207,7 @@
+ 	phy-mode = "rgmii-id";
+ 	phy-reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+ 	phy-reset-duration = <10>;
+-	phy-reset-post-delay = <30>;
++	phy-reset-post-delay = <50>;
+ 	phy-handle = <&ethphy0>;
+ 	fsl,magic-packet;
+ 	status = "okay";
 -- 
-2.25.1
+2.17.1
 
