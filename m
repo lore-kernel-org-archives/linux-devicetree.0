@@ -6,34 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537DAC10F25
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E87C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336CF20848
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE8D20848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgCFKja (ORCPT
+        id S1727247AbgCFKjr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:39:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44310 "EHLO mx2.suse.de"
+        Fri, 6 Mar 2020 05:39:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44144 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727071AbgCFKj2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:39:28 -0500
+        id S1727101AbgCFKja (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 05:39:30 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7C308B230;
-        Fri,  6 Mar 2020 10:39:26 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id B28D3B31F;
+        Fri,  6 Mar 2020 10:39:28 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
 Cc:     ulf.hansson@linaro.org, f.fainelli@gmail.com, phil@raspberrypi.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 07/10] mmc: sdhci: am654: Use quirk instead of custom set_power()
-Date:   Fri,  6 Mar 2020 11:38:52 +0100
-Message-Id: <20200306103857.23962-8-nsaenzjulienne@suse.de>
+Subject: [PATCH 09/10] mmc: sdhci: iproc: Use SDHCI_QUIRK2_SET_BUS_VOLTAGE on bcm2711
+Date:   Fri,  6 Mar 2020 11:38:54 +0100
+Message-Id: <20200306103857.23962-10-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200306103857.23962-1-nsaenzjulienne@suse.de>
 References: <20200306103857.23962-1-nsaenzjulienne@suse.de>
@@ -44,92 +46,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With the introduction of SDHCI_QUIRK2_SET_BUS_VOLTAGE there is no need
-to use a custom set_power() implementation as the quirk takes care of
-configuring the bus voltage register even when powering trough a
-regulator.
+Although vmmc is provided by a regulator, bcm2711's sdhci-iproc needs
+its bus voltage register to be set to a non-zero value. Failure to do so
+turns the core off.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/mmc/host/sdhci_am654.c | 23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+ drivers/mmc/host/sdhci-iproc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index 58183b5f4e82..4629596da86a 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -255,17 +255,6 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
- 	sdhci_set_clock(host, clock);
- }
+diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+index f4f5f0a70cda..e2fab52d6721 100644
+--- a/drivers/mmc/host/sdhci-iproc.c
++++ b/drivers/mmc/host/sdhci-iproc.c
+@@ -263,6 +263,7 @@ static const struct sdhci_iproc_data bcm2835_data = {
  
--static void sdhci_am654_set_power(struct sdhci_host *host, unsigned char mode,
--				  unsigned short vdd)
--{
--	if (!IS_ERR(host->mmc->supply.vmmc)) {
--		struct mmc_host *mmc = host->mmc;
--
--		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
--	}
--	sdhci_set_power_noreg(host, mode, vdd);
--}
--
- static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
- {
- 	unsigned char timing = host->mmc->ios.timing;
-@@ -321,7 +310,6 @@ static struct sdhci_ops sdhci_am654_ops = {
- 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
- 	.set_bus_width = sdhci_set_bus_width,
--	.set_power = sdhci_am654_set_power,
- 	.set_clock = sdhci_am654_set_clock,
- 	.write_b = sdhci_am654_write_b,
- 	.irq = sdhci_am654_cqhci_irq,
-@@ -331,7 +319,8 @@ static struct sdhci_ops sdhci_am654_ops = {
- static const struct sdhci_pltfm_data sdhci_am654_pdata = {
- 	.ops = &sdhci_am654_ops,
+ static const struct sdhci_pltfm_data sdhci_bcm2711_pltfm_data = {
  	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-+		   SDHCI_QUIRK2_SET_BUS_VOLTAGE,
++	.quirks2 = SDHCI_QUIRK2_SET_BUS_VOLTAGE,
+ 	.ops = &sdhci_iproc_32only_ops,
  };
  
- static const struct sdhci_am654_driver_data sdhci_am654_drvdata = {
-@@ -344,7 +333,6 @@ static struct sdhci_ops sdhci_j721e_8bit_ops = {
- 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
- 	.set_bus_width = sdhci_set_bus_width,
--	.set_power = sdhci_am654_set_power,
- 	.set_clock = sdhci_am654_set_clock,
- 	.write_b = sdhci_am654_write_b,
- 	.irq = sdhci_am654_cqhci_irq,
-@@ -354,7 +342,8 @@ static struct sdhci_ops sdhci_j721e_8bit_ops = {
- static const struct sdhci_pltfm_data sdhci_j721e_8bit_pdata = {
- 	.ops = &sdhci_j721e_8bit_ops,
- 	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-+		   SDHCI_QUIRK2_SET_BUS_VOLTAGE,
- };
- 
- static const struct sdhci_am654_driver_data sdhci_j721e_8bit_drvdata = {
-@@ -367,7 +356,6 @@ static struct sdhci_ops sdhci_j721e_4bit_ops = {
- 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
- 	.set_bus_width = sdhci_set_bus_width,
--	.set_power = sdhci_am654_set_power,
- 	.set_clock = sdhci_j721e_4bit_set_clock,
- 	.write_b = sdhci_am654_write_b,
- 	.irq = sdhci_am654_cqhci_irq,
-@@ -377,7 +365,8 @@ static struct sdhci_ops sdhci_j721e_4bit_ops = {
- static const struct sdhci_pltfm_data sdhci_j721e_4bit_pdata = {
- 	.ops = &sdhci_j721e_4bit_ops,
- 	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-+		   SDHCI_QUIRK2_SET_BUS_VOLTAGE,
- };
- 
- static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
 -- 
 2.25.1
 
