@@ -2,107 +2,154 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CA8C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 09:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03771C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 09:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC612072A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 09:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9F72072D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 09:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="AOYso6rM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z+vSL2j8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgCFJws (ORCPT
+        id S1726090AbgCFJ4Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:52:48 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:39381 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbgCFJws (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 04:52:48 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 6681923E62;
-        Fri,  6 Mar 2020 10:52:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583488364;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k+JZ0GQ0s2L+aiUSrf43dcCeKDSpbaMts6VHhOyEnzs=;
-        b=AOYso6rM7E59jrFMqnhq+cXh0M0H6oUnJGoJEbn7Rl8jlR77/c2vjvmdH9F4baD6ovufmy
-        LFBYlaP8nX3Tw4N2BrDGiMf4cOvMGT7/+AzGBZOYJ7vg1cMkCKyw6GdzErYXx0UtYW3xBw
-        vtmRUJECXrlufZ/WtybT+xVdK5oVm4g=
+        Fri, 6 Mar 2020 04:56:24 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51316 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgCFJ4Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 04:56:24 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a132so1663230wme.1
+        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 01:56:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7WA8KxQFlE6B8qCgTFRQ+YrpY3GYXgfg/QOgK1f77sM=;
+        b=Z+vSL2j8scoLCGNkZyokN15xJq1aniWOej9xa0jO1y/7aiSn6wUVH8PGc2mmDoSxkx
+         hKYfJxAN6zemdGqm+/m/AwAvjWPnxYO3i8iNXAcdbEHhdhF9uUqrEmLCTqWr8lqHMzAU
+         5/u3kcwg3w6H2MZgNCyva5KikrewAvfB8ctsMOZd35NBMW7AF0sSL8FLlPXq2+tABW5v
+         3eEcsqfJCErJCgsWy2UZ9D2YLRkwKUkct1WRvgXbWkdGsl+/AqLCS6/4rzZZzbeHMXAb
+         aQFr7GnLr8aSRBGzmvQjRCLEcf731bgNW+CD7gus6HHQ+MyynH9kPWMxpkl+lZZbqIIM
+         Kw5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7WA8KxQFlE6B8qCgTFRQ+YrpY3GYXgfg/QOgK1f77sM=;
+        b=bBebpZZIBi0tUi7NHv+NsTCSjz+iW2NVoKmjc67MxdhBew/rSEV0LsXpu7pfWxywEa
+         qrbrdRnD7ifbbnIwLaskOPch9aOSt5CH2ykzPYfsbs5pWCAUJLDJwY/HNfwYBHDExBOf
+         wsS82jFbxKVKZJKzzM8y7JfWKRe0CC06gR5yBmne3zckVCRFUpAkQ1rV1j8/wcxyr4MH
+         C+/p9jSFxSY8toFEuwjHuiJQ2L3YikY1lR+iNyxVR8BluzuJYz9RfY5KkJBSidUKcuqB
+         7xRpY9j/eB9amihq7OS9v88APz+UhJnywCpwy+r0LQndWGWuBbUXNuTdFGDmISPpfcI3
+         mTNQ==
+X-Gm-Message-State: ANhLgQ1AdYKfhu0bRf/tSrRp562MtJmoAvQ02lwLe1rhml4zBzzWPmLu
+        me79larR8qNxdEMgZ2pmpB+i5g==
+X-Google-Smtp-Source: ADFU+vuU7aA2moxG0tbzibZ6qR77dGIj+dzVr37QpTQa4MjhQ67tVPECKIRxafVKMX7XzMD/CpXXyA==
+X-Received: by 2002:a7b:cd11:: with SMTP id f17mr3243910wmj.6.1583488582036;
+        Fri, 06 Mar 2020 01:56:22 -0800 (PST)
+Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id m25sm12484502wml.35.2020.03.06.01.56.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 01:56:21 -0800 (PST)
+Date:   Fri, 6 Mar 2020 10:56:14 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, will@kernel.org,
+        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
+        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
+        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        robin.murphy@arm.com, christian.koenig@amd.com
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200306095614.GA50020@myrica>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+ <20200224182401.353359-2-jean-philippe@linaro.org>
+ <20200224190056.GT31668@ziepe.ca>
+ <20200225092439.GB375953@myrica>
+ <20200225140814.GW31668@ziepe.ca>
+ <20200228143935.GA2156@myrica>
+ <20200228144844.GQ31668@ziepe.ca>
+ <20200228150427.GF2156@myrica>
+ <20200228151339.GS31668@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 06 Mar 2020 10:52:42 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Add fsl,ls1028a-dspi compatible
-In-Reply-To: <20200218171418.18297-1-michael@walle.cc>
-References: <20200218171418.18297-1-michael@walle.cc>
-Message-ID: <2ef39885fc5aa0404a88e82921c4586a@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 6681923E62
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.635];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[arm.com,kernel.org,nxp.com,gmail.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228151339.GS31668@ziepe.ca>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-02-18 18:14, schrieb Michael Walle:
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> changes since v1:
->  - none, this is a new patch
+On Fri, Feb 28, 2020 at 11:13:40AM -0400, Jason Gunthorpe wrote:
+> On Fri, Feb 28, 2020 at 04:04:27PM +0100, Jean-Philippe Brucker wrote:
+> > On Fri, Feb 28, 2020 at 10:48:44AM -0400, Jason Gunthorpe wrote:
+> > > On Fri, Feb 28, 2020 at 03:39:35PM +0100, Jean-Philippe Brucker wrote:
+> > > > > > +	list_for_each_entry_rcu(bond, &io_mm->devices, mm_head) {
+> > > > > > +		/*
+> > > > > > +		 * To ensure that we observe the initialization of io_mm fields
+> > > > > > +		 * by io_mm_finalize() before the registration of this bond to
+> > > > > > +		 * the list by io_mm_attach(), introduce an address dependency
+> > > > > > +		 * between bond and io_mm. It pairs with the smp_store_release()
+> > > > > > +		 * from list_add_rcu().
+> > > > > > +		 */
+> > > > > > +		io_mm = rcu_dereference(bond->io_mm);
+> > > > > 
+> > > > > A rcu_dereference isn't need here, just a normal derference is fine.
+> > > > 
+> > > > bond->io_mm is annotated with __rcu (for iommu_sva_get_pasid_generic(),
+> > > > which does bond->io_mm under rcu_read_lock())
+> > > 
+> > > I'm surprised the bond->io_mm can change over the lifetime of the
+> > > bond memory..
+> > 
+> > The normal lifetime of the bond is between device driver calls to bind()
+> > and unbind(). If the mm exits early, though, we clear bond->io_mm. The
+> > bond is then stale but can only be freed when the device driver releases
+> > it with unbind().
 > 
->  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
->  1 file changed, 1 insertion(+)
+> I usually advocate for simple use of these APIs. The mm_notifier_get()
+> should happen in bind() and the matching put should happen in the
+> call_rcu callbcak that does the kfree.
+
+I tried to keep it simple like that: normally mmu_notifier_get() is called
+in bind(), and mmu_notifier_put() is called in unbind(). 
+
+Multiple device drivers may call bind() with the same mm. Each bind()
+calls mmu_notifier_get(), obtains the same io_mm, and returns a new bond
+(a device<->mm link). Each bond is freed by calling unbind(), which calls
+mmu_notifier_put().
+
+That's the most common case. Now if the process is killed and the mm
+disappears, we do need to avoid use-after-free caused by DMA of the
+mappings and the page tables. So the release() callback, before doing
+invalidate_all, stops DMA and clears the page table pointer on the IOMMU
+side. It detaches all bonds from the io_mm, calling mmu_notifier_put() for
+each of them. After release(), bond objects still exists and device
+drivers still need to free them with unbind(), but they don't point to an
+io_mm anymore.
+
+> Then you can never get a stale
+> pointer. Don't worry about exit_mmap().
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-> b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-> index 162e024b95a0..a6e4bc5e96db 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-> @@ -7,6 +7,7 @@ Required properties:
->  		"fsl,ls2080a-dspi" followed by "fsl,ls2085a-dspi"
->  		"fsl,ls1012a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
->  		"fsl,ls1088a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
-> +		"fsl,ls1028a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
->  - reg : Offset and length of the register set for the device
->  - interrupts : Should contain SPI controller interrupt
->  - clocks: from common clock binding: handle to dspi clock.
+> release() is an unusual callback and I see alot of places using it
+> wrong. The purpose of release is to invalidate_all, that is it.
+> 
+> Also, confusingly release may be called multiple times in some
+> situations, so it shouldn't disturb anything that might impact a 2nd
+> call.
 
-This patch is be superseeded by
-   https://lore.kernel.org/lkml/20200302001958.11105-2-olteanv@gmail.com/
+I hadn't realized that. The current implementation should be safe against
+it, as release() is a nop if the io_mm doesn't have bonds anymore. Do you
+have an example of such a situation?  I'm trying to write tests for this
+kind of corner cases.
 
--michael
+Thanks,
+Jean
