@@ -2,432 +2,198 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF283C10F00
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F97EC10F25
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F2920866
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:41:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wRALZZlg"
+	by mail.kernel.org (Postfix) with ESMTP id 5284E2072D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgCFNk6 (ORCPT
+        id S1726733AbgCFNmI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:40:58 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46507 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgCFNk5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 08:40:57 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n15so2377923wrw.13
-        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 05:40:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mnN6G9zY/y6OfUIGRMlaJpifAN4Ydyk3U4NgamuqPTs=;
-        b=wRALZZlgeLJMW/t2mq3QfgFuJiJwzuckGf1+aLVNV0luD6kM1OnJ/p/wmx9FSUS2sb
-         7TTwJJAb2CD+wYxWn6wRouZ9EjuqwvFVVytec5cynkwqS5HuToVAGl3XdD1EdAbAGfUe
-         6E60wa4mXQGQjS1SX6SQgI7vESPfJKa/r5O8RQAsJp7DSgrDz/kfQHYUYJ7IYWTprV4h
-         Gy8HYqr4yav0z5ty1vWXUZlBxM4maNDRggHmfRktSh31nH8t2iWOmuZmQxFbooxCRz77
-         6sMoa8tdDL5dOqt04h4NdDHN2emd1JcoZPAJKYfX8bP9c6t4mzD9pGMwILVbAADf/BkR
-         ctTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mnN6G9zY/y6OfUIGRMlaJpifAN4Ydyk3U4NgamuqPTs=;
-        b=Y6LyjuA8AUtu08iIqsB/pIXwsOEU+LXb+0UwTIuPECsc414Zh0w1ZT4SO3AosEbdsE
-         sc/W99i58oUe/PRR4rSlPsZ+g3QAsPprTM5axjiDDVXpnsAjAzewi3/SZGYGek1ttdvY
-         sKTT6FdW+SMrFEKPAu5dL2xjjJ3zutCVyQOowAGisTuOlnEAgCzFn7TFxfYkDKwbAREH
-         c1zuhE50QR5Yb/BDhpTYY0IloMcey6bYl02a3eO7HeRIB31RLWPyoH6OcR0ExSMhRdZw
-         GHPR9vvuPKQQBqONhSNl9vOO1WovlwYarzxzA3uFNVZm7DA+N5uLiE2a8HLMYSlwJ2hY
-         V+0w==
-X-Gm-Message-State: ANhLgQ0uuZi90ebz//syGSvH8HsNLTHREdbYJizhcRn2PsT8mo1jibBE
-        Y71fsphqwpgCxo4HAgwa+zEP3w==
-X-Google-Smtp-Source: ADFU+vubX3ZdVVxAKqeiTBOeSYo/FWSLQG7mS3muEVTs/UR3Nkiy3YiTTefcGGH+SygDOW3AnCBwKA==
-X-Received: by 2002:a5d:5043:: with SMTP id h3mr4092965wrt.274.1583502054793;
-        Fri, 06 Mar 2020 05:40:54 -0800 (PST)
-Received: from localhost.localdomain (89-82-119-43.abo.bbox.fr. [89.82.119.43])
-        by smtp.gmail.com with ESMTPSA id g7sm47178086wrm.72.2020.03.06.05.40.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 06 Mar 2020 05:40:54 -0800 (PST)
-From:   Nicolas Belin <nbelin@baylibre.com>
-To:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        devicetree@vger.kernel.org
-Cc:     baylibre-upstreaming@groups.io, Nicolas Belin <nbelin@baylibre.com>
-Subject: [PATCH v3 3/3] drivers: leds: add support for apa102c leds
-Date:   Fri,  6 Mar 2020 14:40:10 +0100
-Message-Id: <1583502010-16210-4-git-send-email-nbelin@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583502010-16210-1-git-send-email-nbelin@baylibre.com>
-References: <1583502010-16210-1-git-send-email-nbelin@baylibre.com>
+        Fri, 6 Mar 2020 08:42:08 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:47109 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbgCFNmI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 08:42:08 -0500
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MPGNn-1j0Vx30J4P-00PfWP; Fri, 06 Mar 2020 14:41:56 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id E0ECD64F2B8;
+        Fri,  6 Mar 2020 13:41:54 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CcPke4HdLmdh; Fri,  6 Mar 2020 14:41:54 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 756F064CD35;
+        Fri,  6 Mar 2020 14:41:54 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.10.2.141) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 6 Mar 2020 14:41:54 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 1C188804FA; Fri,  6 Mar 2020 14:41:54 +0100 (CET)
+Date:   Fri, 6 Mar 2020 14:41:54 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Driver Development <devel@driverdev.osuosl.org>,
+        Linux Media <linux-media@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Renesas SoC <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
+ adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <20200306134154.GD27714@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Driver Development <devel@driverdev.osuosl.org>,
+        Linux Media <linux-media@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Renesas SoC <linux-renesas-soc@vger.kernel.org>
+References: <20200113141556.GI3606@pflmari>
+ <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+ <20200302134011.GA3717@pflmari>
+ <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+ <20200302150706.GB3717@pflmari>
+ <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
+ <20200302160906.GC3717@pflmari>
+ <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
+ <20200305143628.GB25741@pflmari>
+ <20200306131632.GA4878@pendragon.ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200306131632.GA4878@pendragon.ideasonboard.com>
+X-Originating-IP: [10.10.2.141]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29536F936F637265
+X-Provags-ID: V03:K1:MYH9fUJEmTLzs751ZE7H3XogVug1Pd2e7lMETYI9kqko498wXNx
+ fS9i28Ga1cv76eGr+epr2aoYeAf+3/0v+C3bR5fSV4MQL6PYBg3RlgzdWL87ggLplsNCWt1
+ BQnhRnOFTMNC4+JFERxh53ICgSF/4HRJyu6zBt8KlCs4A1gKnKm1D5LvqZy/cZLSl051F3a
+ 2G0JSrc3wR+Ispc6U0wEw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WrJyyEo45XY=:3W85t6wsawv8PDgR4Ad48W
+ v0IRf2VWdD/r58UILsmFTdhqAQ9WDEXoio61ZzKFznl+q0+C6iStlkELGmo6oOgEk7qWB0STV
+ v5l5ZdGhmNj+nLac8u5LLT00BPNyjHfigc+DWD3Nbl4oBH+BFp0v8DgtfmNGK0qohRo95/sYQ
+ mWSnG6RW/lCn7tACYETXXrcz+6uNzE7HOooQE6CCT99JdrwJ5KtEjwqQTxbfeA65MV07b7r5w
+ jATaNQZzgubHId8O1DpALTUePbPYu7n2/JafaH9aCR8MOn//DYkdCYvHVFrEDHOHFdk9dxXv5
+ nrz0nPU3kx1hBfaSnwp3Tgp41RYKsokNNrKS10DhMbcIjw8rcJd6V+Ch4jjXeXgDZkuU9lfF5
+ lQg4BjcF/OiZX+NSBkENPqHff8E+Re+xWiDmPAplfW80F9KDNzn0aBExMNYoOtYpHezaPYgXf
+ Io+xOXkjnet0IzOEz5L9q3sEIXMf4YUf7DCTBVPyAsw0SNrCt0r260Gwd456NDzeqzwMVTzRr
+ PSdqX8eLo7z9nfkSFq6J6CP+/nzcD03BPezbz0mvC89TPKwmVM3zrPCLW/8HlTznDy6duDoSB
+ CpeuaWUJb7CT3jK/2SEl6HycAz2U3aOWtUVqyyaM65u3BKugf7n/qYHM8MZGsNgA+vt5kpKi7
+ FBRY8bB65RJ/mUxJbmF5AmQjJlDifcdz8H82QuOM0YCz/EQQyG8xqstZv9xUEMA8S5q629ush
+ JoF6KEO1yZ3cxqlspDsqC2TeLUvWh0hBeZm9G5MKO1/UIj41cYFlZJGwAkawMyn8dRXV+2Ns5
+ IB1lLsNWuHvVgUIFLLe5zpFvqSLzei0zi1XJvWl/sZtbIDFqHEsM7WcPGYDS10YRdq3xrCY
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Initilial commit in order to support the apa102c RGB leds. The
-RGB and global brightness management is done by creating 4 leds
-from the Led Framework per apa102c led.
+Hi Laurent,
 
-Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
----
- drivers/leds/Kconfig        |  11 ++
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-apa102c.c | 306 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 318 insertions(+)
- create mode 100644 drivers/leds/leds-apa102c.c
+Laurent Pinchart, Fri, Mar 06, 2020 14:16:32 +0100:
+> On Thu, Mar 05, 2020 at 03:36:28PM +0100, Alex Riesen wrote:
+> > Geert Uytterhoeven, Mon, Mar 02, 2020 17:13:30 +0100:
+> > > On Mon, Mar 2, 2020 at 5:09 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > > > Geert Uytterhoeven, Mon, Mar 02, 2020 16:32:32 +0100:
+> > > > >
+> > > > > The #clock-cells should be in the main video-receiver node.
+> > > > > Probably there is more than one clock output, so #clock-cells may be 1?
+> > > >
+> > > > AFAICS, the device can provide only this one clock line (audio master clock
+> > > > for I2S output)... I shall re-check, just in case.
+> > 
+> > And you're right, of course: the audio output formatting module of the ADV748x
+> > devices provides a set of clock lines related to the I2S pins: the already
+> > discussed master clock, left-right channel clock and the serial clock (bit
+> > clock?).
+> 
+> I don't think we need to model the last two clocks through CCF though,
+> they're part of the I2S protocol, not clock sources that need to be
+> explicitly controlled (or queried).
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index d82f1dea3711..28fa6c4f65cc 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -69,6 +69,17 @@ config LEDS_AN30259A
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called leds-an30259a.
- 
-+config LEDS_APA102C
-+	tristate "LED Support for Shiji APA102C"
-+	depends on SPI
-+	depends on LEDS_CLASS
-+	help
-+	  This option enables support for the APA102C RGB LEDs
-+	  from Shiji Lighting.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called leds-apa102c.
-+
- config LEDS_APU
- 	tristate "Front panel LED support for PC Engines APU/APU2/APU3 boards"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index d7e1107753fb..28dfe82900c5 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -88,6 +88,7 @@ obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
- obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
- 
- # LED SPI Drivers
-+obj-$(CONFIG_LEDS_APA102C)		+= leds-apa102c.o
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
- obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
- obj-$(CONFIG_LEDS_EL15203000)		+= leds-el15203000.o
-diff --git a/drivers/leds/leds-apa102c.c b/drivers/leds/leds-apa102c.c
-new file mode 100644
-index 000000000000..0043e7a6235b
---- /dev/null
-+++ b/drivers/leds/leds-apa102c.c
-@@ -0,0 +1,306 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/spi/spi.h>
-+#include <uapi/linux/uleds.h>
-+#include "leds.h"
-+
-+/*
-+ * Copyright (C) 2020 BayLibre, SAS
-+ * Author: Nicolas Belin <nbelin@baylibre.com>
-+ */
-+
-+/*
-+ *  APA102C SPI protocol description:
-+ *  +------+----------------------------------------+------+
-+ *  |START |               DATA FIELD:              | END  |
-+ *  |FRAME |               N LED FRAMES             |FRAME |
-+ *  +------+------+------+------+------+-----+------+------+
-+ *  | 0*32 | LED1 | LED2 | LED3 | LED4 | --- | LEDN | 1*32 |
-+ *  +------+------+------+------+------+-----+------+------+
-+ *
-+ *  +-----------------------------------+
-+ *  |START FRAME 32bits                 |
-+ *  +--------+--------+--------+--------+
-+ *  |00000000|00000000|00000000|00000000|
-+ *  +--------+--------+--------+--------+
-+ *
-+ *  +------------------------------------+
-+ *  |LED  FRAME 32bits                   |
-+ *  +---+-----+--------+--------+--------+
-+ *  |111|LUMA |  BLUE  | GREEN  |  RED   |
-+ *  +---+-----+--------+--------+--------+
-+ *  |3b |5bits| 8bits  | 8bits  | 8bits  |
-+ *  +---+-----+--------+--------+--------+
-+ *  |MSB   LSB|MSB  LSB|MSB  LSB|MSB  LSB|
-+ *  +---+-----+--------+--------+--------+
-+ *
-+ *  +-----------------------------------+
-+ *  |END FRAME 32bits                   |
-+ *  +--------+--------+--------+--------+
-+ *  |11111111|11111111|11111111|11111111|
-+ *  +--------+--------+--------+--------+
-+ */
-+
-+/* apa102c default settings */
-+#define GLOBAL_MAX_BRIGHTNESS	GENMASK(4, 0)
-+#define RGB_MAX_BRIGHTNESS	GENMASK(7, 0)
-+#define START_BYTE		0
-+#define END_BYTE		GENMASK(7, 0)
-+#define LED_FRAME_HEADER	GENMASK(7, 5)
-+
-+struct apa102c_led {
-+	struct apa102c		*priv;
-+	char			name[LED_MAX_NAME_SIZE];
-+	int			color_id;
-+	struct led_classdev	cdev;
-+};
-+
-+struct apa102c_rgbled {
-+	/* the 4 components of the apa102c rgb led:
-+	 * global brightness, blue, green and red in that order
-+	 */
-+	struct apa102c_led	component[4];
-+};
-+
-+struct apa102c {
-+	size_t			led_count;
-+	struct device		*dev;
-+	struct mutex		lock;
-+	struct spi_device	*spi;
-+	u8			*spi_buf;
-+	struct apa102c_rgbled	rgb_leds[];
-+};
-+
-+static int apa102c_sync(struct apa102c *priv)
-+{
-+	int	ret;
-+	size_t	i;
-+	struct apa102c_rgbled *leds = priv->rgb_leds;
-+	u8	*buf = priv->spi_buf;
-+
-+	/* creating the data that will be sent to all the leds at once */
-+	for (i = 0; i < 4; i++)
-+		*buf++ = START_BYTE;
-+
-+	/* looping on each RGB led component, getting the global brightness
-+	 * then B, G and R values
-+	 */
-+	for (i = 0; i < priv->led_count; i++) {
-+		*buf++ = LED_FRAME_HEADER |
-+			 leds[i].component[0].cdev.brightness;
-+		*buf++ = leds[i].component[1].cdev.brightness;
-+		*buf++ = leds[i].component[2].cdev.brightness;
-+		*buf++ = leds[i].component[3].cdev.brightness;
-+	}
-+
-+	for (i = 0; i < 4; i++)
-+		*buf++ = END_BYTE;
-+
-+	ret = spi_write(priv->spi, priv->spi_buf,
-+			(priv->led_count + 2) * sizeof(u32));
-+
-+	return ret;
-+}
-+
-+static int apa102c_brightness_set(struct led_classdev *cdev,
-+			   enum led_brightness brightness)
-+{
-+	int			ret;
-+	struct apa102c_led	*led = container_of(cdev,
-+						    struct apa102c_led,
-+						    cdev);
-+
-+	mutex_lock(&led->priv->lock);
-+	/* updating the brightness then synching all the leds */
-+	cdev->brightness = brightness;
-+	ret = apa102c_sync(led->priv);
-+	mutex_unlock(&led->priv->lock);
-+
-+	return ret;
-+}
-+
-+static int apa102c_probe_dt(struct apa102c *priv)
-+{
-+	int			ret = 0;
-+	u32			i;
-+	struct apa102c_rgbled	*rgb_led;
-+	struct apa102c_led	*led;
-+	struct fwnode_handle	*child;
-+	const char		*rgb_led_name;
-+	const char		*led_component_name;
-+
-+	/* each node corresponds to an rgb led */
-+	device_for_each_child_node(priv->dev, child) {
-+
-+		ret = fwnode_property_read_u32(child, "reg", &i);
-+		if (ret) {
-+			dev_err(priv->dev, "coudld not read reg %d\n", ret);
-+			goto child_out;
-+		}
-+
-+		if (i >= priv->led_count) {
-+			ret = -EINVAL;
-+			dev_err(priv->dev, "reg value too big\n");
-+			goto child_out;
-+		}
-+
-+		rgb_led = &priv->rgb_leds[i];
-+		/* checking if this led config is already used by checking if
-+		 * the priv member of the global_brightness led as already
-+		 * been set
-+		 */
-+		if (rgb_led->component[0].priv) {
-+			ret = -EINVAL;
-+			dev_err(priv->dev, "using the same reg value twice\n");
-+			goto child_out;
-+		}
-+
-+		ret = fwnode_property_read_string(child, "label",
-+						  &rgb_led_name);
-+		if (ret) {
-+			ret = -EINVAL;
-+			dev_err(priv->dev, "missing rgb led name\n");
-+			goto child_out;
-+		}
-+
-+		/* setting a color_id value for each of the 4 components of the
-+		 * apa102c RGB led. The first component is the global brightness
-+		 * of the led and thus has no color. The order of the colors
-+		 * after the global brightness is then blue, green and red
-+		 * in that order. It corresponds to the order in which the
-+		 * values are sent using spi
-+		 */
-+		rgb_led->component[0].color_id = -1; //no color
-+		rgb_led->component[1].color_id = LED_COLOR_ID_BLUE;
-+		rgb_led->component[2].color_id = LED_COLOR_ID_GREEN;
-+		rgb_led->component[3].color_id = LED_COLOR_ID_RED;
-+
-+		/* now looping on each component and registering a corresponding
-+		 * led
-+		 */
-+		for (i = 0; i < 4; i++) {
-+			led = &rgb_led->component[i];
-+			if (led->color_id == -1) {
-+				/* the global brightness has no defined name
-+				 * so setting it to "brightness". It also has
-+				 * a different MAX_BRIGHTNESS value.
-+				 * If a trigger is present, setting it on this
-+				 * component
-+				 */
-+				led->cdev.max_brightness =
-+					GLOBAL_MAX_BRIGHTNESS;
-+				led_component_name = "brightness";
-+				fwnode_property_read_string(child,
-+					"linux,default-trigger",
-+					&led->cdev.default_trigger);
-+			} else {
-+				/* using the color name defined by the framework
-+				 * for the B, G and R components
-+				 */
-+				led->cdev.max_brightness = RGB_MAX_BRIGHTNESS;
-+				led_component_name = led_colors[led->color_id];
-+			}
-+
-+			/* the rest is common to all the components */
-+			led->priv = priv;
-+			led->cdev.brightness_set_blocking =
-+				apa102c_brightness_set;
-+			/* creating our own led name to differentiate the 4
-+			 * components
-+			 */
-+			snprintf(led->name, sizeof(led->name),
-+				 "%s_%s", rgb_led_name, led_component_name);
-+			led->cdev.name = led->name;
-+
-+			ret = devm_led_classdev_register_ext(priv->dev,
-+							     &led->cdev,
-+							     NULL);
-+			if (ret) {
-+				dev_err(priv->dev, "led register err: %d\n",
-+					ret);
-+				goto child_out;
-+			}
-+		}
-+	}
-+
-+child_out:
-+	return ret;
-+}
-+
-+static int apa102c_probe(struct spi_device *spi)
-+{
-+	struct apa102c	*priv;
-+	size_t		led_count;
-+	int		ret;
-+
-+	led_count = device_get_child_node_count(&spi->dev);
-+	if (!led_count) {
-+		dev_err(&spi->dev, "No LEDs defined in device tree!");
-+		return -ENODEV;
-+	}
-+
-+	priv = devm_kzalloc(&spi->dev,
-+			    struct_size(priv, rgb_leds, led_count),
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->spi_buf = devm_kzalloc(&spi->dev,
-+				     (led_count + 2) * sizeof(u32),
-+				      GFP_KERNEL);
-+	if (!priv->spi_buf)
-+		return -ENOMEM;
-+
-+	mutex_init(&priv->lock);
-+	priv->led_count	= led_count;
-+	priv->dev	= &spi->dev;
-+	priv->spi	= spi;
-+
-+	ret = apa102c_probe_dt(priv);
-+	if (ret)
-+		return ret;
-+
-+	/* Set the LEDs with default values at start */
-+	apa102c_sync(priv);
-+	if (ret)
-+		return ret;
-+
-+	spi_set_drvdata(spi, priv);
-+
-+	return 0;
-+}
-+
-+static int apa102c_remove(struct spi_device *spi)
-+{
-+	struct apa102c *priv = spi_get_drvdata(spi);
-+
-+	mutex_destroy(&priv->lock);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id apa102c_dt_ids[] = {
-+	{ .compatible = "shiji,apa102c", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, apa102c_dt_ids);
-+
-+static struct spi_driver apa102c_driver = {
-+	.probe		= apa102c_probe,
-+	.remove		= apa102c_remove,
-+	.driver = {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= apa102c_dt_ids,
-+	},
-+};
-+
-+module_spi_driver(apa102c_driver);
-+
-+MODULE_AUTHOR("Nicolas Belin <nbelin@baylibre.com>");
-+MODULE_DESCRIPTION("apa102c LED driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("spi:apa102c");
--- 
-2.7.4
+That's good, because I'm right now having hard time finding out how to
+calculate the frequencies!
+
+> > Just to try it out (I'll set #clock-cells to 1), I registered a fixed rate
+> > clock in the driver, added a clock provider:
+> > 
+> > adv748x_probe:
+> > 
+> >     clk = clk_register_fixed_rate(state->dev,
+> > 				  "clk-hdmi-i2s-mclk",
+> > 				  NULL     /* parent_name */,
+> > 				  0        /* flags */,
+> > 				  12288000 /* rate */);
+> >     of_clk_add_provider(state->dev->of_node, of_clk_src_simple_get, clk);
+> > 
+> > And removed the audio_clk_c frequency setting. I also replaced the audio_clk_c
+> > in the list of input clocks of the R-Car-side sound card with the phandle of
+> > the adv7482 main node:
+> > 
+> > salvator-common.dtsi:
+> > 
+> >     &i2c4 {
+> > 	status = "okay";
+> > 
+> > 	adv7482_hdmi_decoder: video-receiver@70 {
+> > 	    #clock-cells = <0>; // to be replaced with <1>
+> > 	};
+> >     };
+> > 
+> >     &rcar_sound {
+> > 	clocks = ..., <&adv7482_hdmi_decoder>, ...;
+> >     };
+> > 
+> > As everything continues to work as before, I assume that at least the clock
+> > dependencies were resolved.
+> 
+> This looks good to me.
+
+Ok, I settle on this than.
+
+> > Is there a way to verify that the added input clock is actually used?
+> > IOW, if its frequency is actually has been programmed into the ssi4 (R-Car
+> > receiving hardware) registers, and not just a left-over from previuos attempts
+> > or plain default setting?
+> > 
+> > As the ADV748x devices seem to provide also the clocks for video outputs, will
+> > it make any sense to place the clock definition into the port node?
+> > Or should all provided clocks be indexed in the main device node?
+> 
+> Those clocks are part of the CSI-2 protocol and also don't need to be
+> explicitly controlled. As far as I can tell from a quick check of the
+> ADV7482 documentation, only the I2S MCLK is a general-purpose clock that
+> needs to be exposed.
+
+Thanks, that's good to know!
+
+Do you know, by chance, which of the snd_soc* callbacks should be used to
+implement setting of the MCLK? The one in snd_soc_component_driver or
+snd_soc_dai_driver->ops (snd_soc_dai_ops)?
+
+Or how the userspace interface looks like? Or, if there is no userspace
+interface for this, how the MCLK is supposed to be set? Through mclk-fs?
+
+Regards,
+Alex
 
