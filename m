@@ -2,148 +2,138 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27676C3F2D6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA4BC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E1C24655
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:09:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="foqmJvTU"
+	by mail.kernel.org (Postfix) with ESMTP id 0CFCE2072A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgCFNJW (ORCPT
+        id S1726314AbgCFNKv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:09:22 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:47082 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgCFNJW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 08:09:22 -0500
-Received: by mail-qv1-f68.google.com with SMTP id m2so852764qvu.13
-        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 05:09:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XKKq26i7LXXgJsW46mcbcSbPq8I/xYnL2HpEPyMqw1w=;
-        b=foqmJvTUw2Rd/dJAzqjnhmFuMbsk1LtzLOifzjHgdZQbMzZ0fHXAAsUe/GdCO1ZYAj
-         7Bn2iIOTlWGut2weejRp8AcX3VG/Qn4/y/RQG0WtfMqv+MReV5P5jcMiLxOXdqYalZiA
-         /dVdSm1Sf6SyyIudvVIwFow4eMDAUcfiWaT/zF3cFXtW4JnKM0JErPEQqyhqPtB0Hhdr
-         ol2bHUU9KfkJM+O1Bn3ayXm8dujSMw6pcJy7+pV2WuGXVVhtWpVQF3na2JpDadwaG7Lv
-         FiGiNN5hAg+eY9U2557t7Y1y8aKkxx39cX6l7OgYqp4+v+dicxqKElU/9QEPZ5LM/fig
-         63hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XKKq26i7LXXgJsW46mcbcSbPq8I/xYnL2HpEPyMqw1w=;
-        b=eNhip0omL0DswtwaEdj6OAa8NpXPZo64jXo9W4KIiAoCopvUjukV1Ec10o1a9QYQ2E
-         m2m5v+OeJlD6YFdJm1xcq3S2YOjdBJ3f7ivI0cBnPJBqN6L3OAxuqZoDON0uoHZkczt+
-         ynIvmVu2OHJCT2tXVzW6wCK2lDOvjYoy5Obh/bhAZj6B6unlkx3MeTAPub2pER7DLEQN
-         Si0rJm09/J7gDuAByZ/LJ14mgiFylc8qdJzizHSqT6jPSXCz0w3kWE3eNUOa6YfpApnE
-         XNmDNAIqYaDshfMtQ7d0WvdPhcbmU9xuJ0/ARXq5Trzqci3eRxLfi/hRj9dBx4um0R9u
-         nJyg==
-X-Gm-Message-State: ANhLgQ0FyQVlcSX7ZA/pP6ZS1p0t8YDnvRWKmoMVhf7atkFH2brGxlLC
-        7QXR5ohMpd30nu6WVOLpigJ75Q==
-X-Google-Smtp-Source: ADFU+vtl8tdBNaG32n8uRFCoIw2vjaXoLHT1yzW1F89T5e4eGpjKwith2OB8kDL1Ro6OTXnkI3ffpw==
-X-Received: by 2002:a0c:f5ce:: with SMTP id q14mr2642141qvm.191.1583500160921;
-        Fri, 06 Mar 2020 05:09:20 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id e7sm8754949qtp.0.2020.03.06.05.09.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 06 Mar 2020 05:09:20 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jACj9-0002zi-Hm; Fri, 06 Mar 2020 09:09:19 -0400
-Date:   Fri, 6 Mar 2020 09:09:19 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, will@kernel.org,
-        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
-        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
-        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        iommu@lists.linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        robin.murphy@arm.com, christian.koenig@amd.com
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200306130919.GJ31668@ziepe.ca>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-2-jean-philippe@linaro.org>
- <20200224190056.GT31668@ziepe.ca>
- <20200225092439.GB375953@myrica>
- <20200225140814.GW31668@ziepe.ca>
- <20200228143935.GA2156@myrica>
- <20200228144844.GQ31668@ziepe.ca>
- <20200228150427.GF2156@myrica>
- <20200228151339.GS31668@ziepe.ca>
- <20200306095614.GA50020@myrica>
+        Fri, 6 Mar 2020 08:10:51 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:36494 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgCFNKv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 08:10:51 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id ADBE18030797;
+        Fri,  6 Mar 2020 13:10:48 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qFg444i0-JS6; Fri,  6 Mar 2020 16:10:43 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC peculiarities into account
+Date:   Fri, 6 Mar 2020 16:10:29 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306095614.GA50020@myrica>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 10:56:14AM +0100, Jean-Philippe Brucker wrote:
-> I tried to keep it simple like that: normally mmu_notifier_get() is called
-> in bind(), and mmu_notifier_put() is called in unbind(). 
-> 
-> Multiple device drivers may call bind() with the same mm. Each bind()
-> calls mmu_notifier_get(), obtains the same io_mm, and returns a new bond
-> (a device<->mm link). Each bond is freed by calling unbind(), which calls
-> mmu_notifier_put().
-> 
-> That's the most common case. Now if the process is killed and the mm
-> disappears, we do need to avoid use-after-free caused by DMA of the
-> mappings and the page tables. 
+From: Serge Semin <fancer.lancer@gmail.com>
 
-This is why release must do invalidate all - but it doesn't need to do
-any more - as no SPTE can be established without a mmget() - and
-mmget() is no longer possible past release.
+Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
+peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
+with currently implemented in the kernel DW DMAC driver, but there are some
+peculiarities which must be taken into account in order to have the device
+fully supported.
 
-> So the release() callback, before doing invalidate_all, stops DMA
-> and clears the page table pointer on the IOMMU side. It detaches all
-> bonds from the io_mm, calling mmu_notifier_put() for each of
-> them. After release(), bond objects still exists and device drivers
-> still need to free them with unbind(), but they don't point to an
-> io_mm anymore.
+First of all traditionally we replaced the legacy plain text-based dt-binding
+file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+channels, which alas have different max burst length configuration.
+In particular first two channels may burst up to 128 bits (16 bytes) at a time
+while the rest of them just up to 32 bits. We must make sure that the DMA
+subsystem doesn't set values exceeding these limitations otherwise the
+controller will hang up. In third currently we discovered the problem in using
+the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+natively implemented multi-block LLP transfers support and the SPI-transfer
+length exceeds the max lock size. In this case due to asynchronous handling of
+Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
+overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+the DMAC to asynchronously execute the transfers we'd have to at least warn
+the user of the possible errors.
 
-Why is so much work needed in release? It really should just be
-invalidate all, usually trying to sort out all the locking for the
-more complicated stuff is not worthwhile.
+Finally there is a bug in the algorithm of the nollp flag detection.
+In particular even if DW DMAC parameters state the multi-block transfers
+support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+by the driver true multi-block LLP functionality unusable. This happens cause'
+if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+contiguous multi-block transfers will be only supported. We must take the
+flag into account when detecting the LLP support otherwise the driver just
+won't work correctly.
 
-If other stuff is implicitly relying on the mm being alive and release
-to fence against that then it is already racy. If it doesn't, then why
-bother doing complicated work in release?
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
 
-> > Then you can never get a stale
-> > pointer. Don't worry about exit_mmap().
-> > 
-> > release() is an unusual callback and I see alot of places using it
-> > wrong. The purpose of release is to invalidate_all, that is it.
-> > 
-> > Also, confusingly release may be called multiple times in some
-> > situations, so it shouldn't disturb anything that might impact a 2nd
-> > call.
-> 
-> I hadn't realized that. The current implementation should be safe against
-> it, as release() is a nop if the io_mm doesn't have bonds anymore. Do you
-> have an example of such a situation?  I'm trying to write tests for this
-> kind of corner cases.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Viresh Kumar <vireshk@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-Hmm, let me think. Ah, you have to be using mmu_notifier_unregister()
-to get that race. This is one of the things that get/put don't suffer
-from - but they conversely don't guarantee that release() will be
-called, so it is up to the caller to ensure everything is fenced
-before calling put.
+Serge Semin (5):
+  dt-bindings: dma: dw: Replace DW DMAC legacy bindings with YAML-based
+    one
+  dt-bindings: dma: dw: Add max burst transaction length property
+    bindings
+  dmaengine: dw: Add LLP and block size config accessors
+  dmaengine: dw: Introduce max burst length hw config
+  dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
 
-Jason
+ .../bindings/dma/snps,dma-spear1340.yaml      | 180 ++++++++++++++++++
+ .../devicetree/bindings/dma/snps-dma.txt      |  69 -------
+ drivers/dma/dw/core.c                         |  24 ++-
+ drivers/dma/dw/dw.c                           |   1 +
+ drivers/dma/dw/of.c                           |   9 +
+ drivers/dma/dw/regs.h                         |   3 +
+ include/linux/platform_data/dma-dw.h          |  22 +++
+ 7 files changed, 238 insertions(+), 70 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
+
+-- 
+2.25.1
+
