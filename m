@@ -2,136 +2,127 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EBFC3F2D6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ADBC3F2D4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7323B20866
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C98F20866
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iYyocD4H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MQzuHt74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgCFHX6 (ORCPT
+        id S1726299AbgCFHYC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:23:58 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:32399 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725901AbgCFHX6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 02:23:58 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583479438; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=UBOFURm4ibb/cnoI9dEpQch9qApxzL8zn4xOLlpoH+U=; b=iYyocD4H0bfI54549X9vFx5eTxkmK6B9cIEHmTfJEcQ1ID/NyRrnlEo+RxvRnZYtJI93/lFs
- 2L3nPGvrVLJy0P0C0e4G5QqHV1iqoZc3cjDGoXQ8N74+KUaMjzb8FmZfV28kY64XudpA9vnS
- cfm0HYi8bqz7pZsi4wpcx7JaSTo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e61fa83.7f6e3358cab0-smtp-out-n01;
- Fri, 06 Mar 2020 07:23:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 774A6C432C2; Fri,  6 Mar 2020 07:23:46 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7DC8EC433BA;
-        Fri,  6 Mar 2020 07:23:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7DC8EC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
-        devicetree@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v3 1/4] dt-bindings: Introduce SoC sleep stats bindings
-Date:   Fri,  6 Mar 2020 12:53:29 +0530
-Message-Id: <1583479412-18320-2-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583479412-18320-1-git-send-email-mkshah@codeaurora.org>
-References: <1583479412-18320-1-git-send-email-mkshah@codeaurora.org>
+        Fri, 6 Mar 2020 02:24:02 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36549 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgCFHYB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 02:24:01 -0500
+Received: by mail-wr1-f67.google.com with SMTP id s17so163796wrs.3
+        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 23:23:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=OjSejv2JJ2JWA4MOD2Ua80DTgBsI2ciXKHuKLp62nNQ=;
+        b=MQzuHt74wlVMFLtLf+XKCyFtFiP0OZACrpNL3iDuYk1PsjH7ivfylf6GMedDSpHrA+
+         +rpZXuO/hvi3sao+44yncL5iFWuV/UQzdOU/G/70eilMHfLTv6lV7YayhU3lk9R91tvQ
+         y/jiEZLUI8XuQCSjDX/ypPrWOeYnmU7plRJodOGIr4kCvhvZ6gRolmWNg4aIy66i7NBr
+         IUj/++l6OOlyHGlaRoH74YT6fWJGJY+suLeH8SAqt7xNzQ6xFcAHKBHQ0I/Bb9wcXuXz
+         DZu0FNVzvh9o+7OJ22MnsEgXWX4Cz3r5dWrF1t8ucKlTJuf1J4NGD3RAjM/t6YAwtP/N
+         JJsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=OjSejv2JJ2JWA4MOD2Ua80DTgBsI2ciXKHuKLp62nNQ=;
+        b=GvPRnH29Rum7bb4w86u6PPBEYzHX8cRLlfvsUT8il9DxT5oFGSl4uCSexroyO7BHMM
+         ABGsORLBHJ6wfu0WfhynYSdZLlYRDSxIc4cByw/TeEkAbIvtkgSanW3pwGxh5sA6sTwZ
+         48tY8Sk3jJNYNPOQhVKeWCLX/nrB5g3s0FFVt3B8WrdWMtiDzB57oW4K4KZMmvanXDNP
+         9sTcChEijXvrS9cCdKg00T+Q1bKk8zPw5RZwS3dDoZOGqnzGMJrlumw3EwTHcvADEP8c
+         0e9A7qP8/QR8DjFfvKRO8nI069tb76T+NQcOex2VqWuU+g6WHEuNVGpBuBBVEI7op6et
+         vPhw==
+X-Gm-Message-State: ANhLgQ2kipFrSfTpfjfYjBfje/xOi+uVU2OgUUgSTLCyUOzSWVwjQgR+
+        wPFmYcqFPJAY7nPIPbiT08ZxrQ==
+X-Google-Smtp-Source: ADFU+vufcMPJhoz525ReiJIke606YTgQB9zlW2QHLNkqzTMEKlmjaYtQF2XY4me1raSEbZfX/h8K+Q==
+X-Received: by 2002:adf:ef92:: with SMTP id d18mr2408404wro.193.1583479438509;
+        Thu, 05 Mar 2020 23:23:58 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id v16sm30547928wrp.84.2020.03.05.23.23.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 23:23:58 -0800 (PST)
+Date:   Fri, 6 Mar 2020 07:24:38 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Ikjoon Jang <ikjn@chromium.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v6] dt-bindings: mfd: Convert ChromeOS EC bindings to
+ json-schema
+Message-ID: <20200306072438.GH3332@dell>
+References: <20200305075302.200959-1-ikjn@chromium.org>
+ <199d9fc9-5eba-c135-14a5-e78000859f47@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <199d9fc9-5eba-c135-14a5-e78000859f47@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+On Thu, 05 Mar 2020, Enric Balletbo i Serra wrote:
 
-Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
-SoC sleep stats driver. The driver is used for displaying SoC sleep
-statistic maintained by Always On Processor or Resource Power Manager.
+> Hi Ikjoon,
+> 
+> On 5/3/20 8:53, Ikjoon Jang wrote:
+> > Convert the ChromeOS EC bindings to json-schema.
+> > 
+> > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> > ---
+> > v6: adjust property dependencies, drop duplicated definitions,
+> >     and set additionalProperties
+> > v5: unset additionalProperties
+> > v4: text reflows, add type references, and fix examples
+> > v3: node name changed in rpmsg example
+> > v2: cleanup description, fix typos, remove LPC, and add RPMSG example
+> > ---
+> >  .../devicetree/bindings/mfd/cros-ec.txt       |  76 -----------
+> >  .../devicetree/bindings/mfd/cros-ec.yaml      | 125 ++++++++++++++++++
+> 
+> According to the feedback I received on other patches from Rob, the name of the
+> file should include the vendor, in that case should be google,cros-ec.yaml
+> 
+> I already argued in previous version why I think this should go in
+> bindings/chrome instead of mfd, these bindings correspond to the platform/chrome
+> device not the mfd cros ec device (cros-ec-dev) in MFD, anyway, I don't want to
+> be touchy, but, as is, should go through the Lee Jones tree not our
+> chrome-platform tree. So if Lee is fine with it I'm fine too.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../bindings/soc/qcom/soc-sleep-stats.yaml         | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+Actually these have been reviewed and taken by Rob of late.
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
-new file mode 100644
-index 00000000..7c29c61
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/qcom/soc-sleep-stats.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
-+
-+maintainers:
-+  - Maulik Shah <mkshah@codeaurora.org>
-+  - Lina Iyer <ilina@codeaurora.org>
-+
-+description:
-+  Always On Processor/Resource Power Manager maintains statistics of the SoC
-+  sleep modes involving powering down of the rails and oscillator clock.
-+
-+  Statistics includes SoC sleep mode type, number of times low power mode were
-+  entered, time of last entry, time of last exit and accumulated sleep duration.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,rpmh-sleep-stats
-+      - qcom,rpm-sleep-stats
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  # Example of rpmh sleep stats
-+  - |
-+    rpmh_sleep_stats@c3f0000 {
-+      compatible = "qcom,rpmh-sleep-stats";
-+      reg = <0 0xc3f0000 0 0x400>;
-+    };
-+  # Example of rpm sleep stats
-+  - |
-+    rpm_sleep_stats@4690000 {
-+      compatible = "qcom,rpm-sleep-stats";
-+      reg = <0 0x04690000 0 0x400>;
-+    };
-+...
+> Just another minor change (see below) and looks good to me.
+> 
+> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
