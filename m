@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AB1C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 00:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AE2C3F2D2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 00:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9959E20717
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 00:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB72B2072A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 00:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgCFAWr convert rfc822-to-8bit (ORCPT
+        id S1726173AbgCFAXn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 19:22:47 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:55132 "EHLO gloria.sntech.de"
+        Thu, 5 Mar 2020 19:23:43 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:55212 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgCFAWr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Mar 2020 19:22:47 -0500
+        id S1726128AbgCFAXn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Mar 2020 19:23:43 -0500
 Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1jA0l3-0006jB-1X; Fri, 06 Mar 2020 01:22:29 +0100
+        id 1jA0m2-0006jp-Eh; Fri, 06 Mar 2020 01:23:30 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
 To:     Tobias Schramm <t.schramm@manjaro.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -42,13 +42,12 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         Vasily Khoruzhick <anarsoul@gmail.com>,
-        Emmanuel Vadot <manu@freebsd.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: Add doc for Pine64 Pinebook Pro
-Date:   Fri, 06 Mar 2020 01:22:27 +0100
-Message-ID: <2185162.N5mF8xYTKh@phil>
-In-Reply-To: <20200304213023.689983-2-t.schramm@manjaro.org>
-References: <20200304213023.689983-2-t.schramm@manjaro.org>
+        Emmanuel Vadot <manu@freebsd.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: rockchip: Add initial support for Pinebook Pro
+Date:   Fri, 06 Mar 2020 01:23:29 +0100
+Message-ID: <6168222.Wuk326WHQK@phil>
+In-Reply-To: <20200304213023.689983-3-t.schramm@manjaro.org>
+References: <20200304213023.689983-2-t.schramm@manjaro.org> <20200304213023.689983-3-t.schramm@manjaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="iso-8859-1"
@@ -57,15 +56,12 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Mittwoch, 4. März 2020, 22:30:22 CET schrieb Tobias Schramm:
-> From: Emmanuel Vadot <manu@freebsd.org>
+Am Mittwoch, 4. März 2020, 22:30:23 CET schrieb Tobias Schramm:
+> This commit adds initial dt support for the rk3399 based Pinebook Pro.
 > 
-> Add a compatible for Pine64 Pinebook Pro
-> 
-> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
 
-applied for 5.7, but moved above Rock64 ;-)
+applied for 5.7
 
 Thanks
 Heiko
