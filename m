@@ -2,186 +2,127 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B26C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C6FC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70ED820848
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C2C20848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgCFN0W (ORCPT
+        id S1726167AbgCFN2A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:26:22 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:36984 "EHLO
+        Fri, 6 Mar 2020 08:28:00 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37042 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgCFN0W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 08:26:22 -0500
+        with ESMTP id S1726090AbgCFN2A (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 08:28:00 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4ADCF8030702;
-        Fri,  6 Mar 2020 13:26:20 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 703FC8030704;
+        Fri,  6 Mar 2020 13:27:58 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iCQgWhJFE1LY; Fri,  6 Mar 2020 16:26:19 +0300 (MSK)
+        with ESMTP id g_5CN1YJjStz; Fri,  6 Mar 2020 16:27:57 +0300 (MSK)
 From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
-        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] dt-bindings: hwmon: Add Baikal-T1 PVT sensor bindings
-Date:   Fri, 6 Mar 2020 16:26:03 +0300
-In-Reply-To: <20200306132604.14312-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306132604.14312-1-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 0/7] watchdog: dw_wdt: Take Baikal-T1 DW WDT peculiarities into account
+Date:   Fri, 6 Mar 2020 16:27:40 +0300
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306132620.4ADCF8030702@mail.baikalelectronics.ru>
+Message-Id: <20200306132758.703FC8030704@mail.baikalelectronics.ru>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Serge Semin <fancer.lancer@gmail.com>
 
-Baikal-T1 SoC is equipped with an embedded process, voltage and
-temperature sensor to monitor the chip internal environment like
-temperature, supply voltage and transistors performance.
+There were a few features enabled at the time of the Baikal-T1 SoC DW WDT
+IP synthesis, which weren't taken into account in the DW WDT driver available
+in the kernel. First of all the SoC engineers synthesized the watchdog core
+with WDT_USE_FIX_TOP set to false (don't really know why, but they did).
+Due to this the timer reset values weren't fixed as the driver expected
+but were initialized with a pre-defined values selected by the engineers.
+Secondly the driver expected that the watchdog APB bus and the timer had
+synchronous reference clocks, while Baikal-T1 SoC DW WDT was created with
+asynchronous ones. So the driver should enable two clock devices: APB bus
+clocks and a separate timer reference clock. Finally DW Watchdog Timer is
+capable of generating a pre-timeout interrupt if corresponding config is
+enabled. The problem was that the pre-timeout IRQ happens when the set
+timeout elapses, while the actual WDT expiration and subsequent reboot take
+place in the next timeout. This makes the pre-timeout functionality
+implementation a bit tricky, since in this case we would have to find a
+WDT timeout twice smaller the requested timeout. All of the changes described
+above are provided by the patches in this patchset.
 
-This bindings describes the external Baikal-T1 PVT control interfaces
-like MMIO registers space, interrupt request number and clocks source.
-These are then used by the corresponding hwmon device driver to
-implement the sysfs files-based access to the sensors functionality.
+In addition traditionally we replaced the legacy plain text-based dt-binding
+file with yaml-based one, made some cleanups in the watchdog core code (just
+replaced time-unit numerical literals with corresponding macro) and added
+DebugFS nodes to ease the driver debug procedure.
 
-Signed-off-by: Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
+
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
----
- .../devicetree/bindings/hwmon/be,bt1-pvt.yaml | 100 ++++++++++++++++++
- 1 file changed, 100 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/be,bt1-pvt.yaml
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-watchdog@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-diff --git a/Documentation/devicetree/bindings/hwmon/be,bt1-pvt.yaml b/Documentation/devicetree/bindings/hwmon/be,bt1-pvt.yaml
-new file mode 100644
-index 000000000000..d575d124d538
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/be,bt1-pvt.yaml
-@@ -0,0 +1,100 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2019 BAIKAL ELECTRONICS, JSC
-+#
-+# Baikal-T1 Process, Voltage, Temperature Sensor Device Tree Bindings.
-+#
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/be,bt1-pvt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Baikal-T1 PVT Sensor Device Tree Bindings
-+
-+maintainers:
-+  - Serge Semin <fancer.lancer@gmail.com>
-+
-+description: |
-+  Baikal-T1 SoC provides an embedded process, voltage and temperature
-+  sensor to monitor an internal SoC environment (chip temperature, supply
-+  voltage and process monitor) and on time detect critical situations,
-+  which may cause the system instability and even damages. The IP-block
-+  is based on the Analog Bits PVT sensor, but is equipped with a dedicated
-+  control wrapper, which provides a MMIO registers-based access to the
-+  sensor core functionality (APB3-bus based) and exposes an additional
-+  functions like thresholds/data ready interrupts, its status and masks,
-+  measurements timeout. Its internal structure is depicted on the next
-+  diagram:
-+     Analog Bits core                     Bakal-T1 PVT control block
-+  +--------------------+                  +------------------------+
-+  | Temperature sensor |-+         +------| Sensors control        |
-+  |--------------------| |<---En---|      |------------------------|
-+  | Voltage sensor     |-|<--Mode--| +--->| Sampled data           |
-+  |--------------------| |<--Trim--+ |    |------------------------|
-+  | Low-Vt sensor      |-|           | +--| Thresholds comparator  |
-+  |--------------------| |---Data----| |  |------------------------|
-+  | High-Vt sensor     |-|           | +->| Interrupts status      |
-+  |--------------------| |--Valid--+-+ |  |------------------------|
-+  | Standard-Vt sensor |-+         +---+--| Interrupts mask        |
-+  +--------------------+                  |------------------------|
-+           ^                              | Interrupts timeout     |
-+           |                              +------------------------+
-+           |                                        ^  ^
-+  Rclk-----+----------------------------------------+  |
-+  APB3-------------------------------------------------+
-+
-+  This bindings describes the external Baikal-T1 PVT control interfaces
-+  like MMIO registers space, interrupt request number and clocks source.
-+  These are then used by the corresponding hwmon device driver to
-+  implement the sysfs files-based access to the sensors functionality.
-+
-+properties:
-+  compatible:
-+    const: be,bt1-pvt
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: PVT reference clock.
-+      - description: APB3 interface clock.
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+      - const: pclk
-+
-+  "#thermal-sensor-cells":
-+      description: Baikal-T1 can be referenced as the CPU thermal-sensor.
-+      const: 0
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/mips-gic.h>
-+    #include <dt-bindings/clock/bt1-ccu.h>
-+
-+    pvt: pvt@1F200000 {
-+      compatible = "be,bt1-pvt";
-+      reg = <0x1F200000 0x1000>;
-+      #thermal-sensor-cells = <0>;
-+
-+      interrupts = <GIC_SHARED 31 IRQ_TYPE_LEVEL_HIGH>;
-+
-+      clocks = <&ccu_sys CCU_SYS_PVT_CLK>,
-+               <&ccu_sys CCU_SYS_APB_CLK>;
-+      clock-names = "ref", "pclk";
-+    };
-+...
+Serge Semin (7):
+  dt-bindings: watchdog: dw-wdt: Replace legacy bindings file with
+    YAML-based one
+  dt-bindings: watchdog: dw-wdt: Add watchdog TOPs array property
+  watchdog: watchdog_dev: Use generic msec-per-sec macro
+  watchdog: dw_wdt: Support devices with non-fixed TOP values
+  watchdog: dw_wdt: Support devices with asynch clocks
+  watchdog: dw_wdt: Add pre-timeouts support
+  watchdog: dw_wdt: Add DebugFS files
+
+ .../devicetree/bindings/watchdog/dw_wdt.txt   |  24 -
+ .../bindings/watchdog/snps,dw-wdt.yaml        |  96 ++++
+ drivers/watchdog/dw_wdt.c                     | 460 ++++++++++++++++--
+ drivers/watchdog/watchdog_dev.c               |   4 +-
+ 4 files changed, 523 insertions(+), 61 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+
 -- 
 2.25.1
 
