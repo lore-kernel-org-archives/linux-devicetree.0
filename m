@@ -2,156 +2,125 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C772C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E56BC10F00
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5412070A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652F52084E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nEcPiVzX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQyzRFDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgCFKIW (ORCPT
+        id S1726579AbgCFKUQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:08:22 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:33757 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbgCFKIV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 05:08:21 -0500
-Received: by mail-ua1-f67.google.com with SMTP id 94so499368uat.0
-        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 02:08:19 -0800 (PST)
+        Fri, 6 Mar 2020 05:20:16 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:37453 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFKUQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 05:20:16 -0500
+Received: by mail-yw1-f68.google.com with SMTP id g206so1729977ywb.4;
+        Fri, 06 Mar 2020 02:20:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uNKCod9HWXu3nxzrNq2A6yL231Mu94A886+59BwdSMs=;
-        b=nEcPiVzXVIU3Kib52ncsdTxiBqwhamhygdS+O38NTLUeFv61aJ1sn68iVJc6k7JB7r
-         o/j/pLXeg7SUehGbmsn/QpATLwr7LQLZHvZApBZRExxELPQt213sRW113dkv9Il0TbzN
-         ymGZ/uZahmlGI2HkF99JYMa5ZWivoDErDZL+qUPAeu9fb6lEsWWejI5H2DoH1SvahW8D
-         KVsWYpzheANfyigtJZ8q6TipmSY1e30WUruYvr3nRpgkGAKSYDPF4JeR3QLQ1UjITByX
-         QTyh6GXV7tFacA2/ugy49rkZl8Ute2lZfcgMiqmbpl1lmSPwNRJXlr3Jk+Zce1xc/4Fa
-         jzOQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JZtPV4lyilADfqy1eD7YIQ/XfyrDcGPt4PIlFlX/erI=;
+        b=bQyzRFDo+Vb/MswGw+eHElqyqGb3zJ0MWFv0WK6p0ACeczEHSnMryHED7qFSgioL1u
+         ZrXaPm0ePM6GoyFxEkW+IRFcu18hwLzdLW4X3oME9tiS72gbt9P5EBimS/62i8QBQjTY
+         IyL0P29Zjat1c2UWDQcdCMS2LCdflmaEc+LzAdD3ATQOtCmX2lu1Hn+m1QS8uK5L+sJ9
+         9Fks3eEusAer9qGOilctBHANj11MWxnB6W3eIXNjrf3So6IDXOeY+Rs992jHykbD8Pcs
+         U5fajFIk5S/WaQre6PSWpN21cJSE0D2dkxfBZlZ8ax55G67e23jIkvFZIMgwx5WhkFuq
+         gznQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uNKCod9HWXu3nxzrNq2A6yL231Mu94A886+59BwdSMs=;
-        b=G7TLRxXDVcdYxQApXVHREnoSyex8LquM8BhIAKPPGDYUOmTMYZrfgFpAyzw8FpMfUM
-         K2D8XMxjq34lNCm2zeoFxkeJ58XcYKZPlJnEuBvkCoZYfG5KLFWRskKoW60E4/VZ+pdF
-         zbr4XvlJnWWrCl8TDXe67rPwSCmNArUQ3LIABRZOoJkOMG3ADJ22TV+v1CeBOeNGcGei
-         oGLluKjcoApB1caR4RJidrZFzYE8ePSFvZysnqJeII5Vwwdk4sgd41WJLVsCQ2+ACg/L
-         7/yS1iGvjXHQxbjpeCKjcpJ4G7zDHCMXGnufvJgGpK+GdtW5MOaLBqzVsTKjv3Iz8zOm
-         xA/w==
-X-Gm-Message-State: ANhLgQ0r8OOa2/7vTczkS73dWwVnenjgfgu7q33nHATsbt620/wK/ioi
-        tQT4DK+AhhH+2vSJx8Xp09mkryjw/fHUGiDqK8SfGA==
-X-Google-Smtp-Source: ADFU+vsPFcu0IamYO7zcUHclxL6+QOvOPAC3udRj76VGvSDRr2MgjVWcGiwDFu6MaHE/Uqw+4BybbwlP2HJccNuaWOc=
-X-Received: by 2002:ab0:7802:: with SMTP id x2mr1248889uaq.100.1583489298936;
- Fri, 06 Mar 2020 02:08:18 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JZtPV4lyilADfqy1eD7YIQ/XfyrDcGPt4PIlFlX/erI=;
+        b=CEFn6wpHr1mza7WLj8HwsElrCLSDbV7FaeD2KXMnK9Rkp+vAl9NrBtw3jBp04RWrwy
+         U97bknHSXy12dwlWjR7C/19GY3CeeZwAxWiXG06tXcmWXQ0ZwPquuSKc7RwbOECKfksk
+         FSA0Fl/m6HWzarVl/6G/A7IGD/IgMCjQltSvpJ560UG1IBjJItzO9kBpnhtI0KtXJ/oM
+         PCjdpGg/yFhJpGA+GgP5kU2Hmm3o7wqC/+5Z1S0Et4hamh54FucVfJWrad6SlO0Ce1xl
+         uo/BhqCgejz6GO4bD+h1LYBUUlgbe/t1483G2oiGNaeQhPBi/KBjYI7fqM/T9+jHJVuB
+         FDfQ==
+X-Gm-Message-State: ANhLgQ2wM62ZFpFN0IWu8Ss65K8pH3hvbj7sQfxIrZicOywXHbgyV/oq
+        LVgqktCTCq5J5z8X7A9580k=
+X-Google-Smtp-Source: ADFU+vteD7dUx1U48uUDIL7XDGNdrDmdW0/Uf18cgj4qg//uICALRMG5MYEWvbGkTm+FC7YAoWjqEA==
+X-Received: by 2002:a81:5e09:: with SMTP id s9mr3248359ywb.348.1583490014862;
+        Fri, 06 Mar 2020 02:20:14 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id p2sm13978658ywd.58.2020.03.06.02.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 02:20:14 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+        Han Xu <han.xu@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V3] arm64: dts: enable fspi in imx8mm dts
+Date:   Fri,  6 Mar 2020 04:19:57 -0600
+Message-Id: <20200306101957.1229406-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
- <CAPDyKFqSJ4h7UvQfQzWmSq9gg97A0MXvdcuXXaY7b-YUHs=V2g@mail.gmail.com> <158334039680.7173.16159724456027777605@swboyd.mtv.corp.google.com>
-In-Reply-To: <158334039680.7173.16159724456027777605@swboyd.mtv.corp.google.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 6 Mar 2020 11:07:41 +0100
-Message-ID: <CAPDyKFqecH=AsvtN+JMxdk6pY2dntWUrhUWF6LEq_DLCcPe6pw@mail.gmail.com>
-Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
- of sdhci-msm platform driver
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Ram Prakash Gupta <rampraka@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 17:46, Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Ulf Hansson (2020-03-04 07:34:29)
-> > On Thu, 20 Feb 2020 at 07:45, Shaik Sajida Bhanu <sbhanu@codeaurora.org> wrote:
-> > >
-> > > The existing suspend/resume callbacks of sdhci-msm driver are just
-> > > gating/un-gating the clocks. During suspend cycle more can be done
-> > > like disabling controller, disabling card detection, enabling wake-up events.
-> > >
-> > > So updating the system pm callbacks for performing these extra
-> > > actions besides controlling the clocks.
-> > >
-> > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > ---
-> > > Changes since V3:
-> > >     Invoking sdhci & cqhci resume if sdhci_host_suspend fails.
-> > >     Removed condition check before invoking cqhci_resume since its a dummy function.
-> > >
-> > > Changes since V2:
-> > >     Removed disabling/enabling pwr-irq from system pm ops.
-> > >
-> > > Changes since V1:
-> > >     Invoking pm_runtime_force_suspend/resume instead of
-> > >     sdhci_msm_runtime_suepend/resume.
-> > > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> > > index 3955fa5d..3559b50 100644
-> > > --- a/drivers/mmc/host/sdhci-msm.c
-> > > +++ b/drivers/mmc/host/sdhci-msm.c
-> > > @@ -2159,9 +2159,52 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
-> [...]
-> > > +
-> > > +       ret = sdhci_suspend_host(host);
-> > > +       if (ret)
-> > > +               goto resume_cqhci;
-> >
-> > sdhci_suspend_host() can't be called on a device that has been runtime
-> > suspended, as that would lead to accessing device registers when
-> > clocks/PM domains are gated.
-> >
-> > Depending on how the corresponding cqhci device is managed from a
-> > runtime PM point of view, it could also be problematic to call
-> > cqhci_suspend().
->
-> There seems to be another patch floating around here[1] that is an
-> attempt at a fix to this patch. They should probably be combined so that
-> it's not confusing what's going on.
+Pull in upstream patch from NXP repo to:
+enable fspi in imx8mm DT file
 
-Yeah, it would be easier if these are discussed together.
+Signed-off-by: Han Xu <han.xu@nxp.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+---
+V3: Move flexspi to order the unit address.
+V2: Reorder s-o-b lines to give credit in proper order.
 
->
-> >
-> > > +
-> > > +       ret = pm_runtime_force_suspend(dev);
-> >
-> > It looks to me that perhaps you could make use of solely
-> > pm_runtime_force_suspend(), then just skip calling
-> > sdhci_suspend|resume_host() altogether. Do you think that could work?
->
-> Does that do all the things the commit text mentions is desired for
-> system suspend?
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 1e5e11592f7b..7e6c0722afa6 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -558,7 +558,8 @@ aips3: bus@30800000 {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges = <0x30800000 0x30800000 0x400000>;
++			ranges = <0x30800000 0x30800000 0x400000>,
++				 <0x8000000 0x8000000 0x10000000>;
+ 
+ 			ecspi1: spi@30820000 {
+ 				compatible = "fsl,imx8mm-ecspi", "fsl,imx51-ecspi";
+@@ -760,6 +761,19 @@ usdhc3: mmc@30b60000 {
+ 				status = "disabled";
+ 			};
+ 
++			flexspi: spi@30bb0000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "nxp,imx8mm-fspi";
++				reg = <0x30bb0000 0x10000>, <0x8000000 0x10000000>;
++				reg-names = "fspi_base", "fspi_mmap";
++				interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_QSPI_ROOT>,
++					 <&clk IMX8MM_CLK_QSPI_ROOT>;
++				clock-names = "fspi", "fspi_en";
++				status = "disabled";
++			};
++
+ 			sdma1: dma-controller@30bd0000 {
+ 				compatible = "fsl,imx8mm-sdma", "fsl,imx8mq-sdma";
+ 				reg = <0x30bd0000 0x10000>;
+-- 
+2.25.0
 
-No. :-)
-
-But why is system wakeup needed for an eMMC card?
-
->
-> > > like disabling controller, disabling card detection, enabling wake-up events.
->
-> [1] https://lore.kernel.org/linux-arm-msm/1583322863-21790-1-git-send-email-vbadigan@codeaurora.org/
-
-Kind regards
-Uffe
