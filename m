@@ -2,164 +2,128 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016A6C3F2D6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9F5C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE67920848
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E3B20848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Rxnahfru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgCFK6F (ORCPT
+        id S1726185AbgCFK7D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:58:05 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:42968 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbgCFK6E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 05:58:04 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026AsW7f025136;
-        Fri, 6 Mar 2020 05:58:02 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52jr3m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 05:58:02 -0500
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 026Aw0NJ038786
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 6 Mar 2020 05:58:01 -0500
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 6 Mar 2020 02:57:59 -0800
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 6 Mar 2020 02:57:59 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 6 Mar 2020 02:57:59 -0800
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 026Avuwn023157;
-        Fri, 6 Mar 2020 05:57:57 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v8 0/8] iio: adi-axi-adc,ad9647: Add support for AD9467 ADC
-Date:   Fri, 6 Mar 2020 13:00:52 +0200
-Message-ID: <20200306110100.22092-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Mar 2020 05:59:03 -0500
+Received: from mout.gmx.net ([212.227.17.22]:33151 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbgCFK7C (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 05:59:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1583492337;
+        bh=kuyvtVf1FO6LxH5diXT7XM0zj9zhQlps+gmZqb1gbrU=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=RxnahfruR9TaTAw3hDrZVCKsoV9p8qDnQR/foPPk817OrF0gMoFgeZaHTQGFn4zMB
+         /yUkkWmX/W3xGz63IfjPxPqpespnVflyL0AkMlFLwSJYs+bSCcZDflHS/bo3s8TjS6
+         LZKaCqr5e7maaHO126pYRwQKsyOEYnYxoz72tHsg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.201]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mt79F-1jURXE17BB-00tR7j; Fri, 06
+ Mar 2020 11:58:57 +0100
+Date:   Fri, 6 Mar 2020 11:58:56 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: cros-ec: Fix indentation in the example
+Message-ID: <20200306105856.GC2376@latitude>
+References: <20200305223631.27550-1-j.neuschaefer@gmx.net>
+ <32848672-85ab-5ed2-731c-bfd4dfa62760@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_03:2020-03-06,2020-03-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
- impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003060078
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
+Content-Disposition: inline
+In-Reply-To: <32848672-85ab-5ed2-731c-bfd4dfa62760@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:l//dY32oPOvq4IGyJ0ElGcieLs6OXSQ/K01CiZeQTDxAkxrH6tl
+ jMq+m7gufeBLjddkRrhNEZU3Jur695WDaEbiR99/Q4/xUfBxjiOJ9CdbJGS3Ude6xWgcLTS
+ t7MqMWg1AMR2bVHRVA42g6+0RCNKGzq3n8K2whaTCZrFzw0l8pL08LhKy5uNK9hxvuv4nCh
+ JN8sjdyKD7tdbVWR2NF6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nfhchYzS+Ug=:ztBB6afWMeKU0ebrRI2/9M
+ upVcaI6A0E6dYcfjY40fWwYAUhRyLpEqlb/BZUaX1f/fP3gjBjj6BrcWJiZo+lElA7AvJPFmv
+ CSMul3ooKercjhOz7F5XBJE9nLLrw8k2cQuConaslxhfe6Rw2kDrqHUk0qQEM5iD3M+2zWypS
+ J1vQj+mSgxpDH0SSI/A+0/Uokgjf85W5Iv4FZX1CHGG42FUB0omOH+/Dy2hol6ftl+4QfvVbD
+ 210tPiBUOI11y9g2HvT/jWWWfuQWOxZe0Qt7TWZxsAV5+x6iAxXNyXZnXPUX4hdY8mYZ4wtVZ
+ zgBETyX0x5uSyfARZIxIwGb8m0fhLvvcHGllDaKhrT7rPQDgEGUoh0xJe0dzT5UnVIs+hYSsO
+ OmT9MasttE+XWW3zJO33/Ab8OHsa6AXhQei+MdqSjGmiqkNgB1cq+DmuQSjosaZdsw1DCpXfv
+ wvRhOdBLS7K2zJ3Ut+jryv39Tb71Gq5jlEKkX4XQp7YgnW9pB9ySqUDaqgZVtF3KwHuyw1hhB
+ 10zTI8NI+8iIq6JiN0fEny46a4O7Rm7ZJQT/+tBb725JGUTyVpLkL3aGT3+68sHG6CPqQ6ikJ
+ n/FYoHiqpw5w7vnbc0sSeSbTvqUyfSNqcv/LgH43FSJwCUmNNnaRTLmYZgTaH7rUWJp0L5gmE
+ 5ohtw9YrIx31oR53UQJfJ9zJLIv5n3AvhM3BcO0yqODQyUfmOyANhXSLEJyjO4brL+iwNZ+Sk
+ tGL3LwbRn+naDmvcre4m8ZuPgKjr610D/Nzucv01xFvnP+MEAqsqyFEgfizSQrdQNJP5ZfVJj
+ 66WKh1NVX59lLk4jlV/5AliviK0KH2IFDsID5OKmN1tuIkelAfZQEqcoeShpCGJVMZ+6l1pXD
+ KhDwjagxNuh9vm+Q5zczQFM73/peMQsXeapDAaleHxU4MxYBYGkmnfepz/ASk5ymNvANpli2k
+ pghVA6GANc0AovLgTSdTRmyH1NzDs2572fSsft2rAjrmLG4zGUSYJF//9pYy8FS9UZkDLeTTV
+ FkFoMH/DszGOSXsHnemz+FOpo8VtZyY+VRfIH8OHrTV0DO4CoQnAWiQhl71sTmXVvqZwK77ji
+ NneCYDhR41/8R95DG4ogB23QrdZ062GfPxpUsEm0Dn+ha8QEWnsY6vksKpHpPW89VaB8ZcKUC
+ oH17p9RLrSy82IWyihIzn+yOvJTRhoy320h6JHxIGKy/flgIjXKQnk4GHo3adG87KmTMixDzU
+ 66E9wu8h9ebTaeEdM
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This changeset adds support for the AD9467 LVDS High-Speed ADC.
-In order to support it, support for an FPGA ADI AXI ADC is added in this
-set.
-This uses the current support for IIO buffer DMAEngine.
 
-Changelog v7 -> v8:
-* in 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
-  - updated register definitions and bits to newer format/docs; the ref driver wasn't really up-to-date
-    -- prefixed bit names with reg-name to avoid bit definition colisions; that makes some macros longer, but at least the format is consistent
-  - using dev_name(&pdev->dev) for indio_dev->name
-  - moved reset to own axi_adc_reset() function; may be re-used later
-  - some re-formatting/alignment changes
-  - address ENOSYS checkpatch complaint; changed with EOPNOTSUPP
+--cmJC7u66zC7hs+87
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changelog v6 -> v7:
-* Fixed dt-schema build for adi,axi-adc.yaml based on Rob's suggestion
-  - added '$ref: /schemas/types.yaml#/definitions/phandle' to 'adi,adc-dev'
-  - dropped 'maxItems' from 'adi,adc-dev'
+On Fri, Mar 06, 2020 at 10:07:31AM +0100, Enric Balletbo i Serra wrote:
+> Hi Jonathan,
+>=20
+> On 5/3/20 23:36, Jonathan Neusch=C3=A4fer wrote:
+> > Properties get one more level of indentation than the node they are in.
+> >=20
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/cros-ec.txt | 6 +++---
+>=20
+> Thanks for sending the patch but the binding is in process to be converte=
+d to
+> json-schema right now [1], and this change will not be needed.
 
-Changelog v5 -> v6
-* fix URLs; got changed during rename
-   https://wiki.analog.com/resources/fpga/docs/adi_axi_adc_ip ->
-   https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-  - noticed while working on the AXI DAC driver
+Alright!
 
-Changelog v4 -> v5:
-* update drivers/iio/adc/Kconfig note about module name; omitted during first rename
-   - 'module will be called axi-adc.' -> 'module will be called adi-axi-adc.'
 
-Changelog v3 -> v4:
-* addressed Rob's dt-remarks
-   - change 'adi-axi-adc-client' prop to 'adi,adc-dev'
+Jonathan
 
-Changelog v2 -> v3:
-* addressed compiler warning
+--cmJC7u66zC7hs+87
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Changelog v1 -> v2:
-* first series was added a bit hastily
-* addressed  'make dt_binding_check' complaints; seems I missed a few when running the check; 
-* added missing patches to include/linux/fpga/adi-axi-common.h
-   - 'include: fpga: adi-axi-common.h: fixup whitespace tab -> space'
-   - 'include: fpga: adi-axi-common.h: add version helper macros'
-* patch 'iio: buffer-dmaengine: add dev-managed calls for buffer alloc/free'
-   - remove copy+pasted comment for 'devm_iio_dmaengine_buffer_alloc()'
-   - removed devm_iio_dmaengine_buffer_free() ; hopefully it might never be needed
-   - fix-up alignment for devm_iio_dmaengine_buffer_alloc() in header
-* patch 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
-   - renamed axi-adc.c -> adi-axi-adc.c & Kconfig symbol
-   - prefix all axi_adc -> adi_axi_adc
-   - removed switch statement in axi_adc_read_raw() & axi_adc_write_raw()
-   - remove axi_adc_chan_spec ; replaced with iio_chan_spec directly ; will think of a simpler solution for extra chan params
-   - removed left-over 'struct axi_adc_cleanup_data'
-   - moved 'devm_add_action_or_reset()' call right after 'adi_axi_adc_attach_client()'
-   - switched to using 'devm_platform_ioremap_resource()'
-* patch 'iio: adc: ad9467: add support AD9467 ADC'
-  - renamed ADI_ADC reg prefixes to AN877_ADC
-  - dropped 'info_mask_separate' field in AD9467_CHAN - will be re-added later when driver gets more features; was left-over from the initial ref driver
-  - remove .shift = 0,  in AD9467_CHAN
-  - renamed 'sample-clock' -> 'adc-clock'
-  - direct returns in ad9467_read_raw() & ad9467_write_raw() & ad9467_setup() switch statements
-  - removed blank line after devm_axi_adc_conv_register()
-  - removed ad9467_id & reworked to use ad9467_of_match
-Alexandru Ardelean (6):
-  include: fpga: adi-axi-common.h: fixup whitespace tab -> space
-  include: fpga: adi-axi-common.h: add version helper macros
-  iio: buffer-dmaengine: use %zu specifier for sprintf(align)
-  iio: buffer-dmaengine: add dev-managed calls for buffer alloc
-  dt-bindings: iio: adc: add bindings doc for AXI ADC driver
-  dt-bindings: iio: adc: add bindings doc for AD9467 ADC
+-----BEGIN PGP SIGNATURE-----
 
-Michael Hennerich (2):
-  iio: adc: adi-axi-adc: add support for AXI ADC IP core
-  iio: adc: ad9467: add support AD9467 ADC
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl5iLPAACgkQCDBEmo7z
+X9up7A//dlfuIqCNhvRSO76nhi7XPY2dbDiukYmO3bWzTeSoFjp1+qE7fJd9ox7m
+jrh6sl90RCP7TbfGSq8eOJ4e7MIQpF14XmBCns+pqrewGH3cDm41wyTlnYyXXeh0
+Jyg+k+h+0qtSgWtC0S/Y4eqzv7d5pORXNc4i48KeOmlNoyUHX/YnTM89oBuJ13R6
+B/RoXC0lAl39fuvT+x6cKoNfCeB5p82+//bIEGnZcOW8Tu6yc+OdOTtPv4JgSKhi
+D79Ti4bqzaD7KxNpGbFHFeWn7VV4fKDB7eKG+pYMAWh3TN0UB4Y5oSZN7NSG3Vz/
+ZCOHYpSzIVc/q9QDvhDXAg9XLKt8kL/lHtLd9cyJCWdNiCjvuYjwkk9TkUgd3YyU
+Fgo4RmH8fiPM0+sZKG4NOK/BUNNslM0RuLmsHRaLewIx9wgzGM7NFJPJxmP5qdN0
+qks5Qtt7JLUtzgStXl9tEPByxs/JUhn5zVq9MJz9V/ceWUZAYEEwb0vAhKWgFA+m
+IFfclflG+UCckKNxEWuiX/yww/uOfSlBGO8JpyiPWu2Vb5Etnu/J6r9psvkTqWC2
+/zKS5L3aXLW5gw+WUmprtPDrkqwP4QWG9OcBfkRBB/cVOrPq7tU/yKVq2qZ5XlHf
+gbGmTwqENNNio6gv2OpwyCXnangWXjqSbdGPNapM5ny4Fl2fgdk=
+=1HWf
+-----END PGP SIGNATURE-----
 
- .../bindings/iio/adc/adi,ad9467.yaml          |  65 ++
- .../bindings/iio/adc/adi,axi-adc.yaml         |  63 ++
- drivers/iio/adc/Kconfig                       |  35 +
- drivers/iio/adc/Makefile                      |   2 +
- drivers/iio/adc/ad9467.c                      | 432 ++++++++++++
- drivers/iio/adc/adi-axi-adc.c                 | 618 ++++++++++++++++++
- .../buffer/industrialio-buffer-dmaengine.c    |  41 +-
- include/linux/fpga/adi-axi-common.h           |   6 +-
- include/linux/iio/adc/adi-axi-adc.h           |  63 ++
- include/linux/iio/buffer-dmaengine.h          |   3 +
- 10 files changed, 1326 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
- create mode 100644 drivers/iio/adc/ad9467.c
- create mode 100644 drivers/iio/adc/adi-axi-adc.c
- create mode 100644 include/linux/iio/adc/adi-axi-adc.h
-
--- 
-2.20.1
-
+--cmJC7u66zC7hs+87--
