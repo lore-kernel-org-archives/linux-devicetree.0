@@ -2,330 +2,111 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04C4C10F26
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A92EC10F26
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FAC2084E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583495391;
-	bh=QT7chaIcpIKaXbYWCdy+77ofMpMDRDGRvvTu75QlMnM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aY0skJlGriOB0xEDSgKWazwUQtO+x392NXkJ6hYF6RIiJLBzUJzX/A/TAWPJkrKdg
-	 FSNRZoCuAAqPIb1IZW1TViY0wTZ3vp1vnqhKv3TzGD3Xa9sffoVahWEmTGYe9Cw7NC
-	 JBOg3BYKQz5qabFIrenkkn3NvcxkLXrym6LtgYlQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0CA1B2084E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCFLtt (ORCPT
+        id S1726861AbgCFLwC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:49:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgCFLts (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:49:48 -0500
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E90582072A;
-        Fri,  6 Mar 2020 11:49:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583495387;
-        bh=QT7chaIcpIKaXbYWCdy+77ofMpMDRDGRvvTu75QlMnM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n/6EQCf54zDryvHFtcOyjbYpRReGsUEpHCLrRBhgBozy0gXd5/YPk5svKHVwt4oee
-         R2Hvml+CGY9GdfiNWysYtW0tgUNf0MvADD9PrhE1S/zXc+fcAM1OcLiBPvjKid3A65
-         5ctG6XWqNyUK4vrwqf6fuguZ2POzWs+eSnY+PblU=
-Date:   Fri, 6 Mar 2020 13:49:41 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        David Miller <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dcbw@redhat.com>,
-        Evan Green <evgreen@google.com>,
-        Eric Caruso <ejcaruso@google.com>,
-        Susheel Yadav Yadagiri <syadagir@codeaurora.org>,
-        Chaitanya Pratapa <cpratapa@codeaurora.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/17] remoteproc: add IPA notification to q6v5 driver
-Message-ID: <20200306114941.GO184088@unreal>
-References: <20200306042831.17827-1-elder@linaro.org>
- <20200306042831.17827-2-elder@linaro.org>
+        Fri, 6 Mar 2020 06:52:02 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:54240 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726054AbgCFLwB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 06:52:01 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026BkpbQ032442;
+        Fri, 6 Mar 2020 06:51:58 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2yfnrax45h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Mar 2020 06:51:58 -0500
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 026BpuTe044776
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 6 Mar 2020 06:51:57 -0500
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 6 Mar 2020
+ 03:51:55 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 6 Mar 2020 03:51:55 -0800
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 026Bpnp8026743;
+        Fri, 6 Mar 2020 06:51:52 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-fpga@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <nios2-dev@lists.rocketboards.org>
+CC:     <ley.foon.tan@intel.com>, <robh+dt@kernel.org>, <mdf@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 2/2] arch: nios2: remove 'resetvalue' property
+Date:   Fri, 6 Mar 2020 13:54:50 +0200
+Message-ID: <20200306115450.3352-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200306115450.3352-1-alexandru.ardelean@analog.com>
+References: <20200306115450.3352-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306042831.17827-2-elder@linaro.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-06_03:2020-03-06,2020-03-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=626 bulkscore=0
+ adultscore=1 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ malwarescore=0 clxscore=1015 spamscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060085
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 10:28:15PM -0600, Alex Elder wrote:
-> Set up a subdev in the q6v5 modem remoteproc driver that generates
-> event notifications for the IPA driver to use for initialization and
-> recovery following a modem shutdown or crash.
->
-> A pair of new functions provides a way for the IPA driver to register
-> and deregister a notification callback function that will be called
-> whenever modem events (about to boot, running, about to shut down,
-> etc.) occur.  A void pointer value (provided by the IPA driver at
-> registration time) and an event type are supplied to the callback
-> function.
->
-> One event, MODEM_REMOVING, is signaled whenever the q6v5 driver is
-> about to remove the notification subdevice.  It requires the IPA
-> driver de-register its callback.
->
-> This sub-device is only used by the modem subsystem (MSS) driver,
-> so the code that adds the new subdev and allows registration and
-> deregistration of the notifier is found in "qcom_q6v6_mss.c".
->
-> Signed-off-by: Alex Elder <elder@linaro.org>
-> ---
->  drivers/remoteproc/Kconfig                    |  6 ++
->  drivers/remoteproc/Makefile                   |  1 +
->  drivers/remoteproc/qcom_q6v5_ipa_notify.c     | 85 +++++++++++++++++++
->  drivers/remoteproc/qcom_q6v5_mss.c            | 38 +++++++++
->  .../linux/remoteproc/qcom_q6v5_ipa_notify.h   | 82 ++++++++++++++++++
->  5 files changed, 212 insertions(+)
->  create mode 100644 drivers/remoteproc/qcom_q6v5_ipa_notify.c
->  create mode 100644 include/linux/remoteproc/qcom_q6v5_ipa_notify.h
->
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index de3862c15fcc..56084635dd63 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -167,6 +167,12 @@ config QCOM_Q6V5_WCSS
->  	  Say y here to support the Qualcomm Peripheral Image Loader for the
->  	  Hexagon V5 based WCSS remote processors.
->
-> +config QCOM_Q6V5_IPA_NOTIFY
-> +	tristate
-> +	depends on QCOM_IPA
-> +	depends on QCOM_Q6V5_MSS
-> +	default QCOM_IPA
-> +
->  config QCOM_SYSMON
->  	tristate "Qualcomm sysmon driver"
->  	depends on RPMSG
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index e30a1b15fbac..0effd3825035 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -21,6 +21,7 @@ obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
->  obj-$(CONFIG_QCOM_Q6V5_MSS)		+= qcom_q6v5_mss.o
->  obj-$(CONFIG_QCOM_Q6V5_PAS)		+= qcom_q6v5_pas.o
->  obj-$(CONFIG_QCOM_Q6V5_WCSS)		+= qcom_q6v5_wcss.o
-> +obj-$(CONFIG_QCOM_Q6V5_IPA_NOTIFY)	+= qcom_q6v5_ipa_notify.o
->  obj-$(CONFIG_QCOM_SYSMON)		+= qcom_sysmon.o
->  obj-$(CONFIG_QCOM_WCNSS_PIL)		+= qcom_wcnss_pil.o
->  qcom_wcnss_pil-y			+= qcom_wcnss.o
-> diff --git a/drivers/remoteproc/qcom_q6v5_ipa_notify.c b/drivers/remoteproc/qcom_q6v5_ipa_notify.c
-> new file mode 100644
-> index 000000000000..e1c10a128bfd
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_q6v5_ipa_notify.c
-> @@ -0,0 +1,85 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Qualcomm IPA notification subdev support
-> + *
-> + * Copyright (C) 2019 Linaro Ltd.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/remoteproc.h>
-> +#include <linux/remoteproc/qcom_q6v5_ipa_notify.h>
-> +
-> +static void
-> +ipa_notify_common(struct rproc_subdev *subdev, enum qcom_rproc_event event)
-> +{
-> +	struct qcom_rproc_ipa_notify *ipa_notify;
-> +	qcom_ipa_notify_t notify;
-> +
-> +	ipa_notify = container_of(subdev, struct qcom_rproc_ipa_notify, subdev);
-> +	notify = ipa_notify->notify;
-> +	if (notify)
-> +		notify(ipa_notify->data, event);
-> +}
-> +
-> +static int ipa_notify_prepare(struct rproc_subdev *subdev)
-> +{
-> +	ipa_notify_common(subdev, MODEM_STARTING);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ipa_notify_start(struct rproc_subdev *subdev)
-> +{
-> +	ipa_notify_common(subdev, MODEM_RUNNING);
-> +
-> +	return 0;
-> +}
-> +
-> +static void ipa_notify_stop(struct rproc_subdev *subdev, bool crashed)
-> +
-> +{
-> +	ipa_notify_common(subdev, crashed ? MODEM_CRASHED : MODEM_STOPPING);
-> +}
-> +
-> +static void ipa_notify_unprepare(struct rproc_subdev *subdev)
-> +{
-> +	ipa_notify_common(subdev, MODEM_OFFLINE);
-> +}
-> +
-> +static void ipa_notify_removing(struct rproc_subdev *subdev)
-> +{
-> +	ipa_notify_common(subdev, MODEM_REMOVING);
-> +}
-> +
-> +/* Register the IPA notification subdevice with the Q6V5 MSS remoteproc */
-> +void qcom_add_ipa_notify_subdev(struct rproc *rproc,
-> +		struct qcom_rproc_ipa_notify *ipa_notify)
-> +{
-> +	ipa_notify->notify = NULL;
-> +	ipa_notify->data = NULL;
-> +	ipa_notify->subdev.prepare = ipa_notify_prepare;
-> +	ipa_notify->subdev.start = ipa_notify_start;
-> +	ipa_notify->subdev.stop = ipa_notify_stop;
-> +	ipa_notify->subdev.unprepare = ipa_notify_unprepare;
-> +
-> +	rproc_add_subdev(rproc, &ipa_notify->subdev);
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_add_ipa_notify_subdev);
-> +
-> +/* Remove the IPA notification subdevice */
-> +void qcom_remove_ipa_notify_subdev(struct rproc *rproc,
-> +		struct qcom_rproc_ipa_notify *ipa_notify)
-> +{
-> +	struct rproc_subdev *subdev = &ipa_notify->subdev;
-> +
-> +	ipa_notify_removing(subdev);
-> +
-> +	rproc_remove_subdev(rproc, subdev);
-> +	ipa_notify->notify = NULL;	/* Make it obvious */
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_remove_ipa_notify_subdev);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Qualcomm IPA notification remoteproc subdev");
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index a1cc9cbe038f..f9ccce76e44b 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -22,6 +22,7 @@
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/remoteproc.h>
-> +#include "linux/remoteproc/qcom_q6v5_ipa_notify.h"
->  #include <linux/reset.h>
->  #include <linux/soc/qcom/mdt_loader.h>
->  #include <linux/iopoll.h>
-> @@ -201,6 +202,7 @@ struct q6v5 {
->  	struct qcom_rproc_glink glink_subdev;
->  	struct qcom_rproc_subdev smd_subdev;
->  	struct qcom_rproc_ssr ssr_subdev;
-> +	struct qcom_rproc_ipa_notify ipa_notify_subdev;
->  	struct qcom_sysmon *sysmon;
->  	bool need_mem_protection;
->  	bool has_alt_reset;
-> @@ -1540,6 +1542,39 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
->  	return 0;
->  }
->
-> +#if IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY)
-> +
-> +/* Register IPA notification function */
-> +int qcom_register_ipa_notify(struct rproc *rproc, qcom_ipa_notify_t notify,
-> +			     void *data)
-> +{
-> +	struct qcom_rproc_ipa_notify *ipa_notify;
-> +	struct q6v5 *qproc = rproc->priv;
-> +
-> +	if (!notify)
-> +		return -EINVAL;
-> +
-> +	ipa_notify = &qproc->ipa_notify_subdev;
-> +	if (ipa_notify->notify)
-> +		return -EBUSY;
-> +
-> +	ipa_notify->notify = notify;
-> +	ipa_notify->data = data;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_register_ipa_notify);
-> +
-> +/* Deregister IPA notification function */
-> +void qcom_deregister_ipa_notify(struct rproc *rproc)
-> +{
-> +	struct q6v5 *qproc = rproc->priv;
-> +
-> +	qproc->ipa_notify_subdev.notify = NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_deregister_ipa_notify);
-> +#endif /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
-> +
->  static int q6v5_probe(struct platform_device *pdev)
->  {
->  	const struct rproc_hexagon_res *desc;
-> @@ -1664,6 +1699,7 @@ static int q6v5_probe(struct platform_device *pdev)
->  	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
->  	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
->  	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
-> +	qcom_add_ipa_notify_subdev(rproc, &qproc->ipa_notify_subdev);
->  	qproc->sysmon = qcom_add_sysmon_subdev(rproc, "modem", 0x12);
->  	if (IS_ERR(qproc->sysmon)) {
->  		ret = PTR_ERR(qproc->sysmon);
-> @@ -1677,6 +1713,7 @@ static int q6v5_probe(struct platform_device *pdev)
->  	return 0;
->
->  detach_proxy_pds:
-> +	qcom_remove_ipa_notify_subdev(qproc->rproc, &qproc->ipa_notify_subdev);
->  	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
->  detach_active_pds:
->  	q6v5_pds_detach(qproc, qproc->active_pds, qproc->active_pd_count);
-> @@ -1693,6 +1730,7 @@ static int q6v5_remove(struct platform_device *pdev)
->  	rproc_del(qproc->rproc);
->
->  	qcom_remove_sysmon_subdev(qproc->sysmon);
-> +	qcom_remove_ipa_notify_subdev(qproc->rproc, &qproc->ipa_notify_subdev);
->  	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
->  	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
->  	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
-> diff --git a/include/linux/remoteproc/qcom_q6v5_ipa_notify.h b/include/linux/remoteproc/qcom_q6v5_ipa_notify.h
-> new file mode 100644
-> index 000000000000..0820edc0ab7d
-> --- /dev/null
-> +++ b/include/linux/remoteproc/qcom_q6v5_ipa_notify.h
-> @@ -0,0 +1,82 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/* Copyright (C) 2019 Linaro Ltd. */
-> +
-> +#ifndef __QCOM_Q6V5_IPA_NOTIFY_H__
-> +#define __QCOM_Q6V5_IPA_NOTIFY_H__
-> +
-> +#if IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY)
+The 'altr,pio-1.0' driver does not handle the 'resetvalue', so remove it.
 
-Why don't you put this guard in the places where such include is called?
-Or the best variant is to ensure that this include is compiled in only
-in CONFIG_QCOM_Q6V5_IPA_NOTIFY flows.
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ Documentation/devicetree/bindings/fpga/fpga-region.txt | 1 -
+ arch/nios2/boot/dts/10m50_devboard.dts                 | 2 --
+ 2 files changed, 3 deletions(-)
 
-That is more common way to guard internal header files.
+diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+index b0dacb6a3390..8ab19d1d3f9a 100644
+--- a/Documentation/devicetree/bindings/fpga/fpga-region.txt
++++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+@@ -469,7 +469,6 @@ programming is the FPGA based bridge of fpga_region1.
+ 				reg = <0x10040 0x20>;
+ 				clocks = <0x2>;
+ 				altr,ngpio = <0x4>;
+-				resetvalue = <0x0>;
+ 				#gpio-cells = <0x2>;
+ 				gpio-controller;
+ 			};
+diff --git a/arch/nios2/boot/dts/10m50_devboard.dts b/arch/nios2/boot/dts/10m50_devboard.dts
+index 739ad96a6cc1..56339bef3247 100644
+--- a/arch/nios2/boot/dts/10m50_devboard.dts
++++ b/arch/nios2/boot/dts/10m50_devboard.dts
+@@ -180,7 +180,6 @@
+ 			compatible = "altr,pio-1.0";
+ 			reg = <0x180014d0 0x00000010>;
+ 			altr,ngpio = <4>;
+-			resetvalue = <15>;
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
+ 		};
+@@ -194,7 +193,6 @@
+ 			altr,interrupt-type = <2>;
+ 			edge_type = <1>;
+ 			level_trigger = <0>;
+-			resetvalue = <0>;
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
+ 		};
+-- 
+2.20.1
 
-Thanks
