@@ -2,153 +2,296 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B588C10F25
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 19:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81A8C10F27
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 20:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1CE206D7
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 19:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583524625;
-	bh=2KI8AroYi/xsU/dZ8EDn9Ch6JDyHbrw2z1S1dS+qD90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1k181C8IMzH2b9nVeOSzlnJr7IyOfWAFsqbvnbuxPSxlMdNYV8RuuWEw2AtvKhRXs
-	 vy8NxiUCPJO27epMd4WAc59XL8TG1FNhUngyhzVNJZqN5RpKvX4OU0bOg8gRsLgwgQ
-	 rOopYxBraYFOCyfac23CPBmxyi7cOcQZ5eSMbMbo=
+	by mail.kernel.org (Postfix) with ESMTP id 93B4020709
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 20:02:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="Z844DkNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCFT5E (ORCPT
+        id S1726171AbgCFUCp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:57:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgCFT5E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:57:04 -0500
-Received: from earth.universe (unknown [185.62.205.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 875BE206D5;
-        Fri,  6 Mar 2020 19:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583524623;
-        bh=2KI8AroYi/xsU/dZ8EDn9Ch6JDyHbrw2z1S1dS+qD90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oYVSb2MfsQ+hbjzskjuPbz7RZYIAFtSD+XG5gHf0kCm9XdPJ9WlKVwh3cu0VjHLKu
-         YD1NI3gJDF7DeWL+2ne99KUVB+DT7CoH39kV0tXHXa4vE8nAVcLC+qz6aX+Jfv+wk/
-         bj2suD5BbzONFXRSVhJmQW4Ose+lqUyOepRE/Pus=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 3F9E63C0C83; Fri,  6 Mar 2020 20:57:00 +0100 (CET)
-Date:   Fri, 6 Mar 2020 20:57:00 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
- SYSCON reboot-mode bindings
-Message-ID: <20200306195700.gg2iatlmxx7rvcol@earth.universe>
-References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
- <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+        Fri, 6 Mar 2020 15:02:45 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35022 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFUCp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 15:02:45 -0500
+Received: by mail-ot1-f66.google.com with SMTP id v10so3684837otp.2
+        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 12:02:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SMzXlI4eXcBBSJs7KiKlj7d7z04WUy2SFwDFYe8Tcig=;
+        b=Z844DkNt5lzVBUHwoyeaTPtXkCuayuNUT3Pk2kBNVVEUPQmdeLx2yvB8JgjGZrxh7V
+         eoRSWTRqWCE+ILI9gcyqM6wLF4CfIrcOLygTxwvf9EsZ5+6y/u/AIjNuWIuP1ArgWyyw
+         S3Fch8kxDK2me49l+VEILLCOejxa0+BxxKx4ssyZx7pLm1KDqynmaVnw6fGCizpQ0Zs4
+         Ji7WQSXwehpzC77QcNSDpkQx986fP2+JBVfDgK3/BF7kUyG0Lt3I2jhHI1YFMM+CUYlB
+         c4F26ezTytt/t0c34XLt1rP3pL7l9hPCLWeW9CtyN5XdYwwUBl9kz9IMIb2m5ish3noy
+         fY4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SMzXlI4eXcBBSJs7KiKlj7d7z04WUy2SFwDFYe8Tcig=;
+        b=EtD5c9ZjscwP8u7x6LCB5v3ZBHBZJByAlyVloyCIJblo70lYHsjY7Gxk4TGHXLSt3z
+         A3AThngQmuWZXYV/oVpyxirYFiye+WnHHOXM9IEjlCLWJ6P8bLXuYKj53xYnVK1Tzb+T
+         aAm7imwCpvMsvNzDJTytMEioztHWkaf8fZGHnngOvZd+Y3zyU+CpeAUAHW7dLuShwuGp
+         O7e5StSiQPtU1YM5R1ePKXLMtsPu64LZJAXSzCYoiLhtxWLhE8BufR0LszcpVx48gIag
+         JrkSEVCRF5cKSwxE5vErfc3mzyK4eQNfnFlwel4WOKLTETjaS+zZgpQQTRtTu/tUCc0w
+         Wt3g==
+X-Gm-Message-State: ANhLgQ1x1PAueNOC+bmsNwM8C2hAe8+aM0n1hSZIAuaoqpFu4vGkY2W8
+        txgG0wRHImECNGpzMAxQ4Mx7ki8KI1YnU3uOJSXsDw==
+X-Google-Smtp-Source: ADFU+vu1RS3nf8reu36DceipCuq5IpQtNWeNqmqkurUGaX9j2e/3u6+1GePdgIdM1aGini5f8bUiLhK8TFCe3F569T4=
+X-Received: by 2002:a05:6830:1503:: with SMTP id k3mr4088931otp.28.1583524962480;
+ Fri, 06 Mar 2020 12:02:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="du3yw7tr5ihl5q4d"
-Content-Disposition: inline
-In-Reply-To: <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+References: <1582577665-13554-1-git-send-email-tharvey@gateworks.com>
+ <1582577665-13554-2-git-send-email-tharvey@gateworks.com> <20200302204949.GA6649@bogus>
+ <CAJ+vNU2ySjAP3q-4rgGy1U=iJeswv1kx6bKCy+Zw7V7oArkumw@mail.gmail.com> <CAL_JsqJnvW=pRt6M6sivxP62-qDg37czAZBKFV61CXO7Uazjsw@mail.gmail.com>
+In-Reply-To: <CAL_JsqJnvW=pRt6M6sivxP62-qDg37czAZBKFV61CXO7Uazjsw@mail.gmail.com>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Fri, 6 Mar 2020 12:02:31 -0800
+Message-ID: <CAJ+vNU2c-Qr_rdWdFC77K8dcX-wgfVN5pXhtYG1nd4iniVT+fg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: mfd: Add Gateworks System Controller bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Robert Jones <rjones@gateworks.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Mar 6, 2020 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
+>
+<snip>
+> > > > +properties:
+> > > > +  $nodename:
+> > > > +    pattern: "gsc@[0-9a-f]{1,2}"
+> > > > +  compatible:
+> > > > +    const: gw,gsc
+> > >
+> > > That's not very specific.
+> > >
+> >
+> > Do you mean something like 'gw,system-controller' would be better
+> > instead of the gsc abbreviation for 'Gateworks System Controller'?
+>
+> No, I mean is there or will there be only one version of this?
+>
 
---du3yw7tr5ihl5q4d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+currently just 1 version is enough
 
-Hi,
+> >
+<snip>
+> >
+> > > > +
+> > > > +  hwmon:
+> > >
+> > > 'hwmon' is a Linux thing. I'm suspicious...
+> > >
+> >
+> > Yes, we've discussed this before and I understand that DT shouldn't
+> > use terminology that is Linux specific (which is why I replaced
+> > 'hwmon' with 'adc' in the ADC nodes below) but I still see a long of
+> > dt bindings in Documentation/devicetree/bindings with the word 'hwmon'
+> > in them.
+> >
+> > Perhaps this makes more sense?
+>
+> Yes, that's more aligned with IIO ADC bindings. Yes, IIO is again a
+> Linuxism, but I think the ADC bindings are fairly independent other
+> than the directory name.
+>
+> >
+> > adc {
+> >   compatible = "gw,gsc-adc";
+> >   #address-cells = <1>;
+> >   #size-cells = <0>;
+> >
+> >   channel@6 {
+> >     type = "gw,hwmon-temperature";
+> >     reg = <0x06>;
+> >     label = "temp";
+> >   };
+> >   ...
+> > };
+> >
 
-On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru=
- wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->=20
-> Optional regmap property will be used to refer to a syscon-controller
-> having a reboot tolerant register mapped.
->=20
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> ---
+ok, will use adc/channel instead of hwmon/adc and change compatible to
+'gw,gsc-adc'
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> >
+> > > > +    type: object
+> > > > +    description: Optional Hardware Monitoring module
+> > > > +
+> > > > +    properties:
+> > > > +      compatible:
+> > > > +        const: gw,gsc-hwmon
+> > > > +
+> > > > +      "#address-cells":
+> > > > +        const: 1
+> > > > +
+> > > > +      "#size-cells":
+> > > > +        const: 0
+> > > > +
+> > > > +      gw,fan-base:
+> > > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +        description: The fan controller base address
+> > >
+> > > Shouldn't this be described as a node in the DT or be implied by the
+> > > compatible?
+> >
+> > It does look out of place there. Would adding another subnode outside
+> > of the (perhaps misnamed) 'hwmon' node make more sense?:
+> >
+> > fan:
+> >  properties:
+> >    compatible: gw,gsc-fancontroller
+> >    reg:
+> >      description: address of the fan controller base register
+> >      maxItems: 1
+>
+> Seems somewhat better location in that the first level is
+> sub-functions of this chip.
+>
+> But now you have 'adc' with no address and 'fan' (w/ reg should be
+> fan@...) with an address, so that's not consistent.
+>
+> Also, I think fan controllers and fans need to have separate nodes as
+> there are different types of fans such as with and without tach
+> signals. I've tried to steer other fan bindings that way. Depends how
+> complex the fan controller is whether that's necessary.
+>
 
--- Sebastian
+The fan controller does now support a tach signal reported via one of
+the ADC channels (which I've neglected to cover) so I can represent
+that as well in a new first level node such as:
 
->  .../bindings/power/reset/syscon-reboot-mode.yaml         | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-=
-mode.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mod=
-e.yaml
-> index e09bb07b1abb..f47bf52ad983 100644
-> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.ya=
-ml
-> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.ya=
-ml
-> @@ -13,9 +13,8 @@ description: |
->    This driver gets reboot mode magic value from reboot-mode driver
->    and stores it in a SYSCON mapped register. Then the bootloader
->    can read it and take different action according to the magic
-> -  value stored. The SYSCON mapped register is retrieved from the
-> -  parental dt-node plus the offset. So the SYSCON reboot-mode node
-> -  should be represented as a sub-node of a "syscon", "simple-mfd" node.
-> +  value stored. The SYSCON mapped register is retrieved either from
-> +  the parental dt-node or from a regmap phandle plus the offset.
-> =20
->  properties:
->    compatible:
-> @@ -29,6 +28,10 @@ properties:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      description: Offset in the register map for the mode register (in by=
-tes).
-> =20
-> +  regmap:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to the register map node.
-> +
->  patternProperties:
->    "^mode-.+":
->      $ref: /schemas/types.yaml#/definitions/uint32
-> --=20
-> 2.25.1
->=20
+  fan:
+    type: object
+    description: Optional FAN controller
 
---du3yw7tr5ihl5q4d
-Content-Type: application/pgp-signature; name="signature.asc"
+    properties:
+      compatible:
+        const: gw,gsc-fan
 
------BEGIN PGP SIGNATURE-----
+      reg:
+        description: The fan controller base address
+        maxItems: 1
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5iqwwACgkQ2O7X88g7
-+prcSA/+PkF08wBVVFq7Q4BPHNi32tO1mtsuo1hS+qydwENk1V2r/Iw98+/z+HWv
-T/n7sZGhaqiqi9M5zi46uag16RRxUVIGdYs+TmBMicX6dBl8jBZtVKCX4ENeBKZI
-ao3Z1R4HYl7b++RVhntvmcNCJg+hhfueVPt/3rH1dZpLnY5OTBZvcUIejm+SLJDF
-z7s1sJhVDOl2h0yAtMhJkkmGrc98Yxe3v4DRcyq2CzpOLpZXQTZm8TOocAfzamz8
-+5L+iIBzHPFx/DOJjzy6Mb+63qby/epANdSJZDz01oShcZVKwQiWn0IUy3autmh7
-LPOtdKxNvIshaPaZjRO5K0njqvf3+v+ylQNwiksGrMAL2DMSRVLz4kx5ydRUgHbr
-DRsRAdCoU6W7N4gGeLyRojJadgw+GiHITOJwtg1iuFyUQbmYNmamU2WSMTJyHBKL
-HxrDiK+55Ms1pbAUvm1O1ysrZsD9orE+9xVS14klrxabW97esUJdC2UB2tNI6CPe
-EuPwDKWAl50CdPNpLYQvSb6/RUUQs/N1IqfPvMr1qFFMSHlN47PsUe9Tw4qk7bXb
-2q84l86l04WD5zRNhl3GMa4yi4h5+tE9Wrur/tOoB6dpP/BrfVls/Pt7IrRI69Lg
-WnTTsrzvv85mzq9IfjhEvBQvMRo5UITVzFOG2+RO4f/PWSOubTo=
-=ysnP
------END PGP SIGNATURE-----
+      gw,fan-tach-ch:
+        description: The fan tach ADC channel
+        maxItems: 1
 
---du3yw7tr5ihl5q4d--
+    required:
+      - compatible
+      - reg
+
+fan {
+  compatible = "gw,gsc-pwm-fan";
+  reg = <0x2c>;
+  gw,fan-tach-ch = <0x16>;
+};
+
+<snip>
+> >
+> > > > +        type: object
+> > > > +        description: |
+> > > > +          Properties for a single ADC which can report cooked values
+> > > > +          (ie temperature sensor based on thermister), raw values
+> > > > +          (ie voltage rail with a pre-scaling resistor divider).
+> > > > +
+> > > > +        properties:
+> > > > +          reg:
+> > > > +            description: Register of the ADC
+> > > > +            maxItems: 1
+> > > > +
+> > > > +          label:
+> > > > +            description: Name of the ADC input
+> > > > +
+> > > > +          type:
+> > >
+> > > Very generic property name, but it's not generic. Needs a vendor prefix
+> > > at least.
+> >
+> > You mean the property name of 'type' is fine, but the values will need
+> > to be vendor specific like 'gw,temperature', 'gw,voltage',
+> > 'gw,voltage-raw' or is it inappropriate to use 'type'?
+>
+> Don't use 'type'.
+>
+> Is this for 'how to setup/program the adc' or 'what am I measuring'?
+> For example, configure the adc for temperature readings vs. measure
+> CPU temperature. Seems like a common thing needed for ADC. 'label'
+> already covers the latter case.
+
+This is for translation of the raw ADC to a cooked value. An earlier
+version of the GSC reported cooked values (doing the scaling in the
+GSC firmware) and later versions report raw values which need to be
+scaled depending on optional voltage divider so you can consider that
+'setup'. Instead of handling this via a 'version' of the GSC I elected
+to describe the difference in ADC channel type as I already had on
+that reported millidegree celcius vs millivolts. I could just move
+them to properties such as:
+
+gw,temperature
+gw,voltage
+gw,voltage-raw
+
+Only one of the above is allowed and am not sure how to represent that
+in the yaml.
+
+Alternatively I could call this property name 'gw,conversion' and
+leave the three type enum?
+
+>
+> > > > +            description: |
+> > > > +              temperature in C*10 (temperature),
+> > > > +              pre-scaled voltage value (voltage),
+> > > > +              or scaled based on an optional resistor divider and optional
+> > > > +              offset (voltage-raw)
+> > > > +            enum:
+> > > > +              - temperature
+> > > > +              - voltage
+> > > > +              - voltage-raw
+> > > > +
+> > > > +          gw,voltage-divider:
+> > > > +            allOf:
+> > > > +              - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > > +            description: values of resistors for divider on raw ADC input
+> > > > +            items:
+> > > > +              - description: R1
+> > > > +              - description: R2
+> > >
+> > > Needs a standard unit suffix. With that, you can drop the type
+> > > reference.
+> >
+> > I understand the unit suffix but not sure what you mean by type
+> > reference. Do you mean:
+> >
+> > gw,voltage-divider-milli-ohms:
+> >   description: values of resistors for divider on raw ADC input
+> >     items:
+> >       - description: R1
+> >       - description: R2
+>
+> Yes, drop the '$ref'.
+>
+
+ok,
+
+Thanks,
+
+Tim
