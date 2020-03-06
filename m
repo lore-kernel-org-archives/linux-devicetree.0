@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D250C10F28
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65060C10F28
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61EB8206CC
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44733206CC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgCFOMb (ORCPT
+        id S1726974AbgCFOM2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:12:31 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39044 "EHLO
+        Fri, 6 Mar 2020 09:12:28 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38996 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCFOMa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 09:12:30 -0500
+        with ESMTP id S1726307AbgCFOM2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 09:12:28 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id D7F48296C97
+        with ESMTPSA id 7EB0C28ED15
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>,
@@ -30,16 +30,13 @@ Cc:     Collabora Kernel ML <kernel@collabora.com>,
         anarsoul@gmail.com, Neil Armstrong <narmstrong@baylibre.com>,
         matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
         icenowy@aosc.io, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
         Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v3 3/4] dt-bindings: Add ANX7688 HDMI to DP bridge binding
-Date:   Fri,  6 Mar 2020 15:12:15 +0100
-Message-Id: <20200306141217.423914-3-enric.balletbo@collabora.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v3 1/4] dt-bindings: Add binding for the Analogix ANX7688 chip
+Date:   Fri,  6 Mar 2020 15:12:13 +0100
+Message-Id: <20200306141217.423914-1-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200306141217.423914-1-enric.balletbo@collabora.com>
-References: <20200306141217.423914-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -47,79 +44,69 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+The ANX7688 chip is a Type-C Port Controller, HDMI to DP converter and
+USB-C mux between USB 3.0 lanes and the DP output.
 
-Add documentation for DT properties supported by the ANX7688 HDMI-DP
-converter.
+For our use case a big part of the chip, like power supplies, control
+gpios and the usb-c part is managed by an Embedded Controller, hence,
+this is its simplest form of the binding. We'd prefer introduce these
+properties for someone with a different use case so they can test
+on their hardware.
 
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
 Changes in v3:
-- Adapt the bridge bindings for the multi-function device.
+- Add binding for ANX7688 multi-function device.
 
-Changes in v2:
-- Improve a bit the descriptions using the info from the datasheet.
-- Convert binding to yaml.
-- Use dual licensing.
+Changes in v2: None
 
- .../bridge/analogix,anx7688-bridge.yaml       | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7688-bridge.yaml
+ .../bindings/mfd/analogix,anx7688.yaml        | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7688-bridge.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7688-bridge.yaml
+diff --git a/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
 new file mode 100644
-index 000000000000..c56da3f39dd8
+index 000000000000..bb95a4e87188
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7688-bridge.yaml
-@@ -0,0 +1,80 @@
++++ b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+@@ -0,0 +1,48 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/bridge/analogix,anx7688-bridge.yaml#
++$id: http://devicetree.org/schemas/mfd/analogix,anx7688.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Analogix ANX7688 HDMI to DisplayPort Bridge
++title: Analogix ANX7688 HDMI to USB Type-C Bridge (Port Controller with MUX)
 +
 +maintainers:
 +  - Nicolas Boichat <drinkcat@chromium.org>
 +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
 +
 +description: |
-+  The ANX7688 bridge describes the HDMI 2.0 to DisplayPort 1.3 bridge block
-+  included in the ANX7688 chip controller. These are meant to be used for
-+  controlling display-related signals.
++  ANX7688 converts HDMI 2.0 to DisplayPort 1.3 Ultra-HDi (4096x2160p60)
++  including an intelligent crosspoint switch to support USB Type-C (USB-C).
++  The integrated crosspoint switch supports USB 3.1 data transfer along with
++  the DisplayPort Alternate Mode signaling over USB Type-C. Additionally,
++  an on-chip microcontroller (OCM) is available to manage the signal switching,
++  Channel Configuration (CC) detection, USB Power Delivery (USB-PD), Vendor
++  Defined Message (VDM) protocol support and other functions as defined in the
++  USB TypeC and USB Power Delivery specifications.
 +
-+  The node of this device should be under an analogix,anx7866 node. Please refer
-+  to Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml for the ANX7688
-+  core bindings.
++  As a result, a multi-function device is exposed as parent of the video
++  bridge, TCPC and MUX blocks.
 +
 +properties:
 +  compatible:
-+    const: analogix,anx7688-bridge
++    const: analogix,anx7688
 +
-+  ports:
-+    type: object
-+
-+    properties:
-+      port@0:
-+        type: object
-+        description: |
-+          Video port for HDMI input
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Video port for DP output
-+
-+    required:
-+      - port@0
++  reg:
++    maxItems: 1
++    description: I2C address of the device
 +
 +required:
 +  - compatible
-+  - ports
++  - reg
 +
 +examples:
 +  - |
@@ -130,29 +117,6 @@ index 000000000000..c56da3f39dd8
 +        anx7688: anx7688@2c {
 +            compatible = "analogix,anx7688";
 +            reg = <0x2c>;
-+
-+            bridge {
-+                compatible = "analogix,anx7688-bridge";
-+
-+                ports {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    port@0 {
-+                        reg = <0>;
-+                        anx7688_in: endpoint {
-+                            remote-endpoint = <&hdmi0_out>;
-+                        };
-+                    };
-+
-+                    port@1 {
-+                        reg = <1>;
-+                        anx7688_out: endpoint {
-+                            remote-endpoint = <&typec0_connector>;
-+                       };
-+                    };
-+                };
-+            };
 +        };
 +    };
 -- 
