@@ -2,62 +2,178 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A0CC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E26C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F35A20717
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2F72051A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:28:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ADVu63vj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725873AbgCFRKw (ORCPT
+        id S1726271AbgCFR2E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:10:52 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:34884 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgCFRKw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:10:52 -0500
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jAGUl-0002MU-S0; Fri, 06 Mar 2020 18:10:43 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, hjc@rock-chips.com,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-Subject: Re: [PATCH v3] dt-bindings: convert rockchip-drm.txt to rockchip-drm.yaml
-Date:   Fri, 06 Mar 2020 18:10:43 +0100
-Message-ID: <31674303.xIi5ycrUlD@diego>
-In-Reply-To: <20200121154314.3444-1-dafna.hirschfeld@collabora.com>
-References: <20200121154314.3444-1-dafna.hirschfeld@collabora.com>
+        Fri, 6 Mar 2020 12:28:04 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:13141 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgCFR2D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 12:28:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583515681;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=EMIkL6ZMx1o3uNQOsK/AuYhMq5YPX55+evrim/F2BFk=;
+        b=ADVu63vjxAIATIBaaaJII74iMFNeaKqAkJ4Q1Hmf6MtAVFBfpo6hRSnbM0pmN3jTE5
+        8c1+gu3+DrwnyFcE0Q5sJ8GXRe6LGmwNYtJpx7TkCgNAexgscJK74z2EAkxCuqf6ZZUQ
+        rgPXb9Hg1zFnP464kvLiR5hJ6z6UfcfIpav6HVq9iuFDkAusrOfGieKlfym/sUtGPEu1
+        2w+V54yFBrX/x1HMdPRQKmyngd/0v1VzVSZxOhjJvXfmD64x6J2Q4TctXaVaAEc1sXXI
+        X2BWh7DxEIDJZJF4QhhjjjcVVJdIQTExNhk08qf8jAdZ+E1SR4SJcjgtjJnT4T9+m9I4
+        2T5g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6GQjzrz4="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw26HRxZtN
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 6 Mar 2020 18:27:59 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>, stable@vger.kernel.org
+Subject: [PATCH v6] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Date:   Fri,  6 Mar 2020 18:27:58 +0100
+Message-Id: <cccce8a3866e54859d04b3f67c7414c3efb1eedd.1583515678.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dafna,
+There is a ACT8600 on the CI20 board and the bindings of the
+ACT8865 driver have changed without updating the CI20 device
+tree. Therefore the PMU can not be probed successfully and
+is running in power-on reset state.
 
-Am Dienstag, 21. Januar 2020, 16:43:14 CET schrieb Dafna Hirschfeld:
-> convert the binding file rockchip-drm.txt to yaml format.
-> This was tested and verified on ARM and ARM64 with:
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-> 
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Fix DT to match the latest act8865-regulator bindings.
 
-applied to drm-misc-next with Rob's Reviewed-by
+Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+Cc: stable@vger.kernel.org
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+---
+ arch/mips/boot/dts/ingenic/ci20.dts | 39 ++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 15 deletions(-)
 
-Thanks
-Heiko
-
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 37b93166bf22..8b5fb635c66f 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -4,6 +4,7 @@
+ #include "jz4780.dtsi"
+ #include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/regulator/active-semi,8865-regulator.h>
+ 
+ / {
+ 	compatible = "img,ci20", "ingenic,jz4780";
+@@ -163,63 +164,71 @@
+ 
+ 		regulators {
+ 			vddcore: SUDCDC1 {
+-				regulator-name = "VDDCORE";
++				regulator-name = "DCDC_REG1";
+ 				regulator-min-microvolt = <1100000>;
+ 				regulator-max-microvolt = <1100000>;
+ 				regulator-always-on;
+ 			};
+ 			vddmem: SUDCDC2 {
+-				regulator-name = "VDDMEM";
++				regulator-name = "DCDC_REG2";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_33: SUDCDC3 {
+-				regulator-name = "VCC33";
++				regulator-name = "DCDC_REG3";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_50: SUDCDC4 {
+-				regulator-name = "VCC50";
++				regulator-name = "SUDCDC_REG4";
+ 				regulator-min-microvolt = <5000000>;
+ 				regulator-max-microvolt = <5000000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_25: LDO_REG5 {
+-				regulator-name = "VCC25";
++				regulator-name = "LDO_REG5";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			wifi_io: LDO_REG6 {
+-				regulator-name = "WIFIIO";
++				regulator-name = "LDO_REG6";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_28: LDO_REG7 {
+-				regulator-name = "VCC28";
++				regulator-name = "LDO_REG7";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_15: LDO_REG8 {
+-				regulator-name = "VCC15";
++				regulator-name = "LDO_REG8";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+-			vcc_18: LDO_REG9 {
+-				regulator-name = "VCC18";
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
++			vrtc_18: LDO_REG9 {
++				regulator-name = "LDO_REG9";
++				/* Despite the datasheet stating 3.3V
++				 * for REG9 and the driver expecting that,
++				 * REG9 outputs 1.8V.
++				 * Likely the CI20 uses a proprietary
++				 * factory programmed chip variant.
++				 * Since this is a simple on/off LDO the
++				 * exact values do not matter.
++				 */
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_11: LDO_REG10 {
+-				regulator-name = "VCC11";
+-				regulator-min-microvolt = <1100000>;
+-				regulator-max-microvolt = <1100000>;
++				regulator-name = "LDO_REG10";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
+ 				regulator-always-on;
+ 			};
+ 		};
+-- 
+2.23.0
 
