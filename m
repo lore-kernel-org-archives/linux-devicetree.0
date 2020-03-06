@@ -2,93 +2,165 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F0EC10F26
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E4EC10F25
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB0D208CD
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E0B2084E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="pMflFDNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgCFOnq (ORCPT
+        id S1726300AbgCFOoI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:43:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:34844 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbgCFOno (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:43:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F34831B;
-        Fri,  6 Mar 2020 06:43:43 -0800 (PST)
-Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.195.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 132703F534;
-        Fri,  6 Mar 2020 06:43:40 -0800 (PST)
-Date:   Fri, 6 Mar 2020 14:43:36 +0000
-From:   Steven Price <steven.price@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Nick Fan <nick.fan@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v4 1/7] dt-bindings: gpu: mali-bifrost: Add Mediatek
- MT8183
-Message-ID: <20200306144336.GA9234@arm.com>
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-2-drinkcat@chromium.org>
- <20200225171613.GA7063@bogus>
- <CANMq1KAVX4o5yC7c_88Wq_O=F+MaSN_V4uNcs1nzS3wBS6A5AA@mail.gmail.com>
- <1583462055.4947.6.camel@mtksdaap41>
- <CAL_JsqLoUnxfrJh0WCs0jgro1KHAjWaYMsaKkKfAKA2KJ252_g@mail.gmail.com>
+        Fri, 6 Mar 2020 09:44:08 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:17412 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727627AbgCFOoH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 09:44:07 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Ajay.Kathat@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Ajay.Kathat@microchip.com";
+  x-sender="Ajay.Kathat@microchip.com"; x-conformance=spf_only;
+  x-record-type="v=spf1"; x-record-text="v=spf1 mx
+  a:ushub1.microchip.com a:smtpout.microchip.com
+  -exists:%{i}.spf.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Ajay.Kathat@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Ajay.Kathat@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: CEDq5WzDf7/uqmp9a8nsb4t27IwlIlShCsUwZ6PY8Kke7OoFxPBc9chsybsQnc/a0fi0J8zIJu
+ Opp13wJjKL0ek77ilKNvVXmI5LVg4AvWgfelbg5EoiC+PGg6ZWln/RbFk2JgQTp6ld/DI7If7E
+ iNvoV6YtvC+jXW/o4egN+chnTqxT5nJYyX2VQ78xPBUHLrUyTM0myz+weEY4Ib5X2mSDP4ZP+p
+ aFB+yeh+ciOxvIj+yd0mlcMc7R4rrtBmCqWgt6H79KatMdXAuYEvjUm8KGEPTo5M5AUxMkZplm
+ KnA=
+X-IronPort-AV: E=Sophos;i="5.70,522,1574146800"; 
+   d="scan'208";a="68117463"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Mar 2020 07:44:05 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 6 Mar 2020 07:44:05 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 6 Mar 2020 07:44:05 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q0LLbFNiv1WNykQuaRV+/EbTErKcck33Icz2nstO1OB9tBBvFuTewWdBnLDMk0QS0tfS9H9cuF6Xz0p4viO364u+iaos7R1Kr6iFEbgFtlh7RkFzcUQ5ToZsraIe9fHE4V9d5q28w82ZnCAi9+ZXW68UYI8fwzkX+3oLOOcuiK1QxE6wFP9ovjWcVd2Z6S4uZAQ0k7JsvhjA7AZUpevC1uRl7QQKr3PZF2fErMM7d58qa0bybDt6DqOnpQpTnTt3Rv86nxMnKQf9Ie1F/ThFQdrQTVXMS9gK+nsMR3PVSZc3ASCc32+Y0LieiBZ9jwi8qrxrmTa6DZAj5ceKVgSPog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zcs6KUM33IZqaN6Jk8SYQi5l553u26Kwhhu8d9cDqlM=;
+ b=mZrNCqztP+0P4DWoeXShmNAvpud1c8DPueyJTSXOB0zn0x9YfpjCNNjxw/fe5mKR+YCCickyPYMpq2Y/2ngLMKrJsLMZyk3YxHcMW1CyjYSuGhHMwq8S74Warqy9QJkAgbR0Zzq1B0uVQmSEq3Bb8ZZj2Kmt6t+HysabFoe2yI3gKM5ACMEI8oLOXYUk75FapFOnXykqeqZSIa3VUuwlvyrj+OrigUrqHQEBSANVYvWWatPsVaqauEmt8y5JPlMOzU3AWVVNC6Lcj16XdiiG767g2t97NDjpy+GxHNmkm+eRJT5wJ2c2vD/Itxv13Ah078KFL+dqpn1Z5YHnNgpchA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zcs6KUM33IZqaN6Jk8SYQi5l553u26Kwhhu8d9cDqlM=;
+ b=pMflFDNJwVuX8RcTJ4ri04uGwqFzfGPY+22aRlVT8D2G3J+jrPi+IfNRZ0KpwLHTAsXiL8vxCqb0+LZDqA9gXPWn/ZxWF4nd5EBmSR3+RsAllyuXK0KAe14NQE8yjMQp46bfdUjsjVRtPB7md2xqPvi2nqVPxtnFaeou3hl0cvs=
+Received: from BN6PR11MB3985.namprd11.prod.outlook.com (2603:10b6:405:7b::14)
+ by BN6PR11MB1362.namprd11.prod.outlook.com (2603:10b6:404:3c::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Fri, 6 Mar
+ 2020 14:44:04 +0000
+Received: from BN6PR11MB3985.namprd11.prod.outlook.com
+ ([fe80::a0be:9e7c:714e:e2bd]) by BN6PR11MB3985.namprd11.prod.outlook.com
+ ([fe80::a0be:9e7c:714e:e2bd%6]) with mapi id 15.20.2793.013; Fri, 6 Mar 2020
+ 14:44:04 +0000
+From:   <Ajay.Kathat@microchip.com>
+To:     <linux-wireless@vger.kernel.org>
+CC:     <devel@driverdev.osuosl.org>, <devicetree@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <Adham.Abozaeid@microchip.com>,
+        <johannes@sipsolutions.net>, <robh@kernel.org>,
+        <Ajay.Kathat@microchip.com>
+Subject: [PATCH 0/2] staging: wilc1000: handle DT binding documentation
+ comments
+Thread-Topic: [PATCH 0/2] staging: wilc1000: handle DT binding documentation
+ comments
+Thread-Index: AQHV88Wu1+rL8LR6w0iCOh7I/oMlGw==
+Date:   Fri, 6 Mar 2020 14:44:04 +0000
+Message-ID: <20200306144400.4269-1-ajay.kathat@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [49.205.218.40]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8637e41a-0490-4ebb-3401-08d7c1dcd12e
+x-ms-traffictypediagnostic: BN6PR11MB1362:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR11MB1362383E26F5370A64FD79DCE3E30@BN6PR11MB1362.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0334223192
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(346002)(376002)(396003)(189003)(199004)(2906002)(81166006)(6506007)(5660300002)(6512007)(81156014)(64756008)(6486002)(4326008)(8936002)(8676002)(36756003)(91956017)(66556008)(76116006)(71200400001)(54906003)(66946007)(66476007)(66446008)(2616005)(316002)(86362001)(1076003)(6916009)(966005)(107886003)(478600001)(186003)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1362;H:BN6PR11MB3985.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: O3m7nAuxzcHT1PtKkXZANIzLm4wRjFzScmt1ycIhwSvdhDVcX3Ywd+BN/TjIOEtxPzRMjwtKg3D/QHt0RGdtPsTracVhBHaiwDlc8gp5py+ILwuRs6vEbZbZleL87oXVFyHKTuzBiHfZUcw1AamgKOh7POdi/GwHuvORjPUwo57YZSGlMbMfPXSFKVexj/USqrqaMIdBHf67LAN5AGKflEUzMEheVStYk7Gn6YtOczIdTN50a3XC9G2JkDzQrP39iKSX9cmeF9BtXd0NDw81V27BSNDqilqlJR2aSOmJ3sixgcgvdKeo1Q+vidIhsOOqulxNAlAdNJEKNOmrAdNyh2OUhTybDmmuFSysZxA9ucq0WHYi6Vswolk7Oqr4QOC7i0YIHOO62lNdxACIZFdL1eeKyFPcGezyhv22LA/M5YdHDOecF8xiZgcOTKpiw1OSaqjXTpkxJoHETMlqUp3Hk491i3cxlOy7/j09pgfeq0EOju3Oqo+SmNKls9jwcBJfmq2a8iWfPTl0jOnbzmjPGw==
+x-ms-exchange-antispam-messagedata: yIfDo2uy1qS9a0qKWyr9Bm6GBZ79HXhqFNSCxgwhrsVOQbSoFMtTlHHkO6pPr3VCn8F9rV9on11PwiExj17aztEiQuzulVuam40JnVHtuUhIDCIxKvXYv4AFYDDKvMfYYlYmLvL4lJ9AYN2cIJgkEQ==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLoUnxfrJh0WCs0jgro1KHAjWaYMsaKkKfAKA2KJ252_g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8637e41a-0490-4ebb-3401-08d7c1dcd12e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2020 14:44:04.0947
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BNjeiAi7eAXYyJZAbLzAt+6QY3WeTmXWe8IyDyW/GNNaRBA8q3ptZwebRLttXCul+888EssIgEU/9w1qA90E//6FYUa/Nk/BbnQ7wW3IOLY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1362
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 02:13:08PM +0000, Rob Herring wrote:
-> On Thu, Mar 5, 2020 at 8:34 PM Nick Fan <nick.fan@mediatek.com> wrote:
-> >
-> > Sorry for my late reply.
-> > I have checked internally.
-> > The MT8183_POWER_DOMAIN_MFG_2D is just a legacy name, not really 2D
-> > domain.
-> >
-> > If the naming too confusing, we can change this name to
-> > MT8183_POWER_DOMAIN_MFG_CORE2 for consistency.
-> 
-> Can you clarify what's in each domain? Are there actually 3 shader
-> cores (IIRC, that should be discoverable)?
+From: Ajay Singh <ajay.kathat@microchip.com>
 
-The cover letter from Nicolas includes:
+This patch series contains changes to handle DT binding documentation
+related review comments. The changes were suggested during the full
+driver review [1] & [2].
+First submitting these patches to staging and later will include them
+as part of the full driver review patch series.
 
-> [  501.321752] panfrost 13040000.gpu: shader_present=0x7 l2_present=0x1
+[1]. https://patchwork.kernel.org/patch/11415897
+[2]. https://patchwork.kernel.org/patch/11415901
 
-0x7 is three bits set, so it certainly looks like there are 3 shader
-cores. Of course I wouldn't guarantee that it is as simple as each power
-domain has a shader core in. The job manager and tiler also need to be
-powered somehow, so they are either sharing with a shader core or
-there's something more complex going on.
+Ajay Singh (2):
+  staging: wilc1000: use 'interrupts' property instead of 'irq-gpio'
+  staging: wilc1000: use single DT binding documentation for SDIO and
+    SPI
 
-Steve
+ .../net/wireless/microchip,wilc1000.yaml      | 79 +++++++++++++++++++
+ .../wilc1000/microchip,wilc1000,sdio.yaml     | 68 ----------------
+ .../wilc1000/microchip,wilc1000,spi.yaml      | 61 --------------
+ .../staging/wilc1000/microchip,wilc1000.yaml  | 79 +++++++++++++++++++
+ drivers/staging/wilc1000/netdev.c             | 24 ++----
+ drivers/staging/wilc1000/netdev.h             |  1 -
+ drivers/staging/wilc1000/sdio.c               | 35 ++++----
+ drivers/staging/wilc1000/spi.c                | 17 +---
+ drivers/staging/wilc1000/wlan.h               |  1 -
+ 9 files changed, 182 insertions(+), 183 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/microchi=
+p,wilc1000.yaml
+ delete mode 100644 drivers/staging/wilc1000/microchip,wilc1000,sdio.yaml
+ delete mode 100644 drivers/staging/wilc1000/microchip,wilc1000,spi.yaml
+ create mode 100644 drivers/staging/wilc1000/microchip,wilc1000.yaml
 
+--=20
+2.24.0
