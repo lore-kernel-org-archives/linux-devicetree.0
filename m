@@ -2,136 +2,87 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3952FC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 18:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B8CC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 18:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F2520675
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 18:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583519384;
-	bh=OlONpDeOIWpAtWkyDwrGE484KEkGVMANhv1y9uDe6Q0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ej+ERS9fd36Neh1YVXxiC8f50c5T42qWFwzmE6oixvEn1xlCTYBywtHUwZsenDfno
-	 +KMRxlbsXy/XBvIzL5DtvQfv/ftMluP27V+3MX23uiRfyS5neN9Fk/Yy22DnRW3ZpI
-	 l4+u0Cxqkq0bzk7PdNEhMehay21vkZB74/D4JEWA=
+	by mail.kernel.org (Postfix) with ESMTP id 8820720674
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 18:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgCFS3n (ORCPT
+        id S1726271AbgCFS5v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:29:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50898 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 13:57:51 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:41996 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbgCFS3n (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:29:43 -0500
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE12620675;
-        Fri,  6 Mar 2020 18:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583519381;
-        bh=OlONpDeOIWpAtWkyDwrGE484KEkGVMANhv1y9uDe6Q0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M9vQB6j4IuH29Lf3yihA1/EsjAciRVojS2zWsfzTxHZo/lM4jnMggEAvmXl6RUVJI
-         NgepqWRXwpKF+iKJAulQrHIU5s8JfyiXzF5sCTPoF9sBhwWcFzdEciYAu9eXgVb4ep
-         zEkSQGwf7mJ4tehuVgouyr+krY+RvROxHss2Us2A=
-Received: by mail-qk1-f175.google.com with SMTP id f3so3258499qkh.1;
-        Fri, 06 Mar 2020 10:29:41 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1+qMdhVxAXCwA346/oCIczPHUCj/5QhNGkqmrfhodqEc5IYXEs
-        YKykrhHKlyqna47h92mhIQWk3qgjNnmmWMTNCQ==
-X-Google-Smtp-Source: ADFU+vuvSgCmNdIo4Vc/u/UHmggYXm29+rU4ejRNLYgy5FQav+zA+HVv5ij8keiUkcfIF8RiCw++jkXG7tlqQlVRmrs=
-X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr4356708qki.254.1583519380984;
- Fri, 06 Mar 2020 10:29:40 -0800 (PST)
+        id S1726083AbgCFS5v (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:57:51 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 9ADA13C21A13;
+        Fri,  6 Mar 2020 19:57:49 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tbmb0qDcjibI; Fri,  6 Mar 2020 19:57:47 +0100 (CET)
+Subject: Re: [PATCH v4 2/2] arm64: dts: rockchip: Add initial support for
+ Pinebook Pro
+To:     Heiko Stuebner <heiko@sntech.de>,
+        Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Emmanuel Vadot <manu@freebsd.org>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Nick Xie <nick@khadas.com>, Andy Yan <andy.yan@rock-chips.com>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200304213023.689983-2-t.schramm@manjaro.org>
+ <20200304213023.689983-3-t.schramm@manjaro.org> <6168222.Wuk326WHQK@phil>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Message-ID: <b30fef29-6667-9200-178b-4d0e9fc63c12@manjaro.org>
+Date:   Fri, 6 Mar 2020 19:58:45 +0100
 MIME-Version: 1.0
-References: <20200303150749.30566-1-ulf.hansson@linaro.org>
- <20200303150749.30566-6-ulf.hansson@linaro.org> <20200303170641.GC26191@bogus>
- <CAPDyKFrzy=88fPgesS0_S45rr4SdWthQRcjwnqJzRcMBKCo4=A@mail.gmail.com> <20200304145313.GA5144@bogus>
-In-Reply-To: <20200304145313.GA5144@bogus>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 6 Mar 2020 12:29:29 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJNKowN-wbzOSCoARTdfayoq37=OT6mOztS=xmJvuFioQ@mail.gmail.com>
-Message-ID: <CAL_JsqJNKowN-wbzOSCoARTdfayoq37=OT6mOztS=xmJvuFioQ@mail.gmail.com>
-Subject: Re: [PATCH 5/7] dt-bindings: arm: Fixup the DT bindings for
- hierarchical PSCI states
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6168222.Wuk326WHQK@phil>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 8:53 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Mar 03, 2020 at 09:50:08PM +0100, Ulf Hansson wrote:
-> > On Tue, 3 Mar 2020 at 18:06, Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Tue, Mar 03, 2020 at 04:07:47PM +0100, Ulf Hansson wrote:
-> > > > The hierarchical topology with power-domain should be described through
-> > > > child nodes, rather than as currently described in the PSCI root node. Fix
-> > > > this by adding a patternProperties with a corresponding reference to the
-> > > > power-domain DT binding.
-> > > >
-> > > > Additionally, update the example to conform to the new pattern, but also to
-> > > > the adjusted domain-idle-state DT binding.
-> > > >
-> > > > Fixes: a3f048b5424e ("dt: psci: Update DT bindings to support hierarchical PSCI states")
-> > > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > > ---
-> > > >  .../devicetree/bindings/arm/psci.yaml         | 33 +++++++++----------
-> > > >  1 file changed, 15 insertions(+), 18 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
-> > > > index 0bc3c43a525a..cae668b61265 100644
-> > > > --- a/Documentation/devicetree/bindings/arm/psci.yaml
-> > > > +++ b/Documentation/devicetree/bindings/arm/psci.yaml
-> > > > @@ -102,11 +102,15 @@ properties:
-> > > >        [1] Kernel documentation - ARM idle states bindings
-> > > >          Documentation/devicetree/bindings/arm/idle-states.yaml
-> > > >
-> > > > -  "#power-domain-cells":
-> > > > -    description:
-> > > > -      The number of cells in a PM domain specifier as per binding in [3].
-> > > > -      Must be 0 as to represent a single PM domain.
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - method
-> > >
-> > > No need to move this.
-> >
-> > Okay.
-> >
-> > >
-> > > >
-> > > > +patternProperties:
-> > > > +  "^(power-controller|power-domain)([@-].*)?$":
-> > > > +    $ref: "../power/power-domain.yaml#"
-> > >
-> > > This has to be under an 'allOf' or the rest of the properties are
-> > > ignored.
-> >
-> > Sure, I had the feeling that something was missing. Thanks for reviewing!
-> >
-> > [...]
-> >
-> > Looks like I should a v2 of the series, or do you prefer to apply some
-> > of the patches before I resend?
->
-> Applied 1-3. I'll wait for v2 of 4 and 5.
+Hi Heiko,
 
-In order to fix all warnings by rc5, I fixed up and applied patches 4 and 5.
+>> This commit adds initial dt support for the rk3399 based Pinebook Pro.
+>>
+>> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+>
+> applied for 5.7
+>
 
-Rob
+any chance you can squeeze in another small fix? Somewhere in the
+process the vmcc and vqmmc supplies of the sdmmc controller were removed
+in error. Those should be added to the sdmmc controller like this:
+
+ &sdmmc {
+        pinctrl-names = "default";
+        pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
+        sd-uhs-sdr104;
++       vmmc-supply = <&vcc3v0_sd>;
++       vqmmc-supply = <&vcc_sdio>;
+        status = "okay";
+ };
+
+Thanks,
+
+Tobias
