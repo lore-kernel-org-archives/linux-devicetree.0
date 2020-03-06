@@ -2,140 +2,136 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10693C3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EBFC3F2D6
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA81D208C3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7323B20866
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p1IRc54H"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iYyocD4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgCFHWG (ORCPT
+        id S1726091AbgCFHX6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:22:06 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41794 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgCFHWG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 02:22:06 -0500
-Received: by mail-wr1-f65.google.com with SMTP id v4so1057338wrs.8;
-        Thu, 05 Mar 2020 23:22:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SnUqcrVsJzqJaaVzt0hPVe/gTQHBXGhcLib5WHQ/AJU=;
-        b=p1IRc54H8JzpxRZeZG0bSTeItFXg8PjCDo21GH34exsa4OQYBGv6BRnOcCVkFANCiQ
-         8dZCcI8PQnGba7V5LgTgvN0ETfNr+6jiDBa9JtgXS3lQtjn/S3n1Kf3WHv+ew/SzUmSk
-         w7qihFs65T7614lKbUMSZrVVzGFfLc6sHKR1zMjBMk1XXl9Uaw395Gr+zeZsQWU1C4zI
-         XYRtTPb4dzWNR5zjwLdFKfaXb7fiDF3kwG+2KuDBV4zDlQYNrcJEeSxZw+CEh06Mhfvu
-         gedGylWQ/43fy9sKMJ+fG3n9R6fgYGItazcFMNVKEuexXIiVh1Ixo2a9DIIeJz7NgNhQ
-         Hmrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SnUqcrVsJzqJaaVzt0hPVe/gTQHBXGhcLib5WHQ/AJU=;
-        b=Bv2sqheDl2wIouJ60seqC3xUOGO5RceLnbd+wWW67bGNHTdbsrf6vwE6RcXsAoP2MU
-         nFYmDUfj8TspIxTlgW/1SMvGkW874cyShUil40nWiFoA3a6OE/3ZFMYLbWhxYkCoQtkT
-         Kkj86Wu/S/GBMqvRy7ZOVYshKGlsTgPMpF8gCqvC3aev66+NokJ1vY25NzPYpuDBtigJ
-         EgjpiRV+KXsVTvIXhfNLGAwHkf/p1nJDBiJZ1Z0bUX6jkK2ubH38BR4UFPTfvVvkM7tG
-         nR2sa5sg4OEudY+NpGGg6ozxYusUmsyyEwQfnK3sBYthhQdDrpgSm+m0pLODkdH0tB9Z
-         VP2Q==
-X-Gm-Message-State: ANhLgQ3Q+YuggFQisPN6JBxBbK1zhz8uyvOMlTWbTkBHvsBQofiuLHXx
-        thwsrxbMhHSOukZBV1PVCKw=
-X-Google-Smtp-Source: ADFU+vt15QdHPEyOlXqze4BvjuHTIZJH5fEAu12zNjWL5ctAZ2d9xwsBEuNTt0doZ65A7htgMnXryA==
-X-Received: by 2002:a5d:4d48:: with SMTP id a8mr2431238wru.35.1583479324472;
-        Thu, 05 Mar 2020 23:22:04 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id f207sm14897847wme.9.2020.03.05.23.22.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 23:22:02 -0800 (PST)
-Subject: Re: [PATCH v4 2/2] arm64: dts: rockchip: Add initial support for
- Pinebook Pro
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Alexis Ballier <aballier@gentoo.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nick Xie <nick@khadas.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Emmanuel Vadot <manu@freebsd.org>
-References: <20200304213023.689983-2-t.schramm@manjaro.org>
- <20200304213023.689983-3-t.schramm@manjaro.org> <6168222.Wuk326WHQK@phil>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <7a799284-92ab-ea04-285e-37d655064118@gmail.com>
-Date:   Fri, 6 Mar 2020 08:22:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <6168222.Wuk326WHQK@phil>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 6 Mar 2020 02:23:58 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:32399 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbgCFHX6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 02:23:58 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583479438; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=UBOFURm4ibb/cnoI9dEpQch9qApxzL8zn4xOLlpoH+U=; b=iYyocD4H0bfI54549X9vFx5eTxkmK6B9cIEHmTfJEcQ1ID/NyRrnlEo+RxvRnZYtJI93/lFs
+ 2L3nPGvrVLJy0P0C0e4G5QqHV1iqoZc3cjDGoXQ8N74+KUaMjzb8FmZfV28kY64XudpA9vnS
+ cfm0HYi8bqz7pZsi4wpcx7JaSTo=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e61fa83.7f6e3358cab0-smtp-out-n01;
+ Fri, 06 Mar 2020 07:23:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 774A6C432C2; Fri,  6 Mar 2020 07:23:46 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7DC8EC433BA;
+        Fri,  6 Mar 2020 07:23:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7DC8EC433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+        devicetree@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v3 1/4] dt-bindings: Introduce SoC sleep stats bindings
+Date:   Fri,  6 Mar 2020 12:53:29 +0530
+Message-Id: <1583479412-18320-2-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583479412-18320-1-git-send-email-mkshah@codeaurora.org>
+References: <1583479412-18320-1-git-send-email-mkshah@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
 
-Missing #address-cells, #size-cells
-Can you still fix that?
+Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
+SoC sleep stats driver. The driver is used for displaying SoC sleep
+statistic maintained by Always On Processor or Resource Power Manager.
 
-On 3/6/20 1:23 AM, Heiko Stuebner wrote:
-> Am Mittwoch, 4. März 2020, 22:30:23 CET schrieb Tobias Schramm:
->> This commit adds initial dt support for the rk3399 based Pinebook Pro.
->>
->> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
-> 
-> applied for 5.7
-> 
-> Thanks
-> Heiko
-> 
-> 
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../bindings/soc/qcom/soc-sleep-stats.yaml         | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
 
-> +&edp {
-> +	force-hpd;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&edp_hpd>;
-> +	status = "okay";
-> +
-> +	ports {
-
-#address-cells = <1>;
-#size-cells = <0>;
-
-Don't forget that extra empty line here.
-
-
-> +		edp_out: port@1 {
-> +			reg = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			edp_out_panel: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&panel_in_edp>;
-> +			};
-> +		};
-> +	};
-> +};
-
+diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+new file mode 100644
+index 00000000..7c29c61
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/qcom/soc-sleep-stats.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
++
++maintainers:
++  - Maulik Shah <mkshah@codeaurora.org>
++  - Lina Iyer <ilina@codeaurora.org>
++
++description:
++  Always On Processor/Resource Power Manager maintains statistics of the SoC
++  sleep modes involving powering down of the rails and oscillator clock.
++
++  Statistics includes SoC sleep mode type, number of times low power mode were
++  entered, time of last entry, time of last exit and accumulated sleep duration.
++
++properties:
++  compatible:
++    enum:
++      - qcom,rpmh-sleep-stats
++      - qcom,rpm-sleep-stats
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  # Example of rpmh sleep stats
++  - |
++    rpmh_sleep_stats@c3f0000 {
++      compatible = "qcom,rpmh-sleep-stats";
++      reg = <0 0xc3f0000 0 0x400>;
++    };
++  # Example of rpm sleep stats
++  - |
++    rpm_sleep_stats@4690000 {
++      compatible = "qcom,rpm-sleep-stats";
++      reg = <0 0x04690000 0 0x400>;
++    };
++...
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
