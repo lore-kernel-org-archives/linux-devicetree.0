@@ -2,258 +2,194 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF575C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F5DC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04DA2073D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:20:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbEDp+IF"
+	by mail.kernel.org (Postfix) with ESMTP id 96CAD2073B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583508931;
+	bh=iNFqdKLv+eRvs3H2Mi3RchCyVRMkK9tatJ+t/BU07yk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Li6OEjwDyqvEh9fPv7UuEN0CkTqflWfNiFkVtZPsEqilRFmCBeGm8nVdSjNJN6LIf
+	 oe+wYNerPhRR1sPhUZaDBwDhCovP7wTE9Sxn6ZnxdjmZ8knowKrVBs66NI10FcFwRk
+	 q4Mbdh29TrjtKG0wuMtQHDVJ00mRoSzur5R3QCtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgCFPUh (ORCPT
+        id S1727095AbgCFPfb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:20:37 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37470 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFPUg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 10:20:36 -0500
-Received: by mail-wr1-f68.google.com with SMTP id 6so2823747wre.4;
-        Fri, 06 Mar 2020 07:20:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r/uHS4evC8ik+CyCrbOO3pGogteVgXLxKemz6/uGGdQ=;
-        b=AbEDp+IFY6BORZhzlbBIjYCIfYe7FXnbf8iRtrJGMPubxijFk2J5oMWWQwvK1O9o28
-         E9JtP0mwLt0nNQdAM7iZ+/iGMa7pszGI6yrmI3/BNq05jOmdi5aBhE3Xng6Mjpy2LYg1
-         lBIUfuWCptV6NN7NuCJm3USjMQ7SP8bpFrMGCHiPsTW64RwWqrz3g+ikMiH8iraDfEw3
-         9QGsmRm+OZNNhhe47Ys47PSKwHlhwduuWxiRQJXwYRmjvvzAiAhAvTf78c7bQyLfwm5n
-         70+mQ7FH/S6WUBDUe1gcd8gUlaZVWZhOYEYqJi5mauJNy5vNG81EpRA9AjF9ggzFohTX
-         wORQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r/uHS4evC8ik+CyCrbOO3pGogteVgXLxKemz6/uGGdQ=;
-        b=tmCI7ZzyQPsdEQKRhIFzEhWZuLSBNWfqUYh0jxVQKf6221cJIIsRbgphgYoH6TLkY2
-         j5lsPAqj0WCdO21uukATBdwXx12GOqWJC1+HQRFbc1EXSnGpSU9y50ZvUQxyBwOX0p0n
-         VMCoZqSns8ICY8Evvp60t6kP69zOMGqAI0VaHF5jd2wziDgAOzKBFyeLh9LyqVNntAkp
-         xXhfZP1iUK+XrwP583aGzJ0i/30RZ3kjLweBxIwUII53rotZEBjIZ9ojWzFqlHG24tgx
-         +PJynw3qzcIY5M6msdGbUAq4pN/1HglPaTVGp+M1axphA/aVJ7epotUOUIISYVdVVrsp
-         LDIg==
-X-Gm-Message-State: ANhLgQ0ehJ9CI2AmWUdOWG0U0bbqwN5nqNl1YnXcTbkHWM1l8iRxqGrD
-        e1c4KsExsLutQpYSrPQgcE8=
-X-Google-Smtp-Source: ADFU+vvX6BQLrE6t4ebXFAnVTSXAsdtf5xvn0XFpWu8QGbtNW/F/3Z18Lt4cV79Iv0e+8payXdq1bQ==
-X-Received: by 2002:adf:f7c9:: with SMTP id a9mr4535175wrq.225.1583508033317;
-        Fri, 06 Mar 2020 07:20:33 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2510:d000:28e7:f2d4:3603:fb7])
-        by smtp.gmail.com with ESMTPSA id j14sm49640202wrn.32.2020.03.06.07.20.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 07:20:32 -0800 (PST)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris.Paterson2@renesas.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [RESEND PATCH v7] dt-bindings: display: Add idk-2121wr binding
-Date:   Fri,  6 Mar 2020 15:20:31 +0000
-Message-Id: <20200306152031.14212-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Mar 2020 10:35:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727060AbgCFPfb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:35:31 -0500
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12F432073D;
+        Fri,  6 Mar 2020 15:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583508930;
+        bh=iNFqdKLv+eRvs3H2Mi3RchCyVRMkK9tatJ+t/BU07yk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iRtX8L9N2ARyt/i4JwDyOinTaKffwSoBdwG2XQievED77xfIsOBUuRbLWg5OznX6Z
+         HbgZqkv0uPQ1LlDHbTLY+oID44WU8dj4nvhopLhTynSYXRqnpITMsdGBw4eKOPbzJZ
+         TAJk/vvYcGjz4r2UZqPNbtrwahqJZjCJ2VgoC9u8=
+Received: by mail-qv1-f50.google.com with SMTP id g16so1107973qvz.5;
+        Fri, 06 Mar 2020 07:35:30 -0800 (PST)
+X-Gm-Message-State: ANhLgQ31rs7u+LrFFlyELK156faOXBnesiHusJYOLPMk8diSVLqpP8Rt
+        TZQUjcrh27bgCrSmgspew+2ZYts42CsCT2zSLA==
+X-Google-Smtp-Source: ADFU+vuhZOwle3B1BdZhiJMPa1o4Ows241SJR8YEgkbTjVTAQFPyg8WmNmCIyOgO1eykQ9B8gJHEPH/0gdrGV5yipJg=
+X-Received: by 2002:ad4:4593:: with SMTP id x19mr3274776qvu.79.1583508929178;
+ Fri, 06 Mar 2020 07:35:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200306144400.4269-1-ajay.kathat@microchip.com> <20200306144400.4269-2-ajay.kathat@microchip.com>
+In-Reply-To: <20200306144400.4269-2-ajay.kathat@microchip.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 6 Mar 2020 09:35:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKP-9bBMpkvMfphyAfdeVd44=pYDSOY=fSsx5xYkJPCjA@mail.gmail.com>
+Message-ID: <CAL_JsqKP-9bBMpkvMfphyAfdeVd44=pYDSOY=fSsx5xYkJPCjA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] staging: wilc1000: use 'interrupts' property instead
+ of 'irq-gpio'
+To:     Ajay.Kathat@microchip.com
+Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Adham.Abozaeid@microchip.com,
+        Johannes Berg <johannes@sipsolutions.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On Fri, Mar 6, 2020 at 8:44 AM <Ajay.Kathat@microchip.com> wrote:
+>
+> From: Ajay Singh <ajay.kathat@microchip.com>
+>
+> Make use of 'interrupts' property instead of using gpio for handling
+> the interrupt as suggested in [1].
+>
+> [1]. https://lore.kernel.org/linux-wireless/20200303015558.GA6876@bogus/
+>
+> Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
+> ---
+>  .../net/wireless/microchip,wilc1000.yaml      | 79 +++++++++++++++++++
+>  .../wilc1000/microchip,wilc1000,sdio.yaml     |  8 +-
+>  .../wilc1000/microchip,wilc1000,spi.yaml      |  8 +-
 
-Add binding for the idk-2121wr LVDS panel from Advantech.
+Bindings should be a separate patch.
 
-Some panel-specific documentation can be found here:
-https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+>  drivers/staging/wilc1000/netdev.c             | 24 ++----
+>  drivers/staging/wilc1000/netdev.h             |  1 -
+>  drivers/staging/wilc1000/sdio.c               | 31 +++-----
+>  drivers/staging/wilc1000/spi.c                | 15 +---
+>  drivers/staging/wilc1000/wlan.h               |  1 -
+>  8 files changed, 108 insertions(+), 59 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml b/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
+> new file mode 100644
+> index 000000000000..a1914449ad07
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/wireless/microchip,wilc1000.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip WILC wireless devicetree bindings
+> +
+> +maintainers:
+> +  - Adham Abozaeid <adham.abozaeid@microchip.com>
+> +  - Ajay Singh <ajay.kathat@microchip.com>
+> +
+> +description:
+> +  The wilc1000 chips can be connected via SPI or SDIO. This document
+> +  describes the binding to connect wilc devices.
+> +
+> +properties:
+> +  compatible:
+> +    const: microchip,wilc1000
+> +
+> +  spi-max-frequency:
+> +    description: Maximum SPI clocking speed of device in Hz.
+> +    maxItems: 1
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-Apologies for flooding in I missed to add the ML email-ids for the earlier
-version so resending it.
+No need to redefine a common property. Just:
 
-Hi All,
+spi-max-frequency: true
 
-This patch is part of series [1] ("Add dual-LVDS panel support to EK874),
-all the patches have been accepted from it except this one. I have fixed
-Rob's comments in this version of the patch.
+> +
+> +  reg:
+> +    description: Chip select address of device.
 
-[1] https://patchwork.kernel.org/cover/11297589/
+Drop this.
 
-v6->7
- * Added reference to lvds.yaml
- * Changed maintainer to myself
- * Switched to dual license
- * Dropped required properties except for ports as rest are already listed
-   in lvds.panel
- * Dropped Reviewed-by tag of Laurent, due to the changes made it might not
-   be valid.
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: phandle to the clock connected on rtc clock line.
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: rtc
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    spi1: spi@fc018000 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      cs-gpios = <&pioB 21 0>;
+> +      wifi@0 {
+> +        compatible = "microchip,wilc1000";
+> +        spi-max-frequency = <48000000>;
+> +        reg = <0>;
+> +        interrupt-parent = <&pioC>;
+> +        interrupts = <27 0>;
+> +        clocks = <&pck1>;
+> +        clock-names = "rtc";
+> +      };
+> +    };
+> +
+> +  - |
+> +    mmc1: mmc@fc000000 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      pinctrl-names = "default";
+> +      pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3>;
+> +      non-removable;
+> +      vmmc-supply = <&vcc_mmc1_reg>;
+> +      vqmmc-supply = <&vcc_3v3_reg>;
+> +      bus-width = <4>;
+> +      wifi@0 {
+> +        compatible = "microchip,wilc1000";
+> +        reg = <0>;
+> +        interrupt-parent = <&pioC>;
+> +        interrupts = <27 0>;
+> +        clocks = <&pck1>;
+> +        clock-names = "rtc";
+> +      };
+> +    };
+> diff --git a/drivers/staging/wilc1000/microchip,wilc1000,sdio.yaml b/drivers/staging/wilc1000/microchip,wilc1000,sdio.yaml
+> index b338f569f7e2..9df7327bc668 100644
+> --- a/drivers/staging/wilc1000/microchip,wilc1000,sdio.yaml
+> +++ b/drivers/staging/wilc1000/microchip,wilc1000,sdio.yaml
 
-v5->v6:
- * No change
+Why aren't you just removing this file and the spi one?
 
-v4->v5:
-* No change
-
-v3->v4:
-* Absorbed patch "dt-bindings: display: Add bindings for LVDS
-  bus-timings"
-* Big restructuring after Rob's and Laurent's comments
-
-v2->v3:
-* New patch
-
- .../display/panel/advantech,idk-2121wr.yaml        | 120 +++++++++++++++++++++
- 1 file changed, 120 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-new file mode 100644
-index 0000000..b05df05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-@@ -0,0 +1,120 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/advantech,idk-2121wr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Advantech IDK-2121WR 21.5" Full-HD dual-LVDS panel
-+
-+maintainers:
-+  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-+  - Thierry Reding <thierry.reding@gmail.com>
-+
-+description: |
-+  The IDK-2121WR from Advantech is a Full-HD dual-LVDS panel.
-+  A dual-LVDS interface is a dual-link connection with even pixels traveling
-+  on one link, and with odd pixels traveling on the other link.
-+
-+  The panel expects odd pixels on the first port, and even pixels on the
-+  second port, therefore the ports must be marked accordingly (with either
-+  dual-lvds-odd-pixels or dual-lvds-even-pixels).
-+
-+allOf:
-+  - $ref: lvds.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: advantech,idk-2121wr
-+      - {} # panel-lvds, but not listed here to avoid false select
-+
-+  width-mm:
-+    const: 476
-+
-+  height-mm:
-+    const: 268
-+
-+  data-mapping:
-+    const: vesa-24
-+
-+  ports:
-+    type: object
-+    properties:
-+      port@0:
-+        type: object
-+        description: The sink for odd pixels.
-+        properties:
-+          reg:
-+            const: 0
-+
-+          dual-lvds-odd-pixels: true
-+
-+        required:
-+          - reg
-+          - dual-lvds-odd-pixels
-+
-+      port@1:
-+        type: object
-+        description: The sink for even pixels.
-+        properties:
-+          reg:
-+            const: 1
-+
-+          dual-lvds-even-pixels: true
-+
-+        required:
-+          - reg
-+          - dual-lvds-even-pixels
-+
-+  panel-timing: true
-+
-+additionalProperties: false
-+
-+required:
-+  - ports
-+
-+examples:
-+  - |+
-+    panel-lvds {
-+      compatible = "advantech,idk-2121wr", "panel-lvds";
-+
-+      width-mm = <476>;
-+      height-mm = <268>;
-+
-+      data-mapping = "vesa-24";
-+
-+      panel-timing {
-+        clock-frequency = <148500000>;
-+        hactive = <1920>;
-+        vactive = <1080>;
-+        hsync-len = <44>;
-+        hfront-porch = <88>;
-+        hback-porch = <148>;
-+        vfront-porch = <4>;
-+        vback-porch = <36>;
-+        vsync-len = <5>;
-+      };
-+
-+      ports {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        port@0 {
-+          reg = <0>;
-+          dual-lvds-odd-pixels;
-+          panel_in0: endpoint {
-+            remote-endpoint = <&lvds0_out>;
-+          };
-+        };
-+
-+        port@1 {
-+          reg = <1>;
-+          dual-lvds-even-pixels;
-+          panel_in1: endpoint {
-+            remote-endpoint = <&lvds1_out>;
-+          };
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.7.4
-
+Rob
