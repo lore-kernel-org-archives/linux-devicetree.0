@@ -2,94 +2,93 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBEBC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422C0C3F2D6
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE99A2084E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D5420848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 10:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pmq4K6KD"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="eHClCP1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgCFKlf (ORCPT
+        id S1726069AbgCFKqO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:41:35 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43087 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgCFKlf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 05:41:35 -0500
-Received: by mail-qt1-f195.google.com with SMTP id v22so1330196qtp.10;
-        Fri, 06 Mar 2020 02:41:33 -0800 (PST)
+        Fri, 6 Mar 2020 05:46:14 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35742 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgCFKqO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 05:46:14 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m3so1857162wmi.0
+        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 02:46:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=al7age2oTXgYTympMQW4jKiNWfRyppUJjWuKVFSzTq4=;
-        b=Pmq4K6KDvmWg+QImisnIgA7B7RmumCDCRG1Xkl53KFpEcY+WMWtEh6qtXRWE89kD8/
-         ablkdKssUXeOAw8KzuISRSoznT0nsDNPDsLJbAd+B89tQXU4CPT0nu/wacgsNiy3Akd/
-         wObt8muPZYIaPjFpZlh6ILWyiB2ueb07kRcxCTQSFuM7vXzlu0p8RWFbfPFE4j1RwgXO
-         vTDpN0GhxFl39+h/8HFJr1sgpjk+8bdS1aYTI7a4icPjgzjWmOU/E05T7+h0FuPPr0+F
-         fAQD1xEnyBoMLWMAoZBI3XK4nkWE4axsjGsEJ7KsUjYuE1C2+HZiG9qq407qRGkn1qyf
-         xPnw==
+        d=raspberrypi.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=d9hiWNQ6J5n3j61Fv/V6tZE2JLkQSqjWYDVkkP/+6yE=;
+        b=eHClCP1d12t4vlxl6n7r39rqsL2C7OiH/LXFAM/DgTnYYvZJm3QDPnuKZyuXrv15/V
+         0TW0q676MD43QFcX8P/UcUVTRGV3T2Dtc0k8eM8NGh/bvFz779Bc0F3UfQAg51D8Jd/v
+         B7QPKgFmd3ebbKD0/xYQGeR/udzkH+4t+LCRBlP9neskFizDKLBfssG9HJdF9ktIGDfo
+         7ZSGzm+GfTPaFH97ubJ67Xi+EUBSqOsgEtSm8upPNm6C5h5Oa8EDidDycVKzMouwn0fF
+         mYD1G9KXWU8g5yG/xmlhn+lZ8A6mrcVhSlqCcCdC/aA1X5dHF7wG8mBOFoNi6KzafVrC
+         K1Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=al7age2oTXgYTympMQW4jKiNWfRyppUJjWuKVFSzTq4=;
-        b=GaPVML/K50+BqtaCFuvD2fsHYOODgvAGYNmfICzaQxrTNUYc6vWZnHeCxzhraQYQV8
-         9yWNX9gwd09+VRa1SRE6mebTOylLi7jAGVmVjzUCLvMPclD7SfC2jWJ/SqG4KAZf1t0s
-         BTK0+xQHdOxVDMFMRo0bxC4rvBmybwZO/W2CqhZm81Q+dDyl6otAHZIg0usFpth+BIGb
-         fBzWl0u80yF9Oiet01BmF5Hc37UFcTKE+f2pf8qIM4nsx7oAAn7qbVYVvDx6Z5UJ83sO
-         73m9woy7xdiTG/atyZfHJdwsE6W7dODOqa5Cw0ahlJlXuVfmaXz8sb+Zzsgb9P3nZGuR
-         iQRQ==
-X-Gm-Message-State: ANhLgQ0s51YXsVEK+3ZYNxV6yHm8SoCKGMvcMI7kH23EATBt7UalJD30
-        Qnb7SscaYHV84sBnQxfe2Mo=
-X-Google-Smtp-Source: ADFU+vuSKVKDhCno4+Mq0uvE1KVuExpu4oA+/WFezYFdXs9rfgVJNmqSirh5K9SNW5BgkOeQFHON2A==
-X-Received: by 2002:ac8:4659:: with SMTP id f25mr2248175qto.273.1583491293109;
-        Fri, 06 Mar 2020 02:41:33 -0800 (PST)
-Received: from L-E5450.nxp.com ([177.221.114.206])
-        by smtp.gmail.com with ESMTPSA id u5sm17096932qkf.32.2020.03.06.02.41.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 02:41:32 -0800 (PST)
-From:   Alifer Moraes <alifer.wsdm@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        marco.franchi@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alifer Moraes <alifer.wsdm@gmail.com>
-Subject: [PATCH] arm64: dts: imx8mq-phanbell: Fix Ethernet PHY post-reset duration
-Date:   Fri,  6 Mar 2020 07:42:19 -0300
-Message-Id: <20200306104219.6434-1-alifer.wsdm@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d9hiWNQ6J5n3j61Fv/V6tZE2JLkQSqjWYDVkkP/+6yE=;
+        b=ItrB6iy38ZIpm62kh+a8WeZ/5ZYpJ2VkEWwJdJHp9uCTRJl5kfgmHLDUCakdkJ7yB4
+         Da7E0nVRdIjyZwU1Av5EwzCSvMdl/BESYUkQrZvu1caCM5EnsbQyEc306ifgOeE/b0M0
+         K/khGiJU3byeyy1dl4fb+8cAB476/roNrHIYu+NoEwbiVU4GzvD9KZkVgQEHYP4aQCck
+         sc/GMmRHYfyRFaHfUsEt6n7mnINMHAMSv6OeGge2D2REgsHPQtud67vrEGSKFc1M1ozH
+         iTGsyhpBdrn9BWMnWDIXeDcIj8CtcC9apBiTC7gt6NNdEmBeanN0YBFT85L9CTOlR9IK
+         8UUQ==
+X-Gm-Message-State: ANhLgQ0fr94fywkKBS3zRWr+sB8a1/BZhe0wSUwAvXsii4BUpuXDmm3G
+        OrpVVrC1hk2SdVv59d/+AqV/xQ==
+X-Google-Smtp-Source: ADFU+vtyuUNlJMUe6+PBiy69yoy09fo5sBeHo942glDD+YgiDtuy/FwybcSRvw5ZFgPFJU/dlDmHzg==
+X-Received: by 2002:a1c:4681:: with SMTP id t123mr3509384wma.86.1583491571878;
+        Fri, 06 Mar 2020 02:46:11 -0800 (PST)
+Received: from ?IPv6:2a00:1098:3142:14:3ca7:8f7d:279:5ab9? ([2a00:1098:3142:14:3ca7:8f7d:279:5ab9])
+        by smtp.gmail.com with ESMTPSA id i14sm972437wmb.25.2020.03.06.02.46.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Mar 2020 02:46:11 -0800 (PST)
+Subject: Re: [PATCH 00/10] Raspberry Pi vmmc regulator support
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        f.fainelli@gmail.com, linux-kernel@vger.kernel.org
+References: <20200306103857.23962-1-nsaenzjulienne@suse.de>
+From:   Phil Elwell <phil@raspberrypi.com>
+Message-ID: <b33aadf7-d481-10db-c290-6e53b696b2d4@raspberrypi.com>
+Date:   Fri, 6 Mar 2020 10:46:10 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200306103857.23962-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX8MQ Phanbell board uses Realtek RTL8211FD as Ethernet PHY.
-Its datasheet states that the proper post reset duration should be at least 50 ms.
+Hi Nicolas,
 
-Fixes: f34d4bfab354 ("arm64: dts: imx8mq-phanbell: Add support for ethernet")
-Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
----
- arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 06/03/2020 10:38, Nicolas Saenz Julienne wrote:
+> The series snowballed into adding a new quirk, as I reliased
+> sdhci-iproc's behaviour is not that uncommon.
+> 
+> Based on Phil Elwell's work in the downstream Raspberry Pi kernel.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index 16ed13c44a47..06e248b95ada 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -207,7 +207,7 @@
- 	phy-mode = "rgmii-id";
- 	phy-reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
- 	phy-reset-duration = <10>;
--	phy-reset-post-delay = <30>;
-+	phy-reset-post-delay = <50>;
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
- 	status = "okay";
--- 
-2.17.1
+There are a few typos in the commit messages ("reliased" -> "realised",
+"trough" -> "through"), but otherwise:
 
+Reviewed-by: Phil Elwell <phil@raspberrypi.com>
+
+Phil
