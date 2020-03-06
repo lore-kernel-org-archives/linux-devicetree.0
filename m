@@ -2,188 +2,81 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05278C3F2D2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 02:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15179C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 03:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29AD20714
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 02:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD5E20870
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 03:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E+5Hc2Ro"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="to2V9PU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCFCnt (ORCPT
+        id S1726358AbgCFDeA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 21:43:49 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:40441 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbgCFCns (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 21:43:48 -0500
-Received: by mail-vs1-f66.google.com with SMTP id c18so608909vsq.7
-        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 18:43:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9J7QUZ3c6oiJJHOCislF9UdZETLylotw3HiKvwmAMXw=;
-        b=E+5Hc2RoJaRGHZP8HBhUfdRXIeqRGN8m1mX+ZoYWKE5rFmO3rqVE3tD2ahZFs+pdHi
-         /4HyvgWRRhRjVfxlEvKX9ZPO9o/jWmDyGVazqEkLQNal6+cTur8SCs2MkknKUJJlpzN5
-         DZe43h++B4igVoAiSlhNUnAYvsmvti3qQYbV8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9J7QUZ3c6oiJJHOCislF9UdZETLylotw3HiKvwmAMXw=;
-        b=hrQu4Hhi9hNlP32z3w7lyMaZmZHWdZg/bJ8V6tNhHrLDmlZjVK3CrK2jYnG3paSBp+
-         +emzyUnoXYBIU5AsWoMCIn9RJ1yDZU7hedwSNqoS0FaMoKk2FVIw1AqOZNF0tKIjY7Ld
-         Z4T8j605ap8A43tU/ibqaAGa7i/L38h+AfAyRoMnmf5UB6t351Min7A7tymd3vQucVfV
-         DSo+hQ8+Zi8dcdzzjY6rMJ/S2JW2dIqqmdp65y0bszVZiaIcu1KUy8VEeiyMHEGjYYwS
-         FbRLiysev0C2nScJgTztojEUAXITBeLVNwmog3M6oWNX+g7++x1T7nhvRDKsebN3SLrF
-         pXxA==
-X-Gm-Message-State: ANhLgQ0I8ihwVSXaJ/ugwfZ5W9+HVk1PIlFkph0QPrHW/WZ0X/g+nzsW
-        1NKRS9eCu/rH0lV8t2XJ+QtYUVJibai9yQpOQ0VpiA==
-X-Google-Smtp-Source: ADFU+vv6/yy6QpFMc26UByJ8foEiCd0tx3UtqsQqGWflBPyiIzZovmd5yFBvcuNwqosvDrUuX+XkrYPkCEaxbPFJbJY=
-X-Received: by 2002:a67:d81b:: with SMTP id e27mr927920vsj.79.1583462626960;
- Thu, 05 Mar 2020 18:43:46 -0800 (PST)
+        Thu, 5 Mar 2020 22:34:00 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:12355 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726162AbgCFDeA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 22:34:00 -0500
+X-UUID: 45b2bf6554584c88bcd01bf3712092c2-20200306
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=itlYgQ45be2Ssn2Nzi2Lg0iTSRTOtSvZl1uOUtpZGFQ=;
+        b=to2V9PU8Ie1oJRyCv/CXkuG0op/0lQp9T6MXTLPZsW/Ds+40Glvq9zHlwcXd9slUyHq6/aEwa8G/qF2+iR47I1xzioLYjZ1nMo6J22L9DktjuWbza2O5MoLFDGQ/jwhR098DbOxPktOpxee4H6DWGXNWs+aSKTFOHco59dr4l2M=;
+X-UUID: 45b2bf6554584c88bcd01bf3712092c2-20200306
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <eason.yen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 926651444; Fri, 06 Mar 2020 11:33:55 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 6 Mar 2020 11:33:01 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 6 Mar 2020 11:33:55 +0800
+From:   Eason Yen <eason.yen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     <eason.yen@mediatek.com>, <jiaxin.yu@mediatek.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Subject: [PATCH 0/2] Add mediatek codec mt6359 driver
+Date:   Fri, 6 Mar 2020 11:33:40 +0800
+Message-ID: <1583465622-16628-1-git-send-email-eason.yen@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-2-drinkcat@chromium.org> <20200225171613.GA7063@bogus>
- <CANMq1KAVX4o5yC7c_88Wq_O=F+MaSN_V4uNcs1nzS3wBS6A5AA@mail.gmail.com> <1583462055.4947.6.camel@mtksdaap41>
-In-Reply-To: <1583462055.4947.6.camel@mtksdaap41>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 6 Mar 2020 10:43:35 +0800
-Message-ID: <CANMq1KCi1ee87zz6cEWaB04=vEhkTdtW7C+UKW5EFn+1j6Cf3Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
-To:     Nick Fan <nick.fan@mediatek.com>
-Cc:     Rob Herring <robh@kernel.org>, Sj Huang <sj.huang@mediatek.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 10:34 AM Nick Fan <nick.fan@mediatek.com> wrote:
->
-> Sorry for my late reply.
-> I have checked internally.
-> The MT8183_POWER_DOMAIN_MFG_2D is just a legacy name, not really 2D
-> domain.
->
-> If the naming too confusing, we can change this name to
-> MT8183_POWER_DOMAIN_MFG_CORE2 for consistency.
+QWRkIG1lZGlhdGVrIGNvZGVjIChNVDYzNTkpIGRyaXZlcg0KDQpNVDYzNTkgc3VwcG9ydCBwbGF5
+YmFjaywgY2FwdHVyZSBhbmQgdm93IGZlYXR1cmUuDQoNCk9uIGRvd25saW5rIHBhdGgsIGl0IGlu
+Y2x1ZGVzIHRocmVlIERBQ3MgZm9yIGhhbmRzZXQsIGhlYWRzZXQsDQphbmQgbGluZW91dCBwYXRo
+LiBPbiB1bmxpbmsgcGF0aCwgaXQgaW5jbHVkZWRzIHRocmVlIEFEQ3MgZm9yDQptYWluIG1pYywg
+c2Vjb25kIG1pYywgM3JkIG1pYywgYW5kIGhlYWRzZXQgbWljLg0KDQpCeSBzY2VuYXJpbywgc2Vs
+ZWN0ICpfTVVYIHdpZGdldCB0byBjcmVhdGUgZGFtcCBwYXRoLg0KQW5kIGJ5IHNlbGVjdCBtaWNf
+dHlwZV9tdXggdG8gY2hvb3NlIERNSUMvQU1JQy8uLi4uDQoNCkZvciBleGFtcGxlLCBzZWxlY3Qg
+dGhlc2UgTVVYIHdpZGdldCB0byBjcmVhdGUgaGVhZHNldCBwYXRoDQooMSkgREFDIEluIE11eCAt
+LT4gIk5vcm1hbCBQYXRoIg0KKDIpIEhQTCBNdXggLS0+ICJBdWRpbyBQbGF5YmFjayINCigzKSBI
+UFIgTXV4IC0tPiAiQXVkaW8gUGxheWJhY2siDQoNCg0KRWFzb24gWWVuICgyKToNCiAgQVNvQzog
+bWVkaWF0ZWs6IG10NjM1OTogYWRkIGNvZGVjIGRvY3VtZW50DQogIEFTb0M6IGNvZGVjOiBtZWRp
+YXRlazogYWRkIG10NjM1OSBjb2RlYyBkcml2ZXINCg0KIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9zb3VuZC9tdDYzNTkudHh0IHwgICAxNiArDQogc291bmQvc29jL2NvZGVjcy9L
+Y29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA5ICsNCiBzb3VuZC9zb2MvY29k
+ZWNzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIgKw0KIHNvdW5kL3Nv
+Yy9jb2RlY3MvbXQ2MzU5LmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgNDIxNyArKysrKysr
+KysrKysrKysrKysrKw0KIHNvdW5kL3NvYy9jb2RlY3MvbXQ2MzU5LmggICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgMzIxMiArKysrKysrKysrKysrKysNCiA1IGZpbGVzIGNoYW5nZWQsIDc0NTYg
+aW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3Mvc291bmQvbXQ2MzU5LnR4dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBzb3VuZC9z
+b2MvY29kZWNzL210NjM1OS5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IHNvdW5kL3NvYy9jb2RlY3Mv
+bXQ2MzU5LmgNCg0KLS0gDQoxLjkuMQ0K
 
-Thanks! I think I'll keep MT8183_POWER_DOMAIN_MFG_2D (that's fine if
-that's the domain name you use internally in your HW design), but I'll
-modify power-domain-names to core0/1/2 in the binding.
-
-> Thanks
->
-> Nick Fan
->
-> On Wed, 2020-02-26 at 08:55 +0800, Nicolas Boichat wrote:
->
-> > +Nick Fan +Sj Huang @ MTK
-> >
-> > On Wed, Feb 26, 2020 at 1:16 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Fri, Feb 07, 2020 at 01:26:21PM +0800, Nicolas Boichat wrote:
-> > > > Define a compatible string for the Mali Bifrost GPU found in
-> > > > Mediatek's MT8183 SoCs.
-> > > >
-> > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > > Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-> > > > ---
-> > > >
-> > > > v4:
-> > > >  - Add power-domain-names description
-> > > >    (kept Alyssa's reviewed-by as the change is minor)
-> > > > v3:
-> > > >  - No change
-> > > >
-> > > >  .../bindings/gpu/arm,mali-bifrost.yaml        | 25 +++++++++++++++++++
-> > > >  1 file changed, 25 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> > > > index 4ea6a8789699709..0d93b3981445977 100644
-> > > > --- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> > > > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> > > > @@ -17,6 +17,7 @@ properties:
-> > > >      items:
-> > > >        - enum:
-> > > >            - amlogic,meson-g12a-mali
-> > > > +          - mediatek,mt8183-mali
-> > > >            - realtek,rtd1619-mali
-> > > >            - rockchip,px30-mali
-> > > >        - const: arm,mali-bifrost # Mali Bifrost GPU model/revision is fully discoverable
-> > > > @@ -62,6 +63,30 @@ allOf:
-> > > >            minItems: 2
-> > > >        required:
-> > > >          - resets
-> > > > +  - if:
-> > > > +      properties:
-> > > > +        compatible:
-> > > > +          contains:
-> > > > +            const: mediatek,mt8183-mali
-> > > > +    then:
-> > > > +      properties:
-> > > > +        sram-supply: true
-> > > > +        power-domains:
-> > > > +          description:
-> > > > +            List of phandle and PM domain specifier as documented in
-> > > > +            Documentation/devicetree/bindings/power/power_domain.txt
-> > > > +          minItems: 3
-> > > > +          maxItems: 3
-> > > > +        power-domain-names:
-> > > > +          items:
-> > > > +            - const: core0
-> > > > +            - const: core1
-> > > > +            - const: 2d
-> > >
-> > > AFAIK, there's no '2d' block in bifrost GPUs. A power domain for each
-> > > core group is correct though.
-> >
-> > Good question... Hopefully Nick/SJ@MTK can comment, the non-upstream DTS has:
-> > gpu: mali@13040000 {
-> > compatible = "mediatek,mt8183-mali", "arm,mali-bifrost";
-> > power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>;
-> > ...
-> > }
-> >
-> > gpu_core1: mali_gpu_core1 {
-> > compatible = "mediatek,gpu_core1";
-> > power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>;
-> > };
-> >
-> > gpu_core2: mali_gpu_core2 {
-> > compatible = "mediatek,gpu_core2";
-> > power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
-> > };
-> >
-> > So I picked core0/core1/2d as names, but looking at this, it's likely
-> > core2 is more appropriate (and MT8183_POWER_DOMAIN_MFG_2D might just
-> > be a internal/legacy name, if there is no real 2d domain).
-> >
-> > Thanks.
-> >
-> > > Rob
->
