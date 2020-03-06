@@ -2,129 +2,106 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE8DC3F2D6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDAEC10F26
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 12:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D872084E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88C4217F4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 12:12:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="zRbWoylh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgCFLwA (ORCPT
+        id S1726740AbgCFMM1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:52:00 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:52526 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbgCFLwA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 06:52:00 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026BpBAI008068;
-        Fri, 6 Mar 2020 06:51:56 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52jvx8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 06:51:56 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 026Bptjf044770
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 6 Mar 2020 06:51:55 -0500
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 6 Mar 2020 06:51:54 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 6 Mar 2020 06:51:54 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 6 Mar 2020 06:51:54 -0500
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 026Bpnp7026743;
-        Fri, 6 Mar 2020 06:51:50 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-fpga@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <nios2-dev@lists.rocketboards.org>
-CC:     <ley.foon.tan@intel.com>, <robh+dt@kernel.org>, <mdf@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 1/2] arch: nios2: rename 'altr,gpio-bank-width' -> 'altr,ngpio'
-Date:   Fri, 6 Mar 2020 13:54:49 +0200
-Message-ID: <20200306115450.3352-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Mar 2020 07:12:27 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38088 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgCFMM1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 07:12:27 -0500
+Received: by mail-vs1-f67.google.com with SMTP id k26so1358153vso.5
+        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 04:12:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ihNSuWG2TnbFd2RAi0QRsgsGZeaoV3jdGLUwn7e+PnM=;
+        b=zRbWoylh99LeZ5Qz+jFtXkrPFLjVN+lTnUL2Q1BMfQA9VnpUzWPZAOQHFE/miP/oJt
+         vtnjVK2+Hz0KkUXzcLwAZEtrS8PJEUU8hz8iTl/jmN3jTkESOK4Nm1m5KO/RC3A8b7BX
+         Rd0ADhPQ61XpOp/MT1rFJOmbYJpVwmnxQFIBOTe4Fc7PehkJv4HdamdpzXgh7U3tbdDn
+         SyjNpbbKb0LVniF3K+UzA/tXoJl0RQXUMMesboKdfx8LxogV+nhTdKPPEWul6xerCi7R
+         is0sD5va+lzIYK4tJT2LAslxxjqnPhtzwDB7c01jWRHItOn54e+UQqblg/KuvPadxpAa
+         md9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ihNSuWG2TnbFd2RAi0QRsgsGZeaoV3jdGLUwn7e+PnM=;
+        b=IqGO9EVEb0Gya1Vg48PNK9zqr2Gpn5c8E2wqA3LGKlpejKZo/ECMD1vODm6iw3TFWR
+         14y4LU/4YSlk1/O1rHigmukiq+7HwRUvNAy/dS4lRVwUsZXVDYRXxAJOPTokSlveQALc
+         EK+Meaj20JZ6tXIWFF5sBeFqoFEq9L4B/Cco8p2n/iqsvP4zbdlZ4M/3ymU/V92RTqCI
+         vU7TzyAHttPl4hOPbmzDz2jQj/4/tkRwVA/y4JRjQlCY9iDi6VpFTlxaGaHWer6SEcpO
+         NlTuUFboUNhR6XpjWgwXOZnARg4zqOr/Z1SItR8LCitA/nu/CgHMNhrOvP0gsjBGK9/0
+         qBMw==
+X-Gm-Message-State: ANhLgQ3LDtyzmDkdZpIW9tYXWO1uqDwKjQPTZP9Eogp96Ad6E6Qer4f9
+        TNUDD1gygziN44xiMnWbzXqY2upB/DUis6E+O56nmg==
+X-Google-Smtp-Source: ADFU+vsSR47Zpizcdzhr125rCceK+nGi35On+g9szLVw50VpNWy0RoTP6XPVBPSvnCxvFQle/Yn97GxufTwYi7YrQFk=
+X-Received: by 2002:a67:fb09:: with SMTP id d9mr1959744vsr.182.1583496745860;
+ Fri, 06 Mar 2020 04:12:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_03:2020-03-06,2020-03-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=482 mlxscore=0 lowpriorityscore=0 clxscore=1011 adultscore=0
- impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003060086
+References: <20200306105503.24267-1-geert+renesas@glider.be>
+In-Reply-To: <20200306105503.24267-1-geert+renesas@glider.be>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Fri, 6 Mar 2020 17:41:00 +0530
+Message-ID: <CAHLCerNuh+JiydP7WOD9KCRm=R7qF4h41MSsadG6PgcteQkFwQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] thermal: Add support for Renesas R-Car M3-W+
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is no more 'altr,gpio-bank-width' in the 'altr,pio-1.0' driver.
-There is a 'altr,ngpio' which is  what the property wants to configure.
+On Fri, Mar 6, 2020 at 4:25 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+>         Hi,
+>
+> This patch series adds support for the Thermal Sensor/Chip Internal
+> Voltage Monitor in the R-Car M3-W+ (R8A77961) SoC.
+>
+> It has been tested on a Salvator-XS development board with R-Car M3-W+.
+>
+> Geert Uytterhoeven (2):
+>   dt-bindings: thermal: rcar-gen3-thermal: Add r8a77961 support
+>   thermal: rcar_gen3_thermal: Add r8a77961 support
+>
+>  .../devicetree/bindings/thermal/rcar-gen3-thermal.txt         | 1 +
+>  drivers/thermal/rcar_gen3_thermal.c                           | 4 ++++
+>  2 files changed, 5 insertions(+)
 
-This change updates all occurrences of 'altr,gpio-bank-width' to
-'altr,ngpio'.
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- Documentation/devicetree/bindings/fpga/fpga-region.txt | 4 ++--
- arch/nios2/boot/dts/10m50_devboard.dts                 | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
-index 90c44694a30b..b0dacb6a3390 100644
---- a/Documentation/devicetree/bindings/fpga/fpga-region.txt
-+++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
-@@ -263,7 +263,7 @@ Overlay contains:
- 			gpio@10040 {
- 				compatible = "altr,pio-1.0";
- 				reg = <0x10040 0x20>;
--				altr,gpio-bank-width = <4>;
-+				altr,ngpio = <4>;
- 				#gpio-cells = <2>;
- 				clocks = <2>;
- 				gpio-controller;
-@@ -468,7 +468,7 @@ programming is the FPGA based bridge of fpga_region1.
- 				compatible = "altr,pio-1.0";
- 				reg = <0x10040 0x20>;
- 				clocks = <0x2>;
--				altr,gpio-bank-width = <0x4>;
-+				altr,ngpio = <0x4>;
- 				resetvalue = <0x0>;
- 				#gpio-cells = <0x2>;
- 				gpio-controller;
-diff --git a/arch/nios2/boot/dts/10m50_devboard.dts b/arch/nios2/boot/dts/10m50_devboard.dts
-index 5e4ab032c1e8..739ad96a6cc1 100644
---- a/arch/nios2/boot/dts/10m50_devboard.dts
-+++ b/arch/nios2/boot/dts/10m50_devboard.dts
-@@ -179,7 +179,7 @@
- 		led_pio: gpio@180014d0 {
- 			compatible = "altr,pio-1.0";
- 			reg = <0x180014d0 0x00000010>;
--			altr,gpio-bank-width = <4>;
-+			altr,ngpio = <4>;
- 			resetvalue = <15>;
- 			#gpio-cells = <2>;
- 			gpio-controller;
-@@ -190,7 +190,7 @@
- 			reg = <0x180014c0 0x00000010>;
- 			interrupt-parent = <&cpu>;
- 			interrupts = <6>;
--			altr,gpio-bank-width = <3>;
-+			altr,ngpio = <3>;
- 			altr,interrupt-type = <2>;
- 			edge_type = <1>;
- 			level_trigger = <0>;
--- 
-2.20.1
-
+> --
+> 2.17.1
+>
+> Gr{oetje,eeting}s,
+>
+>                                                 Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                                             -- Linus Torvalds
