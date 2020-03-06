@@ -3,85 +3,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5FDC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 19:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA89DC10F27
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 19:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0E420675
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 19:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C3F20675
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 19:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgCFTJZ convert rfc822-to-8bit (ORCPT
+        id S1726231AbgCFTle (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:09:25 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:35526 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFTJZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:09:25 -0500
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jAILK-0002nL-U7; Fri, 06 Mar 2020 20:09:06 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Emmanuel Vadot <manu@freebsd.org>,
-        Alexis Ballier <aballier@gentoo.org>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Nick Xie <nick@khadas.com>, Andy Yan <andy.yan@rock-chips.com>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/2] arm64: dts: rockchip: Add initial support for Pinebook Pro
-Date:   Fri, 06 Mar 2020 20:09:05 +0100
-Message-ID: <1783248.GgDFSgCcj8@diego>
-In-Reply-To: <b30fef29-6667-9200-178b-4d0e9fc63c12@manjaro.org>
-References: <20200304213023.689983-2-t.schramm@manjaro.org> <6168222.Wuk326WHQK@phil> <b30fef29-6667-9200-178b-4d0e9fc63c12@manjaro.org>
+        Fri, 6 Mar 2020 14:41:34 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41304 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726185AbgCFTle (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 14:41:34 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026Jdvw9110420;
+        Fri, 6 Mar 2020 14:41:29 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ykmmg1um0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Mar 2020 14:41:29 -0500
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 026Je00m110577;
+        Fri, 6 Mar 2020 14:41:29 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ykmmg1uka-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Mar 2020 14:41:29 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 026Jaguu022255;
+        Fri, 6 Mar 2020 19:41:28 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma03dal.us.ibm.com with ESMTP id 2yffk8babe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Mar 2020 19:41:28 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 026JfQ1q63570286
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Mar 2020 19:41:26 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE26978060;
+        Fri,  6 Mar 2020 19:41:26 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6F0D7805F;
+        Fri,  6 Mar 2020 19:41:25 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.78.144])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri,  6 Mar 2020 19:41:25 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-spi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, broonie@kernel.org, joel@jms.id.au,
+        andrew@aj.id.au, andy.shevchenko@gmail.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v3 0/2] spi: Add FSI-attached SPI controller driver
+Date:   Fri,  6 Mar 2020 13:41:16 -0600
+Message-Id: <20200306194118.18581-1-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-06_07:2020-03-06,2020-03-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=594 phishscore=0
+ spamscore=0 suspectscore=1 clxscore=1015 malwarescore=0 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060120
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tobias,
+This series adds a dts binding and a driver for a new SPI controller that is
+accessed over FSI bus.
 
-Am Freitag, 6. März 2020, 19:58:45 CET schrieb Tobias Schramm:
-> Hi Heiko,
-> 
-> >> This commit adds initial dt support for the rk3399 based Pinebook Pro.
-> >>
-> >> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
-> >
-> > applied for 5.7
-> >
-> 
-> any chance you can squeeze in another small fix? Somewhere in the
-> process the vmcc and vqmmc supplies of the sdmmc controller were removed
-> in error. Those should be added to the sdmmc controller like this:
-> 
->  &sdmmc {
->         pinctrl-names = "default";
->         pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
->         sd-uhs-sdr104;
-> +       vmmc-supply = <&vcc3v0_sd>;
-> +       vqmmc-supply = <&vcc_sdio>;
->         status = "okay";
->  };
+Eddie James (2):
+  dt-bindings: fsi: Add FSI2SPI bindings
+  spi: Add FSI-attached SPI controller driver
 
-I've amended the commit with these two properties.
+ .../devicetree/bindings/fsi/ibm,fsi2spi.yaml  |  36 ++
+ MAINTAINERS                                   |   7 +
+ drivers/spi/Kconfig                           |   7 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-fsi.c                         | 558 ++++++++++++++++++
+ 5 files changed, 609 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
+ create mode 100644 drivers/spi/spi-fsi.c
 
-Heiko
-
+-- 
+2.24.0
 
