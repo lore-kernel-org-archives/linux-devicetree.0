@@ -2,74 +2,126 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B308C3F2D5
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC42C10F00
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A041208C3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52224217F4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 07:39:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSzgjOlO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgCFH2S (ORCPT
+        id S1725853AbgCFHjR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:28:18 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38385 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgCFH2S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 02:28:18 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7Ov-0007jV-SA; Fri, 06 Mar 2020 08:28:05 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7Ov-0003pl-7B; Fri, 06 Mar 2020 08:28:05 +0100
-Date:   Fri, 6 Mar 2020 08:28:05 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sandipan Patra <spatra@nvidia.com>
-Cc:     treding@nvidia.com, robh+dt@kernel.org, jonathanh@nvidia.com,
-        bbasu@nvidia.com, ldewangan@nvidia.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: tegra: Add support for Tegra194
-Message-ID: <20200306072805.qraegjo7xmebelu5@pengutronix.de>
-References: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
+        Fri, 6 Mar 2020 02:39:17 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42400 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgCFHjR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 02:39:17 -0500
+Received: by mail-wr1-f65.google.com with SMTP id v11so1090899wrm.9
+        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 23:39:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:references:subject:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4t0MStYbCBrrml5GUGnyfpLcvggg+PyXMPp39nd5trE=;
+        b=RSzgjOlOMbBeZo2wbq6QANsYrtE15e1XNV26Ts8HIH6E8Rw5WjTotTFhcbQtTdeVEC
+         lmWGNY4BYjMrmJ4GamktpINiM9bQtzsOKOjVuYcR54RQD+/Bfq+/Q6/V1LQuNxMpC9MB
+         RZ7qKyV4+Nd9Zz3jW+pdhf8+QuafjSXhsD6RFbI/EnnQ5aD3ZhSMgXrkNPTQhoOzbG+f
+         lGZtAUTkO1Iby6hmaxtTxeY1WaJVoYFb9+e8VGTGqcYF4UtMI+5j5hQuiYv3fxsMNEc+
+         xFrvx8j1Mm0zQfzF3oLqtor+5FxUk6XVFYPVv2rLK0GfnxzxFgIlgWmJZR86wAMAoXXB
+         nAjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:subject:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4t0MStYbCBrrml5GUGnyfpLcvggg+PyXMPp39nd5trE=;
+        b=nSHo6AJAB9I6y40W0YyJGlFZBFJGEe2CVVh6HUMdavLtTm5r8GDxIgmshLuKCN+zix
+         ABdbl1qyUtKonmaHAgM8AUM9kwIJ6UQzUflZDTw9IiU/qb7/7x7N7Vpmg0qmwsXuAXde
+         QyO35yqpKutwR31UCGCHMcNfviIUozymuYNJL4i9VUbLTRV6SUYFJj8WQCK+iB7oLbQ3
+         YjDIQlZvCo3MuY/zjAFr1nbVasQmpEBa3g5MO5G7kLdRGAS8FEnLF5UwzTIV47Q7xRuM
+         XCQowmvrVawZDxt06RfDuSpqjtI3fblssmdScbtF/TbZ91d6a5kmIx5vsSMPErSiN4J2
+         riqw==
+X-Gm-Message-State: ANhLgQ0+g2edQxjkurxasP04oJ7dpKX+cyGoUpWW915WtvHcTAf76+yu
+        7DukWPlfKYazzTKGSDu46lbMlZm5
+X-Google-Smtp-Source: ADFU+vsDky10qkg2759HPWADpen7Ug1SSZpzuiTDnR7oovqEmbuLwiN6yUtObGg2h/jiin3VPcHFbw==
+X-Received: by 2002:adf:dfc2:: with SMTP id q2mr2501810wrn.209.1583480355596;
+        Thu, 05 Mar 2020 23:39:15 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id j14sm48263537wrn.32.2020.03.05.23.39.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 23:39:15 -0800 (PST)
+To:     Heiko Stuebner <heiko@sntech.de>
+References: <3739122.I207nbqjcC@phil>
+Subject: Re: Re: [PATCH 4/4] arm64: dts: rockchip: Enable eDP display on
+ rk3399 evb
+Cc:     linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Yan <andy.yan@rock-chips.com>, devicetree@vger.kernel.org
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <88f23464-1868-464f-7e0b-c9cd1c12c9d5@gmail.com>
+Date:   Fri, 6 Mar 2020 08:39:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <3739122.I207nbqjcC@phil>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 04:57:33PM +0530, Sandipan Patra wrote:
-> Tegra194 has multiple PWM controllers with each having only one output.
+Hi,
+
+Missing #address-cells, #size-cells
+Can you still fix that?
+Also include all email addresses that are produced by:
+
+./scripts/get_maintainer.pl --nogit-fallback --nogit
+
 > 
-> Also the maxmimum frequency is higher than earlier SoCs.
+> Am Donnerstag, 5. MÃ¤rz 2020, 12:39:12 CET schrieb Andy Yan:
+>> Add eDP panle and enable relative dt node like vop/iommu
+>> to enable eDP display on rk3399 evb.
+>> 
+>> Signed-off-by: Andy Yan <andy.yan at rock-chips.com>
 > 
-> Add support for Tegra194 and specify the number of PWM outputs and
-> maximum supported frequency using device tree match data.
+> applied for 5.7 - after removing the added blank line at the end
+> of the file
 > 
-> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> Thanks
+> Heiko
 
-Looks good to me,
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Thanks
-Uwe
+> +&edp {
+> +	status = "okay";
+> +	force-hpd;
+> +
+> +	ports {
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+#address-cells = <1>;
+#size-cells = <0>;
+
+Don't forget that extra empty line here.
+
+> +		edp_out: port at 1 {
+> +			reg = <1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			edp_out_panel: endpoint at 0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&panel_in_edp>;
+> +			};
+> +		};
+> +	};
+> +};
+
