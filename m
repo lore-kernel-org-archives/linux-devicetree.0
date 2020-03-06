@@ -6,63 +6,63 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8318C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9112C10F00
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4982073B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9522072D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 11:21:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oFIR9svz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aeKOvDaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgCFLVW (ORCPT
+        id S1726026AbgCFLVo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:21:22 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:60203 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725827AbgCFLVW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 06:21:22 -0500
+        Fri, 6 Mar 2020 06:21:44 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12427 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725827AbgCFLVn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 06:21:43 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583493681; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1583493703; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=S9rgB4GK2W6w7XkjsGqmdclDv4AgRWYQvpM/FTcfwc4=; b=oFIR9svzCQ4K8k8ia+vKms6tnkmoy7sS2ROd0ZFy0Kp5UtZAur0FFu73xt/c5h1TTxyoU0AS
- m6YOkgvzrBcx3vH/NrDi+TqsTbchO1lHFMD06GMGWRzkVEPIU2a109VGBI46zkGQdugN1IVb
- Ndo2iSlRFLeSSgAnZ07E/E1EpLY=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ Subject: Sender; bh=Jwxyby0xndROGdVUzKRBbhM6nT8U3ucqzou3WOX2Z9k=; b=aeKOvDaYCr0PB6QLCQTMghWmXqY1etAOHu7I0auMzdUEGTgcTTE8RvRNSSxHVIudrQMMejvb
+ 2ltEZZR5zVqDHltVqA2qhRlLtyQIOMaxXb6zE7R++Lq3/dCW2IaLGiheW/wlnIWzSz5McrDo
+ 1DIHZgtrd3qLe6Nl31iPAFtsVrs=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e623228.7f0c189e66c0-smtp-out-n05;
- Fri, 06 Mar 2020 11:21:12 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e623247.7f950dba90a0-smtp-out-n01;
+ Fri, 06 Mar 2020 11:21:43 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0151AC43637; Fri,  6 Mar 2020 11:21:10 +0000 (UTC)
+        id 19688C44788; Fri,  6 Mar 2020 11:21:42 +0000 (UTC)
 Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sanm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E12C7C433F2;
-        Fri,  6 Mar 2020 11:21:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E12C7C433F2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 022CAC433BA;
+        Fri,  6 Mar 2020 11:21:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 022CAC433BA
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v3 0/4] Add QMP V3 USB3 PHY support for SC7180
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+Subject: Re: [PATCH v4 0/8] Add QUSB2 PHY support for SC7180
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Stephen Boyd <swboyd@chromium.org>,
         Doug Anderson <dianders@chromium.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
-References: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
- <20200305185708.GU24720@google.com>
+        devicetree@vger.kernel.org
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+ <20200203185649.GK3948@builder> <20200305185132.GT24720@google.com>
 From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <38a1d5e6-98ed-c887-6bb5-d32138fc465c@codeaurora.org>
-Date:   Fri, 6 Mar 2020 16:51:04 +0530
+Message-ID: <4fe18d8b-7479-7d1c-ccbe-9d9404b60ba6@codeaurora.org>
+Date:   Fri, 6 Mar 2020 16:51:35 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200305185708.GU24720@google.com>
+In-Reply-To: <20200305185132.GT24720@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -79,46 +79,66 @@ Regards
 
 Sandeep
 
-On 3/6/2020 12:27 AM, Matthias Kaehlcke wrote:
-> Hi Sandeep,
->
-> this series has a few minor outstanding comments that prevent it from
-> landing. Do you plan to respin it soon?
+On 3/6/2020 12:21 AM, Matthias Kaehlcke wrote:
+> On Mon, Feb 03, 2020 at 10:56:49AM -0800, Bjorn Andersson wrote:
+>> On Wed 29 Jan 05:51 PST 2020, Sandeep Maheswaram wrote:
+>>
+>> Kishon, afaict this is all reviewed, let me know when you're taking the
+>> phy pieces and I'll pick up the dts changes.
+> The series has a few minor comments. Sandeep, could you respin the
+> series so that it can be landed?
 >
 > Thanks
 >
 > Matthias
 >
-> On Wed, Feb 12, 2020 at 04:51:24PM +0530, Sandeep Maheswaram wrote:
->> Add QMP V3 USB3 PHY entries for SC7180 in phy driver and
->> device tree bindings.
->>
->> changes in v3:
->> *Addressed Rob's comments in yaml file.
->> *Sepearated the SC7180 support in yaml patch.
->> *corrected the phy reset entries in device tree.
->>
->> changes in v2:
->> *Remove global phy reset in QMP phy.
->> *Convert QMP phy bindings to yaml.
->>
->> Sandeep Maheswaram (4):
->>    dt-bindings: phy: qcom,qmp: Convert QMP phy bindings to yaml
->>    dt-bindings: phy: qcom,qmp: Add support for SC7180
->>    phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
->>    arm64: dts: qcom: sc7180: Correct qmp phy reset entries
->>
->>   .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 287 +++++++++++++++++++++
->>   .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 227 ----------------
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi               |   4 +-
->>   drivers/phy/qualcomm/phy-qcom-qmp.c                |  38 +++
->>   4 files changed, 327 insertions(+), 229 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->>
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
+>>> Converting dt binding to yaml.
+>>> Adding compatible for SC7180 in dt bindings.
+>>> Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
+>>>
+>>> Changes in v4:
+>>> *Addressed Rob Herrings comments in dt bindings.
+>>> *Added new structure for all the overriding tuning params.
+>>> *Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy.
+>>> *Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845.
+>>>
+>>> Changes in v3:
+>>> *Using the generic phy cfg table for QUSB2 V2 phy.
+>>> *Added support for overriding tuning parameters in QUSB2 V2 PHY
+>>> from device tree.
+>>>
+>>> Changes in v2:
+>>> Sorted the compatible in driver.
+>>> Converted dt binding to yaml.
+>>> Added compatible in yaml.
+>>>
+>>> Sandeep Maheswaram (8):
+>>>    dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
+>>>    dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
+>>>      SC7180
+>>>    phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
+>>>    dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
+>>>      parameters
+>>>    phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
+>>>      V2 PHY
+>>>    arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
+>>>    arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
+>>>    arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
+>>>      device
+>>>
+>>>   .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 182 +++++++++++++++++++++
+>>>   .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
+>>>   arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
+>>>   arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
+>>>   arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
+>>>   drivers/phy/qualcomm/phy-qcom-qusb2.c              | 143 +++++++++++-----
+>>>   6 files changed, 291 insertions(+), 114 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+>>>   delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+>>>
+>>> -- 
+>>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>>> of Code Aurora Forum, hosted by The Linux Foundation
+>>>
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
