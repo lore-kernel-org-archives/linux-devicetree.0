@@ -2,34 +2,41 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2568C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A28BC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8997A2084E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EAB20848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 13:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgCFNsc (ORCPT
+        id S1726194AbgCFNys (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:48:32 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37330 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCFNsb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 08:48:31 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 342F4803087C;
-        Fri,  6 Mar 2020 13:48:29 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5oI_7TdojgQv; Fri,  6 Mar 2020 16:48:28 +0300 (MSK)
-Date:   Fri, 6 Mar 2020 16:47:20 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Fri, 6 Mar 2020 08:54:48 -0500
+Received: from mga17.intel.com ([192.55.52.151]:41481 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbgCFNys (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:54:48 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 05:54:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
+   d="scan'208";a="287977630"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Mar 2020 05:54:43 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jADR7-007NGR-NA; Fri, 06 Mar 2020 15:54:45 +0200
+Date:   Fri, 6 Mar 2020 15:54:45 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
@@ -38,103 +45,84 @@ CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200306132912.GA1748204@smile.fi.intel.com>
- <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] i2c: designeware: Add Baikal-T1 SoC DW I2C specifics
+ support
+Message-ID: <20200306135445.GE1748204@smile.fi.intel.com>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306134829.342F4803087C@mail.baikalelectronics.ru>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 03:30:35PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > From: Serge Semin <fancer.lancer@gmail.com>
-> > > 
-> > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
-> > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
-> > > with currently implemented in the kernel DW DMAC driver, but there are some
-> > > peculiarities which must be taken into account in order to have the device
-> > > fully supported.
-> > > 
-> > > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> > > channels, which alas have different max burst length configuration.
-> > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> > > while the rest of them just up to 32 bits. We must make sure that the DMA
-> > > subsystem doesn't set values exceeding these limitations otherwise the
-> > > controller will hang up. In third currently we discovered the problem in using
-> > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> > > natively implemented multi-block LLP transfers support and the SPI-transfer
-> > > length exceeds the max lock size. In this case due to asynchronous handling of
-> > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
-> > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> > > the DMAC to asynchronously execute the transfers we'd have to at least warn
-> > > the user of the possible errors.
-> > > 
-> > > Finally there is a bug in the algorithm of the nollp flag detection.
-> > > In particular even if DW DMAC parameters state the multi-block transfers
-> > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> > > by the driver true multi-block LLP functionality unusable. This happens cause'
-> > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> > > contiguous multi-block transfers will be only supported. We must take the
-> > > flag into account when detecting the LLP support otherwise the driver just
-> > > won't work correctly.
-> > > 
-> > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > commit 98d54f81e36b ("Linux 5.6-rc4").
-> > 
-> > Thank you for your series!
-> > 
-> > I'll definitely review it, but it will take time. So, I think due to late
-> > submission this is material at least for v5.8.
+First of all, I got only 3 out of 6 patches. Are you sure you properly prepared
+the series?
+
+On Fri, Mar 06, 2020 at 04:19:49PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <fancer.lancer@gmail.com>
+
+Same comment as per DMA series, try next time to link the cover letter to the
+series correctly.
+
+> There are three DW I2C controllers embedded into the Baikal-T1 SoC. Two
+> of them are normal with standard DW I2C IP-core configurations and registers
+> accessible over normal MMIO space - so they are acceptable by the available
+> DW I2C driver with no modification.
+
+> But there is a third, which is a bit
+> different. Its registers are indirectly accessed be means of "command/data
+> in/data out" registers tuple. In order to have it also supported by the DW
+> I2C driver, we must modify the code a bit. This is a main purpose of this
+> patchset.
 > 
+> First of all traditionally we replaced the legacy plain text-based dt-binding
+> file with yaml-based one. Then we found and fixed a bug in the DW I2C FIFO size
+> detection algorithm which tried to do it too early before dw_readl/dw_writel
+> methods could be used.
 
-Hello Andy,
-Thanks for the quick response. Looking forward to get the patches
-reviewed and move on with the next patchset I'll send after this. It concerns
-DW APB SSI driver, which uses the changes introduced by this one. So the
-sooner we finished with this patchset the better. Although I understand
-that it may take some time. I've just sent over 12 patchset, which have a lot
-of fixups and new drivers.)
+So far so good (looks like, I think colleagues of mine and myself will review
+individual patches later on).
 
-> One thing that I can tell immediately is the broken email thread in this series.
-> Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
-> so, it will link the mail properly.
-> 
+> Finally we introduced a platform-specific flag
+> ACCESS_INDIRECT, which would enable the indirect access to the DW I2C registers
+> implemented for one of the Baikal-T1 SoC DW I2C controllers. See the commit
+> message of the corresponding patch for details.
 
-I've got thread=true in my gitconfig file, so each email should have
-the proper reference and in-reply-to to the cover-letter (I see it from
-the log). The problem popped up from a different place. For some reason the
-automatic CC/To list extraction command didn't do the job right, so we ended
-up with lacking of mailing lists in Cc's in this patchset. The command look like
-this:
+This is quite questionable. In Intel SoCs we have indirect I²C controllers to
+access (inside PMIC, for example). The approach used to do that is usually to
+have an IPC mechanism and specific bus controller driver. See i2c-cht-wc.c for
+instance.
 
-git send-email --cc-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nom" \
-                   --to-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nol" \
-                   --from "Serge Semin <Sergey.Semin at baikalelectronics.ru>" \
-                   --smtp-server-option="-abaikal" --cover-letter -5
+I'm not sure if it makes a lot of duplication and if actually switching I²C
+DesignWare driver to regmap API will solve it. At least that is the second
+approach I would consider.
 
-Regards,
--Sergey
+But I'll wait others to comment on this. We have to settle the solution before
+going further.
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> commit 98d54f81e36b ("Linux 5.6-rc4").
+
+`git format-patch --base ...` should do the job.
+
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+
+Same comment as per UART patch. Who is the Alexey in relation to the work done?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
