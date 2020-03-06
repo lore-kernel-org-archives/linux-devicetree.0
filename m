@@ -2,131 +2,78 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485BEC10F00
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1A3C10F00
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED5E20848
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 14:52:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aihyF2t/"
+	by mail.kernel.org (Postfix) with ESMTP id 209D920409
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 15:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCFOws (ORCPT
+        id S1726873AbgCFPIl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:52:48 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45775 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgCFOws (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 09:52:48 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z12so2480042qkg.12
-        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 06:52:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+GR87JEz7bnHSu9Y+6bwTYgFaQr/zFIG/NuG9Kdwt4s=;
-        b=aihyF2t/7s9DwcSYHNvpWHnT3C1bxl/IZjNLEoNgOyzpHGq2CUT5SBQgARQYZcC3G6
-         3QQcrLEwVInFxDWyTBXRLmXxACdXjYVIqAViex2/tQdPqzBlGGoQch5dkM9CiRhOY7Yr
-         yUUf7KhbVdR7MKAD56vslHiz5RAfoDjMkqmQ4qTCQQ6gYW3ezJVfIhj1mUTLOa6MObXQ
-         NNFpk5xfcDcsqIhcLIaVcUtJ5aS7/SVw3PB4wRfYRl19e3Sdp1bfYlUxjk95UosNuxLf
-         bfLFXQreuG1sjxtV/SfKboz2+FupAmFWP79r+I3j96a8IihKr6R1cSfkp7pDo/v0x+v/
-         8FdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+GR87JEz7bnHSu9Y+6bwTYgFaQr/zFIG/NuG9Kdwt4s=;
-        b=WL9MpFmzd4Eb/PNuIhwOa1KP6hM4tBtrZMFNN7/jVgIrQgt3dtEWhwrg1/XVyzq45U
-         Tu9q9KGYmgps9LhGvyc0904fUvxGP6/S5dGqXim4IA9/eyOmZ2oG4oGV0lDpQrahdicv
-         81wCpPlWFk3789bjr3gb/f7MchmT1QWdwMcL0CF4f+AroZocXgbR+Ojhako7lUIRmvPU
-         Dnf2Q5OYMF9IPNza2iqoQ4nXeN95jB5Vl2qR7K9HKcJ9xJ3ZGBcRbYL48TJWXO/beNEI
-         8R8No+fhrlA28ynq6pJPuLO6jJ6Z0EAYBwAfqOPIb3p0eDgLlTa1F92cO6boGGUSbSX2
-         d3bA==
-X-Gm-Message-State: ANhLgQ1VSU4Qaz/6a8ladg1D3wJU0dcqFZ7LIWMGT8w1Vwyl+mR1jROy
-        z64Cg95NCRJwaHB+fhdb7RL9IQ==
-X-Google-Smtp-Source: ADFU+vt8B7E7ypc6uA8DcBdUQZ7yTuum2anrkiUB7D/EpPFaARsWnBpjWIkRxETgE9O5KR7vdHN99g==
-X-Received: by 2002:a05:620a:1427:: with SMTP id k7mr3113149qkj.377.1583506366542;
-        Fri, 06 Mar 2020 06:52:46 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id n59sm8640178qtd.77.2020.03.06.06.52.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 06 Mar 2020 06:52:46 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jAELF-00041P-Jc; Fri, 06 Mar 2020 10:52:45 -0400
-Date:   Fri, 6 Mar 2020 10:52:45 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, will@kernel.org,
-        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
-        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
-        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        iommu@lists.linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        robin.murphy@arm.com, christian.koenig@amd.com
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200306145245.GK31668@ziepe.ca>
-References: <20200224190056.GT31668@ziepe.ca>
- <20200225092439.GB375953@myrica>
- <20200225140814.GW31668@ziepe.ca>
- <20200228143935.GA2156@myrica>
- <20200228144844.GQ31668@ziepe.ca>
- <20200228150427.GF2156@myrica>
- <20200228151339.GS31668@ziepe.ca>
- <20200306095614.GA50020@myrica>
- <20200306130919.GJ31668@ziepe.ca>
- <20200306143556.GA99609@myrica>
+        Fri, 6 Mar 2020 10:08:41 -0500
+Received: from muru.com ([72.249.23.125]:59046 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726533AbgCFPIl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:08:41 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9B65B8027;
+        Fri,  6 Mar 2020 15:09:25 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 07:08:37 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Nishanth Menon <nm@ti.com>,
+        yan-liu@ti.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Nori, Sekhar" <nsekhar@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
+Message-ID: <20200306150837.GB37466@atomide.com>
+References: <20200304090031.30360-1-rogerq@ti.com>
+ <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
+ <eb4e97f2-9afd-41a9-e239-88798c326a86@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200306143556.GA99609@myrica>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eb4e97f2-9afd-41a9-e239-88798c326a86@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 03:35:56PM +0100, Jean-Philippe Brucker wrote:
-> On Fri, Mar 06, 2020 at 09:09:19AM -0400, Jason Gunthorpe wrote:
-> > On Fri, Mar 06, 2020 at 10:56:14AM +0100, Jean-Philippe Brucker wrote:
-> > > I tried to keep it simple like that: normally mmu_notifier_get() is called
-> > > in bind(), and mmu_notifier_put() is called in unbind(). 
-> > > 
-> > > Multiple device drivers may call bind() with the same mm. Each bind()
-> > > calls mmu_notifier_get(), obtains the same io_mm, and returns a new bond
-> > > (a device<->mm link). Each bond is freed by calling unbind(), which calls
-> > > mmu_notifier_put().
-> > > 
-> > > That's the most common case. Now if the process is killed and the mm
-> > > disappears, we do need to avoid use-after-free caused by DMA of the
-> > > mappings and the page tables. 
-> > 
-> > This is why release must do invalidate all - but it doesn't need to do
-> > any more - as no SPTE can be established without a mmget() - and
-> > mmget() is no longer possible past release.
+* Roger Quadros <rogerq@ti.com> [200305 16:47]:
+> +Nishanth
 > 
-> In our case we don't have SPTEs, the whole pgd is shared between MMU and
-> IOMMU (isolated using PASID tables).
+> Robin,
+> 
+> On 05/03/2020 18:04, Robin Murphy wrote:
+> > On 04/03/2020 9:00 am, Roger Quadros wrote:
+> > > Even though the TRM says that SATA IP has 36 address bits
+> > > wired in the SoC, we see bus errors whenever any address
+> > > greater than 32-bit is given to the controller.
+> > 
+> > Actually, is it really just SATA? I pulled up a couple of DRA7xx TRMs out of curiosity - thanks for having such easy-to-access documentation by the way :) - and they both give me a clear impression that the entire L3_MAIN interconnect is limited to 32-bit addresses and thus pretty much all the DMA masters should only be able to touch the lower 2GB of DRAM. Especially the bit that explicitly says "This is a high address range (Q8 – Q15) that requires an address greater than 32 bits. This space is visible only for the MPU Subsystem."
+> 
+> You are right that L3 interconnect can only access first 2GB of DRAM.
+> Which means we should add the bus_dma_limit to the entire L3 bus
+> instead of just SATA?
 
-Okay, but this just means that 'invalidate all' also requires
-switching the PASID to use some pgd that is permanently 'all fail'.
+OK makes sense to me.
 
-> At this point no one told the device to stop working on this queue,
-> it may still be doing DMA on this address space.
+> > Is it in fact the case that the SATA driver happens to be the only one to set a >32-bit DMA mask on your system?
+> 
+> This looks like the case. Other device drivers might not be overriding
+> dma_mask at all thus using the default 32-bit dma_mask.
 
-Sure, but there are lots of cases where a defective user space can
-cause pages under active DMA to disappear, like munmap for
-instance. Process exit is really no different, the PASID should take
-errors and the device & driver should do whatever error flow it has.
+OK
 
-Involving a complex driver flow in the exit_mmap path seems like
-dangerous complexity to me.
+Regards,
 
-Jason
+Tony
