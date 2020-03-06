@@ -4,62 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AECC3F2DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E180C3F2DE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 04:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4A62146E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35051208CD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 04:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZZjQOHHH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OXDXHwpE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCFE2n (ORCPT
+        id S1727414AbgCFE3J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Mar 2020 23:28:43 -0500
-Received: from mail-yw1-f41.google.com ([209.85.161.41]:36097 "EHLO
-        mail-yw1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgCFE2m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 23:28:42 -0500
-Received: by mail-yw1-f41.google.com with SMTP id j71so1109350ywb.3
-        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 20:28:40 -0800 (PST)
+        Thu, 5 Mar 2020 23:29:09 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:42773 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727409AbgCFE3I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Mar 2020 23:29:08 -0500
+Received: by mail-yw1-f66.google.com with SMTP id v138so1066419ywa.9
+        for <devicetree@vger.kernel.org>; Thu, 05 Mar 2020 20:29:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gni/ERHExthWFIsP0a9AZaLKXwZ4DtsmIHrkv9FFJ/g=;
-        b=ZZjQOHHHvLICFVdbvoNSiFBKx37ccWUkVp8E7u7hZUHeAgrEwRM8a7OZ3VqGESKyJZ
-         eNcs1UdwYGVWYf819xIMYG/5M4h13AIG1pm0QXnNtvWIyqRDkjGLz0YnKjQHju3m/dK/
-         s/kMR/NAlCIQ4mcYqlUSDlwqDAvBjR7w5zCx9wVXjzjAf3uNCDPUWhhxidZk67jgyOLZ
-         rtx3gKcqV10GZ1Aw1BNI0nldNBZ2siXJUggL9DmPqGZj8ldeS3vrNykaDkjO1C7oaOaT
-         PLGIDmzGKK5l6j0vekm9eywyfN9+JFlZlHDv7C4MGDAvWgeNk2i+xWnw/52UpRgivWsD
-         MIDQ==
+        bh=yRfDYcfz4PClGgSHNiGQSObIaHKPYjVoLJsVmUvy8Lo=;
+        b=OXDXHwpEpqm9D6EcBAAjatlE+DkIqArtmlE79u330SGvIljyyQS5qNc8upKinTIUFS
+         2rVoFnb4MEcaWdeNW4ZLBTNsSq4JgxMVEwAAFjzXvkl31MSvgkWqP+ZGX1CyrF+flEY3
+         b7hSc7mD3NO11fAQX5vLYMveEjpzSvfcyULcFMrpq+ZL0oB7vA9bFxwQeobDEZ8P1WUz
+         sWq99rV4yu0jDyj8aWwi3hCgBT6QrkXNhljWXdm+57lPXotGyvyecDybaMHut2cUCoYm
+         ksiCCYCTqPFmR0IGa5hOny86DRJUr0yOif35Wc1WpAufYd5NlFH7UeLFEvyEMDax3aYw
+         GTng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gni/ERHExthWFIsP0a9AZaLKXwZ4DtsmIHrkv9FFJ/g=;
-        b=iP1iGB1VgttjLIvezrK5T7ehnYX3zufmNN8jE9PQ9Uvupd65CHD9nFoKBzRvUyCfZy
-         MV5AZGWnD57U46aDq3ekOZjd9wVDICesxuX/EGM9B8Bf8pGoDWVwlLJCpChHyM9llpE+
-         0egbdL5CXPqnaZQb15TrzwM9cCpQ3Y62cy+kreHVzw7rDsdRjg+Exhv0ZQU9aQJccZiB
-         nKIiy67Xqq7X54E/hrffRN6v9vjBg7wIikw57BTWrxlElzmJ8PUPlS3VCHNpZSGjXhuj
-         U2mxleqVrgbpyuTSzBPdgkrRTh9z4up1ZVQTsZxIVViTupyo9EFCGSOps6903wbhQ5tq
-         XXqA==
-X-Gm-Message-State: ANhLgQ0g8xryUduElRe8kUc+n8rtM0Aalv82Y/NTV7KmOIWwxliepBeS
-        3kx5ZlIzDe0ij3YcmYiJ0Xd3tA==
-X-Google-Smtp-Source: ADFU+vvu6D2F+M9U3eMejzYO8QeU2OrRUzjgwjL3w7ZbTZBDoypIRluNrk+/A27q1TeOnSEExFIZQg==
-X-Received: by 2002:a81:3944:: with SMTP id g65mr2047976ywa.169.1583468920290;
-        Thu, 05 Mar 2020 20:28:40 -0800 (PST)
+        bh=yRfDYcfz4PClGgSHNiGQSObIaHKPYjVoLJsVmUvy8Lo=;
+        b=cXIedVP/1Aeu0GBZ6qHwOG+I3qRYrYHZLYkIEj0I7kTg+yPLH7G0FYEburpvsWiI1Z
+         Z7l7LSg9rP4vm1fKo+XYOtHwmpi7flLGL1zPHzULu9icuQa+mRV17qYNm/RPsd5DnzlN
+         PY7TQ0kVpXaqffkrWv0VfxqTcTh2/kN866/VLKsaPlJYeBnW6DTVgCypbnU4i0w0BziC
+         zsPGHVMdaM//5hMidMFLk8yxrQ79js/dG4X/ltGbtLlrFk3jpx25TmcXVlSm+mzw50jL
+         F8LeyanJhHZEjfdIZJenSPDIo16ZcsJYoc23AhWITkhOOFqwC5Rbk+eNG8Y5e/x5EMUZ
+         hs3A==
+X-Gm-Message-State: ANhLgQ0ImniCb46LCkLcGSv+nnC9s9riNAhKnNLx64O1XvMbxvlGLwsG
+        6EvoPS1fvM4Ff5tZphO6bAGeaw==
+X-Google-Smtp-Source: ADFU+vtbD6s3KdGkoHIR3Jf3W+cODKnwpaKznF0IhVNkYrhsjL5c3tCJAgWOSqj4enQpmdrmxj8CdA==
+X-Received: by 2002:a81:6c06:: with SMTP id h6mr2166065ywc.302.1583468947687;
+        Thu, 05 Mar 2020 20:29:07 -0800 (PST)
 Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id x2sm12581836ywa.32.2020.03.05.20.28.38
+        by smtp.gmail.com with ESMTPSA id x2sm12581836ywa.32.2020.03.05.20.29.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 20:28:39 -0800 (PST)
+        Thu, 05 Mar 2020 20:29:07 -0800 (PST)
 From:   Alex Elder <elder@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Miller <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>
+To:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Johannes Berg <johannes@sipsolutions.net>,
@@ -69,15 +66,17 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Susheel Yadav Yadagiri <syadagir@codeaurora.org>,
         Chaitanya Pratapa <cpratapa@codeaurora.org>,
         Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Ohad Ben-Cohen <ohad@wizery.com>,
         Siddharth Gupta <sidgup@codeaurora.org>,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 02/17] dt-bindings: soc: qcom: add IPA bindings
-Date:   Thu,  5 Mar 2020 22:28:16 -0600
-Message-Id: <20200306042831.17827-3-elder@linaro.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 16/17] MAINTAINERS: add entry for the Qualcomm IPA driver
+Date:   Thu,  5 Mar 2020 22:28:30 -0600
+Message-Id: <20200306042831.17827-17-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200306042831.17827-1-elder@linaro.org>
 References: <20200306042831.17827-1-elder@linaro.org>
@@ -88,213 +87,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the binding definitions for the "qcom,ipa" device tree node.
+Add an entry in the MAINTAINERS file for the Qualcomm IPA driver
 
 Signed-off-by: Alex Elder <elder@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/net/qcom,ipa.yaml     | 192 ++++++++++++++++++
- 1 file changed, 192 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.yaml
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-new file mode 100644
-index 000000000000..91d08f2c7791
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-@@ -0,0 +1,192 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qcom,ipa.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ec6a539fa42..e8666f980a21 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13662,6 +13662,12 @@ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+ S:	Supported
+ F:	sound/soc/qcom/
+ 
++QCOM IPA DRIVER
++M:	Alex Elder <elder@kernel.org>
++L:	netdev@vger.kernel.org
++S:	Supported
++F:	drivers/net/ipa/
 +
-+title: Qualcomm IP Accelerator (IPA)
-+
-+maintainers:
-+  - Alex Elder <elder@kernel.org>
-+
-+description:
-+  This binding describes the Qualcomm IPA.  The IPA is capable of offloading
-+  certain network processing tasks (e.g. filtering, routing, and NAT) from
-+  the main processor.
-+
-+  The IPA sits between multiple independent "execution environments,"
-+  including the Application Processor (AP) and the modem.  The IPA presents
-+  a Generic Software Interface (GSI) to each execution environment.
-+  The GSI is an integral part of the IPA, but it is logically isolated
-+  and has a distinct interrupt and a separately-defined address space.
-+
-+  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.
-+
-+  - |
-+    --------             ---------
-+    |      |             |       |
-+    |  AP  +<---.   .----+ Modem |
-+    |      +--. |   | .->+       |
-+    |      |  | |   | |  |       |
-+    --------  | |   | |  ---------
-+              v |   v |
-+            --+-+---+-+--
-+            |    GSI    |
-+            |-----------|
-+            |           |
-+            |    IPA    |
-+            |           |
-+            -------------
-+
-+properties:
-+  compatible:
-+      const: "qcom,sdm845-ipa"
-+
-+  reg:
-+    items:
-+      - description: IPA registers
-+      - description: IPA shared memory
-+      - description: GSI registers
-+
-+  reg-names:
-+    items:
-+      - const: ipa-reg
-+      - const: ipa-shared
-+      - const: gsi
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+      const: core
-+
-+  interrupts:
-+    items:
-+      - description: IPA interrupt (hardware IRQ)
-+      - description: GSI interrupt (hardware IRQ)
-+      - description: Modem clock query interrupt (smp2p interrupt)
-+      - description: Modem setup ready interrupt (smp2p interrupt)
-+
-+  interrupt-names:
-+    items:
-+      - const: ipa
-+      - const: gsi
-+      - const: ipa-clock-query
-+      - const: ipa-setup-ready
-+
-+  interconnects:
-+    items:
-+      - description: Interconnect path between IPA and main memory
-+      - description: Interconnect path between IPA and internal memory
-+      - description: Interconnect path between IPA and the AP subsystem
-+
-+  interconnect-names:
-+    items:
-+      - const: memory
-+      - const: imem
-+      - const: config
-+
-+  qcom,smem-states:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: State bits used in by the AP to signal the modem.
-+    items:
-+    - description: Whether the "ipa-clock-enabled" state bit is valid
-+    - description: Whether the IPA clock is enabled (if valid)
-+
-+  qcom,smem-state-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: The names of the state bits used for SMP2P output
-+    items:
-+      - const: ipa-clock-enabled-valid
-+      - const: ipa-clock-enabled
-+
-+  modem-init:
-+    type: boolean
-+    description:
-+      If present, it indicates that the modem is responsible for
-+      performing early IPA initialization, including loading and
-+      validating firwmare used by the GSI.
-+
-+  modem-remoteproc:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      This defines the phandle to the remoteproc node representing
-+      the modem subsystem.  This is requied so the IPA driver can
-+      receive and act on notifications of modem up/down events.
-+
-+  memory-region:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    maxItems: 1
-+    description:
-+      If present, a phandle for a reserved memory area that holds
-+      the firmware passed to Trust Zone for authentication.  Required
-+      when Trust Zone (not the modem) performs early initialization.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
-+  - interconnects
-+  - qcom,smem-states
-+  - modem-remoteproc
-+
-+oneOf:
-+  - required:
-+    - modem-init
-+  - required:
-+    - memory-region
-+
-+examples:
-+  - |
-+        smp2p-mpss {
-+                compatible = "qcom,smp2p";
-+                ipa_smp2p_out: ipa-ap-to-modem {
-+                        qcom,entry-name = "ipa";
-+                        #qcom,smem-state-cells = <1>;
-+                };
-+
-+                ipa_smp2p_in: ipa-modem-to-ap {
-+                        qcom,entry-name = "ipa";
-+                        interrupt-controller;
-+                        #interrupt-cells = <2>;
-+                };
-+        };
-+        ipa@1e40000 {
-+                compatible = "qcom,sdm845-ipa";
-+
-+                modem-init;
-+                modem-remoteproc = <&mss_pil>;
-+
-+                reg = <0 0x1e40000 0 0x7000>,
-+                        <0 0x1e47000 0 0x2000>,
-+                        <0 0x1e04000 0 0x2c000>;
-+                reg-names = "ipa-reg",
-+                                "ipa-shared";
-+                                "gsi";
-+
-+                interrupts-extended = <&intc 0 311 IRQ_TYPE_EDGE_RISING>,
-+                                        <&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
-+                                        <&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+                                        <&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
-+                interrupt-names = "ipa",
-+                                        "gsi",
-+                                        "ipa-clock-query",
-+                                        "ipa-setup-ready";
-+
-+                clocks = <&rpmhcc RPMH_IPA_CLK>;
-+                clock-names = "core";
-+
-+                interconnects =
-+                        <&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
-+                        <&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
-+                        <&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
-+                interconnect-names = "memory",
-+                                        "imem",
-+                                        "config";
-+
-+                qcom,smem-states = <&ipa_smp2p_out 0>,
-+                                        <&ipa_smp2p_out 1>;
-+                qcom,smem-state-names = "ipa-clock-enabled-valid",
-+                                        "ipa-clock-enabled";
-+        };
+ QEMU MACHINE EMULATOR AND VIRTUALIZER SUPPORT
+ M:	Gabriel Somlo <somlo@cmu.edu>
+ M:	"Michael S. Tsirkin" <mst@redhat.com>
 -- 
 2.20.1
 
