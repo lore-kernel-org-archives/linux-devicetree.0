@@ -2,296 +2,171 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81A8C10F27
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 20:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBC9C10F25
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 20:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B4020709
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 20:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A72F206E2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 20:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="Z844DkNt"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="TnbXAUNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgCFUCp (ORCPT
+        id S1726269AbgCFURP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:02:45 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35022 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCFUCp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 15:02:45 -0500
-Received: by mail-ot1-f66.google.com with SMTP id v10so3684837otp.2
-        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 12:02:43 -0800 (PST)
+        Fri, 6 Mar 2020 15:17:15 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45754 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbgCFURP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 15:17:15 -0500
+Received: by mail-wr1-f66.google.com with SMTP id v2so3777747wrp.12
+        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 12:17:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SMzXlI4eXcBBSJs7KiKlj7d7z04WUy2SFwDFYe8Tcig=;
-        b=Z844DkNt5lzVBUHwoyeaTPtXkCuayuNUT3Pk2kBNVVEUPQmdeLx2yvB8JgjGZrxh7V
-         eoRSWTRqWCE+ILI9gcyqM6wLF4CfIrcOLygTxwvf9EsZ5+6y/u/AIjNuWIuP1ArgWyyw
-         S3Fch8kxDK2me49l+VEILLCOejxa0+BxxKx4ssyZx7pLm1KDqynmaVnw6fGCizpQ0Zs4
-         Ji7WQSXwehpzC77QcNSDpkQx986fP2+JBVfDgK3/BF7kUyG0Lt3I2jhHI1YFMM+CUYlB
-         c4F26ezTytt/t0c34XLt1rP3pL7l9hPCLWeW9CtyN5XdYwwUBl9kz9IMIb2m5ish3noy
-         fY4g==
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=W5vuMAQlP/pswYB/GXVE3Zl4riEFKEE7ie+SKRmal+A=;
+        b=TnbXAUNOymXAg4E5ylEB78BCKLRoqRyjo7HHwCE5mF5chf989aKRi7x9lEHcEms0ru
+         EfAUDSuI+9iWOgBkapOAhY4MS6CAQKN3EMIKBDMggPya+en8EhD8SEWRFDlVb4pX6Mc1
+         cUw0WwjMN0r3oFcSQlmXFbNl08L9CutLo8Yjs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SMzXlI4eXcBBSJs7KiKlj7d7z04WUy2SFwDFYe8Tcig=;
-        b=EtD5c9ZjscwP8u7x6LCB5v3ZBHBZJByAlyVloyCIJblo70lYHsjY7Gxk4TGHXLSt3z
-         A3AThngQmuWZXYV/oVpyxirYFiye+WnHHOXM9IEjlCLWJ6P8bLXuYKj53xYnVK1Tzb+T
-         aAm7imwCpvMsvNzDJTytMEioztHWkaf8fZGHnngOvZd+Y3zyU+CpeAUAHW7dLuShwuGp
-         O7e5StSiQPtU1YM5R1ePKXLMtsPu64LZJAXSzCYoiLhtxWLhE8BufR0LszcpVx48gIag
-         JrkSEVCRF5cKSwxE5vErfc3mzyK4eQNfnFlwel4WOKLTETjaS+zZgpQQTRtTu/tUCc0w
-         Wt3g==
-X-Gm-Message-State: ANhLgQ1x1PAueNOC+bmsNwM8C2hAe8+aM0n1hSZIAuaoqpFu4vGkY2W8
-        txgG0wRHImECNGpzMAxQ4Mx7ki8KI1YnU3uOJSXsDw==
-X-Google-Smtp-Source: ADFU+vu1RS3nf8reu36DceipCuq5IpQtNWeNqmqkurUGaX9j2e/3u6+1GePdgIdM1aGini5f8bUiLhK8TFCe3F569T4=
-X-Received: by 2002:a05:6830:1503:: with SMTP id k3mr4088931otp.28.1583524962480;
- Fri, 06 Mar 2020 12:02:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=W5vuMAQlP/pswYB/GXVE3Zl4riEFKEE7ie+SKRmal+A=;
+        b=Oz7BB/zdaN5PX0FI1HTMV5+TuAFzmKZaXgIOKLybAlKEha0syCGC2zq2UVsAjaujhA
+         f6D47+2/N8BUYLeCKtF9ihUfDQhNH6W/PiaB3ZwTczzI8ShX1z0Oo8E+H9sYCtTg7sp8
+         bF8zmb8mhcDPTRjcNOSC/C4jZ0zzD2XlW+dKicMK1gG8uUgUYduANo3FEv9GKq39BlZ+
+         quqd4A8XiNMHBuF9kmiTDh+EWWVaUFq8OlL7osdXF9rOERzwohF+RLS/C7IGBGGuDoiK
+         fw9WtyQKHTM4iOebCsr5Jw7cfd10UCkwiBDKdJp0Ue0r1nQ9m8S87AHzCLuZB1iLcMn3
+         Xc3g==
+X-Gm-Message-State: ANhLgQ3U5bYbCuB2cgmsp/I2XD7ReJARjIwBIEO3zu+4WK4e+PDgKW6b
+        qi94mhj47N6RCj2y4Wa1WKnMww==
+X-Google-Smtp-Source: ADFU+vvqY4qKDIwiATZaIBtsRMHroux6pd0ex8+HlwjC7e401argo9O7tDWbHCc0DheRr1aJ7k6v5A==
+X-Received: by 2002:a5d:5682:: with SMTP id f2mr5332496wrv.327.1583525833437;
+        Fri, 06 Mar 2020 12:17:13 -0800 (PST)
+Received: from ub1910 ([213.48.11.149])
+        by smtp.gmail.com with ESMTPSA id w1sm14361781wmc.11.2020.03.06.12.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 12:17:13 -0800 (PST)
+Date:   Fri, 6 Mar 2020 20:17:08 +0000
+From:   Paul Barker <pbarker@konsulko.com>
+To:     Michal =?UTF-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: Inverted PWM output on iMX6
+Message-ID: <20200306201708.0b94a5ac@ub1910>
+In-Reply-To: <619c279c-5dd7-8d81-3527-dc37f8827104@ysoft.com>
+References: <20200305132232.1aced378@ub1910>
+        <20200305133649.bx7r7d4ntwi75qqb@pengutronix.de>
+        <619c279c-5dd7-8d81-3527-dc37f8827104@ysoft.com>
+Organization: Konsulko Group
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1582577665-13554-1-git-send-email-tharvey@gateworks.com>
- <1582577665-13554-2-git-send-email-tharvey@gateworks.com> <20200302204949.GA6649@bogus>
- <CAJ+vNU2ySjAP3q-4rgGy1U=iJeswv1kx6bKCy+Zw7V7oArkumw@mail.gmail.com> <CAL_JsqJnvW=pRt6M6sivxP62-qDg37czAZBKFV61CXO7Uazjsw@mail.gmail.com>
-In-Reply-To: <CAL_JsqJnvW=pRt6M6sivxP62-qDg37czAZBKFV61CXO7Uazjsw@mail.gmail.com>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Fri, 6 Mar 2020 12:02:31 -0800
-Message-ID: <CAJ+vNU2c-Qr_rdWdFC77K8dcX-wgfVN5pXhtYG1nd4iniVT+fg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] dt-bindings: mfd: Add Gateworks System Controller bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Robert Jones <rjones@gateworks.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
->
-<snip>
-> > > > +properties:
-> > > > +  $nodename:
-> > > > +    pattern: "gsc@[0-9a-f]{1,2}"
-> > > > +  compatible:
-> > > > +    const: gw,gsc
-> > >
-> > > That's not very specific.
-> > >
-> >
-> > Do you mean something like 'gw,system-controller' would be better
-> > instead of the gsc abbreviation for 'Gateworks System Controller'?
->
-> No, I mean is there or will there be only one version of this?
->
+On Fri, 6 Mar 2020 08:43:45 +0100
+Michal Vok=C3=A1=C4=8D <michal.vokac@ysoft.com> wrote:
 
-currently just 1 version is enough
+> On 05. 03. 20 14:36, Uwe Kleine-K=C3=B6nig wrote:
+> > Hello,
+> >=20
+> > On Thu, Mar 05, 2020 at 01:22:32PM +0000, Paul Barker wrote: =20
+> >> I recently ran into an issue using the pwm-fan driver with an inverted
+> >> PWM output on iMX6.
+> >>
+> >> The fan is defined in the device tree as follows:
+> >>
+> >> 	fan0: pwm-fan {
+> >> 		compatible =3D "pwm-fan";
+> >> 		pwms =3D <&pwm2 0 25000 PWM_POLARITY_INVERTED>;
+> >> 		...
+> >> 	}
+> >>
+> >> In pwm_imx27_probe() the support for a third `flags` argument in a pwm
+> >> reference is enabled:
+> >>
+> >> 	imx->chip.of_xlate =3D of_pwm_xlate_with_flags;
+> >> 	imx->chip.of_pwm_n_cells =3D 3;
+> >>
+> >> However, the flag is ignored and the output is not inverted.
+> >>
+> >> By adding some prints I saw that when of_pwm_xlate_with_flags() is
+> >> called, args->args_count is 2 instead of 3.
+> >>
+> >> Looking at the definition of the pwm device itself in imx6qdl.dtsi I
+> >> can see that the number of cells in a pwm reference is set to 2 not 3:
+> >>
+> >> 	pwm2: pwm@2084000 {
+> >> 		#pwm-cells =3D <2>;
+> >> 		...
+> >> 	};
+> >>
+> >> That seems to be preventing a third argument from being passed.
+> >>
+> >> I can change `#pwm-cells` to <3> and then everything works for my
+> >> device but I'm not sure that is the correct solution for everyone. That
+> >> would require all pwm references on iMX6 devices to use 3 cells. The
+> >> code in of_pwm_xlate_with_flags() seems to be built to handle either 2
+> >> or 3 argument cells but I can't see any way to allow this choice in the
+> >> device tree.
+> >>
+> >> If the solution is to set `#pwm-cells` to <3> I'm happy to send a patch
+> >> which does this and updates all pwm references in device trees which
+> >> include `imx6dql.dtsi`. Before I do that I'd like to know that it's the
+> >> correct approach though.
+> >>
+> >> For context I've confirmed this is the case in Linux 5.4 and that the
+> >> relevant files haven't changed between that release and 5.6.0-rc4. =20
+> >=20
+> > I think changing that is fine. However you'd have to care that all
+> > in-tree users that rely on #pwm-cells =3D <2> are fixed accordingly.
+> >=20
+> > I'd do: add #pwm-cells =3D <3> in the cpu.dtsi and then adapt all
+> > machine.dts to add #pwm-cells =3D <2> until there are no more changes to
+> > the generated files compared to the current state. =20
+>=20
+> I solved that in the past on our board the same way as other imx6 boards
+> did. Just override the #pwm-cells property in your board specific devicet=
+ree
+> and you are fine:
+>=20
+>    linux-src$ git grep pwm-cells -- arch/arm/boot/dts/imx6*-*
+>    arch/arm/boot/dts/imx6dl-yapp4-common.dtsi:     #pwm-cells =3D <3>;
+>    arch/arm/boot/dts/imx6q-display5.dtsi:  #pwm-cells =3D <3>;
+>    arch/arm/boot/dts/imx6q-mccmon6.dts:    #pwm-cells =3D <3>;
+>    arch/arm/boot/dts/imx6qdl-tx6.dtsi:     #pwm-cells =3D <3>;
+>    arch/arm/boot/dts/imx6qdl-tx6.dtsi:     #pwm-cells =3D <3>;
+>    arch/arm/boot/dts/imx6ul-tx6ul.dtsi:    #pwm-cells =3D <3>;
+>    arch/arm/boot/dts/imx6ull-colibri.dtsi: #pwm-cells =3D <3>;
+>    arch/arm/boot/dts/imx6ull-colibri.dtsi: #pwm-cells =3D <3>;
+>    arch/arm/boot/dts/imx6ull-colibri.dtsi: #pwm-cells =3D <3>;
+>    arch/arm/boot/dts/imx6ull-colibri.dtsi: #pwm-cells =3D <3>;
 
-> >
-<snip>
-> >
-> > > > +
-> > > > +  hwmon:
-> > >
-> > > 'hwmon' is a Linux thing. I'm suspicious...
-> > >
-> >
-> > Yes, we've discussed this before and I understand that DT shouldn't
-> > use terminology that is Linux specific (which is why I replaced
-> > 'hwmon' with 'adc' in the ADC nodes below) but I still see a long of
-> > dt bindings in Documentation/devicetree/bindings with the word 'hwmon'
-> > in them.
-> >
-> > Perhaps this makes more sense?
->
-> Yes, that's more aligned with IIO ADC bindings. Yes, IIO is again a
-> Linuxism, but I think the ADC bindings are fairly independent other
-> than the directory name.
->
-> >
-> > adc {
-> >   compatible = "gw,gsc-adc";
-> >   #address-cells = <1>;
-> >   #size-cells = <0>;
-> >
-> >   channel@6 {
-> >     type = "gw,hwmon-temperature";
-> >     reg = <0x06>;
-> >     label = "temp";
-> >   };
-> >   ...
-> > };
-> >
+Michal,
 
-ok, will use adc/channel instead of hwmon/adc and change compatible to
-'gw,gsc-adc'
+That approach would be good enough for my limited use case but it doesn't
+prevent others from hitting the same confusion in the future. I'd rather
+fix the base imx6 dtsi files to have #pwm-cells =3D <3> if the driver suppo=
+rts
+the third cell containing flags.
 
-> >
-> > > > +    type: object
-> > > > +    description: Optional Hardware Monitoring module
-> > > > +
-> > > > +    properties:
-> > > > +      compatible:
-> > > > +        const: gw,gsc-hwmon
-> > > > +
-> > > > +      "#address-cells":
-> > > > +        const: 1
-> > > > +
-> > > > +      "#size-cells":
-> > > > +        const: 0
-> > > > +
-> > > > +      gw,fan-base:
-> > > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +        description: The fan controller base address
-> > >
-> > > Shouldn't this be described as a node in the DT or be implied by the
-> > > compatible?
-> >
-> > It does look out of place there. Would adding another subnode outside
-> > of the (perhaps misnamed) 'hwmon' node make more sense?:
-> >
-> > fan:
-> >  properties:
-> >    compatible: gw,gsc-fancontroller
-> >    reg:
-> >      description: address of the fan controller base register
-> >      maxItems: 1
->
-> Seems somewhat better location in that the first level is
-> sub-functions of this chip.
->
-> But now you have 'adc' with no address and 'fan' (w/ reg should be
-> fan@...) with an address, so that's not consistent.
->
-> Also, I think fan controllers and fans need to have separate nodes as
-> there are different types of fans such as with and without tach
-> signals. I've tried to steer other fan bindings that way. Depends how
-> complex the fan controller is whether that's necessary.
->
-
-The fan controller does now support a tach signal reported via one of
-the ADC channels (which I've neglected to cover) so I can represent
-that as well in a new first level node such as:
-
-  fan:
-    type: object
-    description: Optional FAN controller
-
-    properties:
-      compatible:
-        const: gw,gsc-fan
-
-      reg:
-        description: The fan controller base address
-        maxItems: 1
-
-      gw,fan-tach-ch:
-        description: The fan tach ADC channel
-        maxItems: 1
-
-    required:
-      - compatible
-      - reg
-
-fan {
-  compatible = "gw,gsc-pwm-fan";
-  reg = <0x2c>;
-  gw,fan-tach-ch = <0x16>;
-};
-
-<snip>
-> >
-> > > > +        type: object
-> > > > +        description: |
-> > > > +          Properties for a single ADC which can report cooked values
-> > > > +          (ie temperature sensor based on thermister), raw values
-> > > > +          (ie voltage rail with a pre-scaling resistor divider).
-> > > > +
-> > > > +        properties:
-> > > > +          reg:
-> > > > +            description: Register of the ADC
-> > > > +            maxItems: 1
-> > > > +
-> > > > +          label:
-> > > > +            description: Name of the ADC input
-> > > > +
-> > > > +          type:
-> > >
-> > > Very generic property name, but it's not generic. Needs a vendor prefix
-> > > at least.
-> >
-> > You mean the property name of 'type' is fine, but the values will need
-> > to be vendor specific like 'gw,temperature', 'gw,voltage',
-> > 'gw,voltage-raw' or is it inappropriate to use 'type'?
->
-> Don't use 'type'.
->
-> Is this for 'how to setup/program the adc' or 'what am I measuring'?
-> For example, configure the adc for temperature readings vs. measure
-> CPU temperature. Seems like a common thing needed for ADC. 'label'
-> already covers the latter case.
-
-This is for translation of the raw ADC to a cooked value. An earlier
-version of the GSC reported cooked values (doing the scaling in the
-GSC firmware) and later versions report raw values which need to be
-scaled depending on optional voltage divider so you can consider that
-'setup'. Instead of handling this via a 'version' of the GSC I elected
-to describe the difference in ADC channel type as I already had on
-that reported millidegree celcius vs millivolts. I could just move
-them to properties such as:
-
-gw,temperature
-gw,voltage
-gw,voltage-raw
-
-Only one of the above is allowed and am not sure how to represent that
-in the yaml.
-
-Alternatively I could call this property name 'gw,conversion' and
-leave the three type enum?
-
->
-> > > > +            description: |
-> > > > +              temperature in C*10 (temperature),
-> > > > +              pre-scaled voltage value (voltage),
-> > > > +              or scaled based on an optional resistor divider and optional
-> > > > +              offset (voltage-raw)
-> > > > +            enum:
-> > > > +              - temperature
-> > > > +              - voltage
-> > > > +              - voltage-raw
-> > > > +
-> > > > +          gw,voltage-divider:
-> > > > +            allOf:
-> > > > +              - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > +            description: values of resistors for divider on raw ADC input
-> > > > +            items:
-> > > > +              - description: R1
-> > > > +              - description: R2
-> > >
-> > > Needs a standard unit suffix. With that, you can drop the type
-> > > reference.
-> >
-> > I understand the unit suffix but not sure what you mean by type
-> > reference. Do you mean:
-> >
-> > gw,voltage-divider-milli-ohms:
-> >   description: values of resistors for divider on raw ADC input
-> >     items:
-> >       - description: R1
-> >       - description: R2
->
-> Yes, drop the '$ref'.
->
-
-ok,
+I'll send a patch once I've done a bit more investigation.
 
 Thanks,
 
-Tim
+--=20
+Paul Barker
+Konsulko Group
