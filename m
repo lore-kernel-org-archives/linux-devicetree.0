@@ -2,161 +2,81 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1BCC10F25
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92ADC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD95E2072A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fceAxzqK"
+	by mail.kernel.org (Postfix) with ESMTP id 8A83220656
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgCFRmn (ORCPT
+        id S1726162AbgCFRoW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:42:43 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45024 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgCFRmn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 12:42:43 -0500
-Received: by mail-qk1-f193.google.com with SMTP id f198so3043155qke.11
-        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 09:42:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PxT02ryeWyx7p1SBqN6kTMwWdglwMPqc7wMiUtKckm8=;
-        b=fceAxzqKtPxKpBdyBHvIYC/k/jeNtyEFzrsgn7TJvkxLs22sR9WiBM6453QdPTwvJ2
-         93UYmt1Orc9z4jHue6YWkq4c44RthUiPb/T9rH7qfZN2eZY2Xq3DFtWCpEtWlaAber1f
-         HTsaHpVQnQu0i950k23k9hzTJEjKD+BN7/Y/tDId6MCXM2Jq/oAfQ5infM5paw03g9Vz
-         fDBMIkB8bceHTgGX1/Vpyp9g9uOcrHu05i9iMph/9UxfrLbjUIDtwqwEFe+QO0y6kUt5
-         zKGrPWs4/zh+Z5lFrLMK9wdgK1uWKJWRJ5Z5s7FtAiUywEXkXWhLK89r07oF90jjf8ZV
-         UsTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PxT02ryeWyx7p1SBqN6kTMwWdglwMPqc7wMiUtKckm8=;
-        b=Vp3N4GJrBg74mx/VpQ41jI9DdDwRKGnhq6fDFpN2xJH0R+S4oBXHSEa1ZPXY2s7gbM
-         FDtkfOujEmJCvnPXwyzbhcsgluMtombUc8u93Qwl1VyBwFBX1X/iIxxnQRFped1DVmqJ
-         62wj5Ye/3xB85rxrlkh5XjwOlAutS45H0ZXNgz2pqBMluXBf7hWmzrzRJuc0J6atLiFR
-         /nP7xaJtow84tj7AELMVPQSTBNNFQTNFCSZ8OpoUSWTbPHZoSmwqOXlTT4Zw5hUHwTTh
-         OUjsmkOOUR47p1XZXtSWPaIZ5JDbpkLrKeyN0EyidpcNG3V+cVsJWe5TwGdtZRv2OEHP
-         bl5A==
-X-Gm-Message-State: ANhLgQ2eqIiSf2vbXL4NLYAHROpSrZMoffTGUZB/Wgirvb4RQbPsqaBS
-        LoQfFJoj65dVB7AKVEtHEXYpaA==
-X-Google-Smtp-Source: ADFU+vsWbhZAJApLkHJjK1rpJphwwDR2QESHx2duAJgFhBpEHJLxHbOgXJEEbadil5uHQfcoM+kVpg==
-X-Received: by 2002:a37:a44a:: with SMTP id n71mr2362594qke.210.1583516560952;
-        Fri, 06 Mar 2020 09:42:40 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id g15sm14342523qtq.71.2020.03.06.09.42.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 06 Mar 2020 09:42:40 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jAGzf-00060f-N3; Fri, 06 Mar 2020 13:42:39 -0400
-Date:   Fri, 6 Mar 2020 13:42:39 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, will@kernel.org,
-        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
-        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
-        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        iommu@lists.linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        robin.murphy@arm.com, christian.koenig@amd.com
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200306174239.GM31668@ziepe.ca>
-References: <20200225140814.GW31668@ziepe.ca>
- <20200228143935.GA2156@myrica>
- <20200228144844.GQ31668@ziepe.ca>
- <20200228150427.GF2156@myrica>
- <20200228151339.GS31668@ziepe.ca>
- <20200306095614.GA50020@myrica>
- <20200306130919.GJ31668@ziepe.ca>
- <20200306143556.GA99609@myrica>
- <20200306145245.GK31668@ziepe.ca>
- <20200306161519.GB99609@myrica>
+        Fri, 6 Mar 2020 12:44:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60448 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbgCFRoV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:44:21 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BC6A9AC66;
+        Fri,  6 Mar 2020 17:44:19 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org
+Cc:     phil@raspberrypi.com, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
+        stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 00/11] Raspbery Pi 4 vmmc regulator support
+Date:   Fri,  6 Mar 2020 18:44:02 +0100
+Message-Id: <20200306174413.20634-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306161519.GB99609@myrica>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 05:15:19PM +0100, Jean-Philippe Brucker wrote:
-> On Fri, Mar 06, 2020 at 10:52:45AM -0400, Jason Gunthorpe wrote:
-> > On Fri, Mar 06, 2020 at 03:35:56PM +0100, Jean-Philippe Brucker wrote:
-> > > On Fri, Mar 06, 2020 at 09:09:19AM -0400, Jason Gunthorpe wrote:
-> > > > On Fri, Mar 06, 2020 at 10:56:14AM +0100, Jean-Philippe Brucker wrote:
-> > > > > I tried to keep it simple like that: normally mmu_notifier_get() is called
-> > > > > in bind(), and mmu_notifier_put() is called in unbind(). 
-> > > > > 
-> > > > > Multiple device drivers may call bind() with the same mm. Each bind()
-> > > > > calls mmu_notifier_get(), obtains the same io_mm, and returns a new bond
-> > > > > (a device<->mm link). Each bond is freed by calling unbind(), which calls
-> > > > > mmu_notifier_put().
-> > > > > 
-> > > > > That's the most common case. Now if the process is killed and the mm
-> > > > > disappears, we do need to avoid use-after-free caused by DMA of the
-> > > > > mappings and the page tables. 
-> > > > 
-> > > > This is why release must do invalidate all - but it doesn't need to do
-> > > > any more - as no SPTE can be established without a mmget() - and
-> > > > mmget() is no longer possible past release.
-> > > 
-> > > In our case we don't have SPTEs, the whole pgd is shared between MMU and
-> > > IOMMU (isolated using PASID tables).
-> > 
-> > Okay, but this just means that 'invalidate all' also requires
-> > switching the PASID to use some pgd that is permanently 'all fail'.
-> > 
-> > > At this point no one told the device to stop working on this queue,
-> > > it may still be doing DMA on this address space.
-> > 
-> > Sure, but there are lots of cases where a defective user space can
-> > cause pages under active DMA to disappear, like munmap for
-> > instance. Process exit is really no different, the PASID should take
-> > errors and the device & driver should do whatever error flow it has.
-> 
-> We do have the possibility to shut things down in order, so to me this
-> feels like a band-aid. 
+The series first cleans up a common pattern, which is ultimately needed
+to integrate the regulator with bcm2711's sdhci-iproc. It then
+introduces the relevant device-tree changes.
 
-->release() is called by exit_mmap which is called by mmput. There are
-over a 100 callsites to mmput() and I'm not totally sure what the
-rules are for release(). We've run into problems before with things
-like this.
+---
 
-IMHO, due to this, it is best for release to be simple and have
-conservative requirements on context like all the other notifier
-callbacks. It is is not a good place to put complex HW fencing driver
-code.
+Changes since v1:
+ - Use helper function istead of quirk
+ - Add GPIO label
 
-In particular that link you referenced is suggesting the driver tear
-down could take minutes - IMHO it is not OK to block mmput() for
-minutes.
+Nicolas Saenz Julienne (11):
+  mmc: sdhci: Introduce sdhci_set_power_and_bus_voltage()
+  mmc: sdhci: arasan: Use sdhci_set_power_and_voltage()
+  mmc: sdhci: milbeaut: Use sdhci_set_power_and_voltage()
+  mmc: sdhci: at91: Use sdhci_set_power_and_voltage()
+  mmc: sdhci: pxav3: Use sdhci_set_power_and_voltage()
+  mmc: sdhci: xenon: Use sdhci_set_power_and_voltage()
+  mmc: sdhci: am654: Use sdhci_set_power_and_voltage()
+  mmc: sdhci: Unexport sdhci_set_power_noreg()
+  mmc: sdhci: iproc: Add custom set_power() callback for bcm2711
+  ARM: dts: bcm2711: Update expgpio's GPIO labels
+  ARM: dts: bcm2711: Add vmmc regulator in emmc2
 
-> The idea has come up before though [1], and I'm not strongly opposed
-> to this model, but I'm still not convinced it's necessary. It does
-> add more complexity to IOMMU drivers, to avoid printing out the
-> errors that we wouldn't otherwise see, whereas device drivers need
-> in any case to implement the logic that forces stop DMA.
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 13 ++++++++++++-
+ drivers/mmc/host/sdhci-iproc.c        | 17 ++++++++++++++++-
+ drivers/mmc/host/sdhci-milbeaut.c     | 13 +------------
+ drivers/mmc/host/sdhci-of-arasan.c    | 15 ++-------------
+ drivers/mmc/host/sdhci-of-at91.c      | 18 +-----------------
+ drivers/mmc/host/sdhci-pxav3.c        | 20 +-------------------
+ drivers/mmc/host/sdhci-xenon.c        | 20 +-------------------
+ drivers/mmc/host/sdhci.c              | 24 +++++++++++++++++++++---
+ drivers/mmc/host/sdhci.h              |  5 +++--
+ drivers/mmc/host/sdhci_am654.c        | 17 +++--------------
+ 10 files changed, 61 insertions(+), 101 deletions(-)
 
-Errors should not be printed to the kernel log for PASID cases
-anyhow. PASID will be used by unpriv user, and unpriv user should not
-be able to trigger kernel prints at will, eg by doing dma to nmap VA
-or whatever. 
+-- 
+2.25.1
 
-Process exit is just another case of this, and should not be treated
-specially.
-
-Jason
