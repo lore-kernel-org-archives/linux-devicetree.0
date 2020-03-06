@@ -2,92 +2,141 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2379C10F26
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 16:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5AFC10F25
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 16:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0872187F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 16:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DC02146E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 16:15:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="Em4FnE3P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZzXz4A8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCFQIH (ORCPT
+        id S1726237AbgCFQP3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:08:07 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42232 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCFQIG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 11:08:06 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 66so2882521otd.9
-        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 08:08:05 -0800 (PST)
+        Fri, 6 Mar 2020 11:15:29 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51811 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgCFQP3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 11:15:29 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a132so3093887wme.1
+        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 08:15:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LC6fYzrXvQrjxYDrnEIkTo21CADYi8sV2Co7PyB612o=;
-        b=Em4FnE3PMcg/WJr4+ZZxzWpxxSoKfbxuzSM5MUfpkLsbTVlEXeYbbYwoUnxXmVz69j
-         Iqb7SraT2u9Q6F8bMg2vRFiX/HmlLM5dgTUpWL5od1AFfc2p9mnuscx1OFecr72ABli/
-         0hpiyenMdchTPAxl5tdGTjAKLT82q1DvF2Z4n92MPD6OKEUlCIAowJxgyot3mwEO3Ale
-         9zIoRQiRzK4TID3SuMIB/U3VyxPvgP6ovn23L/Y291FSZGvM0lDYFN/zBLVMH5iTq4Vp
-         KChUM1kPuRflNvko9QQg7hFH0gnXCoRVOUAXu5Ww215JsyK/05x5wSaTmFPiac0a80/K
-         tCUA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ao7/80FHIHDLP/KCunZJJgILy66emPF5N72zFy2TR8A=;
+        b=ZzXz4A8vycCJh4RNBaNwHExa5FzLad69MAK4BZ+5/as1gVnRbY6GMPLpDuEkpCKWF6
+         y6CsRjCx5QLX391p185dlNAY1Zcap1EnGsNaLq9XDn4MYET7xEWLNyB/6LDuPN6MRygC
+         YZ5w1hGW0XSmAZgBTL6frJPrhb9fznVH9L9vwRNdIecRFk8QGoUr/L+Knolbah0v2qev
+         1VwkncH2BAtFZIbRxurp6iliV7mw4l8C3XnXlu/qVJcZHUrF9gIymPJHAlq33QsB4aQ6
+         QXgqfDAnyXp5rPLLQMnU0kpgkNyKPGKwvV48byaa1UK7DgR+lESHtDBsR9KfL7wvFZWh
+         kldw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LC6fYzrXvQrjxYDrnEIkTo21CADYi8sV2Co7PyB612o=;
-        b=I40uVz33unMkUtLI4adkKiTiN2NEa27PbsCIdVbrRSO+BasdwOuUCFS2criy2hGkfs
-         tcSwEVnTnWFxBWBwvUHQsnNqJRwaU7PhtcOjuyDSKQgx+6M4Wk558cr77ejm6t4necHa
-         mtJNK8Jb0YZeRsLVrwcNkIByNTuVwHuaL39hv3YdMuIEyXkh0hPYPym16ti9agFm+Ov/
-         6+88r1u0P2dpWHtUAzLqWlEiD4purqdHCZJUiIhsHMVI5ucag7/1iyGaC2z6eiyr2RFX
-         iuXgahvJw77FcLzvc05JETc9onwq+WhcpY7wFSW+xE33z6t695M9dwqE4lLG4h+lgAMm
-         QY8Q==
-X-Gm-Message-State: ANhLgQ1m9sDKX086x0wBcbkUlFKEtFxciY9+qZobmaKK7W7G6Htgmwej
-        C18zwhXDqF3ZRiOmFNmT6iiFRdy0HhmAIUQdX35OAw==
-X-Google-Smtp-Source: ADFU+vsNOqF1Gnn9gVAlK3MDDr9UJefA8cNJowONg8rgYvH5SxZps7BFriCK6uP0ehSTEA8IezBvGKF2Ku8ePhgAtxw=
-X-Received: by 2002:a9d:5cc4:: with SMTP id r4mr3190223oti.33.1583510885541;
- Fri, 06 Mar 2020 08:08:05 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ao7/80FHIHDLP/KCunZJJgILy66emPF5N72zFy2TR8A=;
+        b=AS2JR/I4ZhtnPF+gt9/x9tb/mNlhw45d/Zdky6MwQMuzTL47LZBvYGMdC8qjzTYiLX
+         1anv11E2AMjqyVaCgzWnlU2XmMHwa4q0h4fkgCCUhCH1dkKDQHccL7Gv7cc9A0fw1RyS
+         LQEEYua9pKoC5elx8pvTqlqJGI30FIvKjN5k/4faplR/vs7Y0uXHbU+BEzccklZeLPn5
+         1yvM5bbY8rX+bsxSDBN7077Dvgfw9PzTwAEakoWYOi7SkfeRdXwKlSNqSM7g2jRF+LOD
+         94LHMQ9GbixgE6sCGlQbLX5xgKWLuZ3Kv83A6Zx9CVP0chNgoyJTKTkyg3bbMZxQFqNg
+         ixbg==
+X-Gm-Message-State: ANhLgQ0FMITigDCh+ZCkGYrpmYMx9WQJDv5kUCxY4wXe2ws3YOmc6on8
+        zZvy/xFqcuYgSVbTKEujoDDTTA==
+X-Google-Smtp-Source: ADFU+vu2BwVlJ/z2C8XR7GuNqHPcvrDYuSW70Gsa5PRrlPgFIIEEdN81oD/hv1UjzmKlfbVNO9GZjg==
+X-Received: by 2002:a1c:7f86:: with SMTP id a128mr5012462wmd.185.1583511326318;
+        Fri, 06 Mar 2020 08:15:26 -0800 (PST)
+Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id i21sm3449182wmb.23.2020.03.06.08.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 08:15:25 -0800 (PST)
+Date:   Fri, 6 Mar 2020 17:15:19 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, will@kernel.org,
+        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
+        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
+        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        robin.murphy@arm.com, christian.koenig@amd.com
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200306161519.GB99609@myrica>
+References: <20200225092439.GB375953@myrica>
+ <20200225140814.GW31668@ziepe.ca>
+ <20200228143935.GA2156@myrica>
+ <20200228144844.GQ31668@ziepe.ca>
+ <20200228150427.GF2156@myrica>
+ <20200228151339.GS31668@ziepe.ca>
+ <20200306095614.GA50020@myrica>
+ <20200306130919.GJ31668@ziepe.ca>
+ <20200306143556.GA99609@myrica>
+ <20200306145245.GK31668@ziepe.ca>
 MIME-Version: 1.0
-References: <1582577665-13554-1-git-send-email-tharvey@gateworks.com>
- <1582577665-13554-4-git-send-email-tharvey@gateworks.com> <20200303205408.GA19757@roeck-us.net>
-In-Reply-To: <20200303205408.GA19757@roeck-us.net>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Fri, 6 Mar 2020 08:07:54 -0800
-Message-ID: <CAJ+vNU359PicGLtFr-s+arf210LtBH5OpBsbnbDd7otC1WBkhw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] hwmon: add Gateworks System Controller support
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Robert Jones <rjones@gateworks.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306145245.GK31668@ziepe.ca>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 12:54 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Mon, Feb 24, 2020 at 12:54:25PM -0800, Tim Harvey wrote:
-> > The Gateworks System Controller has a hwmon sub-component that exposes
-> > up to 16 ADC's, some of which are temperature sensors, others which are
-> > voltage inputs. The ADC configuration (register mapping and name) is
-> > configured via device-tree and varies board to board.
-> >
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
->
-> Couple of minor comments, otherwise looks good from my perspective.
->
+On Fri, Mar 06, 2020 at 10:52:45AM -0400, Jason Gunthorpe wrote:
+> On Fri, Mar 06, 2020 at 03:35:56PM +0100, Jean-Philippe Brucker wrote:
+> > On Fri, Mar 06, 2020 at 09:09:19AM -0400, Jason Gunthorpe wrote:
+> > > On Fri, Mar 06, 2020 at 10:56:14AM +0100, Jean-Philippe Brucker wrote:
+> > > > I tried to keep it simple like that: normally mmu_notifier_get() is called
+> > > > in bind(), and mmu_notifier_put() is called in unbind(). 
+> > > > 
+> > > > Multiple device drivers may call bind() with the same mm. Each bind()
+> > > > calls mmu_notifier_get(), obtains the same io_mm, and returns a new bond
+> > > > (a device<->mm link). Each bond is freed by calling unbind(), which calls
+> > > > mmu_notifier_put().
+> > > > 
+> > > > That's the most common case. Now if the process is killed and the mm
+> > > > disappears, we do need to avoid use-after-free caused by DMA of the
+> > > > mappings and the page tables. 
+> > > 
+> > > This is why release must do invalidate all - but it doesn't need to do
+> > > any more - as no SPTE can be established without a mmget() - and
+> > > mmget() is no longer possible past release.
+> > 
+> > In our case we don't have SPTEs, the whole pgd is shared between MMU and
+> > IOMMU (isolated using PASID tables).
+> 
+> Okay, but this just means that 'invalidate all' also requires
+> switching the PASID to use some pgd that is permanently 'all fail'.
+> 
+> > At this point no one told the device to stop working on this queue,
+> > it may still be doing DMA on this address space.
+> 
+> Sure, but there are lots of cases where a defective user space can
+> cause pages under active DMA to disappear, like munmap for
+> instance. Process exit is really no different, the PASID should take
+> errors and the device & driver should do whatever error flow it has.
 
-Guenter,
+We do have the possibility to shut things down in order, so to me this
+feels like a band-aid. The idea has come up before though [1], and I'm not
+strongly opposed to this model, but I'm still not convinced it's
+necessary. It does add more complexity to IOMMU drivers, to avoid printing
+out the errors that we wouldn't otherwise see, whereas device drivers need
+in any case to implement the logic that forces stop DMA.
 
-Thank you for the review! I will post a v6 as soon as I get the dt
-bindings worked through.
+Thanks,
+Jean
 
-Tim
+[1] https://lore.kernel.org/linux-iommu/4d68da96-0ad5-b412-5987-2f7a6aa796c3@amd.com/
+
+> 
+> Involving a complex driver flow in the exit_mmap path seems like
+> dangerous complexity to me.
+> 
+> Jason
