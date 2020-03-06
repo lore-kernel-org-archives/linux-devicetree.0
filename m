@@ -2,165 +2,141 @@ Return-Path: <SRS0=NbWy=4X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFCDC3F2D7
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 06:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05317C3F2D9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 06:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F18B2073D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 06:23:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KOJh4d40"
+	by mail.kernel.org (Postfix) with ESMTP id C32F92073D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Mar 2020 06:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbgCFGXQ (ORCPT
+        id S1726069AbgCFG2I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 01:23:16 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:32130 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725927AbgCFGXQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 01:23:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583475795; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
- Subject: From: Sender; bh=7+QmfuGc+bFF4cv41VQssSd9JveANSp9NopTrz1WeWc=;
- b=KOJh4d40stjxRhUnBw1Fl04VUGTLdeOfP7lTM2vwmsidVj+4FPvpjd9GYDbAZ76pH+QkWDKe
- tcA5e2PePIN7cX9aHB2NZsEqEbrMEvK3hQcB0NPLhQNwNhXXaNk0kJ6uvUS3TMwMQW7klHFq
- 85jfvU/09Ulx/l4kI7X7B7sYHvA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e61ec4b.7f80aa680110-smtp-out-n04;
- Fri, 06 Mar 2020 06:23:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5A684C4479C; Fri,  6 Mar 2020 06:23:06 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8FD7C43383;
-        Fri,  6 Mar 2020 06:23:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B8FD7C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Introduce soc sleep stats bindings
- for Qualcomm SoCs
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
-        devicetree@vger.kernel.org
-References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
- <1582274986-17490-2-git-send-email-mkshah@codeaurora.org>
- <158290845710.4688.3557819013834887314@swboyd.mtv.corp.google.com>
-Message-ID: <b2ec702c-67e9-2473-a5d4-1bb53d9907cd@codeaurora.org>
-Date:   Fri, 6 Mar 2020 11:52:59 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <158290845710.4688.3557819013834887314@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+        Fri, 6 Mar 2020 01:28:08 -0500
+Received: from mga05.intel.com ([192.55.52.43]:11635 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbgCFG2I (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 01:28:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 22:28:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,521,1574150400"; 
+   d="scan'208";a="352671228"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2020 22:28:03 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     sboyd@kernel.org, mturquette@baylibre.com,
+        linux-clk@vger.kernel.org
+Cc:     robh@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v6 0/2] intel: Add a new driver for a new clock controller IP
+Date:   Fri,  6 Mar 2020 14:27:59 +0800
+Message-Id: <cover.1583475488.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
-On 2/28/2020 10:17 PM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-02-21 00:49:43)
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
->> new file mode 100644
->> index 00000000..50352a4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
->> @@ -0,0 +1,47 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bindings/soc/qcom/soc-sleep-stats.yaml#
-> Drop 'bindings' from above?
-Done.
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
->> +
->> +maintainers:
->> +  - Maulik Shah <mkshah@codeaurora.org>
->> +  - Lina Iyer <ilina@codeaurora.org>
->> +
->> +description: |
->> +  Always On Processor/Resource Power Manager maintains statistics of the SoC
->> +  sleep modes involving powering down of the rails and oscillator clock.
->> +
->> +  Statistics includes SoC sleep mode type, number of times low power mode were
->> +  entered, time of last entry, time of last exit and accumulated sleep duration.
->> +  SoC sleep stats driver provides debugfs interface to show this information.
-> Please remove this last line. It is a Linuxism that doesn't belong in DT
-> bindings. And then make it one paragraph and drop the | because
-> formatting doesn't need to be maintained.
-Done.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,rpmh-sleep-stats
->> +      - qcom,rpm-sleep-stats
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +examples:
->> +  # Example of rpmh sleep stats
->> +  - |
->> +    rpmh_sleep_stats: soc-sleep-stats@c3f0000 {
->> +      compatible = "qcom,rpmh-sleep-stats";
->> +      reg = <0 0xc3f0000 0 0x400>;
->> +    };
-> I see that on sc7180 aoss-qmp is overlapping with this region.
->
->
-> 	aoss_qmp: qmp@c300000 {
-> 		compatible = "qcom,sc7180-aoss-qmp";
-> 		reg = <0 0x0c300000 0 0x100000>;
->
-> So is this register region really something more like a TCM or RAM area
-> where rpmh combines multiple software concepts into one hardware memory
-> region? The aoss-qmp driver talks about message RAM, so I think this
-> sleep stats stuff is a carveout of the RPMh message RAM. It seems OK if
-> we want to split that message RAM up into multiple DT nodes, but then
-> we'll need to reduce the reg size for the aoss-qmp node.
-Yes, i discussed this long back with bjorn, we will limit aoss_qmp size to 0x400.
-Will include in next revision in DTSI change.
-> Finally, the node name 'soc-sleep-stats' is generic, but I wonder why we
-> couldn't name the node 'tcm' or 'memory' or 'msgram'. Similarly for the
-> qmp node it fits better DT style to have the node be something generic.
-following DTSI change in this series has comment to drop the label, since no one
-references this node. if we drop label than just naming it msgram@c3f0000 will also
-be too generic IMO.
+This series adds clock driver for Clock Generation Unit(CGU) of
+Lightning Mountain(LGM) SoC.
 
-To address both the comments i am planning to drop label and also soc-sleep-stats
-and just keep rpmh_sleep_stats@c3f0000.
+Patch 1 adds bindings document & include file for CGU.
+Patch 2 adds common clock framework based clock driver for CGU.
 
-Thanks,
-Maulik
+These patches are baselined upon Linux 5.6-rc1 at below Git link:
+git git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
 
->> +  # Example of rpm sleep stats
->> +  - |
->> +    rpm_sleep_stats: soc-sleep-stats@4690000 {
->> +      compatible = "qcom,rpm-sleep-stats";
->> +      reg = <0 0x04690000 0 0x400>;
->> +    };
->> +...
+v6:
+- Resolve Kconfig dependencies issues (Randy Dunlap)
+
+v5:
+- Address review concerns - mainly below mentioned. (Stephen Boyd)
+- Improve commit message, add COMPILE_TEST in KConfig dependency.
+- Remove unused header include files, drop unnecessary casts.
+- Switch to using readl_poll_timeout() instead of implementing timeout routine.
+- Avoid using small functions which are called just once. Inline them or
+  remove them.
+- const static --> static const
+- Fix coding style/convention related review concerns.
+- Use __iomem for all IO addresses variables.
+- Consolidate clk_enable & clk_disable ops into a common clk_enable_disable
+  routine to avoid redundant code.
+- Remove unnecessary dev pointers for clk data structures.
+- Redesign code to use new way of specifying clk_parents i.e. use
+  clk_parent_data.fw_name instead of older parent_name strings.
+- Switch from raw_spin_locks() to normal spin_locks() and realign locking.
+- Drop __initconst, __init, __refdata.
+- Reorder patch series - make dt-binding patch as first patch.
+- Add pointer to include file in dt-bindings document.
+- Remove CLK_IS_CRITICAL flag for clks for which IGNORE_UNUSED flag is enough.
+  Add comments for clks which are marked as CRITICAL.
+- Fix $id path in dt-bindings - drop bindings. (Rob Herring).
+- Add Reviewed-by tag from Rob Herring. Thanks Rob.
+
+v4:
+- Add drivers/clk/x86/Kconfig file which got missed in v3 by mistake.
+
+v3:
+- Address review concerns:
+  Add Kconfig entry in x86 folder instead of modifying clk/Kconfig. (Andy Shevchenko)
+  Fix coding style/convention related concerns. (Andy Shevchenko)
+  Improve description, licensing info, rename node name correctly in dt bindings
+  document & remove CLK_NR_CLKS from dt-bindings header file. (Stephen Boyd)
+  Fix a build warning reported by kbuild test robot & Nathan Chancellor
+- Add few new clocks & rename few existing clocks.
+- Add more ops for ddiv & divider clk_ops.
+- Fix few minor bugs.
+- Use CLK_IS_CRITICAL flag for clocks which shall never be disabled.
+
+v2:
+- Move the driver to x86 folder.
+- Remove syscon usage.
+- Remove regmap based access. Use direct readl()/write() instead. Add spinlocks.
+- Change all enum values to capitals.
+- Rename all data structures & functions from intel_* to lgm_*.
+- Remove multiple header files. Keep only one header file.
+- Make probe fail when any of the clk/pll registration fails.
+- Fix few bugs with clk_init_data assignement.
+- Address review concerns for code quality/style/convention.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (1):
+  dt-bindings: clk: intel: Add bindings document & header file for CGU
+
+rtanwar (1):
+  clk: intel: Add CGU clock driver for a new SoC
+
+ .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  44 ++
+ drivers/clk/Kconfig                                |   1 +
+ drivers/clk/x86/Kconfig                            |   8 +
+ drivers/clk/x86/Makefile                           |   1 +
+ drivers/clk/x86/clk-cgu-pll.c                      | 156 +++++
+ drivers/clk/x86/clk-cgu.c                          | 636 +++++++++++++++++++++
+ drivers/clk/x86/clk-cgu.h                          | 335 +++++++++++
+ drivers/clk/x86/clk-lgm.c                          | 492 ++++++++++++++++
+ include/dt-bindings/clock/intel,lgm-clk.h          | 165 ++++++
+ 9 files changed, 1838 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
+ create mode 100644 drivers/clk/x86/Kconfig
+ create mode 100644 drivers/clk/x86/clk-cgu-pll.c
+ create mode 100644 drivers/clk/x86/clk-cgu.c
+ create mode 100644 drivers/clk/x86/clk-cgu.h
+ create mode 100644 drivers/clk/x86/clk-lgm.c
+ create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.11.0
+
