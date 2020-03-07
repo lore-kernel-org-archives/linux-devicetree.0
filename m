@@ -2,253 +2,115 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D06C10F26
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 15:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F93C10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 16:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C3E2067C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 15:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583593519;
-	bh=djr7N1lF/PKKB9fp2i9gvINm+MJ4rxqV23JMIjkYYO4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EtBWauTNfiFRta6Dhp1bmqGP01ELB3pcfp2/wPU6CjuvVcjW4HayF0sUusIMRREPe
-	 6zYjhBhsM2do0YbOec//q1I2cCSdjJlttui/GyGNZoxY3RY8RZk5vpIUIW0/BViNna
-	 a80cyFyVeAQEwe44C+JRv9yv3o1CTbBpKu5Y57mU=
+	by mail.kernel.org (Postfix) with ESMTP id 2A0712073D
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 16:06:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RY4MKxaS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgCGPFT (ORCPT
+        id S1726116AbgCGQGG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:05:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgCGPFT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:05:19 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59B7520674;
-        Sat,  7 Mar 2020 15:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583593517;
-        bh=djr7N1lF/PKKB9fp2i9gvINm+MJ4rxqV23JMIjkYYO4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cXxT45a+XI3Vfb7mfPiLj/VSNIUGTATR6o2olTOpEYHMESm+uplmvaD3R9b4Hu014
-         zMd2kmTkt0FQ6WlBTv2HZUX5YUnhTvTwx+CnEY9VBgJhCDShl2JqAYFZUeZewlS7Lz
-         8xZk7QeEI0HSkcaGmZN3UNPQx7BQ0EB2N/mzKvQE=
-Date:   Sat, 7 Mar 2020 15:05:13 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v8 7/8] iio: adc: ad9467: add support AD9467 ADC
-Message-ID: <20200307150513.053b198a@archlinux>
-In-Reply-To: <20200306110100.22092-8-alexandru.ardelean@analog.com>
-References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
-        <20200306110100.22092-8-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 7 Mar 2020 11:06:06 -0500
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:38305 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgCGQGF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 11:06:05 -0500
+Received: by mail-wr1-f41.google.com with SMTP id t11so5878430wrw.5;
+        Sat, 07 Mar 2020 08:06:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=iAetEvZraiflUEUc7nvvm8pl55tWCvaIeillv2HHKY4=;
+        b=RY4MKxaSmII1woTtclCslMgTGxlofSmYGl3WFzVaIKcUYL1o5RIExjEpCmugp4szQA
+         pnSfn6kQwEjA920C4NsfvqYiGQpOeXPVoot14HAWuRIIgHEjyA5f3/vkg+EYGbwD+DI5
+         f6ha9Pk8t6NbYSoWJD+Y/9rgfM6ZOdxABsDu6mdEk/wO89+pBZUuL6dCdHCaX3z11lVx
+         KNUgvmHmXlbCpOLFpnaN+oK3Ppyjt0Q8YbF9qP1YAOfzMFIlEFr9Ms38QRNxPwdzAkgx
+         OE9xcgVoZ+WSzP9c0LDrpQbFUHgoUzCDx6Syr2EdVHdhtMjO+3hcziTkuITm3mF+B9gy
+         1LXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iAetEvZraiflUEUc7nvvm8pl55tWCvaIeillv2HHKY4=;
+        b=I6axj7wXBiRLuBrI9MfVNiNCb9+Z5kRRroFafG4/i7WydmVShVGcdI5FWdkOfdfZPo
+         EwvCSGOGGlaWfE+BVywwn/5YVY86VsR6MNsBAVzA87IsUdEl/tzWdKIlINBnr7G4PrpM
+         kPRKYk7e5dTXWpwn/7CIumog0l1JTF68TaX5htOSsDwhxLfZbKGxqEoLFhdkTDvh4stC
+         +1lo+XGayrcnZrDx4AmkLbTmJOiWFXO5eS6pHW2naJv1+Mn+U31BLd98UwOCV27Lh5kq
+         TlKDgB/0Vae4p+a62EOTo+vxp0lT9LvHt9IsYY8+ahs9QPPxiNxfDy4W1b6pr+DB0JYr
+         VnFw==
+X-Gm-Message-State: ANhLgQ2wbnLmjjRsPXptQe3sz3hojgGH3gPbzbS4vFpiaPLhWDXv/wng
+        uff2DK5YQqjZz253WUVzYHQ=
+X-Google-Smtp-Source: ADFU+vsORIHVIXY/NGjz0qd0dQ3z+z+LGwdJWHv2GehbGa7/k9ONo/m7C/JJ4CkIdkadrGxj6NNxwQ==
+X-Received: by 2002:a5d:550f:: with SMTP id b15mr10220750wrv.19.1583597163324;
+        Sat, 07 Mar 2020 08:06:03 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id k126sm17555105wme.4.2020.03.07.08.06.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Mar 2020 08:06:02 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     ulf.hansson@linaro.org
+Cc:     heiko@sntech.de, robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dt-bindings: mmc: synopsys-dw-mshc: fix clock-freq-min-max in example
+Date:   Sat,  7 Mar 2020 17:05:56 +0100
+Message-Id: <20200307160556.16226-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 6 Mar 2020 13:00:59 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+A test with the command below does not detect all errors
+in combination with 'additionalProperties: false' and
+allOf:
+  - $ref: "synopsys-dw-mshc-common.yaml#"
+allOf:
+  - $ref: "mmc-controller.yaml#"
 
-> From: Michael Hennerich <michael.hennerich@analog.com>
-> 
-> The AD9467 is a 16-bit, monolithic, IF sampling analog-to-digital converter
-> (ADC). It is optimized for high performanceover wide bandwidths and ease of
-> use. The product operates at a 250 MSPS conversion rate and is designed for
-> wireless receivers, instrumentation, and test equipment that require a high
-> dynamic range. The ADC requires 1.8 V and 3.3 V power supplies and a low
-> voltage differential input clock for full performance operation. No
-> external reference or driver components are required for many applications.
-> Data outputs are LVDS compatible (ANSI-644 compatible) and include the
-> means to reduce the overall current needed for short trace distances.
-> 
-> Since the chip can operate at such high sample-rates (much higher than
-> classical interfaces), it requires that a DMA controller be used to
-> interface directly to the chip and push data into memory.
-> Typically, the AXI ADC IP core is used to interface with it.
-> 
-> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/AD9467.pdf
-> 
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+'additionalProperties' applies to all properties that are not
+accounted-for by 'properties' or 'patternProperties' in
+the immediate schema.
 
-A few minor things but otherwise looks good to me..
+First when we combine synopsys-dw-mshc.yaml,
+synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
+this error:
 
-> ---
->  drivers/iio/adc/Kconfig  |  15 ++
->  drivers/iio/adc/Makefile |   1 +
->  drivers/iio/adc/ad9467.c | 432 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 448 insertions(+)
->  create mode 100644 drivers/iio/adc/ad9467.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 445070abf376..a0796510f9d4 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -246,6 +246,21 @@ config AD799X
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called ad799x.
->  
-...
-> +static int ad9467_spi_read(struct spi_device *spi, unsigned int reg)
-> +{
-> +	unsigned char buf[3];
-> +	int ret;
-> +
-> +	buf[0] = 0x80 | (reg >> 8);
-> +	buf[1] = reg & 0xFF;
-> +
-> +	ret = spi_write_then_read(spi, &buf[0], 2, &buf[2], 1);
+Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.example.dt.yaml:
+mmc@12200000: 'clock-freq-min-max' does not match any of the regexes:
+'^.*@[0-9]+$', '^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
+uhs-(sdr(12|25|50|104)|ddr50))$', 'pinctrl-[0-9]+'
 
-Why not split buf into send part and receive?  Might make it slightly
-more readable for no actual cost..
+'clock-freq-min-max' is deprecated, so replace it by 'max-frequency'.
 
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return buf[2];
-> +}
-...
+make ARCH=arm dt_binding_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
 
-> +static int ad9467_write_raw(struct adi_axi_adc_conv *conv,
-> +			    struct iio_chan_spec const *chan,
-> +			    int val, int val2, long mask)
-> +{
-> +	const struct adi_axi_adc_chip_info *info = conv->chip_info;
-> +	struct ad9467_state *st = adi_axi_adc_conv_priv(conv);
-> +	unsigned long r_clk;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return ad9467_set_scale(conv, val, val2);
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		if (!st->clk)
-> +			return -ENODEV;
-> +
-> +		if (chan->extend_name)
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is a very 'odd' test.  Why?
-
-> +			return -ENODEV;
-> +
-> +		r_clk = clk_round_rate(st->clk, val);
-> +		if (r_clk < 0 || r_clk > info->max_rate) {
-> +			dev_warn(&st->spi->dev,
-> +				 "Error setting ADC sample rate %ld", r_clk);
-> +			return -EINVAL;
-> +		}
-> +
-> +		return clk_set_rate(st->clk, r_clk);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-...
-> +static int ad9467_probe(struct spi_device *spi)
-> +{
-> +	const struct of_device_id *oid;
-> +	struct adi_axi_adc_conv *conv;
-> +	struct ad9467_state *st;
-> +	unsigned int id;
-> +	int ret;
-> +
-> +	if (!spi->dev.of_node) {
-> +		dev_err(&spi->dev, "DT node is null\n");
-> +		return -ENODEV;
-
-Silly question for you.  Can this happen?  We can only probe this
-if it is in DT and hence there must be a node to get here I think.
-
-> +	}
-> +
-> +	oid = of_match_node(ad9467_of_match, spi->dev.of_node);
-> +	if (!oid)
-> +		return -ENODEV;
-
-You only ever want the data field so you can get that directly.
-of_device_get_match_data
-
-> +
-> +	conv = devm_adi_axi_adc_conv_register(&spi->dev, sizeof(*st));
-> +	if (IS_ERR(conv))
-> +		return PTR_ERR(conv);
-> +
-> +	st = adi_axi_adc_conv_priv(conv);
-> +	st->spi = spi;
-> +
-> +	st->clk = devm_clk_get(&spi->dev, "adc-clk");
-> +	if (IS_ERR(st->clk))
-> +		return PTR_ERR(st->clk);
-> +
-> +	ret = clk_prepare_enable(st->clk);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = devm_add_action_or_reset(&spi->dev, ad9467_clk_disable, st);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->pwrdown_gpio = devm_gpiod_get_optional(&spi->dev, "powerdown",
-> +						   GPIOD_OUT_LOW);
-> +	if (IS_ERR(st->pwrdown_gpio))
-> +		return PTR_ERR(st->pwrdown_gpio);
-> +
-> +	st->reset_gpio = devm_gpiod_get_optional(&spi->dev, "reset",
-> +						 GPIOD_OUT_LOW);
-> +	if (IS_ERR(st->reset_gpio))
-> +		return PTR_ERR(st->reset_gpio);
-> +
-> +	if (st->reset_gpio) {
-> +		udelay(1);
-> +		ret = gpiod_direction_output(st->reset_gpio, 1);
-> +		mdelay(10);
-> +	}
-> +
-> +	spi_set_drvdata(spi, st);
-> +
-> +	id = (unsigned int)oid->data;
-> +	conv->chip_info = &ad9467_chip_info_tbl[id];
-> +
-> +	id = ad9467_spi_read(spi, AN877_ADC_REG_CHIP_ID);
-> +	if (id != conv->chip_info->id) {
-> +		dev_err(&spi->dev, "Unrecognized CHIP_ID 0x%X\n", id);
-> +		return -ENODEV;
-> +	}
-> +
-> +	conv->reg_access = ad9467_reg_access;
-> +	conv->write_raw = ad9467_write_raw;
-> +	conv->read_raw = ad9467_read_raw;
-> +	conv->preenable_setup = ad9467_preenable_setup;
-> +
-> +	return ad9467_setup(st, id);
-> +}
-> +
-> +static struct spi_driver ad9467_driver = {
-> +	.driver = {
-> +		.name = "ad9467",
-> +		.of_match_table = ad9467_of_match,
-> +	},
-> +	.probe = ad9467_probe,
-> +};
-> +module_spi_driver(ad9467_driver);
-> +
-> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD9467 ADC driver");
-> +MODULE_LICENSE("GPL v2");
+diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+index 05f9f36dc..dd2c1b147 100644
+--- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
++++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+@@ -62,7 +62,7 @@ examples:
+       cap-mmc-highspeed;
+       cap-sd-highspeed;
+       card-detect-delay = <200>;
+-      clock-freq-min-max = <400000 200000000>;
++      max-frequency = <200000000>;
+       clock-frequency = <400000000>;
+       data-addr = <0x200>;
+       fifo-depth = <0x80>;
+-- 
+2.11.0
 
