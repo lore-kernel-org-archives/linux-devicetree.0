@@ -2,715 +2,214 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A916C10F00
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 08:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46158C10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 08:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16494206D5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 08:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8CC2070A
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 08:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRhN2JuB"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="VX4KBJif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgCGIgZ (ORCPT
+        id S1725909AbgCGIu7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 03:36:25 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35636 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgCGIgZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 03:36:25 -0500
-Received: by mail-wm1-f67.google.com with SMTP id m3so4765738wmi.0
-        for <devicetree@vger.kernel.org>; Sat, 07 Mar 2020 00:36:22 -0800 (PST)
+        Sat, 7 Mar 2020 03:50:59 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:6039 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgCGIu7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 03:50:59 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Ajay.Kathat@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Ajay.Kathat@microchip.com";
+  x-sender="Ajay.Kathat@microchip.com"; x-conformance=spf_only;
+  x-record-type="v=spf1"; x-record-text="v=spf1 mx
+  a:ushub1.microchip.com a:smtpout.microchip.com
+  -exists:%{i}.spf.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Ajay.Kathat@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Ajay.Kathat@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: BYzFmIas2J56mLER/TmmFc8tFoTJD9h7WqxcoAsuirEoAB2tkoUcmPHQNeaHS4FaG059vWzjC0
+ ZF+iAGnWIFaBajOI/9YU+IZS2dL1UsugNP/oOvgeosfUsBoJDlVX3zCJpZUHCtscUfdVq31wNJ
+ OqmnN2aJeZxZJECWAJNjawfD7X1ELYFqB3XZ4GevPutFME2yVc4TpHeYw8keyWLuuRYmZ5w365
+ D5RFK6fcX38rkXH4hDKa6Jv3gSJDc+XAsSL2uklbbP5JtadxIkMIsbBiSEeyTklp4ao9MetjkX
+ pRQ=
+X-IronPort-AV: E=Sophos;i="5.70,525,1574146800"; 
+   d="scan'208";a="68188713"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Mar 2020 01:50:57 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 7 Mar 2020 01:50:56 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Sat, 7 Mar 2020 01:50:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dCZQVbjzQ479BulVT5zEvZ7zmhf31EhBOqqpxCP7fLwdi9r4F3BcHSn4qRdaFUuXSSEPTi7jgjuWlPsNhS/Ki+08/YfTqiLDRxhlpt/ym/hsF7VKPgfr06p7JDxROYkGkg6ZJqXTNHdCHKMN01ZPMrol67INdhJybIO1dYnz0fHXswLZuan/dkam9I5W7lCy6s3hy4InJg1wGk3P7h5nm2RPE8tznOvF+wqMS4U8L17lO5xCVoX6sJePlfwsTUV/S2iiG8yX6ZX9imax8mQHiOfIrseKnIXsMf5wlQd1L4zAp2E6SrEjBq2b9zARfctUIrCjPurYa4X5jK8Lh/vygw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wRJ49oH4OJ+kR80o0LBl+Eu1lcsBDpsMElpPgJ5mZso=;
+ b=FmrKX6j7XKjns4EYH+I8Q4/nlTHBZu4ve/BblmWSJ9Jt33wZx0JgpSHWF+tfqLFKWuKm0UD42Kn070xvvASAyQIKEl7Aia3o8AEWp2RRTHeE8u3D/gdcdafXhxy+MqeqiBxioESOwPNK87LjVd66Nwl+7NCytY23IfGzOQq10jSr+iMh/nRefRBeqEW7j+UIJeltPo4w/L2b2c87CA2BN/oj81o+MfPF1lAsL08yV0du6XRIb8DIfCXQAZ0JaYXG10aXl8HgLetzhYLFzcPfQP6oa3W9RiMGBkktxM7gR//qFOJM0Uzu87DcogHiKAjCeXpIi4nNPMR/r0jvqF3++w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+llLPrGd5t8/uzhFM/JY7vfZMQbUY9JxBp7ItfeQETg=;
-        b=ZRhN2JuBc1yZkvqlv8Nz7tw90jGoUvvyG5U5lSFosjd87xniaE35kHUCrXF3gbRgLO
-         8sCahkAPj+kUccqOrd4W4nZB+MOZ0pcyAYA3jJdTbG0dwvmKvVCtI1AH1D8csPp0s219
-         UvO7kbWsUHIs9Kez4Bquy4BtmJ4yrbY2afogLT1fHIS/Yk++SNF8dOa5znqbjKMRSk6N
-         BT1N3wYStmxMV+cfQPACYhHZ5r/PsUDPzZ/LnIsus9Kz2M3ZpTyykH4XP3iT6ka9Tx9y
-         vFFEAfm6qDCMb7RnLrmbKYMqEQoGoDv5gXsq5241upGF9shsghC2DcKTfpKHF83a8iUU
-         pOlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+llLPrGd5t8/uzhFM/JY7vfZMQbUY9JxBp7ItfeQETg=;
-        b=rwaRkIO8qRzJH/fLxh0S0XPmXEV4OIZ0A56nrA+AjqF+qZQVm9WMpm+S/FW2SospEj
-         7qBTDP8UE8JPp0/ERJny0j3v0OipaTscReugNmk+bitgKQx5qNcGMlih2TDx1j9kRAZ7
-         s0pykwBdc3IF4b/kF+2JvB5X6HAkhJ3fnViKuwSX1l8eS1OWEPsGZsFlzFQ5TU40KI5p
-         I4bTyMvDkTn0gI4RXOQpD4EgVx8v4sgarafmGPXN3cmq3aCcLFhGwjwOg5LjhcZduqwq
-         jpxPm0Sjf+5MIKKt6aEAyHA3V/QrwDj1MRmkb6ZtWDmRNXrujzvDJQkDYMLYGkEoAtHt
-         D/XA==
-X-Gm-Message-State: ANhLgQ1nvcx689eN/U8T4pWQQiKMzl+yeJD7lX/vOumRFYW2Zm4Y3WTC
-        C5k8VFqxiOUUfv27bQwEYyw=
-X-Google-Smtp-Source: ADFU+vuyotHzjwL5WHrLpokrRMf3GK6+z5AfHgvriTox//HNu4OX1ioXJSvmX6mkBnSUaOZ/5FGaVQ==
-X-Received: by 2002:a7b:cb42:: with SMTP id v2mr8904028wmj.170.1583570181971;
-        Sat, 07 Mar 2020 00:36:21 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id f17sm31420661wrm.3.2020.03.07.00.36.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Mar 2020 00:36:21 -0800 (PST)
-To:     heiko@sntech.de
-Cc:     christoph.muellner@theobroma-systems.com,
-        devicetree@vger.kernel.org, heiko.stuebner@theobroma-systems.com,
-        kever.yang@rock-chips.com, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, robin.murphy@arm.com
-References: <20200306210922.172346-3-heiko@sntech.de>
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add Odroid Advance Go
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <59bdf2c1-79cf-2c45-263e-80a9358c7fdd@gmail.com>
-Date:   Sat, 7 Mar 2020 09:36:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200306210922.172346-3-heiko@sntech.de>
-Content-Type: text/plain; charset=utf-8
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wRJ49oH4OJ+kR80o0LBl+Eu1lcsBDpsMElpPgJ5mZso=;
+ b=VX4KBJif0R2uWqPa55lqfvz+aYvJsbYfkUpDBD5Uwws9lcyjtQoTKcxIx8Df36VrN44ZOv0IT44ANIxTDHK4T5GTiTMsxGauT40Sxs4Lh0zKnv+RcAoBXO62dGpZBUyNnJVoDpSSkrSxbkD1GrKbXJ4KD75B9bwUp/glfSiXzRU=
+Received: from BN6PR11MB3985.namprd11.prod.outlook.com (2603:10b6:405:7b::14)
+ by BN6PR11MB1601.namprd11.prod.outlook.com (2603:10b6:405:f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Sat, 7 Mar
+ 2020 08:50:53 +0000
+Received: from BN6PR11MB3985.namprd11.prod.outlook.com
+ ([fe80::a0be:9e7c:714e:e2bd]) by BN6PR11MB3985.namprd11.prod.outlook.com
+ ([fe80::a0be:9e7c:714e:e2bd%6]) with mapi id 15.20.2793.013; Sat, 7 Mar 2020
+ 08:50:53 +0000
+From:   <Ajay.Kathat@microchip.com>
+To:     <robh@kernel.org>
+CC:     <devel@driverdev.osuosl.org>, <devicetree@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-wireless@vger.kernel.org>,
+        <Adham.Abozaeid@microchip.com>, <johannes@sipsolutions.net>
+Subject: Re: [PATCH 1/2] staging: wilc1000: use 'interrupts' property instead
+ of 'irq-gpio'
+Thread-Topic: [PATCH 1/2] staging: wilc1000: use 'interrupts' property instead
+ of 'irq-gpio'
+Thread-Index: AQHV88WupU/867Y5g0u3Z47AmpcYLag7shyAgAEhWwA=
+Date:   Sat, 7 Mar 2020 08:50:53 +0000
+Message-ID: <4408ce4a-1914-ae73-e3e0-15cf2d283a6c@microchip.com>
+References: <20200306144400.4269-1-ajay.kathat@microchip.com>
+ <20200306144400.4269-2-ajay.kathat@microchip.com>
+ <CAL_JsqKP-9bBMpkvMfphyAfdeVd44=pYDSOY=fSsx5xYkJPCjA@mail.gmail.com>
+In-Reply-To: <CAL_JsqKP-9bBMpkvMfphyAfdeVd44=pYDSOY=fSsx5xYkJPCjA@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [49.205.217.30]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3b8eafa6-93d6-406c-29a0-08d7c274a4f5
+x-ms-traffictypediagnostic: BN6PR11MB1601:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR11MB1601BAE70136DEAED483C4EDE3E00@BN6PR11MB1601.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 03355EE97E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(396003)(136003)(39860400002)(199004)(189003)(76116006)(66446008)(66946007)(91956017)(66556008)(966005)(5660300002)(64756008)(66476007)(36756003)(71200400001)(53546011)(478600001)(6486002)(6506007)(2616005)(31696002)(54906003)(4326008)(26005)(31686004)(86362001)(316002)(6512007)(81156014)(81166006)(8936002)(186003)(6916009)(2906002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1601;H:BN6PR11MB3985.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jzfamJ9BJT19qO4c685Tu+Wh9RT1EXwZDXxkBA25Ce8DIuWZWTj1coBXfstjcjBiR0OxVeOt1yhUZO55ZCkeTJzztTubA2RuzlUMgXhW7EpR5WCHx1kS3cW12tAWSMQu2JYnqn/Fl5LGo8jw8jU+tWE4pyCXuDKB7+KNDVWkzYYHlKOQZbsKw0dg3/0bFTKrVivqU0EHv/23BoklM1AguNRe0agmg385OjYb5mkiXMvZC221AU5em+yi/ntjGVOtRvIpfg96B0ttK+Gmo3sXu/xQiscmTAkVoxuDM0lrdIqK4XzKyFt/AkXcCYnzhvl5aDhUClZhkN5LWfztx7PB4RRYiTE+chHwrOYcWrV/35qfGvx8UCAqyempELIr/+gtKeJwta67lyurJFkpVK3ewTuui4PcbP8Gu0XaszA4uvdnSdMNQLlXVmA99PPMuMOIXAONXqIpCR/67wc3+G2DnvGU7FC7NbuYjidSUnBnXtTn4/paCleLSqtATIjJArgq
+x-ms-exchange-antispam-messagedata: IX3y6VMDeo22rl9O/7gG7k/zQ8kNV2GfNGvg6ZVjos5Z/Wk7avmNy3NEK+kgYwblLuBWxhUTKmYNI3Gy5pVFUFtujNOh3xK+50Wqjv8GPBKEjSrziuF68BsDjhZWQH14GIBQG+FJXdSsgAOPAEeThQ==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8AA77E5AFC563449B59A4572E278CDD4@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b8eafa6-93d6-406c-29a0-08d7c274a4f5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2020 08:50:53.3830
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lQ8NpNIbWS+eZ0VHNtX6CvyMtr+NK3hgOP/Fd1fLN3/NAkr3ct5lkbuN9UAquffSMxWcADKaPswh8HjRj68RzbHdVNJdIa3Ce9lRjQ6yiIc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1601
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-The 'heartbeat' led seems to need some changes. The rest is inherited
-from px30.dtsi I think. How do you deal with all the compatible
-properties names that are normally SoC specific?
-
-Also include all mail lists found with:
-./scripts/get_maintainer.pl --nogit-fallback --nogit
-
-linux-kernel@vger.kernel.org
-
-  DTC     arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dtb
-  DTC     arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml
-  CHECK   arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml
-arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: tsadc:
-tsadc-otp-gpio: {'rockchip,pins': [[0, 6, 0, 123]], 'phandle': [[90]]}
-is not of type 'array'
-arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb@ff340000:
-'clock-names', 'power-domains' do not match any of the regexes:
-'pinctrl-[0-9]+'
-arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb@ff300000:
-'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb@ff350000:
-'clock-names', 'power-domains' do not match any of the regexes:
-'pinctrl-[0-9]+'
-arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: gpio-leds:
-'heartbeat' does not match any of the regexes: '(^led-[0-9a-f]$|led)',
-'pinctrl-[0-9]+'
-arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb2-phy@100:
-'#phy-cells' is a required property
-
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> The Odroid Advance Go is a handheld based on Rockchip's rk3326 soc
-> with a DSI display and some handheld controls including an analog
-> joystick connected to the saradc.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> ---
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  .../boot/dts/rockchip/rk3326-odroid-go2.dts   | 544 ++++++++++++++++++
->  2 files changed, 545 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index af1e1c3707d0..86c38467d487 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-copperhead-ltk101b4029w.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3326-odroid-go2.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
-> new file mode 100644
-> index 000000000000..a16f4a0d1d4d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
-> @@ -0,0 +1,544 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Hardkernel Co., Ltd
-> + * Copyright (c) 2020 Theobroma Systems Design und Consulting GmbH
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/pinctrl/rockchip.h>
-> +#include "rk3326.dtsi"
-> +
-> +/ {
-> +	model = "ODROID-GO Advance";
-> +	compatible = "hardkernel,rk3326-odroid-go2", "rockchip,rk3326";
-> +
-> +	chosen {
-> +		stdout-path = "serial2:115200n8";
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&btn_pins>;
-> +
-> +		/*
-> +		 *      *** ODROIDGO2-Advance Switch layoout ***
-> +		 * |------------------------------------------------|
-> +		 * | sw15                                      sw16 |
-> +		 * |------------------------------------------------|
-> +		 * |     sw1      |-------------------|      sw8    |
-> +		 * |  sw3   sw4   |                   |   sw7   sw5 |
-> +		 * |     sw2      |    LCD Display    |      sw6    |
-> +		 * |              |                   |             |
-> +		 * |              |-------------------|             |
-> +		 * |         sw9 sw10   sw11 sw12   sw13 sw14       |
-> +		 * |------------------------------------------------|
-> +		 */
-> +
-> +		sw1 {
-> +			gpios = <&gpio1 RK_PB4 GPIO_ACTIVE_LOW>;
-> +			label = "DPAD-UP";
-> +			linux,code = <BTN_DPAD_UP>;
-> +		};
-> +		sw2 {
-> +			gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_LOW>;
-> +			label = "DPAD-DOWN";
-> +			linux,code = <BTN_DPAD_DOWN>;
-> +		};
-> +		sw3 {
-> +			gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_LOW>;
-> +			label = "DPAD-LEFT";
-> +			linux,code = <BTN_DPAD_LEFT>;
-> +		};
-> +		sw4 {
-> +			gpios = <&gpio1 RK_PB7 GPIO_ACTIVE_LOW>;
-> +			label = "DPAD-RIGHT";
-> +			linux,code = <BTN_DPAD_RIGHT>;
-> +		};
-> +		sw5 {
-> +			gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_LOW>;
-> +			label = "BTN-A";
-> +			linux,code = <BTN_EAST>;
-> +		};
-> +		sw6 {
-> +			gpios = <&gpio1 RK_PA5 GPIO_ACTIVE_LOW>;
-> +			label = "BTN-B";
-> +			linux,code = <BTN_SOUTH>;
-> +		};
-> +		sw7 {
-> +			gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;
-> +			label = "BTN-Y";
-> +			linux,code = <BTN_WEST>;
-> +		};
-> +		sw8 {
-> +			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_LOW>;
-> +			label = "BTN-X";
-> +			linux,code = <BTN_NORTH>;
-> +		};
-> +		sw9 {
-> +			gpios = <&gpio2 RK_PA0 GPIO_ACTIVE_LOW>;
-> +			label = "F1";
-> +			linux,code = <BTN_TRIGGER_HAPPY1>;
-> +		};
-> +		sw10 {
-> +			gpios = <&gpio2 RK_PA1 GPIO_ACTIVE_LOW>;
-> +			label = "F2";
-> +			linux,code = <BTN_TRIGGER_HAPPY2>;
-> +		};
-> +		sw11 {
-> +			gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
-> +			label = "F3";
-> +			linux,code = <BTN_TRIGGER_HAPPY3>;
-> +		};
-> +		sw12 {
-> +			gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_LOW>;
-> +			label = "F4";
-> +			linux,code = <BTN_TRIGGER_HAPPY4>;
-> +		};
-> +		sw13 {
-> +			gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_LOW>;
-> +			label = "F5";
-> +			linux,code = <BTN_TRIGGER_HAPPY5>;
-> +		};
-> +		sw14 {
-> +			gpios = <&gpio2 RK_PA5 GPIO_ACTIVE_LOW>;
-> +			label = "F6";
-> +			linux,code = <BTN_TRIGGER_HAPPY6>;
-> +		};
-> +		sw15 {
-> +			gpios = <&gpio2 RK_PA6 GPIO_ACTIVE_LOW>;
-> +			label = "TOP-LEFT";
-> +			linux,code = <BTN_TL>;
-> +		};
-> +		sw16 {
-> +			gpios = <&gpio2 RK_PA7 GPIO_ACTIVE_LOW>;
-> +			label = "TOP-RIGHT";
-> +			linux,code = <BTN_TR>;
-> +		};
-> +	};
-> +
-> +	leds: gpio-leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "led_pins";
-> +		pinctrl-0 = <&led_pins>;
-> +
-> +		/* Blue LED : GPIO0_C1 */
-> +		heartbeat {
-> +			label = "blue:heartbeat";
-> +			gpios = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +
-
-> +	backlight: backlight {
-> +		compatible = "pwm-backlight";
-> +		power-supply = <&vcc_bl>;
-> +		pwms = <&pwm1 0 25000 0>;
-> +	};
-
-sort nodenames
-
-> +
-> +	vccsys: vccsys {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc3v8_sys";
-> +		regulator-always-on;
-> +		regulator-min-microvolt = <3800000>;
-> +		regulator-max-microvolt = <3800000>;
-> +	};
-> +
-> +	vcc_host: vcc_host {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_host";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +
-> +		gpio = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		vin-supply = <&vccsys>;
-> +	};
-> +};
-> +
-> +&cpu0 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu1 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu2 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu3 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cru {
-> +	assigned-clocks = <&cru PLL_NPLL>,
-> +		<&cru ACLK_BUS_PRE>, <&cru ACLK_PERI_PRE>,
-> +		<&cru HCLK_BUS_PRE>, <&cru HCLK_PERI_PRE>,
-> +		<&cru PCLK_BUS_PRE>, <&cru SCLK_GPU>,
-> +		<&cru PLL_CPLL>;
-> +
-> +	assigned-clock-rates = <1188000000>,
-> +		<200000000>, <200000000>,
-> +		<150000000>, <150000000>,
-> +		<100000000>, <200000000>,
-> +		<17000000>;
-> +};
-> +
-> +&display_subsystem {
-> +	status = "okay";
-> +};
-> +
-> +&dsi {
-> +	status = "okay";
-> +
-> +	ports {
-> +		mipi_out: port@1 {
-> +			reg = <1>;
-> +
-> +			mipi_out_panel: endpoint {
-> +				remote-endpoint = <&mipi_in_panel>;
-> +			};
-> +		};
-> +	};
-> +
-> +	panel@0 {
-> +		compatible = "elida,kd35t133";
-> +		reg = <0>;
-> +		backlight = <&backlight>;
-> +		iovcc-supply = <&vcc_lcd>;
-> +		reset-gpios = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
-> +		vdd-supply = <&vcc_lcd>;
-> +
-> +		port {
-> +			mipi_in_panel: endpoint {
-> +				remote-endpoint = <&mipi_out_panel>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&dsi_dphy {
-> +	status = "okay";
-> +};
-> +
-> +&gpu {
-> +	mali-supply = <&vdd_logic>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-
-> +	status = "okay";
-
-status below
-
-> +	clock-frequency = <400000>;
-
-> +	i2c-scl-rising-time-ns = <280>;
-> +	i2c-scl-falling-time-ns = <16>;
-
-sort
-
-> +
-> +	rk817: pmic@20 {
-> +		compatible = "rockchip,rk817";
-> +		reg = <0x20>;
-> +		interrupt-parent = <&gpio0>;
-> +		interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pmic_int>;
-> +		rockchip,system-power-controller;
-> +		wakeup-source;
-> +		#clock-cells = <1>;
-> +		clock-output-names = "rk808-clkout1", "xin32k";
-> +
-> +		vcc1-supply = <&vccsys>;
-> +		vcc2-supply = <&vccsys>;
-> +		vcc3-supply = <&vccsys>;
-> +		vcc4-supply = <&vccsys>;
-> +		vcc5-supply = <&vccsys>;
-> +		vcc6-supply = <&vccsys>;
-> +		vcc7-supply = <&vccsys>;
-> +
-> +		regulators {
-> +			vdd_logic: DCDC_REG1 {
-> +				regulator-name = "vdd_logic";
-> +				regulator-min-microvolt = <950000>;
-> +				regulator-max-microvolt = <1150000>;
-> +				regulator-ramp-delay = <6001>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <950000>;
-> +				};
-> +			};
-> +
-> +			vdd_arm: DCDC_REG2 {
-> +				regulator-name = "vdd_arm";
-> +				regulator-min-microvolt = <950000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-ramp-delay = <6001>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +					regulator-suspend-microvolt = <950000>;
-> +				};
-> +			};
-> +
-> +			vcc_ddr: DCDC_REG3 {
-> +				regulator-name = "vcc_ddr";
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc_3v3: DCDC_REG4 {
-> +				regulator-name = "vcc_3v3";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +					regulator-suspend-microvolt = <3300000>;
-> +				};
-> +			};
-> +
-> +			vcc_1v8: LDO_REG2 {
-> +				regulator-name = "vcc_1v8";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <1800000>;
-> +				};
-> +			};
-> +
-> +			vdd_1v0: LDO_REG3 {
-> +				regulator-name = "vdd_1v0";
-> +				regulator-min-microvolt = <1000000>;
-> +				regulator-max-microvolt = <1000000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <1000000>;
-> +				};
-> +			};
-> +
-> +			vcc3v3_pmu: LDO_REG4 {
-> +				regulator-name = "vcc3v3_pmu";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <3300000>;
-> +				};
-> +			};
-> +
-> +			vccio_sd: LDO_REG5 {
-> +				regulator-name = "vccio_sd";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <3300000>;
-> +				};
-> +			};
-> +
-> +			vcc_sd: LDO_REG6 {
-> +				regulator-name = "vcc_sd";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <3300000>;
-> +				};
-> +			};
-> +
-> +			vcc_bl: LDO_REG7 {
-> +				regulator-name = "vcc_bl";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +					regulator-suspend-microvolt = <3300000>;
-> +				};
-> +			};
-> +
-> +			vcc_lcd: LDO_REG8 {
-> +				regulator-name = "vcc_lcd";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +					regulator-suspend-microvolt = <2800000>;
-> +				};
-> +			};
-> +
-> +			vcc_cam: LDO_REG9 {
-> +				regulator-name = "vcc_cam";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3000000>;
-> +
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +					regulator-suspend-microvolt = <3000000>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +/* EXT Header(P2) : 7(SCL:GPIO0.C2), 8(SDA:GPIO0.C3) */
-> +&i2c1 {
-
-> +	status = "okay";
-
-status below
-
-> +	clock-frequency = <400000>;
-> +};
-> +
-> +/* I2S 1 Channel Used */
-> +&i2s1_2ch {
-
-> +	status = "okay";
-
-status below
-
-> +	#sound-dai-cells = <0>;
-> +};
-> +
-> +&io_domains {
-> +	vccio1-supply = <&vcc_3v3>;
-> +	vccio2-supply = <&vccio_sd>;
-> +	vccio3-supply = <&vcc_3v3>;
-> +	vccio4-supply = <&vcc_3v3>;
-> +	vccio5-supply = <&vcc_3v3>;
-> +	vccio6-supply = <&vcc_3v3>;
-> +	status = "okay";
-> +};
-> +
-> +&pmu_io_domains {
-> +	pmuio1-supply = <&vcc3v3_pmu>;
-> +	pmuio2-supply = <&vcc3v3_pmu>;
-> +	status = "okay";
-> +};
-> +
-> +&pwm1 {
-> +	status = "okay";
-> +};
-> +
-> +&saradc {
-> +	vref-supply = <&vcc_1v8>;
-> +	status = "okay";
-> +};
-> +
-> +&sdmmc {
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-
-> +	card-detect-delay = <800>;
-
-Other dts use 200. Why we need 800?
-
-> +	cd-gpios = <&gpio0 RK_PA3 GPIO_ACTIVE_LOW>;
-> +	sd-uhs-sdr12;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-sdr104;
-> +	vmmc-supply = <&vcc_sd>;
-> +	vqmmc-supply = <&vccio_sd>;
-> +	status = "okay";
-> +};
-> +
-> +&tsadc {
-> +	pinctrl-names = "gpio", "otpout";
-> +	pinctrl-0 = <&tsadc_otp_gpio>;
-> +	pinctrl-1 = <&tsadc_otp_out>;
-> +	status = "okay";
-> +};
-> +
-> +&u2phy {
-> +	status = "okay";
-> +
-> +	u2phy_host: host-port {
-> +		status = "okay";
-> +	};
-> +
-> +	u2phy_otg: otg-port {
-> +		status = "disabled";
-> +	};
-> +};
-> +
-> +&usb20_otg {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart1_xfer &uart1_cts>;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart2m1_xfer>;
-> +	status = "okay";
-> +};
-> +
-> +&vopb {
-> +	status = "okay";
-> +};
-> +
-> +&vopb_mmu {
-> +	status = "okay";
-> +};
-> +
-> +&pinctrl {
-> +	pmic {
-> +		pmic_int: pmic-int {
-> +			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +
-> +		dc_det: dc-det {
-> +			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		led_pins: led-pins {
-> +			rockchip,pins = <0 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	btns {
-> +		btn_pins: btn-pins {
-> +			rockchip,pins = <1 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<1 RK_PB5 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<1 RK_PB7 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<1 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<1 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<1 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>,
-> +
-> +					<2 RK_PA0 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<2 RK_PA1 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<2 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<2 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<2 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>,
-> +					<2 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +	};
-> +};
-> --
-> 2.24.1
-
-
+SGkgUm9iLA0KDQpPbiAwNi8wMy8yMCA5OjA1IHBtLCBSb2IgSGVycmluZyB3cm90ZToNCj4gDQo+
+IE9uIEZyaSwgTWFyIDYsIDIwMjAgYXQgODo0NCBBTSA8QWpheS5LYXRoYXRAbWljcm9jaGlwLmNv
+bT4gd3JvdGU6DQo+Pg0KPj4gRnJvbTogQWpheSBTaW5naCA8YWpheS5rYXRoYXRAbWljcm9jaGlw
+LmNvbT4NCj4+DQo+PiBNYWtlIHVzZSBvZiAnaW50ZXJydXB0cycgcHJvcGVydHkgaW5zdGVhZCBv
+ZiB1c2luZyBncGlvIGZvciBoYW5kbGluZw0KPj4gdGhlIGludGVycnVwdCBhcyBzdWdnZXN0ZWQg
+aW4gWzFdLg0KPj4NCj4+IFsxXS4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtd2lyZWxl
+c3MvMjAyMDAzMDMwMTU1NTguR0E2ODc2QGJvZ3VzLw0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEFq
+YXkgU2luZ2ggPGFqYXkua2F0aGF0QG1pY3JvY2hpcC5jb20+DQo+PiAtLS0NCj4+ICAuLi4vbmV0
+L3dpcmVsZXNzL21pY3JvY2hpcCx3aWxjMTAwMC55YW1sICAgICAgfCA3OSArKysrKysrKysrKysr
+KysrKysrDQo+PiAgLi4uL3dpbGMxMDAwL21pY3JvY2hpcCx3aWxjMTAwMCxzZGlvLnlhbWwgICAg
+IHwgIDggKy0NCj4+ICAuLi4vd2lsYzEwMDAvbWljcm9jaGlwLHdpbGMxMDAwLHNwaS55YW1sICAg
+ICAgfCAgOCArLQ0KPiANCj4gQmluZGluZ3Mgc2hvdWxkIGJlIGEgc2VwYXJhdGUgcGF0Y2guDQo+
+IA0KDQpPay4gSSB3aWxsIGFkZCB0aGVtIGluIHNlcGFyYXRlIHBhdGNoLg0KDQo+PiAgZHJpdmVy
+cy9zdGFnaW5nL3dpbGMxMDAwL25ldGRldi5jICAgICAgICAgICAgIHwgMjQgKystLS0tDQo+PiAg
+ZHJpdmVycy9zdGFnaW5nL3dpbGMxMDAwL25ldGRldi5oICAgICAgICAgICAgIHwgIDEgLQ0KPj4g
+IGRyaXZlcnMvc3RhZ2luZy93aWxjMTAwMC9zZGlvLmMgICAgICAgICAgICAgICB8IDMxICsrKy0t
+LS0tDQo+PiAgZHJpdmVycy9zdGFnaW5nL3dpbGMxMDAwL3NwaS5jICAgICAgICAgICAgICAgIHwg
+MTUgKy0tLQ0KPj4gIGRyaXZlcnMvc3RhZ2luZy93aWxjMTAwMC93bGFuLmggICAgICAgICAgICAg
+ICB8ICAxIC0NCj4+ICA4IGZpbGVzIGNoYW5nZWQsIDEwOCBpbnNlcnRpb25zKCspLCA1OSBkZWxl
+dGlvbnMoLSkNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL25ldC93aXJlbGVzcy9taWNyb2NoaXAsd2lsYzEwMDAueWFtbA0KPj4NCj4+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3dpcmVsZXNz
+L21pY3JvY2hpcCx3aWxjMTAwMC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL25ldC93aXJlbGVzcy9taWNyb2NoaXAsd2lsYzEwMDAueWFtbA0KPj4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTE5MTQ0NDlhZDA3DQo+PiAtLS0gL2Rl
+di9udWxsDQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3dp
+cmVsZXNzL21pY3JvY2hpcCx3aWxjMTAwMC55YW1sDQo+PiBAQCAtMCwwICsxLDc5IEBADQo+PiAr
+IyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2Up
+DQo+PiArJVlBTUwgMS4yDQo+PiArLS0tDQo+PiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcv
+c2NoZW1hcy9uZXQvd2lyZWxlc3MvbWljcm9jaGlwLHdpbGMxMDAwLnlhbWwjDQo+PiArJHNjaGVt
+YTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+PiArDQo+
+PiArdGl0bGU6IE1pY3JvY2hpcCBXSUxDIHdpcmVsZXNzIGRldmljZXRyZWUgYmluZGluZ3MNCj4+
+ICsNCj4+ICttYWludGFpbmVyczoNCj4+ICsgIC0gQWRoYW0gQWJvemFlaWQgPGFkaGFtLmFib3ph
+ZWlkQG1pY3JvY2hpcC5jb20+DQo+PiArICAtIEFqYXkgU2luZ2ggPGFqYXkua2F0aGF0QG1pY3Jv
+Y2hpcC5jb20+DQo+PiArDQo+PiArZGVzY3JpcHRpb246DQo+PiArICBUaGUgd2lsYzEwMDAgY2hp
+cHMgY2FuIGJlIGNvbm5lY3RlZCB2aWEgU1BJIG9yIFNESU8uIFRoaXMgZG9jdW1lbnQNCj4+ICsg
+IGRlc2NyaWJlcyB0aGUgYmluZGluZyB0byBjb25uZWN0IHdpbGMgZGV2aWNlcy4NCj4+ICsNCj4+
+ICtwcm9wZXJ0aWVzOg0KPj4gKyAgY29tcGF0aWJsZToNCj4+ICsgICAgY29uc3Q6IG1pY3JvY2hp
+cCx3aWxjMTAwMA0KPj4gKw0KPj4gKyAgc3BpLW1heC1mcmVxdWVuY3k6DQo+PiArICAgIGRlc2Ny
+aXB0aW9uOiBNYXhpbXVtIFNQSSBjbG9ja2luZyBzcGVlZCBvZiBkZXZpY2UgaW4gSHouDQo+PiAr
+ICAgIG1heEl0ZW1zOiAxDQo+IA0KPiBObyBuZWVkIHRvIHJlZGVmaW5lIGEgY29tbW9uIHByb3Bl
+cnR5LiBKdXN0Og0KPiANCj4gc3BpLW1heC1mcmVxdWVuY3k6IHRydWUNCj4gDQpPay4gSSB3aWxs
+IGNoYW5nZXMgdGhpcy4NCg0KPj4gKw0KPj4gKyAgcmVnOg0KPj4gKyAgICBkZXNjcmlwdGlvbjog
+Q2hpcCBzZWxlY3QgYWRkcmVzcyBvZiBkZXZpY2UuDQo+IA0KPiBEcm9wIHRoaXMuDQo+DQoNCk9r
+Lg0KDQo+PiArICAgIG1heEl0ZW1zOiAxDQo+PiArDQo+PiArICBpbnRlcnJ1cHRzOg0KPj4gKyAg
+ICBtYXhJdGVtczogMQ0KPj4gKw0KPj4gKyAgY2xvY2tzOg0KPj4gKyAgICBkZXNjcmlwdGlvbjog
+cGhhbmRsZSB0byB0aGUgY2xvY2sgY29ubmVjdGVkIG9uIHJ0YyBjbG9jayBsaW5lLg0KPj4gKyAg
+ICBtYXhJdGVtczogMQ0KPj4gKw0KPj4gKyAgY2xvY2stbmFtZXM6DQo+PiArICAgIGNvbnN0OiBy
+dGMNCj4+ICsNCj4+ICtyZXF1aXJlZDoNCj4+ICsgIC0gY29tcGF0aWJsZQ0KPj4gKyAgLSByZWcN
+Cj4+ICsgIC0gaW50ZXJydXB0cw0KPj4gKw0KPj4gK2V4YW1wbGVzOg0KPj4gKyAgLSB8DQo+PiAr
+ICAgIHNwaTE6IHNwaUBmYzAxODAwMCB7DQo+PiArICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQo+PiArICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+PiArICAgICAgY3MtZ3Bpb3MgPSA8JnBp
+b0IgMjEgMD47DQo+PiArICAgICAgd2lmaUAwIHsNCj4+ICsgICAgICAgIGNvbXBhdGlibGUgPSAi
+bWljcm9jaGlwLHdpbGMxMDAwIjsNCj4+ICsgICAgICAgIHNwaS1tYXgtZnJlcXVlbmN5ID0gPDQ4
+MDAwMDAwPjsNCj4+ICsgICAgICAgIHJlZyA9IDwwPjsNCj4+ICsgICAgICAgIGludGVycnVwdC1w
+YXJlbnQgPSA8JnBpb0M+Ow0KPj4gKyAgICAgICAgaW50ZXJydXB0cyA9IDwyNyAwPjsNCj4+ICsg
+ICAgICAgIGNsb2NrcyA9IDwmcGNrMT47DQo+PiArICAgICAgICBjbG9jay1uYW1lcyA9ICJydGMi
+Ow0KPj4gKyAgICAgIH07DQo+PiArICAgIH07DQo+PiArDQo+PiArICAtIHwNCj4+ICsgICAgbW1j
+MTogbW1jQGZjMDAwMDAwIHsNCj4+ICsgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4+ICsg
+ICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCj4+ICsgICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1
+bHQiOw0KPj4gKyAgICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF9tbWMxX2Nsa19jbWRfZGF0MCAm
+cGluY3RybF9tbWMxX2RhdDFfMz47DQo+PiArICAgICAgbm9uLXJlbW92YWJsZTsNCj4+ICsgICAg
+ICB2bW1jLXN1cHBseSA9IDwmdmNjX21tYzFfcmVnPjsNCj4+ICsgICAgICB2cW1tYy1zdXBwbHkg
+PSA8JnZjY18zdjNfcmVnPjsNCj4+ICsgICAgICBidXMtd2lkdGggPSA8ND47DQo+PiArICAgICAg
+d2lmaUAwIHsNCj4+ICsgICAgICAgIGNvbXBhdGlibGUgPSAibWljcm9jaGlwLHdpbGMxMDAwIjsN
+Cj4+ICsgICAgICAgIHJlZyA9IDwwPjsNCj4+ICsgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8
+JnBpb0M+Ow0KPj4gKyAgICAgICAgaW50ZXJydXB0cyA9IDwyNyAwPjsNCj4+ICsgICAgICAgIGNs
+b2NrcyA9IDwmcGNrMT47DQo+PiArICAgICAgICBjbG9jay1uYW1lcyA9ICJydGMiOw0KPj4gKyAg
+ICAgIH07DQo+PiArICAgIH07DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3dpbGMx
+MDAwL21pY3JvY2hpcCx3aWxjMTAwMCxzZGlvLnlhbWwgYi9kcml2ZXJzL3N0YWdpbmcvd2lsYzEw
+MDAvbWljcm9jaGlwLHdpbGMxMDAwLHNkaW8ueWFtbA0KPj4gaW5kZXggYjMzOGY1NjlmN2UyLi45
+ZGY3MzI3YmM2NjggMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2lsYzEwMDAvbWlj
+cm9jaGlwLHdpbGMxMDAwLHNkaW8ueWFtbA0KPj4gKysrIGIvZHJpdmVycy9zdGFnaW5nL3dpbGMx
+MDAwL21pY3JvY2hpcCx3aWxjMTAwMCxzZGlvLnlhbWwNCj4gDQo+IFdoeSBhcmVuJ3QgeW91IGp1
+c3QgcmVtb3ZpbmcgdGhpcyBmaWxlIGFuZCB0aGUgc3BpIG9uZT8NCg0KDQpUaGUgYmluZGluZyBm
+aWxlIHdyb25nbHkgZ290IGFkZGVkIGluIHRoaXMgcGF0Y2guIEl0IG5lZWRzIHRvIGJlIGFkZGVk
+DQpvbmx5IHRvICcvZHJpdmVyL3N0YWdpbmcvd2lsYzEwMDAnLiBJIHdpbGwgdXBkYXRlIHRoaXMg
+YW5kIHNlbmQgdjINCnNlcmllcyBieSBrZWVwaW5nIGJpbmRpbmcgcGF0Y2ggc2VwYXJhdGUgZnJv
+bSBjb2RlIGNoYW5nZXMuDQoNClJlZ2FyZHMsDQpBamF5
