@@ -2,367 +2,700 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC62C10F00
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3FBC10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEEB82073D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583586755;
-	bh=kd5ygdxY/wVgotkVvs/qkM0QcdVksZzKJBjqf/OoaUU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cRiRlhzijBvI0T6VXfZUF8dvhKjEjzjA5bsyPIDCsZiNLCVB8ZISOCpdVOEw6l3r5
-	 ZW9t+jo2IBb9OQwtlagmcw/68hCJfuCL94LM/nZ4jv9tE42SqAKSjOcfChT4Wu9zel
-	 4KeCuxZwoDfzqo8ZEroyRFVxfcf4V0EqXaQXtjj0=
+	by mail.kernel.org (Postfix) with ESMTP id 15E92206D5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgCGNMf (ORCPT
+        id S1726139AbgCGNru convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:12:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43358 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 08:47:50 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:40274 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbgCGNMf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 7 Mar 2020 08:12:35 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 053EB206D5;
-        Sat,  7 Mar 2020 13:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583586753;
-        bh=kd5ygdxY/wVgotkVvs/qkM0QcdVksZzKJBjqf/OoaUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lekVUBehvD3RlpR5565UvGDt4InlqPecSNTU1Hu/cDTPg1J5/plOOCsQArMmcDreH
-         T/Gx7655MsekkLMfKx0PCGdJSDb3nhrUhEFo8Sj7zPk6gHRO5dNdSkYF5E5EeSog1I
-         ymaJYbC5hmGcjDHlhK2kO1DAAR0quWNQQALQdWSQ=
-Date:   Sat, 7 Mar 2020 13:12:29 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
-Message-ID: <20200307131229.571c20c5@archlinux>
-In-Reply-To: <1583585920.3.0@crapouillou.net>
-References: <20200301150920.55993-1-contact@artur-rojek.eu>
-        <20200301150920.55993-3-contact@artur-rojek.eu>
-        <20200307124740.708ae2f3@archlinux>
-        <1583585920.3.0@crapouillou.net>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726134AbgCGNru (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 7 Mar 2020 08:47:50 -0500
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jAZnl-0006a4-U4; Sat, 07 Mar 2020 14:47:37 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     christoph.muellner@theobroma-systems.com,
+        devicetree@vger.kernel.org, kever.yang@rock-chips.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, robin.murphy@arm.com
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add Odroid Advance Go
+Date:   Sat, 07 Mar 2020 14:47:37 +0100
+Message-ID: <1813727.zy6ATufqe5@diego>
+In-Reply-To: <59bdf2c1-79cf-2c45-263e-80a9358c7fdd@gmail.com>
+References: <20200306210922.172346-3-heiko@sntech.de> <59bdf2c1-79cf-2c45-263e-80a9358c7fdd@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 07 Mar 2020 13:58:40 +0100
-Paul Cercueil <paul@crapouillou.net> wrote:
+Hi Johan,
 
-> Hi Jonathan,
->=20
->=20
-> Le sam., mars 7, 2020 at 12:47, Jonathan Cameron=20
-> <jic23@jic23.retrosnub.co.uk> a =C3=A9crit :
-> > On Sun,  1 Mar 2020 16:09:18 +0100
-> > Artur Rojek <contact@artur-rojek.eu> wrote:
-> >  =20
-> >>  The SADC component in JZ47xx SoCs provides support for touchscreen
-> >>  operations (pen position and pen down pressure) in single-ended and
-> >>  differential modes.
-> >>=20
-> >>  Of the known hardware to use this controller, GCW Zero and Anbernic=20
-> >> RG-350
-> >>  utilize the touchscreen mode by having their joystick(s) attached=20
-> >> to the
-> >>  X/Y positive/negative input pins.
-> >>  GCW Zero comes with a single joystick and is sufficiently handled=20
-> >> with the
-> >>  currently implemented single-ended mode. Support for boards with two
-> >>  joysticks, where one is hooked up to Xn/Yn and the other to Xp/Yp=20
-> >> channels
-> >>  will need to be provided in the future.
-> >>=20
-> >>  The touchscreen component of SADC takes a significant time to=20
-> >> stabilize
-> >>  after first receiving the clock and a delay of 50ms has been=20
-> >> empirically
-> >>  proven to be a safe value before data sampling can begin.
-> >>=20
-> >>  Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> >>  Tested-by: Paul Cercueil <paul@crapouillou.net> =20
-> >=20
-> > This relies on the use of an irq that wasn't previously used.  Was=20
-> > that
-> > always hooked up?  If not we need to still work as before when it
-> > isn't provided.
-> >=20
-> > Otherwise this looks fine to me. =20
->=20
-> All the boards that probe the ingenic-adc driver have the interrupt=20
-> provided from devicetree, yes.
-Great :)
+Am Samstag, 7. März 2020, 09:36:19 CET schrieb Johan Jonker:
+> The 'heartbeat' led seems to need some changes. The rest is inherited
+> from px30.dtsi I think. How do you deal with all the compatible
+> properties names that are normally SoC specific?
 
-No problem then.  Perhaps add a note to the patch description to say
-that so no one else wonders in future.
+The rk3326 really is just a px30 with the little vop deactivated.
+So I really don't want to make "much fuss" over that ;-)
 
-Thanks,
-
-Jonathan
+Previous iterations where the arm32 px3/px3se/etc which essentially
+also just copied an existing soc and added some industrial voodoo
+to the chip itself (temperature range or whatever).
 
 
->=20
-> Cheers,
-> -Paul
->=20
-> >  =20
-> >>  ---
-> >>=20
-> >>   Changes:
-> >>=20
-> >>   v2: - improve description of the touchscreen mode,
-> >>       - get rid of the unneeded kfifo,
-> >>       - drop IIO_BUFFER_CB from Kconfig,
-> >>       - remove extended names from the touchscreen channels
-> >>=20
-> >>   v3: remove unneeded `linux/iio/kfifo_buf.h` include
-> >>=20
-> >>   drivers/iio/adc/Kconfig       |   1 +
-> >>   drivers/iio/adc/ingenic-adc.c | 109=20
-> >> +++++++++++++++++++++++++++++++++-
-> >>   2 files changed, 108 insertions(+), 2 deletions(-)
-> >>=20
-> >>  diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> >>  index 82e33082958c..d3fd4b6e2d47 100644
-> >>  --- a/drivers/iio/adc/Kconfig
-> >>  +++ b/drivers/iio/adc/Kconfig
-> >>  @@ -453,6 +453,7 @@ config INA2XX_ADC
-> >>   config INGENIC_ADC
-> >>   	tristate "Ingenic JZ47xx SoCs ADC driver"
-> >>   	depends on MIPS || COMPILE_TEST
-> >>  +	select IIO_BUFFER
-> >>   	help
-> >>   	  Say yes here to build support for the Ingenic JZ47xx SoCs ADC=20
-> >> unit.
-> >>=20
-> >>  diff --git a/drivers/iio/adc/ingenic-adc.c=20
-> >> b/drivers/iio/adc/ingenic-adc.c
-> >>  index 7a24bc1dabe1..0dafc8d5d0d8 100644
-> >>  --- a/drivers/iio/adc/ingenic-adc.c
-> >>  +++ b/drivers/iio/adc/ingenic-adc.c
-> >>  @@ -8,7 +8,9 @@
-> >>=20
-> >>   #include <dt-bindings/iio/adc/ingenic,adc.h>
-> >>   #include <linux/clk.h>
-> >>  +#include <linux/iio/buffer.h>
-> >>   #include <linux/iio/iio.h>
-> >>  +#include <linux/interrupt.h>
-> >>   #include <linux/io.h>
-> >>   #include <linux/iopoll.h>
-> >>   #include <linux/kernel.h>
-> >>  @@ -20,6 +22,8 @@
-> >>   #define JZ_ADC_REG_CFG			0x04
-> >>   #define JZ_ADC_REG_CTRL			0x08
-> >>   #define JZ_ADC_REG_STATUS		0x0c
-> >>  +#define JZ_ADC_REG_ADSAME		0x10
-> >>  +#define JZ_ADC_REG_ADWAIT		0x14
-> >>   #define JZ_ADC_REG_ADTCH		0x18
-> >>   #define JZ_ADC_REG_ADBDAT		0x1c
-> >>   #define JZ_ADC_REG_ADSDAT		0x20
-> >>  @@ -28,6 +32,9 @@
-> >>   #define JZ_ADC_REG_ENABLE_PD		BIT(7)
-> >>   #define JZ_ADC_REG_CFG_AUX_MD		(BIT(0) | BIT(1))
-> >>   #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
-> >>  +#define JZ_ADC_REG_CFG_PULL_UP(n)	((n) << 16)
-> >>  +#define JZ_ADC_REG_CFG_SAMPLE_NUM(n)	((n) << 10)
-> >>  +#define JZ_ADC_REG_CFG_TOUCH_OPS_MASK	(BIT(31) | GENMASK(23, 10))
-> >>   #define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
-> >>   #define JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB	16
-> >>   #define JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB	8
-> >>  @@ -44,6 +51,14 @@
-> >>   #define JZ4770_ADC_BATTERY_VREF			6600
-> >>   #define JZ4770_ADC_BATTERY_VREF_BITS		12
-> >>=20
-> >>  +#define JZ_ADC_IRQ_AUX			BIT(0)
-> >>  +#define JZ_ADC_IRQ_BATTERY		BIT(1)
-> >>  +#define JZ_ADC_IRQ_TOUCH		BIT(2)
-> >>  +#define JZ_ADC_IRQ_PEN_DOWN		BIT(3)
-> >>  +#define JZ_ADC_IRQ_PEN_UP		BIT(4)
-> >>  +#define JZ_ADC_IRQ_PEN_DOWN_SLEEP	BIT(5)
-> >>  +#define JZ_ADC_IRQ_SLEEP		BIT(7)
-> >>  +
-> >>   struct ingenic_adc;
-> >>=20
-> >>   struct ingenic_adc_soc_data {
-> >>  @@ -411,6 +426,28 @@ static const struct iio_info ingenic_adc_info=20
-> >> =3D {
-> >>   };
-> >>=20
-> >>   static const struct iio_chan_spec ingenic_channels[] =3D {
-> >>  +	{
-> >>  +		.type =3D IIO_POSITIONRELATIVE,
-> >>  +		.indexed =3D 1,
-> >>  +		.channel =3D INGENIC_ADC_TOUCH_XP,
-> >>  +		.scan_index =3D 0,
-> >>  +		.scan_type =3D {
-> >>  +			.sign =3D 'u',
-> >>  +			.realbits =3D 12,
-> >>  +			.storagebits =3D 16
-> >>  +		},
-> >>  +	},
-> >>  +	{
-> >>  +		.type =3D IIO_POSITIONRELATIVE,
-> >>  +		.indexed =3D 1,
-> >>  +		.channel =3D INGENIC_ADC_TOUCH_YP,
-> >>  +		.scan_index =3D 1,
-> >>  +		.scan_type =3D {
-> >>  +			.sign =3D 'u',
-> >>  +			.realbits =3D 12,
-> >>  +			.storagebits =3D 16
-> >>  +		},
-> >>  +	},
-> >>   	{
-> >>   		.extend_name =3D "aux",
-> >>   		.type =3D IIO_VOLTAGE,
-> >>  @@ -418,6 +455,7 @@ static const struct iio_chan_spec=20
-> >> ingenic_channels[] =3D {
-> >>   				      BIT(IIO_CHAN_INFO_SCALE),
-> >>   		.indexed =3D 1,
-> >>   		.channel =3D INGENIC_ADC_AUX,
-> >>  +		.scan_index =3D -1
-> >>   	},
-> >>   	{
-> >>   		.extend_name =3D "battery",
-> >>  @@ -428,6 +466,7 @@ static const struct iio_chan_spec=20
-> >> ingenic_channels[] =3D {
-> >>   						BIT(IIO_CHAN_INFO_SCALE),
-> >>   		.indexed =3D 1,
-> >>   		.channel =3D INGENIC_ADC_BATTERY,
-> >>  +		.scan_index =3D -1
-> >>   	},
-> >>   	{ /* Must always be last in the array. */
-> >>   		.extend_name =3D "aux2",
-> >>  @@ -436,16 +475,69 @@ static const struct iio_chan_spec=20
-> >> ingenic_channels[] =3D {
-> >>   				      BIT(IIO_CHAN_INFO_SCALE),
-> >>   		.indexed =3D 1,
-> >>   		.channel =3D INGENIC_ADC_AUX2,
-> >>  +		.scan_index =3D -1
-> >>   	},
-> >>   };
-> >>=20
-> >>  +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
-> >>  +{
-> >>  +	struct ingenic_adc *adc =3D iio_priv(iio_dev);
-> >>  +
-> >>  +	clk_enable(adc->clk);
-> >>  +	/* It takes significant time for the touchscreen hw to stabilize.=20
-> >> */
-> >>  +	msleep(50);
-> >>  +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
-> >>  +			       JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
-> >>  +			       JZ_ADC_REG_CFG_PULL_UP(4));
-> >>  +	writew(80, adc->base + JZ_ADC_REG_ADWAIT);
-> >>  +	writew(2, adc->base + JZ_ADC_REG_ADSAME);
-> >>  +	writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
-> >>  +	writel(0, adc->base + JZ_ADC_REG_ADTCH);
-> >>  +	ingenic_adc_enable(adc, 2, true);
-> >>  +
-> >>  +	return 0;
-> >>  +}
-> >>  +
-> >>  +static int ingenic_adc_buffer_disable(struct iio_dev *iio_dev)
-> >>  +{
-> >>  +	struct ingenic_adc *adc =3D iio_priv(iio_dev);
-> >>  +
-> >>  +	ingenic_adc_enable(adc, 2, false);
-> >>  +	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
-> >>  +	writeb(0xff, adc->base + JZ_ADC_REG_STATUS);
-> >>  +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK, 0);
-> >>  +	writew(0, adc->base + JZ_ADC_REG_ADSAME);
-> >>  +	writew(0, adc->base + JZ_ADC_REG_ADWAIT);
-> >>  +	clk_disable(adc->clk);
-> >>  +
-> >>  +	return 0;
-> >>  +}
-> >>  +
-> >>  +static const struct iio_buffer_setup_ops ingenic_buffer_setup_ops=20
-> >> =3D {
-> >>  +	.postenable =3D &ingenic_adc_buffer_enable,
-> >>  +	.predisable =3D &ingenic_adc_buffer_disable
-> >>  +};
-> >>  +
-> >>  +static irqreturn_t ingenic_adc_irq(int irq, void *data)
-> >>  +{
-> >>  +	struct iio_dev *iio_dev =3D data;
-> >>  +	struct ingenic_adc *adc =3D iio_priv(iio_dev);
-> >>  +	u32 tdat;
-> >>  +
-> >>  +	tdat =3D readl(adc->base + JZ_ADC_REG_ADTCH);
-> >>  +	iio_push_to_buffers(iio_dev, &tdat);
-> >>  +	writeb(JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_STATUS);
-> >>  +
-> >>  +	return IRQ_HANDLED;
-> >>  +}
-> >>  +
-> >>   static int ingenic_adc_probe(struct platform_device *pdev)
-> >>   {
-> >>   	struct device *dev =3D &pdev->dev;
-> >>   	struct iio_dev *iio_dev;
-> >>   	struct ingenic_adc *adc;
-> >>   	const struct ingenic_adc_soc_data *soc_data;
-> >>  -	int ret;
-> >>  +	int irq, ret;
-> >>=20
-> >>   	soc_data =3D device_get_match_data(dev);
-> >>   	if (!soc_data)
-> >>  @@ -460,6 +552,18 @@ static int ingenic_adc_probe(struct=20
-> >> platform_device *pdev)
-> >>   	mutex_init(&adc->aux_lock);
-> >>   	adc->soc_data =3D soc_data;
-> >>=20
-> >>  +	irq =3D platform_get_irq(pdev, 0); =20
-> >=20
-> > Do we need a fallback path if there is no irq provided?  We can't=20
-> > break existing
-> > supported devices that don't specify one.
-> >  =20
-> >>  +	if (irq < 0) {
-> >>  +		dev_err(dev, "Failed to get irq: %d\n", irq);
-> >>  +		return irq;
-> >>  +	}
-> >>  +	ret =3D devm_request_irq(dev, irq, ingenic_adc_irq, 0,
-> >>  +			       dev_name(dev), iio_dev);
-> >>  +	if (ret < 0) {
-> >>  +		dev_err(dev, "Failed to request irq: %d\n", ret);
-> >>  +		return ret;
-> >>  +	}
-> >>  +
-> >>   	adc->base =3D devm_platform_ioremap_resource(pdev, 0);
-> >>   	if (IS_ERR(adc->base))
-> >>   		return PTR_ERR(adc->base);
-> >>  @@ -499,7 +603,8 @@ static int ingenic_adc_probe(struct=20
-> >> platform_device *pdev)
-> >>=20
-> >>   	iio_dev->dev.parent =3D dev;
-> >>   	iio_dev->name =3D "jz-adc";
-> >>  -	iio_dev->modes =3D INDIO_DIRECT_MODE;
-> >>  +	iio_dev->modes =3D INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
-> >>  +	iio_dev->setup_ops =3D &ingenic_buffer_setup_ops;
-> >>   	iio_dev->channels =3D ingenic_channels;
-> >>   	iio_dev->num_channels =3D ARRAY_SIZE(ingenic_channels);
-> >>   	/* Remove AUX2 from the list of supported channels. */ =20
-> >  =20
->=20
->=20
+And thanks for making sure the details are right below. I'll do a
+v2 with these things corrected.
+
+Thanks
+Heiko
+
+
+> Also include all mail lists found with:
+> ./scripts/get_maintainer.pl --nogit-fallback --nogit
+> 
+> linux-kernel@vger.kernel.org
+> 
+>   DTC     arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dtb
+>   DTC     arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml
+>   CHECK   arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml
+> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: tsadc:
+> tsadc-otp-gpio: {'rockchip,pins': [[0, 6, 0, 123]], 'phandle': [[90]]}
+> is not of type 'array'
+> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb@ff340000:
+> 'clock-names', 'power-domains' do not match any of the regexes:
+> 'pinctrl-[0-9]+'
+> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb@ff300000:
+> 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
+> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb@ff350000:
+> 'clock-names', 'power-domains' do not match any of the regexes:
+> 'pinctrl-[0-9]+'
+> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: gpio-leds:
+> 'heartbeat' does not match any of the regexes: '(^led-[0-9a-f]$|led)',
+> 'pinctrl-[0-9]+'
+> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb2-phy@100:
+> '#phy-cells' is a required property
+> 
+> > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > 
+> > The Odroid Advance Go is a handheld based on Rockchip's rk3326 soc
+> > with a DSI display and some handheld controls including an analog
+> > joystick connected to the saradc.
+> > 
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+> >  .../boot/dts/rockchip/rk3326-odroid-go2.dts   | 544 ++++++++++++++++++
+> >  2 files changed, 545 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> > index af1e1c3707d0..86c38467d487 100644
+> > --- a/arch/arm64/boot/dts/rockchip/Makefile
+> > +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> > @@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-copperhead-ltk101b4029w.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
+> > +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3326-odroid-go2.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
+> > new file mode 100644
+> > index 000000000000..a16f4a0d1d4d
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
+> > @@ -0,0 +1,544 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright (c) 2019 Hardkernel Co., Ltd
+> > + * Copyright (c) 2020 Theobroma Systems Design und Consulting GmbH
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/input/input.h>
+> > +#include <dt-bindings/pinctrl/rockchip.h>
+> > +#include "rk3326.dtsi"
+> > +
+> > +/ {
+> > +	model = "ODROID-GO Advance";
+> > +	compatible = "hardkernel,rk3326-odroid-go2", "rockchip,rk3326";
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial2:115200n8";
+> > +	};
+> > +
+> > +	gpio-keys {
+> > +		compatible = "gpio-keys";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&btn_pins>;
+> > +
+> > +		/*
+> > +		 *      *** ODROIDGO2-Advance Switch layoout ***
+> > +		 * |------------------------------------------------|
+> > +		 * | sw15                                      sw16 |
+> > +		 * |------------------------------------------------|
+> > +		 * |     sw1      |-------------------|      sw8    |
+> > +		 * |  sw3   sw4   |                   |   sw7   sw5 |
+> > +		 * |     sw2      |    LCD Display    |      sw6    |
+> > +		 * |              |                   |             |
+> > +		 * |              |-------------------|             |
+> > +		 * |         sw9 sw10   sw11 sw12   sw13 sw14       |
+> > +		 * |------------------------------------------------|
+> > +		 */
+> > +
+> > +		sw1 {
+> > +			gpios = <&gpio1 RK_PB4 GPIO_ACTIVE_LOW>;
+> > +			label = "DPAD-UP";
+> > +			linux,code = <BTN_DPAD_UP>;
+> > +		};
+> > +		sw2 {
+> > +			gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_LOW>;
+> > +			label = "DPAD-DOWN";
+> > +			linux,code = <BTN_DPAD_DOWN>;
+> > +		};
+> > +		sw3 {
+> > +			gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_LOW>;
+> > +			label = "DPAD-LEFT";
+> > +			linux,code = <BTN_DPAD_LEFT>;
+> > +		};
+> > +		sw4 {
+> > +			gpios = <&gpio1 RK_PB7 GPIO_ACTIVE_LOW>;
+> > +			label = "DPAD-RIGHT";
+> > +			linux,code = <BTN_DPAD_RIGHT>;
+> > +		};
+> > +		sw5 {
+> > +			gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_LOW>;
+> > +			label = "BTN-A";
+> > +			linux,code = <BTN_EAST>;
+> > +		};
+> > +		sw6 {
+> > +			gpios = <&gpio1 RK_PA5 GPIO_ACTIVE_LOW>;
+> > +			label = "BTN-B";
+> > +			linux,code = <BTN_SOUTH>;
+> > +		};
+> > +		sw7 {
+> > +			gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;
+> > +			label = "BTN-Y";
+> > +			linux,code = <BTN_WEST>;
+> > +		};
+> > +		sw8 {
+> > +			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_LOW>;
+> > +			label = "BTN-X";
+> > +			linux,code = <BTN_NORTH>;
+> > +		};
+> > +		sw9 {
+> > +			gpios = <&gpio2 RK_PA0 GPIO_ACTIVE_LOW>;
+> > +			label = "F1";
+> > +			linux,code = <BTN_TRIGGER_HAPPY1>;
+> > +		};
+> > +		sw10 {
+> > +			gpios = <&gpio2 RK_PA1 GPIO_ACTIVE_LOW>;
+> > +			label = "F2";
+> > +			linux,code = <BTN_TRIGGER_HAPPY2>;
+> > +		};
+> > +		sw11 {
+> > +			gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
+> > +			label = "F3";
+> > +			linux,code = <BTN_TRIGGER_HAPPY3>;
+> > +		};
+> > +		sw12 {
+> > +			gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_LOW>;
+> > +			label = "F4";
+> > +			linux,code = <BTN_TRIGGER_HAPPY4>;
+> > +		};
+> > +		sw13 {
+> > +			gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_LOW>;
+> > +			label = "F5";
+> > +			linux,code = <BTN_TRIGGER_HAPPY5>;
+> > +		};
+> > +		sw14 {
+> > +			gpios = <&gpio2 RK_PA5 GPIO_ACTIVE_LOW>;
+> > +			label = "F6";
+> > +			linux,code = <BTN_TRIGGER_HAPPY6>;
+> > +		};
+> > +		sw15 {
+> > +			gpios = <&gpio2 RK_PA6 GPIO_ACTIVE_LOW>;
+> > +			label = "TOP-LEFT";
+> > +			linux,code = <BTN_TL>;
+> > +		};
+> > +		sw16 {
+> > +			gpios = <&gpio2 RK_PA7 GPIO_ACTIVE_LOW>;
+> > +			label = "TOP-RIGHT";
+> > +			linux,code = <BTN_TR>;
+> > +		};
+> > +	};
+> > +
+> > +	leds: gpio-leds {
+> > +		compatible = "gpio-leds";
+> > +		pinctrl-names = "led_pins";
+> > +		pinctrl-0 = <&led_pins>;
+> > +
+> > +		/* Blue LED : GPIO0_C1 */
+> > +		heartbeat {
+> > +			label = "blue:heartbeat";
+> > +			gpios = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger = "heartbeat";
+> > +		};
+> > +	};
+> > +
+> 
+> > +	backlight: backlight {
+> > +		compatible = "pwm-backlight";
+> > +		power-supply = <&vcc_bl>;
+> > +		pwms = <&pwm1 0 25000 0>;
+> > +	};
+> 
+> sort nodenames
+> 
+> > +
+> > +	vccsys: vccsys {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "vcc3v8_sys";
+> > +		regulator-always-on;
+> > +		regulator-min-microvolt = <3800000>;
+> > +		regulator-max-microvolt = <3800000>;
+> > +	};
+> > +
+> > +	vcc_host: vcc_host {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "vcc_host";
+> > +		regulator-min-microvolt = <5000000>;
+> > +		regulator-max-microvolt = <5000000>;
+> > +
+> > +		gpio = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
+> > +		enable-active-high;
+> > +		regulator-always-on;
+> > +		vin-supply = <&vccsys>;
+> > +	};
+> > +};
+> > +
+> > +&cpu0 {
+> > +	cpu-supply = <&vdd_arm>;
+> > +};
+> > +
+> > +&cpu1 {
+> > +	cpu-supply = <&vdd_arm>;
+> > +};
+> > +
+> > +&cpu2 {
+> > +	cpu-supply = <&vdd_arm>;
+> > +};
+> > +
+> > +&cpu3 {
+> > +	cpu-supply = <&vdd_arm>;
+> > +};
+> > +
+> > +&cru {
+> > +	assigned-clocks = <&cru PLL_NPLL>,
+> > +		<&cru ACLK_BUS_PRE>, <&cru ACLK_PERI_PRE>,
+> > +		<&cru HCLK_BUS_PRE>, <&cru HCLK_PERI_PRE>,
+> > +		<&cru PCLK_BUS_PRE>, <&cru SCLK_GPU>,
+> > +		<&cru PLL_CPLL>;
+> > +
+> > +	assigned-clock-rates = <1188000000>,
+> > +		<200000000>, <200000000>,
+> > +		<150000000>, <150000000>,
+> > +		<100000000>, <200000000>,
+> > +		<17000000>;
+> > +};
+> > +
+> > +&display_subsystem {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&dsi {
+> > +	status = "okay";
+> > +
+> > +	ports {
+> > +		mipi_out: port@1 {
+> > +			reg = <1>;
+> > +
+> > +			mipi_out_panel: endpoint {
+> > +				remote-endpoint = <&mipi_in_panel>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	panel@0 {
+> > +		compatible = "elida,kd35t133";
+> > +		reg = <0>;
+> > +		backlight = <&backlight>;
+> > +		iovcc-supply = <&vcc_lcd>;
+> > +		reset-gpios = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
+> > +		vdd-supply = <&vcc_lcd>;
+> > +
+> > +		port {
+> > +			mipi_in_panel: endpoint {
+> > +				remote-endpoint = <&mipi_out_panel>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&dsi_dphy {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&gpu {
+> > +	mali-supply = <&vdd_logic>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c0 {
+> 
+> > +	status = "okay";
+> 
+> status below
+> 
+> > +	clock-frequency = <400000>;
+> 
+> > +	i2c-scl-rising-time-ns = <280>;
+> > +	i2c-scl-falling-time-ns = <16>;
+> 
+> sort
+> 
+> > +
+> > +	rk817: pmic@20 {
+> > +		compatible = "rockchip,rk817";
+> > +		reg = <0x20>;
+> > +		interrupt-parent = <&gpio0>;
+> > +		interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pmic_int>;
+> > +		rockchip,system-power-controller;
+> > +		wakeup-source;
+> > +		#clock-cells = <1>;
+> > +		clock-output-names = "rk808-clkout1", "xin32k";
+> > +
+> > +		vcc1-supply = <&vccsys>;
+> > +		vcc2-supply = <&vccsys>;
+> > +		vcc3-supply = <&vccsys>;
+> > +		vcc4-supply = <&vccsys>;
+> > +		vcc5-supply = <&vccsys>;
+> > +		vcc6-supply = <&vccsys>;
+> > +		vcc7-supply = <&vccsys>;
+> > +
+> > +		regulators {
+> > +			vdd_logic: DCDC_REG1 {
+> > +				regulator-name = "vdd_logic";
+> > +				regulator-min-microvolt = <950000>;
+> > +				regulator-max-microvolt = <1150000>;
+> > +				regulator-ramp-delay = <6001>;
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <950000>;
+> > +				};
+> > +			};
+> > +
+> > +			vdd_arm: DCDC_REG2 {
+> > +				regulator-name = "vdd_arm";
+> > +				regulator-min-microvolt = <950000>;
+> > +				regulator-max-microvolt = <1350000>;
+> > +				regulator-ramp-delay = <6001>;
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +					regulator-suspend-microvolt = <950000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_ddr: DCDC_REG3 {
+> > +				regulator-name = "vcc_ddr";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_3v3: DCDC_REG4 {
+> > +				regulator-name = "vcc_3v3";
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +					regulator-suspend-microvolt = <3300000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_1v8: LDO_REG2 {
+> > +				regulator-name = "vcc_1v8";
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <1800000>;
+> > +				};
+> > +			};
+> > +
+> > +			vdd_1v0: LDO_REG3 {
+> > +				regulator-name = "vdd_1v0";
+> > +				regulator-min-microvolt = <1000000>;
+> > +				regulator-max-microvolt = <1000000>;
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <1000000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc3v3_pmu: LDO_REG4 {
+> > +				regulator-name = "vcc3v3_pmu";
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <3300000>;
+> > +				};
+> > +			};
+> > +
+> > +			vccio_sd: LDO_REG5 {
+> > +				regulator-name = "vccio_sd";
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <3300000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_sd: LDO_REG6 {
+> > +				regulator-name = "vcc_sd";
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-boot-on;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <3300000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_bl: LDO_REG7 {
+> > +				regulator-name = "vcc_bl";
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +					regulator-suspend-microvolt = <3300000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_lcd: LDO_REG8 {
+> > +				regulator-name = "vcc_lcd";
+> > +				regulator-min-microvolt = <2800000>;
+> > +				regulator-max-microvolt = <2800000>;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +					regulator-suspend-microvolt = <2800000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_cam: LDO_REG9 {
+> > +				regulator-name = "vcc_cam";
+> > +				regulator-min-microvolt = <3000000>;
+> > +				regulator-max-microvolt = <3000000>;
+> > +
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +					regulator-suspend-microvolt = <3000000>;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +/* EXT Header(P2) : 7(SCL:GPIO0.C2), 8(SDA:GPIO0.C3) */
+> > +&i2c1 {
+> 
+> > +	status = "okay";
+> 
+> status below
+> 
+> > +	clock-frequency = <400000>;
+> > +};
+> > +
+> > +/* I2S 1 Channel Used */
+> > +&i2s1_2ch {
+> 
+> > +	status = "okay";
+> 
+> status below
+> 
+> > +	#sound-dai-cells = <0>;
+> > +};
+> > +
+> > +&io_domains {
+> > +	vccio1-supply = <&vcc_3v3>;
+> > +	vccio2-supply = <&vccio_sd>;
+> > +	vccio3-supply = <&vcc_3v3>;
+> > +	vccio4-supply = <&vcc_3v3>;
+> > +	vccio5-supply = <&vcc_3v3>;
+> > +	vccio6-supply = <&vcc_3v3>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&pmu_io_domains {
+> > +	pmuio1-supply = <&vcc3v3_pmu>;
+> > +	pmuio2-supply = <&vcc3v3_pmu>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&pwm1 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&saradc {
+> > +	vref-supply = <&vcc_1v8>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&sdmmc {
+> > +	bus-width = <4>;
+> > +	cap-sd-highspeed;
+> 
+> > +	card-detect-delay = <800>;
+> 
+> Other dts use 200. Why we need 800?
+> 
+> > +	cd-gpios = <&gpio0 RK_PA3 GPIO_ACTIVE_LOW>;
+> > +	sd-uhs-sdr12;
+> > +	sd-uhs-sdr25;
+> > +	sd-uhs-sdr50;
+> > +	sd-uhs-sdr104;
+> > +	vmmc-supply = <&vcc_sd>;
+> > +	vqmmc-supply = <&vccio_sd>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&tsadc {
+> > +	pinctrl-names = "gpio", "otpout";
+> > +	pinctrl-0 = <&tsadc_otp_gpio>;
+> > +	pinctrl-1 = <&tsadc_otp_out>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&u2phy {
+> > +	status = "okay";
+> > +
+> > +	u2phy_host: host-port {
+> > +		status = "okay";
+> > +	};
+> > +
+> > +	u2phy_otg: otg-port {
+> > +		status = "disabled";
+> > +	};
+> > +};
+> > +
+> > +&usb20_otg {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&uart1_xfer &uart1_cts>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart2 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&uart2m1_xfer>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&vopb {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&vopb_mmu {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&pinctrl {
+> > +	pmic {
+> > +		pmic_int: pmic-int {
+> > +			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
+> > +		};
+> > +
+> > +		dc_det: dc-det {
+> > +			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +		};
+> > +	};
+> > +
+> > +	leds {
+> > +		led_pins: led-pins {
+> > +			rockchip,pins = <0 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +		};
+> > +	};
+> > +
+> > +	btns {
+> > +		btn_pins: btn-pins {
+> > +			rockchip,pins = <1 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<1 RK_PB5 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<1 RK_PB7 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<1 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<1 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<1 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +
+> > +					<2 RK_PA0 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<2 RK_PA1 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<2 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<2 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<2 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>,
+> > +					<2 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
+> > +		};
+> > +	};
+> > +};
+> > --
+> > 2.24.1
+> 
+> 
+> 
+
+
+
 
