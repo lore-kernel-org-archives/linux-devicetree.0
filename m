@@ -2,162 +2,108 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616C6C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 02:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02491C10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 03:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D35206E6
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 02:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF70D206CC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 03:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQf8UBn7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6CTG2Bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgCGCrh (ORCPT
+        id S1726300AbgCGDYo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 21:47:37 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35824 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgCGCrh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 21:47:37 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s8so1882339pjq.0
-        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 18:47:37 -0800 (PST)
+        Fri, 6 Mar 2020 22:24:44 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36703 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCGDYn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 22:24:43 -0500
+Received: by mail-qk1-f195.google.com with SMTP id u25so4352951qkk.3;
+        Fri, 06 Mar 2020 19:24:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/TRUJUtCxoJr2pqkTiLnH3NeMO+5+wP18MbBGwl1VpQ=;
-        b=fQf8UBn7/bTpeN0W23TKO3sg7Wmr6TcYe9FLKdc4QXrgHwFrqKZlFK9umi0NR5h7CO
-         efYLTJHlw4ihT2NNuIzfBpTjXAFp03KIlSSIGSPUZOTOTQN6+NzbClDjWMvtNumunsZf
-         pj4vB8ZNitQ/iNfq3PeHrNYf/UmQd5vopf9gVnUkWa4K6KQTQdlzJqb8mwl91MIHVfpI
-         CK8bAl9EcrUqBgU7tI9ctMfgEu6lWFv0myNir5STMDoyaQBdo91dQy+KjnTnf4kmckcF
-         /CM4U/mZcZu82VAYCSg7mvUYL3KtbgqMyE9dqz2GlSm7I3IzxPiRc9y2i2KNLJIH8uu1
-         gK2g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xx47FJX+QZbsjpJJ8x5FoZzQPuJdzEkyLKKPH7vo5sk=;
+        b=V6CTG2BcTle4ax3VW2GMHUYNQikRPHCX4W8GrQB30I7oTu+yciihautJPRVRVjQ/Fc
+         4kw1eamGfYWI+0JA2+f4WTC0j66nFLcnd99j+u/JabWCi3MKzZqlGYpUGHSL2uG7mtIF
+         BfhUwv1spkZ3ujZfrr3fUBm8ngmoJQzhDuiHuJu/QP0GKueGBjshtLXt46XuOmZgKx/k
+         JuhzFIkghSF56z6430kkDS6XYJ9RA+oqlafgd4aUUnS5t52RLf0rttvgMrL1JBERiRYX
+         RpwRRbLrCwoL2EWUcYPnjqPBEq6rHC9UTbskZJ/gSdsjmpVPKgwIbE0mfl05KL3hJagt
+         G8jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/TRUJUtCxoJr2pqkTiLnH3NeMO+5+wP18MbBGwl1VpQ=;
-        b=SXkReHtniZtzj2DCFCy/8nohdCMjnmetiFYjMqB5TPc6+TLU5iOTy4NLJ3TpS1HZdO
-         bZB9GxyZISVWwmczYrrJR6kQKyFH4OTw2uUi/UtM433SfNwUaxVsPFhM3TiHkuQarl06
-         QB0noEzTnE7TUhgmpXrGQG+b0+USjDMgjavFcSBAig6DgSSoNzxXhGI8+lJdBjdGlLrT
-         xBbco1OK/NHPah9QUX78QM+y03DDFNE9J5LJ/q6gCaZDLfl87LWkKOYzMb36+Phr5+yl
-         DB5Xl/SA+ZuXZ+2ULifc4WjIbkG5QqZDMBHSPSV7riMShnCeQ2pMIGA8qbBCn9AhKV5u
-         In+A==
-X-Gm-Message-State: ANhLgQ2NvMDI98l69zSLvh+g5N20vhaUeb3qFAiEHyw6yUwCI/gMrDEb
-        aQFXT9jo1LrL8mPqm382/5124BrN2WY=
-X-Google-Smtp-Source: ADFU+vs06omP9DDIanW/7BIljswpejxJdOu3j3Oapw/Muyix+IW+HjAgI9iuKPhFNjxkaFzGYW8Egg==
-X-Received: by 2002:a17:902:7483:: with SMTP id h3mr6062982pll.30.1583549256522;
-        Fri, 06 Mar 2020 18:47:36 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id mp23sm10631065pjb.42.2020.03.06.18.47.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 18:47:35 -0800 (PST)
-Date:   Fri, 6 Mar 2020 18:47:33 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: db845c: add Low speed expansion
- i2c and spi nodes
-Message-ID: <20200307024733.GE1094083@builder>
-References: <20200305145344.14670-1-srinivas.kandagatla@linaro.org>
- <20200305145344.14670-5-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xx47FJX+QZbsjpJJ8x5FoZzQPuJdzEkyLKKPH7vo5sk=;
+        b=ZtNJrkPrOYNUvLBuBSYru29cikjWe24CmuHm7vdRHvcqmzpb77S1/X3tEhepW2hMkP
+         /nTV9rt0PJwKWaXJ59SV7tHIdkdBgJPdVedeWVQ0+ivDwc/s3JS+1Jm2u6xqMY2aF20k
+         /5JEdNiQAO4dBJk/8xuwWqmcQIJRfU410oMylwR2EJvLUsOkSJM17jZBXOC9/RnnKEXW
+         QIpR3ZXLTGGwkp/kLDFKiec+aZUDq56VXEKncMErOi1cl6mg6miXlhYTc9qVDTKCWkpB
+         1Z15ZtIa7OrhhjihDWIem7/h/NyzQElJQLhyWKYVdxNpG+Lzr+jseaWDewDR0b8QSyYA
+         cO3A==
+X-Gm-Message-State: ANhLgQ2mWJQW63OGtyC95nD/emT9nKXhb900gy40S3fsakI1eAO57y4Y
+        0+SIJsKOt7OoxFocaq3k/yI+JxwwcoicDHid1ug=
+X-Google-Smtp-Source: ADFU+vsrgn/I7/3yq0U87aezc5EPcL/v/ioSyi8uCEcZqO8JoZIjCstooShLZGMYvgHn2vn/uc1R6Au9Gus47NWljDo=
+X-Received: by 2002:a37:a50d:: with SMTP id o13mr5736750qke.37.1583551482955;
+ Fri, 06 Mar 2020 19:24:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305145344.14670-5-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <cover.1583039752.git.shengjiu.wang@nxp.com> <872c2e1082de6348318e14ccd31884d62355c282.1583039752.git.shengjiu.wang@nxp.com>
+ <20200303014133.GA24596@bogus> <CAA+D8ANgECaz=tRtRwNP=jMXBD0XciAE0HUYROH8uuo03iDejg@mail.gmail.com>
+ <20200303124739.GE3866@sirena.org.uk>
+In-Reply-To: <20200303124739.GE3866@sirena.org.uk>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Sat, 7 Mar 2020 11:24:32 +0800
+Message-ID: <CAA+D8AMkmHZoZ7Oa0_OGfgRAC+H-117e1bNJgzyiWGTueyxDzg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/8] ASoC: dt-bindings: fsl_asrc: Change asrc-width to asrc-format
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>, linux-imx@nxp.com,
+        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 05 Mar 06:53 PST 2020, Srinivas Kandagatla wrote:
+Hi
 
-> This patch adds support UART0, I2C0, I2C1 and SPI0 available
-> on Low Speed expansion connector.
-> 
+On Tue, Mar 3, 2020 at 8:47 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Mar 03, 2020 at 11:59:30AM +0800, Shengjiu Wang wrote:
+> > On Tue, Mar 3, 2020 at 9:43 AM Rob Herring <robh@kernel.org> wrote:
+>
+> > > > -   - fsl,asrc-width  : Defines a mutual sample width used by DPCM Back Ends.
+> > > > +   - fsl,asrc-format : Defines a mutual sample format used by DPCM Back
+> > > > +                       Ends. The value is one of SNDRV_PCM_FORMAT_XX in
+> > > > +                       "include/uapi/sound/asound.h"
+>
+> > > You can't just change properties. They are an ABI.
+>
+> > I have updated all the things related with this ABI in this patch series.
+> > What else should I do?
+>
+> Like Nicolin says you should continue to support the old stuff.  The
+> kernel should work with people's out of tree DTs too so simply updating
+> everything in the tree isn't enough.
 
-Applied, after fixing the sort order. Thanks for posting this!
+Thanks for review, I will update patch in next version.
 
-Regards,
-Bjorn
-
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> index 350d3ea60235..fd2bdf10a4d9 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> @@ -434,6 +434,24 @@
->  	vdda-pll-supply = <&vreg_l26a_1p2>;
->  };
->  
-> +&i2c11 {
-> +	/* On Low speed expansion */
-> +	label = "LS-I2C1";
-> +	status = "okay";
-> +};
-> +
-> +&i2c14 {
-> +	/* On Low speed expansion */
-> +	label = "LS-I2C0";
-> +	status = "okay";
-> +};
-> +
-> +&spi2 {
-> +	/* On Low speed expansion */
-> +	label = "LS-SPI0";
-> +	status = "okay";
-> +};
-> +
->  &pm8998_gpio {
->  	vol_up_pin_a: vol-up-active {
->  		pins = "gpio6";
-> @@ -574,6 +592,11 @@
->  	};
->  };
->  
-> +&uart3 {
-> +	label = "LS-UART0";
-> +	status = "disabled";
-> +};
-> +
->  &uart6 {
->  	status = "okay";
->  
-> @@ -589,6 +612,7 @@
->  };
->  
->  &uart9 {
-> +	label = "LS-UART1";
->  	status = "okay";
->  };
->  
-> @@ -674,6 +698,16 @@
->  };
->  
->  /* PINCTRL - additions to nodes defined in sdm845.dtsi */
-> +&qup_spi2_default {
-> +	drive-strength = <16>;
-> +};
-> +
-> +&qup_uart3_default{
-> +	pinmux {
-> +		pins = "gpio41", "gpio42", "gpio43", "gpio44";
-> +		function = "qup3";
-> +	};
-> +};
->  
->  &qup_uart6_default {
->  	pinmux {
-> -- 
-> 2.21.0
-> 
+best regards
+wang shengjiu
