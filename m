@@ -2,115 +2,92 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F93C10F00
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 16:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFDBC10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 19:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0712073D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 16:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RY4MKxaS"
+	by mail.kernel.org (Postfix) with ESMTP id D740A2073C
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 19:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgCGQGG (ORCPT
+        id S1726180AbgCGTIJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 11:06:06 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:38305 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgCGQGF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 11:06:05 -0500
-Received: by mail-wr1-f41.google.com with SMTP id t11so5878430wrw.5;
-        Sat, 07 Mar 2020 08:06:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iAetEvZraiflUEUc7nvvm8pl55tWCvaIeillv2HHKY4=;
-        b=RY4MKxaSmII1woTtclCslMgTGxlofSmYGl3WFzVaIKcUYL1o5RIExjEpCmugp4szQA
-         pnSfn6kQwEjA920C4NsfvqYiGQpOeXPVoot14HAWuRIIgHEjyA5f3/vkg+EYGbwD+DI5
-         f6ha9Pk8t6NbYSoWJD+Y/9rgfM6ZOdxABsDu6mdEk/wO89+pBZUuL6dCdHCaX3z11lVx
-         KNUgvmHmXlbCpOLFpnaN+oK3Ppyjt0Q8YbF9qP1YAOfzMFIlEFr9Ms38QRNxPwdzAkgx
-         OE9xcgVoZ+WSzP9c0LDrpQbFUHgoUzCDx6Syr2EdVHdhtMjO+3hcziTkuITm3mF+B9gy
-         1LXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iAetEvZraiflUEUc7nvvm8pl55tWCvaIeillv2HHKY4=;
-        b=I6axj7wXBiRLuBrI9MfVNiNCb9+Z5kRRroFafG4/i7WydmVShVGcdI5FWdkOfdfZPo
-         EwvCSGOGGlaWfE+BVywwn/5YVY86VsR6MNsBAVzA87IsUdEl/tzWdKIlINBnr7G4PrpM
-         kPRKYk7e5dTXWpwn/7CIumog0l1JTF68TaX5htOSsDwhxLfZbKGxqEoLFhdkTDvh4stC
-         +1lo+XGayrcnZrDx4AmkLbTmJOiWFXO5eS6pHW2naJv1+Mn+U31BLd98UwOCV27Lh5kq
-         TlKDgB/0Vae4p+a62EOTo+vxp0lT9LvHt9IsYY8+ahs9QPPxiNxfDy4W1b6pr+DB0JYr
-         VnFw==
-X-Gm-Message-State: ANhLgQ2wbnLmjjRsPXptQe3sz3hojgGH3gPbzbS4vFpiaPLhWDXv/wng
-        uff2DK5YQqjZz253WUVzYHQ=
-X-Google-Smtp-Source: ADFU+vsORIHVIXY/NGjz0qd0dQ3z+z+LGwdJWHv2GehbGa7/k9ONo/m7C/JJ4CkIdkadrGxj6NNxwQ==
-X-Received: by 2002:a5d:550f:: with SMTP id b15mr10220750wrv.19.1583597163324;
-        Sat, 07 Mar 2020 08:06:03 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k126sm17555105wme.4.2020.03.07.08.06.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Mar 2020 08:06:02 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     ulf.hansson@linaro.org
-Cc:     heiko@sntech.de, robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] dt-bindings: mmc: synopsys-dw-mshc: fix clock-freq-min-max in example
-Date:   Sat,  7 Mar 2020 17:05:56 +0100
-Message-Id: <20200307160556.16226-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Sat, 7 Mar 2020 14:08:09 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:41944 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726138AbgCGTIJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 7 Mar 2020 14:08:09 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id D9BA8E00D3;
+        Sat,  7 Mar 2020 19:08:25 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id XwkNf2ZU1kmz; Sat,  7 Mar 2020 19:08:23 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id B6FACE0161;
+        Sat,  7 Mar 2020 19:08:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id YrblnvZ3IINr; Sat,  7 Mar 2020 19:08:23 +0000 (UTC)
+Received: from furthur.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id E2D02E00D1;
+        Sat,  7 Mar 2020 19:08:22 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Rob Herring <robh@kernel.org>
+Subject: [RESEND PATCH v2 1/3] dt-bindings: Add vendor prefix for Chrontel, Inc.
+Date:   Sat,  7 Mar 2020 20:07:58 +0100
+Message-Id: <20200307190800.142658-2-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200307190800.142658-1-lkundrak@v3.sk>
+References: <20200307190800.142658-1-lkundrak@v3.sk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below does not detect all errors
-in combination with 'additionalProperties: false' and
-allOf:
-  - $ref: "synopsys-dw-mshc-common.yaml#"
-allOf:
-  - $ref: "mmc-controller.yaml#"
+Chrontel makes encoders for video displays and perhaps other stuff.
+Their web site is http://www.chrontel.com/.
 
-'additionalProperties' applies to all properties that are not
-accounted-for by 'properties' or 'patternProperties' in
-the immediate schema.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Rob Herring <robh@kernel.org>
 
-First when we combine synopsys-dw-mshc.yaml,
-synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
-this error:
-
-Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.example.dt.yaml:
-mmc@12200000: 'clock-freq-min-max' does not match any of the regexes:
-'^.*@[0-9]+$', '^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
-uhs-(sdr(12|25|50|104)|ddr50))$', 'pinctrl-[0-9]+'
-
-'clock-freq-min-max' is deprecated, so replace it by 'max-frequency'.
-
-make ARCH=arm dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1:
+- Collect Rob's ack
 
-diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-index 05f9f36dc..dd2c1b147 100644
---- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-+++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-@@ -62,7 +62,7 @@ examples:
-       cap-mmc-highspeed;
-       cap-sd-highspeed;
-       card-detect-delay = <200>;
--      clock-freq-min-max = <400000 200000000>;
-+      max-frequency = <200000000>;
-       clock-frequency = <400000000>;
-       data-addr = <0x200>;
-       fifo-depth = <0x80>;
--- 
-2.11.0
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
+umentation/devicetree/bindings/vendor-prefixes.yaml
+index a2da166df1bc7..0ab86d876f4d2 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -185,6 +185,8 @@ patternProperties:
+     description: ChipOne
+   "^chipspark,.*":
+     description: ChipSPARK
++  "^chrontel,.*":
++    description: Chrontel, Inc.
+   "^chrp,.*":
+     description: Common Hardware Reference Platform
+   "^chunghwa,.*":
+--=20
+2.24.1
 
