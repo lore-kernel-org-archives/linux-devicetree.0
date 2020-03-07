@@ -2,182 +2,96 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988CDC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 20:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FF1C10F26
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 21:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D9D2075A
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 20:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3jRXFnC"
+	by mail.kernel.org (Postfix) with ESMTP id 181932073C
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 21:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCGUsC (ORCPT
+        id S1726174AbgCGVG2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 15:48:02 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40619 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgCGUsC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 15:48:02 -0500
-Received: by mail-wm1-f65.google.com with SMTP id e26so5877829wme.5;
-        Sat, 07 Mar 2020 12:47:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ziFCZjudOEoSpdz7d2yWfia39dXlf0qOBljsEcTWZL8=;
-        b=m3jRXFnC3RA86byBozOVT2XsLJXEYY2jFderK0EJ8xVynmByhkqqqMBL3p+jekRoT2
-         J/JJ6ptLY4reR4iKMjOGp6VlKdTWwntQDpahN7QJ3ncwlnC0aREKd40UAxEW8Zz6Kvga
-         N1GW4Q6V5xeNxUdRYNgETIFYvPvjvOKwZd9mr3p9nNmYZMM3Dvp2wITGRGDj6jbM9hv8
-         dAltjy5UZSZM9LBa1oGx8/KgLoE0QY759DvAHpLDSXKCISm1PMH8YcGzfWTxiFfqhJ25
-         9S2An6jXTA7zvR7hfxoQy1700i7zKkWTVwGFz5tU1v1Lx80xoREV930gxA+swXzFfPL1
-         Eciw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ziFCZjudOEoSpdz7d2yWfia39dXlf0qOBljsEcTWZL8=;
-        b=SPrOnHvTBIrAtYy++4SrqiphUOYpuSW6zxF3EP0otSpvbmm86TNc0A4g5P0QpzHCzR
-         1W1Nf8stcV2mbfb6YU/n6J7wZVFrFtWq51msHBz1JN6eo4/Execr/eRoC8RxHEK6LGh7
-         U6/uEE1vedVakO6isBhzdnlvojC/sQkLpObMeuokd0EtpM+XumMJSIbGWN0actc0JXvq
-         vw5TYLNdP4aPHUZQUorZVOYGLLki4liX+omJ4ybd0W5g4uTgsA2FevqJJFvY3UEl8trA
-         fkg3Vz1au0Xd1yni9WAJCxpeFS9ehSXZjt/08vQ/Kw3q51KqsZ20EIbwmMMmOZssUmiN
-         eLWA==
-X-Gm-Message-State: ANhLgQ3/kmQakvYeAF+GCJcLlgzuF1DOBpmSQIfGop1pMGBMP2eceE3B
-        M3g1r0erKmmBxVYvJhQEZVq7arPTVrQ=
-X-Google-Smtp-Source: ADFU+vtNe+RN3wY1HIILDHoeDsBmXatP3JK6rafsZzvlf/PJADmLS6hLMwPn/0glIDzhkLN+KBVMhQ==
-X-Received: by 2002:a7b:c92e:: with SMTP id h14mr11554301wml.90.1583614079020;
-        Sat, 07 Mar 2020 12:47:59 -0800 (PST)
-Received: from ?IPv6:2001:a61:24cc:fd01:4c3a:3001:350e:71a0? ([2001:a61:24cc:fd01:4c3a:3001:350e:71a0])
-        by smtp.gmail.com with ESMTPSA id b5sm12229797wrj.1.2020.03.07.12.47.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Mar 2020 12:47:58 -0800 (PST)
-Subject: Re: [PATCH 5/5] dt-bindings: iio: Add adis16475 documentation
-To:     Jonathan Cameron <jic23@kernel.org>,
-        "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     "lars@metafoo.de" <lars@metafoo.de>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-References: <20200225124152.270914-1-nuno.sa@analog.com>
- <20200225124152.270914-6-nuno.sa@analog.com>
- <20200303211045.31f977bb@archlinux>
- <9b9e18f279edbcb60122a0b0d4c067975868194a.camel@analog.com>
- <63b5c766-78a2-59c4-6efb-3eb35031a351@metafoo.de>
- <3bdae6c113381c7dd0645b7b98c67fac734b92ab.camel@analog.com>
- <13e355c6-af60-772a-92ec-aff17d0255ee@metafoo.de>
- <a6b4c76a337f53db1ee05a03eca06751b901d04b.camel@analog.com>
- <20200307113349.27e4484a@archlinux>
-From:   nunojsa <noname.nuno@gmail.com>
-Message-ID: <292029f7-e30d-b510-95b0-e6037182a63b@gmail.com>
-Date:   Sat, 7 Mar 2020 21:47:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sat, 7 Mar 2020 16:06:28 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:50823 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgCGVG2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 16:06:28 -0500
+X-Originating-IP: 195.189.32.242
+Received: from pc.localdomain (unknown [195.189.32.242])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id F09B440002;
+        Sat,  7 Mar 2020 21:06:23 +0000 (UTC)
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v4 1/5] IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+Date:   Sat,  7 Mar 2020 22:14:08 +0100
+Message-Id: <20200307211412.44148-1-contact@artur-rojek.eu>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200307113349.27e4484a@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 07.03.20 12:33, Jonathan Cameron wrote:
-> On Thu, 5 Mar 2020 13:04:27 +0000
-> "Sa, Nuno" <Nuno.Sa@analog.com> wrote:
-> 
->> On Thu, 2020-03-05 at 13:43 +0100, Lars-Peter Clausen wrote:
->>> On 3/5/20 1:27 PM, Sa, Nuno wrote:  
->>>>> In my opinion there is should not be a difference in the
->>>>> userspace
->>>>> interface for chips that do support 32-bit burst and those that
->>>>> don't.
->>>>> For devices that don't support 32-bit burst it should be emulated
->>>>> by
->>>>> reading the LSB bits registers manually.  
->>>> Hmm. In terms of interface I think there is no difference. We
->>>> always
->>>> report 32bits channels (for accel and gyro). However, what we do
->>>> right
->>>> know is just to set the LSB to 0 if burst32 is not supported. So,
->>>> we
->>>> can be just ignoring the LSB bits if they are being used...  
->>>
->>> What I meant was that somebody might still want to get the full 32-
->>> bit 
->>> values in buffered mode, even if the device does not support burst32.  
->>
->> They are. Just that the LSB part is always set to 0 :). And that, in my
->> opinion, is wrong. As you say, we should do the manual readings if
->> there are any bits on the LSB registers...
->>
->> - Nuno Sá
->>> In 
->>> that case you can first do a 16-bit burst read to get the MSBs and
->>> then 
->>> do manual reads of all the LSB registers and then put both into the
->>> buffer.
->>> - Lars
->>>   
->>
-> Thanks Lars and Nuno, I'd not grasped exactly what this was.
-> 
-> Hmm.  Not allowing for variable bit widths has bitten us a few times in the
-> past.  Howwever, it's a really nasty thing to try and add to the core now
-> unfortunately.
-> 
-> In some cases we've just padded the smaller bitwidth buffer but that
-> is costly to actually do.  You get fast reads from the hardware then loose
-> at least some of the benefit respacing the data.
-> 
-> Still it is definitely a policy decision so not DT.  It's ugly but if
-> we want to support it and can't do it at runtime, perhaps a module parameter
-> is the best option?
->
+Provide an of_xlate callback in order to retrieve the correct channel
+specifier index from the IIO channels array.
 
-So, we can decide this at runtime. As Lars pointed out, the LSB bits are not
-used by default (decimation and FIR filters disabled). However, applications can
-change this by changing the sampling frequency (affects the decimation filter)
-and the low_pass_filter_3db_freq (affects the FIR filter). If one of these filters
-is used, then the LSB bits are meaningful and makes sense to use burst32. For parts
-that do not support burst32, we should manually read the data.
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-I started to prepare the version 2 of this series and Im starting to have mixed
-feelings. For now, I can see 3 ways of handling this:
+ Changes:
 
-1) If we assume that changing from burst32 to burst mode can occur at any
-time, we need some special handling. We need to realloc the buffer used
-on the spi transfer and readjust the spi xfer length. I'm not a big fan of the
-realloc part...
+ v2-v4: no change
 
-2) Alternatively, we could introduce a `burst_max_len` in the library that could be
-used in devices with different burst modes with different sizes. Max len would just
-hold the maximum burst len (as the name implies) and would be used to allocate
-the buffer to use on the spi tranfer. On the spi xfer we would then use the real
-burst length. With this we would not need to care about reallocs...
+ drivers/iio/adc/ingenic-adc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-3) More conservative, we would not allow changing burst modes if buffering is
-ongoing... Changing a filter setting that would lead to burst mode change when
-buffering would return -EPERM...
-
-Either way, I will probably just send the v2 patch with 1) and then everyone can have
-a better look on how it looks and we can discuss improvements/other mechanism in the
-v2 thread.
-
-- Nuno Sá
-> Thanks,
-> 
-> Jonathan
-> 
-> 
+diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+index 39c0a609fc94..7a24bc1dabe1 100644
+--- a/drivers/iio/adc/ingenic-adc.c
++++ b/drivers/iio/adc/ingenic-adc.c
+@@ -383,6 +383,21 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
+ 	}
+ }
+ 
++static int ingenic_adc_of_xlate(struct iio_dev *iio_dev,
++				const struct of_phandle_args *iiospec)
++{
++	int i;
++
++	if (!iiospec->args_count)
++		return -EINVAL;
++
++	for (i = 0; i < iio_dev->num_channels; ++i)
++		if (iio_dev->channels[i].channel == iiospec->args[0])
++			return i;
++
++	return -EINVAL;
++}
++
+ static void ingenic_adc_clk_cleanup(void *data)
+ {
+ 	clk_unprepare(data);
+@@ -392,6 +407,7 @@ static const struct iio_info ingenic_adc_info = {
+ 	.write_raw = ingenic_adc_write_raw,
+ 	.read_raw = ingenic_adc_read_raw,
+ 	.read_avail = ingenic_adc_read_avail,
++	.of_xlate = ingenic_adc_of_xlate,
+ };
+ 
+ static const struct iio_chan_spec ingenic_channels[] = {
+-- 
+2.25.1
 
