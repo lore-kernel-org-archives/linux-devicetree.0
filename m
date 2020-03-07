@@ -2,91 +2,552 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1AAC10F00
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 14:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CBEC10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 14:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407A42075B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 14:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F77206D5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 14:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583591170;
-	bh=R10XMZPnBvU7IEe5DhBHjIeZp6ovpiPSVdQ11F9vIUg=;
+	s=default; t=1583592609;
+	bh=rsyhA3FNKjlB3A1bCTlFl4Qn1liXbB65Iom0Yu5QBk4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Azz2c1ST54JgNdpGpQqMVpkvTLWWeUePy8UWt0Gj4M9nHBxSH5TPAC/mBneqkzyBE
-	 /FxN09k8RstaJg1oYzLMuAcIGw1VsOh/0Al5eeW8Xd9q1qHkHe4ODlO+xA4y/zTPiS
-	 Vnn9lobD3HQ6VgKp29AZoyLnPe+7rzhNsY9zPxNw=
+	b=qdRDE9JxNEy5fXUAkCH47njrdbYJVG6R8TS6eOC4tYrdy+3o0iQlZHSPrpgVVkNYe
+	 QQ2cR5SHH6w+55XZofeSzQptEgPJO35ILFMWLVXcCywBKlnqIzd3KSXh84aFdxeU37
+	 LMY09HhMvEQ/8p/F6EvKaOawcE1alZafkfZtf/cQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgCGO0J (ORCPT
+        id S1726323AbgCGOuG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 09:26:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 09:50:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgCGO0J (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 7 Mar 2020 09:26:09 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726073AbgCGOuG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 7 Mar 2020 09:50:06 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBCBE206D5;
-        Sat,  7 Mar 2020 14:26:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBFD420675;
+        Sat,  7 Mar 2020 14:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583591169;
-        bh=R10XMZPnBvU7IEe5DhBHjIeZp6ovpiPSVdQ11F9vIUg=;
+        s=default; t=1583592605;
+        bh=rsyhA3FNKjlB3A1bCTlFl4Qn1liXbB65Iom0Yu5QBk4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bX61VUnzwU7BHmKBRED5vsxrD4Mx8Zliu4qfr+Ys3aQtVzOjpnDu2jz2tdZq5VmwV
-         5S8Hq8FFbOkI5nehAYWPPQfuCsqQLIBqndG9ezwKOoCbCWWg6ucNUt6REjaBoqfxrg
-         lFSyDJTLuB4xjed4zMZ4g4Jk1DPKVAivzYUOrQA8=
-Date:   Sat, 7 Mar 2020 14:26:04 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH v8 2/8] include: fpga: adi-axi-common.h: add version
- helper macros
-Message-ID: <20200307142604.7d597667@archlinux>
-In-Reply-To: <20200306110100.22092-3-alexandru.ardelean@analog.com>
-References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
-        <20200306110100.22092-3-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        b=BkT/agLv0UbjtJv4jy5IL76QqduDNNit5hEOsuyy3oQIbagyR6uSdcaO4BjWON32j
+         VI4nhLeVk5ydzG44Hc7+8h32fSwxhJBx4uukxJQY3lvGpIs1IAT0fu239aHiy0fUTW
+         xOniO3dgcerUcUUEuXXoMjEn5yySPEsIVwZS/WaA=
+Received: from [185.104.136.29] (helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jAamA-00AqlA-6s; Sat, 07 Mar 2020 14:50:02 +0000
+Date:   Sat, 07 Mar 2020 14:50:03 +0000
+Message-ID: <864kv06wys.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 01/10] irqchip: Add driver for Loongson I/O Local Interrupt Controller
+In-Reply-To: <20200221050942.507775-2-jiaxun.yang@flygoat.com>
+References: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
+        <20200221050942.507775-2-jiaxun.yang@flygoat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org, chenhc@lemote.com, gregkh@linuxfoundation.org, allison@lohutok.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 6 Mar 2020 13:00:54 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> The format for all ADI AXI IP cores is the same.
-> i.e. 'major.minor.patch'.
+On Fri, 21 Feb 2020 05:09:16 +0000,
+Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 > 
-> This patch adds the helper macros to be re-used in ADI AXI drivers.
+> This controller appeared on Loongson family of chips as the primary
+> package interrupt source.
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Again, trivial but needs a Moritz ack as it's his subsystem.
-
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  include/linux/fpga/adi-axi-common.h | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/irqchip/Kconfig                |   9 +
+>  drivers/irqchip/Makefile               |   1 +
+>  drivers/irqchip/irq-loongson-liointc.c | 338 +++++++++++++++++++++++++
+>  3 files changed, 348 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-loongson-liointc.c
 > 
-> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-> index ebd4e07ae3d8..141ac3f251e6 100644
-> --- a/include/linux/fpga/adi-axi-common.h
-> +++ b/include/linux/fpga/adi-axi-common.h
-> @@ -16,4 +16,8 @@
->  #define ADI_AXI_PCORE_VER(major, minor, patch)	\
->  	(((major) << 16) | ((minor) << 8) | (patch))
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 6d397732138d..c609eaa319d2 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -513,4 +513,13 @@ config EXYNOS_IRQ_COMBINER
+>  	  Say yes here to add support for the IRQ combiner devices embedded
+>  	  in Samsung Exynos chips.
 >  
-> +#define ADI_AXI_PCORE_VER_MAJOR(version)	(((version) >> 16) & 0xff)
-> +#define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
-> +#define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
+> +config LOONGSON_LIOINTC
+> +	bool "Loongson Local I/O Interrupt Controller"
+> +	depends on MACH_LOONGSON64
+> +	default y
+> +	select IRQ_DOMAIN
+> +	select GENERIC_IRQ_CHIP
+> +	help
+> +	  Support for the Loongson Local I/O Interrupt Controller.
 > +
->  #endif /* ADI_AXI_COMMON_H_ */
+>  endmenu
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index eae0d78cbf22..5e7678efdfe6 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -105,3 +105,4 @@ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+>  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+>  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
+> +obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
+> diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+> new file mode 100644
+> index 000000000000..d7efab9f4ee7
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-loongson-liointc.c
+> @@ -0,0 +1,338 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + *  Loongson Local IO Interrupt Controller support
+> + */
+> +
+> +#include <linux/errno.h>
+> +#include <linux/init.h>
+> +#include <linux/types.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/ioport.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/io.h>
+> +#include <linux/smp.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +
+> +#include <boot_param.h>
+> +
+> +#define LIOINTC_CHIP_IRQ	32
+> +#define LIOINTC_NUM_PARENT 4
+> +
+> +#define LIOINTC_REG_INTx_MAP(x)	(x * 0x1)
 
+Wow. I guess the 0x prefix changes everything. Or did you intend to
+have something else here?
+
+> +#define LIOINTC_INTC_CHIP_START	0x20
+> +
+> +#define LIOINTC_REG_INTC_STATUS	(LIOINTC_INTC_CHIP_START + 0x20)
+> +#define LIOINTC_REG_INTC_EN_STATUS	(LIOINTC_INTC_CHIP_START + 0x04)
+> +#define LIOINTC_REG_INTC_ENABLE	(LIOINTC_INTC_CHIP_START + 0x08)
+> +#define LIOINTC_REG_INTC_DISABLE	(LIOINTC_INTC_CHIP_START + 0x0c)
+> +#define LIOINTC_REG_INTC_POL	(LIOINTC_INTC_CHIP_START + 0x10)
+> +#define LIOINTC_REG_INTC_EDGE	(LIOINTC_INTC_CHIP_START + 0x14)
+> +
+> +#define BUGGY_LPC_IRQ	10
+
+Why BUGGY? Yes, there is a bug in the controller, but the interrupt
+does exist, right?
+
+> +
+> +#define LIOINTC_SHIFT_INTx	4
+> +
+> +struct liointc_handler_data {
+> +	struct liointc_priv *priv;
+> +	u32 parent_int_map;
+> +};
+> +
+> +struct liointc_priv {
+> +	void __iomem *base;
+> +	struct irq_chip_generic *gc;
+> +	u8 map_cache[LIOINTC_CHIP_IRQ];
+> +	struct liointc_handler_data handler[LIOINTC_NUM_PARENT];
+> +	u8 possible_parent_mask;
+> +	bool have_lpc_irq_bug;
+
+For the sake of making this readable, consider reformating this
+structure like this:
+
+	void __iomem			*base;
+	struct irq_chip_generic		*gc;
+	u8 				map_cache[LIOINTC_CHIP_IRQ];
+	struct liointc_handler_data	handler[LIOINTC_NUM_PARENT];
+	u8				possible_parent_mask;
+	bool				have_lpc_irq_bug;
+
+which shows that there is certainly room for improvement in the layout
+(it'd be a good idea to group together the u8 fields, for example).
+
+> +};
+> +
+> +static void liointc_chained_handle_irq(struct irq_desc *desc)
+> +{
+> +	struct liointc_handler_data *handler = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct irq_chip_generic *gc = handler->priv->gc;
+> +	u32 pending;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	pending = readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
+> +
+> +	if (!pending) {
+> +		/* Always blame LPC IRQ if we have that Bug with LPC interrupt enabled */
+> +		if (handler->priv->have_lpc_irq_bug &&
+> +			(handler->parent_int_map & ~gc->mask_cache & BIT(BUGGY_LPC_IRQ)))
+> +			generic_handle_irq(irq_find_mapping(gc->domain, BUGGY_LPC_IRQ));
+
+This seems overly convoluted. Why not write something like:
+
+			pending = BIT(LPC_IRQ);
+
+instead of having two calls to generic_handle_irq() and co?
+
+Also for the sake of making the patch more easily readable, consider
+splitting the errata workarounds into a separate patch. It is much
+easier to first work out the inner working of the driver without any
+wart, and only then add the bad stuff on top.
+
+> +		else
+> +			spurious_interrupt();
+> +	}
+> +
+> +	while (pending) {
+> +		int bit = __ffs(pending);
+> +
+> +		generic_handle_irq(irq_find_mapping(gc->domain, bit));
+> +		pending &= ~BIT(bit);
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void map_cache_set_core(struct liointc_priv *priv, int irq, int core)
+> +{
+> +	priv->map_cache[irq] &= ~GENMASK(3, 0);
+> +	priv->map_cache[irq] |= BIT(core);
+
+This is only called once, and nothing ever touches bits [3:0] until
+then. So the first line is useless, and the second one is better moved
+to the calling site. It is also always the same value, known at boot
+time...
+
+> +}
+> +
+> +static void write_map_cache(struct liointc_priv *priv, int irq)
+> +{
+> +	writeb(priv->map_cache[irq],
+> +		priv->base + LIOINTC_REG_INTx_MAP(irq));
+> +}
+> +
+> +static void liointc_set_bit(struct irq_chip_generic *gc,
+> +				unsigned int offset,
+> +				u32 mask, bool set)
+> +{
+> +	if (set)
+> +		writel(readl(gc->reg_base + offset) | mask,
+> +				gc->reg_base + offset);
+> +	else
+> +		writel(readl(gc->reg_base + offset) & ~mask,
+> +				gc->reg_base + offset);
+> +}
+> +
+> +static int liointc_set_type(struct irq_data *data, unsigned int type)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+> +	u32 mask = data->mask;
+> +	unsigned long flags;
+> +
+> +	irq_gc_lock_irqsave(gc, flags);
+> +	switch (type) {
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
+> +		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
+> +		break;
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
+> +		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
+> +		break;
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
+> +		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
+> +		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	irq_gc_unlock_irqrestore(gc, flags);
+> +
+> +	irqd_set_trigger_type(data, type);
+> +	return 0;
+> +}
+> +
+> +static int liointc_set_affinity(struct irq_data *idata,
+> +				const cpumask_t *cpu_mask, bool force)
+> +{
+> +	return -ENAVAIL;
+
+-EINVAL is the canonical return code for unimplemented callbacks.
+
+> +}
+> +
+> +static void liointc_resume(struct irq_chip_generic *gc)
+> +{
+> +	struct liointc_priv *priv = gc->private;
+> +	unsigned long flags;
+> +	int i;
+> +
+> +	irq_gc_lock_irqsave(gc, flags);
+> +	/* Revert map cache */
+> +	for (i = 0; i < LIOINTC_CHIP_IRQ; i++)
+> +		write_map_cache(priv, i);
+> +
+> +	/* Revert mask cache again */
+> +	writel(gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_DISABLE);
+
+Shouldn't you *disable everything* before restoring anything at all?
+I'd expect something like
+
+writel(0xffffffff, gc->reg_base + LIOINTC_REG_INTC_DISABLE);
+
+to be the first thing you do in this function. Otherwise, you could
+end-up getting spurious interrupts as you have already started
+restoring stuff.
+
+> +	writel(~gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
+> +	irq_gc_unlock_irqrestore(gc, flags);
+> +}
+> +
+> +static void validate_parent_mask(struct liointc_priv *priv, u32 of_parent_int_map[])
+> +{
+> +	u32 proceed_mask = 0x0, duplicated_mask = 0x0;
+> +	int i;
+> +	int fallback_parent = __ffs(priv->possible_parent_mask);
+> +
+> +	for (i = 0; i < LIOINTC_NUM_PARENT; i++) {
+> +		/* Try if the parent is avilable */
+> +		if (!(priv->possible_parent_mask & BIT(i)))
+> +			continue;
+> +
+> +		priv->handler[i].parent_int_map = of_parent_int_map[i];
+> +
+> +		/* Detect if the IRQ have previously proceed */
+> +		duplicated_mask |= (priv->handler[i].parent_int_map & proceed_mask);
+> +		proceed_mask |= priv->handler[i].parent_int_map;
+> +	}
+> +
+> +	/* Fallback IRQs with no map bit set */
+> +	while (~proceed_mask) {
+> +		int bit = __ffs(~proceed_mask);
+> +
+> +		pr_warn("loongson-liointc: Found homeless IRQ %d, map to INT%d\n",
+> +			bit, fallback_parent);
+> +		priv->handler[fallback_parent].parent_int_map |= BIT(bit);
+> +		proceed_mask |= BIT(bit);
+> +	}
+> +
+> +	/* Fallback IRQs with multiple map bit set */
+> +	while (duplicated_mask) {
+> +		int bit = __ffs(duplicated_mask);
+> +
+> +		pr_warn("loongson-liointc: IRQ %d have multiple parents, map to INT%d\n",
+> +			bit, fallback_parent);
+> +		/* Clear the bit in all parent bits */
+> +		for (i = 0; i < LIOINTC_NUM_PARENT; i++)
+> +			priv->handler[i].parent_int_map &= ~BIT(bit);
+> +
+> +		priv->handler[fallback_parent].parent_int_map |= BIT(bit);
+> +		duplicated_mask &= ~BIT(bit);
+> +	}
+> +
+> +	/* Generate parent INT part of map Cache */
+> +	for (i = 0; i < LIOINTC_NUM_PARENT; i++) {
+> +		u32 pending = priv->handler[i].parent_int_map;
+> +
+> +		while (pending) {
+> +			int bit = __ffs(pending);
+> +
+> +			priv->map_cache[bit] = BIT(i) << LIOINTC_SHIFT_INTx;
+> +			pending &= ~BIT(bit);
+> +		}
+> +	}
+
+Most of this function seems to be a validation tool for badly written
+DT. Please do that at DT compilation time if you want, but not in the
+kernel. At the worse, check for overlap/missing interrupts and fail,
+but don't let people rely on default behaviours.
+
+> +}
+> +
+> +static const char *parent_names[] = {"int0", "int1", "int2", "int3"};
+> +
+> +int __init liointc_of_init(struct device_node *node,
+> +				struct device_node *parent)
+> +{
+> +	struct irq_chip_generic *gc;
+> +	struct irq_domain *domain;
+> +	struct irq_chip_type *ct;
+> +	struct liointc_priv *priv;
+> +	u32 of_parent_int_map[LIOINTC_NUM_PARENT];
+> +	int parent_irq[LIOINTC_NUM_PARENT];
+> +	int core = loongson_sysconf.boot_cpu_id;
+
+Spurious variable. Just use the boot cpu id where needed (there is
+only one instance).
+
+> +	int i, err = 0;
+> +	int sz;
+> +
+> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->base = of_iomap(node, 0);
+> +	if (!priv->base) {
+> +		err = -ENODEV;
+> +		goto out_free_priv;
+> +	}
+> +
+> +	if (of_device_is_compatible(node, "loongson,liointc-1.0"))
+> +		priv->have_lpc_irq_bug = true;
+> +
+> +	for (i = 0; i < LIOINTC_NUM_PARENT; i++) {
+> +		parent_irq[i] = of_irq_get_byname(node, parent_names[i]);
+> +		if (parent_irq[i] >= 0)
+
+0 isn't a valid interrupt.
+
+> +			priv->possible_parent_mask |= BIT(i);
+
+And once you got rid of the above DT validation, this field should go
+away.
+
+> +	}
+> +
+> +
+> +	if (!priv->possible_parent_mask) {
+> +		pr_err("loongson-liointc: No parent\n");
+> +		err = -ENOMEM;
+> +		goto out_iounmap;
+> +	}
+> +
+> +	sz = of_property_read_variable_u32_array(node, "loongson,parent_int_map",
+> +						&of_parent_int_map[0], LIOINTC_NUM_PARENT,
+> +						LIOINTC_NUM_PARENT);
+> +	if (sz < 4) {
+> +		pr_err("loongson-liointc: No parent_int_map\n");
+> +		err = -ENODEV;
+
+That's probably a -EINVAL again. The device is there, the data is bogus.
+
+> +		goto out_iounmap;
+> +	}
+> +
+> +	/* Setup IRQ domain */
+> +	domain = irq_domain_add_linear(node, 32,
+> +					&irq_generic_chip_ops, priv);
+> +	if (!domain) {
+> +		pr_err("loongson-liointc: cannot add IRQ domain\n");
+> +		err = -ENOMEM;
+> +		goto out_iounmap;
+> +	}
+> +
+> +	err = irq_alloc_domain_generic_chips(domain, 32, 1,
+> +					node->full_name, handle_level_irq,
+> +					IRQ_NOPROBE, 0, 0);
+> +	if (err) {
+> +		pr_err("loongson-liointc: unable to register IRQ domain\n");
+> +		err = -ENOMEM;
+
+You already have err set to the right value.
+
+> +		goto out_free_domain;
+> +	}
+> +
+> +
+> +	/* Disable all IRQs */
+> +	writel(0xffffffff, priv->base + LIOINTC_REG_INTC_DISABLE);
+> +	/* Set to level triggered */
+> +	writel(0x0, priv->base + LIOINTC_REG_INTC_EDGE);
+> +
+> +	validate_parent_mask(priv, &of_parent_int_map[0]);
+> +
+> +	for (i = 0; i < LIOINTC_CHIP_IRQ; i++) {
+> +		map_cache_set_core(priv, i, core);
+> +		write_map_cache(priv, i);
+> +	}
+> +
+> +	gc = irq_get_domain_generic_chip(domain, 0);
+> +	gc->private = priv;
+> +	gc->reg_base = priv->base;
+
+If gc->base is already the VA for the irqchip, why do you need to
+cache it in the private structure as well?
+
+> +	gc->domain = domain;
+> +	gc->resume = liointc_resume;
+> +
+> +	ct = gc->chip_types;
+> +	ct->regs.enable = LIOINTC_REG_INTC_ENABLE;
+> +	ct->regs.disable = LIOINTC_REG_INTC_DISABLE;
+> +	ct->chip.irq_unmask = irq_gc_unmask_enable_reg;
+> +	ct->chip.irq_mask = irq_gc_mask_disable_reg;
+> +	ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
+> +	ct->chip.irq_set_type = liointc_set_type;
+> +	ct->chip.irq_set_affinity = liointc_set_affinity;
+> +
+> +	gc->mask_cache = 0xffffffff;
+> +	priv->gc = gc;
+> +
+> +	for (i = 0; i < LIOINTC_NUM_PARENT; i++) {
+> +		if (parent_irq[i] < 0)
+
+0 is an invalid interrupt number.
+
+> +			continue;
+> +
+> +		priv->handler[i].priv = priv;
+> +		irq_set_chained_handler_and_data(parent_irq[i],
+> +				liointc_chained_handle_irq, &priv->handler[i]);
+> +	}
+> +
+> +	return 0;
+> +
+> +out_free_domain:
+> +	irq_domain_remove(domain);
+> +out_iounmap:
+> +	iounmap(priv->base);
+> +out_free_priv:
+> +	kfree(priv);
+> +
+> +	return err;
+> +}
+> +
+> +IRQCHIP_DECLARE(loongson_liointc_1_0, "loongson,liointc-1.0", liointc_of_init);
+> +IRQCHIP_DECLARE(loongson_liointc_1_0a, "loongson,liointc-1.0a", liointc_of_init);
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
