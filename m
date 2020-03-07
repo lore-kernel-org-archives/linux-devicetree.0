@@ -6,144 +6,98 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99D6C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 11:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A48C10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 12:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9462073D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 11:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E960206D5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 12:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgCGLlA (ORCPT
+        id S1726281AbgCGMeS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 06:41:00 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:35686 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCGLk7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 06:40:59 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id CFB902002D;
-        Sat,  7 Mar 2020 12:40:55 +0100 (CET)
-Date:   Sat, 7 Mar 2020 12:40:54 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, seanpaul@chromium.org,
-        kalyan_t@codeaurora.org, hoegsberg@chromium.org
-Subject: Re: [v1] dt-bindings: msm: disp: add yaml schemas for DPU and DSI
- bindings
-Message-ID: <20200307114054.GA564@ravnborg.org>
-References: <1583494560-25336-1-git-send-email-mkrishn@codeaurora.org>
+        Sat, 7 Mar 2020 07:34:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38562 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbgCGMeR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 7 Mar 2020 07:34:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7E2AFADD7;
+        Sat,  7 Mar 2020 12:34:13 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200229104358.GB19610@mani>
+ <20200307002453.350430-1-matheus@castello.eng.br>
+ <20200307002453.350430-2-matheus@castello.eng.br>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <62e115af-9d8c-572a-a400-91bdef9d9292@suse.de>
+Date:   Sat, 7 Mar 2020 13:34:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583494560-25336-1-git-send-email-mkrishn@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8
-        a=gEfo2CItAAAA:8 a=nY4iuGU7CXqHoBgY49wA:9 a=UqWAcN0MMYTXwVMZ:21
-        a=A81lDmqo7XWCXIhH:21 a=CjuIK1q_8ugA:10 a=pioyyrs4ZptJ924tMmac:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+In-Reply-To: <20200307002453.350430-2-matheus@castello.eng.br>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krishna.
+Hi Matheus,
 
-Thanks for these bindings files.
+Am 07.03.20 um 01:24 schrieb Matheus Castello:
+> The Caninos Loucos Program develops Single Board Computers with an open
+> structure. The Program wants to form a community of developers to use
+> the IoT technology and disseminate the learning of embedded systems in
 
-On Fri, Mar 06, 2020 at 05:06:00PM +0530, Krishna Manikandan wrote:
-> MSM Mobile Display Subsytem(MDSS) encapsulates sub-blocks
-> like DPU display controller, DSI etc. Add YAML schema
-> for the device tree bindings for the same.
+I would suggest "IoT technologies" without "the".
+
+> Brazil.
 > 
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+> The boards are designed and manufactured by LSI-TEC NPO.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 > ---
->  .../bindings/display/msm/dpu-sc7180.yaml           | 269 +++++++++++++++
->  .../bindings/display/msm/dpu-sdm845.yaml           | 265 +++++++++++++++
->  .../bindings/display/msm/dsi-sc7180.yaml           | 369 +++++++++++++++++++++
->  .../bindings/display/msm/dsi-sdm845.yaml           | 369 +++++++++++++++++++++
->  4 files changed, 1272 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-sdm845.yaml
+>   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml b/Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
-> new file mode 100644
-> index 0000000..3d1d9b8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
-> @@ -0,0 +1,269 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/msm/dpu-sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Description of Qualcomm Display Dpu dt properties.
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 9e67944bec9c..3e974dd563cf 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -167,6 +167,8 @@ patternProperties:
+>       description: Calxeda
+>     "^capella,.*":
+>       description: Capella Microsystems, Inc
+> +  "^caninos,.*":
+> +    description: Caninos Loucos LSI-TEC NPO
 
-Try to be cossistent in capitilization of Dpu versus DPU
+Alphabetical order: n goes before p.
 
-> +
-> +maintainers:
-> + - Krishna Manikandan <mkrishn@codeaurora.org>
-> +
-> +description: |
-> + Device tree bindings for MSM Mobile Display Subsytem(MDSS) that encapsulates
-> + sub-blocks like DPU display controller, DSI and DP interfaces etc. Device tree
-> + bindings of MDSS and DPU are mentioned for SC7180 target.
+I'm confused by the description... Either this Caninos Loucos is an 
+independent vendor and gets its own prefix, or it's LSI-Tec and uses 
+something like lsi-tec,caninosloucos-foo. Please clarify commit message 
+and/or description line, at least by inserting something like "program 
+by", "brand by" or the like rather than just concatenating names. Maybe 
+compare UDOO by SECO. Is caninos,foo unique enough or should it be 
+caninosloucos,foo? (crazy canines?)
 
-Bindings should use an indent of two spaces.
-This is what is used in the example schema and the de-facto standard.
-One space indent makes it very hard to follow the indent.
+Note that I usually attempt to CC the organizations I'm assigning a 
+vendor prefix for. Do you represent them or coordinated with them?
 
-For examples the indent varies. From 2 spaces to 8 spaces.
-I often use 4 spaces as 2 spaces is not enough when it spans several
-lines. But there is nothing fixed there.
+Regards,
+Andreas
 
-> +
-> +properties:
-> + "mdss":
-> +  type: object
-> +  description: |
-> +   Node containing MDSS that encapsulated sub-blocks like DPU, DSI and DP
-> +   interfaces.
-> +
-> +  properties:
-> +   compatible:
-> +    items:
-> +     - const: qcom,sc7180-mdss
-> +   reg:
-> +    description: |
-> +     Physical base address and length of controller's registers.
-Add empty line between properties (empty line before reg:).
+>     "^cascoda,.*":
+>       description: Cascoda, Ltd.
+>     "^catalyst,.*":
 
-> +
-> +   reg-names:
-> +    description: |
-> +     Names for different register regions defined above. The required region
-> +     is mentioned below.
-> +    items:
-> +     - const: mdss
-> +
-> +   power-domains:
-> +    description: |
-> +     A power domain consumer specifier according to
-> +     Documentation/devicetree/bindings/power/power_domain.txt.
-Should this be power-domain.yaml?
-
-
-> +
-> +   clocks:
-> +    description: |
-> +     List of clock specifiers for clocks needed by the device.
-Do not use "|" unless required. Fine to have text on same line as
-description: .
-
-
-	Sam
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
