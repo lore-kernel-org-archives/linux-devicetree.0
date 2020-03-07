@@ -2,700 +2,118 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3FBC10F00
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F32C10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E92206D5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8881206D5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FlXZIfiE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgCGNru convert rfc822-to-8bit (ORCPT
+        id S1726269AbgCGNsu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:47:50 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:40274 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgCGNru (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 7 Mar 2020 08:47:50 -0500
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jAZnl-0006a4-U4; Sat, 07 Mar 2020 14:47:37 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     christoph.muellner@theobroma-systems.com,
-        devicetree@vger.kernel.org, kever.yang@rock-chips.com,
+        Sat, 7 Mar 2020 08:48:50 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52563 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgCGNst (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 08:48:49 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so5395532wmc.2;
+        Sat, 07 Mar 2020 05:48:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=VLve4QZOuRtttmHJksSXthYkxNJhElAvXQoUiytCJzc=;
+        b=FlXZIfiEIWMFhEVLOL5GVMFzGCcwtKgnQvfyeO8sq9XM/RyhZ85+CcrsY6eYOLr9yn
+         Y+nemzpqsAvWmQ1tAbhbvfBeEU89TfTXfjly5SlKt2rdqf15qv0/z/risXb78S3NB69s
+         A6uWtLhx5A/zaxl6k+XIdpj2ET77JgsUTZ9gkxaYDrVlIyliS+Ct6ZamdAXUf+xRrC4F
+         XQ8EQaTEVwUwjEwdcsWjHGyqJ26+YFHF8HHIKTiLlDWzQRW7OgX1FaHS80FgawfiwJ7t
+         IfkOiAETeWYfwbIMz/aHZDi6kTGIAmF3jzJ9ezdpmwe/BvLHymWiRxKxZ5EEXZDIrA7P
+         pXQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VLve4QZOuRtttmHJksSXthYkxNJhElAvXQoUiytCJzc=;
+        b=O/xhlBCZME9VvUlY+DDqj7o3/fK745qvZ9np4NyPyd/5sesfq5lAu/EgFmmPGmlAdr
+         vgLFXxE/Pq/05rPJLJzOCIpNj+oLSbg+33VmJUwI5+FKNPWLTHSgWFq7MQ/M3rkUpTBV
+         uGfndX9Rd2MT+y7egMS96Dp/D+f1TEpV8quHIAB2KVb7Owq0hD6Zsd2dzQlwd13Cm6lK
+         BitklS7Ehykihi4T0EV9vdwOYIq4U/3xaWw7BjHFfhydw0/ov3mAniklUlf4VlMygCej
+         9HSoxUoktBcTB+/kcBop4FHiHciSHETJf7oTaW15UK6MSZ9ZmUnLZFko8OjNz9cQz27f
+         wqWg==
+X-Gm-Message-State: ANhLgQ05RmV9AltQvEB05BEZZGvfQhj/hlRhRjRa8slWWFP3G1WCcip4
+        da6D7V1i0ldCqGkW6h3UYnU=
+X-Google-Smtp-Source: ADFU+vuvl0cB7rvIyFZU3kahKrREdwlXP94ms7tqOWI9oFHrGV8FXQBxgtWGuP/NMjg+U5a2Yv0tGA==
+X-Received: by 2002:a1c:5fc4:: with SMTP id t187mr8224185wmb.81.1583588928440;
+        Sat, 07 Mar 2020 05:48:48 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id 9sm11767265wmx.32.2020.03.07.05.48.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Mar 2020 05:48:48 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, robin.murphy@arm.com
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add Odroid Advance Go
-Date:   Sat, 07 Mar 2020 14:47:37 +0100
-Message-ID: <1813727.zy6ATufqe5@diego>
-In-Reply-To: <59bdf2c1-79cf-2c45-263e-80a9358c7fdd@gmail.com>
-References: <20200306210922.172346-3-heiko@sntech.de> <59bdf2c1-79cf-2c45-263e-80a9358c7fdd@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/5] ARM: dts: rockchip: fix vqmmc-supply property name for rk3188-bqedison2qc
+Date:   Sat,  7 Mar 2020 14:48:37 +0100
+Message-Id: <20200307134841.13803-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Johan,
+A test with the command below does not detect all errors
+in combination with 'additionalProperties: false' and
+allOf:
+  - $ref: "synopsys-dw-mshc-common.yaml#"
+allOf:
+  - $ref: "mmc-controller.yaml#"
 
-Am Samstag, 7. März 2020, 09:36:19 CET schrieb Johan Jonker:
-> The 'heartbeat' led seems to need some changes. The rest is inherited
-> from px30.dtsi I think. How do you deal with all the compatible
-> properties names that are normally SoC specific?
+'additionalProperties' applies to all properties that are not
+accounted-for by 'properties' or 'patternProperties' in
+the immediate schema.
 
-The rk3326 really is just a px30 with the little vop deactivated.
-So I really don't want to make "much fuss" over that ;-)
+First when we combine rockchip-dw-mshc.yaml,
+synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
+this error:
 
-Previous iterations where the arm32 px3/px3se/etc which essentially
-also just copied an existing soc and added some industrial voodoo
-to the chip itself (temperature range or whatever).
+arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: mmc@10218000:
+'vmmcq-supply' does not match any of the regexes:
+'^.*@[0-9]+$',
+'^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
+uhs-(sdr(12|25|50|104)|ddr50))$',
+'pinctrl-[0-9]+'
 
+'vmmcq-supply' is not a valid property name for mmc nodes.
+Fix this error by renaming it to 'vqmmc-supply'.
 
-And thanks for making sure the details are right below. I'll do a
-v2 with these things corrected.
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
 
-Thanks
-Heiko
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3188-bqedison2qc.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-> Also include all mail lists found with:
-> ./scripts/get_maintainer.pl --nogit-fallback --nogit
-> 
-> linux-kernel@vger.kernel.org
-> 
->   DTC     arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dtb
->   DTC     arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml
->   CHECK   arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml
-> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: tsadc:
-> tsadc-otp-gpio: {'rockchip,pins': [[0, 6, 0, 123]], 'phandle': [[90]]}
-> is not of type 'array'
-> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb@ff340000:
-> 'clock-names', 'power-domains' do not match any of the regexes:
-> 'pinctrl-[0-9]+'
-> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb@ff300000:
-> 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
-> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb@ff350000:
-> 'clock-names', 'power-domains' do not match any of the regexes:
-> 'pinctrl-[0-9]+'
-> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: gpio-leds:
-> 'heartbeat' does not match any of the regexes: '(^led-[0-9a-f]$|led)',
-> 'pinctrl-[0-9]+'
-> arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dt.yaml: usb2-phy@100:
-> '#phy-cells' is a required property
-> 
-> > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > 
-> > The Odroid Advance Go is a handheld based on Rockchip's rk3326 soc
-> > with a DSI display and some handheld controls including an analog
-> > joystick connected to the saradc.
-> > 
-> > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > ---
-> >  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
-> >  .../boot/dts/rockchip/rk3326-odroid-go2.dts   | 544 ++++++++++++++++++
-> >  2 files changed, 545 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
-> > 
-> > diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> > index af1e1c3707d0..86c38467d487 100644
-> > --- a/arch/arm64/boot/dts/rockchip/Makefile
-> > +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> > @@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-copperhead-ltk101b4029w.dtb
-> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
-> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
-> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
-> > +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3326-odroid-go2.dtb
-> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
-> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
-> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
-> > new file mode 100644
-> > index 000000000000..a16f4a0d1d4d
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
-> > @@ -0,0 +1,544 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Copyright (c) 2019 Hardkernel Co., Ltd
-> > + * Copyright (c) 2020 Theobroma Systems Design und Consulting GmbH
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/input/input.h>
-> > +#include <dt-bindings/pinctrl/rockchip.h>
-> > +#include "rk3326.dtsi"
-> > +
-> > +/ {
-> > +	model = "ODROID-GO Advance";
-> > +	compatible = "hardkernel,rk3326-odroid-go2", "rockchip,rk3326";
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial2:115200n8";
-> > +	};
-> > +
-> > +	gpio-keys {
-> > +		compatible = "gpio-keys";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&btn_pins>;
-> > +
-> > +		/*
-> > +		 *      *** ODROIDGO2-Advance Switch layoout ***
-> > +		 * |------------------------------------------------|
-> > +		 * | sw15                                      sw16 |
-> > +		 * |------------------------------------------------|
-> > +		 * |     sw1      |-------------------|      sw8    |
-> > +		 * |  sw3   sw4   |                   |   sw7   sw5 |
-> > +		 * |     sw2      |    LCD Display    |      sw6    |
-> > +		 * |              |                   |             |
-> > +		 * |              |-------------------|             |
-> > +		 * |         sw9 sw10   sw11 sw12   sw13 sw14       |
-> > +		 * |------------------------------------------------|
-> > +		 */
-> > +
-> > +		sw1 {
-> > +			gpios = <&gpio1 RK_PB4 GPIO_ACTIVE_LOW>;
-> > +			label = "DPAD-UP";
-> > +			linux,code = <BTN_DPAD_UP>;
-> > +		};
-> > +		sw2 {
-> > +			gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_LOW>;
-> > +			label = "DPAD-DOWN";
-> > +			linux,code = <BTN_DPAD_DOWN>;
-> > +		};
-> > +		sw3 {
-> > +			gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_LOW>;
-> > +			label = "DPAD-LEFT";
-> > +			linux,code = <BTN_DPAD_LEFT>;
-> > +		};
-> > +		sw4 {
-> > +			gpios = <&gpio1 RK_PB7 GPIO_ACTIVE_LOW>;
-> > +			label = "DPAD-RIGHT";
-> > +			linux,code = <BTN_DPAD_RIGHT>;
-> > +		};
-> > +		sw5 {
-> > +			gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_LOW>;
-> > +			label = "BTN-A";
-> > +			linux,code = <BTN_EAST>;
-> > +		};
-> > +		sw6 {
-> > +			gpios = <&gpio1 RK_PA5 GPIO_ACTIVE_LOW>;
-> > +			label = "BTN-B";
-> > +			linux,code = <BTN_SOUTH>;
-> > +		};
-> > +		sw7 {
-> > +			gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;
-> > +			label = "BTN-Y";
-> > +			linux,code = <BTN_WEST>;
-> > +		};
-> > +		sw8 {
-> > +			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_LOW>;
-> > +			label = "BTN-X";
-> > +			linux,code = <BTN_NORTH>;
-> > +		};
-> > +		sw9 {
-> > +			gpios = <&gpio2 RK_PA0 GPIO_ACTIVE_LOW>;
-> > +			label = "F1";
-> > +			linux,code = <BTN_TRIGGER_HAPPY1>;
-> > +		};
-> > +		sw10 {
-> > +			gpios = <&gpio2 RK_PA1 GPIO_ACTIVE_LOW>;
-> > +			label = "F2";
-> > +			linux,code = <BTN_TRIGGER_HAPPY2>;
-> > +		};
-> > +		sw11 {
-> > +			gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
-> > +			label = "F3";
-> > +			linux,code = <BTN_TRIGGER_HAPPY3>;
-> > +		};
-> > +		sw12 {
-> > +			gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_LOW>;
-> > +			label = "F4";
-> > +			linux,code = <BTN_TRIGGER_HAPPY4>;
-> > +		};
-> > +		sw13 {
-> > +			gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_LOW>;
-> > +			label = "F5";
-> > +			linux,code = <BTN_TRIGGER_HAPPY5>;
-> > +		};
-> > +		sw14 {
-> > +			gpios = <&gpio2 RK_PA5 GPIO_ACTIVE_LOW>;
-> > +			label = "F6";
-> > +			linux,code = <BTN_TRIGGER_HAPPY6>;
-> > +		};
-> > +		sw15 {
-> > +			gpios = <&gpio2 RK_PA6 GPIO_ACTIVE_LOW>;
-> > +			label = "TOP-LEFT";
-> > +			linux,code = <BTN_TL>;
-> > +		};
-> > +		sw16 {
-> > +			gpios = <&gpio2 RK_PA7 GPIO_ACTIVE_LOW>;
-> > +			label = "TOP-RIGHT";
-> > +			linux,code = <BTN_TR>;
-> > +		};
-> > +	};
-> > +
-> > +	leds: gpio-leds {
-> > +		compatible = "gpio-leds";
-> > +		pinctrl-names = "led_pins";
-> > +		pinctrl-0 = <&led_pins>;
-> > +
-> > +		/* Blue LED : GPIO0_C1 */
-> > +		heartbeat {
-> > +			label = "blue:heartbeat";
-> > +			gpios = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>;
-> > +			linux,default-trigger = "heartbeat";
-> > +		};
-> > +	};
-> > +
-> 
-> > +	backlight: backlight {
-> > +		compatible = "pwm-backlight";
-> > +		power-supply = <&vcc_bl>;
-> > +		pwms = <&pwm1 0 25000 0>;
-> > +	};
-> 
-> sort nodenames
-> 
-> > +
-> > +	vccsys: vccsys {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "vcc3v8_sys";
-> > +		regulator-always-on;
-> > +		regulator-min-microvolt = <3800000>;
-> > +		regulator-max-microvolt = <3800000>;
-> > +	};
-> > +
-> > +	vcc_host: vcc_host {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "vcc_host";
-> > +		regulator-min-microvolt = <5000000>;
-> > +		regulator-max-microvolt = <5000000>;
-> > +
-> > +		gpio = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +		regulator-always-on;
-> > +		vin-supply = <&vccsys>;
-> > +	};
-> > +};
-> > +
-> > +&cpu0 {
-> > +	cpu-supply = <&vdd_arm>;
-> > +};
-> > +
-> > +&cpu1 {
-> > +	cpu-supply = <&vdd_arm>;
-> > +};
-> > +
-> > +&cpu2 {
-> > +	cpu-supply = <&vdd_arm>;
-> > +};
-> > +
-> > +&cpu3 {
-> > +	cpu-supply = <&vdd_arm>;
-> > +};
-> > +
-> > +&cru {
-> > +	assigned-clocks = <&cru PLL_NPLL>,
-> > +		<&cru ACLK_BUS_PRE>, <&cru ACLK_PERI_PRE>,
-> > +		<&cru HCLK_BUS_PRE>, <&cru HCLK_PERI_PRE>,
-> > +		<&cru PCLK_BUS_PRE>, <&cru SCLK_GPU>,
-> > +		<&cru PLL_CPLL>;
-> > +
-> > +	assigned-clock-rates = <1188000000>,
-> > +		<200000000>, <200000000>,
-> > +		<150000000>, <150000000>,
-> > +		<100000000>, <200000000>,
-> > +		<17000000>;
-> > +};
-> > +
-> > +&display_subsystem {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&dsi {
-> > +	status = "okay";
-> > +
-> > +	ports {
-> > +		mipi_out: port@1 {
-> > +			reg = <1>;
-> > +
-> > +			mipi_out_panel: endpoint {
-> > +				remote-endpoint = <&mipi_in_panel>;
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > +	panel@0 {
-> > +		compatible = "elida,kd35t133";
-> > +		reg = <0>;
-> > +		backlight = <&backlight>;
-> > +		iovcc-supply = <&vcc_lcd>;
-> > +		reset-gpios = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
-> > +		vdd-supply = <&vcc_lcd>;
-> > +
-> > +		port {
-> > +			mipi_in_panel: endpoint {
-> > +				remote-endpoint = <&mipi_out_panel>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&dsi_dphy {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&gpu {
-> > +	mali-supply = <&vdd_logic>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c0 {
-> 
-> > +	status = "okay";
-> 
-> status below
-> 
-> > +	clock-frequency = <400000>;
-> 
-> > +	i2c-scl-rising-time-ns = <280>;
-> > +	i2c-scl-falling-time-ns = <16>;
-> 
-> sort
-> 
-> > +
-> > +	rk817: pmic@20 {
-> > +		compatible = "rockchip,rk817";
-> > +		reg = <0x20>;
-> > +		interrupt-parent = <&gpio0>;
-> > +		interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pmic_int>;
-> > +		rockchip,system-power-controller;
-> > +		wakeup-source;
-> > +		#clock-cells = <1>;
-> > +		clock-output-names = "rk808-clkout1", "xin32k";
-> > +
-> > +		vcc1-supply = <&vccsys>;
-> > +		vcc2-supply = <&vccsys>;
-> > +		vcc3-supply = <&vccsys>;
-> > +		vcc4-supply = <&vccsys>;
-> > +		vcc5-supply = <&vccsys>;
-> > +		vcc6-supply = <&vccsys>;
-> > +		vcc7-supply = <&vccsys>;
-> > +
-> > +		regulators {
-> > +			vdd_logic: DCDC_REG1 {
-> > +				regulator-name = "vdd_logic";
-> > +				regulator-min-microvolt = <950000>;
-> > +				regulator-max-microvolt = <1150000>;
-> > +				regulator-ramp-delay = <6001>;
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <950000>;
-> > +				};
-> > +			};
-> > +
-> > +			vdd_arm: DCDC_REG2 {
-> > +				regulator-name = "vdd_arm";
-> > +				regulator-min-microvolt = <950000>;
-> > +				regulator-max-microvolt = <1350000>;
-> > +				regulator-ramp-delay = <6001>;
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +					regulator-suspend-microvolt = <950000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_ddr: DCDC_REG3 {
-> > +				regulator-name = "vcc_ddr";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_3v3: DCDC_REG4 {
-> > +				regulator-name = "vcc_3v3";
-> > +				regulator-min-microvolt = <3300000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +					regulator-suspend-microvolt = <3300000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_1v8: LDO_REG2 {
-> > +				regulator-name = "vcc_1v8";
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <1800000>;
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <1800000>;
-> > +				};
-> > +			};
-> > +
-> > +			vdd_1v0: LDO_REG3 {
-> > +				regulator-name = "vdd_1v0";
-> > +				regulator-min-microvolt = <1000000>;
-> > +				regulator-max-microvolt = <1000000>;
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <1000000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc3v3_pmu: LDO_REG4 {
-> > +				regulator-name = "vcc3v3_pmu";
-> > +				regulator-min-microvolt = <3300000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <3300000>;
-> > +				};
-> > +			};
-> > +
-> > +			vccio_sd: LDO_REG5 {
-> > +				regulator-name = "vccio_sd";
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <3300000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_sd: LDO_REG6 {
-> > +				regulator-name = "vcc_sd";
-> > +				regulator-min-microvolt = <3300000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-boot-on;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <3300000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_bl: LDO_REG7 {
-> > +				regulator-name = "vcc_bl";
-> > +				regulator-min-microvolt = <3300000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +					regulator-suspend-microvolt = <3300000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_lcd: LDO_REG8 {
-> > +				regulator-name = "vcc_lcd";
-> > +				regulator-min-microvolt = <2800000>;
-> > +				regulator-max-microvolt = <2800000>;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +					regulator-suspend-microvolt = <2800000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_cam: LDO_REG9 {
-> > +				regulator-name = "vcc_cam";
-> > +				regulator-min-microvolt = <3000000>;
-> > +				regulator-max-microvolt = <3000000>;
-> > +
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +					regulator-suspend-microvolt = <3000000>;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +/* EXT Header(P2) : 7(SCL:GPIO0.C2), 8(SDA:GPIO0.C3) */
-> > +&i2c1 {
-> 
-> > +	status = "okay";
-> 
-> status below
-> 
-> > +	clock-frequency = <400000>;
-> > +};
-> > +
-> > +/* I2S 1 Channel Used */
-> > +&i2s1_2ch {
-> 
-> > +	status = "okay";
-> 
-> status below
-> 
-> > +	#sound-dai-cells = <0>;
-> > +};
-> > +
-> > +&io_domains {
-> > +	vccio1-supply = <&vcc_3v3>;
-> > +	vccio2-supply = <&vccio_sd>;
-> > +	vccio3-supply = <&vcc_3v3>;
-> > +	vccio4-supply = <&vcc_3v3>;
-> > +	vccio5-supply = <&vcc_3v3>;
-> > +	vccio6-supply = <&vcc_3v3>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&pmu_io_domains {
-> > +	pmuio1-supply = <&vcc3v3_pmu>;
-> > +	pmuio2-supply = <&vcc3v3_pmu>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&pwm1 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&saradc {
-> > +	vref-supply = <&vcc_1v8>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&sdmmc {
-> > +	bus-width = <4>;
-> > +	cap-sd-highspeed;
-> 
-> > +	card-detect-delay = <800>;
-> 
-> Other dts use 200. Why we need 800?
-> 
-> > +	cd-gpios = <&gpio0 RK_PA3 GPIO_ACTIVE_LOW>;
-> > +	sd-uhs-sdr12;
-> > +	sd-uhs-sdr25;
-> > +	sd-uhs-sdr50;
-> > +	sd-uhs-sdr104;
-> > +	vmmc-supply = <&vcc_sd>;
-> > +	vqmmc-supply = <&vccio_sd>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&tsadc {
-> > +	pinctrl-names = "gpio", "otpout";
-> > +	pinctrl-0 = <&tsadc_otp_gpio>;
-> > +	pinctrl-1 = <&tsadc_otp_out>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&u2phy {
-> > +	status = "okay";
-> > +
-> > +	u2phy_host: host-port {
-> > +		status = "okay";
-> > +	};
-> > +
-> > +	u2phy_otg: otg-port {
-> > +		status = "disabled";
-> > +	};
-> > +};
-> > +
-> > +&usb20_otg {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&uart1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&uart1_xfer &uart1_cts>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&uart2 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&uart2m1_xfer>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&vopb {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&vopb_mmu {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&pinctrl {
-> > +	pmic {
-> > +		pmic_int: pmic-int {
-> > +			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
-> > +		};
-> > +
-> > +		dc_det: dc-det {
-> > +			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
-> > +		};
-> > +	};
-> > +
-> > +	leds {
-> > +		led_pins: led-pins {
-> > +			rockchip,pins = <0 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-> > +		};
-> > +	};
-> > +
-> > +	btns {
-> > +		btn_pins: btn-pins {
-> > +			rockchip,pins = <1 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<1 RK_PB5 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<1 RK_PB7 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<1 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<1 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<1 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +
-> > +					<2 RK_PA0 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<2 RK_PA1 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<2 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<2 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<2 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>,
-> > +					<2 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
-> > +		};
-> > +	};
-> > +};
-> > --
-> > 2.24.1
-> 
-> 
-> 
-
-
-
+diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+index ad1afd403..8afb2fd5d 100644
+--- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
++++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+@@ -465,7 +465,7 @@
+ 	non-removable;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
+-	vmmcq-supply = <&vccio_wl>;
++	vqmmc-supply = <&vccio_wl>;
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	status = "okay";
+-- 
+2.11.0
 
