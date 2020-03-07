@@ -2,82 +2,404 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF7EC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DA3C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 02:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1587E206E6
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FA7206CC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 02:37:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VWuHF0Ig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCGC3k (ORCPT
+        id S1727026AbgCGCht (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 21:29:40 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:37174 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbgCGC3R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 21:29:17 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0947A1A0E38;
-        Sat,  7 Mar 2020 03:29:15 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A3E6B1A1975;
-        Sat,  7 Mar 2020 03:28:10 +0100 (CET)
-Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 434F840294;
-        Sat,  7 Mar 2020 10:27:59 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        bhelgaas@google.com, robh+dt@kernel.org, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        roy.zang@nxp.com, amurray@thegoodpenguin.co.uk,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v4 00/11] Add the multiple PF support for DWC and Layerscape
-Date:   Sat,  7 Mar 2020 10:14:19 +0800
-Message-Id: <20200307021430.36826-1-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 6 Mar 2020 21:37:49 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39530 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgCGChr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Mar 2020 21:37:47 -0500
+Received: by mail-pl1-f193.google.com with SMTP id j20so1619212pll.6
+        for <devicetree@vger.kernel.org>; Fri, 06 Mar 2020 18:37:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5GIvve0FlG5w469nF3Y4ZvcUMBqV8AQMJnsHfo+5RpQ=;
+        b=VWuHF0IgCgP9XrC6GwTCfWsyZSt0Zc7z5qeNlZd0wzcbSldWjHcPAr5tD/WR2YSVzw
+         Guv8AfnxNiSi91wFKkMdecGcz3HjAQtSfEbNmdFbJuvKb4PSo8RevMybVt6N/CaeULFQ
+         FqItiUp/4V9MV6JMOolq9g8wVrF/9IPql9wDzZq0AtkWqAjo9QjggXEg4qQ9LEq80gRo
+         L9hA8wJr2RNOXXHDZ/j/mPkm1odncdCXRAj1X8OWmK1UVDzefTMnUuTR/uWn0TF9jbUA
+         jnQqq/jIDqXIJ6QB5nH71BMwXzqwdlfQ7J0Ac2pQncZ5GyYl/t+u/Z5fkL8CZqSgVKKt
+         BW/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5GIvve0FlG5w469nF3Y4ZvcUMBqV8AQMJnsHfo+5RpQ=;
+        b=tJ7IQJabMwmiacOaMqSDw4LvsuAW4h2aXF9KaovTqSD+V8VC7ceHsrdk3seDGAV2Tm
+         L57MBZTBr37Tb7PSBJqSP+/Gwy12hNCRJCL61Uy+576EoGqI/4Cv0U1lyKsZ+ThCBLCA
+         eExdDLLEkkBdOwOefjRmnqBt7YQR3AWd3zWICr2GR93Ot/S2ihz3dQAfVqYvDIXl9VUk
+         i6BMS6v15hMNwL+vpu5qHnr9xQPfznqnPD7vGvffiCbzFGn+3cEcFfYU49NK5f9eH4W8
+         buxnGnx0Yvua67849vVTZ83DFr0v1hZz1o/zwjNskaKfluxOKj0It5ybOYJFTioSMtiy
+         P6Zg==
+X-Gm-Message-State: ANhLgQ0EU1OnTZ5WRIZCbOqQTmJCB0NRIdAcB1YRu6XeOemvkYXmWqxl
+        3NUMHWWMwa+jaqIcjSSDhANJIsFTbiQ=
+X-Google-Smtp-Source: ADFU+vvLFEFhuvosMbYhjNKBga4ZTxXPoC+oty1ZBNO4A07s0fOMUCbsXcXsf9e0edb1EYMdkt9uhg==
+X-Received: by 2002:a17:90a:9b8a:: with SMTP id g10mr6842575pjp.163.1583548665067;
+        Fri, 06 Mar 2020 18:37:45 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x12sm27318128pfi.122.2020.03.06.18.37.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 18:37:44 -0800 (PST)
+Date:   Fri, 6 Mar 2020 18:37:42 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] arm64: dts: qcom: sdm845: Add ADSP audio support
+Message-ID: <20200307023742.GC1094083@builder>
+References: <20200305145344.14670-1-srinivas.kandagatla@linaro.org>
+ <20200305145344.14670-2-srinivas.kandagatla@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305145344.14670-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the PCIe EP multiple PF support for DWC and Layerscape, add
-the doorbell MSIX function for DWC, use list to manage the PF of
-one PCIe controller, and refactor the Layerscape EP driver due to
-some platforms difference.
+On Thu 05 Mar 06:53 PST 2020, Srinivas Kandagatla wrote:
 
-Xiaowei Bao (11):
-  PCI: designware-ep: Add multiple PFs support for DWC
-  PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
-  PCI: designware-ep: Move the function of getting MSI capability
-    forward
-  PCI: designware-ep: Modify MSI and MSIX CAP way of finding
-  dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a
-    and ls2088a
-  PCI: layerscape: Fix some format issue of the code
-  PCI: layerscape: Modify the way of getting capability with different
-    PEX
-  PCI: layerscape: Modify the MSIX to the doorbell mode
-  PCI: layerscape: Add EP mode support for ls1088a and ls2088a
-  arm64: dts: layerscape: Add PCIe EP node for ls1088a
-  misc: pci_endpoint_test: Add LS1088a in pci_device_id table
+> This patch adds support to basic dsp audio, codec, slimbus
+> and soundwire controller DT nodes.
+> 
 
- .../devicetree/bindings/pci/layerscape-pci.txt     |   2 +
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |  31 +++
- drivers/misc/pci_endpoint_test.c                   |   2 +
- drivers/pci/controller/dwc/pci-layerscape-ep.c     | 100 ++++++--
- drivers/pci/controller/dwc/pcie-designware-ep.c    | 255 +++++++++++++++++----
- drivers/pci/controller/dwc/pcie-designware.c       |  59 +++--
- drivers/pci/controller/dwc/pcie-designware.h       |  48 +++-
- 7 files changed, 404 insertions(+), 93 deletions(-)
+I wouldn't be against the idea of splitting this patch in a few...
 
--- 
-2.9.5
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 338 +++++++++++++++++++++++++++
+>  1 file changed, 338 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 061f49faab19..705d8a0c3a1e 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -20,6 +20,7 @@
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>  #include <dt-bindings/thermal/thermal.h>
+> +#include <dt-bindings/soc/qcom,apr.h>
 
+Please keep these sorted alphabetically.
+
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -491,6 +492,54 @@
+>  			label = "lpass";
+>  			qcom,remote-pid = <2>;
+>  			mboxes = <&apss_shared 8>;
+
+Please add an empty line here.
+
+> +			apr {
+> +				compatible = "qcom,apr-v2";
+> +				qcom,glink-channels = "apr_audio_svc";
+> +				qcom,apr-domain = <APR_DOMAIN_ADSP>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				qcom,intents = <512 20>;
+> +
+> +				q6core {
+
+q6core@3
+
+Due to the reg.
+
+> +					reg = <APR_SVC_ADSP_CORE>;
+> +					compatible = "qcom,q6core";
+
+Don't we want some qcom,protection-domain properties on these?
+
+> +				};
+> +
+> +				q6afe: q6afe {
+
+q6afe@4
+
+> +					compatible = "qcom,q6afe";
+> +					reg = <APR_SVC_AFE>;
+> +					q6afedai: dais {
+> +						compatible = "qcom,q6afe-dais";
+> +						#address-cells = <1>;
+> +						#size-cells = <0>;
+> +						#sound-dai-cells = <1>;
+> +
+> +						qi2s@22 {
+> +							reg = <22>;
+> +							qcom,sd-lines = <0 1 2 3>;
+> +						};
+> +					};
+> +				};
+> +
+> +				q6asm: q6asm {
+
+q6asm@7
+
+> +					compatible = "qcom,q6asm";
+> +					reg = <APR_SVC_ASM>;
+> +					q6asmdai: dais {
+> +						compatible = "qcom,q6asm-dais";
+> +						#sound-dai-cells = <1>;
+> +						iommus = <&apps_smmu 0x1821 0x0>;
+> +					};
+> +				};
+> +
+> +				q6adm: q6adm {
+
+q6adm@8
+
+Or perhaps then, as we have a unit address, these could use a generic
+name and be on the form:
+
+q6adm: apr-service@8 {
+
+> +					compatible = "qcom,q6adm";
+> +					reg = <APR_SVC_ADM>;
+> +					q6routing: routing {
+> +						compatible = "qcom,q6adm-routing";
+> +						#sound-dai-cells = <0>;
+> +					};
+> +				};
+> +			};
+
+Please take the opportunity of adding an empty line here as well.
+
+>  			fastrpc {
+>  				compatible = "qcom,fastrpc";
+>  				qcom,glink-channels = "fastrpcglink-apps-dsp";
+> @@ -513,6 +562,9 @@
+>  		};
+>  	};
+>  
+> +	sound: sound {
+> +	};
+> +
+>  	cdsp_pas: remoteproc-cdsp {
+>  		compatible = "qcom,sdm845-cdsp-pas";
+>  
+> @@ -1782,6 +1834,142 @@
+>  				};
+>  			};
+>  
+> +			quat_mi2s_sleep: quat_mi2s_sleep {
+
+Are these all board-agnostic or should they live in the board.dts files
+instead?
+
+For all of these, please replace _ with - in the node names.
+
+> +				mux {
+> +					pins = "gpio58", "gpio59";
+> +					function = "gpio";
+> +				};
+> +
+> +				config {
+> +					pins = "gpio58", "gpio59";
+> +					drive-strength = <2>;   /* 2 mA */
+> +					bias-pull-down;         /* PULL DOWN */
+
+Please omit these comments, given that the properties are quite
+descriptive already.
+
+> +					input-enable;
+> +				};
+
+And you don't need the subnode level these days, i.e. this can be
+written as:
+
+			quat_mi2s_sleep: quat-mi2s-sleep {
+				pins = "gpio58", "gpio59";
+				function = "gpio";
+				drive-strength = <2>;
+				bias-pull-down;
+				input-enable;
+			};
+
+> +			};
+> +
+[..]
+> @@ -2602,6 +2843,91 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		slim_msm: slim@171c0000 {
+> +			compatible = "qcom,slim-ngd-v2.1.0";
+> +			reg = <0 0x171c0000 0 0x2C000>;
+
+Please lowercase the digits of the size.
+
+> +			reg-names = "ctrl";
+
+reg-names is not in binding, nor used by driver.
+
+> +			interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
+
+s/0/GIC_SPI/
+
+> +
+> +			qcom,apps-ch-pipes = <0x780000>;
+> +			qcom,ea-pc = <0x270>;
+> +			status = "okay";
+> +			dmas =	<&slimbam 3>, <&slimbam 4>,
+> +				<&slimbam 5>, <&slimbam 6>;
+> +			dma-names = "rx", "tx", "tx2", "rx2";
+> +
+> +			iommus = <&apps_smmu 0x1806 0x0>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			ngd@1 {
+> +				reg = <1>;
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +
+> +				wcd9340_ifd: tas-ifd {
+
+@0 given the reg, perhaps codec@0?
+
+> +					compatible = "slim217,250";
+> +					reg  = <0 0>;
+
+Out of curiosity, why does ngd@1 have #size-cells = <1>, but then all
+codecs have size 0?
+
+> +				};
+> +
+> +				wcd9340: codec@1{
+> +					pinctrl-0 = <&wcd_intr_default>;
+> +					pinctrl-names = "default";
+> +					compatible = "slim217,250";
+> +					reg  = <1 0>;
+
+I do prefer when the nodes start with compatible and then reg...
+
+> +					reset-gpios = <&tlmm 64 0>;
+> +					slim-ifc-dev  = <&wcd9340_ifd>;
+> +
+> +					#sound-dai-cells = <1>;
+> +
+> +					interrupt-parent = <&tlmm>;
+> +					interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
+
+
+How about combining the interrupt-parent and interrupts as:
+					interrupts-extended = <&tlmm 54 IRQ_TYPE_LEVEL_HIGH>;
+
+> +					interrupt-controller;
+> +					#interrupt-cells = <1>;
+> +
+> +					#clock-cells = <0>;
+> +					clock-frequency = <9600000>;
+> +					clock-output-names = "mclk";
+> +					qcom,micbias1-millivolt = <1800>;
+> +					qcom,micbias2-millivolt = <1800>;
+> +					qcom,micbias3-millivolt = <1800>;
+> +					qcom,micbias4-millivolt = <1800>;
+> +
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +
+> +					wcdpinctrl: wcd-pinctrl@42 {
+
+s/wcd-pinctrl/gpio-controller/
+
+> +						compatible = "qcom,wcd9340-gpio";
+> +						gpio-controller;
+> +						#gpio-cells = <2>;
+> +						reg = <0x42 0x2>;
+> +					};
+> +
+> +					swm: swm@c85 {
+> +						compatible = "qcom,soundwire-v1.3.0";
+> +						reg = <0xc85 0x40>;
+> +						interrupt-parent = <&wcd9340>;
+> +						interrupts = <20 IRQ_TYPE_EDGE_RISING>;
+
+interrupts-extended?
+
+> +						interrupt-names = "soundwire";
+
+No interrupt-names in binding and driver resolves the interrupt by
+index, so you can omit this.
+
+> +
+> +						qcom,dout-ports	= <6>;
+> +						qcom,din-ports	= <2>;
+> +						qcom,ports-sinterval-low =/bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
+> +						qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
+> +						qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
+> +
+> +						#sound-dai-cells = <1>;
+> +						clocks = <&wcd9340>;
+> +						clock-names = "iface";
+> +                                                #address-cells = <2>;
+> +                                                #size-cells = <0>;
+
+Odd indentation on these two.
+
+> +
+> +
+
+Empty lines?
+
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+>  		usb_1_hsphy: phy@88e2000 {
+>  			compatible = "qcom,sdm845-qusb2-phy";
+>  			reg = <0 0x088e2000 0 0x400>;
+> @@ -3446,6 +3772,18 @@
+>  			};
+>  		};
+>  
+> +		slimbam: bamdma@17184000 {
+
+s/bamdma/dma/
+
+Regards,
+Bjorn
+
+> +			compatible = "qcom,bam-v1.7.0";
+> +			qcom,controlled-remotely;
+> +			reg = <0 0x17184000 0 0x2a000>;
+> +			num-channels  = <31>;
+> +			interrupts = <0 164 IRQ_TYPE_LEVEL_HIGH>;
+
+s/0/GIC_SPI/
+
+Regards,
+Bjorn
+
+> +			#dma-cells = <1>;
+> +			qcom,ee = <1>;
+> +			qcom,num-ees = <2>;
+> +			iommus = <&apps_smmu 0x1806 0x0>;
+> +		};
+> +
+>  		timer@17c90000 {
+>  			#address-cells = <2>;
+>  			#size-cells = <2>;
+> -- 
+> 2.21.0
+> 
