@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C6AC10F00
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33E1C10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D872075B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD922075B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zq0bI2jE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMI7D0qK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgCGNsw (ORCPT
+        id S1726346AbgCGNsz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:48:52 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40040 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgCGNsv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 08:48:51 -0500
-Received: by mail-wm1-f68.google.com with SMTP id e26so5241717wme.5;
-        Sat, 07 Mar 2020 05:48:50 -0800 (PST)
+        Sat, 7 Mar 2020 08:48:55 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37139 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgCGNsx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 08:48:53 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a141so5264782wme.2;
+        Sat, 07 Mar 2020 05:48:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2imEdS/PBWfabOn+dN51LVNZ4eyxGJ7p2pvJGQCDbMA=;
-        b=Zq0bI2jEf9UR4l3dw4/5Q20mWx9OFcm4BXeRZihBnHD77OfRm41Te+m7y0b3E3wYk/
-         OW9F+mRGvUT4/yHOWoOTXtzcWqaHYuCQL63AYI+wJhPTdn39ROdOP6oezU8c4g1wX0jP
-         32O33kibj9C6ND4j4Lw0ZJWiQ96pCUmfsSCDy6A8UjORaRnVto9vAHJzriQCpabDNW2n
-         +4UhR1aXzOoc8E4g2ymLuOBwO/mYavCGa0lwGxexZHcfePDNh3E6NGaEk/sJoCmfv09G
-         Om2iD1R39JblW6s5FVs+hbRTjFcv/eXhUjmdsF1PD8j4chZMPOMsaDRrXS7TozTHSGsy
-         m+kA==
+        bh=STsCYmVzqE0DyGQSLcvjOSy6vdxPWBxzS0jjS6ORcro=;
+        b=rMI7D0qKgKibOcLcQS/QK9oNfgZ2LNDtF/Z/YgZsX1xLCBu6Hnc/lKSrbOQBIEPLSg
+         v33E7/H4iz+xsgbL6klyAa2fO1kLmSk9WFqB3c2ywEYP4BrQ5FQBwLJR/w/7ZVewQ5Er
+         x9vt6l9dgXR4fq1ZR+GjY5VwDC/kWtcYmlxiLWv67te7rD91XlNwNHh4dIFuaM6ZgYLV
+         j2IlO3Bkc1QfTXJmt9crdZlOMc29O3PBfvM+e6ecbZkXb2fT5WBtxaDiA7whoQLBhfu3
+         jsEv8QPE9yD2K3nbYB+voC9kE5WhA+/zYjgFrXL8V7e1RTiZYDXH3LBsGxem2LC4vzot
+         xd9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=2imEdS/PBWfabOn+dN51LVNZ4eyxGJ7p2pvJGQCDbMA=;
-        b=kolG+VGmpnFt40QpNg+8UBgQE0Gz+IZQhp2e+JVPR0WbzOWqILSg2I9+Db0bAZEsQ4
-         3HcUGP+w2IU7qVYG10mHYIJl9R8mr5SiFQiokbVhEgB+O7jjVm9MJRbVgQlzYkvSaNUf
-         iBai0Pdbdx0crjptUF+wN/suHYp8g97b0BmY1mJk5uhgVYHJd7TrnuNbIt+ND4vjPhey
-         c9dR+HioD/pN83YBX8nZ0KF48teJTCbLGSZzgxzYrRbmfjtl3mU/CsT/Z+QlWzhfi/Tp
-         s0r/GKUYhQKKnaFCQ0av5ddgsBOEbf1jwtru7vUKDgUCS3K++PAv+ARBqU2fW9Gc7Gyg
-         9Lkw==
-X-Gm-Message-State: ANhLgQ1DUwcQcvSrhNfN+Rxnd0HcvVj2Ui4m++zM8HQ8/e3VV4tUsSkq
-        /Na1Rwv7n0yaPCVyzBKvYvY=
-X-Google-Smtp-Source: ADFU+vu8s4n5Jiy9JVKXd+Qg1OTKkxCBR1qUX5tnXAgdtgg4qZfDvCaWow+W0/h6haum4suXa5MHVg==
-X-Received: by 2002:a05:600c:290e:: with SMTP id i14mr10103753wmd.139.1583588929397;
-        Sat, 07 Mar 2020 05:48:49 -0800 (PST)
+        bh=STsCYmVzqE0DyGQSLcvjOSy6vdxPWBxzS0jjS6ORcro=;
+        b=TtJg0p7LGnfFylaeRAnhrhNzSgg24HJMQjY5QI2sxVd2sWebBNRAyP+Bvi4X09EGJN
+         7J4w6nfc4bMjzEQEknmHLDiiLbIVk9bT8OeUsvoUfcU/8NLIdnLlYWET/HYPcho7+luE
+         bpovDRVg04DJDXikqxl3MidXkiODRcuwhtOpYG9raBUgDBsU9TMR6pMIbJzZ6eUcfkqQ
+         TJpoZdM4q1+FV1ZMHMtQQJy/0QM6J3ysN47YkbI3UEZjn7+LWASVVUchz4I55JAABDYf
+         TKNix0OVuyAyl8jAqRdGycJgmnpQVeYhhqympwiruwnMhW4umF2LCpCDuN7DsmjpB656
+         steg==
+X-Gm-Message-State: ANhLgQ2/CcG3Jg26zDu0lK3P10Lj6Mm8U/ZUGOz9HaCOM1j+F1dpTZdG
+        0wst6ibzkEWB5v/Jo1pmljY=
+X-Google-Smtp-Source: ADFU+vs3yoiMYHy+aHEyVA2e2f6aaRqhgHSl816HFm9nXq+rhUBv2x3rBlfeJzF3+oI0XniuPhuGcw==
+X-Received: by 2002:a1c:e0d6:: with SMTP id x205mr9352590wmg.29.1583588931283;
+        Sat, 07 Mar 2020 05:48:51 -0800 (PST)
 Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 9sm11767265wmx.32.2020.03.07.05.48.48
+        by smtp.gmail.com with ESMTPSA id 9sm11767265wmx.32.2020.03.07.05.48.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Mar 2020 05:48:49 -0800 (PST)
+        Sat, 07 Mar 2020 05:48:50 -0800 (PST)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/5] ARM: dts: rockchip: fix rockchip,default-sample-phase property names
-Date:   Sat,  7 Mar 2020 14:48:38 +0100
-Message-Id: <20200307134841.13803-2-jbx6244@gmail.com>
+Subject: [PATCH v1 4/5] arm64: dts: rockchip: fix vqmmc-supply property name for rk3399 puma
+Date:   Sat,  7 Mar 2020 14:48:40 +0100
+Message-Id: <20200307134841.13803-4-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200307134841.13803-1-jbx6244@gmail.com>
 References: <20200307134841.13803-1-jbx6244@gmail.com>
@@ -84,65 +84,37 @@ the immediate schema.
 
 First when we combine rockchip-dw-mshc.yaml,
 synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
-for example this error:
+this error:
 
-arch/arm/boot/dts/rk3036-evb.dt.yaml: mmc@1021c000:
-'default-sample-phase' does not match any of the regexes:
+arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dt.yaml: mmc@fe320000:
+'vqmmc' does not match any of the regexes:
 '^.*@[0-9]+$', '^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
 uhs-(sdr(12|25|50|104)|ddr50))$', 'pinctrl-[0-9]+'
 
-'default-sample-phase' is not a valid property name for mmc nodes.
-Fix this error by renaming it to 'rockchip,default-sample-phase'.
+'vqmmc' is not a valid property name for mmc nodes.
+Fix this error by renaming it to 'vqmmc-supply'.
 
-make ARCH=arm dtbs_check
+make ARCH=arm64 dtbs_check
 DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm/boot/dts/rk3036-kylin.dts | 2 +-
- arch/arm/boot/dts/rk3036.dtsi      | 2 +-
- arch/arm/boot/dts/rk322x.dtsi      | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
-index fb3cf005c..2ff9f152d 100644
---- a/arch/arm/boot/dts/rk3036-kylin.dts
-+++ b/arch/arm/boot/dts/rk3036-kylin.dts
-@@ -319,7 +319,7 @@
- 	bus-width = <4>;
- 	cap-sd-highspeed;
- 	cap-sdio-irq;
--	default-sample-phase = <90>;
-+	rockchip,default-sample-phase = <90>;
- 	keep-power-in-suspend;
- 	mmc-pwrseq = <&sdio_pwrseq>;
- 	non-removable;
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index c28d293df..2226f0d70 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -263,7 +263,7 @@
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
--		default-sample-phase = <158>;
-+		rockchip,default-sample-phase = <158>;
- 		disable-wp;
- 		dmas = <&pdma 12>;
- 		dma-names = "rx-tx";
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index b98579035..8ad44213f 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -698,7 +698,7 @@
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		bus-width = <8>;
--		default-sample-phase = <158>;
-+		rockchip,default-sample-phase = <158>;
- 		fifo-depth = <0x100>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index c1edca387..07694b196 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -480,7 +480,7 @@
+ };
+ 
+ &sdmmc {
+-	vqmmc = <&vcc_sd>;
++	vqmmc-supply = <&vcc_sd>;
+ };
+ 
+ &spi1 {
 -- 
 2.11.0
 
