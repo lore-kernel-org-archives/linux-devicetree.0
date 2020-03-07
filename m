@@ -2,350 +2,253 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0534C10F00
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 15:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D06C10F26
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 15:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C682067C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 15:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C3E2067C
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 15:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583593294;
-	bh=XtGD4Df9UP8bBp/OM5Affx133/DB+NR9MNKFeqJjTw4=;
+	s=default; t=1583593519;
+	bh=djr7N1lF/PKKB9fp2i9gvINm+MJ4rxqV23JMIjkYYO4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BqjUmAlQAyECH31e9ZHeDC0Pg3fNwETKh7UVtalxHhLKj9Ckrpy950KXom+rZEGQg
-	 OiuipRQlkYIMpsXNdlXKAR6s9i049MUbKmG3Zvh6z5mqsRMuL+6uzmyZ9Q/PMSsWiR
-	 wWZD3euYwsuBnmZ5/6wzpIc7bpDkvHvSnghHDWLI=
+	b=EtBWauTNfiFRta6Dhp1bmqGP01ELB3pcfp2/wPU6CjuvVcjW4HayF0sUusIMRREPe
+	 6zYjhBhsM2do0YbOec//q1I2cCSdjJlttui/GyGNZoxY3RY8RZk5vpIUIW0/BViNna
+	 a80cyFyVeAQEwe44C+JRv9yv3o1CTbBpKu5Y57mU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbgCGPBe (ORCPT
+        id S1726138AbgCGPFT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:01:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 10:05:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgCGPBd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:01:33 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726065AbgCGPFT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:05:19 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ACA820674;
-        Sat,  7 Mar 2020 15:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59B7520674;
+        Sat,  7 Mar 2020 15:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583593293;
-        bh=XtGD4Df9UP8bBp/OM5Affx133/DB+NR9MNKFeqJjTw4=;
+        s=default; t=1583593517;
+        bh=djr7N1lF/PKKB9fp2i9gvINm+MJ4rxqV23JMIjkYYO4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hN0tuSNlP0eLxHH6BSndXedzXFU53sFTdoqFF2FwAAZDXN3Y4RlIk1vpdFW3bOF1L
-         dDF0T2gSCc7RAairTjlljGMckD+9llpAVMn2j6tBKCKZhm7AJPx1OjO7jHcx1uUIoH
-         F67/M0BELJNaO5a5nyDRILpqDVN08HHnGtQ7k8cY=
-Received: from [185.104.136.29] (helo=big-swifty.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jAaxG-00Aqqa-RM; Sat, 07 Mar 2020 15:01:31 +0000
-Date:   Sat, 07 Mar 2020 15:01:31 +0000
-Message-ID: <8636ak6wfo.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 03/10] irqchip: Add driver for Loongson-3 HyperTransport PIC controller
-In-Reply-To: <20200221050942.507775-4-jiaxun.yang@flygoat.com>
-References: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
-        <20200221050942.507775-4-jiaxun.yang@flygoat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+        b=cXxT45a+XI3Vfb7mfPiLj/VSNIUGTATR6o2olTOpEYHMESm+uplmvaD3R9b4Hu014
+         zMd2kmTkt0FQ6WlBTv2HZUX5YUnhTvTwx+CnEY9VBgJhCDShl2JqAYFZUeZewlS7Lz
+         8xZk7QeEI0HSkcaGmZN3UNPQx7BQ0EB2N/mzKvQE=
+Date:   Sat, 7 Mar 2020 15:05:13 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v8 7/8] iio: adc: ad9467: add support AD9467 ADC
+Message-ID: <20200307150513.053b198a@archlinux>
+In-Reply-To: <20200306110100.22092-8-alexandru.ardelean@analog.com>
+References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
+        <20200306110100.22092-8-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.104.136.29
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org, chenhc@lemote.com, allison@lohutok.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2020 05:09:18 +0000,
-Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+On Fri, 6 Mar 2020 13:00:59 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+
+> From: Michael Hennerich <michael.hennerich@analog.com>
 > 
-> This controller appeared on Loongson-3 family of chips to receive interrupts
-> from PCH PIC.
+> The AD9467 is a 16-bit, monolithic, IF sampling analog-to-digital converter
+> (ADC). It is optimized for high performanceover wide bandwidths and ease of
+> use. The product operates at a 250 MSPS conversion rate and is designed for
+> wireless receivers, instrumentation, and test equipment that require a high
+> dynamic range. The ADC requires 1.8 V and 3.3 V power supplies and a low
+> voltage differential input clock for full performance operation. No
+> external reference or driver components are required for many applications.
+> Data outputs are LVDS compatible (ANSI-644 compatible) and include the
+> means to reduce the overall current needed for short trace distances.
+> 
+> Since the chip can operate at such high sample-rates (much higher than
+> classical interfaces), it requires that a DMA controller be used to
+> interface directly to the chip and push data into memory.
+> Typically, the AXI ADC IP core is used to interface with it.
+> 
+> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/AD9467.pdf
+> 
+> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Please explain for us mere mortals what the relationship is between
-this interrupt controller and the i8259.
+A few minor things but otherwise looks good to me..
 
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  arch/mips/include/asm/i8259.h        |   1 +
->  drivers/irqchip/Kconfig              |  10 ++
->  drivers/irqchip/Makefile             |   1 +
->  drivers/irqchip/irq-i8259.c          |   6 +-
->  drivers/irqchip/irq-loongson-htpic.c | 146 +++++++++++++++++++++++++++
->  5 files changed, 161 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+>  drivers/iio/adc/Kconfig  |  15 ++
+>  drivers/iio/adc/Makefile |   1 +
+>  drivers/iio/adc/ad9467.c | 432 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 448 insertions(+)
+>  create mode 100644 drivers/iio/adc/ad9467.c
 > 
-> diff --git a/arch/mips/include/asm/i8259.h b/arch/mips/include/asm/i8259.h
-> index 97a5e41ed1ab..1ec3dbb1588f 100644
-> --- a/arch/mips/include/asm/i8259.h
-> +++ b/arch/mips/include/asm/i8259.h
-> @@ -36,6 +36,7 @@ extern raw_spinlock_t i8259A_lock;
->  extern void make_8259A_irq(unsigned int irq);
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 445070abf376..a0796510f9d4 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -246,6 +246,21 @@ config AD799X
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called ad799x.
 >  
->  extern void init_i8259_irqs(void);
-> +extern struct irq_domain *of_init_i8259_irqs(struct device_node *node);
->  
->  /**
->   * i8159_set_poll() - Override the i8259 polling function
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index c609eaa319d2..cae6f480c987 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -522,4 +522,14 @@ config LOONGSON_LIOINTC
->  	help
->  	  Support for the Loongson Local I/O Interrupt Controller.
->  
-> +config LOONGSON_HTPIC
-> +	bool "Loongson3 HyperTransport PIC Controller"
-> +	depends on MACH_LOONGSON64
-> +	default y
-> +	select IRQ_DOMAIN
-> +	select GENERIC_IRQ_CHIP
-> +	select I8259
-> +	help
-> +	  Support for the Loongson-3 HyperTransport PIC Controller.
-> +
->  endmenu
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 5e7678efdfe6..37bbe39bf909 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -106,3 +106,4 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
->  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
->  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
->  obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
-> +obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-> diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
-> index d000870d9b6b..9d79acce6c0c 100644
-> --- a/drivers/irqchip/irq-i8259.c
-> +++ b/drivers/irqchip/irq-i8259.c
-> @@ -309,7 +309,7 @@ static const struct irq_domain_ops i8259A_ops = {
->   * driver compatibility reasons interrupts 0 - 15 to be the i8259
->   * interrupts even if the hardware uses a different interrupt numbering.
->   */
-> -struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
-> +struct irq_domain * __init of_init_i8259_irqs(struct device_node *node)
-
-I don't think this renaming brings much to the table.
-
->  {
->  	struct irq_domain *domain;
->  
-> @@ -330,7 +330,7 @@ struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
->  
->  void __init init_i8259_irqs(void)
->  {
-> -	__init_i8259_irqs(NULL);
-> +	of_init_i8259_irqs(NULL);
->  }
->  
->  static void i8259_irq_dispatch(struct irq_desc *desc)
-> @@ -351,7 +351,7 @@ int __init i8259_of_init(struct device_node *node, struct device_node *parent)
->  	struct irq_domain *domain;
->  	unsigned int parent_irq;
->  
-> -	domain = __init_i8259_irqs(node);
-> +	domain = of_init_i8259_irqs(node);
->  
->  	parent_irq = irq_of_parse_and_map(node, 0);
->  	if (!parent_irq) {
-> diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
-> new file mode 100644
-> index 000000000000..a90cf4357285
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-loongson-htpic.c
-> @@ -0,0 +1,146 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-> + *  Loongson HTPIC IRQ support
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irq.h>
-> +#include <linux/io.h>
-> +#include <linux/syscore_ops.h>
-> +
-> +#include <asm/i8259.h>
-> +
-> +#define HTPIC_MAX_PARENT_IRQ	4
-> +#define HTINT_NUM_VECTORS	8
-> +#define HTINT_EN_OFF		0x20
-> +
-> +struct loongson_htpic {
-> +	void __iomem *base;
-> +	struct irq_domain *domain;
-> +};
-> +
-> +struct loongson_htpic *htpic;
-
-static?
-
-> +
-> +static void htpic_irq_dispatch(struct irq_desc *desc)
+...
+> +static int ad9467_spi_read(struct spi_device *spi, unsigned int reg)
 > +{
-> +	struct loongson_htpic *priv = irq_desc_get_handler_data(desc);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	uint32_t pending;
+> +	unsigned char buf[3];
+> +	int ret;
 > +
-> +	chained_irq_enter(chip, desc);
-> +	pending = readl(priv->base);
-> +	/* Ack all IRQs */
-> +	writel(pending, priv->base);
+> +	buf[0] = 0x80 | (reg >> 8);
+> +	buf[1] = reg & 0xFF;
+> +
+> +	ret = spi_write_then_read(spi, &buf[0], 2, &buf[2], 1);
 
-Why isn't this done as part of the irq_ack() callback instead? If the
-flow handling is different from the 8259, then maybe you shouldn't be
-hijacking it...
+Why not split buf into send part and receive?  Might make it slightly
+more readable for no actual cost..
 
 > +
-> +	if (!pending)
-> +		spurious_interrupt();
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +	while (pending) {
-> +		int bit = __ffs(pending);
-> +
-> +		if (unlikely(bit > 15))
-> +			spurious_interrupt();
+> +	return buf[2];
+> +}
+...
 
-and yet you continue handling it?
-
+> +static int ad9467_write_raw(struct adi_axi_adc_conv *conv,
+> +			    struct iio_chan_spec const *chan,
+> +			    int val, int val2, long mask)
+> +{
+> +	const struct adi_axi_adc_chip_info *info = conv->chip_info;
+> +	struct ad9467_state *st = adi_axi_adc_conv_priv(conv);
+> +	unsigned long r_clk;
 > +
-> +		generic_handle_irq(irq_linear_revmap(priv->domain, bit));
-> +		pending &= ~BIT(bit);
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		return ad9467_set_scale(conv, val, val2);
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		if (!st->clk)
+> +			return -ENODEV;
+> +
+> +		if (chan->extend_name)
+
+This is a very 'odd' test.  Why?
+
+> +			return -ENODEV;
+> +
+> +		r_clk = clk_round_rate(st->clk, val);
+> +		if (r_clk < 0 || r_clk > info->max_rate) {
+> +			dev_warn(&st->spi->dev,
+> +				 "Error setting ADC sample rate %ld", r_clk);
+> +			return -EINVAL;
+> +		}
+> +
+> +		return clk_set_rate(st->clk, r_clk);
+> +	default:
+> +		return -EINVAL;
 > +	}
-> +	chained_irq_exit(chip, desc);
 > +}
 > +
-> +static void htpic_reg_init(void)
+...
+> +static int ad9467_probe(struct spi_device *spi)
 > +{
-> +	int i;
+> +	const struct of_device_id *oid;
+> +	struct adi_axi_adc_conv *conv;
+> +	struct ad9467_state *st;
+> +	unsigned int id;
+> +	int ret;
 > +
-> +	for (i = 0; i < HTINT_NUM_VECTORS; i++) {
-> +		uint32_t val;
-> +
-> +		/* Disable all HT Vectors */
-> +		writel(0x0, htpic->base + HTINT_EN_OFF + i * 0x4);
-> +		val = readl(htpic->base + i * 0x4);
-> +		/* Ack all possible pending IRQs */
-> +		writel(GENMASK(31, 0), htpic->base + i * 0x4);
+> +	if (!spi->dev.of_node) {
+> +		dev_err(&spi->dev, "DT node is null\n");
+> +		return -ENODEV;
+
+Silly question for you.  Can this happen?  We can only probe this
+if it is in DT and hence there must be a node to get here I think.
+
 > +	}
 > +
-> +	/* Enable 16 vectors for PIC */
-> +	writel(0xffff, htpic->base + HTINT_EN_OFF);
-> +}
+> +	oid = of_match_node(ad9467_of_match, spi->dev.of_node);
+> +	if (!oid)
+> +		return -ENODEV;
+
+You only ever want the data field so you can get that directly.
+of_device_get_match_data
+
 > +
-> +static void htpic_resume(void)
-> +{
-> +	htpic_reg_init();
-> +}
+> +	conv = devm_adi_axi_adc_conv_register(&spi->dev, sizeof(*st));
+> +	if (IS_ERR(conv))
+> +		return PTR_ERR(conv);
 > +
-> +struct syscore_ops htpic_syscore_ops = {
-> +	.resume		= htpic_resume,
-> +};
+> +	st = adi_axi_adc_conv_priv(conv);
+> +	st->spi = spi;
 > +
-> +int __init htpic_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +	unsigned int parent_irq[4];
-> +	int i, err;
-> +	int num_parents = 0;
+> +	st->clk = devm_clk_get(&spi->dev, "adc-clk");
+> +	if (IS_ERR(st->clk))
+> +		return PTR_ERR(st->clk);
 > +
-> +	if (htpic) {
-> +		pr_err("loongson-htpic: Only one HTPIC is allowed in the system\n");
+> +	ret = clk_prepare_enable(st->clk);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = devm_add_action_or_reset(&spi->dev, ad9467_clk_disable, st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->pwrdown_gpio = devm_gpiod_get_optional(&spi->dev, "powerdown",
+> +						   GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->pwrdown_gpio))
+> +		return PTR_ERR(st->pwrdown_gpio);
+> +
+> +	st->reset_gpio = devm_gpiod_get_optional(&spi->dev, "reset",
+> +						 GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->reset_gpio))
+> +		return PTR_ERR(st->reset_gpio);
+> +
+> +	if (st->reset_gpio) {
+> +		udelay(1);
+> +		ret = gpiod_direction_output(st->reset_gpio, 1);
+> +		mdelay(10);
+> +	}
+> +
+> +	spi_set_drvdata(spi, st);
+> +
+> +	id = (unsigned int)oid->data;
+> +	conv->chip_info = &ad9467_chip_info_tbl[id];
+> +
+> +	id = ad9467_spi_read(spi, AN877_ADC_REG_CHIP_ID);
+> +	if (id != conv->chip_info->id) {
+> +		dev_err(&spi->dev, "Unrecognized CHIP_ID 0x%X\n", id);
 > +		return -ENODEV;
 > +	}
 > +
-> +	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
-> +	if (!htpic) {
-> +		err = -ENOMEM;
-> +		goto out_free;
-> +	}
+> +	conv->reg_access = ad9467_reg_access;
+> +	conv->write_raw = ad9467_write_raw;
+> +	conv->read_raw = ad9467_read_raw;
+> +	conv->preenable_setup = ad9467_preenable_setup;
 > +
-> +	htpic->base = of_iomap(node, 0);
-> +	if (!htpic->base) {
-> +		err = -ENODEV;
-> +		goto out_free;
-> +	}
-> +
-> +	htpic->domain = of_init_i8259_irqs(node);
-> +	if (!htpic->domain) {
-> +		pr_err("loongson-htpic: Failed to initialize i8259 IRQs\n");
-> +		err = -ENOMEM;
-> +		goto out_iounmap;
-> +	}
-> +
-> +	for (i = 0; i < HTPIC_MAX_PARENT_IRQ; i++) {
-> +		parent_irq[i] = irq_of_parse_and_map(node, 0);
-
-So you only care about the first interrupt in the DT?
-
-> +		if (parent_irq[i] < 0)
-
-0 is an invalid interrupt.
-
-> +			break;
-> +
-> +		num_parents++;
-> +	}
-> +
-> +	if (!num_parents) {
-> +		pr_err("loongson-htpic: Failed to get parent irqs\n");
-> +		err = -ENODEV;
-> +		goto out_remove_domain;
-> +	}
-> +
-> +	htpic_reg_init();
-> +
-> +	for (i = 0; i < num_parents; i++) {
-> +		irq_set_chained_handler_and_data(parent_irq[i],
-> +						htpic_irq_dispatch, htpic);
-> +	}
-
-What is the mapping between the 16 inputs and the 4 outputs?
-
-> +
-> +	register_syscore_ops(&htpic_syscore_ops);
-> +
-> +	return 0;
-> +
-> +out_remove_domain:
-> +	irq_domain_remove(htpic->domain);
-> +out_iounmap:
-> +	iounmap(htpic->base);
-> +out_free:
-> +	kfree(htpic);
-> +	return err;
+> +	return ad9467_setup(st, id);
 > +}
 > +
-> +IRQCHIP_DECLARE(loongson_htpic, "loongson,htpic-1.0", htpic_of_init);
+> +static struct spi_driver ad9467_driver = {
+> +	.driver = {
+> +		.name = "ad9467",
+> +		.of_match_table = ad9467_of_match,
+> +	},
+> +	.probe = ad9467_probe,
+> +};
+> +module_spi_driver(ad9467_driver);
+> +
+> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD9467 ADC driver");
+> +MODULE_LICENSE("GPL v2");
 
-Thanks,
-
-	M.
-
--- 
-Jazz is not dead, it just smells funny.
