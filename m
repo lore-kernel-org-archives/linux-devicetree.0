@@ -2,238 +2,367 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8434FC10F00
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC62C10F00
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559AF2073D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:10:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Sr2AX/wp"
+	by mail.kernel.org (Postfix) with ESMTP id CEEB82073D
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583586755;
+	bh=kd5ygdxY/wVgotkVvs/qkM0QcdVksZzKJBjqf/OoaUU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cRiRlhzijBvI0T6VXfZUF8dvhKjEjzjA5bsyPIDCsZiNLCVB8ZISOCpdVOEw6l3r5
+	 ZW9t+jo2IBb9OQwtlagmcw/68hCJfuCL94LM/nZ4jv9tE42SqAKSjOcfChT4Wu9zel
+	 4KeCuxZwoDfzqo8ZEroyRFVxfcf4V0EqXaQXtjj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgCGNKZ (ORCPT
+        id S1726252AbgCGNMf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:10:25 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:54135 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgCGNKZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 08:10:25 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        Sat, 7 Mar 2020 08:12:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726239AbgCGNMf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 7 Mar 2020 08:12:35 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 7F4DB23058;
-        Sat,  7 Mar 2020 14:10:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583586621;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1uf4sgSuEO4KOdf8x8D6sp3g7Zg8u/DJumv1+dN6104=;
-        b=Sr2AX/wpTsaLJT9ULkatEcmcgDKiRWrU9g0NOoXxW654sP4fRHuho0Yjx+09Ja7OYbYoNQ
-        3aJFUcdVKnlXvKwyk3tWNIwQJ5+t3Qk9ynsTlZzrpY/fHLOewLq/gaR7jDKFGTqFaU/J56
-        gyDzJekCsrGrDENhzdQmEVmIlZB+Y3k=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sat, 07 Mar 2020 14:10:19 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 053EB206D5;
+        Sat,  7 Mar 2020 13:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583586753;
+        bh=kd5ygdxY/wVgotkVvs/qkM0QcdVksZzKJBjqf/OoaUU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lekVUBehvD3RlpR5565UvGDt4InlqPecSNTU1Hu/cDTPg1J5/plOOCsQArMmcDreH
+         T/Gx7655MsekkLMfKx0PCGdJSDb3nhrUhEFo8Sj7zPk6gHRO5dNdSkYF5E5EeSog1I
+         ymaJYbC5hmGcjDHlhK2kO1DAAR0quWNQQALQdWSQ=
+Date:   Sat, 7 Mar 2020 13:12:29 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Artur Rojek <contact@artur-rojek.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
- compatible
-In-Reply-To: <VI1PR04MB4431F901BEEF2EAB9AB1D7C6EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20200306205403.29881-1-michael@walle.cc>
- <20200306205403.29881-2-michael@walle.cc>
- <VI1PR04MB44312A940BC5BFC7F13A5706EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
- <e0be23f7d1307621151594dd66d2b8fd@walle.cc>
- <VI1PR04MB4431F901BEEF2EAB9AB1D7C6EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
-Message-ID: <433418e889347784bc74f3c22c23e644@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 7F4DB23058
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[11];
-         NEURAL_HAM(-0.00)[-0.568];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,kernel.org,arm.com,nxp.com,gmail.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
+Message-ID: <20200307131229.571c20c5@archlinux>
+In-Reply-To: <1583585920.3.0@crapouillou.net>
+References: <20200301150920.55993-1-contact@artur-rojek.eu>
+        <20200301150920.55993-3-contact@artur-rojek.eu>
+        <20200307124740.708ae2f3@archlinux>
+        <1583585920.3.0@crapouillou.net>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, 07 Mar 2020 13:58:40 +0100
+Paul Cercueil <paul@crapouillou.net> wrote:
 
-Hi Peng,
+> Hi Jonathan,
+>=20
+>=20
+> Le sam., mars 7, 2020 at 12:47, Jonathan Cameron=20
+> <jic23@jic23.retrosnub.co.uk> a =C3=A9crit :
+> > On Sun,  1 Mar 2020 16:09:18 +0100
+> > Artur Rojek <contact@artur-rojek.eu> wrote:
+> >  =20
+> >>  The SADC component in JZ47xx SoCs provides support for touchscreen
+> >>  operations (pen position and pen down pressure) in single-ended and
+> >>  differential modes.
+> >>=20
+> >>  Of the known hardware to use this controller, GCW Zero and Anbernic=20
+> >> RG-350
+> >>  utilize the touchscreen mode by having their joystick(s) attached=20
+> >> to the
+> >>  X/Y positive/negative input pins.
+> >>  GCW Zero comes with a single joystick and is sufficiently handled=20
+> >> with the
+> >>  currently implemented single-ended mode. Support for boards with two
+> >>  joysticks, where one is hooked up to Xn/Yn and the other to Xp/Yp=20
+> >> channels
+> >>  will need to be provided in the future.
+> >>=20
+> >>  The touchscreen component of SADC takes a significant time to=20
+> >> stabilize
+> >>  after first receiving the clock and a delay of 50ms has been=20
+> >> empirically
+> >>  proven to be a safe value before data sampling can begin.
+> >>=20
+> >>  Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> >>  Tested-by: Paul Cercueil <paul@crapouillou.net> =20
+> >=20
+> > This relies on the use of an irq that wasn't previously used.  Was=20
+> > that
+> > always hooked up?  If not we need to still work as before when it
+> > isn't provided.
+> >=20
+> > Otherwise this looks fine to me. =20
+>=20
+> All the boards that probe the ingenic-adc driver have the interrupt=20
+> provided from devicetree, yes.
+Great :)
 
-Am 2020-03-07 11:32, schrieb Peng Ma:
->> -----Original Message-----
->> From: Michael Walle <michael@walle.cc>
->> Sent: 2020年3月7日 17:26
->> To: Peng Ma <peng.ma@nxp.com>
->> Cc: dmaengine@vger.kernel.org; devicetree@vger.kernel.org;
->> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; 
->> Vinod Koul
->> <vkoul@kernel.org>; Rob Herring <robh+dt@kernel.org>; Mark Rutland
->> <mark.rutland@arm.com>; Shawn Guo <shawnguo@kernel.org>; Leo Li
->> <leoyang.li@nxp.com>
->> Subject: Re: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add 
->> "fsl,vf610-edma"
->> compatible
->> 
->> Caution: EXT Email
->> 
->> Hi Peng,
->> 
->> Am 2020-03-07 03:09, schrieb Peng Ma:
->>>> -----Original Message-----
->>>> From: Michael Walle <michael@walle.cc>
->>>> Sent: 2020年3月7日 4:54
->>>> To: dmaengine@vger.kernel.org; devicetree@vger.kernel.org;
->>>> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
->>>> Cc: Vinod Koul <vkoul@kernel.org>; Rob Herring <robh+dt@kernel.org>;
->>>> Mark Rutland <mark.rutland@arm.com>; Shawn Guo
->> <shawnguo@kernel.org>;
->>>> Leo Li <leoyang.li@nxp.com>; Peng Ma <peng.ma@nxp.com>; Michael 
->>>> Walle
->>>> <michael@walle.cc>
->>>> Subject: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
->>>> compatible
->>>> 
->>>> Caution: EXT Email
->>>> 
->>>> The bootloader does the IOMMU fixup and dynamically adds the 
->>>> "iommus"
->>>> property to devices according to its compatible string. In case of
->>>> the eDMA controller this property is missing. Add it. After that the
->>>> IOMMU will work with the eDMA core.
->>>> 
->>>> Signed-off-by: Michael Walle <michael@walle.cc>
->>>> ---
->>>> arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
->>>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>> 
->>>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->>>> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->>>> index b152fa90cf5c..aa467bff2209 100644
->>>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->>>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->>>> @@ -447,7 +447,7 @@
->>>> 
->>>>                edma0: dma-controller@22c0000 {
->>>>                        #dma-cells = <2>;
->>>> -                       compatible = "fsl,ls1028a-edma";
->>>> +                       compatible = "fsl,ls1028a-edma",
->>>> + "fsl,vf610-edma";
->>> Hi Michael,
->>> 
->>> You should change it on bootloader instead of kernel, Some Reg of
->>> LS1028a is different from others, So we used compatible
->>> "fsl,ls1028a-edm" to distinguish "
->>> fsl,vf610-edma".
->> 
->> Yes this might be the right thing to do. So since it is NXPs 
->> bootloader feel free to
->> fix that ;) Looking at the u-boot code right now, I don't even know it 
->> that is the
->> right fix at all. The fixup code in u-boot is SoC independent (its in 
->> fsl_icid.h and is
->> enabled with CONFIG_LSCH3, ie your chassis version). For example, the 
->> sdhc
->> fixup will scan the nodes for "compatible = fsl,esdhc", which is also 
->> the
->> secondary compatible for the "ls1028a-esdhc" compatible.
->> 
->> And here is another reason to have it this way: we need backwards 
->> compatibility,
->> the are already boards out there whose bootloader will fix-up the 
->> "old" node.
->> Thus I don't see any other possibilty.
->> 
-> [Peng Ma] OK, There is non fixed on uboot.
-> I will fix it on uboot, if you want to use now, please change the
-> uboot as below:
+No problem then.  Perhaps add a note to the patch description to say
+that so no one else wonders in future.
 
-As I told you, I cannot be changed for shipped bootloaders. While it can 
-be
-changed for newer ones, I would really like to retain backwards 
-compatibility.
-And so should you.
+Thanks,
 
-That being said, I don't see a problem in having both compatibles. Linux
-will use the ls1028a-emda one and u-boot will fix up the "older"
-vf610-edma one.
+Jonathan
 
-Unfortunately, this patch will not only affect eDMA but all other 
-drivers
-which uses eDMA, eg. sound, lpuart, i2c and maybe DSPI.
 
--michael
+>=20
+> Cheers,
+> -Paul
+>=20
+> >  =20
+> >>  ---
+> >>=20
+> >>   Changes:
+> >>=20
+> >>   v2: - improve description of the touchscreen mode,
+> >>       - get rid of the unneeded kfifo,
+> >>       - drop IIO_BUFFER_CB from Kconfig,
+> >>       - remove extended names from the touchscreen channels
+> >>=20
+> >>   v3: remove unneeded `linux/iio/kfifo_buf.h` include
+> >>=20
+> >>   drivers/iio/adc/Kconfig       |   1 +
+> >>   drivers/iio/adc/ingenic-adc.c | 109=20
+> >> +++++++++++++++++++++++++++++++++-
+> >>   2 files changed, 108 insertions(+), 2 deletions(-)
+> >>=20
+> >>  diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> >>  index 82e33082958c..d3fd4b6e2d47 100644
+> >>  --- a/drivers/iio/adc/Kconfig
+> >>  +++ b/drivers/iio/adc/Kconfig
+> >>  @@ -453,6 +453,7 @@ config INA2XX_ADC
+> >>   config INGENIC_ADC
+> >>   	tristate "Ingenic JZ47xx SoCs ADC driver"
+> >>   	depends on MIPS || COMPILE_TEST
+> >>  +	select IIO_BUFFER
+> >>   	help
+> >>   	  Say yes here to build support for the Ingenic JZ47xx SoCs ADC=20
+> >> unit.
+> >>=20
+> >>  diff --git a/drivers/iio/adc/ingenic-adc.c=20
+> >> b/drivers/iio/adc/ingenic-adc.c
+> >>  index 7a24bc1dabe1..0dafc8d5d0d8 100644
+> >>  --- a/drivers/iio/adc/ingenic-adc.c
+> >>  +++ b/drivers/iio/adc/ingenic-adc.c
+> >>  @@ -8,7 +8,9 @@
+> >>=20
+> >>   #include <dt-bindings/iio/adc/ingenic,adc.h>
+> >>   #include <linux/clk.h>
+> >>  +#include <linux/iio/buffer.h>
+> >>   #include <linux/iio/iio.h>
+> >>  +#include <linux/interrupt.h>
+> >>   #include <linux/io.h>
+> >>   #include <linux/iopoll.h>
+> >>   #include <linux/kernel.h>
+> >>  @@ -20,6 +22,8 @@
+> >>   #define JZ_ADC_REG_CFG			0x04
+> >>   #define JZ_ADC_REG_CTRL			0x08
+> >>   #define JZ_ADC_REG_STATUS		0x0c
+> >>  +#define JZ_ADC_REG_ADSAME		0x10
+> >>  +#define JZ_ADC_REG_ADWAIT		0x14
+> >>   #define JZ_ADC_REG_ADTCH		0x18
+> >>   #define JZ_ADC_REG_ADBDAT		0x1c
+> >>   #define JZ_ADC_REG_ADSDAT		0x20
+> >>  @@ -28,6 +32,9 @@
+> >>   #define JZ_ADC_REG_ENABLE_PD		BIT(7)
+> >>   #define JZ_ADC_REG_CFG_AUX_MD		(BIT(0) | BIT(1))
+> >>   #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
+> >>  +#define JZ_ADC_REG_CFG_PULL_UP(n)	((n) << 16)
+> >>  +#define JZ_ADC_REG_CFG_SAMPLE_NUM(n)	((n) << 10)
+> >>  +#define JZ_ADC_REG_CFG_TOUCH_OPS_MASK	(BIT(31) | GENMASK(23, 10))
+> >>   #define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
+> >>   #define JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB	16
+> >>   #define JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB	8
+> >>  @@ -44,6 +51,14 @@
+> >>   #define JZ4770_ADC_BATTERY_VREF			6600
+> >>   #define JZ4770_ADC_BATTERY_VREF_BITS		12
+> >>=20
+> >>  +#define JZ_ADC_IRQ_AUX			BIT(0)
+> >>  +#define JZ_ADC_IRQ_BATTERY		BIT(1)
+> >>  +#define JZ_ADC_IRQ_TOUCH		BIT(2)
+> >>  +#define JZ_ADC_IRQ_PEN_DOWN		BIT(3)
+> >>  +#define JZ_ADC_IRQ_PEN_UP		BIT(4)
+> >>  +#define JZ_ADC_IRQ_PEN_DOWN_SLEEP	BIT(5)
+> >>  +#define JZ_ADC_IRQ_SLEEP		BIT(7)
+> >>  +
+> >>   struct ingenic_adc;
+> >>=20
+> >>   struct ingenic_adc_soc_data {
+> >>  @@ -411,6 +426,28 @@ static const struct iio_info ingenic_adc_info=20
+> >> =3D {
+> >>   };
+> >>=20
+> >>   static const struct iio_chan_spec ingenic_channels[] =3D {
+> >>  +	{
+> >>  +		.type =3D IIO_POSITIONRELATIVE,
+> >>  +		.indexed =3D 1,
+> >>  +		.channel =3D INGENIC_ADC_TOUCH_XP,
+> >>  +		.scan_index =3D 0,
+> >>  +		.scan_type =3D {
+> >>  +			.sign =3D 'u',
+> >>  +			.realbits =3D 12,
+> >>  +			.storagebits =3D 16
+> >>  +		},
+> >>  +	},
+> >>  +	{
+> >>  +		.type =3D IIO_POSITIONRELATIVE,
+> >>  +		.indexed =3D 1,
+> >>  +		.channel =3D INGENIC_ADC_TOUCH_YP,
+> >>  +		.scan_index =3D 1,
+> >>  +		.scan_type =3D {
+> >>  +			.sign =3D 'u',
+> >>  +			.realbits =3D 12,
+> >>  +			.storagebits =3D 16
+> >>  +		},
+> >>  +	},
+> >>   	{
+> >>   		.extend_name =3D "aux",
+> >>   		.type =3D IIO_VOLTAGE,
+> >>  @@ -418,6 +455,7 @@ static const struct iio_chan_spec=20
+> >> ingenic_channels[] =3D {
+> >>   				      BIT(IIO_CHAN_INFO_SCALE),
+> >>   		.indexed =3D 1,
+> >>   		.channel =3D INGENIC_ADC_AUX,
+> >>  +		.scan_index =3D -1
+> >>   	},
+> >>   	{
+> >>   		.extend_name =3D "battery",
+> >>  @@ -428,6 +466,7 @@ static const struct iio_chan_spec=20
+> >> ingenic_channels[] =3D {
+> >>   						BIT(IIO_CHAN_INFO_SCALE),
+> >>   		.indexed =3D 1,
+> >>   		.channel =3D INGENIC_ADC_BATTERY,
+> >>  +		.scan_index =3D -1
+> >>   	},
+> >>   	{ /* Must always be last in the array. */
+> >>   		.extend_name =3D "aux2",
+> >>  @@ -436,16 +475,69 @@ static const struct iio_chan_spec=20
+> >> ingenic_channels[] =3D {
+> >>   				      BIT(IIO_CHAN_INFO_SCALE),
+> >>   		.indexed =3D 1,
+> >>   		.channel =3D INGENIC_ADC_AUX2,
+> >>  +		.scan_index =3D -1
+> >>   	},
+> >>   };
+> >>=20
+> >>  +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
+> >>  +{
+> >>  +	struct ingenic_adc *adc =3D iio_priv(iio_dev);
+> >>  +
+> >>  +	clk_enable(adc->clk);
+> >>  +	/* It takes significant time for the touchscreen hw to stabilize.=20
+> >> */
+> >>  +	msleep(50);
+> >>  +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
+> >>  +			       JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
+> >>  +			       JZ_ADC_REG_CFG_PULL_UP(4));
+> >>  +	writew(80, adc->base + JZ_ADC_REG_ADWAIT);
+> >>  +	writew(2, adc->base + JZ_ADC_REG_ADSAME);
+> >>  +	writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
+> >>  +	writel(0, adc->base + JZ_ADC_REG_ADTCH);
+> >>  +	ingenic_adc_enable(adc, 2, true);
+> >>  +
+> >>  +	return 0;
+> >>  +}
+> >>  +
+> >>  +static int ingenic_adc_buffer_disable(struct iio_dev *iio_dev)
+> >>  +{
+> >>  +	struct ingenic_adc *adc =3D iio_priv(iio_dev);
+> >>  +
+> >>  +	ingenic_adc_enable(adc, 2, false);
+> >>  +	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
+> >>  +	writeb(0xff, adc->base + JZ_ADC_REG_STATUS);
+> >>  +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK, 0);
+> >>  +	writew(0, adc->base + JZ_ADC_REG_ADSAME);
+> >>  +	writew(0, adc->base + JZ_ADC_REG_ADWAIT);
+> >>  +	clk_disable(adc->clk);
+> >>  +
+> >>  +	return 0;
+> >>  +}
+> >>  +
+> >>  +static const struct iio_buffer_setup_ops ingenic_buffer_setup_ops=20
+> >> =3D {
+> >>  +	.postenable =3D &ingenic_adc_buffer_enable,
+> >>  +	.predisable =3D &ingenic_adc_buffer_disable
+> >>  +};
+> >>  +
+> >>  +static irqreturn_t ingenic_adc_irq(int irq, void *data)
+> >>  +{
+> >>  +	struct iio_dev *iio_dev =3D data;
+> >>  +	struct ingenic_adc *adc =3D iio_priv(iio_dev);
+> >>  +	u32 tdat;
+> >>  +
+> >>  +	tdat =3D readl(adc->base + JZ_ADC_REG_ADTCH);
+> >>  +	iio_push_to_buffers(iio_dev, &tdat);
+> >>  +	writeb(JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_STATUS);
+> >>  +
+> >>  +	return IRQ_HANDLED;
+> >>  +}
+> >>  +
+> >>   static int ingenic_adc_probe(struct platform_device *pdev)
+> >>   {
+> >>   	struct device *dev =3D &pdev->dev;
+> >>   	struct iio_dev *iio_dev;
+> >>   	struct ingenic_adc *adc;
+> >>   	const struct ingenic_adc_soc_data *soc_data;
+> >>  -	int ret;
+> >>  +	int irq, ret;
+> >>=20
+> >>   	soc_data =3D device_get_match_data(dev);
+> >>   	if (!soc_data)
+> >>  @@ -460,6 +552,18 @@ static int ingenic_adc_probe(struct=20
+> >> platform_device *pdev)
+> >>   	mutex_init(&adc->aux_lock);
+> >>   	adc->soc_data =3D soc_data;
+> >>=20
+> >>  +	irq =3D platform_get_irq(pdev, 0); =20
+> >=20
+> > Do we need a fallback path if there is no irq provided?  We can't=20
+> > break existing
+> > supported devices that don't specify one.
+> >  =20
+> >>  +	if (irq < 0) {
+> >>  +		dev_err(dev, "Failed to get irq: %d\n", irq);
+> >>  +		return irq;
+> >>  +	}
+> >>  +	ret =3D devm_request_irq(dev, irq, ingenic_adc_irq, 0,
+> >>  +			       dev_name(dev), iio_dev);
+> >>  +	if (ret < 0) {
+> >>  +		dev_err(dev, "Failed to request irq: %d\n", ret);
+> >>  +		return ret;
+> >>  +	}
+> >>  +
+> >>   	adc->base =3D devm_platform_ioremap_resource(pdev, 0);
+> >>   	if (IS_ERR(adc->base))
+> >>   		return PTR_ERR(adc->base);
+> >>  @@ -499,7 +603,8 @@ static int ingenic_adc_probe(struct=20
+> >> platform_device *pdev)
+> >>=20
+> >>   	iio_dev->dev.parent =3D dev;
+> >>   	iio_dev->name =3D "jz-adc";
+> >>  -	iio_dev->modes =3D INDIO_DIRECT_MODE;
+> >>  +	iio_dev->modes =3D INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
+> >>  +	iio_dev->setup_ops =3D &ingenic_buffer_setup_ops;
+> >>   	iio_dev->channels =3D ingenic_channels;
+> >>   	iio_dev->num_channels =3D ARRAY_SIZE(ingenic_channels);
+> >>   	/* Remove AUX2 from the list of supported channels. */ =20
+> >  =20
+>=20
+>=20
 
-> 
-> diff --git a/arch/arm/cpu/armv8/fsl-layerscape/ls1028_ids.c
-> b/arch/arm/cpu/armv8/fsl-layerscape/ls1028_ids.c
-> index d9d125e8ba..db9dd69548 100644
-> --- a/arch/arm/cpu/armv8/fsl-layerscape/ls1028_ids.c
-> +++ b/arch/arm/cpu/armv8/fsl-layerscape/ls1028_ids.c
-> @@ -14,7 +14,7 @@ struct icid_id_table icid_tbl[] = {
->         SET_SDHC_ICID(1, FSL_SDMMC_STREAM_ID),
->         SET_SDHC_ICID(2, FSL_SDMMC2_STREAM_ID),
->         SET_SATA_ICID(1, "fsl,ls1028a-ahci", FSL_SATA1_STREAM_ID),
-> -       SET_EDMA_ICID(FSL_EDMA_STREAM_ID),
-> +       SET_EDMA_ICID_LS1028(FSL_EDMA_STREAM_ID),
->         SET_QDMA_ICID("fsl,ls1028a-qdma", FSL_DMA_STREAM_ID),
->         SET_GPU_ICID("fsl,ls1028a-gpu", FSL_GPU_STREAM_ID),
->         SET_DISPLAY_ICID(FSL_DISPLAY_STREAM_ID),
-> diff --git a/arch/arm/include/asm/arch-fsl-layerscape/fsl_icid.h
-> b/arch/arm/include/asm/arch-fsl-layerscape/fsl_icid.h
-> index 37e2fe4e66..15d0b60dbe 100644
-> --- a/arch/arm/include/asm/arch-fsl-layerscape/fsl_icid.h
-> +++ b/arch/arm/include/asm/arch-fsl-layerscape/fsl_icid.h
-> @@ -144,6 +144,10 @@ extern int fman_icid_tbl_sz;
->         SET_GUR_ICID("fsl,vf610-edma", streamid, spare3_amqr,\
->                 EDMA_BASE_ADDR)
-> 
-> +#define SET_EDMA_ICID_LS1028(streamid) \
-> +       SET_GUR_ICID("fsl,ls1028a-edma", streamid, spare3_amqr,\
-> +               EDMA_BASE_ADDR)
-> +
->  #define SET_GPU_ICID(compat, streamid) \
->         SET_GUR_ICID(compat, streamid, misc1_amqr,\
->                 GPU_BASE_ADDR)
-> 
-> BR,
-> Peng
->> -michael
->> 
->>> 
->>> Thanks,
->>> Peng
->>>>                        reg = <0x0 0x22c0000 0x0 0x10000>,
->>>>                              <0x0 0x22d0000 0x0 0x10000>,
->>>>                              <0x0 0x22e0000 0x0 0x10000>;
->>>> --
->>>> 2.20.1
