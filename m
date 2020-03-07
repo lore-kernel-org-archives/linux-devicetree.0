@@ -2,374 +2,139 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C615C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 01:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BEAC10F25
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 02:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21622206CC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 01:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583544032;
-	bh=tKs0d9Kq0Y/zSX5jcC5OD9ImyGddCv9D1ncrA85uCUc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BOwG/eb59OXamcJySnu4ExCcNHxfsGulYsZ4Ovxg67EUJQKMmV/kpCEtBK1KLec78
-	 bTsxCCYStyLXWohYKT7N70QlLuY5K1KuOttUhy/EXumVR5BuDZ7qOmEWJRE0K/UqLh
-	 XxppGUP1qieGxbA11heZ88C1W5IV0ZtBKxS+lMPA=
+	by mail.kernel.org (Postfix) with ESMTP id 8AEE420709
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 02:09:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hafatfYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCGBUb (ORCPT
+        id S1726259AbgCGCJi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Mar 2020 20:20:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgCGBUb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Mar 2020 20:20:31 -0500
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AB40206CC;
-        Sat,  7 Mar 2020 01:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583544030;
-        bh=tKs0d9Kq0Y/zSX5jcC5OD9ImyGddCv9D1ncrA85uCUc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=q+NkS8vRoVTkd9rU2ut9EXjn+06UBked/9OiXI/5EdijyHZhV+JoUTiMge6cDyVQH
-         tsMuXFU18tlU7E1QPkOERGXZOaPuFRr7Or0mJYJ/ZGG9OH3cwz9cGI1J6yyJyM5c0R
-         S7aHn+XwVz1AxVdaLuGiZnkh1cqauKHatr4kaU7U=
-Date:   Fri, 6 Mar 2020 17:20:27 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 5/9] net: ethernet: ti: introduce
- am65x/j721e gigabit eth subsystem driver
-Message-ID: <20200306172027.18d88fb0@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200306234734.15014-6-grygorii.strashko@ti.com>
-References: <20200306234734.15014-1-grygorii.strashko@ti.com>
-        <20200306234734.15014-6-grygorii.strashko@ti.com>
+        Fri, 6 Mar 2020 21:09:38 -0500
+Received: from mail-eopbgr50052.outbound.protection.outlook.com ([40.107.5.52]:57666
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726240AbgCGCJh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Mar 2020 21:09:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UV1ZOdozDjml3HHLwcFKqV92KVucYunWkI3LAEwpjj+D2YuB3uFFFgYaoKXqCBxzFINnyXtEk+I91dVGCLzFAetKmeXzZuopTVJanaKRAutL/vzHBr8zKXX6eqq/g6w9793VmW69EtFRoqt3jIaYbhgWLStet+dLTXztByzfQilnfcOSQlfvOuBC5G0chDwkmXXJmLrqoNWWiK15r4z5p72m1avfK2VHaryGMub05VnrEkf41UZToEOb05CA0czmf5urPqW+8s3urQIGWVyZv8B5gyEGnrvkaMcE3+KOlabA87QT10lfeFv2I4kr1+EWZnTd4Z9xW8BeLSNxspXInA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vh8e5ReA7lxS3NA+fdZxDQL+LxaRTRiVPwRn5z2tWLE=;
+ b=QPfatNdknzTBY7AU3Ko+zhMqmZcVTjadHC4ASlihebPqK74SCKJGodIuEMLlLZf8MwEEdK8cSC5F2638mAZXYLknUqRy+2WI6s/xLBT0/SsHIS9IUkxM79ZUyoShpwHpCqtP8Lm+4n3lZN83kwC9u6pTpAaX2ypARRVqW7zn0nFiB2hSUijpGNKzskDJGfQeNwsKzNpCvXAwpBZNpjGx2JGyy5/elTZCmhBCvUH/mb/t3MRt8/hAaqxE+x467y0iOH991mvCwbSR/J56LaWbRFqVp4iTSNYxdLG5es9qw95jMQY9SmEZtwpQmRDohkYAYn0CPJhAZUckeQNwrnPzew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vh8e5ReA7lxS3NA+fdZxDQL+LxaRTRiVPwRn5z2tWLE=;
+ b=hafatfYx9cKrmaFLqPH9B4lL29aKfmKDmZvo3/Cijqq4tGN2xjnTAsWncx1a2JdsJ3xmn7dxW4jtdzKxll0pOfdiUTjGYiQ0FJbDcFc2Q3glbGz2FXQN/rAFknEpIBMwMcaiQmB4TTdMW6bwQvxo6uC7n2s37GQwzJDjF9U/hgM=
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
+ VI1PR04MB4766.eurprd04.prod.outlook.com (20.177.49.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15; Sat, 7 Mar 2020 02:09:33 +0000
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::10f0:dc6d:c9f9:edfc]) by VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::10f0:dc6d:c9f9:edfc%5]) with mapi id 15.20.2793.013; Sat, 7 Mar 2020
+ 02:09:33 +0000
+From:   Peng Ma <peng.ma@nxp.com>
+To:     Michael Walle <michael@walle.cc>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Subject: RE: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
+ compatible
+Thread-Topic: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
+ compatible
+Thread-Index: AQHV8/lsXqSm1fChNEm1yZWBD/JxAKg8YRCg
+Date:   Sat, 7 Mar 2020 02:09:32 +0000
+Message-ID: <VI1PR04MB44312A940BC5BFC7F13A5706EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20200306205403.29881-1-michael@walle.cc>
+ <20200306205403.29881-2-michael@walle.cc>
+In-Reply-To: <20200306205403.29881-2-michael@walle.cc>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.ma@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8c7a3f05-1c63-4008-e1cf-08d7c23c93ee
+x-ms-traffictypediagnostic: VI1PR04MB4766:|VI1PR04MB4766:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB4766DAFCE1EDDEEC6026EAA1EDE00@VI1PR04MB4766.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 03355EE97E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(189003)(199004)(2906002)(110136005)(6506007)(54906003)(86362001)(316002)(64756008)(66476007)(66446008)(66556008)(44832011)(4326008)(26005)(71200400001)(52536014)(33656002)(5660300002)(76116006)(55016002)(9686003)(7696005)(8936002)(186003)(8676002)(81156014)(81166006)(66946007)(478600001)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4766;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Lk62mPr1XEUB/PrNDPmJbzSgEYBVYMW2AFCBi1KV9vHU5VClqtciiT2IWCibC29Fb0ih0Qep9ny6xeScZm7prNmX0s1c5yJ3T0rE2Ps/sg58cfp+OQeOq52Fv9aEzznj+nDgzQjzKsWJNRaFZGwyJ/9bC2qXKAx0XKZEqkDieNZ7D7Csqu5wzDunbv3wt/67/09PtmmOQ90p7Je1YzsLNQ4ONWY0DpWShuRsbcfp3SpH9K0+KUFoVxL2c3hlLHAKqWKBw/FBhHF0NNzgQIwC/NXy1H95ubLz2HHjpjBlEQBpyaxlKA+fnHkswZCcYH98uAqli7TeuNdIEOZn31qLNMuy2VoSgCXPiKRPqCLMKoWNsTpg9ynR6l4VMZ4QUPWavmy2lN8WnID+y1z9GQEk9Cz6XFL9B4VXmVNxh/Jzh0ytSRisffCGUbhnLnbj0NUDZgPStrpnc9lIRzEkAry7ELaJ1WTs+IjqPoBiiSFo5a2V0Ur0hAeD07EYKqaUFQSJ
+x-ms-exchange-antispam-messagedata: dSza8f4qs8M50n8TyjOVuqgF7+F2pjtVhQgsnCq0a6vJKCxlDuICOkM/FOxpfz+c818leNhu+oFaTF5Ahs8WLNAMy6msjPbIzy/vnelBgSuA1IzvQ/BBnnAB42fRkbEj9/7WtNEHqtYpmJVIzBfLnQ==
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c7a3f05-1c63-4008-e1cf-08d7c23c93ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2020 02:09:33.1107
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FNtWcSR8AHB9N1ftdQIUtxlpVf5e44xxbkM4dDiWMLJhT5TDMWgrZl0idAUUZ29z
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4766
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> +static void am65_cpsw_get_drvinfo(struct net_device *ndev,
-> +				  struct ethtool_drvinfo *info)
-> +{
-> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> +
-> +	strlcpy(info->driver, dev_driver_string(common->dev),
-> +		sizeof(info->driver));
-> +	strlcpy(info->version, AM65_CPSW_DRV_VER, sizeof(info->version));
-
-Please remove the driver version, use of driver versions is being deprecated upstream.
-
-> +	strlcpy(info->bus_info, dev_name(common->dev), sizeof(info->bus_info));
-> +}
-
-> +static void am65_cpsw_get_channels(struct net_device *ndev,
-> +				   struct ethtool_channels *ch)
-> +{
-> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> +
-> +	ch->max_combined = 0;
-
-no need to zero fields
-
-> +	ch->max_rx = AM65_CPSW_MAX_RX_QUEUES;
-> +	ch->max_tx = AM65_CPSW_MAX_TX_QUEUES;
-> +	ch->max_other = 0;
-> +	ch->other_count = 0;
-> +	ch->rx_count = AM65_CPSW_MAX_RX_QUEUES;
-> +	ch->tx_count = common->tx_ch_num;
-> +	ch->combined_count = 0;
-> +}
-> +
-> +static int am65_cpsw_set_channels(struct net_device *ndev,
-> +				  struct ethtool_channels *chs)
-> +{
-> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> +
-> +	if (chs->combined_count)
-> +		return -EINVAL;
-
-core will check if its larger than max_combined
-
-> +	if (!chs->rx_count || !chs->tx_count)
-> +		return -EINVAL;
-> +
-> +	if (chs->rx_count != 1 ||
-> +	    chs->tx_count > AM65_CPSW_MAX_TX_QUEUES)
-> +		return -EINVAL;
-
-ditto
-
-> +	/* Check if interface is up. Can change the num queues when
-> +	 * the interface is down.
-> +	 */
-> +	if (netif_running(ndev))
-> +		return -EBUSY;
-> +
-> +	am65_cpsw_nuss_remove_tx_chns(common);
-> +
-> +	return am65_cpsw_nuss_update_tx_chns(common, chs->tx_count);
-> +}
-> +
-> +static void am65_cpsw_get_ringparam(struct net_device *ndev,
-> +				    struct ethtool_ringparam *ering)
-> +{
-> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> +
-> +	/* not supported */
-> +	ering->tx_max_pending = 0;
-
-no need to zero fields
-
-> +	ering->tx_pending = common->tx_chns[0].descs_num;
-> +	ering->rx_max_pending = 0;
-> +	ering->rx_pending = common->rx_chns.descs_num;
-> +}
-
-> +EXPORT_SYMBOL_GPL(am65_cpsw_nuss_adjust_link);
-
-Why does this need to be exported?
-
-> +	psdata = cppi5_hdesc_get_psdata(desc_rx);
-> +	csum_info = psdata[2];
-> +	dev_dbg(dev, "%s rx csum_info:%#x\n", __func__, csum_info);
-> +
-> +	dma_unmap_single(dev, buf_dma, buf_dma_len, DMA_FROM_DEVICE);
-> +
-> +	k3_udma_desc_pool_free(rx_chn->desc_pool, desc_rx);
-> +
-> +	if (unlikely(!netif_running(skb->dev))) {
-
-This is strange, does am65_cpsw_nuss_ndo_slave_stop() not stop RX?
-
-> +		dev_kfree_skb_any(skb);
-> +		return 0;
-> +	}
-> +
-> +	new_skb = netdev_alloc_skb_ip_align(ndev, AM65_CPSW_MAX_PACKET_SIZE);
-> +	if (new_skb) {
-> +		skb_put(skb, pkt_len);
-> +		skb->protocol = eth_type_trans(skb, ndev);
-> +		am65_cpsw_nuss_rx_csum(skb, csum_info);
-> +		napi_gro_receive(&common->napi_rx, skb);
-> +
-> +		ndev_priv = netdev_priv(ndev);
-> +		stats = this_cpu_ptr(ndev_priv->stats);
-> +
-> +		u64_stats_update_begin(&stats->syncp);
-> +		stats->rx_packets++;
-> +		stats->rx_bytes += pkt_len;
-> +		u64_stats_update_end(&stats->syncp);
-> +		kmemleak_not_leak(new_skb);
-> +	} else {
-> +		ndev->stats.rx_dropped++;
-> +		new_skb = skb;
-> +	}
-
-> +static int am65_cpsw_nuss_tx_poll(struct napi_struct *napi_tx, int budget)
-> +{
-> +	struct am65_cpsw_tx_chn *tx_chn = am65_cpsw_napi_to_tx_chn(napi_tx);
-> +	int num_tx;
-> +
-> +	num_tx = am65_cpsw_nuss_tx_compl_packets(tx_chn->common, tx_chn->id,
-> +						 budget);
-> +	if (num_tx < budget) {
-
-The budget is for RX, you can just complete all TX on a NAPI poll.
-
-> +		napi_complete(napi_tx);
-> +		enable_irq(tx_chn->irq);
-> +	}
-> +
-> +	return num_tx;
-> +}
-
-> +static netdev_tx_t am65_cpsw_nuss_ndo_slave_xmit(struct sk_buff *skb,
-> +						 struct net_device *ndev)
-> +{
-> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> +	struct cppi5_host_desc_t *first_desc, *next_desc, *cur_desc;
-> +	struct am65_cpsw_port *port = am65_ndev_to_port(ndev);
-> +	struct device *dev = common->dev;
-> +	struct am65_cpsw_tx_chn *tx_chn;
-> +	struct netdev_queue *netif_txq;
-> +	dma_addr_t desc_dma, buf_dma;
-> +	int ret, q_idx, i;
-> +	void **swdata;
-> +	u32 *psdata;
-> +	u32 pkt_len;
-> +
-> +	/* frag list based linkage is not supported for now. */
-> +	if (skb_shinfo(skb)->frag_list) {
-> +		dev_err_ratelimited(dev, "NETIF_F_FRAGLIST not supported\n");
-> +		ret = -EINVAL;
-> +		goto drop_free_skb;
-> +	}
-
-You don't advertise the feature, there is no need for this check.
-
-> +	/* padding enabled in hw */
-> +	pkt_len = skb_headlen(skb);
-> +
-> +	q_idx = skb_get_queue_mapping(skb);
-> +	dev_dbg(dev, "%s skb_queue:%d\n", __func__, q_idx);
-> +	q_idx = q_idx % common->tx_ch_num;
-
-You should never see a packet for ring above your ring count, this
-modulo is unnecessary.
-
-> +	tx_chn = &common->tx_chns[q_idx];
-> +	netif_txq = netdev_get_tx_queue(ndev, q_idx);
-> +
-> +	/* Map the linear buffer */
-> +	buf_dma = dma_map_single(dev, skb->data, pkt_len,
-> +				 DMA_TO_DEVICE);
-> +	if (unlikely(dma_mapping_error(dev, buf_dma))) {
-> +		dev_err(dev, "Failed to map tx skb buffer\n");
-
-You probably don't want to print errors when memory gets depleted.
-Counter is enough
-
-> +		ret = -EINVAL;
-
-EINVAL is not a valid netdev_tx_t..
-
-> +		ndev->stats.tx_errors++;
-> +		goto drop_stop_q;
-
-Why stop queue on memory mapping error? What will re-enable it?
-
-> +	}
-> +
-> +	first_desc = k3_udma_desc_pool_alloc(tx_chn->desc_pool);
-> +	if (!first_desc) {
-> +		dev_dbg(dev, "Failed to allocate descriptor\n");
-
-ret not set
-
-> +		dma_unmap_single(dev, buf_dma, pkt_len, DMA_TO_DEVICE);
-> +		goto drop_stop_q_busy;
-> +	}
-
-> +done_tx:
-> +	skb_tx_timestamp(skb);
-> +
-> +	/* report bql before sending packet */
-> +	netdev_tx_sent_queue(netif_txq, pkt_len);
-> +
-> +	cppi5_hdesc_set_pktlen(first_desc, pkt_len);
-> +	desc_dma = k3_udma_desc_pool_virt2dma(tx_chn->desc_pool, first_desc);
-> +	ret = k3_udma_glue_push_tx_chn(tx_chn->tx_chn, first_desc, desc_dma);
-> +	if (ret) {
-> +		dev_err(dev, "can't push desc %d\n", ret);
-> +		ndev->stats.tx_errors++;
-> +		goto drop_free_descs;
-
-BQL already counted this frame.
-
-> +	}
-> +
-> +	if (k3_udma_desc_pool_avail(tx_chn->desc_pool) < MAX_SKB_FRAGS) {
-> +		netif_tx_stop_queue(netif_txq);
-> +		/* Barrier, so that stop_queue visible to other cpus */
-> +		smp_mb__after_atomic();
-> +		dev_err(dev, "netif_tx_stop_queue %d\n", q_idx);
-
-How many descriptors are there if it's okay to print an error when
-descriptors run out? :o
-
-> +		/* re-check for smp */
-> +		if (k3_udma_desc_pool_avail(tx_chn->desc_pool) >=
-> +		    MAX_SKB_FRAGS) {
-> +			netif_tx_wake_queue(netif_txq);
-> +			dev_err(dev, "netif_tx_wake_queue %d\n", q_idx);
-> +		}
-> +	}
-> +
-> +	return NETDEV_TX_OK;
-> +
-> +drop_free_descs:
-> +	am65_cpsw_nuss_xmit_free(tx_chn, dev, first_desc);
-> +drop_stop_q:
-> +	netif_tx_stop_queue(netif_txq);
-> +drop_free_skb:
-> +	ndev->stats.tx_dropped++;
-> +	dev_kfree_skb_any(skb);
-> +	return ret;
-
-return NETDEV_TX_OK;
-
-> +
-> +drop_stop_q_busy:
-> +	netif_tx_stop_queue(netif_txq);
-> +	return NETDEV_TX_BUSY;
-> +}
-
-> +static int am65_cpsw_nuss_ndev_add_napi_2g(struct am65_cpsw_common *common)
-> +{
-> +	struct device *dev = common->dev;
-> +	struct am65_cpsw_port *port;
-> +	int i, ret = 0;
-> +
-> +	port = am65_common_get_port(common, 1);
-> +
-> +	for (i = 0; i < common->tx_ch_num; i++) {
-> +		struct am65_cpsw_tx_chn	*tx_chn = &common->tx_chns[i];
-> +
-> +		netif_tx_napi_add(port->ndev, &tx_chn->napi_tx,
-> +				  am65_cpsw_nuss_tx_poll, NAPI_POLL_WEIGHT);
-> +
-> +		ret = devm_request_irq(dev, tx_chn->irq,
-> +				       am65_cpsw_nuss_tx_irq,
-> +				       0, tx_chn->tx_chn_name, tx_chn);
-> +		if (ret) {
-> +			dev_err(dev, "failure requesting tx%u irq %u, %d\n",
-> +				tx_chn->id, tx_chn->irq, ret);
-> +			goto err;
-
-If this fails half way through the loop is there something that'd call 
-netif_tx_napi_del()?
-
-> +		}
-> +	}
-> +
-> +err:
-> +	return ret;
-> +}
-
-> +	/* register devres action here, so dev will be disabled
-> +	 * at right moment. The dev will be enabled in .remove() callback
-> +	 * unconditionally.
-> +	 */
-> +	ret = devm_add_action_or_reset(dev, am65_cpsw_pm_runtime_free, dev);
-> +	if (ret) {
-> +		dev_err(dev, "failed to add pm put reset action %d", ret);
-> +		return ret;
-> +	}
-
-Could you explain why you need this? Why can't remove disable PM?
-
-In general looks to me like this driver abuses devm_ infra in ways
-which make it more complex than it needs to be :(
-
-> +	ret = devm_of_platform_populate(dev);
-> +	/* We do not want to force this, as in some cases may not have child */
-> +	if (ret)
-> +		dev_warn(dev, "populating child nodes err:%d\n", ret);
-> +
-> +	am65_cpsw_nuss_get_ver(common);
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IE1pY2hhZWwgV2FsbGUgPG1p
+Y2hhZWxAd2FsbGUuY2M+DQo+U2VudDogMjAyMMTqM9TCN8jVIDQ6NTQNCj5UbzogZG1hZW5naW5l
+QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+bGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+DQo+Q2M6IFZpbm9kIEtvdWwgPHZrb3VsQGtlcm5lbC5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtk
+dEBrZXJuZWwub3JnPjsgTWFyaw0KPlJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgU2hh
+d24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgTGVvIExpDQo+PGxlb3lhbmcubGlAbnhwLmNv
+bT47IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT47IE1pY2hhZWwgV2FsbGUNCj48bWljaGFlbEB3
+YWxsZS5jYz4NCj5TdWJqZWN0OiBbRVhUXSBbUEFUQ0ggMi8yXSBhcm02NDogZHRzOiBsczEwMjhh
+OiBhZGQgImZzbCx2ZjYxMC1lZG1hIg0KPmNvbXBhdGlibGUNCj4NCj5DYXV0aW9uOiBFWFQgRW1h
+aWwNCj4NCj5UaGUgYm9vdGxvYWRlciBkb2VzIHRoZSBJT01NVSBmaXh1cCBhbmQgZHluYW1pY2Fs
+bHkgYWRkcyB0aGUgImlvbW11cyINCj5wcm9wZXJ0eSB0byBkZXZpY2VzIGFjY29yZGluZyB0byBp
+dHMgY29tcGF0aWJsZSBzdHJpbmcuIEluIGNhc2Ugb2YgdGhlIGVETUENCj5jb250cm9sbGVyIHRo
+aXMgcHJvcGVydHkgaXMgbWlzc2luZy4gQWRkIGl0LiBBZnRlciB0aGF0IHRoZSBJT01NVSB3aWxs
+IHdvcmsgd2l0aA0KPnRoZSBlRE1BIGNvcmUuDQo+DQo+U2lnbmVkLW9mZi1ieTogTWljaGFlbCBX
+YWxsZSA8bWljaGFlbEB3YWxsZS5jYz4NCj4tLS0NCj4gYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8IDIgKy0NCj4gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
+aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+DQo+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj5iL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj5pbmRleCBiMTUyZmE5MGNmNWMuLmFhNDY3YmZmMjIw
+OSAxMDA2NDQNCj4tLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4
+YS5kdHNpDQo+KysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEu
+ZHRzaQ0KPkBAIC00NDcsNyArNDQ3LDcgQEANCj4NCj4gICAgICAgICAgICAgICAgZWRtYTA6IGRt
+YS1jb250cm9sbGVyQDIyYzAwMDAgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICNkbWEtY2Vs
+bHMgPSA8Mj47DQo+LSAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMx
+MDI4YS1lZG1hIjsNCj4rICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxs
+czEwMjhhLWVkbWEiLA0KPisgImZzbCx2ZjYxMC1lZG1hIjsNCkhpIE1pY2hhZWwsDQoNCllvdSBz
+aG91bGQgY2hhbmdlIGl0IG9uIGJvb3Rsb2FkZXIgaW5zdGVhZCBvZiBrZXJuZWwsIFNvbWUgUmVn
+IG9mIExTMTAyOGEgaXMgZGlmZmVyZW50DQpmcm9tIG90aGVycywgU28gd2UgdXNlZCBjb21wYXRp
+YmxlICJmc2wsbHMxMDI4YS1lZG0iIHRvIGRpc3Rpbmd1aXNoICIgZnNsLHZmNjEwLWVkbWEiLg0K
+DQpUaGFua3MsDQpQZW5nDQo+ICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweDIy
+YzAwMDAgMHgwIDB4MTAwMDA+LA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDAg
+MHgyMmQwMDAwIDB4MCAweDEwMDAwPiwNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8
+MHgwIDB4MjJlMDAwMCAweDAgMHgxMDAwMD47DQo+LS0NCj4yLjIwLjENCg0K
