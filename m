@@ -2,70 +2,154 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE88FC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 09:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110BFC10F26
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 09:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBB4206D5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 09:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE64B2075B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 09:25:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZOqzzySJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgCGJOC (ORCPT
+        id S1726193AbgCGJZ7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 04:14:02 -0500
-Received: from elvis.franken.de ([193.175.24.41]:54703 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgCGJOC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 7 Mar 2020 04:14:02 -0500
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jAVWw-0000pd-00; Sat, 07 Mar 2020 10:13:58 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 5A923C0FA0; Sat,  7 Mar 2020 10:06:17 +0100 (CET)
-Date:   Sat, 7 Mar 2020 10:06:17 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Sat, 7 Mar 2020 04:25:59 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:57673 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgCGJZ6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 04:25:58 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 11FCA23EB4;
+        Sat,  7 Mar 2020 10:25:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583573156;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k5ZQ+jGPB/XqVL4rRP9EmsAWoBDvpiXvAb7VKbopIoM=;
+        b=ZOqzzySJsyMFJdD2BnnD0p1c2FIDVyA1rZSwjwFlgyKyIuYiUXq8hJPZ3bhvzq4vFWspVW
+        xdNVvVSKbL/plsWkSUo9TlTb+xhQKzVP8uf9VP/sbxpkJxs3RuFK+lseR6BEufLKutSHH8
+        pjfkdV4Qoxlopt0pYskNih+n9Q8oj2w=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 07 Mar 2020 10:25:55 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v6] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-Message-ID: <20200307090617.GA4570@alpha.franken.de>
-References: <cccce8a3866e54859d04b3f67c7414c3efb1eedd.1583515678.git.hns@goldelico.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cccce8a3866e54859d04b3f67c7414c3efb1eedd.1583515678.git.hns@goldelico.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Subject: Re: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
+ compatible
+In-Reply-To: <VI1PR04MB44312A940BC5BFC7F13A5706EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20200306205403.29881-1-michael@walle.cc>
+ <20200306205403.29881-2-michael@walle.cc>
+ <VI1PR04MB44312A940BC5BFC7F13A5706EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
+Message-ID: <e0be23f7d1307621151594dd66d2b8fd@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 11FCA23EB4
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[10];
+         NEURAL_HAM(-0.00)[-0.462];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 06:27:58PM +0100, H. Nikolaus Schaller wrote:
-> There is a ACT8600 on the CI20 board and the bindings of the
-> ACT8865 driver have changed without updating the CI20 device
-> tree. Therefore the PMU can not be probed successfully and
-> is running in power-on reset state.
+Hi Peng,
+
+Am 2020-03-07 03:09, schrieb Peng Ma:
+>> -----Original Message-----
+>> From: Michael Walle <michael@walle.cc>
+>> Sent: 2020年3月7日 4:54
+>> To: dmaengine@vger.kernel.org; devicetree@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+>> Cc: Vinod Koul <vkoul@kernel.org>; Rob Herring <robh+dt@kernel.org>; 
+>> Mark
+>> Rutland <mark.rutland@arm.com>; Shawn Guo <shawnguo@kernel.org>; Leo 
+>> Li
+>> <leoyang.li@nxp.com>; Peng Ma <peng.ma@nxp.com>; Michael Walle
+>> <michael@walle.cc>
+>> Subject: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
+>> compatible
+>> 
+>> Caution: EXT Email
+>> 
+>> The bootloader does the IOMMU fixup and dynamically adds the "iommus"
+>> property to devices according to its compatible string. In case of the 
+>> eDMA
+>> controller this property is missing. Add it. After that the IOMMU will 
+>> work with
+>> the eDMA core.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>> arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> index b152fa90cf5c..aa467bff2209 100644
+>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> @@ -447,7 +447,7 @@
+>> 
+>>                edma0: dma-controller@22c0000 {
+>>                        #dma-cells = <2>;
+>> -                       compatible = "fsl,ls1028a-edma";
+>> +                       compatible = "fsl,ls1028a-edma",
+>> + "fsl,vf610-edma";
+> Hi Michael,
 > 
-> Fix DT to match the latest act8865-regulator bindings.
+> You should change it on bootloader instead of kernel, Some Reg of
+> LS1028a is different
+> from others, So we used compatible "fsl,ls1028a-edm" to distinguish "
+> fsl,vf610-edma".
+
+Yes this might be the right thing to do. So since it is NXPs bootloader
+feel free to fix that ;) Looking at the u-boot code right now, I don't
+even know it that is the right fix at all. The fixup code in u-boot is
+SoC independent (its in fsl_icid.h and is enabled with CONFIG_LSCH3, ie
+your chassis version). For example, the sdhc fixup will scan the nodes
+for "compatible = fsl,esdhc", which is also the secondary compatible
+for the "ls1028a-esdhc" compatible.
+
+And here is another reason to have it this way: we need backwards
+compatibility, the are already boards out there whose bootloader will
+fix-up the "old" node. Thus I don't see any other possibilty.
+
+-michael
+
 > 
-> Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  arch/mips/boot/dts/ingenic/ci20.dts | 39 ++++++++++++++++++-----------
->  1 file changed, 24 insertions(+), 15 deletions(-)
-
-applied to mips-fixes.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> Thanks,
+> Peng
+>>                        reg = <0x0 0x22c0000 0x0 0x10000>,
+>>                              <0x0 0x22d0000 0x0 0x10000>,
+>>                              <0x0 0x22e0000 0x0 0x10000>;
+>> --
+>> 2.20.1
