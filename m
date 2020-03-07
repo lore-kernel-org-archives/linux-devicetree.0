@@ -2,118 +2,91 @@ Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5A5C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83824C10F26
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 14:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842112075B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 13:49:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guNv2u8a"
+	by mail.kernel.org (Postfix) with ESMTP id 53E222075B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 14:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583591127;
+	bh=O+87n042lk3PkORkXovI5bSszMbNt147sH09kFHUQZc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TZEM/0H06BikU+C4RHA62TqaB+3BHjOeFmeqqA0Qu0a3kBH6AFuH8zI3GPcO0RY7O
+	 E8+tgyTRcl227GbtbK77kXnXBWekXiFgU14Y2pYOwt6R1te9J+TygGyKr1uCZLKfHY
+	 xXOD8+f18QMa0/mv3l9VbE+DOXRexOBS1F5AuCGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgCGNsy (ORCPT
+        id S1726174AbgCGOZ0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:48:54 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55452 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgCGNsy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 08:48:54 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 6so5383195wmi.5;
-        Sat, 07 Mar 2020 05:48:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2IH7KzQC1elq12VnowpNAipmMQUPET2Kh6DcuNwrX+E=;
-        b=guNv2u8aad75h2Dy+CJemJg8fZOWKV4MRdf8+4vmo1vcdNRW4xM0xlxHbfDzcSVTWH
-         lpKIilyU+OfrRv9S4WBaa9wGJYEmYtV8cQfsmwHTeKzpchK29R3S/OWZVMtH/DlKV+L+
-         wdQvR7I0hckZ/b4y6ewyPLyuhF0n5h1/g1TXJiTwltIOG2NpgAckcU44N0O8PMVaDnpl
-         Gr+DAdmg1TUfS0AVs0sDJVJu4PILQ/CYpCEgsqUHZ8ukdPqafisx3oJve9p5h6LMUdM2
-         iozvkvfbM2szO74WAIW4QRYDCzVo5E/Pgp/J1w91GdxIGAz7diGsiwe9TAd1siaXorel
-         CRQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2IH7KzQC1elq12VnowpNAipmMQUPET2Kh6DcuNwrX+E=;
-        b=ZMWw+clE1xcUAZL2nsJdXhgiM7ia9QVg4BhmwL+9pWW6cTZMicvtq/Al4L7fWeWZK1
-         fd7Ub/J38audLNisn66XadIU2DYAmPQtYt9JC9RPvFwZEByrrPm7oQHX3K51I/ZmJC/6
-         +9mnFSLZOtzY37VmDr1vp2WOn7jZjG1poXhpLt1oEFxz7g4eFysnjQXAFuxwB+KkEmgq
-         OtTTB1vNuDYB78liM6C4/yEYGV+Lz5msysLDTA3khsl9TE0T5fWJEtyxjdgytMLBTT6/
-         3YK67cgZ2znlUNYHLi5Umpe4tZeCqvLzQKv/wXPEJcwJjGQaeqfn6yhVIa7mXdTKeyib
-         h6mw==
-X-Gm-Message-State: ANhLgQ2Dk/cRPu+VP4Gc1yS3ijOjzWURIrBU43mvOGEXG5bLFHYX4FLL
-        o1WuMuoJxw6zst3+1VukhReJL8Xf
-X-Google-Smtp-Source: ADFU+vv3PgqIbCaqS+/cHZ/qOpqqVZm0POM2tszTay3g45d6g3SYV6XbuREuuyTf4OoiuGgSVA9FVg==
-X-Received: by 2002:a1c:cc11:: with SMTP id h17mr10429280wmb.154.1583588930249;
-        Sat, 07 Mar 2020 05:48:50 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 9sm11767265wmx.32.2020.03.07.05.48.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Mar 2020 05:48:49 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/5] arm64: dts: remove no-emmc from mmc node for Rockchip PX5 EVB
-Date:   Sat,  7 Mar 2020 14:48:39 +0100
-Message-Id: <20200307134841.13803-3-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200307134841.13803-1-jbx6244@gmail.com>
-References: <20200307134841.13803-1-jbx6244@gmail.com>
+        Sat, 7 Mar 2020 09:25:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726154AbgCGOZ0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 7 Mar 2020 09:25:26 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D82EF206D5;
+        Sat,  7 Mar 2020 14:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583591126;
+        bh=O+87n042lk3PkORkXovI5bSszMbNt147sH09kFHUQZc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I5+9DXhZkr8Q/Qh/JRatBSfcgpqDpdE4nT5OlH06Vu6sWh3alDs6JOsejOOMgFlAM
+         uy4Tb+I4ZuSOS9ZlSMGzAbQ53WDPIQmiHLEsCb6R0wDRE5miJ+Fzy1DPdLrkJE8dP8
+         Iz6SGy11IzGMSfQwCS9N+ZVLiNw0DNWRd9Mv1dng=
+Date:   Sat, 7 Mar 2020 14:25:21 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH v8 1/8] include: fpga: adi-axi-common.h: fixup
+ whitespace tab -> space
+Message-ID: <20200307142521.3efbe4a4@archlinux>
+In-Reply-To: <20200306110100.22092-2-alexandru.ardelean@analog.com>
+References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
+        <20200306110100.22092-2-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below does not detect all errors
-in combination with 'additionalProperties: false' and
-allOf:
-  - $ref: "synopsys-dw-mshc-common.yaml#"
-allOf:
-  - $ref: "mmc-controller.yaml#"
+On Fri, 6 Mar 2020 13:00:53 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-'additionalProperties' applies to all properties that are not
-accounted-for by 'properties' or 'patternProperties' in
-the immediate schema.
+> The initial version use a tab between '#define' & 'ADI_AXI_REG_VERSION'.
+> This changes it to space. The change is purely cosmetic.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Whilst this is trivial it still needs an ack from relevant maintainer
+for that directory. Moritz I think...
 
-First when we combine rockchip-dw-mshc.yaml,
-synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
-this error:
+Jonathan
 
-arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dt.yaml: mmc@ff0c0000:
-'no-emmc' does not match any of the regexes:
-'^.*@[0-9]+$', '^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
-uhs-(sdr(12|25|50|104)|ddr50))$', 'pinctrl-[0-9]+'
-
-'no-emmc' is not a valid property name for mmc nodes,
-so remove it.
-
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
-index 231db0305..5ffd7b4d3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
-@@ -239,7 +239,6 @@
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
- 	card-detect-delay = <200>;
--	no-emmc;
- 	no-sdio;
- 	sd-uhs-sdr12;
- 	sd-uhs-sdr25;
--- 
-2.11.0
+> ---
+>  include/linux/fpga/adi-axi-common.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
+> index 7fc95d5c95bb..ebd4e07ae3d8 100644
+> --- a/include/linux/fpga/adi-axi-common.h
+> +++ b/include/linux/fpga/adi-axi-common.h
+> @@ -11,7 +11,7 @@
+>  #ifndef ADI_AXI_COMMON_H_
+>  #define ADI_AXI_COMMON_H_
+>  
+> -#define	ADI_AXI_REG_VERSION			0x0000
+> +#define ADI_AXI_REG_VERSION			0x0000
+>  
+>  #define ADI_AXI_PCORE_VER(major, minor, patch)	\
+>  	(((major) << 16) | ((minor) << 8) | (patch))
 
