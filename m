@@ -2,217 +2,143 @@ Return-Path: <SRS0=ZTIy=4Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBF5C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 11:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9EFC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 13:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4502084E
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 11:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D9E20866
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 13:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewXgXl+X"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Vc/4k9oN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgCHLue (ORCPT
+        id S1726291AbgCHNbH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 07:50:34 -0400
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:40819 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgCHLue (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 07:50:34 -0400
-Received: by mail-lj1-f180.google.com with SMTP id 19so4178749ljj.7
-        for <devicetree@vger.kernel.org>; Sun, 08 Mar 2020 04:50:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8U0arpJjyZG4PEcID5P3OdBxXe5FL2ju3xXw7vB6b5Y=;
-        b=ewXgXl+XIX83J0qPxVIMouqkdbaEsp2Skrles62G1DDhD95uW8cRlgGyRlpnH0H3q5
-         RsdI3gjugvptUjBfaVTe1nFHkAIOg+uTzc1ZotHJ2SLOci6SgdggNrU8ki+uwnF9+KFc
-         NtbYQLD3SDkCthoXRu/yyud8tZatR2jQx+tH2+pJp8FVz64WT5Quxo7/0o5iPDi52TbK
-         hHWg5+MgPgyfVtvCj1S8oB7KQWxdM29PxS3o/Pfsm9YKrEMeXYelbT907+lS6ttJJFFh
-         SdszsXHwbzJfbKAzu/TZzpnip2D2fMlCGt6U6iTNBC9Yl2PJQIm94DK46xKo5OYgqEbu
-         KmNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=8U0arpJjyZG4PEcID5P3OdBxXe5FL2ju3xXw7vB6b5Y=;
-        b=uYcxAC4pMjLszvQT/Q91bkWnADeAg7NZRKuSjvwEpPsrKclQ4GoX0Sjdw8X5tX35V2
-         0ziR6eQ6KXP/s8fjXhJ9BzRERG0WGhhP1VYODhpFh8z8nniRrOJpS5xLrIKiCNcYQz0q
-         16AVcgkd+FmvKevLNDqWlDAFsauKbjxuiQ3deizoIuPaV9WYxvkPvQNdI2RXAMKC659V
-         rjhGc7Z3RiC++mqDh39beKAacW7F54FOOQru317JcehlQ7OhMr5neCRQX9mHscpAm2GW
-         QBxq8dw8erojgn+UPB5bNELo9QvOK99d0Vm+xibL79GXuYXN0gmy38OW8gBG4Y8QHWOi
-         5vcw==
-X-Gm-Message-State: ANhLgQ16hppM5Hh0CE8JS1yxOfgpR91ZPGKlq1+q9rcZMjdK1ppf/qfw
-        NhhKD+ivzjjo6mT9L2wwRDI=
-X-Google-Smtp-Source: ADFU+vscdSC5W1WXwbGjsyCNU3QkHsMl8UcRV7mQHXL9XewiB+zCLdzS7TWZx3O9REjmTM8bbAsXbA==
-X-Received: by 2002:a2e:9886:: with SMTP id b6mr3914692ljj.266.1583668231058;
-        Sun, 08 Mar 2020 04:50:31 -0700 (PDT)
-Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id u5sm8557572ljl.75.2020.03.08.04.50.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2020 04:50:30 -0700 (PDT)
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v1 1/1] dt-bindings: display: fix panel warnings
-Date:   Sun,  8 Mar 2020 12:50:17 +0100
-Message-Id: <20200308115017.18563-2-sam@ravnborg.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200308115017.18563-1-sam@ravnborg.org>
-References: <20200308115017.18563-1-sam@ravnborg.org>
+        Sun, 8 Mar 2020 09:31:07 -0400
+Received: from mail-eopbgr40089.outbound.protection.outlook.com ([40.107.4.89]:52159
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726271AbgCHNbH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 8 Mar 2020 09:31:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aOWzq0YnFFCjSqkrf+Pxurf1eNdMMfiDnYfxAOH/li2vAQpyLNY7ifYt/DX5GKj3KNjTBJbJ5D9cD7V3FrxGLK9H5PbxyXNZYA3BxEEZfQ98fxQEJM4DtNUUVdGm1S9yYDdvRRGjf5w1gOpXyGD8HudGs/Xp7ZWlMdNJrwCXkNv1/R+0DXaazcFb9WfEayVaIcMxfZnt+7kxrj79F+TgI56EHZFkMq9WF9RU6+9BKVDuQHkHQ/a9mbLHTKHFsVa0Ocyb5MeWo/UrEXlcnnttqYyycgpml9tveR34fwgNrf4gC52uwPxrvIphvgCxFproxJa5kRqi8NWrMg+caHc6xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KPvGEoa3xXvTsw2glntuKyytxDx+FWSDma8CeW3Y3Lg=;
+ b=QsIwbdmOSruEfHZUOmHCWg+F31aQu7TWXhscSngzfzPWldNYkGrEjjlmF9Q3f9fEorvn94WnthVEf/KxtTT14o+LsNro3Dl6JccX2yZRFYDnoW37gubcdLojPf7wAKpHxeuUbA7vYbJV5HBRtOt+sVqWyMumSu/rXF5j5P8a6Te1oM1eEFiuVkQi3k7VimAhZu+2AbkqPsET2ANLIqCR9JTdAiioOgBUw0z35tguFIWIKSOabHY/E0WVCDIcPBm4yCn03lpzigW4oZkFaN4WhXYS9zQsCb5iPBENYjLEhbkcNkk6Zxho5LRQcCtMNmSd0LqbVKqfFmiHGckjy+lIcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KPvGEoa3xXvTsw2glntuKyytxDx+FWSDma8CeW3Y3Lg=;
+ b=Vc/4k9oNAXXCQ0FIdpxudsj5Qj88SPPfanra6eOlmfiyu9abmc2LOV1nGXaf6iJbznRylF7Uyxyqf4FBfcoH84UAHrtpUtMLdwPz1XYoswmlvxjnEDEoJohKONMuF8ETDH5CPzBgBXKkCXLpVQs6hwl7xjNMtT0SWi4OH4btwB0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6275.eurprd04.prod.outlook.com (20.179.36.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.15; Sun, 8 Mar 2020 13:31:03 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.013; Sun, 8 Mar 2020
+ 13:31:03 +0000
+From:   peng.fan@nxp.com
+To:     sudeep.holla@arm.com, robh+dt@kernel.org
+Cc:     viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V5 0/2] firmware: arm_scmi: add smc/hvc transports support
+Date:   Sun,  8 Mar 2020 21:24:37 +0800
+Message-Id: <1583673879-20714-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0116.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:40::20) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR01CA0116.apcprd01.prod.exchangelabs.com (2603:1096:4:40::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.14 via Frontend Transport; Sun, 8 Mar 2020 13:31:00 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c40ecc2d-67bb-46d5-14bd-08d7c364f286
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6275:|AM0PR04MB6275:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB62759973706A8568B31416B188E10@AM0PR04MB6275.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 03361FCC43
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(366004)(346002)(376002)(136003)(199004)(189003)(5660300002)(16526019)(186003)(2616005)(956004)(2906002)(4326008)(6506007)(6512007)(6666004)(9686003)(52116002)(66556008)(966005)(6486002)(81156014)(81166006)(86362001)(478600001)(8676002)(316002)(66946007)(66476007)(26005)(36756003)(69590400007)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6275;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pjyNX7P1BekYFjENP723m1xtSKhfFwcZFajoNuUeBZIqDvgGOTV4SirkSA5bvrwue2cs3wcDL+9C3YrUcRh41lRB0z/n95INEDpjP3/fYMwkb7WkWD8t/2oXB0GpZi/BNx8jJPi7aVF0M6y9728XX7GICU0+VfKGd2+1y9oIQDA35znr9/yXAmv2BGeRZy/OY+PXhN3bcPhM2KvO1jfhxfUQ8ya/tVtBN4iI/QU4ZGhAgei7u9z3D6L048AQxkTePRmt426HSsrtOg2vG+w2+qizC/jKrRlUpFRRvIxUzHBk6EVmN+4awuuwkhA2O9XFFvTc0AWteTYYIwwMQWOqkVz0zgD2+6hVfwvgWe3NJHHoVInppJXvbghcaCz+fOkRe54s9mWJJSTG0rIYtzypVUod4GO9KM6nVnwnu/3EAHGExyMpSQiQK9e0/z2Fa5U6pvt1M9Rcu1fWPL5Ax4LNnYm+EKtfCiGhCC3/YxO61l92R4arj193KtAPewkTSbQMsPBkT8XbnReGtr8DjxotGSXRqyxYbPzjSg6COyN21uJoRTKC5pjoM6XsVDYIhmFy9kvrJfMe83gfKT1L3mF0lQ==
+X-MS-Exchange-AntiSpam-MessageData: IFqQYgmjgJu/k7E2chCjj57YIMCZ4xJEba16pid4JCONmirIX9uFD+CP05YzVcRaBEBaF7DVBw8Kj7NeZW+2RswQ3Xg7rHRa+ykHeVPgX804dS/9q5/vwI9IJc0XaZxzOQ4g9+xpgpbvcuWohYepCQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c40ecc2d-67bb-46d5-14bd-08d7c364f286
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2020 13:31:03.3771
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IWixPaeQeBstrkZwSIBl1GD8nSG0SAEVgfCQqh13PWXmU/EWqsFeX28wbmhrTzG3Kaj4Vmq9GeukqX46jZdmDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6275
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix following type af warnings in the panel bindings:
+From: Peng Fan <peng.fan@nxp.com>
 
-Warning (unit_address_vs_reg): /example-0/dsi/panel: node has a reg or ranges property, but no unit name
-Warning (unit_address_vs_reg): /example-0/dsi@ff450000: node has a unit name, but no reg property
+V5:
+ Add Rob's R-b tag for patch 1
+ Add mutex for patch 2
 
-Removing the "@xxx" from the node name fixed first warning.
-Adding a missing reg property fixed the second warning
+V4:
+ Drop prot_id in scmi_chan_info, since not used for now.
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- .../devicetree/bindings/display/panel/elida,kd35t133.yaml     | 2 +-
- .../bindings/display/panel/leadtek,ltk500hd1829.yaml          | 2 +-
- .../devicetree/bindings/display/panel/novatek,nt35510.yaml    | 4 ++--
- .../devicetree/bindings/display/panel/orisetech,otm8009a.yaml | 2 +-
- .../devicetree/bindings/display/panel/panel-dpi.yaml          | 2 +-
- .../devicetree/bindings/display/panel/panel-simple-dsi.yaml   | 2 +-
- .../devicetree/bindings/display/panel/raydium,rm68200.yaml    | 2 +-
- .../devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml | 2 +-
- 8 files changed, 9 insertions(+), 9 deletions(-)
+V3:
+ Add back arm,scmi-smc compatible string
+ Change smc-id to arm,smc-id
+ Directly use arm_smccc_1_1_invoke
+ Add prot_id in scmi_chan_info for per protocol shmem usage.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml b/Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml
-index 4bd74eaa61be..aa761f697b7a 100644
---- a/Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/elida,kd35t133.yaml
-@@ -34,7 +34,7 @@ additionalProperties: false
- 
- examples:
-   - |
--    dsi@ff450000 {
-+    dsi {
-         #address-cells = <1>;
-         #size-cells = <0>;
-         panel@0 {
-diff --git a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
-index 4ebcea7d0c63..2c9b8aa34815 100644
---- a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
-@@ -34,7 +34,7 @@ additionalProperties: false
- 
- examples:
-   - |
--    dsi@ff450000 {
-+    dsi {
-         #address-cells = <1>;
-         #size-cells = <0>;
-         panel@0 {
-diff --git a/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml b/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
-index 791fc9daa68b..73d2ff3baaff 100644
---- a/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
-@@ -40,10 +40,10 @@ examples:
-   - |
-     #include <dt-bindings/gpio/gpio.h>
- 
--    dsi@a0351000 {
-+    dsi {
-         #address-cells = <1>;
-         #size-cells = <0>;
--        panel {
-+        panel@0 {
-             compatible = "hydis,hva40wv1", "novatek,nt35510";
-             reg = <0>;
-             vdd-supply = <&ab8500_ldo_aux4_reg>;
-diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-index 6e6ac995c27b..4b6dda6dbc0f 100644
---- a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-@@ -39,7 +39,7 @@ required:
- 
- examples:
-   - |
--    dsi@0 {
-+    dsi {
-       #address-cells = <1>;
-       #size-cells = <0>;
-       panel@0 {
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-index 5275d350f8cb..f63870384c00 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-@@ -48,7 +48,7 @@ additionalProperties: false
- 
- examples:
-   - |
--    panel@0 {
-+    panel {
-         compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-         label = "osddisplay";
-         power-supply = <&vcc_supply>;
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-index 8b60368a2425..cefe19b6bf44 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-@@ -50,7 +50,7 @@ required:
- 
- examples:
-   - |
--    mdss_dsi@fd922800 {
-+    mdss_dsi {
-       #address-cells = <1>;
-       #size-cells = <0>;
-       panel@0 {
-diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml b/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
-index 09149f140d5f..a35ba16fc000 100644
---- a/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
-@@ -42,7 +42,7 @@ required:
- 
- examples:
-   - |
--    dsi@0 {
-+    dsi {
-       #address-cells = <1>;
-       #size-cells = <0>;
-       panel@0 {
-diff --git a/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
-index 186e5e1c8fa3..39ec7ae525ad 100644
---- a/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
-@@ -34,7 +34,7 @@ additionalProperties: false
- 
- examples:
-   - |
--    dsi@ff450000 {
-+    dsi {
-         #address-cells = <1>;
-         #size-cells = <0>;
-         panel@0 {
+V2:
+ patch 1/2: only add smc-id property
+ patch 2/2: Parse smc/hvc from psci node
+	    Use prot_id as 2nd arg when issue smc/hvc
+	    Differentiate tranports using mboxes or smc-id property
+https://lore.kernel.org/patchwork/cover/1193435/
+
+This is to add smc/hvc transports support, based on Viresh's v6.
+SCMI firmware could be implemented in EL3, S-EL1, NS-EL2 or other
+A core exception level. Then smc/hvc could be used. And for vendor
+specific firmware, a wrapper layer could added in EL3, S-EL1,
+NS-EL2 and etc to translate SCMI calls to vendor specific firmware calls.
+
+A new compatible string arm,scmi-smc is added. arm,scmi is still for
+mailbox transports.
+
+Per smc/hvc, only Tx supported.
+
+Peng Fan (2):
+  dt-bindings: arm: arm,scmi: add smc/hvc transport
+  firmware: arm_scmi: add smc/hvc transport
+
+ Documentation/devicetree/bindings/arm/arm,scmi.txt |   3 +-
+ drivers/firmware/arm_scmi/Makefile                 |   2 +-
+ drivers/firmware/arm_scmi/common.h                 |   1 +
+ drivers/firmware/arm_scmi/driver.c                 |   1 +
+ drivers/firmware/arm_scmi/smc.c                    | 152 +++++++++++++++++++++
+ 5 files changed, 157 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/smc.c
+
 -- 
-2.20.1
+2.16.4
 
