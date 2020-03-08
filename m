@@ -2,234 +2,114 @@ Return-Path: <SRS0=ZTIy=4Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F37DC18E5B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 15:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7E7C10F28
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C0B2072A
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 15:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5364820866
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:26:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="WI2lBknG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbgCHPdw (ORCPT
+        id S1726259AbgCHQ0i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 11:33:52 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49944 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgCHPdv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Mar 2020 11:33:51 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AC9781A1510;
-        Sun,  8 Mar 2020 16:33:49 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 684401A14FD;
-        Sun,  8 Mar 2020 16:33:42 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C8D42402D5;
-        Sun,  8 Mar 2020 23:33:33 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/3] thermal: imx8mm: Add i.MX8MP support
-Date:   Sun,  8 Mar 2020 23:27:19 +0800
-Message-Id: <1583681240-14782-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583681240-14782-1-git-send-email-Anson.Huang@nxp.com>
-References: <1583681240-14782-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 8 Mar 2020 12:26:38 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45364 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgCHQ0i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 12:26:38 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b13so5623323lfb.12
+        for <devicetree@vger.kernel.org>; Sun, 08 Mar 2020 09:26:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=OxYUCpymTQKyh/Zbcj6rnN2cqzFH378GX45gA5Aa85c=;
+        b=WI2lBknG1kB4QUIwRtAqQSF0FeqwrfWNQEX6PKrjPmBBkdEkE5XEz94twM/+Pkc2DJ
+         7Z/gOBhyNZ0phrtxKil6xb6sMNbJGAX0oz6im9TK8yDISsikzFYa1h1GNDqNU1BRusXs
+         op8vGT5TH9UWKqhzwXwk9s/f94TgAwMxvCzyD6HJlhjZnSqtZDIfq04RMT9UZkNwYOtZ
+         q9yaVeDrlhtxPKn2rfciU/wG1shzSVot114jen77a4cbjBvKux+ZmrB3UOpVd3sqa0kb
+         L940Ubg5DDOvmXS1uCFfamvDpMNivcyrQ75v92SgTw0t+OAt7hBXqpM1SjoA8jK7K+6W
+         oMCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=OxYUCpymTQKyh/Zbcj6rnN2cqzFH378GX45gA5Aa85c=;
+        b=mzY7qDN2y+GFQ4XabBhVYO4sRoW2b1NrrySohOfRDGOEcBwHu3swtRDBlVRcLbbkDm
+         U2B+1qRX8cIUGgN3Chx/C8sPzNW672MkAVgduwKb94TZcqVeOf3qgYllJ2DCWdpYlg/a
+         SetdO09/UUXxhHafcc/4j/sBMYyOcr1YmhtD6cF4oQXViSuf4RigZ1t64XJ+wlQKeqDo
+         ylSrOXvoPcRMEFk4J4H0xF7Ig4N5Dy+OdQIudmMv9ErsWXokP3RhdI07lwYBIPTOEM8J
+         1Rj76WsnzWQza30qPcttzkcDYZxp89sbP7nHzj5ilsBFUr4h59qOkF5JqWfpQ8nDlc/D
+         HcFg==
+X-Gm-Message-State: ANhLgQ3MGgzBcktE1xgkeZJuKhn7FZ7UU9o00kjqG1K8zXyrGK7tMuX3
+        mtP3b/n1YsaS0RiJjUBa7tuPrA==
+X-Google-Smtp-Source: ADFU+vvLj9947q2eq5NymLrmOdpYhDI4kv3dx/GK9iDq9j8U+KsaxvWNy3cVavNC8pPNW8aOpHZgNA==
+X-Received: by 2002:a19:c70d:: with SMTP id x13mr3177936lff.204.1583684795775;
+        Sun, 08 Mar 2020 09:26:35 -0700 (PDT)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id 140sm7960803lfk.19.2020.03.08.09.26.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 09:26:34 -0700 (PDT)
+Date:   Sun, 8 Mar 2020 17:26:34 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: rcar-gen3-thermal: Add
+ r8a77961 support
+Message-ID: <20200308162634.GB2975348@oden.dyn.berto.se>
+References: <20200306105503.24267-1-geert+renesas@glider.be>
+ <20200306105503.24267-2-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200306105503.24267-2-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX8MP shares same TMU with i.MX8MM, the only difference is i.MX8MP
-has two thermal sensors while i.MX8MM ONLY has one, add multiple sensors
-support for i.MX8MM TMU driver.
+Hi Geert,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/thermal/imx8mm_thermal.c | 108 +++++++++++++++++++++++++++++++++------
- 1 file changed, 93 insertions(+), 15 deletions(-)
+Thanks for your work.
 
-diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
-index d597ceb..8a87ed0 100644
---- a/drivers/thermal/imx8mm_thermal.c
-+++ b/drivers/thermal/imx8mm_thermal.c
-@@ -10,34 +10,75 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/thermal.h>
- 
- #include "thermal_core.h"
- 
- #define TER			0x0	/* TMU enable */
-+#define TPS			0x4
- #define TRITSR			0x20	/* TMU immediate temp */
- 
- #define TER_EN			BIT(31)
- #define TRITSR_VAL_MASK		0xff
- 
--#define TEMP_LOW_LIMIT		10
-+#define PROBE_SEL_ALL		GENMASK(31, 30)
- 
--struct imx8mm_tmu {
-+#define PROBE0_STATUS_OFFSET	30
-+#define PROBE0_VAL_OFFSET	16
-+#define SIGN_BIT		BIT(7)
-+#define TEMP_VAL_MASK		GENMASK(6, 0)
-+
-+#define VER1_TEMP_LOW_LIMIT	10
-+#define VER2_TEMP_LOW_LIMIT	-40
-+#define VER2_TEMP_HIGH_LIMIT	125
-+
-+#define TMU_VER1		0x1
-+#define TMU_VER2		0x2
-+
-+struct thermal_soc_data {
-+	u32 num_sensors;
-+	u32 version;
-+};
-+
-+struct tmu_sensor {
-+	struct imx8mm_tmu *priv;
-+	u32 hw_id;
- 	struct thermal_zone_device *tzd;
-+};
-+
-+struct imx8mm_tmu {
- 	void __iomem *base;
- 	struct clk *clk;
-+	const struct thermal_soc_data *socdata;
-+	struct tmu_sensor sensors[0];
- };
- 
- static int tmu_get_temp(void *data, int *temp)
- {
--	struct imx8mm_tmu *tmu = data;
-+	struct tmu_sensor *sensor = data;
-+	struct imx8mm_tmu *tmu = sensor->priv;
-+	bool ready;
- 	u32 val;
- 
--	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
--	if (val < TEMP_LOW_LIMIT)
--		return -EAGAIN;
-+	if (tmu->socdata->version == TMU_VER1) {
-+		val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
-+		if (val < VER1_TEMP_LOW_LIMIT)
-+			return -EAGAIN;
-+	} else {
-+		val = readl_relaxed(tmu->base + TRITSR);
-+		ready = val & (1 << (sensor->hw_id + PROBE0_STATUS_OFFSET));
-+		val = (val >> (sensor->hw_id * PROBE0_VAL_OFFSET))
-+		      & TRITSR_VAL_MASK;
-+		if (val & SIGN_BIT) /* negative */
-+			val = (~(val & TEMP_VAL_MASK) + 1);
-+
-+		*temp = val;
-+		if (!ready || *temp < VER2_TEMP_LOW_LIMIT ||
-+		    *temp > VER2_TEMP_HIGH_LIMIT)
-+			return -EAGAIN;
-+	}
- 
- 	*temp = val * 1000;
- 
-@@ -50,14 +91,21 @@ static struct thermal_zone_of_device_ops tmu_tz_ops = {
- 
- static int imx8mm_tmu_probe(struct platform_device *pdev)
- {
-+	const struct thermal_soc_data *data;
- 	struct imx8mm_tmu *tmu;
- 	u32 val;
- 	int ret;
-+	int i;
-+
-+	data = of_device_get_match_data(&pdev->dev);
- 
--	tmu = devm_kzalloc(&pdev->dev, sizeof(struct imx8mm_tmu), GFP_KERNEL);
-+	tmu = devm_kzalloc(&pdev->dev, struct_size(tmu, sensors,
-+			   data->num_sensors), GFP_KERNEL);
- 	if (!tmu)
- 		return -ENOMEM;
- 
-+	tmu->socdata = data;
-+
- 	tmu->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(tmu->base))
- 		return PTR_ERR(tmu->base);
-@@ -77,16 +125,35 @@ static int imx8mm_tmu_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	tmu->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0,
--							tmu, &tmu_tz_ops);
--	if (IS_ERR(tmu->tzd)) {
--		dev_err(&pdev->dev,
--			"failed to register thermal zone sensor: %d\n", ret);
--		return PTR_ERR(tmu->tzd);
-+	/* disable the monitor during initialization */
-+	val = readl_relaxed(tmu->base + TER);
-+	val &= ~TER_EN;
-+	writel_relaxed(val, tmu->base + TER);
-+
-+	for (i = 0; i < data->num_sensors; i++) {
-+		tmu->sensors[i].priv = tmu;
-+		tmu->sensors[i].tzd =
-+			devm_thermal_zone_of_sensor_register(&pdev->dev, i,
-+							     &tmu->sensors[i],
-+							     &tmu_tz_ops);
-+		if (IS_ERR(tmu->sensors[i].tzd)) {
-+			dev_err(&pdev->dev,
-+				"failed to register thermal zone sensor[%d]: %d\n",
-+				i, ret);
-+			return PTR_ERR(tmu->sensors[i].tzd);
-+		}
-+		tmu->sensors[i].hw_id = i;
- 	}
- 
- 	platform_set_drvdata(pdev, tmu);
- 
-+	/* enable all the probes for V2 TMU */
-+	if (tmu->socdata->version == TMU_VER2) {
-+		val = readl_relaxed(tmu->base + TPS);
-+		val |= PROBE_SEL_ALL;
-+		writel_relaxed(val, tmu->base + TPS);
-+	}
-+
- 	/* enable the monitor */
- 	val = readl_relaxed(tmu->base + TER);
- 	val |= TER_EN;
-@@ -111,8 +178,19 @@ static int imx8mm_tmu_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static struct thermal_soc_data imx8mm_tmu_data = {
-+	.num_sensors = 1,
-+	.version = TMU_VER1,
-+};
-+
-+static struct thermal_soc_data imx8mp_tmu_data = {
-+	.num_sensors = 2,
-+	.version = TMU_VER2,
-+};
-+
- static const struct of_device_id imx8mm_tmu_table[] = {
--	{ .compatible = "fsl,imx8mm-tmu", },
-+	{ .compatible = "fsl,imx8mm-tmu", .data = &imx8mm_tmu_data, },
-+	{ .compatible = "fsl,imx8mp-tmu", .data = &imx8mp_tmu_data, },
- 	{ },
- };
- 
+On 2020-03-06 11:55:02 +0100, Geert Uytterhoeven wrote:
+> Document R-Car M3-W+ (R8A77961) SoC bindings.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+>  Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+> index 12c740b975f78690..2993fa720195308f 100644
+> --- a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>  			    - "renesas,r8a774b1-thermal" (RZ/G2N)
+>  			    - "renesas,r8a7795-thermal" (R-Car H3)
+>  			    - "renesas,r8a7796-thermal" (R-Car M3-W)
+> +			    - "renesas,r8a77961-thermal" (R-Car M3-W+)
+>  			    - "renesas,r8a77965-thermal" (R-Car M3-N)
+>  			    - "renesas,r8a77980-thermal" (R-Car V3H)
+>  - reg			: Address ranges of the thermal registers. Each sensor
+> -- 
+> 2.17.1
+> 
+
 -- 
-2.7.4
-
+Regards,
+Niklas Söderlund
