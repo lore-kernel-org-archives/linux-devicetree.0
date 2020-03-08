@@ -2,138 +2,115 @@ Return-Path: <SRS0=ZTIy=4Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F12C10F27
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 21:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF90BC10F27
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 22:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65F720684
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 21:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5220D2083E
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 22:25:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o8i/L3Rz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=heimpold.de header.i=@heimpold.de header.b="A3oqdy+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgCHVvH (ORCPT
+        id S1726391AbgCHWZJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 17:51:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46348 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgCHVvG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 17:51:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w12so3158581pll.13
-        for <devicetree@vger.kernel.org>; Sun, 08 Mar 2020 14:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/0umr1qG/qgpEFz5deDRXgTYtCKL5W9w5+Ev+GQb+Dg=;
-        b=o8i/L3RzqvaBlnfdNPvNBkov0CbZ1ev3aXO9OELC4EF6fIuiIT+5wosdkaM2+PZ3Fh
-         JT/oDPO4SPzaTCp5mhzvVtDl1d8XsQtAdmQP9d3030ErzHH/rZ9O8g6nE7H0X2eQpvQh
-         DR5nt4NL35U1p5PBkQE4vOYjrHpltQ4+WUNrEhY0j0TXN/du5AD4OONWZjpUyiY7xuMF
-         04wxOJct1+9W6EzedROi0pHgbTKzlMxWbxr/Xg+mXoVhxux29YGxEKS0x8t69kP1EVVx
-         nVry261wR5FtZyy+ASdSoLqjgZMM/FJVLo0ACyyGE0q7BeneVF6nygiqUC7sVLZin2hp
-         ZLbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/0umr1qG/qgpEFz5deDRXgTYtCKL5W9w5+Ev+GQb+Dg=;
-        b=remKEaywDp90qO7T6zqEGhBZpsvBuDn2q/dWeSm952U9/Ylyi6uo7u2sosQp9pGLBR
-         59OvQgXkhP4tNxYvGDvd3EV3BOuwoU/gNO6+e8pqZcPqggt3nW2JlWUb47jBbk5Bx13v
-         CrNRzz1nqqXkY/cEfjJQKu0qUW8EKGQuPy25KF1TM0JBqdPX4grulAHtJFnMl+hzyNsO
-         LihLmOzHX0nsWX1VhqRpJCUBQ2t0mP0ZKbQ/XShHee0Ci+rdSnKaK2VNm/o2tscg8uIC
-         BcjZI25qMcrVt3ZbDLZm2RmwQV09D8Fh3ZqXSV7lszdyzuudvXval5K7wusoDo2YdNdB
-         I93Q==
-X-Gm-Message-State: ANhLgQ0FXSqBdWjd4E5AmNx4wY6UUtRb6AKtjFK8DVYkpRleJdpPKsK5
-        X+peWvaSjzSkqOI0sXgPmSfRzA==
-X-Google-Smtp-Source: ADFU+vso95SaWak3tER3wqc75VRhPc5TbTb2THpk8dh/f8oHGiH8kxhVJ28evS719oogUmCiIiHFLg==
-X-Received: by 2002:a17:90a:c78b:: with SMTP id gn11mr13899610pjb.97.1583704263403;
-        Sun, 08 Mar 2020 14:51:03 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g18sm43038368pfi.80.2020.03.08.14.51.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2020 14:51:02 -0700 (PDT)
-Date:   Sun, 8 Mar 2020 14:51:00 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     adrian.hunter@intel.com, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        rampraka@codeaurora.org, vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org
-Subject: Re: [RFC v4 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW
- scaling strings
-Message-ID: <20200308215100.GM1094083@builder>
-References: <1582030833-12964-1-git-send-email-ppvk@codeaurora.org>
- <1582030833-12964-3-git-send-email-ppvk@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582030833-12964-3-git-send-email-ppvk@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Sun, 8 Mar 2020 18:25:09 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:20612 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbgCHWZJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 18:25:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583706306;
+        s=strato-dkim-0002; d=heimpold.de;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=d9uANtqqjVRwOWMSyb++r8818TlXjH+7k+MeOvfjjAo=;
+        b=A3oqdy+PX8PD0cNpjQs47ICTEpjOrCOukRPRFlPEOYv6xPq9i09aHbtjEHRADGyeQo
+        BJ4ITDeLGy2+YNXfS9ZKry9vEAMjx8PLspeM0FecHZoBm2cl1Cka3WahN3INoV0dQlhK
+        lCoq3HIR02fggWNrgymb4QXxYaGGA5BLkj0i7bvvMCGtwqCqlKcCziyAK0eJRXNeEidc
+        Or/dSlYXiFfovllXJcuQvYi3vgSo8tCUQaoO67eBrxCEWxr87D0VFcDQvNftTdzaxbD5
+        7JfWU9grT6yTD92P0Lc7nQnzfKnMba4t03nBOGMjQvapwRfquS7ANLKLMBkM9mttDXHC
+        newA==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EW8QnKjhhg/vO4pzqdNytq77N6ZKUSN7PfdWTGQORRBv+ASfYPl1MuUOoWmb+wVC/S4hO3Q59Bxjg5s+JNFtEYYiw=="
+X-RZG-CLASS-ID: mo00
+Received: from tonne.mhei.heimpold.itr
+        by smtp.strato.de (RZmta 46.2.0 AUTH)
+        with ESMTPSA id Q06422w28MM4gKy
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sun, 8 Mar 2020 23:22:04 +0100 (CET)
+Received: from kerker.mhei.heimpold.itr (kerker.mhei.heimpold.itr [192.168.8.1])
+        by tonne.mhei.heimpold.itr (Postfix) with ESMTP id 6D0F71512E1;
+        Sun,  8 Mar 2020 23:22:03 +0100 (CET)
+From:   Michael Heimpold <mhei@heimpold.de>
+To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Michael Heimpold <mhei@heimpold.de>
+Subject: [PATCH] ARM: dts: imx23: introduce mmc0_sck_cfg
+Date:   Sun,  8 Mar 2020 23:21:44 +0100
+Message-Id: <20200308222144.24863-1-mhei@heimpold.de>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 18 Feb 05:00 PST 2020, Pradeep P V K wrote:
+The Olimex Olinuxino board has a user led connected to SSP1_DETECT.
+But since this pin is listed in mmc0_pins_fixup, it is already claimed
+by MMC driver and this results in this error during boot:
 
-> Add interconnect bandwidth scaling supported strings for qcom-sdhci
-> controller.
-> 
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+[    1.390000] imx23-pinctrl 80018000.pinctrl: pin SSP1_DETECT already
+  requested by 80010000.spi; cannot claim for leds
+[    1.400000] imx23-pinctrl 80018000.pinctrl: pin-65 (leds) status -22
+[    1.410000] imx23-pinctrl 80018000.pinctrl: could not request pin 65
+   (SSP1_DETECT) from group led_gpio2_1.0  on device 80018000.pinctrl
+[    1.420000] leds-gpio leds: Error applying setting, reverse things back
+[    1.430000] leds-gpio: probe of leds failed with error -22
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This fix it, introduce mmc0_sck_cfg and switch the Olinuxino board to it.
 
-> ---
-> 
-> changes from RFC v3 -> v4:
-> - No changes.
-> 
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index 7ee639b..cbe97b8 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -40,6 +40,21 @@ Required properties:
->  	"cal"	- reference clock for RCLK delay calibration (optional)
->  	"sleep"	- sleep clock for RCLK delay calibration (optional)
->  
-> +Optional Properties:
-> +* Following bus parameters are required for interconnect bandwidth scaling:
-> +- interconnects: Pairs of phandles and interconnect provider specifier
-> +		 to denote the edge source and destination ports of
-> +		 the interconnect path.
-> +
-> +- interconnect-names: For sdhc, we have two main paths.
-> +		1. Data path : sdhc to ddr
-> +		2. Config path : cpu to sdhc
-> +		For Data interconnect path the name supposed to be
-> +		is "sdhc-ddr" and for config interconnect path it is
-> +		"cpu-sdhc".
-> +		Please refer to Documentation/devicetree/bindings/
-> +		interconnect/ for more details.
-> +
->  Example:
->  
->  	sdhc_1: sdhci@f9824900 {
-> @@ -57,6 +72,9 @@ Example:
->  
->  		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
->  		clock-names = "core", "iface";
-> +		interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
-> +				<&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
-> +		interconnect-names = "sdhc-ddr","cpu-sdhc";
->  	};
->  
->  	sdhc_2: sdhci@f98a4900 {
-> -- 
-> 1.9.1
-> 
+Signed-off-by: Michael Heimpold <mhei@heimpold.de>
+---
+ arch/arm/boot/dts/imx23-olinuxino.dts | 2 +-
+ arch/arm/boot/dts/imx23.dtsi          | 8 ++++++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx23-olinuxino.dts b/arch/arm/boot/dts/imx23-olinuxino.dts
+index 4c9aafe00b5d..0729e72f2283 100644
+--- a/arch/arm/boot/dts/imx23-olinuxino.dts
++++ b/arch/arm/boot/dts/imx23-olinuxino.dts
+@@ -23,7 +23,7 @@
+ 			ssp0: spi@80010000 {
+ 				compatible = "fsl,imx23-mmc";
+ 				pinctrl-names = "default";
+-				pinctrl-0 = <&mmc0_4bit_pins_a &mmc0_pins_fixup>;
++				pinctrl-0 = <&mmc0_4bit_pins_a &mmc0_sck_cfg>;
+ 				bus-width = <4>;
+ 				broken-cd;
+ 				status = "okay";
+diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+index 8257630f7a49..e18ad74d5470 100644
+--- a/arch/arm/boot/dts/imx23.dtsi
++++ b/arch/arm/boot/dts/imx23.dtsi
+@@ -267,6 +267,14 @@
+ 					fsl,pull-up = <MXS_PULL_DISABLE>;
+ 				};
+ 
++				mmc0_sck_cfg: mmc0-sck-cfg@0 {
++					reg = <0>;
++					fsl,pinmux-ids = <
++						MX23_PAD_SSP1_SCK__SSP1_SCK
++					>;
++					fsl,pull-up = <MXS_PULL_DISABLE>;
++				};
++
+ 				mmc1_4bit_pins_a: mmc1-4bit@0 {
+ 					reg = <0>;
+ 					fsl,pinmux-ids = <
+-- 
+2.17.1
+
