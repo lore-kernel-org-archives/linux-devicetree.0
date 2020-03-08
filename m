@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5806C10F29
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93789C10F28
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC18620828
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C18B20880
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgCHQcu (ORCPT
+        id S1726437AbgCHQct (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 12:32:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44914 "EHLO mx2.suse.de"
+        Sun, 8 Mar 2020 12:32:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44926 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726359AbgCHQct (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726382AbgCHQct (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sun, 8 Mar 2020 12:32:49 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DD49BB053;
-        Sun,  8 Mar 2020 16:32:46 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 72686B13C;
+        Sun,  8 Mar 2020 16:32:47 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     =?UTF-8?q?Wells=20Lu=20=E5=91=82=E8=8A=B3=E9=A8=B0?= 
         <wells.lu@sunplus.com>, Dvorkin Dmitry <dvorkin@tibbo.com>,
         linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [RFC 04/11] dt-bindings: interrupt-controller: Add Sunplus SP7021 mux
-Date:   Sun,  8 Mar 2020 17:32:22 +0100
-Message-Id: <20200308163230.4002-5-afaerber@suse.de>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [RFC 05/11] dt-bindings: serial: Add Sunplus SP7021 UART
+Date:   Sun,  8 Mar 2020 17:32:23 +0100
+Message-Id: <20200308163230.4002-6-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200308163230.4002-1-afaerber@suse.de>
 References: <20200308163230.4002-1-afaerber@suse.de>
@@ -47,70 +46,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Sunplus SP7021 SoC has an interrupt mux.
+The Sunplus Plus1 (aka Pentagram) SP7021 SoC has five UARTs.
 
 Cc: Wells Lu 呂芳騰 <wells.lu@sunplus.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- .../sunplus,pentagram-intc.yaml                    | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sunplus,pentagram-intc.yaml
+ .../bindings/serial/sunplus,pentagram-uart.yaml    | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/sunplus,pentagram-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/sunplus,pentagram-intc.yaml
+diff --git a/Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml b/Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml
 new file mode 100644
-index 000000000000..baaf7bcd4a71
+index 000000000000..9d1641232a4c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/sunplus,pentagram-intc.yaml
-@@ -0,0 +1,50 @@
++++ b/Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml
+@@ -0,0 +1,24 @@
 +# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/interrupt-controller/sunplus,pentagram-intc.yaml#
++$id: http://devicetree.org/schemas/serial/sunplus,pentagram-uart.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Sunplus Pentagram SoC Interrupt Controller
++title: Sunplus Pentagram SoC UART Serial Interface
 +
 +maintainers:
 +  - Andreas Färber <afaerber@suse.de>
 +
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
 +properties:
 +  compatible:
-+    const: sunplus,sp7021-intc
++    const: sunplus,sp7021-uart
 +
 +  reg:
-+    maxItems: 2
++    maxItems: 1
 +
 +  interrupts:
-+    maxItems: 2
++    maxItems: 1
 +
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    interrupt-controller@9c000780 {
-+        compatible = "sunplus,sp7021-intc";
-+        reg = <0x9c000780 0x80>,
-+              <0x9c000a80 0x80>;
-+        interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+    };
++  clocks:
++    maxItems: 1
 +...
 -- 
 2.16.4
