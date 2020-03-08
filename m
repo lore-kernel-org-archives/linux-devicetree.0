@@ -1,295 +1,131 @@
-Return-Path: <SRS0=TJ2L=4Y=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=ZTIy=4Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4A9C10F26
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 21:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4944AC10F25
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 02:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3FA2073D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Mar 2020 21:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C83B20409
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 02:19:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583633975;
+	bh=lYOUYS198D1/0Gr+1+Ic9jjMBLUGg7SoAMQZAnwkh/E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x6vZQDo8m4Zezr9Jnu673As/YyXG2HxrzRqHxx8sZEbGK+41SrjcKexZjuFSrs+BK
+	 XwlH80GcYG1Yzmr4ssCbvQZRWBWvZmucFG0zXvg06ohFAe6pFmrdnyKmRBtIVkaYUP
+	 yfVcbsI6xyTisIZ45pnvXmPsP5ll03ILWUfjwMWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgCGVGe (ORCPT
+        id S1726174AbgCHCTd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Mar 2020 16:06:34 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:48755 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCGVGd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 16:06:33 -0500
-X-Originating-IP: 195.189.32.242
-Received: from pc.localdomain (unknown [195.189.32.242])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id ED67340005;
-        Sat,  7 Mar 2020 21:06:28 +0000 (UTC)
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v4 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
-Date:   Sat,  7 Mar 2020 22:14:10 +0100
-Message-Id: <20200307211412.44148-3-contact@artur-rojek.eu>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200307211412.44148-1-contact@artur-rojek.eu>
-References: <20200307211412.44148-1-contact@artur-rojek.eu>
+        Sat, 7 Mar 2020 21:19:33 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:33242 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgCHCTd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Mar 2020 21:19:33 -0500
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 0282JHfY013317;
+        Sun, 8 Mar 2020 11:19:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0282JHfY013317
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583633958;
+        bh=MRiJFfd4XzN50K790XI9lYLTj9Bp98INNHajUe+6r64=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CSRFkM+LvCiVVJMAKnKNKED4Bi4v4qwdh2AY46W/45w1GrIJCABBjXmRPJpRlubT4
+         5LkpYPXWSOt9KidwivW0GffaSyEIXPlEnHTdmkZMqwkSh9P6Ng2HxSW/dDpC+gUoJu
+         OPUcVZ7eT/w7xr+LfEQeUImZYeIW61Na3duvbr/2WPXq+SdpZGjMHp+yv6kDAFbM/X
+         tYWdiDJ0oKEAOSGUOcJeLbPF+8tlv7CcGsNZnGgWc0+xl0bMVsLhxcbEF9nyVB9uUW
+         mZWWvqJhTsGOCT/DFHdlTbevxIuXMKrHBPjXg732gEXEeIp/WRmvn2NoevmfntXoqw
+         pHZN1cO87Y7YQ==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id h22so2095172uap.13;
+        Sat, 07 Mar 2020 18:19:18 -0800 (PST)
+X-Gm-Message-State: ANhLgQ1uyaO9WHt4NMEtb8H3CMtmOJuq0dxbz6KgpUuz1U/WFgHhfECC
+        5Clg2NYtgWBXWhjvPnN3MfTC9SlnCOMn8uvifdY=
+X-Google-Smtp-Source: ADFU+vsU5zfX/fbI+PZJ18ZCecEFu4G8aaymDTDagTkIOLYMu7EWSvEB1LjcowfG/2EWb+GKR6g/DiftGunXkHPiUTY=
+X-Received: by 2002:a9f:2828:: with SMTP id c37mr5344910uac.25.1583633957239;
+ Sat, 07 Mar 2020 18:19:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-3-masahiroy@kernel.org>
+ <20200304055520.GA28911@ravnborg.org> <CAL_JsqLA7yq8rnVhM210sLt788yeu2xxFd94Fe0K_CGZw-mqSA@mail.gmail.com>
+In-Reply-To: <CAL_JsqLA7yq8rnVhM210sLt788yeu2xxFd94Fe0K_CGZw-mqSA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 8 Mar 2020 11:18:41 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATmnfjo2A0x6ytLNeo_rjv1_e9RFyxCnB-K1E1O=fw9jQ@mail.gmail.com>
+Message-ID: <CAK7LNATmnfjo2A0x6ytLNeo_rjv1_e9RFyxCnB-K1E1O=fw9jQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] kbuild: allow to run dt_binding_check and dtbs_check
+ in a single command
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, DTML <devicetree@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SADC component in JZ47xx SoCs provides support for touchscreen
-operations (pen position and pen down pressure) in single-ended and
-differential modes.
+Hi Sam, Rob,
 
-Of the known hardware to use this controller, GCW Zero and Anbernic RG-350
-utilize the touchscreen mode by having their joystick(s) attached to the
-X/Y positive/negative input pins.
-GCW Zero comes with a single joystick and is sufficiently handled with the
-currently implemented single-ended mode. Support for boards with two
-joysticks, where one is hooked up to Xn/Yn and the other to Xp/Yp channels
-will need to be provided in the future.
+On Thu, Mar 5, 2020 at 12:19 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Mar 3, 2020 at 11:55 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Hi Masahiro
+> >
+> > Thanks for the nice improvements to the dt infrastructure.
+> >
+> > Stealing a thread here..
+> >
+> > >  It is also possible to run checks with a single schema file by setting the
+> > >  ``DT_SCHEMA_FILES`` variable to a specific schema file.
+> > Would it be simple to enable the use of dirs for DT_SCHEMA_FILES?
+>
+> I did name that with the intent of supporting more than one file.
+>
+> > So I for example could do:
+> >
+> > make dt_bindings_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+>
+> Does this work?:
+>
+> make dt_bindings_check DT_SCHEMA_FILES="$(find
+> Documentation/devicetree/bindings/display/panel/ -name '*.yaml' |
+> xargs)"
+>
+> Rob
 
-The touchscreen component of SADC takes a significant time to stabilize
-after first receiving the clock and a delay of 50ms has been empirically
-proven to be a safe value before data sampling can begin.
 
-All the boards which probe this driver have the interrupt provided from
-devicetree, with no need to handle a case where the irq was not provided.
+Rob proposed a solution, so
+I do not think we should extend this too much.
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-Tested-by: Paul Cercueil <paul@crapouillou.net>
----
 
- Changes:
+BTW, there is a limitation that
+DT_SCHEMA_FILES must point to file(s)
+in Documentation/devicetree/bindings/.
 
- v2: - improve description of the touchscreen mode,
-     - get rid of the unneeded kfifo,
-     - drop IIO_BUFFER_CB from Kconfig,
-     - remove extended names from the touchscreen channels
 
- v3: remove unneeded `linux/iio/kfifo_buf.h` include
+$ cp  Documentation/devicetree/bindings/arm/psci.yaml   ./
+$ make  dt_binding_check  DT_SCHEMA_FILES=psci.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+make[1]: *** No rule to make target
+'Documentation/devicetree/bindings/psci.yaml', needed by '__build'.
+Stop.
+make: *** [Makefile:1278: dt_binding_check] Error 2
 
- v4: clarify irq provider source in the patch description
 
- drivers/iio/adc/Kconfig       |   1 +
- drivers/iio/adc/ingenic-adc.c | 109 +++++++++++++++++++++++++++++++++-
- 2 files changed, 108 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 82e33082958c..d3fd4b6e2d47 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -453,6 +453,7 @@ config INA2XX_ADC
- config INGENIC_ADC
- 	tristate "Ingenic JZ47xx SoCs ADC driver"
- 	depends on MIPS || COMPILE_TEST
-+	select IIO_BUFFER
- 	help
- 	  Say yes here to build support for the Ingenic JZ47xx SoCs ADC unit.
- 
-diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-index 7a24bc1dabe1..0dafc8d5d0d8 100644
---- a/drivers/iio/adc/ingenic-adc.c
-+++ b/drivers/iio/adc/ingenic-adc.c
-@@ -8,7 +8,9 @@
- 
- #include <dt-bindings/iio/adc/ingenic,adc.h>
- #include <linux/clk.h>
-+#include <linux/iio/buffer.h>
- #include <linux/iio/iio.h>
-+#include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
-@@ -20,6 +22,8 @@
- #define JZ_ADC_REG_CFG			0x04
- #define JZ_ADC_REG_CTRL			0x08
- #define JZ_ADC_REG_STATUS		0x0c
-+#define JZ_ADC_REG_ADSAME		0x10
-+#define JZ_ADC_REG_ADWAIT		0x14
- #define JZ_ADC_REG_ADTCH		0x18
- #define JZ_ADC_REG_ADBDAT		0x1c
- #define JZ_ADC_REG_ADSDAT		0x20
-@@ -28,6 +32,9 @@
- #define JZ_ADC_REG_ENABLE_PD		BIT(7)
- #define JZ_ADC_REG_CFG_AUX_MD		(BIT(0) | BIT(1))
- #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
-+#define JZ_ADC_REG_CFG_PULL_UP(n)	((n) << 16)
-+#define JZ_ADC_REG_CFG_SAMPLE_NUM(n)	((n) << 10)
-+#define JZ_ADC_REG_CFG_TOUCH_OPS_MASK	(BIT(31) | GENMASK(23, 10))
- #define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
- #define JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB	16
- #define JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB	8
-@@ -44,6 +51,14 @@
- #define JZ4770_ADC_BATTERY_VREF			6600
- #define JZ4770_ADC_BATTERY_VREF_BITS		12
- 
-+#define JZ_ADC_IRQ_AUX			BIT(0)
-+#define JZ_ADC_IRQ_BATTERY		BIT(1)
-+#define JZ_ADC_IRQ_TOUCH		BIT(2)
-+#define JZ_ADC_IRQ_PEN_DOWN		BIT(3)
-+#define JZ_ADC_IRQ_PEN_UP		BIT(4)
-+#define JZ_ADC_IRQ_PEN_DOWN_SLEEP	BIT(5)
-+#define JZ_ADC_IRQ_SLEEP		BIT(7)
-+
- struct ingenic_adc;
- 
- struct ingenic_adc_soc_data {
-@@ -411,6 +426,28 @@ static const struct iio_info ingenic_adc_info = {
- };
- 
- static const struct iio_chan_spec ingenic_channels[] = {
-+	{
-+		.type = IIO_POSITIONRELATIVE,
-+		.indexed = 1,
-+		.channel = INGENIC_ADC_TOUCH_XP,
-+		.scan_index = 0,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 12,
-+			.storagebits = 16
-+		},
-+	},
-+	{
-+		.type = IIO_POSITIONRELATIVE,
-+		.indexed = 1,
-+		.channel = INGENIC_ADC_TOUCH_YP,
-+		.scan_index = 1,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 12,
-+			.storagebits = 16
-+		},
-+	},
- 	{
- 		.extend_name = "aux",
- 		.type = IIO_VOLTAGE,
-@@ -418,6 +455,7 @@ static const struct iio_chan_spec ingenic_channels[] = {
- 				      BIT(IIO_CHAN_INFO_SCALE),
- 		.indexed = 1,
- 		.channel = INGENIC_ADC_AUX,
-+		.scan_index = -1
- 	},
- 	{
- 		.extend_name = "battery",
-@@ -428,6 +466,7 @@ static const struct iio_chan_spec ingenic_channels[] = {
- 						BIT(IIO_CHAN_INFO_SCALE),
- 		.indexed = 1,
- 		.channel = INGENIC_ADC_BATTERY,
-+		.scan_index = -1
- 	},
- 	{ /* Must always be last in the array. */
- 		.extend_name = "aux2",
-@@ -436,16 +475,69 @@ static const struct iio_chan_spec ingenic_channels[] = {
- 				      BIT(IIO_CHAN_INFO_SCALE),
- 		.indexed = 1,
- 		.channel = INGENIC_ADC_AUX2,
-+		.scan_index = -1
- 	},
- };
- 
-+static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
-+{
-+	struct ingenic_adc *adc = iio_priv(iio_dev);
-+
-+	clk_enable(adc->clk);
-+	/* It takes significant time for the touchscreen hw to stabilize. */
-+	msleep(50);
-+	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
-+			       JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
-+			       JZ_ADC_REG_CFG_PULL_UP(4));
-+	writew(80, adc->base + JZ_ADC_REG_ADWAIT);
-+	writew(2, adc->base + JZ_ADC_REG_ADSAME);
-+	writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
-+	writel(0, adc->base + JZ_ADC_REG_ADTCH);
-+	ingenic_adc_enable(adc, 2, true);
-+
-+	return 0;
-+}
-+
-+static int ingenic_adc_buffer_disable(struct iio_dev *iio_dev)
-+{
-+	struct ingenic_adc *adc = iio_priv(iio_dev);
-+
-+	ingenic_adc_enable(adc, 2, false);
-+	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
-+	writeb(0xff, adc->base + JZ_ADC_REG_STATUS);
-+	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK, 0);
-+	writew(0, adc->base + JZ_ADC_REG_ADSAME);
-+	writew(0, adc->base + JZ_ADC_REG_ADWAIT);
-+	clk_disable(adc->clk);
-+
-+	return 0;
-+}
-+
-+static const struct iio_buffer_setup_ops ingenic_buffer_setup_ops = {
-+	.postenable = &ingenic_adc_buffer_enable,
-+	.predisable = &ingenic_adc_buffer_disable
-+};
-+
-+static irqreturn_t ingenic_adc_irq(int irq, void *data)
-+{
-+	struct iio_dev *iio_dev = data;
-+	struct ingenic_adc *adc = iio_priv(iio_dev);
-+	u32 tdat;
-+
-+	tdat = readl(adc->base + JZ_ADC_REG_ADTCH);
-+	iio_push_to_buffers(iio_dev, &tdat);
-+	writeb(JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_STATUS);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int ingenic_adc_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct iio_dev *iio_dev;
- 	struct ingenic_adc *adc;
- 	const struct ingenic_adc_soc_data *soc_data;
--	int ret;
-+	int irq, ret;
- 
- 	soc_data = device_get_match_data(dev);
- 	if (!soc_data)
-@@ -460,6 +552,18 @@ static int ingenic_adc_probe(struct platform_device *pdev)
- 	mutex_init(&adc->aux_lock);
- 	adc->soc_data = soc_data;
- 
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(dev, "Failed to get irq: %d\n", irq);
-+		return irq;
-+	}
-+	ret = devm_request_irq(dev, irq, ingenic_adc_irq, 0,
-+			       dev_name(dev), iio_dev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to request irq: %d\n", ret);
-+		return ret;
-+	}
-+
- 	adc->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(adc->base))
- 		return PTR_ERR(adc->base);
-@@ -499,7 +603,8 @@ static int ingenic_adc_probe(struct platform_device *pdev)
- 
- 	iio_dev->dev.parent = dev;
- 	iio_dev->name = "jz-adc";
--	iio_dev->modes = INDIO_DIRECT_MODE;
-+	iio_dev->modes = INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
-+	iio_dev->setup_ops = &ingenic_buffer_setup_ops;
- 	iio_dev->channels = ingenic_channels;
- 	iio_dev->num_channels = ARRAY_SIZE(ingenic_channels);
- 	/* Remove AUX2 from the list of supported channels. */
--- 
-2.25.1
+$(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+does not work if DT_SCHEMA_FILES is outside of
+Documentation/devicetree/bindings/, but I have no
+solution for this.
 
+--
+Best Regards
+Masahiro Yamada
