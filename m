@@ -2,121 +2,70 @@ Return-Path: <SRS0=ZTIy=4Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F5AC10F28
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D7CC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 646F920866
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:27:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="CxJtmWvG"
+	by mail.kernel.org (Postfix) with ESMTP id 2EEBE20880
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgCHQ13 (ORCPT
+        id S1726297AbgCHQcr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 12:27:29 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41931 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgCHQ13 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 12:27:29 -0400
-Received: by mail-lj1-f194.google.com with SMTP id o10so671286ljc.8
-        for <devicetree@vger.kernel.org>; Sun, 08 Mar 2020 09:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=AgbZPWzyECAbkrihwQ1V8G57nxvx4bfh3QjN09MX4mo=;
-        b=CxJtmWvGW5GMhmcbRj1vIsbYCyoCD/ElANMvE4JV93La5RSPJePznKPb6yXWxMCs7K
-         6oPu2Vhi2M34P7RE16gagWFr0JJnZ9De2RNopc0I7Hu5HAtk200/XMxiXfKJeoIcCuvF
-         moznl//TQHl716hsco1JdhqiWtDRdtnZENpUs63CMCH1I6vhjRqe5sIVpMKr6gbFiGPl
-         y1leHHRDT+Y6z5W0KPmrbQK8FVfyZAAmxB2ZYwfudcK+JC1RRFsxlj+ZcjSDz7PJ+W3b
-         KyCKSQyED8uoWTpzXzqTD4s+LEREmkcPNAnf/uOoOLJIZPtmneRzVXTc/Ei/xwbiR61C
-         s+9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=AgbZPWzyECAbkrihwQ1V8G57nxvx4bfh3QjN09MX4mo=;
-        b=SoCJdymO77QvBXl10bIcNTQk5t35mYquG6Zv56C9bILIpokp8tiW0Dgg41T6aK+1rZ
-         AqdEobw39tO/kqb22//6WkuGb48sRnDwaeP5bxa17gXbiLqh18vF6tEAfIlqOc81a+sR
-         fvmWPhCA+qCUehuTq6y1Xhe5W/FCT+WsG4DS2qr31edWiTRNnseiG/r74PwbPNyjHkVY
-         WcW/xmEW/oHzUy14OzfJfxkD7x73JCeOFU87kH5x9QXw81aphbPwOlqKRAQFpNvnn7d+
-         klIoz8o1irJbuTLkMVi+zPqM4wOq45h8bXjAiMjQGF/MkWWdVYilz0aN3zQIIgywnwmQ
-         bqqA==
-X-Gm-Message-State: ANhLgQ2mJ3gI7lb35aYICgjedqYGF0bGdd/YgawYIE6Rx3prh4WiobmO
-        bdQWhqMV6U2rgy4ix4WKN94/Cw==
-X-Google-Smtp-Source: ADFU+vs6GeXsR2Zjj1pVsfKvGQrdo/jEqEgzExz1YOhG1fanLSSMkOS2n6KjRkfdZpcWTkdiW8bEaQ==
-X-Received: by 2002:a2e:a584:: with SMTP id m4mr7733555ljp.46.1583684847185;
-        Sun, 08 Mar 2020 09:27:27 -0700 (PDT)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id c20sm13177024lfb.60.2020.03.08.09.27.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2020 09:27:26 -0700 (PDT)
-Date:   Sun, 8 Mar 2020 17:27:26 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 2/2] thermal: rcar_gen3_thermal: Add r8a77961 support
-Message-ID: <20200308162726.GC2975348@oden.dyn.berto.se>
-References: <20200306105503.24267-1-geert+renesas@glider.be>
- <20200306105503.24267-3-geert+renesas@glider.be>
+        Sun, 8 Mar 2020 12:32:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44810 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbgCHQcr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 8 Mar 2020 12:32:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 624BAAEF6;
+        Sun,  8 Mar 2020 16:32:45 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?Wells=20Lu=20=E5=91=82=E8=8A=B3=E9=A8=B0?= 
+        <wells.lu@sunplus.com>, Dvorkin Dmitry <dvorkin@tibbo.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [RFC 01/11] dt-bindings: vendor-prefixes: Add Sunplus
+Date:   Sun,  8 Mar 2020 17:32:19 +0100
+Message-Id: <20200308163230.4002-2-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200308163230.4002-1-afaerber@suse.de>
+References: <20200308163230.4002-1-afaerber@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200306105503.24267-3-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+Sunplus Technology Co., Ltd. is a Taiwanese IC vendor.
+Assign vendor prefix "sunplus".
 
-Thanks for your patch.
+Cc: Wells Lu 呂芳騰 <wells.lu@sunplus.com>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On 2020-03-06 11:55:03 +0100, Geert Uytterhoeven wrote:
-> Add support for the Thermal Sensor/Chip Internal Voltage Monitor in the
-> R-Car M3-W+ (R8A77961) SoC.
-> 
-> According to the R-Car Gen3 Hardware Manual Errata for Revision 2.00 of
-> Jan 31, 2020, the thermal parameters for R-Car M3-W+ are the same as for
-> R-Car M3-W.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
->  drivers/thermal/rcar_gen3_thermal.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-> index 72877bdc072daaed..a6b0c31f1509c45c 100644
-> --- a/drivers/thermal/rcar_gen3_thermal.c
-> +++ b/drivers/thermal/rcar_gen3_thermal.c
-> @@ -324,6 +324,10 @@ static const struct of_device_id rcar_gen3_thermal_dt_ids[] = {
->  		.compatible = "renesas,r8a7796-thermal",
->  		.data = &rcar_gen3_ths_tj_1_m3_w,
->  	},
-> +	{
-> +		.compatible = "renesas,r8a77961-thermal",
-> +		.data = &rcar_gen3_ths_tj_1_m3_w,
-> +	},
->  	{
->  		.compatible = "renesas,r8a77965-thermal",
->  		.data = &rcar_gen3_ths_tj_1,
-> -- 
-> 2.17.1
-> 
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6e09fc7362d5..2c764b0941b4 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -955,6 +955,8 @@ patternProperties:
+     description: Summit microelectronics
+   "^sunchip,.*":
+     description: Shenzhen Sunchip Technology Co., Ltd
++  "^sunplus,.*":
++    description: Sunplus Technology Co., Ltd.
+   "^SUNW,.*":
+     description: Sun Microsystems, Inc
+   "^swir,.*":
 -- 
-Regards,
-Niklas S�derlund
+2.16.4
+
