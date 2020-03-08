@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C17C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 15:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD21C18E5F
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 15:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C722084E
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 15:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEF3217F4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 15:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgCHPdu (ORCPT
+        id S1726279AbgCHPdz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 11:33:50 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58108 "EHLO inva021.nxp.com"
+        Sun, 8 Mar 2020 11:33:55 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49978 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgCHPdu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Mar 2020 11:33:50 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 543A6200A42;
-        Sun,  8 Mar 2020 16:33:48 +0100 (CET)
+        id S1726271AbgCHPdx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 8 Mar 2020 11:33:53 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A3A61A1523;
+        Sun,  8 Mar 2020 16:33:50 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3EE982013C5;
-        Sun,  8 Mar 2020 16:33:41 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8D3F21A151C;
+        Sun,  8 Mar 2020 16:33:43 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 976C440294;
-        Sun,  8 Mar 2020 23:33:32 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EFF94402DA;
+        Sun,  8 Mar 2020 23:33:34 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
         amit.kucheria@verdurent.com, robh+dt@kernel.org,
@@ -36,40 +36,142 @@ To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/3] dt-bindings: thermal: imx8mm-thermal: Add support for i.MX8MP
-Date:   Sun,  8 Mar 2020 23:27:18 +0800
-Message-Id: <1583681240-14782-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 3/3] arm64: dts: imx8mp: Add thermal zones support
+Date:   Sun,  8 Mar 2020 23:27:20 +0800
+Message-Id: <1583681240-14782-3-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583681240-14782-1-git-send-email-Anson.Huang@nxp.com>
+References: <1583681240-14782-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add thermal binding doc for Freescale's i.MX8MP Thermal Monitoring Unit.
+i.MX8MP has a TMU inside which supports two thermal zones, add support
+for them.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 63 +++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-index d09ae82..3629d3c 100644
---- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-@@ -1,10 +1,10 @@
- * Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index a253c3f..c621988 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
  
- Required properties:
--- compatible : Must be "fsl,imx8mm-tmu".
-+- compatible : Must be "fsl,imx8mm-tmu" or "fsl,imx8mp-tmu".
- - reg : Address range of TMU registers.
- - clocks : TMU's clock source.
--- #thermal-sensor-cells : Should be 0. See ./thermal.txt for a description.
-+- #thermal-sensor-cells : Should be 0 or 1. See ./thermal.txt for a description.
+ #include "imx8mp-pinfunc.h"
  
- Example:
- tmu: tmu@30260000 {
+@@ -43,6 +44,7 @@
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_1: cpu@1 {
+@@ -53,6 +55,7 @@
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_2: cpu@2 {
+@@ -63,6 +66,7 @@
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_3: cpu@3 {
+@@ -73,6 +77,7 @@
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_L2: l2-cache0 {
+@@ -127,6 +132,57 @@
+ 		method = "smc";
+ 	};
+ 
++	thermal-zones {
++		cpu-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <2000>;
++			thermal-sensors = <&tmu 0x0>;
++			trips {
++				cpu_alert0: trip0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cpu_crit0: trip1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&cpu_alert0>;
++					cooling-device =
++						<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		soc-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <2000>;
++			thermal-sensors = <&tmu 0x1>;
++			trips {
++				soc_alert0: trip0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				soc_crit0: trip1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+@@ -215,6 +271,13 @@
+ 				gpio-ranges = <&iomuxc 0 114 30>;
+ 			};
+ 
++			tmu: tmu@30260000 {
++				compatible = "fsl,imx8mp-tmu";
++				reg = <0x30260000 0x10000>;
++				clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
++				#thermal-sensor-cells = <1>;
++			};
++
+ 			wdog1: watchdog@30280000 {
+ 				compatible = "fsl,imx8mp-wdt", "fsl,imx21-wdt";
+ 				reg = <0x30280000 0x10000>;
 -- 
 2.7.4
 
