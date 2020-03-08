@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D7CC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EEFC3F2D1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EEBE20880
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2462087F
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 16:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgCHQcr (ORCPT
+        id S1726486AbgCHQcx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 12:32:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44810 "EHLO mx2.suse.de"
+        Sun, 8 Mar 2020 12:32:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45012 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbgCHQcr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Mar 2020 12:32:47 -0400
+        id S1726359AbgCHQcx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 8 Mar 2020 12:32:53 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 624BAAEF6;
-        Sun,  8 Mar 2020 16:32:45 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 79F1FB2F7;
+        Sun,  8 Mar 2020 16:32:51 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     =?UTF-8?q?Wells=20Lu=20=E5=91=82=E8=8A=B3=E9=A8=B0?= 
@@ -30,9 +30,9 @@ Cc:     =?UTF-8?q?Wells=20Lu=20=E5=91=82=E8=8A=B3=E9=A8=B0?=
         linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [RFC 01/11] dt-bindings: vendor-prefixes: Add Sunplus
-Date:   Sun,  8 Mar 2020 17:32:19 +0100
-Message-Id: <20200308163230.4002-2-afaerber@suse.de>
+Subject: [RFC 11/11] ARM: dts: sp7021-cpu: Add dummy UART0 clock and interrupt
+Date:   Sun,  8 Mar 2020 17:32:29 +0100
+Message-Id: <20200308163230.4002-12-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200308163230.4002-1-afaerber@suse.de>
 References: <20200308163230.4002-1-afaerber@suse.de>
@@ -44,28 +44,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sunplus Technology Co., Ltd. is a Taiwanese IC vendor.
-Assign vendor prefix "sunplus".
-
-Cc: Wells Lu 呂芳騰 <wells.lu@sunplus.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/pentagram-sp7021-bpi-f2s.dts | 7 +++++++
+ arch/arm/boot/dts/pentagram-sp7021-cpu.dtsi    | 5 +++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6e09fc7362d5..2c764b0941b4 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -955,6 +955,8 @@ patternProperties:
-     description: Summit microelectronics
-   "^sunchip,.*":
-     description: Shenzhen Sunchip Technology Co., Ltd
-+  "^sunplus,.*":
-+    description: Sunplus Technology Co., Ltd.
-   "^SUNW,.*":
-     description: Sun Microsystems, Inc
-   "^swir,.*":
+diff --git a/arch/arm/boot/dts/pentagram-sp7021-bpi-f2s.dts b/arch/arm/boot/dts/pentagram-sp7021-bpi-f2s.dts
+index 3c25b6e79fe2..455416ce9d82 100644
+--- a/arch/arm/boot/dts/pentagram-sp7021-bpi-f2s.dts
++++ b/arch/arm/boot/dts/pentagram-sp7021-bpi-f2s.dts
+@@ -15,8 +15,15 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	uart0_clk: clk {
++		compatible = "fixed-clock";
++		clock-frequency = <27000000>;
++		#clock-cells = <0>;
++	};
+ };
+ 
+ &uart0 {
+ 	status = "okay";
++	clocks = <&uart0_clk>;
+ };
+diff --git a/arch/arm/boot/dts/pentagram-sp7021-cpu.dtsi b/arch/arm/boot/dts/pentagram-sp7021-cpu.dtsi
+index 7e424baa9214..48c5986a31ed 100644
+--- a/arch/arm/boot/dts/pentagram-sp7021-cpu.dtsi
++++ b/arch/arm/boot/dts/pentagram-sp7021-cpu.dtsi
+@@ -86,3 +86,8 @@
+ 		#interrupt-cells = <2>;
+ 	};
+ };
++
++&uart0 {
++	interrupt-parent = <&intc>;
++	interrupts = <53 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
 2.16.4
 
