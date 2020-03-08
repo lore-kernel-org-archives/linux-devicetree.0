@@ -2,160 +2,207 @@ Return-Path: <SRS0=ZTIy=4Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED369C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 19:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1DFC10F28
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 21:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7097206D5
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 19:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A9B206D5
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 21:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuTzOrLQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWs4R9Zw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgCHTUo (ORCPT
+        id S1726359AbgCHVc0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 15:20:44 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43827 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgCHTUo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 15:20:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v9so8395668wrf.10;
-        Sun, 08 Mar 2020 12:20:42 -0700 (PDT)
+        Sun, 8 Mar 2020 17:32:26 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34577 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgCHVc0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 17:32:26 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a23so455129plm.1
+        for <devicetree@vger.kernel.org>; Sun, 08 Mar 2020 14:32:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qALcG3CGuBaboVD1Vu6sKa7UNKTJMIZmbr5ctcnIjvQ=;
-        b=KuTzOrLQIYKb2aSSDndfU+R4OkG8+39CunsygU0n4TfXkT3rs607w8JdEwc7EkhXsh
-         SUI5U4xuqaM9u2kio3yF8L+iH80FaSzYKojyVif5EOGrwXyEC0Gkbe8H9x+6I9uVWaUI
-         RT/td7r6E8m4X97pUhBUDriTf1zOhmskFBfaaLvSXV09uCRoeWeGCxvzjDVCvADrX0m4
-         OGajyiizFLDGpLeKePswPh2ZPdrG2VOjhvLszoQZn4RX7Ym4zRLpiXb393YGlng3qaUl
-         NNvgvs6yjZUeroVVwUj2aJvhGwQCRM6pQEpwXfS1MoFKGf14J3Kxm6LJzSHPh6b6Dsqc
-         HcAw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f9/0ieWDmPVyDB4Z2hwh7wW0M3gQcpkCSJj06NxF8yI=;
+        b=DWs4R9Zw4bFp0twDiTO0rAcVPqJ9MeuA6SGCskUyImzV+noQgWAPHlXfv8l4WdYjv8
+         oN8GxHJ+AM4XJnT01GzSQvh00zsraaW7uLJAzv0mOe2BKrv3BgnMWhJ52fAGVpCZBjOK
+         xDmHmcyHCBkVIltQazD5tHWp0D/jCKFzJkSl0hhYE08+m2ZWmtMcC1mh33AKEzlvdQuc
+         JbSDUtlO4EOO60PiDRWOcknpIX5m7V2FVmL/77X0x6MZbwSuyFjUDdim0IQJHHUc/ylb
+         KutyjacJdKnmGxvcVNEFrA+BpQz/JH1XFjfZFiA6N2jEpUtrajD0968rCzAVaZHU8XL7
+         RWnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qALcG3CGuBaboVD1Vu6sKa7UNKTJMIZmbr5ctcnIjvQ=;
-        b=sg/JXf+KfmImKXo5DzZnUEwJbgMHkwVBwlCxFmJrQu6qKTwd6zcdwwSzms6N1AR86d
-         7XxBFArRTkP++/lbi2PfrhzdGnA5A8MvW/XivXsiREDgfA+QdOAXzghYMsuoXxPw4QhM
-         RrJ6taRqva78EObGHG8Y3gaKPLVl0jMWrhL8GxURTWF/CfFDXzzIIJxNVqzVxzXlW5Dv
-         cXbkQPPA5bhbftZ3sfdDjjsTp/V8rlr23PKeKwwSnxJffsde8/f8ZDjv0ikEYBq9DGLD
-         qNFbT+RLJKpl1iRzGx9P+S920+KSZHay+zDYYpoVxz0nv6UJAzTGkLPP33yqwKxNqhZ1
-         lN+A==
-X-Gm-Message-State: ANhLgQ3OI0qcKFk+kp9WD9s2tAKpT+TCBx+cvxIZLmOJEEOPs4I+fdBf
-        HG5w2NWhOaG7z/ZF95s7mZk=
-X-Google-Smtp-Source: ADFU+vv3rcWG5MMYWXUHe4T6UqDBb1TBfzXy2V9IGq5bFXchWpdP6YGsyWHg0RWNUP8FI7gV+0nbcA==
-X-Received: by 2002:adf:e98f:: with SMTP id h15mr16675277wrm.263.1583695241942;
-        Sun, 08 Mar 2020 12:20:41 -0700 (PDT)
-Received: from supervisor.net28 ([46.53.253.27])
-        by smtp.gmail.com with ESMTPSA id f127sm23281865wma.4.2020.03.08.12.20.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Mar 2020 12:20:41 -0700 (PDT)
-From:   Arthur Demchenkov <spinal.by@gmail.com>
-Cc:     Arthur Demchenkov <spinal.by@gmail.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: OMAP: DTS: N900: fix onenand timings
-Date:   Sun,  8 Mar 2020 22:19:33 +0300
-Message-Id: <20200308191934.8263-1-spinal.by@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f9/0ieWDmPVyDB4Z2hwh7wW0M3gQcpkCSJj06NxF8yI=;
+        b=Zq9JbHC8ivjptEC8Sp9vqRYHRmBRpBxXJ+h0miMBx8fAFxcp/QQwRzfFVoD6Tmoms2
+         LagVvYV7LY2OKb/aKR9ZMSqFx9tX6WmZkkBHCP1bzU/N7TmsaL0XSRaGZuDYHNN0sRdJ
+         KFu6LI43cJPky60F0og8Z3ltcWGuz0MrES0PcpNDZuLbg0x77aXOU4cTUFva833NGPKE
+         M55Cpav+BcJawz1cWR1YVi75ESaTeLw6I9imvLNzbHx/okyhMtRDL7o9JGOvv2Y7bB5k
+         UniXl+GVUGvvkoEB+UALLuEadjWXHqC4IO8okTdUS0wtUYGrItGs0DFKbCRcybMapkAd
+         zTQw==
+X-Gm-Message-State: ANhLgQ2Wbq7S/vGvSU86v7rnlt5zbby8FeO09MkEpg5ShbZ1aBhZfPPO
+        e2NYUDOWkNlg15oAbsb1o5EWIw==
+X-Google-Smtp-Source: ADFU+vtvtCHb8/W34pLlH4mKGucPBSrpWEisS/mQ6Fgz+/N0TWyLL1lRf/YSSKJWR8kAdKfYCuTdow==
+X-Received: by 2002:a17:902:5996:: with SMTP id p22mr13118027pli.190.1583703143741;
+        Sun, 08 Mar 2020 14:32:23 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g20sm15977866pjv.20.2020.03.08.14.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 14:32:22 -0700 (PDT)
+Date:   Sun, 8 Mar 2020 14:32:20 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     srinivas.kandagatla@linaro.org, agross@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tsoni@codeaurora.org, vnkgutta@codeaurora.org
+Subject: Re: [PATCH v6 1/3] soc: qcom: Introduce Protection Domain Restart
+ helpers
+Message-ID: <20200308213220.GK1094083@builder>
+References: <20200304200911.15415-1-sibis@codeaurora.org>
+ <20200304200911.15415-2-sibis@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304200911.15415-2-sibis@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-started using DT specified timings for GPMC, and as a result the
-OneNAND stopped working on N900 as we had wrong values in the DT.
-Fix by updating the values to bootloader timings that have been tested
-to be working on Nokia N900 with OneNAND manufacturers: Samsung,
-Numonyx.
+On Wed 04 Mar 12:09 PST 2020, Sibi Sankar wrote:
+> diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+[..]
+> +static int pdr_locate_service(struct pdr_handle *pdr, struct pdr_service *pds)
+> +{
+> +	struct servreg_get_domain_list_resp *resp;
+> +	struct servreg_get_domain_list_req req;
+> +	struct servreg_location_entry *entry;
+> +	int domains_read = 0;
+> +	int ret, i;
+> +
+> +	resp = kzalloc(sizeof(*resp), GFP_KERNEL);
+> +	if (!resp)
+> +		return -ENOMEM;
+> +
+> +	/* Prepare req message */
+> +	strcpy(req.service_name, pds->service_name);
+> +	req.domain_offset_valid = true;
+> +	req.domain_offset = 0;
+> +
+> +	do {
+> +		req.domain_offset = domains_read;
+> +		ret = pdr_get_domain_list(&req, resp, pdr);
+> +		if (ret < 0)
+> +			goto out;
+> +
+> +		for (i = domains_read; i < resp->domain_list_len; i++) {
+> +			entry = &resp->domain_list[i];
+> +
+> +			if (strnlen(entry->name, sizeof(entry->name)) == sizeof(entry->name))
+> +				continue;
+> +
+> +			if (!strcmp(entry->name, pds->service_path)) {
+> +				pds->service_data_valid = entry->service_data_valid;
+> +				pds->service_data = entry->service_data;
+> +				pds->instance = entry->instance;
+> +				goto out;
+> +			}
+> +		}
+> +
+> +		/* Update ret to indicate that the service is not yet found */
+> +		ret = -ENXIO;
+> +
+> +		/* Always read total_domains from the response msg */
+> +		if (resp->domain_list_len > resp->total_domains)
+> +			resp->domain_list_len = resp->total_domains;
+> +
+> +		domains_read += resp->domain_list_len;
+> +	} while (domains_read < resp->total_domains);
+> +out:
+> +	kfree(resp);
+> +	return ret;
+> +}
+> +
+> +static void pdr_notify_lookup_failure(struct pdr_handle *pdr,
+> +				      struct pdr_service *pds,
+> +				      int err)
+> +{
+> +	list_del(&pds->node);
+> +
+> +	if (err == -ENXIO)
+> +		pds->state = SERVREG_LOCATOR_UNKNOWN_SERVICE;
+> +	else
+> +		pds->state = SERVREG_LOCATOR_ERR;
+> +
+> +	pr_err("PDR: service lookup for %s failed: %d\n",
+> +	       pds->service_name, err);
+> +
+> +	mutex_lock(&pdr->status_lock);
+> +	pdr->status(pds->state, pds->service_path, pdr->priv);
+> +	mutex_unlock(&pdr->status_lock);
+> +	kfree(pds);
 
-Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
----
- arch/arm/boot/dts/omap3-n900.dts | 44 +++++++++++++++++++++++++---------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+So this implies that we didn't find the service and we will never find
+it? How are the client drivers expected to react to above two states?
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index c3c6d7d04a76..4089d97405c9 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -854,34 +854,46 @@
- 		compatible = "ti,omap2-onenand";
- 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
- 
-+		/*
-+		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
-+		 * bootloader set values when booted with v5.1
-+		 * (OneNAND Manufacturer: Samsung):
-+		 *
-+		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
-+		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
-+		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
-+		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
-+		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
-+		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
-+		 */
- 		gpmc,sync-read;
- 		gpmc,sync-write;
- 		gpmc,burst-length = <16>;
- 		gpmc,burst-read;
- 		gpmc,burst-wrap;
- 		gpmc,burst-write;
--		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
--		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
-+		gpmc,device-width = <2>;
-+		gpmc,mux-add-data = <2>;
- 		gpmc,cs-on-ns = <0>;
--		gpmc,cs-rd-off-ns = <87>;
--		gpmc,cs-wr-off-ns = <87>;
-+		gpmc,cs-rd-off-ns = <102>;
-+		gpmc,cs-wr-off-ns = <102>;
- 		gpmc,adv-on-ns = <0>;
--		gpmc,adv-rd-off-ns = <10>;
--		gpmc,adv-wr-off-ns = <10>;
--		gpmc,oe-on-ns = <15>;
--		gpmc,oe-off-ns = <87>;
-+		gpmc,adv-rd-off-ns = <12>;
-+		gpmc,adv-wr-off-ns = <12>;
-+		gpmc,oe-on-ns = <12>;
-+		gpmc,oe-off-ns = <102>;
- 		gpmc,we-on-ns = <0>;
--		gpmc,we-off-ns = <87>;
--		gpmc,rd-cycle-ns = <112>;
--		gpmc,wr-cycle-ns = <112>;
--		gpmc,access-ns = <81>;
--		gpmc,page-burst-access-ns = <15>;
-+		gpmc,we-off-ns = <102>;
-+		gpmc,rd-cycle-ns = <132>;
-+		gpmc,wr-cycle-ns = <132>;
-+		gpmc,access-ns = <96>;
-+		gpmc,page-burst-access-ns = <18>;
- 		gpmc,bus-turnaround-ns = <0>;
- 		gpmc,cycle2cycle-delay-ns = <0>;
- 		gpmc,wait-monitoring-ns = <0>;
--		gpmc,clk-activation-ns = <5>;
--		gpmc,wr-data-mux-bus-ns = <30>;
--		gpmc,wr-access-ns = <81>;
-+		gpmc,clk-activation-ns = <6>;
-+		gpmc,wr-data-mux-bus-ns = <36>;
-+		gpmc,wr-access-ns = <96>;
- 		gpmc,sync-clk-ps = <15000>;
- 
- 		/*
--- 
-2.11.0
+> +}
+> +
+> +static void pdr_locator_work(struct work_struct *work)
+> +{
+> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
+> +					      locator_work);
+> +	struct pdr_service *pds, *tmp;
+> +	int ret = 0;
+> +
+> +	/* Bail out early if the SERVREG LOCATOR QMI service is not up */
+> +	mutex_lock(&pdr->lock);
+> +	if (!pdr->locator_init_complete) {
+> +		mutex_unlock(&pdr->lock);
+> +		pr_debug("PDR: SERVICE LOCATOR service not available\n");
+> +		return;
+> +	}
+> +	mutex_unlock(&pdr->lock);
+> +
+> +	mutex_lock(&pdr->list_lock);
+> +	list_for_each_entry_safe(pds, tmp, &pdr->lookups, node) {
+> +		if (!pds->need_locator_lookup)
+> +			continue;
+> +
+> +		pds->need_locator_lookup = false;
+> +		ret = pdr_locate_service(pdr, pds);
+> +		if (ret < 0)
+> +			pdr_notify_lookup_failure(pdr, pds, ret);
 
+If I read this correctly, pdr_locate_service() returning an error seems
+to mean that pd->instance won't be filled out, as such I don't think you
+want to proceed.
+
+Further more, pdr_notify_lookup_failure() ends up freeing the pds, so
+below lookup would be a use after free, not unlikely followed by a
+double free of pds.
+
+How about a "continue" here and only clear need_locator_lookup if both
+of these checks pass?
+
+> +
+> +		ret = qmi_add_lookup(&pdr->notifier_hdl, pds->service, 1,
+> +				     pds->instance);
+> +		if (ret < 0)
+> +			pdr_notify_lookup_failure(pdr, pds, ret);
+> +	}
+> +	mutex_unlock(&pdr->list_lock);
+> +}
+
+Apart from that I think the patches look good now.
+
+Regards,
+Bjorn
