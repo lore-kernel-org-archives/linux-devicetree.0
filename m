@@ -2,451 +2,160 @@ Return-Path: <SRS0=ZTIy=4Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E9DC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 17:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED369C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 19:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B10D1208CD
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 17:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583688719;
-	bh=Ej8/Npo0eyOV6TR4YhpVQ8QwoiE2Cwl3i8B9kYid67E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bnI2/qLTJ/7fuCkYkeakuySJz0VWJDPQZaAXZH+Oqy4ZucB97w2K4tTA2aFZ5ABfr
-	 HPm1/8Ve5S6pstxxXMlhAqOea7zbDzziNo87qlcHzoksgQeSOwoQo1K7pd3lv2Lyu0
-	 bO+YyVSzBRqpSNJn4pkUotSHvbDs2KzdXBNgtLQA=
+	by mail.kernel.org (Postfix) with ESMTP id C7097206D5
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Mar 2020 19:20:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuTzOrLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgCHRb7 (ORCPT
+        id S1726330AbgCHTUo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 13:31:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgCHRb6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Mar 2020 13:31:58 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1C9E208C3;
-        Sun,  8 Mar 2020 17:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583688717;
-        bh=Ej8/Npo0eyOV6TR4YhpVQ8QwoiE2Cwl3i8B9kYid67E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ex1VYyxrzwsbBD9Slkxzw6B24/B3lxZyAlR95iqRfmMtrfyp++6WKeXYbMGgnwt/A
-         em+I7b4CFKyMrT+WMh/DN/ei/rOUZktzDXnBxJGKd4zuzpVKsAIegABInPZOV49/Rr
-         pzHaRLSq8Ab/gmC2zNbHEmVGK+8Jah1fomQuE8Gg=
-Date:   Sun, 8 Mar 2020 17:31:52 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Bia, Beniamin" <Beniamin.Bia@analog.com>
-Cc:     "biabeniamin@outlook.com" <biabeniamin@outlook.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v5 3/5] iio: amplifiers: hmc425a: Add support for
- HMC425A attenuator
-Message-ID: <20200308172951.05c2fbd7@archlinux>
-In-Reply-To: <d3a68ef4a6b6646bb09e87290ced8054ef85d0a4.camel@analog.com>
-References: <20200206151149.32122-1-beniamin.bia@analog.com>
-        <20200206151149.32122-3-beniamin.bia@analog.com>
-        <20200214140959.528a546e@archlinux>
-        <d3a68ef4a6b6646bb09e87290ced8054ef85d0a4.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 8 Mar 2020 15:20:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43827 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgCHTUo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 15:20:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v9so8395668wrf.10;
+        Sun, 08 Mar 2020 12:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qALcG3CGuBaboVD1Vu6sKa7UNKTJMIZmbr5ctcnIjvQ=;
+        b=KuTzOrLQIYKb2aSSDndfU+R4OkG8+39CunsygU0n4TfXkT3rs607w8JdEwc7EkhXsh
+         SUI5U4xuqaM9u2kio3yF8L+iH80FaSzYKojyVif5EOGrwXyEC0Gkbe8H9x+6I9uVWaUI
+         RT/td7r6E8m4X97pUhBUDriTf1zOhmskFBfaaLvSXV09uCRoeWeGCxvzjDVCvADrX0m4
+         OGajyiizFLDGpLeKePswPh2ZPdrG2VOjhvLszoQZn4RX7Ym4zRLpiXb393YGlng3qaUl
+         NNvgvs6yjZUeroVVwUj2aJvhGwQCRM6pQEpwXfS1MoFKGf14J3Kxm6LJzSHPh6b6Dsqc
+         HcAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qALcG3CGuBaboVD1Vu6sKa7UNKTJMIZmbr5ctcnIjvQ=;
+        b=sg/JXf+KfmImKXo5DzZnUEwJbgMHkwVBwlCxFmJrQu6qKTwd6zcdwwSzms6N1AR86d
+         7XxBFArRTkP++/lbi2PfrhzdGnA5A8MvW/XivXsiREDgfA+QdOAXzghYMsuoXxPw4QhM
+         RrJ6taRqva78EObGHG8Y3gaKPLVl0jMWrhL8GxURTWF/CfFDXzzIIJxNVqzVxzXlW5Dv
+         cXbkQPPA5bhbftZ3sfdDjjsTp/V8rlr23PKeKwwSnxJffsde8/f8ZDjv0ikEYBq9DGLD
+         qNFbT+RLJKpl1iRzGx9P+S920+KSZHay+zDYYpoVxz0nv6UJAzTGkLPP33yqwKxNqhZ1
+         lN+A==
+X-Gm-Message-State: ANhLgQ3OI0qcKFk+kp9WD9s2tAKpT+TCBx+cvxIZLmOJEEOPs4I+fdBf
+        HG5w2NWhOaG7z/ZF95s7mZk=
+X-Google-Smtp-Source: ADFU+vv3rcWG5MMYWXUHe4T6UqDBb1TBfzXy2V9IGq5bFXchWpdP6YGsyWHg0RWNUP8FI7gV+0nbcA==
+X-Received: by 2002:adf:e98f:: with SMTP id h15mr16675277wrm.263.1583695241942;
+        Sun, 08 Mar 2020 12:20:41 -0700 (PDT)
+Received: from supervisor.net28 ([46.53.253.27])
+        by smtp.gmail.com with ESMTPSA id f127sm23281865wma.4.2020.03.08.12.20.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 08 Mar 2020 12:20:41 -0700 (PDT)
+From:   Arthur Demchenkov <spinal.by@gmail.com>
+Cc:     Arthur Demchenkov <spinal.by@gmail.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: OMAP: DTS: N900: fix onenand timings
+Date:   Sun,  8 Mar 2020 22:19:33 +0300
+Message-Id: <20200308191934.8263-1-spinal.by@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ben, 
+Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+started using DT specified timings for GPMC, and as a result the
+OneNAND stopped working on N900 as we had wrong values in the DT.
+Fix by updating the values to bootloader timings that have been tested
+to be working on Nokia N900 with OneNAND manufacturers: Samsung,
+Numonyx.
 
-Just noticed, the author for this doesn't match the module author
-or the first sign off.
-I've fixed up.  Hope that's fine with you and Michael.
+Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
+---
+ arch/arm/boot/dts/omap3-n900.dts | 44 +++++++++++++++++++++++++---------------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
 
-Jonathan
-
-
-On Thu, 20 Feb 2020 12:32:35 +0000
-"Bia, Beniamin" <Beniamin.Bia@analog.com> wrote:
-
-> Hi,
-> 
-> I checked the modifications and everything works as expected.
-> 
-> Thanks,
-> Ben
-> On Fri, 2020-02-14 at 14:09 +0000, Jonathan Cameron wrote:
-> > [External]
-> > 
-> > On Thu, 6 Feb 2020 17:11:47 +0200
-> > Beniamin Bia <beniamin.bia@analog.com> wrote:
-> >   
-> > > This patch adds support for the HMC425A 0.5 dB LSB GaAs MMIC 6-BIT
-> > > DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz.
-> > > 
-> > > Datasheet:
-> > >   
-> https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
-> > > 
-> > > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>  
-> > 
-> > 2 things left in here. I'll have a go at fixing them up to save us
-> > going
-> > to v6 but please take a look at the result and check I haven't broken
-> > anything!
-> > 
-> > Applied to the togreg branch of iio.git and pushed out as testing for
-> > the autobuilders to have a play with it.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> > > ---
-> > > Changes in v5:
-> > > -properties in HMC425A_CHAN on separate lines
-> > > -of_device_get_match instead of of_match_device
-> > > 
-> > >  drivers/iio/amplifiers/Kconfig   |  10 ++
-> > >  drivers/iio/amplifiers/Makefile  |   1 +
-> > >  drivers/iio/amplifiers/hmc425a.c | 253
-> > > +++++++++++++++++++++++++++++++
-> > >  3 files changed, 264 insertions(+)
-> > >  create mode 100644 drivers/iio/amplifiers/hmc425a.c
-> > > 
-> > > diff --git a/drivers/iio/amplifiers/Kconfig
-> > > b/drivers/iio/amplifiers/Kconfig
-> > > index da7f126d197b..9b02c9a2bc8a 100644
-> > > --- a/drivers/iio/amplifiers/Kconfig
-> > > +++ b/drivers/iio/amplifiers/Kconfig
-> > > @@ -22,4 +22,14 @@ config AD8366
-> > >  	  To compile this driver as a module, choose M here: the
-> > >  	  module will be called ad8366.
-> > >  
-> > > +config HMC425
-> > > +	tristate "Analog Devices HMC425A and similar GPIO Gain
-> > > Amplifiers"
-> > > +	depends on GPIOLIB
-> > > +	help
-> > > +	  Say yes here to build support for Analog Devices HMC425A and
-> > > similar
-> > > +	  gain amplifiers or step attenuators.
-> > > +
-> > > +	  To compile this driver as a module, choose M here: the
-> > > +	  module will be called hmc425a.
-> > > +
-> > >  endmenu
-> > > diff --git a/drivers/iio/amplifiers/Makefile
-> > > b/drivers/iio/amplifiers/Makefile
-> > > index 9abef2ebe9bc..19a89db1d9b1 100644
-> > > --- a/drivers/iio/amplifiers/Makefile
-> > > +++ b/drivers/iio/amplifiers/Makefile
-> > > @@ -5,3 +5,4 @@
-> > >  
-> > >  # When adding new entries keep the list in alphabetical order
-> > >  obj-$(CONFIG_AD8366) += ad8366.o
-> > > +obj-$(CONFIG_HMC425) += hmc425a.o
-> > > \ No newline at end of file  
-> > 
-> > I'll fix the no newline..
-> >   
-> > > diff --git a/drivers/iio/amplifiers/hmc425a.c
-> > > b/drivers/iio/amplifiers/hmc425a.c
-> > > new file mode 100644
-> > > index 000000000000..b0d624a7ad05
-> > > --- /dev/null
-> > > +++ b/drivers/iio/amplifiers/hmc425a.c
-> > > @@ -0,0 +1,253 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * HMC425A and similar Gain Amplifiers
-> > > + *
-> > > + * Copyright 2020 Analog Devices Inc.
-> > > + */
-> > > +
-> > > +#include <linux/device.h>
-> > > +#include <linux/err.h>
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/iio/iio.h>
-> > > +#include <linux/iio/sysfs.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of_device.h>
-> > > +#include <linux/of_platform.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/regulator/consumer.h>
-> > > +#include <linux/sysfs.h>
-> > > +
-> > > +enum hmc425a_type {
-> > > +	ID_HMC425A,
-> > > +};
-> > > +
-> > > +struct hmc425a_chip_info {
-> > > +	const char			*name;
-> > > +	const struct iio_chan_spec	*channels;
-> > > +	unsigned int			num_channels;
-> > > +	unsigned int			num_gpios;
-> > > +	int				gain_min;
-> > > +	int				gain_max;
-> > > +	int				default_gain;
-> > > +};
-> > > +
-> > > +struct hmc425a_state {
-> > > +	struct	regulator *reg;
-> > > +	struct	mutex lock; /* protect sensor state */
-> > > +	struct	hmc425a_chip_info *chip_info;
-> > > +	struct	gpio_descs *gpios;
-> > > +	enum	hmc425a_type type;
-> > > +	u32	gain;
-> > > +};
-> > > +
-> > > +static int hmc425a_write(struct iio_dev *indio_dev, u32 value)
-> > > +{
-> > > +	struct hmc425a_state *st = iio_priv(indio_dev);
-> > > +	DECLARE_BITMAP(values, BITS_PER_TYPE(value));
-> > > +
-> > > +	values[0] = value;
-> > > +
-> > > +	gpiod_set_array_value_cansleep(st->gpios->ndescs, st->gpios-  
-> > > >desc,  
-> > > +				       NULL, values);
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int hmc425a_read_raw(struct iio_dev *indio_dev,
-> > > +			    struct iio_chan_spec const *chan, int *val,
-> > > +			    int *val2, long m)
-> > > +{
-> > > +	struct hmc425a_state *st = iio_priv(indio_dev);
-> > > +	int code, gain = 0;
-> > > +	int ret;
-> > > +
-> > > +	mutex_lock(&st->lock);
-> > > +	switch (m) {
-> > > +	case IIO_CHAN_INFO_HARDWAREGAIN:
-> > > +		code = st->gain;
-> > > +
-> > > +		switch (st->type) {
-> > > +		case ID_HMC425A:
-> > > +			gain = ~code * -500;
-> > > +			break;
-> > > +		}
-> > > +
-> > > +		*val = gain / 1000;
-> > > +		*val2 = (gain % 1000) * 1000;
-> > > +
-> > > +		ret = IIO_VAL_INT_PLUS_MICRO_DB;
-> > > +		break;
-> > > +	default:
-> > > +		ret = -EINVAL;
-> > > +	}
-> > > +	mutex_unlock(&st->lock);
-> > > +
-> > > +	return ret;
-> > > +};
-> > > +
-> > > +static int hmc425a_write_raw(struct iio_dev *indio_dev,
-> > > +			     struct iio_chan_spec const *chan, int val,
-> > > +			     int val2, long mask)
-> > > +{
-> > > +	struct hmc425a_state *st = iio_priv(indio_dev);
-> > > +	struct hmc425a_chip_info *inf = st->chip_info;
-> > > +	int code = 0, gain;
-> > > +	int ret;
-> > > +
-> > > +	if (val < 0)
-> > > +		gain = (val * 1000) - (val2 / 1000);
-> > > +	else
-> > > +		gain = (val * 1000) + (val2 / 1000);
-> > > +
-> > > +	if (gain > inf->gain_max || gain < inf->gain_min)
-> > > +		return -EINVAL;
-> > > +
-> > > +	switch (st->type) {
-> > > +	case ID_HMC425A:
-> > > +		code = ~((abs(gain) / 500) & 0x3F);
-> > > +		break;
-> > > +	}
-> > > +
-> > > +	mutex_lock(&st->lock);
-> > > +	switch (mask) {
-> > > +	case IIO_CHAN_INFO_HARDWAREGAIN:
-> > > +		st->gain = code;
-> > > +
-> > > +		ret = hmc425a_write(indio_dev, st->gain);
-> > > +		break;
-> > > +	default:
-> > > +		ret = -EINVAL;
-> > > +	}
-> > > +	mutex_unlock(&st->lock);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int hmc425a_write_raw_get_fmt(struct iio_dev *indio_dev,
-> > > +				     struct iio_chan_spec const *chan,
-> > > +				     long mask)
-> > > +{
-> > > +	switch (mask) {
-> > > +	case IIO_CHAN_INFO_HARDWAREGAIN:
-> > > +		return IIO_VAL_INT_PLUS_MICRO_DB;
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}
-> > > +}
-> > > +
-> > > +static const struct iio_info hmc425a_info = {
-> > > +	.read_raw = &hmc425a_read_raw,
-> > > +	.write_raw = &hmc425a_write_raw,
-> > > +	.write_raw_get_fmt = &hmc425a_write_raw_get_fmt,
-> > > +};
-> > > +
-> > > +#define HMC425A_CHAN(_channel)					
-> > > 	\
-> > > +{									
-> > > \
-> > > +	.type = IIO_VOLTAGE,						
-> > > \
-> > > +	.output = 1,							
-> > > \
-> > > +	.indexed = 1,							
-> > > \
-> > > +	.channel = _channel,						
-> > > \
-> > > +	.info_mask_separate = BIT(IIO_CHAN_INFO_HARDWAREGAIN),		
-> > > \
-> > > +}
-> > > +
-> > > +static const struct iio_chan_spec hmc425a_channels[] = {
-> > > +	HMC425A_CHAN(0),
-> > > +};
-> > > +
-> > > +/* Match table for of_platform binding */
-> > > +static const struct of_device_id hmc425a_of_match[] = {
-> > > +	{ .compatible = "adi,hmc425a", .data = (void *)ID_HMC425A },
-> > > +	{},
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, hmc425a_of_match);
-> > > +
-> > > +static void hmc425a_reg_disable(void *data)
-> > > +{
-> > > +	struct hmc425a_state *st = data;
-> > > +
-> > > +	regulator_disable(st->reg);
-> > > +}
-> > > +
-> > > +static struct hmc425a_chip_info hmc425a_chip_info_tbl[] = {
-> > > +	[ID_HMC425A] = {
-> > > +		.name = "hmc425a",
-> > > +		.channels = hmc425a_channels,
-> > > +		.num_channels = ARRAY_SIZE(hmc425a_channels),
-> > > +		.num_gpios = 6,
-> > > +		.gain_min = -31500,
-> > > +		.gain_max = 0,
-> > > +		.default_gain = -0x40, /* set default gain -31.5db*/
-> > > +	},
-> > > +};
-> > > +
-> > > +static int hmc425a_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct iio_dev *indio_dev;
-> > > +	struct hmc425a_state *st;
-> > > +	int ret;
-> > > +
-> > > +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
-> > > +	if (!indio_dev)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	st = iio_priv(indio_dev);
-> > > +	st->type = (enum hmc425a_type)of_device_get_match_data(&pdev-  
-> > > >dev);  
-> > > +
-> > > +	st->chip_info = &hmc425a_chip_info_tbl[st->type];
-> > > +	indio_dev->num_channels = st->chip_info->num_channels;
-> > > +	indio_dev->channels = st->chip_info->channels;
-> > > +	indio_dev->name = st->chip_info->name;
-> > > +	st->gain = st->chip_info->default_gain;
-> > > +
-> > > +	st->gpios = devm_gpiod_get_array(&pdev->dev, "ctrl",
-> > > GPIOD_OUT_LOW);
-> > > +	if (IS_ERR(st->gpios)) {
-> > > +		ret = PTR_ERR(st->gpios);
-> > > +		if (ret != -EPROBE_DEFER)
-> > > +			dev_err(&pdev->dev, "failed to get gpios\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	if (st->gpios->ndescs != st->chip_info->num_gpios) {
-> > > +		dev_err(&pdev->dev, "%d GPIOs needed to operate\n",
-> > > +			st->chip_info->num_gpios);
-> > > +		return -ENODEV;
-> > > +	}
-> > > +
-> > > +	st->reg = devm_regulator_get_optional(&pdev->dev, "vcc-
-> > > supply");  
-> > 
-> > Sorry I'd missed this before.  Why is this optional?  I think
-> > what is needed here is to just let the regulator framework provide
-> > a stub if no regulator is supplied in DT.
-> > 
-> > We only play this optional game if we have regulators that are really
-> > optional such as reference voltages on parts that also have internal
-> > references that can be used.
-> >   
-> > > +	if (IS_ERR(st->reg)) {
-> > > +		if (PTR_ERR(st->reg) == -EPROBE_DEFER)
-> > > +			return -EPROBE_DEFER;
-> > > +
-> > > +		st->reg = NULL;
-> > > +	} else {
-> > > +		ret = regulator_enable(st->reg);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +		ret = devm_add_action_or_reset(&pdev->dev,
-> > > hmc425a_reg_disable,
-> > > +					       st);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	}
-> > > +
-> > > +	mutex_init(&st->lock);
-> > > +
-> > > +	indio_dev->dev.parent = &pdev->dev;
-> > > +	indio_dev->info = &hmc425a_info;
-> > > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > > +
-> > > +	return devm_iio_device_register(&pdev->dev, indio_dev);
-> > > +}
-> > > +
-> > > +static struct platform_driver hmc425a_driver = {
-> > > +	.driver = {
-> > > +		.name = KBUILD_MODNAME,
-> > > +		.of_match_table = hmc425a_of_match,
-> > > +	},
-> > > +	.probe = hmc425a_probe,
-> > > +};
-> > > +module_platform_driver(hmc425a_driver);
-> > > +
-> > > +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
-> > > +MODULE_DESCRIPTION("Analog Devices HMC425A and similar GPIO
-> > > control Gain Amplifiers");
-> > > +MODULE_LICENSE("GPL v2");  
-> > 
-> >   
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index c3c6d7d04a76..4089d97405c9 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -854,34 +854,46 @@
+ 		compatible = "ti,omap2-onenand";
+ 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
+ 
++		/*
++		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
++		 * bootloader set values when booted with v5.1
++		 * (OneNAND Manufacturer: Samsung):
++		 *
++		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
++		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
++		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
++		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
++		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
++		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
++		 */
+ 		gpmc,sync-read;
+ 		gpmc,sync-write;
+ 		gpmc,burst-length = <16>;
+ 		gpmc,burst-read;
+ 		gpmc,burst-wrap;
+ 		gpmc,burst-write;
+-		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
+-		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
++		gpmc,device-width = <2>;
++		gpmc,mux-add-data = <2>;
+ 		gpmc,cs-on-ns = <0>;
+-		gpmc,cs-rd-off-ns = <87>;
+-		gpmc,cs-wr-off-ns = <87>;
++		gpmc,cs-rd-off-ns = <102>;
++		gpmc,cs-wr-off-ns = <102>;
+ 		gpmc,adv-on-ns = <0>;
+-		gpmc,adv-rd-off-ns = <10>;
+-		gpmc,adv-wr-off-ns = <10>;
+-		gpmc,oe-on-ns = <15>;
+-		gpmc,oe-off-ns = <87>;
++		gpmc,adv-rd-off-ns = <12>;
++		gpmc,adv-wr-off-ns = <12>;
++		gpmc,oe-on-ns = <12>;
++		gpmc,oe-off-ns = <102>;
+ 		gpmc,we-on-ns = <0>;
+-		gpmc,we-off-ns = <87>;
+-		gpmc,rd-cycle-ns = <112>;
+-		gpmc,wr-cycle-ns = <112>;
+-		gpmc,access-ns = <81>;
+-		gpmc,page-burst-access-ns = <15>;
++		gpmc,we-off-ns = <102>;
++		gpmc,rd-cycle-ns = <132>;
++		gpmc,wr-cycle-ns = <132>;
++		gpmc,access-ns = <96>;
++		gpmc,page-burst-access-ns = <18>;
+ 		gpmc,bus-turnaround-ns = <0>;
+ 		gpmc,cycle2cycle-delay-ns = <0>;
+ 		gpmc,wait-monitoring-ns = <0>;
+-		gpmc,clk-activation-ns = <5>;
+-		gpmc,wr-data-mux-bus-ns = <30>;
+-		gpmc,wr-access-ns = <81>;
++		gpmc,clk-activation-ns = <6>;
++		gpmc,wr-data-mux-bus-ns = <36>;
++		gpmc,wr-access-ns = <96>;
+ 		gpmc,sync-clk-ps = <15000>;
+ 
+ 		/*
+-- 
+2.11.0
 
