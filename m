@@ -2,74 +2,96 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A010C10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B479C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E50224649
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:36:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="LQOC0Icp"
+	by mail.kernel.org (Postfix) with ESMTP id 366E320409
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:37:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583786234;
+	bh=5+Sb/qN3yZlUduJg7rDZcqaSKiZkM8mntRD6QBcZcmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=braxttyXbV9eBsyOQJkqELzQDLTsDgrIhIIbK9jLNBDeNMLfYbg3ZnyvpIIe6PXLi
+	 SY42ZK2z9oQ+fE8UrNr8D0dB2+nsfSs8iiPBKLJxXwpQryDx3sypu3tEaJPzVx9bGd
+	 4d6OXWD8jvCo9R2/YpzEg3lZKwh9ddp8CmiS3OmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgCIUg3 (ORCPT
+        id S1726134AbgCIUhN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:36:29 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:57336 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgCIUg3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:36:29 -0400
-Received: from localhost.localdomain (80-110-126-226.cgn.dynamic.surfer.at [80.110.126.226])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 0B743C3FB3;
-        Mon,  9 Mar 2020 20:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1583786186; bh=awz8KYyR1mFeuL9bVkD1x82S9ZomZ83jlRqOYvBFojo=;
-        h=From:To:Cc:Subject:Date;
-        b=LQOC0IcpM39Cnvyxmc69xAF3o0s/E3x/weuQs/vLTgkaoy2Ruf3Z3KFU7+Csb1+Dn
-         x4Ezb3ClVXrYbZNZvjTmxddxTXXgrgNdT/7zd7boXY0NMgXR+owaxoG0wZ5Gn2Zwhw
-         yxMz2pFe4JcRIA5i6r5TySJ7edcb+ahFgZWDrkoA=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-leds@vger.kernel.org
-Cc:     Dan Murphy <dmurphy@ti.com>, Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        Mon, 9 Mar 2020 16:37:13 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44402 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbgCIUhN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 16:37:13 -0400
+Received: by mail-ot1-f68.google.com with SMTP id v22so10954672otq.11;
+        Mon, 09 Mar 2020 13:37:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1n4yXD8CThTOxD2EDR7I2aRpPsppUZVF3HLI87zQ4ZY=;
+        b=go0dVBjgRN87R/f7y7T8y5AItvvdkRgUs/xYZe7kqzytFhavX9tv46YfeTf1uJ3q5g
+         UJAzixwSlwm2K/WibdZpSMLNEGhZLBSbgfG/rEdbNHxrWBrU987sQV4/49jsgX+/h6Qc
+         wv6eRlqPQjDxThE57/yD9LfkiRG+Xe3FNzagfeeEJ8CDVKh+0vDotqDKQtFaWDV7kF6S
+         78nB8tytw2GXXLQ8gBuEfh/LGzKEgBAywJT+jusYs+MksEmVlKZpugNSExTcsEV5uSgC
+         rje8OjXy6jhGOktO3tuY8ESosWJytC3PYNvmefT9KzujaKuNwbTyeR0AmLVmd6IOZgYQ
+         bbpg==
+X-Gm-Message-State: ANhLgQ3hoaGoTRl2IZc4zeIwq7yU68+a+ph3a5legtfoedrShHd1kjBo
+        gv33Zew+s5DAzfgJ97pvW7YPhco=
+X-Google-Smtp-Source: ADFU+vt7V3uyoj4pVmg02Jxf/Z1VF/kbucOhU+qbtUfrGu4N3GDlO3Br9L3hOmcZncjvzboSC3Tyhw==
+X-Received: by 2002:a05:6830:1345:: with SMTP id r5mr987211otq.342.1583786232592;
+        Mon, 09 Mar 2020 13:37:12 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w15sm3464104oiw.43.2020.03.09.13.37.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 13:37:11 -0700 (PDT)
+Received: (nullmailer pid 27764 invoked by uid 1000);
+        Mon, 09 Mar 2020 20:37:11 -0000
+Date:   Mon, 9 Mar 2020 15:37:11 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH 0/3] Add sgm3140 flash led driver
-Date:   Mon,  9 Mar 2020 21:35:55 +0100
-Message-Id: <20200309203558.305725-1-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.25.1
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH net-next v2 4/9] dt-binding: ti: am65x: document mcu cpsw
+ nuss
+Message-ID: <20200309203711.GA15678@bogus>
+References: <20200306234734.15014-1-grygorii.strashko@ti.com>
+ <20200306234734.15014-5-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306234734.15014-5-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series introduces a driver for the SGMICRO SGM3140 charge pump
-used in the PinePhone smartphone.
+On Sat, 7 Mar 2020 01:47:29 +0200, Grygorii Strashko wrote:
+> Document device tree bindings for The TI AM654x/J721E SoC Gigabit Ethernet MAC
+> (Media Access Controller - CPSW2G NUSS). The CPSW NUSS provides Ethernet packet
+> communication for the device.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   | 225 ++++++++++++++++++
+>  1 file changed, 225 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> 
 
-Luca Weiss (3):
-  dt-bindings: Add vendor prefix for SG Micro Corp
-  dt-bindings: leds: Add binding for sgm3140
-  leds: add sgm3140 driver
+My bot found errors running 'make dt_binding_check' on your patch:
 
- .../bindings/leds/leds-sgm3140.yaml           |  53 ++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- drivers/leds/Kconfig                          |   9 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/leds-sgm3140.c                   | 260 ++++++++++++++++++
- 5 files changed, 325 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
- create mode 100644 drivers/leds/leds-sgm3140.c
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.example.dt.yaml: ethernet@46000000: 'pinctrl-0' is a dependency of 'pinctrl-names'
 
--- 
-2.25.1
-
+See https://patchwork.ozlabs.org/patch/1250679
+Please check and re-submit.
