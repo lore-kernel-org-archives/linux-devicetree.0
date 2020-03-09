@@ -2,95 +2,145 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B27BC18E5A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1C3C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1872920578
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583777439;
-	bh=qOKa5+48209mLBEkUPuuBB1K+HV64pW5TiQ1KS9b9Sc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c0aoxohHKnH42CIyEjSFb/+uU7rAR/soz4u7MRzSbzKp4p5GR1wUEXGdIunpWFhXu
-	 as7rVR/15OlCTiQtvh8jGvDh7vDz9UTeWOJbRaKdkLst5VJUv/zrdKeag5gsaC6jLg
-	 xC6HV3rFa/YMcNnjFnK8J1xG468B/vzJZAGFwv7Y=
+	by mail.kernel.org (Postfix) with ESMTP id 73418208C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxvkAOQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgCISKi (ORCPT
+        id S1726676AbgCISPD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:10:38 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40026 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgCISKi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 14:10:38 -0400
-Received: by mail-ot1-f67.google.com with SMTP id x19so10526543otp.7;
-        Mon, 09 Mar 2020 11:10:37 -0700 (PDT)
+        Mon, 9 Mar 2020 14:15:03 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38609 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgCISPD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 14:15:03 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h5so2782203edn.5;
+        Mon, 09 Mar 2020 11:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xs7r2b9IzlfpQAdeExaqPyMiu2aaclTGgziI7uZf/6s=;
+        b=WxvkAOQAuO/cEOwxhw7vHKPvtV7dDzQ2lSV3UO+Y2iakzmbUhmOn8ttTAmVMqHqxnu
+         kz/P0iP+Hy9cOSqm5mWZVPTFXWtnp9ZZQ9huvu34iprmrCNI4RynlJnsa7MNM/2+Qslf
+         ou18g7F1YhoYvN4/8kcY32A7z1E8/qlUFEpUZWo0q8OwGkTIamUiXPF5mex5yBO4d+4b
+         jxq/fhATTHRb/y0xJAoGleyuyOVLCIIFnMUc5eoKSZQ5EdJUASXlcMxpLz949twscU3D
+         7yqvDrBptKaJA5i4BGrahUtW+cJHELsGxtneCTRlNwJ6JIj7gIioNCXeTRPRejqb3wgK
+         n0uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=deNJF5N+tcxiITRRxmIT4oQ72noV576m4MdDvXlZn9Q=;
-        b=JY0/3E85ETw2xhECMuLA6Ui+lLaQit9F3DHjzFfmqJbtQ38ds7dxRCxiWZ6YGv9O2A
-         ihIWxs/LjUTVZyoTepRovhOjy9YUncqBMZQdfCOgYyDyCqNTocQheLOvNBOgecZRNpTv
-         opxIlq+DO9eoVpijgjR4a4htrVPQquKhcF5Kx32wabTWr+AbkuLBktg+YReiRY5fy83b
-         9dTQpJrZBCKZFji9Gkk4RE7BYstJ0KDbPFTJfT9AcBoeigHlNRkf4qdN1bl5DSRsjgY0
-         vzvnjbOSrCMDkQFYaA0gHQ32CrV/pnYck4015QkulZWpE+AjjmFJCBAUQ2eb//NVFa6M
-         78mw==
-X-Gm-Message-State: ANhLgQ0XA+44/kzX9RzIie/7PnQOshAqe5v4Udq7MPrxLxaapsVUxneR
-        NiOSNOEDMEBEZHortRjn+g==
-X-Google-Smtp-Source: ADFU+vtDOB4TE8oXStOHtxCcHfpJSMs3sf9ZfzaL10Bhyl2BiHDsj4rlSKGldbHXefilyYKA54CiwA==
-X-Received: by 2002:a05:6830:1aca:: with SMTP id r10mr7435564otc.330.1583777437384;
-        Mon, 09 Mar 2020 11:10:37 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c3sm2023128otl.81.2020.03.09.11.10.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 11:10:36 -0700 (PDT)
-Received: (nullmailer pid 23932 invoked by uid 1000);
-        Mon, 09 Mar 2020 18:10:35 -0000
-Date:   Mon, 9 Mar 2020 13:10:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-scsi@vger.kernel.org, krzk@kernel.org, avri.altman@wdc.com,
-        martin.petersen@oracle.com, kwmad.kim@samsung.com,
-        stanley.chu@mediatek.com, cang@codeaurora.org,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH 1/5] dt-bindings: phy: Document Samsung UFS PHY bindings
-Message-ID: <20200309181035.GA23663@bogus>
-References: <20200306150529.3370-1-alim.akhtar@samsung.com>
- <CGME20200306151021epcas5p40139bc39ddabb00f054f872c2b77db8f@epcas5p4.samsung.com>
- <20200306150529.3370-2-alim.akhtar@samsung.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xs7r2b9IzlfpQAdeExaqPyMiu2aaclTGgziI7uZf/6s=;
+        b=pnu3b2LHpLJlAevcsxZdzbpW9cVEccyklrtlJRk5BMZE+mIm1ZSvKPSLZ1eT07eAhu
+         s9hM7CLMeiqoF7XRWhqCtD4zPRmfwLqOA8Xy0cPAqflXWDmNnaltMpRXCgzEaqJ9JSzQ
+         VhqeN/cFGJyAVXJ0yzT29dfINQhCMjPHMTCvSvokksTzkUI/AADvg3Yozbb+PkFxVxSA
+         NE2Ov7CoNo6OWYUpTwov/oua4cO740frcbN7O0tpuH2Ivks0k5dCEAp3zSUkJETWLhPN
+         IsjUkk7UbaMXruDcI6n7DfIXOSm01J7VikUmhwj83D+l8PEIpqc0+7Kpu1YjQmvESLqr
+         dSDA==
+X-Gm-Message-State: ANhLgQ1HvRTpfK2d/NFOyXv4jQBgkKmEcA1lCVQ0JakPo9+rPi1RcGsM
+        2ul2ze6XKS8kOUTpR4yqYoXfHIZmsrtQiRBUKhk=
+X-Google-Smtp-Source: ADFU+vuX+135JLR5eV9PzpXXV/FHyVLVYOJHZDWbj5zoXjOcs3HBVAiRwWM+dfvSFmxVVm5OhztF1vU44B3a0Ykb2kg=
+X-Received: by 2002:a17:906:f49:: with SMTP id h9mr16437041ejj.6.1583777701665;
+ Mon, 09 Mar 2020 11:15:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306150529.3370-2-alim.akhtar@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200309145624.10026-1-olteanv@gmail.com> <f530a0740f34b2cf26a8055d4eae2527@walle.cc>
+In-Reply-To: <f530a0740f34b2cf26a8055d4eae2527@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 9 Mar 2020 20:14:50 +0200
+Message-ID: <CA+h21hrSezjwKJDCd1wN8qk5koWfPmwT0Mx+sR7fHxo1sCGcjw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] NXP DSPI bugfixes and support for LS1028A
+To:     Michael Walle <michael@walle.cc>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  6 Mar 2020 20:35:25 +0530, Alim Akhtar wrote:
-> This patch documents Samsung UFS PHY device tree bindings
-> 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> ---
->  .../bindings/phy/samsung,ufs-phy.yaml         | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
-> 
+On Mon, 9 Mar 2020 at 20:03, Michael Walle <michael@walle.cc> wrote:
+> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> >
+> > This series addresses a few issues that were missed during the previous
+> > series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
+> > SoCs other than LS1021A and LS1043A. DMA mode has been completely
+> > broken
+> > by that series, and XSPI mode never worked on little-endian
+> > controllers.
+> >
+> > Then it introduces support for the LS1028A chip, whose compatible has
+> > recently been documented here:
+> >
+> > https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
+>
+> If it is not compatible with the LS1021A the second compatible string
+> should be removed. Depending on the other remark about the endianess,
+> it might still be compatible, though.
+>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Please feel free to remove it. I wasn't actually planning to add it in
+the first place, but now it that it's there it doesn't really bother
+anybody either.
 
-Error: Documentation/devicetree/bindings/phy/samsung,ufs-phy.example.dts:23.36-37 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/phy/samsung,ufs-phy.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/phy/samsung,ufs-phy.example.dt.yaml] Error 1
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+>
+> > The device tree for the LS1028A SoC is extended with DMA channels
+> > definition, such that even though the default operating mode is XSPI,
+> > one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
+> > devtype_data structure of the driver and use that instead.
+>
+> wouldn't it make more sense, to use DMA is the dma node is present
+> in the device tree? otherwise use XSPI mode? I don't think it is
+> really handy to change the mode inside the driver.
+>
 
-See https://patchwork.ozlabs.org/patch/1250378
-Please check and re-submit.
+Let's keep it simple. The driver should configure the hardware in the
+most efficient and least buggy mode available. Right now that is XSPI.
+The hardware description (aka the device tree) is a separate topic. If
+there ever arises any situation where there are corner cases with XSPI
+mode, it's good to have a fallback in the form of DMA mode, and not
+have to worry about yet another problem (which is that there are 2
+sets of device tree blobs in deployment).
+
+TL;DR: These DMA channels don't really bother anybody but you never
+know when they might come in handy.
+
+> -michael
+>
+> >
+> > For testing, benchmarking and debugging, the mikroBUS connector on the
+> > LS1028A-RDB is made available via spidev.
+> >
+> > Vladimir Oltean (6):
+> >   spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
+> >   spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
+> >   spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
+> >   spi: spi-fsl-dspi: Add support for LS1028A
+> >   arm64: dts: ls1028a: Specify the DMA channels for the DSPI
+> > controllers
+> >   arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
+> >
+> >  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 14 +++++
+> >  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
+> >  drivers/spi/spi-fsl-dspi.c                    | 54 +++++++++++++++----
+> >  3 files changed, 64 insertions(+), 10 deletions(-)
+
+Thanks,
+-Vladimir
