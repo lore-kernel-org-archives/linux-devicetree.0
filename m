@@ -2,172 +2,136 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840B2C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBA4C10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5907220828
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECABE20828
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W+7y4Xuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgCILJu (ORCPT
+        id S1727002AbgCILOi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:09:50 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:49957 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgCILJt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 07:09:49 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MNss4-1j0MB33BHc-00OKYg; Mon, 09 Mar 2020 12:09:33 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id AEACE650061;
-        Mon,  9 Mar 2020 11:09:32 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id EF_gs1Tv7aJJ; Mon,  9 Mar 2020 12:09:32 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 4495A64FD05;
-        Mon,  9 Mar 2020 12:09:32 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.10.2.141) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 9 Mar 2020 12:09:32 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id E1BA1804F8; Mon,  9 Mar 2020 12:09:31 +0100 (CET)
-Date:   Mon, 9 Mar 2020 12:09:31 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-Message-ID: <20200309110931.GB3593@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-References: <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
- <20200302150706.GB3717@pflmari>
- <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
- <20200302160906.GC3717@pflmari>
- <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
- <20200305143628.GB25741@pflmari>
- <20200306131632.GA4878@pendragon.ideasonboard.com>
- <20200306134154.GD27714@pflmari>
- <20200306134546.GE4878@pendragon.ideasonboard.com>
- <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
-X-Originating-IP: [10.10.2.141]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29536F936F637D63
-X-Provags-ID: V03:K1:gR6rW5ecslKFmSCgJXl9/tgvA5veb1fTHa5FSn9E02NiSYn8MTc
- jfTRnhmhxG1xh05nAmModYg4ablDUwhsTEWRtMKNiwF1Ba+Q4XBvXEXLZUfES35/yWi0Siv
- mW5lPK8HZK2Ymp/Dyg8Uz8kFjgeAWLhSrZtsSOuyib7tUn57ibP939fs3UC9nCbF83YzvKM
- Ng06OF7KQ36aOR0aRClNw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rLu4bN4ajpU=:h8UFrs8QFFhECyg3qTXbrA
- 3JNpp6c0hdSW7ncjvgVXWh2iQHS+Y0jct46wxyEhGGkrV0oCDArK5DhnpdUcTzm78L5zXPGKi
- yIPl2CNrEgIkSA/5VERu1sHyqn+VdfnDQLHYd7snDgsll+j0MiIpq+/ZK1Z3+6d7K6rZcXMzR
- w3A7az7S6srz5fz9Auy2RJAPxI0Fe4EBrF7R8bTpT2KJsmch3TyiTErVRCCsOCAo+bdCdZFsM
- MPvcyE5Q7YLmnY6HMBZnbUUknhGzSVJgthMI1+GqGD6yvp9OU1qI2Z4O8YAbg5ttdRFJbT9Bk
- Ov05BmUmMHLO/1Msl0vZ20gPoJid/qxpyEbcedDUmDM7Mv27UMAjgKQMo8YVN6ctelyix7s4k
- JogLp4RV9krJ96qClbNo7DRUsjsAU3w+h4uzi5HGZhhSH4rUJFjBETcK5lykq3IYQFfIOw31D
- pwdGjPjH++xAyVltzpVnLerAsQkO00qa1hc4nsTUgHCfH5DSa8d2/GHtCBcyRCzN9PHtsdYXy
- XoWJ78Ckt5RTFgxJ05xxzyMAgX2/TgzhwtWt4XYSFYqs6cDKe+eSNnpo0iaO/eBEQeoJD+1AI
- N0YtFEfiY4uw5lMmZVkOns/8ii0WQrLWxZg4Ld/wir7iFW3D00Y2iaW5zAj+nxuNttzuospw0
- lgy3NUXLdIEwl8WiWDDDnndRbKoMJfsiB9/2tvJ5wvlUM3RFFNH5Z8OSk49IERX5QJwWTQRPs
- cGgih8YlLjJw4IZgfSClkNtM7w1mk4vjsDvESjtaCr1YiTgaaQ/uL73fsR6f5DtBYYzZ/IhI0
- rymrCcY3m1GBu0hpUne15zhelObdrhOC+u5oCsc21Vn87GFy0Wody6vBthbrHoWPTpXLz52
+        Mon, 9 Mar 2020 07:14:38 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:54874 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727152AbgCILOh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 07:14:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583752476; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=UBOFURm4ibb/cnoI9dEpQch9qApxzL8zn4xOLlpoH+U=; b=W+7y4XuqH17H2V7tKraSQR9afNl7KUxylsI+VF6+W/G7OIQSVSnnnMRzY7PRXezxdefAJvTf
+ 6+hLqmisfkbaUn/wpcohayn2oinxuA+jFqSxxQlXoj5MT1WZfiF3g2oHLww5DLZ2qRkdD7V8
+ E0G1BStcyiJKX4Cb2BRiOKRnpIg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e662519.7fb70ba47bc8-smtp-out-n03;
+ Mon, 09 Mar 2020 11:14:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A3A4AC433BA; Mon,  9 Mar 2020 11:14:33 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC9DAC44788;
+        Mon,  9 Mar 2020 11:14:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC9DAC44788
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+        devicetree@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v4 1/4] dt-bindings: Introduce SoC sleep stats bindings
+Date:   Mon,  9 Mar 2020 16:44:14 +0530
+Message-Id: <1583752457-21159-2-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org>
+References: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
 
-Kuninori Morimoto, Mon, Mar 09, 2020 02:31:01 +0100:
-> > > > Those clocks are part of the CSI-2 protocol and also don't need to be
-> > > > explicitly controlled. As far as I can tell from a quick check of the
-> > > > ADV7482 documentation, only the I2S MCLK is a general-purpose clock that
-> > > > needs to be exposed.
-> (snip)
-> > > Do you know, by chance, which of the snd_soc* callbacks should be used to
-> > > implement setting of the MCLK? The one in snd_soc_component_driver or
-> > > snd_soc_dai_driver->ops (snd_soc_dai_ops)?
-> > > 
-> > > Or how the userspace interface looks like? Or, if there is no userspace
-> > > interface for this, how the MCLK is supposed to be set? Through mclk-fs?
-> > 
-> > I'm afraid my knowledge of the sound subsystem is limited. Morimoto-san
-> > is the main developer and maintainer of Renesas sound drivers.
-> > Morimoto-sensei, would you have an answer to that question ? :-)
-> 
-> In my quick check, it goes to AUDIO_CLKC.
-> If so, you can update rcar_sound::clocks.
-> 
-> 	&rcar_sound {
-> 		...
-> -		/* update <audio_clk_b> to <cs2000> */
-> +		/* update <audio_clk_b> to <cs2000>,
-> +		 *        <audio_clk_c> to <adv748x> */
-> 		clocks = <&cpg CPG_MOD 1005>,
-> 			...
-> 			 <&audio_clk_a>, <&cs2000>,
-> -			 <&audio_clk_c>,
-> +			 <&adv748x>,
-> 			 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
-> 
-> Thank you for your help !!
+Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
+SoC sleep stats driver. The driver is used for displaying SoC sleep
+statistic maintained by Always On Processor or Resource Power Manager.
 
-Thanks.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../bindings/soc/qcom/soc-sleep-stats.yaml         | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
 
-Should the adv748x driver also implement anything to configure the frequency
-of MCLK clock? I mean something like .set_sysclk and .set_fmt callbacks of
-snd_soc_dai_ops?
-
-Or is the driver implementation, which depends on mclk-fs to be 256, the audio
-stream format to be 8x S24_LE, and requires strictly 48kHz sampling rate on
-the HDMI input, a totally acceptable first attempt at writing a DAI driver?
-
-I'm a bit bothered by that, as the hardware is also capable of decoding
-stereo, sampling rate 32-192kHz, a variety of PCM and compressed/encrypted
-formats, 128-768fs MCLK multipliers, and a row of I2S options.
-
-I just find it confusing to place the configuration interfaces.
-For instance, the patches use the media ioctl for audio output selection to
-select I2S protocol. While works, it does not feel right (shouldn't it be in
-the device tree?)
-
-Maybe you can point me at a driver doing something similar? I'm studying media
-drivers now, but not many of them use ASoC interfaces for devices providing a
-clock. Or maybe I should better look at sound/soc/...?
-
-Thanks in advance,
-Alex
+diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+new file mode 100644
+index 00000000..7c29c61
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/qcom/soc-sleep-stats.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
++
++maintainers:
++  - Maulik Shah <mkshah@codeaurora.org>
++  - Lina Iyer <ilina@codeaurora.org>
++
++description:
++  Always On Processor/Resource Power Manager maintains statistics of the SoC
++  sleep modes involving powering down of the rails and oscillator clock.
++
++  Statistics includes SoC sleep mode type, number of times low power mode were
++  entered, time of last entry, time of last exit and accumulated sleep duration.
++
++properties:
++  compatible:
++    enum:
++      - qcom,rpmh-sleep-stats
++      - qcom,rpm-sleep-stats
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  # Example of rpmh sleep stats
++  - |
++    rpmh_sleep_stats@c3f0000 {
++      compatible = "qcom,rpmh-sleep-stats";
++      reg = <0 0xc3f0000 0 0x400>;
++    };
++  # Example of rpm sleep stats
++  - |
++    rpm_sleep_stats@4690000 {
++      compatible = "qcom,rpm-sleep-stats";
++      reg = <0 0x04690000 0 0x400>;
++    };
++...
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
