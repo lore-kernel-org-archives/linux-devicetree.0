@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C69C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 736CAC18E5F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D8821744
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588402086A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725796AbgCIJyJ (ORCPT
+        id S1726027AbgCIJyJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 9 Mar 2020 05:54:09 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55524 "EHLO
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55522 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725942AbgCIJyI (ORCPT
+        by vger.kernel.org with ESMTP id S1726465AbgCIJyI (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 05:54:08 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:02 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:47 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:44 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 301BF230B; Mon,  9 Mar 2020 15:23:46 +0530 (IST)
+        id 4808B230B; Mon,  9 Mar 2020 15:23:43 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -37,9 +37,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v5 8/9] arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
-Date:   Mon,  9 Mar 2020 15:23:08 +0530
-Message-Id: <1583747589-17267-9-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v5 4/9] dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning parameters
+Date:   Mon,  9 Mar 2020 15:23:04 +0530
+Message-Id: <1583747589-17267-5-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
 References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
@@ -48,37 +48,74 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use generic QUSB2 V2 Phy configuration for sdm845.
+Add support for overriding QUSB2 V2 phy tuning parameters
+in device tree bindings.
 
 Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 32 +++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 061f49f..5ed51c0 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2603,7 +2603,7 @@
- 		};
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+index 60124a3..144ae29 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+@@ -75,7 +75,7 @@ if:
+   properties:
+     compatible:
+       contains:
+-        const: qcom,sdm845-qusb2-phy
++        const: qcom,qusb2-v2-phy
+ then:
+   properties:
+     qcom,imp-res-offset-value:
+@@ -89,6 +89,26 @@ then:
+           maximum: 63
+           default: 0
  
- 		usb_1_hsphy: phy@88e2000 {
--			compatible = "qcom,sdm845-qusb2-phy";
-+			compatible = "qcom,sdm845-qusb2-phy", "qcom,qusb2-v2-phy";
- 			reg = <0 0x088e2000 0 0x400>;
- 			status = "disabled";
- 			#phy-cells = <0>;
-@@ -2618,7 +2618,7 @@
- 		};
++    qcom,bias-ctrl-value:
++      description:
++        It is a 6 bit value that specifies bias-ctrl-value. It is a PHY
++        tuning parameter that may vary for different boards of same SOC.
++      allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - minimum: 0
++          maximum: 63
++          default: 0
++
++    qcom,charge-ctrl-value:
++     description:
++        It is a 2 bit value that specifies charge-ctrl-value. It is a PHY
++        tuning parameter that may vary for different boards of same SOC.
++     allOf:
++       - $ref: /schemas/types.yaml#/definitions/uint32
++       - minimum: 0
++         maximum: 3
++         default: 0
++
+     qcom,hstx-trim-value:
+       description:
+         It is a 4 bit value that specifies tuning for HSTX
+@@ -124,6 +144,16 @@ then:
+           maximum: 1
+           default: 0
  
- 		usb_2_hsphy: phy@88e3000 {
--			compatible = "qcom,sdm845-qusb2-phy";
-+			compatible = "qcom,sdm845-qusb2-phy", "qcom,qusb2-v2-phy";
- 			reg = <0 0x088e3000 0 0x400>;
- 			status = "disabled";
- 			#phy-cells = <0>;
++    qcom,hsdisc-trim-value:
++      description:
++        It is a 2 bit value tuning parameter that control disconnect
++        threshold and may vary for different boards of same SOC.
++      allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - minimum: 0
++          maximum: 3
++          default: 0
++
+ required:
+   - compatible
+   - reg
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
