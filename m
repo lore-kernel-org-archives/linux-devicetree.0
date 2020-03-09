@@ -2,209 +2,129 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F076BC10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D512C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22052146E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583788432;
-	bh=CFrKLjp8KPBWk8MMiGqTf8FTi17PQMu2DFbxAZz3YHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dlpk1N7W5+c4klZWf/oyYQG6MdE3aeNmwTo0cbLIl2JTpsRSXwzBwoj1ZcjpPM1lG
-	 HHcXTui4wwK6mzPir9ERJt3RhBkMKWVvP/Ajmv77MW5K2ZHViZcybctiKiRjJs6/xD
-	 o3VMzzomMerEbtmLZuAOv8ZGEIRVzQkEu/xxQ4RM=
+	by mail.kernel.org (Postfix) with ESMTP id 075722146E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mc3f2TGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCIVNw (ORCPT
+        id S1726333AbgCIVS0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:13:52 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42547 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgCIVNv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:13:51 -0400
-Received: by mail-oi1-f193.google.com with SMTP id l12so11661288oil.9;
-        Mon, 09 Mar 2020 14:13:51 -0700 (PDT)
+        Mon, 9 Mar 2020 17:18:26 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38435 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgCIVS0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:18:26 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w3so4520021plz.5;
+        Mon, 09 Mar 2020 14:18:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=75BMaXcAmO4F5Wh+UkrqpyAJEuiai75tQOLAGLzUruc=;
+        b=Mc3f2TGua+mzWZqhqcBFy8xGR4f62bMfkZ533/dtz8uiLUdJhj/KUeALKn1cfWNrgL
+         fIQti2Sr9jF85Y+rnxx4+60P16SUP3noRF2AljLUI1D2TFMmP1bonRiTwzjx4xNJ9Qwe
+         5ZwVhdVsIL82iYY0GFFZP9ck6Ccro9zA/NCVMYqPyiZzOtN5c7Gv+TLxZguS9lB7Xon4
+         hDadFff6ReYzd5WneH3sHbliE6rYSdrwuC0imPmRhArAKnt1MskwGQAGVLXRnAlhKQtL
+         kwBImHlUMMDcum7ZL8MZBJ/YPV3RAGp0y3mQHGzC9a7UWHTJnrktv2CJw6iWWZrfotr5
+         SlVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1O7KrZaULdV7e7gmb/1OPYLUWRSmATxGTYHmz7Vmh20=;
-        b=mkr1CPih4OMFAWgK/cWxUaGjKU2dRtmSp05OltKjRit5GNJuzORk4iSdHFg2dzb3iI
-         ArFiw2ayFNvLNj/utRoknekZlaDGQ/PlYNfAR6a/LrClXp5N6HYLU7sb+iXITJjNrQ+g
-         1b3ic0IoBrMQ+sjJuVWOCStEYkPOyrCN4mab2AYSh6vJZzfvElpKXqYBVcilF+Xcz3fU
-         ONJv2NlHOUcFQT+XFcLbnAA36oTC/kiX5Zlyp7a8QRsp7HYWqwIQs5QnRNXhyzY/2x9e
-         u+dVJh91eBZ0x0UualmI+UYRICLo87AzTH75+3FpPGocGiGiEZQ59yASGpGfVsfSosPC
-         UUYA==
-X-Gm-Message-State: ANhLgQ23m6FaDNVrrqy8kk/8ry+OLa8BP6NVe+M6+1eYNeCjyXiKqIn9
-        guzZOrPhKFPio+MkuN0wnw==
-X-Google-Smtp-Source: ADFU+vvRj/iiV7KhB8aESxO7wMGC+tAofKVD4gjHWM1jmr1XRP26t2xFFjso8Y1HEz3xzEJRWqX8/g==
-X-Received: by 2002:aca:56c5:: with SMTP id k188mr789156oib.165.1583788431056;
-        Mon, 09 Mar 2020 14:13:51 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r8sm2103584otp.7.2020.03.09.14.13.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 14:13:50 -0700 (PDT)
-Received: (nullmailer pid 26024 invoked by uid 1000);
-        Mon, 09 Mar 2020 21:13:49 -0000
-Date:   Mon, 9 Mar 2020 16:13:49 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
- controller
-Message-ID: <20200309211349.GA10752@bogus>
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
- <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
+        bh=75BMaXcAmO4F5Wh+UkrqpyAJEuiai75tQOLAGLzUruc=;
+        b=es/4Wbht8DaJxxvMiMaa35I1G40wlVuWeZavxp9DNxEds2cFBV+F70eJtjTuEv+Ct2
+         i/i6jYnfO6Y4eONLgCmGFOliLUVI52U1muyHEaU/+9gEeGmAMxQ4ggVqNOVM+AtSqhVA
+         pAh1pmbcA15Zg9kTtRzCqfKME4u2GIvchg8+hvJJ2Cw0iBWWXvS2Y4fzU8wvBxhK5CPG
+         wJLhOF/aMnliY2tEraLZB1g4sPMUN3N1BDwOGAikwjFaQqCqzDj2Sup/DNZndcbms1Ho
+         yXEbOOkHz9VzkWeW5eumZcQRuGfg+hiINPM1h35sCo9PuA7CEaXMynjBYMd4JPb5lvX1
+         pnvA==
+X-Gm-Message-State: ANhLgQ2fY0+KSU9ELtKJ2eHE22yub4lKCBGBTJhaRWXByKTovFU+GBdj
+        tIy4UC4B7BjcF9RaEoGgcNg=
+X-Google-Smtp-Source: ADFU+vt2yYWX7gJknQLuNcwuQzhGdS8aInh7+JZ9Mbaq0Z7M0IITbFjuVTv3VCNQfp0cXyneROITtg==
+X-Received: by 2002:a17:902:864a:: with SMTP id y10mr17943042plt.2.1583788704865;
+        Mon, 09 Mar 2020 14:18:24 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id u24sm44614851pgo.83.2020.03.09.14.18.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 14:18:24 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 14:18:32 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/7] ASoC: fsl-asoc-card: Support new property
+ fsl,asrc-format
+Message-ID: <20200309211831.GA11333@Asurada-Nvidia.nvidia.com>
+References: <cover.1583725533.git.shengjiu.wang@nxp.com>
+ <266dccc836c11165ad91a301f24fe4f7ad2557be.1583725533.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <266dccc836c11165ad91a301f24fe4f7ad2557be.1583725533.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 03:25:17PM +0530, Sivaprakash Murugesan wrote:
-> add dt-binding for ipq6018 apss clock controller
+On Mon, Mar 09, 2020 at 11:58:29AM +0800, Shengjiu Wang wrote:
+> In order to align with new ESARC, we add new property fsl,asrc-format.
+> The fsl,asrc-format can replace the fsl,asrc-width, driver
+> can accept format from devicetree, don't need to convert it to
+> format through width.
 > 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 > ---
->  .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
->  2 files changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->  create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
+>  sound/soc/fsl/fsl-asoc-card.c | 20 +++++++++++---------
+>  1 file changed, 11 insertions(+), 9 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
-> new file mode 100644
-> index 0000000..7433721
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
+> diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+> index 9ce55feaac22..32101b9a37b9 100644
+> --- a/sound/soc/fsl/fsl-asoc-card.c
+> +++ b/sound/soc/fsl/fsl-asoc-card.c
+> @@ -680,17 +680,19 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+>  			goto asrc_fail;
+>  		}
+>  
+> -		ret = of_property_read_u32(asrc_np, "fsl,asrc-width", &width);
+> +		ret = of_property_read_u32(asrc_np, "fsl,asrc-format", &priv->asrc_format);
+>  		if (ret) {
+> -			dev_err(&pdev->dev, "failed to get output rate\n");
 
-Dual license new bindings please:
+Nice that your patch fixed my copy-n-paste typo here :)
 
-(GPL-2.0-only OR BSD-2-Clause)
+> -			ret = -EINVAL;
+> -			goto asrc_fail;
+> -		}
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,apsscc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm IPQ6018 APSS Clock Controller Binding
-> +
-> +maintainers:
-> +  - Stephen Boyd <sboyd@kernel.org>
+It'd be nicer to have a line of comments:
+			/* Fallback to old binding; translate to asrc_format */
 
-I'd expect this to be a QCom person, not who is applying patches.
-
-> +
-> +description: |
-
-You can drop '|'.
-
-> +  Qualcomm IPQ6018 APSS clock control module which supports the clocks with
-> +  frequencies above 800Mhz.
-> +
-> +properties:
-> +  compatible :
-> +    const: qcom,apss-ipq6018
-
-Normal ordering is: qcom,ipq6018-apss
-
-> +
-> +  clocks:
-> +    description: clocks required for this controller.
-> +    maxItems: 4
-
-Need to define what each clock is.
-
-> +
-> +  clock-names:
-> +    description: clock output names of required clocks.
-> +    maxItems: 4
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  '#reset-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
-> +  - '#reset-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +      #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
-> +      apss_clk: qcom,apss_clk@b111000 {
-
-I thought I'd finally seen the last of these Qcom node names...
-
-clock-controller@...
-
-> +            compatible = "qcom,apss-ipq6018";
-> +            clocks = <&xo>, <&gcc GPLL0>,
-> +                        <&gcc GPLL2>, <&gcc GPLL4>;
-> +            clock-names = "xo", "gpll0",
-> +                         "gpll2", "gpll4";
-> +            reg = <0xb11100c 0x5ff4>;
-> +            #clock-cells = <1>;
-> +            #reset-cells = <1>;
-> +      };
-> +...
-> diff --git a/include/dt-bindings/clock/qcom,apss-ipq6018.h b/include/dt-bindings/clock/qcom,apss-ipq6018.h
-> new file mode 100644
-> index 0000000..ed9d7d8
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/qcom,apss-ipq6018.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-
-I'm pretty sure your employer would like an additional license here.
-
-> +/*
-> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-> + *
-> + * Permission to use, copy, modify, and/or distribute this software for any
-> + * purpose with or without fee is hereby granted, provided that the above
-> + * copyright notice and this permission notice appear in all copies.
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-> + * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-> + * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-> + * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-> + * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-> + * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
-> +#define _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
-> +
-> +#define APSS_PLL_EARLY				0
-> +#define APSS_PLL				1
-> +#define APCS_ALIAS0_CLK_SRC			2
-> +#define APCS_ALIAS0_CORE_CLK			3
-> +
-> +#endif
-> -- 
-> 2.7.4
-> 
+> +			ret = of_property_read_u32(asrc_np, "fsl,asrc-width", &width);
+> +			if (ret) {
+> +				dev_err(&pdev->dev, "failed to get output width\n");
+> +				return ret;
+> +			}
+>  
+> -		if (width == 24)
+> -			priv->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
+> -		else
+> -			priv->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
+> +			if (width == 24)
+> +				priv->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
+> +			else
+> +				priv->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
+> +		}
