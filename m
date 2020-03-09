@@ -2,59 +2,79 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95EAC10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 15:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08DDC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 15:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A30521D7E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 15:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8224222C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 15:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCIPUy (ORCPT
+        id S1726921AbgCIPel (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:20:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56870 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgCIPUx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:20:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0FE2AAD2B;
-        Mon,  9 Mar 2020 15:20:52 +0000 (UTC)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-In-Reply-To: <20200304132437.20164-1-nsaenzjulienne@suse.de>
-Date:   Mon, 09 Mar 2020 16:20:33 +0100
-Cc:     <devicetree@vger.kernel.org>, <f.fainelli@gmail.com>,
-        <phil@raspberrypi.org>, <linux-kernel@vger.kernel.org>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2] ARM: dts: bcm2711: Move emmc2 into its own bus
-From:   "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
-To:     "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>,
-        "Rob Herring" <robh+dt@kernel.org>
-Message-Id: <C16EMMYP9HNH.163772OHL9QL4@linux-9qgx>
+        Mon, 9 Mar 2020 11:34:41 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35679 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgCIPek (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 11:34:40 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jBKQR-0007u6-JR; Mon, 09 Mar 2020 16:34:39 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jBKQP-0003op-L5; Mon, 09 Mar 2020 16:34:37 +0100
+Date:   Mon, 9 Mar 2020 16:34:37 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Barker <pbarker@konsulko.com>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] dts: imx6: Allow flags argument in pwms reference
+Message-ID: <20200309153437.lwc5uutytj7rvee2@pengutronix.de>
+References: <20200309145558.16098-1-pbarker@konsulko.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200309145558.16098-1-pbarker@konsulko.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed Mar 4, 2020 at 3:24 PM PST, Nicolas Saenz Julienne wrote:
-> Depending on bcm2711's revision its emmc2 controller might have
-> different DMA constraints. Raspberry Pi 4's firmware will take care of
-> updating those, but only if a certain alias is found in the device tree.
-> So, move emmc2 into its own bus, so as not to pollute other devices with
-> dma-ranges changes and create the emmc2bus alias.
->
-> Based in Phil ELwell's downstream implementation.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
+Hello,
 
-Applied to for-next
+while I like the result in general I'd be a bit more careful here. So
+I'd split this into several steps:
 
-Regards,
-Nicolas
+  a) add
+	#pwm-cells = <3>;
+     to the soc.dtsi and undo this by adding
+	#pwm-cells = <2>;
+     to all machine.dts (that don't already have #pwm-cells = <3>)
+
+  b) for each machine with explicit #pwm-cells = <2>; convert to ... =
+     <3>;.
+
+This has the advantage that after a) there are no changes to the .dtb
+files which can be easily verified. And the patches in b) can be
+individually reverted in case something machine specific breaks.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
