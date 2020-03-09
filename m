@@ -2,114 +2,119 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323C7C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 08:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F31AC10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0261C20828
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 08:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C6F20727
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgCIIuB (ORCPT
+        id S1726215AbgCIJVn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:50:01 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:57289 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgCIIuB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 04:50:01 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: CtE5m+ELkGAVPTcPcGWF0bzBHDYq/y1TZA9/A/Lh6/eGyiKlxgVGEMrs2Xkv6LOIBeQBMvAmIu
- WhBqEtZ2Lu4v8vuYsg2Hp5cw6tmkhWcowBBL2JDzSFrTvRgZAZGiqaj75MMA2IWMVOkym8kHl1
- yaJaW9gcnpSVICSc+seTCSwjSMhcldrNPZCl+c2HPsqRlczDfhE8k3gKo9vUTOJs9nhGx5K1ud
- qkyHCOCaWp0C65H04VHomaZTfE4EFlhTdtwRjKkaZQ6rtbWHB4PHv+OjuVYzgBiGxJ2XWvqGNF
- 4Oo=
-X-IronPort-AV: E=Sophos;i="5.70,532,1574146800"; 
-   d="scan'208";a="69310236"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Mar 2020 01:49:59 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 9 Mar 2020 01:49:59 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 9 Mar 2020 01:49:56 -0700
-Date:   Mon, 9 Mar 2020 09:49:13 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-CC:     <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: at91: Fix a typo ("descibe")
-Message-ID: <20200309084913.sgecbf3h2ajog3d7@M43218.corp.atmel.com>
-Mail-Followup-To: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200308214230.15193-1-j.neuschaefer@gmx.net>
+        Mon, 9 Mar 2020 05:21:43 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39420 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCIJVn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 05:21:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id a9so2637779otl.6;
+        Mon, 09 Mar 2020 02:21:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0chbd4nwR5irzruqlvYBPN4eYq66a85QmEWWjg+J+Uc=;
+        b=ftFFfTmlYSK+tVcqUNZjYko0G2v9U+ke+zdonK/orm2gDzNYhv+udaO+j4nWtck6BD
+         gWaEstT1hw12aUX8adrBxxYlAumYmPGUHDQd7X8uqjE1+W+PGuGqmbEXPwDKV/MlAOZO
+         +fvlDT4hLwAcOGWasL+wu6A1Ys6yoVEXFoigwYs2pZ1/B3MoCfZnV0rLzoHxAqqIglqg
+         OWTbOak2vtBj2xoeURlE3aMaM/ukjZulPjkGu6KcvKvtdm7kWwnX38s4KUXCpOf+Q5wP
+         c2unonQRak+9yOBinuc9qZ0FZDGkhrdzZixhUOwRt86ST1J1+rPEvq82awjm5BCisgR8
+         Gfsw==
+X-Gm-Message-State: ANhLgQ17339ilcHlXivhvNEicRFTeZWw7I9/gTOSWQgGkAay1pf3Nqcf
+        k3V5yHX3cBorQ7LpPCP3Zxzk8p2VGllDh9Uf4UHOcg==
+X-Google-Smtp-Source: ADFU+vuhP8K63glnB2X4iEc7HTPTFJXZEPkIIW22Q78fMzb/B95Goj5cxitaZ8igflDkbBXOM7yVb7ajPKCM3OcTgZw=
+X-Received: by 2002:a9d:4d02:: with SMTP id n2mr2907132otf.107.1583745702518;
+ Mon, 09 Mar 2020 02:21:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200308214230.15193-1-j.neuschaefer@gmx.net>
+References: <1583304137-28482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1583304137-28482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 Mar 2020 10:21:31 +0100
+Message-ID: <CAMuHMdVQ=evfYLP09q7UMZB1gry-y=g+sP0FDgSmk-iwuRf3kQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] clk: renesas: rcar-usb2-clock-sel: Fix clks/resets handling
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 10:42:30PM +0100, Jonathan Neuschäfer wrote:
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Hi Shimda-san,
 
-> ---
->  .../devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt          | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> index eb39f5051159..e8abbdad7b5d 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> @@ -38,7 +38,7 @@ Bank: 3 (A, B and C)
->    0xffffffff 0x7fff3ccf  /* pioB */
->    0xffffffff 0x007fffff  /* pioC */
-> 
-> -For each peripheral/bank we will descibe in a u32 if a pin can be
-> +For each peripheral/bank we will describe in a u32 if a pin can be
->  configured in it by putting 1 to the pin bit (1 << pin)
-> 
->  Let's take the pioA on peripheral B
-> --
-> 2.20.1
-> 
+On Wed, Mar 4, 2020 at 7:42 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This patch series is based on the latest renesas-drivers.git /
+> renesas-drivers-2020-02-25-v5.6-rc3 branch.
+> The hardware also needs multiple clocks/resets management like
+> renesas_usbhs driver [1], so this patch series fixes it.
+>
+> [1]
+> 3df0e24 usb: renesas_usbhs: Add multiple clocks management
+> f181dbb usb: renesas_usbhs: Add reset_control
+>
+> Changes from v3:
+>  - Add reset-names property in patch 2/4.
+>  - Use devm_clk_bulk_get() instead of multiple devm_clk_get() in patch 3/4.
+>  - Add Geert's Reviewed-by into the patch 4/4.
+>  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=196577
+>
+> Changes from v2:
+>  - Add Rob's Reviewed-by into the patch [12]/4.
+>  - Fix typo in patch 2/4.
+>  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=194309
+>
+> Changes from v1:
+>  - Add Reviewed-by into this series' patch 1/4.
+>  - (new) Add resets and power-domains properties into the patch 2/4.
+>  - Use clk_bulk_* APIs (except clk_bulk_get() because this driver has
+>    4 clocks and used only 2 clocks).
+>  - Add "select RESET_CONTROLLER" into Kconfig
+>  - Use devm_reset_control_array_get() instead of optional API.
+>  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=192869
+>
+> Yoshihiro Shimoda (4):
+>   dt-bindings: clock: renesas: rcar-usb2-clock-sel: Fix clock[-name]s
+>     properties
+>   dt-bindings: clock: renesas: rcar-usb2-clock-sel: Add power-domains
+>     and resets properties
+>   clk: renesas: rcar-usb2-clock-sel: Add multiple clocks management
+>   clk: renesas: rcar-usb2-clock-sel: Add reset_control
+>
+>  .../bindings/clock/renesas,rcar-usb2-clock-sel.txt | 17 +++++++--
+>  drivers/clk/renesas/Kconfig                        |  1 +
+>  drivers/clk/renesas/rcar-usb2-clock-sel.c          | 40 ++++++++++++++++++++--
+>  3 files changed, 53 insertions(+), 5 deletions(-)
+
+Thanks, queued in clk-renesas-for-v5.7.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
