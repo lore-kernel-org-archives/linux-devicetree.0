@@ -2,89 +2,104 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B86BC10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFC5C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEFF12146E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583788075;
-	bh=I8FgkWV2hDJmqqtoiYGojcLmO+AFJ0xdAa3H17SBlOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oP+cWlE5LqnNyWoDpyfD+sS/off655yfDGQt82/W/jl9Q66RaK/QiPJsq4Oo9Q3uQ
-	 huLqZXRbXdL2IJoh+IRDcXrJhw5uJCx8Ni8wCEO+TR16m+Nnn5Gtfy7fnzT3mpezAk
-	 i8wd2iaPPrDI9fTLBUk/XxJpYBadiQbUg1genG3w=
+	by mail.kernel.org (Postfix) with ESMTP id 185C624656
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jfRwWnu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgCIVHz (ORCPT
+        id S1726197AbgCIVIp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:07:55 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33182 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgCIVHz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:07:55 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g15so4977260otr.0;
-        Mon, 09 Mar 2020 14:07:54 -0700 (PDT)
+        Mon, 9 Mar 2020 17:08:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53932 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgCIVIp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:08:45 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g134so1070268wme.3;
+        Mon, 09 Mar 2020 14:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+kMv15yJUTEdNPrEZ0z7ORWq3Tt1uXx0pRgX3Sxz6MY=;
+        b=jfRwWnu0XJu4lBt57XtZvLsh3KSPGbukCDMT//jHqaa2rhkmArh/mxjA2HP1RR76LW
+         lAayDslY1iBBJGOOvXPL/0rjP1epF3rdC/zgyxVh4tqGjvt9Sm0PbH4vtM0Ip0qsoH8I
+         reCHYam7ryG+dZkD76WVLZ0aDG1ckt25u9YsIK65fN6qjmyWr9sdr+G5XHzuNx6L7EFT
+         w4DyETuQvZ4C1m0FmVRytoecUz2ef3bP53nBqyxJd7xmm+5zu11MS9d0XyhRYeWCIBGG
+         ZNFvDuxHkJaTvULHZib1bo4wJGv7RPKGhacUvlzCmDM+UemM/hH5ynejst+gC2/hyxIg
+         BLCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pMV++LytUtj3P6dSF++V99qkX7EhPLEm12vYJmHEnZw=;
-        b=Uo4yIFxYYw33dOkHHrM7bRMj9kfE4EMOF9wQTnB/OmFncAWwdqqbxtIM9gfjvriziu
-         rdp0FE4zc2K/O1TXvnks5+6rtn4+iFfj4XDPaqi2lcCMXUYvafRQQTBi299D/f4W8jx0
-         vgiW/zAO5X9+jbUpbmKpcuOKB5PDcO0/nVMvi/nfs0qnAgYxtagxb9s7IteuPNzSqIq7
-         Tg27VLL2Cugy6U4g8bPJNTuDjtLZJXur4y6GCEnmai/K08aRxvZqutn5xXEDcVf8y70M
-         dIipa/LKpFQZfjBLqopLMKILvwl5YoIYgPjfCrOj7m2H85L8mmV3KolGxCQQ9wvC5D59
-         WqJg==
-X-Gm-Message-State: ANhLgQ0JIIoia4fIdhYQcIGs5feDUW5aoY0eqxIEtf3Pbvru2j7P0Ai+
-        Gqfznyj/bSETknk1K8ffDA==
-X-Google-Smtp-Source: ADFU+vshu1EjqoKlJxPqEOxyh0K4Uwd9Ih8PrChG30GxNXBknM6ohPNCu7bxWTCS66Oxoqm8ACMmRg==
-X-Received: by 2002:a9d:77d7:: with SMTP id w23mr13695380otl.45.1583788073292;
-        Mon, 09 Mar 2020 14:07:53 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l4sm2688904oti.65.2020.03.09.14.07.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+kMv15yJUTEdNPrEZ0z7ORWq3Tt1uXx0pRgX3Sxz6MY=;
+        b=BTweVPK84qCu50A7PhMPenu7ahsPZbh3n38VgYHktUEzwhM/+48I60H2gWZO3iEH2F
+         cUlSuwW/bAteKPTZy0E8fwAZZbgTv2L7idH8Aq0vm7J7MYOpuPVxZ1wpETcw2nPGGMbr
+         f/+ovMNPHhyiDFgbvaTxssv/eLqRK/uLcTw3vwnAWnaAwkSkYcOMLoX1fRrX0H2FShSI
+         RCg2fZSBGPtNxkk0pgG9SXAhTlel49fJ3TOGnCG2VvfgVY9X4zDoaUKlQNrdmFOBwETz
+         R4+j8TwdcRiRHPUOfI7BE+5RY+euD7a0aaljC2dHVGqm9s54A+YRo/lvgG9wNP+mBp20
+         oFKA==
+X-Gm-Message-State: ANhLgQ2tjbnMPdlkBH8hLUKAUX2iI47Ce8N6AI2xPJJ2HrcA6j8SPfB6
+        DdcVWVug7YoktqTIpAfthB8vkdcVPAM=
+X-Google-Smtp-Source: ADFU+vuKHbngmBiwEfQY4TReuY49PKt2j7g7NspKCa21VTD882ngCnQipd4A6DaTIWLvjKT+IMUMLw==
+X-Received: by 2002:a1c:a345:: with SMTP id m66mr1153698wme.114.1583788122973;
+        Mon, 09 Mar 2020 14:08:42 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id j205sm1016275wma.42.2020.03.09.14.08.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 14:07:52 -0700 (PDT)
-Received: (nullmailer pid 10666 invoked by uid 1000);
-        Mon, 09 Mar 2020 21:07:51 -0000
-Date:   Mon, 9 Mar 2020 16:07:51 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
- controller
-Message-ID: <20200309210751.GA7716@bogus>
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
- <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
- <20200227171425.GA4211@bogus>
- <b4e3fad9-414f-ce90-26b0-ba8498d21ade@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4e3fad9-414f-ce90-26b0-ba8498d21ade@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 09 Mar 2020 14:08:42 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH v2 0/6] NXP DSPI bugfixes and support for LS1028A
+Date:   Mon,  9 Mar 2020 23:07:49 +0200
+Message-Id: <20200309210755.6759-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 10:54:56AM +0530, Sivaprakash Murugesan wrote:
-> Hi Rob,
-> 
-> I ran make dt_binding_check and dtbs_check both on mainline(5.6-rc4) and
-> linux-next both are successful.
-> 
-> The file qcom,gcc-ipq6018.h is merged in 5.6, not sure what is going wrong.
-> 
-> Could you please help?
+This series addresses a few issues that were missed during the previous
+series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
+SoCs other than LS1021A and LS1043A. DMA mode has been completely broken
+by that series, and XSPI mode never worked on little-endian controllers.
 
-Sorry, my fault there. The checks have to be warning free and that 
-didn't happen til 5.6-rc5, so I was still based on 5.5.
+Then it introduces support for the LS1028A chip, whose compatible has
+recently been documented here:
 
-Rob
+https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
+
+The device tree for the LS1028A SoC is extended with DMA channels
+definition, such that even though the default operating mode is XSPI,
+one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
+devtype_data structure of the driver and use that instead.
+
+For testing, benchmarking and debugging, the mikroBUS connector on the
+LS1028A-RDB is made available via spidev.
+
+Vladimir Oltean (6):
+  spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
+  spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
+  spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
+  spi: spi-fsl-dspi: Add support for LS1028A
+  arm64: dts: ls1028a: Specify the DMA channels for the DSPI controllers
+  arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
+
+ .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 14 ++++++
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
+ drivers/spi/spi-fsl-dspi.c                    | 50 +++++++++++++++----
+ 3 files changed, 60 insertions(+), 10 deletions(-)
+
+-- 
+2.17.1
+
