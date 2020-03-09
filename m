@@ -2,137 +2,103 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26221C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 00:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221A6C10F28
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 01:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F360D2084E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 00:42:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="t4OKXi6v"
+	by mail.kernel.org (Postfix) with ESMTP id 070A22064A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 01:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgCIAmW (ORCPT
+        id S1726467AbgCIBbD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 20:42:22 -0400
-Received: from mail-dm6nam12on2041.outbound.protection.outlook.com ([40.107.243.41]:64128
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726621AbgCIAmV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Mar 2020 20:42:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fcShugAM+w0AkKqPKIa7IyJ+7KTPx7+Dnf2sZFsk3jDXke2pLlnxMJ/G20ZYqUQ3T2reBsWFMP2o/PSqnSZvUyKSZbKg8zIxSchc9bvkFdaZmZKTpZ9HtqWq3zKbc/F5wlUAQaSfxbYPkanKn6tNgOioLAhb3SfVskQDFP85nrFWaTMbclMwyguzDUgECzJw5sGMjK6z0iUDLwYgkoVtTlM3p5VLy6fIogRsgjRq7sVoQbWNIgPkqtv2lY3IngFgwEAwSIbV++P3zo6TAcHViqof3n6wmsSzdjVYs+tpqLqL/xF53/PMJ9zMvzF4nmZw5YIY5o+NLjbRBnTiwPM6hw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mxNKXv51wD7zn8UvoreijsBGeV+QUr1cf8Fgv48vzE0=;
- b=cY/S0MpRcVJ1nmTMyQBOKlXi24qODfuBqU5wE+/AdN73WNGKECmD2sGfklLOeZkdMqVlEkyOtQW4b3tiYxVMLFsigPrYLmrd1Rm9c2W6C8DSBf1YY6ByV8f4UxfsLYyj+Yix8l0tUFz+7yPprMxE8a1LpXKAqiHdinvWGz1XHfzBCM39oUgmpHA4r+loyBsA4toMvs2iNTpDF3nyVNyCOUUIlVpKEhWFXZzfLc/oxMqVMwWsEH6W0sfurfMCEXSxYeut9dCbkt2p7Ss48qrDAERGV0MoINKscAptJC4DJADxJpHrqVbwBr1pubQH86aWyKAEIn6Xv9NP/mmwjt+6vQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
- dkim=pass header.d=labundy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mxNKXv51wD7zn8UvoreijsBGeV+QUr1cf8Fgv48vzE0=;
- b=t4OKXi6vJlnIfRh/JhA4wVgizuLFFSUVjiF1qmMVr+NfHlQWj6ZkfelB4RNySAEXWrHgoovtVB/tnm6/8kB/TBoNexPSl1BZEC0LIWQFaUR7Y73VTpjpFmgiifnSSoEGIEio5XMPyw1SRn4vhM4ympOCHYRa4ycw6v1c6vQ5Cxg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jeff@labundy.com; 
-Received: from SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
- by SN6PR08MB6064.namprd08.prod.outlook.com (2603:10b6:805:fc::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Mon, 9 Mar
- 2020 00:42:18 +0000
-Received: from SN6PR08MB5517.namprd08.prod.outlook.com
- ([fe80::e87b:9b6:d4b8:af68]) by SN6PR08MB5517.namprd08.prod.outlook.com
- ([fe80::e87b:9b6:d4b8:af68%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 00:42:18 +0000
-Date:   Sun, 8 Mar 2020 19:42:05 -0500
-From:   Jeff LaBundy <jeff@labundy.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com,
-        thierry.reding@gmail.com, jic23@kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v5 4/7] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20200309004205.GA2684@labundy.com>
-References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
- <1581895931-6056-5-git-send-email-jeff@labundy.com>
- <20200228092234.owlqvpuwu4hk3vog@pengutronix.de>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200228092234.owlqvpuwu4hk3vog@pengutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: DM5PR13CA0033.namprd13.prod.outlook.com
- (2603:10b6:3:7b::19) To SN6PR08MB5517.namprd08.prod.outlook.com
- (2603:10b6:805:fb::32)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from labundy.com (136.49.227.119) by DM5PR13CA0033.namprd13.prod.outlook.com (2603:10b6:3:7b::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.6 via Frontend Transport; Mon, 9 Mar 2020 00:42:16 +0000
-X-Originating-IP: [136.49.227.119]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 38c00889-173e-4928-d62d-08d7c3c2b822
-X-MS-TrafficTypeDiagnostic: SN6PR08MB6064:
-X-Microsoft-Antispam-PRVS: <SN6PR08MB60649FED95746A9DF52DCC8FD3FE0@SN6PR08MB6064.namprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
-X-Forefront-PRVS: 0337AFFE9A
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(39830400003)(396003)(136003)(189003)(199004)(55016002)(86362001)(81166006)(81156014)(508600001)(8936002)(8886007)(6916009)(186003)(316002)(36756003)(16526019)(33656002)(26005)(52116002)(5660300002)(7696005)(4326008)(66946007)(6666004)(4744005)(2616005)(966005)(956004)(2906002)(8676002)(66476007)(7416002)(1076003)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB6064;H:SN6PR08MB5517.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: labundy.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ER3L6+1zXOQbJgbHesnp2GK81SRIdzSVg+y7HARIn3I9QZIm/CFABwdRFotPsAf7bKbye+YITInjN947qr+EMxsTfzNX/W/vipdnipbApiQwAIpXv7Qwz7Y/4j4X40YBZ176LjdEq8Fy9BN0DlAJnaTP5IV2nMprTg0v8qx9GEq3e1zSh+n44k5C8pBH0vTw5PhJfnASp2qjc3SE+WqSRj0GQEzP4c9o24mXAiNXlabmhh2D0kAmmdyiDPEd5x+5x0d7OaLkzcJLwNvG+r+Vlw02KLyEFXrgBNs91Tk3CPDiuey9K5EGUQU4KEujtV2VwRPfRl4s0KS8fS7fKd2iruTZZSa085lpFsXW/DiZQZeQQQ6IVJUnIGjAWQCqSu4aDnAghs8+Q2PSfG2BMY463CE68lVi58a+0duxR4UXBVneuGw6VaeXF0IXIxPwBgX4Am89zJVplclnsx6cvEBH/Hi3dGrfbGPG0u/ecb6p+d9FynTLLMnTi/3Czb6xVwqr4JP+2FGqggKdZ85ZKgw38g==
-X-MS-Exchange-AntiSpam-MessageData: YUEDyUZQP7lo2PbfKqoaxvbJUOVcNbPfKY6ewpXAUAiEk+61dy6nVUqCa07X439QGWiqZRkePdTpiHNNn1kiYrUMA//ZdC/YyBJRSdVyNCwe575hzywRLal/624pFAQEhl5/IFzyRzpJ9P3pqwzbAw==
-X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38c00889-173e-4928-d62d-08d7c3c2b822
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 00:42:17.9545
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zPUIq4eUX3W4l/3dKmMK8qT9RUOBQ6jDgvQHKkfHNkXilNfDm1sUH01SCR63AWgYYQ7/FBuK9YPGURHn0pN2hQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB6064
+        Sun, 8 Mar 2020 21:31:03 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:24988 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726346AbgCIBbD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 21:31:03 -0400
+Date:   09 Mar 2020 10:31:01 +0900
+X-IronPort-AV: E=Sophos;i="5.70,530,1574089200"; 
+   d="scan'208";a="41113966"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 09 Mar 2020 10:31:01 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 76F41400857C;
+        Mon,  9 Mar 2020 10:31:01 +0900 (JST)
+Message-ID: <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Driver Development <devel@driverdev.osuosl.org>,
+        Linux Media <linux-media@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Renesas SoC <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from adv748x codec (HDMI input) to the R-Car SoC
+In-Reply-To: <20200306134546.GE4878@pendragon.ideasonboard.com>
+References: <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+        <20200302134011.GA3717@pflmari>
+        <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+        <20200302150706.GB3717@pflmari>
+        <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
+        <20200302160906.GC3717@pflmari>
+        <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
+        <20200305143628.GB25741@pflmari>
+        <20200306131632.GA4878@pendragon.ideasonboard.com>
+        <20200306134154.GD27714@pflmari>
+        <20200306134546.GE4878@pendragon.ideasonboard.com>
+User-Agent: Wanderlust/2.15.9 Emacs/25.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Thierry,
 
-May I ask for your Ack as well, so that this patch can go through MFD
-along with the remainder of the series?
+Hi
 
-Hi Uwe,
-
-On Fri, Feb 28, 2020 at 10:22:34AM +0100, Uwe Kleine-König wrote:
-> Hello Jeff,
-> 
-> On Sun, Feb 16, 2020 at 05:32:08PM -0600, Jeff LaBundy wrote:
-> > This patch adds support for the Azoteq IQS620A, capable of generating
-> > a 1-kHz PWM output with duty cycle between ~0.4% and 100% (inclusive).
+> > > Those clocks are part of the CSI-2 protocol and also don't need to be
+> > > explicitly controlled. As far as I can tell from a quick check of the
+> > > ADV7482 documentation, only the I2S MCLK is a general-purpose clock that
+> > > needs to be exposed.
+(snip)
+> > Do you know, by chance, which of the snd_soc* callbacks should be used to
+> > implement setting of the MCLK? The one in snd_soc_component_driver or
+> > snd_soc_dai_driver->ops (snd_soc_dai_ops)?
 > > 
-> > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> > Or how the userspace interface looks like? Or, if there is no userspace
+> > interface for this, how the MCLK is supposed to be set? Through mclk-fs?
 > 
-> I like it,
-> 
-> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> I'm afraid my knowledge of the sound subsystem is limited. Morimoto-san
+> is the main developer and maintainer of Renesas sound drivers.
+> Morimoto-sensei, would you have an answer to that question ? :-)
 
-Thank you very much for your steadfast support during the development
-of this patch over the last few months.
+In my quick check, it goes to AUDIO_CLKC.
+If so, you can update rcar_sound::clocks.
 
-> 
-> Best regards
-> Uwe
-> 
-> -- 
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+	&rcar_sound {
+		...
+-		/* update <audio_clk_b> to <cs2000> */
++		/* update <audio_clk_b> to <cs2000>,
++		 *        <audio_clk_c> to <adv748x> */
+		clocks = <&cpg CPG_MOD 1005>,
+			...
+			 <&audio_clk_a>, <&cs2000>,
+-			 <&audio_clk_c>,
++			 <&adv748x>,
+			 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
 
-Kind regards,
-Jeff LaBundy
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
