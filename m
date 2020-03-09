@@ -2,114 +2,183 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C69C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 08:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4EBC10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 08:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26B8F20674
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 08:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C461520863
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 08:31:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIEHJnHD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="KgvIPbuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725956AbgCIIQL (ORCPT
+        id S1726403AbgCIIbX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:16:11 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38396 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCIIQL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 04:16:11 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n2so2071654wmc.3;
-        Mon, 09 Mar 2020 01:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=21vOxRxDjKqcfrgbiaoQAsuWSgoqLHAftWopA3ShZhI=;
-        b=oIEHJnHDukzw19P80JbWF7J3wp/aDWOpD/frO9t4Av3oqEH1wlFFAKDwbw7ZxK5hdt
-         ovZKGRwTYKxENfkzlsCflHhjRJ4uX/8hyJ23ArR/BuaB8zyE6Cf75hA4tG8vbaPg4F7N
-         al6blJrPk47C5cwgWlf0P1Z161QWjiy8iJNQJsFUYPwA0O1iGNPleIa2v6YiWjF8aBN8
-         RhxEJz5dnfzgjMNqzmqAa4P3iIAo8yhtt2aukcdDJeYAxHFGO5G1RvJCGbCPfnI+4Jf8
-         V+GY5ch26FATDwdb3BTivgWx+EFi2pylYXY9MD5vSng24iNw1EsUbZVLd0SgBsVW9njh
-         DEIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=21vOxRxDjKqcfrgbiaoQAsuWSgoqLHAftWopA3ShZhI=;
-        b=pAaW79Z7f2uVn2kt24QBKVtipy590hbd0jJPlGaZIne8XibZQORwhEmlw2Ql8nqUKz
-         Q6E44vwmtvhwFyVkjwK/bGPNh06qVbe/ZqMjM9/eAjWmDzY7enRrF3A3AlN0H3ZCl/1L
-         9e18i8D3IecgKDGqv3TDKMTbV6OfOlwTaoiRyt+5MO5R0nmZhEacuqvk+DHmABgbNBSQ
-         y+0GwA299bc1DthUgmXorGlvMBC7cpTcKU9P90yj33P5eGdiTudy2KIq+vG3kh7BJKWS
-         oPBc/djz2aRaATAOxMNNPFqvaHZbGSRs5g5Gh9oI1CFhkPEqxgnJkQkHQyH+CR8MVzRp
-         xVnw==
-X-Gm-Message-State: ANhLgQ28s0AVFne6Okq4V5p0qgzJ+yPeoQWVjve/bNhB66aAiyssynCr
-        /NMaWKl0Zhq23DzsqtsPsCA=
-X-Google-Smtp-Source: ADFU+vt3Yqf7ZPutJlxBROOJKc49aGfr7tYraWP+grvURFzG5aqwAEF03ai0VObc3auLb7YasfTsDg==
-X-Received: by 2002:a7b:c770:: with SMTP id x16mr4736819wmk.159.1583741769115;
-        Mon, 09 Mar 2020 01:16:09 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id q2sm1097096wrv.65.2020.03.09.01.16.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Mar 2020 01:16:08 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: remove rockchip,grf from vop nodes for px30
-Date:   Mon,  9 Mar 2020 09:16:00 +0100
-Message-Id: <20200309081600.3887-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Mon, 9 Mar 2020 04:31:23 -0400
+Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:23378 "EHLO
+        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725796AbgCIIbX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 04:31:23 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Mar 2020 04:31:22 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1583742682; x=1615278682;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=UgnIsQyrw7V0RiG+5o4AS/b+Nah9kEs6rkBtBbKMBog=;
+  b=KgvIPbuCgunfKgnvu6jsOkhtPSmMiqmdGglzBmjQhHPYTbWejvC4FVGD
+   0p7n5vYGohhzfFTh6rscxlUjKViPdjokuGopL86zAPCARWYWE5vw8ENEQ
+   VxbS4PDfsKgHprSSWzco4/xWDVp5RBCdqTerWGCEFsd2bf1Too6+N6+mK
+   0jrCZbQr/a2vkybl4CDrfxQ4crSUtDi1d1cP4WNNySGPAUNRoXD88CNJb
+   +UQEFPWW99OIWW+xH4HeWg2IOybVVzwy0zDUx3xT8T09NUho66AFm7nLv
+   TCEPTdpAzt3vsSgDphWymkyQAnOZDdjrk4yjy9ptXVaA13lP5zx2dyDzy
+   A==;
+IronPort-SDR: tG2W2IlNj001FKiGJn+JIVXn/ulyclJn6PgAvVSosfqgLki2eO5UiXHQRTzUimUQ32F0NJ82oq
+ MZIW9saqpznA==
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: [RFC PATCH] leds: pwm: add flag to start without PWM init
+Thread-Topic: [RFC PATCH] leds: pwm: add flag to start without PWM init
+Thread-Index: AQHV9ewaOIgIxoAtxUq/BaTh5/4IBw==
+Date:   Mon, 9 Mar 2020 08:24:09 +0000
+Message-ID: <20200309082218.13263-1-Denis.Osterland@diehl.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-TrailerSkip: 1
+X-GBS-PROC: PkB65aL1SqtESF35r/jQn+utJHGlOfM4q7b0EC8/4akyCQ5zbSEBILSrYpOrT7a6
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-An experimental test with the command below without
-additional properties in 'rockchip-vop.yaml' gives this error:
+This patch add =22pwm,uninitalized=22 devicetree flag support to pwm
+leds, which allows to defer pwm init to first use of led.
 
-arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: vop@ff470000:
-'power-domains', 'rockchip,grf'
-do not match any of the regexes: 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: vop@ff460000:
-'power-domains', 'rockchip,grf'
-do not match any of the regexes: 'pinctrl-[0-9]+'
+This allows to configure the PWM early in bootloader to let the LED
+blink until an application in Linux userspace set something different.
 
-'rockchip,grf' is not used by the Rockchip VOP driver,
-so remove it from 'vop' nodes in 'px30.dtsi'.
-
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
-rockchip/rockchip-vop.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
 ---
- arch/arm64/boot/dts/rockchip/px30.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 215515ccb..1bbed660f 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -1030,7 +1030,6 @@
- 		reset-names = "axi", "ahb", "dclk";
- 		iommus = <&vopb_mmu>;
- 		power-domains = <&power PX30_PD_VO>;
--		rockchip,grf = <&grf>;
- 		status = "disabled";
- 
- 		vopb_out: port {
-@@ -1072,7 +1071,6 @@
- 		reset-names = "axi", "ahb", "dclk";
- 		iommus = <&vopl_mmu>;
- 		power-domains = <&power PX30_PD_VO>;
--		rockchip,grf = <&grf>;
- 		status = "disabled";
- 
- 		vopl_out: port {
--- 
-2.11.0
+I want to ask if such a patch is intresting for mainline and
+if it is woth to think about how to represent this state to user space.
 
+Regards Denis
+
+ Documentation/devicetree/bindings/leds/leds-pwm.txt |  1 +
+ drivers/leds/leds-pwm.c                             | 10 ++++++++--
+ include/linux/leds_pwm.h                            |  1 +
+ 3 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
+ntation/devicetree/bindings/leds/leds-pwm.txt
+index 6c6583c35f2f..4f58df631fc9 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+@@ -19,6 +19,7 @@ LED sub-node properties:
+   see Documentation/devicetree/bindings/leds/common.txt
+ - linux,default-trigger :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
++- pwm,uninitalized : defer PWM init to first brightness change of led
+=20
+ Example:
+=20
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 8b6965a563e9..02c90f05602a 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -97,7 +97,8 @@ static int led_pwm_add(struct device *dev, struct led_p=
+wm_priv *priv,
+ 	 * FIXME: pwm_apply_args() should be removed when switching to the
+ 	 * atomic PWM API.
+ 	 */
+-	pwm_apply_args(led_data->pwm);
++	if (!led->pwm_uninitialized)
++		pwm_apply_args(led_data->pwm);
+=20
+ 	pwm_get_args(led_data->pwm, &pargs);
+=20
+@@ -108,7 +109,9 @@ static int led_pwm_add(struct device *dev, struct led=
+_pwm_priv *priv,
+ 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
+ 	if (ret =3D=3D 0) {
+ 		priv->num_leds++;
+-		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
++		if (!led->pwm_uninitialized)
++			led_pwm_set(&led_data->cdev,
++					led_data->cdev.brightness);
+ 	} else {
+ 		dev_err(dev, =22failed to register PWM led for %s: %d=5Cn=22,
+ 			led->name, ret);
+@@ -143,6 +146,9 @@ static int led_pwm_create_fwnode(struct device *dev, =
+struct led_pwm_priv *priv)
+ 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
+ 					 &led.max_brightness);
+=20
++		led.pwm_uninitialized =3D fwnode_property_read_bool(fwnode,
++							=22pwm,uninitialized=22);
++
+ 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
+ 		if (ret) {
+ 			fwnode_handle_put(fwnode);
+diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
+index 93d101d28943..0b04dfd43654 100644
+--- a/include/linux/leds_pwm.h
++++ b/include/linux/leds_pwm.h
+@@ -10,6 +10,7 @@ struct led_pwm {
+ 	const char	*default_trigger;
+ 	unsigned	pwm_id __deprecated;
+ 	u8 		active_low;
++	u8		pwm_uninitialized;
+ 	unsigned 	max_brightness;
+ 	unsigned	pwm_period_ns;
+ };
+--=20
+2.25.1
+
+
+
+Diehl Connectivity Solutions GmbH
+Gesch=E4ftsf=FChrung: Horst Leonberger
+Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
+N=FCrnberg: HRB 32315
+_________________________________________________________________________=
+__________________________
+
+Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
+ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
+Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
+ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
+Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
+ und/oder Publikation dieser E-Mail ist strengstens untersagt.
+- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
+Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
+chten/
+
+The contents of the above mentioned e-mail is not legally binding. This e=
+-mail contains confidential and/or legally protected information. Please =
+inform us if you have received this e-mail by
+mistake and delete it in such a case. Each unauthorized reproduction, dis=
+closure, alteration, distribution and/or publication of this e-mail is st=
+rictly prohibited.=20
+- For general information on data protection and your respective rights p=
+lease visit https://www.diehl.com/group/en/transparency-and-information-o=
+bligations/
