@@ -2,169 +2,172 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497F5C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840B2C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2578420674
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5907220828
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgCIKsl (ORCPT
+        id S1726647AbgCILJu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 06:48:41 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2520 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725956AbgCIKsl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 06:48:41 -0400
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id E289F9BDFECA97C73EEA;
-        Mon,  9 Mar 2020 10:48:39 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 9 Mar 2020 10:48:39 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 9 Mar 2020
- 10:48:39 +0000
-Date:   Mon, 9 Mar 2020 10:48:26 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>,
-        <joro@8bytes.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <robin.murphy@arm.com>, <kevin.tian@intel.com>,
-        <baolu.lu@linux.intel.com>, <jacob.jun.pan@linux.intel.com>,
-        <christian.koenig@amd.com>, <yi.l.liu@intel.com>,
-        <zhangfei.gao@linaro.org>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v4 23/26] iommu/arm-smmu-v3: Add stall support for
- platform devices
-Message-ID: <20200309104826.000052c1@Huawei.com>
-In-Reply-To: <20200304140833.GB646000@myrica>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
-        <20200224182401.353359-24-jean-philippe@linaro.org>
-        <20200227181726.00007c9a@Huawei.com>
-        <20200304140833.GB646000@myrica>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 9 Mar 2020 07:09:50 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:49957 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgCILJt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 07:09:49 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MNss4-1j0MB33BHc-00OKYg; Mon, 09 Mar 2020 12:09:33 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id AEACE650061;
+        Mon,  9 Mar 2020 11:09:32 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id EF_gs1Tv7aJJ; Mon,  9 Mar 2020 12:09:32 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 4495A64FD05;
+        Mon,  9 Mar 2020 12:09:32 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.10.2.141) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 9 Mar 2020 12:09:32 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id E1BA1804F8; Mon,  9 Mar 2020 12:09:31 +0100 (CET)
+Date:   Mon, 9 Mar 2020 12:09:31 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Driver Development <devel@driverdev.osuosl.org>,
+        Linux Media <linux-media@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Renesas SoC <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
+ adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <20200309110931.GB3593@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Driver Development <devel@driverdev.osuosl.org>,
+        Linux Media <linux-media@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Renesas SoC <linux-renesas-soc@vger.kernel.org>
+References: <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+ <20200302150706.GB3717@pflmari>
+ <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
+ <20200302160906.GC3717@pflmari>
+ <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
+ <20200305143628.GB25741@pflmari>
+ <20200306131632.GA4878@pendragon.ideasonboard.com>
+ <20200306134154.GD27714@pflmari>
+ <20200306134546.GE4878@pendragon.ideasonboard.com>
+ <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
+X-Originating-IP: [10.10.2.141]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29536F936F637D63
+X-Provags-ID: V03:K1:gR6rW5ecslKFmSCgJXl9/tgvA5veb1fTHa5FSn9E02NiSYn8MTc
+ jfTRnhmhxG1xh05nAmModYg4ablDUwhsTEWRtMKNiwF1Ba+Q4XBvXEXLZUfES35/yWi0Siv
+ mW5lPK8HZK2Ymp/Dyg8Uz8kFjgeAWLhSrZtsSOuyib7tUn57ibP939fs3UC9nCbF83YzvKM
+ Ng06OF7KQ36aOR0aRClNw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rLu4bN4ajpU=:h8UFrs8QFFhECyg3qTXbrA
+ 3JNpp6c0hdSW7ncjvgVXWh2iQHS+Y0jct46wxyEhGGkrV0oCDArK5DhnpdUcTzm78L5zXPGKi
+ yIPl2CNrEgIkSA/5VERu1sHyqn+VdfnDQLHYd7snDgsll+j0MiIpq+/ZK1Z3+6d7K6rZcXMzR
+ w3A7az7S6srz5fz9Auy2RJAPxI0Fe4EBrF7R8bTpT2KJsmch3TyiTErVRCCsOCAo+bdCdZFsM
+ MPvcyE5Q7YLmnY6HMBZnbUUknhGzSVJgthMI1+GqGD6yvp9OU1qI2Z4O8YAbg5ttdRFJbT9Bk
+ Ov05BmUmMHLO/1Msl0vZ20gPoJid/qxpyEbcedDUmDM7Mv27UMAjgKQMo8YVN6ctelyix7s4k
+ JogLp4RV9krJ96qClbNo7DRUsjsAU3w+h4uzi5HGZhhSH4rUJFjBETcK5lykq3IYQFfIOw31D
+ pwdGjPjH++xAyVltzpVnLerAsQkO00qa1hc4nsTUgHCfH5DSa8d2/GHtCBcyRCzN9PHtsdYXy
+ XoWJ78Ckt5RTFgxJ05xxzyMAgX2/TgzhwtWt4XYSFYqs6cDKe+eSNnpo0iaO/eBEQeoJD+1AI
+ N0YtFEfiY4uw5lMmZVkOns/8ii0WQrLWxZg4Ld/wir7iFW3D00Y2iaW5zAj+nxuNttzuospw0
+ lgy3NUXLdIEwl8WiWDDDnndRbKoMJfsiB9/2tvJ5wvlUM3RFFNH5Z8OSk49IERX5QJwWTQRPs
+ cGgih8YlLjJw4IZgfSClkNtM7w1mk4vjsDvESjtaCr1YiTgaaQ/uL73fsR6f5DtBYYzZ/IhI0
+ rymrCcY3m1GBu0hpUne15zhelObdrhOC+u5oCsc21Vn87GFy0Wody6vBthbrHoWPTpXLz52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 4 Mar 2020 15:08:33 +0100
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+Hi,
 
-> On Thu, Feb 27, 2020 at 06:17:26PM +0000, Jonathan Cameron wrote:
-> > On Mon, 24 Feb 2020 19:23:58 +0100
-> > Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
-> >   
-> > > From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Kuninori Morimoto, Mon, Mar 09, 2020 02:31:01 +0100:
+> > > > Those clocks are part of the CSI-2 protocol and also don't need to be
+> > > > explicitly controlled. As far as I can tell from a quick check of the
+> > > > ADV7482 documentation, only the I2S MCLK is a general-purpose clock that
+> > > > needs to be exposed.
+> (snip)
+> > > Do you know, by chance, which of the snd_soc* callbacks should be used to
+> > > implement setting of the MCLK? The one in snd_soc_component_driver or
+> > > snd_soc_dai_driver->ops (snd_soc_dai_ops)?
 > > > 
-> > > The SMMU provides a Stall model for handling page faults in platform
-> > > devices. It is similar to PCI PRI, but doesn't require devices to have
-> > > their own translation cache. Instead, faulting transactions are parked and
-> > > the OS is given a chance to fix the page tables and retry the transaction.
-> > > 
-> > > Enable stall for devices that support it (opt-in by firmware). When an
-> > > event corresponds to a translation error, call the IOMMU fault handler. If
-> > > the fault is recoverable, it will call us back to terminate or continue
-> > > the stall.
-> > > 
-> > > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>  
-> > One question inline.
+> > > Or how the userspace interface looks like? Or, if there is no userspace
+> > > interface for this, how the MCLK is supposed to be set? Through mclk-fs?
 > > 
-> > Thanks,
-> >   
-> > > ---
-> > >  drivers/iommu/arm-smmu-v3.c | 271 ++++++++++++++++++++++++++++++++++--
-> > >  drivers/iommu/of_iommu.c    |   5 +-
-> > >  include/linux/iommu.h       |   2 +
-> > >  3 files changed, 269 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> > > index 6a5987cce03f..da5dda5ba26a 100644
-> > > --- a/drivers/iommu/arm-smmu-v3.c
-> > > +++ b/drivers/iommu/arm-smmu-v3.c
-> > > @@ -374,6 +374,13 @@  
-> > 
-> >   
-> > > +/*
-> > > + * arm_smmu_flush_evtq - wait until all events currently in the queue have been
-> > > + *                       consumed.
-> > > + *
-> > > + * Wait until the evtq thread finished a batch, or until the queue is empty.
-> > > + * Note that we don't handle overflows on q->batch. If it occurs, just wait for
-> > > + * the queue to be empty.
-> > > + */
-> > > +static int arm_smmu_flush_evtq(void *cookie, struct device *dev, int pasid)
-> > > +{
-> > > +	int ret;
-> > > +	u64 batch;
-> > > +	struct arm_smmu_device *smmu = cookie;
-> > > +	struct arm_smmu_queue *q = &smmu->evtq.q;
-> > > +
-> > > +	spin_lock(&q->wq.lock);
-> > > +	if (queue_sync_prod_in(q) == -EOVERFLOW)
-> > > +		dev_err(smmu->dev, "evtq overflow detected -- requests lost\n");
-> > > +
-> > > +	batch = q->batch;  
-> > 
-> > So this is trying to be sure we have advanced the queue 2 spots?  
+> > I'm afraid my knowledge of the sound subsystem is limited. Morimoto-san
+> > is the main developer and maintainer of Renesas sound drivers.
+> > Morimoto-sensei, would you have an answer to that question ? :-)
 > 
-> So we call arm_smmu_flush_evtq() before decommissioning a PASID, to make
-> sure that there aren't any pending event for this PASID languishing in the
-> fault queues.
+> In my quick check, it goes to AUDIO_CLKC.
+> If so, you can update rcar_sound::clocks.
 > 
-> The main test is queue_empty(). If that succeeds then we know that there
-> aren't any pending event (and the PASID is safe to reuse). But if new
-> events are constantly added to the queue then we wait for the evtq thread
-> to handle a full batch, where one batch corresponds to the queue size. For
-> that we take the batch number when entering flush(), and wait for the evtq
-> thread to increment it twice.
+> 	&rcar_sound {
+> 		...
+> -		/* update <audio_clk_b> to <cs2000> */
+> +		/* update <audio_clk_b> to <cs2000>,
+> +		 *        <audio_clk_c> to <adv748x> */
+> 		clocks = <&cpg CPG_MOD 1005>,
+> 			...
+> 			 <&audio_clk_a>, <&cs2000>,
+> -			 <&audio_clk_c>,
+> +			 <&adv748x>,
+> 			 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
 > 
-> > Is there a potential race here?  q->batch could have updated before we take
-> > a local copy.  
-> 
-> Yes we're just checking on the progress of the evtq thread. All accesses
-> to batch are made while holding the wq lock.
-> 
-> Flush is a rare event so the lock isn't contended, but the wake_up() that
-> this patch introduces in arm_smmu_evtq_thread() does add some overhead
-> (0.85% of arm_smmu_evtq_thread(), according to perf). It would be nice to
-> get rid of it but I haven't found anything clever yet.
-> 
+> Thank you for your help !!
 
-Thanks.  Maybe worth a few comments in the code as this is a bit esoteric.
+Thanks.
 
-Thanks,
+Should the adv748x driver also implement anything to configure the frequency
+of MCLK clock? I mean something like .set_sysclk and .set_fmt callbacks of
+snd_soc_dai_ops?
 
-Jonathan
+Or is the driver implementation, which depends on mclk-fs to be 256, the audio
+stream format to be 8x S24_LE, and requires strictly 48kHz sampling rate on
+the HDMI input, a totally acceptable first attempt at writing a DAI driver?
 
-> Thanks,
-> Jean
-> 
-> >   
-> > > +	ret = wait_event_interruptible_locked(q->wq, queue_empty(&q->llq) ||
-> > > +					      q->batch >= batch + 2);
-> > > +	spin_unlock(&q->wq.lock);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +  
-> > ...
-> >   
+I'm a bit bothered by that, as the hardware is also capable of decoding
+stereo, sampling rate 32-192kHz, a variety of PCM and compressed/encrypted
+formats, 128-768fs MCLK multipliers, and a row of I2S options.
 
+I just find it confusing to place the configuration interfaces.
+For instance, the patches use the media ioctl for audio output selection to
+select I2S protocol. While works, it does not feel right (shouldn't it be in
+the device tree?)
 
+Maybe you can point me at a driver doing something similar? I'm studying media
+drivers now, but not many of them use ASoC interfaces for devices providing a
+clock. Or maybe I should better look at sound/soc/...?
+
+Thanks in advance,
+Alex
