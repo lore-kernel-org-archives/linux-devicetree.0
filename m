@@ -2,116 +2,87 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B332C10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2192C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E7D2464B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mind.be header.i=@mind.be header.b="YuJ74zCS"
+	by mail.kernel.org (Postfix) with ESMTP id B00902464B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583787932;
+	bh=g9N6of+fXMYEvQmQJ986K150eu5EoFj639M+Arl2mgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HHumC39/UKCuz12nVbiCEyYyB9neqgU5w3ivaVD1NrEktdDPbMFspoLswcGBfxpud
+	 Y9NDgZL0MPMe1xoUOEnuaWGUuzvQ5YKysW3giSJssqBJ7WAlqzASs70FqxjuTWpbH6
+	 L8gQXR3UwSb9TIxJTB9/DxA1syb970O+tZJeSO9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgCIUz6 (ORCPT
+        id S1726809AbgCIVF3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:55:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35799 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgCIUz6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 16:55:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r7so13044147wro.2
-        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 13:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mind.be; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=vhQE94JMdE+kOhEIbg2JbjKBD/IEFt/F1xmPKcV+cCA=;
-        b=YuJ74zCSchT9R3Qw3rctLTy0ub6AzdBpEPLkSD80z+B+IQkXZa36AMPNVEM7doIeXL
-         zd8Vpkkze/4ANcZsQ7e8Dr1Njf9f4PHcm7FKs+nm7r0UuFVfMQFa1Mrbpnw8xEZ9ZQ8v
-         YfqZFMqOWMa+j/RfwTu4lYl9g14Srn1vG8+dTNYq6J0uQlTPQVPwCITtEfB8VSYBSzsH
-         tyht4tdxYqCNSvFX0iMdVWadDTPODU60p/CoH123NYBypP+o6h/ypxiFNetmHzRnfYYs
-         5VH1fYXNJFXiMp5VC8ZaOpHTtKCxTUuXMeb6O4EJ+kQYucaDX1WuNVEFqXrGKH3x5+cU
-         afjQ==
+        Mon, 9 Mar 2020 17:05:29 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46110 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgCIVF3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:05:29 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 111so6728818oth.13;
+        Mon, 09 Mar 2020 14:05:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=vhQE94JMdE+kOhEIbg2JbjKBD/IEFt/F1xmPKcV+cCA=;
-        b=CumG4QpDpoq+HhMegYV02OGcS67I+QRVlgBxut1ZrYmI22r+pBdrIT6zv+N5X647Gb
-         6e8OMiR67WI/TSGXEITpOO8/bqt7HU1kqmgMfEy9pvqJnXt6K7kI+5OjfMHDA2zaImtH
-         WAi6zsjPTUVwS9Q6zcF9vUYBIfFaah5lFo0mHFSNfu6Mx0IcJknq49Qsmx5BWUHb2rC0
-         WYhHeob1kS9ZiSFcAuwoTKgTMO8JfXUOaOFVY0eY+CVNcdqeC8gpEE97gENYgbR8rsU0
-         zgxDKZzMuH3HgO59m3Uj6HxFibEDa7g0w9NqT1dXYlLhP0RLo+M9DlRaxwpLNJOTTFPx
-         TJ8A==
-X-Gm-Message-State: ANhLgQ37NL7Z/VI+pdF40ci537agaYOwpxWWjF7oQnGvE7EzINHOcIcm
-        DTJ2vQKZ6k+zP1VSHqDcLj0s156CCZE=
-X-Google-Smtp-Source: ADFU+vuzi/IVOqxjAG2WysJRD8gtQgdniJdh8UtOI2sGJBVKb2NSoZEAo9jXf68Q3PWHcOJjeJmg6A==
-X-Received: by 2002:adf:9087:: with SMTP id i7mr14374888wri.120.1583787355688;
-        Mon, 09 Mar 2020 13:55:55 -0700 (PDT)
-Received: from ?IPv6:2a02:a03f:44b4:9700:886c:841d:dea2:ee2a? ([2a02:a03f:44b4:9700:886c:841d:dea2:ee2a])
-        by smtp.gmail.com with ESMTPSA id i14sm10352273wrp.82.2020.03.09.13.55.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 13:55:55 -0700 (PDT)
-Subject: Re: [PATCH 6/6 V3] ASoC: tas5756m: Add DT binding document
-To:     Rob Herring <robh@kernel.org>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-References: <20200308142509.27765-1-charles-antoine.couret@mind.be>
- <20200308142509.27765-7-charles-antoine.couret@mind.be>
- <20200309203847.GA31358@bogus>
-From:   Couret Charles-Antoine <charles-antoine.couret@mind.be>
-Message-ID: <e537768b-9d46-afcf-f5b9-0552630cdff7@mind.be>
-Date:   Mon, 9 Mar 2020 21:55:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=S3K7yVdnvROgRNjWoLKF7rzoU4Ko8/qyGdog+zSFEvY=;
+        b=txA2x6jRluRQuBoHlJ2KxeDu+bClLlE35DM2xjfr6rbt5He4Xevn7jzHu9lrEgmWmp
+         YaMWo5Bt8XwsxiDYx4z2Yua/EFdKCzOve0tOH4NcizFo+q3Tlmm/DcICzb1cQSEiRnG1
+         UYExfwiBsZCHexlUZ3VppXN2rMkX3VtKaXE9f3VpGFdtYMCzFhr8U6ulrgUbhZXj6soK
+         GxZvszN3bI6HUQAyLVNnrAJ5UfWxxKeYHM65q2C/4D/HeOhU0hZ0ifgSoQvouEyUppLf
+         o0D757n9rALL7RzUx0iOKEZg1EozSuFFkxVUb7rlfCasI6j4BLwQEkdtB+xjn3tegZRg
+         Zi8Q==
+X-Gm-Message-State: ANhLgQ0TYOnMpTMf53nfug56N8+2fryLmancNS5hmnNhy7UJi6n+6/6P
+        gLwRA7hqfD+Etg30jgSsEbmTVQQ=
+X-Google-Smtp-Source: ADFU+vsOLiOFN9ulRKpD6cuBbP+kcy4+3ReuiL4dSROeIWdMiRVn2TguKliq7tXm2P4zrNABYne43g==
+X-Received: by 2002:a9d:76d6:: with SMTP id p22mr14881833otl.37.1583787928705;
+        Mon, 09 Mar 2020 14:05:28 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s12sm3486510oic.31.2020.03.09.14.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 14:05:28 -0700 (PDT)
+Received: (nullmailer pid 7378 invoked by uid 1000);
+        Mon, 09 Mar 2020 21:05:27 -0000
+Date:   Mon, 9 Mar 2020 16:05:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Belin <nbelin@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io,
+        Nicolas Belin <nbelin@baylibre.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: Document shiji vendor-prefix
+Message-ID: <20200309210527.GA7275@bogus>
+References: <1583502010-16210-1-git-send-email-nbelin@baylibre.com>
+ <1583502010-16210-2-git-send-email-nbelin@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200309203847.GA31358@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583502010-16210-2-git-send-email-nbelin@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Le 09/03/2020 à 21:38, Rob Herring a écrit :
-> On Sun,  8 Mar 2020 15:25:09 +0100, Charles-Antoine Couret wrote:
->> Document the bindings for the tas5756m driver.
->>
->> Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@mind.be>
->> ---
->>   .../devicetree/bindings/sound/tas5756m.yaml   | 64 +++++++++++++++++++
->>   1 file changed, 64 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/tas5756m.yaml
->>
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> Error: Documentation/devicetree/bindings/sound/tas5756m.example.dts:23.37-38 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/sound/tas5756m.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/sound/tas5756m.example.dt.yaml] Error 1
-> Makefile:1262: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
-> See https://patchwork.ozlabs.org/patch/1251057
-> Please check and re-submit.
+On Fri,  6 Mar 2020 14:40:08 +0100, Nicolas Belin wrote:
+> Shenzhen Shiji Lighting Co.,Ltd is a LED manufacturer.
+> 
+> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Hi Rob,
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-I don't understand this issue. My example is based on a real device tree 
-and it works fine.
-
-I don't have access to your 
-"Documentation/devicetree/bindings/sound/tas5756m.example.dts" file so I 
-can not reproduce it. I executed your script before sending the patch 
-(but without extracting the example) and it was fine.
-
-Can you explain the issue please?
-
-Thank you in advance and have a nice day,
-
-Charles-Antoine Couret
-
+If a tag was not added on purpose, please state why and what changed.
