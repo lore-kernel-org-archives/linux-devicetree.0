@@ -2,167 +2,135 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0967C10F29
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D21C10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4692146E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D8E20409
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583785480;
-	bh=StFL5QvmItJfOwz5VxmHCR0sM7EiUH0ldEUy/9kuvBI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=kqZhDhmMnJHlk+G0YhkvfAh+TL9MqYEYYPmAQsIMceXDHKBIqLER3hXexcOOvB40d
-	 5DTSXGMhP0Y+oB9uvrrOfB1mQkZnPh4hvcbkFZ097/gtaz6xmCcXqqLhfRcRl308PC
-	 3oavi2GvCpOLSRLXxOmrBVT2/0Cw/cf1xq2PpJwE=
+	s=default; t=1583785967;
+	bh=FFDaHAtD7iC6WyFyG4J8jvV5Jk9bE81FuTqbd/X/IcM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sTbmNOECoI2BToUPEpFIw0KPNOz/BIQ3SxYt7ExDjLmsl+e6eDjhJMvH7vdMjIoz7
+	 J5vsyjANSw60uUAYkKmt18XocorMNnm6KvSTepDNBGIIIFmZPvani4s7iE/WZ3apDT
+	 XoQBLEZbs2665isO+SnuNRJWjOIvq+NFWc2bxqhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgCIUYh (ORCPT
+        id S1726106AbgCIUcq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:24:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbgCIUYg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:24:36 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D87F62146E;
-        Mon,  9 Mar 2020 20:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583785476;
-        bh=StFL5QvmItJfOwz5VxmHCR0sM7EiUH0ldEUy/9kuvBI=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=mEltg4vcLqtYrMmRBSqoDNjFIEKXPWo+0y9RcaDbIdUbJgApQjySqLUB03QgQkVHQ
-         MiLGalrDdPxg9svfAdIjRCd5U7eMPLG7pUgeFQr/CgHNkq2dj1Mtn71lHcXyn5XBVP
-         3ShE/8zhFEQvjPWlCh8RuqexbeyA1TD3J/wmlz8I=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 9 Mar 2020 16:32:46 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44945 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCIUcq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 16:32:46 -0400
+Received: by mail-ot1-f65.google.com with SMTP id v22so10941166otq.11;
+        Mon, 09 Mar 2020 13:32:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TPaozqX6hcrQl8MvSCKkCToz6ciR60p3BFFfuKRb91M=;
+        b=Lc9NjB19XLFGie1+bIcXoy4um1zQ6ya551xRhPhEPQTa3cBL9WsSaE9c71lUQ1wfaa
+         GcPnarDepkYKDmkO9U7Z6mghKOyA03ConXNtWSvaKVdTafDJV1jDGETSJWI00QjFwS6h
+         VHrJTltqRJgUkUTKd5S+itpcE59M2pzfNQliRgQ79tyNZGal1S6zjfeAvyBhSMuDF6Lc
+         LSq4yxkKrowmce0oULbu/M1eoq2541LKukqPUNq53KSD71g9sXM2lqD0CbwHPHH+nefK
+         fPERR/xaIRQAW9Ech5+Kvg3Fnm4bcqsU7XQgKx1gfaO3FClTYH3HIzSEVcDbQR9LoFBS
+         ry5w==
+X-Gm-Message-State: ANhLgQ1tOjgo1AnBaHNtI28hxE7nGdJS5iiJCwMegkxMR/u/tCaMQIah
+        4fguDC2AxsKTB2LOMEM3Nw==
+X-Google-Smtp-Source: ADFU+vsR/WR3wizvIH1E4Drwx3TUV8dEzHnollfDTSSj6qrdLWlT3UkvH/z3CQ6DeACwVFzb8TLSTQ==
+X-Received: by 2002:a9d:6654:: with SMTP id q20mr1223294otm.180.1583785964227;
+        Mon, 09 Mar 2020 13:32:44 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m15sm15202144otl.20.2020.03.09.13.32.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 13:32:43 -0700 (PDT)
+Received: (nullmailer pid 15518 invoked by uid 1000);
+        Mon, 09 Mar 2020 20:32:42 -0000
+Date:   Mon, 9 Mar 2020 15:32:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chris.Paterson2@renesas.com, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [RESEND PATCH v7] dt-bindings: display: Add idk-2121wr binding
+Message-ID: <20200309203242.GA14486@bogus>
+References: <20200306152031.14212-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org> <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
-Subject: Re: [PATCH 2/2] clk: qcom: Add ipq6018 apss clock controller
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     sivaprak@codeaurora.org
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-Date:   Mon, 09 Mar 2020 13:24:35 -0700
-Message-ID: <158378547505.66766.155212878365765346@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306152031.14212-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sivaprakash Murugesan (2020-02-27 01:55:18)
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 15cdcdc..37e4ce2 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -89,6 +89,14 @@ config APQ_MMCC_8084
->           Say Y if you want to support multimedia devices such as display,
->           graphics, video encode/decode, camera, etc.
-> =20
-> +config IPQ_APSS_6018
-> +       tristate "IPQ6018 APSS Clock Controller"
-> +       select IPQ_GCC_6018
-> +       help
-> +         Support for APSS clock controller on ipq6018 devices. The
-> +         APSS clock controller supports frequencies higher than 800Mhz.
+On Fri,  6 Mar 2020 15:20:31 +0000, Lad Prabhakar wrote:
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Add binding for the idk-2121wr LVDS panel from Advantech.
+> 
+> Some panel-specific documentation can be found here:
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> Apologies for flooding in I missed to add the ML email-ids for the earlier
+> version so resending it.
+> 
+> Hi All,
+> 
+> This patch is part of series [1] ("Add dual-LVDS panel support to EK874),
+> all the patches have been accepted from it except this one. I have fixed
+> Rob's comments in this version of the patch.
+> 
+> [1] https://patchwork.kernel.org/cover/11297589/
+> 
+> v6->7
+>  * Added reference to lvds.yaml
+>  * Changed maintainer to myself
+>  * Switched to dual license
+>  * Dropped required properties except for ports as rest are already listed
+>    in lvds.panel
+>  * Dropped Reviewed-by tag of Laurent, due to the changes made it might not
+>    be valid.
+> 
+> v5->v6:
+>  * No change
+> 
+> v4->v5:
+> * No change
+> 
+> v3->v4:
+> * Absorbed patch "dt-bindings: display: Add bindings for LVDS
+>   bus-timings"
+> * Big restructuring after Rob's and Laurent's comments
+> 
+> v2->v3:
+> * New patch
+> 
+>  .../display/panel/advantech,idk-2121wr.yaml        | 120 +++++++++++++++++++++
+>  1 file changed, 120 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> 
 
-supports CPU frequencies? It's not clear what APSS is to a lot of people
-out there.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +         Say Y if you want to support higher frequencies on ipq6018 devi=
-ces.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.example.dt.yaml: panel-lvds: 'port' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.example.dt.yaml: panel-lvds: 'port' is a required property
 
-support CPU frequency scaling on ipq6018?
-
-> +
->  config IPQ_GCC_4019
->         tristate "IPQ4019 Global Clock Controller"
->         help
-> diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6=
-018.c
-> new file mode 100644
-> index 0000000..04b8962
-> --- /dev/null
-> +++ b/drivers/clk/qcom/apss-ipq6018.c
-> @@ -0,0 +1,210 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/err.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-
-Are these two includes needed at all?
-
-> +#include <linux/clk-provider.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/reset-controller.h>
-> +#include <dt-bindings/clock/qcom,apss-ipq6018.h>
-> +
-> +#include "common.h"
-> +#include "clk-regmap.h"
-> +#include "clk-pll.h"
-> +#include "clk-rcg.h"
-> +#include "clk-branch.h"
-> +#include "clk-alpha-pll.h"
-> +#include "clk-regmap-divider.h"
-> +#include "clk-regmap-mux.h"
-> +#include "reset.h"
-> +
-> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
-
-This can be removed. It's common in clk-rcg.h now
-
-> +
-> +static struct clk_branch apcs_alias0_core_clk =3D {
-> +       .halt_reg =3D 0x004c,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x004c,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "apcs_alias0_core_clk",
-> +                       .parent_hws =3D (const struct clk_hw *[]){
-> +                               &apcs_alias0_clk_src.clkr.hw },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-
-Please add a comment about why CLK_IS_CRITICAL is here. Presumably in
-the case that a cpufreq driver doesn't probe and claim this clk?
-
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +
-[...]
-> +
-> +static int __init apss_ipq6018_init(void)
-> +{
-> +       return platform_driver_register(&apss_ipq6018_driver);
-> +}
-> +core_initcall(apss_ipq6018_init);
-> +
-> +static void __exit apss_ipq6018_exit(void)
-> +{
-> +       platform_driver_unregister(&apss_ipq6018_driver);
-> +}
-> +module_exit(apss_ipq6018_exit);
-
-Any reason this can't just be module_platform_driver()?
+See https://patchwork.ozlabs.org/patch/1250384
+Please check and re-submit.
