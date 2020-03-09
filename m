@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619AAC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 22:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28ACC10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 22:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F84B24654
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 22:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7B124679
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 22:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583792469;
-	bh=pD+eGu+hEoThcdzbPg/WPBPpZdkfW1suNVWp40wMcW4=;
+	s=default; t=1583792474;
+	bh=fB+OB5JMO91xNFO2ErYSLu7hsT/WKGFiqmNUM9GBC9g=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=0hAU4zUZ9EAv0/sJxq7tCTZf6gJcQkRh5UFOAcOQQeEX2wNnxe3WnpP63Dbv1pmEi
-	 CVoMSrv4poBE4MTaxn6hZv/iGRwdbzBMCSo+dKwAJPIG5uurUbycZfxcZgw2xUf7QH
-	 hPmQ+9o1q578OxBDnYcdxW5fpnBO5WJi4ChE7+Aw=
+	b=WhvL47nhO8810ltN472rt/q/YMLEujB6JyEdhTZUFve1OT/1FcfKc/0soMXk8nL83
+	 0F8x1dk0BQ//empk0xQDVh0THfjbsH4NQReKt2t0QaAJP8PlZOsVYjt/Ggl+OQzips
+	 XCqoXoW04QjhrCR4VQRK7Mw4NCfLZ42y3tQVMy3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbgCIWVF (ORCPT
+        id S1727154AbgCIWVK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:21:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57794 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 18:21:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgCIWVF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:21:05 -0400
+        id S1726536AbgCIWVK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:21:10 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A65024670;
-        Mon,  9 Mar 2020 22:21:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9DE924654;
+        Mon,  9 Mar 2020 22:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583792464;
-        bh=pD+eGu+hEoThcdzbPg/WPBPpZdkfW1suNVWp40wMcW4=;
+        s=default; t=1583792470;
+        bh=fB+OB5JMO91xNFO2ErYSLu7hsT/WKGFiqmNUM9GBC9g=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=DowT9PWK9XYr9G49bemhQEPfKpHY0thsRlPFNxEvURxNYUogfnzl0l0bNiI2aOl/q
-         /YI9xKOt4eajO8SnNaw4RnVZjLuwG1tKyMUpvckZ6UdykVRSwQPBDn8xWd/d+Gy7Zf
-         Woih6nXt9OLAy7vVe8hPAVd6TJ9ajr5plZD3ijaA=
+        b=1F8ignM+0ogiKJqtZtlfHfkkLn3Y43FZJYXmvxRV2iOjpcFQNflNtHa5wJlS8PCcD
+         +A33b8WvDt8F/4N0dz0nU4ybNmPu4YLApxyKDcXwpZpRsMdBdGjULezWiHCLGR549O
+         CSB/Hu0fvDXKScQFIWhcY8B/PHRqf/2uthshHTWU=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200224045003.3783838-3-vkoul@kernel.org>
-References: <20200224045003.3783838-1-vkoul@kernel.org> <20200224045003.3783838-3-vkoul@kernel.org>
-Subject: Re: [PATCH v4 2/5] clk: qcom: clk-alpha-pll: Refactor trion PLL
+In-Reply-To: <20200224045003.3783838-4-vkoul@kernel.org>
+References: <20200224045003.3783838-1-vkoul@kernel.org> <20200224045003.3783838-4-vkoul@kernel.org>
+Subject: Re: [PATCH v4 3/5] clk: qcom: clk-alpha-pll: Add support for controlling Lucid PLLs
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -57,19 +57,18 @@ Cc:     linux-arm-msm@vger.kernel.org,
         jshriram@codeaurora.org, vnkgutta@codeaurora.org,
         Vinod Koul <vkoul@kernel.org>
 To:     Vinod Koul <vkoul@kernel.org>
-Date:   Mon, 09 Mar 2020 15:21:03 -0700
-Message-ID: <158379246365.66766.2439361033044035371@swboyd.mtv.corp.google.com>
+Date:   Mon, 09 Mar 2020 15:21:09 -0700
+Message-ID: <158379246921.66766.10563302645797643035@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Vinod Koul (2020-02-23 20:50:00)
+Quoting Vinod Koul (2020-02-23 20:50:01)
 > From: Taniya Das <tdas@codeaurora.org>
 >=20
-> Remove duplicate function for calculating the round rate of PLL and also
-> update the trion pll ops to use the common function.
+> Add programming sequence support for managing the Lucid PLLs.
 >=20
 > Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
