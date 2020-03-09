@@ -2,75 +2,252 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFFFC10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F360FC10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAD924670
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BB92146E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:46:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NipBi1V1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgCIToJ (ORCPT
+        id S1726307AbgCITq1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:44:09 -0400
-Received: from v6.sk ([167.172.42.174]:34794 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbgCIToJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:44:09 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 5CAF061314;
-        Mon,  9 Mar 2020 19:44:07 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 17/17] clk: mmp2: Fix bit masks for LCDC I/O and pixel clocks
-Date:   Mon,  9 Mar 2020 20:42:54 +0100
-Message-Id: <20200309194254.29009-18-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200309194254.29009-1-lkundrak@v3.sk>
-References: <20200309194254.29009-1-lkundrak@v3.sk>
+        Mon, 9 Mar 2020 15:46:27 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38644 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCITq1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 15:46:27 -0400
+Received: by mail-ed1-f66.google.com with SMTP id h5so3097811edn.5;
+        Mon, 09 Mar 2020 12:46:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GafaQTIDxRtZR3QJp5M8zL8cHUHfz+w2mpxMr87DmTg=;
+        b=NipBi1V16qvwZX2pVO1sMAKTqLsbamjVjq/UuqoLh8xcrWKfahPRDsLBiOa1e5Glxl
+         McguFHQOwTen76/dIQiy4RcgWsmJVk19hW5c/7saOb1waZW5ra1llR07rbabm4SK/LB8
+         /RwCo5davJdnPe6TMqVw54SeKH3uK25bZHhzNKd8nwwo0bXdhIMAgV6kcJ3vV1+BRWHl
+         SmIW3E+GcHfpguQ12pTdWD8NanfeYEJkr4EXDrFu86QoXfPL+AyfwVfNhTpwoyKbAKma
+         A/896W1JwUDNkBfDP2zMs6Ox9b3S8j/NO5QgnNMbxdJYpJw76Vp0dXiKtWmf2HpwllEQ
+         5NSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GafaQTIDxRtZR3QJp5M8zL8cHUHfz+w2mpxMr87DmTg=;
+        b=NFctmpS5A6FVqLWHDuUug776n+jEcKBcFDuCoZMF860cLHwTT8bdDBSc3Td8RSanjp
+         qCetXdGo66zraW9Weu/WV54ccVQnSjxyr/+wTOB4oBekR3llFKs2ei55M0aU7plk50qb
+         U2Mtd7IjcExSh2nddCcDxwQc0lKWmMzXBKdHzcO/Ybq91Dg/ZUUZUYDpN+mCQaW6+knn
+         3CamSEwcfOyYlD8e5vw7hS1CdIyraH42FrnqmxKBU7Noc8D9KwrqedtebNfbxlJnA7sc
+         MWAr89Z3TtmnjGsgv8WgpXtQcads5tFzp/HC9Uk2ZKjMd/9VhezeJ526AxHdTs6kn7lA
+         U5yQ==
+X-Gm-Message-State: ANhLgQ0zjYiZ+NODPZM1VP8KZbgmy4c5mgMX7ghXnaf9cg8y3NZHoFUK
+        TOB+x+s1eZ9QWUcaFKABhEaOCXCVN04EtQWDzuQ=
+X-Google-Smtp-Source: ADFU+vvbISa28RamiS7n6MURDptCTjT0Zst1Jfc9dRpyv7SayoTii1YE6z/aAXF9dDlpcwYhprgM5y6LIsJbbz/whBE=
+X-Received: by 2002:a17:906:3e1b:: with SMTP id k27mr8971822eji.258.1583783184196;
+ Mon, 09 Mar 2020 12:46:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200309111804.188162-1-masneyb@onstation.org>
+In-Reply-To: <20200309111804.188162-1-masneyb@onstation.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 9 Mar 2020 12:46:11 -0700
+Message-ID: <CAF6AEGu7NHVCjeTg94XzV19ByL4AZfYs07eBthw18E9HJ6JtsQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: display: msm: gmu: move sram property to gpu bindings
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-They were reversed because I read the datasheet upside down.
-Actually there is no datasheet, but I ended up understanding the
-comments in Open Firmware driver wrong.
+On Mon, Mar 9, 2020 at 4:18 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> The sram property was incorrectly added to the GMU binding when it
+> really belongs with the GPU binding instead. Let's go ahead and
+> move it.
+>
+> While changes are being made here, let's update the sram property
+> description to mention that this property is only valid for a3xx and
+> a4xx GPUs. The a3xx/a4xx example in the GPU is replaced with what was
+> in the GMU.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Fixes: 198a72c8f9ee ("dt-bindings: display: msm: gmu: add optional ocmem property")
+> ---
+> Background thread:
+> https://lore.kernel.org/lkml/20200303170159.GA13109@jcrouse1-lnx.qualcomm.com/
+>
+> I started to look at what it would take to convert the GPU bindings to
+> YAML, however I am unsure of the complete list of "qcom,adreno-XYZ.W"
+> compatibles that are valid.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+heh, I'm not sure anyone is ;-)
 
----
-Changes since v1:
-- Added this patch
+That said, adreno_device.c should give a complete list of XYZ (and
+*usually* the .W doesn't matter too much)
 
- drivers/clk/mmp/clk-of-mmp2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+BR,
+-R
 
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
-index 8769860fab640..52dc8b43acd9a 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -314,8 +314,8 @@ static struct mmp_param_gate_clk apmu_gate_clks[] = {
- 	{MMP2_CLK_SDH1, "sdh1_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH1, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
- 	{MMP2_CLK_SDH2, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
- 	{MMP2_CLK_SDH3, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
--	{MMP2_CLK_DISP0, "disp0_clk", "disp0_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x09, 0x09, 0x0, 0, &disp0_lock},
--	{MMP2_CLK_DISP0_LCDC, "disp0_lcdc_clk", "disp0_mux", CLK_SET_RATE_PARENT, APMU_DISP0, 0x12, 0x12, 0x0, 0, &disp0_lock},
-+	{MMP2_CLK_DISP0, "disp0_clk", "disp0_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x12, 0x12, 0x0, 0, &disp0_lock},
-+	{MMP2_CLK_DISP0_LCDC, "disp0_lcdc_clk", "disp0_mux", CLK_SET_RATE_PARENT, APMU_DISP0, 0x09, 0x09, 0x0, 0, &disp0_lock},
- 	{MMP2_CLK_DISP0_SPHY, "disp0_sphy_clk", "disp0_sphy_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x1024, 0x1024, 0x0, 0, &disp0_lock},
- 	{MMP2_CLK_DISP1, "disp1_clk", "disp1_div", CLK_SET_RATE_PARENT, APMU_DISP1, 0x09, 0x09, 0x0, 0, &disp1_lock},
- 	{MMP2_CLK_CCIC_ARBITER, "ccic_arbiter", "vctcxo", CLK_SET_RATE_PARENT, APMU_CCIC0, 0x1800, 0x1800, 0x0, 0, &ccic0_lock},
--- 
-2.25.1
-
+>
+>  .../devicetree/bindings/display/msm/gmu.txt   | 51 -----------------
+>  .../devicetree/bindings/display/msm/gpu.txt   | 55 ++++++++++++++-----
+>  2 files changed, 42 insertions(+), 64 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> index bf9c7a2a495c..90af5b0a56a9 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> @@ -31,10 +31,6 @@ Required properties:
+>  - iommus: phandle to the adreno iommu
+>  - operating-points-v2: phandle to the OPP operating points
+>
+> -Optional properties:
+> -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+> -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+> -
+>  Example:
+>
+>  / {
+> @@ -67,50 +63,3 @@ Example:
+>                 operating-points-v2 = <&gmu_opp_table>;
+>         };
+>  };
+> -
+> -a3xx example with OCMEM support:
+> -
+> -/ {
+> -       ...
+> -
+> -       gpu: adreno@fdb00000 {
+> -               compatible = "qcom,adreno-330.2",
+> -                            "qcom,adreno";
+> -               reg = <0xfdb00000 0x10000>;
+> -               reg-names = "kgsl_3d0_reg_memory";
+> -               interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> -               interrupt-names = "kgsl_3d0_irq";
+> -               clock-names = "core",
+> -                             "iface",
+> -                             "mem_iface";
+> -               clocks = <&mmcc OXILI_GFX3D_CLK>,
+> -                        <&mmcc OXILICX_AHB_CLK>,
+> -                        <&mmcc OXILICX_AXI_CLK>;
+> -               sram = <&gmu_sram>;
+> -               power-domains = <&mmcc OXILICX_GDSC>;
+> -               operating-points-v2 = <&gpu_opp_table>;
+> -               iommus = <&gpu_iommu 0>;
+> -       };
+> -
+> -       ocmem@fdd00000 {
+> -               compatible = "qcom,msm8974-ocmem";
+> -
+> -               reg = <0xfdd00000 0x2000>,
+> -                     <0xfec00000 0x180000>;
+> -               reg-names = "ctrl",
+> -                            "mem";
+> -
+> -               clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> -                        <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> -               clock-names = "core",
+> -                             "iface";
+> -
+> -               #address-cells = <1>;
+> -               #size-cells = <1>;
+> -
+> -               gmu_sram: gmu-sram@0 {
+> -                       reg = <0x0 0x100000>;
+> -                       ranges = <0 0 0xfec00000 0x100000>;
+> -               };
+> -       };
+> -};
+> diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> index 7edc298a15f2..fd779cd6994d 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> @@ -35,25 +35,54 @@ Required properties:
+>    bring the GPU out of secure mode.
+>  - firmware-name: optional property of the 'zap-shader' node, listing the
+>    relative path of the device specific zap firmware.
+> +- sram: phandle to the On Chip Memory (OCMEM) that's present on some a3xx and
+> +        a4xx Snapdragon SoCs. See
+> +        Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+>
+> -Example 3xx/4xx/a5xx:
+> +Example 3xx/4xx:
+>
+>  / {
+>         ...
+>
+> -       gpu: qcom,kgsl-3d0@4300000 {
+> -               compatible = "qcom,adreno-320.2", "qcom,adreno";
+> -               reg = <0x04300000 0x20000>;
+> +       gpu: adreno@fdb00000 {
+> +               compatible = "qcom,adreno-330.2",
+> +                            "qcom,adreno";
+> +               reg = <0xfdb00000 0x10000>;
+>                 reg-names = "kgsl_3d0_reg_memory";
+> -               interrupts = <GIC_SPI 80 0>;
+> -               clock-names =
+> -                   "core",
+> -                   "iface",
+> -                   "mem_iface";
+> -               clocks =
+> -                   <&mmcc GFX3D_CLK>,
+> -                   <&mmcc GFX3D_AHB_CLK>,
+> -                   <&mmcc MMSS_IMEM_AHB_CLK>;
+> +               interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +               interrupt-names = "kgsl_3d0_irq";
+> +               clock-names = "core",
+> +                             "iface",
+> +                             "mem_iface";
+> +               clocks = <&mmcc OXILI_GFX3D_CLK>,
+> +                        <&mmcc OXILICX_AHB_CLK>,
+> +                        <&mmcc OXILICX_AXI_CLK>;
+> +               sram = <&gpu_sram>;
+> +               power-domains = <&mmcc OXILICX_GDSC>;
+> +               operating-points-v2 = <&gpu_opp_table>;
+> +               iommus = <&gpu_iommu 0>;
+> +       };
+> +
+> +       gpu_sram: ocmem@fdd00000 {
+> +               compatible = "qcom,msm8974-ocmem";
+> +
+> +               reg = <0xfdd00000 0x2000>,
+> +                     <0xfec00000 0x180000>;
+> +               reg-names = "ctrl",
+> +                           "mem";
+> +
+> +               clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> +                        <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> +               clock-names = "core",
+> +                             "iface";
+> +
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +
+> +               gpu_sram: gpu-sram@0 {
+> +                       reg = <0x0 0x100000>;
+> +                       ranges = <0 0 0xfec00000 0x100000>;
+> +               };
+>         };
+>  };
+>
+> --
+> 2.24.1
+>
