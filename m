@@ -2,100 +2,90 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5797C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 06:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC28BC10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 07:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8890220675
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 06:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C3B20665
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 07:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s3VbLfph"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O+owxSwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgCIGz3 (ORCPT
+        id S1726027AbgCIHKL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 02:55:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40921 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgCIGz2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 02:55:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p2so8750253wrw.7;
-        Sun, 08 Mar 2020 23:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dm/e7fVVkyUEJNRr/yTEUzT0xvOhNYWpgvQvhHUhF68=;
-        b=s3VbLfphTDUMOj5VgEB+bJaxg9XNGT89jpF7/fzn4h2lZjtBN2yMNm+e2Mk1q3vVbz
-         2hu8irwSULuWR6uM43Wv53RBYq6D8D2BBoG3YD6ovjl857cnhxhwjSTQ0PQTELIqogKQ
-         /yyn6SfIz769wKub7xSny0zSlNeUbAq7qpI5RPwFPuVZ4IGqm67Sdov8lAwKUL+koX53
-         5kYAbSbYqLJrm/u2YaUvrq24vjlONNNEgpvHIGRtuzx++/LgRQmjp0JJgmQAqtAdfLkJ
-         YpY1lGAWis9ADEi+SJCUaE0woOUY9hR3uXmr8drGmY4IegRi4kKBxCRU8B6pzqkrVbkY
-         uBmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dm/e7fVVkyUEJNRr/yTEUzT0xvOhNYWpgvQvhHUhF68=;
-        b=flupmVY/WlLFLVinH6cj+X5K7RqVOZGdU1noCvFgA23rs5k4ZQiKrwx3WO60xbuXKJ
-         wa9VCOkSSUH3YGBQAqcWDTZZb/137F/cCBlrZ0Z9LBbkw/ZqY/qcZ95WPxRSN7ISG1o5
-         287HbDYEfpbS9WfB34PXcRVERXuyA6xZxMUnK0mMGk9bJ+Fhd/l6ME09uqNnrBZNGvOA
-         t8MNqXktCUPYQnTIVtnqn7kJcP4AEW2O96JXIOMrIcb61FA9o97HSsbcthvXuawwWRtn
-         k/nmf+YrreANlmh2uMmz+DXjDQmue/8swH8V5xI8ju7XLsxNNXT6OJjMuOF2IHrwC0SP
-         I3qA==
-X-Gm-Message-State: ANhLgQ13NexyJXAnWbq1zqSzfuSffyOw6i2FwioJqwb+SnoFCdTNDUIb
-        HLoBSQv6xeymx8pRC6aV+8I=
-X-Google-Smtp-Source: ADFU+vuCkgUSr5KTXA5g4+RQ2G5B4vEX0HXc+ZOFzelH2n6p5QuIzylG840VCzpvNwVRkr+/89Abxw==
-X-Received: by 2002:adf:80af:: with SMTP id 44mr19311433wrl.241.1583736925115;
-        Sun, 08 Mar 2020 23:55:25 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id l5sm24320597wml.3.2020.03.08.23.55.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Mar 2020 23:55:24 -0700 (PDT)
-To:     jbx6244@gmail.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, heiko@sntech.de,
-        hjc@rock-chips.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        robh+dt@kernel.org
-References: <20200306170353.11393-1-jbx6244@gmail.com>
-Subject: Re: [PATCH v1] dt-bindings: display: rockchip: convert rockchip vop
- bindings to yaml
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <590762ab-db79-c8b1-7f0e-b653ed4b1721@gmail.com>
-Date:   Mon, 9 Mar 2020 07:55:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+        Mon, 9 Mar 2020 03:10:11 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52836 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgCIHKL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 03:10:11 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0297A0fD010391;
+        Mon, 9 Mar 2020 02:10:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583737800;
+        bh=uZAT8o07ZjnRf5vBt9YtdwA7qFwAH2KyAIpBPpjxOzM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=O+owxSwo5ZuYAsLRqzOQcQTztjfmer4a/5uQZyihMDROaHptvvljVCu6RvQZ0pR8t
+         7k4ei8ZsVpiozO0DPJEg1TWnEy6fH/X/zB3+7rgXd1R/YUSA73TvX/HLuk/YOw4REL
+         bvUOZO1w128iv46Iv7AX8Sqeu0sb13jJGYXIXRhE=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0297A0tZ077937
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Mar 2020 02:10:00 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
+ 2020 02:09:59 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Mar 2020 02:09:59 -0500
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02979veZ046277;
+        Mon, 9 Mar 2020 02:09:57 -0500
+Subject: Re: [PATCH] arm: dts: ti: k3-am654-main: Update otap-del-sel values
+To:     Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>
+References: <20200109085152.10573-1-faiz_abbas@ti.com>
+ <5dc0bca0-502d-01b8-554b-4c4bc06688a8@ti.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <54c5abfd-7ac5-92ba-e89b-aeae9ee4e275@ti.com>
+Date:   Mon, 9 Mar 2020 12:41:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200306170353.11393-1-jbx6244@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <5dc0bca0-502d-01b8-554b-4c4bc06688a8@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Tero,
 
-Question for robh:
+On 17/01/20 1:38 pm, Tero Kristo wrote:
+> On 09/01/2020 10:51, Faiz Abbas wrote:
+>> According to the latest AM65x Data Manual[1], a different output tap
+>> delay value is optimum for a given speed mode. Update these values.
+>>
+>> [1] http://www.ti.com/lit/gpn/am6526
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> 
+> I believe this patch is going to be updated, as the dt binding has
+> received comments. As such, going to ignore this for now.
+> 
 
-In the old txt situation we add/describe only properties that are used
-by the driver/hardware itself. With yaml it also filters things in a
-node that are used by other drivers like:
+Those other series are merged now so you should be able to pick this up.
 
-assigned-clocks:
-assigned-clock-rates:
-power-domains:
-
-Should we add or not?
-
-Kind regards,
-
-Johan
-
-PS: Will drop 'rockchip,grf' in v2 for px30, not used in vop driver?
+Thanks,
+Faiz
