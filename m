@@ -2,180 +2,139 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C63C10F29
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFB2C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C2B20866
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1766320848
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D0ZkahO1"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZolYOmg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbgCITBF (ORCPT
+        id S1727512AbgCITGe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:01:05 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36970 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbgCITBE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 15:01:04 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f16so2222512plj.4
-        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 12:01:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=vlwqcKTAzq+tnews6JZmD9exPu8HmU2dnVIUxFyHgnU=;
-        b=D0ZkahO1wynqPGY55sNCGoG0peiJ8j4nO/0C6g+hf9C4UnZp478yFslg/fitmtiVD5
-         LPAHpOrV6mOIZqUA57C4QgVZvB7xIohv2jSOsNGBzIZJVr/eElHEYyyKJjtq4XUblYNx
-         sR0ojQX7gfHwLsFgA3yFU/YcsiwyLiExJt6jE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=vlwqcKTAzq+tnews6JZmD9exPu8HmU2dnVIUxFyHgnU=;
-        b=Hf7R4VpHpE161Up6DD2bAMaxQlBNy1evYEzVFGH1sNlUQVp9qvHsrhCRS26QuNEwNS
-         GnWzyAVvhiDoIJNjrgutRObpcFzhUquKN/4LqMBu0I7qHq44t6L0134klIFrimu7QvH5
-         0Hfcqn34qktC4Md1ZMqD0e2ryKf+OTk1CBilrSiC8xGUPYExWRQWA+UDGR3haXrJ9TzL
-         Z6UMdm47qIpbA5zramEQ+WMB8jy68B+iVrQCvlEcXMXQIybzn/PVRqM7SztuPzPl9sGg
-         75v/YxeC57Un1L1Y9n6Pi5md5fxwDYAIui3auXAW+fAxB78uKphmKx5tDyk8qMQdd2+W
-         Xaxg==
-X-Gm-Message-State: ANhLgQ29sBdMGHDGJf4KsfH1RoetZ+uzeoKqnyERAx2bucKE+BCKGc6Z
-        ARLNT0Wm7EyB2jNorImcvzGJAQ==
-X-Google-Smtp-Source: ADFU+vtpsj53ds8mnXl4FWNlUj/pImcr7BB2QSHheuKi/kCvMR9Z/dhfdpdDfWSI3kH8BKU9T1nHwg==
-X-Received: by 2002:a17:902:aa49:: with SMTP id c9mr17784508plr.145.1583780462732;
-        Mon, 09 Mar 2020 12:01:02 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y9sm293333pjj.17.2020.03.09.12.01.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 12:01:02 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 9 Mar 2020 15:06:34 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:38155 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727468AbgCITGe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 15:06:34 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id D9C6D23EDA;
+        Mon,  9 Mar 2020 20:06:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583780791;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EdVZVnFbpfoFLdQOqIrp0CLvmnfwSC3yBcsX83MdnRo=;
+        b=ZolYOmg50XSId6PGMI1a5HwOx8vJiqGhFgbhFA6YwWsKizEEuI4/r/LJz9iaPpfoFZhGxD
+        5w/gHNisa3uHqP+nfIxPVrFma/nM9VIaZISuGAnZRlHzZ8ab434Fz9a5k4ZBsDNbEyp/BH
+        RrmkgRkxgeYzj2TB/3ZEC2uUoga6NPw=
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200309185120.GC1098305@builder>
-References: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org> <1583752457-21159-2-git-send-email-mkshah@codeaurora.org> <158377818530.66766.4481786840843320343@swboyd.mtv.corp.google.com> <20200309185120.GC1098305@builder>
-Subject: Re: [PATCH v4 1/4] dt-bindings: Introduce SoC sleep stats bindings
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>, evgreen@chromium.org,
-        mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org,
-        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
-        devicetree@vger.kernel.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Date:   Mon, 09 Mar 2020 12:01:01 -0700
-Message-ID: <158378046147.66766.9861199454487445583@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Mar 2020 20:06:30 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, peng.ma@nxp.com
+Subject: Re: [PATCH 5/6] arm64: dts: ls1028a: Specify the DMA channels for the
+ DSPI controllers
+In-Reply-To: <20200309145624.10026-6-olteanv@gmail.com>
+References: <20200309145624.10026-1-olteanv@gmail.com>
+ <20200309145624.10026-6-olteanv@gmail.com>
+Message-ID: <83af52172a3cabd662de1ed9574e4247@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: D9C6D23EDA
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         NEURAL_HAM(-0.00)[-0.388];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-03-09 11:51:20)
-> On Mon 09 Mar 11:23 PDT 2020, Stephen Boyd wrote:
->=20
-> > Quoting Maulik Shah (2020-03-09 04:14:14)
-> > > From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-> > >=20
-> > > Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
-> > > SoC sleep stats driver. The driver is used for displaying SoC sleep
-> > > statistic maintained by Always On Processor or Resource Power Manager.
-> > >=20
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-> > > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> > > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > ---
-> > >  .../bindings/soc/qcom/soc-sleep-stats.yaml         | 46 ++++++++++++=
-++++++++++
-> > >  1 file changed, 46 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sl=
-eep-stats.yaml
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-sta=
-ts.yaml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
-> > > new file mode 100644
-> > > index 00000000..7c29c61
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
-> > > @@ -0,0 +1,46 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/soc/qcom/soc-sleep-stats.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
-> > > +
-> > > +maintainers:
-> > > +  - Maulik Shah <mkshah@codeaurora.org>
-> > > +  - Lina Iyer <ilina@codeaurora.org>
-> > > +
-> > > +description:
-> > > +  Always On Processor/Resource Power Manager maintains statistics of=
- the SoC
-> > > +  sleep modes involving powering down of the rails and oscillator cl=
-ock.
-> > > +
-> > > +  Statistics includes SoC sleep mode type, number of times low power=
- mode were
-> > > +  entered, time of last entry, time of last exit and accumulated sle=
-ep duration.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - qcom,rpmh-sleep-stats
-> > > +      - qcom,rpm-sleep-stats
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +
-> > > +examples:
-> > > +  # Example of rpmh sleep stats
-> > > +  - |
-> > > +    rpmh_sleep_stats@c3f0000 {
-> > > +      compatible =3D "qcom,rpmh-sleep-stats";
-> > > +      reg =3D <0 0xc3f0000 0 0x400>;
-> > > +    };
-> > > +  # Example of rpm sleep stats
-> > > +  - |
-> > > +    rpm_sleep_stats@4690000 {
-> >=20
-> > Node names don't have underscores. It really feels like we should be ab=
-le
-> > to get away with not having this device node at all. Why can't we have
-> > the rpm message ram be a node that covers the entire range and then have
-> > that either create a platform device for debugfs stats or just have it
-> > register the stat information from whatever driver attaches to that
-> > node?
-> >=20
-> > Carving this up into multiple nodes and making compatible strings
-> > doesn't seem very useful here because we're essentially making device
-> > nodes in DT for logical software components that exist in the rpm
-> > message ram.
->=20
-> It's been a while since I discussed this with Lina, but iirc I opted for
-> the model you suggest and we concluded that it wouldn't fit with the RPM
-> case.
->=20
-> And given that, for reasons unknown to me, msgram isn't a single region,
-> but a set of adjacent memory regions, this does seem to represent
-> hardware better.
->=20
+Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> LS1028A has a functional connection to the eDMA module. Even if the
+> spi-fsl-dspi.c driver is not using DMA for LS1028A now, define the 
+> slots
+> in the DMAMUX for connecting the eDMA channels to the 3 DSPI
+> controllers.
+> 
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 515e0a1b934f..18155273a46e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -298,6 +298,8 @@
+>  			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+>  			clock-names = "dspi";
+>  			clocks = <&clockgen 4 1>;
+> +			dmas = <&edma0 0 62>, <&edma0 0 60>;
+> +			dma-names = "tx", "rx";
 
-I guess there's message ram and code ram or something like that? Maybe
-that's the problem? Either way it sounds like the node name needs to be
-fixed to have dashes and then this is fine to keep. Describing memory
-like this in DT just makes me sad.
+minor nit. Other nodes specified the dma channels as
+
+dma-names = "tx", "rx";
+dmas = <&edma0 0 62>,
+        <&edma0 0 60>;
+
+-michael
+
+>  			spi-num-chipselects = <4>;
+>  			little-endian;
+>  			status = "disabled";
+> @@ -311,6 +313,8 @@
+>  			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+>  			clock-names = "dspi";
+>  			clocks = <&clockgen 4 1>;
+> +			dmas = <&edma0 0 58>, <&edma0 0 56>;
+> +			dma-names = "tx", "rx";
+>  			spi-num-chipselects = <4>;
+>  			little-endian;
+>  			status = "disabled";
+> @@ -324,6 +328,8 @@
+>  			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+>  			clock-names = "dspi";
+>  			clocks = <&clockgen 4 1>;
+> +			dmas = <&edma0 0 54>, <&edma0 0 2>;
+> +			dma-names = "tx", "rx";
+>  			spi-num-chipselects = <3>;
+>  			little-endian;
+>  			status = "disabled";
