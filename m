@@ -2,144 +2,274 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B576C10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1DFC10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A2724656
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xRFA/xvQ"
+	by mail.kernel.org (Postfix) with ESMTP id 47C0B2465A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583782582;
+	bh=Q/Y8XhuVS8zV0t8K+w7GOL7XmCYXcjEqC5LXm81Ug0I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gAV+l9Ik6ZAOtNXy5PqCouZQDFbdpWT1FVSCnO1sKZKsMeCVUcY9ncTNkgP/sGNWs
+	 XxaMwBpo6UuoBIayVMQlqH7rhe4ItU8zB5blcZhRb1q16LgzKUvup0D9uzaUDFlx5E
+	 dqUtxXT+CCWkzoZQ6ZBlumv7kQp5EV7gbro+qrJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgCIT30 (ORCPT
+        id S1726202AbgCITgV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:29:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37441 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCIT3X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 15:29:23 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f16so2252066plj.4
-        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 12:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PjCahE7HDbhWso9X6d1lzPSE1/CDEaSUn45Mvn78hrg=;
-        b=xRFA/xvQUxQ/6xcy+vthbrS8cMcvOJqFPfY+MOOQuO3UiIaxHA7QmLD2cXfq70ORvt
-         4YhDNRrAODTMYmGfjYzmYu+XJybODGw/rvX3F6BtSYPX/8tIicTuBNq65Hyp3qa18/XQ
-         dUmRnBBvrkGbjWXQbEwml0DRlZ3fRnI0jYtrufclmOfpOOvRh5NrOzXgBy+lE+YfVIqe
-         HQ/8W+P+YGcbgOOr5JzrVm4d12Y0Ms3Nze795sGA0ltPWoQVNc5+QLZdV9J/HZxfY3/J
-         Qinwu8ZFLQlg0NW5RpI6nCuaKZ5f1C6nngBuyuw+aR6ARGZwhzl1r2FqNzEE/Dz4u49z
-         oAaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PjCahE7HDbhWso9X6d1lzPSE1/CDEaSUn45Mvn78hrg=;
-        b=LdcZjZRRE6OoWnyYWrBuM9ZHC5xz7vcPXFSi7qy+1iopBHf9hJH2GGaNJXqGqxox/i
-         NGGiZ4xLN19MHboeBHvaHhMlN3Ezl+RZkGJBIPC4UhsiQh1WpZOFSFhFjr7TyWLpAvMS
-         wyHqyXjujSd2vo41ZpwFvcoHS8Z4j0RQWw7N+BYwEkiX/FEibvUNmv25gVtFDKMETG/L
-         XW/64x7ANsJRQlEaEz/4XoR3rVfmi+JhcJArPKvAS1X4F7n502erSsTRBdw0JqNZQZLw
-         HvNF51yJ/S4luxwbAmW5a2BNr2AAtV7NTRaJiMZOCOmIv61ugWH1skm4g6gSgcKNewI5
-         5jXQ==
-X-Gm-Message-State: ANhLgQ2arwFhCSWzrwZ07BbPTjgV5KdkpJhduymZFONjdACaf8uuSYlG
-        qcEy5tW9e5FRJIGWMs34J+0LPg==
-X-Google-Smtp-Source: ADFU+vuecIUzxw+F0r5oweE7mmL21uOUoxea3p5BAhmf7NogmqrAB9MM2idoTRwQXH0m8Xl/9Kc1Lg==
-X-Received: by 2002:a17:902:342:: with SMTP id 60mr16526200pld.206.1583782162073;
-        Mon, 09 Mar 2020 12:29:22 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u19sm31438770pgf.11.2020.03.09.12.29.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 12:29:21 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 12:29:19 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v5 0/9] Add QUSB2 PHY support for SC7180
-Message-ID: <20200309192919.GE1098305@builder>
-References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+        Mon, 9 Mar 2020 15:36:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbgCITgV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:36:21 -0400
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45EAF2465A;
+        Mon,  9 Mar 2020 19:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583782580;
+        bh=Q/Y8XhuVS8zV0t8K+w7GOL7XmCYXcjEqC5LXm81Ug0I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wA10nR8ux8Vp3EKnyUgW6pGIWE22tSfpPpMB6XIIaGnSn6bro1BIr8WBipP5NmJSs
+         IZK3OlycwPDU7+ecw1VROEbWe61AfYtEdiecWm6r2hY8v0Dzuh0FBW3BgnqK53QGRM
+         YYahJYXTRIylzGAqDJy1vTAnxN3L7rwFk/5imxKM=
+Date:   Mon, 9 Mar 2020 12:36:18 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2 5/9] net: ethernet: ti: introduce
+ am65x/j721e gigabit eth subsystem driver
+Message-ID: <20200309123618.5e9bfd30@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <76009b01-2f02-41e8-aea2-16dd1cbddd93@ti.com>
+References: <20200306234734.15014-1-grygorii.strashko@ti.com>
+        <20200306234734.15014-6-grygorii.strashko@ti.com>
+        <20200306172027.18d88fb0@kicinski-fedora-PC1C0HJN>
+        <76009b01-2f02-41e8-aea2-16dd1cbddd93@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 09 Mar 02:53 PDT 2020, Sandeep Maheswaram wrote:
+On Sat, 7 Mar 2020 07:19:17 +0200 Grygorii Strashko wrote:
+> Hi Jakub,
+> 
+> Thank you for your review.
+> 
+> On 07/03/2020 03:20, Jakub Kicinski wrote:
+> >> +static void am65_cpsw_get_drvinfo(struct net_device *ndev,
+> >> +				  struct ethtool_drvinfo *info)
+> >> +{
+> >> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
+> >> +
+> >> +	strlcpy(info->driver, dev_driver_string(common->dev),
+> >> +		sizeof(info->driver));
+> >> +	strlcpy(info->version, AM65_CPSW_DRV_VER, sizeof(info->version));  
+> > 
+> > Please remove the driver version, use of driver versions is being deprecated upstream.  
+> 
+> Hm. I can remove it np. But how do I or anybody else can know that it's deprecated
+> 
+>   * @get_drvinfo: Report driver/device information.  Should only set the
+>   *	@driver, @version, @fw_version and @bus_info fields.  If not
+>   *	implemented, the @driver and @bus_info fields will be filled in
+>   *	according to the netdev's parent device.
+> 
+>   * struct ethtool_drvinfo - general driver and device information
+> ..
+>   * @version: Driver version string; may be an empty string
+> 
+> It seems not marked as deprecated.
 
-Kishon, let me know if/when you're picking up patch 1-6 and I can pick
-the dts patches through the qcom soc tree.
+Thanks, it's _being_ deprecated, by which I mean we are slowly removing
+the use, and will mark it as deprecated afterwards. I take your point
+that we should have started with marking..
 
-Regards,
-Bjorn
+> >> +	psdata = cppi5_hdesc_get_psdata(desc_rx);
+> >> +	csum_info = psdata[2];
+> >> +	dev_dbg(dev, "%s rx csum_info:%#x\n", __func__, csum_info);
+> >> +
+> >> +	dma_unmap_single(dev, buf_dma, buf_dma_len, DMA_FROM_DEVICE);
+> >> +
+> >> +	k3_udma_desc_pool_free(rx_chn->desc_pool, desc_rx);
+> >> +
+> >> +	if (unlikely(!netif_running(skb->dev))) {  
+> > 
+> > This is strange, does am65_cpsw_nuss_ndo_slave_stop() not stop RX?  
+> 
+> Net core will set __LINK_STATE_START = 0 before calling .ndo_stop() and there could some time gap
+> between clearing __LINK_STATE_START and actually disabling RX.
+> if NAPI is in progress it will just allow to complete current NAPI cycle by discarding unwanted packets
+> and without statistic update.
 
-> Converting dt binding to yaml.
-> Adding compatible for SC7180 in dt bindings.
-> Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
+That's fine, let the core discard those packets if it wants to.
+Disabling the interface while the traffic is flowing is a rare
+occurrence, it's a waste of cycles to check for every packet.
+
+> >> +		dev_kfree_skb_any(skb);
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	new_skb = netdev_alloc_skb_ip_align(ndev, AM65_CPSW_MAX_PACKET_SIZE);
+> >> +	if (new_skb) {
+> >> +		skb_put(skb, pkt_len);
+> >> +		skb->protocol = eth_type_trans(skb, ndev);
+> >> +		am65_cpsw_nuss_rx_csum(skb, csum_info);
+> >> +		napi_gro_receive(&common->napi_rx, skb);
+> >> +
+> >> +		ndev_priv = netdev_priv(ndev);
+> >> +		stats = this_cpu_ptr(ndev_priv->stats);
+> >> +
+> >> +		u64_stats_update_begin(&stats->syncp);
+> >> +		stats->rx_packets++;
+> >> +		stats->rx_bytes += pkt_len;
+> >> +		u64_stats_update_end(&stats->syncp);
+> >> +		kmemleak_not_leak(new_skb);
+> >> +	} else {
+> >> +		ndev->stats.rx_dropped++;
+> >> +		new_skb = skb;
+> >> +	}  
+> >   
+> >> +static int am65_cpsw_nuss_tx_poll(struct napi_struct *napi_tx, int budget)
+> >> +{
+> >> +	struct am65_cpsw_tx_chn *tx_chn = am65_cpsw_napi_to_tx_chn(napi_tx);
+> >> +	int num_tx;
+> >> +
+> >> +	num_tx = am65_cpsw_nuss_tx_compl_packets(tx_chn->common, tx_chn->id,
+> >> +						 budget);
+> >> +	if (num_tx < budget) {  
+> > 
+> > The budget is for RX, you can just complete all TX on a NAPI poll.  
 > 
-> Changes in v5:
-> *Added the dt bindings which are applicable only to QUSB2 V2 PHY in 
->  separate block as per comments from Matthias in patch 1/9 and patch 4/9
->  and addressed Rob's comment in patch 1/9.
-> *Separated the patch for new override params and added a local variable
->  to access overrides as per comments from Matthias patch 5/9 and 6/9.
+> Then TX will block RX. Right? this is soft IRQs which are executed one by one.
+
+If anything completing all TX frames makes it more likely RX will have
+another memory to allocate from. AFAIK live lock by TX completions is
+unheard of.
+> >> +	tx_chn = &common->tx_chns[q_idx];
+> >> +	netif_txq = netdev_get_tx_queue(ndev, q_idx);
+> >> +
+> >> +	/* Map the linear buffer */
+> >> +	buf_dma = dma_map_single(dev, skb->data, pkt_len,
+> >> +				 DMA_TO_DEVICE);
+> >> +	if (unlikely(dma_mapping_error(dev, buf_dma))) {
+> >> +		dev_err(dev, "Failed to map tx skb buffer\n");  
+> > 
+> > You probably don't want to print errors when memory gets depleted.
+> > Counter is enough  
 > 
-> Changes in v4:
-> *Addressed Rob Herrings comments in dt bindings.
-> *Added new structure for all the overriding tuning params.
-> *Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
-> *Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
+> Could you please help me understand what is the relation between "memory depletion"
+> and dma_mapping_error()?
+
+I don't know your platform, so the comment may not be accurate, but
+usually DMA mappings fail if the device has some memory addressing
+constraints, and all memory which can satisfy those is used. Or the
+memory situation is extremely dire and IOMMU driver can't allocate
+meta data.
+
+> >> +		ret = -EINVAL;  
+> > 
+> > EINVAL is not a valid netdev_tx_t..  
 > 
-> Changes in v3:
-> *Using the generic phy cfg table for QUSB2 V2 phy.
-> *Added support for overriding tuning parameters in QUSB2 V2 PHY
-> from device tree.
+> Considering dev_xmit_complete() - this part was always "black magic" to me :(
+> Will fix.
 > 
-> Changes in v2:
-> Sorted the compatible in driver.
-> Converted dt binding to yaml.
-> Added compatible in yaml.
+> >> +		ndev->stats.tx_errors++;
+> >> +		goto drop_stop_q;  
+> > 
+> > Why stop queue on memory mapping error? What will re-enable it?  
 > 
-> Sandeep Maheswaram (9):
->   dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
->   dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
->     SC7180
->   phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
->   dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
->     parameters
->   phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
->     V2 PHY
->   phy: qcom-qusb2: Add new overriding tuning parameters in QUSB2 V2 PHY
->   arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
->   arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
->   arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
->     device
+> it will not. I'm considering it as critical - no recovery.
+
+Oh, I see. If you're sure this can never happen (tm) on your platfrom
+I'd throw in a WARN_ON_ONCE() in this path so users know what's going
+on. That said it doesn't seem too hard to recover from, so normal error
+handling would be best.
+
+> >> +	}
+> >> +
+> >> +	first_desc = k3_udma_desc_pool_alloc(tx_chn->desc_pool);
+> >> +	if (!first_desc) {
+> >> +		dev_dbg(dev, "Failed to allocate descriptor\n");  
+> > 
+> > ret not set  
 > 
->  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 187 +++++++++++++++++++++
->  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
->  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
->  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
->  drivers/phy/qualcomm/phy-qcom-qusb2.c              | 144 +++++++++++-----
->  6 files changed, 297 insertions(+), 114 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> It will return NETDEV_TX_BUSY in this  case - below.
+>
+> >> +		dma_unmap_single(dev, buf_dma, pkt_len, DMA_TO_DEVICE);
+> >> +		goto drop_stop_q_busy;
+> >> +	}  
+
+> >> +		}
+> >> +	}
+> >> +
+> >> +err:
+> >> +	return ret;
+> >> +}  
+> >   
+> >> +	/* register devres action here, so dev will be disabled
+> >> +	 * at right moment. The dev will be enabled in .remove() callback
+> >> +	 * unconditionally.
+> >> +	 */
+> >> +	ret = devm_add_action_or_reset(dev, am65_cpsw_pm_runtime_free, dev);
+> >> +	if (ret) {
+> >> +		dev_err(dev, "failed to add pm put reset action %d", ret);
+> >> +		return ret;
+> >> +	}  
+> > 
+> > Could you explain why you need this? Why can't remove disable PM?
+> > 
+> > In general looks to me like this driver abuses devm_ infra in ways
+> > which make it more complex than it needs to be :(  
 > 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+> Sry, can't agree here. This allows me to keep release sequence in sane way and get
+> rid of mostly all goto for fail cases (which are constant source of errors for complex
+> initialization sequences) by using standard framework.
+
+As a reviewer I can tell you with absolute certainty that using devm
+anywhere but in the probe function makes the driver a lot harder to
+review.
+
+IMHO the API to remove registered callbacks should be avoided like 
+the plague.
+
+> Regarding PM runtime
+>   -  many Linux core framework provide devm_ APIs this and other
+> drivers are happy to use them.
+>   - but, there is the problem: DD release sequence is
 > 
+> 	drv->remove(dev);
+> 
+> 	devres_release_all(dev);
+> 
+> and there is no devm_ API for PM runtime. So, if some initialization step is done with devm_ API and
+> It depends on device to be active - no way to solve it in .remove() callback easily.
+> For example, devm_of_platform_populate().
+> 
+> With above code I ensure that:
+> 
+> drv->remove(dev);
+>   |- pm_runtime_get()
+> 
+> devres_release_all(dev);
+>   |- devm_of_platform_populate_release()
+>   |- pm_runtime_put()
+>   |- pm_runtime_disable()
+
+Add devm_pm_* helpers for PM then?  That'd the preferred solution
+upstream.
