@@ -2,137 +2,144 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA68C10F29
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B576C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E177722525
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A2724656
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xRFA/xvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgCITWu (ORCPT
+        id S1726168AbgCIT30 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:22:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52992 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbgCITWt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:22:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 55DADB06A;
-        Mon,  9 Mar 2020 19:22:47 +0000 (UTC)
-Message-ID: <9e685fce547d808f269e59e2290331e75c66f3e4.camel@suse.de>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Mon, 9 Mar 2020 15:29:26 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37441 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgCIT3X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 15:29:23 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f16so2252066plj.4
+        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 12:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PjCahE7HDbhWso9X6d1lzPSE1/CDEaSUn45Mvn78hrg=;
+        b=xRFA/xvQUxQ/6xcy+vthbrS8cMcvOJqFPfY+MOOQuO3UiIaxHA7QmLD2cXfq70ORvt
+         4YhDNRrAODTMYmGfjYzmYu+XJybODGw/rvX3F6BtSYPX/8tIicTuBNq65Hyp3qa18/XQ
+         dUmRnBBvrkGbjWXQbEwml0DRlZ3fRnI0jYtrufclmOfpOOvRh5NrOzXgBy+lE+YfVIqe
+         HQ/8W+P+YGcbgOOr5JzrVm4d12Y0Ms3Nze795sGA0ltPWoQVNc5+QLZdV9J/HZxfY3/J
+         Qinwu8ZFLQlg0NW5RpI6nCuaKZ5f1C6nngBuyuw+aR6ARGZwhzl1r2FqNzEE/Dz4u49z
+         oAaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PjCahE7HDbhWso9X6d1lzPSE1/CDEaSUn45Mvn78hrg=;
+        b=LdcZjZRRE6OoWnyYWrBuM9ZHC5xz7vcPXFSi7qy+1iopBHf9hJH2GGaNJXqGqxox/i
+         NGGiZ4xLN19MHboeBHvaHhMlN3Ezl+RZkGJBIPC4UhsiQh1WpZOFSFhFjr7TyWLpAvMS
+         wyHqyXjujSd2vo41ZpwFvcoHS8Z4j0RQWw7N+BYwEkiX/FEibvUNmv25gVtFDKMETG/L
+         XW/64x7ANsJRQlEaEz/4XoR3rVfmi+JhcJArPKvAS1X4F7n502erSsTRBdw0JqNZQZLw
+         HvNF51yJ/S4luxwbAmW5a2BNr2AAtV7NTRaJiMZOCOmIv61ugWH1skm4g6gSgcKNewI5
+         5jXQ==
+X-Gm-Message-State: ANhLgQ2arwFhCSWzrwZ07BbPTjgV5KdkpJhduymZFONjdACaf8uuSYlG
+        qcEy5tW9e5FRJIGWMs34J+0LPg==
+X-Google-Smtp-Source: ADFU+vuecIUzxw+F0r5oweE7mmL21uOUoxea3p5BAhmf7NogmqrAB9MM2idoTRwQXH0m8Xl/9Kc1Lg==
+X-Received: by 2002:a17:902:342:: with SMTP id 60mr16526200pld.206.1583782162073;
+        Mon, 09 Mar 2020 12:29:22 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id u19sm31438770pgf.11.2020.03.09.12.29.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 12:29:21 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 12:29:19 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wahrenst@gmx.net
-Date:   Mon, 09 Mar 2020 20:22:45 +0100
-In-Reply-To: <ddcb8fd5-9e35-454c-b38d-d36e7b41ef07@i2se.com>
-References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
-         <736f0c59-352b-03b2-f77f-bfc22171b3fb@i2se.com>
-         <03fcb1e2bc7f3ff389b6dfbf3964e159a93ae835.camel@suse.de>
-         <d3d40174-9c08-f42f-e088-08e23c2dc029@i2se.com>
-         <f2ec22160ac86aec8d252ade7d6eb8789777cc42.camel@suse.de>
-         <01ceb60e-a791-b6ca-352e-ad2e79f264e3@i2se.com>
-         <ddcb8fd5-9e35-454c-b38d-d36e7b41ef07@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-tZ303xiG7cDiGT02SWOp"
-User-Agent: Evolution 3.34.4 
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v5 0/9] Add QUSB2 PHY support for SC7180
+Message-ID: <20200309192919.GE1098305@builder>
+References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon 09 Mar 02:53 PDT 2020, Sandeep Maheswaram wrote:
 
---=-tZ303xiG7cDiGT02SWOp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Stefan,
-
-On Mon, 2020-03-09 at 16:41 +0100, Stefan Wahren wrote:
-> Hi Nicolas,
->=20
-> On 06.03.20 21:33, Stefan Wahren wrote:
-> > Hi Nicolas,
-> >=20
-> > Am 05.03.20 um 11:44 schrieb Nicolas Saenz Julienne:
-> > > Hi Stefan,
-> > >=20
-> > > On Tue, 2020-03-03 at 20:24 +0100, Stefan Wahren wrote:
-> > > > > > > Note: I tested this on RPi3b, RPi3a+ and RPi2b.
-> > > > > > as i already wrote this prevent X to start on current Raspbian =
-on my
-> > > > > > Raspberry Pi 3A+ (multi_v7_defconfig, no u-boot). We must be ca=
-reful
-> > > > > > here.
-> > > > > >=20
-> > > > > > I will take a look at the debug UART. Maybe there are more help=
-ful
-> > > > > > information.
-> > > > > It seems we're seeing different things, I tested this on raspbian
-> > > > > (multi_v7_defconfig) and on arm64. I'll try again from scratch
-> > > > > tomorrow.
-> > > > My modifications to the Raspbian image (from 13.2.2020) are little:
-> > > >=20
-> > > > - specify devicetree to config.txt
-> > > > - change console to ttyS1 and remove "silent" in cmdline.txt
-> > > > - rename all original kernel7*.img
-> > > > - copy dtb and kernel7.img to boot partition
-> > > > - copy kernel modules to root partition
-> > > Would you mind retesting with the latest linux-next? I validated an i=
-mage
-> > > based
-> > > on 5.6.0-rc4-next-20200305-00001-g285a7a64cd56 and a fresh raspbian
-> > > download on
-> > > RPi3a+ without X issues.
-> > i retested with todays linux-next and the issue persists on my RPi 3A+ =
-/
-> > HP ZR2440w with this patch applied.
->=20
-> I tested my display with a RPI 3B, 3B+ and a Zero W. All of them had the
-> same issue. Btw i used this display the last years for testing the
-> Raspberry Pi.
->=20
-> After that i connected the RPI 3B to my TV screen and it works with the
-> patch applied.
-
-Thanks for taking the time on this. I guess all we have left is looking dee=
-per
-into it. I'll add it to my backlog for now.
+Kishon, let me know if/when you're picking up patch 1-6 and I can pick
+the dts patches through the qcom soc tree.
 
 Regards,
-Nicolas
+Bjorn
 
-
---=-tZ303xiG7cDiGT02SWOp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5ml4UACgkQlfZmHno8
-x/43iAgAkAzhEC+LqzxtkdHiNML8ngJfJVRbuYYwyH9gHGl/3lrYW1ecvisK9ZwB
-aJkbQkDEpPceupdXb9TsNr98lJ1Idhk4b8yZbm2FCzVFnHuIYc2NsxlkGc6fvp9a
-S6BIgQYnfRyBzmMBpLofF7rDmdcd9SBtLqkLTKmJx4WROMK17jREEkOSYLF3//RO
-Z1urTNh2l1hUHq5DGyJvGQX5KMPGYfxoZ1IL4FgLB54DelxscpQxxdgli2RNHKxA
-9WkI0l6XlcL1b5ke6KcoU0lKbPQ3SEcLrZUukqd37JxhgIXu8ow1RK5dAtWOGZVK
-oo6I7gSafUtvGrFpqlNpc9hepfltCQ==
-=/qXY
------END PGP SIGNATURE-----
-
---=-tZ303xiG7cDiGT02SWOp--
-
+> Converting dt binding to yaml.
+> Adding compatible for SC7180 in dt bindings.
+> Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
+> 
+> Changes in v5:
+> *Added the dt bindings which are applicable only to QUSB2 V2 PHY in 
+>  separate block as per comments from Matthias in patch 1/9 and patch 4/9
+>  and addressed Rob's comment in patch 1/9.
+> *Separated the patch for new override params and added a local variable
+>  to access overrides as per comments from Matthias patch 5/9 and 6/9.
+> 
+> Changes in v4:
+> *Addressed Rob Herrings comments in dt bindings.
+> *Added new structure for all the overriding tuning params.
+> *Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
+> *Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
+> 
+> Changes in v3:
+> *Using the generic phy cfg table for QUSB2 V2 phy.
+> *Added support for overriding tuning parameters in QUSB2 V2 PHY
+> from device tree.
+> 
+> Changes in v2:
+> Sorted the compatible in driver.
+> Converted dt binding to yaml.
+> Added compatible in yaml.
+> 
+> Sandeep Maheswaram (9):
+>   dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
+>   dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
+>     SC7180
+>   phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
+>   dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
+>     parameters
+>   phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
+>     V2 PHY
+>   phy: qcom-qusb2: Add new overriding tuning parameters in QUSB2 V2 PHY
+>   arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
+>   arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
+>   arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
+>     device
+> 
+>  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 187 +++++++++++++++++++++
+>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
+>  drivers/phy/qualcomm/phy-qcom-qusb2.c              | 144 +++++++++++-----
+>  6 files changed, 297 insertions(+), 114 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
