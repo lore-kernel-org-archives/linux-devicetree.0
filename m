@@ -2,172 +2,92 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE81C10F29
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E25C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 06:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A7E2087F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tcvkwFkf"
+	by mail.kernel.org (Postfix) with ESMTP id 27F1120674
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 06:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgCIG2F (ORCPT
+        id S1725942AbgCIGkc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 02:28:05 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38094 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726217AbgCIG2F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 02:28:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583735284; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=qy2xY/dZyMiOpfQufKuG+wtf2moSQrlU/AD39JqMigc=;
- b=tcvkwFkfnLNgGWAL7+JjvbUqGZoNbBSaRs8wNhQaND710vNnpGe9GBfsdHoTlA6kij3Optjq
- yFiTbtIONQb9doQAfab8LB+QxVAXBxNdzkZj9tEuQ1CuEiaqB4ljWv4clzaZeFbgCnIaZUIv
- 6K+RfYY9OR9S0Xvt9+8yElYQES4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e65e1e6.7efdb514f340-smtp-out-n03;
- Mon, 09 Mar 2020 06:27:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 930BDC433BA; Mon,  9 Mar 2020 06:27:49 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E94B8C433D2;
-        Mon,  9 Mar 2020 06:27:48 +0000 (UTC)
+        Mon, 9 Mar 2020 02:40:32 -0400
+Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:59321 "EHLO
+        ironport.ite.com.tw" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725796AbgCIGkc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 02:40:32 -0400
+X-Greylist: delayed 592 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Mar 2020 02:40:31 EDT
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 09 Mar 2020 14:30:37 +0800
+Received: from CSBMAIL1.internal.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
+        by mse.ite.com.tw with ESMTP id 0296UZCU083637;
+        Mon, 9 Mar 2020 14:30:35 +0800 (GMT-8)
+        (envelope-from allen.chen@ite.com.tw)
+Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 9 Mar 2020 14:30:34 +0800
+From:   allen <allen.chen@ite.com.tw>
+CC:     Allen Chen <allen.chen@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh@kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH v7 0/3] IT6505 cover letter
+Date:   Mon, 9 Mar 2020 14:26:46 +0800
+Message-ID: <1583735298-19266-1-git-send-email-allen.chen@ite.com.tw>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 11:57:48 +0530
-From:   kgunda@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     jingoohan1@gmail.com, lee.jones@linaro.org,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V1 2/2] backlight: qcom-wled: Add support for WLED5
- peripheral in PM8150L
-In-Reply-To: <20200308214748.GL1094083@builder>
-References: <1583153739-19170-1-git-send-email-kgunda@codeaurora.org>
- <1583153739-19170-3-git-send-email-kgunda@codeaurora.org>
- <20200308214748.GL1094083@builder>
-Message-ID: <d0e681ae203bb14f4061d248b935578b@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+X-Originating-IP: [192.168.70.14]
+X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58)
+X-TM-SNTS-SMTP: 276B81D14A28F35F3BB9F3961654517F3B3FDC12D3BFBDBC5C64B69F282444F52000:8
+X-MAIL: mse.ite.com.tw 0296UZCU083637
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-03-09 03:17, Bjorn Andersson wrote:
-> On Mon 02 Mar 04:55 PST 2020, Kiran Gunda wrote:
->> diff --git a/drivers/video/backlight/qcom-wled.c 
->> b/drivers/video/backlight/qcom-wled.c
-> [..]
->> @@ -147,14 +187,39 @@ struct wled {
->>  	u32 max_brightness;
->>  	u32 short_count;
->>  	u32 auto_detect_count;
->> +	u32 version;
->>  	bool disabled_by_short;
->>  	bool has_short_detect;
->> +	bool cabc_disabled;
->>  	int short_irq;
->>  	int ovp_irq;
->> 
->>  	struct wled_config cfg;
->>  	struct delayed_work ovp_work;
->>  	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
->> +	int (*cabc_config)(struct wled *wled, bool enable);
->> +	int (*wled_sync_toggle)(struct wled *wled);
-> 
-> Please split this patch in one that adds these and breaks out the wled3
-> support, and then a second patch that adds wled5.
-> 
-Sure. Will make this change in the next post.
->> +};
->> +
-> [..]
->> +static int wled5_set_brightness(struct wled *wled, u16 brightness)
->> +{
->> +	int rc, offset;
->> +	u16 low_limit = wled->max_brightness * 1 / 1000;
->> +	u8 v[2], brightness_msb_mask;
->> +
->> +	/* WLED5's lower limit is 0.1% */
->> +	if (brightness > 0 && brightness < low_limit)
->> +		brightness = low_limit;
->> +
->> +	brightness_msb_mask = 0xf;
->> +	if (wled->max_brightness == WLED5_SINK_REG_BRIGHT_MAX_15B)
->> +		brightness_msb_mask = 0x7f;
-> 
-> Why not just brightness &= wled->max_brightness? But given that it 
-> seems
-> like the framework ensures that brightness <= max_brightness, why not
-> skip this altogether?
-> 
-Okay. I will modify the code to remove the min/max, low_limit checks in 
-next post.
->> +
->> +	v[0] = brightness & 0xff;
->> +	v[1] = (brightness >> 8) & brightness_msb_mask;
->> +
->> +	offset = wled5_brightness_reg[wled->cfg.mod_sel];
->> +	rc = regmap_bulk_write(wled->regmap, wled->sink_addr + offset,
->> +			v, 2);
->> +	return rc;
->> +}
->> +
->>  static int wled4_set_brightness(struct wled *wled, u16 brightness)
->>  {
->>  	int rc, i;
->> @@ -237,7 +325,28 @@ static int wled_module_enable(struct wled *wled, 
->> int val)
->>  	return 0;
->>  }
->> 
->> -static int wled_sync_toggle(struct wled *wled)
->> +static int wled5_sync_toggle(struct wled *wled)
->> +{
->> +	int rc;
->> +	u8 val;
->> +
->> +	val = (wled->cfg.mod_sel == MOD_A) ? WLED5_SINK_REG_SYNC_MOD_A_BIT :
->> +					     WLED5_SINK_REG_SYNC_MOD_B_BIT;
->> +	rc = regmap_update_bits(wled->regmap,
->> +				wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
->> +				WLED5_SINK_REG_SYNC_MASK, val);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	val = 0;
-> 
-> Just plug 0 in the function call.
-> 
-Sure. Will do it in next post.
->> +	rc = regmap_update_bits(wled->regmap,
->> +				wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
->> +				WLED5_SINK_REG_SYNC_MASK, val);
->> +
->> +	return rc;
-> 
-> And return regmap_update_bits(...);
-> 
-Sure. Will do it in next post.
->> +}
->> +
-> 
-> Regards,
-> Bjorn
+The IT6505 is a high-performance DisplayPort 1.1a transmitter, fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications. The IT6505 supports color depth of up to 36 bits (12 bits/color) and ensures robust transmission of high-quality uncompressed video content, along with uncompressed and compressed digital audio content.
+
+This series contains document bindings, revert commit, add vendor prefix, Kconfig to control the function enable or not.
+
+Allen Chen (1):
+  WIP: drm/bridge: add it6505 driver
+
+allen (2):
+  dt-bindings: Add vendor prefix for ITE Tech. Inc.
+  WIP: dt-bindings: Add binding for IT6505.
+
+ .../bindings/display/bridge/ite,it6505.yaml        |   96 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |    2 +-
+ drivers/gpu/drm/bridge/Kconfig                     |   11 +-
+ drivers/gpu/drm/bridge/Makefile                    |    6 +-
+ drivers/gpu/drm/bridge/ite-it6505.c                | 3022 ++++++++++++++++++++
+ 5 files changed, 3132 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+ create mode 100644 drivers/gpu/drm/bridge/ite-it6505.c
+
+-- 
+1.9.1
+
