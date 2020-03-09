@@ -2,186 +2,136 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12FBC10F28
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 01:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912CDC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 02:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2112067C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 01:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5552067C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 02:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aWYnmvWG"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GsbEro2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgCIBxt (ORCPT
+        id S1726875AbgCICHo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 21:53:49 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35187 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgCIBxs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 21:53:48 -0400
-Received: by mail-vs1-f67.google.com with SMTP id u26so5067365vsg.2
-        for <devicetree@vger.kernel.org>; Sun, 08 Mar 2020 18:53:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QImbxmTkHKil1pvHr+BDxiJL2XLBZLzoyGW6wsTn3oQ=;
-        b=aWYnmvWGdbntSuhyucIIAMxrZHkM4G5/Q9vbOmCQsekZAYHvr4Eog74dsXDkMYl2xD
-         KvL1zeXKamlcuQTyyvQgkSKnT1gNRPF5uTVUa4a4fHcg/kx4VnHTixsNdroZ764sU1Uy
-         +tKikHrHiZuRBXkYz+/Z8bBjwf8qxvraCz7gQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QImbxmTkHKil1pvHr+BDxiJL2XLBZLzoyGW6wsTn3oQ=;
-        b=s7aeIhBbTd38qwkS94YTgX+A1GfRvfr8rlypQ/yGzr8KlW3qfp6tQgVum6DglIcf+d
-         4OnWkwns9w5bICAIWfo73s8FzXPfSh7t9B7firoEj8+6wcEF38Gq40v3VOlDr8YWxHBG
-         QTxatsT+DVXUmxfHIgnc7sqfXzFrEffj23H0lfX+IY1Tx84s8mH3oQU9/v74mVroK0C4
-         6SAILgfXaEngcfJuVM8HcBXsK9XeSKALCyLoNNQsAh6Yf4SRuZjZCd8bHsXss7LDKq0i
-         h0P6iLTA2RocAB+WNnz6rbOLquKeAnTsJtgxFoeVC0STZ+PVmzDxpIULfsHmuCf2KNpt
-         hEkw==
-X-Gm-Message-State: ANhLgQ2U1gmoef73GsQTp5KPihtiP4B/9m5tAsM2qDQ0VfmeIJgmfZtt
-        6E2wHpsxoXQD1MeHdfwN5kNGAD0Y4LX+3ynBvnYqMg==
-X-Google-Smtp-Source: ADFU+vvYsFjqtY5zn3zCc01nvvuQjne4/YR7CEb/r3521XiWmW+BqevLE59/BQHtNHTJV1ro52aTXPZEfqp1TtQdFWA=
-X-Received: by 2002:a05:6102:9c7:: with SMTP id g7mr8614280vsi.186.1583718826912;
- Sun, 08 Mar 2020 18:53:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-8-drinkcat@chromium.org> <CANMq1KBL-S2DVKbCB2h_XNpfUro+pZ96-C5ft0p-8GX_tbXELQ@mail.gmail.com>
- <CAL_JsqLuo+2G2MjiwS9cwNhMV2pGBojXFGNqEfLv3fP-Y04mfA@mail.gmail.com>
- <CANMq1KCn5rrOrv2GjFh5Aau5Los4VVk=NMWAsvZiNuwoxyMVHA@mail.gmail.com> <e4e95aa7713344e8b43fe5fad05de3ee@mtkmbs01n1.mediatek.inc>
-In-Reply-To: <e4e95aa7713344e8b43fe5fad05de3ee@mtkmbs01n1.mediatek.inc>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 9 Mar 2020 09:53:35 +0800
-Message-ID: <CANMq1KDmvxQdKHgyvQb6xChFX5UkBqPyQKXxuxGV70=p1=ezKw@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] RFC: drm/panfrost: devfreq: Add support for 2 regulators
-To:     =?UTF-8?B?TmljayBGYW4gKOiMg+WTsue2rSk=?= <Nick.Fan@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?B?V2VpeWkgTHUgKOWRguWogeWEgCk=?= <Weiyi.Lu@mediatek.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Sun, 8 Mar 2020 22:07:44 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:54618 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726346AbgCICHo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Mar 2020 22:07:44 -0400
+X-UUID: e2fedb98a27a4aa7807276ff00b02162-20200309
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=17MyIh5es8+oWEfzyMzpzHwqTieeb22zUb4UUI66VDE=;
+        b=GsbEro2QROKwbTUJcqFz6G+vVTLniRBvF+e8J4Z9Qqk/BYiixF5YhWtxizwGfSMXOre02+Wh99mivEJB5iPmzRdP5Dr6kJ9r4bbuv6CMA4bEdilrsllEaj3bEzXIYippAVPJLht7V0yNK8bRg4fiQN09RvTWN5tBZEKjlAodfjA=;
+X-UUID: e2fedb98a27a4aa7807276ff00b02162-20200309
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 356268346; Mon, 09 Mar 2020 10:07:40 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 9 Mar 2020 10:08:45 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 9 Mar 2020 10:07:36 +0800
+Message-ID: <1583719659.28331.1.camel@mtksdaap41>
+Subject: Re: [PATCH v5 12/13] soc: mediatek: cmdq: add clear option in
+ cmdq_pkt_wfe api
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?B?SkIgVHNhaSAo6JSh5b+X5b2sKQ==?= <Jb.Tsai@mediatek.com>,
-        =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, <dri-devel@lists.freedesktop.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        HS Liao <hs.liao@mediatek.com>
+Date:   Mon, 9 Mar 2020 10:07:39 +0800
+In-Reply-To: <1583664775-19382-13-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1583664775-19382-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1583664775-19382-13-git-send-email-dennis-yc.hsieh@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Looping back on this, after digging a bit deeper...
+SGksIERlbm5pczoNCg0KT24gU3VuLCAyMDIwLTAzLTA4IGF0IDE4OjUyICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IEFkZCBjbGVhciBwYXJhbWV0ZXIgdG8gbGV0IGNsaWVudCBkZWNp
+ZGUgaWYNCj4gZXZlbnQgc2hvdWxkIGJlIGNsZWFyIHRvIDAgYWZ0ZXIgR0NFIHJlY2VpdmUgaXQu
+DQo+IA0KDQpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCg0KPiBTaWdu
+ZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5jb20+
+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICB8IDIg
+Ky0NCj4gIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jICAgfCA1ICsrKy0t
+DQo+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIHwgMyArLS0NCj4g
+IGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggICAgfCA1ICsrKy0tDQo+ICA0
+IGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCj4gDQo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gaW5kZXggN2RhYWFiYzI2ZWIx
+Li5hMDY1YjNhNDEyY2YgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2NydGMuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9j
+cnRjLmMNCj4gQEAgLTQ4OCw3ICs0ODgsNyBAQCBzdGF0aWMgdm9pZCBtdGtfZHJtX2NydGNfaHdf
+Y29uZmlnKHN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiAgCWlmIChtdGtfY3J0Yy0+
+Y21kcV9jbGllbnQpIHsNCj4gIAkJY21kcV9oYW5kbGUgPSBjbWRxX3BrdF9jcmVhdGUobXRrX2Ny
+dGMtPmNtZHFfY2xpZW50LCBQQUdFX1NJWkUpOw0KPiAgCQljbWRxX3BrdF9jbGVhcl9ldmVudChj
+bWRxX2hhbmRsZSwgbXRrX2NydGMtPmNtZHFfZXZlbnQpOw0KPiAtCQljbWRxX3BrdF93ZmUoY21k
+cV9oYW5kbGUsIG10a19jcnRjLT5jbWRxX2V2ZW50KTsNCj4gKwkJY21kcV9wa3Rfd2ZlKGNtZHFf
+aGFuZGxlLCBtdGtfY3J0Yy0+Y21kcV9ldmVudCwgZmFsc2UpOw0KPiAgCQltdGtfY3J0Y19kZHBf
+Y29uZmlnKGNydGMsIGNtZHFfaGFuZGxlKTsNCj4gIAkJY21kcV9wa3RfZmluYWxpemUoY21kcV9o
+YW5kbGUpOw0KPiAgCQljbWRxX3BrdF9mbHVzaF9hc3luYyhjbWRxX2hhbmRsZSwgZGRwX2NtZHFf
+Y2IsIGNtZHFfaGFuZGxlKTsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210
+ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMN
+Cj4gaW5kZXggYmI1YmUyMGZjNzBhLi5lYzU2MzdkNDMyNTQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21l
+ZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IEBAIC0yOTYsMTUgKzI5NiwxNiBAQCBpbnQgY21k
+cV9wa3Rfd3JpdGVfc192YWx1ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGhpZ2hfYWRkcl9y
+ZWdfaWR4LA0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9zX3ZhbHVlKTsN
+Cj4gIA0KPiAtaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGV2ZW50
+KQ0KPiAraW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGV2ZW50LCBi
+b29sIGNsZWFyKQ0KPiAgew0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHsw
+fSB9Ow0KPiArCXUzMiBjbGVhcl9vcHRpb24gPSBjbGVhciA/IENNRFFfV0ZFX1VQREFURSA6IDA7
+DQo+ICANCj4gIAlpZiAoZXZlbnQgPj0gQ01EUV9NQVhfRVZFTlQpDQo+ICAJCXJldHVybiAtRUlO
+VkFMOw0KPiAgDQo+ICAJaW5zdC5vcCA9IENNRFFfQ09ERV9XRkU7DQo+IC0JaW5zdC52YWx1ZSA9
+IENNRFFfV0ZFX09QVElPTjsNCj4gKwlpbnN0LnZhbHVlID0gQ01EUV9XRkVfT1BUSU9OIHwgY2xl
+YXJfb3B0aW9uOw0KPiAgCWluc3QuZXZlbnQgPSBldmVudDsNCj4gIA0KPiAgCXJldHVybiBjbWRx
+X3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3QpOw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9s
+aW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaCBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9t
+dGstY21kcS1tYWlsYm94LmgNCj4gaW5kZXggM2Y2YmMwZGZkNWRhLi40MmQyYTMwZTZhNzAgMTAw
+NjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4g
+KysrIGIvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBAQCAtMjcs
+OCArMjcsNyBAQA0KPiAgICogYml0IDE2LTI3OiB1cGRhdGUgdmFsdWUNCj4gICAqIGJpdCAzMTog
+MSAtIHVwZGF0ZSwgMCAtIG5vIHVwZGF0ZQ0KPiAgICovDQo+IC0jZGVmaW5lIENNRFFfV0ZFX09Q
+VElPTgkJCShDTURRX1dGRV9VUERBVEUgfCBDTURRX1dGRV9XQUlUIHwgXA0KPiAtCQkJCQlDTURR
+X1dGRV9XQUlUX1ZBTFVFKQ0KPiArI2RlZmluZSBDTURRX1dGRV9PUFRJT04JCQkoQ01EUV9XRkVf
+V0FJVCB8IENNRFFfV0ZFX1dBSVRfVkFMVUUpDQo+ICANCj4gIC8qKiBjbWRxIGV2ZW50IG1heGlt
+dW0gKi8NCj4gICNkZWZpbmUgQ01EUV9NQVhfRVZFTlQJCQkweDNmZg0KPiBkaWZmIC0tZ2l0IGEv
+aW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBiL2luY2x1ZGUvbGludXgvc29j
+L21lZGlhdGVrL210ay1jbWRxLmgNCj4gaW5kZXggMWE2YzU2ZjNiZWMxLi5kNjM3NDk0NDA2OTcg
+MTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4g
+KysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBAQCAtMTUyLDEx
+ICsxNTIsMTIgQEAgaW50IGNtZHFfcGt0X3dyaXRlX3NfdmFsdWUoc3RydWN0IGNtZHFfcGt0ICpw
+a3QsIHUxNiBoaWdoX2FkZHJfcmVnX2lkeCwNCj4gIC8qKg0KPiAgICogY21kcV9wa3Rfd2ZlKCkg
+LSBhcHBlbmQgd2FpdCBmb3IgZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gICAq
+IEBwa3Q6CXRoZSBDTURRIHBhY2tldA0KPiAtICogQGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0
+eXBlIHRvICJ3YWl0IGFuZCBDTEVBUiINCj4gKyAqIEBldmVudDoJdGhlIGRlc2lyZWQgZXZlbnQg
+dHlwZSB0byB3YWl0DQo+ICsgKiBAY2xlYXI6CWNsZWFyIGV2ZW50IG9yIG5vdCBhZnRlciBldmVu
+dCBhcnJpdmUNCj4gICAqDQo+ICAgKiBSZXR1cm46IDAgZm9yIHN1Y2Nlc3M7IGVsc2UgdGhlIGVy
+cm9yIGNvZGUgaXMgcmV0dXJuZWQNCj4gICAqLw0KPiAtaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3Qg
+Y21kcV9wa3QgKnBrdCwgdTE2IGV2ZW50KTsNCj4gK2ludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNt
+ZHFfcGt0ICpwa3QsIHUxNiBldmVudCwgYm9vbCBjbGVhcik7DQo+ICANCj4gIC8qKg0KPiAgICog
+Y21kcV9wa3RfY2xlYXJfZXZlbnQoKSAtIGFwcGVuZCBjbGVhciBldmVudCBjb21tYW5kIHRvIHRo
+ZSBDTURRIHBhY2tldA0KDQo=
 
-On Fri, Feb 14, 2020 at 9:38 AM Nick Fan (=E8=8C=83=E5=93=B2=E7=B6=AD) <Nic=
-k.Fan@mediatek.com> wrote:
-> [snip]
-> > > Another thing that I'm not implementing is the dance that Mediatek
-> > > does in their kbase driver when changing the clock (described in
-> > > patch
-> > > 2/7):
-> > > ""
-> > > The binding we use with out-of-tree Mali drivers includes more
-> > > clocks, this is used for devfreq: the out-of-tree driver switches
-> > > clk_mux to clk_sub_parent (26Mhz), adjusts clk_main_parent, then
-> > > switches clk_mux back to clk_main_parent:
-> > > (see
-> > > https://chromium.googlesource.com/chromiumos/third_party/kernel/+/ch
-> > > romeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_run
-> > > time_pm.c#423)
-> > > clocks =3D
-> > >         <&topckgen CLK_TOP_MFGPLL_CK>,
-> > >         <&topckgen CLK_TOP_MUX_MFG>,
-> > >         <&clk26m>,
-> > >         <&mfgcfg CLK_MFG_BG3D>;
-> > > clock-names =3D
-> > >         "clk_main_parent",
-> > >         "clk_mux",
-> > >         "clk_sub_parent",
-> > >         "subsys_mfg_cg";
-> > > ""
-> > > Is there a clean/simple way to implement this in the clock
-> > > framework/device tree? Or should we implement something in the
-> > > panfrost driver?
-> >
-> > Putting parent clocks into 'clocks' for a device is a pretty common
-> > abuse. The 'assigned-clocks' binding is what's used for parent clock
-> > setup. Not sure that's going to help here though. Is this dance
-> > because the parent clock frequency can't be changed cleanly?
->
-> Nick/Weiyi, any idea why we do that dance in the first place? (maybe the =
-PLL clock is unstable while it's being changed?)
->
-> Clock source may become unstable during clock frequency changes, so it is=
- always safer to switch to a more reliable clock source.
-> Otherwise, it may cause some problem in some corner case.
-> I would suggest to keep it.
-
-The Mediatek CPUfreq driver actually does a very similar dance:
-https://github.com/torvalds/linux/blob/master/drivers/cpufreq/mediatek-cpuf=
-req.c#L249
-
-What they have in the device tree is the main clock, and the
-"intermediate" clock that is required during switching:
-clocks =3D <&mcucfg CLK_MCU_MP0_SEL>, <&topckgen CLK_TOP_ARMPLL_DIV_PLL1>;
-clock-names =3D "cpu", "intermediate";
-
-The topology looks like this:
- clk26m                              15       15        1    26000000
-        0     0  50000
-    armpll_ll                         1        1        0  1417000000
-        0     0  50000
-       mcu_mp0_sel                    0        0        0  1417000000
-        0     0  50000
-
-And device tree provides mcu_mp0_sel as "cpu", and the armpll_div_pll1
-as "intermediate".
-
-The driver looks up armpll_ll by calling get_parent, then:
- - set_parent(mcu_mp0_sel, armpll_div_pll1)
- - set_rate(armpll_ll, new_rate)
- - set_parent(mcu_mp0_sel, armpll_ll)
-
-On MT8183's GPU, the topology is a little bit more complicated (but I
-think there should be a way to merge mfg_bg3d an mfg_sel in the clock
-core)
- clk26m                              15       15        1    26000000
-        0     0  50000
-    mfgpll                            1        1        0   419999817
-        0     0  50000
-       mfgpll_ck                      2        2        0   419999817
-        0     0  50000
-          mfg_sel                     3        3        0   419999817
-        0     0  50000
-             mfg_bg3d                 1        1        0   419999817
-        0     0  50000
-
-We're going to need a special panfrost devfreq driver for mt8183
-anyway (to handle the 2 regulators), so it would be easy to take a
-similar approach:
- - Add "intermediate" clock in the device tree (clk26m)
- - Find mfg_sel/mfgpll_ck using 1/2 clk_get_parent calls.
- - Switch mfg_sel to clk26m, set mfgpll_ck rate, switch mfg_sel back
-to mfgpll_ck.
-
-(BTW, I tried to look, and couldn't find examples or reparenting
-during clock changes in drivers/clk, are there existing drivers doing
-similar things? Or this would be new?).
