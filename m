@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAC0C18E5A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9D1C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98103208C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85488215A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KqHUijx7"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="sz0+gFHP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbgCISfM (ORCPT
+        id S1727446AbgCISiv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:35:12 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:52419 "EHLO
+        Mon, 9 Mar 2020 14:38:51 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:38299 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbgCISfM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 14:35:12 -0400
+        with ESMTP id S1726661AbgCISiu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 14:38:50 -0400
 Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 0187923EDA;
-        Mon,  9 Mar 2020 19:35:09 +0100 (CET)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 517C323EDA;
+        Mon,  9 Mar 2020 19:38:48 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583778909;
+        t=1583779128;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UKBQm/CELdZbYxZDawLpP5aml1WS/d0wkEXfjOmg9+8=;
-        b=KqHUijx7VNI9rkxedjbCgevBb5ZDckL6Uci7Et7zDL9mWzI7vBtPeeJh/8n9kA1oJGIOLy
-        I1De77amAgvB+bBBf+cDSdNjNlbaA279EmQqe2PyyFsgC2PChEgmG5YxP8/LbbxAkxSbAk
-        dc/eFs5+lh/mI3hvwsA4KlZ1E5jwaYE=
+        bh=hIYhl3hOwDQGX1uE6iNMK8JIcA2bt00RM3gT2bSjN4M=;
+        b=sz0+gFHPZkigcov5P1QNKrsDGR4Axp+OmoxRrAPJxGuuxDsbOnsKUrfnnPLJiRLDxNlqGA
+        KKSA5dqNlSsnVUuVjJ1Ic74XGBKlodg+QsAzN8zShXwHe2mmBms8pjqTPdOJNToNJTnr0M
+        l/T0KqDFFhVy5t8FnyesfK8l4f43NJQ=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 19:35:08 +0100
+Date:   Mon, 09 Mar 2020 19:38:48 +0100
 From:   Michael Walle <michael@walle.cc>
 To:     Vladimir Oltean <olteanv@gmail.com>
 Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
@@ -50,17 +50,16 @@ Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
         devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
         andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
         mhosny@nvidia.com, peng.ma@nxp.com
-Subject: Re: [PATCH 6/6] arm64: dts: ls1028a-rdb: Add a spidev node for the
- mikroBUS
-In-Reply-To: <20200309145624.10026-7-olteanv@gmail.com>
+Subject: Re: [PATCH 4/6] spi: spi-fsl-dspi: Add support for LS1028A
+In-Reply-To: <20200309145624.10026-5-olteanv@gmail.com>
 References: <20200309145624.10026-1-olteanv@gmail.com>
- <20200309145624.10026-7-olteanv@gmail.com>
-Message-ID: <f213388d924b63d0fe265a2d731647be@walle.cc>
+ <20200309145624.10026-5-olteanv@gmail.com>
+Message-ID: <02a2816d2f39bf621dfee543ed612ae0@walle.cc>
 X-Sender: michael@walle.cc
 User-Agent: Roundcube Webmail/1.3.10
 X-Spamd-Bar: +
 X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 0187923EDA
+X-Rspamd-Queue-Id: 517C323EDA
 X-Spamd-Result: default: False [1.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -69,9 +68,8 @@ X-Spamd-Result: default: False [1.40 / 15.00];
          TAGGED_RCPT(0.00)[dt];
          MIME_GOOD(-0.10)[text/plain];
          DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.0:email];
          RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.371];
+         NEURAL_HAM(-0.00)[-0.384];
          FREEMAIL_TO(0.00)[gmail.com];
          RCVD_COUNT_ZERO(0.00)[0];
          FROM_EQ_ENVFROM(0.00)[];
@@ -87,52 +85,68 @@ X-Mailing-List: devicetree@vger.kernel.org
 Am 2020-03-09 15:56, schrieb Vladimir Oltean:
 > From: Vladimir Oltean <vladimir.oltean@nxp.com>
 > 
-> For debugging, it is useful to have access to the DSPI controller
-> signals. On the reference design board, these are exported to either 
-> the
-> mikroBUS1 or mikroBUS2 connector (according to the CPLD register
-> BRDCFG3[SPI3]).
+> This is similar to the DSPI instantiation on LS1028A, except that:
+>  - The A-011218 erratum has been fixed, so DMA works
+>  - The endianness is different, which has implications on XSPI mode
+> 
+> Some benchmarking with the following command:
+> 
+> spidev_test --device /dev/spidev2.0 --bpw 8 --size 256 --cpha --iter
+> 10000000 --speed 20000000
+> 
+> shows that in DMA mode, it can achieve around 2400 kbps, and in XSPI
+> mode, the same command goes up to 4700 kbps. This is somewhat to be
+> expected, since the DMA buffer size is extremely small at 8 bytes, the
+> winner becomes whomever can prepare the buffers for transmission
+> quicker, and DMA mode has higher overhead there. So XSPI FIFO mode has
+> been chosen as the operating mode for this chip.
 > 
 > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  drivers/spi/spi-fsl-dspi.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> index bb7ba3bcbe56..43f403b30dae 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> @@ -83,6 +83,20 @@
->  	};
->  };
-> 
-> +&dspi2 {
-> +	bus-num = <2>;
-> +	status = "okay";
-> +
-> +	/* mikroBUS1 */
-> +	spidev@0 {
-> +		compatible = "spidev";
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 5624b9ee77db..264d184e7296 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -131,6 +131,7 @@ struct fsl_dspi_devtype_data {
+>  enum {
+>  	LS1021A,
+>  	LS1012A,
+> +	LS1028A,
+>  	LS1043A,
+>  	LS1046A,
+>  	LS2080A,
+> @@ -163,6 +164,14 @@ static const struct fsl_dspi_devtype_data
+> devtype_data[] = {
+>  		.pushr_cmd		= 0,
+>  		.pushr_tx		= 2,
+>  	},
+> +	[LS1028A] = {
+> +		.trans_mode		= DSPI_DMA_MODE,
 
-As far as I know this throws a warning at boot that you
-shouldn't use the compatible = "spidev", doesn't it?
-
-/*
-  * spidev should never be referenced in DT without a specific
-  * compatible string, it is a Linux implementation thing
-  * rather than a description of the hardware.
-  */
+shouldn't this be DSPI_XSPI_MODE according to your cover letter?
 
 -michael
 
-> +		reg = <0>;
-> +		spi-max-frequency = <20000000>;
-> +		fsl,spi-cs-sck-delay = <100>;
-> +		fsl,spi-sck-cs-delay = <100>;
-> +	};
-> +};
-> +
->  &esdhc {
->  	sd-uhs-sdr104;
->  	sd-uhs-sdr50;
+> +		.dma_bufsize		= 8,
+> +		.max_clock_factor	= 8,
+> +		.fifo_size		= 4,
+> +		.pushr_cmd		= 2,
+> +		.pushr_tx		= 0,
+> +	},
+>  	[LS1043A] = {
+>  		/* Has A-011218 DMA erratum */
+>  		.trans_mode		= DSPI_XSPI_MODE,
+> @@ -1113,6 +1122,9 @@ static const struct of_device_id 
+> fsl_dspi_dt_ids[] = {
+>  	}, {
+>  		.compatible = "fsl,ls1012a-dspi",
+>  		.data = &devtype_data[LS1012A],
+> +	}, {
+> +		.compatible = "fsl,ls1028a-dspi",
+> +		.data = &devtype_data[LS1028A],
+>  	}, {
+>  		.compatible = "fsl,ls1043a-dspi",
+>  		.data = &devtype_data[LS1043A],
