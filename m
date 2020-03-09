@@ -2,163 +2,120 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACCDC10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 07:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A2C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 07:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C861206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 07:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141B720728
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 07:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tR8cA0V6"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TvTU+oyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgCIHMb (ORCPT
+        id S1726071AbgCIHzp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 03:12:31 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40670 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgCIHMb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 03:12:31 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p2so8797100wrw.7
-        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 00:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Jx5Fj/KqKcbpxqyibs51BThSAgjts5OPNkpxf24XLEw=;
-        b=tR8cA0V6wn3IXu7I5PIZbj2+RF0mwRgQrGHbYq2MPnA2DeBAeU3Vi0+83xqTsrIsTM
-         n+V2qGUg6b2Rp3XceJES5C57ra7qrzdmlyIeTQG7Ud2SH6JUuiXb5Vg9twxkeRAMG5+4
-         9e9zU3IEUWN3W26ywuTVjRnfUGLDPYmKQbaTQMiDFvoiXOegtNxGZh8zk3fbHJjg8vbB
-         Oic0kHkQWmKs7iZ0KGG39oyV+z/9FYk4FPevarfIDonaVx/kIeihO79lV17w7Y3R7Kje
-         vTa/yBL+iuR6landd8ZhZAcZqlngtHG2dKPBFfF3eZK2rCWIJdELf3iz4jtS8RTh5RV3
-         gvwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Jx5Fj/KqKcbpxqyibs51BThSAgjts5OPNkpxf24XLEw=;
-        b=q3ugSDIB0YJlGtiiSjawu2kF2q0Exh0L2bsCJqcwo1IQDUDeilqdcd+OIly6V5XzAX
-         etZLNcHudP1aYqisnXtPj7pdAshSkPB4DgBhm3OmQ9tO81YrRL969J9fHJqPntdz99XZ
-         qHI+um6ZL8gqWKZ1QoXWRm6mbeBdtgKo+ghpO5L47BXeZ4KwnIMKZQBEVRy5Q/0hd0c5
-         C8xZOQzRSnVEDSEbtUzjG0M3gK5ta0zFcfEdM+lxhC7cXNzIzOeTEKEIXNqG4LYLR2Ve
-         OV04LB9EMUWy39SWhkUEf4AFqvvEyl1Be5bFLfmA6roUPIfty6PkFs7TYatho33vOJAM
-         Wl8A==
-X-Gm-Message-State: ANhLgQ2fDCCmZ5irqnydmu5G4qfxLx1FFOKBfdrcPPGOaOvUHk8VEJST
-        9TMKMmGV82VGIVeA8iSn557Shg==
-X-Google-Smtp-Source: ADFU+vv1KN/TNTl8uwEObqOb9eEUvKbajXYeZlnfMBRzAHZjYnEsQAJAA/ali0fp45ZhYJTwLDz3/w==
-X-Received: by 2002:adf:94c2:: with SMTP id 60mr12156640wrr.396.1583737949449;
-        Mon, 09 Mar 2020 00:12:29 -0700 (PDT)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id b6sm2157961wrv.43.2020.03.09.00.12.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 00:12:28 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 07:13:13 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] syscon: Alter syscon and reboot-mode drivers
-Message-ID: <20200309071313.GA3200@dell>
-References: <20200306130356.6ABDD8030703@mail.baikalelectronics.ru>
+        Mon, 9 Mar 2020 03:55:45 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:59946 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725942AbgCIHzp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 03:55:45 -0400
+X-UUID: 7119ba7b7a6e46bcb84bdaed4b5b366d-20200309
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=d0wnLlS3PKlRwicESnqS4F2qX7BxraxwO4F/6cuzvFM=;
+        b=TvTU+oyqCuvB/dpVbfvu0kKeOdvaGuR0TXe4LK1eGwi+8IKZUxta4cn+iy/5g+zeKnkRjwu+zxKtOpDKhPOj8g83vj3cYLKgXzbFFMCAWt7WKoAAPWeeqSD4hxIZdJM8Dz8JxsMHj2HNr8FsY6UMor/pZY3sCobhsi8+7X0TdxI=;
+X-UUID: 7119ba7b7a6e46bcb84bdaed4b5b366d-20200309
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <nick.fan@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1475847732; Mon, 09 Mar 2020 15:55:40 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 9 Mar 2020 15:54:27 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 9 Mar 2020 15:55:55 +0800
+Message-ID: <1583740539.3995.15.camel@mtksdaap41>
+Subject: Re: [PATCH v4 1/7] dt-bindings: gpu: mali-bifrost: Add Mediatek
+ MT8183
+From:   Nick Fan <nick.fan@mediatek.com>
+To:     Steven Price <steven.price@arm.com>
+CC:     Rob Herring <robh@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        David Airlie <airlied@linux.ie>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 9 Mar 2020 15:55:39 +0800
+In-Reply-To: <20200306144336.GA9234@arm.com>
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+         <20200207052627.130118-2-drinkcat@chromium.org>
+         <20200225171613.GA7063@bogus>
+         <CANMq1KAVX4o5yC7c_88Wq_O=F+MaSN_V4uNcs1nzS3wBS6A5AA@mail.gmail.com>
+         <1583462055.4947.6.camel@mtksdaap41>
+         <CAL_JsqLoUnxfrJh0WCs0jgro1KHAjWaYMsaKkKfAKA2KJ252_g@mail.gmail.com>
+         <20200306144336.GA9234@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200306130356.6ABDD8030703@mail.baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 06 Mar 2020, Sergey.Semin@baikalelectronics.ru wrote:
+T24gRnJpLCAyMDIwLTAzLTA2IGF0IDE0OjQzICswMDAwLCBTdGV2ZW4gUHJpY2Ugd3JvdGU6DQo+
+IE9uIEZyaSwgTWFyIDA2LCAyMDIwIGF0IDAyOjEzOjA4UE0gKzAwMDAsIFJvYiBIZXJyaW5nIHdy
+b3RlOg0KPiA+IE9uIFRodSwgTWFyIDUsIDIwMjAgYXQgODozNCBQTSBOaWNrIEZhbiA8bmljay5m
+YW5AbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBTb3JyeSBmb3IgbXkgbGF0ZSBy
+ZXBseS4NCj4gPiA+IEkgaGF2ZSBjaGVja2VkIGludGVybmFsbHkuDQo+ID4gPiBUaGUgTVQ4MTgz
+X1BPV0VSX0RPTUFJTl9NRkdfMkQgaXMganVzdCBhIGxlZ2FjeSBuYW1lLCBub3QgcmVhbGx5IDJE
+DQo+ID4gPiBkb21haW4uDQo+ID4gPg0KPiA+ID4gSWYgdGhlIG5hbWluZyB0b28gY29uZnVzaW5n
+LCB3ZSBjYW4gY2hhbmdlIHRoaXMgbmFtZSB0bw0KPiA+ID4gTVQ4MTgzX1BPV0VSX0RPTUFJTl9N
+RkdfQ09SRTIgZm9yIGNvbnNpc3RlbmN5Lg0KPiA+IA0KPiA+IENhbiB5b3UgY2xhcmlmeSB3aGF0
+J3MgaW4gZWFjaCBkb21haW4/IEFyZSB0aGVyZSBhY3R1YWxseSAzIHNoYWRlcg0KPiA+IGNvcmVz
+IChJSVJDLCB0aGF0IHNob3VsZCBiZSBkaXNjb3ZlcmFibGUpPw0KPiANCj4gVGhlIGNvdmVyIGxl
+dHRlciBmcm9tIE5pY29sYXMgaW5jbHVkZXM6DQo+IA0KPiA+IFsgIDUwMS4zMjE3NTJdIHBhbmZy
+b3N0IDEzMDQwMDAwLmdwdTogc2hhZGVyX3ByZXNlbnQ9MHg3IGwyX3ByZXNlbnQ9MHgxDQo+IA0K
+PiAweDcgaXMgdGhyZWUgYml0cyBzZXQsIHNvIGl0IGNlcnRhaW5seSBsb29rcyBsaWtlIHRoZXJl
+IGFyZSAzIHNoYWRlcg0KPiBjb3Jlcy4gT2YgY291cnNlIEkgd291bGRuJ3QgZ3VhcmFudGVlIHRo
+YXQgaXQgaXMgYXMgc2ltcGxlIGFzIGVhY2ggcG93ZXINCj4gZG9tYWluIGhhcyBhIHNoYWRlciBj
+b3JlIGluLiBUaGUgam9iIG1hbmFnZXIgYW5kIHRpbGVyIGFsc28gbmVlZCB0byBiZQ0KPiBwb3dl
+cmVkIHNvbWVob3csIHNvIHRoZXkgYXJlIGVpdGhlciBzaGFyaW5nIHdpdGggYSBzaGFkZXIgY29y
+ZSBvcg0KPiB0aGVyZSdzIHNvbWV0aGluZyBtb3JlIGNvbXBsZXggZ29pbmcgb24uDQo+IA0KPiBT
+dGV2ZQ0KPiANClRoZXJlIGFyZSBhY3R1YWxseSBmaXZlIHBvd2VyIGRvbWFpbnMgaW4gdG90YWwg
+Zm9yIE1UODE4MyBHUFUuDQoNClRoZXJlIGFyZSAzIHNoYWRlciBjb3JlcyBpbiBNVDgxODMuDQoN
+ClRoZXkgY2FuIGJlIGxpc3RlZCBhcyBmb2xsb3dpbmcgZm9yIGVhY2ggcG93ZXIgZG9tYWluOg0K
+MS5NVDgxODNfUE9XRVJfRE9NQUlOX01GR19BU1lOQyA6IFNPQyBidXMgbG9naWMNCjIuTVQ4MTgz
+X1BPV0VSX0RPTUFJTl9NRkcgOiBHUFUgam9iIG1hbmFnZXIgJiB0aWxlcg0KMy5NVDgxODNfUE9X
+RVJfRE9NQUlOX01GR19DT1JFMCA6IEdQVSBzaGFkZXIgY29yZSAwDQo0Lk1UODE4M19QT1dFUl9E
+T01BSU5fTUZHX0NPUkUxIDogR1BVIHNoYWRlciBjb3JlIDENCjUuTVQ4MTgzX1BPV0VSX0RPTUFJ
+Tl9NRkdfMkQgOiBHUFUgc2hhZGVyIGNvcmUgMg0KDQpUaGVyZSBhcmUgb3RoZXIgcG93ZXIgZG9t
+YWluIGRlcGVuZGVuY3kgY2FuIGJlIHJlZmVyZW5jZSBpbiB0aGUNCmZvbGxvd2luZyBsaW5rLg0K
+aHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkvMi8xLzE2Ng0KDQpZb3UgY2FuIGNoZWNrIHRoZSBw
+b3dlciBkb21haW4gZGVwZW5kZW5jaWVzIGFzIGZvbGxvd2luZw0KPT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KK3N0YXRpYyBjb25zdCBz
+dHJ1Y3Qgc2NwX3N1YmRvbWFpbiBzY3Bfc3ViZG9tYWluX210ODE4M1tdID0gew0KKwl7TVQ4MTgz
+X1BPV0VSX0RPTUFJTl9NRkdfQVNZTkMsIE1UODE4M19QT1dFUl9ET01BSU5fTUZHfSwNCisJe01U
+ODE4M19QT1dFUl9ET01BSU5fTUZHLCBNVDgxODNfUE9XRVJfRE9NQUlOX01GR18yRH0sDQorCXtN
+VDgxODNfUE9XRVJfRE9NQUlOX01GRywgTVQ4MTgzX1BPV0VSX0RPTUFJTl9NRkdfQ09SRTB9LA0K
+Kwl7TVQ4MTgzX1BPV0VSX0RPTUFJTl9NRkcsIE1UODE4M19QT1dFUl9ET01BSU5fTUZHX0NPUkUx
+fSwNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT0NCg0KVGhhbmtzDQoNCk5pY2sgRmFuDQoNCg==
 
-> From: Serge Semin <fancer.lancer@gmail.com>
-> 
-> A lot of custom functionality can be tuned by means of a syscon-registers
-> placed in Baikal-T1 CCU memory space (though in documentation they are
-> called system devices registers). While in most of the case the syscon
-> registers usage will be distributed between corresponding subsystem drivers
-> (thanks to pretty much coherent design of the registers fields), there are
-> some peculiarities we should reflect in the generic syscon code.
-> 
-> First of all seeing there is an map endiannes config acceptable by the syscon
-> it would be justified to add the corresponding properties declared in the
-> mfd/syscon.yaml bindings file. Don't really know why this hasn't been done
-> before.
-> 
-> Then as it's going to be general in the framework of the Baikal-T1 SoC support
-> integration into the kernel, we suggest to replace the legacy text-based
-> syscon-reboot-mode dts-bindings file with yaml-based one.
-> 
-> Finally seeing the syscon-reboot-mode devices are mostly used in conjuction
-> with just syscon-reboot device (in particular Baikal-T1 CCU WDT RCR register is
-> preserved during any type of reboots) and for several other reasons (see the
-> commit message for details), we suggest to add the 'regmap' property support
-> to the syscon-reboot-mode driver. This would eliminate the requirement of
-> placing the syscon-reboot-mode dts-node in the syscon sub-nodes area.
-> 
-> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> commit 98d54f81e36b ("Linux 5.6-rc4").
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Serge Semin (4):
->   dt-bindings: syscon: Add syscon endian properties support
->   dt-bindings: power: reset: Replace SYSCON reboot-mode legacy bindings
->     with YAML-based one
->   dt-bindings: power: reset: Add regmap support to the SYSCON
->     reboot-mode bindings
->   power: reset: syscon-reboot-mode: Add regmap dts-property support
-> 
->  .../devicetree/bindings/mfd/syscon.yaml       | 14 +++++
->  .../power/reset/syscon-reboot-mode.txt        | 35 -----------
->  .../power/reset/syscon-reboot-mode.yaml       | 58 +++++++++++++++++++
->  drivers/power/reset/syscon-reboot-mode.c      | 11 +++-
->  4 files changed, 80 insertions(+), 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
->  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
-
-Please re-send this patch --threaded.
-
-As it stands, it's been scattered to the 4 winds throughout my inbox.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
