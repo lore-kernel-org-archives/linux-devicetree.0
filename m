@@ -2,208 +2,519 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEE5C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63C8C10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306F620866
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6065F2187F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:00:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ykt2W3nY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCIJyH (ORCPT
+        id S1726415AbgCIKAC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:54:07 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55522 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726379AbgCIJyG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 05:54:06 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:02 +0530
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:44 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 114082418; Mon,  9 Mar 2020 15:23:44 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v5 5/9] phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2 V2 PHY
-Date:   Mon,  9 Mar 2020 15:23:05 +0530
-Message-Id: <1583747589-17267-6-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
-References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+        Mon, 9 Mar 2020 06:00:02 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35093 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgCIKAC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 06:00:02 -0400
+Received: by mail-io1-f68.google.com with SMTP id h8so8514396iob.2
+        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 03:00:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XYsp5YfT9GHQXn9e9Uo27I/6IbA8wOJ+MyIiypQnqBg=;
+        b=ykt2W3nYoRuWrtAqOa+Jsr1xjyONntaqQ876szsFgg3yWgfwa9XzXjUfH4F/gZVOBg
+         Y9xx8CFdkMRq7xUeBvduDNkuPFoYCglGOfhrApb5BAdr9kBgyCwIqK9Z84coYwaM/Adu
+         k9QLcYz62w2GtU1xDOZj1x+ELpMqDnZVm3dqgzFHFec2LLjNezgEyIZcAV3bU0E6rLHI
+         RJ6rxJr98//K83vCDNZ2VRBF8gze0k7o7Ae+SZDqK4pz0CrE7JMVKISOi/cLdxLcOCND
+         bE/65iiH3L6juRm+qDW85/MHQTiwS9ktu8u8535W0pjnP61bY7tl4PVcMqC8QZL/s3a8
+         0OkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XYsp5YfT9GHQXn9e9Uo27I/6IbA8wOJ+MyIiypQnqBg=;
+        b=JBWKfFrGs4uMRw1jv3y3S+nXX0xwHlNLHd0T4ZiZoxYH0xKh/lM7zUe2HaXxV4PHZ5
+         easXTxpx3qkqp0Q47F9uHGojDgxsLSVMtwh86luchmQnNy6DhYb+Q/x9l9aqYg3HpQpj
+         FHMOqZP81GVHJ5WM1DWCnJYt9Ov0gW5PZ3xZefMkN9r7lw+NKRUKG1+WKL0TeORXhwRt
+         IudebFroYEQKEOw4dEZHSeArGyeOZjyfv9Sy/VwZZR9q4QUVBpX6BCUmbEdlh2ky78rb
+         I+y6CEaQcOpfB5+hPBIJ4j6zL8FIhi1i6AqdjYvV0+VZ6mkLt1+o4ZCT4SMEVI3tHnl5
+         pgXA==
+X-Gm-Message-State: ANhLgQ2Oi3Vow8NMqvs4OS4G6bzuoehQ9AqcnqMttk+VL32/SM7zN7Xh
+        Zsl8JCCerZncP0gOEpT/Nxfop12t4jC2+W74NAAETQ==
+X-Google-Smtp-Source: ADFU+vv/Q5BFWC4z6ovabVtmzjjAwANH9fR51mgOt+AmYdVu7DeLah+kQkB3dEeMKXvxBunc5jReHmubRgb5xmImDZI=
+X-Received: by 2002:a02:ac90:: with SMTP id x16mr3235208jan.12.1583748001402;
+ Mon, 09 Mar 2020 03:00:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <1583502010-16210-1-git-send-email-nbelin@baylibre.com>
+ <1583502010-16210-4-git-send-email-nbelin@baylibre.com> <f599f5f7-4023-10c0-a582-4dce2a601b95@gmail.com>
+In-Reply-To: <f599f5f7-4023-10c0-a582-4dce2a601b95@gmail.com>
+From:   Nicolas Belin <nbelin@baylibre.com>
+Date:   Mon, 9 Mar 2020 10:59:50 +0100
+Message-ID: <CAJZgTGH4g79ohvGi0RbD3LS7p422Q44h4_7sTWFwjiqS4U+zvA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] drivers: leds: add support for apa102c leds
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Added new structure for overriding tuning parameters in QUSB2 V2 PHY as the
-override params are increased due to usage of generic QUSB2 V2 phy table.
+Hi Jacek,
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
----
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 75 ++++++++++++++++++++---------------
- 1 file changed, 43 insertions(+), 32 deletions(-)
+Le ven. 6 mars 2020 =C3=A0 21:20, Jacek Anaszewski
+<jacek.anaszewski@gmail.com> a =C3=A9crit :
+>
+> Hi Nicolas,
+>
+> On 3/6/20 2:40 PM, Nicolas Belin wrote:
+> > Initilial commit in order to support the apa102c RGB leds. The
+> > RGB and global brightness management is done by creating 4 leds
+> > from the Led Framework per apa102c led.
+> >
+> > Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+> > ---
+> >  drivers/leds/Kconfig        |  11 ++
+> >  drivers/leds/Makefile       |   1 +
+> >  drivers/leds/leds-apa102c.c | 306 ++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 318 insertions(+)
+> >  create mode 100644 drivers/leds/leds-apa102c.c
+> >
+> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> > index d82f1dea3711..28fa6c4f65cc 100644
+> > --- a/drivers/leds/Kconfig
+> > +++ b/drivers/leds/Kconfig
+> > @@ -69,6 +69,17 @@ config LEDS_AN30259A
+> >         To compile this driver as a module, choose M here: the module
+> >         will be called leds-an30259a.
+> >
+> > +config LEDS_APA102C
+> > +     tristate "LED Support for Shiji APA102C"
+> > +     depends on SPI
+> > +     depends on LEDS_CLASS
+> > +     help
+> > +       This option enables support for the APA102C RGB LEDs
+> > +       from Shiji Lighting.
+> > +
+> > +       To compile this driver as a module, choose M here: the module
+> > +       will be called leds-apa102c.
+> > +
+> >  config LEDS_APU
+> >       tristate "Front panel LED support for PC Engines APU/APU2/APU3 bo=
+ards"
+> >       depends on LEDS_CLASS
+> > diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> > index d7e1107753fb..28dfe82900c5 100644
+> > --- a/drivers/leds/Makefile
+> > +++ b/drivers/leds/Makefile
+> > @@ -88,6 +88,7 @@ obj-$(CONFIG_LEDS_LM36274)          +=3D leds-lm36274=
+.o
+> >  obj-$(CONFIG_LEDS_TPS6105X)          +=3D leds-tps6105x.o
+> >
+> >  # LED SPI Drivers
+> > +obj-$(CONFIG_LEDS_APA102C)           +=3D leds-apa102c.o
+> >  obj-$(CONFIG_LEDS_CR0014114)         +=3D leds-cr0014114.o
+> >  obj-$(CONFIG_LEDS_DAC124S085)                +=3D leds-dac124s085.o
+> >  obj-$(CONFIG_LEDS_EL15203000)                +=3D leds-el15203000.o
+> > diff --git a/drivers/leds/leds-apa102c.c b/drivers/leds/leds-apa102c.c
+> > new file mode 100644
+> > index 000000000000..0043e7a6235b
+> > --- /dev/null
+> > +++ b/drivers/leds/leds-apa102c.c
+> > @@ -0,0 +1,306 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include <linux/leds.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/spi/spi.h>
+> > +#include <uapi/linux/uleds.h>
+> > +#include "leds.h"
+> > +
+> > +/*
+> > + * Copyright (C) 2020 BayLibre, SAS
+> > + * Author: Nicolas Belin <nbelin@baylibre.com>
+> > + */
+> > +
+> > +/*
+> > + *  APA102C SPI protocol description:
+> > + *  +------+----------------------------------------+------+
+> > + *  |START |               DATA FIELD:              | END  |
+> > + *  |FRAME |               N LED FRAMES             |FRAME |
+> > + *  +------+------+------+------+------+-----+------+------+
+> > + *  | 0*32 | LED1 | LED2 | LED3 | LED4 | --- | LEDN | 1*32 |
+> > + *  +------+------+------+------+------+-----+------+------+
+> > + *
+> > + *  +-----------------------------------+
+> > + *  |START FRAME 32bits                 |
+> > + *  +--------+--------+--------+--------+
+> > + *  |00000000|00000000|00000000|00000000|
+> > + *  +--------+--------+--------+--------+
+> > + *
+> > + *  +------------------------------------+
+> > + *  |LED  FRAME 32bits                   |
+> > + *  +---+-----+--------+--------+--------+
+> > + *  |111|LUMA |  BLUE  | GREEN  |  RED   |
+> > + *  +---+-----+--------+--------+--------+
+> > + *  |3b |5bits| 8bits  | 8bits  | 8bits  |
+> > + *  +---+-----+--------+--------+--------+
+> > + *  |MSB   LSB|MSB  LSB|MSB  LSB|MSB  LSB|
+> > + *  +---+-----+--------+--------+--------+
+> > + *
+> > + *  +-----------------------------------+
+> > + *  |END FRAME 32bits                   |
+> > + *  +--------+--------+--------+--------+
+> > + *  |11111111|11111111|11111111|11111111|
+> > + *  +--------+--------+--------+--------+
+> > + */
+> > +
+> > +/* apa102c default settings */
+> > +#define GLOBAL_MAX_BRIGHTNESS        GENMASK(4, 0)
+> > +#define RGB_MAX_BRIGHTNESS   GENMASK(7, 0)
+> > +#define START_BYTE           0
+> > +#define END_BYTE             GENMASK(7, 0)
+> > +#define LED_FRAME_HEADER     GENMASK(7, 5)
+> > +
+> > +struct apa102c_led {
+> > +     struct apa102c          *priv;
+> > +     char                    name[LED_MAX_NAME_SIZE];
+>
+> This is not needed, LED core takes care of parsing LED name.
+>
+> > +     int                     color_id;
+> > +     struct led_classdev     cdev;
+> > +};
+> > +
+> > +struct apa102c_rgbled {
+> > +     /* the 4 components of the apa102c rgb led:
+> > +      * global brightness, blue, green and red in that order
+> > +      */
+> > +     struct apa102c_led      component[4];
+> > +};
+> > +
+> > +struct apa102c {
+> > +     size_t                  led_count;
+> > +     struct device           *dev;
+> > +     struct mutex            lock;
+> > +     struct spi_device       *spi;
+> > +     u8                      *spi_buf;
+> > +     struct apa102c_rgbled   rgb_leds[];
+> > +};
+> > +
+> > +static int apa102c_sync(struct apa102c *priv)
+> > +{
+> > +     int     ret;
+> > +     size_t  i;
+> > +     struct apa102c_rgbled *leds =3D priv->rgb_leds;
+> > +     u8      *buf =3D priv->spi_buf;
+> > +
+> > +     /* creating the data that will be sent to all the leds at once */
+> > +     for (i =3D 0; i < 4; i++)
+> > +             *buf++ =3D START_BYTE;
+> > +
+> > +     /* looping on each RGB led component, getting the global brightne=
+ss
+> > +      * then B, G and R values
+> > +      */
+> > +     for (i =3D 0; i < priv->led_count; i++) {
+> > +             *buf++ =3D LED_FRAME_HEADER |
+> > +                      leds[i].component[0].cdev.brightness;
+> > +             *buf++ =3D leds[i].component[1].cdev.brightness;
+> > +             *buf++ =3D leds[i].component[2].cdev.brightness;
+> > +             *buf++ =3D leds[i].component[3].cdev.brightness;
+> > +     }
+>
+> The problem is that in the monochrome LED approach (i.e. the only
+> available one) you have to alter the state of only one LED - that
+> on behalf of which the call is made.
+>
+> And anyway, you're doing here much too much, taking into account
+> that this function is called from brightness_set op.
+>
+> Isn't it possible to update only one LED ?
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 70c9da6..44841c9 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -277,6 +277,28 @@ static const char * const qusb2_phy_vreg_names[] = {
- 
- #define QUSB2_NUM_VREGS		ARRAY_SIZE(qusb2_phy_vreg_names)
- 
-+/* struct override_param - structure holding qusb2 v2 phy overriding param
-+ * set override true if the  device tree property exists and read and assign
-+ * to value
-+ */
-+struct override_param {
-+	bool override;
-+	u8 value;
-+};
-+
-+/*struct override_params - structure holding qusb2 v2 phy overriding params
-+ * @imp_res_offset: rescode offset to be updated in IMP_CTRL1 register
-+ * @hstx_trim: HSTX_TRIM to be updated in TUNE1 register
-+ * @preemphasis: Amplitude Pre-Emphasis to be updated in TUNE1 register
-+ * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
-+ */
-+struct override_params {
-+	struct override_param imp_res_offset;
-+	struct override_param hstx_trim;
-+	struct override_param preemphasis;
-+	struct override_param preemphasis_width;
-+};
-+
- /**
-  * struct qusb2_phy - structure holding qusb2 phy attributes
-  *
-@@ -292,14 +314,7 @@ static const char * const qusb2_phy_vreg_names[] = {
-  * @tcsr: TCSR syscon register map
-  * @cell: nvmem cell containing phy tuning value
-  *
-- * @override_imp_res_offset: PHY should use different rescode offset
-- * @imp_res_offset_value: rescode offset to be updated in IMP_CTRL1 register
-- * @override_hstx_trim: PHY should use different HSTX o/p current value
-- * @hstx_trim_value: HSTX_TRIM value to be updated in TUNE1 register
-- * @override_preemphasis: PHY should use different pre-amphasis amplitude
-- * @preemphasis_level: Amplitude Pre-Emphasis to be updated in TUNE1 register
-- * @override_preemphasis_width: PHY should use different pre-emphasis duration
-- * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
-+ * @overrides: pointer to structure for all overriding tuning params
-  *
-  * @cfg: phy config data
-  * @has_se_clk_scheme: indicate if PHY has single-ended ref clock scheme
-@@ -319,14 +334,7 @@ struct qusb2_phy {
- 	struct regmap *tcsr;
- 	struct nvmem_cell *cell;
- 
--	bool override_imp_res_offset;
--	u8 imp_res_offset_value;
--	bool override_hstx_trim;
--	u8 hstx_trim_value;
--	bool override_preemphasis;
--	u8 preemphasis_level;
--	bool override_preemphasis_width;
--	u8 preemphasis_width;
-+	struct override_params overrides;
- 
- 	const struct qusb2_phy_cfg *cfg;
- 	bool has_se_clk_scheme;
-@@ -394,24 +402,25 @@ void qcom_qusb2_phy_configure(void __iomem *base,
- static void qusb2_phy_override_phy_params(struct qusb2_phy *qphy)
- {
- 	const struct qusb2_phy_cfg *cfg = qphy->cfg;
-+	struct override_params *or = &qphy->overrides;
- 
--	if (qphy->override_imp_res_offset)
-+	if (or->imp_res_offset.override)
- 		qusb2_write_mask(qphy->base, QUSB2PHY_IMP_CTRL1,
--			     qphy->imp_res_offset_value << IMP_RES_OFFSET_SHIFT,
-+		or->imp_res_offset.value << IMP_RES_OFFSET_SHIFT,
- 			     IMP_RES_OFFSET_MASK);
- 
--	if (qphy->override_hstx_trim)
-+	if (or->hstx_trim.override)
- 		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
--				 qphy->hstx_trim_value << HSTX_TRIM_SHIFT,
-+		or->hstx_trim.value << HSTX_TRIM_SHIFT,
- 				 HSTX_TRIM_MASK);
- 
--	if (qphy->override_preemphasis)
-+	if (or->preemphasis.override)
- 		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
--				qphy->preemphasis_level << PREEMPHASIS_EN_SHIFT,
-+		or->preemphasis.value << PREEMPHASIS_EN_SHIFT,
- 				PREEMPHASIS_EN_MASK);
- 
--	if (qphy->override_preemphasis_width) {
--		if (qphy->preemphasis_width ==
-+	if (or->preemphasis_width.override) {
-+		if (or->preemphasis_width.value ==
- 		    QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT)
- 			qusb2_setbits(qphy->base,
- 				      cfg->regs[QUSB2PHY_PORT_TUNE1],
-@@ -796,10 +805,12 @@ static int qusb2_phy_probe(struct platform_device *pdev)
- 	int ret, i;
- 	int num;
- 	u32 value;
-+	struct override_params *or;
- 
- 	qphy = devm_kzalloc(dev, sizeof(*qphy), GFP_KERNEL);
- 	if (!qphy)
- 		return -ENOMEM;
-+	or = &qphy->overrides;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	qphy->base = devm_ioremap_resource(dev, res);
-@@ -864,26 +875,26 @@ static int qusb2_phy_probe(struct platform_device *pdev)
- 
- 	if (!of_property_read_u32(dev->of_node, "qcom,imp-res-offset-value",
- 				  &value)) {
--		qphy->imp_res_offset_value = (u8)value;
--		qphy->override_imp_res_offset = true;
-+		or->imp_res_offset.value = (u8)value;
-+		or->imp_res_offset.override = true;
- 	}
- 
- 	if (!of_property_read_u32(dev->of_node, "qcom,hstx-trim-value",
- 				  &value)) {
--		qphy->hstx_trim_value = (u8)value;
--		qphy->override_hstx_trim = true;
-+		or->hstx_trim.value = (u8)value;
-+		or->hstx_trim.override = true;
- 	}
- 
- 	if (!of_property_read_u32(dev->of_node, "qcom,preemphasis-level",
- 				     &value)) {
--		qphy->preemphasis_level = (u8)value;
--		qphy->override_preemphasis = true;
-+		or->preemphasis.value = (u8)value;
-+		or->preemphasis.override = true;
- 	}
- 
- 	if (!of_property_read_u32(dev->of_node, "qcom,preemphasis-width",
- 				     &value)) {
--		qphy->preemphasis_width = (u8)value;
--		qphy->override_preemphasis_width = true;
-+		or->preemphasis_width.value = (u8)value;
-+		or->preemphasis_width.override = true;
- 	}
- 
- 	pm_runtime_set_active(dev);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+No, it is not possible. When one LED is updated and as all the leds
+are cascaded, the values for all the leds have to be sent using spi.
+However, what I can do is not updating the full buffer and simply the
+part that corresponds to the modified LED.
 
+>
+> > +
+> > +     for (i =3D 0; i < 4; i++)
+> > +             *buf++ =3D END_BYTE;
+> > +
+> > +     ret =3D spi_write(priv->spi, priv->spi_buf,
+> > +                     (priv->led_count + 2) * sizeof(u32));
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int apa102c_brightness_set(struct led_classdev *cdev,
+> > +                        enum led_brightness brightness)
+> > +{
+> > +     int                     ret;
+> > +     struct apa102c_led      *led =3D container_of(cdev,
+> > +                                                 struct apa102c_led,
+> > +                                                 cdev);
+> > +
+> > +     mutex_lock(&led->priv->lock);
+> > +     /* updating the brightness then synching all the leds */
+> > +     cdev->brightness =3D brightness;
+>
+> LED core handles that. Please drop this assignment.
+
+OK
+
+>
+> > +     ret =3D apa102c_sync(led->priv);
+> > +     mutex_unlock(&led->priv->lock);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int apa102c_probe_dt(struct apa102c *priv)
+> > +{
+> > +     int                     ret =3D 0;
+> > +     u32                     i;
+> > +     struct apa102c_rgbled   *rgb_led;
+> > +     struct apa102c_led      *led;
+> > +     struct fwnode_handle    *child;
+> > +     const char              *rgb_led_name;
+> > +     const char              *led_component_name;
+> > +
+> > +     /* each node corresponds to an rgb led */
+> > +     device_for_each_child_node(priv->dev, child) {
+> > +
+> > +             ret =3D fwnode_property_read_u32(child, "reg", &i);
+> > +             if (ret) {
+> > +                     dev_err(priv->dev, "coudld not read reg %d\n", re=
+t);
+> > +                     goto child_out;
+> > +             }
+> > +
+> > +             if (i >=3D priv->led_count) {
+> > +                     ret =3D -EINVAL;
+> > +                     dev_err(priv->dev, "reg value too big\n");
+> > +                     goto child_out;
+> > +             }
+> > +
+> > +             rgb_led =3D &priv->rgb_leds[i];
+> > +             /* checking if this led config is already used by checkin=
+g if
+> > +              * the priv member of the global_brightness led as alread=
+y
+> > +              * been set
+> > +              */
+> > +             if (rgb_led->component[0].priv) {
+> > +                     ret =3D -EINVAL;
+> > +                     dev_err(priv->dev, "using the same reg value twic=
+e\n");
+> > +                     goto child_out;
+> > +             }
+> > +
+> > +             ret =3D fwnode_property_read_string(child, "label",
+> > +                                               &rgb_led_name);
+> > +             if (ret) {
+> > +                     ret =3D -EINVAL;
+> > +                     dev_err(priv->dev, "missing rgb led name\n");
+> > +                     goto child_out;
+> > +             }
+> > +
+> > +             /* setting a color_id value for each of the 4 components =
+of the
+> > +              * apa102c RGB led. The first component is the global bri=
+ghtness
+> > +              * of the led and thus has no color. The order of the col=
+ors
+> > +              * after the global brightness is then blue, green and re=
+d
+> > +              * in that order. It corresponds to the order in which th=
+e
+> > +              * values are sent using spi
+> > +              */
+> > +             rgb_led->component[0].color_id =3D -1; //no color
+> > +             rgb_led->component[1].color_id =3D LED_COLOR_ID_BLUE;
+> > +             rgb_led->component[2].color_id =3D LED_COLOR_ID_GREEN;
+> > +             rgb_led->component[3].color_id =3D LED_COLOR_ID_RED;
+>
+> Each LED has to have separate DT node. We haven't had so far use case
+> with global brightness but I think it would be OK to add
+> LED_COLOR_ID_LUMA for that. But please hold on with making any changes
+> until Pavel will express his opinion on that.
+
+It would be nice to have LED_COLOR_ID_LUMA. However, I don't feel like
+it is really a color. I'll wait for Pavel's opinion.
+
+>
+> > +
+> > +             /* now looping on each component and registering a corres=
+ponding
+> > +              * led
+> > +              */
+> > +             for (i =3D 0; i < 4; i++) {
+> > +                     led =3D &rgb_led->component[i];
+> > +                     if (led->color_id =3D=3D -1) {
+> > +                             /* the global brightness has no defined n=
+ame
+> > +                              * so setting it to "brightness". It also=
+ has
+> > +                              * a different MAX_BRIGHTNESS value.
+> > +                              * If a trigger is present, setting it on=
+ this
+> > +                              * component
+> > +                              */
+> > +                             led->cdev.max_brightness =3D
+> > +                                     GLOBAL_MAX_BRIGHTNESS;
+> > +                             led_component_name =3D "brightness";
+> > +                             fwnode_property_read_string(child,
+> > +                                     "linux,default-trigger",
+> > +                                     &led->cdev.default_trigger);
+> > +                     } else {
+> > +                             /* using the color name defined by the fr=
+amework
+> > +                              * for the B, G and R components
+> > +                              */
+> > +                             led->cdev.max_brightness =3D RGB_MAX_BRIG=
+HTNESS;
+> > +                             led_component_name =3D led_colors[led->co=
+lor_id];
+> > +                     }
+> > +
+> > +                     /* the rest is common to all the components */
+> > +                     led->priv =3D priv;
+> > +                     led->cdev.brightness_set_blocking =3D
+> > +                             apa102c_brightness_set;
+> > +                     /* creating our own led name to differentiate the=
+ 4
+> > +                      * components
+> > +                      */
+> > +                     snprintf(led->name, sizeof(led->name),
+> > +                              "%s_%s", rgb_led_name, led_component_nam=
+e);
+> > +                     led->cdev.name =3D led->name;
+> > +
+>
+> LED core can do the above for you, if only you provide it with LED
+> fwnode.
+
+I was doing that to have a led_name formatted as "label_color". I am
+going to check for LED functions that could work for me and come back
+to you if find other functions that are not present.
+
+>
+> > +                     ret =3D devm_led_classdev_register_ext(priv->dev,
+> > +                                                          &led->cdev,
+> > +                                                          NULL);
+>
+> There is no point in using *ext API and not passing led_init_data to it.
+> Please pass struct led_init_data in the third argument, with initialized
+> only its fwnode property.
+>
+> > +                     if (ret) {
+> > +                             dev_err(priv->dev, "led register err: %d\=
+n",
+> > +                                     ret);
+> > +                             goto child_out;
+> > +                     }
+> > +             }
+> > +     }
+> > +
+> > +child_out:
+> > +     return ret;
+> > +}
+> > +
+> > +static int apa102c_probe(struct spi_device *spi)
+> > +{
+> > +     struct apa102c  *priv;
+> > +     size_t          led_count;
+> > +     int             ret;
+> > +
+> > +     led_count =3D device_get_child_node_count(&spi->dev);
+> > +     if (!led_count) {
+> > +             dev_err(&spi->dev, "No LEDs defined in device tree!");
+> > +             return -ENODEV;
+> > +     }
+> > +
+> > +     priv =3D devm_kzalloc(&spi->dev,
+> > +                         struct_size(priv, rgb_leds, led_count),
+> > +                         GFP_KERNEL);
+> > +     if (!priv)
+> > +             return -ENOMEM;
+> > +
+> > +     priv->spi_buf =3D devm_kzalloc(&spi->dev,
+> > +                                  (led_count + 2) * sizeof(u32),
+> > +                                   GFP_KERNEL);
+> > +     if (!priv->spi_buf)
+> > +             return -ENOMEM;
+> > +
+> > +     mutex_init(&priv->lock);
+> > +     priv->led_count =3D led_count;
+> > +     priv->dev       =3D &spi->dev;
+> > +     priv->spi       =3D spi;
+> > +
+> > +     ret =3D apa102c_probe_dt(priv);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /* Set the LEDs with default values at start */
+> > +     apa102c_sync(priv);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     spi_set_drvdata(spi, priv);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int apa102c_remove(struct spi_device *spi)
+> > +{
+> > +     struct apa102c *priv =3D spi_get_drvdata(spi);
+> > +
+> > +     mutex_destroy(&priv->lock);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct of_device_id apa102c_dt_ids[] =3D {
+> > +     { .compatible =3D "shiji,apa102c", },
+> > +     {},
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, apa102c_dt_ids);
+> > +
+> > +static struct spi_driver apa102c_driver =3D {
+> > +     .probe          =3D apa102c_probe,
+> > +     .remove         =3D apa102c_remove,
+> > +     .driver =3D {
+> > +             .name           =3D KBUILD_MODNAME,
+> > +             .of_match_table =3D apa102c_dt_ids,
+> > +     },
+> > +};
+> > +
+> > +module_spi_driver(apa102c_driver);
+> > +
+> > +MODULE_AUTHOR("Nicolas Belin <nbelin@baylibre.com>");
+> > +MODULE_DESCRIPTION("apa102c LED driver");
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_ALIAS("spi:apa102c");
+> >
+>
+> --
+> Best regards,
+> Jacek Anaszewski
+
+Thanks,
+
+Regards,
+
+Nicolas
