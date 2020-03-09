@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98381C18E5B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A592C18E5A
 	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9B520828
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F139C24677
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgCIKOq (ORCPT
+        id S1726467AbgCIKOp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 06:14:46 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52979 "EHLO
+        Mon, 9 Mar 2020 06:14:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59313 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgCIKOp (ORCPT
+        with ESMTP id S1725796AbgCIKOp (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 06:14:45 -0400
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jBFQm-0003mr-R9; Mon, 09 Mar 2020 11:14:40 +0100
+        id 1jBFQj-0003mL-6t; Mon, 09 Mar 2020 11:14:37 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jBFQh-0001mN-0n; Mon, 09 Mar 2020 11:14:35 +0100
+        id 1jBFQg-0001le-Ks; Mon, 09 Mar 2020 11:14:34 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
         hans.verkuil@cisco.com, jacopo+renesas@jmondi.org,
         robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
 Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
         linux-media@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH v12 16/19] media: dt-bindings: tvp5150: cleanup bindings stlye
-Date:   Mon,  9 Mar 2020 11:14:25 +0100
-Message-Id: <20200309101428.15267-17-m.felsch@pengutronix.de>
+Subject: [PATCH v12 01/19] dt-bindings: connector: analog: add sdtv standards property
+Date:   Mon,  9 Mar 2020 11:14:10 +0100
+Message-Id: <20200309101428.15267-2-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200309101428.15267-1-m.felsch@pengutronix.de>
 References: <20200309101428.15267-1-m.felsch@pengutronix.de>
@@ -50,76 +50,87 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use underlines to highlight optional and required properties. This is
-quite common for all bindings. Align descriptions and start sentence
-with uppercase letter. Also reword the usage of the required
-endpoint properties for the output port in case BT.656 should be used.
+Some connectors no matter if in- or output supports only a limited
+range of sdtv standards. It doesn't matter if the hardware behind that
+connector supports more than the listed formats since the users are
+restriced by a label e.g. to plug only a camera into this connector
+which uses the PAL format.
+
+This patch adds the capability to describe such limitation within the
+firmware. There are no format restrictions if the property isn't
+present, so it's completely backward compatible.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/media/i2c/tvp5150.txt | 30 +++++++++++--------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+[1] https://patchwork.kernel.org/cover/10794703/
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-index 28b64ad149ef..cc98b38c7e73 100644
---- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-@@ -5,12 +5,14 @@ The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
- with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
+v12:
+- split patch https://patchwork.linuxtv.org/patch/58491/
+
+v10:
+- fix typo s/TV_STD_*/SDTV_STD_*/
+
+v8:
+Hi Rob,
+
+I dropped your r b tag becuase of the changes I made in this version.
+Please can you have look on it again? Luckily this would be the last
+time ;-)
+
+- move definition to include/dt-bindings/display
+- rename tvnorms.h to sdtv-standards.h
+- TVORMS_* -> SDTV_STD_*
+- add sync comments
+- adapt commit message
+- fix bindings documentation
+
+v7:
+I kept Robs r b tag because I only changed the example and extended
+TVNORM_* macros.
+
+- fix some style issues
+- add TVNORM_NTSC, TVNORM_525_60 and TVNORM_625_50
+
+v6:
+- tvnorms.h: use tabs instead of spaces
+- tvnorms.h: add TVNORM_PAL and TVNORM_SECAM
+- tvnorms.h: drop rarely used TVNORM_ATSC_* norms
+
+v2-v4:
+- nothing since the patch was squashed from series [1] into this
+  series.
+
+ .../bindings/display/connector/analog-tv-connector.txt      | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
+index 0c0970c210ab..883bcb2604c7 100644
+--- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
++++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
+@@ -6,16 +6,22 @@ Required properties:
  
- Required Properties:
--- compatible: value must be "ti,tvp5150"
--- reg: I2C slave address
-+====================
-+- compatible:	Value must be "ti,tvp5150".
-+- reg:		I2C slave address.
+ Optional properties:
+ - label: a symbolic name for the connector
++- sdtv-standards: limit the supported TV standards on a connector to the given
++                  ones. If not specified all TV standards are allowed.
++                  Possible TV standards are defined in
++                  include/dt-bindings/display/sdtv-standards.h.
  
- Optional Properties:
--- pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
--- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
-+====================
-+- pdn-gpios:	Phandle for the GPIO connected to the PDN pin, if any.
-+- reset-gpios:	Phandle for the GPIO connected to the RESETB pin, if any.
+ Required nodes:
+ - Video port for TV input
  
- The device node must contain one 'port' child node per device physical input
- and output port, in accordance with the video interface bindings defined in
-@@ -24,9 +26,8 @@ are numbered as follows
- 	  Y-OUT		src		2
+ Example
+ -------
++#include <dt-bindings/display/sdtv-standards.h>
  
- The device node must contain at least one sink port and the src port. Each input
--port must be linked to an endpoint defined in
--Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt. The
--port/connector layout is as follows
-+port must be linked to an endpoint defined in [1]. The port/connector layout is
-+as follows
+ tv: connector {
+ 	compatible = "composite-video-connector";
+ 	label = "tv";
++	sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
  
- tvp-5150 port@0 (AIP1A)
- 	endpoint@0 -----------> Comp0-Con  port
-@@ -38,14 +39,17 @@ tvp-5150 port@2
- 	endpoint (video bitstream output at YOUT[0-7] parallel bus)
- 
- Required Endpoint Properties for parallel synchronization on output port:
-+=========================================================================
- 
--- hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
--- vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
--- field-even-active: field signal level during the even field data
--  transmission. Must be <0>.
-+- hsync-active:		Active state of the HSYNC signal. Must be <1> (HIGH).
-+- vsync-active:		Active state of the VSYNC signal. Must be <1> (HIGH).
-+- field-even-active:	Field signal level during the even field data
-+			transmission. Must be <0>.
- 
--If none of hsync-active, vsync-active and field-even-active is specified,
--the endpoint is assumed to use embedded BT.656 synchronization.
-+Note: Do not specify any of these properties if you want to use the embedded
-+      BT.656 synchronization.
-+
-+[1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
- 
- Example - three input sources:
- 
+ 	port {
+ 		tv_connector_in: endpoint {
 -- 
 2.20.1
 
