@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE88C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC550C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896BE20674
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A755620674
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgCIJyF (ORCPT
+        id S1726682AbgCIJyQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:54:05 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:36868 "EHLO
+        Mon, 9 Mar 2020 05:54:16 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55522 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725942AbgCIJyF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 05:54:05 -0400
+        by vger.kernel.org with ESMTP id S1726609AbgCIJyN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 05:54:13 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:02 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:45 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:42 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id BE4F5230B; Mon,  9 Mar 2020 15:23:44 +0530 (IST)
+        id 246562418; Mon,  9 Mar 2020 15:23:41 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -37,9 +37,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v5 6/9] phy: qcom-qusb2: Add new overriding tuning parameters in QUSB2 V2 PHY
-Date:   Mon,  9 Mar 2020 15:23:06 +0530
-Message-Id: <1583747589-17267-7-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v5 1/9] dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
+Date:   Mon,  9 Mar 2020 15:23:01 +0530
+Message-Id: <1583747589-17267-2-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
 References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
@@ -48,124 +48,248 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Added support for overriding bias-ctrl-value,charge-ctrl-value and
-hsdisc-trim-value params for QUSB2 V2 PHY
+Convert QUSB2 phy  bindings to DT schema format using json-schema.
 
 Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 51 +++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 149 +++++++++++++++++++++
+ .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 ----------
+ 2 files changed, 149 insertions(+), 68 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 44841c9..3708d43 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -66,6 +66,14 @@
- #define IMP_RES_OFFSET_MASK			GENMASK(5, 0)
- #define IMP_RES_OFFSET_SHIFT			0x0
- 
-+/* QUSB2PHY_PLL_BIAS_CONTROL_2 register bits */
-+#define BIAS_CTRL2_RES_OFFSET_MASK		GENMASK(5, 0)
-+#define BIAS_CTRL2_RES_OFFSET_SHIFT		0x0
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+new file mode 100644
+index 0000000..2342cd0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+@@ -0,0 +1,149 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +
-+/* QUSB2PHY_CHG_CONTROL_2 register bits */
-+#define CHG_CTRL2_OFFSET_MASK			GENMASK(5, 4)
-+#define CHG_CTRL2_OFFSET_SHIFT			0x4
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom,qusb2-phy.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- /* QUSB2PHY_PORT_TUNE1 register bits */
- #define HSTX_TRIM_MASK				GENMASK(7, 4)
- #define HSTX_TRIM_SHIFT				0x4
-@@ -73,6 +81,10 @@
- #define PREEMPHASIS_EN_MASK			GENMASK(1, 0)
- #define PREEMPHASIS_EN_SHIFT			0x0
- 
-+/* QUSB2PHY_PORT_TUNE2 register bits */
-+#define HSDISC_TRIM_MASK			GENMASK(1, 0)
-+#define HSDISC_TRIM_SHIFT			0x0
++title: Qualcomm QUSB2 phy controller
 +
- #define QUSB2PHY_PLL_ANALOG_CONTROLS_TWO	0x04
- #define QUSB2PHY_PLL_CLOCK_INVERTERS		0x18c
- #define QUSB2PHY_PLL_CMODE			0x2c
-@@ -291,12 +303,18 @@ struct override_param {
-  * @hstx_trim: HSTX_TRIM to be updated in TUNE1 register
-  * @preemphasis: Amplitude Pre-Emphasis to be updated in TUNE1 register
-  * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
-+ * @bias_ctrl: bias ctrl to be updated in BIAS_CONTROL_2 register
-+ * @charge_ctrl: charge ctrl to be updated in CHG_CTRL2 register
-+ * @hsdisc_trim: disconnect threshold to be updated in TUNE2 register
-  */
- struct override_params {
- 	struct override_param imp_res_offset;
- 	struct override_param hstx_trim;
- 	struct override_param preemphasis;
- 	struct override_param preemphasis_width;
-+	struct override_param bias_ctrl;
-+	struct override_param charge_ctrl;
-+	struct override_param hsdisc_trim;
- };
- 
- /**
-@@ -409,6 +427,16 @@ static void qusb2_phy_override_phy_params(struct qusb2_phy *qphy)
- 		or->imp_res_offset.value << IMP_RES_OFFSET_SHIFT,
- 			     IMP_RES_OFFSET_MASK);
- 
-+	if (or->bias_ctrl.override)
-+		qusb2_write_mask(qphy->base, QUSB2PHY_PLL_BIAS_CONTROL_2,
-+		or->bias_ctrl.value << BIAS_CTRL2_RES_OFFSET_SHIFT,
-+			   BIAS_CTRL2_RES_OFFSET_MASK);
++maintainers:
++  - Manu Gautam <mgautam@codeaurora.org>
 +
-+	if (or->charge_ctrl.override)
-+		qusb2_write_mask(qphy->base, QUSB2PHY_CHG_CTRL2,
-+		or->charge_ctrl.value << CHG_CTRL2_OFFSET_SHIFT,
-+			     CHG_CTRL2_OFFSET_MASK);
++description:
++  QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
 +
- 	if (or->hstx_trim.override)
- 		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
- 		or->hstx_trim.value << HSTX_TRIM_SHIFT,
-@@ -430,6 +458,11 @@ static void qusb2_phy_override_phy_params(struct qusb2_phy *qphy)
- 				      cfg->regs[QUSB2PHY_PORT_TUNE1],
- 				      PREEMPH_WIDTH_HALF_BIT);
- 	}
++properties:
++  compatible:
++    enum:
++      - qcom,msm8996-qusb2-phy
++      - qcom,msm8998-qusb2-phy
++      - qcom,sdm845-qusb2-phy
++  reg:
++    maxItems: 1
 +
-+	if (or->hsdisc_trim.override)
-+		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE2],
-+		or->hsdisc_trim.value << HSDISC_TRIM_SHIFT,
-+				 HSDISC_TRIM_MASK);
- }
- 
- /*
-@@ -879,6 +912,18 @@ static int qusb2_phy_probe(struct platform_device *pdev)
- 		or->imp_res_offset.override = true;
- 	}
- 
-+	if (!of_property_read_u32(dev->of_node, "qcom,bias-ctrl-value",
-+				  &value)) {
-+		or->bias_ctrl.value = (u8)value;
-+		or->bias_ctrl.override = true;
-+	}
++  "#phy-cells":
++    const: 0
 +
-+	if (!of_property_read_u32(dev->of_node, "qcom,charge-ctrl-value",
-+				  &value)) {
-+		or->charge_ctrl.value = (u8)value;
-+		or->charge_ctrl.override = true;
-+	}
++  clocks:
++    minItems: 2
++    maxItems: 3
++    items:
++      - description: phy config clock
++      - description: 19.2 MHz ref clk
++      - description: phy interface clock (Optional)
 +
- 	if (!of_property_read_u32(dev->of_node, "qcom,hstx-trim-value",
- 				  &value)) {
- 		or->hstx_trim.value = (u8)value;
-@@ -897,6 +942,12 @@ static int qusb2_phy_probe(struct platform_device *pdev)
- 		or->preemphasis_width.override = true;
- 	}
- 
-+	if (!of_property_read_u32(dev->of_node, "qcom,hsdisc-trim-value",
-+				  &value)) {
-+		or->hsdisc_trim.value = (u8)value;
-+		or->hsdisc_trim.override = true;
-+	}
++  clock-names:
++    minItems: 2
++    maxItems: 3
++    items:
++      - const: cfg_ahb
++      - const: ref
++      - const: iface
 +
- 	pm_runtime_set_active(dev);
- 	pm_runtime_enable(dev);
- 	/*
++  vdda-pll-supply:
++     description:
++       Phandle to 1.8V regulator supply to PHY refclk pll block.
++
++  vdda-phy-dpdm-supply:
++     description:
++       Phandle to 3.1V regulator supply to Dp/Dm port signals.
++
++  resets:
++    maxItems: 1
++    description:
++      Phandle to reset to phy block.
++
++  nvmem-cells:
++    maxItems: 1
++    description:
++        Phandle to nvmem cell that contains 'HS Tx trim'
++        tuning parameter value for qusb2 phy.
++
++  qcom,tcsr-syscon:
++    description:
++        Phandle to TCSR syscon register region.
++    $ref: /schemas/types.yaml#/definitions/phandle
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: qcom,sdm845-qusb2-phy
++then:
++  properties:
++    qcom,imp-res-offset-value:
++      description:
++        It is a 6 bit value that specifies offset to be
++        added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
++        tuning parameter that may vary for different boards of same SOC.
++      allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - minimum: 0
++          maximum: 63
++          default: 0
++
++    qcom,hstx-trim-value:
++      description:
++        It is a 4 bit value that specifies tuning for HSTX
++        output current.
++        Possible range is - 15mA to 24mA (stepsize of 600 uA).
++        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
++      allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - minimum: 0
++          maximum: 15
++          default: 3
++
++    qcom,preemphasis-level:
++      description:
++        It is a 2 bit value that specifies pre-emphasis level.
++        Possible range is 0 to 15% (stepsize of 5%).
++        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
++      allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - minimum: 0
++          maximum: 3
++          default: 2
++
++    qcom,preemphasis-width:
++      description:
++        It is a 1 bit value that specifies how long the HSTX
++        pre-emphasis (specified using qcom,preemphasis-level) must be in
++        effect. Duration could be half-bit of full-bit.
++        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
++      allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - minimum: 0
++          maximum: 1
++          default: 0
++
++required:
++  - compatible
++  - reg
++  - "#phy-cells"
++  - clocks
++  - clock-names
++  - vdda-pll-supply
++  - vdda-phy-dpdm-supply
++  - resets
++
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-msm8996.h>
++    hsusb_phy: phy@7411000 {
++        compatible = "qcom,msm8996-qusb2-phy";
++        reg = <0x7411000 0x180>;
++        #phy-cells = <0>;
++
++        clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++                 <&gcc GCC_RX1_USB2_CLKREF_CLK>;
++        clock-names = "cfg_ahb", "ref";
++
++        vdda-pll-supply = <&pm8994_l12>;
++        vdda-phy-dpdm-supply = <&pm8994_l24>;
++
++        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
++        nvmem-cells = <&qusb2p_hstx_trim>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+deleted file mode 100644
+index fe29f9e..0000000
+--- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
++++ /dev/null
+@@ -1,68 +0,0 @@
+-Qualcomm QUSB2 phy controller
+-=============================
+-
+-QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+-
+-Required properties:
+- - compatible: compatible list, contains
+-	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
+-	       "qcom,msm8998-qusb2-phy" for 10nm PHY on msm8998,
+-	       "qcom,sdm845-qusb2-phy" for 10nm PHY on sdm845.
+-
+- - reg: offset and length of the PHY register set.
+- - #phy-cells: must be 0.
+-
+- - clocks: a list of phandles and clock-specifier pairs,
+-	   one for each entry in clock-names.
+- - clock-names: must be "cfg_ahb" for phy config clock,
+-			"ref" for 19.2 MHz ref clk,
+-			"iface" for phy interface clock (Optional).
+-
+- - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
+- - vdda-phy-dpdm-supply: Phandle to 3.1V regulator supply to Dp/Dm port signals.
+-
+- - resets: Phandle to reset to phy block.
+-
+-Optional properties:
+- - nvmem-cells: Phandle to nvmem cell that contains 'HS Tx trim'
+-		tuning parameter value for qusb2 phy.
+-
+- - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
+- - qcom,imp-res-offset-value: It is a 6 bit value that specifies offset to be
+-		added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
+-		tuning parameter that may vary for different boards of same SOC.
+-		This property is applicable to only QUSB2 v2 PHY (sdm845).
+- - qcom,hstx-trim-value: It is a 4 bit value that specifies tuning for HSTX
+-		output current.
+-		Possible range is - 15mA to 24mA (stepsize of 600 uA).
+-		See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+-		This property is applicable to only QUSB2 v2 PHY (sdm845).
+-		Default value is 22.2mA for sdm845.
+- - qcom,preemphasis-level: It is a 2 bit value that specifies pre-emphasis level.
+-		Possible range is 0 to 15% (stepsize of 5%).
+-		See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+-		This property is applicable to only QUSB2 v2 PHY (sdm845).
+-		Default value is 10% for sdm845.
+-- qcom,preemphasis-width: It is a 1 bit value that specifies how long the HSTX
+-		pre-emphasis (specified using qcom,preemphasis-level) must be in
+-		effect. Duration could be half-bit of full-bit.
+-		See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+-		This property is applicable to only QUSB2 v2 PHY (sdm845).
+-		Default value is full-bit width for sdm845.
+-
+-Example:
+-	hsusb_phy: phy@7411000 {
+-		compatible = "qcom,msm8996-qusb2-phy";
+-		reg = <0x7411000 0x180>;
+-		#phy-cells = <0>;
+-
+-		clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+-			<&gcc GCC_RX1_USB2_CLKREF_CLK>,
+-		clock-names = "cfg_ahb", "ref";
+-
+-		vdda-pll-supply = <&pm8994_l12>;
+-		vdda-phy-dpdm-supply = <&pm8994_l24>;
+-
+-		resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+-		nvmem-cells = <&qusb2p_hstx_trim>;
+-        };
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
