@@ -2,30 +2,30 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23F6C18E5A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC58FC18E5A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DCE20409
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3E7208C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 11:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgCILqp (ORCPT
+        id S1726548AbgCILqy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:46:45 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:43551 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726428AbgCILqp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 07:46:45 -0400
+        Mon, 9 Mar 2020 07:46:54 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:31358 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726464AbgCILqx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 07:46:53 -0400
 X-IronPort-AV: E=Sophos;i="5.70,533,1574089200"; 
-   d="scan'208";a="41388051"
+   d="scan'208";a="41172722"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 09 Mar 2020 20:46:43 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 09 Mar 2020 20:46:51 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B8986421A427;
-        Mon,  9 Mar 2020 20:46:39 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 6E49E421A42B;
+        Mon,  9 Mar 2020 20:46:48 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -41,27 +41,46 @@ Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Lad Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 0/2] media: i2c: ov5645: Switch to assigned-clock-rates
-Date:   Mon,  9 Mar 2020 11:46:11 +0000
-Message-Id: <1583754373-16510-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 1/2] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
+Date:   Mon,  9 Mar 2020 11:46:12 +0000
+Message-Id: <1583754373-16510-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583754373-16510-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1583754373-16510-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series adds support for using assigned-clock-rates for
-specifying clock rates for ov5645 driver
+Use assigned-clock-rates to specify the clock rate.
 
-Lad Prabhakar (2):
-  media: dt-bindings: media: i2c: Switch to assigned-clock-rates
-  media: i2c: ov5645: Switch to assigned-clock-rates
-
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 4 ++--
- arch/arm/boot/dts/imx6qdl-wandboard.dtsi               | 3 ++-
- drivers/media/i2c/ov5645.c                             | 9 ++-------
- 3 files changed, 6 insertions(+), 10 deletions(-)
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+index 72ad992..1c85c78 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+@@ -8,7 +8,6 @@ Required Properties:
+ - compatible: Value should be "ovti,ov5645".
+ - clocks: Reference to the xclk clock.
+ - clock-names: Should be "xclk".
+-- clock-frequency: Frequency of the xclk clock.
+ - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+   to the hardware pin PWDNB which is physically active low.
+ - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+@@ -37,7 +36,8 @@ Example:
+ 
+ 			clocks = <&clks 200>;
+ 			clock-names = "xclk";
+-			clock-frequency = <24000000>;
++			assigned-clocks = <&clks 200>;
++			assigned-clock-rates = <24000000>;
+ 
+ 			vdddo-supply = <&camera_dovdd_1v8>;
+ 			vdda-supply = <&camera_avdd_2v8>;
 -- 
 2.7.4
 
