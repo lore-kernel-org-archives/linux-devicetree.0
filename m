@@ -2,134 +2,167 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57907C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0967C10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EBA20873
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:17:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NBn4ng5r"
+	by mail.kernel.org (Postfix) with ESMTP id AE4692146E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:24:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583785480;
+	bh=StFL5QvmItJfOwz5VxmHCR0sM7EiUH0ldEUy/9kuvBI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=kqZhDhmMnJHlk+G0YhkvfAh+TL9MqYEYYPmAQsIMceXDHKBIqLER3hXexcOOvB40d
+	 5DTSXGMhP0Y+oB9uvrrOfB1mQkZnPh4hvcbkFZ097/gtaz6xmCcXqqLhfRcRl308PC
+	 3oavi2GvCpOLSRLXxOmrBVT2/0Cw/cf1xq2PpJwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgCIURq (ORCPT
+        id S1726193AbgCIUYh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:17:46 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:43297 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgCIURq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 16:17:46 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        Mon, 9 Mar 2020 16:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726106AbgCIUYg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Mar 2020 16:24:36 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 2C33223EB9;
-        Mon,  9 Mar 2020 21:17:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583785062;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=z4lMfHVJtv1/7tVOgY+2NWcDkuP/vkxxc0vG3i3iujk=;
-        b=NBn4ng5rW9oF8jRIKbzD31HivmfpG9BA77wMSo0PPFk6bAfzl3PR72WqOaR7fjDpHdA3sE
-        77UMpTWS/9sN2Naf6SKSh6yNpPZjkpJOcwGJxbP1PO5bDjUajSZyDnmbRtpReyBIMfb2VP
-        1JOHIrABm2aB7IU06lyO+tfP9+TnPVo=
+        by mail.kernel.org (Postfix) with ESMTPSA id D87F62146E;
+        Mon,  9 Mar 2020 20:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583785476;
+        bh=StFL5QvmItJfOwz5VxmHCR0sM7EiUH0ldEUy/9kuvBI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=mEltg4vcLqtYrMmRBSqoDNjFIEKXPWo+0y9RcaDbIdUbJgApQjySqLUB03QgQkVHQ
+         MiLGalrDdPxg9svfAdIjRCd5U7eMPLG7pUgeFQr/CgHNkq2dj1Mtn71lHcXyn5XBVP
+         3ShE/8zhFEQvjPWlCh8RuqexbeyA1TD3J/wmlz8I=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 21:17:42 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Subject: Re: [PATCH 5/6] arm64: dts: ls1028a: Specify the DMA channels for the
- DSPI controllers
-In-Reply-To: <CA+h21hp2MxLqLJL9AnufmW_-OQFdiY7p4Db97G3eTr_MUkH4TA@mail.gmail.com>
-References: <20200309145624.10026-1-olteanv@gmail.com>
- <20200309145624.10026-6-olteanv@gmail.com>
- <83af52172a3cabd662de1ed9574e4247@walle.cc>
- <CA+h21hp2MxLqLJL9AnufmW_-OQFdiY7p4Db97G3eTr_MUkH4TA@mail.gmail.com>
-Message-ID: <3b25c8b5fc9c433715e1fa99bc515822@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 2C33223EB9
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.385];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
+References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org> <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH 2/2] clk: qcom: Add ipq6018 apss clock controller
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     sivaprak@codeaurora.org
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org
+Date:   Mon, 09 Mar 2020 13:24:35 -0700
+Message-ID: <158378547505.66766.155212878365765346@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-03-09 20:59, schrieb Vladimir Oltean:
-> On Mon, 9 Mar 2020 at 21:06, Michael Walle <michael@walle.cc> wrote:
->> 
->> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
->> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
->> >
->> > LS1028A has a functional connection to the eDMA module. Even if the
->> > spi-fsl-dspi.c driver is not using DMA for LS1028A now, define the
->> > slots
->> > in the DMAMUX for connecting the eDMA channels to the 3 DSPI
->> > controllers.
->> >
->> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
->> > ---
->> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
->> >  1 file changed, 6 insertions(+)
->> >
->> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> > index 515e0a1b934f..18155273a46e 100644
->> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> > @@ -298,6 +298,8 @@
->> >                       interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->> >                       clock-names = "dspi";
->> >                       clocks = <&clockgen 4 1>;
->> > +                     dmas = <&edma0 0 62>, <&edma0 0 60>;
->> > +                     dma-names = "tx", "rx";
->> 
->> minor nit. Other nodes specified the dma channels as
->> 
->> dma-names = "tx", "rx";
->> dmas = <&edma0 0 62>,
->>         <&edma0 0 60>;
->> 
->> -michael
->> 
-> 
-> Does it matter?
+Quoting Sivaprakash Murugesan (2020-02-27 01:55:18)
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 15cdcdc..37e4ce2 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -89,6 +89,14 @@ config APQ_MMCC_8084
+>           Say Y if you want to support multimedia devices such as display,
+>           graphics, video encode/decode, camera, etc.
+> =20
+> +config IPQ_APSS_6018
+> +       tristate "IPQ6018 APSS Clock Controller"
+> +       select IPQ_GCC_6018
+> +       help
+> +         Support for APSS clock controller on ipq6018 devices. The
+> +         APSS clock controller supports frequencies higher than 800Mhz.
 
-No, therefore "minor nit". Its just formatted other then everything else 
-in the file.
+supports CPU frequencies? It's not clear what APSS is to a lot of people
+out there.
 
--michael
+> +         Say Y if you want to support higher frequencies on ipq6018 devi=
+ces.
+
+support CPU frequency scaling on ipq6018?
+
+> +
+>  config IPQ_GCC_4019
+>         tristate "IPQ4019 Global Clock Controller"
+>         help
+> diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6=
+018.c
+> new file mode 100644
+> index 0000000..04b8962
+> --- /dev/null
+> +++ b/drivers/clk/qcom/apss-ipq6018.c
+> @@ -0,0 +1,210 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+
+Are these two includes needed at all?
+
+> +#include <linux/clk-provider.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <linux/reset-controller.h>
+> +#include <dt-bindings/clock/qcom,apss-ipq6018.h>
+> +
+> +#include "common.h"
+> +#include "clk-regmap.h"
+> +#include "clk-pll.h"
+> +#include "clk-rcg.h"
+> +#include "clk-branch.h"
+> +#include "clk-alpha-pll.h"
+> +#include "clk-regmap-divider.h"
+> +#include "clk-regmap-mux.h"
+> +#include "reset.h"
+> +
+> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
+
+This can be removed. It's common in clk-rcg.h now
+
+> +
+> +static struct clk_branch apcs_alias0_core_clk =3D {
+> +       .halt_reg =3D 0x004c,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x004c,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "apcs_alias0_core_clk",
+> +                       .parent_hws =3D (const struct clk_hw *[]){
+> +                               &apcs_alias0_clk_src.clkr.hw },
+> +                       .num_parents =3D 1,
+> +                       .flags =3D CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+
+Please add a comment about why CLK_IS_CRITICAL is here. Presumably in
+the case that a cpufreq driver doesn't probe and claim this clk?
+
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +
+[...]
+> +
+> +static int __init apss_ipq6018_init(void)
+> +{
+> +       return platform_driver_register(&apss_ipq6018_driver);
+> +}
+> +core_initcall(apss_ipq6018_init);
+> +
+> +static void __exit apss_ipq6018_exit(void)
+> +{
+> +       platform_driver_unregister(&apss_ipq6018_driver);
+> +}
+> +module_exit(apss_ipq6018_exit);
+
+Any reason this can't just be module_platform_driver()?
