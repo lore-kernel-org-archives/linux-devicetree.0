@@ -2,138 +2,122 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6639C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A276CC18E5A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791FA20578
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB0922522
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SAn3421T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/QlIdvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCIO3M (ORCPT
+        id S1726946AbgCIO4o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:29:12 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49386 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgCIO3L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 10:29:11 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 029ESbNs038839;
-        Mon, 9 Mar 2020 09:28:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583764118;
-        bh=PK9HkNhFkjhSgbGPGf8aZjBq6q1NmO8OJkQ0UtLLUrY=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=SAn3421TiO84EvcU9BpsikWSA7JcG9TeTbS74dJ9CuUaj/W4qCxM8fB1bLvYwzywm
-         IZI88wB5cUFyHKslgUJH4OPJ2CNLN+wQQYzklbnNR3RrJTP3/Sd/ftkFhxU0EArGqX
-         tGaKORIcLhVvGK4/hxqc3NAglL8E/IP3Jvk8WNy8=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029ESbBw082094;
-        Mon, 9 Mar 2020 09:28:37 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
- 2020 09:28:37 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Mar 2020 09:28:37 -0500
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029ESXq0049548;
-        Mon, 9 Mar 2020 09:28:34 -0500
-Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
- transceiver regulator
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Rob Herring <robh@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
- <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
- <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
- <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
- <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
- <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
-Message-ID: <8400282d-8003-549b-3560-5b55b318e57a@ti.com>
-Date:   Mon, 9 Mar 2020 20:00:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 9 Mar 2020 10:56:44 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54221 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbgCIO4o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 10:56:44 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g134so10288050wme.3;
+        Mon, 09 Mar 2020 07:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=wL7TUO9B/e8wYQKuwe9Iv+RdI+L5yqc8HfjdMUkN5OQ=;
+        b=n/QlIdvVs7r9NIFZ7lrfaRlji0EHzZQ9mBNoEouMenoaKpHqMd+1/ngBKflwqOKG66
+         3npDsAq2cG171y6OI1tPUbrK/33H6u4MVHN14rEAFtl9LN4QhJKfbXUMueNvb7wXfyLt
+         L8n6lMt0DJQEXw6C+yclVzzvrM5bV7QkGE7rSj8Ue3K8my5D+mkg4qUdgpxayRUMDfjs
+         sRxSy239lBgEohGUyyp/kdvlDEc1XGYvDpxUU3mTvVMF65UE1DJQbi8EaLqBgGpYENUS
+         NMJAkIT9K+SDo7YDxXb+XgyinHa7VhiXOB10POHP/FWlIj2sRnsUFjmvfrZufadvCiMB
+         +85A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=wL7TUO9B/e8wYQKuwe9Iv+RdI+L5yqc8HfjdMUkN5OQ=;
+        b=gtoDYohvMGg+lNt7/DespzEP9YtdY80f49amzsINLtBFzt/skJEFp58jSRnhYkftJQ
+         SLfKtWra6gfXDKy2AZLa1VCO+Qy/QjDX+TmBFNEs8Gb9Pmeor96HzibYXFtgCQt6twHs
+         EsfthtXeGYygubrqZYKTWcdRxykDbCcWq4+HLY8Mcnq3Z9h7JP/peS85Ha+vt66vLfhm
+         niriyYShjYxFAEPnqSjgJ77qsKlZuvnHYYmDKGxO5fw5cIDsVZ+SR3490hu7OIy0zokJ
+         JBj5Dto2YebDQ2Krw/A3BwEE43NjziKW1K0wYZMKKco0bqaW4RjB/bhh8xRxxVMP2FHo
+         J7tw==
+X-Gm-Message-State: ANhLgQ3MqDPluzRBEHWQ6Fw7orGCHwqN07UB6391HRLVEGEWwk+CeEZT
+        3bm+eRMwcZtzskHUjyfhnCg=
+X-Google-Smtp-Source: ADFU+vsp81mIhxzaa3uhtuNOQnYBjU4hdT2fuT3yXd6s38W0d/2aLJaHjmCT0UuDCg2268viGfAb1g==
+X-Received: by 2002:a05:600c:d7:: with SMTP id u23mr20976578wmm.145.1583765802463;
+        Mon, 09 Mar 2020 07:56:42 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id w22sm26905374wmk.34.2020.03.09.07.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 07:56:41 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH 3/6] spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
+Date:   Mon,  9 Mar 2020 16:56:21 +0200
+Message-Id: <20200309145624.10026-4-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200309145624.10026-1-olteanv@gmail.com>
+References: <20200309145624.10026-1-olteanv@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marc,
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-On 02/03/20 1:46 pm, Faiz Abbas wrote:
-> Marc,
-> 
-> On 26/02/20 2:40 pm, Faiz Abbas wrote:
->> Hi Marc,
->>
->> On 21/02/20 2:01 pm, Marc Kleine-Budde wrote:
->>> On 2/21/20 9:31 AM, Faiz Abbas wrote:
->>>> Hi Rob,
->>>>
->>>> On 20/02/20 2:05 am, Rob Herring wrote:
->>>>> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
->>>>>> Some CAN transceivers have a standby line that needs to be asserted
->>>>>> before they can be used. Model this GPIO lines as an optional
->>>>>> fixed-regulator node. Document bindings for the same.
->>>>>>
->>>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
->>>>>>  1 file changed, 3 insertions(+)
->>>>>
->>>>> This has moved to DT schema in my tree, so please adjust it and resend.
->>>>
->>>> Ok.
->>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
->>>>>> index ed614383af9c..f17e2a5207dc 100644
->>>>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
->>>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
->>>>>> @@ -48,6 +48,9 @@ Optional Subnode:
->>>>>>  			  that can be used for CAN/CAN-FD modes. See
->>>>>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
->>>>>>  			  for details.
->>>>>> +
->>>>>> +- xceiver-supply: Regulator that powers the CAN transceiver.
->>>>>
->>>>> The supply for a transceiver should go in the transceiver node.
->>>>>
->>>>
->>>> Marc, while I have you here, do you agree with this?
->>>
->>> I'll look into the details later today.
->>>
->>
->> Sure. Be sure to take another look at my attempt to use the transceiver
->> with a phy driver some time ago.
->>
->> https://lore.kernel.org/patchwork/patch/1006238/
->>
-> 
-> Do you have any comments?
-> 
+In DMA mode, dspi_setup_accel does not get called, which results in the
+dspi->oper_word_size variable (which is used by dspi_dma_xfer) to not be
+initialized properly.
 
-Gentle ping.
+Because oper_word_size is zero, a few calculations end up being
+incorrect, and the DMA transfer eventually times out instead of sending
+anything on the wire.
 
-Thanks,
-Faiz
+Set up native transfers (or 8-on-16 acceleration) using dspi_setup_accel
+for DMA mode too.
+
+Fixes: 6c1c26ecd9a3 ("spi: spi-fsl-dspi: Accelerate transfers using larger word size if possible")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+ drivers/spi/spi-fsl-dspi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index a8e56abe20ac..5624b9ee77db 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -372,6 +372,8 @@ static void dspi_rx_dma_callback(void *arg)
+ 	complete(&dma->cmd_rx_complete);
+ }
+ 
++static void dspi_setup_accel(struct fsl_dspi *dspi);
++
+ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+ {
+ 	struct device *dev = &dspi->pdev->dev;
+@@ -459,9 +461,10 @@ static int dspi_dma_xfer(struct fsl_dspi *dspi)
+ 	int bytes_per_buffer;
+ 	int ret = 0;
+ 
++	dspi_setup_accel(dspi);
++
+ 	curr_remaining_bytes = dspi->len;
+-	bytes_per_buffer = dspi->devtype_data->dma_bufsize /
+-			   dspi->devtype_data->fifo_size;
++	bytes_per_buffer = dspi->devtype_data->dma_bufsize;
+ 	while (curr_remaining_bytes) {
+ 		/* Check if current transfer fits the DMA buffer */
+ 		dma->curr_xfer_len = curr_remaining_bytes /
+-- 
+2.17.1
+
