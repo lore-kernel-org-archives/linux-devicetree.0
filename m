@@ -4,94 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D68FC10F29
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 04:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDB7C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 05:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D502E206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 04:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDFC20674
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 05:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgCIEFc (ORCPT
+        id S1725956AbgCIFHy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 00:05:32 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:35004 "EHLO inva020.nxp.com"
+        Mon, 9 Mar 2020 01:07:54 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:33032 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgCIEFb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 00:05:31 -0400
+        id S1725796AbgCIFHx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Mar 2020 01:07:53 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0282E1A16FB;
-        Mon,  9 Mar 2020 05:05:30 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ABE431A0153;
+        Mon,  9 Mar 2020 06:07:51 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E64F21A1738;
-        Mon,  9 Mar 2020 05:05:22 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 52801402A5;
-        Mon,  9 Mar 2020 12:05:14 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/7] ASoC: fsl-asoc-card: Support new property fsl,asrc-format
-Date:   Mon,  9 Mar 2020 11:58:29 +0800
-Message-Id: <266dccc836c11165ad91a301f24fe4f7ad2557be.1583725533.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1583725533.git.shengjiu.wang@nxp.com>
-References: <cover.1583725533.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1583725533.git.shengjiu.wang@nxp.com>
-References: <cover.1583725533.git.shengjiu.wang@nxp.com>
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C0F671A00E9;
+        Mon,  9 Mar 2020 06:07:47 +0100 (CET)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AA5BB402C1;
+        Mon,  9 Mar 2020 13:07:42 +0800 (SGT)
+From:   andy.tang@nxp.com
+To:     daniel.lezcano@linaro.org, edubezval@gmail.com, rui.zhang@intel.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH] dt-bindings: thermal: make cooling-maps property optional
+Date:   Mon,  9 Mar 2020 12:54:11 +0800
+Message-Id: <20200309045411.21859-1-andy.tang@nxp.com>
+X-Mailer: git-send-email 2.9.5
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In order to align with new ESARC, we add new property fsl,asrc-format.
-The fsl,asrc-format can replace the fsl,asrc-width, driver
-can accept format from devicetree, don't need to convert it to
-format through width.
+From: Yuantian Tang <andy.tang@nxp.com>
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cooling-maps doesn't have to be a required property because there may
+be no cooling device on system, or there are no enough cooling devices for
+each thermal zone in multiple thermal zone cases since cooling devices
+can't be shared.
+So make this property optional to remove such limitations.
+
+For thermal zones with no cooling-maps, there could be critic trips
+that can trigger CPU reset or shutdown. So they still can take actions.
+
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/thermal/thermal.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 9ce55feaac22..32101b9a37b9 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -680,17 +680,19 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 			goto asrc_fail;
- 		}
+diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+index ca14ba959e0d..f78bec19ca35 100644
+--- a/Documentation/devicetree/bindings/thermal/thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+@@ -142,11 +142,11 @@ Required properties:
+ - trips:		A sub-node which is a container of only trip point nodes
+   Type: sub-node	required to describe the thermal zone.
  
--		ret = of_property_read_u32(asrc_np, "fsl,asrc-width", &width);
-+		ret = of_property_read_u32(asrc_np, "fsl,asrc-format", &priv->asrc_format);
- 		if (ret) {
--			dev_err(&pdev->dev, "failed to get output rate\n");
--			ret = -EINVAL;
--			goto asrc_fail;
--		}
-+			ret = of_property_read_u32(asrc_np, "fsl,asrc-width", &width);
-+			if (ret) {
-+				dev_err(&pdev->dev, "failed to get output width\n");
-+				return ret;
-+			}
++Optional property:
+ - cooling-maps:		A sub-node which is a container of only cooling device
+   Type: sub-node	map nodes, used to describe the relation between trips
+ 			and cooling devices.
  
--		if (width == 24)
--			priv->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
--		else
--			priv->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
-+			if (width == 24)
-+				priv->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
-+			else
-+				priv->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
-+		}
- 	}
- 
- 	/* Finish card registering */
+-Optional property:
+ - coefficients:		An array of integers (one signed cell) containing
+   Type: array		coefficients to compose a linear relation between
+   Elem size: one cell	the sensors listed in the thermal-sensors property.
 -- 
-2.21.0
+2.17.1
 
