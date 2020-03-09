@@ -2,76 +2,104 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28209C10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D2DC10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5C92146E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFA124649
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgCIVUl (ORCPT
+        id S1726168AbgCIVXe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:20:41 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:40291 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgCIVUl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:20:41 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 4ED35E0006;
-        Mon,  9 Mar 2020 21:20:38 +0000 (UTC)
-Date:   Mon, 9 Mar 2020 22:20:38 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
-        robh+dt@kernel.org, peda@axentia.se, linux@armlinux.org.uk,
-        wsa@the-dreams.de, Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: Re: [PATCH v4 4/4] ARM: at91/dt: sama5d2: add i2c gpio pinctrl
-Message-ID: <20200309212038.GK3563@piout.net>
-References: <20200225155012.22764-1-codrin.ciubotariu@microchip.com>
- <20200225155012.22764-4-codrin.ciubotariu@microchip.com>
+        Mon, 9 Mar 2020 17:23:34 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38473 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgCIVXe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:23:34 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jBPs2-0003GI-H4; Mon, 09 Mar 2020 22:23:30 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jBPs1-0008L4-4q; Mon, 09 Mar 2020 22:23:29 +0100
+Date:   Mon, 9 Mar 2020 22:23:29 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "pbarker@konsulko.com" <pbarker@konsulko.com>,
+        "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "matt.ranostay@konsulko.com" <matt.ranostay@konsulko.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Subject: Re: [PATCH] dts: imx6: Allow flags argument in pwms reference
+Message-ID: <20200309212329.j5y7j7s46fjjscv3@pengutronix.de>
+References: <20200309145558.16098-1-pbarker@konsulko.com>
+ <d1c950a83d3aa0520df696033bb0a038e2de1f66.camel@toradex.com>
+ <20200309170751.vzffq5gmsaw3tsbp@pengutronix.de>
+ <20200309173506.GA4916@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200225155012.22764-4-codrin.ciubotariu@microchip.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200309173506.GA4916@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 25/02/2020 17:50:12+0200, Codrin Ciubotariu wrote:
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+On Mon, Mar 09, 2020 at 07:35:06PM +0200, Laurent Pinchart wrote:
+> On Mon, Mar 09, 2020 at 06:07:51PM +0100, Uwe Kleine-König wrote:
+> > On Mon, Mar 09, 2020 at 04:45:05PM +0000, Philippe Schenker wrote:
+> > > On Mon, 2020-03-09 at 14:55 +0000, Paul Barker wrote:
+> > >> diff --git a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
+> > >> b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
+> > >> index 37f80ab8ccd0..f87ac95b70bc 100644
+> > >> --- a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
+> > >> +++ b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
+> > >> @@ -14,7 +14,7 @@
+> > >>  
+> > >>  	backlight {
+> > >>  		compatible = "pwm-backlight";
+> > >> -		pwms = <&pwm1 0 5000000>;
+> > >> +		pwms = <&pwm1 0 5000000 0>;
+> > > 
+> > > There is a header file existing that has PWM_POLARITY_INVERTED defined
+> > > in include/dt-bindings/pwm/pwm.h. I feel we should add there a
+> > > PWM_POLARITY_NORMAL instead of just using 0.
+> > 
+> > ack.
+> > 
+> > > But then I'm asking myself if we can't get rid of the file include/dt-
+> > > bindings/pwm/pwm.h and instead use include/linux/pwm.h everywhere.
+> > > 
+> > > Or shouldn't we use defines in devicetrees from there?
+> > 
+> > devicetrees are supposed to be stand-alone. So yes indeed, no linux
+> > includes in device tree files.
 > 
-> Add the i2c gpio pinctrls to support the i2c bus recovery
-> 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> [codrin.ciubotariu@microchip.com: removed gpio pull-ups]
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> ---
-> 
-> Changes in v4:
->  - added Acked-by tag from Ludovic;
-> 
-> Changes in v3:
->  - removed gpio pull-ups;
-> 
-> Changes in v2:
->  - new patch;
-> 
->  arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts   | 33 +++++++++++++++++++--
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 33 +++++++++++++++++++--
->  2 files changed, 60 insertions(+), 6 deletions(-)
-> 
-Applied, thanks.
+> Correct. I don't mind adding PWM_POLARITY_NORMAL to
+> include/dt-bindings/pwm/pwm.h, I think it would increase readability.
+
++1 from me. Who cares enough to come up with a patch?
+
+Best regards
+Uwe
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
