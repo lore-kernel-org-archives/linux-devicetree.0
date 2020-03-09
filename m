@@ -2,120 +2,114 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A2C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 07:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C69C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 08:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141B720728
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 07:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B8F20674
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 08:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TvTU+oyq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIEHJnHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbgCIHzp (ORCPT
+        id S1725956AbgCIIQL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 03:55:45 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:59946 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725942AbgCIHzp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 03:55:45 -0400
-X-UUID: 7119ba7b7a6e46bcb84bdaed4b5b366d-20200309
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=d0wnLlS3PKlRwicESnqS4F2qX7BxraxwO4F/6cuzvFM=;
-        b=TvTU+oyqCuvB/dpVbfvu0kKeOdvaGuR0TXe4LK1eGwi+8IKZUxta4cn+iy/5g+zeKnkRjwu+zxKtOpDKhPOj8g83vj3cYLKgXzbFFMCAWt7WKoAAPWeeqSD4hxIZdJM8Dz8JxsMHj2HNr8FsY6UMor/pZY3sCobhsi8+7X0TdxI=;
-X-UUID: 7119ba7b7a6e46bcb84bdaed4b5b366d-20200309
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <nick.fan@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1475847732; Mon, 09 Mar 2020 15:55:40 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 9 Mar 2020 15:54:27 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 9 Mar 2020 15:55:55 +0800
-Message-ID: <1583740539.3995.15.camel@mtksdaap41>
-Subject: Re: [PATCH v4 1/7] dt-bindings: gpu: mali-bifrost: Add Mediatek
- MT8183
-From:   Nick Fan <nick.fan@mediatek.com>
-To:     Steven Price <steven.price@arm.com>
-CC:     Rob Herring <robh@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        David Airlie <airlied@linux.ie>,
-        "Daniel Vetter" <daniel@ffwll.ch>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 9 Mar 2020 15:55:39 +0800
-In-Reply-To: <20200306144336.GA9234@arm.com>
-References: <20200207052627.130118-1-drinkcat@chromium.org>
-         <20200207052627.130118-2-drinkcat@chromium.org>
-         <20200225171613.GA7063@bogus>
-         <CANMq1KAVX4o5yC7c_88Wq_O=F+MaSN_V4uNcs1nzS3wBS6A5AA@mail.gmail.com>
-         <1583462055.4947.6.camel@mtksdaap41>
-         <CAL_JsqLoUnxfrJh0WCs0jgro1KHAjWaYMsaKkKfAKA2KJ252_g@mail.gmail.com>
-         <20200306144336.GA9234@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Mon, 9 Mar 2020 04:16:11 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38396 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCIIQL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 04:16:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n2so2071654wmc.3;
+        Mon, 09 Mar 2020 01:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=21vOxRxDjKqcfrgbiaoQAsuWSgoqLHAftWopA3ShZhI=;
+        b=oIEHJnHDukzw19P80JbWF7J3wp/aDWOpD/frO9t4Av3oqEH1wlFFAKDwbw7ZxK5hdt
+         ovZKGRwTYKxENfkzlsCflHhjRJ4uX/8hyJ23ArR/BuaB8zyE6Cf75hA4tG8vbaPg4F7N
+         al6blJrPk47C5cwgWlf0P1Z161QWjiy8iJNQJsFUYPwA0O1iGNPleIa2v6YiWjF8aBN8
+         RhxEJz5dnfzgjMNqzmqAa4P3iIAo8yhtt2aukcdDJeYAxHFGO5G1RvJCGbCPfnI+4Jf8
+         V+GY5ch26FATDwdb3BTivgWx+EFi2pylYXY9MD5vSng24iNw1EsUbZVLd0SgBsVW9njh
+         DEIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=21vOxRxDjKqcfrgbiaoQAsuWSgoqLHAftWopA3ShZhI=;
+        b=pAaW79Z7f2uVn2kt24QBKVtipy590hbd0jJPlGaZIne8XibZQORwhEmlw2Ql8nqUKz
+         Q6E44vwmtvhwFyVkjwK/bGPNh06qVbe/ZqMjM9/eAjWmDzY7enRrF3A3AlN0H3ZCl/1L
+         9e18i8D3IecgKDGqv3TDKMTbV6OfOlwTaoiRyt+5MO5R0nmZhEacuqvk+DHmABgbNBSQ
+         y+0GwA299bc1DthUgmXorGlvMBC7cpTcKU9P90yj33P5eGdiTudy2KIq+vG3kh7BJKWS
+         oPBc/djz2aRaATAOxMNNPFqvaHZbGSRs5g5Gh9oI1CFhkPEqxgnJkQkHQyH+CR8MVzRp
+         xVnw==
+X-Gm-Message-State: ANhLgQ28s0AVFne6Okq4V5p0qgzJ+yPeoQWVjve/bNhB66aAiyssynCr
+        /NMaWKl0Zhq23DzsqtsPsCA=
+X-Google-Smtp-Source: ADFU+vt3Yqf7ZPutJlxBROOJKc49aGfr7tYraWP+grvURFzG5aqwAEF03ai0VObc3auLb7YasfTsDg==
+X-Received: by 2002:a7b:c770:: with SMTP id x16mr4736819wmk.159.1583741769115;
+        Mon, 09 Mar 2020 01:16:09 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id q2sm1097096wrv.65.2020.03.09.01.16.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Mar 2020 01:16:08 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: remove rockchip,grf from vop nodes for px30
+Date:   Mon,  9 Mar 2020 09:16:00 +0100
+Message-Id: <20200309081600.3887-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAzLTA2IGF0IDE0OjQzICswMDAwLCBTdGV2ZW4gUHJpY2Ugd3JvdGU6DQo+
-IE9uIEZyaSwgTWFyIDA2LCAyMDIwIGF0IDAyOjEzOjA4UE0gKzAwMDAsIFJvYiBIZXJyaW5nIHdy
-b3RlOg0KPiA+IE9uIFRodSwgTWFyIDUsIDIwMjAgYXQgODozNCBQTSBOaWNrIEZhbiA8bmljay5m
-YW5AbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBTb3JyeSBmb3IgbXkgbGF0ZSBy
-ZXBseS4NCj4gPiA+IEkgaGF2ZSBjaGVja2VkIGludGVybmFsbHkuDQo+ID4gPiBUaGUgTVQ4MTgz
-X1BPV0VSX0RPTUFJTl9NRkdfMkQgaXMganVzdCBhIGxlZ2FjeSBuYW1lLCBub3QgcmVhbGx5IDJE
-DQo+ID4gPiBkb21haW4uDQo+ID4gPg0KPiA+ID4gSWYgdGhlIG5hbWluZyB0b28gY29uZnVzaW5n
-LCB3ZSBjYW4gY2hhbmdlIHRoaXMgbmFtZSB0bw0KPiA+ID4gTVQ4MTgzX1BPV0VSX0RPTUFJTl9N
-RkdfQ09SRTIgZm9yIGNvbnNpc3RlbmN5Lg0KPiA+IA0KPiA+IENhbiB5b3UgY2xhcmlmeSB3aGF0
-J3MgaW4gZWFjaCBkb21haW4/IEFyZSB0aGVyZSBhY3R1YWxseSAzIHNoYWRlcg0KPiA+IGNvcmVz
-IChJSVJDLCB0aGF0IHNob3VsZCBiZSBkaXNjb3ZlcmFibGUpPw0KPiANCj4gVGhlIGNvdmVyIGxl
-dHRlciBmcm9tIE5pY29sYXMgaW5jbHVkZXM6DQo+IA0KPiA+IFsgIDUwMS4zMjE3NTJdIHBhbmZy
-b3N0IDEzMDQwMDAwLmdwdTogc2hhZGVyX3ByZXNlbnQ9MHg3IGwyX3ByZXNlbnQ9MHgxDQo+IA0K
-PiAweDcgaXMgdGhyZWUgYml0cyBzZXQsIHNvIGl0IGNlcnRhaW5seSBsb29rcyBsaWtlIHRoZXJl
-IGFyZSAzIHNoYWRlcg0KPiBjb3Jlcy4gT2YgY291cnNlIEkgd291bGRuJ3QgZ3VhcmFudGVlIHRo
-YXQgaXQgaXMgYXMgc2ltcGxlIGFzIGVhY2ggcG93ZXINCj4gZG9tYWluIGhhcyBhIHNoYWRlciBj
-b3JlIGluLiBUaGUgam9iIG1hbmFnZXIgYW5kIHRpbGVyIGFsc28gbmVlZCB0byBiZQ0KPiBwb3dl
-cmVkIHNvbWVob3csIHNvIHRoZXkgYXJlIGVpdGhlciBzaGFyaW5nIHdpdGggYSBzaGFkZXIgY29y
-ZSBvcg0KPiB0aGVyZSdzIHNvbWV0aGluZyBtb3JlIGNvbXBsZXggZ29pbmcgb24uDQo+IA0KPiBT
-dGV2ZQ0KPiANClRoZXJlIGFyZSBhY3R1YWxseSBmaXZlIHBvd2VyIGRvbWFpbnMgaW4gdG90YWwg
-Zm9yIE1UODE4MyBHUFUuDQoNClRoZXJlIGFyZSAzIHNoYWRlciBjb3JlcyBpbiBNVDgxODMuDQoN
-ClRoZXkgY2FuIGJlIGxpc3RlZCBhcyBmb2xsb3dpbmcgZm9yIGVhY2ggcG93ZXIgZG9tYWluOg0K
-MS5NVDgxODNfUE9XRVJfRE9NQUlOX01GR19BU1lOQyA6IFNPQyBidXMgbG9naWMNCjIuTVQ4MTgz
-X1BPV0VSX0RPTUFJTl9NRkcgOiBHUFUgam9iIG1hbmFnZXIgJiB0aWxlcg0KMy5NVDgxODNfUE9X
-RVJfRE9NQUlOX01GR19DT1JFMCA6IEdQVSBzaGFkZXIgY29yZSAwDQo0Lk1UODE4M19QT1dFUl9E
-T01BSU5fTUZHX0NPUkUxIDogR1BVIHNoYWRlciBjb3JlIDENCjUuTVQ4MTgzX1BPV0VSX0RPTUFJ
-Tl9NRkdfMkQgOiBHUFUgc2hhZGVyIGNvcmUgMg0KDQpUaGVyZSBhcmUgb3RoZXIgcG93ZXIgZG9t
-YWluIGRlcGVuZGVuY3kgY2FuIGJlIHJlZmVyZW5jZSBpbiB0aGUNCmZvbGxvd2luZyBsaW5rLg0K
-aHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkvMi8xLzE2Ng0KDQpZb3UgY2FuIGNoZWNrIHRoZSBw
-b3dlciBkb21haW4gZGVwZW5kZW5jaWVzIGFzIGZvbGxvd2luZw0KPT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KK3N0YXRpYyBjb25zdCBz
-dHJ1Y3Qgc2NwX3N1YmRvbWFpbiBzY3Bfc3ViZG9tYWluX210ODE4M1tdID0gew0KKwl7TVQ4MTgz
-X1BPV0VSX0RPTUFJTl9NRkdfQVNZTkMsIE1UODE4M19QT1dFUl9ET01BSU5fTUZHfSwNCisJe01U
-ODE4M19QT1dFUl9ET01BSU5fTUZHLCBNVDgxODNfUE9XRVJfRE9NQUlOX01GR18yRH0sDQorCXtN
-VDgxODNfUE9XRVJfRE9NQUlOX01GRywgTVQ4MTgzX1BPV0VSX0RPTUFJTl9NRkdfQ09SRTB9LA0K
-Kwl7TVQ4MTgzX1BPV0VSX0RPTUFJTl9NRkcsIE1UODE4M19QT1dFUl9ET01BSU5fTUZHX0NPUkUx
-fSwNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT0NCg0KVGhhbmtzDQoNCk5pY2sgRmFuDQoNCg==
+An experimental test with the command below without
+additional properties in 'rockchip-vop.yaml' gives this error:
+
+arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: vop@ff470000:
+'power-domains', 'rockchip,grf'
+do not match any of the regexes: 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: vop@ff460000:
+'power-domains', 'rockchip,grf'
+do not match any of the regexes: 'pinctrl-[0-9]+'
+
+'rockchip,grf' is not used by the Rockchip VOP driver,
+so remove it from 'vop' nodes in 'px30.dtsi'.
+
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
+rockchip/rockchip-vop.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/px30.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+index 215515ccb..1bbed660f 100644
+--- a/arch/arm64/boot/dts/rockchip/px30.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+@@ -1030,7 +1030,6 @@
+ 		reset-names = "axi", "ahb", "dclk";
+ 		iommus = <&vopb_mmu>;
+ 		power-domains = <&power PX30_PD_VO>;
+-		rockchip,grf = <&grf>;
+ 		status = "disabled";
+ 
+ 		vopb_out: port {
+@@ -1072,7 +1071,6 @@
+ 		reset-names = "axi", "ahb", "dclk";
+ 		iommus = <&vopl_mmu>;
+ 		power-domains = <&power PX30_PD_VO>;
+-		rockchip,grf = <&grf>;
+ 		status = "disabled";
+ 
+ 		vopl_out: port {
+-- 
+2.11.0
 
