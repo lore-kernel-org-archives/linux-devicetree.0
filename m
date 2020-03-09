@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7EEC18E5B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C69C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C7F20863
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D8821744
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgCIJyK (ORCPT
+        id S1725796AbgCIJyJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:54:10 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55522 "EHLO
+        Mon, 9 Mar 2020 05:54:09 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55524 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726556AbgCIJyK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 05:54:10 -0400
+        by vger.kernel.org with ESMTP id S1725942AbgCIJyI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 05:54:08 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:03 +0530
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:02 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:46 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:47 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 7D4E42418; Mon,  9 Mar 2020 15:23:45 +0530 (IST)
+        id 301BF230B; Mon,  9 Mar 2020 15:23:46 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -37,9 +37,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v5 7/9] arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
-Date:   Mon,  9 Mar 2020 15:23:07 +0530
-Message-Id: <1583747589-17267-8-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v5 8/9] arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
+Date:   Mon,  9 Mar 2020 15:23:08 +0530
+Message-Id: <1583747589-17267-9-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
 References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
@@ -48,25 +48,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use generic QUSB2 V2 Phy configuration for SC7180.
+Use generic QUSB2 V2 Phy configuration for sdm845.
 
 Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 253274d..1d1e09d 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1277,7 +1277,7 @@
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 061f49f..5ed51c0 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2603,7 +2603,7 @@
  		};
  
- 		usb_1_hsphy: phy@88e3000 {
--			compatible = "qcom,sc7180-qusb2-phy";
-+			compatible = "qcom,sc7180-qusb2-phy", "qcom,qusb2-v2-phy";
+ 		usb_1_hsphy: phy@88e2000 {
+-			compatible = "qcom,sdm845-qusb2-phy";
++			compatible = "qcom,sdm845-qusb2-phy", "qcom,qusb2-v2-phy";
+ 			reg = <0 0x088e2000 0 0x400>;
+ 			status = "disabled";
+ 			#phy-cells = <0>;
+@@ -2618,7 +2618,7 @@
+ 		};
+ 
+ 		usb_2_hsphy: phy@88e3000 {
+-			compatible = "qcom,sdm845-qusb2-phy";
++			compatible = "qcom,sdm845-qusb2-phy", "qcom,qusb2-v2-phy";
  			reg = <0 0x088e3000 0 0x400>;
  			status = "disabled";
  			#phy-cells = <0>;
