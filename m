@@ -2,220 +2,160 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AEEC10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C6C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CA720873
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7092520828
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:23:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="oxC+SQ6i"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oLl6S0gM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgCISTr (ORCPT
+        id S1727357AbgCISXI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:19:47 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:57703 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727533AbgCISTU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 14:19:20 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B0FD623EDA;
-        Mon,  9 Mar 2020 19:19:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583777957;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G2w6tuRog//c5RJrBIV3CvcBIQfC/GRMRCcWy6DXPrU=;
-        b=oxC+SQ6iB8SGjZJd9ssYmn3wa9uWQUaOSyR3hR2y2JuS0Ctc32JnRJ2wT6qf6VGzZ72+0W
-        kD1F8qzHygvUO/I7H8fvtBzvBHm7iDkaUzI7Ryg27XXVbhLfc3/8b86EBppedAQLFByM/y
-        x3gTfL3I0MuHCT4pfjps9H2RmeT8VEc=
+        Mon, 9 Mar 2020 14:23:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34903 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbgCISXH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 14:23:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u68so4484713pfb.2
+        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 11:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=82dH+sJ15Ldshryiq0HsH5AclffhvcMdjvdymma/EAM=;
+        b=oLl6S0gM4gLxCh+cd88ogRCnh4JBCz5iq0tCYjiarP4lY6rV8yz1pfTfPhF0WfK/qJ
+         gFz0VA+eLUw2SNrcIed9mr2QCj06ekq9xCZPVRUYrxt3lh+6R1CSLWJJ59YRdwiaapIN
+         PWwtibFjepZgVXEjR138LljiCrB1T18zef8XA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=82dH+sJ15Ldshryiq0HsH5AclffhvcMdjvdymma/EAM=;
+        b=nZF+dru7qU4aOd7ipWhlxCJ2zUzkJZd+luRQNvqwxQj8W6r61SvKcaWfyLyA569ZLU
+         vAPgHzrWVeOhcbPHv+D0pjPzvvIXsJhqOR9puwf5USgzxLk0XS+Ls9yNZ7F8+dYZdQ1t
+         dEXGZQfuZMFdm5QmL47PyyZEbD1gT53LFf3KpkJekSv8D5XJ1RLhlstbj+I1rPYoD47g
+         Zmvwb8e4JNtzsQg9ClI0HAuak91IYMJapJ/0xIPwROYlwTqoFUiQws8/esdA956UTWAa
+         9P2P5fmLZfTHOVjUIGJRCZ9v9HXhUxhCtaf2JTNnyQDAm66VuMC+jphL+doXrWw7KWtw
+         F9kg==
+X-Gm-Message-State: ANhLgQ2UIWRxzFmVPBD238lUu8GDVkG0Coj1sGlJihYJpa3eIUUvjas8
+        Hsq0XOrRewfkSEIw7kvN6f/aLA==
+X-Google-Smtp-Source: ADFU+vt76X0Uszasj2fbq6k4WAAfFHzB09o/cHllk3EBigMBTQ2q7C01Ws3zAVvmNKzgaOqyMhCq/g==
+X-Received: by 2002:a63:7f1d:: with SMTP id a29mr17893011pgd.123.1583778186633;
+        Mon, 09 Mar 2020 11:23:06 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id q30sm244145pjh.5.2020.03.09.11.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 11:23:06 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 19:19:17 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Subject: Re: [PATCH 2/6] spi: spi-fsl-dspi: Fix little endian access to PUSHR
- CMD and TXDATA
-In-Reply-To: <CA+h21hp4vC1c00rCgZo_hwQz3cE4dLBHjcgTHvf-+fS9a9VfxQ@mail.gmail.com>
-References: <20200309145624.10026-1-olteanv@gmail.com>
- <20200309145624.10026-3-olteanv@gmail.com>
- <d8e39e402328b962cdbc25316a27eac8@walle.cc>
- <CA+h21hp4vC1c00rCgZo_hwQz3cE4dLBHjcgTHvf-+fS9a9VfxQ@mail.gmail.com>
-Message-ID: <a709dc91aac9124ed37ac1e7fcb7e105@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: B0FD623EDA
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.538];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1583752457-21159-2-git-send-email-mkshah@codeaurora.org>
+References: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org> <1583752457-21159-2-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: Introduce SoC sleep stats bindings
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+        devicetree@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Date:   Mon, 09 Mar 2020 11:23:05 -0700
+Message-ID: <158377818530.66766.4481786840843320343@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-03-09 19:07, schrieb Vladimir Oltean:
-> Hi Michael,
-> 
-> On Mon, 9 Mar 2020 at 19:59, Michael Walle <michael@walle.cc> wrote:
->> 
->> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
->> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
->> >
->> > In XSPI mode, the 32-bit PUSHR register can be written to separately:
->> > the higher 16 bits are for commands and the lower 16 bits are for data.
->> >
->> > This has nicely been hacked around, by defining a second regmap with a
->> > width of 16 bits, and effectively splitting a 32-bit register into 2
->> > 16-bit ones, from the perspective of this regmap_pushr.
->> >
->> > The problem is the assumption about the controller's endianness. If the
->> > controller is little endian (such as anything post-LS1046A), then the
->> > first 2 bytes, in the order imposed by memory layout, will actually
->> > hold
->> > the TXDATA, and the last 2 bytes will hold the CMD.
->> >
->> > So take the controller's endianness into account when performing split
->> > writes to PUSHR. The obvious and simple solution would have been to
->> > call
->> > regmap_get_val_endian(), but that is an internal regmap function and we
->> > don't want to change regmap just for this. Therefore, we define the
->> > offsets per-instantiation, in the devtype_data structure. This means
->> > that we have to know from the driver which controllers are big- and
->> > which are little-endian (which is fine, we do, but it makes the device
->> > tree binding itself a little redundant except for regmap_config).
->> >
->> > This patch does not apply cleanly to stable trees, and a punctual fix
->> > to
->> > the commit cannot be provided given this constraint of lack of access
->> > to
->> > regmap_get_val_endian(). The per-SoC devtype_data structures (and
->> > therefore the premises to fix this bug) have been introduced only a few
->> > commits ago, in commit d35054010b57 ("spi: spi-fsl-dspi: Use specific
->> > compatible strings for all SoC instantiations")
->> >
->> > Fixes: 58ba07ec79e6 ("spi: spi-fsl-dspi: Add support for XSPI mode
->> > registers")
->> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
->> > ---
->> >  drivers/spi/spi-fsl-dspi.c | 28 ++++++++++++++++++++++------
->> >  1 file changed, 22 insertions(+), 6 deletions(-)
->> >
->> > diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
->> > index 0ce26c1cbf62..a8e56abe20ac 100644
->> > --- a/drivers/spi/spi-fsl-dspi.c
->> > +++ b/drivers/spi/spi-fsl-dspi.c
->> > @@ -103,10 +103,6 @@
->> >  #define SPI_FRAME_BITS(bits)         SPI_CTAR_FMSZ((bits) - 1)
->> >  #define SPI_FRAME_EBITS(bits)                SPI_CTARE_FMSZE(((bits) - 1) >> 4)
->> >
->> > -/* Register offsets for regmap_pushr */
->> > -#define PUSHR_CMD                    0x0
->> > -#define PUSHR_TX                     0x2
->> > -
->> >  #define DMA_COMPLETION_TIMEOUT               msecs_to_jiffies(3000)
->> >
->> >  struct chip_data {
->> > @@ -124,6 +120,12 @@ struct fsl_dspi_devtype_data {
->> >       u8                      max_clock_factor;
->> >       int                     fifo_size;
->> >       int                     dma_bufsize;
->> > +     /*
->> > +      * Offsets for CMD and TXDATA within SPI_PUSHR when accessed
->> > +      * individually (in XSPI mode)
->> > +      */
->> > +     int                     pushr_cmd;
->> > +     int                     pushr_tx;
->> >  };
->> 
->> Shouldn't this just read the "little-endian" property of the
->> device tree node?
-> 
-> This is exactly what the driver did prior to this commit from 2014:
-> https://patchwork.kernel.org/patch/4732711/
-> Since then, "little-endian" and "big-endian" became generic regmap 
-> properties.
-> 
->> Like it worked before with regmap, which takes
->> the little-endian/big-endian property into account.
->> 
-> 
-> So XSPI mode allows you, among other things, to send 32 bits words at a 
-> time.
-> In my opinion this was tested only the big-endian DSPI controllers
-> (LS1021A, LS1043A etc).
-> On the little-endian controllers (LS2, LX2, LS1028A) I suspect this
-> was actually never tested.
-> The reason why we see it now is because we're "accelerating" even
-> 8-bit words to 32-bit.
-> So it is incorrect to say "like it worked before": it never worked 
-> before.
+Quoting Maulik Shah (2020-03-09 04:14:14)
+> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+>=20
+> Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
+> SoC sleep stats driver. The driver is used for displaying SoC sleep
+> statistic maintained by Always On Processor or Resource Power Manager.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../bindings/soc/qcom/soc-sleep-stats.yaml         | 46 ++++++++++++++++=
+++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-=
+stats.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.y=
+aml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+> new file mode 100644
+> index 00000000..7c29c61
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/qcom/soc-sleep-stats.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
+> +
+> +maintainers:
+> +  - Maulik Shah <mkshah@codeaurora.org>
+> +  - Lina Iyer <ilina@codeaurora.org>
+> +
+> +description:
+> +  Always On Processor/Resource Power Manager maintains statistics of the=
+ SoC
+> +  sleep modes involving powering down of the rails and oscillator clock.
+> +
+> +  Statistics includes SoC sleep mode type, number of times low power mod=
+e were
+> +  entered, time of last entry, time of last exit and accumulated sleep d=
+uration.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,rpmh-sleep-stats
+> +      - qcom,rpm-sleep-stats
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  # Example of rpmh sleep stats
+> +  - |
+> +    rpmh_sleep_stats@c3f0000 {
+> +      compatible =3D "qcom,rpmh-sleep-stats";
+> +      reg =3D <0 0xc3f0000 0 0x400>;
+> +    };
+> +  # Example of rpm sleep stats
+> +  - |
+> +    rpm_sleep_stats@4690000 {
 
-I just meant how the endianess is figured out ;) Like by using the
-endianess property in the device tree. Not by also taking the compatible
-string into account.
+Node names don't have underscores. It really feels like we should be able
+to get away with not having this device node at all. Why can't we have
+the rpm message ram be a node that covers the entire range and then have
+that either create a platform device for debugfs stats or just have it
+register the stat information from whatever driver attaches to that
+node?
 
-
->> If I understand this correctly, this solution would mix the methods
->> how the IP endianess is determined. Eg. regmap_xx uses the
->> little-endian property and this driver then also uses the compatible
->> string to also distinguish between the endianess.
->> 
-> 
-> Yup. Otherwise we effectively have to duplicate the logic from the
-> internal regmap_get_val_endian function. I found no other way to
-> figure out what endianness the regmap_config has. Suggestions welcome.
-
-If there is no way in determining that, you could just use the
-of_property_read_bool(). there is also of_device_is_big_endian()
-although I don't know if this is consistent with how the regmap uses it.
-Eg. is it big-endian or little-endian if there is no property at all?
-
-I mean something like:
-
-if (little_endian)
-     regmap_write(regmap, PUSHR_CMD_LE, cmd)
-else
-     regmap_write(regmap, PUSHR_CMD_BE, cmd)
-
-Eg. if one would add another SoC to the DSPI driver, you would also need
-to specify the cmd/tx offset. But actually its already known because it
-just depend on the endianess which is already specified in the device 
-tree.
-
--michael
+Carving this up into multiple nodes and making compatible strings
+doesn't seem very useful here because we're essentially making device
+nodes in DT for logical software components that exist in the rpm
+message ram.
