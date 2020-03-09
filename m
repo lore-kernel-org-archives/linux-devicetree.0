@@ -2,158 +2,138 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9373C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6639C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C039F20873
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:25:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583763922;
-	bh=CUvHsyb4NnoMIXB/Ro0tmAGHeTgxzBj9AjeT9wTt46g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=cOH9VkVu6/WEuHPZssHQFmlC7/1BL7/mJjLsXev5ZbuTgyScyH6yUY3f8rXHNkL7s
-	 K1ghby5IKN50nuh8uvDbMXv7ixAW/pcfPS/cuRiaIzohsD+wYbiroJFOxjN0fH9aOQ
-	 sSwYHWc0ZjxqDIh8kVjHrmMXXgj7G4gnGkcPByDU=
+	by mail.kernel.org (Postfix) with ESMTP id 791FA20578
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:29:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SAn3421T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgCIOZV (ORCPT
+        id S1726650AbgCIO3M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:25:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:53154 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgCIOZV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:25:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F16707FA;
-        Mon,  9 Mar 2020 07:25:20 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 750B93F67D;
-        Mon,  9 Mar 2020 07:25:20 -0700 (PDT)
-Date:   Mon, 09 Mar 2020 14:25:19 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        Rob Herring <robh+dt@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Subject: Applied "ASoC: jz4740-i2s: Add local dev variable in probe function" to the asoc tree
-In-Reply-To:  <20200306222931.39664-3-paul@crapouillou.net>
-Message-Id:  <applied-20200306222931.39664-3-paul@crapouillou.net>
-X-Patchwork-Hint: ignore
+        Mon, 9 Mar 2020 10:29:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49386 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgCIO3L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 10:29:11 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 029ESbNs038839;
+        Mon, 9 Mar 2020 09:28:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583764118;
+        bh=PK9HkNhFkjhSgbGPGf8aZjBq6q1NmO8OJkQ0UtLLUrY=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=SAn3421TiO84EvcU9BpsikWSA7JcG9TeTbS74dJ9CuUaj/W4qCxM8fB1bLvYwzywm
+         IZI88wB5cUFyHKslgUJH4OPJ2CNLN+wQQYzklbnNR3RrJTP3/Sd/ftkFhxU0EArGqX
+         tGaKORIcLhVvGK4/hxqc3NAglL8E/IP3Jvk8WNy8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029ESbBw082094;
+        Mon, 9 Mar 2020 09:28:37 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
+ 2020 09:28:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Mar 2020 09:28:37 -0500
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029ESXq0049548;
+        Mon, 9 Mar 2020 09:28:34 -0500
+Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
+ transceiver regulator
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Rob Herring <robh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
+References: <20200217142836.23702-1-faiz_abbas@ti.com>
+ <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
+ <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
+ <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
+ <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
+ <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
+Message-ID: <8400282d-8003-549b-3560-5b55b318e57a@ti.com>
+Date:   Mon, 9 Mar 2020 20:00:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Hi Marc,
 
-   ASoC: jz4740-i2s: Add local dev variable in probe function
+On 02/03/20 1:46 pm, Faiz Abbas wrote:
+> Marc,
+> 
+> On 26/02/20 2:40 pm, Faiz Abbas wrote:
+>> Hi Marc,
+>>
+>> On 21/02/20 2:01 pm, Marc Kleine-Budde wrote:
+>>> On 2/21/20 9:31 AM, Faiz Abbas wrote:
+>>>> Hi Rob,
+>>>>
+>>>> On 20/02/20 2:05 am, Rob Herring wrote:
+>>>>> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
+>>>>>> Some CAN transceivers have a standby line that needs to be asserted
+>>>>>> before they can be used. Model this GPIO lines as an optional
+>>>>>> fixed-regulator node. Document bindings for the same.
+>>>>>>
+>>>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
+>>>>>>  1 file changed, 3 insertions(+)
+>>>>>
+>>>>> This has moved to DT schema in my tree, so please adjust it and resend.
+>>>>
+>>>> Ok.
+>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>>> index ed614383af9c..f17e2a5207dc 100644
+>>>>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>>> @@ -48,6 +48,9 @@ Optional Subnode:
+>>>>>>  			  that can be used for CAN/CAN-FD modes. See
+>>>>>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>>>>>>  			  for details.
+>>>>>> +
+>>>>>> +- xceiver-supply: Regulator that powers the CAN transceiver.
+>>>>>
+>>>>> The supply for a transceiver should go in the transceiver node.
+>>>>>
+>>>>
+>>>> Marc, while I have you here, do you agree with this?
+>>>
+>>> I'll look into the details later today.
+>>>
+>>
+>> Sure. Be sure to take another look at my attempt to use the transceiver
+>> with a phy driver some time ago.
+>>
+>> https://lore.kernel.org/patchwork/patch/1006238/
+>>
+> 
+> Do you have any comments?
+> 
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Gentle ping.
 
 Thanks,
-Mark
-
-From a42d9ba15cbf3e84307906db65fc598a8b73e2f1 Mon Sep 17 00:00:00 2001
-From: Paul Cercueil <paul@crapouillou.net>
-Date: Fri, 6 Mar 2020 23:29:28 +0100
-Subject: [PATCH] ASoC: jz4740-i2s: Add local dev variable in probe function
-
-Make the code cleaner by using a "struct device *dev" variable instead
-of dereferencing it everytime from within the struct platform_device.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://lore.kernel.org/r/20200306222931.39664-3-paul@crapouillou.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/jz4740/jz4740-i2s.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
-index 9d5405881209..2572aba843e3 100644
---- a/sound/soc/jz4740/jz4740-i2s.c
-+++ b/sound/soc/jz4740/jz4740-i2s.c
-@@ -492,45 +492,45 @@ MODULE_DEVICE_TABLE(of, jz4740_of_matches);
- 
- static int jz4740_i2s_dev_probe(struct platform_device *pdev)
- {
-+	struct device *dev = &pdev->dev;
- 	struct jz4740_i2s *i2s;
- 	struct resource *mem;
- 	int ret;
- 
--	i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
-+	i2s = devm_kzalloc(dev, sizeof(*i2s), GFP_KERNEL);
- 	if (!i2s)
- 		return -ENOMEM;
- 
--	i2s->version =
--		(enum jz47xx_i2s_version)of_device_get_match_data(&pdev->dev);
-+	i2s->version = (enum jz47xx_i2s_version)of_device_get_match_data(dev);
- 
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	i2s->base = devm_ioremap_resource(&pdev->dev, mem);
-+	i2s->base = devm_ioremap_resource(dev, mem);
- 	if (IS_ERR(i2s->base))
- 		return PTR_ERR(i2s->base);
- 
- 	i2s->phys_base = mem->start;
- 
--	i2s->clk_aic = devm_clk_get(&pdev->dev, "aic");
-+	i2s->clk_aic = devm_clk_get(dev, "aic");
- 	if (IS_ERR(i2s->clk_aic))
- 		return PTR_ERR(i2s->clk_aic);
- 
--	i2s->clk_i2s = devm_clk_get(&pdev->dev, "i2s");
-+	i2s->clk_i2s = devm_clk_get(dev, "i2s");
- 	if (IS_ERR(i2s->clk_i2s))
- 		return PTR_ERR(i2s->clk_i2s);
- 
- 	platform_set_drvdata(pdev, i2s);
- 
- 	if (i2s->version == JZ_I2S_JZ4780)
--		ret = devm_snd_soc_register_component(&pdev->dev,
-+		ret = devm_snd_soc_register_component(dev,
- 			&jz4740_i2s_component, &jz4780_i2s_dai, 1);
- 	else
--		ret = devm_snd_soc_register_component(&pdev->dev,
-+		ret = devm_snd_soc_register_component(dev,
- 			&jz4740_i2s_component, &jz4740_i2s_dai, 1);
- 
- 	if (ret)
- 		return ret;
- 
--	return devm_snd_dmaengine_pcm_register(&pdev->dev, NULL,
-+	return devm_snd_dmaengine_pcm_register(dev, NULL,
- 		SND_DMAENGINE_PCM_FLAG_COMPAT);
- }
- 
--- 
-2.20.1
-
+Faiz
