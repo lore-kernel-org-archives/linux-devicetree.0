@@ -2,101 +2,96 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46512C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 03:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1384C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 04:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2497F2064A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 03:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1472083E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 04:05:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgCIDg7 (ORCPT
+        id S1726149AbgCIEF3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Mar 2020 23:36:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:5773 "EHLO mga11.intel.com"
+        Mon, 9 Mar 2020 00:05:29 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37680 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbgCIDg7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Mar 2020 23:36:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 20:36:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,531,1574150400"; 
-   d="scan'208";a="414670446"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by orsmga005.jf.intel.com with ESMTP; 08 Mar 2020 20:36:56 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     Dinh Nguyen <dinguyen@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Chee Hong Ang <chee.hong.ang@intel.com>
-Subject: [PATCH] arm64: dts: increase the QSPI reg address for Stratix10 and Agilex
-Date:   Mon,  9 Mar 2020 11:36:49 +0800
-Message-Id: <20200309033649.15208-1-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
+        id S1725811AbgCIEF2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Mar 2020 00:05:28 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 24AA52015B1;
+        Mon,  9 Mar 2020 05:05:27 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1532620159B;
+        Mon,  9 Mar 2020 05:05:20 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BA0544024E;
+        Mon,  9 Mar 2020 12:05:10 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/7] ASoC: Add new module driver for new ASRC
+Date:   Mon,  9 Mar 2020 11:58:27 +0800
+Message-Id: <cover.1583725533.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Joyce Ooi <joyce.ooi@intel.com>
+Add new module driver for new ASRC in i.MX8MN, several commits
+are added for new property fsl,asrc-format
 
-This patch increases the reg addresses for QSPI boot and QSPI rootfs for
-Stratix10 and Agilex to cater for the increased size of kernel Image.
+Shengjiu Wang (7):
+  ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
+  ASoC: fsl-asoc-card: Support new property fsl,asrc-format
+  ASoC: fsl_asrc: Support new property fsl,asrc-format
+  ASoC: fsl_asrc: rename asrc_priv to asrc
+  ASoC: fsl_asrc: Move common definition to fsl_asrc_common
+  ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+  ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
 
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
----
- .../boot/dts/altera/socfpga_stratix10_socdk.dts    |    6 +++---
- arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts |    6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+changes in v5
+- Add new property fsl,asrc-format, rather than change fsl,asrc-width
+  to fsl,asrc-formt.
+- code change for above change.
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-index fb11ef0..f6c4a15 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-@@ -178,12 +178,12 @@
- 
- 			qspi_boot: partition@0 {
- 				label = "Boot and fpga data";
--				reg = <0x0 0x034B0000>;
-+				reg = <0x0 0x03FE0000>;
- 			};
- 
--			qspi_rootfs: partition@4000000 {
-+			qspi_rootfs: partition@3FE0000 {
- 				label = "Root Filesystem - JFFS2";
--				reg = <0x034B0000 0x0EB50000>;
-+				reg = <0x03FE0000 0x0C020000>;
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-index 44d38af..ac6e51b 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-@@ -129,12 +129,12 @@
- 
- 			qspi_boot: partition@0 {
- 				label = "Boot and fpga data";
--				reg = <0x0 0x034B0000>;
-+				reg = <0x0 0x03FE0000>;
- 			};
- 
--			qspi_rootfs: partition@34B0000 {
-+			qspi_rootfs: partition@3FE0000 {
- 				label = "Root Filesystem - JFFS2";
--				reg = <0x034B0000 0x0EB50000>;
-+				reg = <0x03FE0000 0x0C020000>;
- 			};
- 		};
- 	};
+changes in v4
+- Add several commit for changing DT binding asrc-width to asrc-format
+- rename asrc_priv to asrc
+
+changes in v3
+- add new commit "ASoC: fsl_asrc: Change asrc_width to asrc_format"
+- modify binding doc to yaml format
+- remove fsl_easrc_dma.c, make fsl_asrc_dma.c useable for easrc.
+
+changes in v2
+- change i.MX815 to i.MX8MN
+- Add changes in Kconfig and Makefile
+
+ .../devicetree/bindings/sound/fsl,asrc.txt    |    5 +
+ .../devicetree/bindings/sound/fsl,easrc.yaml  |  101 +
+ sound/soc/fsl/Kconfig                         |   11 +
+ sound/soc/fsl/Makefile                        |    2 +
+ sound/soc/fsl/fsl-asoc-card.c                 |   20 +-
+ sound/soc/fsl/fsl_asrc.c                      |  303 +--
+ sound/soc/fsl/fsl_asrc.h                      |   74 +-
+ sound/soc/fsl/fsl_asrc_common.h               |  105 +
+ sound/soc/fsl/fsl_asrc_dma.c                  |   54 +-
+ sound/soc/fsl/fsl_easrc.c                     | 2111 +++++++++++++++++
+ sound/soc/fsl/fsl_easrc.h                     |  651 +++++
+ 11 files changed, 3203 insertions(+), 234 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+ create mode 100644 sound/soc/fsl/fsl_asrc_common.h
+ create mode 100644 sound/soc/fsl/fsl_easrc.c
+ create mode 100644 sound/soc/fsl/fsl_easrc.h
+
 -- 
-1.7.1
+2.21.0
 
