@@ -2,106 +2,251 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90E8C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529E7C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 15:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D1A222C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD4721655
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 15:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJ108Hz1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HmzzL+VM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgCIO4i (ORCPT
+        id S1726882AbgCIPB1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:56:38 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51210 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgCIO4i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 10:56:38 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a132so10280888wme.1;
-        Mon, 09 Mar 2020 07:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EE7lvEiAG7C14PkVCMk9l0Wy5jQzPbqsBQS6amZKVCA=;
-        b=vJ108Hz1XaAGKgv8VGLzMxri6bt2aM7Twgdn6jUMjw2aJkcE8o8fA99F2DDHsZYrDn
-         rY6UjmyBrejKAxZXkJ985sa48Xfo+jp0fS39NhnCAhM7QspJ4O5hoHHq3VweFVLEeHYJ
-         zD5Oaa+aD28JWLimjnborf3lmXX22r7Btitaf9QjQsAq9JmKMzbvAoo6qXaqBL5Of9iQ
-         KPmMU0lejN4h3feV5OYjJix8clgE9Y3P0NIuWP9TdqjFMNjqyofnlsrZNXNBtU/tpqqJ
-         Q2LUt6zvwfaTp6hmcV5upbV+ZZHIxeQLCi1ZdxkCkUrRluRFKhShK3TjeajHwzpnV5sp
-         PC1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EE7lvEiAG7C14PkVCMk9l0Wy5jQzPbqsBQS6amZKVCA=;
-        b=P9S8Ry5UZcFCPhHfJrWLjX9yT38sLzBgiV8ihKhSoqYnX3MxMoFVd04Jy8B29h2yLI
-         pwUr0N+ab2dnKog8jhNoooSqpmKr19EFaqc4p80923lU3hVD7IBTvCEPLWdzSMKHbnK1
-         iatJHzHbBmuFO6ql8G21OL8WQw3xxZF5ndIhUkXRBhnjzx3JTGTTZ2eeFzNc7cAxylc2
-         wAkkPkSUQGDiWtyo++ktdJOVRG5m+RO54uETL8o+wFsPAG5yOi0UGxwlb7F1R/UazeqF
-         dTDNdEMwYN1Vv1cQCSHeeAD9cj4GMFfP6BNG6OdNuLtGN1202y+8h9M1IriGbno0gmJf
-         A0nQ==
-X-Gm-Message-State: ANhLgQ1rlkoMnJ0nNjHM+kWMR7/fVh1iP3E5G/qJ9vMnYdDDLyr/o893
-        S1Ebe72+OylfNhHBR0k4/oc=
-X-Google-Smtp-Source: ADFU+vuIcp4tUkeUBqFI3ifCMpSrEEeaioXn+XMby+pwukK2buFzSgc/j7BiGNz6APMkwbbRDtG06g==
-X-Received: by 2002:a7b:c2a2:: with SMTP id c2mr20109965wmk.19.1583765796955;
-        Mon, 09 Mar 2020 07:56:36 -0700 (PDT)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id w22sm26905374wmk.34.2020.03.09.07.56.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 07:56:35 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH 0/6] NXP DSPI bugfixes and support for LS1028A
-Date:   Mon,  9 Mar 2020 16:56:18 +0200
-Message-Id: <20200309145624.10026-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 9 Mar 2020 11:01:27 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38082 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726772AbgCIPB1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 11:01:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583766086; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=OfeXMwCy0tr21RuuUPUFSbLXXtySnJ162vCqOeqxiCI=; b=HmzzL+VMfqO7I+hJgbNdrcYfufweWNtiDsO0SNvVBVptPErpzONEvivk5fkiucde7SZ6X9Os
+ iYAkegq7FzloiAYDpI3G6GLtX3cbd1RuJprDpVQN8EI8WoCqaPwz3uxCHbVQbpJ5CRPULYaG
+ i1APQ6krvI7O0PIIR/44xh00npI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e665a31.7f3d35f82228-smtp-out-n03;
+ Mon, 09 Mar 2020 15:01:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3A50FC43637; Mon,  9 Mar 2020 15:01:05 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0EE80C433CB;
+        Mon,  9 Mar 2020 15:01:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0EE80C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 9 Mar 2020 09:01:01 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     robh+dt@kernel.org, robdclark@gmail.com, sean@poorly.run,
+        devicetree@vger.kernel.org, jeffrey.l.hugo@gmail.com,
+        airlied@linux.ie, linux-arm-msm@vger.kernel.org,
+        smasetty@codeaurora.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        sam@ravnborg.org
+Subject: Re: [Freedreno] [PATCH] dt-bindings: display: msm: gmu: move sram
+ property to gpu bindings
+Message-ID: <20200309150101.GA29092@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Brian Masney <masneyb@onstation.org>, robh+dt@kernel.org,
+        robdclark@gmail.com, sean@poorly.run, devicetree@vger.kernel.org,
+        jeffrey.l.hugo@gmail.com, airlied@linux.ie,
+        linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, sam@ravnborg.org
+References: <20200309111804.188162-1-masneyb@onstation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309111804.188162-1-masneyb@onstation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Mon, Mar 09, 2020 at 07:18:04AM -0400, Brian Masney wrote:
+> The sram property was incorrectly added to the GMU binding when it
+> really belongs with the GPU binding instead. Let's go ahead and
+> move it.
+> 
+> While changes are being made here, let's update the sram property
+> description to mention that this property is only valid for a3xx and
+> a4xx GPUs. The a3xx/a4xx example in the GPU is replaced with what was
+> in the GMU.
 
-This series addresses a few issues that were missed during the previous
-series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
-SoCs other than LS1021A and LS1043A. DMA mode has been completely broken
-by that series, and XSPI mode never worked on little-endian controllers.
+Thank you kindly!  I'll re-submit my stack on top of this.
 
-Then it introduces support for the LS1028A chip, whose compatible has
-recently been documented here:
+Acked-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
-
-The device tree for the LS1028A SoC is extended with DMA channels
-definition, such that even though the default operating mode is XSPI,
-one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
-devtype_data structure of the driver and use that instead.
-
-For testing, benchmarking and debugging, the mikroBUS connector on the
-LS1028A-RDB is made available via spidev.
-
-Vladimir Oltean (6):
-  spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
-  spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
-  spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
-  spi: spi-fsl-dspi: Add support for LS1028A
-  arm64: dts: ls1028a: Specify the DMA channels for the DSPI controllers
-  arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
-
- .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 14 +++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
- drivers/spi/spi-fsl-dspi.c                    | 54 +++++++++++++++----
- 3 files changed, 64 insertions(+), 10 deletions(-)
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Fixes: 198a72c8f9ee ("dt-bindings: display: msm: gmu: add optional ocmem property")
+> ---
+> Background thread:
+> https://lore.kernel.org/lkml/20200303170159.GA13109@jcrouse1-lnx.qualcomm.com/
+> 
+> I started to look at what it would take to convert the GPU bindings to
+> YAML, however I am unsure of the complete list of "qcom,adreno-XYZ.W"
+> compatibles that are valid.
+> 
+>  .../devicetree/bindings/display/msm/gmu.txt   | 51 -----------------
+>  .../devicetree/bindings/display/msm/gpu.txt   | 55 ++++++++++++++-----
+>  2 files changed, 42 insertions(+), 64 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> index bf9c7a2a495c..90af5b0a56a9 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> @@ -31,10 +31,6 @@ Required properties:
+>  - iommus: phandle to the adreno iommu
+>  - operating-points-v2: phandle to the OPP operating points
+>  
+> -Optional properties:
+> -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+> -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+> -
+>  Example:
+>  
+>  / {
+> @@ -67,50 +63,3 @@ Example:
+>  		operating-points-v2 = <&gmu_opp_table>;
+>  	};
+>  };
+> -
+> -a3xx example with OCMEM support:
+> -
+> -/ {
+> -	...
+> -
+> -	gpu: adreno@fdb00000 {
+> -		compatible = "qcom,adreno-330.2",
+> -		             "qcom,adreno";
+> -		reg = <0xfdb00000 0x10000>;
+> -		reg-names = "kgsl_3d0_reg_memory";
+> -		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> -		interrupt-names = "kgsl_3d0_irq";
+> -		clock-names = "core",
+> -		              "iface",
+> -		              "mem_iface";
+> -		clocks = <&mmcc OXILI_GFX3D_CLK>,
+> -		         <&mmcc OXILICX_AHB_CLK>,
+> -		         <&mmcc OXILICX_AXI_CLK>;
+> -		sram = <&gmu_sram>;
+> -		power-domains = <&mmcc OXILICX_GDSC>;
+> -		operating-points-v2 = <&gpu_opp_table>;
+> -		iommus = <&gpu_iommu 0>;
+> -	};
+> -
+> -	ocmem@fdd00000 {
+> -		compatible = "qcom,msm8974-ocmem";
+> -
+> -		reg = <0xfdd00000 0x2000>,
+> -		      <0xfec00000 0x180000>;
+> -		reg-names = "ctrl",
+> -		             "mem";
+> -
+> -		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> -		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> -		clock-names = "core",
+> -		              "iface";
+> -
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -
+> -		gmu_sram: gmu-sram@0 {
+> -			reg = <0x0 0x100000>;
+> -			ranges = <0 0 0xfec00000 0x100000>;
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> index 7edc298a15f2..fd779cd6994d 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> @@ -35,25 +35,54 @@ Required properties:
+>    bring the GPU out of secure mode.
+>  - firmware-name: optional property of the 'zap-shader' node, listing the
+>    relative path of the device specific zap firmware.
+> +- sram: phandle to the On Chip Memory (OCMEM) that's present on some a3xx and
+> +        a4xx Snapdragon SoCs. See
+> +        Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+>  
+> -Example 3xx/4xx/a5xx:
+> +Example 3xx/4xx:
+>  
+>  / {
+>  	...
+>  
+> -	gpu: qcom,kgsl-3d0@4300000 {
+> -		compatible = "qcom,adreno-320.2", "qcom,adreno";
+> -		reg = <0x04300000 0x20000>;
+> +	gpu: adreno@fdb00000 {
+> +		compatible = "qcom,adreno-330.2",
+> +		             "qcom,adreno";
+> +		reg = <0xfdb00000 0x10000>;
+>  		reg-names = "kgsl_3d0_reg_memory";
+> -		interrupts = <GIC_SPI 80 0>;
+> -		clock-names =
+> -		    "core",
+> -		    "iface",
+> -		    "mem_iface";
+> -		clocks =
+> -		    <&mmcc GFX3D_CLK>,
+> -		    <&mmcc GFX3D_AHB_CLK>,
+> -		    <&mmcc MMSS_IMEM_AHB_CLK>;
+> +		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "kgsl_3d0_irq";
+> +		clock-names = "core",
+> +		              "iface",
+> +		              "mem_iface";
+> +		clocks = <&mmcc OXILI_GFX3D_CLK>,
+> +		         <&mmcc OXILICX_AHB_CLK>,
+> +		         <&mmcc OXILICX_AXI_CLK>;
+> +		sram = <&gpu_sram>;
+> +		power-domains = <&mmcc OXILICX_GDSC>;
+> +		operating-points-v2 = <&gpu_opp_table>;
+> +		iommus = <&gpu_iommu 0>;
+> +	};
+> +
+> +	gpu_sram: ocmem@fdd00000 {
+> +		compatible = "qcom,msm8974-ocmem";
+> +
+> +		reg = <0xfdd00000 0x2000>,
+> +		      <0xfec00000 0x180000>;
+> +		reg-names = "ctrl",
+> +		            "mem";
+> +
+> +		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> +		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> +		clock-names = "core",
+> +		              "iface";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		gpu_sram: gpu-sram@0 {
+> +			reg = <0x0 0x100000>;
+> +			ranges = <0 0 0xfec00000 0x100000>;
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 2.24.1
+> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
 
 -- 
-2.17.1
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
