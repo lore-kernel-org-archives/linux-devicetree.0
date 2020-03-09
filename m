@@ -2,86 +2,134 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1BCC10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57907C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81E72146E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33EBA20873
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:17:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NBn4ng5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgCIUPf (ORCPT
+        id S1726118AbgCIURq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:15:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42238 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgCIUPf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:15:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 909BEAC37;
-        Mon,  9 Mar 2020 20:15:33 +0000 (UTC)
-Message-ID: <8609efe72001a183452c4bd4f1f1a827eb789406.camel@suse.de>
-Subject: Re: ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     nick.hudson@gmx.co.uk, linux-rpi-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Cc:     Nick Hudson <skrll@netbsd.org>
-Date:   Mon, 09 Mar 2020 21:15:32 +0100
-In-Reply-To: <20200309164842.8184-1-nick.hudson@gmx.co.uk>
-References: <20200309164842.8184-1-nick.hudson@gmx.co.uk>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-ft9tqa9x20+veMJWC9gx"
-User-Agent: Evolution 3.34.4 
+        Mon, 9 Mar 2020 16:17:46 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:43297 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCIURq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 16:17:46 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 2C33223EB9;
+        Mon,  9 Mar 2020 21:17:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583785062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z4lMfHVJtv1/7tVOgY+2NWcDkuP/vkxxc0vG3i3iujk=;
+        b=NBn4ng5rW9oF8jRIKbzD31HivmfpG9BA77wMSo0PPFk6bAfzl3PR72WqOaR7fjDpHdA3sE
+        77UMpTWS/9sN2Naf6SKSh6yNpPZjkpJOcwGJxbP1PO5bDjUajSZyDnmbRtpReyBIMfb2VP
+        1JOHIrABm2aB7IU06lyO+tfP9+TnPVo=
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Mar 2020 21:17:42 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Subject: Re: [PATCH 5/6] arm64: dts: ls1028a: Specify the DMA channels for the
+ DSPI controllers
+In-Reply-To: <CA+h21hp2MxLqLJL9AnufmW_-OQFdiY7p4Db97G3eTr_MUkH4TA@mail.gmail.com>
+References: <20200309145624.10026-1-olteanv@gmail.com>
+ <20200309145624.10026-6-olteanv@gmail.com>
+ <83af52172a3cabd662de1ed9574e4247@walle.cc>
+ <CA+h21hp2MxLqLJL9AnufmW_-OQFdiY7p4Db97G3eTr_MUkH4TA@mail.gmail.com>
+Message-ID: <3b25c8b5fc9c433715e1fa99bc515822@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 2C33223EB9
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         NEURAL_HAM(-0.00)[-0.385];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Am 2020-03-09 20:59, schrieb Vladimir Oltean:
+> On Mon, 9 Mar 2020 at 21:06, Michael Walle <michael@walle.cc> wrote:
+>> 
+>> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+>> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+>> >
+>> > LS1028A has a functional connection to the eDMA module. Even if the
+>> > spi-fsl-dspi.c driver is not using DMA for LS1028A now, define the
+>> > slots
+>> > in the DMAMUX for connecting the eDMA channels to the 3 DSPI
+>> > controllers.
+>> >
+>> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+>> > ---
+>> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
+>> >  1 file changed, 6 insertions(+)
+>> >
+>> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> > index 515e0a1b934f..18155273a46e 100644
+>> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> > @@ -298,6 +298,8 @@
+>> >                       interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+>> >                       clock-names = "dspi";
+>> >                       clocks = <&clockgen 4 1>;
+>> > +                     dmas = <&edma0 0 62>, <&edma0 0 60>;
+>> > +                     dma-names = "tx", "rx";
+>> 
+>> minor nit. Other nodes specified the dma channels as
+>> 
+>> dma-names = "tx", "rx";
+>> dmas = <&edma0 0 62>,
+>>         <&edma0 0 60>;
+>> 
+>> -michael
+>> 
+> 
+> Does it matter?
 
---=-ft9tqa9x20+veMJWC9gx
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+No, therefore "minor nit". Its just formatted other then everything else 
+in the file.
 
-Hi Nick,
-
-On Mon, 2020-03-09 at 16:48 +0000, nick.hudson@gmx.co.uk wrote:
-> From: Nick Hudson <nick.hudson@gmx.co.uk>
->=20
-> Define the sdhci pinctrl state as "default" so it gets applied
-> correctly and to match all other RPis.
->=20
-> Signed-off-by: Nick Hudson <skrll@netbsd.org>
-> ---
-
-you should add the [PATCH] prefix in your subject when submitting patches. =
-Also
-make sure you CC everyone listed by ./sripts/get_maintainer.pl, so they can
-properly review the patch.
-
-Thanks!
-Nicolas
-
-
---=-ft9tqa9x20+veMJWC9gx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5mo+QACgkQlfZmHno8
-x/5X0AgApDlJn2d4OsuBK7Pi9nkv3wl+RM56/ZMeEECpSeVCg7joYzLQkxZZU0nn
-OYsmMeD3MSoqcUH8UClWCix7dxpZbr72zX5x9pZ5/bj3ZCEdndlnCQRILRWK2gd+
-KyV1sQVAKy0BZIdfRw5j+ILKYCt5zGkyylleM/W7gFO5ozZhs2koLxuAgevjXwgJ
-wzwLMfinFDjSMsyJGverO/We488zzG4nEf/3R0Aj2V1829JB+tHo2qormHllZaB6
-oAu8+AdBMaNZjkWNJpiP40lUUfWXMO5Zwm8da7HtdBC9+PMwdOokgv71EJfRPAS3
-OwYRT9IMnNpBXWSPvv+kOZfP2ofe4A==
-=3CIk
------END PGP SIGNATURE-----
-
---=-ft9tqa9x20+veMJWC9gx--
-
+-michael
