@@ -2,123 +2,444 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A97C10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 23:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D3CC10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 23:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F7A24655
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 23:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD8424654
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 23:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y+LkSq/5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cdnk6m5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgCIXVN (ORCPT
+        id S1727380AbgCIXqd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:21:13 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:55010 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726698AbgCIXVN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 19:21:13 -0400
-X-UUID: 1624f9f01a604613bd62eb2b8e1aca56-20200310
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/ML3Ledtqy4m3bKFwbFWPyytmDkR4UuhLn++0IipQ84=;
-        b=Y+LkSq/54wUygpz2HTCRiMO68JO39kSH/LYYXlQpDe7OdiNW5lD1yis3agyiM1ms4CdW8712f4Mfla2EEo3pXxdSwU2v9RSoDQ029EtGsRqJHvIesuCUu6rpOEUcJCLXIRCVrQrKeB0kThjySKFWVtS8CZFjsbw41yUkpkVyxGk=;
-X-UUID: 1624f9f01a604613bd62eb2b8e1aca56-20200310
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <chun-hung.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 720479230; Tue, 10 Mar 2020 07:21:06 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 10 Mar 2020 07:19:53 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 10 Mar 2020 07:18:21 +0800
-Message-ID: <1583796065.23665.8.camel@mtkswgap22>
-Subject: Re: [PATCH 1/4] [1/4] mmc: core: expose MMC_CAP2_CQE* to dt
-From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Pavel Machek" <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 10 Mar 2020 07:21:05 +0800
-In-Reply-To: <CACRpkdauCe-zAcsO5q_79+Ux_a2=bktA5UqKjWs4XdBJZ3wWeg@mail.gmail.com>
-References: <1581921111-24172-1-git-send-email-chun-hung.wu@mediatek.com>
-         <1581921111-24172-2-git-send-email-chun-hung.wu@mediatek.com>
-         <CACRpkdauCe-zAcsO5q_79+Ux_a2=bktA5UqKjWs4XdBJZ3wWeg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 9 Mar 2020 19:46:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45318 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbgCIXqd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 19:46:33 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b22so4642096pls.12;
+        Mon, 09 Mar 2020 16:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tSkT8n/Z430nm+g00OtvcSfjHhJpGkNA3fExCO40Te8=;
+        b=cdnk6m5blgp+J3OCCWG1EwTcX7VfYmlhHPdekIezpQYnw7MyShxIo+/25t7RrD32Q4
+         oT9z6/nuIhAgI3gTTN8PWbCYh/7/8cF2iBEfVdUQCtCvAHf1zMWmJYcuQdc7Z8+bcU7a
+         6EwKAVirPwfhw3llXme6c+Aa28WKjcugihN3i/iyNs/XGp1ZpzWcVNbo93e3RxK9+n02
+         9D7t2C6UZ1SFq8qX1yTzuqHsqLkb2JbMgzWGdOnAkpE6h9uOQsfnG+CNx78qRNNSMOsR
+         8HOd5pWydhBGSPcueNfSizyLXkI/yS3BTxydl0nAbUjDAeCetUQE8/g9iPT8bKJH/vIF
+         +kLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tSkT8n/Z430nm+g00OtvcSfjHhJpGkNA3fExCO40Te8=;
+        b=qZWD7TkbDo5dToxG33WJAkbluqLRbNoikAFK6kXoeakTvEyAW+uxCr7ld2iy5cwqpP
+         z1idQ7jeuvfOEBy729ppq9oATmDwNLLJkkukvEZriXw6ZiehXhOvsA9RTg4z2bXMNILl
+         fLyC2J9BgzLzzVqLOIwgfGCAR0ypE9jplkhq3Sc6dV9qHP+m71CSQa5lZxSaNsO/qRTj
+         +7/JDUyNuaRAfnFeibnOLofnfHNy0fGniXdzxN3h77TcjgDjWCliYOGL1VP1nxd3TvrH
+         bbPx/umAPbjqQAlZ2yUC6TaKFBqfhOPoPfQ1QOYUPyA3CKsrqHlgJyqDRSpVGF4RQHH/
+         w/cA==
+X-Gm-Message-State: ANhLgQ3xoCL2fZI0WsLHdArIVOQ64qvBNs4bsksUUx2hXF2z8LyfZ8W6
+        /54x9Bvxuo99so4xxHAiEhA=
+X-Google-Smtp-Source: ADFU+vsfl38+Tfau/1SStKLehhrwyQ4BxIJ94XjQFG8sY7tPuku0xQ39POC0QDmboqLCgaw1GJYNEA==
+X-Received: by 2002:a17:902:b40f:: with SMTP id x15mr18684112plr.82.1583797590271;
+        Mon, 09 Mar 2020 16:46:30 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id i21sm942112pgn.5.2020.03.09.16.46.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 16:46:29 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 16:46:39 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 7/7] ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
+Message-ID: <20200309234638.GD11333@Asurada-Nvidia.nvidia.com>
+References: <cover.1583725533.git.shengjiu.wang@nxp.com>
+ <2616bfd81df982add337b169b2d424a8d50c6bda.1583725533.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2616bfd81df982add337b169b2d424a8d50c6bda.1583725533.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAyLTIxIGF0IDE1OjMzICswMTAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
-PiBPbiBNb24sIEZlYiAxNywgMjAyMCBhdCA3OjMyIEFNIENodW4tSHVuZyBXdSA8Y2h1bi1odW5n
-Lnd1QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+IA0KPiA+IEV4cG9zZSBNTUNfQ0FQMl9DUUUgYW5k
-IE1NQ19DQVAyX0NRRV9EQ01EDQo+ID4gdG8gaG9zdC0+Y2FwczIgaWYNCj4gPiAxLiAic3VwcG9y
-dHMtY3FlIiBpcyBkZWZpbmVkIGluIGR0IGFuZA0KPiA+IDIuICJkaXNhYmxlLWNxZS1kY21kIiBp
-cyBub3QgZGVmaW5lZCBpbiBkdC4NCj4gPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL21tYy9jb3Jl
-L2hvc3QuYyB8IDggKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygr
-KQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2NvcmUvaG9zdC5jIGIvZHJpdmVy
-cy9tbWMvY29yZS9ob3N0LmMNCj4gPiBpbmRleCAxMDViN2E3Li5lZmIwZGJlIDEwMDY0NA0KPiA+
-IC0tLSBhL2RyaXZlcnMvbW1jL2NvcmUvaG9zdC5jDQo+ID4gKysrIGIvZHJpdmVycy9tbWMvY29y
-ZS9ob3N0LmMNCj4gPiBAQCAtMzE5LDYgKzMxOSwxNCBAQCBpbnQgbW1jX29mX3BhcnNlKHN0cnVj
-dCBtbWNfaG9zdCAqaG9zdCkNCj4gPiAgICAgICAgICAgICAgICAgaG9zdC0+Y2FwczIgfD0gTU1D
-X0NBUDJfTk9fU0Q7DQo+ID4gICAgICAgICBpZiAoZGV2aWNlX3Byb3BlcnR5X3JlYWRfYm9vbChk
-ZXYsICJuby1tbWMiKSkNCj4gPiAgICAgICAgICAgICAgICAgaG9zdC0+Y2FwczIgfD0gTU1DX0NB
-UDJfTk9fTU1DOw0KPiA+ICsgICAgICAgaWYgKGRldmljZV9wcm9wZXJ0eV9yZWFkX2Jvb2woZGV2
-LCAic3VwcG9ydHMtY3FlIikpDQo+ID4gKyAgICAgICAgICAgICAgIGhvc3QtPmNhcHMyIHw9IE1N
-Q19DQVAyX0NRRTsNCj4gDQo+IEkgZG9uJ3QgdW5kZXJzdGFuZCB3aHkgdGhpcyBpcyBldmVuIGEg
-RFQgcHJvcGVydHkgYXMgaXQgc2hvdWxkDQo+IGJlIGNsZWFyIGZyb20gdGhlIGhvc3RzIGNvbXBh
-dGlibGUgd2hldGhlciBpdCBzdXBwb3J0cyBDUUUgb3INCj4gbm90LiBCdXQgaXQncyB0b28gbGF0
-ZSB0byBkbyBhbnl0aGluZyBhYm91dCB0aGF0IEkgc3VwcG9zZSwgYW5kDQo+IEkganVzdCBhc3N1
-bWUgdGhlcmUgaXMgc29tZXRoaW5nIEkgZG9uJ3QgdW5kZXJzdGFuZCBoZXJlLg0KInN1cHBvcnRz
-LWNxZSIgYXMgbXkgdW5kZXJzdGFuZGluZyBpcyBsaWtlIEhTNDAwIEhTMjAwIGlzIGEgaG9zdA0K
-Y2FwYWJpbGl0eS4NCj4gDQo+ID4gKyAgICAgICAvKiBNdXN0IGJlIGFmdGVyICJzdXBwb3J0cy1j
-cWUiIGNoZWNrICovDQo+ID4gKyAgICAgICBpZiAoIWRldmljZV9wcm9wZXJ0eV9yZWFkX2Jvb2wo
-ZGV2LCAiZGlzYWJsZS1jcWUtZGNtZCIpKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChob3N0
-LT5jYXBzMiAmIE1NQ19DQVAyX0NRRSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBob3N0
-LT5jYXBzMiB8PSBNTUNfQ0FQMl9DUUVfRENNRDsNCj4gPiArICAgICAgIH0NCj4gDQo+IFRoaXMg
-aXMgdGhlIHJpZ2h0IHBsYWNlIHRvIGRvIHRoaXMgSSBzdXBwb3NlLiBEaXNhYmxpbmcgQ1FFDQo+
-IHNlbGVjdGl2ZWx5IGlzIHNvbWV0aGluZyB5b3UgbWlnaHQgd2FubmEgZG8gZm9yIGRlYnVnZ2lu
-Zy4NCj4gQWNrZWQtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4N
-Cj4gDQo+IEkgc2VlIHRoYXQgc29tZSBkcml2ZXJzIGFyZSBhbHJlYWR5IHBhcnNpbmcgdGhpcyBE
-VCBwcm9wZXJ0eQ0KPiBvbiB0aGVpciBvd24sIHNob3VsZCB3ZSBmb2xsb3cgdXAgd2l0aCBwYXRj
-aGVzIHNvIHRoYXQgdGhlc2U6DQo+IA0KPiAkIGdpdCBncmVwICdzdXBwb3J0cy1jcWUnDQo+IGRy
-aXZlcnMvbW1jL2hvc3Qvc2RoY2ktYnJjbXN0Yi5jOiAgICAgICBpZg0KPiAoZGV2aWNlX3Byb3Bl
-cnR5X3JlYWRfYm9vbCgmcGRldi0+ZGV2LCAic3VwcG9ydHMtY3FlIikpIHsNCj4gZHJpdmVycy9t
-bWMvaG9zdC9zZGhjaS1tc20uYzogICBpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKG5vZGUsICJz
-dXBwb3J0cy1jcWUiKSkNCj4gZHJpdmVycy9tbWMvaG9zdC9zZGhjaS10ZWdyYS5jOiBpZg0KPiAo
-ZGV2aWNlX3Byb3BlcnR5X3JlYWRfYm9vbChob3N0LT5tbWMtPnBhcmVudCwgInN1cHBvcnRzLWNx
-ZSIpKQ0KPiANCj4gTWFrZSB1c2Ugb2YgdGhlIGNlbnRyYWwgcGFyc2luZyBpbnN0ZWFkPw0KSW4g
-djQsIEkgd2lsbCByZW1vdmUgdGhlIHZlbmRvciBkcml2ZXIgZHQgc2V0dGluZyBhbmQgdXNlIGNl
-bnRyYWwNCnBhcnNpbmcgaW5zdGVhZC4NCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxsZWlqDQoN
-Cg==
+A few small comments -- trying to improve readability.
 
+On Mon, Mar 09, 2020 at 11:58:34AM +0800, Shengjiu Wang wrote:
+> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new IP module
+> found on i.MX8MN. It is different with old ASRC module.
+> 
+> The primary features for the EASRC are as follows:
+> - 4 Contexts - groups of channels with an independent time base
+> - Fully independent and concurrent context control
+> - Simultaneous processing of up to 32 audio channels
+> - Programmable filter charachteristics for each context
+> - 32, 24, 20, and 16-bit fixed point audio sample support
+> - 32-bit floating point audio sample support
+> - 8kHz to 384kHz sample rate
+> - 1/16 to 8x sample rate conversion ratio
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
+> ---
+>  sound/soc/fsl/Kconfig     |   11 +
+>  sound/soc/fsl/Makefile    |    2 +
+>  sound/soc/fsl/fsl_easrc.c | 2111 +++++++++++++++++++++++++++++++++++++
+>  sound/soc/fsl/fsl_easrc.h |  651 ++++++++++++
+>  4 files changed, 2775 insertions(+)
+>  create mode 100644 sound/soc/fsl/fsl_easrc.c
+>  create mode 100644 sound/soc/fsl/fsl_easrc.h
+
+> diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
+
+> +static int fsl_easrc_resampler_config(struct fsl_asrc *easrc)
+> +{
+> +	struct device *dev = &easrc->pdev->dev;
+> +	struct fsl_easrc_priv *easrc_priv = easrc->private;
+> +	struct asrc_firmware_hdr *hdr =  easrc_priv->firmware_hdr;
+> +	struct interp_params *interp = easrc_priv->interp;
+> +	struct interp_params *selected_interp = NULL;
+> +	unsigned int num_coeff;
+> +	unsigned int i;
+> +	u64 *arr;
+> +	u32 *r;
+> +	int ret;
+> +
+> +	if (!hdr) {
+> +		dev_err(dev, "firmware not loaded!\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	for (i = 0; i < hdr->interp_scen; i++) {
+> +		if ((interp[i].num_taps - 1) ==
+> +		    bits_taps_to_val(easrc_priv->rs_num_taps)) {
+
+Could fit everything under 80 characters:
+
++		if ((interp[i].num_taps - 1) !=
++		    bits_taps_to_val(easrc_priv->rs_num_taps))
++			continue;
++
++		arr = interp[i].coeff;
++		selected_interp = &interp[i];
++		dev_dbg(dev, "Selected interp_filter: %u taps - %u phases\n",
++			selected_interp->num_taps,
++			selected_interp->num_phases);
++		break;
+
+
+> +static int fsl_easrc_normalize_filter(struct fsl_asrc *easrc,
+> +				      u64 *infilter,
+> +				      u64 *outfilter,
+> +				      int shift)
+> +{
+> +	struct device *dev = &easrc->pdev->dev;
+> +	u64 coef = *infilter;
+
+> +	s64 exp  = (coef & 0x7ff0000000000000ll) >> 52;
+
+Hmm...by masking 0x7ff0000000000000ll, MSB (sign bit) is gone.
+Would the result still possibly be a negative value?
+
+> +	/*
+> +	 * If exponent is zero (value == 0), or 7ff (value == NaNs)
+> +	 * dont touch the content
+> +	 */
+> +	if (((coef & 0x7ff0000000000000ll) == 0) ||
+> +	    ((coef & 0x7ff0000000000000ll) == ((u64)0x7ff << 52))) {
+
+You have extracted "exp" already:
++	if (exp == 0 || (u64)exp & 0x7ff == 0x7ff)
+
+> +		*outfilter = coef;
+
+Could simply a bit by returning here:
++		return 0;
++	}
+	
+Then:
+
++	/* coef * 2^shift == exp + shift */
++	exp += shift;
++
++	if ((shift > 0 && exp >= 2047) || (shift < 0 && exp <= 0)) {
++		dev_err(dev, "coef out of range\n");
++		return -EINVAL;
++	}
++
++	outcoef = (u64)(coef & 0x800FFFFFFFFFFFFFll) + ((u64)exp << 52);
++	*outfilter = outcoef;
+
+
+> +static int fsl_easrc_write_pf_coeff_mem(struct fsl_asrc *easrc, int ctx_id,
+> +					u64 *arr, int n_taps, int shift)
+> +{
+> +	if (!arr) {
+> +		dev_err(dev, "NULL buffer\n");
+
+Could it be slightly more specific?
+
+
+> +static int fsl_easrc_prefilter_config(struct fsl_asrc *easrc,
+> +				      unsigned int ctx_id)
+> +{
+> +	ctx_priv->in_filled_sample = bits_taps_to_val(easrc_priv->rs_num_taps) / 2;
+> +	ctx_priv->out_missed_sample = ctx_priv->in_filled_sample *
+> +					  ctx_priv->out_params.sample_rate /
+> +					  ctx_priv->in_params.sample_rate;
+
+There are quite a few references to sample_rate and sample_format
+here, so we could use some local variables to cache them:
+
++       in_s_rate = ctx_priv->in_params.sample_rate;
++       out_s_rate = ctx_priv->out_params.sample_rate;
++       in_s_fmt = ctx_priv->in_params.sample_format;
++       out_s_fmt = ctx_priv->out_params.sample_format;
+
+
+> +static int fsl_easrc_config_slot(struct fsl_asrc *easrc, unsigned int ctx_id)
+> +{
+> +	struct fsl_easrc_priv *easrc_priv = easrc->private;
+> +	struct fsl_asrc_pair *ctx = easrc->pair[ctx_id];
+> +	int req_channels = ctx->channels;
+> +	int start_channel = 0, avail_channel;
+> +	struct fsl_easrc_slot *slot0, *slot1;
+> +	int i, ret;
+> +
+> +	if (req_channels <= 0)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < EASRC_CTX_MAX_NUM; i++) {
+> +		slot0 = &easrc_priv->slot[i][0];
+> +		slot1 = &easrc_priv->slot[i][1];
+> +
+> +		if (slot0->busy && slot1->busy)
+> +			continue;
+> +
+
+Could merge the duplication by doing:
++	struct fsl_easrc_slot *slot = NULL;
+...
++		else if ((slot0->busy && slot0->ctx_index == ctx->index) ||
++			 (slot1->busy && slot1->ctx_index == ctx->index))
++			continue;
++		else if (!slot0->busy)
++			slot = slot0;
++		else if (!slot1->busy)
++			slot = slot1;
++
++		if (!slot)
++			continue;
++
++		avail_channel = fsl_easrc_max_ch_for_slot(ctx, slot);
++		if (avail_channel <= 0)
++			continue;
++
++		slot->slot_index = 0;
++
++		ret = fsl_easrc_config_one_slot(ctx, slot, i, &req_channels,
++						&start_channel, &avail_channel);
++		if (ret)
++			return ret;
++
++		if (req_channels > 0)
++			continue;
++		else
++			break;
+
+# Please double check before doing copy-n-paste.
+
+
+> +int fsl_easrc_config_context(struct fsl_asrc *easrc, unsigned int ctx_id)
+> +{
+> +	/* Context Input FIFO Watermark */
+> +	regmap_update_bits(easrc->regmap, REG_EASRC_CC(ctx_id),
+> +			   EASRC_CC_FIFO_WTMK_MASK,
+> +			   EASRC_CC_FIFO_WTMK(ctx_priv->in_params.fifo_wtmk));
+> +
+> +	/* Context Output FIFO Watermark */
+> +	regmap_update_bits(easrc->regmap, REG_EASRC_COC(ctx_id),
+> +			   EASRC_COC_FIFO_WTMK_MASK,
+> +			   EASRC_COC_FIFO_WTMK(ctx_priv->out_params.fifo_wtmk - 1));
+
+Why a "-1" here vs. no "-1" for input FIFO? Could probably put
+the reason in the comments?
+
+
+> +void fsl_easrc_release_context(struct fsl_asrc_pair *ctx)
+> +{
+> +	unsigned long lock_flags;
+> +	struct fsl_asrc *easrc;
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	if (!ctx)
+> +		return;
+> +
+> +	easrc = ctx->asrc;
+> +	dev = &easrc->pdev->dev;
+> +
+> +	spin_lock_irqsave(&easrc->lock, lock_flags);
+> +
+> +	ret = fsl_easrc_release_slot(easrc, ctx->index);
+
+Where is this "ret" used?
+
+> +
+> +	easrc->channel_avail += ctx->channels;
+> +	easrc->pair[ctx->index] = NULL;
+> +
+> +	spin_unlock_irqrestore(&easrc->lock, lock_flags);
+> +}
+
+
+> +void fsl_easrc_dump_firmware(struct fsl_asrc *easrc)
+
+Hmm..where is this function being used? From outside?
+
+> +int fsl_easrc_get_firmware(struct fsl_asrc *easrc)
+
+static?
+
+If it's being called from an outsider, it might be safer to check
+easrc->private pointer too?
+
+
+> +{
+> +	struct fsl_easrc_priv *easrc_priv;
+
+Could probably clean up some wrappings with:
++	struct firmware **fw_p;
+
+> +	u32 pnum, inum, offset;
+
++	u8 *data;
+
+> +	int ret;
+> +
+> +	if (!easrc)
+> +		return -EINVAL;
+> +
+> +	easrc_priv = easrc->private;
+
++	fw_p = &easrc_priv->fw;
+
+> +	ret = request_firmware(&easrc_priv->fw, easrc_priv->fw_name,
+> +			       &easrc->pdev->dev);
+
++	ret = request_firmware(fw_p, easrc_priv->fw_name, &easrc->pdev->dev);
+
+> +	if (ret)
+> +		return ret;
+
++	data = easrc_priv->fw->data;
+
+And replace all data references.
+
+
+> +static int fsl_easrc_get_fifo_addr(u8 dir, enum asrc_pair_index index)
+> +{
+> +	return REG_EASRC_FIFO(dir, index);
+
+Maybe an inline type or simply a macro?
+
+
+> +static int fsl_easrc_probe(struct platform_device *pdev)
+> +{
+: +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "no irq for node %s\n",
+> +			dev_name(&pdev->dev));
+
+Probably could save some wrappings in this function if we have a:
+	struct device *dev = &pdev->dev;
+
+And dev_err() prints dev_name() actually, so it'd be better use:
++		dev_err(dev, "no irq for node %pOF\n", np);
+
+
+> +	ret = of_property_read_string(np,
+> +				      "fsl,easrc-ram-script-name",
+> +				      &easrc_priv->fw_name);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to get firmware name\n");
+> +		return ret;
+> +	}
+
+Could we move this to the place where we parse DT bindings?
+
+
+> +static int fsl_easrc_runtime_resume(struct device *dev)
+> +{
+
+> +	for (i = ASRC_PAIR_A; i < EASRC_CTX_MAX_NUM; i++) {
+> +		ctx = easrc->pair[i];
+> +		if (ctx) {
+
+Could do this to save some indentations from following lines:
++		if (!ctx)
++			continue;
+
+> +			ctx_priv = ctx->private;
+> +			fsl_easrc_set_rs_ratio(ctx);
+> +			ctx_priv->out_missed_sample = ctx_priv->in_filled_sample *
+> +							  ctx_priv->out_params.sample_rate /
+> +							  ctx_priv->in_params.sample_rate;
+> +			if (ctx_priv->in_filled_sample * ctx_priv->out_params.sample_rate
+> +					% ctx_priv->in_params.sample_rate != 0)
+> +				ctx_priv->out_missed_sample += 1;
+> +
+> +			ret = fsl_easrc_write_pf_coeff_mem(easrc, i,
+> +							   ctx_priv->st1_coeff,
+> +							   ctx_priv->st1_num_taps,
+> +							   ctx_priv->st1_addexp);
+> +			if (ret)
+> +				goto disable_mem_clk;
+> +
+> +			ret = fsl_easrc_write_pf_coeff_mem(easrc, i,
+> +							   ctx_priv->st2_coeff,
+> +							   ctx_priv->st2_num_taps,
+> +							   ctx_priv->st2_addexp);
+> +			if (ret)
+> +				goto disable_mem_clk;
+
+
+> diff --git a/sound/soc/fsl/fsl_easrc.h b/sound/soc/fsl/fsl_easrc.h
+> +struct fsl_easrc_slot {
+> +	bool busy;
+> +	int ctx_index;
+> +	int slot_index;
+> +	int num_channel;  /*maximum is 8*/
+	
+Spaces for comments: 	/* maximum is 8 */
+
+
+> +/**
+> + * fsl_easrc_priv: EASRC private data
+> + *
+> + * @slot: slot setting
+> + * @firmware_hdr:  the header of firmware
+> + * @interp: pointer to interpolation filter coeff
+> + * @prefil: pointer to prefilter coeff
+> + * @fw: firmware of coeff table
+> + * @fw_name: firmware name
+> + * @rs_num_taps:  resample filter taps, 32, 64, or 128
+> + * @bps_i2c958: bits per sample of IEC958
+
+i2c or iec?
