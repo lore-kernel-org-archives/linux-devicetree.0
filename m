@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE1CC10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28209C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141D02146E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5C92146E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgCIVUY (ORCPT
+        id S1726168AbgCIVUl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:20:24 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:51293 "EHLO
+        Mon, 9 Mar 2020 17:20:41 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:40291 "EHLO
         relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgCIVUY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:20:24 -0400
+        with ESMTP id S1726118AbgCIVUl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:20:41 -0400
 X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 4B152E0004;
-        Mon,  9 Mar 2020 21:20:21 +0000 (UTC)
-Date:   Mon, 9 Mar 2020 22:20:20 +0100
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 4ED35E0006;
+        Mon,  9 Mar 2020 21:20:38 +0000 (UTC)
+Date:   Mon, 9 Mar 2020 22:20:38 +0100
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -32,23 +32,23 @@ Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
         robh+dt@kernel.org, peda@axentia.se, linux@armlinux.org.uk,
         wsa@the-dreams.de, Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: Re: [PATCH v4 3/4] ARM: at91/dt: sama5d4: add i2c gpio pinctrl
-Message-ID: <20200309212020.GJ3563@piout.net>
+Subject: Re: [PATCH v4 4/4] ARM: at91/dt: sama5d2: add i2c gpio pinctrl
+Message-ID: <20200309212038.GK3563@piout.net>
 References: <20200225155012.22764-1-codrin.ciubotariu@microchip.com>
- <20200225155012.22764-3-codrin.ciubotariu@microchip.com>
+ <20200225155012.22764-4-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225155012.22764-3-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20200225155012.22764-4-codrin.ciubotariu@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 25/02/2020 17:50:11+0200, Codrin Ciubotariu wrote:
+On 25/02/2020 17:50:12+0200, Codrin Ciubotariu wrote:
 > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 > 
-> Add the i2c gpio pinctrls so the i2c bus recovery option can be enabled
+> Add the i2c gpio pinctrls to support the i2c bus recovery
 > 
 > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
 > [codrin.ciubotariu@microchip.com: removed gpio pull-ups]
@@ -63,10 +63,11 @@ On 25/02/2020 17:50:11+0200, Codrin Ciubotariu wrote:
 >  - removed gpio pull-ups;
 > 
 > Changes in v2:
->   - none;
+>  - new patch;
 > 
->  arch/arm/boot/dts/sama5d4.dtsi | 33 ++++++++++++++++++++++++++++++---
->  1 file changed, 30 insertions(+), 3 deletions(-)
+>  arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts   | 33 +++++++++++++++++++--
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 33 +++++++++++++++++++--
+>  2 files changed, 60 insertions(+), 6 deletions(-)
 > 
 Applied, thanks.
 
