@@ -2,147 +2,203 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13854C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 13:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD35C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86E921655
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 13:58:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="en4dNoeE"
+	by mail.kernel.org (Postfix) with ESMTP id 260B621D56
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 14:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583763918;
+	bh=WKog/Z3eWreiPgowZwnHuYIiKaqytEO7j/CjS0mGOGk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wQQQVsq7cd9mR0SGtDNqAEuIC44xUfSL3bm13p/E26UMwkcViAxUTIpIEazBYKQJ5
+	 cc7aUdoTN+PmNpJYfARg5nCnlRnarAs9FOwLkGUuI1rnLL55ErgKlIJpRdBI0xUytJ
+	 cmw48FbAGRlGCgfwUtABRK12Frw12cRUZmNClBLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgCIN6s (ORCPT
+        id S1726520AbgCIOZR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:58:48 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32168 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726632AbgCIN6s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 09:58:48 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029DvUbI016259;
-        Mon, 9 Mar 2020 09:58:47 -0400
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2106.outbound.protection.outlook.com [104.47.70.106])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ym9db5cfh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Mar 2020 09:58:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HqLfwEvmDYLFxsWAlS4QA4Io3sV+boPVap7Jf4r/TYqGcSEVGgNbXa1rZj2z/S28GEw+S3lKOMUC2mFKdFNn7YJdL5JdB+TPbM4KUnsGY3oMK4zdPVR7LHRkdeFx70T7yYWrqvG/u5cfleQ1JbI1ya79JbYoyYO/auQaP7DaJujbkNbUtvhR1PdeHalsGTT0jSbI2UFVNHu5hQxa+nMcXlFHexrCmU37/tkWf7Mhwq6Xhp7XlJ70cICBn+uQjcQQKu+Op6WBE7jpkJPipnE9/kV146nDoG3v2Oo3Wml6wO0tBIg4H5ejrDFLIQdC7GY4JRDz3+Edm4GxnkVKRs+84A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AhrzlkANeRUJ02ZJWIAj5eahF5oetBFTAajrkNfqOs8=;
- b=U7Yg5QX1VvqwztoUL9oUzWgXUueZAfxPX+xJf87lmpmZan74pwrng2Iq6coBr/AG+ocV3lojWgEScVJCGuy5gq9SxHHjBqIMwCPkBoaEo0teM859pAOOWwAmCrI4vZVHu87+gzoDAxNQyZlhEwDfy5mlBoRSrrvq6kestJvCPIn71MFnUnNNODCYZp22Z08V0sRz2AvXnzfU7EureK+CgN0MmyjSxTFCwL9N0JmlCPTR9vEH9XOpBnax64y5F+cG9pQ35r2N5XcPKy1JZIlcg96RwPMcljG699f7u/xXAyAFhdLanosQ5TzD6Ph5UVmYlvcwcnO+nTY12P52/fD7pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AhrzlkANeRUJ02ZJWIAj5eahF5oetBFTAajrkNfqOs8=;
- b=en4dNoeE1qFi0r+Zpo2U3j/rAJ2va4sfni3yHdN+C3HZQJ9Kpr+KJs5ASa02HpVhHLxwZ99CRG85NPQfpUw6+dfXowQxoInlCdgl5jzURE3dzRWsDy1+GMG6DRNh9gbQl0vM8R++yJtN/Avq+w9aSve4Y+kaYzC+9/JJDBhMD4E=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB4761.namprd03.prod.outlook.com (2603:10b6:5:18d::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Mon, 9 Mar
- 2020 13:58:45 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::f8c4:f7f2:c7a0:cc19]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::f8c4:f7f2:c7a0:cc19%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 13:58:45 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "mdf@kernel.org" <mdf@kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH v8 2/8] include: fpga: adi-axi-common.h: add version
- helper macros
-Thread-Topic: [PATCH v8 2/8] include: fpga: adi-axi-common.h: add version
- helper macros
-Thread-Index: AQHV86YcBP6rketQYUC8BeRDNruucag9MV4AgABcPoCAAsDIAA==
-Date:   Mon, 9 Mar 2020 13:58:44 +0000
-Message-ID: <f1022947596ef9f0d94ca606f26f236c84288b89.camel@analog.com>
-References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
-         <20200306110100.22092-3-alexandru.ardelean@analog.com>
-         <20200307142604.7d597667@archlinux> <20200307195613.GA38707@epycbox.lan>
-In-Reply-To: <20200307195613.GA38707@epycbox.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c0efd62a-29d3-491b-7578-08d7c431fbae
-x-ms-traffictypediagnostic: DM6PR03MB4761:
-x-microsoft-antispam-prvs: <DM6PR03MB4761E722FC416281FD948B58F9FE0@DM6PR03MB4761.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0337AFFE9A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(136003)(396003)(346002)(366004)(199004)(189003)(4326008)(36756003)(71200400001)(54906003)(6486002)(6512007)(966005)(110136005)(316002)(8676002)(81166006)(81156014)(8936002)(26005)(91956017)(76116006)(186003)(6506007)(5660300002)(64756008)(66556008)(66446008)(66946007)(66476007)(478600001)(86362001)(2906002)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4761;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xs8T2h7wWDa61KOap6isvwFREmbLtG63NQarItkiBpeJPO34/OnbfBC7SgWJzE+EUEb2yNdVoe3k9wjBdHWdCX+1vyXTOCKNeKxgmqfMBKRLBybK5Nrf+N0V+90m6I3jzX+jF5rRBGAXScqnkvB+nBJyogt/nb8XdUUrb5jSkCxSFVuXgw2IAw3soK4JN9vfHIzK5eRMhsLVgtPnUC3b6KNKR6wdL2Vknwi6Bkx7iRZUUZfXRd1rEFMtP95h9pkFFUFtkmRFjkCyaecGPzsNXZ61ZETDIf6MuRJJcoPfMCIMsbszx+FLupkgORPUMsLeVvnTwAn015/cxS2fa5wNYYwo06S80+nK8AXuP/pTRnBtU/0dUhTOTZNjLhpuS9lH9d6wKlo6Nt2ior+GvgD5Al7Bxg7kYLFCj0p9HPJCgzqHB2IrYjhJlrx8wuvfQToxYpzWvt51b06zwUQOIXpFAi5M3oBeXmwbTNw9+jJVHL/+bTk+P8Jc5jboJtK5U0mylHEafhBym0GDFHN4L6csYQ==
-x-ms-exchange-antispam-messagedata: g0FocDeOMXlmY8qmpJFcoEW9LsjhW7kfV5Fj4frcJkW+8OaB3mQRv2nHVD9p24mwWOab7Sd8L5f53BfkU4gvM4o/t0+ZOCKMZ+wslV7sRagS7po5WJO16DvC+gUUabs9tchVic4lpjpdJCIWS6euEQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <459DCDB9C617464AB06481564BFBBD0D@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0efd62a-29d3-491b-7578-08d7c431fbae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 13:58:45.0061
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vncXNmIcc54EfBM1MuMjUumN3ZRoY+bHdyBQ9puEgnE2ecG12c4jHZamNBWopbb9oOoecliVEjkN4JbZXIKn8efmy2y4w2LIIZlZ5RCN+WI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4761
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_04:2020-03-09,2020-03-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- clxscore=1015 impostorscore=0 bulkscore=0 priorityscore=1501 phishscore=0
- mlxscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003090096
+        Mon, 9 Mar 2020 10:25:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:53128 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbgCIOZR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Mar 2020 10:25:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84B2F30E;
+        Mon,  9 Mar 2020 07:25:16 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 079343F67D;
+        Mon,  9 Mar 2020 07:25:15 -0700 (PDT)
+Date:   Mon, 09 Mar 2020 14:25:14 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        Rob Herring <robh+dt@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Subject: Applied "ASoC: jz4740-i2s: Avoid passing enum as match data" to the asoc tree
+In-Reply-To:  <20200306222931.39664-4-paul@crapouillou.net>
+Message-Id:  <applied-20200306222931.39664-4-paul@crapouillou.net>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTAzLTA3IGF0IDExOjU2IC0wODAwLCBNb3JpdHogRmlzY2hlciB3cm90ZToN
-Cj4gW0V4dGVybmFsXQ0KPiANCj4gT24gU2F0LCBNYXIgMDcsIDIwMjAgYXQgMDI6MjY6MDRQTSAr
-MDAwMCwgSm9uYXRoYW4gQ2FtZXJvbiB3cm90ZToNCj4gPiBPbiBGcmksIDYgTWFyIDIwMjAgMTM6
-MDA6NTQgKzAyMDANCj4gPiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBh
-bmFsb2cuY29tPiB3cm90ZToNCj4gPiANCj4gPiA+IFRoZSBmb3JtYXQgZm9yIGFsbCBBREkgQVhJ
-IElQIGNvcmVzIGlzIHRoZSBzYW1lLg0KPiA+ID4gaS5lLiAnbWFqb3IubWlub3IucGF0Y2gnLg0K
-PiA+ID4gDQo+ID4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIGhlbHBlciBtYWNyb3MgdG8gYmUgcmUt
-dXNlZCBpbiBBREkgQVhJIGRyaXZlcnMuDQo+ID4gPiANCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFs
-ZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+IEFja2Vk
-LWJ5OiBNb3JpdHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+DQo+IA0KPiA+IEFnYWluLCB0cml2
-aWFsIGJ1dCBuZWVkcyBhIE1vcml0eiBhY2sgYXMgaXQncyBoaXMgc3Vic3lzdGVtLg0KPiANCj4g
-SSBoYWQgb3JpZ2luYWxseSBhc2tlZCB0byBub3QgcHV0IGl0IHVuZGVyIGluY2x1ZGUvbGludXgv
-ZnBnYSwgYnV0IGFsYXMsDQo+IG5vdyBpdCdzIGhlcmUgOikNCj4gDQo+IEl0IG5ldmVyIG1hZGUg
-bXVjaCBzZW5zZSBpbWhvIHRvIGRyb3AgaXQgdW5kZXIgbGludXgvZnBnYSBqdXN0IGJlY2F1c2UN
-Cj4gaXQncyBhIGhhcmR3YXJlIGltcGxlbWVudGVkIGluIGFuIEZQR0EuLi4uDQoNCldlIGNhbiBh
-bHdheXMgbW92ZSBpdC4NCkkgZG9uJ3QgcmVtZW1iZXIgYWJvdXQgYW55IGRpc2N1c3Npb24gb24g
-dGhpcyBtYXR0ZXIuDQpPciBtYXliZSBJIHdhc24ndCBpbmNsdWRlZC4NCk9yIG1heWJlIEkgaGF2
-ZSBzb21lIHNldmVyZSBjYXNlIG9mIGFtbmVzaWEgb3IgY2FyZWxlc3NuZXNzIGZvciBvbWl0dGlu
-Zw0KdGhyZWFkcy4gSSBhbSB0ZXJyaWJsZSBhdCBmb2xsb3dpbmcgdGhyZWFkcy4NCg0KQXBvbG9n
-aWVzIGZvciBhbnl0aGluZyBvbiBteSBwYXJ0Lg0KDQpJZiB5b3UgcHJvcG9zZSBhbm90aGVyIGxv
-Y2F0aW9uLCBJIGNhbiBzcGluLXVwIGEgcGF0Y2ggb24gaXQuDQoNClRoZXNlIHJlZy1kZWZpbml0
-aW9ucyBhcmUgY29tbW9uIHRvIGFsbCBBREkgSERMIHJlZ3MuDQpNYXliZSBtb3JlIG1heSBjb21l
-IHVwIGFzIHN0dWZmIGdldHMgdXBzdHJlYW1lZC4NCg0KVGhlIGZ1bGwtYmxvd24vaW50ZXJuYWwg
-dmVyc2lvbiB3ZSBoYXZlIGlzOg0KaHR0cHM6Ly9naXRodWIuY29tL2FuYWxvZ2RldmljZXNpbmMv
-bGludXgvYmxvYi9tYXN0ZXIvaW5jbHVkZS9saW51eC9mcGdhL2FkaS1heGktY29tbW9uLmgNCg0K
-SXQgdHJpZXMgdG8gZGVmaW5lIHNvbWUgdGhpbmdzIHRoYXQgYXJlIGNvbW1vbiBiZXR3ZWVuIElu
-dGVsLCBYaWxpbnggYW5kIEFESSBJUA0KY29yZXMgYWNyb3NzIFt0aGVzZSBhbmQgaG9wZWZ1bGx5
-IG90aGVyXSBGUEdBIGJvYXJkcy4NCkknbSBub3Qgc2F5aW5nIGl0J3MgZG9pbmcgYSBnb29kIGpv
-YiBvZiB0aGF0IGF0IHRoZSBtb21lbnQuDQrCr1xfKOODhClfL8KvDQpUaGFua3MNCkFsZXgNCg0K
-PiANCj4gQ2hlZXJzLA0KPiBNb3JpdHoNCg==
+The patch
+
+   ASoC: jz4740-i2s: Avoid passing enum as match data
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 62f9ed5f8768d2425461737d77b83f888b525c06 Mon Sep 17 00:00:00 2001
+From: Paul Cercueil <paul@crapouillou.net>
+Date: Fri, 6 Mar 2020 23:29:29 +0100
+Subject: [PATCH] ASoC: jz4740-i2s: Avoid passing enum as match data
+
+Instead of passing an enum as match data, and checking its value in the
+probe to register one or the other dai, pass a pointer to a struct
+i2s_soc_info, which contains all the information relative to one SoC.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://lore.kernel.org/r/20200306222931.39664-4-paul@crapouillou.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/jz4740/jz4740-i2s.c | 36 ++++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
+
+diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
+index 2572aba843e3..d1512d483cda 100644
+--- a/sound/soc/jz4740/jz4740-i2s.c
++++ b/sound/soc/jz4740/jz4740-i2s.c
+@@ -93,6 +93,11 @@ enum jz47xx_i2s_version {
+ 	JZ_I2S_JZ4780,
+ };
+ 
++struct i2s_soc_info {
++	enum jz47xx_i2s_version version;
++	struct snd_soc_dai_driver *dai;
++};
++
+ struct jz4740_i2s {
+ 	struct resource *mem;
+ 	void __iomem *base;
+@@ -104,7 +109,7 @@ struct jz4740_i2s {
+ 	struct snd_dmaengine_dai_dma_data playback_dma_data;
+ 	struct snd_dmaengine_dai_dma_data capture_dma_data;
+ 
+-	enum jz47xx_i2s_version version;
++	const struct i2s_soc_info *soc_info;
+ };
+ 
+ static inline uint32_t jz4740_i2s_read(const struct jz4740_i2s *i2s,
+@@ -284,7 +289,7 @@ static int jz4740_i2s_hw_params(struct snd_pcm_substream *substream,
+ 		ctrl &= ~JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_MASK;
+ 		ctrl |= sample_size << JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_OFFSET;
+ 
+-		if (i2s->version >= JZ_I2S_JZ4780) {
++		if (i2s->soc_info->version >= JZ_I2S_JZ4780) {
+ 			div_reg &= ~I2SDIV_IDV_MASK;
+ 			div_reg |= (div - 1) << I2SDIV_IDV_SHIFT;
+ 		} else {
+@@ -398,7 +403,7 @@ static int jz4740_i2s_dai_probe(struct snd_soc_dai *dai)
+ 	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
+ 		&i2s->capture_dma_data);
+ 
+-	if (i2s->version >= JZ_I2S_JZ4780) {
++	if (i2s->soc_info->version >= JZ_I2S_JZ4780) {
+ 		conf = (7 << JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
+ 			(8 << JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
+ 			JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
+@@ -457,6 +462,11 @@ static struct snd_soc_dai_driver jz4740_i2s_dai = {
+ 	.ops = &jz4740_i2s_dai_ops,
+ };
+ 
++static const struct i2s_soc_info jz4740_i2s_soc_info = {
++	.version = JZ_I2S_JZ4740,
++	.dai = &jz4740_i2s_dai,
++};
++
+ static struct snd_soc_dai_driver jz4780_i2s_dai = {
+ 	.probe = jz4740_i2s_dai_probe,
+ 	.remove = jz4740_i2s_dai_remove,
+@@ -475,6 +485,11 @@ static struct snd_soc_dai_driver jz4780_i2s_dai = {
+ 	.ops = &jz4740_i2s_dai_ops,
+ };
+ 
++static const struct i2s_soc_info jz4780_i2s_soc_info = {
++	.version = JZ_I2S_JZ4780,
++	.dai = &jz4780_i2s_dai,
++};
++
+ static const struct snd_soc_component_driver jz4740_i2s_component = {
+ 	.name		= "jz4740-i2s",
+ 	.suspend	= jz4740_i2s_suspend,
+@@ -483,8 +498,8 @@ static const struct snd_soc_component_driver jz4740_i2s_component = {
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id jz4740_of_matches[] = {
+-	{ .compatible = "ingenic,jz4740-i2s", .data = (void *)JZ_I2S_JZ4740 },
+-	{ .compatible = "ingenic,jz4780-i2s", .data = (void *)JZ_I2S_JZ4780 },
++	{ .compatible = "ingenic,jz4740-i2s", .data = &jz4740_i2s_soc_info },
++	{ .compatible = "ingenic,jz4780-i2s", .data = &jz4780_i2s_soc_info },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, jz4740_of_matches);
+@@ -501,7 +516,7 @@ static int jz4740_i2s_dev_probe(struct platform_device *pdev)
+ 	if (!i2s)
+ 		return -ENOMEM;
+ 
+-	i2s->version = (enum jz47xx_i2s_version)of_device_get_match_data(dev);
++	i2s->soc_info = device_get_match_data(dev);
+ 
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	i2s->base = devm_ioremap_resource(dev, mem);
+@@ -520,13 +535,8 @@ static int jz4740_i2s_dev_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, i2s);
+ 
+-	if (i2s->version == JZ_I2S_JZ4780)
+-		ret = devm_snd_soc_register_component(dev,
+-			&jz4740_i2s_component, &jz4780_i2s_dai, 1);
+-	else
+-		ret = devm_snd_soc_register_component(dev,
+-			&jz4740_i2s_component, &jz4740_i2s_dai, 1);
+-
++	ret = devm_snd_soc_register_component(dev, &jz4740_i2s_component,
++					      i2s->soc_info->dai, 1);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.20.1
+
