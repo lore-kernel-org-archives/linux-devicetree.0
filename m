@@ -2,170 +2,96 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C7CC10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 17:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEB4C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 17:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD3EF24676
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 17:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6331215A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 17:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583774224;
+	bh=5yHR3Ujn0DynzVH9Ws0JWy8TxK1tv97Kz6riXZaz3J0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=v0ntmDJWI77/0DXxz7+iLgAieiZvsKdQ1/sAehRKcr/YqgDRtKfWk0MqGBajA30Za
+	 AcLmHEo+1ylRRIZFW8Ivi1pNd7WRPKJ6UhgWJZg5Z1+9XdYRi7O5Cv0nNMbvpx7n2J
+	 1zTPP3smG61Ytv5K6twJJhBRngy0ZvQg0kX8IEko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbgCIRH4 (ORCPT
+        id S1727229AbgCIRRE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:07:56 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44251 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgCIRH4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 13:07:56 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jBLsf-0001ch-FA; Mon, 09 Mar 2020 18:07:53 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jBLse-0007pH-08; Mon, 09 Mar 2020 18:07:51 +0100
-Date:   Mon, 9 Mar 2020 18:07:51 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "pbarker@konsulko.com" <pbarker@konsulko.com>,
-        "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "matt.ranostay@konsulko.com" <matt.ranostay@konsulko.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Subject: Re: [PATCH] dts: imx6: Allow flags argument in pwms reference
-Message-ID: <20200309170751.vzffq5gmsaw3tsbp@pengutronix.de>
-References: <20200309145558.16098-1-pbarker@konsulko.com>
- <d1c950a83d3aa0520df696033bb0a038e2de1f66.camel@toradex.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d1c950a83d3aa0520df696033bb0a038e2de1f66.camel@toradex.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Mon, 9 Mar 2020 13:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727195AbgCIRRE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Mar 2020 13:17:04 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4ADE20828;
+        Mon,  9 Mar 2020 17:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583774223;
+        bh=5yHR3Ujn0DynzVH9Ws0JWy8TxK1tv97Kz6riXZaz3J0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CDi1KzsbcpSmQ2xbABBuFQQCx8uyO2Y0j+8cAr5lq6u8MDFPAeD4RaAHuLwPF9pgX
+         VX3MbgqNvUX/wzaRyjH2ASXHWoAcxTsxaja8NwUcvUpdOHZGzqxqw6Weey0s5CKbxU
+         3VHnxLUN+JUwa/2uSMCaMT/341doGUzO/4/0no8g=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-clk@vger.kernel.org
+Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: [PATCHv2 0/3] clk: agilex: add clock driver
+Date:   Mon,  9 Mar 2020 12:16:50 -0500
+Message-Id: <20200309171653.27630-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 04:45:05PM +0000, Philippe Schenker wrote:
-> On Mon, 2020-03-09 at 14:55 +0000, Paul Barker wrote:
-> > The pwm-imx27 driver supports a third argument in a pwms reference to
-> > provide flags. However #pwm-cells needs to be set to <3> in the pwm
-> > node
-> > so that these flags can be passed through to the driver. Once #pwm-
-> > cells
-> > is <3>, all pwms references need to use the 3-cell form.
-> > 
-> > Signed-off-by: Paul Barker <pbarker@konsulko.com>
-> > 
-> > Cc: Matt Ranostay <matt.ranostay@konsulko.com>
-> > Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> > Cc: Rob Herring robh+dt@kernel.org
-> > Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > ---
-> >  arch/arm/boot/dts/imx6dl-aristainetos_4.dts      |  2 +-
-> >  arch/arm/boot/dts/imx6dl-aristainetos_7.dts      |  2 +-
-> >  arch/arm/boot/dts/imx6dl-mamoj.dts               |  2 +-
-> >  arch/arm/boot/dts/imx6dl-yapp4-common.dtsi       |  1 -
-> >  arch/arm/boot/dts/imx6q-ba16.dtsi                |  2 +-
-> >  arch/arm/boot/dts/imx6q-display5.dtsi            |  1 -
-> >  arch/arm/boot/dts/imx6q-kp.dtsi                  |  4 ++--
-> >  arch/arm/boot/dts/imx6q-logicpd.dts              |  2 +-
-> >  arch/arm/boot/dts/imx6q-mccmon6.dts              |  1 -
-> >  arch/arm/boot/dts/imx6q-novena.dts               |  2 +-
-> >  arch/arm/boot/dts/imx6q-pistachio.dts            |  2 +-
-> >  arch/arm/boot/dts/imx6q-var-dt6customboard.dts   |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-apalis.dtsi            |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-apf6dev.dtsi           |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi     |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-colibri.dtsi           |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-cubox-i.dtsi           |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-emcon.dtsi             |  6 +++---
-> >  arch/arm/boot/dts/imx6qdl-gw52xx.dtsi            |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-gw53xx.dtsi            |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi            |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-gw560x.dtsi            |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-gw5903.dtsi            |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-gw5904.dtsi            |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-icore.dtsi             |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi    |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi         |  4 ++--
-> >  arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi     |  6 +++---
-> >  arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi    |  4 ++--
-> >  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi        |  4 ++--
-> >  arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi       |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi         |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi         |  6 +++---
-> >  arch/arm/boot/dts/imx6qdl-sabresd.dtsi           |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-savageboard.dtsi       |  2 +-
-> >  arch/arm/boot/dts/imx6qdl-tx6.dtsi               |  2 --
-> >  arch/arm/boot/dts/imx6qdl.dtsi                   |  8 ++++----
-> >  arch/arm/boot/dts/imx6sl-evk.dts                 |  2 +-
-> >  arch/arm/boot/dts/imx6sl.dtsi                    |  8 ++++----
-> >  arch/arm/boot/dts/imx6sll-evk.dts                |  2 +-
-> >  arch/arm/boot/dts/imx6sll.dtsi                   |  8 ++++----
-> >  arch/arm/boot/dts/imx6sx-nitrogen6sx.dts         |  2 +-
-> >  arch/arm/boot/dts/imx6sx-sdb.dtsi                |  2 +-
-> >  arch/arm/boot/dts/imx6sx-softing-vining-2000.dts |  6 +++---
-> >  arch/arm/boot/dts/imx6sx.dtsi                    | 16 ++++++++-------
-> > -
-> >  arch/arm/boot/dts/imx6ul-14x14-evk.dtsi          |  2 +-
-> >  arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts      |  2 +-
-> >  arch/arm/boot/dts/imx6ul-geam.dts                |  2 +-
-> >  arch/arm/boot/dts/imx6ul-imx6ull-opos6uldev.dtsi |  2 +-
-> >  arch/arm/boot/dts/imx6ul-isiot.dtsi              |  2 +-
-> >  arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts  |  2 +-
-> >  arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi    |  2 +-
-> >  arch/arm/boot/dts/imx6ul-pico.dtsi               |  2 +-
-> >  arch/arm/boot/dts/imx6ul-tx6ul.dtsi              |  1 -
-> >  arch/arm/boot/dts/imx6ul.dtsi                    | 16 ++++++++-------
-> > -
-> >  arch/arm/boot/dts/imx6ull-colibri.dtsi           |  4 ----
-> >  56 files changed, 85 insertions(+), 95 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-> > b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-> > index 37f80ab8ccd0..f87ac95b70bc 100644
-> > --- a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-> > +++ b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-> > @@ -14,7 +14,7 @@
-> >  
-> >  	backlight {
-> >  		compatible = "pwm-backlight";
-> > -		pwms = <&pwm1 0 5000000>;
-> > +		pwms = <&pwm1 0 5000000 0>;
-> 
-> There is a header file existing that has PWM_POLARITY_INVERTED defined
-> in include/dt-bindings/pwm/pwm.h. I feel we should add there a
-> PWM_POLARITY_NORMAL instead of just using 0.
+Hi,
 
-ack.
+This is version 2 of the patchset to add clock driver to the Agilex
+platform. It's been while since I posted v1 so I want clarify the
+patches a bit in this cover letter.
 
-> But then I'm asking myself if we can't get rid of the file include/dt-
-> bindings/pwm/pwm.h and instead use include/linux/pwm.h everywhere.
-> 
-> Or shouldn't we use defines in devicetrees from there?
+Since the Agilex clocking is very similar to Stratix10, the
+driver is very similar and will re-use the clock data structures of
+Stratix10. Thus, there needs to be updates to the Stratix10 clock
+driver.
 
-devicetrees are supposed to be stand-alone. So yes indeed, no linux
-includes in device tree files.
+Patch 1/3 : update the Stratix10 clock driver to make use of the new
+	parent data scheme
+Patch 2/3 : version 2 of the documenation, converted to YAML
+Patch 3/4 : version 2 of the clock driver with comments from v1
+	addressed
 
-Best regards
-Uwe
+Thanks,
+Dinh
+
+Dinh Nguyen (3):
+  clk: socfpga: stratix10: use new parent data scheme
+  dt-bindings: documentation: add clock bindings information for Agilex
+  clk: socfpga: agilex: add clock driver for the Agilex platform
+
+ .../bindings/clock/intc,agilex.yaml           |  79 ++++
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/socfpga/Makefile                  |   2 +
+ drivers/clk/socfpga/clk-agilex.c              | 369 ++++++++++++++++++
+ drivers/clk/socfpga/clk-gate-s10.c            |   5 +-
+ drivers/clk/socfpga/clk-periph-s10.c          |  10 +-
+ drivers/clk/socfpga/clk-pll-s10.c             |  74 +++-
+ drivers/clk/socfpga/clk-s10.c                 | 110 ++++--
+ drivers/clk/socfpga/stratix10-clk.h           |  10 +-
+ include/dt-bindings/clock/agilex-clock.h      |  70 ++++
+ 10 files changed, 689 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/intc,agilex.yaml
+ create mode 100644 drivers/clk/socfpga/clk-agilex.c
+ create mode 100644 include/dt-bindings/clock/agilex-clock.h
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.17.1
+
