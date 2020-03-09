@@ -2,95 +2,111 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2865DC10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 12:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCB3C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 12:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01ED8208C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 12:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583755826;
-	bh=68DGRmK0PFpbqWsNyLOBiT1LF+cj6C1TEM5VVoLPeUs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lct7hQq4wzmQ0jSCjIQDWkQFO3JM6KdBNf7NHiwN0tvuH8vNiqueRqVteLIHDq6gQ
-	 64wJOsj05N044lFN34zgXzy5WrOH1+N6A+bXkOyWqAdzbP3N2COguXDWKWCW9wFIPu
-	 OuqUZkujZxFopM8PMsYEUaphu5VenZc+qmblG8vo=
+	by mail.kernel.org (Postfix) with ESMTP id E6A60205ED
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 12:51:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fmbt/s57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCIMKW (ORCPT
+        id S1726383AbgCIMvy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 08:10:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:51262 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbgCIMKW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 08:10:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 116B530E;
-        Mon,  9 Mar 2020 05:10:22 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 888603F6CF;
-        Mon,  9 Mar 2020 05:10:21 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 12:10:20 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] mtd: spi-nor: remove mtk-quadspi driver
-Message-ID: <20200309121020.GD4101@sirena.org.uk>
-References: <20200306085052.28258-1-gch981213@gmail.com>
- <20200306085052.28258-5-gch981213@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mSxgbZZZvrAyzONB"
-Content-Disposition: inline
-In-Reply-To: <20200306085052.28258-5-gch981213@gmail.com>
-X-Cookie: Above all things, reverence yourself.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 9 Mar 2020 08:51:54 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45657 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgCIMvy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 08:51:54 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m9so1946317wro.12;
+        Mon, 09 Mar 2020 05:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=x1PptPbFNehJRLUAcVtBI+Vv+nO2YeUsId4RwTPHqBA=;
+        b=Fmbt/s57JOvGC+t5yT6BOuG+VuAV+C1vdOBucJ2qiE9DA5S13as4YRRV/vKilghnS1
+         qCmwRQ40bTYX/E5Oi7OqKpaTZPPYm0UHI8wV6UnPq3oD4SxiMkxf3m3RrE3cd05LWt7d
+         jaFr8ytttI+TRgfOzMo/KMzE7oIfFm9pHBCKqyqPH0CpRWtaatkaWFXV42k9l9KwYWMG
+         MZC5ngxwUkLTnxmkUh1rMZxbIBFMpw77ykaPWiQ8hHMK7ACE0Zdtfo0q439DXKeCex1E
+         PF+0tMWqcOhzJFm8QAOKg8Rb9ig1E6S+Jdwo0rhRV58/yiKfAB/jdye8798KS4/++TlP
+         XdZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=x1PptPbFNehJRLUAcVtBI+Vv+nO2YeUsId4RwTPHqBA=;
+        b=YsDVP7cZ7iL3ErWLSuX4r2ZbhwvQ3AnDpolNMNN2cqrb/JVkRbqD590HpjXv1SjODD
+         QAWUH+NG9J5rNDArMChl3T93SVZznhWQssryrEEm6TcTj0AUu71sTZ6WREd4NzE3m2oJ
+         lQej4GBxTvejnZHZEiVWgwDcks4IEr77QwgunrqY/+luZHufWWANhCLZCepG1MQ7iURc
+         Y7riFqotEnVch69WmzML64lUR2WEcah11oQS+TDdBtcR9LJnVd1igjWI7FvxQ/q2vQtr
+         onA5Vpft61yJ16sptHGonJojlIJ5v44drz5xwiHq/Cl7/o+jOBIGNLQscxGIwAKppw7V
+         zRUQ==
+X-Gm-Message-State: ANhLgQ2okOvPXrnUZUktgFKTtObVjwcWN1XY8IxfvlMQYQVROZZfA8z+
+        WTjotNQ+TLMwxPwupFLcAlU=
+X-Google-Smtp-Source: ADFU+vugr4WovSuV+zASQpMXVbLmM8ABazZhoZEpd53p08W7sWLhtWk5N82r7d6SgIM3qCpKurVBLQ==
+X-Received: by 2002:a05:6000:1081:: with SMTP id y1mr20922811wrw.52.1583758312017;
+        Mon, 09 Mar 2020 05:51:52 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id k133sm6417635wma.11.2020.03.09.05.51.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Mar 2020 05:51:51 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: remove max-freq from &spi1 node for Hugsun X99
+Date:   Mon,  9 Mar 2020 13:51:45 +0100
+Message-Id: <20200309125145.14455-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+A test with the command below does not detect all errors
+in combination with 'additionalProperties: false' and
+allOf:
+  - $ref: "spi-controller.yaml#"
 
---mSxgbZZZvrAyzONB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+'additionalProperties' applies to all properties that are not
+accounted-for by 'properties' or 'patternProperties' in
+the immediate schema.
 
-On Fri, Mar 06, 2020 at 04:50:52PM +0800, Chuanhong Guo wrote:
-> This driver is superseded by the new spi-mtk-nor driver.
->=20
-> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+First when we combine spi-rockchip.yaml and
+spi-controller.yaml it gives this error:
 
-Is this move OK from a MTD point of view - should I apply this when the
-rest goes in?  The patch was in prior versions too and is obviously
-straightforward.
+arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dt.yaml: spi@ff1d0000:
+'max-freq' does not match any of the regexes:
+'^.*@[0-9a-f]+$', '^slave$'
 
---mSxgbZZZvrAyzONB
-Content-Type: application/pgp-signature; name="signature.asc"
+'max-freq' is not a valid property name for spi nodes,
+so remove it.
 
------BEGIN PGP SIGNATURE-----
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-rockchip.yaml
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5mMisACgkQJNaLcl1U
-h9AW8wf/ZiBUrxNc95s6m0g5fMy2/cs3/LsPrWZSb3N2E1e27ymrx83CSPad45sg
-mGRE8ZNrAjJejZVzFdgOiQZQtKXKFVjY6HjAAatKDSNqcX+8k/VR6yCE/xQB36h/
-V+fLMlrzLx1nNEF3umZAmtdkQIQN8OuSTUbLAgAVe3bZVXWMQAZfcJrCy/FuidfY
-ZjU3+caJ3jC8rwDB6+1xVujEe3+eCz63rkOHoSGzqXBYI0OpQfOLd9M8fu77WW4U
-6RV5Z5lUl26EOpzOO2+FJKEdguXeXDguoAjKlqcc+CzhGBVdnRetzqf+LEujpAOd
-xU3eqFZzEBmUHpNr4i2GACoDY/MBSw==
-=H8Zm
------END PGP SIGNATURE-----
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
---mSxgbZZZvrAyzONB--
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+index f2ffee639..ee4867fbe 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+@@ -610,7 +610,6 @@
+ 
+ &spi1 {
+ 	status = "okay";
+-	max-freq = <10000000>;
+ 
+ 	flash@0 {
+ 		compatible = "jedec,spi-nor";
+-- 
+2.11.0
+
