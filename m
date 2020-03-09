@@ -2,181 +2,240 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAAFC3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 17:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED934C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 17:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D084D21655
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 17:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC76C20873
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 17:59:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="sdce2DA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCIR5u (ORCPT
+        id S1726170AbgCIR7J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:57:50 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:55216 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgCIR5u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 13:57:50 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Mon, 9 Mar 2020 13:59:09 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:58955 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbgCIR7J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 13:59:09 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id B293B804F2;
-        Mon,  9 Mar 2020 18:57:43 +0100 (CET)
-Date:   Mon, 9 Mar 2020 18:57:42 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Phong LE <ple@baylibre.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        mark.rutland@arm.com, a.hajda@samsung.com, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, mripard@kernel.org,
-        heiko.stuebner@theobroma-systems.com, linus.walleij@linaro.org,
-        stephan@gerhold.net, broonie@kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: add it66121 bindings
-Message-ID: <20200309175742.GB4841@ravnborg.org>
-References: <20200309153654.11481-1-ple@baylibre.com>
- <20200309153654.11481-3-ple@baylibre.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 4FA4B23EB3;
+        Mon,  9 Mar 2020 18:59:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583776745;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rZ28TfUvwJ1itgNfROyuxzqF3oOBSx8iDyoQZE1QoIU=;
+        b=sdce2DA9ReD8BSZfA8tQOnNqs8NpxR82clomsNdrrGSyLM+J9c7vox5+Y3zOxTeSYK+vLe
+        QNrz6YmI35AUyqaUnhp/VMPC0K7WVmAczW0nSkVV3uY2/EIGNDM2C62FIHG4BRVq4eJvGn
+        YQbl38FmlejEQ6G/cZYSFrL5tQYmPKI=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309153654.11481-3-ple@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=IpJZQVW2AAAA:8
-        a=gEfo2CItAAAA:8 a=cX5Nq78nYJ3ux5aV4n4A:9 a=_o3i03AVA8FuQwU8:21
-        a=XREf6cB9zaPaBULp:21 a=CjuIK1q_8ugA:10 a=IawgGOuG5U0WyFbmm1f5:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Mar 2020 18:59:04 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, peng.ma@nxp.com
+Subject: Re: [PATCH 2/6] spi: spi-fsl-dspi: Fix little endian access to PUSHR
+ CMD and TXDATA
+In-Reply-To: <20200309145624.10026-3-olteanv@gmail.com>
+References: <20200309145624.10026-1-olteanv@gmail.com>
+ <20200309145624.10026-3-olteanv@gmail.com>
+Message-ID: <d8e39e402328b962cdbc25316a27eac8@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 4FA4B23EB3
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         NEURAL_HAM(-0.00)[-0.386];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Phong.
-
-On Mon, Mar 09, 2020 at 04:36:53PM +0100, Phong LE wrote:
-> Add the ITE bridge HDMI it66121 bindings.
-
-Good to see that you used DT Schema.
-
+Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
 > 
-> Signed-off-by: Phong LE <ple@baylibre.com>
+> In XSPI mode, the 32-bit PUSHR register can be written to separately:
+> the higher 16 bits are for commands and the lower 16 bits are for data.
+> 
+> This has nicely been hacked around, by defining a second regmap with a
+> width of 16 bits, and effectively splitting a 32-bit register into 2
+> 16-bit ones, from the perspective of this regmap_pushr.
+> 
+> The problem is the assumption about the controller's endianness. If the
+> controller is little endian (such as anything post-LS1046A), then the
+> first 2 bytes, in the order imposed by memory layout, will actually 
+> hold
+> the TXDATA, and the last 2 bytes will hold the CMD.
+> 
+> So take the controller's endianness into account when performing split
+> writes to PUSHR. The obvious and simple solution would have been to 
+> call
+> regmap_get_val_endian(), but that is an internal regmap function and we
+> don't want to change regmap just for this. Therefore, we define the
+> offsets per-instantiation, in the devtype_data structure. This means
+> that we have to know from the driver which controllers are big- and
+> which are little-endian (which is fine, we do, but it makes the device
+> tree binding itself a little redundant except for regmap_config).
+> 
+> This patch does not apply cleanly to stable trees, and a punctual fix 
+> to
+> the commit cannot be provided given this constraint of lack of access 
+> to
+> regmap_get_val_endian(). The per-SoC devtype_data structures (and
+> therefore the premises to fix this bug) have been introduced only a few
+> commits ago, in commit d35054010b57 ("spi: spi-fsl-dspi: Use specific
+> compatible strings for all SoC instantiations")
+> 
+> Fixes: 58ba07ec79e6 ("spi: spi-fsl-dspi: Add support for XSPI mode 
+> registers")
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 > ---
->  .../bindings/display/bridge/ite,it66121.yaml  | 95 +++++++++++++++++++
->  1 file changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
+>  drivers/spi/spi-fsl-dspi.c | 28 ++++++++++++++++++++++------
+>  1 file changed, 22 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> new file mode 100644
-> index 000000000000..f546c0b5a465
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> @@ -0,0 +1,95 @@
-> +# SPDX-License-Identifier: GPL-2.0
-For new schemas please use: (GPL-2.0 OR BSD-2-Clause)
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 0ce26c1cbf62..a8e56abe20ac 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -103,10 +103,6 @@
+>  #define SPI_FRAME_BITS(bits)		SPI_CTAR_FMSZ((bits) - 1)
+>  #define SPI_FRAME_EBITS(bits)		SPI_CTARE_FMSZE(((bits) - 1) >> 4)
+> 
+> -/* Register offsets for regmap_pushr */
+> -#define PUSHR_CMD			0x0
+> -#define PUSHR_TX			0x2
+> -
+>  #define DMA_COMPLETION_TIMEOUT		msecs_to_jiffies(3000)
+> 
+>  struct chip_data {
+> @@ -124,6 +120,12 @@ struct fsl_dspi_devtype_data {
+>  	u8			max_clock_factor;
+>  	int			fifo_size;
+>  	int			dma_bufsize;
+> +	/*
+> +	 * Offsets for CMD and TXDATA within SPI_PUSHR when accessed
+> +	 * individually (in XSPI mode)
+> +	 */
+> +	int			pushr_cmd;
+> +	int			pushr_tx;
+>  };
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/ite,it66121.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ITE it66121 HDMI bridge Device Tree Bindings
-> +
-> +maintainers:
-> +  - Phong LE <ple@baylibre.com>
-> +
-> +description: |
-> +  The IT66121 is a high-performance and low-power single channel HDMI
-> +  transmitter, fully compliant with HDMI 1.3a, HDCP 1.2 and backward compatible
-> +  to DVI 1.0 specifications.
-> +
-> +properties:
-> +  compatible:
-> +    const: ite,it66121
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: base I2C address of the device
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO connected to active low reset
-> +
-> +  vrf12-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.2V analog core power.
-> +
-> +  vcn33-supply:
-> +    maxItems: 1
-> +    description: Regulator for 3.3V digital core power.
-> +
-> +  vcn18-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.8V IO core power.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  pclk-dual-edge:
-> +    maxItems: 1
-> +    description: enable pclk dual edge mode.
-> +
-> +  port:
-> +    type: object
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        description: |
-> +          Input endpoints of the bridge.
-> +
-> +    required:
-> +      - endpoint
-> +
+Shouldn't this just read the "little-endian" property of the
+device tree node? Like it worked before with regmap, which takes
+the little-endian/big-endian property into account.
 
-Are we missing an additionalProperties: false?
-So we do not have other properties than the ones listed here.
+If I understand this correctly, this solution would mix the methods
+how the IP endianess is determined. Eg. regmap_xx uses the
+little-endian property and this driver then also uses the compatible
+string to also distinguish between the endianess.
 
-	Sam
+-michael
 
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - vrf12-supply
-> +  - vcn33-supply
-> +  - vcn18-supply
-> +  - interrupts
-> +  - port
-> +
-> +examples:
-> +  - |
-> +    i2c6 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      it66121hdmitx: it66121hdmitx@4c {
-> +        compatible = "ite,it66121";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&ite_pins_default>;
-> +        vcn33-supply = <&mt6358_vcn33_wifi_reg>;
-> +        vcn18-supply = <&mt6358_vcn18_reg>;
-> +        vrf12-supply = <&mt6358_vrf12_reg>;
-> +        reset-gpios = <&pio 160 1 /* GPIO_ACTIVE_LOW */>;
-> +        interrupt-parent = <&pio>;
-> +        interrupts = <4 8 /* IRQ_TYPE_LEVEL_LOW */>;
-> +        reg = <0x4c>;
-> +        pclk-dual-edge;
-> +
-> +        port {
-> +          it66121_in: endpoint {
-> +            remote-endpoint = <&display_out>;
-> +          };
-> +        };
-> +      };
-> +    };
-> -- 
-> 2.17.1
+>  enum {
+> @@ -150,42 +152,56 @@ static const struct fsl_dspi_devtype_data
+> devtype_data[] = {
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 4,
+> +		.pushr_cmd		= 0,
+> +		.pushr_tx		= 2,
+>  	},
+>  	[LS1012A] = {
+>  		/* Has A-011218 DMA erratum */
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 16,
+> +		.pushr_cmd		= 0,
+> +		.pushr_tx		= 2,
+>  	},
+>  	[LS1043A] = {
+>  		/* Has A-011218 DMA erratum */
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 16,
+> +		.pushr_cmd		= 0,
+> +		.pushr_tx		= 2,
+>  	},
+>  	[LS1046A] = {
+>  		/* Has A-011218 DMA erratum */
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 16,
+> +		.pushr_cmd		= 0,
+> +		.pushr_tx		= 2,
+>  	},
+>  	[LS2080A] = {
+>  		.trans_mode		= DSPI_DMA_MODE,
+>  		.dma_bufsize		= 8,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 4,
+> +		.pushr_cmd		= 2,
+> +		.pushr_tx		= 0,
+>  	},
+>  	[LS2085A] = {
+>  		.trans_mode		= DSPI_DMA_MODE,
+>  		.dma_bufsize		= 8,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 4,
+> +		.pushr_cmd		= 2,
+> +		.pushr_tx		= 0,
+>  	},
+>  	[LX2160A] = {
+>  		.trans_mode		= DSPI_DMA_MODE,
+>  		.dma_bufsize		= 8,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 4,
+> +		.pushr_cmd		= 2,
+> +		.pushr_tx		= 0,
+>  	},
+>  	[MCF5441X] = {
+>  		.trans_mode		= DSPI_EOQ_MODE,
+> @@ -670,12 +686,12 @@ static void dspi_pushr_cmd_write(struct fsl_dspi
+> *dspi, u16 cmd)
+>  	 */
+>  	if (dspi->len > dspi->oper_word_size)
+>  		cmd |= SPI_PUSHR_CMD_CONT;
+> -	regmap_write(dspi->regmap_pushr, PUSHR_CMD, cmd);
+> +	regmap_write(dspi->regmap_pushr, dspi->devtype_data->pushr_cmd, cmd);
+>  }
+> 
+>  static void dspi_pushr_txdata_write(struct fsl_dspi *dspi, u16 txdata)
+>  {
+> -	regmap_write(dspi->regmap_pushr, PUSHR_TX, txdata);
+> +	regmap_write(dspi->regmap_pushr, dspi->devtype_data->pushr_tx, 
+> txdata);
+>  }
+> 
+>  static void dspi_xspi_write(struct fsl_dspi *dspi, int cnt, bool eoq)
