@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039E5C33C88
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C465C18E5C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C3020848
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DBF21D7E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 10:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCIKPC (ORCPT
+        id S1726612AbgCIKOs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 06:15:02 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41075 "EHLO
+        Mon, 9 Mar 2020 06:14:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55329 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCIKOr (ORCPT
+        with ESMTP id S1726530AbgCIKOr (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 06:14:47 -0400
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jBFQm-0003mq-RD; Mon, 09 Mar 2020 11:14:40 +0100
+        id 1jBFQj-0003mR-6e; Mon, 09 Mar 2020 11:14:37 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jBFQg-0001mK-Vk; Mon, 09 Mar 2020 11:14:34 +0100
+        id 1jBFQg-0001ln-Mk; Mon, 09 Mar 2020 11:14:34 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
         hans.verkuil@cisco.com, jacopo+renesas@jmondi.org,
         robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
 Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
         linux-media@vger.kernel.org
-Subject: [PATCH v12 15/19] media: tvp5150: add subdev open/close callbacks
-Date:   Mon,  9 Mar 2020 11:14:24 +0100
-Message-Id: <20200309101428.15267-16-m.felsch@pengutronix.de>
+Subject: [PATCH v12 04/19] media: v4l2-fwnode: add endpoint id field to v4l2_fwnode_link
+Date:   Mon,  9 Mar 2020 11:14:13 +0100
+Message-Id: <20200309101428.15267-5-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200309101428.15267-1-m.felsch@pengutronix.de>
 References: <20200309101428.15267-1-m.felsch@pengutronix.de>
@@ -50,58 +50,64 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Bring the device into a working state upon a open/close call. Currently
-this involves only the interrupt enable/disable process but can be
-extended in the future.
+A link is between two endpoints not between two ports to be more
+precise. Add the local_id/remote_id field which stores the endpoint
+reg/port property to the link. Now the link holds all necessary
+information about a link.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
+
 v12:
-- new patch
+- New in this serie
 
- drivers/media/i2c/tvp5150.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 2 ++
+ include/media/v4l2-fwnode.h           | 4 ++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 9bad3192358d..abc784dbeb81 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1618,6 +1618,26 @@ static int tvp5150_registered(struct v4l2_subdev *sd)
- 	return 0;
- }
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 6ece4320e1d2..78c32aebbe03 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -565,6 +565,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
  
-+static int tvp5150_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	int ret;
-+
-+	ret = pm_runtime_get_sync(sd->dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(sd->dev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tvp5150_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	pm_runtime_put(sd->dev);
-+
-+	return 0;
-+}
-+
- /* ----------------------------------------------------------------------- */
+ 	memset(link, 0, sizeof(*link));
  
- static const struct v4l2_ctrl_ops tvp5150_ctrl_ops = {
-@@ -1675,6 +1695,8 @@ static const struct v4l2_subdev_ops tvp5150_ops = {
++	fwnode_property_read_u32(__fwnode, "reg", &link->local_id);
+ 	fwnode = fwnode_get_parent(__fwnode);
+ 	fwnode_property_read_u32(fwnode, port_prop, &link->local_port);
+ 	fwnode = fwnode_get_next_parent(fwnode);
+@@ -578,6 +579,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
+ 		return -ENOLINK;
+ 	}
  
- static const struct v4l2_subdev_internal_ops tvp5150_internal_ops = {
- 	.registered = tvp5150_registered,
-+	.open = tvp5150_open,
-+	.close = tvp5150_close,
++	fwnode_property_read_u32(fwnode, "reg", &link->remote_id);
+ 	fwnode = fwnode_get_parent(fwnode);
+ 	fwnode_property_read_u32(fwnode, port_prop, &link->remote_port);
+ 	fwnode = fwnode_get_next_parent(fwnode);
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index f6a7bcd13197..7bba6dfa3fd6 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -113,14 +113,18 @@ struct v4l2_fwnode_endpoint {
+  * struct v4l2_fwnode_link - a link between two endpoints
+  * @local_node: pointer to device_node of this endpoint
+  * @local_port: identifier of the port this endpoint belongs to
++ * @local_id: identifier of the id this endpoint belongs to
+  * @remote_node: pointer to device_node of the remote endpoint
+  * @remote_port: identifier of the port the remote endpoint belongs to
++ * @remote_id: identifier of the id the remote endpoint belongs to
+  */
+ struct v4l2_fwnode_link {
+ 	struct fwnode_handle *local_node;
+ 	unsigned int local_port;
++	unsigned int local_id;
+ 	struct fwnode_handle *remote_node;
+ 	unsigned int remote_port;
++	unsigned int remote_id;
  };
  
- /****************************************************************************
+ /**
 -- 
 2.20.1
 
