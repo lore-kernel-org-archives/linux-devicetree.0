@@ -2,186 +2,166 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7C1C18E5A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16D0C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D96208C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8760A208C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 18:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tQtZpJ87"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PNNr+LHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbgCISXm (ORCPT
+        id S1727446AbgCISbH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:23:42 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:27735 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727483AbgCISXm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 14:23:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583778221; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=oXtyD64Mkp4ykU5HU0PK0xoug9dx6XnlZHC0tqZFXR8=; b=tQtZpJ8723zBNkYY84nXhQU8uBZlmyslMH2rrqXve+WMYmExTNYvaZ2TzCPR22vvYMETVa2+
- fpUyT8ZQxXDEWPiBhD6I0lk0eNdFQrlhsO0lNfBnmaiVqyzZ3Q4o5Ura9McKLWjOWQG0wibS
- Tsfd4GYlL/jZ5z5fIA0XO4u9DGc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6689a6.7f2cf01a2180-smtp-out-n02;
- Mon, 09 Mar 2020 18:23:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B6A80C433D2; Mon,  9 Mar 2020 18:23:33 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 9 Mar 2020 14:31:07 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:53591 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727440AbgCISbH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 14:31:07 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4282BC43636;
-        Mon,  9 Mar 2020 18:23:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4282BC43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, joro@8bytes.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-remoteproc@vger.kernel.org, ohad@wizery.com,
-        agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 3/3] remoteproc: qcom_q6v5_mss: Request direct mapping for firmware subdevice
-Date:   Mon,  9 Mar 2020 23:52:55 +0530
-Message-Id: <20200309182255.20142-4-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200309182255.20142-1-sibis@codeaurora.org>
-References: <20200309182255.20142-1-sibis@codeaurora.org>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 950EF23EDA;
+        Mon,  9 Mar 2020 19:31:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583778663;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QTIEtymJN3mVQ54qJYN3byp7OoTvsUhQ9JrnqEUValI=;
+        b=PNNr+LHBYW1ZjkiokZWQsE/7TysuCbOqXiWrlcsL/mWuhO952dMYkfliZ6C0+IdzPV2Gab
+        IU85F6BCB3j6/mAvgWXAROBo6EO5h4MWY1zl3nE7+WdlyoLZogZ1dg9rHSHTtOQyr15Ibt
+        Kgbc80Xj+2EuB/+YlSUWuxXMJAcRLuc=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Mar 2020 19:31:03 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Subject: Re: [PATCH 0/6] NXP DSPI bugfixes and support for LS1028A
+In-Reply-To: <CA+h21hrSezjwKJDCd1wN8qk5koWfPmwT0Mx+sR7fHxo1sCGcjw@mail.gmail.com>
+References: <20200309145624.10026-1-olteanv@gmail.com>
+ <f530a0740f34b2cf26a8055d4eae2527@walle.cc>
+ <CA+h21hrSezjwKJDCd1wN8qk5koWfPmwT0Mx+sR7fHxo1sCGcjw@mail.gmail.com>
+Message-ID: <6da04c9a17fa9e6259a462cb52312930@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 950EF23EDA
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         NEURAL_HAM(-0.00)[-0.536];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Q6 modem sub-system has direct access to DDR through memnoc and
-an indirect access routed through a SMMU which MSS CE (crypto engine
-sub-component of MSS) uses during out of reset sequence. Request direct
-mapping for the modem-firmware subdevice since smmu is not expected
-to provide access control/translation for these SIDs (sandboxing of the
-modem is achieved through XPUs engaged using SMC calls).
+Am 2020-03-09 19:14, schrieb Vladimir Oltean:
+> On Mon, 9 Mar 2020 at 20:03, Michael Walle <michael@walle.cc> wrote:
+>> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+>> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+>> >
+>> > This series addresses a few issues that were missed during the previous
+>> > series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
+>> > SoCs other than LS1021A and LS1043A. DMA mode has been completely
+>> > broken
+>> > by that series, and XSPI mode never worked on little-endian
+>> > controllers.
+>> >
+>> > Then it introduces support for the LS1028A chip, whose compatible has
+>> > recently been documented here:
+>> >
+>> > https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
+>> 
+>> If it is not compatible with the LS1021A the second compatible string
+>> should be removed. Depending on the other remark about the endianess,
+>> it might still be compatible, though.
+>> 
+> 
+> Please feel free to remove it. I wasn't actually planning to add it in
+> the first place, but now it that it's there it doesn't really bother
+> anybody either.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_mss.c | 68 ++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+But it won't work if the endianess depends on the compatible string ;)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index d7667418a62f4..ceb7f71dd17df 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -10,6 +10,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
-+#include <linux/iommu.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
-@@ -202,6 +203,7 @@ struct q6v5 {
- 	struct qcom_rproc_subdev smd_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
- 	struct qcom_sysmon *sysmon;
-+	struct device *fw_subdev;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
- 	bool has_halt_nav;
-@@ -378,6 +380,67 @@ static void q6v5_pds_disable(struct q6v5 *qproc, struct device **pds,
- 	}
- }
- 
-+static int qcom_init_firmware(struct q6v5 *qproc)
-+{
-+	struct platform_device_info info;
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+	int ret;
-+
-+	np = of_get_child_by_name(qproc->dev->of_node, "modem-firmware");
-+	if (!np)
-+		return 0;
-+
-+	memset(&info, 0, sizeof(info));
-+	info.fwnode = &np->fwnode;
-+	info.parent = qproc->dev;
-+	info.name = np->name;
-+
-+	pdev = platform_device_register_full(&info);
-+	if (IS_ERR(pdev)) {
-+		of_node_put(np);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	pdev->dev.of_node = np;
-+	ret = of_dma_configure(&pdev->dev, np, true);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to configure DMA\n");
-+		goto err_unregister;
-+	}
-+
-+	ret = iommu_request_dm_for_dev(&pdev->dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to request direct mapping\n");
-+		goto err_unregister;
-+	}
-+
-+	qproc->fw_subdev = &pdev->dev;
-+	of_node_put(np);
-+	return 0;
-+
-+err_unregister:
-+	platform_device_unregister(pdev);
-+	of_node_put(np);
-+	return ret;
-+}
-+
-+static void qcom_remove_firmware(struct q6v5 *qproc)
-+{
-+	struct iommu_domain *iommu;
-+
-+	if (!qproc->fw_subdev)
-+		return;
-+
-+	iommu = iommu_get_domain_for_dev(qproc->fw_subdev);
-+	if (!iommu)
-+		return;
-+
-+	iommu_detach_device(iommu, qproc->fw_subdev);
-+	iommu_domain_free(iommu);
-+	platform_device_unregister(to_platform_device(qproc->fw_subdev));
-+}
-+
- static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int *current_perm,
- 				   bool local, bool remote, phys_addr_t addr,
- 				   size_t size)
-@@ -1722,6 +1785,10 @@ static int q6v5_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto detach_proxy_pds;
- 
-+	ret = qcom_init_firmware(qproc);
-+	if (ret)
-+		goto detach_proxy_pds;
-+
- 	qproc->mpss_perm = BIT(QCOM_SCM_VMID_HLOS);
- 	qproc->mba_perm = BIT(QCOM_SCM_VMID_HLOS);
- 	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
-@@ -1759,6 +1826,7 @@ static int q6v5_remove(struct platform_device *pdev)
- 	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
- 	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
- 	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
-+	qcom_remove_firmware(qproc);
- 
- 	q6v5_pds_detach(qproc, qproc->active_pds, qproc->active_pd_count);
- 	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>> 
+>> > The device tree for the LS1028A SoC is extended with DMA channels
+>> > definition, such that even though the default operating mode is XSPI,
+>> > one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
+>> > devtype_data structure of the driver and use that instead.
+>> 
+>> wouldn't it make more sense, to use DMA is the dma node is present
+>> in the device tree? otherwise use XSPI mode? I don't think it is
+>> really handy to change the mode inside the driver.
+>> 
+> 
+> Let's keep it simple. The driver should configure the hardware in the
+> most efficient and least buggy mode available. Right now that is XSPI.
+> The hardware description (aka the device tree) is a separate topic. If
+> there ever arises any situation where there are corner cases with XSPI
+> mode, it's good to have a fallback in the form of DMA mode, and not
+> have to worry about yet another problem (which is that there are 2
+> sets of device tree blobs in deployment).
+
+Point taken. But this is not how other drivers behave, which uses the
+DMA if its given in the device node.
+
+Btw. do other SoCs perform better with DMA?
+
+-michael
+
+> TL;DR: These DMA channels don't really bother anybody but you never
+> know when they might come in handy.
+> 
+>> -michael
+>> 
+>> >
+>> > For testing, benchmarking and debugging, the mikroBUS connector on the
+>> > LS1028A-RDB is made available via spidev.
+>> >
+>> > Vladimir Oltean (6):
+>> >   spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
+>> >   spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
+>> >   spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
+>> >   spi: spi-fsl-dspi: Add support for LS1028A
+>> >   arm64: dts: ls1028a: Specify the DMA channels for the DSPI
+>> > controllers
+>> >   arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
+>> >
+>> >  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 14 +++++
+>> >  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
+>> >  drivers/spi/spi-fsl-dspi.c                    | 54 +++++++++++++++----
+>> >  3 files changed, 64 insertions(+), 10 deletions(-)
+> 
+> Thanks,
+> -Vladimir
