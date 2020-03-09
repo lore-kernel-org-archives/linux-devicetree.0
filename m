@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FC9C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7EEC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E966620873
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C7F20863
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgCIJyL (ORCPT
+        id S1726610AbgCIJyK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:54:11 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55524 "EHLO
+        Mon, 9 Mar 2020 05:54:10 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55522 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726545AbgCIJyK (ORCPT
+        by vger.kernel.org with ESMTP id S1726556AbgCIJyK (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 05:54:10 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:02 +0530
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:03 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:43 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:46 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id A741B245A; Mon,  9 Mar 2020 15:23:42 +0530 (IST)
+        id 7D4E42418; Mon,  9 Mar 2020 15:23:45 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -37,9 +37,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v5 3/9] phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
-Date:   Mon,  9 Mar 2020 15:23:03 +0530
-Message-Id: <1583747589-17267-4-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v5 7/9] arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
+Date:   Mon,  9 Mar 2020 15:23:07 +0530
+Message-Id: <1583747589-17267-8-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
 References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
@@ -48,72 +48,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add generic QUSB2 V2 PHY table so the respective phys
-can use the same table.
+Use generic QUSB2 V2 Phy configuration for SC7180.
 
 Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index bf94a52..70c9da6 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2017, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017, 2019, The Linux Foundation. All rights reserved.
-  */
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 253274d..1d1e09d 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1277,7 +1277,7 @@
+ 		};
  
- #include <linux/clk.h>
-@@ -177,7 +177,7 @@ static const struct qusb2_phy_init_tbl msm8998_init_tbl[] = {
- 	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_DIGITAL_TIMERS_TWO, 0x19),
- };
- 
--static const unsigned int sdm845_regs_layout[] = {
-+static const unsigned int qusb2_v2_regs_layout[] = {
- 	[QUSB2PHY_PLL_CORE_INPUT_OVERRIDE] = 0xa8,
- 	[QUSB2PHY_PLL_STATUS]		= 0x1a0,
- 	[QUSB2PHY_PORT_TUNE1]		= 0x240,
-@@ -191,7 +191,7 @@ static const unsigned int sdm845_regs_layout[] = {
- 	[QUSB2PHY_INTR_CTRL]		= 0x230,
- };
- 
--static const struct qusb2_phy_init_tbl sdm845_init_tbl[] = {
-+static const struct qusb2_phy_init_tbl qusb2_v2_init_tbl[] = {
- 	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_ANALOG_CONTROLS_TWO, 0x03),
- 	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CLOCK_INVERTERS, 0x7c),
- 	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CMODE, 0x80),
-@@ -258,10 +258,10 @@ static const struct qusb2_phy_cfg msm8998_phy_cfg = {
- 	.update_tune1_with_efuse = true,
- };
- 
--static const struct qusb2_phy_cfg sdm845_phy_cfg = {
--	.tbl		= sdm845_init_tbl,
--	.tbl_num	= ARRAY_SIZE(sdm845_init_tbl),
--	.regs		= sdm845_regs_layout,
-+static const struct qusb2_phy_cfg qusb2_v2_phy_cfg = {
-+	.tbl		= qusb2_v2_init_tbl,
-+	.tbl_num	= ARRAY_SIZE(qusb2_v2_init_tbl),
-+	.regs		= qusb2_v2_regs_layout,
- 
- 	.disable_ctrl	= (PWR_CTRL1_VREF_SUPPLY_TRIM | PWR_CTRL1_CLAMP_N_EN |
- 			   POWER_DOWN),
-@@ -774,8 +774,8 @@ static const struct of_device_id qusb2_phy_of_match_table[] = {
- 		.compatible	= "qcom,msm8998-qusb2-phy",
- 		.data		= &msm8998_phy_cfg,
- 	}, {
--		.compatible	= "qcom,sdm845-qusb2-phy",
--		.data		= &sdm845_phy_cfg,
-+		.compatible	= "qcom,qusb2-v2-phy",
-+		.data		= &qusb2_v2_phy_cfg,
- 	},
- 	{ },
- };
+ 		usb_1_hsphy: phy@88e3000 {
+-			compatible = "qcom,sc7180-qusb2-phy";
++			compatible = "qcom,sc7180-qusb2-phy", "qcom,qusb2-v2-phy";
+ 			reg = <0 0x088e3000 0 0x400>;
+ 			status = "disabled";
+ 			#phy-cells = <0>;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
