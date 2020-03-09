@@ -2,153 +2,116 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404C9C10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B332C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C5720873
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E7D2464B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 20:55:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/h35p5Z"
+	dkim=pass (2048-bit key) header.d=mind.be header.i=@mind.be header.b="YuJ74zCS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgCIUv6 (ORCPT
+        id S1726333AbgCIUz6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:51:58 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40941 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgCIUv6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 16:51:58 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a13so13645109edu.7
-        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 13:51:57 -0700 (PDT)
+        Mon, 9 Mar 2020 16:55:58 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35799 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbgCIUz6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 16:55:58 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so13044147wro.2
+        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 13:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=t1/tQO7ScCacraf64I25ikdRmSj7nncqRyTrMrLoByc=;
-        b=I/h35p5ZqhFEXKIglmPBQ5ryPy8ZQ3kZ8EkvxY0QIjPtYqXIwDOxumlAa296c8Dyo0
-         WYNbpv1jFvcs8s7chpv0oTLYHShJj0RGTv8+uEOXL+aeEAjL88tZQTOGaxXK22mO0VmD
-         TTAT1iyIUdzGzehwjF1M0sktzk1PEpdWkTg8/Wixww6YFobaAWihSZPsV5/R4wiZoACO
-         CllXavEihPgF/xPbiA6E5M6/ymZeNXth2pH+1fmpd98t0IPey2NzHRbg0aKf183lHn0f
-         6D4QHoegInFZ/VUue78vV0vNTjcJUwOPRlSNDnIOiQ+GUQhyWdbALnB333Dj39GDE6B1
-         5PFg==
+        d=mind.be; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=vhQE94JMdE+kOhEIbg2JbjKBD/IEFt/F1xmPKcV+cCA=;
+        b=YuJ74zCSchT9R3Qw3rctLTy0ub6AzdBpEPLkSD80z+B+IQkXZa36AMPNVEM7doIeXL
+         zd8Vpkkze/4ANcZsQ7e8Dr1Njf9f4PHcm7FKs+nm7r0UuFVfMQFa1Mrbpnw8xEZ9ZQ8v
+         YfqZFMqOWMa+j/RfwTu4lYl9g14Srn1vG8+dTNYq6J0uQlTPQVPwCITtEfB8VSYBSzsH
+         tyht4tdxYqCNSvFX0iMdVWadDTPODU60p/CoH123NYBypP+o6h/ypxiFNetmHzRnfYYs
+         5VH1fYXNJFXiMp5VC8ZaOpHTtKCxTUuXMeb6O4EJ+kQYucaDX1WuNVEFqXrGKH3x5+cU
+         afjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=t1/tQO7ScCacraf64I25ikdRmSj7nncqRyTrMrLoByc=;
-        b=CWmU9cYL2eA2nYEGJBsipaBRe6BAgeJCcSPtA8JghTfYQgqvJJjKdJ0Gvg8C5PHXkn
-         +AncDqYiVexl4Mh22CqJx1ugSr/W2gJquTqzgO5Rzgijf2bzBYonWuJCUFLjib8mqb/b
-         EVl7GgFlBsI+hvkfKU9lTfG370kvWocVQq98VmibbOKfxtVEML1JJGhtwuSvDLMuAji2
-         EoM409rNKd5pP5ESbpXgVqSIimg1Dn5EL35SYXwqcY0xmlEFyU29W4pXZAoEWo5tiUUC
-         BAyY40PqLSBgJBeUAIbrKEPB3XO3hsXjc1WLGm8oBwMZqPPTswnvNrh6e2Gobp3Wt9az
-         PJ8g==
-X-Gm-Message-State: ANhLgQ1THFHUsO3KPd7WLTSWURHGg3bxkblAi9D8OG/28Tf0HE5ZPczO
-        Qyr0TBnhXvWviTnYvSnqlkI=
-X-Google-Smtp-Source: ADFU+vvEqRdMsP6ltiXblRnGNbb0aVgrt68sLYFP+1qn+FyfvmQIB4cqzWGfyduN5LVWlyFdtKy5rA==
-X-Received: by 2002:a05:6402:3c6:: with SMTP id t6mr17963839edw.110.1583787116660;
-        Mon, 09 Mar 2020 13:51:56 -0700 (PDT)
-Received: from [10.67.48.239] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x23sm1067412ejb.78.2020.03.09.13.51.54
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=vhQE94JMdE+kOhEIbg2JbjKBD/IEFt/F1xmPKcV+cCA=;
+        b=CumG4QpDpoq+HhMegYV02OGcS67I+QRVlgBxut1ZrYmI22r+pBdrIT6zv+N5X647Gb
+         6e8OMiR67WI/TSGXEITpOO8/bqt7HU1kqmgMfEy9pvqJnXt6K7kI+5OjfMHDA2zaImtH
+         WAi6zsjPTUVwS9Q6zcF9vUYBIfFaah5lFo0mHFSNfu6Mx0IcJknq49Qsmx5BWUHb2rC0
+         WYhHeob1kS9ZiSFcAuwoTKgTMO8JfXUOaOFVY0eY+CVNcdqeC8gpEE97gENYgbR8rsU0
+         zgxDKZzMuH3HgO59m3Uj6HxFibEDa7g0w9NqT1dXYlLhP0RLo+M9DlRaxwpLNJOTTFPx
+         TJ8A==
+X-Gm-Message-State: ANhLgQ37NL7Z/VI+pdF40ci537agaYOwpxWWjF7oQnGvE7EzINHOcIcm
+        DTJ2vQKZ6k+zP1VSHqDcLj0s156CCZE=
+X-Google-Smtp-Source: ADFU+vuzi/IVOqxjAG2WysJRD8gtQgdniJdh8UtOI2sGJBVKb2NSoZEAo9jXf68Q3PWHcOJjeJmg6A==
+X-Received: by 2002:adf:9087:: with SMTP id i7mr14374888wri.120.1583787355688;
+        Mon, 09 Mar 2020 13:55:55 -0700 (PDT)
+Received: from ?IPv6:2a02:a03f:44b4:9700:886c:841d:dea2:ee2a? ([2a02:a03f:44b4:9700:886c:841d:dea2:ee2a])
+        by smtp.gmail.com with ESMTPSA id i14sm10352273wrp.82.2020.03.09.13.55.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 13:51:55 -0700 (PDT)
-Subject: Re: ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        nick.hudson@gmx.co.uk, linux-rpi-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Cc:     Nick Hudson <skrll@netbsd.org>
-References: <20200309164842.8184-1-nick.hudson@gmx.co.uk>
- <8609efe72001a183452c4bd4f1f1a827eb789406.camel@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <47bc256f-d8f2-6f42-1421-12e19c09d0ce@gmail.com>
-Date:   Mon, 9 Mar 2020 13:51:52 -0700
+        Mon, 09 Mar 2020 13:55:55 -0700 (PDT)
+Subject: Re: [PATCH 6/6 V3] ASoC: tas5756m: Add DT binding document
+To:     Rob Herring <robh@kernel.org>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+References: <20200308142509.27765-1-charles-antoine.couret@mind.be>
+ <20200308142509.27765-7-charles-antoine.couret@mind.be>
+ <20200309203847.GA31358@bogus>
+From:   Couret Charles-Antoine <charles-antoine.couret@mind.be>
+Message-ID: <e537768b-9d46-afcf-f5b9-0552630cdff7@mind.be>
+Date:   Mon, 9 Mar 2020 21:55:54 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <8609efe72001a183452c4bd4f1f1a827eb789406.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200309203847.GA31358@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/9/20 1:15 PM, Nicolas Saenz Julienne wrote:
-> Hi Nick,
-> 
-> On Mon, 2020-03-09 at 16:48 +0000, nick.hudson@gmx.co.uk wrote:
->> From: Nick Hudson <nick.hudson@gmx.co.uk>
+Le 09/03/2020 à 21:38, Rob Herring a écrit :
+> On Sun,  8 Mar 2020 15:25:09 +0100, Charles-Antoine Couret wrote:
+>> Document the bindings for the tas5756m driver.
 >>
->> Define the sdhci pinctrl state as "default" so it gets applied
->> correctly and to match all other RPis.
->>
->> Signed-off-by: Nick Hudson <skrll@netbsd.org>
+>> Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@mind.be>
 >> ---
-> 
-> you should add the [PATCH] prefix in your subject when submitting patches. Also
-> make sure you CC everyone listed by ./sripts/get_maintainer.pl, so they can
-> properly review the patch.
+>>   .../devicetree/bindings/sound/tas5756m.yaml   | 64 +++++++++++++++++++
+>>   1 file changed, 64 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/sound/tas5756m.yaml
+>>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Error: Documentation/devicetree/bindings/sound/tas5756m.example.dts:23.37-38 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/sound/tas5756m.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/sound/tas5756m.example.dt.yaml] Error 1
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> See https://patchwork.ozlabs.org/patch/1251057
+> Please check and re-submit.
 
-It would also be nice to get a Fixes: tag such that this could be
-backported to stable kernels. Thank you.
--- 
-Florian
+Hi Rob,
+
+I don't understand this issue. My example is based on a real device tree 
+and it works fine.
+
+I don't have access to your 
+"Documentation/devicetree/bindings/sound/tas5756m.example.dts" file so I 
+can not reproduce it. I executed your script before sending the patch 
+(but without extracting the example) and it was fine.
+
+Can you explain the issue please?
+
+Thank you in advance and have a nice day,
+
+Charles-Antoine Couret
+
