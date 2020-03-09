@@ -2,88 +2,119 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EC1C10F25
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28E1C10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7679A20828
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983BF24656
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 19:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQ6d4P7G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ms/8ZoJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgCITrw (ORCPT
+        id S1726106AbgCIT7q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:47:52 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39769 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgCITrv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 15:47:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id f21so6247274iol.6;
-        Mon, 09 Mar 2020 12:47:50 -0700 (PDT)
+        Mon, 9 Mar 2020 15:59:46 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35036 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCIT7p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 15:59:45 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a20so7545554edj.2;
+        Mon, 09 Mar 2020 12:59:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QKbim7kyHkrPMGudkJ1vg0pEcBDWWCn0qINKqdVbA5w=;
-        b=aQ6d4P7G+51cW8y0i8NEFCtsKyBIAmDQUSzYlkLtf9MQzoqQGdQwySUYgdQkPk65et
-         BmWWjn2rjrHZIQjLlcNULODk5WgZGKexl56EwBzIjXJ2GiyoEJSk5cDo2hgN9YpBNIb8
-         i2sMa23eSaQbyjhj2W3NPQDmtj26SJ/U1V3VzobgYIPUdOS2Cbpck23EfWzcEQdEyVTI
-         /fcFr/U2P/oupRc223/fzVPBB+C5DOCFR1akIOVvpeXO5nsVE3EHbFMmaQpwIwPDAlTj
-         smSK6qzxupxo+4IFoT6Bdzhxc4oyqdojunjeJjFrBJ6Bbs8sw1Ie34TVuOangoKlhGCz
-         UXiA==
+        bh=VmBXxLKmo+++3JevDuJgXXYNelP3ARfrGqq9jGQ7Y7E=;
+        b=ms/8ZoJQ8nLPB660/C1W5wBbhezgkvnTQ4JipsElaAt9WEAK7C3RspKMI05wCln7uH
+         vOjrZ+hEU8wRmNb7cV3l0iKwIXxvFNVNWOQmveMjVZUk/BXuAm3qkMYlHX/SHf/B5RRW
+         uUFD7T10eBMQNsE+3IvbNRAewmIdNmqoVC+tVMc0glgiOSNnId0iRCT/ALNOOxwVbuIl
+         qAUA5E3tQv2ToAcgD9PLekxJJ04FtHSTzWRI0le6cl1qKf4dgfMJfyRVxEbmyGaZlYOF
+         AUtRu4kjq46Jn3gTIHNUzDPJFbOQns50H/KyEiTCSboV7UlsQ8zbQDd4MWHpWBh9T1eX
+         V9tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QKbim7kyHkrPMGudkJ1vg0pEcBDWWCn0qINKqdVbA5w=;
-        b=KrF24B0nuBYnro1LPewWqK+aSWt2nDjXZWLjRNM9G2boLLbiciI4KMLzPojQiDvUgJ
-         kpq61GGhTxq5EsZE2tV7VzvsJcdAHaSv5qDGcfSrOnZtb2uL17Qihg/PjGGFF+ndiQ+K
-         Jli5L3dLEqSG/ap0irg1KeZdpxOFhAFwpNYTYmT3cYDSXhaSN6FPIQ3X6mvrG5UNTj5Y
-         8CLkQXaDipbt/l0jbcUHy8CA8AZbGqn+KgM0W4BGwzH4U5obRR8O+Jj29WdGjNAM+xKV
-         ByYUCX4bcoWoW6IgAMDe/AVELbpwMTFPpJUyWYcNmJ2jauDzfKMwE7c/46x1LchTyYH/
-         kW5A==
-X-Gm-Message-State: ANhLgQ1ICCLoeTeuSQlCW2ZAENMl/T7VtpEI9pD4DjoVo036tHL3tLZw
-        IH6WcooghTtg+R3Y4+HkzZyYlzb05jvGZeTKZamVyBic
-X-Google-Smtp-Source: ADFU+vu0kdCSLs3bzWD+F6sDXLWQMKarERkN7jRfqXBo+1Uyqq+GkdyoCW1iIkJTYgvcqSWEJbTCkD7eLiN5QW2hczI=
-X-Received: by 2002:a6b:2c52:: with SMTP id s79mr14709222ios.160.1583783270045;
- Mon, 09 Mar 2020 12:47:50 -0700 (PDT)
+        bh=VmBXxLKmo+++3JevDuJgXXYNelP3ARfrGqq9jGQ7Y7E=;
+        b=Ble8vhjCq4wmkm7lqc+teYGnlBYDRBZNy2xagLCmerocdu9ePmL9rPjjrI/G7VYc0L
+         hmjCAfkt3xWhIQjOfTRalD63ulGXQxWjMJ+/47LDIDNoOdvxg75fpiZCVX+yrAVhwU5v
+         RBEjNqtRokjE+REIc7O1T7M3ESRohq3uftTTIrPydbt0V+91hxuVd98JUwCwMgLxuLd9
+         XWLgyHu3FTsJAlbPgu0ZGnFHvVBumDKagoA6g/qLOREh8pDGb600/73WzsDKDjfqzyqc
+         rxO/qsWopkpAibHomAqiUj0hGYyRTjkuUIbpSDeOgs8sA8kPUIzVMtguqfiasiWXUHQo
+         1ZhA==
+X-Gm-Message-State: ANhLgQ1yHdaUx4RD+HtS35UGx2BJ9OEXrJdiui/XGQsqglUJXWjufrih
+        sSYP9krkkUgQb2zzH2X35wmaw0j6X+tffzZlnbg=
+X-Google-Smtp-Source: ADFU+vui/3sVmKBiJj2kgewtRz/H76d3oN3MyBRFSaJd5Yt5pd15za9zixZuGhwGvUsQxOOsjnSrE1+XaMuiRPIv2WQ=
+X-Received: by 2002:a17:906:f49:: with SMTP id h9mr16777311ejj.6.1583783983011;
+ Mon, 09 Mar 2020 12:59:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200308055445.1992189-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20200308055445.1992189-1-bjorn.andersson@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 9 Mar 2020 13:47:38 -0600
-Message-ID: <CAOCk7NrYxPRsT+wqgW=ShkYNnkuLfuzzVACDL7Zn-phKSgqvfw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8998-mtp: Disable funnel 4 and 5
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <20200309145624.10026-1-olteanv@gmail.com> <20200309145624.10026-6-olteanv@gmail.com>
+ <83af52172a3cabd662de1ed9574e4247@walle.cc>
+In-Reply-To: <83af52172a3cabd662de1ed9574e4247@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 9 Mar 2020 21:59:32 +0200
+Message-ID: <CA+h21hp2MxLqLJL9AnufmW_-OQFdiY7p4Db97G3eTr_MUkH4TA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] arm64: dts: ls1028a: Specify the DMA channels for the
+ DSPI controllers
+To:     Michael Walle <michael@walle.cc>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Mar 7, 2020 at 10:58 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Mon, 9 Mar 2020 at 21:06, Michael Walle <michael@walle.cc> wrote:
 >
-> Disable Coresight funnel 4 and 5, for now, as these causes the MTP to
-> crash when clock late_initcall disables unused clocks.
+> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> >
+> > LS1028A has a functional connection to the eDMA module. Even if the
+> > spi-fsl-dspi.c driver is not using DMA for LS1028A now, define the
+> > slots
+> > in the DMAMUX for connecting the eDMA channels to the 3 DSPI
+> > controllers.
+> >
+> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > index 515e0a1b934f..18155273a46e 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > @@ -298,6 +298,8 @@
+> >                       interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> >                       clock-names = "dspi";
+> >                       clocks = <&clockgen 4 1>;
+> > +                     dmas = <&edma0 0 62>, <&edma0 0 60>;
+> > +                     dma-names = "tx", "rx";
 >
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> minor nit. Other nodes specified the dma channels as
+>
+> dma-names = "tx", "rx";
+> dmas = <&edma0 0 62>,
+>         <&edma0 0 60>;
+>
+> -michael
+>
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Does it matter?
 
-I'm guessing that these are accessed by something else in the system,
-without properly putting its own vote or something.  Similar to
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.6-rc5&id=12eced09cd301aa7b1868a67c50a651c2aacd363
-
-If I get some time, I'll try to repro and hopefully identify what is
-exactly going wrong.
+Regards,
+-Vladimir
