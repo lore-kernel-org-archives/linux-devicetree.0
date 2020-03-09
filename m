@@ -2,98 +2,103 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA5DC10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 16:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77D6C10F27
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 16:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC47222522
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 16:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7E820828
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 16:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="k+AolkOW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7+hIRJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgCIQtC (ORCPT
+        id S1727101AbgCIQyz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:49:02 -0400
-Received: from mout.gmx.net ([212.227.15.19]:42619 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbgCIQtC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:49:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583772532;
-        bh=bJZASp2wqp9DJbqY/Zmxx2XfmImJ56qCMM/gAOy79bs=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=k+AolkOW7aMPveXSRCzTW1mzf7AnpFbkVFgspbpnZTvRabNmYJv7vHXhmG+hZdW4m
-         xadEFgOuNfF9RO9tM3+sggHp7u4fcF/iPFB4ylMYS4Zw1E9dsCpZJOZsWa/aO9e2ip
-         o7r8KphXQ3j/bYe1/whvp14Ook5Q9+sHYLx7zRRU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from zoom ([188.223.33.120]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1N4QsO-1jIX7y2CNq-011Pey; Mon, 09
- Mar 2020 17:48:52 +0100
-Received: by zoom (Postfix, from userid 2000)
-        id DA6F719C8597; Mon,  9 Mar 2020 16:48:50 +0000 (GMT)
-From:   nick.hudson@gmx.co.uk
-To:     linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Nick Hudson <nick.hudson@gmx.co.uk>, Nick Hudson <skrll@netbsd.org>
-Subject: ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
-Date:   Mon,  9 Mar 2020 16:48:42 +0000
-Message-Id: <20200309164842.8184-1-nick.hudson@gmx.co.uk>
-X-Mailer: git-send-email 2.17.1
-X-Provags-ID: V03:K1:EWzltLxH3lc0PaDWKiDsDvrtgmxbVZf503xTW2EYG4eCK4WO0SI
- 3s15ax8nQoxEuKgct+4iIiBQKyx+egXPSWusqhufDdo6QzSKLn39NODetwdcqb87WHczRBH
- VlpVFYRP9c2Zn9hfIuSOh+WIpPggeWCcBiIDuU9VTG3QNJaMYfE16GEpzut+H/F9/yCFVak
- 68/tZm1NVIZr/r4dk4vSg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:icy/k2Wp7oU=:uONgayPy9N7KjVWTwGtGlh
- WAVqB5tsMO0+MRSCav3ZMAZhwrnxoREnBm11+6xELUyfZqHREUXGojGXsZFl+SUW5bmtC+Y4x
- gwRGPFE3dAgRAE/5zgi6wm9RrzXPBTWPJRbFNk/w0hE1/HpwHGkFTceG6kntEdrd3X91pGtZo
- eL8xCjkOKngn2mhGgVQ8k8s96jbq2FVoHzICr1wBzVsDWYc8KCSg/v/jtA46oJU8LaWeCnz1C
- Ze1ODe7kWLiXjqpcByhjxFVvHbFrg1Lp4AYSOIghFiInxLKArs2LbxTtchpuBBuDJJAEmAZg+
- ENHfKzCkTNYiLnxwxrIsjWLNGRsSkVTmrUr+al/LGGrYkz4Jdqo3WUGVce/vnD3xTAXW6ooFZ
- 2t/teEXFN/vVqGWZ7VJoUJZsqCTnpFCDRX/c3fPk6y+okdsRX+x0FkBuMNRDD67ArsY+dmJmi
- iLx9f8j/UyiUuOVAFVGllLe8lGXEMc575m7fFT2p0xPNC/2jut23grsNefUVSZ/vHVZXpO501
- +jrPDh3Faql9xnX8PSD3xyvfzWK6AY5Q2xGtOpZvln/XRTk3HV6IvVZJcp+R8b8rtJs6Pzo2J
- +YWDTYWAQplTlTTapW0s2MZNMLrPqTSbRzYUkcf6DQOccyrrzCSnUmFNuV2fagzIfMCG1TT1H
- CbRXTTAFRaKRiiGO2oLF4UkGT93wuubMlLzEz2TNoZApWmJPwqiHfklIzFZqGVs52Plka3VN5
- qfNXrP7lNseJhGo9AKt52oR+iZFchrsMlvNY4Nno3opZhsSl2kWREhWs0Y/TxUEronSTL+P6Z
- Gy8UA7us3XUfbPMJP/ufz3o0cX80NDahgz+2SznYV8uKU6Y5SBqhqqInOmEahXPafohSIQZdF
- t6+3gkhE42/hW7dejV+zOzldZMS7MfndkvFk/beH9XYSWcE12pHg2HNgmJj40r9UXj8cJEeto
- vfSFlmJplvcUPbL93kvqTL5P0AWjHOL6S4n4yG30ipcB8nbiIn/KQ+EvvsdVVi0kLRuHF9rzo
- Kerv+2sibXZ/fWcA6nPYqGMmPWCRKbVdrNPNr6kV8D3XCsZbvGamfuwnSGGdDAFORIb3QefTj
- AOx0NK++JOicgI/jPVbq4wn/QpSb9CfJFFBGvM7Xc1D08/YPYTwV2hLCuZ7BFm8N/pWcnylMA
- feH5/2Sxpbd7xEyMR6UVOhjOQnn13iD9eYx3QqoblT7eY5rU1sDLnDyq+9AGRqLlMFsIEpmUz
- mmk/mxnr4i8/RwSpJ
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Mar 2020 12:54:55 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38248 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbgCIQyy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 12:54:54 -0400
+Received: by mail-io1-f65.google.com with SMTP id s24so9824220iog.5;
+        Mon, 09 Mar 2020 09:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tBM/EJVByJ1fvt0IaB7s42kBMtrMOfscdKxthc1f01o=;
+        b=j7+hIRJ+WeLBqH9JZ71vlz/LU6RkYQnan8oxdrQmew18BkJPxDpnlDDs8qwjyf4S//
+         6g/elDvgR2jQK9bQjetKagI64eXB91sAaSx3dWdbExpOSby3rqIq068TjSOY49q3LRJX
+         B+gxeLX+9+e+V9rxkzHIy6bDZKe1isOWqYS6CeIzxl9PLIVG62uM6FLB21XuHHwNQsw5
+         4MIhCTr8lo091TmPK/2vLwXAUNzV5BcPsOA/hBHHx/oplK6aQeultzspfXxzCom7Sy79
+         V+MrWkL2/CTv96Ofq3PF0TuBWLJBDCR9ZKpcwqTcqtjnVRHOXWmWMvt0Sa4ev8N7Klo3
+         PpSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tBM/EJVByJ1fvt0IaB7s42kBMtrMOfscdKxthc1f01o=;
+        b=iMNL1TCG3Pl5wBMQdOo4xEKMSGyXK0Yns1b+yQzGlvAqZ/s0D5KkH/+hD6Kr6e76WP
+         qCwhnS+Rt5XDlWZ+KV0O+rfwrlsa0jOE6bKj2ser+H4QyR+GC6y+X9Virb3AASMbU82U
+         3rPJDskFLI2eJ4TTxM625myTESiUeKYtu0yeXYU49btZIhTSpqOVRiITtCH9JAKv2Z4Y
+         UFrEMgceE0wKBvPUKp+cjnHhyMuPJqsXlWjiqOL5q6HjhyLn6vSPG8wJpwI2m8Q18aKf
+         mJFFFuIKv59/cVMUVMTX5uxrOfnMGF03GtGSoJXDhUttVEafY6PVsrhPRyFbcq4gZod6
+         0GWQ==
+X-Gm-Message-State: ANhLgQ129IWz2RpjbwD+tfGG7vqXDyAUsuF/8twSPaFvsgnbCDiGJEdP
+        1zvdspc5En07am+QRQE+nOFdqyrEdnz6tLP01sU=
+X-Google-Smtp-Source: ADFU+vuolrK6LFWTF1i2AMSm9DahDorblsLbuuPqp++RHjvfHEfl6hLe/NsSx+TCiOg3yJcdPU9Z/vcKwZqJhKtkEUE=
+X-Received: by 2002:a6b:3c13:: with SMTP id k19mr14304131iob.25.1583772893973;
+ Mon, 09 Mar 2020 09:54:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200306042831.17827-1-elder@linaro.org>
+In-Reply-To: <20200306042831.17827-1-elder@linaro.org>
+From:   Dave Taht <dave.taht@gmail.com>
+Date:   Mon, 9 Mar 2020 09:54:42 -0700
+Message-ID: <CAA93jw5enz6-h1m=7tGFToK+E+8z3aD80pBef4AYkFrS2u3hHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver (UPDATED)
+To:     Alex Elder <elder@linaro.org>
+Cc:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dcbw@redhat.com>,
+        Evan Green <evgreen@google.com>,
+        Eric Caruso <ejcaruso@google.com>,
+        Susheel Yadav Yadagiri <syadagir@codeaurora.org>,
+        Chaitanya Pratapa <cpratapa@codeaurora.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Siddharth Gupta <sidgup@codeaurora.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nick Hudson <nick.hudson@gmx.co.uk>
+I am happy to see this driver upstream.
 
-Define the sdhci pinctrl state as "default" so it gets applied
-correctly and to match all other RPis.
+>Arnd's concern was that the rmnet_data0 network device does not
+>have the benefit of information about the state of the underlying
+>IPA hardware in order to be effective in controlling TX flow.
+>The feared result is over-buffering of TX packets (bufferbloat).
+>I began working on some simple experiments to see whether (or how
+>much) his concern was warranted.  But it turned out that completing
+>these experiments was much more work than had been hoped.
 
-Signed-off-by: Nick Hudson <skrll@netbsd.org>
-=2D--
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 1 +
- 1 file changed, 1 insertion(+)
+Members of the bufferbloat project *care*, and have tools and testbeds for
+exploring these issues. It would be good to establish a relationship with
+the vendor, obtain hardware, and other (technical and financial) support, if
+possible.
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/=
-bcm2835-rpi-zero-w.dts
-index b75af21069f9..4c3f606e5b8d 100644
-=2D-- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -112,6 +112,7 @@
- &sdhci {
- 	#address-cells =3D <1>;
- 	#size-cells =3D <0>;
-+	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&emmc_gpio34 &gpclk2_gpio43>;
- 	bus-width =3D <4>;
- 	mmc-pwrseq =3D <&wifi_pwrseq>;
-=2D-
-2.17.1
-
+Is there any specific hardware now available (generally or in beta) that
+can be obtained by us to take a harder look? A contact at linaro or QCA
+willing discuss options?
