@@ -2,272 +2,428 @@ Return-Path: <SRS0=Fzrg=42=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E305C10F27
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 13:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7B4C10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6C821D7E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 13:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583759631;
-	bh=35FQ8G3j5ksoqdAlW7Zk4d/LBcnIMm9U8mBsQ+8SyYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uf9RseLq9odCBYrQie9upCNwnCRmAHlesEEQKx0KXSxy7j5M7aFIWyNijm9cs5dxV
-	 e8mi2+BJegQ40GVEISxPqc/CG2uPv3489xnrwyE6jDK9GUJC6IHgEEeeHw2ub5uMtr
-	 PZJTTC6SkQjrbDi9cDxiHFZQibmTyKlLB6Vh8tXo=
+	by mail.kernel.org (Postfix) with ESMTP id 58B0320727
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cCw+/NYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgCINNu (ORCPT
+        id S1726445AbgCIN0o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:13:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:51986 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgCINNu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:13:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6ACD630E;
-        Mon,  9 Mar 2020 06:13:49 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE6AE3F67D;
-        Mon,  9 Mar 2020 06:13:48 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 13:13:46 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Eason Yen <eason.yen@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, jiaxin.yu@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH 2/2] ASoC: codec: mediatek: add mt6359 codec driver
-Message-ID: <20200309131346.GF4101@sirena.org.uk>
-References: <1583465622-16628-1-git-send-email-eason.yen@mediatek.com>
- <1583465622-16628-3-git-send-email-eason.yen@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Y1L3PTX8QE8cb2T+"
-Content-Disposition: inline
-In-Reply-To: <1583465622-16628-3-git-send-email-eason.yen@mediatek.com>
-X-Cookie: Above all things, reverence yourself.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 9 Mar 2020 09:26:44 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:35838 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726427AbgCIN0n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 09:26:43 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583760402; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=wMMrzD7T/RIwHvzv+Ze2mZTFGghdcHPfBa6bIbLUCGs=; b=cCw+/NYO5h3G4BhK6kSIF/JAe8Y1qSbA1G7Ow6Vc6HUca5fwpJ9F/dEmFgskAlYQHf1q9fTw
+ Ij2wrIaFWw3ZMXixDtJ5YfuKE5p/76LVYXKDkceKkZiujWWZ9kLzwdHtv94ibm9BPYO1ufFH
+ v4CoYp9mNF23ABw9AE5ckIGMFYQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e664411.7fe1cfd17b20-smtp-out-n03;
+ Mon, 09 Mar 2020 13:26:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C4ACAC44795; Mon,  9 Mar 2020 13:26:39 +0000 (UTC)
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0FC46C44788;
+        Mon,  9 Mar 2020 13:26:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0FC46C44788
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V3 1/4] backlight: qcom-wled: convert the wled bindings to .yaml format
+Date:   Mon,  9 Mar 2020 18:55:59 +0530
+Message-Id: <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the qcom-wled bindings from .txt to .yaml format.
 
---Y1L3PTX8QE8cb2T+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ .../bindings/leds/backlight/qcom-wled.txt          | 154 -----------------
+ .../bindings/leds/backlight/qcom-wled.yaml         | 184 +++++++++++++++++++++
+ 2 files changed, 184 insertions(+), 154 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
 
-On Fri, Mar 06, 2020 at 11:33:42AM +0800, Eason Yen wrote:
-
-> +static void capture_gpio_reset(struct mt6359_priv *priv)
-> +{
-> +	/* set pad_aud_*_miso to GPIO mode and dir input
-> +	 * reason:
-> +	 * pad_aud_clk_miso, because when playback only the miso_clk
-> +	 * will also have 26m, so will have power leak
-> +	 * pad_aud_dat_miso*, because the pin is used as boot strap
-> +	 */
-
-This looks like things that might be better exposed via pinctrl and
-gpiolib for board specific configuration - what exactly are these GPIOs
-doing?  A lot of this code looks like it might be board specific.
-
-> +/* use only when not govern by DAPM */
-> +static int mt6359_set_dcxo(struct mt6359_priv *priv, bool enable)
-> +{
-
-Why might this sometimes be controlled outside of DAPM?
-
-> +/* reg idx for -40dB*/
-> +#define PGA_MINUS_40_DB_REG_VAL 0x1f
-> +#define HP_PGA_MINUS_40_DB_REG_VAL 0x3f
-> +static const char *const dl_pga_gain[] = {
-> +	"8Db", "7Db", "6Db", "5Db", "4Db",
-> +	"3Db", "2Db", "1Db", "0Db", "-1Db",
-> +	"-2Db", "-3Db",	"-4Db", "-5Db", "-6Db",
-> +	"-7Db", "-8Db", "-9Db", "-10Db", "-40Db"
-> +};
-> +
-> +static const char *const hp_dl_pga_gain[] = {
-> +	"8Db", "7Db", "6Db", "5Db", "4Db",
-> +	"3Db", "2Db", "1Db", "0Db", "-1Db",
-> +	"-2Db", "-3Db",	"-4Db", "-5Db", "-6Db",
-> +	"-7Db", "-8Db", "-9Db", "-10Db", "-11Db",
-> +	"-12Db", "-13Db", "-14Db", "-15Db", "-16Db",
-> +	"-17Db", "-18Db", "-19Db", "-20Db", "-21Db",
-> +	"-22Db", "-40Db"
-> +};
-
-I can't see any users of these tables in the driver?  That's good since
-the driver should be translating these into TLV controls rather than
-using enums but these variables aren't used then so should be removed.
-
-> +
-> +	if (!is_valid_hp_pga_idx(from) || !is_valid_hp_pga_idx(to))
-> +		dev_warn(priv->dev, "%s(), volume index is not valid, from %d, to %d\n",
-> +			 __func__, from, to);
-
-Shouldn't we return an error then?
-
-> +
-> +	dev_info(priv->dev, "%s(), from %d, to %d\n",
-> +		 __func__, from, to);
-
-At most this should be a dev_dbg(), having a dev_info() log is going to
-be far too verbose.  There's a lot of these in the driver.
-
-> +static const char *const mic_type_mux_map[] = {
-> +	"Idle",
-> +	"ACC",
-> +	"DMIC",
-> +	"DCC",
-> +	"DCC_ECM_DIFF",
-> +	"DCC_ECM_SINGLE",
-> +	"VOW_ACC",
-> +	"VOW_DMIC",
-> +	"VOW_DMIC_LP",
-> +	"VOW_DCC",
-> +	"VOW_DCC_ECM_DIFF",
-> +	"VOW_DCC_ECM_SINGLE"
-> +};
-
-This looks like something that should be being set by DT or other
-platform data rather than at runtime - we're not likely to change from a
-digital to analogue microphone at runtime for example.
-
-> +static int mt6359_put_volsw(struct snd_kcontrol *kcontrol,
-> +			    struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_component *component =
-> +			snd_soc_kcontrol_component(kcontrol);
-> +	struct mt6359_priv *priv = snd_soc_component_get_drvdata(component);
-> +	struct soc_mixer_control *mc =
-> +			(struct soc_mixer_control *)kcontrol->private_value;
-> +	unsigned int reg;
-> +	int index = ucontrol->value.integer.value[0];
-> +	int ret;
-> +
-> +	ret = snd_soc_put_volsw(kcontrol, ucontrol);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	switch (mc->reg) {
-> +	case MT6359_ZCD_CON2:
-> +		regmap_read(priv->regmap, MT6359_ZCD_CON2, &reg);
-> +		priv->ana_gain[AUDIO_ANALOG_VOLUME_HPOUTL] =
-> +			(reg >> RG_AUDHPLGAIN_SFT) & RG_AUDHPLGAIN_MASK;
-> +		priv->ana_gain[AUDIO_ANALOG_VOLUME_HPOUTR] =
-> +			(reg >> RG_AUDHPRGAIN_SFT) & RG_AUDHPRGAIN_MASK;
-> +		break;
-
-It's unclear what's going on with this custom function.  As far as I can
-see all it's doing is taking a copy of the gain setting for later use by
-rampig functions but since we're immediately writing the set value into
-the register map surely we don't need that as we can just read the value
-back from the register?
-
-> +static const struct snd_kcontrol_new mt6359_snd_controls[] = {
-> +	/* dl pga gain */
-> +	SOC_SINGLE_EXT_TLV("HeadsetL Volume",
-> +			   MT6359_ZCD_CON2, 0, 0x1E, 0,
-> +			   snd_soc_get_volsw, mt6359_put_volsw,
-> +			   hp_playback_tlv),
-> +	SOC_SINGLE_EXT_TLV("HeadsetR Volume",
-> +			   MT6359_ZCD_CON2, 7, 0x1E, 0,
-> +			   snd_soc_get_volsw, mt6359_put_volsw,
-> +			   hp_playback_tlv),
-> +	SOC_SINGLE_EXT_TLV("LineoutL Volume",
-> +			   MT6359_ZCD_CON1, 0, 0x12, 0,
-> +			   snd_soc_get_volsw, mt6359_put_volsw, playback_tlv),
-> +	SOC_SINGLE_EXT_TLV("LineoutR Volume",
-> +			   MT6359_ZCD_CON1, 7, 0x12, 0,
-> +			   snd_soc_get_volsw, mt6359_put_volsw, playback_tlv),
-
-These should be stereo controls not pairs of mono controls.
-
-> +	/* ul pga gain */
-> +	SOC_SINGLE_EXT_TLV("PGAL Volume",
-> +			   MT6359_AUDENC_ANA_CON0, RG_AUDPREAMPLGAIN_SFT, 4, 0,
-> +			   snd_soc_get_volsw, mt6359_put_volsw, capture_tlv),
-> +	SOC_SINGLE_EXT_TLV("PGAR Volume",
-> +			   MT6359_AUDENC_ANA_CON1, RG_AUDPREAMPRGAIN_SFT, 4, 0,
-> +			   snd_soc_get_volsw, mt6359_put_volsw, capture_tlv),
-
-Same here.
-
-> +static const char * const lo_in_mux_map[] = {
-> +	"Open", "Playback_L_DAC", "Playback", "Test Mode"
-> +};
-> +
-> +static int lo_in_mux_map_value[] = {
-> +	0x0, 0x1, 0x2, 0x3,
-> +};
-
-Why use a value enum here, a normal mux should be fine?
-
-> +static int mt_delay_250_event(struct snd_soc_dapm_widget *w,
-> +			      struct snd_kcontrol *kcontrol,
-> +			      int event)
-> +{
-> +	switch (event) {
-> +	case SND_SOC_DAPM_POST_PMU:
-> +	case SND_SOC_DAPM_PRE_PMD:
-> +		usleep_range(250, 270);
-
-Why would having a sleep before power down be useful?
-
-> +static int mt6359_codec_probe(struct snd_soc_component *cmpnt)
-> +{
-> +	struct mt6359_priv *priv = snd_soc_component_get_drvdata(cmpnt);
-> +	int ret;
-> +
-> +	snd_soc_component_init_regmap(cmpnt, priv->regmap);
-> +
-> +	snd_soc_add_component_controls(cmpnt,
-> +				       mt6359_snd_vow_controls,
-> +				       ARRAY_SIZE(mt6359_snd_vow_controls));
-
-Use the controls member of the component driver struct.
-
-> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_HPOUTL] = 8;
-> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_HPOUTR] = 8;
-> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_MICAMP1] = 3;
-> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_MICAMP2] = 3;
-> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_MICAMP3] = 3;
-
-These should be left at the hardware defaults.
-
-> +	priv->avdd_reg = devm_regulator_get(priv->dev, "vaud18");
-> +	if (IS_ERR(priv->avdd_reg)) {
-> +		dev_err(priv->dev, "%s(), have no vaud18 supply", __func__);
-> +		return PTR_ERR(priv->avdd_reg);
-> +	}
-
-The driver should request resources during device model probe rather
-than component probe.
-
-> +	ret = regulator_enable(priv->avdd_reg);
-> +	if (ret)
-> +		return ret;
-> +
-
-There's nothing to disable this on remove.
-
---Y1L3PTX8QE8cb2T+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5mQQkACgkQJNaLcl1U
-h9DX5Af/ZXEkllI5PwLFc3+3O8BAAFuHXUMEpdJcOuRRbpDI/b75g0ksRcz1vyXG
-UYtDhpLHnj5zofuVANdhydI13V32Yx034ouL9Q0S6aS/fGRIa802yamSKh0O4fys
-Of5CMYR/5WaN7l6s143v3MlBJidu0bkw9XVX/Gl/MveEnXRM8Ch0Jbme29Wah+9c
-IUtxbwU9s5y0ARbxUsm5vYILnoWIGADDQBDRYJDKYwvgUskiERFiR0+PWUie9hs9
-hmImd1VmfXoKe6bC3NGFu96DuzTv6GOlA8JhfJpddifrIATZwAL3CksEzBaylQl6
-PJSoObx4lvvIWT0DWP9kUrcsytDe7g==
-=XoPC
------END PGP SIGNATURE-----
-
---Y1L3PTX8QE8cb2T+--
+diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+deleted file mode 100644
+index c06863b..0000000
+--- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
++++ /dev/null
+@@ -1,154 +0,0 @@
+-Binding for Qualcomm Technologies, Inc. WLED driver
+-
+-WLED (White Light Emitting Diode) driver is used for controlling display
+-backlight that is part of PMIC on Qualcomm Technologies, Inc. reference
+-platforms. The PMIC is connected to the host processor via SPMI bus.
+-
+-- compatible
+-	Usage:        required
+-	Value type:   <string>
+-	Definition:   should be one of:
+-			"qcom,pm8941-wled"
+-			"qcom,pmi8998-wled"
+-			"qcom,pm660l-wled"
+-
+-- reg
+-	Usage:        required
+-	Value type:   <prop encoded array>
+-	Definition:   Base address of the WLED modules.
+-
+-- default-brightness
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   brightness value on boot, value from: 0-4095.
+-		      Default: 2048
+-
+-- label
+-	Usage:        required
+-	Value type:   <string>
+-	Definition:   The name of the backlight device
+-
+-- qcom,cs-out
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   enable current sink output.
+-		      This property is supported only for PM8941.
+-
+-- qcom,cabc
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   enable content adaptive backlight control.
+-
+-- qcom,ext-gen
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   use externally generated modulator signal to dim.
+-		      This property is supported only for PM8941.
+-
+-- qcom,current-limit
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   mA; per-string current limit; value from 0 to 25 with
+-		      1 mA step. Default 20 mA.
+-		      This property is supported only for pm8941.
+-
+-- qcom,current-limit-microamp
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   uA; per-string current limit; value from 0 to 30000 with
+-		      2500 uA step. Default 25 mA.
+-
+-- qcom,current-boost-limit
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   mA; boost current limit.
+-		      For pm8941: one of: 105, 385, 525, 805, 980, 1260, 1400,
+-		      1680. Default: 805 mA.
+-		      For pmi8998: one of: 105, 280, 450, 620, 970, 1150, 1300,
+-		      1500. Default: 970 mA.
+-
+-- qcom,switching-freq
+-	Usage:        optional
+-	Value type:   <u32>
+-	 Definition:   kHz; switching frequency; one of: 600, 640, 685, 738,
+-		       800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
+-		       4800, 9600.
+-		       Default: for pm8941: 1600 kHz
+-				for pmi8998: 800 kHz
+-
+-- qcom,ovp
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   V; Over-voltage protection limit; one of:
+-		      27, 29, 32, 35. Default: 29V
+-		      This property is supported only for PM8941.
+-
+-- qcom,ovp-millivolt
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   mV; Over-voltage protection limit;
+-		      For pmi8998: one of 18100, 19600, 29600, 31100.
+-		      Default 29600 mV.
+-		      If this property is not specified for PM8941, it
+-		      falls back to "qcom,ovp" property.
+-
+-- qcom,num-strings
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   #; number of led strings attached;
+-		      value: For PM8941 from 1 to 3. Default: 2
+-			     For PMI8998 from 1 to 4.
+-
+-- interrupts
+-	Usage:        optional
+-	Value type:   <prop encoded array>
+-	Definition:   Interrupts associated with WLED. This should be
+-		      "short" and "ovp" interrupts. Interrupts can be
+-		      specified as per the encoding listed under
+-		      Documentation/devicetree/bindings/spmi/
+-		      qcom,spmi-pmic-arb.txt.
+-
+-- interrupt-names
+-	Usage:        optional
+-	Value type:   <string>
+-	Definition:   Interrupt names associated with the interrupts.
+-		      Must be "short" and "ovp". The short circuit detection
+-		      is not supported for PM8941.
+-
+-- qcom,enabled-strings
+-	Usage:        optional
+-	Value tyoe:   <u32 array>
+-	Definition:   Array of the WLED strings numbered from 0 to 3. Each
+-		      string of leds are operated individually. Specify the
+-		      list of strings used by the device. Any combination of
+-		      led strings can be used.
+-
+-- qcom,external-pfet
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   Specify if external PFET control for short circuit
+-		      protection is used. This property is supported only
+-		      for PMI8998.
+-
+-- qcom,auto-string-detection
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   Enables auto-detection of the WLED string configuration.
+-		      This feature is not supported for PM8941.
+-
+-
+-Example:
+-
+-pm8941-wled@d800 {
+-	compatible = "qcom,pm8941-wled";
+-	reg = <0xd800>;
+-	label = "backlight";
+-
+-	qcom,cs-out;
+-	qcom,current-limit = <20>;
+-	qcom,current-boost-limit = <805>;
+-	qcom,switching-freq = <1600>;
+-	qcom,ovp = <29>;
+-	qcom,num-strings = <2>;
+-	qcom,enabled-strings = <0 1>;
+-};
+diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+new file mode 100644
+index 0000000..d334f81
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+@@ -0,0 +1,184 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/leds/backlight/qcom-wled.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Binding for Qualcomm Technologies, Inc. WLED driver
++
++maintainers:
++  - Lee Jones <lee.jones@linaro.org>
++
++description: |
++  WLED (White Light Emitting Diode) driver is used for controlling display
++  backlight that is part of PMIC on Qualcomm Technologies, Inc. reference
++  platforms. The PMIC is connected to the host processor via SPMI bus.
++
++properties:
++  compatible :
++    enum:
++       - qcom,pm8941-wled
++       - qcom,pmi8998-wled
++       - qcom,pm660l-wled
++
++  reg:
++    maxItems: 1
++
++  default-brightness:
++    maxItems: 1
++    description:
++      brightness value on boot, value from 0-4095.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++        default: 2048
++
++  label:
++    maxItems: 1
++    description:
++      The name of the backlight device.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/string
++
++  qcom,cs-out:
++    description:
++      enable current sink output.
++      This property is supported only for PM8941.
++    type: boolean
++
++  qcom,cabc:
++    description:
++      enable content adaptive backlight control.
++    type: boolean
++
++  qcom,ext-gen:
++    description:
++      use externally generated modulator signal to dim.
++      This property is supported only for PM8941.
++    type: boolean
++
++  qcom,current-limit:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      mA; per-string current limit; value from 0 to 25 with
++      1 mA step. This property is supported only for pm8941.
++    default: 20
++
++  qcom,current-limit-microamp:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      uA; per-string current limit; value from 0 to 30000 with
++      2500 uA step.
++    default: 25
++
++  qcom,current-boost-limit:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      mA; boost current limit.
++      For pm8941 one of 105, 385, 525, 805, 980, 1260, 1400, 1680.
++      Default, 805 mA.
++      For pmi8998 one of 105, 280, 450, 620, 970, 1150, 1300,
++      1500. Default 970 mA.
++
++  qcom,switching-freq:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      kHz; switching frequency; one of 600, 640, 685, 738,
++      800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
++      4800, 9600.
++      Default for pm8941 1600 kHz
++               for pmi8998 800 kHz
++
++  qcom,ovp:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      V; Over-voltage protection limit; one of 27, 29, 32, 35. Default 29V
++      This property is supported only for PM8941.
++
++  qcom,ovp-millivolt:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      mV; Over-voltage protection limit;
++      For pmi8998 one of 18100, 19600, 29600, 31100.
++      Default 29600 mV.
++      If this property is not specified for PM8941, it
++      falls back to "qcom,ovp" property.
++
++  qcom,num-strings:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      number of led strings attached;
++      value for PM8941 from 1 to 3. Default 2
++      For PMI8998 from 1 to 4.
++
++  interrupts:
++    maxItems: 2
++    description:
++      Interrupts associated with WLED. This should be
++      "short" and "ovp" interrupts. Interrupts can be
++      specified as per the encoding listed under
++      Documentation/devicetree/bindings/spmi/
++      qcom,spmi-pmic-arb.txt.
++
++  interrupt-names:
++    description:
++      Interrupt names associated with the interrupts.
++      Must be "short" and "ovp". The short circuit detection
++      is not supported for PM8941.
++
++  qcom,enabled-strings:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++      Array of the WLED strings numbered from 0 to 3. Each
++      string of leds are operated individually. Specify the
++      list of strings used by the device. Any combination of
++      led strings can be used.
++
++  qcom,external-pfet:
++    description:
++      Specify if external PFET control for short circuit
++      protection is used. This property is supported only
++      for PMI8998.
++    type: boolean
++
++  qcom,auto-string-detection:
++    description:
++      Enables auto-detection of the WLED string configuration.
++      This feature is not supported for PM8941.
++    type: boolean
++
++required:
++  - compatible
++  - reg
++  - label
++
++examples:
++  - |
++    pm8941-wled@d800 {
++        compatible = "qcom,pm8941-wled";
++        reg = <0xd800 0x100>;
++        label = "backlight";
++
++        qcom,cs-out;
++        qcom,current-limit = <20>;
++        qcom,current-boost-limit = <805>;
++        qcom,switching-freq = <1600>;
++        qcom,ovp = <29>;
++        qcom,num-strings = <2>;
++        qcom,enabled-strings = <0 1>;
++     };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
