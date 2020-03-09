@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB2CC10F29
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1395EC10F25
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA6224671
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FEB24679
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Mar 2020 21:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YYjBZ90U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiEzEQt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgCIVIw (ORCPT
+        id S1726454AbgCIVJF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:08:52 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42910 "EHLO
+        Mon, 9 Mar 2020 17:09:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32782 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgCIVIw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:08:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v11so13021448wrm.9;
-        Mon, 09 Mar 2020 14:08:50 -0700 (PDT)
+        with ESMTP id S1726960AbgCIVIu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 17:08:50 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a25so9250243wrd.0;
+        Mon, 09 Mar 2020 14:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3+pDepDyRd9WIgsrKAnVdJt5zeWPjx4zXJajcwJEkC8=;
-        b=YYjBZ90UQunn2F8G3mVjPWqz4msh8jVIw2W+YsV4erRhiDx3EgaPVm47CrxFLKX5iD
-         fdZdCIOv4SBPx8tdJKJt7Bc69XMYFF/UJbBbTgVcbH6Qif20OGc2A/SsfX230CVAMMaZ
-         SjJgnG1FpYfPyp+n3i3ExSQqaAwZJD9uLwIxnT6ogwxmyZLUBrD1zOzM8cht/JeTEHje
-         2uKeION61n0HiUQbW5ChJ8gZOPrL6uqPRTiitJRH0F6GR9ITVTxhL+WI2zD/Ye7xNAMQ
-         +VMXSNUvYOA83qwBdhHDx/loaeify5KtNI2xsTVcMFVR5Jb/BoInCMl4VGQX8i9hZrS3
-         ApqQ==
+        bh=zJ+BhiqzAPedLjVQEzNhhBhXg2/bvt9dVT7qP5vBemU=;
+        b=ZiEzEQt6vNy+N4xNVB0KXZJU7owNHZYL5iP87LNrU8MvE1L93LDbVteZFUUFkz5kSE
+         QfocY0uE0Q7u06YabklbBZ9GbcSv3TvMKqFJP2/KYqEbBVYXr/Yy02UoCdZBWpOkYemt
+         vnyLnrqf3oellAbEestRNziCKKocxorHa43xDD6OsRe+T0wAmQB2Iri72glzamGxu9uU
+         C7nTePcqtuE+UC11YZx0n+ydax2oWM0gH6Wv7N3++3zCEmMirLpaKtnS4MCGvj6lpDbD
+         LTlDv4z7181BIL9A7znAy0fX9/4ZD93+gv50RInZ/kmFCLEmdiga/orVpklqT45rW91T
+         J6TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3+pDepDyRd9WIgsrKAnVdJt5zeWPjx4zXJajcwJEkC8=;
-        b=mmffplLlc+g4JwLMMSKXQBWf5ecCMEXwI7Ijq3ypdzPfoenzbEcYziC5WvuLhUrHVo
-         Y7CWtniVQy8LuqQBaQVPizV7kjzl69P1JbhgW4u8kRKMqhhSotddOlzavXueEwnByWSG
-         46u/mBheET+1VSwEHcw2AoMQNgIIKFUvnQNR+da4VkdErgCfB0zAlBDPtDjy7O4Egs1L
-         M9cu5kqPiF4IkazJDjZ7qCQNMKlYOLRruZ1y1kS9lEOborT2HScJH5o+jQKMDPt1KZL7
-         s6Nr0Bsgc72u2XwlKmsnpEev2Kf3ZE6noB9Iyq+/Fpcot+DfBQkiSePsOjmPxiTX1Wbn
-         SD+g==
-X-Gm-Message-State: ANhLgQ272zccZxfy8ovsMCLTtVWkGl3219ms7nQZmoqESzMceFBdxER5
-        1TJEe3gId8fAp67cIthaUhc=
-X-Google-Smtp-Source: ADFU+vuLGgm5z604QlSI/vPeJh9b9W6r9PDuFcm3SzqgCTn7hktSoOptMylhwduYM0hpwRj6iiyR6w==
-X-Received: by 2002:a05:6000:44:: with SMTP id k4mr8141644wrx.205.1583788130125;
-        Mon, 09 Mar 2020 14:08:50 -0700 (PDT)
+        bh=zJ+BhiqzAPedLjVQEzNhhBhXg2/bvt9dVT7qP5vBemU=;
+        b=j78tEXQJ9QdgRkgF0FIeIQvNk4jwrUEWfmpr9KQuDkas9B3K7/32ybA/Dn2OqhmoWn
+         7u8FY2HPHsT59lTxZaqEqPXqBJP7vTe+YhpTL/S+iptZmrqu3UT81Lc04W6O8/YtMn+C
+         TNgt64yE61epSS7j+KG37d2BUzZtmzEKzZ2dk5eSqqPipghsnKtEVGuP9arJOIicXCZC
+         K8uDfNgsoArxfhaOwb0DsPQJTktwwSCLwnNpQgGVlJ3LKwKgpQv4g8BVHT/YoazIixxG
+         Lvnprz8zm3U6I74hL5KYVX4lpI7+NAz5LjpuzbBVk5YT6dkZOjuqPt+BxmI7uIfg3Mij
+         NKgg==
+X-Gm-Message-State: ANhLgQ1kyat/b5lpEsgzO9CxqK0BlTbpZFfP80J+IOVYmf63mhwp76fY
+        l4B/vzTB0omntn0waT+M3oE=
+X-Google-Smtp-Source: ADFU+vv04R9WwYrPLPQl3d9L/uANpvTzTdjm3jAsbSVEfMlurizTxdPXVYyjejTHnjhKeW0qne7jJw==
+X-Received: by 2002:a5d:61c9:: with SMTP id q9mr10749218wrv.164.1583788128740;
+        Mon, 09 Mar 2020 14:08:48 -0700 (PDT)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id j205sm1016275wma.42.2020.03.09.14.08.48
+        by smtp.gmail.com with ESMTPSA id j205sm1016275wma.42.2020.03.09.14.08.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 14:08:49 -0700 (PDT)
+        Mon, 09 Mar 2020 14:08:48 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
         andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
         mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v2 5/6] arm64: dts: ls1028a: Specify the DMA channels for the DSPI controllers
-Date:   Mon,  9 Mar 2020 23:07:54 +0200
-Message-Id: <20200309210755.6759-6-olteanv@gmail.com>
+Subject: [PATCH v2 4/6] spi: spi-fsl-dspi: Add support for LS1028A
+Date:   Mon,  9 Mar 2020 23:07:53 +0200
+Message-Id: <20200309210755.6759-5-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200309210755.6759-1-olteanv@gmail.com>
 References: <20200309210755.6759-1-olteanv@gmail.com>
@@ -75,50 +75,64 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-LS1028A has a functional connection to the eDMA module. Even if the
-spi-fsl-dspi.c driver is not using DMA for LS1028A now, define the slots
-in the DMAMUX for connecting the eDMA channels to the 3 DSPI
-controllers.
+This is similar to the DSPI instantiation on LS1028A, except that:
+ - The A-011218 erratum has been fixed, so DMA works
+ - The endianness is different, which has implications on XSPI mode
+
+Some benchmarking with the following command:
+
+spidev_test --device /dev/spidev2.0 --bpw 8 --size 256 --cpha --iter 10000000 --speed 20000000
+
+shows that in DMA mode, it can achieve around 2400 kbps, and in XSPI
+mode, the same command goes up to 4700 kbps. This is somewhat to be
+expected, since the DMA buffer size is extremely small at 8 bytes, the
+winner becomes whomever can prepare the buffers for transmission
+quicker, and DMA mode has higher overhead there. So XSPI FIFO mode has
+been chosen as the operating mode for this chip.
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes in v2:
-None.
+Switch to DSPI_XSPI_MODE.
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-fsl-dspi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 515e0a1b934f..18155273a46e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -298,6 +298,8 @@
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&clockgen 4 1>;
-+			dmas = <&edma0 0 62>, <&edma0 0 60>;
-+			dma-names = "tx", "rx";
- 			spi-num-chipselects = <4>;
- 			little-endian;
- 			status = "disabled";
-@@ -311,6 +313,8 @@
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&clockgen 4 1>;
-+			dmas = <&edma0 0 58>, <&edma0 0 56>;
-+			dma-names = "tx", "rx";
- 			spi-num-chipselects = <4>;
- 			little-endian;
- 			status = "disabled";
-@@ -324,6 +328,8 @@
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&clockgen 4 1>;
-+			dmas = <&edma0 0 54>, <&edma0 0 2>;
-+			dma-names = "tx", "rx";
- 			spi-num-chipselects = <3>;
- 			little-endian;
- 			status = "disabled";
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 43d2d9fc8b92..cf8a141bbaf2 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -125,6 +125,7 @@ struct fsl_dspi_devtype_data {
+ enum {
+ 	LS1021A,
+ 	LS1012A,
++	LS1028A,
+ 	LS1043A,
+ 	LS1046A,
+ 	LS2080A,
+@@ -153,6 +154,12 @@ static const struct fsl_dspi_devtype_data devtype_data[] = {
+ 		.max_clock_factor	= 8,
+ 		.fifo_size		= 16,
+ 	},
++	[LS1028A] = {
++		.trans_mode		= DSPI_XSPI_MODE,
++		.dma_bufsize		= 8,
++		.max_clock_factor	= 8,
++		.fifo_size		= 4,
++	},
+ 	[LS1043A] = {
+ 		/* Has A-011218 DMA erratum */
+ 		.trans_mode		= DSPI_XSPI_MODE,
+@@ -1100,6 +1107,9 @@ static const struct of_device_id fsl_dspi_dt_ids[] = {
+ 	}, {
+ 		.compatible = "fsl,ls1012a-dspi",
+ 		.data = &devtype_data[LS1012A],
++	}, {
++		.compatible = "fsl,ls1028a-dspi",
++		.data = &devtype_data[LS1028A],
+ 	}, {
+ 		.compatible = "fsl,ls1043a-dspi",
+ 		.data = &devtype_data[LS1043A],
 -- 
 2.17.1
 
