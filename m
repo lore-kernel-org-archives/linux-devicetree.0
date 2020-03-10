@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F77EC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A205C10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 203EC2146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF582146E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vXTPk45r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q+ar7slh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgCJSIh (ORCPT
+        id S1726464AbgCJSIl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:08:37 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39924 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgCJSIh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:08:37 -0400
-Received: by mail-qk1-f193.google.com with SMTP id e16so13657268qkl.6
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 11:08:35 -0700 (PDT)
+        Tue, 10 Mar 2020 14:08:41 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35284 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgCJSIl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:08:41 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d8so9226806qka.2
+        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 11:08:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MAwiIeVOcnoMYt3o32Tzb8UHM7XHKlcBrRbJnonZbrc=;
-        b=vXTPk45r/waYQvFQgOKwzBSHAL9zHE46iO890ebFvG+9LCfJi6R1+fOauXE8VMTLKJ
-         2HkiliowpPB9edJM4y0GqQiVYQWny6XzRi8Z6jxofD23h/ZzdPFrWSvGjmkKvc/xe0ab
-         6ap/OvAz3nnv8QeeaXuV/B8Ak3rv8MLD8wRt0EA5n3dzCqhC9QlafiMAwic1g6UJ5IgJ
-         /96wt7TQDaqRMwrxEzW3x2DBEsC0CyaT8wkB+L4/yBIN1VyW0f8AQvEVY9m2GbMINwK4
-         k/xR2fC1e/yAvJiOuQOdtHi3O9jNSEDARM2px1TU12Us3SOKLLb61rD+S9s2iihs0f+5
-         iWCQ==
+        bh=Bnd+dV97Of1gzlLSXuML0/e/DO8s77XB3KGyM9X9Y78=;
+        b=q+ar7slh9UUin4VNa0tQmCpbNTemq39L5IHKC84JTVR3nZVOwMMm2Ac7FnlSj81YLB
+         a/naKkWCewRYQx/0Bq7WjMkWteQ2UimBpMAZeXZfnLk6Ck/hGVHzoCrS0sASZ7eFCgxg
+         CX3NX3l78UJDQ7Z835Qxb3aELpXfsOeKJgZlIzCMJHqFXbP7s50dRhFBXkPBF29IUJ6i
+         cIH4rNbexEptClgn9Xf862u4C5TFDNij0rznf8J5cuIP1eacpxqaNdXYt3Xboo5nVA9w
+         eP+Js3L7Kv7S2mrTM8XPrWWS1+asPUW9uWDqbma+dMSTTkHOpohvF/Y+nWP7zjry+nUr
+         iUFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MAwiIeVOcnoMYt3o32Tzb8UHM7XHKlcBrRbJnonZbrc=;
-        b=VICSvHyIcW9qe/fAImbcfc5qFFDOkThyGM2cIIiO4vxVMWPQejtxmBhqdiXWxS9TFW
-         FOq8Bu6jV+F7+EKTX81YNQjb65mWCpJdU9Fk49Gbl9sQqlHyNYvInTZ1GzlaZlWWx58T
-         Y1iArSWb8mRcY75zVrH+Gn8r+um28W4hTV+pPzJ+p190/RKTJTVNJ5+k3oRZ6Nm7dAzi
-         ILTZ5Q9GzePoviPEyYTQULiEy/hcEQDsd7V8uFWYrsoqhodTHwbwCMNk0h6SsqrBnq2v
-         X9QbiOQHlkjHAbXpeiL3IMKwMm23MJrMfQXRRA9jKoFjvPyLFB4XKuIjrc/Z+YiXQ7U1
-         f3vg==
-X-Gm-Message-State: ANhLgQ0u6ptO96VKlNztncZ7LCaFM2uhBG7J+tQPVwBEp8P031wIgi+2
-        z0x5mUfexeHJZb0Yo07vo7o=
-X-Google-Smtp-Source: ADFU+vtHvDDPVh4+vaatEZehwcpoGE/VhOPXZuUGJCaIYY8nsgPQBYdZ4HFQo8bq+aUzrPWJwtrOMA==
-X-Received: by 2002:a37:27c1:: with SMTP id n184mr20361283qkn.67.1583863715150;
-        Tue, 10 Mar 2020 11:08:35 -0700 (PDT)
+        bh=Bnd+dV97Of1gzlLSXuML0/e/DO8s77XB3KGyM9X9Y78=;
+        b=PGboB6O5i9RFSEuaKSSPqYGsonJ8WEajqxDocZzunV331by4zx6sGAg4bSU9esCDH0
+         345IAEdozXmKWsLJzolWP3HDhIRFJzzTQMEw02K+kDELD8QnbKQWgUT168i4hmfJ9qEj
+         0VwGrBnFhmZwurJtMROz4Ldf1IRLlXEXix8swzrhCJ5hr0VLIbTNTibZ7GfqS0GcumUq
+         39OzLWK1KnrS0iKnl4vBvyJgkO66Kv3/OBjBUTuwUl8cozwb4aCoaGOZx0bWnRW1Sz9g
+         61T1HGl9dhTImRvja8g1nEaU7/OxLUbQDtfRRoHZn3OK58BMYpUIzbr+fNma2705bTEz
+         TdhQ==
+X-Gm-Message-State: ANhLgQ1H5Caqibfu898xZToQVyX48tzNTSirTyYmTEzIVVhzvwE//yIX
+        ARFSkPhe4y5AW3MapDHkFUA=
+X-Google-Smtp-Source: ADFU+vvEmO075gFXxYZT46n3yw54rkxtqO3eJ3ClbukU3dn1bolj+MSAfJhnnbOiAYIe5o5xtdR5vg==
+X-Received: by 2002:a37:6cc7:: with SMTP id h190mr21402942qkc.358.1583863718547;
+        Tue, 10 Mar 2020 11:08:38 -0700 (PDT)
 Received: from fabio-Latitude-E5450.nxp.com ([177.221.114.206])
-        by smtp.gmail.com with ESMTPSA id 127sm17848821qkj.97.2020.03.10.11.08.32
+        by smtp.gmail.com with ESMTPSA id 127sm17848821qkj.97.2020.03.10.11.08.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:08:34 -0700 (PDT)
+        Tue, 10 Mar 2020 11:08:37 -0700 (PDT)
 From:   Fabio Estevam <festevam@gmail.com>
 To:     shawnguo@kernel.org
 Cc:     otavio.salvador@ossystems.com.br, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v2 2/5] ARM: dts: imx7d-pico: Add support for the dwarf baseboard
-Date:   Tue, 10 Mar 2020 15:08:22 -0300
-Message-Id: <20200310180825.10111-2-festevam@gmail.com>
+Subject: [PATCH v2 3/5] ARM: dts: imx7d-pico: Add support for the nymph baseboard
+Date:   Tue, 10 Mar 2020 15:08:23 -0300
+Message-Id: <20200310180825.10111-3-festevam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200310180825.10111-1-festevam@gmail.com>
 References: <20200310180825.10111-1-festevam@gmail.com>
@@ -71,7 +71,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the imx7d pico board with dwarf baseboard combination.
+Add support for the imx7d pico board with nymph baseboard combination.
 
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
@@ -79,28 +79,28 @@ Changes since v1:
 - Use audio-codec as the codec node name
 
  arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/imx7d-pico-dwarf.dts | 87 ++++++++++++++++++++++++++
- 2 files changed, 88 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7d-pico-dwarf.dts
+ arch/arm/boot/dts/imx7d-pico-nymph.dts | 84 ++++++++++++++++++++++++++
+ 2 files changed, 85 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7d-pico-nymph.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 566c6d1cfc46..38a71988ac2a 100644
+index 38a71988ac2a..c46416725a63 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -617,6 +617,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-mba7.dtb \
- 	imx7d-meerkat96.dtb \
+@@ -619,6 +619,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
  	imx7d-nitrogen7.dtb \
-+	imx7d-pico-dwarf.dtb \
+ 	imx7d-pico-dwarf.dtb \
  	imx7d-pico-hobbit.dtb \
++	imx7d-pico-nymph.dtb \
  	imx7d-pico-pi.dtb \
  	imx7d-sbc-imx7.dtb \
-diff --git a/arch/arm/boot/dts/imx7d-pico-dwarf.dts b/arch/arm/boot/dts/imx7d-pico-dwarf.dts
+ 	imx7d-sdb.dtb \
+diff --git a/arch/arm/boot/dts/imx7d-pico-nymph.dts b/arch/arm/boot/dts/imx7d-pico-nymph.dts
 new file mode 100644
-index 000000000000..5162fe227d1e
+index 000000000000..104a85254adb
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-pico-dwarf.dts
-@@ -0,0 +1,87 @@
++++ b/arch/arm/boot/dts/imx7d-pico-nymph.dts
+@@ -0,0 +1,84 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 +//
 +// Copyright 2015 Technexion Ltd.
@@ -112,8 +112,19 @@ index 000000000000..5162fe227d1e
 +
 +#include "imx7d-pico.dtsi"
 +/ {
-+	model = "TechNexion PICO-IMX7D and DWARF baseboard";
-+	compatible = "technexion,imx7d-pico-dwarf", "fsl,imx7d";
++	model = "TechNexion PICO-IMX7 and NYMPH baseboard";
++	compatible = "technexion,imx7d-pico-nymph", "fsl,imx7d";
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		led {
++			label = "gpio-led";
++			gpios = <&gpio2 13 GPIO_ACTIVE_HIGH>;
++		};
++	};
 +
 +	sound {
 +		compatible = "fsl,imx-audio-sgtl5000";
@@ -148,41 +159,27 @@ index 000000000000..5162fe227d1e
 +		VDDIO-supply = <&reg_3p3v>;
 +	};
 +
-+	pressure-sensor@60 {
-+		compatible = "fsl,mpl3115";
-+		reg = <0x60>;
++	adc@52 {
++		compatible = "ti,adc081c";
++		reg = <0x52>;
++		vref-supply = <&reg_2p5v>;
 +	};
 +};
 +
-+&i2c4 {
++&i2c2 {
 +	clock_frequency = <100000>;
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
++	pinctrl-0 = <&pinctrl_i2c2>;
 +	status = "okay";
 +
-+	pca9554: io-expander@25 {
-+		compatible = "nxp,pca9554";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		#interrupt-cells = <2>;
-+		reg = <0x25>;
-+	};
-+
-+	touchscreen@38 {
-+		compatible = "edt,edt-ft5x06";
-+		reg = <0x38>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_touchscreen>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
-+		reset-gpios = <&pca9554 4 GPIO_ACTIVE_LOW>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
++	rtc@68 {
++		compatible = "dallas,ds1337";
++		reg = <0x68>;
 +	};
 +};
 +
 +&iomuxc {
-+	pinctrl_touchscreen: touchscreengrp {
++	pinctrl_gpio_leds: gpioledsgrp {
 +		fsl,pins = <
 +			MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x14
 +		>;
