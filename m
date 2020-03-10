@@ -2,196 +2,88 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2444FC18E5A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CE8C3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D57208E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:49:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxA1mfJN"
+	by mail.kernel.org (Postfix) with ESMTP id D0A69222C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbgCJTtu (ORCPT
+        id S1726918AbgCJTye (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:49:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36940 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCJTtt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 15:49:49 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f16so3710759plj.4;
-        Tue, 10 Mar 2020 12:49:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z9ZKe9DPK55G94wFxazjpOuNWkVTtqx7CppQ9HO6NqY=;
-        b=QxA1mfJNuNo101umOeAqQ1YfnCfKPylu4nJIhD8ICZb+kA1lQjLgkrzbxjk25h9SQr
-         pZ5PkAaIlTsqDsvLkgZqL3tlvvp1XW9cPNAyB78bh/rEsJurcqd5DWeG30lDAWmR39Ad
-         uW7KbxfzTH4jlBTd0WHwYTYPNKorO5VQDSD4WM6EKOJZ9tIt3gq3Lq/jWHo2sQ/r/y+A
-         DhW3HSUJ0GFiNByu57by+d8FfdQSqK2BDl3J4+4tGoo0iMBayPuPQlUu9G4ljDYR0c3S
-         VZV0FovHyoTyzy2UMcwIU/SDGBlzJh2RwIVQYo9kTDPW0n2g3u8GRg7K4BwXTRIaLJrj
-         rgnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z9ZKe9DPK55G94wFxazjpOuNWkVTtqx7CppQ9HO6NqY=;
-        b=ozCrQqrN4rAO42l8Q7jg0MTW7TFwwswtHOoIrpk0TbOO/9R2jjsp44FGpeoX98vAkD
-         k7a2Rm+xFur1et9prLkU1YbXAK/bFwUiWlD9Ouegj49qXTQQLrxPLhGZPsHjYDRL/z1/
-         8EPEoqckzebsIQb3SB5TW6HwugohFMvf1TSj/mQkOFs6LJGau4dEz1YKR23VtN3t1Oz/
-         U+M4NhKcUhDsNhsUtSwFIRXQ+x5Sjqd0CWrHKSParN8H3qRfVRIG79N/lJMLZHZU+a/b
-         7g7QrS57hGJ+msSSKLTM3Dt+DcgOWvgfnAslvtNlojeY5gIjCB5pVlayNH0WD3d9JysD
-         1oRQ==
-X-Gm-Message-State: ANhLgQ3SuP0am/RHAy1YkmPHyAhcF7k/i2SA2cvOiuvLr6/VijVn6EAO
-        AwYiZ+VpH7fwKSncboSSnuICXkNi
-X-Google-Smtp-Source: ADFU+vttShOB0et+FIE14Un1vRU7k4VYoJ6iz35zEx98edQYoJE8W2h24Jqu/B/zyrxKywi6Kqvs+A==
-X-Received: by 2002:a17:902:9b95:: with SMTP id y21mr8418083plp.101.1583869788247;
-        Tue, 10 Mar 2020 12:49:48 -0700 (PDT)
-Received: from localhost.localdomain ([45.114.62.228])
-        by smtp.gmail.com with ESMTPSA id d19sm3784490pfd.82.2020.03.10.12.49.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:49:47 -0700 (PDT)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCHv3 5/5] clk: samsung: exynos542x: Move FSYS subsystem clocks to its sub-CMU
-Date:   Tue, 10 Mar 2020 19:48:54 +0000
-Message-Id: <20200310194854.831-6-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310194854.831-1-linux.amoon@gmail.com>
-References: <20200310194854.831-1-linux.amoon@gmail.com>
+        Tue, 10 Mar 2020 15:54:34 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:49210 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgCJTye (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 15:54:34 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 55CCC804BA;
+        Tue, 10 Mar 2020 20:54:26 +0100 (CET)
+Date:   Tue, 10 Mar 2020 20:54:25 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH v8] dt-bindings: display: Add idk-2121wr binding
+Message-ID: <20200310195425.GA23440@ravnborg.org>
+References: <1583869169-1006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583869169-1006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=yC-0_ovQAAAA:8
+        a=NcFk6D9gAAAA:8 a=VwQbUJbxAAAA:8 a=7378Ce_uM9WWH4H7eJsA:9
+        a=CjuIK1q_8ugA:10 a=gDps05xe3HUA:10 a=-FEs8UIgK8oA:10 a=CojVow1nldcA:10
+        a=NWVoK91CQyQA:10 a=QsnFDINu91a9xkgZirup:22 a=dT0RXAwTRpxWjiziVLXF:22
+        a=AjGcO6oz07-iQ99wixmX:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-FSYS power domain support usbdrd3, pdma and usb2 power gaiting,
-hence move FSYS clk setting to sub-CMU block to support power domain
-on/off sequences for device nodes.
+Hi Prabhakar
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-New patch in the series
----
- drivers/clk/samsung/clk-exynos5420.c | 45 +++++++++++++++++++++-------
- 1 file changed, 34 insertions(+), 11 deletions(-)
+On Tue, Mar 10, 2020 at 07:39:29PM +0000, Lad Prabhakar wrote:
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Add binding for the idk-2121wr LVDS panel from Advantech.
+> 
+> Some panel-specific documentation can be found here:
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> 
+> Hi All,
+> This patch is part of series [1] ("Add dual-LVDS panel support to EK874),
+> all the patches have been accepted from it except this one. I have fixed
+> Rob's comments in this version of the patch.
+> 
+> [1] https://patchwork.kernel.org/cover/11297589/
+> 
+> V7->8
+>  * Dropped ref to lvds.yaml, since the panel a dual channel LVDS, as a
+>    result the root port is called as ports instead of port and the child
+>    node port@0 and port@1 are used for even and odd pixels, hence binding
+>    has required property as ports instead of port.
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index c9e5a1fb6653..6c4c47dfcdce 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -859,12 +859,6 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
- 	DIV(0, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
- 	DIV(0, "dout_maupcm0", "dout_maudio0", DIV_MAU, 24, 8),
- 
--	/* USB3.0 */
--	DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
--	DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
--	DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
--	DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
--
- 	/* MMC */
- 	DIV(0, "dout_mmc0", "mout_mmc0", DIV_FSYS1, 0, 10),
- 	DIV(0, "dout_mmc1", "mout_mmc1", DIV_FSYS1, 10, 10),
-@@ -1031,8 +1025,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 
- 	/* FSYS Block */
- 	GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
--	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
--	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
- 	GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
- 	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
- 	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
-@@ -1040,9 +1032,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
- 	GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
- 			GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
--	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
--	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
--	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
- 	GATE(CLK_SCLK_UNIPRO, "sclk_unipro", "dout_unipro",
- 			SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
- 
-@@ -1258,6 +1247,28 @@ static struct exynos5_subcmu_reg_dump exynos5x_gsc_suspend_regs[] = {
- 	{ DIV2_RATIO0, 0, 0x30 },	/* DIV dout_gscl_blk_300 */
- };
- 
-+/* USB3.0 */
-+static const struct samsung_div_clock exynos5x_fsys_div_clks[] __initconst = {
-+	DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
-+	DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
-+	DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
-+	DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
-+};
-+
-+static const struct samsung_gate_clock exynos5x_fsys_gate_clks[] __initconst = {
-+	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
-+	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
-+	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
-+	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
-+	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
-+};
-+
-+static struct exynos5_subcmu_reg_dump exynos5x_fsys_suspend_regs[] = {
-+	{ GATE_IP_FSYS, 0xffffffff, 0xffffffff }, /* FSYS gates */
-+	{ SRC_TOP3, 0, BIT(24) },                 /* SW_MUX_PCLK_200_FSYS_SEL */
-+	{ SRC_TOP3, 0, BIT(28) },                 /* SW_MUX_ACLK_200_FSYS_SEL */
-+};
-+
- static const struct samsung_gate_clock exynos5x_g3d_gate_clks[] __initconst = {
- 	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9,
- 	     CLK_SET_RATE_PARENT, 0),
-@@ -1376,12 +1387,23 @@ static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
- 	.pd_name	= "MAU",
- };
- 
-+static const struct exynos5_subcmu_info exynos5x_fsys_subcmu = {
-+	.div_clks       = exynos5x_fsys_div_clks,
-+	.nr_div_clks    = ARRAY_SIZE(exynos5x_fsys_div_clks),
-+	.gate_clks	= exynos5x_fsys_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_fsys_gate_clks),
-+	.suspend_regs	= exynos5x_fsys_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_fsys_suspend_regs),
-+	.pd_name	= "FSYS",
-+};
-+
- static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
- 	&exynos5x_disp_subcmu,
- 	&exynos5x_gsc_subcmu,
- 	&exynos5x_g3d_subcmu,
- 	&exynos5x_mfc_subcmu,
- 	&exynos5x_mscl_subcmu,
-+	&exynos5x_fsys_subcmu,
- };
- 
- static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
-@@ -1391,6 +1413,7 @@ static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
- 	&exynos5x_mfc_subcmu,
- 	&exynos5x_mscl_subcmu,
- 	&exynos5800_mau_subcmu,
-+	&exynos5x_fsys_subcmu,
- };
- 
- static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
--- 
-2.25.1
+Looks good, thanks for your persistence..
+Applied and pushed to drm-misc-next.
 
+	Sam
