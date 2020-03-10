@@ -2,79 +2,226 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08218C10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 00:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0F5C10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 00:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C627E2146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 00:04:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="lm+H5tfR"
+	by mail.kernel.org (Postfix) with ESMTP id 324FA24649
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 00:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgCJAEl (ORCPT
+        id S1727242AbgCJANR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 20:04:41 -0400
-Received: from smtpweb146.aruba.it ([62.149.158.146]:39492 "EHLO
-        smtpweb146.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbgCJAEl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 20:04:41 -0400
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Mar 2020 20:04:40 EDT
-Received: from ubuntu.localdomain ([146.241.70.103])
-        by smtpcmd05.ad.aruba.it with bizsmtp
-        id CPxW2200V2DhmGq01PxWb4; Tue, 10 Mar 2020 00:57:31 +0100
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Cc:     Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: clk: fix example for single-output provider
-Date:   Tue, 10 Mar 2020 00:57:22 +0100
-Message-Id: <20200309235722.26278-1-giulio.benetti@benettiengineering.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 9 Mar 2020 20:13:17 -0400
+Received: from bin-mail-out-06.binero.net ([195.74.38.229]:54722 "EHLO
+        bin-mail-out-06.binero.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726937AbgCJANR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 20:13:17 -0400
+X-Halon-ID: df69b787-6263-11ea-9f40-0050569116f7
+Authorized-sender: niklas@soderlund.pp.se
+Received: from bismarck.berto.se (p4fca2392.dip0.t-ipconnect.de [79.202.35.146])
+        by bin-vsp-out-03.atm.binero.net (Halon) with ESMTPA
+        id df69b787-6263-11ea-9f40-0050569116f7;
+        Tue, 10 Mar 2020 01:12:51 +0100 (CET)
+From:   =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+To:     Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH] dt-bindings: thermal: rcar-gen3-thermal: Convert bindings to json-schema
+Date:   Tue, 10 Mar 2020 01:12:55 +0100
+Message-Id: <20200310001255.1425662-1-niklas.soderlund+renesas@ragnatech.se>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1583798251; bh=t09PIkcfDqhH2smlQIxEEW+HTkXTi0Jg/uM+cRD92JQ=;
-        h=From:To:Subject:Date:MIME-Version;
-        b=lm+H5tfRdd64vO8PqQ/QkUPZb5KfLRQEoV+Oe3REcO+x6sz2j7441t+0B85lxwjuQ
-         s1gbNdi+BXI4PuQOtGCSXaO4IeKqsdIiz2Y2+pwi6U9hB8x7AaXFpNRLJte+kAW3/C
-         HtOLc+IPQmf5Ip41uFkplHSBix91p13yMFKMjW3a3rcuhzPsFFsCY/6GdeTPJYKImh
-         ymY6v/JPpzgoFGJ5OyNsHI6cyt5bE4mNY1EgRvI3f/R7DI/c+uvpaQ6H5sX6ax9AUy
-         LFHUHgjT22JVvRG0E/6SXlBwqHwUrKmjr3dPuXBadMxUIQ/uwDzHx6sREf0S5/iRwb
-         XuxbJ0+1O6CvA==
-To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As described above single-output clock provider should have
-0 cells number, so let's fix it by using 0 as cells number.
+Convert Renesas R-Car Gen3 Thermal bindings documentation to
+json-schema.
 
-Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- Documentation/devicetree/bindings/clock/clock-bindings.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/thermal/rcar-gen3-thermal.txt    | 59 ------------
+ .../bindings/thermal/rcar-gen3-thermal.yaml   | 96 +++++++++++++++++++
+ 2 files changed, 96 insertions(+), 59 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
 
-diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-index b646bbcf7f92..8a55fdcf96ee 100644
---- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-+++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -94,7 +94,7 @@ clock is connected to output 0 of the &ref.
-     /* external oscillator */
-     osc: oscillator {
-         compatible = "fixed-clock";
--        #clock-cells = <1>;
-+        #clock-cells = <0>;
-         clock-frequency  = <32678>;
-         clock-output-names = "osc";
-     };
+diff --git a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+deleted file mode 100644
+index 12c740b975f78690..0000000000000000
+--- a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
++++ /dev/null
+@@ -1,59 +0,0 @@
+-* DT bindings for Renesas R-Car Gen3 Thermal Sensor driver
+-
+-On R-Car Gen3 SoCs, the thermal sensor controllers (TSC) control the thermal
+-sensors (THS) which are the analog circuits for measuring temperature (Tj)
+-inside the LSI.
+-
+-Required properties:
+-- compatible		: "renesas,<soctype>-thermal",
+-			  Examples with soctypes are:
+-			    - "renesas,r8a774a1-thermal" (RZ/G2M)
+-			    - "renesas,r8a774b1-thermal" (RZ/G2N)
+-			    - "renesas,r8a7795-thermal" (R-Car H3)
+-			    - "renesas,r8a7796-thermal" (R-Car M3-W)
+-			    - "renesas,r8a77965-thermal" (R-Car M3-N)
+-			    - "renesas,r8a77980-thermal" (R-Car V3H)
+-- reg			: Address ranges of the thermal registers. Each sensor
+-			  needs one address range. Sorting must be done in
+-			  increasing order according to datasheet, i.e.
+-			  TSC1, TSC2, ...
+-- clocks		: Must contain a reference to the functional clock.
+-- #thermal-sensor-cells : must be <1>.
+-
+-Optional properties:
+-
+-- interrupts		: interrupts routed to the TSC (must be 3).
+-- power-domain		: Must contain a reference to the power domain. This
+-			  property is mandatory if the thermal sensor instance
+-			  is part of a controllable power domain.
+-
+-Example:
+-
+-	tsc: thermal@e6198000 {
+-		compatible = "renesas,r8a7795-thermal";
+-		reg = <0 0xe6198000 0 0x100>,
+-		      <0 0xe61a0000 0 0x100>,
+-		      <0 0xe61a8000 0 0x100>;
+-		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cpg CPG_MOD 522>;
+-		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+-		#thermal-sensor-cells = <1>;
+-	};
+-
+-	thermal-zones {
+-		sensor_thermal1: sensor-thermal1 {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-			thermal-sensors = <&tsc 0>;
+-
+-			trips {
+-				sensor1_crit: sensor1-crit {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
+new file mode 100644
+index 0000000000000000..4b605482f3e38735
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# Copyright (C) 2020 Renesas Electronics Corp.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/rcar-gen3-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas R-Car Gen3 Thermal Sensor
++
++description:
++  On R-Car Gen3 SoCs, the thermal sensor controllers (TSC) control the thermal
++  sensors (THS) which are the analog circuits for measuring temperature (Tj)
++  inside the LSI.
++
++maintainers:
++  - Niklas Söderlund <niklas.soderlund@ragnatech.se>
++
++properties:
++  compatible:
++    enum:
++      - renesas,r8a774a1-thermal # RZ/G2M
++      - renesas,r8a774b1-thermal # RZ/G2N
++      - renesas,r8a7795-thermal  # R-Car H3
++      - renesas,r8a7796-thermal  # R-Car M3-W
++      - renesas,r8a77965-thermal # R-Car M3-N
++      - renesas,r8a77980-thermal # R-Car V3H
++  reg:
++    description:
++      Address ranges of the thermal registers. Each sensor needs one address
++      range. Sorting must be done in increasing order according to datasheet,
++      i.e. TSC1, TSC2, ...
++    minItems: 1
++    maxItems: 4
++
++  interrupts:
++    minItems: 3
++    maxItems: 3
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  "#thermal-sensor-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - power-domains
++  - resets
++  - "#thermal-sensor-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a7795-sysc.h>
++
++    tsc: thermal@e6198000 {
++            compatible = "renesas,r8a7795-thermal";
++            reg = <0 0xe6198000 0 0x100>,
++                  <0 0xe61a0000 0 0x100>,
++                  <0 0xe61a8000 0 0x100>;
++            interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&cpg CPG_MOD 522>;
++            power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++            resets = <&cpg 522>;
++            #thermal-sensor-cells = <1>;
++    };
++
++    thermal-zones {
++            sensor_thermal1: sensor-thermal1 {
++                    polling-delay-passive = <250>;
++                    polling-delay = <1000>;
++                    thermal-sensors = <&tsc 0>;
++
++                    trips {
++                            sensor1_crit: sensor1-crit {
++                                    temperature = <90000>;
++                                    hysteresis = <2000>;
++                                    type = "critical";
++                            };
++                    };
++            };
++    };
 -- 
-2.20.1
+2.25.1
 
