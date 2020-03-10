@@ -2,167 +2,178 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D295C18E5A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 08:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C233C10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 08:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D9124673
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 08:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DD524673
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 08:03:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TgjBmVfy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCJIC6 (ORCPT
+        id S1726295AbgCJIDO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:02:58 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48481 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbgCJIC5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 04:02:57 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jBZqd-0003q9-DC; Tue, 10 Mar 2020 09:02:43 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jBZqb-000205-1H; Tue, 10 Mar 2020 09:02:41 +0100
-Date:   Tue, 10 Mar 2020 09:02:41 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
-        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
-        kernel@pengutronix.de, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        Tue, 10 Mar 2020 04:03:14 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:59063 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726469AbgCJIDO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 04:03:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583827393; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=QBtq7GTfm1XtqD3LNG9Vf7w0jmrC6VQFpurGidPCtd8=; b=TgjBmVfywi1zJizSkrBIli+fREFwUjVvIeOY9WqGHpSLMg/N8LDVR6QcQGLvp32HOwhZgVaR
+ XSk2FJnybHp8o7luNQQW6L+FDbQM0AHibggRCC/E40Zb2tMgV+X5vnql4p0RaK5ctrqvxSNg
+ qa3GX/mqKgQg63PFqnv8CnF7ZUA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6749c0.7f0020ef89d0-smtp-out-n02;
+ Tue, 10 Mar 2020 08:03:12 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2C35CC432C2; Tue, 10 Mar 2020 08:03:12 +0000 (UTC)
+Received: from [192.168.0.103] (unknown [183.83.137.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 66FBDC433CB;
+        Tue, 10 Mar 2020 08:03:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 66FBDC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: Introduce SoC sleep stats bindings
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     evgreen@chromium.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
         devicetree@vger.kernel.org
-Subject: Re: [RESEND v6  07/13] spi: imx: remove ERR009165 workaround on
- i.mx6ul
-Message-ID: <20200310080240.GS3335@pengutronix.de>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
+References: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org>
+ <1583752457-21159-2-git-send-email-mkshah@codeaurora.org>
+ <158377818530.66766.4481786840843320343@swboyd.mtv.corp.google.com>
+ <20200309185120.GC1098305@builder>
+ <158378046147.66766.9861199454487445583@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <20fccc8f-f224-fed7-a0ca-ac39857027d7@codeaurora.org>
+Date:   Tue, 10 Mar 2020 13:33:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:40:21 up 19 days, 15:10, 46 users,  load average: 0.37, 0.19,
- 0.18
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <158378046147.66766.9861199454487445583@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 07:31:56PM +0800, Robin Gong wrote:
-> ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and
-> i.mx8m/8mm still need this errata. Please refer to nxp official
-> errata document from https://www.nxp.com/ .
-> 
-> For removing workaround on those chips. Add new i.mx6ul type.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> ---
->  drivers/spi/spi-imx.c | 50 +++++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 45 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> index 842a86e..f7ee2ec 100644
-> --- a/drivers/spi/spi-imx.c
-> +++ b/drivers/spi/spi-imx.c
-> @@ -57,6 +57,7 @@ enum spi_imx_devtype {
->  	IMX35_CSPI,	/* CSPI on all i.mx except above */
->  	IMX51_ECSPI,	/* ECSPI on i.mx51 */
->  	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
-> +	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
->  };
->  
->  struct spi_imx_data;
-> @@ -75,6 +76,11 @@ struct spi_imx_devtype_data {
->  	bool has_slavemode;
->  	unsigned int fifo_size;
->  	bool dynamic_burst;
-> +	/*
-> +	 * ERR009165 fixed or not:
-> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
-> +	 */
-> +	bool tx_glitch_fixed;
->  	enum spi_imx_devtype devtype;
->  };
->  
-> @@ -128,7 +134,8 @@ static inline int is_imx35_cspi(struct spi_imx_data *d)
->  
->  static inline int is_imx51_ecspi(struct spi_imx_data *d)
->  {
-> -	return d->devtype_data->devtype == IMX51_ECSPI;
-> +	return d->devtype_data->devtype == IMX51_ECSPI ||
-> +	       d->devtype_data->devtype == IMX6UL_ECSPI;
->  }
 
-Erm, no. A i.MX51 ECSPI is a i.MX51 ECSPI and not a i.MX6UL ECSPI. If
-you want to handle them equally somewhere then explicitly test for
-i.MX6ul *and* i.MX51 there.
+On 3/10/2020 12:31 AM, Stephen Boyd wrote:
+> Quoting Bjorn Andersson (2020-03-09 11:51:20)
+>> On Mon 09 Mar 11:23 PDT 2020, Stephen Boyd wrote:
+>>
+>>> Quoting Maulik Shah (2020-03-09 04:14:14)
+>>>> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+>>>>
+>>>> Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
+>>>> SoC sleep stats driver. The driver is used for displaying SoC sleep
+>>>> statistic maintained by Always On Processor or Resource Power Manager.
+>>>>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+>>>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>>>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>> ---
+>>>>  .../bindings/soc/qcom/soc-sleep-stats.yaml         | 46 ++++++++++++++++++++++
+>>>>  1 file changed, 46 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+>>>> new file mode 100644
+>>>> index 00000000..7c29c61
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+>>>> @@ -0,0 +1,46 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/soc/qcom/soc-sleep-stats.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
+>>>> +
+>>>> +maintainers:
+>>>> +  - Maulik Shah <mkshah@codeaurora.org>
+>>>> +  - Lina Iyer <ilina@codeaurora.org>
+>>>> +
+>>>> +description:
+>>>> +  Always On Processor/Resource Power Manager maintains statistics of the SoC
+>>>> +  sleep modes involving powering down of the rails and oscillator clock.
+>>>> +
+>>>> +  Statistics includes SoC sleep mode type, number of times low power mode were
+>>>> +  entered, time of last entry, time of last exit and accumulated sleep duration.
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    enum:
+>>>> +      - qcom,rpmh-sleep-stats
+>>>> +      - qcom,rpm-sleep-stats
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +  - reg
+>>>> +
+>>>> +examples:
+>>>> +  # Example of rpmh sleep stats
+>>>> +  - |
+>>>> +    rpmh_sleep_stats@c3f0000 {
+>>>> +      compatible = "qcom,rpmh-sleep-stats";
+>>>> +      reg = <0 0xc3f0000 0 0x400>;
+>>>> +    };
+>>>> +  # Example of rpm sleep stats
+>>>> +  - |
+>>>> +    rpm_sleep_stats@4690000 {
+>>> Node names don't have underscores. It really feels like we should be able
+>>> to get away with not having this device node at all. Why can't we have
+>>> the rpm message ram be a node that covers the entire range and then have
+>>> that either create a platform device for debugfs stats or just have it
+>>> register the stat information from whatever driver attaches to that
+>>> node?
+>>>
+>>> Carving this up into multiple nodes and making compatible strings
+>>> doesn't seem very useful here because we're essentially making device
+>>> nodes in DT for logical software components that exist in the rpm
+>>> message ram.
+>> It's been a while since I discussed this with Lina, but iirc I opted for
+>> the model you suggest and we concluded that it wouldn't fit with the RPM
+>> case.
+>>
+>> And given that, for reasons unknown to me, msgram isn't a single region,
+>> but a set of adjacent memory regions, this does seem to represent
+>> hardware better.
+>>
+> I guess there's message ram and code ram or something like that? Maybe
+> that's the problem? Either way it sounds like the node name needs to be
+> fixed to have dashes and then this is fine to keep. Describing memory
+> like this in DT just makes me sad.
+Hi,
 
->  
->  static inline int is_imx53_ecspi(struct spi_imx_data *d)
-> @@ -585,9 +592,16 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
->  	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
->  	spi_imx->spi_bus_clk = clk;
->  
-> -	/* ERR009165: work in XHC mode as PIO */
-> -	if (spi_imx->usedma)
-> -		ctrl &= ~MX51_ECSPI_CTRL_SMC;
-> +	/*
-> +	 * ERR009165: work in XHC mode instead of SMC as PIO on the chips
-> +	 * before i.mx6ul.
-> +	 */
-> +	if (spi_imx->usedma) {
-> +		if (spi_imx->devtype_data->tx_glitch_fixed)
-> +			ctrl |= MX51_ECSPI_CTRL_SMC;
-> +		else
-> +			ctrl &= ~MX51_ECSPI_CTRL_SMC;
-> +	}
+I will spin v5 with fixing node name.
 
-Changed again, but the PIO case still not honoured. This should look
-like
-	if (spi_imx->usedma && spi_imx->devtype_data->tx_glitch_fixed)
-		ctrl |= MX51_ECSPI_CTRL_SMC;
-	else
-		ctrl &= ~MX51_ECSPI_CTRL_SMC;
-
->  
->  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
->  
-> @@ -615,6 +629,8 @@ static void mx51_setup_wml(struct spi_imx_data *spi_imx)
->  {
->  	u32 tx_wml = 0;
->  
-> +	if (spi_imx->devtype_data->tx_glitch_fixed)
-> +		tx_wml = spi_imx->wml;
-
-That explains the variable introduced in the last patch, ok.
-
-I have the impression that splitting up 06/13 and 07/13 into two patches
-doesn't make it easier to review.
-
-Sascha
-
+Thanks,
+Maulik
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
