@@ -4,100 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7238AC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD8C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4397521D7E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D97C22525
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583865521;
-	bh=sWhVyiDzhH2/LT5EnNWWeerl7XPZ5N7R/DUZZzrWBIg=;
+	s=default; t=1583865668;
+	bh=JEmCfmMIkH6weUIwI31TNG03fTSIYBwntznYJOJYO4U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C9DCuzAIShPh0XqGviKbnRQOV4RkeOzjS+I4IVfNxvs75k6l6hUrPfvlG5l9jDxdx
-	 d4zVvpWt0MkBsMRaeTO6kiWS0wjVkNCtkoH3J9u5oBL76FsTBr0yAgwDPdh7VzAMzm
-	 Ga/AOmLbQWgisBlVYs4lAFzLvD99H0QfSL17CZBc=
+	b=RKa1CEFTIyWKCA2G41MUvz4RcQ9ShzUxfvPy4asDp5yiNrwTBDGmioDcTkxeYAZgZ
+	 DMHySxWOcDNIGvAOqoq6Ku+pFO3gWvn5prl4CHqaiNjiQYI4b0nJUMVyKpgRbpXztM
+	 O6gpKac6xNjdlGv+JAmqGfHbp+rrnLoqVRcaU4uY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgCJSik (ORCPT
+        id S1726445AbgCJSlH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:38:40 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33661 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgCJSik (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:38:40 -0400
-Received: by mail-oi1-f193.google.com with SMTP id r7so1789360oij.0;
-        Tue, 10 Mar 2020 11:38:40 -0700 (PDT)
+        Tue, 10 Mar 2020 14:41:07 -0400
+Received: from mail-ot1-f43.google.com ([209.85.210.43]:35586 "EHLO
+        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJSlH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:41:07 -0400
+Received: by mail-ot1-f43.google.com with SMTP id k26so6947064otr.2;
+        Tue, 10 Mar 2020 11:41:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rcKiHvyeeVweEFjKVsIEKKh5OdVQ21JonvREl9Oqx8E=;
-        b=fLNrpGIZDwnxQinE02d5+06iYlWdgNqK6SeT3ex652Ytja3OJg74RGBVrEWy57JP1Z
-         CV3AanNemxBUhPbkAhTrLMIKnQhYCoSFtO0Usey3Pke0NKJWKlVSZltT8Hf3AvG3ExHT
-         /VBmLrg0tcyiiYnkA2n+TpEHboZk6gAVyqJnorHhz5Z2XVV5uWo0gh45B2e6TYlvFCRW
-         LCVN7cXJYT+mrmYRYheOlRdVakgZ/mTY06nnaRQPv+eNc/K0FYjFLL10IUdmDO8NEsUW
-         9G1tYYto1qt/8/5PcFBCBDYcUsZawqJKSt+uzbMdoiJ624t3BnDaQ2nymgc11NCBsbRZ
-         fNZQ==
-X-Gm-Message-State: ANhLgQ1ebcfiPK5+OixSqll6tBknQPDbDP//HUv8UDTv4rdkwVpjGXsf
-        YT8yJLYkHtZXjXtteYeTtw==
-X-Google-Smtp-Source: ADFU+vsoV3qqlTEQdCVrmWtlFKB7yKGYbJtvxst09oJE3MqwGuSD0LEr/QkIJob56v6U03bQwXU4Mw==
-X-Received: by 2002:aca:4d86:: with SMTP id a128mr1767381oib.96.1583865519689;
-        Tue, 10 Mar 2020 11:38:39 -0700 (PDT)
+        bh=PQABEcEk14Djn/LTjb5Ace2N+AY5AMQXCZutVyQXiUs=;
+        b=ukiSN6A3P2avIco+2SYJf+QS34JEcdWNnWES82FFSuwlh19xM+xe+sgDx2HI4pjocX
+         MwPmoktmbD6visqO1dVIl0O1XdYZUxaSp+Ortc9fPBghuhG01U8nfI1NESZpKPtcGKNM
+         pC0jrCg/qQYIn8I16s7yzy2ZqlK6gsL7qZat1eAEGzFqK/nk+po58Z3+LN6ds+zuHFXi
+         pWT8zC2guomWpnD7iq3u15P2P7VL9OQ1L+Wv5usSJ7bNB8nb4/YWEWtVM3XIxHLS0INq
+         cXmkiD2SHlQz1YG8Nr5FJWzuybl4DUVdpefKggv/AJATLKUJegtxXSsPEvCvN43HnxNW
+         8d1g==
+X-Gm-Message-State: ANhLgQ0KArhO1IIZyPOWpnX9aJRcNFTPdDAf91uYlPNNHX97Jwu3KZdg
+        xvUwE5+0HS5Jw/aTdvE/aQ==
+X-Google-Smtp-Source: ADFU+vuCpy55+wQ03dvYMG8T9a9Ha2z5esUQgxNizO1+WBHUPrvJ7vapbxm/UI4ejAFS/eHYpZMrxg==
+X-Received: by 2002:a9d:67c7:: with SMTP id c7mr3275865otn.85.1583865665110;
+        Tue, 10 Mar 2020 11:41:05 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l10sm4493995oii.29.2020.03.10.11.38.38
+        by smtp.gmail.com with ESMTPSA id s128sm4496355oia.4.2020.03.10.11.41.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:38:39 -0700 (PDT)
-Received: (nullmailer pid 26679 invoked by uid 1000);
-        Tue, 10 Mar 2020 18:38:38 -0000
-Date:   Tue, 10 Mar 2020 13:38:38 -0500
+        Tue, 10 Mar 2020 11:41:04 -0700 (PDT)
+Received: (nullmailer pid 2384 invoked by uid 1000);
+        Tue, 10 Mar 2020 18:41:03 -0000
+Date:   Tue, 10 Mar 2020 13:41:03 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 4/8] dt-bindings: memory: tegra: Add external memory
- controller binding for Tegra210
-Message-ID: <20200310183838.GA25904@bogus>
-References: <20200310152003.2945170-1-thierry.reding@gmail.com>
- <20200310152003.2945170-5-thierry.reding@gmail.com>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     s.hauer@pengutronix.de, vkoul@kernel.org, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
+        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
+        kernel@pengutronix.de, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RESEND v6  08/13] spi: imx: add new i.mx6ul compatible name in
+ binding doc
+Message-ID: <20200310184103.GA2192@bogus>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-9-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310152003.2945170-5-thierry.reding@gmail.com>
+In-Reply-To: <1583839922-22699-9-git-send-email-yibin.gong@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 10 Mar 2020 16:19:59 +0100, Thierry Reding wrote:
-> From: Joseph Lo <josephl@nvidia.com>
+On Tue, 10 Mar 2020 19:31:57 +0800, Robin Gong wrote:
+> ERR009165 fixed from i.mx6ul, add its compatible name in binding doc.
 > 
-> Add the binding document for the external memory controller (EMC) which
-> communicates with external LPDDR4 devices. It includes the bindings of
-> the EMC node and a sub-node of EMC table which under the reserved memory
-> node. The EMC table contains the data of the rates that EMC supported.
-> 
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
 > ---
-> Changes in v5:
-> - convert to dt-schema
-> 
->  .../nvidia,tegra210-emc.yaml                  | 83 +++++++++++++++++++
->  1 file changed, 83 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml
+>  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #address-cells (2) differs from /example-0 (1)
-Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #size-cells (2) differs from /example-0 (1)
-
-See https://patchwork.ozlabs.org/patch/1252240
-Please check and re-submit.
+If a tag was not added on purpose, please state why and what changed.
