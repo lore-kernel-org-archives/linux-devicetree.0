@@ -4,38 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F69C2BB57
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D99EC3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36F5227BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CAE222D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbgCJSfR (ORCPT
+        id S1727075AbgCJSfV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:35:17 -0400
-Received: from muru.com ([72.249.23.125]:59590 "EHLO muru.com"
+        Tue, 10 Mar 2020 14:35:21 -0400
+Received: from muru.com ([72.249.23.125]:59622 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727556AbgCJSfP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:35:15 -0400
+        id S1726977AbgCJSfU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:35:20 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 20D46810A;
-        Tue, 10 Mar 2020 18:36:00 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 60378812F;
+        Tue, 10 Mar 2020 18:36:05 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
         devicetree@vger.kernel.org,
         Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Brian Hutchinson <b.hutchman@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
         linux-clk@vger.kernel.org
-Subject: [PATCH 03/10] ARM: OMAP2+: Drop legacy platform data for dm814x cpsw
-Date:   Tue, 10 Mar 2020 11:34:57 -0700
-Message-Id: <20200310183504.65358-4-tony@atomide.com>
+Subject: [PATCH 06/10] ARM: dts: Configure interconnect target module for dm814x tptc1
+Date:   Tue, 10 Mar 2020 11:35:00 -0700
+Message-Id: <20200310183504.65358-7-tony@atomide.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310183504.65358-1-tony@atomide.com>
 References: <20200310183504.65358-1-tony@atomide.com>
@@ -46,91 +47,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We can now probe devices with ti-sysc interconnect driver and dts
-data. Let's drop the related platform data.
-dts property.
+We can now probe devices with device tree only configuration using
+ti-sysc interconnect target module driver. Let's configure the
+module, but keep the legacy "ti,hwmods" peroperty to avoid new boot
+time warnings. The legacy property will be removed in later patches
+together with the legacy platform data.
+
+Let's also correct the custom node name to use generic node name dma.
 
 Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/mach-omap2/omap_hwmod_81xx_data.c | 58 ----------------------
- 1 file changed, 58 deletions(-)
+ arch/arm/boot/dts/dm814x.dtsi | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_81xx_data.c b/arch/arm/mach-omap2/omap_hwmod_81xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_81xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_81xx_data.c
-@@ -867,62 +867,6 @@ static struct omap_hwmod_ocp_if dm816x_l4_ls__timer7 = {
- 	.user		= OCP_USER_MPU,
- };
+diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
+--- a/arch/arm/boot/dts/dm814x.dtsi
++++ b/arch/arm/boot/dts/dm814x.dtsi
+@@ -573,12 +573,28 @@ edma_tptc0: dma@0 {
+ 			};
+ 		};
  
--/* CPSW on dm814x */
--static struct omap_hwmod_class_sysconfig dm814x_cpgmac_sysc = {
--	.rev_offs	= 0x0,
--	.sysc_offs	= 0x8,
--	.syss_offs	= 0x4,
--	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE |
--			  SYSS_HAS_RESET_STATUS,
--	.idlemodes	= SIDLE_FORCE | SIDLE_NO | MSTANDBY_FORCE |
--			  MSTANDBY_NO,
--	.sysc_fields	= &omap_hwmod_sysc_type3,
--};
--
--static struct omap_hwmod_class dm814x_cpgmac0_hwmod_class = {
--	.name		= "cpgmac0",
--	.sysc		= &dm814x_cpgmac_sysc,
--};
--
--static struct omap_hwmod dm814x_cpgmac0_hwmod = {
--	.name		= "cpgmac0",
--	.class		= &dm814x_cpgmac0_hwmod_class,
--	.clkdm_name	= "alwon_ethernet_clkdm",
--	.flags		= HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY,
--	.main_clk	= "cpsw_125mhz_gclk",
--	.prcm		= {
--		.omap4	= {
--			.clkctrl_offs = DM81XX_CM_ALWON_ETHERNET_0_CLKCTRL,
--			.modulemode = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--static struct omap_hwmod_class dm814x_mdio_hwmod_class = {
--	.name		= "davinci_mdio",
--};
--
--static struct omap_hwmod dm814x_mdio_hwmod = {
--	.name		= "davinci_mdio",
--	.class		= &dm814x_mdio_hwmod_class,
--	.clkdm_name	= "alwon_ethernet_clkdm",
--	.main_clk	= "cpsw_125mhz_gclk",
--};
--
--static struct omap_hwmod_ocp_if dm814x_l4_hs__cpgmac0 = {
--	.master		= &dm81xx_l4_hs_hwmod,
--	.slave		= &dm814x_cpgmac0_hwmod,
--	.clk		= "cpsw_125mhz_gclk",
--	.user		= OCP_USER_MPU,
--};
--
--static struct omap_hwmod_ocp_if dm814x_cpgmac0__mdio = {
--	.master		= &dm814x_cpgmac0_hwmod,
--	.slave		= &dm814x_mdio_hwmod,
--	.user		= OCP_USER_MPU,
--	.flags		= HWMOD_NO_IDLEST,
--};
--
- /* EMAC Ethernet */
- static struct omap_hwmod_class_sysconfig dm816x_emac_sysc = {
- 	.rev_offs	= 0x0,
-@@ -1510,8 +1454,6 @@ static struct omap_hwmod_ocp_if *dm814x_hwmod_ocp_ifs[] __initdata = {
- 	&dm81xx_tptc3__alwon_l3_fast,
- 	&dm814x_l4_ls__timer1,
- 	&dm814x_l4_ls__timer2,
--	&dm814x_l4_hs__cpgmac0,
--	&dm814x_cpgmac0__mdio,
- 	&dm81xx_alwon_l3_slow__gpmc,
- 	&dm814x_default_l3_slow__usbss,
- 	&dm814x_alwon_l3_med__mmc3,
+-		edma_tptc1: tptc@49900000 {
+-			compatible = "ti,edma3-tptc";
++		target-module@49900000 {
++			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			ti,hwmods = "tptc1";
+-			reg =	<0x49900000 0x100000>;
+-			interrupts = <113>;
+-			interrupt-names = "edma3_tcerrint";
++			reg = <0x49900000 0x4>,
++			      <0x49900010 0x4>;
++			reg-names = "rev", "sysc";
++			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
++			ti,sysc-midle = <SYSC_IDLE_FORCE>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&alwon_clkctrl DM814_TPTC1_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x49900000 0x100000>;
++
++			edma_tptc1: dma@0 {
++				compatible = "ti,edma3-tptc";
++				reg = <0 0x100000>;
++				interrupts = <113>;
++				interrupt-names = "edma3_tcerrint";
++			};
+ 		};
+ 
+ 		edma_tptc2: tptc@49a00000 {
 -- 
 2.25.1
