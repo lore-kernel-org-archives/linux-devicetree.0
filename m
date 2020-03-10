@@ -2,159 +2,100 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30370C10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EB9C10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05FC724649
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD4324686
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:04:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u/Co4rTh"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="E8boOYMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgCJODe (ORCPT
+        id S1726390AbgCJOEy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:03:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34865 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgCJODe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 10:03:34 -0400
-Received: by mail-lj1-f196.google.com with SMTP id u12so10064736ljo.2;
-        Tue, 10 Mar 2020 07:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ifhb6WixgJc6nnbKnnyQJ5Lzp6hUyVHScR9nCG2Gpbs=;
-        b=u/Co4rThARQN6d7BB1WsDIguEHyOZRCEDSZ0aRzABmG4KiGoaSXNCxJ58kdF8RglmZ
-         gUnmXg+cCZPlIcy4f7UEKRTBY7kdnb3tx26a30cChFyc+0UooSQdco73Ea02bzTBSO8O
-         in29jyjpDTvoX8UYVBipDQUTb9Y6gMpRm2hD8BbIWsLyHqSXtZ0qUkTSOKIzI6PN7Qyx
-         9LgqsrUYKEoiBPLBabe7csVgtNEvCdfHfnowfQn+zzUqDW/3AWI8rdEhkj7Hvwys5CGI
-         /OHIfDVPS1k+NrLNmhYuEci+squRepbPr1LlncIJb+KxKdbTn4ecJv8+hqK+J321emRy
-         S3uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ifhb6WixgJc6nnbKnnyQJ5Lzp6hUyVHScR9nCG2Gpbs=;
-        b=rYgPFG+j0QNV3OqAKkJl7OJPAHTVUe7dvOYJ4CdFnn9Gzhpk1/crSN9JiLqc5w/ODT
-         4kPtlwnOyqk5EvDa1S14HFjcYg9Vv2815v+Tfu0Aq0/ay03RlZfDCuCK7TLkfoxZDFRl
-         NktgSGW5sdVikV3F4Wgh+fvAtv61Z2G9dFSxTD/rlr5/AQCOyI1EzcwLWqgrWZX1mdE/
-         0xuE1NsTfqog4IvYzZ3rlT9hRA42JodesIiBPkFxjyqMj/+y91mHFSdK9rBwVRR6RgNk
-         Cz8nLVWU+HMv9488sHl9aJ83pOL/vUMkCdEUchYph1VWb01eYtTe/ffdO9cLgM31fbpq
-         D2JQ==
-X-Gm-Message-State: ANhLgQ0xEns1acN85wIKVg5+iMEKdFeHR4dX1uhpnm71wDOPAj+i06AN
-        QCL0gwGDHxd7jMfhVF25b4tVqExirs4gAO0hJxM=
-X-Google-Smtp-Source: ADFU+vsNLzcIjQvDxrS1HICTwW6HgMn3cbq+aL6cnnKZeK97nAmGn2kplnEXtqTHoWwA5L+xcBE8jylw4kWIQlYByr4=
-X-Received: by 2002:a2e:86d0:: with SMTP id n16mr12557218ljj.117.1583849010466;
- Tue, 10 Mar 2020 07:03:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200310134603.30260-1-robert.foss@linaro.org> <20200310134603.30260-3-robert.foss@linaro.org>
-In-Reply-To: <20200310134603.30260-3-robert.foss@linaro.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 10 Mar 2020 11:03:21 -0300
-Message-ID: <CAOMZO5D7N6FfPMiycGun-eui-G-tbp15stwRWBWs4L98JHFfGA@mail.gmail.com>
-Subject: Re: [v1 2/3] media: ov8856: Add devicetree support
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     ben.kao@intel.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tue, 10 Mar 2020 10:04:54 -0400
+Received: from vps.xff.cz ([195.181.215.36]:40144 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726389AbgCJOEy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 10:04:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1583849092; bh=E024hw0nCcOAz/evtUeh0SKgeswiCLbymOv+Vx8NBeE=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=E8boOYMHPpL1w1uF1IVT3DJGWFABQDdAcfZtNaNhdKlmQScsKUlgFNmMBLqb0n7Ni
+         Oj1qpMNZz3sFL8LqTXtcjanCirwI+z0qDA2E2WY6yh7uMt5pLkwGC0IjesrmeyZHhG
+         cg6bMYy7FZJ6MceeYI+i7Ss68wVXfHVrOk2nu5to=
+Date:   Tue, 10 Mar 2020 15:04:52 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] [PATCH 2/2] ARM: dts: sun4i: Add support for
+ Topwise A721 tablet
+Message-ID: <20200310140452.cfzw2o7al6uf2fpp@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Pascal Roeleven <dev@pascalroeleven.nl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+References: <20200310102725.14591-1-dev@pascalroeleven.nl>
+ <20200310102725.14591-3-dev@pascalroeleven.nl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310102725.14591-3-dev@pascalroeleven.nl>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:47 AM Robert Foss <robert.foss@linaro.org> wrote:
+On Tue, Mar 10, 2020 at 11:27:24AM +0100, Pascal Roeleven wrote:
+> The Topwise A721/LY-F1 tablet is a tablet sold around 2012 under
+> different brands. The mainboard mentions A721 clearly, so this tablet
+> is best known under this name.
+> 
+> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
+> ---
+>  arch/arm/boot/dts/Makefile                   |   3 +-
+>  arch/arm/boot/dts/sun4i-a10-topwise-a721.dts | 302 +++++++++++++++++++
+>  2 files changed, 304 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
+> 
+> +/dts-v1/;
+> +#include "sun4i-a10.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +
+> +/ {
+> +	model = "Topwise A721";
+> +	compatible = "topwise,a721", "allwinner,sun4i-a10";
 
-> +static int __ov8856_power_on(struct ov8856 *ov8856)
-> +{
-> +       struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> +       int ret;
-> +
-> +       ret = clk_prepare_enable(ov8856->xvclk);
-> +       if (ret < 0) {
-> +               dev_err(&client->dev, "failed to enable xvclk\n");
-> +               return ret;
-> +       }
-> +
-> +       gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> +
-> +       ret = regulator_bulk_enable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> +       if (ret < 0) {
-> +               dev_err(&client->dev, "failed to enable regulators\n");
-> +               goto disable_clk;
-> +       }
-> +
-> +       gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
+And you also need to add the compatible to:
 
-To power it up you probably only need:
+  Documentation/devicetree/bindings/arm/sunxi.yaml
 
-gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, 0);
+regards,
+	o.
 
-And use reset-gpios as active low in your device tree. Assuming the
-reset-gpios is active low like other OmniVision sensors.
-
-> +
-> +       usleep_range(1500, 1800);
-> +
-> +       return 0;
-> +
-> +disable_clk:
-> +       clk_disable_unprepare(ov8856->xvclk);
-> +
-> +       return ret;
-> +}
-> +
-> +static void __ov8856_power_off(struct ov8856 *ov8856)
-> +{
-> +       gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> +       regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> +       clk_disable_unprepare(ov8856->xvclk);
-> +}
-> +
-> +
-
-Unneede extra blank line.
-
->         v4l2_i2c_subdev_init(&ov8856->sd, client, &ov8856_subdev_ops);
-> +       ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
-> +       if (IS_ERR(ov8856->xvclk)) {
-> +               dev_err(&client->dev, "failed to get xvclk\n");
-> +               return -EINVAL;
-
-You should better return the real error insteald
-PTR_ERR(ov8856->xvclk). This way defer probe could work.
-
-> +       }
-> +
-> +       ret = clk_set_rate(ov8856->xvclk, OV8856_XVCLK_24);
-> +       if (ret < 0) {
-> +               dev_err(&client->dev, "failed to set xvclk rate (24MHz)\n");
-> +               return ret;
-> +       }
-> +
-> +       ov8856->n_shutdn_gpio = devm_gpiod_get(&client->dev, "reset",
-> +                                              GPIOD_OUT_LOW);
-> +       if (IS_ERR(ov8856->n_shutdn_gpio)) {
-> +               dev_err(&client->dev, "failed to get reset-gpios\n");
-> +               return -EINVAL;
-
-Please return the real error.
