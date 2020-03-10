@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E41EC3F2D1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F69C2BB57
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D6A21D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36F5227BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgCJSfL (ORCPT
+        id S1727526AbgCJSfR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:35:11 -0400
-Received: from muru.com ([72.249.23.125]:59572 "EHLO muru.com"
+        Tue, 10 Mar 2020 14:35:17 -0400
+Received: from muru.com ([72.249.23.125]:59590 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727272AbgCJSfL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:35:11 -0400
+        id S1727556AbgCJSfP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:35:15 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 538F5812F;
-        Tue, 10 Mar 2020 18:35:56 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 20D46810A;
+        Tue, 10 Mar 2020 18:36:00 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org,
         Graeme Smecher <gsmecher@threespeedlogic.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
         Brian Hutchinson <b.hutchman@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 01/10] clk: ti: Fix dm814x clkctrl for ethernet
-Date:   Tue, 10 Mar 2020 11:34:55 -0700
-Message-Id: <20200310183504.65358-2-tony@atomide.com>
+        Michael Turquette <mturquette@baylibre.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        linux-clk@vger.kernel.org
+Subject: [PATCH 03/10] ARM: OMAP2+: Drop legacy platform data for dm814x cpsw
+Date:   Tue, 10 Mar 2020 11:34:57 -0700
+Message-Id: <20200310183504.65358-4-tony@atomide.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310183504.65358-1-tony@atomide.com>
 References: <20200310183504.65358-1-tony@atomide.com>
@@ -46,94 +46,91 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We are missing alwon ethernet clock for dm814x and this prevents us
-from probing the CPSW with device tree only data. Looks like Ethernet
-currently only works if it has been enabled in the bootloader.
+We can now probe devices with ti-sysc interconnect driver and dts
+data. Let's drop the related platform data.
+dts property.
 
-Looks like relying on the bootloader clocks is not an issue with the
-mainline kernel currently, but it will be an issue when configuring
-CPSW Ethernet to probe with device tree data only as we will be managing
-the clocks.
-
-Fixes: 26ca2e973844 ("clk: ti: dm814: add clkctrl clock data")
-Cc: linux-clk@vger.kernel.org
 Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
 Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
+ arch/arm/mach-omap2/omap_hwmod_81xx_data.c | 58 ----------------------
+ 1 file changed, 58 deletions(-)
 
-Stephen & Tero, can you guys please ack if this patch looks OK?
-
----
- arch/arm/boot/dts/dm814x-clocks.dtsi | 14 ++++++++++++++
- drivers/clk/ti/clk-814x.c            |  7 ++++++-
- include/dt-bindings/clock/dm814.h    |  5 +++++
- 3 files changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/dm814x-clocks.dtsi b/arch/arm/boot/dts/dm814x-clocks.dtsi
---- a/arch/arm/boot/dts/dm814x-clocks.dtsi
-+++ b/arch/arm/boot/dts/dm814x-clocks.dtsi
-@@ -362,4 +362,18 @@ alwon_clkctrl: clk@0 {
- 			#clock-cells = <2>;
- 		};
- 	};
-+
-+	alwon_ethernet_cm: alwon_ethernet_cm@15d4 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x15d4 0x4>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x15d4 0x4>;
-+
-+		alwon_ethernet_clkctrl: clk@0 {
-+			compatible = "ti,clkctrl";
-+			reg = <0 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
- };
-diff --git a/drivers/clk/ti/clk-814x.c b/drivers/clk/ti/clk-814x.c
---- a/drivers/clk/ti/clk-814x.c
-+++ b/drivers/clk/ti/clk-814x.c
-@@ -25,7 +25,6 @@ static const struct omap_clkctrl_reg_data dm814_alwon_clkctrl_regs[] __initconst
- 	{ DM814_WD_TIMER_CLKCTRL, NULL, CLKF_SW_SUP | CLKF_NO_IDLEST, "sysclk18_ck" },
- 	{ DM814_MCSPI1_CLKCTRL, NULL, CLKF_SW_SUP, "sysclk10_ck" },
- 	{ DM814_GPMC_CLKCTRL, NULL, CLKF_SW_SUP, "sysclk6_ck" },
--	{ DM814_CPGMAC0_CLKCTRL, NULL, CLKF_SW_SUP, "cpsw_125mhz_gclk" },
- 	{ DM814_MPU_CLKCTRL, NULL, CLKF_SW_SUP, "mpu_ck" },
- 	{ DM814_RTC_CLKCTRL, NULL, CLKF_SW_SUP | CLKF_NO_IDLEST, "sysclk18_ck" },
- 	{ DM814_TPCC_CLKCTRL, NULL, CLKF_SW_SUP, "sysclk4_ck" },
-@@ -39,9 +38,15 @@ static const struct omap_clkctrl_reg_data dm814_alwon_clkctrl_regs[] __initconst
- 	{ 0 },
+diff --git a/arch/arm/mach-omap2/omap_hwmod_81xx_data.c b/arch/arm/mach-omap2/omap_hwmod_81xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_81xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_81xx_data.c
+@@ -867,62 +867,6 @@ static struct omap_hwmod_ocp_if dm816x_l4_ls__timer7 = {
+ 	.user		= OCP_USER_MPU,
  };
  
-+static const struct
-+omap_clkctrl_reg_data dm814_alwon_ethernet_clkctrl_regs[] __initconst = {
-+	{ 0, NULL, CLKF_SW_SUP, "cpsw_125mhz_gclk" },
-+};
-+
- const struct omap_clkctrl_data dm814_clkctrl_data[] __initconst = {
- 	{ 0x48180500, dm814_default_clkctrl_regs },
- 	{ 0x48181400, dm814_alwon_clkctrl_regs },
-+	{ 0x481815d4, dm814_alwon_ethernet_clkctrl_regs },
- 	{ 0 },
- };
- 
-diff --git a/include/dt-bindings/clock/dm814.h b/include/dt-bindings/clock/dm814.h
---- a/include/dt-bindings/clock/dm814.h
-+++ b/include/dt-bindings/clock/dm814.h
-@@ -34,4 +34,9 @@
- #define DM814_MMC2_CLKCTRL	DM814_CLKCTRL_INDEX(0x220)
- #define DM814_MMC3_CLKCTRL	DM814_CLKCTRL_INDEX(0x224)
- 
-+/* alwon_ethernet clocks */
-+#define DM814_ETHERNET_CLKCTRL_OFFSET	0x1d4
-+#define DM814_ETHERNET_CLKCTRL_INDEX(offset)	((offset) - DM814_ETHERNET_CLKCTRL_OFFSET)
-+#define DM814_ETHERNET_CPGMAC0_CLKCTRL	DM814_ETHERNET_CLKCTRL_INDEX(0x1d4)
-+
- #endif
+-/* CPSW on dm814x */
+-static struct omap_hwmod_class_sysconfig dm814x_cpgmac_sysc = {
+-	.rev_offs	= 0x0,
+-	.sysc_offs	= 0x8,
+-	.syss_offs	= 0x4,
+-	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE |
+-			  SYSS_HAS_RESET_STATUS,
+-	.idlemodes	= SIDLE_FORCE | SIDLE_NO | MSTANDBY_FORCE |
+-			  MSTANDBY_NO,
+-	.sysc_fields	= &omap_hwmod_sysc_type3,
+-};
+-
+-static struct omap_hwmod_class dm814x_cpgmac0_hwmod_class = {
+-	.name		= "cpgmac0",
+-	.sysc		= &dm814x_cpgmac_sysc,
+-};
+-
+-static struct omap_hwmod dm814x_cpgmac0_hwmod = {
+-	.name		= "cpgmac0",
+-	.class		= &dm814x_cpgmac0_hwmod_class,
+-	.clkdm_name	= "alwon_ethernet_clkdm",
+-	.flags		= HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY,
+-	.main_clk	= "cpsw_125mhz_gclk",
+-	.prcm		= {
+-		.omap4	= {
+-			.clkctrl_offs = DM81XX_CM_ALWON_ETHERNET_0_CLKCTRL,
+-			.modulemode = MODULEMODE_SWCTRL,
+-		},
+-	},
+-};
+-
+-static struct omap_hwmod_class dm814x_mdio_hwmod_class = {
+-	.name		= "davinci_mdio",
+-};
+-
+-static struct omap_hwmod dm814x_mdio_hwmod = {
+-	.name		= "davinci_mdio",
+-	.class		= &dm814x_mdio_hwmod_class,
+-	.clkdm_name	= "alwon_ethernet_clkdm",
+-	.main_clk	= "cpsw_125mhz_gclk",
+-};
+-
+-static struct omap_hwmod_ocp_if dm814x_l4_hs__cpgmac0 = {
+-	.master		= &dm81xx_l4_hs_hwmod,
+-	.slave		= &dm814x_cpgmac0_hwmod,
+-	.clk		= "cpsw_125mhz_gclk",
+-	.user		= OCP_USER_MPU,
+-};
+-
+-static struct omap_hwmod_ocp_if dm814x_cpgmac0__mdio = {
+-	.master		= &dm814x_cpgmac0_hwmod,
+-	.slave		= &dm814x_mdio_hwmod,
+-	.user		= OCP_USER_MPU,
+-	.flags		= HWMOD_NO_IDLEST,
+-};
+-
+ /* EMAC Ethernet */
+ static struct omap_hwmod_class_sysconfig dm816x_emac_sysc = {
+ 	.rev_offs	= 0x0,
+@@ -1510,8 +1454,6 @@ static struct omap_hwmod_ocp_if *dm814x_hwmod_ocp_ifs[] __initdata = {
+ 	&dm81xx_tptc3__alwon_l3_fast,
+ 	&dm814x_l4_ls__timer1,
+ 	&dm814x_l4_ls__timer2,
+-	&dm814x_l4_hs__cpgmac0,
+-	&dm814x_cpgmac0__mdio,
+ 	&dm81xx_alwon_l3_slow__gpmc,
+ 	&dm814x_default_l3_slow__usbss,
+ 	&dm814x_alwon_l3_med__mmc3,
 -- 
 2.25.1
