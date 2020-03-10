@@ -2,109 +2,162 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96196C10F25
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 01:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86446C10F25
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 01:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE3724649
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 01:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5135224649
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 01:07:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kjWV2H+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgCJBHZ (ORCPT
+        id S1726170AbgCJBHd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:07:25 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:21605 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726466AbgCJBHY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 21:07:24 -0400
-Date:   10 Mar 2020 10:07:23 +0900
-X-IronPort-AV: E=Sophos;i="5.70,535,1574089200"; 
-   d="scan'208";a="41431033"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 10 Mar 2020 10:07:23 +0900
-Received: from mercury.renesas.com (unknown [10.166.252.133])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 2B391400753F;
-        Tue, 10 Mar 2020 10:07:23 +0900 (JST)
-Message-ID: <87a74pvwz8.wl-kuninori.morimoto.gx@renesas.com>
-From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-To:     Alex Riesen <alexander.riesen@cetitec.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 9 Mar 2020 21:07:33 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41962 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgCJBHd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 21:07:33 -0400
+Received: by mail-yw1-f68.google.com with SMTP id p124so12151208ywc.8
+        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 18:07:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g5xnWgJ5omzmZiku6UfaNj8qU529m5YfhrjX1iEpn4A=;
+        b=kjWV2H+ENIYP82wnkfLeoFh/cu0d6WCJIUEmu3ujdQeJGhIXy/5G1boCNlFG8g0qBr
+         +2e4zj+IUgMgrGGmx8xi/SpqcykgxdFjE8+INLu57lfr0OaK5tzabI36l1MbeHx1erNT
+         dYDE3RDADynW72cXRucYvQhJa+Zy4oyvr3wGA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g5xnWgJ5omzmZiku6UfaNj8qU529m5YfhrjX1iEpn4A=;
+        b=AZMtu/Kt0bcQvA/k/3EHa/V0pdWYYdy3TbUwxsbNERwrjD+nSvzV4Cuw3A66uT3yH0
+         VPGcsU0GVzwbjg4vG53quQ1jD9N0edQKIQ/TQufIfmmZe4pwM2QHqR59HOAdbcjzsdEV
+         8Ssf9zVxEfcwn2K1+KGomOE3dCoV4mex/WWBRChbOuAAEBlBOI1NmDRd1NP1PXB21qsG
+         wlRZNBgqK3dtUXayxjbinM4jOt7GKnupFAnx6QI8Xf9LGAIUchIrxHa8eOsEXTIHoTAS
+         MN/XiQGU34ET3enRiNugJ/bEQwL/HtCuXmYUuH4+Lw1M6yKxbwjX4KSEjeGC+sgmtuyk
+         34CA==
+X-Gm-Message-State: ANhLgQ3dkQMWsUfG9/2XmjB6WxqxrvE/WxdlOt3/4BRdklJf+BAzCaTC
+        Q64+DOyQV92tF51Bk6yPJo829WGBGMo0Vw==
+X-Google-Smtp-Source: ADFU+vtWPJZXpAnFrVLLuudu1WqJZebtIFWa8Zg3/cVWTTKgFnU1ibjJ6xiiBmN7GQvaw7HNgFZ0SQ==
+X-Received: by 2002:a81:7cc6:: with SMTP id x189mr19852302ywc.202.1583802450865;
+        Mon, 09 Mar 2020 18:07:30 -0700 (PDT)
+Received: from mail-yw1-f42.google.com (mail-yw1-f42.google.com. [209.85.161.42])
+        by smtp.gmail.com with ESMTPSA id h128sm5592346ywa.50.2020.03.09.18.07.30
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Mar 2020 18:07:30 -0700 (PDT)
+Received: by mail-yw1-f42.google.com with SMTP id p124so12151174ywc.8
+        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 18:07:30 -0700 (PDT)
+X-Received: by 2002:ab0:3392:: with SMTP id y18mr2111560uap.66.1583802054012;
+ Mon, 09 Mar 2020 18:00:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus> <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net> <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+ <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com> <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+ <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com> <CAODwPW8WwntWb_=dg2J3AMy-gHw2QvNj_g98SufN13+AuGnUSg@mail.gmail.com>
+ <b4ba821a-eef6-4aea-1eba-897171b92c41@amlogic.com>
+In-Reply-To: <b4ba821a-eef6-4aea-1eba-897171b92c41@amlogic.com>
+From:   Evan Benn <evanbenn@chromium.org>
+Date:   Tue, 10 Mar 2020 12:00:27 +1100
+X-Gmail-Original-Message-ID: <CAKz_xw2T1UceCwFZnBxg6WVp2D4+MziyvQPdU6tEnR_BdLh-PQ@mail.gmail.com>
+Message-ID: <CAKz_xw2T1UceCwFZnBxg6WVp2D4+MziyvQPdU6tEnR_BdLh-PQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+To:     Xingyu Chen <xingyu.chen@amlogic.com>
+Cc:     Julius Werner <jwerner@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from adv748x codec (HDMI input) to the R-Car SoC
-In-Reply-To: <20200309110931.GB3593@pflmari>
-References: <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
-        <20200302150706.GB3717@pflmari>
-        <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
-        <20200302160906.GC3717@pflmari>
-        <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
-        <20200305143628.GB25741@pflmari>
-        <20200306131632.GA4878@pendragon.ideasonboard.com>
-        <20200306134154.GD27714@pflmari>
-        <20200306134546.GE4878@pendragon.ideasonboard.com>
-        <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
-        <20200309110931.GB3593@pflmari>
-User-Agent: Wanderlust/2.15.9 Emacs/25.2 Mule/6.0
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Xingyu,
 
-Hi Alex
+I am trying to establish some clarity about what to do here.
 
-> Should the adv748x driver also implement anything to configure the frequency
-> of MCLK clock? I mean something like .set_sysclk and .set_fmt callbacks of
-> snd_soc_dai_ops?
-> 
-> Or is the driver implementation, which depends on mclk-fs to be 256, the audio
-> stream format to be 8x S24_LE, and requires strictly 48kHz sampling rate on
-> the HDMI input, a totally acceptable first attempt at writing a DAI driver?
-> 
-> I'm a bit bothered by that, as the hardware is also capable of decoding
-> stereo, sampling rate 32-192kHz, a variety of PCM and compressed/encrypted
-> formats, 128-768fs MCLK multipliers, and a row of I2S options.
-> 
-> I just find it confusing to place the configuration interfaces.
-> For instance, the patches use the media ioctl for audio output selection to
-> select I2S protocol. While works, it does not feel right (shouldn't it be in
-> the device tree?)
-> 
-> Maybe you can point me at a driver doing something similar? I'm studying media
-> drivers now, but not many of them use ASoC interfaces for devices providing a
-> clock. Or maybe I should better look at sound/soc/...?
+The trusted firmware review has now been accepted
+https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405.
 
-Setting Sound Clock for all cases/patterns are very complex and difficult actually.
-(ADV7482 configuration) x (ADG divider / selector) x etc, etc...
+I could try to add your mentioned extra operation indexes to the ATF
+watchdog, to try to establish a standard ATF smc watchdog interface.
+Hypothetically then your linux driver could connect to any of the ATF
+watchdogs, apart from the meson indirection layer.
+I do not quite understand the meson layer to be honest, would we run
+the meson layer on non-amlogic SOCs?
 
-Thus, Current R-Car sound is assuming that audio_clk_a/b/c/i are providing
-route clock (= no configuration, fixed clock), and ADG divides it,
-and provide best clock to each SSIx.
+It looks feasible to strip the meson part from your driver so that it
+works on more socs, please correct me if I am wrong.
 
-Current Salvator/ULCB already have 44.1/48kHz route clock (= CS2000 and Audio_CLK_A),
-and we can reuse it for all SSIx. Thus, ADV7482 clock is not necessary, I guess ?
-Or providing specific clock for some case is enough
-(ADG will automatically select it if necessary).
+Alternatively we could also add these extra operation indexes to this
+linux driver. Unfortunately I would not have a way to test that.
 
-If ADV7482 needs more detail clock settings combination,
-then, there is no method to adjust to it.
-We need to consider such system somehow.
+Thanks
 
-Thank you for your help !!
+Evan
 
-Best regards
----
-Kuninori Morimoto
+On Tue, Feb 25, 2020 at 6:43 PM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
+>
+> Hi, Julius
+>
+> On 2020/2/25 9:23, Julius Werner wrote:
+> >> The SMC function ID may be solved by the DTS, but the wdt indexs(Eg:
+> >> SMCWD_INFO) are also different
+> >> for each vendor. The imx_sc_wdt.c is also use the SMC to operate the
+> >> WDT, but the wdt indexs(Eg: IMX_SIP_TIMER_START_WDOG)
+> >> are different from ours. IMO, If the ATF can implement a common hal
+> >> interface and index for watchdog, then writing a
+> >> common smc wdt driver will be easier to compatible with all vendors.
+> > The MediaTek driver is still in flux (e.g. still being reviewed in
+> > Trusted Firmware here:
+> > https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405),
+> > we can still change it. So if we can now decide on making this a
+> > "standard" driver, we can change the MediaTek interface to match IMX
+> > and standardize on that. (There are existing Chromebooks shipped with
+> > a different interface, but we could handle those separately with
+> > downstream patches. I think having a unified interface that will
+> > prevent this problem in the future would be worth some extra
+> > complication right now.)
+> If the ATF provides a common watchdog hal interface and index, I am
+> happy to match
+> the generic sec wdt driver. Compared to the current MTK wdt index [0],
+> the following
+> indexes need to be supported for meson wdt [1].
+> - *_INIT.
+> - *_GETTIMEOUT.
+> - *_RESETNOW.  It is used to reset the system right now, similar to your
+> SOFT RESET.
+>
+> For another platform-specific parameter "SMC function ID", the generic
+> sec wdt driver can get it from the dts, but if
+> the driver want to compatible with more vendors in the future, maybe we
+> should consider Guenter's suggestion at [2]
+>
+> [0]: https://patchwork.kernel.org/patch/11395579/
+> [1]: https://patchwork.kernel.org/patch/11331271/
+> [2]:
+> https://lore.kernel.org/linux-watchdog/20200220155159.GB29658@roeck-us.net/T/#md00328548222965054cd19ec7dda074f8fc09fe2
+>
+> Best Regards
+> > .
