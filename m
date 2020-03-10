@@ -2,97 +2,58 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEEAC18E5C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AD8C18E5A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A5421D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583865088;
-	bh=KzEEBxuqORSag8YJEE1VdQTCHLnudqoIKvkv7V+Qmms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IcgPC0MxQnfmKlzm77Vc2N/Yx7sDPUUpZGm4CrCk4kPiJo8RNHljEEnhXd+tBdV3X
-	 mllUuenz6gG1kja1GFBlCYoCM2kOy7BW+Z4BZDYs1YhhkYf7/jW6b15+v2a9fn8/8Z
-	 CC5havF+Rsem0ajY+Xz7XlBJFGFMiTyYsTO4GjB0=
+	by mail.kernel.org (Postfix) with ESMTP id E501B222C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbgCJSbX (ORCPT
+        id S1727599AbgCJScB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:31:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45256 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgCJSbX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:31:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id f21so14126283otp.12;
-        Tue, 10 Mar 2020 11:31:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kE8zJYod7DGw/iirznrwm04icms4ZonrW+m7De0Huos=;
-        b=tSgqnoILJO40vmXhVI6xPFpcIjeTu1NY8MVBWwOp0dkkpGIJOvxcGOq5562QZFwxmo
-         iHTpES6+SthX0zWQ/ZtVgiGk+gfBrmRAQ4TMS/nmgr5WnacdREt3KJ8CeHVVR5r3b+gy
-         vvLAiiPd1bD+2h3s/kcAPfnmjCDEDO28tX+dcdv0XUSb8zqAKw147h2S7Osa3HXlNm9A
-         DZGkNmuLBEiay6H1WkIpffoll1j7NQb2PCcsZFKZI8vKz360HjsGmNI6C0LtMVqLPkJn
-         Gt7Gb9xWujor6y21VtgYTPYqWUlAL5qSG2At9DWA0+y/eBGvFEVVU6VYbuJNlZI14sRM
-         XjQw==
-X-Gm-Message-State: ANhLgQ3eb1sugpOt6TN+1R3xeLOzuqrA+B7SyYTVbUE3+JONbfRhyW57
-        Q9/wihhIrSbURoOOEe5LNg==
-X-Google-Smtp-Source: ADFU+vs6BXU2RhaGOMkzDNdE03Xyflh1TY7gz7r9610og46G77Jwujiyd6QdA37f1IfNWYINzkfbHg==
-X-Received: by 2002:a9d:21b4:: with SMTP id s49mr17315918otb.294.1583865080731;
-        Tue, 10 Mar 2020 11:31:20 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e206sm4490498oia.24.2020.03.10.11.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:31:19 -0700 (PDT)
-Received: (nullmailer pid 14370 invoked by uid 1000);
-        Tue, 10 Mar 2020 18:31:18 -0000
-Date:   Tue, 10 Mar 2020 13:31:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
-        Kiran Gunda <kgunda@codeaurora.org>
-Subject: Re: [PATCH V3 1/4] backlight: qcom-wled: convert the wled bindings
- to .yaml format
-Message-ID: <20200310183118.GA13818@bogus>
-References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
- <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
+        Tue, 10 Mar 2020 14:32:01 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:55431 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727628AbgCJScA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:32:00 -0400
+X-Originating-IP: 91.224.148.103
+Received: from localhost.localdomain (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2A1C9C000D;
+        Tue, 10 Mar 2020 18:31:56 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, juliensu@mxic.com.tw,
+        yuehaibing@huawei.com, linux-kernel@vger.kernel.org,
+        frieder.schrempf@kontron.de, linux-mtd@lists.infradead.org,
+        tglx@linutronix.de, allison@lohutok.net
+Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix NAND device bindings
+Date:   Tue, 10 Mar 2020 19:31:55 +0100
+Message-Id: <20200310183155.18901-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1581922600-25461-3-git-send-email-masonccyang@mxic.com.tw>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: ab6b615a220b1b398f01cf679d3468c829b42583
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  9 Mar 2020 18:55:59 +0530, Kiran Gunda wrote:
-> Convert the qcom-wled bindings from .txt to .yaml format.
+On Mon, 2020-02-17 at 06:56:40 UTC, Mason Yang wrote:
+> Document the bindings used by the Macronix NAND device.
 > 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> ---
->  .../bindings/leds/backlight/qcom-wled.txt          | 154 -----------------
->  .../bindings/leds/backlight/qcom-wled.yaml         | 184 +++++++++++++++++++++
->  2 files changed, 184 insertions(+), 154 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
-Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
-
-See https://patchwork.ozlabs.org/patch/1251567
-Please check and re-submit.
+Miquel
