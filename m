@@ -2,136 +2,106 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630E1C10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 15:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C0CC3F2C6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 16:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDE821D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 15:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EB7222C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 16:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SbYgGqz6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ec9Xy47+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgCJPzd (ORCPT
+        id S1726632AbgCJQNa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:55:33 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33215 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgCJPzc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 11:55:32 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g15so7517696otr.0
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 08:55:31 -0700 (PDT)
+        Tue, 10 Mar 2020 12:13:30 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43427 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJQN3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 12:13:29 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q9so4721754lfc.10;
+        Tue, 10 Mar 2020 09:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TgqmscoWWwUwE2N+wjkp7klbD8Llg5aD9QxcbbWM91M=;
-        b=SbYgGqz6Iv/cF2Xk6HbsmaZYROCsChtMTCZqVrowfSBNRknWfl4l1M2KOEsbDuDViG
-         gz35NNiTeGIUs6AKuQ85hd+LpOAnbrCsiqXjdX8KQqXe7sYPAN3+qsNvVCKZfIlRisfw
-         d8FdhZRhYobG0/brLgrhPttDTXvZDKY2co3aN4RN+AwRGvicLAZZiSbWUv4cmlcMSEYV
-         y3pCA+lmAWxqQ1Zt2ktlka8bQcuydF8d6bzmMRc/6QhsiRaYsUAFs5SzkAyLyKI8wrmc
-         s1TDcwRI8TNmjAenvUK7oftIL/kYKvWncS50htb8hL0Me+hB5c2JE7d9rw/gD2+mtj4P
-         5H5A==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W+60mEKOc6FZpec77KfiUx6G8m6jCqzHZbWxKsI68hg=;
+        b=Ec9Xy47+PEgWoZAna5oFPlDRIuAjLD0n5J1sYYhhvbZCyOwpVFQMQ9XujlWExJs3gU
+         7IwvIHCypTprj5W4tTESsxFSFbeqz9RBaIeJwEfQbxWzwX/oiySVJuiNe+tc8b4AIcDS
+         s+CIz9PNBIesDikyaqiiLYix5W0mypifUSly7oN/hs4eUs/WIJr14ghZJeIktIi0SjPf
+         24LH4DcyqCAxbnqVBGc29gB8XISHLBBgplOexNl1aDjLREoxHdyby2EQW3Qt6UR2SY9u
+         lv41viFMWNFfAm/YvDown//2YQqJzY5zIMJP+fQ1K1uH2r9jChayZRg0WrkxzuMD+dFO
+         L1tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TgqmscoWWwUwE2N+wjkp7klbD8Llg5aD9QxcbbWM91M=;
-        b=npKCrFVpLhmZjSd3wdr6WOYQxi9oDJjXURvp+PtOD3f/wh51xwhgqP1cvg1687NM/d
-         uOyyBcIhgs3IV9YSgPqTty+DQtvj0pbOAHEHw1UDqdxfQNjgmhEN0avaNByR1+rCVHS1
-         xQAp2qK7hr45mZOP8HHsBxHBNgpTYe2y0PjyeG4MZBwkTI4cS+7bibyt8wmj40GNgKWL
-         3LCO9fRnvqrnDCShtlrKQOO14g1OAZ4cyeXwGsR3z86YIGsovaiJweJw4jYgZ6MFCHwi
-         bEQNQoDhB8uTaefccWibvJgxyH74i/9oqpIEt/ovYSmX5jbPQCpDGC3p5Ncr4svpMCR/
-         KAYQ==
-X-Gm-Message-State: ANhLgQ2yOnzl862QVJB4KFnQInU9tAfIZeqZT2zqZGHJtm3uF7flZJIX
-        J6rLRq80KJmcAPDBrUcPukdbMfExV8kh0urQraOyhQ==
-X-Google-Smtp-Source: ADFU+vva3WOrofQsiULBwLdHFTnTgcGCFkvcJUnV+SV2B4eVtEQKOTmFmG4oUCa5cat2xXUgVCBlj6+tobSNOz5bcMI=
-X-Received: by 2002:a9d:19e9:: with SMTP id k96mr17670341otk.68.1583855731083;
- Tue, 10 Mar 2020 08:55:31 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W+60mEKOc6FZpec77KfiUx6G8m6jCqzHZbWxKsI68hg=;
+        b=q4e6wM0t/Fjb6BHJbJEOmzlJduOSrUU9BPmoBxV6aIgIEWBESXpgR33Hxpgf8+sc+o
+         uYyY6VVf7ETNtc14gRaK1JecTggYwbVBPJYv44sM9s2HSR27jnMYBfbBm1jpKL/p/oSC
+         6coRypvYHlrioJMmg1aH6emdrjGb54vV4NtbV+kOiStg+s2NXApPJuYXuhnfp2IJR2r4
+         YpoimZRKIEhntXh4YbpggX6T9eUffWemVzLf5fqJz2d6rW1vQelcPd4n0VjbrVGOyP/b
+         nFlBU2EYYVgtDUvQGjaqct8h82hbK8h8U3Azw9GnwjHnpUDPNCfSPmx4pqBLgyhTMNZc
+         5nBA==
+X-Gm-Message-State: ANhLgQ1U5wFHZSvdwMlhIWnF5WWdSETk3w8HBwEXzzOD+8X6/PnJWPsa
+        2Q3o7WDLfETTRvbCgPUe0kQ=
+X-Google-Smtp-Source: ADFU+vtaKKamjRMw8i2j8oskqRtAMyNXrKMEbwftPQGJTJ3Tr/icqA8fhaQeQsImoRUm3raAqgliwg==
+X-Received: by 2002:a19:4c08:: with SMTP id z8mr7699955lfa.95.1583856806690;
+        Tue, 10 Mar 2020 09:13:26 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id t27sm11160833ljk.78.2020.03.10.09.13.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 09:13:26 -0700 (PDT)
+Subject: Re: [PATCH v5 2/8] clk: tegra: Export functions for EMC clock scaling
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200310152003.2945170-1-thierry.reding@gmail.com>
+ <20200310152003.2945170-3-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8e1f11e9-a95a-500f-ff44-6f44ad990863@gmail.com>
+Date:   Tue, 10 Mar 2020 19:13:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200310134603.30260-1-robert.foss@linaro.org>
- <20200310134603.30260-3-robert.foss@linaro.org> <20200310142652.GK1922688@smile.fi.intel.com>
-In-Reply-To: <20200310142652.GK1922688@smile.fi.intel.com>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Tue, 10 Mar 2020 16:55:20 +0100
-Message-ID: <CAG3jFyu5S1H=r6pV92tc_a2LoCUnhb0mDbOegP2BCO8a5C1nVg@mail.gmail.com>
-Subject: Re: [v1 2/3] media: ov8856: Add devicetree support
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     ben.kao@intel.com, mchehab@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200310152003.2945170-3-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+10.03.2020 18:19, Thierry Reding пишет:
+> From: Joseph Lo <josephl@nvidia.com>
+> 
+> Export functions to allow accessing the CAR register required by EMC
+> clock scaling. These functions will be used to access the CAR register
+> as part of the scaling sequence.
+> 
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v5:
+> - remove tegra210_clk_emc_update_setting() which is no longer needed
+> 
+...
+> +EXPORT_SYMBOL_GPL(tegra210_clk_emc_update_setting);
+...
+> +extern void tegra210_clk_emc_dll_enable(bool flag);
+> +extern void tegra210_clk_emc_dll_update_setting(u32 emc_dll_src_value);
+> +extern void tegra210_clk_emc_update_setting(u32 emc_src_value);
 
-On Tue, 10 Mar 2020 at 15:26, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Mar 10, 2020 at 02:46:02PM +0100, Robert Foss wrote:
-> > Add devicetree match table, and enable ov8856_probe()
-> > to initialize power, clocks and reset pins.
->
-> ...
->
-> > +#define OV8856_NUM_SUPPLIES ARRAY_SIZE(ov8856_supply_names)
->
-> Use ARRAY_SIZE() directly.
-
-Ack.
-
->
-> Have you seen Sakari's comments?
-> Sakari, do I have d=C3=A9j=C4=85 vu or you indeed commented this driver?
-
-Yes, I may have missed some part of it, so please tell me if I have.
-
-There is a patchset floating around that implements a larger chunk of
-functionality,
-including a couple of new modes. This is based on that series.
-
->
-> ...
->
-> > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
->
-> > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
->
-> Yes, seems this one is inverted.
->
-> ...
->
-> > +{
-> > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> > +     regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> > +     clk_disable_unprepare(ov8856->xvclk);
-> > +}
-> > +
-> > +
->
-> One blank line is enough.
->
-> ...
->
-> > +     ov8856->xvclk =3D devm_clk_get(&client->dev, "xvclk");
-> > +     if (IS_ERR(ov8856->xvclk)) {
-> > +             dev_err(&client->dev, "failed to get xvclk\n");
-> > +             return -EINVAL;
-> > +     }
->
-> Previously it worked without clock provider, now you make a dependency.
->
-> This won't work.
-
-So the ideal behavior would be to only use the xclk if it is provided?
+Why these exports are needed given that the EMC driver is built-in?
