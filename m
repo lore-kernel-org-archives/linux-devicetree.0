@@ -2,164 +2,85 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700ACC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8806BC18E5A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4494A22525
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDCB20873
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583865894;
-	bh=JzpMaBHlRUYn5LycZ062ARQDLv6Ci83oFWVAGYtCck0=;
+	s=default; t=1583866130;
+	bh=n+cyrf7lfGTbCHVUgVgAurLOC6uO4AK85qBrh6PLbJs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1GE0tsZRE1y4GQFOqDYx/Ylyij0D/yBvo7vFSCYB6gzhNjBU++cYFKcG0P8AmY9XW
-	 gOkM1Z8ltNSF6/jIQFfEWP7yQcW6eu37rJMiMruxmNxtlAv4JtSEQt/iP3G/jJIbvN
-	 zOC6UPBSF5vuwIOp0Ztay95r/60rI9iJbWav5P1s=
+	b=QMkqj3M68z0HxbvNOqvuBBWiRXuzd/PBNgojvnAPXgPXp6iem/X7mHdq2PTzrTMSU
+	 UhQ0wUhnm8TggJNjKp86FIEpeMHAOmLJUwazbLn4Nmr7Eya1srRC2y5BboXv4r30yi
+	 zENbXml1urR7xz/LXxoDvueqmcY1pg4sZ/Zd8/QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgCJSou (ORCPT
+        id S1727079AbgCJSsr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:44:50 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35580 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgCJSou (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:44:50 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k26so6958285otr.2;
-        Tue, 10 Mar 2020 11:44:49 -0700 (PDT)
+        Tue, 10 Mar 2020 14:48:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34964 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbgCJSsr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:48:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k26so6971149otr.2;
+        Tue, 10 Mar 2020 11:48:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PJfOBTObVWYVfiIlBNgR4fIlBc7lQjhtjwMHAHY2r38=;
-        b=jspXlkV46wtCr5ljGYqKvjDyr+EwDuPGKHiLmx/sCjBmb4vqXOh3wTuAGCE3rKOjwL
-         pmg7xhaE9Di16irRmxlDpDWhhJLXUIF6YSFuXsLsmkmYkF74gRGG6H9wOZsyyJz+Gdqx
-         PojiqmB2+ONmhHfoDMy/ZSNV8faJblnJRPWQMmG7wDJpWuwlgO3skHR08DKHlD34RDVE
-         23jrH4/wWnENPnJ6Wrka7oTDxiNDiHZoZqKjoO2bkpOQpFb7sYYzCVIG0qgjkAAZyU4/
-         8hQ2tEfLXmaG4aS11mCxfxddmQdMGvMgD6Z9SnsG004rnv4nvgobEZieHDv7XB2pahXR
-         QZqA==
-X-Gm-Message-State: ANhLgQ13lEhGdSuTQsiEqyOT4HFyZg4/f6ORGHdVuzREuo7IperG2fgH
-        ZcYNZgY6Ad4brI4iaER6Hg==
-X-Google-Smtp-Source: ADFU+vuQs0OnawS9/ynUCTc8EKkO5VNO4tLlfeFjHbA8Jtq0UYFCWakGTmg55xZxtKimji/atijdSQ==
-X-Received: by 2002:a9d:6a91:: with SMTP id l17mr13893256otq.29.1583865889501;
-        Tue, 10 Mar 2020 11:44:49 -0700 (PDT)
+        bh=EzS4Ory16y/BLSb6no87Sernjs2m/cGxUWkwz4EtDSw=;
+        b=bHrrbkEe93tofoi9fXugjJHRTbU1TMEPmLwDmEpz8kIbcp0BZ0uzFY8CIz2TJE4QcA
+         H65GMIhzduUY5GGOIMKxjYW5G3WonEnC9qKqbKjzWdsQRBAc4XAL/1eoLfx8BEn04W/j
+         ZSyofGpHSCT2mSnIwTFyM/26ltBHBROy8hLn4gGlZ1nbCI1RoL3V/uV9pIzgqZ5jzH99
+         h/rYMYXJseNhVRsU+jZ7eaVF15w0BBvNe8DADxmBi8Ji5M0mhnQB9ciLrFG3Tz/5TmUp
+         lgDc37Rm4v7ABAPQjaFOVcyWfL4tLjzYqBi7etHKbbCSgKd9Q6BLr9lQgMjSh1AoMi2R
+         emzQ==
+X-Gm-Message-State: ANhLgQ0dMupVGjiZ9/kzLLm6Wuk24FFRFTOHdi4y65/YpP2rEAwiaFsm
+        O9r+uJ+LLmv2bhyjOtZ1dw==
+X-Google-Smtp-Source: ADFU+vsMU183YY5TJ9IDWm2qf6EIOH/EKHLHafJAiNQIT7jZ1BNW3xQAYT9kBEXnBN09EB1NU0f2WQ==
+X-Received: by 2002:a9d:750d:: with SMTP id r13mr7271522otk.321.1583866126181;
+        Tue, 10 Mar 2020 11:48:46 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b11sm2077211otj.64.2020.03.10.11.44.48
+        by smtp.gmail.com with ESMTPSA id a73sm2633320oib.16.2020.03.10.11.48.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:44:48 -0700 (PDT)
-Received: (nullmailer pid 8866 invoked by uid 1000);
-        Tue, 10 Mar 2020 18:44:47 -0000
-Date:   Tue, 10 Mar 2020 13:44:47 -0500
+        Tue, 10 Mar 2020 11:48:45 -0700 (PDT)
+Received: (nullmailer pid 15229 invoked by uid 1000);
+        Tue, 10 Mar 2020 18:48:44 -0000
+Date:   Tue, 10 Mar 2020 13:48:44 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Dhananjay Kangude <dkangude@cadence.com>
-Cc:     linux-edac@vger.kernel.org, bp@alien8.de, mchehab@kernel.org,
-        tony.luck@intel.com, james.morse@arm.com,
-        linux-kernel@vger.kernel.org, mparab@cadence.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] dt-bindings: edac: Add cadence ddr mc support
-Message-ID: <20200310184447.GB2508@bogus>
-References: <20200228094322.13617-1-dkangude@cadence.com>
- <20200228094322.13617-3-dkangude@cadence.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        olivier.moysan@st.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH] dt-bindings: sound: Convert cirrus,cs42l51 to json-schema
+Message-ID: <20200310184844.GA15190@bogus>
+References: <20200228152706.29749-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228094322.13617-3-dkangude@cadence.com>
+In-Reply-To: <20200228152706.29749-1-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 10:43:22AM +0100, Dhananjay Kangude wrote:
-> Add documentation for cadence ddr memory controller EDAC DTS bindings
+On Fri, 28 Feb 2020 16:27:06 +0100, Benjamin Gaignard wrote:
+> Convert cirrus,cs42l51 to yaml format.
 > 
-> Signed-off-by: Dhananjay Kangude <dkangude@cadence.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  .../devicetree/bindings/edac/cdns,ddr-edac.yaml    | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+>  .../devicetree/bindings/sound/cirrus,cs42l51.yaml  | 69 ++++++++++++++++++++++
+>  .../devicetree/bindings/sound/cs42l51.txt          | 33 -----------
+>  2 files changed, 69 insertions(+), 33 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/cs42l51.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
-> new file mode 100644
-> index 000000000000..d83d8840d57b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
-> @@ -0,0 +1,59 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/edac/cdns,ddr-edac.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Cadence DDR IP with ECC support (EDAC)
-> +
-> +description:
-> +  This binding describes the Cadence DDR/LPDDR IP with ECC feature enabled
-> +  to detect and correct CE/UE errors.
-> +
-> +maintainers:
-> +  - Dhananjay Kangdue <dkangude@cadence.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cdns,cadence-ddr4-mc-edac
 
-You have Cadence twice effectively.
-
-'edac' is a linuxism. The binding should be for the DDR controller 
-unless this block only does ECC. Name it based on what the h/w is 
-called.
-
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 1
-> +
-> +  ranges: true
-
-You don't have any children defined, so you don't need these 3 
-properties.
-
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description:
-> +          Register block of DDR/LPDDR apb registers up to mapped area.
-> +          Mapped area contains the register set for memory controller,
-> +          phy and PI module register set doesn't part of this mapping.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - ranges
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    edac: edac@fd100000 {
-> +        compatible = "cdns,cadence-ddr4-mc-edac";
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges;
-> +        reg = <0xfd100000 0x4000>;
-> +        interrupts = <0x00 0x01 0x04>;
-> +        };
-
-Wrong indent.
-
-> +...
-> -- 
-> 2.15.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
