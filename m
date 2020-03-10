@@ -2,110 +2,227 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FEBC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DF8C18E5A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26EC6246A0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43E324681
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mclrgEFb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="HI4fouM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgCJN0m (ORCPT
+        id S1728631AbgCJNeA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:26:42 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56185 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728863AbgCJMzw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 08:55:52 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 6so1269978wmi.5;
-        Tue, 10 Mar 2020 05:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ddx48D2gr10nMoG1C61HRni/V10Bu89hCsWOfewS3C4=;
-        b=mclrgEFbgjuY+WFqJ+yAnwLTrQAeGXiC0Khzlfy+mgVHM1ed2h7pdu01MundlIfUOz
-         lK1bvpqusxVftNGxvuDX8dIDOXjHVEUAr1+UmxkBK0E7cdjtLT09f9juyEOgCPeTGOHf
-         dri3R4BLs5m2VACYXYbpduXDXQgMT6RyF1IuKHtrf8s07k/VzpcRttYBlxrS7+0m4Cuc
-         0+emoIgUY+Hv9GEup174YOtN+nXnwG0164vMzM8KJi7UraKvZ5FLdiqPQtArsU3I4jbn
-         AFyhQro+tSKtFVMPm2Qb8M+V/t8W6TluhBMQ5bgRH5JUjWtmM3q3erHjcumkmQ7ct7GQ
-         200A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ddx48D2gr10nMoG1C61HRni/V10Bu89hCsWOfewS3C4=;
-        b=kzU7Te13CnI92MbfifeH/92yu0hJ3Zogs3WNPfCwAO14zXHIksyGHc2tt2EXaJwA43
-         zqSJWylBwNl/MmTcyw5ABW7aaB89kNuT0HcDYyRXSH2qPaWBliSOKVGQaqzET4+beNtN
-         fNw7BKbvtmvVmjATbmg1ZdVAp3cFyApWwVlDWbE+J6EtIfHyNHbDZ5m+yW7K44437taa
-         +tmZxgrCQKgcvfUSxEr/3wlx2XRj6RxLb/+0lvZiekc8dnczLkF2q/Jnk2Crfe9SIx66
-         OMjHOKcFphHT3JrdtL24zJAzeGNC2rZmGMoET5SRLHK/LjoiGN4aysvN5dOI+XRTwvLW
-         A1Uw==
-X-Gm-Message-State: ANhLgQ3LYTQ02fT3qGDtxnZfMcqpWvRX6shRTQxnPzhIl3K5JkgGob3W
-        B4RHRNgkTK4txMruxz8gay0=
-X-Google-Smtp-Source: ADFU+vs/PIuMLTxZwNDZV1kMk1rEY1URgp5tFfXnru+tJtrPQsbTGmlA5/Sp7HQfDtoO2oX3XXcdlw==
-X-Received: by 2002:a1c:ac46:: with SMTP id v67mr1970418wme.153.1583844950007;
-        Tue, 10 Mar 2020 05:55:50 -0700 (PDT)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id t81sm4018594wmb.15.2020.03.10.05.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 05:55:49 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
-Date:   Tue, 10 Mar 2020 14:55:35 +0200
-Message-Id: <20200310125542.5939-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 10 Mar 2020 09:34:00 -0400
+Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:55608 "EHLO
+        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727560AbgCJMrK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1583844429; x=1615380429;
+  h=from:to:cc:subject:date:message-id:reply-to:
+   content-transfer-encoding:mime-version;
+  bh=vJMUNeqDMsTha7ppeHbqyximHbM6DIWnSoKrK5grZ1I=;
+  b=HI4fouM3osPsipuSsDRORHWMBkCeo5sru6keNAtqcJm2+IplX2APbBn4
+   ETbQXy8igc6H6q52eh0c5Q34ByM/N2/PlafESucJWCfI0d4w7vYm6Y6o2
+   GoktJzCgv/plND2Nak/xQGp7GMUdUXT/CADJTf4sg/8FRfB8WPgdVygCg
+   Fp0eOXO7j9t9dBySwEs2cvc5RscGnzfaAUexsUvA3fX5ryFKWDMNgLvYz
+   F1xuVm3Jrhn8oMiWym49xznpd/ovrvS5Z/rG3qFnNHSaX2V9+tFUwp7ra
+   4B/gbYBLQlqAgcmLgXhhvRGbwsnLPSGgx+qu/1F+WzFoU7EVEFNglbqxd
+   w==;
+IronPort-SDR: HJKi4lh+OgEVnpq5+7C8qWg2DW7WiNTN9D7ZiCg5AttouSI2wgSKdTlbxC7drEZyQaa1l7rfCD
+ /FSbIuI8n7Sw==
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: [PATCH v2] leds: pwm: add support for default-state device property
+Thread-Topic: [PATCH v2] leds: pwm: add support for default-state device
+ property
+Thread-Index: AQHV9tn/0ZJlTn83ZkK/QE6qVZtMDw==
+Date:   Tue, 10 Mar 2020 12:47:03 +0000
+Message-ID: <20200310123126.4709-1-Denis.Osterland@diehl.com>
+Reply-To: "20200309082218.13263-1-Denis.Osterland@diehl.com" 
+          <20200309082218.13263-1-Denis.Osterland@diehl.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-TrailerSkip: 1
+X-GBS-PROC: byQFdw3ukCM+zy1/poiPc/AZUMLuadj5bOamS2OKQu8jauJJNj7A4I2WQ4sGAD2T
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+This patch adds support for =22default-state=22 devicetree property, whic=
+h
+allows to defer pwm init to first use of led.
 
-This series addresses a few issues that were missed during the previous
-series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
-SoCs other than LS1021A and LS1043A. DMA mode has been completely broken
-by that series, and XSPI mode never worked on little-endian controllers.
+This allows to configure the PWM early in bootloader to let the LED
+blink until an application in Linux userspace set something different.
 
-Then it introduces support for the LS1028A chip, whose compatible has
-recently been documented here:
+Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+---
+v1->v2:
+  - use default-state =3D =22keep=22, as suggested by Jacek Anaszewski
+  - calc initial brightness with PWM state from device
 
-https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
+ .../devicetree/bindings/leds/leds-pwm.txt     |  2 ++
+ drivers/leds/leds-pwm.c                       | 33 +++++++++++++++++--
+ include/linux/leds_pwm.h                      |  1 +
+ 3 files changed, 33 insertions(+), 3 deletions(-)
 
-The device tree for the LS1028A SoC is extended with DMA channels
-definition, such that even though the default operating mode is XSPI,
-one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
-devtype_data structure of the driver and use that instead.
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
+ntation/devicetree/bindings/leds/leds-pwm.txt
+index 6c6583c35f2f..d0f489680594 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+@@ -19,6 +19,8 @@ LED sub-node properties:
+   see Documentation/devicetree/bindings/leds/common.txt
+ - linux,default-trigger :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
++- default-state : (optional)
++  see Documentation/devicetree/bindings/leds/common.yaml
+=20
+ Example:
+=20
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 8b6965a563e9..92726c2e43ba 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -75,7 +75,8 @@ static int led_pwm_add(struct device *dev, struct led_p=
+wm_priv *priv,
+ 	led_data->active_low =3D led->active_low;
+ 	led_data->cdev.name =3D led->name;
+ 	led_data->cdev.default_trigger =3D led->default_trigger;
+-	led_data->cdev.brightness =3D LED_OFF;
++	ret =3D led->default_state =3D=3D LEDS_GPIO_DEFSTATE_ON;
++	led_data->cdev.brightness =3D ret =3F led->max_brightness : LED_OFF;
+ 	led_data->cdev.max_brightness =3D led->max_brightness;
+ 	led_data->cdev.flags =3D LED_CORE_SUSPENDRESUME;
+=20
+@@ -97,7 +98,8 @@ static int led_pwm_add(struct device *dev, struct led_p=
+wm_priv *priv,
+ 	 * FIXME: pwm_apply_args() should be removed when switching to the
+ 	 * atomic PWM API.
+ 	 */
+-	pwm_apply_args(led_data->pwm);
++	if (led->default_state !=3D LEDS_GPIO_DEFSTATE_KEEP)
++		pwm_apply_args(led_data->pwm);
+=20
+ 	pwm_get_args(led_data->pwm, &pargs);
+=20
+@@ -105,10 +107,23 @@ static int led_pwm_add(struct device *dev, struct l=
+ed_pwm_priv *priv,
+ 	if (!led_data->period && (led->pwm_period_ns > 0))
+ 		led_data->period =3D led->pwm_period_ns;
+=20
++	if (led->default_state =3D=3D LEDS_GPIO_DEFSTATE_KEEP) {
++		uint64_t brightness;
++		struct pwm_device *pwm =3D led_data->pwm;
++		struct pwm_state state;
++
++		pwm->chip->ops->get_state(pwm->chip, pwm, &state);
++		brightness =3D led->max_brightness * state.duty_cycle;
++		do_div(brightness, state.period);
++		led_data->cdev.brightness =3D (enum led_brightness)brightness;
++	}
++
+ 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
+ 	if (ret =3D=3D 0) {
+ 		priv->num_leds++;
+-		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
++		if (led->default_state !=3D LEDS_GPIO_DEFSTATE_KEEP)
++			led_pwm_set(&led_data->cdev,
++					led_data->cdev.brightness);
+ 	} else {
+ 		dev_err(dev, =22failed to register PWM led for %s: %d=5Cn=22,
+ 			led->name, ret);
+@@ -126,6 +141,8 @@ static int led_pwm_create_fwnode(struct device *dev, =
+struct led_pwm_priv *priv)
+ 	memset(&led, 0, sizeof(led));
+=20
+ 	device_for_each_child_node(dev, fwnode) {
++		const char *state =3D NULL;
++
+ 		ret =3D fwnode_property_read_string(fwnode, =22label=22, &led.name);
+ 		if (ret && is_of_node(fwnode))
+ 			led.name =3D to_of_node(fwnode)->name;
+@@ -143,6 +160,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
+ struct led_pwm_priv *priv)
+ 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
+ 					 &led.max_brightness);
+=20
++		if (!fwnode_property_read_string(fwnode, =22default-state=22,
++						 &state)) {
++			if (!strcmp(state, =22keep=22))
++				led.default_state =3D LEDS_GPIO_DEFSTATE_KEEP;
++			else if (!strcmp(state, =22on=22))
++				led.default_state =3D LEDS_GPIO_DEFSTATE_ON;
++			else
++				led.default_state =3D LEDS_GPIO_DEFSTATE_OFF;
++		}
++
+ 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
+ 		if (ret) {
+ 			fwnode_handle_put(fwnode);
+diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
+index 93d101d28943..c9ef9012913d 100644
+--- a/include/linux/leds_pwm.h
++++ b/include/linux/leds_pwm.h
+@@ -10,6 +10,7 @@ struct led_pwm {
+ 	const char	*default_trigger;
+ 	unsigned	pwm_id __deprecated;
+ 	u8 		active_low;
++	u8		default_state;
+ 	unsigned 	max_brightness;
+ 	unsigned	pwm_period_ns;
+ };
+--=20
+2.25.1
 
-I don't expect the "fixes" patches to reach very far down the stable
-pipe, since there has been pretty heavy refactoring in this driver.
 
-For testing, benchmarking and debugging, the mikroBUS connector on the
-LS1028A-RDB is made available via spidev.
 
-Vladimir Oltean (7):
-  spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
-  spi: spi-fsl-dspi: Avoid use-after-free in interrupt mode
-  spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
-  spi: spi-fsl-dspi: Fix bits-per-word acceleration in DMA mode
-  spi: spi-fsl-dspi: Add support for LS1028A
-  arm64: dts: ls1028a: Specify the DMA channels for the DSPI controllers
-  arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
+Diehl Connectivity Solutions GmbH
+Gesch=E4ftsf=FChrung: Horst Leonberger
+Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
+N=FCrnberg: HRB 32315
+_________________________________________________________________________=
+__________________________
 
- .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  14 ++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   6 +
- drivers/spi/spi-fsl-dspi.c                    | 188 +++++++++++-------
- 3 files changed, 134 insertions(+), 74 deletions(-)
+Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
+ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
+Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
+ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
+Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
+ und/oder Publikation dieser E-Mail ist strengstens untersagt.
+- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
+Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
+chten/
 
--- 
-2.17.1
-
+The contents of the above mentioned e-mail is not legally binding. This e=
+-mail contains confidential and/or legally protected information. Please =
+inform us if you have received this e-mail by
+mistake and delete it in such a case. Each unauthorized reproduction, dis=
+closure, alteration, distribution and/or publication of this e-mail is st=
+rictly prohibited.=20
+- For general information on data protection and your respective rights p=
+lease visit https://www.diehl.com/group/en/transparency-and-information-o=
+bligations/
