@@ -2,202 +2,119 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18F9C10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 21:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EA7C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 21:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E7721655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 21:09:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583874547;
-	bh=aO/230DCKti683rP0qoBVP61iOvZbUB9+GrbuunBBek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0lJg5n/3GHbbsuNEhMhR4zgEfADa7A8iEttL34j7FnLTLdjS0knE17HcARgW5ckoi
-	 hqWemJvnOqVIUimStMvb3wn51wIPCPLc8vRmCOwBMRgcV0n43o1qQVXk5UObxPVdah
-	 J4xJyKlRMe3mAt1qVcj2I/1G2ZtpCWC1GqI5vQlE=
+	by mail.kernel.org (Postfix) with ESMTP id DCCE322522
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 21:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgCJVJH (ORCPT
+        id S1726402AbgCJVJs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:09:07 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37258 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbgCJVJH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 17:09:07 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w13so4967855oih.4;
-        Tue, 10 Mar 2020 14:09:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GfhqlgMKmzN4IuxVJjHneTo0nfEVjjRSeSr65YkBw7o=;
-        b=Aj/pjqHjph9rl9vnbfZAAvUpxO3Ydpqvxj7o+/Pjy81RqxFEto9s36rxJ9Ktjg/dVa
-         2u4waJP4xTvzgv9l6LabOIF1M+QsOKB3zCMzj4/fmEgVqQEp91eZ0q8ynKhf42gmJsiR
-         mwNitWbopDaSDeeDkKbCR2I5YSoNmywuwd8KKRrJiWjKCXlzSDEajXhzQ2kVFSoolTZC
-         RrRIcILOZQu08A0ZjmYhNMZYxngCXvz0YqIeHPIPw5Dkz5rjxssYNuglb6XIOMsXt6hQ
-         VmnzPbvj+9yCbso5oOBR43ja1Ij7HGY39rr32u/rsQZL+Aeyauk5BdgdDAeJAkQYgCd4
-         kcUw==
-X-Gm-Message-State: ANhLgQ1/TXWEFPVChmDXDwnvD3WbqviHFw2OhmTNw6LZhMjz2sdTGeQm
-        uiZF8KvYooXSrbkyqCMBaA==
-X-Google-Smtp-Source: ADFU+vuo4t0V5T26kso3ujaflSD82gWJtxIt/gxBCOgVp/HDNHLnUFS+kxRXLGet1zlCiae3LTR2EQ==
-X-Received: by 2002:aca:b205:: with SMTP id b5mr2682151oif.21.1583874546307;
-        Tue, 10 Mar 2020 14:09:06 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h3sm2131748otr.4.2020.03.10.14.09.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 14:09:05 -0700 (PDT)
-Received: (nullmailer pid 18143 invoked by uid 1000);
-        Tue, 10 Mar 2020 21:09:04 -0000
-Date:   Tue, 10 Mar 2020 16:09:04 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     t-kristo@ti.com, kishon@ti.com, nm@ti.com, nsekhar@ti.com,
-        vigneshr@ti.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] arm64: dts: ti: k3-j721e-main: Add serdes_ln_ctrl
- node to select SERDES lane mux
-Message-ID: <20200310210904.GA11275@bogus>
-References: <20200303101722.26052-1-rogerq@ti.com>
- <20200303101722.26052-4-rogerq@ti.com>
+        Tue, 10 Mar 2020 17:09:48 -0400
+Received: from muru.com ([72.249.23.125]:59710 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgCJVJs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 17:09:48 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9A961810A;
+        Tue, 10 Mar 2020 21:10:33 +0000 (UTC)
+Date:   Tue, 10 Mar 2020 14:09:44 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Arthur Demchenkov <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] ARM: dts: omap4-droid4: Fix sgx clock rate
+Message-ID: <20200310210944.GU37466@atomide.com>
+References: <20200310201818.15989-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303101722.26052-4-rogerq@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200310201818.15989-1-tony@atomide.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 12:17:19PM +0200, Roger Quadros wrote:
-> From: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Add serdes_ln_ctrl node used for selecting SERDES lane mux.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 27 ++++++++++++
->  include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
->  2 files changed, 80 insertions(+)
->  create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> index cbaadee5bfdc..c5d54af37e91 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> @@ -5,6 +5,8 @@
->   * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
->   */
->  #include <dt-bindings/phy/phy.h>
-> +#include <dt-bindings/mux/mux.h>
-> +#include <dt-bindings/mux/mux-j721e-wiz.h>
->  
->  &cbass_main {
->  	msmc_ram: sram@70000000 {
-> @@ -19,6 +21,31 @@
->  		};
->  	};
->  
-> +	scm_conf: scm-conf@100000 {
-> +		compatible = "syscon", "simple-mfd", "ti,j721e-system-controller";
+* Tony Lindgren <tony@atomide.com> [200310 20:19]:
+> +&sgx_module {
 
-Wrong ordering. Most significant first.
+Sorry the sgx_module label came from the linux_openpvrsgx branch
+I had merged in as Arthur noticed.
 
-> +		reg = <0 0x00100000 0 0x1c000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0x00100000 0x1c000>;
-> +
-> +		serdes_ln_ctrl: serdes-ln-ctrl@4080 {
+Below is an updated patch against v5.6-rc series.
 
-Your syscon.yaml change is not valid if you have child nodes. Do a 
-specific binding for this block.
+Regards,
 
-> +			compatible = "mmio-mux";
-> +			reg = <0x00004080 0x50>;
-> +			#mux-control-cells = <1>;
-> +			mux-reg-masks = <0x4080 0x3>, <0x4084 0x3>, /* SERDES0 lane0/1 select */
-> +					<0x4090 0x3>, <0x4094 0x3>, /* SERDES1 lane0/1 select */
-> +					<0x40a0 0x3>, <0x40a4 0x3>, /* SERDES2 lane0/1 select */
-> +					<0x40b0 0x3>, <0x40b4 0x3>, /* SERDES3 lane0/1 select */
-> +					<0x40c0 0x3>, <0x40c4 0x3>, <0x40c8 0x3>, <0x40cc 0x3>;
-> +					/* SERDES4 lane0/1/2/3 select */
-> +			idle-states = <SERDES0_LANE0_PCIE0_LANE0>, <SERDES0_LANE1_PCIE0_LANE1>,
-> +				      <SERDES1_LANE0_PCIE1_LANE0>, <SERDES1_LANE1_PCIE1_LANE1>,
-> +				      <SERDES2_LANE0_PCIE2_LANE0>, <SERDES2_LANE1_PCIE2_LANE1>,
-> +				      <MUX_IDLE_AS_IS>, <SERDES3_LANE1_USB3_0>,
-> +				      <SERDES4_LANE0_EDP_LANE0>, <SERDES4_LANE1_EDP_LANE1>, <SERDES4_LANE2_EDP_LANE2>, <SERDES4_LANE3_EDP_LANE3>;
-> +		};
-> +	};
-> +
->  	gic500: interrupt-controller@1800000 {
->  		compatible = "arm,gic-v3";
->  		#address-cells = <2>;
-> diff --git a/include/dt-bindings/mux/mux-j721e-wiz.h b/include/dt-bindings/mux/mux-j721e-wiz.h
-> new file mode 100644
-> index 000000000000..fd1c4ea9fc7f
-> --- /dev/null
-> +++ b/include/dt-bindings/mux/mux-j721e-wiz.h
-> @@ -0,0 +1,53 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides constants for J721E WIZ.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_J721E_WIZ
-> +#define _DT_BINDINGS_J721E_WIZ
-> +
-> +#define SERDES0_LANE0_QSGMII_LANE1	0x0
-> +#define SERDES0_LANE0_PCIE0_LANE0	0x1
-> +#define SERDES0_LANE0_USB3_0_SWAP	0x2
-> +
-> +#define SERDES0_LANE1_QSGMII_LANE2	0x0
-> +#define SERDES0_LANE1_PCIE0_LANE1	0x1
-> +#define SERDES0_LANE1_USB3_0		0x2
-> +
-> +#define SERDES1_LANE0_QSGMII_LANE3	0x0
-> +#define SERDES1_LANE0_PCIE1_LANE0	0x1
-> +#define SERDES1_LANE0_USB3_1_SWAP	0x2
-> +#define SERDES1_LANE0_SGMII_LANE0	0x3
-> +
-> +#define SERDES1_LANE1_QSGMII_LANE4	0x0
-> +#define SERDES1_LANE1_PCIE1_LANE1	0x1
-> +#define SERDES1_LANE1_USB3_1		0x2
-> +#define SERDES1_LANE1_SGMII_LANE1	0x3
-> +
-> +#define SERDES2_LANE0_PCIE2_LANE0	0x1
-> +#define SERDES2_LANE0_SGMII_LANE0	0x3
-> +#define SERDES2_LANE0_USB3_1_SWAP	0x2
-> +
-> +#define SERDES2_LANE1_PCIE2_LANE1	0x1
-> +#define SERDES2_LANE1_USB3_1		0x2
-> +#define SERDES2_LANE1_SGMII_LANE1	0x3
-> +
-> +#define SERDES3_LANE0_PCIE3_LANE0	0x1
-> +#define SERDES3_LANE0_USB3_0_SWAP	0x2
-> +
-> +#define SERDES3_LANE1_PCIE3_LANE1	0x1
-> +#define SERDES3_LANE1_USB3_0		0x2
-> +
-> +#define SERDES4_LANE0_EDP_LANE0		0x0
-> +#define SERDES4_LANE0_QSGMII_LANE5	0x2
-> +
-> +#define SERDES4_LANE1_EDP_LANE1		0x0
-> +#define SERDES4_LANE1_QSGMII_LANE6	0x2
-> +
-> +#define SERDES4_LANE2_EDP_LANE2		0x0
-> +#define SERDES4_LANE2_QSGMII_LANE7	0x2
-> +
-> +#define SERDES4_LANE3_EDP_LANE3		0x0
-> +#define SERDES4_LANE3_QSGMII_LANE8	0x2
-> +
-> +#endif /* _DT_BINDINGS_J721E_WIZ */
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+Tony
+
+8< ------------------------
+From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Tue, 10 Mar 2020 14:02:48 -0700
+Subject: [PATCH] ARM: dts: omap4-droid4: Fix sgx clock rate
+
+We currently have a different clock rate for droid4 compared to the
+stock v3.0.8 based Android Linux kernel:
+
+# cat /sys/kernel/debug/clk/dpll_*_m7x2_ck/clk_rate
+266666667
+307200000
+# cat /sys/kernel/debug/clk/l3_gfx_cm:clk:0000:0/clk_rate
+307200000
+
+Let's fix this by configuring sgx to use 153.6 MHz instead of 307.2 MHz.
+
+This helps a bit with thermal issues that seem to be related to memory
+corruption when using sgx. It seems that other driver related issues
+still remain though.
+
+Cc: Arthur Demchenkov <spinal.by@gmail.com>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/motorola-mapphone-common.dtsi | 10 ++++++++++
+ arch/arm/boot/dts/omap4.dtsi                    |  2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+--- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
++++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+@@ -678,6 +678,16 @@ &rng_target {
+ 	status = "disabled";
+ };
+ 
++/*
++ * Use dpll_per for sgx at 153.6MHz like the stock v3.0.8 Android kernel
++ */
++&sgx_module {
++	assigned-clocks = <&l3_gfx_clkctrl OMAP4_GPU_CLKCTRL 24>,
++			  <&dpll_per_m7x2_ck>;
++	assigned-clock-rates = <0>, <153600000>;
++	assigned-clock-parents = <&dpll_per_m7x2_ck>;
++};
++
+ /* Configure pwm clock source for timers 8 & 9 */
+ &timer8 {
+ 	assigned-clocks = <&abe_clkctrl OMAP4_TIMER8_CLKCTRL 24>;
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -390,7 +390,7 @@ abb_iva: regulator-abb-iva {
+ 			status = "disabled";
+ 		};
+ 
+-		target-module@56000000 {
++		sgx_module: target-module@56000000 {
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			reg = <0x5600fe00 0x4>,
+ 			      <0x5600fe10 0x4>;
+-- 
+2.25.1
