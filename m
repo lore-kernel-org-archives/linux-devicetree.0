@@ -2,146 +2,98 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C262AC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E011C10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C96720637
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333D324684
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="PfDYnxNS";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="DhhbvSZJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oxgQQEls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgCJNsO (ORCPT
+        id S1726467AbgCJN5e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:48:14 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:13500 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726390AbgCJNsN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:48:13 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ADheAk008603;
-        Tue, 10 Mar 2020 06:47:26 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pfpt0818; bh=My48sBqpMiHz8gZOzD73kt62jfDvD+0R5QX0Kc5Qa9c=;
- b=PfDYnxNS3T6SaDjaM4+BHX0g0KtGz7XVXjelmPxDBigY2cYKuZ0QA8xWs2z6qKPi2ww4
- CwS4hGpvMrtBSqtkAgT6ZsDrRMIyVSmAWLGmZizgMuYoMCepYS8yxPB2FWKe+S4MO00y
- yAdoXEvgiJGKXgHg6hqPyiBqPYSmO9CG7dAZ4UVID9U8kvm5LrbAvtTAmvTdhulNOVnQ
- ePwTow9kP1RmkJCFfd7UoGDCss2vAdAvkii4aG4ClP3YCuJ6KluwduCSZUoUG0HO7epc
- RD149HngShiCKlvryvNFWw88JooLSl2zG7bCo4uDA5IAJwA8HRmTcEB8IZ6ORL/wvoTs KA== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2yp04fkjpg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 10 Mar 2020 06:47:26 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 10 Mar
- 2020 06:47:24 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.172)
- by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Tue, 10 Mar 2020 06:47:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gQfrgV2rgSKg+phCL4vEAqBYJHxWvW8L9AroomAe2Nbis3B/F0hXF2VWNZcwZi5e++w2BRtmXcBnLC5DAiHYaSj+Y8waDaqjUqHcsUsgD50eOMftBexf6Y11puvv01t0WEo7BrEExUs38rxjBQEpcxwHoOCNHK6RTs8D58NUdhx0vHHes5Rnvvmsxw9dyTffPHIYuTObPlKgCTT87PZh0xsUc1axzsTS+VFVw1u3LynT10KOFv6a9MIr4TOUlIJlKKqOBFzSkJmdEZw8RgAhn+n/iZhFEO0/QKqibzB8K2su+4q5XFfaFcueURr4KTyW/vk9OQ5HbvZ7/T4FymxiQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=My48sBqpMiHz8gZOzD73kt62jfDvD+0R5QX0Kc5Qa9c=;
- b=kzAudi0ZyTjrWcvlEITRHxQ39Jm2N2uDavIs7QwleWQ6j8xYOSzROS6gyEIGsVIb/w2jeVBDx6eLexi3wpD3jkrI6MsNeg6VYvQgIK+DukNJ9pHgH1DMIifXBZuvHG4JpmP8CrNjAY3KcinSBGdH3qVI42DnwcF3egdbcni8fPKU0vOvJO6pb33+ojNj7J+a+Dp6eY+kS0dRU4fWyNcbJlqmSODOXtE6pUl8M2uDOoFyB3ny07M2V/kbof7vOwD5zb7cDd2p8IsMt4WxHC5brv4TalbwnBsVGZiVGan+tnvOpGHqg/z3fxnF36pcji+Yjuo6an4S9OMIlxVCeXfoTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Tue, 10 Mar 2020 09:57:34 -0400
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:45589 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgCJN5e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 09:57:34 -0400
+Received: by mail-lf1-f53.google.com with SMTP id b13so10926726lfb.12;
+        Tue, 10 Mar 2020 06:57:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=My48sBqpMiHz8gZOzD73kt62jfDvD+0R5QX0Kc5Qa9c=;
- b=DhhbvSZJI4nrOJND7NzCPVUNfuCMe8qAwYsh+G739fTzVYbtQBmOlpGiJ1KX4uBIaNnBnCH9MkxqG8NRtOEhFYtq/q4Y5AmoNEfkqbz81AftavcDg601JVifSXD6A56dpULha1Egbgh753rifIxAldLAkW2Q4tf11h50wAEgidQ=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
- by MN2PR18MB2637.namprd18.prod.outlook.com (2603:10b6:208:aa::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
- 2020 13:47:23 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 13:47:23 +0000
-Date:   Tue, 10 Mar 2020 14:47:13 +0100
-From:   Robert Richter <rrichter@marvell.com>
-To:     Hanna Hawa <hhhawa@amazon.com>
-CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <james.morse@arm.com>, <robh+dt@kernel.org>,
-        <frowand.list@gmail.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <Jonathan.Cameron@huawei.com>,
-        <arnd@arndb.de>, <linux-kernel@vger.kernel.org>,
-        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <barakw@amazon.com>
-Subject: Re: [PATCH v9 3/3] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-Message-ID: <20200310134713.n4gtrgtjdjymmgm5@rric.localdomain>
-References: <20200129195016.956-1-hhhawa@amazon.com>
- <20200129195016.956-4-hhhawa@amazon.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129195016.956-4-hhhawa@amazon.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: HE1PR07CA0031.eurprd07.prod.outlook.com
- (2603:10a6:7:66::17) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a1V7f1F0LQmjo7Lwkhxv0H2OITNt4DTANxKKHcaVDpM=;
+        b=oxgQQElsrxUHhCc9YjPXkd1tmnpRDKrP2gylnsR6DYAg5/FRO3tM2yHIDEpDIRRHKv
+         v0mTqFr60upqjPDGSSgbTNZVGy0Gtrw8tXRTiZGWUVmbozdhWNpOY8YHW41xpBJ5pKog
+         iuw9inydwR+1ITq+9XwPniSknR7N6dgNcY00owCmIPBUEMaBZ34u13knQFEBk1pYHORI
+         cuaBSUXFPqhyYWzjjFA7/DMcAucFdHw06PYnD+Qdc8fzDQxUQcqx0AAquECXRp8b2pJM
+         9hFcj8+CdlmAcmbzAsksu3YLBO0ycaSiFHW/9jahGY5H6SUqkt40jAn+DQhELgWlqRq5
+         zqww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a1V7f1F0LQmjo7Lwkhxv0H2OITNt4DTANxKKHcaVDpM=;
+        b=ce02AJPdZXga8U4aw0X5YN1rMSLCN747mmGrfDjgM3Rv1JFHQl2Jb/yAVPhqiq0c1b
+         k6TBSEYRpVEpoxrc1hhF6ahIk+SIJ+1fqw+vl1T1N0fYEBOF2eQdN3ME/+yhnRmY+UFJ
+         Mq0bBxj+qgXAOBJXlLVD17dg0hw2cgjuUt338/VVIvmFZY8hWjk9rH856DjiFhSyM2QW
+         bGxNlDshkuNSrL3KfNNPuspKBal0i2IE/mDxuzwPijf4lXAKR9M1gCv74eAL22GPk1ZH
+         KjnoO1j7f+/BR2XfMAj3NHQ0GbJ5CEXHDBPO9TJ0z6h0oPINqkK2dnh41NIPVEpoo4to
+         Pi2g==
+X-Gm-Message-State: ANhLgQ3d/yHLsB5/TFifhNW6FMCR0VHkFLMeXmSX7yWgjgNOkS/JtsTR
+        K90nIv2kW9SahMhbyoljjkHzMflzBagELPV1ooM=
+X-Google-Smtp-Source: ADFU+vsInh8fH3rOKgWvw4Sp1i/c3pYIMP6oFihYh35j+7wlxleB92/F9wsbHoy+4eLgsGT19IloKcl8gLA6bIcetZk=
+X-Received: by 2002:a05:6512:1054:: with SMTP id c20mr12605269lfb.69.1583848651279;
+ Tue, 10 Mar 2020 06:57:31 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from rric.localdomain (31.208.96.227) by HE1PR07CA0031.eurprd07.prod.outlook.com (2603:10a6:7:66::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.7 via Frontend Transport; Tue, 10 Mar 2020 13:47:20 +0000
-X-Originating-IP: [31.208.96.227]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 81566fc2-4bbc-4ffa-be50-08d7c4f98fa3
-X-MS-TrafficTypeDiagnostic: MN2PR18MB2637:
-X-Microsoft-Antispam-PRVS: <MN2PR18MB2637E1FF1C4DE324D6C4ADCFD9FF0@MN2PR18MB2637.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(39850400004)(396003)(376002)(47630400002)(189003)(199004)(9686003)(4744005)(26005)(186003)(55016002)(66946007)(8936002)(66556008)(16526019)(66476007)(6666004)(8676002)(53546011)(1076003)(81156014)(4326008)(956004)(81166006)(5660300002)(7416002)(6506007)(7696005)(52116002)(478600001)(2906002)(316002)(86362001)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2637;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3iDPY63OFmKeEvxkYoUabbu/05T+TPyoPb08LDX9pJ+TmJYsHZdIm4MaKygNjRMXSUDuzcErYEcTBQQWmXootgCGYaWmH00biqMTCujwo47Gp0WA5fAHlqqeu8C1D+Ka04KIY3J9ZYk6SEV4xXcsGnLOaqko/F2gWtEcVa9srBk8B5Ii6w0gw9J6Kfv7ljw0ltUHyf+yNd0jM/QJvUu9HRgLLXSTzWR6ZUw5zlJKwxexZNzCB2FPRq2PT61wBGwb+DBI7G86833zaVp99KQvec+6hbYUasqkX46uCmWuLtTkSpyH2WfpFiA2QqH3VhgFjbkDHs1I+1DfWKT4TaiGah+EKFMzxdjD4d/yFiCPKy70/emx/YNO4y2AY4T1NCS+XQsjs4o+eXrtdUORlIE0bCxAhkzNLxmZO350K2Xnbmvfk7ZShQOQ87GQ71s0niGz
-X-MS-Exchange-AntiSpam-MessageData: ZDeLOLbfR76Mc9JtJpCvKO5Ao4Vr7gMwPWX9x7ljlsQ5/a62Ff9oIvp0AUsylfFWX+cnMv4OS2QCCRMz9VLSOsxWgNGShhfF2XPyWyxcDI7puOTDrub6xvxV+kf3admSCoMv5q1AjpVHO1m+oA5wEQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81566fc2-4bbc-4ffa-be50-08d7c4f98fa3
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 13:47:23.4646
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ggssCBrCi+hHedYGRAFzuCAbIIF8XRQF9tfv90kVxC1x4rTU5d3FSIspTJ/Thc+ErvnnHkRTDjUDfCm/+tHg5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2637
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-10_07:2020-03-10,2020-03-10 signatures=0
+References: <20200310134603.30260-1-robert.foss@linaro.org> <20200310134603.30260-2-robert.foss@linaro.org>
+In-Reply-To: <20200310134603.30260-2-robert.foss@linaro.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 10 Mar 2020 10:57:22 -0300
+Message-ID: <CAOMZO5C9Oj+SmTroE+bSsGcOPpz6se+WOqw1qJU9x6TrzbzZKw@mail.gmail.com>
+Subject: Re: [v1 1/3] media: dt-bindings: ov8856: Document YAML bindings
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     ben.kao@intel.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29.01.20 21:50:16, Hanna Hawa wrote:
-> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-> report L2 errors.
-> 
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> ---
->  MAINTAINERS               |   5 +
->  drivers/edac/Kconfig      |   8 ++
->  drivers/edac/Makefile     |   1 +
->  drivers/edac/al_l2_edac.c | 270 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 284 insertions(+)
->  create mode 100644 drivers/edac/al_l2_edac.c
+Hi Robert,
 
-Hanna, most of the review comments by Boris for patch #1 (al_l1_edac)
-apply here too. Please address them.
+On Tue, Mar 10, 2020 at 10:46 AM Robert Foss <robert.foss@linaro.org> wrote:
 
-Thanks,
+> +    ov8856: camera-sensor@10 {
+> +        compatible = "ovti,ov8856";
+> +        reg = <0x10>;
+> +        reset-gpios = <&pio 111 GPIO_ACTIVE_HIGH>;
 
--Robert
+Could you double check this is correct? Other OmniVision sensors have
+reset-gpios as active low.
+
+I suspect that the driver has also an inverted logic, so that's why it works.
+
+I don't have access to the datasheet though, so I am just guessing.
