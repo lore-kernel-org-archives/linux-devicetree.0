@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2CAC18E5C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 16:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B185DC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 16:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3349020848
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 16:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CD921D7E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 16:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lgzsxr6o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8W9ZO9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCJQ0d (ORCPT
+        id S1726488AbgCJQ3r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:26:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43610 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgCJQ0c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 12:26:32 -0400
-Received: by mail-lf1-f65.google.com with SMTP id q9so4757287lfc.10;
-        Tue, 10 Mar 2020 09:26:30 -0700 (PDT)
+        Tue, 10 Mar 2020 12:29:47 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42507 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgCJQ3q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 12:29:46 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q19so14851178ljp.9;
+        Tue, 10 Mar 2020 09:29:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3kZ96VsUJ4A3yK6VGR9AXLTuIfooSdtJ0HnhKEGe9Fw=;
-        b=Lgzsxr6oMFzOsPxY9dqSyyz+TWPWYZAYaIZybxHwPbTDTnpTfhcf8T7cmTQLxxeocf
-         JFBzSHHXm9Id0YNDU2fxUGwLkp9N/UdZqQjoe9REJMwJvhVqE1a1wz3Yu2Kc45aDoebD
-         p3MZ6O+MRPBq21lDU2CDWhIHursel7f6T21qSG9f+QLlQuVzLaZ200WMZjHJNXFknaHF
-         V5IpTSiTfmThvMfZqAwsF97GR/Kgxoc03rpn5/BdIijvGI2RosWcR+V391wkXb3d51lW
-         kNtc1sFbVEyZlKhAuMIG68F4XkLMlHf1sOzz+Al9dmAeCr7HI+efqXyIdHlcWa4Hx5tQ
-         2/BQ==
+        bh=30exkwIozzMIemffj/fYVWOVstIzogFHegkU2NrMGIE=;
+        b=H8W9ZO9+fAGGf0mi/x/aCZiEBxURB0+pmELuWYmMuZPzOqbCYjsT1aaTKRyPLWOJpF
+         +xkWeEUdt6E1tTcRphwtmdbIjgWgM770EETZWV7SIuAVQ15anlGCOW/PKSfu5yRS/QII
+         +Dso1YQbw0Gtgzn4iOolrqQ236Q0FaDAw2LA/0Z4erR8G71YkWhxe84I4OeBN56kK3Iz
+         xzSJhtL9p0Om74cjaYupwdL0eyo9zUxLUlBIf0ZZbujcjnXId24dr7CVy4K89wyM8KrA
+         qQ6v8y31COx5LKaTPPPjlmj/UQKfVgh73immy/UdBv/VpuvmfMT1toAFBZ4JHfLwtyq7
+         KTSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3kZ96VsUJ4A3yK6VGR9AXLTuIfooSdtJ0HnhKEGe9Fw=;
-        b=rze8gPoAEpSDV8xhq/2NLKRLEImbUkPtpiTbKKlcnglGA2Sz3jMyxYsNf/QeHiKViH
-         U7RYQtRTu42E6FeQ/FVkNaXzkyCmb+bHZ4lpLuWLUFxJpXh9TwITPbkWUAxifIbeGqCi
-         4x36lBogWyErRlnKpPYqr1ifdzyPM4XcD+Q8DRaAeRLUtU2j5stnElBIAk/xzIsSZIUh
-         jmnSd3heO1qEqXoWzTxGT1Mf3mO43Hi48o0A5vj0vdRo7lLQubWeiBGh1ncm6v8IzESA
-         vQi0RNIhPXZuUzPYVkotzWNRfj/i5ONK4RykY2J4hzRDhY0IQAABeLRG/pkZOMFfkHe8
-         hpEQ==
-X-Gm-Message-State: ANhLgQ2vPd0gtCLLwSe31QMfHFkJwqtKCPVGUznsxF58UWnZD6X8x3tF
-        eBVhV/vGAsUKtgk8eCp82Ow=
-X-Google-Smtp-Source: ADFU+vv2oMyShABl/4K04lOItrbsFoT02OEztRR3TdqYw5HWhLqIU0OqmWKQc+hKqbxT2Y49HNphaA==
-X-Received: by 2002:ac2:51bc:: with SMTP id f28mr12918101lfk.112.1583857589703;
-        Tue, 10 Mar 2020 09:26:29 -0700 (PDT)
+        bh=30exkwIozzMIemffj/fYVWOVstIzogFHegkU2NrMGIE=;
+        b=LHK0lnAYFSMv2T8eOmxdVKWmygmUV1crpkTJ3jSTIKy+vMXdBNeZdBPYRtRWwm/EDj
+         u3PD5zbKkQCR0Sb5Pc9Z5de0iMskhvnc00qFyUtB8uI98Zok883FSqvRsPwYN7nHZ+eK
+         jnRgaoWjjTwoimU1dJXjNNkkeGJbN+XabqQMBMjnoDaJhp4Do5+mmYaVebwdPgAkf5Sg
+         OsR8j2XqIsZGsO0mwz2aP6xprLZlEJZTFGyXm+70G6hRoK3f1FracONKh5JwhZ8dfIhv
+         0GUpp2IZwFqnLIIkA823gJNy/lEAz/RNg5kysudGw7JKzOlABKh1fMNSf6OtyKxXeIu1
+         54xA==
+X-Gm-Message-State: ANhLgQ1pWFY8FewJq3yeyKxyJchDaSn2kHM80rGA4zrFdUalZMXYi8z6
+        dVVGNM/b4aTYhh5oOXcqHKs=
+X-Google-Smtp-Source: ADFU+vvdTpxrjULX838dUbvtkil6NodhyPbfHR+o/rMELhCGItwMF1ZTV2oG4p09hAYaoXQGNe34Bg==
+X-Received: by 2002:a2e:870b:: with SMTP id m11mr12994367lji.273.1583857784214;
+        Tue, 10 Mar 2020 09:29:44 -0700 (PDT)
 Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id w24sm22958192ljh.26.2020.03.10.09.26.28
+        by smtp.googlemail.com with ESMTPSA id z21sm14776415lfd.67.2020.03.10.09.29.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 09:26:29 -0700 (PDT)
+        Tue, 10 Mar 2020 09:29:43 -0700 (PDT)
 Subject: Re: [PATCH v5 3/8] clk: tegra: Implement Tegra210 EMC clock
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Jon Hunter <jonathanh@nvidia.com>,
@@ -70,8 +70,8 @@ Cc:     Jon Hunter <jonathanh@nvidia.com>,
 References: <20200310152003.2945170-1-thierry.reding@gmail.com>
  <20200310152003.2945170-4-thierry.reding@gmail.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <88d18719-b6dd-98d0-e147-f89eed2f3f0c@gmail.com>
-Date:   Tue, 10 Mar 2020 19:26:28 +0300
+Message-ID: <3b583202-50d0-145c-d60f-91bd646008ad@gmail.com>
+Date:   Tue, 10 Mar 2020 19:29:42 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -102,15 +102,17 @@ X-Mailing-List: devicetree@vger.kernel.org
 > - major rework and cleanup
 
 ...
-
-> +u32 emc_readl(struct tegra_emc *emc, unsigned long offset)
+> +EXPORT_SYMBOL_GPL(tegra210_clk_emc_attach);
+> +
+> +void tegra210_clk_emc_detach(struct clk *clk)
 > +{
-> +	return readl_relaxed(emc->emc_base[REG_EMC] + offset);
+> +	struct tegra210_clk_emc *emc = to_tegra210_clk_emc(__clk_get_hw(clk));
+> +
+> +	emc->provider = NULL;
 > +}
+> +EXPORT_SYMBOL_GPL(tegra210_clk_emc_detach);...
+> +config TEGRA210_EMC
+> +	bool "NVIDIA Tegra210 External Memory Controller driver"
 
-static u32 emc_readl()
 
-> +u32 emc_readl_per_ch(struct tegra_emc *emc, int type,
-> +			    unsigned long offset)
-
-static u32 emc_readl_per_ch()
+I'd remove all the exports for now, given that the driver is built-in.
