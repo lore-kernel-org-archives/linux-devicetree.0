@@ -2,128 +2,101 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6BBC18E5A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF587C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 23:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82550222C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B38222C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 23:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="I20JsyOJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m1sTUdtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCJWDW (ORCPT
+        id S1727758AbgCJXQx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:03:22 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39268 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727642AbgCJWDV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 18:03:21 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f7so3115844wml.4
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 15:03:19 -0700 (PDT)
+        Tue, 10 Mar 2020 19:16:53 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43575 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgCJXQx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 19:16:53 -0400
+Received: by mail-pl1-f195.google.com with SMTP id f8so139022plt.10
+        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 16:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=dYEP1uE4NnVFr/AeDKddTWSxJgA20EPFg2G+JAahXU0=;
-        b=I20JsyOJIesiZZQ8aV/IdyM+r4UI4cQUwV9OU88GjMqXQdcGxyWCcTu+TKnMpQTwzR
-         8zsRR1Ku3VvKEiqj1/PL8R5Nrk6wcQBvAnxyWKr7fOA7HdZ08IH0zfDTMBnRXrE4sv+B
-         1FJbyCwTIoyCOqD2c6zdL2IiWQINHKswybaSp4LQ7NJ/mx5atiVaaCA7KJmFqkI1NxgO
-         ZLyx0BgypSHUQzKXHvqeJWj1ZAU41f5jkODNqWwySdRgLuSbY/bjut3UAN1jCydVdFW5
-         4q0nzPNiNsFhSQ2UmsMYO7SYzoSm7Xv0C8TZTspbL4HFRap19/7Ybum6IG+LQMJ662fW
-         FIwg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zXg9Gj7QTUwpYvOhGlvMrbNF6i7eg/pUYIjVoM9j78w=;
+        b=m1sTUdtz0IBH4T58S0Qp8F887lOMFeQ6E3LwhmSyto0/XicAZGMKH/OdcvxBS/gioj
+         hpdgTy+8k2waNEDrL7V93U+BcQrXkOtW7w1AYTphgWutJGFtTIY3zpT15dtk3Y+co1p9
+         dCqpvzXMboOTnI8q3DAmcjPcZiP2ChNuhzxOw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=dYEP1uE4NnVFr/AeDKddTWSxJgA20EPFg2G+JAahXU0=;
-        b=a+NM5YcF+okFKqgUducoggmi48ISUGxQGG8FZ1hjibezt9U0WxJ6NYh5rAxMLrdzY8
-         IZXwJYpyw1MJw19pDAMSvMvFPqlJhY1+kMDa4e/RDdAkN9EK38H23CF3+sih3NJOpn7+
-         k/VNVfBHuwqkgorqiDvJgWNwTNf8JHUSo+ncPqSTbZmbWylAbIdSy9H2AZs3vS0TC+E8
-         FPm2jwE1JUkWXIvPpKWOV1WvB1SQrQ0Q4q4V+YLTxy+fSClQNyXLYAbeI/6kFF1Gqund
-         WYNGUsjVVqDw6OjpZ+FfNcEbTohoSDDa8kEg9/Wutz6q9QMlICGl4tGF6mNt9Dni2ErB
-         6DMw==
-X-Gm-Message-State: ANhLgQ0RDCvL/vyOOSa1xBWzZVlDS2m+rHspFcetbLLyNf/n+0uG1pBO
-        u2HjuGvqQ60zq33ZrgMYNiN7GQ==
-X-Google-Smtp-Source: ADFU+vsFsnumgp9VoOGVYqCrNLZ5ay6csw80CWgZBfUy0rM6bs6wjkEgt0Ofqq4WtgfmKA4Ub4RhiQ==
-X-Received: by 2002:a1c:4e14:: with SMTP id g20mr3853268wmh.143.1583877798471;
-        Tue, 10 Mar 2020 15:03:18 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id w67sm1892315wmb.41.2020.03.10.15.03.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Mar 2020 15:03:17 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Rob Herring <robh+dt@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        "open list\:ARM\/Amlogic Meson..." 
-        <linux-amlogic@lists.infradead.org>, SoC Team <soc@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "open list\:THERMAL" <linux-pm@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list\:ARM\/FREESCALE IMX \/ MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2] dt-bindings: power: Fix dt_binding_check error
-In-Reply-To: <CAL_JsqJAxfL_Q3HYHk_8VeefdXnhYT7kcPe3F5Gzk1Vfj+xtww@mail.gmail.com>
-References: <1583164448-83438-1-git-send-email-jianxin.pan@amlogic.com> <7hsgiqra5x.fsf@baylibre.com> <CAL_JsqJAxfL_Q3HYHk_8VeefdXnhYT7kcPe3F5Gzk1Vfj+xtww@mail.gmail.com>
-Date:   Tue, 10 Mar 2020 15:03:15 -0700
-Message-ID: <7h36afn9zw.fsf@baylibre.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zXg9Gj7QTUwpYvOhGlvMrbNF6i7eg/pUYIjVoM9j78w=;
+        b=Glt4RLF/cJmFtNOrQZLFDt1i3mVG13XBFpnwI2W2+nL3/YZI65lB1P0UGp3CJRPv2G
+         rzMPy5F78yCSUcDXXYK55KZ/3sqaOHaBz4cTAm/waEZBJMt+V5vpP8UIN9rL5hpu8mZv
+         Mlzax/FHoE+7fPsc+h3UJRUqvnX9wJ/IUw7ALWrqr8XuFU+YGUt1+wnj+V2OXOT+xe7Y
+         qX6DaflZ8wqThLiCGE23R37YEeTQXjTcKHjpDUz5+ftPgS/NVAWOPqkr82wmtrPWObCI
+         82b9WwVj2x0MeMA7lBncIU6o9GYAYhgkaU0G8udOGuKW6gmtZ9VOK87PWREuVltKbVpZ
+         gkow==
+X-Gm-Message-State: ANhLgQ1j7NExlmToPa/P02wa7ptn+SyFGSpaQ83aqh6x9a9VuHUSatRD
+        uvInN1A1YBHgUwIepWq5qMMoZg==
+X-Google-Smtp-Source: ADFU+vua2DRqzHPDCg1h0WaWa5jUQRYxfdS9IEm3qlPlei+YNlP5TOn8cJF3gz2OQRyZ5zwlg/XAUQ==
+X-Received: by 2002:a17:90b:438d:: with SMTP id in13mr333664pjb.114.1583882210644;
+        Tue, 10 Mar 2020 16:16:50 -0700 (PDT)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id 15sm43071797pfp.125.2020.03.10.16.16.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 10 Mar 2020 16:16:50 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Evan Green <evgreen@chromium.org>, Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: sc7180: Include interconnect definitions
+Date:   Tue, 10 Mar 2020 16:16:29 -0700
+Message-Id: <20200310161502.1.Ia2884ed3c8826f52fbd5dcfa7a376a2fac4f31e6@changeid>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob Herring <robh+dt@kernel.org> writes:
+Re-introduce the include of the sc7180 interconnect node name
+definitions. Though this was part of v5 of the interconnect provider
+series [1], it was dropped because the DT changes went through a
+different tree than the header. Re-add that now.
 
-> On Mon, Mar 2, 2020 at 10:31 AM Kevin Hilman <khilman@baylibre.com> wrote:
->>
->> Hi Jianxin,
->>
->> Jianxin Pan <jianxin.pan@amlogic.com> writes:
->>
->> > Missing ';' in the end of secure-monitor example node.
->> >
->> > Fixes: 165b5fb294e8 ("dt-bindings: power: add Amlogic secure power domains bindings")
->> > Reported-by: Rob Herring <robh+dt@kernel.org>
->> > Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->> > ---
->> >  Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->> > index af32209..bc4e037 100644
->> > --- a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->> > +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->> > @@ -36,5 +36,5 @@ examples:
->> >              compatible = "amlogic,meson-a1-pwrc";
->> >              #power-domain-cells = <1>;
->> >          };
->> > -    }
->> > +    };
->>
->> Thanks for the fix.  Queued for v5.7.
->>
->> @Arnd, @Olof: you can ignore this one.  I requested Jianxin to send to
->> you thinking this was a fix for something you already queued, but it's
->> not.  I'll handle it.
->
-> Someone has what needs fixing queued in linux-next, but this fix is
-> still not there. Somehow it seems like features show up in linux-next
-> faster than fixes for SoC tree...
+Interconnect clients being introduced can reference this patch as a
+dependency, rather than racing each other to add the include.
 
-The fix (this patch) is queued in my 'for-next' branch which I pushed
-yesterday.  I guess it missed next-20200310 but should be in tomorrow.
+[1] https://patchwork.kernel.org/patch/11417989/
 
-Kevin
+Signed-off-by: Evan Green <evgreen@chromium.org>
+---
 
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/log/?h=for-next
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 89ba01246f95b..eb5a527da685a 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/clock/qcom,videocc-sc7180.h>
++#include <dt-bindings/interconnect/qcom,sc7180.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
+ #include <dt-bindings/power/qcom-aoss-qmp.h>
+-- 
+2.24.1
+
