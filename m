@@ -2,112 +2,96 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38C8C18E5A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC773C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0CE021D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:20:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gp/3+tK3"
+	by mail.kernel.org (Postfix) with ESMTP id 7CBBB20873
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583868431;
+	bh=L91ZGvyPG6SoSyZiVQkhs+qHEP7CHBNmCUrkxEfq6qA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W+Sh2ha6jfLEjkYBvsmBRsFX/4XVLlT/qWmRBc3Tzd7WJ5MvUA+CWecCme4AKUKHF
+	 mn/5woWb56vwpGJzj19LuzsMdMvlJ0XQ86Zwa3yHzbw+99DkWsfCcaGF6IHfRVubny
+	 3+Zj1btjT4EutQdW7mwbnR++CXR+n8rEqFxs0n/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgCJTUe (ORCPT
+        id S1726851AbgCJT1L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:20:34 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33221 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgCJTUd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 15:20:33 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m5so6764408pgg.0
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 12:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cC2057sPqmPcpMKTkeB3a8bTjc/o1vrfqpJvHiGtnZU=;
-        b=Gp/3+tK3D+e1w351TKt3AZhjG7ssptPYwoN75sKp8UNBt+HYPDOF0OuAmp/1t3HyEA
-         TA3d6tn36/U+iKROF0bxiFHF8/ZMxBC44qGb9zVh9byUtO0ME4tgbJHE1hBMaBJBBi0R
-         iKNszHZ7hKuuvpRvrZ1jghA+/1QDoDgVCerX7dS7fJm1hXCEdfXWd4sCU3WU7Ow8YN7I
-         Us/anH7lZ0Nt+sSP+sgA8JTLVbaoPDek1O01K4AKCrAD0qCFrNRIMNLff21NmMXUgfdk
-         PimTnrj3zfOlwtgqyY9waZRr2/3dzy0kJbLM547JpbxcxX4kZ6S7xeeSynQ6VoyHcsEp
-         E2Ew==
+        Tue, 10 Mar 2020 15:27:11 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46114 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgCJT1K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 15:27:10 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a22so15047232oid.13;
+        Tue, 10 Mar 2020 12:27:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cC2057sPqmPcpMKTkeB3a8bTjc/o1vrfqpJvHiGtnZU=;
-        b=D6uzoa6VCW7rHk4rpjddgdguqakMLmjHZCYP4erziQ7wCi6E9QHK39dKyEvjg1pxKa
-         nW3XLZNmzY1V4kTLqU23EokbR+r/DvIhM5c8z1tnrPGOtGJlKfQ5oOORP5YiXewRhEnN
-         huSeGkIby40TD2Ci3hx06e6IB9GMNK8vfcyaDugpevpzys5IpOg8pnkmo1z5ogSEz/S+
-         o9xl5h4BQWpcO0ngFh3apVs05p/4mHfveoqiAABn0KhmGQLWUrfsHLkB1V+xwObTf37i
-         XKGZyP3mXq0HvAHIGYBVzaqSGnunwVg1YXYoIP9OFDHtrvu9tDv+QOfIGOIvQDc3jlUK
-         aV7g==
-X-Gm-Message-State: ANhLgQ2NJ5drJ/l9SXqJejLMGBWxkJ2S1M9Pm8ORUty6mJdr3iLAC3rH
-        V4btwhahDf2eQJ5Uaxr4BsNdog==
-X-Google-Smtp-Source: ADFU+vtWP5ERLP9aV0fp1zqUyf9v1Asbb4leZXOT+JfMa00W8DwkmyxfINhtLJv8waJz4e7fOejrYg==
-X-Received: by 2002:a63:6dc5:: with SMTP id i188mr21478581pgc.82.1583868030640;
-        Tue, 10 Mar 2020 12:20:30 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o66sm35067793pfb.93.2020.03.10.12.20.29
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zk3nV+rnevYhsEtIp8S5NhXsIWAJWfizdxJq3VogyBs=;
+        b=WBI0Gj7K7iCUKY0aY61jBT6XVmHyhQx/3+S2opbg4My6XvJYAGZphzn13IwfnWqKKa
+         dDeEm5JZymplkjLnWXggzvszpi6Gu5moELZ53bgBvbryxscJsBeUl1O3SffJC7phRiy8
+         vkl2BkjLUDpdJl1sJhJUMMPSbdp8nfY9OKgWbmo9TsNWjHfqkOsd+mLSAF2yMtPks/Ro
+         LDTexfvS+g7S0bHCwvfnbRRAiJfWEweSiH+HDDfoORK3P+wTDCpUPaMaZCKnLoyjOuXy
+         4Cj661k+77I9w98Bgs+Ic3o6jV/rgdLs2Vdtqt+ce2eBAVmGjIUDvBEMISV4y5nSdqeq
+         9vCg==
+X-Gm-Message-State: ANhLgQ1AI2ImgqdYjgIkbivelrHV1UCwXcF2N4u8sqtZEEkOSDUQPlVM
+        8qFEKNUW+7C2g9+5JYU9iQ==
+X-Google-Smtp-Source: ADFU+vt4+g6JzZFc2bA7YzaatPyonL9+FOXoSCwg0RcSGx+p2akdnElyUgvTbw3URfv8kOoMSIEdUg==
+X-Received: by 2002:aca:b1d5:: with SMTP id a204mr2321167oif.82.1583868430034;
+        Tue, 10 Mar 2020 12:27:10 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j5sm16235753otl.71.2020.03.10.12.27.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:20:30 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 12:20:27 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v4 3/5] remoteproc: qcom: Update PIL relocation info on
- load
-Message-ID: <20200310192027.GJ264362@yoga>
-References: <20200310063338.3344582-1-bjorn.andersson@linaro.org>
- <20200310063338.3344582-4-bjorn.andersson@linaro.org>
- <158386385637.149997.10680456822295964075@swboyd.mtv.corp.google.com>
+        Tue, 10 Mar 2020 12:27:09 -0700 (PDT)
+Received: (nullmailer pid 13676 invoked by uid 1000);
+        Tue, 10 Mar 2020 19:27:08 -0000
+Date:   Tue, 10 Mar 2020 14:27:08 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: arm: fix Rockchip Kylin board
+ bindings
+Message-ID: <20200310192708.GA13604@bogus>
+References: <20200302092759.3291-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <158386385637.149997.10680456822295964075@swboyd.mtv.corp.google.com>
+In-Reply-To: <20200302092759.3291-1-jbx6244@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 10 Mar 11:10 PDT 2020, Stephen Boyd wrote:
-
-> Quoting Bjorn Andersson (2020-03-09 23:33:36)
-> > diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-> > index e953886b2eb7..d5cdff942535 100644
-> > --- a/drivers/remoteproc/qcom_q6v5_adsp.c
-> > +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-> > @@ -164,10 +166,18 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
-> >  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
-> >  {
-> >         struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-> > +       int ret;
-> > +
-> > +       ret = qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-> > +                                   adsp->mem_region, adsp->mem_phys,
-> > +                                   adsp->mem_size, &adsp->mem_reloc);
-> > +       if (ret)
-> > +               return ret;
-> >  
-> > -       return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-> > -                            adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-> > -                            &adsp->mem_reloc);
-> > +       /* Failures only affect post mortem debugging, so ignore return value */
-> > +       qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, adsp->mem_size);
+On Mon,  2 Mar 2020 10:27:57 +0100, Johan Jonker wrote:
+> A test with the command below gives this error:
 > 
-> If the return value was void then the comment wouldn't be necessary and
-> it would be self documenting as such. Can we do that?
+> arch/arm/boot/dts/rk3036-kylin.dt.yaml: /: compatible:
+> ['rockchip,rk3036-kylin', 'rockchip,rk3036']
+> is not valid under any of the given schemas
+> 
+> Normally the dt-binding is the authoritative part, so boards should follow
+> the binding, but in the kylin-case the compatible from the .dts is used for
+> years in the field now, so fix the binding, as otherwise
+> we would break old users.
+> 
+> Fix this error by changing 'rockchip,kylin-rk3036' to
+> 'rockchip,rk3036-kylin' in rockchip.yaml.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-I started off with this in v1, but agreed with Mathieu to ignore the
-failures in the place where we actually don't care, rather than inside
-qcom_pil_info_store()...
-
-Regards,
-Bjorn
+Reviewed-by: Rob Herring <robh@kernel.org>
