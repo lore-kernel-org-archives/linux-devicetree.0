@@ -2,72 +2,149 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2668C10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 07:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CE2C18E5A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 07:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9859A2468A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 07:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583824187;
-	bh=L11SdzzQTyUNNRxclnarGF3ZTYF1cI+qdg4ZV5PcXDQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VbsgcSyqjXj2JKQ9mkqU/6D8wL81Gcda50TDqVAHZitQKNsLKb650c+07oZIrDHg0
-	 0ME79TJPl8UrUWYEj1fYTL5tbquGiqbemTYboMnTSYC9wa0QcVlS0npw82BsG8MlSc
-	 J3knopJkdRphS4esbLL+IwQY2RCLjOB6B+hh1/ww=
+	by mail.kernel.org (Postfix) with ESMTP id DA8A82467D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 07:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgCJHJr (ORCPT
+        id S1726389AbgCJHjo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 03:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgCJHJr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 03:09:47 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D79824677;
-        Tue, 10 Mar 2020 07:09:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583824186;
-        bh=L11SdzzQTyUNNRxclnarGF3ZTYF1cI+qdg4ZV5PcXDQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lktXBtD6NO4hhBukLkC1l8I8yzsKD/dc7CaQMdMGMOzA4WGkwh1vxYWNAdBOX6pdL
-         rpE4An+4S7gMURXu7b5U8rg3/FeD4IFeAJ2PZQ/I9BXgyGsGrr4HZaIWpekUVEbRsx
-         xZOjrneNU3I8yx18lXvfWSMZSbOzyMRkkYLoJEvk=
-Date:   Tue, 10 Mar 2020 15:09:40 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mp: add crypto node
-Message-ID: <20200310070939.GD17772@dragon>
-References: <20200224125023.29780-1-horia.geanta@nxp.com>
+        Tue, 10 Mar 2020 03:39:44 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48745 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgCJHjn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 03:39:43 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBZU3-0001OK-GJ; Tue, 10 Mar 2020 08:39:23 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBZU0-00089j-OU; Tue, 10 Mar 2020 08:39:20 +0100
+Date:   Tue, 10 Mar 2020 08:39:20 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
+        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
+        kernel@pengutronix.de, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RESEND v6  06/13] spi: imx: fix ERR009165
+Message-ID: <20200310073920.GR3335@pengutronix.de>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-7-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200224125023.29780-1-horia.geanta@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1583839922-22699-7-git-send-email-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:28:52 up 19 days, 14:59, 43 users,  load average: 0.01, 0.14,
+ 0.20
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 02:50:23PM +0200, Horia Geantă wrote:
-> Add node for CAAM - Cryptographic Acceleration and Assurance Module.
+On Tue, Mar 10, 2020 at 07:31:55PM +0800, Robin Gong wrote:
+> Change to XCH  mode even in dma mode, please refer to the below
+> errata:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
 > 
-> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> ---
+>  drivers/spi/spi-imx.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+> index f4f28a4..842a86e 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -585,8 +585,9 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+>  	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
+>  	spi_imx->spi_bus_clk = clk;
+>  
+> +	/* ERR009165: work in XHC mode as PIO */
+>  	if (spi_imx->usedma)
+> -		ctrl |= MX51_ECSPI_CTRL_SMC;
+> +		ctrl &= ~MX51_ECSPI_CTRL_SMC;
 
-Applied, thanks.
+'ctrl' was read from the hardware. In the dma case it was set
+explicitly, but it was never cleared for a PIO transfer. This looked
+wrong before this patch. Now with this patch it looks even more wrong:
+We clear a bit that has never been set and we only do this for DMA, when
+for the PIO case it definitly must be cleared. Drop the if clause.
+
+>  
+>  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
+>  
+> @@ -612,12 +613,14 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+>  
+>  static void mx51_setup_wml(struct spi_imx_data *spi_imx)
+>  {
+> +	u32 tx_wml = 0;
+> +
+>  	/*
+>  	 * Configure the DMA register: setup the watermark
+>  	 * and enable DMA request.
+>  	 */
+>  	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
+> -		MX51_ECSPI_DMA_TX_WML(spi_imx->wml) |
+> +		MX51_ECSPI_DMA_TX_WML(tx_wml) |
+
+tx_wml is never assigned any other value than 0. Drop the variable.
+
+>  		MX51_ECSPI_DMA_RXT_WML(spi_imx->wml) |
+>  		MX51_ECSPI_DMA_TEDEN | MX51_ECSPI_DMA_RXDEN |
+>  		MX51_ECSPI_DMA_RXTDEN, spi_imx->base + MX51_ECSPI_DMA);
+> @@ -1171,7 +1174,11 @@ static int spi_imx_dma_configure(struct spi_master *master)
+>  	tx.direction = DMA_MEM_TO_DEV;
+>  	tx.dst_addr = spi_imx->base_phys + MXC_CSPITXDATA;
+>  	tx.dst_addr_width = buswidth;
+> -	tx.dst_maxburst = spi_imx->wml;
+> +	/*
+> +	 * For ERR009165 with tx_wml = 0 could enlarge burst size to fifo size
+> +	 * to speed up fifo filling as possible.
+> +	 */
+> +	tx.dst_maxburst = spi_imx->devtype_data->fifo_size;
+>  	ret = dmaengine_slave_config(master->dma_tx, &tx);
+>  	if (ret) {
+>  		dev_err(spi_imx->dev, "TX dma configuration failed with %d\n", ret);
+> @@ -1265,10 +1272,6 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
+>  {
+>  	int ret;
+>  
+> -	/* use pio mode for i.mx6dl chip TKT238285 */
+> -	if (of_machine_is_compatible("fsl,imx6dl"))
+> -		return 0;
+
+So with this patch it becomes possible to do DMA on i.MX6dl, but it is
+mentioned nowhere.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
