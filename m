@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64C4C10F25
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 03:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B1DC10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 03:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E1624681
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 03:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E21A24671
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 03:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="O9VNDCx/"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LyLsxOJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCJDbq (ORCPT
+        id S1726833AbgCJDb5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 23:31:46 -0400
-Received: from mail-vi1eur05on2083.outbound.protection.outlook.com ([40.107.21.83]:6199
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        Mon, 9 Mar 2020 23:31:57 -0400
+Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:12903
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726156AbgCJDbp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Mar 2020 23:31:45 -0400
+        id S1726265AbgCJDb4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Mar 2020 23:31:56 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iz/Uii+lswsGWGgMMSdqvA8yXSF1yrBPFyba3Tqu26NKy2/9kaXw2vQvi9b7xzeKeoT6rxrpVIopTm4CYTCKdeU7f265/7/ZVl9kkKrHHSqXdUoFn4TejuDkpPpUIu2ISZ1Td0AmQdQKIdYGg3KmdqCPHwTF/W4gNAfR7Q5O3klm3qkcMXaBKnPIdtyT2rhTZPeSi1o8VorXqTezWZ1S29keqfeSJ5JqJqt0UeYH+aYnBlh57CqibhEggGuVJ0+HbNNHpFX1tO2Uj6SyuKrmF3K2If4i0Xy5z+aXNoK++Z1URo/kvu2NrM9sn2sLnQpd3CVh3WhMz6J36dUgJWN9Rg==
+ b=BXGqGFY/oJb0psAMJTVwvos3HWv79F5jaCljLL9P3TsjJ3F5SyKtqf7X3Bb8AWuQ73Bl4gZc1DFeP4YXJz2HXqXH+SRgDGuRD1mD35ofYGZhbOT+ZwpsdKKQ4f3DZEapsUKqGwOcgmnQ9oNL8hF6Ac6DNBPnm6GLoB8Hzh/g5Jb6NnFQIc0c4yh6Oeow38A8c4DKqOrILajlGr43tBq4Gifhgfp8XHo7k7s1nisXD5Rm5TMIYUQtxST8e9bP2/6DQ0zsPs2uTnC3uQINWLxhRr2OW21WTu52l8532MXmoNbgpbgf6hDhoyBpR9MwacCqktQghP55OgzXt10ZlClbKQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7BVdxIwg1wGUCQLNo0wrfhCcaHRz2AGt1s70g8HM9Dc=;
- b=JHjMEZuhcFDyI4DMe2bv2E7E3xDnw+AFeXbPAFD5L77IswtwwdZNGKpZ+nAQN6/vNT63LowXgkgxWjE3EtQhUO38TmOdI1DMd6zGV8RHsj6vUHRQkVO0HEXYifhpUIm33PzMks6LgiD9JodlFM4ni1OO4hkG3HSzcXjvmBIUMncknFeGsZcxyRmOHFCXuH3AMlDXKcg/BEKeWzXYtr58t+KBg09ihUdqlh/Yak50CQNV42Gak4VrYP18j2nhost5N66WklxLcgJZzIrfl6AVVKojAlGRGKrVD8DQZqCWcDzzT32zep7+quKEXDp1LMNTBPdAIbVhLXt/MfeEJlcUXQ==
+ bh=jFMiMbOLM2v65YRlJ+RXVBgXYhwuGIUpMeWPV7yKShw=;
+ b=efyAGKkwQdYUVmWKqcRtOm5rz9N4pfAmzX5jH0c8GGH+mOpxKkQT3ByquWVgWkT9uI9kfJx1g+7VuytUTcSpOwI1QPeuDrvltu28tPWlz2RPxSWTNZGRMJ2f0h2eSIFYquKbUYCRmVWBu2YfzczKWcbNV3Foo7kBarSPf1kVLCJi9Oy+u81yZEZiHXZL/43kwYFvbQxlTXwsZfFxU47rCVTenGDYI/cXzl3CmETW235CPHl8zOFjOqLIkiQV9ZCCM3WzDPqc7mNR1xIAgAy4aj1Yur91vUyVP962mAGDOx1A4T5oaAtMVq4nboi9lQR1XdWjaROWSwkqCUOTeUthJw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7BVdxIwg1wGUCQLNo0wrfhCcaHRz2AGt1s70g8HM9Dc=;
- b=O9VNDCx/qstV8Cj4Lrl0gwHZiFvFo+tD9XXddav3Kj/zi6PQik31ZikOW1PytnVPyjHX6QnaZMDh9SAiHpep53HVsgY5e1eHEVqVted/ManGyG43P9vXHGfR9iNk2huLa4YTnWTckQJ/BiSf13TaYceI88gLJ9+1Bd0/TNzr/n4=
+ bh=jFMiMbOLM2v65YRlJ+RXVBgXYhwuGIUpMeWPV7yKShw=;
+ b=LyLsxOJmu16EBocBjuGkTMBHMid2HUxp22L6nyrLz31iQGzwMDofd9zPyafEw1idUBPrgDFKwmYcphB/l4cJ/NCkDOo7lTv57nv407aPcScmyXIdG3bsjAc2/UlQxJEubtUSAkpNFn8LD3jNOYIMRGxaUnFmeVw5aIxoObjIneE=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=yibin.gong@nxp.com; 
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6511.eurprd04.prod.outlook.com (20.179.233.161) with Microsoft SMTP
+ VE1PR04MB6621.eurprd04.prod.outlook.com (20.179.234.213) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Tue, 10 Mar 2020 03:31:41 +0000
+ 15.20.2793.17; Tue, 10 Mar 2020 03:31:53 +0000
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 03:31:41 +0000
+ 03:31:53 +0000
 From:   Robin Gong <yibin.gong@nxp.com>
 To:     s.hauer@pengutronix.de, vkoul@kernel.org, shawnguo@kernel.org,
         u.kleine-koenig@pengutronix.de, broonie@kernel.org,
@@ -58,9 +58,9 @@ Cc:     kernel@pengutronix.de, linux-spi@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-imx@nxp.com, dmaengine@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [RESEND v6  11/13] dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
-Date:   Tue, 10 Mar 2020 19:32:00 +0800
-Message-Id: <1583839922-22699-12-git-send-email-yibin.gong@nxp.com>
+Subject: [RESEND v6  13/13] Revert "dmaengine: imx-sdma: fix context cache"
+Date:   Tue, 10 Mar 2020 19:32:02 +0800
+Message-Id: <1583839922-22699-14-git-send-email-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
 References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
@@ -70,94 +70,58 @@ X-ClientProxiedBy: SG2PR06CA0241.apcprd06.prod.outlook.com
  (2603:10a6:803:119::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR06CA0241.apcprd06.prod.outlook.com (2603:1096:4:ac::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.15 via Frontend Transport; Tue, 10 Mar 2020 03:31:35 +0000
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR06CA0241.apcprd06.prod.outlook.com (2603:1096:4:ac::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.15 via Frontend Transport; Tue, 10 Mar 2020 03:31:47 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.66]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bfd006ff-7ec6-4972-3977-08d7c4a38c44
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6511:|VE1PR04MB6511:
+X-MS-Office365-Filtering-Correlation-Id: 1f8382d6-54c9-4693-f51b-08d7c4a39352
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6621:|VE1PR04MB6621:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB6511375A53957E0486B9BDBF89FF0@VE1PR04MB6511.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Microsoft-Antispam-PRVS: <VE1PR04MB6621CB430E614EB2024E33A589FF0@VE1PR04MB6621.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:59;
 X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(189003)(199004)(4326008)(5660300002)(6506007)(52116002)(66476007)(66946007)(66556008)(316002)(6486002)(6512007)(6666004)(36756003)(2906002)(86362001)(186003)(478600001)(956004)(2616005)(81156014)(8936002)(8676002)(81166006)(7416002)(26005)(16526019)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6511;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(366004)(376002)(396003)(199004)(189003)(4326008)(8936002)(6666004)(8676002)(81156014)(81166006)(4744005)(2906002)(5660300002)(2616005)(7416002)(36756003)(66556008)(66946007)(6506007)(52116002)(316002)(956004)(26005)(478600001)(16526019)(186003)(66476007)(86362001)(6486002)(6512007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6621;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZQjH5LFA1Dt+seYhPkSF71lvED4MB0G6vBnNLQQALqUSYKTs37Rrox1PQ+Z1EvuCxc6Toku+dK5XEqI/wjdrFhpATfldTF3U+td7/lrhxvTXB3CLEdIRbzbH3PBAdQvyyBizryTBS5fFlKZx3VnoAnA7KL64DuysLc7VnYRD0ZLEbgr28ke1p/uO/FcEZMj+E1K2KBAKEVkEc40Q0Udw/yFLf8J4qMiCr1IxfhwF7Qly8M808QYY6XSEJH2hG758Ap6y7/wekSurl5DQ+6g1jlLw2D5XOz6XGDLquxHUBQJ9akf5lliQhWZ00ky+KF4zfmBZMB55j4cg2F0GQgBcN5EMVLMEvH4mYUJZG9r8ZJ0/XNomKnK9BHnBqO6n87G5pVxfBOpby77Zaa3L8hLudUvrY/6sfIpc2LH0VB190zSACL3q1rCUknZXEB7S+/jdJziIeZ0kaMK77DkoO5YJJHu7RjaCZ3LaHgHuUWSkARKYiuEqUNy5Zmmf4GblxVEE
-X-MS-Exchange-AntiSpam-MessageData: RMN8SmIthdOLyICP/z2h3wIkjSVOyf2+GtqugoEVSCz2jPRtE7vTzLfIvQ1waYjszKje51m2IvMI0oWnJOd/RiZaKTaN/sAjQNB28CyvbkPN3PNEcXNUt/PgRNyWby1SnT6aAQ8M8fl3msVNEl7fBg==
+X-Microsoft-Antispam-Message-Info: K0T+rsMusn3LlXYy1TcndzbdDeiGOtx8JsShRHKAQnUukbChGGVvafU7MfAaS4Vl8Y+K8QTossCWYHdoe10R9f2CdRTfjpe2SirdQp5l1XoPypgbbiFpS2uAQhCoY/ciuvXV8A3d4dPiN0PX5rBTm4pDaE1Th30abnOfXvI9Jzd7Iy+JSLYmPSy9pzCsXKQDF/wKKdZexWVafeEZef8M4rWoo6PaZHBMNs+Lvp4pxXr/hOu0K1HPFtGWCpo8zEsWD2vNcwu4sFheJYjQJhhrQyaOlOjuqe4gzuUwQPAEdvXNRo32Xc/oUB/odQkKuy8bt8MPBax00Ol3aGScOhkCZ7+nwMHhyWi1LfmKkLwepA5a8/KaC78Xx93oCTTXUr3KFGm8vRlYqwD8hP6oHIxQn5LrxdeKqE2JWuVXOQ6jDZ689KMUhNvCc9Ij+0djid1mCxnj7cJzv8eFjL2T27+lf60nf+hqbj/ZyiPUkw2/ZzDPLAbJt+mc6D0vfb9+RT51
+X-MS-Exchange-AntiSpam-MessageData: kIhhF7v49IKXnFLL8lgtUjsMyj7cr8oOEVztSRU2zsvMZ263E9EKENiKSqLs4ofswlLeyPLaJmDeqP6ruxKsvGAqxdBImneEQIiqBMwi2tRVeYTg4YJmyonwLgzMGW24vWd6lZqGsS559dwYMl1/qw==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfd006ff-7ec6-4972-3977-08d7c4a38c44
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 03:31:41.0617
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f8382d6-54c9-4693-f51b-08d7c4a39352
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 03:31:53.1722
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2nH01EJ11yccrwUS1dgiIq2gELdnlWHLHmnG23Bl1qhT+UdQGJcFJfNIsd2I6FzHzh2kowhSIYcYxq7ttemRVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6511
+X-MS-Exchange-CrossTenant-UserPrincipalName: A+X3vln9vz1zwgs2JQNWmWmXRBa3wksjjbt7lLLUKWRVCyCFC/Tfxm/+KKbceXF5f5ipWOQume63mmWe2PHnnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6621
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Because the number of ecspi1 rx event on i.mx8mm is 0, the condition
-check ignore such special case without dma channel enabled, which caused
-ecspi1 rx works failed. Actually, no need to check event_id0/event_id1
-and replace checking 'event_id1' with 'DMA_DEV_TO_DEV', so that configure
-event_id1 only in case DEV_TO_DEV.
+This reverts commit d288bddd8374e0a043ac9dde64a1ae6a09411d74, since
+'context_loaded' finally removed.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/dma/imx-sdma.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/dma/imx-sdma.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 5ae7237..4a6256e 100644
+index 042cfbf..1abe4bd 100644
 --- a/drivers/dma/imx-sdma.c
 +++ b/drivers/dma/imx-sdma.c
-@@ -1205,7 +1205,7 @@ static int sdma_config_channel(struct dma_chan *chan)
- 	if ((sdmac->peripheral_type != IMX_DMATYPE_MEMORY) &&
- 			(sdmac->peripheral_type != IMX_DMATYPE_DSP)) {
- 		/* Handle multiple event channels differently */
--		if (sdmac->event_id1) {
-+		if (sdmac->direction == DMA_DEV_TO_DEV) {
- 			if (sdmac->peripheral_type == IMX_DMATYPE_ASRC_SP ||
- 			    sdmac->peripheral_type == IMX_DMATYPE_ASRC)
- 				sdma_set_watermarklevel_for_p2p(sdmac);
-@@ -1373,9 +1373,9 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
- 
- 	sdma_channel_synchronize(chan);
- 
--	if (sdmac->event_id0 >= 0)
--		sdma_event_disable(sdmac, sdmac->event_id0);
--	if (sdmac->event_id1)
-+	sdma_event_disable(sdmac, sdmac->event_id0);
-+
-+	if (sdmac->direction == DMA_DEV_TO_DEV)
- 		sdma_event_disable(sdmac, sdmac->event_id1);
+@@ -1380,7 +1380,6 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
  
  	sdmac->event_id0 = 0;
-@@ -1674,13 +1674,11 @@ static int sdma_config(struct dma_chan *chan,
- 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
+ 	sdmac->event_id1 = 0;
+-	sdmac->context_loaded = false;
  
- 	/* Set ENBLn earlier to make sure dma request triggered after that */
--	if (sdmac->event_id0 >= 0) {
--		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
--			return -EINVAL;
--		sdma_event_enable(sdmac, sdmac->event_id0);
--	}
-+	if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
-+		return -EINVAL;
-+	sdma_event_enable(sdmac, sdmac->event_id0);
+ 	sdma_set_channel_priority(sdmac, 0);
  
--	if (sdmac->event_id1) {
-+	if (sdmac->direction == DMA_DEV_TO_DEV) {
- 		if (sdmac->event_id1 >= sdmac->sdma->drvdata->num_events)
- 			return -EINVAL;
- 		sdma_event_enable(sdmac, sdmac->event_id1);
 -- 
 2.7.4
 
