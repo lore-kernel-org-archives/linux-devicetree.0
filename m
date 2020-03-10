@@ -2,85 +2,108 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFEAC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAECC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0783D20637
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986B1208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:25:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GCb/UeYv"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HRuCOVZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgCJSLl (ORCPT
+        id S1726582AbgCJSZz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:11:41 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36552 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgCJSLl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:11:41 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c7so940536pgw.3
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 11:11:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=pN3qTpKjWmrG74+zt0MCb4nvU9mEwdxCDTu02IXOOa4=;
-        b=GCb/UeYvad1VcBxP5Le7hPBRpo0tV94ewwp+L7bfi16zLWdvY79SaKTJeXfC+TLr/G
-         6+IrD5CuLoIQrNsAfuW/T3WHsvHWPVEIuTIkXzpQO9jAnDCtKi8RhdbeFGStr02B4zcM
-         4d2syzMFkbd/GJcAUqGJmOUuuK+trg1JVAr+Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=pN3qTpKjWmrG74+zt0MCb4nvU9mEwdxCDTu02IXOOa4=;
-        b=VD+bUe2mJDc2q108Wcp2ag9JdhtQ4mGYJhaW5LuYMCK/UtphvVr5iMz0k1Vp+3jWkI
-         EzpVDaPsmQHXYe2ONEB4hL26w+a0f3dzF+pzZSmbdi5quGC8ayYRiwSLbHFwpd9v9LMU
-         EUnk6lob0rWGTtIpMLG1fBqYqqN3d4WPiboT3VBxgX6NM0zeW8890yQdHR4aJDCMDvFt
-         6oeFNJrZMQL2XuA+g5+Xm6cApXzSbNwuN4kdAGGKuLy6nzyqCgKqx5ejVh0FALiOfSay
-         oHuwvRhLBGDFHvaARpQ8wg2DgW9NNd8+jiQb7vluW7fWcSTjnzf8FZ0HP4ZXs5swPOsN
-         Ezcw==
-X-Gm-Message-State: ANhLgQ1x93oBSofRPcoCe/w26YC+lL0IzB44j5nJVGpiJAoubakxpjIH
-        suXpIVJlAgm7w9iujDBuB6TTrQ==
-X-Google-Smtp-Source: ADFU+vtPfd6sEmJbJPrHFLC6tR/0kN+w0z/+5OCEPiBHtC1WspD9R1DrHYTO6ADKDhsgGxgi0AJK8A==
-X-Received: by 2002:a63:6d4e:: with SMTP id i75mr10022175pgc.443.1583863900171;
-        Tue, 10 Mar 2020 11:11:40 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id d9sm2967203pjw.24.2020.03.10.11.11.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:11:39 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Tue, 10 Mar 2020 14:25:55 -0400
+Received: from mout.gmx.net ([212.227.17.21]:53105 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgCJSZy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:25:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1583864741;
+        bh=bFNqpua+YkzWFVc3UHXXvzS3AdF4ncGup9hQJF7JgsM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=HRuCOVZZtfp+KcUwATt3A57HJU3nd/6Gt3AGzr8fVOQ26mh/cYH8AvkJDaxla7LrH
+         WTHAoWtV6HOELVnR0phT97MYCOHjJ4dF08SpizBl2jgwiDyCSCsw0LT97S8OzR8//y
+         ZTjtvv+/hCleFNMOElJQ1mYObS/pvkipnTZiGdtA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from zoom ([188.223.33.120]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MD9XF-1j2h0v3fpx-009C8y; Tue, 10
+ Mar 2020 19:25:41 +0100
+Received: by zoom (Postfix, from userid 2000)
+        id 33D2119C87C9; Tue, 10 Mar 2020 18:25:39 +0000 (GMT)
+From:   nick.hudson@gmx.co.uk
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Nick Hudson <nick.hudson@gmx.co.uk>, Nick Hudson <skrll@netbsd.org>
+Subject: [PATCH] ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
+Date:   Tue, 10 Mar 2020 18:25:37 +0000
+Message-Id: <20200310182537.8156-1-nick.hudson@gmx.co.uk>
+X-Mailer: git-send-email 2.17.1
+X-Provags-ID: V03:K1:3/Rt0YeR7CTtZzR1Fqp91cdaAaSx69K/t/4zI3jdBuV2UhzC3n4
+ MmdrwDddFGb8jLk2u+lcAMOmgNAeNjmwa/lg/1z7eoVYBNlrndFDsOo/rolirFwofzX0Xs3
+ RdIe3l8fONwTn+qW19f4sOCCoWTZzTvJVybor7qfgr3Dcf1ym5LAEQm+f+uXWLvoQ0iJpAG
+ k2bQo6mSBNTu2p3vK70Fg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gG3GKwolD78=:s7UQlNhpF4wArl+OpyY9rX
+ YE2f5jIYCHVmzWKuayMb7Q1H5k441i+Z0RmUEJETKfGzl5KrzR6u8boufYIwY2bG/NqhaXJxr
+ BoLcoABo1rlpj+sUJoDJ72SIjPNKgEjdPpD7xRuT91Zk4S0yMZMuhe2qPkqkP6c056JNIzKaL
+ h7tJWQsK0co+oE55lpBRzz/bVJ9H92+Il1pbzUSpQPu6BaH4d7OxN51G17AZUUQhGFOiDqame
+ 1NOqVklyU2bqm1elS6OVzKxlAJz/mp+QTmwkmPB8EQOOv/3D02Tlvjvh6DcxuxDmsmhvgIZOU
+ To8eesWE8heEzGOXhM8w2XbFSf2z9vKUJUmn1zWsH/LC05iRVDNi/tlOLVP6BiJusJ1EhmYv9
+ 70ICsPqYVo+Glc2OrbvUKrU9pfqLcjkuBNVQgUmtM94K1M1ZEglarxO1zJJLkjyLW83ml+Jew
+ 3XW57bDRfct6k0Y2fgfOq+xKtlzCn6uRD4KTjhuurNxdxE8Qxii3BDsmB0VteM/CgxT9NRS/o
+ v++5alr6LXvAtA4BjIjZzQb1lJsbfqr3t+AuXjMWMQDyJOWf71tGkRObBixwTBMNCV9rYBZfU
+ ilA6pK0oHPNjFn+kM0t95opLSBc0J7Ze5fEFdLDzFtbHOGcMGT3chtHN2CnDFhvhzWfqEZ+3p
+ qgZV6uiXviDBPZjqw58lJ++/ht/UNlWitM5zpFoOeW3GFwbu4Vb5WfOFdAdqDf0NOeefqHbJ0
+ yrNh/+p4KWBTWTp8DR4MtpG+YkOps5qp0RBlYiWdEkbwaDrVW9FdbOp/4lrftyGNNGiuiblVa
+ b9nDznXG+UNDApsO+oWH3g8iQyD88hcQt/XaDn4YupsPTe7A46aAZUPF7f/nP3BWJDTTe5kL0
+ YGrcwSHB4Of3mhKmAFWKDr+mGbANqcHGfKhXn58w2RD7WVBvTbb8vBInhiz7knJw1IFTXzBFL
+ ZiVxLKkYdXl0M8stLzYqKZeRX73rUIm6VHFpxiNB7rr19FS0UmRf36FXX6FKBL6xd+pykwjG2
+ IEP9j8w3px+E2nRzvhV7MWTXJUeWj/8dKMQ16bwR97GcHum2CkZw3yfelfRRCRJcd+43vig70
+ dmJkTJwwvTsddA/DTpJLLGXs8PIpsO+2K5HN07diWVo9vLjmaRFXNcMNhGQSfME50BzZL+dIG
+ TNTn2xgnr+BApp6+9BhIRHk/MGJIKMKL8EZ8bOWtg/U5hPnqESVru8G7V74L3l+JxgQ6XFoi7
+ q2JTZfQneUOsuPraT
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200310063338.3344582-6-bjorn.andersson@linaro.org>
-References: <20200310063338.3344582-1-bjorn.andersson@linaro.org> <20200310063338.3344582-6-bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 5/5] arm64: dts: qcom: sdm845: Add IMEM and PIL info region
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 10 Mar 2020 11:11:38 -0700
-Message-ID: <158386389888.149997.14127685932598676242@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-03-09 23:33:38)
-> Add a simple-mfd representing IMEM on SDM845 and define the PIL
-> relocation info region, so that post mortem tools will be able to locate
-> the loaded remoteprocs.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+From: Nick Hudson <nick.hudson@gmx.co.uk>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Define the sdhci pinctrl state as "default" so it gets applied
+correctly and to match all other RPis.
+
+Fixes: 2c7c040c73e9 ("ARM: dts: bcm2835: Add Raspberry Pi Zero W")
+
+Signed-off-by: Nick Hudson <skrll@netbsd.org>
+=2D--
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/=
+bcm2835-rpi-zero-w.dts
+index b75af21069f9..4c3f606e5b8d 100644
+=2D-- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+@@ -112,6 +112,7 @@
+ &sdhci {
+ 	#address-cells =3D <1>;
+ 	#size-cells =3D <0>;
++	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&emmc_gpio34 &gpclk2_gpio43>;
+ 	bus-width =3D <4>;
+ 	mmc-pwrseq =3D <&wifi_pwrseq>;
+=2D-
+2.17.1
+
