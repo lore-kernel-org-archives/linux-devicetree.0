@@ -2,99 +2,173 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAFEC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5E5C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB48F20873
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF28208E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 19:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583868775;
-	bh=vtoQHm8CwndQqwISuDVBtwkw5F15vfzTipGakLSGCx8=;
+	s=default; t=1583869044;
+	bh=llRqB7vOBH+w/xCHH1Y5KTae7g8J7o9qsA6xQHqX0y4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K+A15o2kAVTRI2G/T4EicQnzDZtvyYgtmcBdazFdzS2QWzpUtPSFO3WMa0BOxkXVO
-	 8f3/C5d9Y4jMBgkp37IO78UjAYybctfiFO+Brj08GqbFnUcbEqYMDEYKScJYutgeRo
-	 uGzmehIYf0iMuYaYkbB1kFLQ2KIxh15ksPhG5oec=
+	b=XSFZJ2LtZIpJMcw85r1jj/vjUA04kf6yPNP+yETNQQ6AaqRl6+555HJRq5Z1I7vr0
+	 yMIbkmNWV2d+7+pmxlJ3/R7FzfWyMY9f+NhKlTewlzVFb5KwJfg7DhaWnV4kP8d/Y4
+	 G6ER5Q7Lqc3PrDiXjhtrHkYcySHPZefw/XMoaMDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgCJTcz (ORCPT
+        id S1727138AbgCJThX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:32:55 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43904 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgCJTcz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 15:32:55 -0400
-Received: by mail-oi1-f193.google.com with SMTP id p125so15110453oif.10;
-        Tue, 10 Mar 2020 12:32:54 -0700 (PDT)
+        Tue, 10 Mar 2020 15:37:23 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42116 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgCJThX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 15:37:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 66so14355725otd.9;
+        Tue, 10 Mar 2020 12:37:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eIE4b9URO1qb+MxsPOjVs9T43nhsRKMyMwg2+2kf3Bo=;
-        b=rPeU/CB7wHyeTsfT3HtSmQcj5Z4fH00gSaDwR3jy2ttNYAJPaav6I1D/IgGTIqb38N
-         vwaotwGRao5UQWJQ24BkM1qXcEp4tinVajXdOfXarPiBDE/Qj11o55IuN1GwfnOJtTTg
-         2Dk4sC2BF/jUrWsBRYqnDJsUC7uyxzBfqE63AxouIyMONKp/RwysqllfyqCGOwWSP+yS
-         2Qm9cKYNWATbPQv/oDnE3YAdeaziZOd5qTZdKPuT1XKpvEuDv6vu4lQUlxrRPIRq9imh
-         Ivuimv3VQ7+sIJHtbriwOsrSEJdM6AFU7y4SLnxjfezFseoJI2EuT9TZlflZ6SIDWv8L
-         MnYQ==
-X-Gm-Message-State: ANhLgQ1V3A2o318Y5gZbqrVUhhvoUvawGo5bJHL7/iNCkwHDhhYfV3Q9
-        etSLluE3jvIeTe7ev7jhncL5TsI=
-X-Google-Smtp-Source: ADFU+vtyF0UxNd2V5SNDAhbqfD+SoLrFN/9/7Iy1fakA8ZwCLf/fMWqKCvI1jf25Ndt1qbrkinmu+A==
-X-Received: by 2002:aca:d553:: with SMTP id m80mr1624311oig.30.1583868774574;
-        Tue, 10 Mar 2020 12:32:54 -0700 (PDT)
+        bh=GiGH+kf0e9zr45mlrfM5b4we/G65q5yAgOGauiL01s8=;
+        b=orJ7y28PBh3tnG+gW30KFDbE8+U/WQYpKyD84eAJSVugVPRz9AflrpOk4FJnskML++
+         rFBA9VvsimnBkXlypLnlQXB2YrX48/z22Y31z+95jnhum/QWApIOqUwNCKERD4eA9iYI
+         OISu2YT8xKb46QhQ/3bl303nWr3BNgFFODVvCid6VaUnY5Nnr4RoTaGgkr9FOLfJV5U2
+         E3iOTAsJ7RdfBkiEB6Ypoo7INbvCDXzlAj9ZygESzkOLH0ofHs+XyhBYNX94zB1RaOCP
+         RnRoEdtQ2aqK0UbOv8LA/TWUS37r2MFE1xmuDMSWC/Et+8KGy5BpLcBimzhwvkOsIRBp
+         9SDw==
+X-Gm-Message-State: ANhLgQ1AT8IGt2skk8oEBWm0pXI4zJVa7hPjz0EfyaYdCMf/WyTYR+pP
+        0E/9dDp5Lo3+VbeKYf9blNIfZ+U=
+X-Google-Smtp-Source: ADFU+vv5Ufou1gAlKDX6XtyEl/Yqxyi6/Ef2fceOO2APym87C2PtkEFkU+SgtAU4IcyOIenAnsywvQ==
+X-Received: by 2002:a05:6830:1581:: with SMTP id i1mr4949574otr.349.1583869042434;
+        Tue, 10 Mar 2020 12:37:22 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 96sm16366528otn.29.2020.03.10.12.32.53
+        by smtp.gmail.com with ESMTPSA id v2sm3574361oiv.41.2020.03.10.12.37.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:32:53 -0700 (PDT)
-Received: (nullmailer pid 23387 invoked by uid 1000);
-        Tue, 10 Mar 2020 19:32:53 -0000
-Date:   Tue, 10 Mar 2020 14:32:53 -0500
+        Tue, 10 Mar 2020 12:37:21 -0700 (PDT)
+Received: (nullmailer pid 30746 invoked by uid 1000);
+        Tue, 10 Mar 2020 19:37:21 -0000
+Date:   Tue, 10 Mar 2020 14:37:21 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: serial: snps-dw-apb-uart: add compatible
- property for rk3308 uart
-Message-ID: <20200310193253.GA23246@bogus>
-References: <20200302133910.10942-1-jbx6244@gmail.com>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     wim@linux-watchdog.org, linux@roeck-us.net,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCHv2 1/4] dt-bindings: watchdog: Add support for TI K3 RTI
+ watchdog
+Message-ID: <20200310193721.GA24150@bogus>
+References: <20200302200426.6492-1-t-kristo@ti.com>
+ <20200302200426.6492-2-t-kristo@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302133910.10942-1-jbx6244@gmail.com>
+In-Reply-To: <20200302200426.6492-2-t-kristo@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  2 Mar 2020 14:39:10 +0100, Johan Jonker wrote:
-> A test with the command below gives these errors:
+On Mon, Mar 02, 2020 at 10:04:23PM +0200, Tero Kristo wrote:
+> TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
+> used to implement a windowed watchdog functionality. Windowed watchdog
+> will generate an error if it is petted outside the time window, either
+> too early or too late.
 > 
-> arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: serial@ff0d0000: compatible:
-> ['rockchip,rk3308-uart', 'snps,dw-apb-uart']
-> is not valid under any of the given schemas
-> arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dt.yaml: serial@ff0a0000: compatible:
-> ['rockchip,rk3308-uart', 'snps,dw-apb-uart']
-> is not valid under any of the given schemas
-> 
-> The compatible property for the Rockchip rk3308 uart was somehow never
-> added to the documention. Fix this error by adding 'rockchip,rk3308-uart'
-> to snps-dw-apb-uart.yaml.
-> 
-> make ARCH=arm64 dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/serial/
-> snps-dw-apb-uart.yaml
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 > ---
->  Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/watchdog/ti,rti-wdt.yaml         | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+> new file mode 100644
+> index 000000000000..3813f59fb6c3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Applied, thanks.
+Dual license new bindings please:
 
-Rob
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments K3 SoC Watchdog Timer
+> +
+> +maintainers:
+> +  - Tero Kristo <t-kristo@ti.com>
+> +
+> +description: |+
+
+You can drop '|+' as there's no formatting to preserve.
+
+> +  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
+> +  Interrupt) IP module. This timer adds a support for windowed watchdog
+> +  mode, which will signal an error if it is pinged outside the watchdog
+> +  time window, meaning either too early or too late. The error signal
+> +  generated can be routed to either interrupt a safety controller or
+> +  to directly reset the SoC.
+> +
+
+Reference the common watchdog.yaml schema.
+
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,rti-wdt
+
+Should be SoC specific possibly with a fallback.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    /*
+> +     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
+> +     * select the source clock for the watchdog, forcing it to tick with
+> +     * a 32kHz clock in this case.
+> +     */
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +    main_rti0: rti@2200000 {
+
+watchdog@...
+
+> +        compatible = "ti,rti-wdt";
+> +        reg = <0x0 0x2200000 0x0 0x100>;
+> +        clocks = <&k3_clks 252 1>;
+> +        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
+
+Not documented.
+
+> +        assigned-clocks = <&k3_clks 252 1>;
+> +        assigned-clock-parents = <&k3_clks 252 5>;
+
+Not documented.
+
+> +    };
+> -- 
+> 2.17.1
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
