@@ -2,52 +2,55 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044B3C10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A180C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD852253D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D0F321D7E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583862433;
-	bh=Oh9ZvT4Bvl8uZds2f5cLSdbfHTOwhbdXpqse6mjFJ8A=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YabJCmbflRZXEyfY1+psAhBe+UD72BRy/nia0DhdFq2pJzT+7keEKCMViuG65g1Wi
-	 KuyUCzPHY0H4LmekAoexy8271F7T3bRpwFWWola8OMjrrVBWGIC9vR5erU9SREVxx5
-	 AZUVbMvV6d+D5aWhcTAc6QiqH1A5NODh/1MsGm2I=
+	s=default; t=1583862438;
+	bh=yEVqSVzjSrlW03t5Uobt/12zNzyYOKdExRRlDrrKUNg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lSSgMQiY8ybpRE1WP/B01goBDgwYhAmmCZ55ryVGN/4dQHAkezcC6JJFt/rjbY+FX
+	 KjOdRWeOJJVtjO3KnhcOkTCNGHzJBzbtPhsw4q99r/H+oOICwHzmQHNWtsyfe4D4Os
+	 9tcc8qRxF0fgc0l9HY1o7vJLvFPf7kX1EsLGfPQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgCJRrN (ORCPT
+        id S1726851AbgCJRrR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44112 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 13:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgCJRrN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:47:13 -0400
+        id S1726290AbgCJRrO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 13:47:14 -0400
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDEC320727;
+        by mail.kernel.org (Postfix) with ESMTPSA id C0BDC2146E;
         Tue, 10 Mar 2020 17:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583862432;
-        bh=Oh9ZvT4Bvl8uZds2f5cLSdbfHTOwhbdXpqse6mjFJ8A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nqX5P860kUst2mq+YE/8D+trqHK9MpxmtbDRBdlzzFY4I5MkI3QoiUu/T2WdWHAfr
-         dei9VWzgsIc6vPDp+YkvTMgixX5B2wy4AJ6Ne9vS676l14agqOGeZDwM8+LeeMmPoC
-         y92YWqKfDtGo8NqqZjgQYrfAP5NNR2cxtN7JCq3g=
+        bh=yEVqSVzjSrlW03t5Uobt/12zNzyYOKdExRRlDrrKUNg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nTwcoteXlhPI4lyJgviLHnEf8uRhovlKa30fr68qYMQc7fzq1uwEH+p9V9FeXUJ8X
+         2QMS5aUIecXbxGl3iy/hAhJohWHqWu0j3BCBmYCliTQr1jPww21H2QRiOr8xlyqsPT
+         /iTc2G5/PKwqhFXOdMqXThGDDjftjDjkrUtREdnA=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 031656045B; Wed, 11 Mar 2020 01:47:09 +0800 (CST)
+        id 14A9960308; Wed, 11 Mar 2020 01:47:10 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <mripard@kernel.org>
 Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] ARM: dts: sun8i: r40: fix SPI address and reorder nodes
-Date:   Wed, 11 Mar 2020 01:47:06 +0800
-Message-Id: <20200310174709.24174-1-wens@kernel.org>
+Subject: [PATCH 3/3] ARM: dts: sun8i: r40: Move SPI device nodes based on address order
+Date:   Wed, 11 Mar 2020 01:47:09 +0800
+Message-Id: <20200310174709.24174-4-wens@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310174709.24174-1-wens@kernel.org>
+References: <20200310174709.24174-1-wens@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -57,23 +60,154 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Hi,
+When the SPI device nodes were added, they were added in the wrong
+location in the device tree file. The device nodes should be sorted
+by register address.
 
-Here are some fixes for the R40 device tree for v5.6. The base addresses
-for SPI2 and SPI3 were incorrect and are fixed. I also found some nodes
-were not added in the proper order, possibly because git matched the
-incorrect place when applying the patch. These are fixed as well.
+Move the devices node to their correct positions within the file.
 
-ChenYu
+Fixes: 554581b79139 ("ARM: dts: sun8i: R40: Add SPI controllers nodes and pinmuxes")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm/boot/dts/sun8i-r40.dtsi | 104 +++++++++++++++----------------
+ 1 file changed, 52 insertions(+), 52 deletions(-)
 
-Chen-Yu Tsai (3):
-  ARM: dts: sun8i: r40: Move AHCI device node based on address order
-  ARM: dts: sun8i: r40: Fix register base address for SPI2 and SPI3
-  ARM: dts: sun8i: r40: Move SPI device nodes based on address order
-
- arch/arm/boot/dts/sun8i-r40.dtsi | 126 +++++++++++++++----------------
- 1 file changed, 63 insertions(+), 63 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index 81cc92ddc78b..f0ede4f52aa3 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -198,6 +198,32 @@ nmi_intc: interrupt-controller@1c00030 {
+ 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		spi0: spi@1c05000 {
++			compatible = "allwinner,sun8i-r40-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x01c05000 0x1000>;
++			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
++			clock-names = "ahb", "mod";
++			resets = <&ccu RST_BUS_SPI0>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		spi1: spi@1c06000 {
++			compatible = "allwinner,sun8i-r40-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x01c06000 0x1000>;
++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
++			clock-names = "ahb", "mod";
++			resets = <&ccu RST_BUS_SPI1>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		csi0: csi@1c09000 {
+ 			compatible = "allwinner,sun8i-r40-csi0",
+ 				     "allwinner,sun7i-a20-csi0";
+@@ -307,6 +333,19 @@ crypto: crypto@1c15000 {
+ 			resets = <&ccu RST_BUS_CE>;
+ 		};
+ 
++		spi2: spi@1c17000 {
++			compatible = "allwinner,sun8i-r40-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x01c17000 0x1000>;
++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI2>, <&ccu CLK_SPI2>;
++			clock-names = "ahb", "mod";
++			resets = <&ccu RST_BUS_SPI2>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		ahci: sata@1c18000 {
+ 			compatible = "allwinner,sun8i-r40-ahci";
+ 			reg = <0x01c18000 0x1000>;
+@@ -364,6 +403,19 @@ ohci2: usb@1c1c400 {
+ 			status = "disabled";
+ 		};
+ 
++		spi3: spi@1c1f000 {
++			compatible = "allwinner,sun8i-r40-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x01c1f000 0x1000>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI3>, <&ccu CLK_SPI3>;
++			clock-names = "ahb", "mod";
++			resets = <&ccu RST_BUS_SPI3>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		ccu: clock@1c20000 {
+ 			compatible = "allwinner,sun8i-r40-ccu";
+ 			reg = <0x01c20000 0x400>;
+@@ -692,58 +744,6 @@ i2c4: i2c@1c2c000 {
+ 			#size-cells = <0>;
+ 		};
+ 
+-		spi0: spi@1c05000 {
+-			compatible = "allwinner,sun8i-r40-spi",
+-				     "allwinner,sun8i-h3-spi";
+-			reg = <0x01c05000 0x1000>;
+-			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
+-			clock-names = "ahb", "mod";
+-			resets = <&ccu RST_BUS_SPI0>;
+-			status = "disabled";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
+-
+-		spi1: spi@1c06000 {
+-			compatible = "allwinner,sun8i-r40-spi",
+-				     "allwinner,sun8i-h3-spi";
+-			reg = <0x01c06000 0x1000>;
+-			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
+-			clock-names = "ahb", "mod";
+-			resets = <&ccu RST_BUS_SPI1>;
+-			status = "disabled";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
+-
+-		spi2: spi@1c17000 {
+-			compatible = "allwinner,sun8i-r40-spi",
+-				     "allwinner,sun8i-h3-spi";
+-			reg = <0x01c17000 0x1000>;
+-			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_SPI2>, <&ccu CLK_SPI2>;
+-			clock-names = "ahb", "mod";
+-			resets = <&ccu RST_BUS_SPI2>;
+-			status = "disabled";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
+-
+-		spi3: spi@1c1f000 {
+-			compatible = "allwinner,sun8i-r40-spi",
+-				     "allwinner,sun8i-h3-spi";
+-			reg = <0x01c1f000 0x1000>;
+-			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_SPI3>, <&ccu CLK_SPI3>;
+-			clock-names = "ahb", "mod";
+-			resets = <&ccu RST_BUS_SPI3>;
+-			status = "disabled";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
+-
+ 		gmac: ethernet@1c50000 {
+ 			compatible = "allwinner,sun8i-r40-gmac";
+ 			syscon = <&ccu>;
 -- 
 2.25.1
 
