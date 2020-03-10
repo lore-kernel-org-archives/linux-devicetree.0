@@ -2,105 +2,218 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D925CC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B4BC18E5C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7C3222C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583865294;
-	bh=DbYpnoy7dO2sQI5+NrP100LLf+OuHCeWP3HKsp3G5SQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZwbeUN1gS2ahRo0b+PaMrmsjy4SJdFYDWtcBZjc0VCwl4efuJYEsWA+lnePANs+QQ
-	 J3rxPw/UFkmRV3L8PaNmjswMWrSW3xBVD4TAGU2ZSHIryK5shlZO7efctLjhNfzS2S
-	 7zmTkkwPxopEHtIRFDLyCMYBfOFzN7Mro4ZZBQfA=
+	by mail.kernel.org (Postfix) with ESMTP id DAB5921D56
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgCJSey convert rfc822-to-8bit (ORCPT
+        id S1727535AbgCJSfO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:34:54 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36770 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCJSex (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:34:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j14so14203543otq.3;
-        Tue, 10 Mar 2020 11:34:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Qxv/00XMMhgTeh2kOC1Ph3C8IIV+y4nTNxTVmMAyg3o=;
-        b=EYJ2KkIvsPe//cWdOUDYOyB6JSIIPcvvCmqiHLbCBz8CFjg3S8TG7euXP2cy+MUHXd
-         fOYl0/zXt3lsbRoOP3eY2yiR0mJubrgBw+D7+zE+ZunkPXIv6cPFAlkhZhgOJygAuRtx
-         OG0uSzPzG3cehZAw0HrSfesrllD9keVVxZJMFrp35GsyVCxXCun0hq+oJ7+VLmqqaYDV
-         O3XX2IyM/cjrje66i9VlTDTA2TDBOSNXQtHLTkPyHtPdRoa3EnExPcOthrprnUbklsSG
-         0dwORCqV2Ug4E/ta7BF7lBQKot5b50CdIeiDND2YM9TLtpEBesqkzzkC/52nwLj8gmoK
-         lF4g==
-X-Gm-Message-State: ANhLgQ2cnb0kJY3kjz4MgThuzBjVI4VwfQPAkH35C5JNzalH5eh9FEcs
-        Jw+Syzs39YZqreSjNq9Dgw==
-X-Google-Smtp-Source: ADFU+vvyL2Q227mgSpTpbdMx4+9Ugc8E1wZT51W3nrzhNMDbF28JSge5af+vDHQReVkDqvlGeH72UQ==
-X-Received: by 2002:a9d:a68:: with SMTP id 95mr17240964otg.87.1583865292201;
-        Tue, 10 Mar 2020 11:34:52 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o1sm16153021otl.49.2020.03.10.11.34.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:34:51 -0700 (PDT)
-Received: (nullmailer pid 20171 invoked by uid 1000);
-        Tue, 10 Mar 2020 18:34:50 -0000
-Date:   Tue, 10 Mar 2020 13:34:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: power: supply: cw2015_battery: add
- device tree binding documentation
-Message-ID: <20200310183450.GA14530@bogus>
-References: <20200309160346.2203680-1-t.schramm@manjaro.org>
- <20200309160346.2203680-2-t.schramm@manjaro.org>
+        Tue, 10 Mar 2020 14:35:14 -0400
+Received: from muru.com ([72.249.23.125]:59584 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727360AbgCJSfN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:35:13 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 1CFDB81CA;
+        Tue, 10 Mar 2020 18:35:58 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Graeme Smecher <gsmecher@threespeedlogic.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Brian Hutchinson <b.hutchman@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        linux-clk@vger.kernel.org
+Subject: [PATCH 02/10] ARM: dts: Configure interconnect target module for dm814x cpsw
+Date:   Tue, 10 Mar 2020 11:34:56 -0700
+Message-Id: <20200310183504.65358-3-tony@atomide.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310183504.65358-1-tony@atomide.com>
+References: <20200310183504.65358-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200309160346.2203680-2-t.schramm@manjaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  9 Mar 2020 17:03:45 +0100, Tobias Schramm wrote:
-> This patch adds the dts binding schema for the cw2015 fuel gauge.
-> 
-> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
-> ---
->  .../bindings/power/supply/cw2015_battery.yaml | 84 +++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
-> 
+We can now probe devices with device tree only configuration using
+ti-sysc interconnect target module driver. Let's configure the
+module and drop the legacy "ti,hwmods" property.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+As this module is very similar to what we already have configured
+and working for am33xx, let's just update the whole cpsw with a
+single patch to avoid some extra churn on the dts files.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/cw2015_battery.example.dt.yaml: cw2015@62: 'cellwise,bat-config-info', 'cellwise,monitor-interval-ms' do not match any of the regexes: '^#.*', '^(at25|devbus|dmacap|dsa|exynos|fsi[ab]|gpio-fan|gpio|gpmc|hdmi|i2c-gpio),.*', '^(keypad|m25p|max8952|max8997|max8998|mpmc),.*', '^(pinctrl-single|#pinctrl-single|PowerPC),.*', '^(pl022|pxa-mmc|rcar_sound|rotary-encoder|s5m8767|sdhci),.*', '^(simple-audio-card|simple-graph-card|st-plgpio|st-spics|ts),.*', '^GEFanuc,.*', '^ORCL,.*', '^SUNW,.*', '^[a-zA-Z0-9#_][a-zA-Z0-9+\\-._@]{0,63}$', '^[a-zA-Z0-9+\\-._]*@[0-9a-zA-Z,]*$', '^abilis,.*', '^abracon,.*', '^acme,.*', '^actions,.*', '^active-semi,.*', '^ad,.*', '^adafruit,.*', '^adapteva,.*', '^adaptrum,.*', '^adh,.*', '^adi,.*', '^advantech,.*', '^aeroflexgaisler,.*', '^al,.*', '^allegro,.*', '^allo,.*', '^allwinner,.*', '^alphascale,.*', '^altr,.*', '^amarula,.*', '^amazon,.*', '^amcc,.*', '^amd,.*', '^amediatech,.
- *', '^amlogic,.*', '^ampire,.*', '^ams,.*', '^amstaos,.*', '^analogix,.*', '^andestech,.*', '^anvo,.*', '^apm,.*', '^aptina,.*', '^arasan,.*', '^archermind,.*', '^arctic,.*', '^arcx,.*', '^aries,.*', '^arm,.*', '^armadeus,.*', '^arrow,.*', '^artesyn,.*', '^asahi-kasei,.*', '^asc,.*', '^aspeed,.*', '^asus,.*', '^atlas,.*', '^atmel,.*', '^auo,.*', '^auvidea,.*', '^avago,.*', '^avia,.*', '^avic,.*', '^avnet,.*', '^axentia,.*', '^axis,.*', '^azoteq,.*', '^azw,.*', '^bananapi,.*', '^bhf,.*', '^bitmain,.*', '^boe,.*', '^bosch,.*', '^boundary,.*', '^brcm,.*', '^broadmobi,.*', '^bticino,.*', '^buffalo,.*', '^bur,.*', '^calaosystems,.*', '^calxeda,.*', '^capella,.*', '^cascoda,.*', '^catalyst,.*', '^cavium,.*', '^cdns,.*', '^cdtech,.*', '^ceva,.*', '^chipidea,.*', '^chipone,.*', '^chipspark,.*', '^chrp,.*', '^chunghwa,.*', '^chuwi,.*', '^ciaa,.*', '^cirrus,.*', '^cloudengines,.*', '^cnm,.*', '^cnxt,.*', '^colorfly,.*', '^compulab,.*', '^corpro,.*', '^cortina,.*', '^cosmic,.*', '^crane,.*', '
- ^creative,.*', '^crystalfontz,.*', '^csky,.*', '^csq,.*', '^cubietech,.*', '^cypress,.*', '^cznic,.*', '^dallas,.*', '^dataimage,.*', '^davicom,.*', '^delta,.*', '^denx,.*', '^devantech,.*', '^dh,.*', '^difrnce,.*', '^digi,.*', '^digilent,.*', '^dioo,.*', '^dlc,.*', '^dlg,.*', '^dlink,.*', '^dmo,.*', '^domintech,.*', '^dongwoon,.*', '^dptechnics,.*', '^dragino,.*', '^dserve,.*', '^ea,.*', '^ebs-systart,.*', '^ebv,.*', '^eckelmann,.*', '^edt,.*', '^eeti,.*', '^einfochips,.*', '^elan,.*', '^elgin,.*', '^embest,.*', '^emlid,.*', '^emmicro,.*', '^empire-electronix,.*', '^emtrion,.*', '^endless,.*', '^energymicro,.*', '^engicam,.*', '^epcos,.*', '^epfl,.*', '^epson,.*', '^esp,.*', '^est,.*', '^ettus,.*', '^eukrea,.*', '^everest,.*', '^everspin,.*', '^evervision,.*', '^exar,.*', '^excito,.*', '^ezchip,.*', '^facebook,.*', '^fairphone,.*', '^faraday,.*', '^fastrax,.*', '^fcs,.*', '^feiyang,.*', '^firefly,.*', '^focaltech,.*', '^friendlyarm,.*', '^fsl,.*', '^fujitsu,.*', '^gardena,.*', '^ga
- teworks,.*', '^gcw,.*', '^ge,.*', '^geekbuying,.*', '^gef,.*', '^gemei,.*', '^geniatech,.*', '^giantec,.*', '^giantplus,.*', '^globalscale,.*', '^globaltop,.*', '^gmt,.*', '^goodix,.*', '^google,.*', '^grinn,.*', '^grmn,.*', '^gumstix,.*', '^gw,.*', '^hannstar,.*', '^haoyu,.*', '^hardkernel,.*', '^hideep,.*', '^himax,.*', '^hisilicon,.*', '^hit,.*', '^hitex,.*', '^holt,.*', '^holtek,.*', '^honeywell,.*', '^hoperun,.*', '^hp,.*', '^hsg,.*', '^hugsun,.*', '^hwacom,.*', '^hyundai,.*', '^i2se,.*', '^ibm,.*', '^icplus,.*', '^idt,.*', '^ifi,.*', '^ilitek,.*', '^img,.*', '^incircuit,.*', '^inet-tek,.*', '^infineon,.*', '^inforce,.*', '^ingenic,.*', '^innolux,.*', '^inside-secure,.*', '^inspur,.*', '^intel,.*', '^intercontrol,.*', '^invensense,.*', '^inversepath,.*', '^iom,.*', '^isee,.*', '^isil,.*', '^issi,.*', '^itead,.*', '^iwave,.*', '^jdi,.*', '^jedec,.*', '^jesurun,.*', '^jianda,.*', '^kam,.*', '^karo,.*', '^keithkoep,.*', '^keymile,.*', '^khadas,.*', '^kiebackpeter,.*', '^kinetic,.*
- ', '^kingdisplay,.*', '^kingnovel,.*', '^kionix,.*', '^kobo,.*', '^koe,.*', '^kontron,.*', '^kosagi,.*', '^kyo,.*', '^lacie,.*', '^laird,.*', '^lamobo,.*', '^lantiq,.*', '^lattice,.*', '^leadtek,.*', '^leez,.*', '^lego,.*', '^lemaker,.*', '^lenovo,.*', '^lg,.*', '^lgphilips,.*', '^libretech,.*', '^licheepi,.*', '^linaro,.*', '^linksprite,.*', '^linksys,.*', '^linux,.*', '^linx,.*', '^lltc,.*', '^logicpd,.*', '^longcheer,.*', '^loongson,.*', '^lsi,.*', '^lwn,.*', '^macnica,.*', '^mapleboard,.*', '^marvell,.*', '^maxbotix,.*', '^maxim,.*', '^mbvl,.*', '^mcube,.*', '^meas,.*', '^mecer,.*', '^mediatek,.*', '^megachips,.*', '^mele,.*', '^melexis,.*', '^melfas,.*', '^mellanox,.*', '^memsic,.*', '^menlo,.*', '^merrii,.*', '^micrel,.*', '^microchip,.*', '^microcrystal,.*', '^micron,.*', '^microsoft,.*', '^mikroe,.*', '^miniand,.*', '^minix,.*', '^miramems,.*', '^mitsubishi,.*', '^mosaixtech,.*', '^motorola,.*', '^moxa,.*', '^mpl,.*', '^mps,.*', '^mqmaker,.*', '^mscc,.*', '^msi,.*', '^mti,.*
- ', '^multi-inno,.*', '^mundoreader,.*', '^murata,.*', '^mxicy,.*', '^myir,.*', '^national,.*', '^nec,.*', '^neonode,.*', '^netgear,.*', '^netlogic,.*', '^netron-dy,.*', '^netxeon,.*', '^newhaven,.*', '^nexbox,.*', '^nextthing,.*', '^ni,.*', '^nintendo,.*', '^nlt,.*', '^nokia,.*', '^nordic,.*', '^novtech,.*', '^nutsboard,.*', '^nuvoton,.*', '^nvd,.*', '^nvidia,.*', '^nxp,.*', '^oceanic,.*', '^okaya,.*', '^oki,.*', '^olimex,.*', '^olpc,.*', '^onion,.*', '^onnn,.*', '^ontat,.*', '^opalkelly,.*', '^opencores,.*', '^openrisc,.*', '^option,.*', '^oranth,.*', '^orisetech,.*', '^ortustech,.*', '^osddisplays,.*', '^overkiz,.*', '^ovti,.*', '^oxsemi,.*', '^panasonic,.*', '^parade,.*', '^parallax,.*', '^pda,.*', '^pericom,.*', '^pervasive,.*', '^phicomm,.*', '^phytec,.*', '^picochip,.*', '^pine64,.*', '^pineriver,.*', '^pixcir,.*', '^plantower,.*', '^plathome,.*', '^plda,.*', '^plx,.*', '^pni,.*', '^polaroid,.*', '^portwell,.*', '^poslab,.*', '^pov,.*', '^powervr,.*', '^primux,.*', '^probox2,.
- *', '^pulsedlight,.*', '^purism,.*', '^qca,.*', '^qcom,.*', '^qemu,.*', '^qi,.*', '^qiaodian,.*', '^qihua,.*', '^qnap,.*', '^radxa,.*', '^raidsonic,.*', '^ralink,.*', '^ramtron,.*', '^raspberrypi,.*', '^raydium,.*', '^rda,.*', '^realtek,.*', '^renesas,.*', '^rervision,.*', '^richtek,.*', '^ricoh,.*', '^rikomagic,.*', '^riscv,.*', '^rockchip,.*', '^rocktech,.*', '^rohm,.*', '^ronbo,.*', '^roofull,.*', '^samsung,.*', '^samtec,.*', '^sancloud,.*', '^sandisk,.*', '^satoz,.*', '^sbs,.*', '^schindler,.*', '^seagate,.*', '^seirobotics,.*', '^semtech,.*', '^sensirion,.*', '^sensortek,.*', '^sff,.*', '^sgd,.*', '^sgx,.*', '^sharp,.*', '^shimafuji,.*', '^si-en,.*', '^si-linux,.*', '^sifive,.*', '^sigma,.*', '^sii,.*', '^sil,.*', '^silabs,.*', '^silead,.*', '^silergy,.*', '^siliconmitus,.*', '^simtek,.*', '^sinlinx,.*', '^sinovoip,.*', '^sipeed,.*', '^sirf,.*', '^sis,.*', '^sitronix,.*', '^skyworks,.*', '^smsc,.*', '^snps,.*', '^sochip,.*', '^socionext,.*', '^solidrun,.*', '^solomon,.*', '^son
- y,.*', '^spansion,.*', '^sprd,.*', '^sst,.*', '^st,.*', '^st-ericsson,.*', '^starry,.*', '^startek,.*', '^ste,.*', '^stericsson,.*', '^summit,.*', '^sunchip,.*', '^swir,.*', '^syna,.*', '^synology,.*', '^tbs,.*', '^tbs-biometrics,.*', '^tcg,.*', '^tcl,.*', '^technexion,.*', '^technologic,.*', '^techstar,.*', '^tempo,.*', '^terasic,.*', '^tfc,.*', '^thine,.*', '^ti,.*', '^tianma,.*', '^tlm,.*', '^tmt,.*', '^topeet,.*', '^toppoly,.*', '^toradex,.*', '^toshiba,.*', '^toumaz,.*', '^tpk,.*', '^tplink,.*', '^tpo,.*', '^tq,.*', '^tronfy,.*', '^tronsmart,.*', '^truly,.*', '^tsd,.*', '^tyan,.*', '^u-blox,.*', '^ubnt,.*', '^ucrobotics,.*', '^udoo,.*', '^ugoos,.*', '^uniwest,.*', '^upisemi,.*', '^urt,.*', '^usi,.*', '^utoo,.*', '^v3,.*', '^vamrs,.*', '^variscite,.*', '^via,.*', '^videostrong,.*', '^virtio,.*', '^vishay,.*', '^vitesse,.*', '^vivante,.*', '^vocore,.*', '^voipac,.*', '^vot,.*', '^vxt,.*', '^wd,.*', '^wetek,.*', '^wexler,.*', '^whwave,.*', '^wi2wi,.*', '^winbond,.*', '^winstar,.*'
- , '^wits,.*', '^wlf,.*', '^wm,.*', '^wobo,.*', '^x-powers,.*', '^xes,.*', '^xillybus,.*', '^xinpeng,.*', '^xlnx,.*', '^xunlong,.*', '^xylon,.*', '^yna,.*', '^yones-toptech,.*', '^ysoft,.*', '^zarlink,.*', '^zeitec,.*', '^zidoo,.*', '^zii,.*', '^zte,.*', '^zyxel,.*'
+Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/dm814x.dtsi | 112 ++++++++++++++++++++--------------
+ arch/arm/boot/dts/dra62x.dtsi |   6 +-
+ 2 files changed, 68 insertions(+), 50 deletions(-)
 
-See https://patchwork.ozlabs.org/patch/1251657
-Please check and re-submit.
+diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
+--- a/arch/arm/boot/dts/dm814x.dtsi
++++ b/arch/arm/boot/dts/dm814x.dtsi
+@@ -4,6 +4,8 @@
+  * kind, whether express or implied.
+  */
+ 
++#include <dt-bindings/bus/ti-sysc.h>
++#include <dt-bindings/clock/dm814.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/dm814x.h>
+ 
+@@ -574,57 +576,73 @@ l4hs: l4hs@4a000000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0 0x4a000000 0x1b4040>;
+-		};
+-
+-		/* REVISIT: Move to live under l4hs once driver is fixed */
+-		mac: ethernet@4a100000 {
+-			compatible = "ti,cpsw";
+-			ti,hwmods = "cpgmac0";
+-			clocks = <&cpsw_125mhz_gclk>, <&cpsw_cpts_rft_clk>;
+-			clock-names = "fck", "cpts";
+-			cpdma_channels = <8>;
+-			ale_entries = <1024>;
+-			bd_ram_size = <0x2000>;
+-			mac_control = <0x20>;
+-			slaves = <2>;
+-			active_slave = <0>;
+-			cpts_clock_mult = <0x80000000>;
+-			cpts_clock_shift = <29>;
+-			reg = <0x4a100000 0x800
+-			       0x4a100900 0x100>;
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			interrupt-parent = <&intc>;
+-			/*
+-			 * c0_rx_thresh_pend
+-			 * c0_rx_pend
+-			 * c0_tx_pend
+-			 * c0_misc_pend
+-			 */
+-			interrupts = <40 41 42 43>;
+-			ranges;
+-			syscon = <&scm_conf>;
+ 
+-			davinci_mdio: mdio@4a100800 {
+-				compatible = "ti,davinci_mdio";
++			target-module@100000 {
++				compatible = "ti,sysc-omap4-simple", "ti,sysc";
++				reg = <0x100900 0x4>,
++				      <0x100908 0x4>,
++				      <0x100904 0x4>;
++				reg-names = "rev", "sysc", "syss";
++				ti,sysc-mask = <0>;
++				ti,sysc-midle = <SYSC_IDLE_FORCE>,
++						<SYSC_IDLE_NO>;
++				ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++						<SYSC_IDLE_NO>;
++				ti,syss-mask = <1>;
++				clocks = <&alwon_ethernet_clkctrl DM814_ETHERNET_CPGMAC0_CLKCTRL 0>;
++				clock-names = "fck";
+ 				#address-cells = <1>;
+-				#size-cells = <0>;
+-				ti,hwmods = "davinci_mdio";
+-				bus_freq = <1000000>;
+-				reg = <0x4a100800 0x100>;
+-			};
+-
+-			cpsw_emac0: slave@4a100200 {
+-				/* Filled in by U-Boot */
+-				mac-address = [ 00 00 00 00 00 00 ];
+-				phys = <&phy_gmii_sel 1>;
++				#size-cells = <1>;
++				ranges = <0 0x100000 0x8000>;
++
++				mac: ethernet@0 {
++					compatible = "ti,cpsw";
++					clocks = <&cpsw_125mhz_gclk>, <&cpsw_cpts_rft_clk>;
++					clock-names = "fck", "cpts";
++					cpdma_channels = <8>;
++					ale_entries = <1024>;
++					bd_ram_size = <0x2000>;
++					mac_control = <0x20>;
++					slaves = <2>;
++					active_slave = <0>;
++					cpts_clock_mult = <0x80000000>;
++					cpts_clock_shift = <29>;
++					reg = <0 0x800>,
++					      <0x900 0x100>;
++					#address-cells = <1>;
++					#size-cells = <1>;
++					/*
++					* c0_rx_thresh_pend
++					* c0_rx_pend
++					* c0_tx_pend
++					* c0_misc_pend
++					*/
++					interrupts = <40 41 42 43>;
++					ranges = <0 0 0x8000>;
++					syscon = <&scm_conf>;
++
++					davinci_mdio: mdio@800 {
++						compatible = "ti,cpsw-mdio", "ti,davinci_mdio";
++						clocks = <&alwon_ethernet_clkctrl DM814_ETHERNET_CPGMAC0_CLKCTRL 0>;
++						clock-names = "fck";
++						#address-cells = <1>;
++						#size-cells = <0>;
++						bus_freq = <1000000>;
++						reg = <0x800 0x100>;
++					};
+ 
+-			};
++					cpsw_emac0: slave@200 {
++						/* Filled in by U-Boot */
++						mac-address = [ 00 00 00 00 00 00 ];
++						phys = <&phy_gmii_sel 1>;
++					};
+ 
+-			cpsw_emac1: slave@4a100300 {
+-				/* Filled in by U-Boot */
+-				mac-address = [ 00 00 00 00 00 00 ];
+-				phys = <&phy_gmii_sel 2>;
++					cpsw_emac1: slave@300 {
++						/* Filled in by U-Boot */
++						mac-address = [ 00 00 00 00 00 00 ];
++						phys = <&phy_gmii_sel 2>;
++					};
++				};
+ 			};
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/dra62x.dtsi b/arch/arm/boot/dts/dra62x.dtsi
+--- a/arch/arm/boot/dts/dra62x.dtsi
++++ b/arch/arm/boot/dts/dra62x.dtsi
+@@ -12,12 +12,12 @@ / {
+ 
+ /* Compared to dm814x, dra62x has different offsets for Ethernet */
+ &mac {
+-	reg = <0x4a100000 0x800
+-		0x4a101200 0x100>;
++	reg = <0 0x800>,
++	      <0x1200 0x100>;
+ };
+ 
+ &davinci_mdio {
+-	reg = <0x4a101000 0x100>;
++	reg = <0x1000 0x100>;
+ };
+ 
+ #include "dra62x-clocks.dtsi"
+-- 
+2.25.1
