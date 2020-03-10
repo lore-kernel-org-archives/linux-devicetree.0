@@ -2,166 +2,86 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E3CC18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45166C10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A9B24649
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:28:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B4y7OjNp"
+	by mail.kernel.org (Postfix) with ESMTP id 198D8227BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgCJO23 (ORCPT
+        id S1726488AbgCJOaR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:28:29 -0400
-Received: from mail-lj1-f169.google.com ([209.85.208.169]:40766 "EHLO
-        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbgCJO23 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 10:28:29 -0400
-Received: by mail-lj1-f169.google.com with SMTP id 19so11535264ljj.7
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 07:28:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oq2TUuJgjX8T14WhhZPEa3jJeXtGZIthBibLM1uWq8A=;
-        b=B4y7OjNpycQJv6Tb/xr1QLVim7t9Rw8XWToJWkDcaNxG9b31kY9FLflt0xSCgHsr3p
-         4OxOscuD7+1WlZM8Z6yPR2FEv3jPoRS3BQh0ooPAh9DUlGyC5MTCQ5EPBNwe9DllzIgq
-         43qutTr/l56boxw/0lKLbeVMmuVym8k8PciM8NQkBo9uPWvV1cDjRLyTosojKZzHa/8+
-         FCmfAi9SMgZORKu86H/xYV+Fa67I4Mx7fHK7ebJB4h0PkG/VVU7pKf0G3X7S6hSxjeOT
-         BCn12Zs4J90U/OXN0cuNiwshEEG3wiUi6C5MhXNFrHixo7S3rp+X9lXS30w/rqdO8BWD
-         Hnnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oq2TUuJgjX8T14WhhZPEa3jJeXtGZIthBibLM1uWq8A=;
-        b=MGF1vsM0Nuaf1CK7PQ3beM3rtEBajp8vZoqnz5PbQus3A1lWagMY76jTdJCpOnzfir
-         qTAbvRc1AwNH4anSPT13e5zenxYXFn/ULcVGb3YMZXxx5OiFz5JEKY2TZJL757RrWQ5R
-         rW8Ldjkvr033iLxlmoeuW4m6CS7fB2mntlA5i70iOKlOoFnK7LqV+8/Oe0ie+dHPrxqL
-         qW8W5PpJite2oTqb01RTCy9atVVZt8DfzX2QQjCDlmIYWJwMLLFCOzmqaJlSPmfW10rX
-         CeZePZ9KV4e9/4+5yPYTbJaZ4+XfRIVcKsSI465k4vDjKX/lYrxkBzrFhspkY9ClIRB0
-         PZ1Q==
-X-Gm-Message-State: ANhLgQ2u+jatQzJunrtadk6BFMLaIoSYtN+9sJttgD6kNjBKHKhD7Z3l
-        CNrTfMx0DHlCkBk9zF+o6O6VgA==
-X-Google-Smtp-Source: ADFU+vvWFKIWGUtl92EE1gL69n4Km/arGy5lK3kwV/k5xtRJ9+eceWgnrlqtuXL4yqKtwzeQnFUQZQ==
-X-Received: by 2002:a2e:9590:: with SMTP id w16mr12879556ljh.113.1583850507090;
-        Tue, 10 Mar 2020 07:28:27 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id w24sm22794505ljh.26.2020.03.10.07.28.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 07:28:26 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Ferruh Yigit <fery@cypress.com>,
-        Henrik Rydberg <rydberg@bitmath.org>
-Subject: [PATCH 1/2 v1] dt-bindings: touchscreen: Add CY8CTMA140 bindings
-Date:   Tue, 10 Mar 2020 15:28:17 +0100
-Message-Id: <20200310142818.15415-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.1
+        Tue, 10 Mar 2020 10:30:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:59907 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbgCJOaR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 10:30:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 07:30:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
+   d="scan'208";a="443182666"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Mar 2020 07:30:13 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jBfte-008U3F-Qf; Tue, 10 Mar 2020 16:30:14 +0200
+Date:   Tue, 10 Mar 2020 16:30:14 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     ben.kao@intel.com, mchehab@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [v1 3/3] media: ov8856: Implement sensor module revision
+ identification
+Message-ID: <20200310143014.GL1922688@smile.fi.intel.com>
+References: <20200310134603.30260-1-robert.foss@linaro.org>
+ <20200310134603.30260-4-robert.foss@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200310134603.30260-4-robert.foss@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Cypress CY8CTMA140
-touchscreen.
+On Tue, Mar 10, 2020 at 02:46:03PM +0100, Robert Foss wrote:
+> Query the sensor for its module revision, and compare it
+> to known revisions.
+> Currently only the '1B' revision has been added.
 
-Cc: devicetree@vger.kernel.org
-Cc: Ferruh Yigit <fery@cypress.com>
-Cc: Henrik Rydberg <rydberg@bitmath.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../input/touchscreen/cypress,cy8ctma140.yaml | 72 +++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
+Are you sure you send latest version?
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
-new file mode 100644
-index 000000000000..66b488e48b74
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/cypress,cy8ctma140.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cypress CY8CTMA140 series touchscreen controller bindings
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+
-+properties:
-+  compatible:
-+    const: cypress,cy8ctma140
-+
-+  reg:
-+    description: I2C client address, defined by hardware
-+    const: 0x20
-+
-+  clock-frequency:
-+    description: I2C client max frequency, defined by hardware
-+    const: 400000
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vcpin-supply:
-+    description: Analog power supply regulator on VCPIN pin
-+
-+  vdd-supply:
-+    description: Digital power supply regulator on VDD pin
-+
-+  touchscreen-inverted-x: true
-+  touchscreen-inverted-y: true
-+  touchscreen-size-x: true
-+  touchscreen-size-y: true
-+  touchscreen-swapped-x-y: true
-+  touchscreen-max-pressure: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - touchscreen-size-x
-+  - touchscreen-size-y
-+  - touchscreen-max-pressure
-+
-+examples:
-+- |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c@00000000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      touchscreen@20 {
-+        compatible = "cypress,cy8ctma140";
-+        reg = <0x20>;
-+        touchscreen-size-x = <480>;
-+        touchscreen-size-y = <800>;
-+        touchscreen-max-pressure = <255>;
-+        interrupt-parent = <&gpio6>;
-+        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
-+        vdd-supply = <&ab8500_ldo_aux2_reg>;
-+        vcpin-supply = <&ab8500_ldo_aux2_reg>;
-+      };
-+    };
-+
-+...
+I have a déjà vu that I have seen this already and this one doesn't address any
+comment given.
+
+...
+
+> +	dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
+> +		val,
+
+> +		val == OV8856_1B_MODULE ? "1B" : "unknown revision",
+
+This is weird. Can you add a bit more general way of showing revision?
+
+> +		client->addr);
+
 -- 
-2.21.1
+With Best Regards,
+Andy Shevchenko
+
 
