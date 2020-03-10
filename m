@@ -2,138 +2,172 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D93BC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E51C3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B8A20873
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583850692;
-	bh=7dxdgkV5YUtvF1qH4AuaNTcIVtkYOCHvnp6vEhHeaco=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=QWU4a56pyt/MemZnwQMh8ZAldVh7qC5XYtFz/N1zufb+p6KlMLs8G5DqdoxWY8uEU
-	 OyHU8ctEizwf5cD4Q3l2V+hWXJzzfe4g47tjsxRz65WuohKNqK+niJurhnHzm3A4FM
-	 efHOaDWjKOMLtHoKlbPpe4th+h0JijXhk6h+fLBM=
+	by mail.kernel.org (Postfix) with ESMTP id 7C65A208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:38:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmPjz/lh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgCJOb3 (ORCPT
+        id S1727191AbgCJOiK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:31:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:37838 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbgCJOb2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:31:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4497E30E;
-        Tue, 10 Mar 2020 07:31:28 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDF483F6CF;
-        Tue, 10 Mar 2020 07:31:27 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 14:31:26 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     andrew@aj.id.au, andy.shevchenko@gmail.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, joel@jms.id.au,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org
-Subject: Applied "dt-bindings: fsi: Add FSI2SPI bindings" to the spi tree
-In-Reply-To:  <20200306194118.18581-2-eajames@linux.ibm.com>
-Message-Id:  <applied-20200306194118.18581-2-eajames@linux.ibm.com>
-X-Patchwork-Hint: ignore
+        Tue, 10 Mar 2020 10:38:10 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55800 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgCJOiK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 10:38:10 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 6so1669853wmi.5;
+        Tue, 10 Mar 2020 07:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TjTCBST6cpMsAppV8JBTTv+T9QV8G6JLefGJ8DTMePs=;
+        b=TmPjz/lhjnZcVRNn4y7bnt8Dk07ZJMZgLzzwpZhO0PigzBsVHOzApOPqb8iS68o/0k
+         68Pfb1OWY6pUMqTmla/Xpx059WGaOz7mrx3lZaN0Jc/Cww2Weu/4QuCe5D7IKW9wyapS
+         9bMaFcqPftQSMlzmOoApEsG8MtVqdbJPC8wuvEfiNcpXcJw4AJMnruYO4sHW6HiZy+W5
+         YP9bCAMQUnJQLxUnb57Xb/lZHz18dPYCVVBwQdPS/UOSTshMrArQpZYkI5UCmu3ubPwh
+         gdpLBWrqe6AU88bYyLlXipVH8XOjZKei/9XNKnWOY94jeRRHYHhFMUCFMs2qGWKFKtzc
+         L3WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TjTCBST6cpMsAppV8JBTTv+T9QV8G6JLefGJ8DTMePs=;
+        b=YssoY7dhfl3vop8VPmwE/ozv1QW1CuJJuKfJIZSbGTHJCle7VZyJ2yZG0VOyKN8tZK
+         zZZocc/3VUmPcbVGT2meDBxw99NgNDws9jkSZVtgH9A9zBtsEyNzfoQMcFr2XdcUAX7E
+         NSZDiymUuL493XwVd60Ic4E0jt6aDXJ7bS8gBKGlOVMflAscuYrV3cBBjWqYJVvUim0B
+         GXsE922HKDmXmwtO4AQW1dwIYaPzkWM0TSHKWLmwZhyKQTo4V8vY1nF5gHK9/Vx+CzjI
+         +eFGUfT7VJZPtwRgRUuRmkf/yuYaOMyilws7br5vYmNOKuTf64wJmfRLohLNhEFzdety
+         vS3A==
+X-Gm-Message-State: ANhLgQ0rz23wpK8gOaM3iUB2gt2UPOh2hYG+6MBEutvuBAhlhv+GHp2m
+        kze4u/CBn7ZHBSgUMJJUvq4=
+X-Google-Smtp-Source: ADFU+vtljeoEU+yem2iyDmCFuSh/4804c3cfqoE81CpBPKgnGi1igq3KI2mh2HhVQsq/asf+qr2lkw==
+X-Received: by 2002:a7b:cb97:: with SMTP id m23mr1992564wmi.140.1583851087374;
+        Tue, 10 Mar 2020 07:38:07 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host218-254-dynamic.53-79-r.retail.telecomitalia.it. [79.53.254.218])
+        by smtp.googlemail.com with ESMTPSA id c23sm4516611wme.39.2020.03.10.07.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 07:38:06 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     sboyd@kernel.org
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
+Date:   Tue, 10 Mar 2020 15:37:56 +0100
+Message-Id: <20200310143756.244-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <sboyd@kernel.org>
+References: <sboyd@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Add missing definition of rpm clk for ipq806x soc
 
-   dt-bindings: fsi: Add FSI2SPI bindings
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1e7479df0168339a98acb680fc56b804b96acb18 Mon Sep 17 00:00:00 2001
-From: Eddie James <eajames@linux.ibm.com>
-Date: Fri, 6 Mar 2020 13:41:17 -0600
-Subject: [PATCH] dt-bindings: fsi: Add FSI2SPI bindings
-
-Add documentation for the FSI2SPI CFAM engine, which provides access to
-a number of SPI controllers.
-
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200306194118.18581-2-eajames@linux.ibm.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Acked-by: John Crispin <john@phrozen.org>
 ---
- .../devicetree/bindings/fsi/ibm,fsi2spi.yaml  | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
+ .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+ drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
+ include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
+ 3 files changed, 40 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
-new file mode 100644
-index 000000000000..893d81e54caa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/fsi/ibm,fsi2spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+index 944719bd586f..4bb2cbeff2b4 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+@@ -15,6 +15,7 @@ Required properties :
+ 			"qcom,rpmcc-msm8916", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+ 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
++			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8998", "qcom,rpmcc"
+ 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
+diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
+index 9e3110a71f12..f71d228fd6bd 100644
+--- a/drivers/clk/qcom/clk-rpm.c
++++ b/drivers/clk/qcom/clk-rpm.c
+@@ -543,10 +543,45 @@ static const struct rpm_clk_desc rpm_clk_apq8064 = {
+ 	.num_clks = ARRAY_SIZE(apq8064_clks),
+ };
+ 
++/* ipq806x */
++DEFINE_CLK_RPM(ipq806x, afab_clk, afab_a_clk, QCOM_RPM_APPS_FABRIC_CLK);
++DEFINE_CLK_RPM(ipq806x, cfpb_clk, cfpb_a_clk, QCOM_RPM_CFPB_CLK);
++DEFINE_CLK_RPM(ipq806x, daytona_clk, daytona_a_clk, QCOM_RPM_DAYTONA_FABRIC_CLK);
++DEFINE_CLK_RPM(ipq806x, ebi1_clk, ebi1_a_clk, QCOM_RPM_EBI1_CLK);
++DEFINE_CLK_RPM(ipq806x, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
++DEFINE_CLK_RPM(ipq806x, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
++DEFINE_CLK_RPM(ipq806x, nss_fabric_0_clk, nss_fabric_0_a_clk, QCOM_RPM_NSS_FABRIC_0_CLK);
++DEFINE_CLK_RPM(ipq806x, nss_fabric_1_clk, nss_fabric_1_a_clk, QCOM_RPM_NSS_FABRIC_1_CLK);
 +
-+title: IBM FSI-attached SPI controllers
++static struct clk_rpm *ipq806x_clks[] = {
++	[RPM_APPS_FABRIC_CLK] = &ipq806x_afab_clk,
++	[RPM_APPS_FABRIC_A_CLK] = &ipq806x_afab_a_clk,
++	[RPM_CFPB_CLK] = &ipq806x_cfpb_clk,
++	[RPM_CFPB_A_CLK] = &ipq806x_cfpb_a_clk,
++	[RPM_DAYTONA_FABRIC_CLK] = &ipq806x_daytona_clk,
++	[RPM_DAYTONA_FABRIC_A_CLK] = &ipq806x_daytona_a_clk,
++	[RPM_EBI1_CLK] = &ipq806x_ebi1_clk,
++	[RPM_EBI1_A_CLK] = &ipq806x_ebi1_a_clk,
++	[RPM_SYS_FABRIC_CLK] = &ipq806x_sfab_clk,
++	[RPM_SYS_FABRIC_A_CLK] = &ipq806x_sfab_a_clk,
++	[RPM_SFPB_CLK] = &ipq806x_sfpb_clk,
++	[RPM_SFPB_A_CLK] = &ipq806x_sfpb_a_clk,
++	[RPM_NSS_FABRIC_0_CLK] = &ipq806x_nss_fabric_0_clk,
++	[RPM_NSS_FABRIC_0_A_CLK] = &ipq806x_nss_fabric_0_a_clk,
++	[RPM_NSS_FABRIC_1_CLK] = &ipq806x_nss_fabric_1_clk,
++	[RPM_NSS_FABRIC_1_A_CLK] = &ipq806x_nss_fabric_1_a_clk,
++};
 +
-+maintainers:
-+ - Eddie James <eajames@linux.ibm.com>
++static const struct rpm_clk_desc rpm_clk_ipq806x = {
++	.clks = ipq806x_clks,
++	.num_clks = ARRAY_SIZE(ipq806x_clks),
++};
 +
-+description: |
-+  This binding describes an FSI CFAM engine called the FSI2SPI. Therefore this
-+  node will always be a child of an FSI CFAM node; see fsi.txt for details on
-+  FSI slave and CFAM nodes. This FSI2SPI engine provides access to a number of
-+  SPI controllers.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ibm,fsi2spi
-+
-+  reg:
-+    items:
-+      - description: FSI slave address
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    fsi2spi@1c00 {
-+        compatible = "ibm,fsi2spi";
-+        reg = <0x1c00 0x400>;
-+    };
+ static const struct of_device_id rpm_clk_match_table[] = {
+ 	{ .compatible = "qcom,rpmcc-msm8660", .data = &rpm_clk_msm8660 },
+ 	{ .compatible = "qcom,rpmcc-apq8060", .data = &rpm_clk_msm8660 },
+ 	{ .compatible = "qcom,rpmcc-apq8064", .data = &rpm_clk_apq8064 },
++	{ .compatible = "qcom,rpmcc-ipq806x", .data = &rpm_clk_ipq806x },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rpm_clk_match_table);
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index 8e3095720552..ae74c43c485d 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -37,6 +37,10 @@
+ #define RPM_XO_A0				27
+ #define RPM_XO_A1				28
+ #define RPM_XO_A2				29
++#define RPM_NSS_FABRIC_0_CLK			30
++#define RPM_NSS_FABRIC_0_A_CLK			31
++#define RPM_NSS_FABRIC_1_CLK			32
++#define RPM_NSS_FABRIC_1_A_CLK			33
+ 
+ /* SMD RPM clocks */
+ #define RPM_SMD_XO_CLK_SRC				0
 -- 
-2.20.1
+2.25.0
 
