@@ -2,197 +2,192 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A92DC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 08:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB509C2BB57
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 08:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17032253D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 08:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0F424685
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 08:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgCJIRd (ORCPT
+        id S1726220AbgCJIT5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:17:33 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:34005 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgCJIRd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 04:17:33 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MOzGc-1izPwe31lE-00POOZ; Tue, 10 Mar 2020 09:17:16 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 939BA65011A;
-        Tue, 10 Mar 2020 08:17:15 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lLqXdIoCtkhf; Tue, 10 Mar 2020 09:17:15 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 1370764F896;
-        Tue, 10 Mar 2020 09:17:15 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.10.2.141) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 10 Mar 2020 09:17:14 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id A2B24804F8; Tue, 10 Mar 2020 09:17:14 +0100 (CET)
-Date:   Tue, 10 Mar 2020 09:17:14 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-Message-ID: <20200310081714.GA11274@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-References: <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
- <20200302160906.GC3717@pflmari>
- <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
- <20200305143628.GB25741@pflmari>
- <20200306131632.GA4878@pendragon.ideasonboard.com>
- <20200306134154.GD27714@pflmari>
- <20200306134546.GE4878@pendragon.ideasonboard.com>
- <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
- <20200309110931.GB3593@pflmari>
- <87a74pvwz8.wl-kuninori.morimoto.gx@renesas.com>
+        Tue, 10 Mar 2020 04:19:57 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49145 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgCJIT5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 04:19:57 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBa6p-00069G-Gm; Tue, 10 Mar 2020 09:19:27 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBa6n-0002TP-9h; Tue, 10 Mar 2020 09:19:25 +0100
+Date:   Tue, 10 Mar 2020 09:19:25 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
+        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
+        kernel@pengutronix.de, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RESEND v6  09/13] dmaengine: imx-sdma: remove ERR009165 on
+ i.mx6ul
+Message-ID: <20200310081925.GT3335@pengutronix.de>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a74pvwz8.wl-kuninori.morimoto.gx@renesas.com>
-X-Originating-IP: [10.10.2.141]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A627467
-X-Provags-ID: V03:K1:PBV/4ZazPpOCL0NFPbx0O17cwJVnIG2mTRgrAjYG6B7PqSR8mIR
- uguUMPT9X4a/ukhegY+14bHlpiGWSDqAkth8myPnz06cizfzXp7UMSui1BnjUFXZwXKUqob
- S9s2A99jm7Y1ihE76E9i78Qrh3mXHncz3jHoiubOOd5e7fVT6nWs0I2hJLblBiiYVqLL00U
- y0HceA3ppvM1M/68+OdZA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yLiw7twFsQA=:TG7f/zMyGEPXat198P6bMY
- wxVAfnroL5HDFHBhhOpafgEYU9ZBGbf6NTNTsvPJ8PXZNk0v7hpKfkIWnGnQ9uweudU70tOpz
- pvMLpAQpXNcSpmUumv7uVs3sZ2Hq7jiKLh3UEp4J7ZKf31lKcco6USIduIkoJAZSDreqVs0QB
- yhIJe7qYoFT8xXqH1Xbn6TphpEWybu38mhA0/Pv+sMmbfD0EHzAzhJqtC8R+3KldUCGFlCZNn
- y3WRcXZTSWz9xAQUYp0m1tBqRAbAFVJy5tj3MrhZy+aoWlaJRl2W3PxRFy6R8x8WGGx9+ppVK
- 2vykpfYsRRYonDXh3HL0X0i9zEMhyQj/mvriKe2v5wmYtZkjLuS3McgF8svHxwXkbegELhCZt
- xrs3Q7sAdPpHHU8F6sBmYgutttaSCwHUR6XJztfF0flG7PTVtU+K9s95sNIBSrqEOWTTLsF6q
- fXKYVjEpxQamfvlEO4WAgNiGGN9bljqHGjaOQvzOyby9vsdVcEnr3A0KBqRy/yOrCW+8Ebv5K
- ePadnx5TjHU+N4u01SHySP10uESuI46W8AWz9HcJ8OP8Z8ZmaFER241WtXeVdLppA0YIYja6F
- whGPg9n4M1WZ7mxSvtGmU2O2ymqotlcsq9ozX1+Zr2m3r9P44vQnxmlK2gBTFGwl+tKbckESJ
- 3vr075KTsAhMm4wxp9kCi75Xqnc8k/nAT7bsAhdIzcJldySQ6dmeQEHpS3Vb+sG+qhlCll0KP
- IGepHzmE6DL3Wmmhyl2us+iLu84wDTaK6LjhbViX4mPpfTU1PrbT95pq2TnL496xBTjjHRFfT
- k0wQbNGhofB3Ns8NYTcwAFsnVcyuA2RUnFPDPaMASf0S/YGqakF8RbnH4IGAE3S0U8qUe0h
+In-Reply-To: <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:04:16 up 19 days, 15:34, 45 users,  load average: 0.11, 0.18,
+ 0.17
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Morimoto-san,
-
-Kuninori Morimoto, Tue, Mar 10, 2020 02:07:23 +0100:
-> > Should the adv748x driver also implement anything to configure the frequency
-> > of MCLK clock? I mean something like .set_sysclk and .set_fmt callbacks of
-> > snd_soc_dai_ops?
-> > 
-> > Or is the driver implementation, which depends on mclk-fs to be 256, the audio
-> > stream format to be 8x S24_LE, and requires strictly 48kHz sampling rate on
-> > the HDMI input, a totally acceptable first attempt at writing a DAI driver?
-> > 
-> > I'm a bit bothered by that, as the hardware is also capable of decoding
-> > stereo, sampling rate 32-192kHz, a variety of PCM and compressed/encrypted
-> > formats, 128-768fs MCLK multipliers, and a row of I2S options.
-> > 
-> > I just find it confusing to place the configuration interfaces.
-> > For instance, the patches use the media ioctl for audio output selection to
-> > select I2S protocol. While works, it does not feel right (shouldn't it be in
-> > the device tree?)
-> > 
-> > Maybe you can point me at a driver doing something similar? I'm studying media
-> > drivers now, but not many of them use ASoC interfaces for devices providing a
-> > clock. Or maybe I should better look at sound/soc/...?
+On Tue, Mar 10, 2020 at 07:31:58PM +0800, Robin Gong wrote:
+> ECSPI issue fixed from i.mx6ul at hardware level, no need
+> ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx
+> from where i.mx6ul source.
 > 
-> Setting Sound Clock for all cases/patterns are very complex and difficult actually.
-> (ADV7482 configuration) x (ADG divider / selector) x etc, etc...
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  drivers/dma/imx-sdma.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 1 deletion(-)
 > 
-> Thus, Current R-Car sound is assuming that audio_clk_a/b/c/i are providing
-> route clock (= no configuration, fixed clock), and ADG divides it,
-> and provide best clock to each SSIx.
-> Current Salvator/ULCB already have 44.1/48kHz route clock (= CS2000 and Audio_CLK_A),
-> and we can reuse it for all SSIx. Thus, ADV7482 clock is not necessary, I guess ?
-> Or providing specific clock for some case is enough
-> (ADG will automatically select it if necessary).
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 56288d8..5ae7237 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -419,6 +419,13 @@ struct sdma_driver_data {
+>  	int num_events;
+>  	struct sdma_script_start_addrs	*script_addrs;
+>  	bool check_ratio;
+> +	/*
+> +	 * ecspi ERR009165 fixed should be done in sdma script
+> +	 * and it has been fixed in soc from i.mx6ul.
+> +	 * please get more information from the below link:
+> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+> +	 */
+> +	bool ecspi_fixed;
+>  };
+>  
+>  struct sdma_engine {
+> @@ -539,6 +546,31 @@ static struct sdma_driver_data sdma_imx6q = {
+>  	.script_addrs = &sdma_script_imx6q,
+>  };
+>  
+> +static struct sdma_script_start_addrs sdma_script_imx6sx = {
+> +	.ap_2_ap_addr = 642,
+> +	.uart_2_mcu_addr = 817,
+> +	.mcu_2_app_addr = 747,
+> +	.uartsh_2_mcu_addr = 1032,
+> +	.mcu_2_shp_addr = 960,
+> +	.app_2_mcu_addr = 683,
+> +	.shp_2_mcu_addr = 891,
+> +	.spdif_2_mcu_addr = 1100,
+> +	.mcu_2_spdif_addr = 1134,
+> +};
+> +
+> +static struct sdma_driver_data sdma_imx6sx = {
+> +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
+> +	.num_events = 48,
+> +	.script_addrs = &sdma_script_imx6sx,
+> +};
+> +
+> +static struct sdma_driver_data sdma_imx6ul = {
+> +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
+> +	.num_events = 48,
+> +	.script_addrs = &sdma_script_imx6sx,
+> +	.ecspi_fixed = true,
+> +};
+> +
+>  static struct sdma_script_start_addrs sdma_script_imx7d = {
+>  	.ap_2_ap_addr = 644,
+>  	.uart_2_mcu_addr = 819,
+> @@ -584,9 +616,15 @@ static const struct platform_device_id sdma_devtypes[] = {
+>  		.name = "imx6q-sdma",
+>  		.driver_data = (unsigned long)&sdma_imx6q,
+>  	}, {
+> +		.name = "imx6sx-sdma",
+> +		.driver_data = (unsigned long)&sdma_imx6sx,
+> +	}, {
 
-In this particular case, the ADV7482 *must* provide the clock, I believe: it
-extracts the audio stream from the HDMI connection (in addition to everything
-else) and serves the stream on I2S. Its MCLK line is physically connected to
-the CLK_C line (which is an input) of the R-Car SoC. The I2S audio
-transmission does not work if the ADV7482 clock is not programmed (or
-programmed incorrectly).
-Yes, I tried (I also tried programming it incorrectly, just because I didn't
-know what I was doing).
+Now the i.MX6sx uses a new sdma_script_start_addrs entry which is the same
+as the i.MX6q one we used before with one exception: it lacks the
+per_2_per_addr = 6331 entry. This is only used for IMX_DMATYPE_ASRC and
+IMX_DMATYPE_ASRC_SP, both are entirely unused in the mainline kernel. So
+why must the i.MX6sx changed here and what has this to do with ECSPI?
 
-> If ADV7482 needs more detail clock settings combination,
-> then, there is no method to adjust to it.
-> We need to consider such system somehow.
+Sascha
 
-Not encouraging...
+>  		.name = "imx7d-sdma",
+>  		.driver_data = (unsigned long)&sdma_imx7d,
+>  	}, {
+> +		.name = "imx6ul-sdma",
+> +		.driver_data = (unsigned long)&sdma_imx6ul,
+> +	}, {
+>  		.name = "imx8mq-sdma",
+>  		.driver_data = (unsigned long)&sdma_imx8mq,
+>  	}, {
+> @@ -602,7 +640,9 @@ static const struct of_device_id sdma_dt_ids[] = {
+>  	{ .compatible = "fsl,imx35-sdma", .data = &sdma_imx35, },
+>  	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
+>  	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
+> +	{ .compatible = "fsl,imx6sx-sdma", .data = &sdma_imx6sx, },
+>  	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
+> +	{ .compatible = "fsl,imx6ul-sdma", .data = &sdma_imx6ul, },
+>  	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
+>  	{ /* sentinel */ }
+>  };
+> @@ -1169,8 +1209,17 @@ static int sdma_config_channel(struct dma_chan *chan)
+>  			if (sdmac->peripheral_type == IMX_DMATYPE_ASRC_SP ||
+>  			    sdmac->peripheral_type == IMX_DMATYPE_ASRC)
+>  				sdma_set_watermarklevel_for_p2p(sdmac);
+> -		} else
+> +		} else {
+> +			/*
+> +			 * ERR009165 fixed from i.mx6ul, no errata need,
+> +			 * set bit31 to let sdma script skip the errata.
+> +			 */
+> +			if (sdmac->peripheral_type == IMX_DMATYPE_CSPI &&
+> +			    sdmac->direction == DMA_MEM_TO_DEV &&
+> +			    sdmac->sdma->drvdata->ecspi_fixed)
+> +				__set_bit(31, &sdmac->watermark_level);
+>  			__set_bit(sdmac->event_id0, sdmac->event_mask);
+> +		}
+>  
+>  		/* Address */
+>  		sdmac->shp_addr = sdmac->per_address;
+> -- 
+> 2.7.4
+> 
+> 
 
-Maybe I should leave the clock fixed, with the frequency configuration in the
-device tree, e.g. as adv7482 port node property "clock-frequency".
-Which feels rather pathetic, but at least serves my purpose (48k, 8x24).
-
-But let me describe the situation as I see it first.
-
-As far as I understand, the SSI4 (Salvator-X board) should be programmed by
-the snd-soc-rcar driver in the "slave receiver" mode for this use case, which
-is HDMI input ADV7482 (I2S master, TDM) -> SSI4 (I2S slave)):
-
-[   63.305990] asoc_simple_card_parse_clk: asoc-audio-graph-card sound: rsnd-dai.1 : sysclk = 66666664, direction 0
-[   63.306028] asoc_simple_card_parse_clk: asoc-audio-graph-card sound: adv748x-i2s : sysclk = 12288000, direction 1
-
-I am a bit bothered by the fact that sysclk of rsnd-dai.1 does not match that
-sysclk of adv7482-i2s, but I think it's just DT node configuration.
-
-[   63.306033] asoc_simple_card_set_dailink_name: asoc-audio-graph-card sound: name : rsnd-dai.1-adv748x-i2s
-...
-[   63.332641] asoc-audio-graph-card sound: adv748x.4-0070 <-> rsnd-dai.1 mapping ok
-...
-[   63.341317] dapm_connect_dai_link_widgets:  rsnd-dai.1-adv748x-i2s: connected DAI link adv748x.4-0070:Capture -> ec500000.sound:DAI1 Capture
-...
-[  128.961389] rsnd_write: rcar_sound ec500000.sound: w ssi[4] - SSICR ( 124) : 9ceb0100
-
-Decoding this last line (9ceb0100) gives SSICR.TRMD (bit1) =0, SSICR.SCKD
-(bit15) =0, SSICR.SWSD (bit14) =0. The combination is documented as "slave
-receiver". Which, I assume, makes SSI4 use the external clock. Given the
-received stream looks ok, something also must have set the dividers correctly.
-
-From the above, I conclude, whatever the complexity of the audio system clock
-configuration, it seems to be implemented for the case.
-
-I only miss a more or less clear way to configure the I2S master (ADV7482, that is).
-
-Regards,
-Alex
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
