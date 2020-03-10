@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820FAC2BB8A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D48C2BB8B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54180222D9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4F620727
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbgCJSfS (ORCPT
+        id S1727326AbgCJSfW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:35:18 -0400
-Received: from muru.com ([72.249.23.125]:59598 "EHLO muru.com"
+        Tue, 10 Mar 2020 14:35:22 -0400
+Received: from muru.com ([72.249.23.125]:59638 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727332AbgCJSfR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:35:17 -0400
+        id S1727556AbgCJSfW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:35:22 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id E3589812F;
-        Tue, 10 Mar 2020 18:36:01 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 3061781CA;
+        Tue, 10 Mar 2020 18:36:07 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
@@ -34,9 +34,9 @@ Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
         linux-clk@vger.kernel.org
-Subject: [PATCH 04/10] ARM: dts: Configure interconnect target module for dm814x tpcc
-Date:   Tue, 10 Mar 2020 11:34:58 -0700
-Message-Id: <20200310183504.65358-5-tony@atomide.com>
+Subject: [PATCH 07/10] ARM: dts: Configure interconnect target module for dm814x tptc2
+Date:   Tue, 10 Mar 2020 11:35:01 -0700
+Message-Id: <20200310183504.65358-8-tony@atomide.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310183504.65358-1-tony@atomide.com>
 References: <20200310183504.65358-1-tony@atomide.com>
@@ -59,58 +59,45 @@ Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
 Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/dm814x.dtsi | 39 ++++++++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/dm814x.dtsi | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
 --- a/arch/arm/boot/dts/dm814x.dtsi
 +++ b/arch/arm/boot/dts/dm814x.dtsi
-@@ -521,21 +521,32 @@ mmc3: mmc@47810000 {
- 			reg = <0x47810000 0x1000>;
+@@ -597,12 +597,28 @@ edma_tptc1: dma@0 {
+ 			};
  		};
  
--		edma: edma@49000000 {
--			compatible = "ti,edma3-tpcc";
-+		target-module@49000000 {
+-		edma_tptc2: tptc@49a00000 {
+-			compatible = "ti,edma3-tptc";
++		target-module@49a00000 {
 +			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "tpcc";
--			reg =	<0x49000000 0x10000>;
--			reg-names = "edma3_cc";
--			interrupts = <12 13 14>;
--			interrupt-names = "edma3_ccint", "edma3_mperr",
--					  "edma3_ccerrint";
--			dma-requests = <64>;
--			#dma-cells = <2>;
--
--			ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>,
--				   <&edma_tptc2 3>, <&edma_tptc3 0>;
--
--			ti,edma-memcpy-channels = <20 21>;
-+			reg = <0x49000000 0x4>;
-+			reg-names = "rev";
-+			clocks = <&alwon_clkctrl DM814_TPCC_CLKCTRL 0>;
+ 			ti,hwmods = "tptc2";
+-			reg =	<0x49a00000 0x100000>;
+-			interrupts = <114>;
+-			interrupt-names = "edma3_tcerrint";
++			reg = <0x49a00000 0x4>,
++			      <0x49a00010 0x4>;
++			reg-names = "rev", "sysc";
++			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
++			ti,sysc-midle = <SYSC_IDLE_FORCE>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&alwon_clkctrl DM814_TPTC2_CLKCTRL 0>;
 +			clock-names = "fck";
 +			#address-cells = <1>;
 +			#size-cells = <1>;
-+			ranges = <0x0 0x49000000 0x10000>;
++			ranges = <0x0 0x49a00000 0x100000>;
 +
-+			edma: dma@0 {
-+				compatible = "ti,edma3-tpcc";
-+				reg = <0 0x10000>;
-+				reg-names = "edma3_cc";
-+				interrupts = <12 13 14>;
-+				interrupt-names = "edma3_ccint", "edma3_mperr",
-+						  "edma3_ccerrint";
-+				dma-requests = <64>;
-+				#dma-cells = <2>;
-+
-+				ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>,
-+					   <&edma_tptc2 3>, <&edma_tptc3 0>;
-+
-+				ti,edma-memcpy-channels = <20 21>;
++			edma_tptc2: dma@0 {
++				compatible = "ti,edma3-tptc";
++				reg = <0 0x100000>;
++				interrupts = <114>;
++				interrupt-names = "edma3_tcerrint";
 +			};
  		};
  
- 		edma_tptc0: tptc@49800000 {
+ 		edma_tptc3: tptc@49b00000 {
 -- 
 2.25.1
