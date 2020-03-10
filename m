@@ -2,157 +2,128 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E02C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 21:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6BBC18E5A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEFA3222C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 21:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82550222C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U+DI/gme"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="I20JsyOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbgCJV5u (ORCPT
+        id S1726283AbgCJWDW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:57:50 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38321 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJV5u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 17:57:50 -0400
-Received: by mail-pj1-f66.google.com with SMTP id a16so1018962pju.3
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 14:57:49 -0700 (PDT)
+        Tue, 10 Mar 2020 18:03:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39268 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727642AbgCJWDV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 18:03:21 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f7so3115844wml.4
+        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 15:03:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qYdxwwwpYm23LuoOol66JOS31vLZfpo3MXiCkbyPzr8=;
-        b=U+DI/gmeBVvE0NZblYAgaOZPjifrN5fk+p5gpLgDTyfGPTvgXLQ9vkTEgIGJXF4uJL
-         Fd952FkPe2/jNEyATMsvJrqqJ6kZ+XFOunzZ92lTnwRcgI7Pa8CXnOyw7Qb8CEESpM7G
-         WfgtTQ5XY2rs03J4e6y3h1z8ES9S3LYFcA/sA=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=dYEP1uE4NnVFr/AeDKddTWSxJgA20EPFg2G+JAahXU0=;
+        b=I20JsyOJIesiZZQ8aV/IdyM+r4UI4cQUwV9OU88GjMqXQdcGxyWCcTu+TKnMpQTwzR
+         8zsRR1Ku3VvKEiqj1/PL8R5Nrk6wcQBvAnxyWKr7fOA7HdZ08IH0zfDTMBnRXrE4sv+B
+         1FJbyCwTIoyCOqD2c6zdL2IiWQINHKswybaSp4LQ7NJ/mx5atiVaaCA7KJmFqkI1NxgO
+         ZLyx0BgypSHUQzKXHvqeJWj1ZAU41f5jkODNqWwySdRgLuSbY/bjut3UAN1jCydVdFW5
+         4q0nzPNiNsFhSQ2UmsMYO7SYzoSm7Xv0C8TZTspbL4HFRap19/7Ybum6IG+LQMJ662fW
+         FIwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qYdxwwwpYm23LuoOol66JOS31vLZfpo3MXiCkbyPzr8=;
-        b=HAAyYymI06148uXzAmfxxrQVl3XmPR6OLl/ndet2JEEABhHGLGReKDeJk/kn0LaRGo
-         wMRrvRRjWXDbVyDRPSwQBzwDqHUFeXXIzqXWM5uSOkjW0vmltMsJ8fkdBZHVFIbDMfcJ
-         ueJ6XyqmL3Wny7yetMT7RcYmZefaVXRRNtpgCZX164n17LH/CM4SzLv5iG2Vv02cugrw
-         wiFHBcO6y4bWD1TE8VH0PkcnxU626zDjGSTByDV4WPGEBjPaQwlug19LSh7/Mk0W9T6U
-         K77VF2A80Nwc34huXbwtT8TxI+binrhbwthtMGAh7Ye2gXIpZaTGPT88d6UjkH6X/cdD
-         d2IA==
-X-Gm-Message-State: ANhLgQ3MCCaf8BxbMDR2RXxHUFjXACfAC6OESSRoJ4eT8o5ItzGSjsCd
-        +PwWUyRUqdQ2Lx9eKpAa7nrlOA==
-X-Google-Smtp-Source: ADFU+vuBaEaTeYfHN/Q5va1wjqReuMLDH16k2pXg+pd13QFSJEnP/TcDz8IkAB3cuekA2ZHVICXqlg==
-X-Received: by 2002:a17:90a:8c0f:: with SMTP id a15mr58797pjo.156.1583877468981;
-        Tue, 10 Mar 2020 14:57:48 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id mr7sm3122253pjb.12.2020.03.10.14.57.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 14:57:48 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 14:57:46 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org
-Subject: Re: [PATCH V4 3/3] dt-bindings: geni-se: Add binding for UART pin
- swap
-Message-ID: <20200310215746.GZ24720@google.com>
-References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
- <1581932212-19469-4-git-send-email-akashast@codeaurora.org>
- <20200218190731.GC15781@google.com>
- <ec5de895-3e86-811e-7ffc-fb98e115f850@codeaurora.org>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=dYEP1uE4NnVFr/AeDKddTWSxJgA20EPFg2G+JAahXU0=;
+        b=a+NM5YcF+okFKqgUducoggmi48ISUGxQGG8FZ1hjibezt9U0WxJ6NYh5rAxMLrdzY8
+         IZXwJYpyw1MJw19pDAMSvMvFPqlJhY1+kMDa4e/RDdAkN9EK38H23CF3+sih3NJOpn7+
+         k/VNVfBHuwqkgorqiDvJgWNwTNf8JHUSo+ncPqSTbZmbWylAbIdSy9H2AZs3vS0TC+E8
+         FPm2jwE1JUkWXIvPpKWOV1WvB1SQrQ0Q4q4V+YLTxy+fSClQNyXLYAbeI/6kFF1Gqund
+         WYNGUsjVVqDw6OjpZ+FfNcEbTohoSDDa8kEg9/Wutz6q9QMlICGl4tGF6mNt9Dni2ErB
+         6DMw==
+X-Gm-Message-State: ANhLgQ0RDCvL/vyOOSa1xBWzZVlDS2m+rHspFcetbLLyNf/n+0uG1pBO
+        u2HjuGvqQ60zq33ZrgMYNiN7GQ==
+X-Google-Smtp-Source: ADFU+vsFsnumgp9VoOGVYqCrNLZ5ay6csw80CWgZBfUy0rM6bs6wjkEgt0Ofqq4WtgfmKA4Ub4RhiQ==
+X-Received: by 2002:a1c:4e14:: with SMTP id g20mr3853268wmh.143.1583877798471;
+        Tue, 10 Mar 2020 15:03:18 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id w67sm1892315wmb.41.2020.03.10.15.03.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Mar 2020 15:03:17 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Rob Herring <robh+dt@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        "open list\:ARM\/Amlogic Meson..." 
+        <linux-amlogic@lists.infradead.org>, SoC Team <soc@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "open list\:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list\:ARM\/FREESCALE IMX \/ MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2] dt-bindings: power: Fix dt_binding_check error
+In-Reply-To: <CAL_JsqJAxfL_Q3HYHk_8VeefdXnhYT7kcPe3F5Gzk1Vfj+xtww@mail.gmail.com>
+References: <1583164448-83438-1-git-send-email-jianxin.pan@amlogic.com> <7hsgiqra5x.fsf@baylibre.com> <CAL_JsqJAxfL_Q3HYHk_8VeefdXnhYT7kcPe3F5Gzk1Vfj+xtww@mail.gmail.com>
+Date:   Tue, 10 Mar 2020 15:03:15 -0700
+Message-ID: <7h36afn9zw.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ec5de895-3e86-811e-7ffc-fb98e115f850@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Akash,
+Rob Herring <robh+dt@kernel.org> writes:
 
-The patch that implements the binding landed in tty/tty-next:
+> On Mon, Mar 2, 2020 at 10:31 AM Kevin Hilman <khilman@baylibre.com> wrote:
+>>
+>> Hi Jianxin,
+>>
+>> Jianxin Pan <jianxin.pan@amlogic.com> writes:
+>>
+>> > Missing ';' in the end of secure-monitor example node.
+>> >
+>> > Fixes: 165b5fb294e8 ("dt-bindings: power: add Amlogic secure power domains bindings")
+>> > Reported-by: Rob Herring <robh+dt@kernel.org>
+>> > Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> > ---
+>> >  Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
+>> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> > index af32209..bc4e037 100644
+>> > --- a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> > +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> > @@ -36,5 +36,5 @@ examples:
+>> >              compatible = "amlogic,meson-a1-pwrc";
+>> >              #power-domain-cells = <1>;
+>> >          };
+>> > -    }
+>> > +    };
+>>
+>> Thanks for the fix.  Queued for v5.7.
+>>
+>> @Arnd, @Olof: you can ignore this one.  I requested Jianxin to send to
+>> you thinking this was a fix for something you already queued, but it's
+>> not.  I'll handle it.
+>
+> Someone has what needs fixing queued in linux-next, but this fix is
+> still not there. Somehow it seems like features show up in linux-next
+> faster than fixes for SoC tree...
 
-9fa3c4b1fa379 tty: serial: qcom_geni_serial: Fix GPIO swapping with workaround
+The fix (this patch) is queued in my 'for-next' branch which I pushed
+yesterday.  I guess it missed next-20200310 but should be in tomorrow.
 
-The binding needs a re-spin to match the implementation.
+Kevin
 
-Thanks
 
-Matthias
-
-On Wed, Feb 19, 2020 at 06:51:35PM +0530, Akash Asthana wrote:
-> Hi Matthias,
-> 
-> On 2/19/2020 12:37 AM, Matthias Kaehlcke wrote:
-> > Hi Akash,
-> > 
-> > I didn't see a patch that implements the binding, did you post it?
-> 
-> We haven't posted any update on patch@
-> https://patchwork.kernel.org/cover/11313817/
-> 
-> [tty: serial: qcom_geni_serial: Configure UART_IO_MACRO_CTRL register]. We
-> will spin it ASAP.
-> 
-> > 
-> > 
-> > On Mon, Feb 17, 2020 at 03:06:52PM +0530, Akash Asthana wrote:
-> > > Add documentation to support RX/TX/CTS/RTS pin swap in HW.
-> > > 
-> > > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> > > ---
-> > >   Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 9 +++++++++
-> > >   1 file changed, 9 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> > > index 11530df..7e4b9af 100644
-> > > --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> > > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> > > @@ -165,6 +165,15 @@ patternProperties:
-> > >             - description: UART core irq
-> > >             - description: Wakeup irq (RX GPIO)
-> > > +      rx-tx-swap:
-> > > +        description: RX and TX pins are swap.
-> > s/swap/swapped/
-> Ok
-> > 
-> > > +
-> > > +      cts-rts-swap:
-> > > +        description: CTS and RTS pins are swap.
-> > s/swap/swapped/
-> Ok
-> > 
-> > > +
-> > > +      rx-tx-cts-rts-swap:
-> > > +        description: RX-TX and CTS-RTS both pairs are swap.
-> > I don't think this option adds much value, if both pairs are swapped
-> > the above two properties can be set.
-> 
-> Yeah ok, It is possible to derive value for rx-tx-cts-rts if above 2
-> properties are set.
-> 
-> > 
-> > > +
-> > >       required:
-> > >         - compatible
-> > >         - interrupts
-> > > -- 
-> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-> 
-> Thanks for reviewing,
-> 
-> 
-> Regards,
-> 
-> Akash
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/log/?h=for-next
