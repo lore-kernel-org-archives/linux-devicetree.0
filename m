@@ -2,334 +2,176 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9364AC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 20:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF71C10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 20:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448D121927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 20:29:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JeYo3Smd"
+	by mail.kernel.org (Postfix) with ESMTP id F1E62222C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 20:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgCJU3F (ORCPT
+        id S1727573AbgCJUmO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:29:05 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35453 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgCJU3F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 16:29:05 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g6so5909782plt.2
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 13:29:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=GMuYDMQptT1n1uJsZIzgAcIkITwsd6hqzDFmp4rEPRE=;
-        b=JeYo3SmdY6UxY4FgcPu7B+OoZgo3hnnVSr6PZBMNBtFWHKglByULsKeeb/caAjP4jJ
-         jLJRrzzJGRr6T4Yrlck9Obyx5RovU5Ncve8AeGBizYahB+RuF4+LwpC1MOREIrrM6a0J
-         GTGGWzZX+8xImif3vrWHhXBsgG8uJ5oS7z4jo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=GMuYDMQptT1n1uJsZIzgAcIkITwsd6hqzDFmp4rEPRE=;
-        b=JBwO1/+1cAYQblqItkwjYY2WdC//EadXttWxmMesafIN+xkEFfX6w0FbNNr/T0crcO
-         jwPFKqnYsfFPaVhsKtUOFSVET8SqCM5JaXdCR77wD4H7pA5MG5HZVlh0aDaoNIJ0iqff
-         svv71aoKOUR9tY3pM4e1lY+t9FsjnZI/JgU5XY8Ll4dA6Ynt5iB7W0I5y3c38q8rAfkv
-         mn2UdxqBmuEknegQ9+InAX7QMP9zH2IXfg+qbxosW3RBeKfXDG+6uxVCnvlQTMq0AJCR
-         7kejNJ1SMfe08Clwc0c0WYqcOkgdWI3i4b6EcU6eTXaRjEq5uLZW9IpPrmjGGxpEij56
-         emwA==
-X-Gm-Message-State: ANhLgQ1E0XIfuXxUJ+SlEBXeuxJrx0V6a7ka0Zyb84fSkY11SW82GjJX
-        bQF3J5jAfpLBb6NHt2GlogetCai6Cdo=
-X-Google-Smtp-Source: ADFU+vvgzyrWpYIB6gNvxgfP9/U5zEOx+2Aom36kZpRYU1vljRz8s4s5Xhy7AwVsaesd5IsjqhOf5A==
-X-Received: by 2002:a17:902:eacb:: with SMTP id p11mr15990588pld.39.1583872144174;
-        Tue, 10 Mar 2020 13:29:04 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id z22sm27087928pgn.19.2020.03.10.13.29.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 13:29:03 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200310063338.3344582-3-bjorn.andersson@linaro.org>
-References: <20200310063338.3344582-1-bjorn.andersson@linaro.org> <20200310063338.3344582-3-bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 2/5] remoteproc: qcom: Introduce driver to store pil info in IMEM
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 10 Mar 2020 13:29:02 -0700
-Message-ID: <158387214232.149997.3935472981193001512@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Tue, 10 Mar 2020 16:42:14 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:12322 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727528AbgCJUmM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:42:12 -0400
+X-IronPort-AV: E=Sophos;i="5.70,538,1574089200"; 
+   d="scan'208";a="41303690"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 11 Mar 2020 05:42:10 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9878C40F8AD8;
+        Wed, 11 Mar 2020 05:42:07 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 2/2] arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
+Date:   Tue, 10 Mar 2020 20:41:59 +0000
+Message-Id: <1583872919-7757-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583872919-7757-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1583872919-7757-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-03-09 23:33:35)
-> A region in IMEM is used to communicate load addresses of remoteproc to
-> post mortem debug tools. Implement a driver that can be used to store
-> this information in order to enable these tools to process collected
-> ramdumps.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->=20
-> Changes since v3:
-> - Don't carry shadow of all entries
-> - Reworked indexing of entries in qcom_pil_info_store()
-> - Marked global __read_mostly
->=20
-> Stephen requested, in v3, that the driver should be turned into a library=
- that,
-> in the context of the remoteproc drivers, would resolve the pil info regi=
-on and
-> update an appropriate entry, preferably a statically assigned one.
->=20
-> Unfortunately the entries must be packed, so it's not possible to pre-ass=
-ign
-> entries for each remoteproc, in case some of them aren't booted. Further =
-more,
-> it turns out that the IMEM region must be zero-initialized in order to ha=
-ve a
-> reliable way to determining which entries are available.
->=20
-> We therefor have the need for global mutual exclusion and a mechanism tha=
-t is
-> guaranteed to run before any clients attempt to update the content - so t=
-he
-> previously proposed design is maintained.
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-The library could have a static variable that tracks when it's been
-called once, holds a lock to protect concurrent access and then zero
-initializes on the first call.=20
+The HiHope RZ/G2M is advertised as compatible with panel idk-1110wr
+from Advantech, however the panel isn't sold alongside the board.
+A new dts, adding everything that's required to get the panel to
+work the HiHope RZ/G2M, is the most convenient way to support the
+HiHope RZ/G2M when it's connected to the idk-1110wr.
 
-> diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom=
-_pil_info.c
-> new file mode 100644
-> index 000000000000..0ddfb2639b7f
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_pil_info.c
-> @@ -0,0 +1,180 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2019-2020 Linaro Ltd.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define PIL_RELOC_NAME_LEN     8
-> +
-> +struct pil_reloc_entry {
-> +       char name[PIL_RELOC_NAME_LEN];
-> +       __le64 base;
-> +       __le32 size;
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ arch/arm64/boot/dts/renesas/Makefile               |  1 +
+ .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 86 ++++++++++++++++++++++
+ 2 files changed, 87 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
 
-Why are these little endian? Isn't regmap doing endian swaps?
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 2153842..82dd245 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
++dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex-idk-1110wr.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
+ dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
+new file mode 100644
+index 0000000..6033cae
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the HiHope RZ/G2M sub board connected to an
++ * Advantech IDK-1110WR 10.1" LVDS panel
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
++
++#include "r8a774a1-hihope-rzg2m-ex.dts"
++
++/ {
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm0 0 50000>;
++
++		brightness-levels = <0 2 8 16 32 64 128 255>;
++		default-brightness-level = <6>;
++	};
++
++	panel-lvds {
++		compatible = "advantech,idk-1110wr", "panel-lvds";
++
++		width-mm = <223>;
++		height-mm = <125>;
++
++		data-mapping = "jeida-24";
++
++		panel-timing {
++			/* 1024x600 @60Hz */
++			clock-frequency = <51200000>;
++			hactive = <1024>;
++			vactive = <600>;
++			hsync-len = <240>;
++			hfront-porch = <40>;
++			hback-porch = <40>;
++			vfront-porch = <15>;
++			vback-porch = <10>;
++			vsync-len = <10>;
++		};
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
++};
++
++&gpio1 {
++	/*
++	 * When GP1_20 is LOW LVDS0 is connected to the LVDS connector
++	 * When GP1_20 is HIGH LVDS0 is connected to the LT8918L
++	 */
++	lvds-connector-en-gpio {
++		gpio-hog;
++		gpios = <20 GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "lvds-connector-en-gpio";
++	};
++};
++
++&lvds0 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++};
++
++&pfc {
++	pwm0_pins: pwm0 {
++		groups = "pwm0";
++		function = "pwm0";
++	};
++};
++
++&pwm0 {
++	pinctrl-0 = <&pwm0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
+-- 
+2.7.4
 
-> +} __packed;
-
-Is __packed necessary? It looks like things are naturally aligned
-already.
-
-> +
-> +struct pil_reloc {
-> +       struct device *dev;
-> +       struct regmap *map;
-> +       size_t offset;
-> +       size_t num_entries;
-> +       size_t entry_size;
-> +};
-> +
-> +static struct pil_reloc *_reloc __read_mostly;
-> +static DEFINE_MUTEX(reloc_mutex);
-> +
-> +/**
-> + * qcom_pil_info_store() - store PIL information of image in IMEM
-> + * @image:     name of the image
-> + * @base:      base address of the loaded image
-> + * @size:      size of the loaded image
-> + *
-> + * Return: 0 on success, negative errno on failure
-> + */
-> +int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
-> +{
-> +       struct pil_reloc_entry entry;
-> +       unsigned int offset;
-> +       int selected =3D -1;
-> +       int ret;
-> +       int i;
-> +
-> +       offset =3D _reloc->offset;
-> +
-> +       mutex_lock(&reloc_mutex);
-> +       for (i =3D 0; i < _reloc->num_entries; i++) {
-> +               ret =3D regmap_bulk_read(_reloc->map, offset, &entry, _re=
-loc->entry_size);
-> +               if (ret < 0)
-> +                       continue;
-> +
-> +               if (!entry.name[0]) {
-> +                       if (selected =3D=3D -1)
-> +                               selected =3D offset;
-> +                       continue;
-
-Why not goto found?
-
-> +               }
-> +
-> +               if (!strncmp(entry.name, image, sizeof(entry.name))) {
-> +                       selected =3D offset;
-> +                       goto found;
-
-Why not goto found_again? And then jump over the strscpy() in this case?
-
-> +               }
-> +
-> +               offset +=3D sizeof(entry);
-> +       }
-> +
-> +       if (selected =3D=3D -1) {
-
-Do we need this check? It should have been jumped over if it found it?
-
-> +               dev_warn(_reloc->dev, "insufficient PIL info slots\n");
-> +               ret =3D -ENOMEM;
-> +               goto unlock;
-> +       }
-> +
-> +found:
-> +       strscpy(entry.name, image, ARRAY_SIZE(entry.name));
-> +       entry.base =3D base;
-> +       entry.size =3D size;
-
-Sparse should complain here.
-
-> +
-> +       ret =3D regmap_bulk_write(_reloc->map, selected, &entry, _reloc->=
-entry_size);
-
-It would make a lot more sense to me if this was written with plain
-readl/writel logic. Then I don't have to think about structs being
-stored in I/O memory regions, and instead I can concentrate on there
-being two 64-bit registers for name and base and one 32-bit register for
-the size.
-
-> +unlock:
-> +       mutex_unlock(&reloc_mutex);
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
-> +
-> +/**
-> + * qcom_pil_info_available() - query if the pil info is probed
-> + *
-> + * Return: boolean indicating if the pil info device is probed
-> + */
-> +bool qcom_pil_info_available(void)
-> +{
-> +       return !!_reloc;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_pil_info_available);
-> +
-> +static int pil_reloc_probe(struct platform_device *pdev)
-> +{
-> +       struct pil_reloc_entry entry =3D {0};
-> +       struct pil_reloc *reloc;
-> +       struct resource *res;
-> +       struct resource imem;
-> +       unsigned int offset;
-> +       int ret;
-> +       int i;
-> +
-> +       reloc =3D devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
-> +       if (!reloc)
-> +               return -ENOMEM;
-> +
-> +       reloc->dev =3D &pdev->dev;
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res)
-> +               return -EINVAL;
-> +
-> +       /* reloc->offset is relative to parent (IMEM) base address */
-> +       ret =3D of_address_to_resource(pdev->dev.of_node->parent, 0, &ime=
-m);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       reloc->offset =3D res->start - imem.start;
-> +       reloc->num_entries =3D resource_size(res) / sizeof(entry);
-> +
-> +       reloc->map =3D syscon_node_to_regmap(pdev->dev.parent->of_node);
-> +       if (IS_ERR(reloc->map))
-> +               return PTR_ERR(reloc->map);
-> +
-> +       ret =3D regmap_get_val_bytes(reloc->map);
-> +       if (ret < 0)
-> +               return -EINVAL;
-> +       reloc->entry_size =3D sizeof(entry) / ret;
-> +
-> +       offset =3D reloc->offset;
-> +       for (i =3D 0; i < reloc->num_entries; i++, offset +=3D sizeof(ent=
-ry)) {
-> +               ret =3D regmap_bulk_write(reloc->map, offset, &entry,
-> +                                       reloc->entry_size);
-> +               if (ret < 0)
-> +                       return ret;
-> +       }
-
-This would be a lot easier to read with a memset_io().
-
-> +
-> +       mutex_lock(&reloc_mutex);
-> +       _reloc =3D reloc;
-> +       mutex_unlock(&reloc_mutex);
-> +
-> +       return 0;
-> +}
-> +
-> +static int pil_reloc_remove(struct platform_device *pdev)
-> +{
-> +       mutex_lock(&reloc_mutex);
-> +       _reloc =3D NULL;
-> +       mutex_unlock(&reloc_mutex);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id pil_reloc_of_match[] =3D {
-> +       { .compatible =3D "qcom,pil-reloc-info" },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
-> +
-> +static struct platform_driver pil_reloc_driver =3D {
-
-I still don't understand the need for a platform device driver and probe
-ordering. It's not a device in the usual ways, it's just some memory
-that's lying around and always there! Why can't we search in DT for the
-imem node and then find the pil reloc info compatible string on the
-first call to this library? Then we don't need an API to see if the
-device has probed yet (qcom_pil_info_available) and we can just ioremap
-some region of memory that's carved out for this reason. Forcing
-everything through the regmap is mostly adding pain.
-
-> +       .probe =3D pil_reloc_probe,
