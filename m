@@ -3,128 +3,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C692C10F25
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 01:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660E4C10F29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 01:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C102465A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 01:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4820524655
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 01:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgCJBMt (ORCPT
+        id S1726156AbgCJBwe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:12:49 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:44614 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgCJBMt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Mar 2020 21:12:49 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 438CD80307C5;
-        Tue, 10 Mar 2020 01:12:48 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id VPQJE74fpZjG; Tue, 10 Mar 2020 04:12:47 +0300 (MSK)
-Date:   Tue, 10 Mar 2020 04:11:57 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] mfd: Add Baikal-T1 SoC Boot Controller driver
-References: <20200306130528.9973-1-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200306130528.9973-1-Sergey.Semin@baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200310011248.438CD80307C5@mail.baikalelectronics.ru>
+        Mon, 9 Mar 2020 21:52:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54728 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbgCJBwe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Mar 2020 21:52:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 18:52:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
+   d="scan'208";a="265455423"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Mar 2020 18:52:28 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, boris.brezillon@free-electrons.com,
+        simon.k.r.goldschmidt@gmail.com, dinguyen@kernel.org,
+        tien.fong.chee@intel.com, marex@denx.de,
+        linux-mtd@lists.infradead.org, dwmw2@infradead.org, richard@nod.at,
+        computersforpeace@gmail.com, cyrille.pitchen@atmel.com,
+        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
+        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v12 0/4] spi: cadence-quadspi: Add support for the Cadence QSPI controller
+Date:   Tue, 10 Mar 2020 09:52:09 +0800
+Message-Id: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:05:26PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <fancer.lancer@gmail.com>
-> 
-> Baikal-T1 Boot Controller is an IP block embedded into the SoC and responsible
-> for the chip proper pre-initialization and further booting up from selected
-> memory mapped device. From the Linux kernel point of view it's just a multi-
-> functional device, which exports three physically mapped ROMs and a single SPI
-> controller interface.
-> 
-> Baikal-T1 can boot either from an external SPI-flash or from an embedded into
-> it firmware. So when the bootup from the SPI-flash is selected the flash memory
-> can be accessed either directly via the embedded into the Boot Controller DW
-> APB SSI controller registers or via a physically mapped ROM (which is just an
-> FSM IP-core interacting with the DW APB SSI controller by itself). Since both
-> of these interfaces are using the same SPI interface they can't be utilized
-> simultaneously. Instead the Boot Controller provides the access switching
-> functionality by means of the control register flag. That's why we need the
-> Boot Controller MFD driver provided by this patchset - in order to multiplex the
-> access to the DW APB SSI controller and SPI interface from two different
-> subsystems.
-> 
-> After this patchset is integrated into the kernel we'll submit two more
-> patchsets with physically mapped ROMs (due to some peculiarities we can't have
-> the already available in the kernel mtd-rom drivers) and SPI controller
-> (similarly the available in the kernel DW APB SSI driver isn't suitable for
-> our version of the SPI controller) drivers will be submitted for integration
-> into the mainline Linux kernel.
-> 
-> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> commit 98d54f81e36b ("Linux 5.6-rc4").
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Serge Semin (2):
->   dt-bindings: mfd: Add Baikal-T1 Boot Controller bindings
->   mfd: Add Baikal-T1 Boot Controller driver
-> 
->  .../bindings/mfd/be,bt1-boot-ctl.yaml         |  89 +++++
->  drivers/mfd/Kconfig                           |  13 +
->  drivers/mfd/Makefile                          |   1 +
->  drivers/mfd/bt1-boot-ctl.c                    | 345 ++++++++++++++++++
->  include/linux/mfd/bt1-boot-ctl.h              |  46 +++
->  5 files changed, 494 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/be,bt1-boot-ctl.yaml
->  create mode 100644 drivers/mfd/bt1-boot-ctl.c
->  create mode 100644 include/linux/mfd/bt1-boot-ctl.h
-> 
-> -- 
-> 2.25.1
-> 
+Add support for the Cadence QSPI controller. This controller is
+present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
 
-Folks,
+This driver does not support generic SPI and also the implementation
+only supports spi-mem interface to replace the existing driver in
+mtd/spi-nor/cadence-quadspi.c, which supports SPI-NOR memory.
 
-It appears our corporate email server changes the Message-Id field of 
-messages passing through it. Due to that the emails threading gets to be
-broken. I'll resubmit the properly structured v2 patchset as soon as our system
-administrator fixes the problem. Sorry for the inconvenience caused by it.
+So we have decided that adapt spi-mem framework with existing driver 
+to support SPI-NOR and SPI-NAND flash memories.
 
-Regards,
--Sergey
+changes from v11
+ -- Boris suggested to split the patches
+ -- split 3 patches like below  
+    i) spi-mem adaptation
+    ii) convert the existing drivers to spi based.
+    ii) add intel changes to above 2 patches.
+ -- Rob's build issue resolved
+ 
+changes from v10
+ -- Rob's review comments update in dt_schema yaml.
+ -- add valid contraints constraints. 
+
+changes from v9:
+ -- Mark's review comments address
+ -- add check to shared interrupt handler
+ -- add check decoder if present
+ -- add error check for quirks capability data
+ -- remove the existing cadence_quadspi.c from drivers/mtd/spi-nor path
+ -- remove CONFIG macro from Kconfig in the above path
+ -- remove cadence_quadspi.o build option from Makefile in the above path
+
+changes from v8:
+ -- remove the depends MTD macro
+ -- comment into C++ style
+ -- remove spaces and tabs where not applicable.
+ -- align the macro string as same as existing one.
+ -- replace QUAD to op->data.buswidth variable.
+ -- add CQSPI_NEEDS_ADDR_SWAP instead of soc_selection variable
+
+changes from v7:
+ -- remove addr_buf kept like as original
+ -- drop bus-num, chipselect variable
+ -- add soc_selection varible to differetiate the features
+ -- replace dev->ddev in dma function
+ -- add seperate function to handle the 24bit slave device address
+    translation for lgm soc
+ -- correct sentence seems incomplete in Kconfig
+ -- add cqspi->soc_selection check to keep the original TI platform
+    working code.
+
+changes from v6:
+ -- Add the Signed-off-by Vignesh in commit message
+ -- bus_num, num_chipselect added to avoid the garbage bus number
+    during the probe and spi_register.
+ -- master mode bits updated
+ -- address sequence is different from TI and Intel SoC Ip handling
+    so modified as per Intel and differentiating by use_dac_mode variable.
+ -- dummy cycles also different b/w two platforms, so keeping separate check
+ -- checkpatch errors which are intentional left as is for better readability
+
+changes from v5:
+ -- kbuild test robot warnings fixed
+ -- Add Reported-By: Dan Carpenter <dan.carpenter@oracle.com>
+
+changes from v4:
+ -- kbuild test robot warnings fixed
+ -- Add Reborted-by: tag
+
+changes from v3:
+spi-cadence-quadspi.c
+ -- static to all functions wrt to local to the file.
+ -- Prefix cqspi_ and make the function static
+ -- cmd_ops, data_ops and dummy_ops dropped
+ -- addr_ops kept since it is required for address calculation.
+ -- devm_ used for supported functions , removed legacy API's
+ -- removed "indirect" name from functions
+ -- replaced by master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL | SPI_RX_OCTAL;
+    as per Vignesh susggestion
+ -- removed free functions since devm_ handles automatically.
+ -- dropped all unused Macros
+
+YAML file update:
+ -- cadence,qspi.yaml file name replace by cdns,qspi-nor.yaml
+ -- compatible string updated as per Vignesh suggestion
+ -- for single entry, removed descriptions
+ -- removed optional parameters
+  Build Result:
+   linux$ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml dt_binding_check
+    CHKDT   Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+    SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+    DTC     Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
+    CHECK   Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
+
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: spi: Add schema for Cadence QSPI Controller driver
+  spi: cadence-quadspi: Add support for the Cadence QSPI controller
+
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 ---
+ .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 142 +++++
+ drivers/mtd/spi-nor/Kconfig                        |  11 -
+ drivers/mtd/spi-nor/Makefile                       |   1 -
+ drivers/spi/Kconfig                                |  10 +
+ drivers/spi/Makefile                               |   1 +
+ .../spi-cadence-quadspi.c}                         | 641 ++++++++++-----------
+ 7 files changed, 456 insertions(+), 417 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+ rename drivers/{mtd/spi-nor/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (73%)
+
+Ramuthevar Vadivel Murugan (4):
+  dt-bindings: spi: Add schema for Cadence QSPI Controller driver
+  mtd: spi-nor: add spi-mem support in cadence-quadspi controller driver
+  spi: cadence-quadspi: Add support for the Cadence QSPI controller
+  spi: cadence-quadspi: Add qspi support for Intel LGM SoC
+
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 ---
+ .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 ++++
+ drivers/mtd/spi-nor/Kconfig                        |  11 -
+ drivers/mtd/spi-nor/Makefile                       |   1 -
+ drivers/spi/Kconfig                                |  10 +
+ drivers/spi/Makefile                               |   1 +
+ .../spi-cadence-quadspi.c}                         | 643 ++++++++++-----------
+ 7 files changed, 442 insertions(+), 418 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+ rename drivers/{mtd/spi-nor/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (73%)
+
+-- 
+2.11.0
+
