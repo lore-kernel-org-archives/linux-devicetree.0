@@ -2,115 +2,97 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFE5C10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1749EC18E5A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D63A2467D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE584222D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgCJKFa (ORCPT
+        id S1726224AbgCJKHH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:05:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30521 "EHLO mga17.intel.com"
+        Tue, 10 Mar 2020 06:07:07 -0400
+Received: from sauhun.de ([88.99.104.3]:46880 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgCJKFa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:05:30 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 03:05:30 -0700
-X-IronPort-AV: E=Sophos;i="5.70,536,1574150400"; 
-   d="scan'208";a="242269786"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 03:05:25 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 6BF08209DF; Tue, 10 Mar 2020 12:05:23 +0200 (EET)
-Date:   Tue, 10 Mar 2020 12:05:23 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V3, 2/2] media: i2c: Add DW9768 VCM driver
-Message-ID: <20200310100523.GC5379@paasikivi.fi.intel.com>
-References: <20200228155958.20657-1-dongchun.zhu@mediatek.com>
- <20200228155958.20657-3-dongchun.zhu@mediatek.com>
- <1583834419.5781.33.camel@mhfsdcap03>
+        id S1726199AbgCJKHH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 06:07:07 -0400
+Received: from localhost (p54B33196.dip0.t-ipconnect.de [84.179.49.150])
+        by pokefinder.org (Postfix) with ESMTPSA id A5EBD2C1EB6;
+        Tue, 10 Mar 2020 11:07:04 +0100 (CET)
+Date:   Tue, 10 Mar 2020 11:07:04 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 01/89] dt-bindings: i2c: brcmstb: Convert the BRCMSTB
+ binding to a schema
+Message-ID: <20200310100704.GJ1987@ninjato>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <6649111e9c585f267762bb6c6dd96128e5cfb4ba.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QnBU6tTI9sljzm9u"
 Content-Disposition: inline
-In-Reply-To: <1583834419.5781.33.camel@mhfsdcap03>
+In-Reply-To: <6649111e9c585f267762bb6c6dd96128e5cfb4ba.1582533919.git-series.maxime@cerno.tech>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dongchun,
 
-On Tue, Mar 10, 2020 at 06:00:19PM +0800, Dongchun Zhu wrote:
-> Hi Sakari, Rob, Andy, Tomasz,
-> 
-> On Fri, 2020-02-28 at 23:59 +0800, Dongchun Zhu wrote:
-...
-> > +static int dw9768_init(struct dw9768 *dw9768)
-> > +{
-> > +	struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
-> > +	int ret, val;
-> > +
-> > +	/* Reset DW9768_RING_PD_CONTROL_REG to default status 0x00 */
-> > +	ret = i2c_smbus_write_byte_data(client, DW9768_RING_PD_CONTROL_REG,
-> > +					DW9768_PD_MODE_OFF);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	/*
-> > +	 * DW9769 requires waiting delay time of t_OPR
-> > +	 * after PD reset takes place.
-> > +	 */
-> > +	usleep_range(DW9768_T_OPR_US, DW9768_T_OPR_US + 100);
-> > +
-> > +	ret = dw9768_write_array(dw9768, dw9768_init_regs,
-> > +				 ARRAY_SIZE(dw9768_init_regs));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	for (val = dw9768->focus->val % DW9768_MOVE_STEPS;
-> > +	     val <= dw9768->focus->val;
-> > +	     val += DW9768_MOVE_STEPS) {
-> > +		ret = dw9768_set_dac(dw9768, val);
-> > +		if (ret) {
-> > +			dev_err(&client->dev, "%s I2C failure: %d",
-> > +				__func__, ret);
-> > +			return ret;
-> > +		}
-> > +		usleep_range(DW9768_MOVE_DELAY_US,
-> > +			     DW9768_MOVE_DELAY_US + 1000);
-> > +	}
-> > +
-> 
-> What do you think about the approach taken by this patch?
-> From the view of VCM hardware, the collision sound of lens should only
-> happen when moving position back to zero.
-> When opening camera, one should be able to move lens to the position
-> directly.
-> I tried to replace this code to a single dw9768_set_dac(dw9768,
-> dw9768->focus->val),
-> there is no collision sound when open camera and it could reduce several
-> hundred ms when open lens driver fd.
-> Are we okay with this?
+--QnBU6tTI9sljzm9u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think so. Usually on VCMs with ringing compensation the only problematic
-case is when the power is cut. :-)
+On Mon, Feb 24, 2020 at 10:06:03AM +0100, Maxime Ripard wrote:
+> Switch the DT binding to a YAML schema to enable the DT validation.
+>=20
+> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-i2c@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
--- 
-Sakari Ailus
+I didn't get the cover letter, so I assume I shall pick the I2C patches.
+Please let me have the cover letter next time.
+
+
+--QnBU6tTI9sljzm9u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5nZsgACgkQFA3kzBSg
+KbbQ9Q/9GTVZf8R/GtAv29DgISJ/YjMp58JVs7OU6+mBQE0j7tiCJ6PLhm23VGiU
+cdjdeDr1WnNxjFJVz4odMqLO3I6OQ1D5492m9JoDPyulYLf977dEiSMq+k3m50sp
+Fjtmc2wfaeQD3IEdkDtNcFJkFpj90z3u7lQdT3g+HjnVXLMzQqPCKMNJ86uV+Bch
+S5zkZy+T5cNq8ddDKy9pFKtLO5RtVsaJb4voFeCAn3mxvW768XGv6zH0p0YUDeXI
+O+l3CwwFe8V1eqvQceTRu8eSq6k7XD0/EnH9eu0LVee+ou5gWUNgOI5oVyqee1mv
+h9lJ/m4Dwnw5vwRb1Eo3yloQ5laK5Qoacj+PC1ywwQD6VajDelfa67qhjmGBVoMu
+pu5gguaOFKTHsKDodTv3eKkupQmTeSvN50spne+/y8dZk1hth5k9mf6hfahKZYT5
+NLyaSwsgCDnQ7cvJBHE4WkuCBx9yTyVVOTQB4TdtHwvk0NdhQSq8v3cCQeoe73IH
+PipJrkHNeQrag1t/2WQwNQEViKoomxVK/n7zp8AbXfxiarzAmVnNvJi7WHoLotaM
+LKnth/eRoerOtXeF1Owk54u+/V6kJE6mlNcl7RVvHauIANEG5k9p2cmPaXRFGnh0
+n2qmm1mj0HCYrQxIkKJ+qtFeaieY1IQU1op1flY5kftD5ZzqRUk=
+=EeaW
+-----END PGP SIGNATURE-----
+
+--QnBU6tTI9sljzm9u--
