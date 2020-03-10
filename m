@@ -2,98 +2,106 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E011C10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26E0C10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333D324684
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 13:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E4324649
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 14:01:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oxgQQEls"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Hufku/C0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCJN5e (ORCPT
+        id S1726680AbgCJOBw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:57:34 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:45589 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgCJN5e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 09:57:34 -0400
-Received: by mail-lf1-f53.google.com with SMTP id b13so10926726lfb.12;
-        Tue, 10 Mar 2020 06:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a1V7f1F0LQmjo7Lwkhxv0H2OITNt4DTANxKKHcaVDpM=;
-        b=oxgQQElsrxUHhCc9YjPXkd1tmnpRDKrP2gylnsR6DYAg5/FRO3tM2yHIDEpDIRRHKv
-         v0mTqFr60upqjPDGSSgbTNZVGy0Gtrw8tXRTiZGWUVmbozdhWNpOY8YHW41xpBJ5pKog
-         iuw9inydwR+1ITq+9XwPniSknR7N6dgNcY00owCmIPBUEMaBZ34u13knQFEBk1pYHORI
-         cuaBSUXFPqhyYWzjjFA7/DMcAucFdHw06PYnD+Qdc8fzDQxUQcqx0AAquECXRp8b2pJM
-         9hFcj8+CdlmAcmbzAsksu3YLBO0ycaSiFHW/9jahGY5H6SUqkt40jAn+DQhELgWlqRq5
-         zqww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a1V7f1F0LQmjo7Lwkhxv0H2OITNt4DTANxKKHcaVDpM=;
-        b=ce02AJPdZXga8U4aw0X5YN1rMSLCN747mmGrfDjgM3Rv1JFHQl2Jb/yAVPhqiq0c1b
-         k6TBSEYRpVEpoxrc1hhF6ahIk+SIJ+1fqw+vl1T1N0fYEBOF2eQdN3ME/+yhnRmY+UFJ
-         Mq0bBxj+qgXAOBJXlLVD17dg0hw2cgjuUt338/VVIvmFZY8hWjk9rH856DjiFhSyM2QW
-         bGxNlDshkuNSrL3KfNNPuspKBal0i2IE/mDxuzwPijf4lXAKR9M1gCv74eAL22GPk1ZH
-         KjnoO1j7f+/BR2XfMAj3NHQ0GbJ5CEXHDBPO9TJ0z6h0oPINqkK2dnh41NIPVEpoo4to
-         Pi2g==
-X-Gm-Message-State: ANhLgQ3d/yHLsB5/TFifhNW6FMCR0VHkFLMeXmSX7yWgjgNOkS/JtsTR
-        K90nIv2kW9SahMhbyoljjkHzMflzBagELPV1ooM=
-X-Google-Smtp-Source: ADFU+vsInh8fH3rOKgWvw4Sp1i/c3pYIMP6oFihYh35j+7wlxleB92/F9wsbHoy+4eLgsGT19IloKcl8gLA6bIcetZk=
-X-Received: by 2002:a05:6512:1054:: with SMTP id c20mr12605269lfb.69.1583848651279;
- Tue, 10 Mar 2020 06:57:31 -0700 (PDT)
+        Tue, 10 Mar 2020 10:01:52 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:48533 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726852AbgCJOBv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 10:01:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583848911; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=czufNzXPZ6lBC2QNJ+K0CqApWW5+g5vWavRGt2Bpfjc=;
+ b=Hufku/C0i+Nq0pBVt3sNwZtgdB7rt8tLIODsnLxOVS4Rswlx3POy7DriJi4482Kh3KppXSpg
+ tg4yp2hVsbVK8yuoFLRepuGlJwwxB7qgiCK6s5t7DvXuq5jV+q+6rTEC0AVC/cJwUZHB2cU0
+ 3OTf2D0k4GXEPBhWpHzA/G8pLUI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e679d94.7fd90d2dea78-smtp-out-n03;
+ Tue, 10 Mar 2020 14:00:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E2CC5C4478C; Tue, 10 Mar 2020 14:00:50 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F530C432C2;
+        Tue, 10 Mar 2020 14:00:50 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200310134603.30260-1-robert.foss@linaro.org> <20200310134603.30260-2-robert.foss@linaro.org>
-In-Reply-To: <20200310134603.30260-2-robert.foss@linaro.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 10 Mar 2020 10:57:22 -0300
-Message-ID: <CAOMZO5C9Oj+SmTroE+bSsGcOPpz6se+WOqw1qJU9x6TrzbzZKw@mail.gmail.com>
-Subject: Re: [v1 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     ben.kao@intel.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 10 Mar 2020 19:30:50 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-remoteproc@vger.kernel.org, ohad@wizery.com,
+        agross@kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 0/3] Request direct mapping for modem firmware subdevice
+In-Reply-To: <20200310112332.GG3794@8bytes.org>
+References: <20200309182255.20142-1-sibis@codeaurora.org>
+ <20200310112332.GG3794@8bytes.org>
+Message-ID: <4ed6ddd667a3e6f670084a443d141474@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robert,
+Hey Joerg,
+Thanks for taking time to review
+the series!
 
-On Tue, Mar 10, 2020 at 10:46 AM Robert Foss <robert.foss@linaro.org> wrote:
+On 2020-03-10 16:53, Joerg Roedel wrote:
+> On Mon, Mar 09, 2020 at 11:52:52PM +0530, Sibi Sankar wrote:
+>> The Q6 modem sub-system has direct access to DDR through memnoc and
+>> an indirect access routed through a SMMU which MSS CE (crypto engine
+>> sub-component of MSS) uses during out of reset sequence. Request 
+>> direct
+>> mapping for the modem-firmware subdevice since smmu is not expected
+>> to provide access control/translation for these SIDs (sandboxing of 
+>> the
+>> modem is achieved through XPUs engaged using SMC calls).
+> 
+> So the DMA accesses are initiated by the firmware and need to be direct
+> mapped? Which memory region do they access?
 
-> +    ov8856: camera-sensor@10 {
-> +        compatible = "ovti,ov8856";
-> +        reg = <0x10>;
-> +        reset-gpios = <&pio 111 GPIO_ACTIVE_HIGH>;
+The accesses are initiated by the firmware
+and they access modem reserved regions.
+However as explained in ^^ any accesses
+outside the region will result in a violation
+and is controlled through XPUs (protection units).
 
-Could you double check this is correct? Other OmniVision sensors have
-reset-gpios as active low.
+With ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT y
+the firmware SIDs will explicitly need to
+be directly mapped to avoid observing
+global faults in the absence of secure
+firmware (TrustZone) programming the modem
+SIDs as S2CR-Bypass.
 
-I suspect that the driver has also an inverted logic, so that's why it works.
+> 
+> Regards,
+> 
+> 	Joerg
 
-I don't have access to the datasheet though, so I am just guessing.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
