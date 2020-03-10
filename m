@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AD8C18E5A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F245C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E501B222C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E82D208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbgCJScB (ORCPT
+        id S1727332AbgCJScI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:32:01 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:55431 "EHLO
+        Tue, 10 Mar 2020 14:32:08 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58607 "EHLO
         relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727628AbgCJScA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:32:00 -0400
+        with ESMTP id S1726545AbgCJScH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:32:07 -0400
 X-Originating-IP: 91.224.148.103
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2A1C9C000D;
-        Tue, 10 Mar 2020 18:31:56 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B9F63C0010;
+        Tue, 10 Mar 2020 18:32:04 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Mason Yang <masonccyang@mxic.com.tw>, miquel.raynal@bootlin.com,
         richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
@@ -33,26 +33,39 @@ Cc:     devicetree@vger.kernel.org, juliensu@mxic.com.tw,
         yuehaibing@huawei.com, linux-kernel@vger.kernel.org,
         frieder.schrempf@kontron.de, linux-mtd@lists.infradead.org,
         tglx@linutronix.de, allison@lohutok.net
-Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix NAND device bindings
-Date:   Tue, 10 Mar 2020 19:31:55 +0100
-Message-Id: <20200310183155.18901-1-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v5 1/2] mtd: rawnand: Add support for Macronix NAND randomizer
+Date:   Tue, 10 Mar 2020 19:32:04 +0100
+Message-Id: <20200310183204.18963-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1581922600-25461-3-git-send-email-masonccyang@mxic.com.tw>
+In-Reply-To: <1581922600-25461-2-git-send-email-masonccyang@mxic.com.tw>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: ab6b615a220b1b398f01cf679d3468c829b42583
+X-linux-mtd-patch-commit: db955f2f752f20ce0bf4859430999d3c119d7cc4
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2020-02-17 at 06:56:40 UTC, Mason Yang wrote:
-> Document the bindings used by the Macronix NAND device.
+On Mon, 2020-02-17 at 06:56:39 UTC, Mason Yang wrote:
+> Macronix NANDs support randomizer operation for user data scrambled,
+> which can be enabled with a SET_FEATURE.
+> 
+> User data written to the NAND device without randomizer is still readable
+> after randomizer function enabled.
+> The penalty of randomizer are subpage accesses prohibited and more time
+> period is needed in program operation and entering deep power-down mode.
+> i.e., tPROG 300us to 340us(randomizer enabled)
+> 
+> For more high-reliability concern, if subpage write not available with
+> hardware ECC and then to enable randomizer is recommended by default.
+> Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
+> to see if this high-reliability function is supported. By adding a new
+> specific DT property in children nodes to enable randomizer function.
 > 
 > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
