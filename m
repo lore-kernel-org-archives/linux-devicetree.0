@@ -2,102 +2,106 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7BFC33C85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8717DC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673E120727
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57985222C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583865379;
+	bh=2x9OjP/cL989J/BJIl8ZTmdrXYn701P4JDMdpwdKyKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JmLQ223JqpbxFLb8X8q+lMSHaK/FcycTDO1UzKdyDMDwY2U3/3WQSGis9zN4sog+/
+	 Ei5FnOwxbtWKA0Ev7hGrw2guYJGGFPWeXRyXF6joW7U1aznmt6Z5TaY2sIWcbGcbRf
+	 qQ0mOqZFuwFOQFI+uC7IEwLpxXYfVaLLydIhRdb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbgCJSfY (ORCPT
+        id S1726445AbgCJSgS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:35:24 -0400
-Received: from muru.com ([72.249.23.125]:59650 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727556AbgCJSfY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:35:24 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id E2B12812F;
-        Tue, 10 Mar 2020 18:36:08 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        linux-clk@vger.kernel.org
-Subject: [PATCH 08/10] ARM: dts: Configure interconnect target module for dm814x tptc3
-Date:   Tue, 10 Mar 2020 11:35:02 -0700
-Message-Id: <20200310183504.65358-9-tony@atomide.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310183504.65358-1-tony@atomide.com>
-References: <20200310183504.65358-1-tony@atomide.com>
+        Tue, 10 Mar 2020 14:36:18 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43907 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgCJSgS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 14:36:18 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a6so6273685otb.10;
+        Tue, 10 Mar 2020 11:36:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RWBhtEAElv+woAI0B9coW/qcWUrLc+hN8tGBRRi9/8s=;
+        b=KzL0Cc2cTGGSj3qjzAhUSqEeOnk1ivJqba8748Famn+YIdUawiC4uLcDT8KRVyX+yU
+         VIfN/IwTtsE+dI5olqNVHQtGDoHaHYccQzJRAocYrYMaLo7ackvUWyLgo03YQ9lSaXn7
+         nHzTV/rgesOuXcdFD+B8SYhC+7agbbalbonCjqK1AMOf4Cg/Svy4mAUueLZka/RtBcGd
+         xCtbMhY7r9SBBIU8Ie/1KecLDLpidggoNbCSsFSqe38YbXQ37w1J4yQKsPS2AKIfNxxy
+         9cxWRZ0pDd0TGaH0Riw3feG7n9RbFGURqi2/n1yYmkOUfGy6AULzBx/9g6ybgaNDWLLX
+         PAhw==
+X-Gm-Message-State: ANhLgQ1EfaAk3JlXxz0t9etC6zcpWIp34e9UibQhYUSmBqNpYEHeJsX/
+        pMkq57nDmsj1dfWc3Tm0fg==
+X-Google-Smtp-Source: ADFU+vu0ICotI3P1yky6B20yPZmLQBQBsrF3y63sWlL0hNI6+A8JD+ItyEEvuVkvK6xbWwo2T/IxBA==
+X-Received: by 2002:a9d:6e90:: with SMTP id a16mr5846143otr.72.1583865377661;
+        Tue, 10 Mar 2020 11:36:17 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c12sm4551332oic.27.2020.03.10.11.36.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 11:36:16 -0700 (PDT)
+Received: (nullmailer pid 22533 invoked by uid 1000);
+        Tue, 10 Mar 2020 18:36:16 -0000
+Date:   Tue, 10 Mar 2020 13:36:16 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     linux-clk@vger.kernel.org, dinguyen@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCHv2 2/3] dt-bindings: documentation: add clock bindings
+ information for Agilex
+Message-ID: <20200310183616.GA20350@bogus>
+References: <20200309171653.27630-1-dinguyen@kernel.org>
+ <20200309171653.27630-3-dinguyen@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309171653.27630-3-dinguyen@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We can now probe devices with device tree only configuration using
-ti-sysc interconnect target module driver. Let's configure the
-module, but keep the legacy "ti,hwmods" peroperty to avoid new boot
-time warnings. The legacy property will be removed in later patches
-together with the legacy platform data.
+On Mon,  9 Mar 2020 12:16:52 -0500, Dinh Nguyen wrote:
+> Document the Agilex clock bindings, and add the clock header file. The
+> clock header is an enumeration of all the different clocks on the Agilex
+> platform.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> ---
+> v2: convert original document to YAML
+> ---
+>  .../bindings/clock/intc,agilex.yaml           | 79 +++++++++++++++++++
+>  include/dt-bindings/clock/agilex-clock.h      | 70 ++++++++++++++++
+>  2 files changed, 149 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/intc,agilex.yaml
+>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
+> 
 
-Let's also correct the custom node name to use generic node name dma.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/dm814x.dtsi | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+Documentation/devicetree/bindings/clock/intc,agilex.yaml:  while scanning a block scalar
+  in "<unicode string>", line 36, column 5
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 37, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/clock/intc,agilex.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/clock/intc,agilex.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+warning: no schema found in file: Documentation/devicetree/bindings/clock/intc,agilex.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/intc,agilex.yaml: ignoring, error parsing file
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
---- a/arch/arm/boot/dts/dm814x.dtsi
-+++ b/arch/arm/boot/dts/dm814x.dtsi
-@@ -621,12 +621,28 @@ edma_tptc2: dma@0 {
- 			};
- 		};
- 
--		edma_tptc3: tptc@49b00000 {
--			compatible = "ti,edma3-tptc";
-+		target-module@49b00000 {
-+			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "tptc3";
--			reg =	<0x49b00000 0x100000>;
--			interrupts = <115>;
--			interrupt-names = "edma3_tcerrint";
-+			reg = <0x49b00000 0x4>,
-+			      <0x49b00010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&alwon_clkctrl DM814_TPTC3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x49b00000 0x100000>;
-+
-+			edma_tptc3: dma@0 {
-+				compatible = "ti,edma3-tptc";
-+				reg = <0 0x100000>;
-+				interrupts = <115>;
-+				interrupt-names = "edma3_tcerrint";
-+			};
- 		};
- 
- 		/* See TRM "Table 1-318. L4HS Instance Summary" */
--- 
-2.25.1
+See https://patchwork.ozlabs.org/patch/1251669
+Please check and re-submit.
