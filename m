@@ -2,41 +2,44 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915FDC33C83
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820FAC2BB8A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AD021D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54180222D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 18:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCJSfK (ORCPT
+        id S1727574AbgCJSfS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:35:10 -0400
-Received: from muru.com ([72.249.23.125]:59554 "EHLO muru.com"
+        Tue, 10 Mar 2020 14:35:18 -0400
+Received: from muru.com ([72.249.23.125]:59598 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727272AbgCJSfK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:35:10 -0400
+        id S1727332AbgCJSfR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:35:17 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id D7FBF810A;
-        Tue, 10 Mar 2020 18:35:54 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id E3589812F;
+        Tue, 10 Mar 2020 18:36:01 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
         devicetree@vger.kernel.org,
-        Brian Hutchinson <b.hutchman@gmail.com>,
         Graeme Smecher <gsmecher@threespeedlogic.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Brian Hutchinson <b.hutchman@gmail.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Michael Turquette <mturquette@baylibre.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
         linux-clk@vger.kernel.org
-Subject: [PATCH 00/10] Complete updating CPSW and EDMA to probe with dts
-Date:   Tue, 10 Mar 2020 11:34:54 -0700
-Message-Id: <20200310183504.65358-1-tony@atomide.com>
+Subject: [PATCH 04/10] ARM: dts: Configure interconnect target module for dm814x tpcc
+Date:   Tue, 10 Mar 2020 11:34:58 -0700
+Message-Id: <20200310183504.65358-5-tony@atomide.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310183504.65358-1-tony@atomide.com>
+References: <20200310183504.65358-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -44,36 +47,70 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi all,
+We can now probe devices with device tree only configuration using
+ti-sysc interconnect target module driver. Let's configure the
+module, but keep the legacy "ti,hwmods" peroperty to avoid new boot
+time warnings. The legacy property will be removed in later patches
+together with the legacy platform data.
 
-This series completes the conversion of CPSW and EDMA to probe with dts
-data with ti81xx being the last omap user.
+Let's also correct the custom node name to use generic node name dma.
 
-Regards,
+Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/dm814x.dtsi | 39 ++++++++++++++++++++++-------------
+ 1 file changed, 25 insertions(+), 14 deletions(-)
 
-Tony
-
-
-Tony Lindgren (10):
-  clk: ti: Fix dm814x clkctrl for ethernet
-  ARM: dts: Configure interconnect target module for dm814x cpsw
-  ARM: OMAP2+: Drop legacy platform data for dm814x cpsw
-  ARM: dts: Configure interconnect target module for dm814x tpcc
-  ARM: dts: Configure interconnect target module for dm814x tptc0
-  ARM: dts: Configure interconnect target module for dm814x tptc1
-  ARM: dts: Configure interconnect target module for dm814x tptc2
-  ARM: dts: Configure interconnect target module for dm814x tptc3
-  ARM: dts: Configure interconnect target module for ti816x edma
-  ARM: OMAP2+: Drop legacy platform data for ti81xx edma
-
- arch/arm/boot/dts/dm814x-clocks.dtsi       |  14 ++
- arch/arm/boot/dts/dm814x.dtsi              | 260 ++++++++++++++-------
- arch/arm/boot/dts/dm816x.dtsi              | 148 ++++++++++--
- arch/arm/boot/dts/dra62x.dtsi              |   6 +-
- arch/arm/mach-omap2/omap_hwmod_81xx_data.c | 231 ------------------
- drivers/clk/ti/clk-814x.c                  |   7 +-
- include/dt-bindings/clock/dm814.h          |   5 +
- 7 files changed, 332 insertions(+), 339 deletions(-)
-
+diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
+--- a/arch/arm/boot/dts/dm814x.dtsi
++++ b/arch/arm/boot/dts/dm814x.dtsi
+@@ -521,21 +521,32 @@ mmc3: mmc@47810000 {
+ 			reg = <0x47810000 0x1000>;
+ 		};
+ 
+-		edma: edma@49000000 {
+-			compatible = "ti,edma3-tpcc";
++		target-module@49000000 {
++			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			ti,hwmods = "tpcc";
+-			reg =	<0x49000000 0x10000>;
+-			reg-names = "edma3_cc";
+-			interrupts = <12 13 14>;
+-			interrupt-names = "edma3_ccint", "edma3_mperr",
+-					  "edma3_ccerrint";
+-			dma-requests = <64>;
+-			#dma-cells = <2>;
+-
+-			ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>,
+-				   <&edma_tptc2 3>, <&edma_tptc3 0>;
+-
+-			ti,edma-memcpy-channels = <20 21>;
++			reg = <0x49000000 0x4>;
++			reg-names = "rev";
++			clocks = <&alwon_clkctrl DM814_TPCC_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x49000000 0x10000>;
++
++			edma: dma@0 {
++				compatible = "ti,edma3-tpcc";
++				reg = <0 0x10000>;
++				reg-names = "edma3_cc";
++				interrupts = <12 13 14>;
++				interrupt-names = "edma3_ccint", "edma3_mperr",
++						  "edma3_ccerrint";
++				dma-requests = <64>;
++				#dma-cells = <2>;
++
++				ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>,
++					   <&edma_tptc2 3>, <&edma_tptc3 0>;
++
++				ti,edma-memcpy-channels = <20 21>;
++			};
+ 		};
+ 
+ 		edma_tptc0: tptc@49800000 {
 -- 
 2.25.1
