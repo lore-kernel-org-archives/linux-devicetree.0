@@ -2,177 +2,137 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD98C18E5A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 15:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A24C18E5A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 15:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42EBD2051A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 15:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B382464B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 15:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="DeiZr5VH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GR1hoSXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgCJPW2 (ORCPT
+        id S1727123AbgCJP1Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:22:28 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:46829 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgCJPW2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 11:22:28 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5324C23ECA;
-        Tue, 10 Mar 2020 16:22:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583853746;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RdGYE+O0ALkRkOb+rA9Tz98qgHCKJH6tSFvrz+uxT1o=;
-        b=DeiZr5VHKXR89WablI3UrMJKuQkPOBdGfFkzXtV9tbBQ/NoMoxhedHVvbVfcYEu4jv4AFo
-        g4cA4bYD7TwwaWBH6f49Kl3dLswWVOOiwVrF15Nbwi5mZmag/iYXdrHjIMlgCfyjblInP3
-        qBjFT8LgCcQwpHuCK1BMFJf/45sxsqs=
+        Tue, 10 Mar 2020 11:27:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41231 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbgCJP1Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 11:27:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s14so2767827wrt.8
+        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 08:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3LjI4IW7CuuBnAiNN/wI4Y4tTmMxDl1C2yKa4O1GZZ8=;
+        b=GR1hoSXSykV7wG3aWhZ3CvRrOrvKkE3Wph6GSdl9EAA8G3b8myYCdbp67ONYzc7e2C
+         W6ITxdGZmpEgWLIHKTi4tZYpoWio+/UPk88nS+D1nX9ykCA7YozN1wfw6TU8Fs33mv3W
+         4Q7Bu9/20ZIz7f9+o9wihVmfP/rUiuwcXMqzCFAD2K3GhChQm8bjkkFx61C6TZLc+Sqe
+         48H3vto4AiO/NLQ8yyzWT2rrjEEL3E7h/9bRMYm+dpDvjW8fDzIJauWMaf5IeJxyypES
+         eeHXTqg0BY+x+f4/b6ZwPOeYXAkTKP7SKzbvSRQO4SlDo/butMMgQ7NiGvk+KhwcIS3t
+         5qqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3LjI4IW7CuuBnAiNN/wI4Y4tTmMxDl1C2yKa4O1GZZ8=;
+        b=bPnLb235pgBzQgaUlaqqoSxTD0j6A5YJeAxju/LlKKBixSUS3QI6X2/U2FgeuGST1r
+         HZoemyS/jQTpRe41WKsXuoMxIPKupqlNPK0//POOYuEQxa76LMtVu6fnC7qg8NuBcLCV
+         z49G6zEJkp0B8pbtrbPDT2m6Q0Ik6JsHSuo5r0n5k8Asu9VELnU1iokOshY5F+8uIljS
+         YgvVtoCOL5xpiqrRF1T6kFH7BAfcOIRmG4xsx3pY/kRNtC7tNmuXcpFAJAsB63QgdvyQ
+         bV/MrzeTEbi7j8IntL9eQG5jFG+PNlMZEZ7NvsYNvjnHQon7hvBzFTTFT4CXR5mApsQF
+         nccw==
+X-Gm-Message-State: ANhLgQ3AMAI2U5lTxai9cJpc3tKh5u8UtAumF+XULRm5J97BbJYizEUz
+        rOXp4Y+OdM+QvBnaqZUpUWFNCQ==
+X-Google-Smtp-Source: ADFU+vsBBggc0x97WUZ6qoSZO8TvflomuxqqHU8axLnY+M4+YZhPfZvivjKVKcGlYgMIXbh9zjDycA==
+X-Received: by 2002:a05:6000:4:: with SMTP id h4mr26644695wrx.14.1583854042426;
+        Tue, 10 Mar 2020 08:27:22 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id i204sm4374823wma.44.2020.03.10.08.27.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 08:27:21 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 15:27:19 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH V3 2/4] backlight: qcom-wled: Add callback functions
+Message-ID: <20200310152719.5hpzh6osq22y4qbn@holly.lan>
+References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+ <1583760362-26978-3-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 10 Mar 2020 16:22:26 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
-In-Reply-To: <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
-References: <20200310125542.5939-1-olteanv@gmail.com>
- <615284875b709f602d57e4a4621a83c1@walle.cc>
- <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
-Message-ID: <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 5324C23ECA
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.399];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583760362-26978-3-git-send-email-kgunda@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vladimir,
-
-Am 2020-03-10 15:56, schrieb Vladimir Oltean:
->> (2) Also, reading the flash, every second time there is (reproducibly)
->> an
->> IO error:
->> 
->> # hexdump -C /dev/mtd0
->> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->> |huhu............|
->> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->> |................|
->> *
->> 01000000
->> # hexdump -C /dev/mtd0
->> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->> |huhu............|
->> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->> |................|
->> *
->> hexdump: /dev/mtd0: Input/output error
->> 00dc0000
->> # hexdump -C /dev/mtd0
->> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->> |huhu............|
->> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->> |................|
->> *
->> 01000000
->> # hexdump -C /dev/mtd0
->> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->> |huhu............|
->> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->> |................|
->> *
->> hexdump: /dev/mtd0: Input/output error
->> 00e6a000
->> 
+On Mon, Mar 09, 2020 at 06:56:00PM +0530, Kiran Gunda wrote:
+> Add cabc_config, sync_toggle, wled_ovp_fault_status and wled_ovp_delay
+> callback functions to prepare the driver for adding WLED5 support.
 > 
-> Just to be clear, issue 2 is seen only after you abort another
-> transaction, right?
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 
-No, just normal uninterrupted reading. Just tried it right after
-reboot. Doesn't seem to be every second time though, just random
-which makes me wonder if that is another problem now. Also the
-last successful reading is random.
+Overall this code would a lot easier to review if
+> ---
+>  drivers/video/backlight/qcom-wled.c | 196 +++++++++++++++++++++++-------------
+>  1 file changed, 126 insertions(+), 70 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+> index 3d276b3..b73f273 100644
+> --- a/drivers/video/backlight/qcom-wled.c
+> +++ b/drivers/video/backlight/qcom-wled.c
+> @@ -128,6 +128,7 @@ struct wled_config {
+>  	bool cs_out_en;
+>  	bool ext_gen;
+>  	bool cabc;
+> +	bool en_cabc;
 
-buildroot login: root
-# hexdump -C /dev/mtd0
-00000000  31 32 33 34 35 ff ff ff  ff ff ff ff ff ff ff ff  
-|12345...........|
-00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  
-|................|
-*
-[   32.359156] random: crng init done
-01000000
-# hexdump -C /dev/mtd0
-00000000  31 32 33 34 35 ff ff ff  ff ff ff ff ff ff ff ff  
-|12345...........|
-00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  
-|................|
-*
-01000000
-# hexdump -C /dev/mtd0
-00000000  31 32 33 34 35 ff ff ff  ff ff ff ff ff ff ff ff  
-|12345...........|
-00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  
-|................|
-*
-hexdump: /dev/mtd0: Input/output error
-00166000
-# hexdump -C /dev/mtd0
-00000000  31 32 33 34 35 ff ff ff  ff ff ff ff ff ff ff ff  
-|12345...........|
-00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  
-|................|
-*
-hexdump: /dev/mtd0: Input/output error
-00c68000
-# hexdump -C /dev/mtd0
-00000000  31 32 33 34 35 ff ff ff  ff ff ff ff ff ff ff ff  
-|12345...........|
-00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  
-|................|
-*
-hexdump: /dev/mtd0: Input/output error
-00243000
-#
+Does this ever get set to true?
 
--michael
+>  	bool external_pfet;
+>  	bool auto_detection_enabled;
+>  };
+> @@ -147,14 +148,20 @@ struct wled {
+>  	u32 max_brightness;
+>  	u32 short_count;
+>  	u32 auto_detect_count;
+> +	u32 version;
+>  	bool disabled_by_short;
+>  	bool has_short_detect;
+> +	bool cabc_disabled;
+>  	int short_irq;
+>  	int ovp_irq;
+>  
+>  	struct wled_config cfg;
+>  	struct delayed_work ovp_work;
+>  	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
+> +	int (*cabc_config)(struct wled *wled, bool enable);
+> +	int (*wled_sync_toggle)(struct wled *wled);
+> +	int (*wled_ovp_fault_status)(struct wled *wled, bool *fault_set);
+> +	int (*wled_ovp_delay)(struct wled *wled);
+
+Let's get some doc comments explaining what these callbacks do (and
+which versions they apply to).
+
+cabc_config() in particular appears to have a very odd interface for
+wled4.  It looks like it relies on being initially called with enable
+set a particular way and prevents itself from acting again. Therefore if
+the comment you end up writing doesn't sound "right" then please also
+fix the API!
+
+Finally, why is everything except cabc_config() prefixed with wled?
+
+
+Daniel.
