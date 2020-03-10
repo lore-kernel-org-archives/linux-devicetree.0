@@ -2,499 +2,576 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC45C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 04:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209F1C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 05:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDEF124649
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 04:25:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EtBK/yGy"
+	by mail.kernel.org (Postfix) with ESMTP id DC3B82467D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 05:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583816978;
+	bh=a+O1uY+gF6EmAXiNhRbLqaV9Ui8ABiC4TVTZXyGDdds=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=2iXPJWXvD2UfvDIlcYsc4BGalHmqyw1e2SgeTEv6CwEuipVW5axG1/m3G1zY5a/x1
+	 MHtIeLcWWislJxWXcI5XNBLFItFxWOoamqEL7f1dmRAt1h4px+q+M+o/i1LnFXq+GC
+	 kv3riUwrXimTn0bXhtGxvj93K5sFloPp5cHYj7kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbgCJEZ7 (ORCPT
+        id S1725999AbgCJFJh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 00:25:59 -0400
-Received: from mail-ed1-f53.google.com ([209.85.208.53]:33437 "EHLO
-        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgCJEZ7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 00:25:59 -0400
-Received: by mail-ed1-f53.google.com with SMTP id z65so8738034ede.0
-        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 21:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZHOqz7uUgecqsn6sFVAwqyMqbdPI7yrYTT8yXex9t5w=;
-        b=EtBK/yGyHQCBjHloNYBLMIse3X2DZZtmX7NQ+RDmqbfpLe7styYnpKwv5P43Fnerez
-         FSSAJ9KpQlJhVnCjfzMbK62QvbmoPDLev+QV2NkclTu7VFPRZ//6Ty7RQb+Cg14cV5s+
-         tS4/XUpgLz89SaCFZxUs2pWldTANuYRJN3d3c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZHOqz7uUgecqsn6sFVAwqyMqbdPI7yrYTT8yXex9t5w=;
-        b=rmL8zGFt8pJdb6yapNWV1dnRQ4ZqufT6F3xxoQAgYfHjYp2fDfF787Y1vt41QQWmL3
-         c6XSWuH0x4ALjnLD33oAIzvnc+xKjcdebJoDcYQE87BzZ7sfp/vbsoaX6JP5aa3ac9Yu
-         1Z6KQO6aft+22AvAmIYKqXhDziOecgLUuFRR75/TSmz7NIsEaRFO5N+Ic73ClRUH50Nm
-         dslQOs/3vrvZkPp+CRvEBtdv4kUAvv8Jn+uMwIgCUwaua6wOPhZgu8I4uulN29NoeK1H
-         e52gWjgfTqoVkXQi6zwk0nsUHF5PdMZdL24hNAavkZLVUczbIi8CvmIonRxqfCj12i1V
-         sotA==
-X-Gm-Message-State: ANhLgQ0bhUSMVKwGfZ2fPbhxrypB4Sydg+SAK6yOjqI+5C6cZW910MCA
-        3tr+lbhks2mSLAdKEFhvzRTM3tRWM5CLaw==
-X-Google-Smtp-Source: ADFU+vvALhh686iKwNIAhdctZjj/spEqWcnhii+t6grvgEatCcQ7kKc/A+240AehsKRcNRMUHrHrtw==
-X-Received: by 2002:a17:906:bcc4:: with SMTP id lw4mr10772600ejb.228.1583814354603;
-        Mon, 09 Mar 2020 21:25:54 -0700 (PDT)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id y89sm2809471eda.97.2020.03.09.21.25.54
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 21:25:54 -0700 (PDT)
-Received: by mail-wr1-f45.google.com with SMTP id m9so5061909wro.12
-        for <devicetree@vger.kernel.org>; Mon, 09 Mar 2020 21:25:54 -0700 (PDT)
-X-Received: by 2002:adf:e94d:: with SMTP id m13mr23865947wrn.415.1583813863598;
- Mon, 09 Mar 2020 21:17:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191017084033.28299-1-xia.jiang@mediatek.com>
- <20191017084033.28299-6-xia.jiang@mediatek.com> <20191023103945.GA41089@chromium.org>
- <1575626384.17879.81.camel@mhfsdcap03>
-In-Reply-To: <1575626384.17879.81.camel@mhfsdcap03>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 10 Mar 2020 13:17:31 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5A8XAT-7kZgaKktbBk1ogdfY3LRsK0xapHps4VqCQ_BZA@mail.gmail.com>
-Message-ID: <CAAFQd5A8XAT-7kZgaKktbBk1ogdfY3LRsK0xapHps4VqCQ_BZA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Tue, 10 Mar 2020 01:09:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbgCJFJh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 01:09:37 -0400
+Received: from localhost.localdomain (unknown [122.167.84.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7731624655;
+        Tue, 10 Mar 2020 05:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583816976;
+        bh=a+O1uY+gF6EmAXiNhRbLqaV9Ui8ABiC4TVTZXyGDdds=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PcQHWNefEvf4WBIoOsEHzmEjB+lc6SpvmsdDZH0Z6K+/9wnA01+mySUcIqSlOtJsL
+         KriGj/7/Si/LAnx2cMQ3HRTe5+eTFTErrWRSAHzvQayg97iFa07ZwtUjVhEYJNnXuM
+         /GL+7DX6EPDFw7DlAgsGo3rjJ8WcmbxBzpQX3Nz0=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <Rick.Chang@mediatek.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        jshriram@codeaurora.org, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH] arm64: dts: qcom: sm8250: Add sm8250 dts file
+Date:   Tue, 10 Mar 2020 10:39:10 +0530
+Message-Id: <20200310050910.506854-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Xia,
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-On Fri, Dec 6, 2019 at 6:59 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
->
-> On Wed, 2019-10-23 at 18:39 +0800, Tomasz Figa wrote:
-> > Hi Xia,
-> >
-> > On Thu, Oct 17, 2019 at 04:40:38PM +0800, Xia Jiang wrote:
-> > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
-> > > decode and encode have great similarities with function operation.
-> > >
-> > > Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> > > ---
-> > > v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder,
-> > >     one for decoder.
-> > >     split mtk_jpeg_set_default_params() to two functions, one for
-> > >     encoder, one for decoder.
-> > >     add cropping support for encoder in g/s_selection ioctls.
-> > >     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
-> > >     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 by
-> > >     specification.
-> > >     move width shifting operation behind aligning operation in
-> > >     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
-> > >     fix user abuseing data_offset issue for DMABUF in
-> > >     mtk_jpeg_set_enc_src().
-> > >     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGHT
-> > >                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH from
-> > >                         'int' type to 'unsigned int' type.
-> > >                         fix msleadingly indented of 'else'.
-> > >
-> > > v3: delete Change-Id.
-> > >     only test once handler->error after the last v4l2_ctrl_new_std().
-> > >     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch.
-> > >
-> > > v2: fix compliance test fail, check created buffer size in driver.
-> > > ---
-> > >  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++---
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
-> > >  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
-> > >  7 files changed, 1004 insertions(+), 146 deletions(-)
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.h
-> > >
-> >
-> > First of all, thanks for the patch!
-> >
-> > Please check my comments below.
-> >
-> > My general feeling about this code is that the encoder hardware block is
-> > completely orthogonal from the decoder block and there is very little code
-> > reuse from the original decoder driver.
-> >
-> > Moreover, a lot of existing code now needs if (decoder) { ... } else {... }
-> > segments, which complicates the code.
-> >
-> > Would it perhaps make sense to instead create a separate mtk-jpeg-enc
-> > driver?
-> >
-> > It would also give us a fresh start in terms of code quality, as the
-> > existing mtk-jpeg driver has a lot of quality issues unfortunately. (Some
-> > of my comments to this patch actually relate to the issues with the
-> > original code, not introduced by this patch, but we need to fix them if
-> > changing this driver already.)
-> >
-> Dear Tomasz,
->
-> I haved fixed the driver by following your advice in general.
->
-> Please check my reply below.
+Add sm8250 devicetree file for SM8250 SoC and SM8250 MTP platform.
+This file adds the basic nodes like cpu, psci and other required
+configuration for booting up to the serial console.
 
-Sorry, I missed this message originally. Replied below.
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/Makefile       |   1 +
+ arch/arm64/boot/dts/qcom/sm8250-mtp.dts |  29 ++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi    | 444 ++++++++++++++++++++++++
+ 3 files changed, 474 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8250.dtsi
 
-[snip]
-> > > +   }
-> > > +   param->enc_w = q_data_src->w;
-> > > +   param->enc_h = q_data_src->h;
-> > > +
-> > > +   if (jpeg_params->enc_quality >= 97)
-> > > +           param->enc_quality = JPEG_ENCODE_QUALITY_Q97;
-> > > +   else if (jpeg_params->enc_quality >= 95)
-> > > +           param->enc_quality = JPEG_ENCODE_QUALITY_Q95;
-> >
-> > I'm wondering if the application requests 96, it doesn't expect the quality to
-> > be _at_least_ 96.
-> our jpeg enc hw do not support quality 96,only support 15 kinds of quant
-> table listed here, so if the application requests 96,a nearest and
-> highest quality will be given.
-> >
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 973c0f079659..c6014c0340ed 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -22,5 +22,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+new file mode 100644
+index 000000000000..224d0f1ea6f9
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++/dts-v1/;
++
++#include "sm8250.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. SM8250 MTP";
++	compatible = "qcom,sm8250-mtp";
++
++	aliases {
++		serial0 = &uart2;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&qupv3_id_1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+new file mode 100644
+index 000000000000..1373bc53dec9
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -0,0 +1,444 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/qcom,rpmh.h>
++#include <dt-bindings/soc/qcom,rpmh-rsc.h>
++
++/ {
++	interrupt-parent = <&intc>;
++
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	chosen { };
++
++	clocks {
++		xo_board: xo-board {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <38400000>;
++			clock-output-names = "xo_board";
++		};
++
++		sleep_clk: sleep-clk {
++			compatible = "fixed-clock";
++			clock-frequency = <32000>;
++			#clock-cells = <1>;
++		};
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x0>;
++			enable-method = "psci";
++			next-level-cache = <&L2_0>;
++			L2_0: l2-cache {
++			      compatible = "cache";
++			      next-level-cache = <&L3_0>;
++				L3_0: l3-cache {
++				      compatible = "cache";
++				};
++			};
++		};
++
++		CPU1: cpu@100 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x100>;
++			enable-method = "psci";
++			next-level-cache = <&L2_100>;
++			L2_100: l2-cache {
++			      compatible = "cache";
++			      next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU2: cpu@200 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x200>;
++			enable-method = "psci";
++			next-level-cache = <&L2_200>;
++			L2_200: l2-cache {
++			      compatible = "cache";
++			      next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU3: cpu@300 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x300>;
++			enable-method = "psci";
++			next-level-cache = <&L2_300>;
++			L2_300: l2-cache {
++			      compatible = "cache";
++			      next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU4: cpu@400 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x400>;
++			enable-method = "psci";
++			next-level-cache = <&L2_400>;
++			L2_400: l2-cache {
++			      compatible = "cache";
++			      next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU5: cpu@500 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x500>;
++			enable-method = "psci";
++			next-level-cache = <&L2_500>;
++			L2_500: l2-cache {
++			      compatible = "cache";
++			      next-level-cache = <&L3_0>;
++			};
++
++		};
++
++		CPU6: cpu@600 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x600>;
++			enable-method = "psci";
++			next-level-cache = <&L2_600>;
++			L2_600: l2-cache {
++			      compatible = "cache";
++			      next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU7: cpu@700 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x700>;
++			enable-method = "psci";
++			next-level-cache = <&L2_700>;
++			L2_700: l2-cache {
++			      compatible = "cache";
++			      next-level-cache = <&L3_0>;
++			};
++		};
++	};
++
++	firmware {
++		scm: scm {
++			compatible = "qcom,scm";
++			#reset-cells = <1>;
++		};
++	};
++
++	tcsr_mutex: hwlock {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x1000>;
++		#hwlock-cells = <1>;
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		/* We expect the bootloader to fill in the size */
++		reg = <0x0 0x80000000 0x0 0x0>;
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		hyp_mem: memory@80000000 {
++			reg = <0x0 0x80000000 0x0 0x600000>;
++			no-map;
++		};
++
++		xbl_aop_mem: memory@80700000 {
++			reg = <0x0 0x80700000 0x0 0x160000>;
++			no-map;
++		};
++
++		cmd_db: memory@80860000 {
++			compatible = "qcom,cmd-db";
++			reg = <0x0 0x80860000 0x0 0x20000>;
++			no-map;
++		};
++
++		smem_mem: memory@80900000 {
++			reg = <0x0 0x80900000 0x0 0x200000>;
++			no-map;
++		};
++
++		removed_mem: memory@80b00000 {
++			reg = <0x0 0x80b00000 0x0 0x5300000>;
++			no-map;
++		};
++
++		camera_mem: memory@86200000 {
++			reg = <0x0 0x86200000 0x0 0x500000>;
++			no-map;
++		};
++
++		wlan_mem: memory@86700000 {
++			reg = <0x0 0x86700000 0x0 0x100000>;
++			no-map;
++		};
++
++		ipa_fw_mem: memory@86800000 {
++			reg = <0x0 0x86800000 0x0 0x10000>;
++			no-map;
++		};
++
++		ipa_gsi_mem: memory@86810000 {
++			reg = <0x0 0x86810000 0x0 0xa000>;
++			no-map;
++		};
++
++		gpu_mem: memory@8681a000 {
++			reg = <0x0 0x8681a000 0x0 0x2000>;
++			no-map;
++		};
++
++		npu_mem: memory@86900000 {
++			reg = <0x0 0x86900000 0x0 0x500000>;
++			no-map;
++		};
++
++		video_mem: memory@86e00000 {
++			reg = <0x0 0x86e00000 0x0 0x500000>;
++			no-map;
++		};
++
++		cvp_mem: memory@87300000 {
++			reg = <0x0 0x87300000 0x0 0x500000>;
++			no-map;
++		};
++
++		cdsp_mem: memory@87800000 {
++			reg = <0x0 0x87800000 0x0 0x1400000>;
++			no-map;
++		};
++
++		slpi_mem: memory@88c00000 {
++			reg = <0x0 0x88c00000 0x0 0x1500000>;
++			no-map;
++		};
++
++		adsp_mem: memory@8a100000 {
++			reg = <0x0 0x8a100000 0x0 0x1d00000>;
++			no-map;
++		};
++
++		spss_mem: memory@8be00000 {
++			reg = <0x0 0x8be00000 0x0 0x100000>;
++			no-map;
++		};
++
++		cdsp_secure_heap: memory@8bf00000 {
++			reg = <0x0 0x8bf00000 0x0 0x4600000>;
++			no-map;
++		};
++	};
++
++	smem: qcom,smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_mem>;
++		hwlocks = <&tcsr_mutex 3>;
++	};
++
++	soc: soc@0 {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges = <0 0 0 0 0x10 0>;
++		dma-ranges = <0 0 0 0 0x10 0>;
++		compatible = "simple-bus";
++
++		gcc: clock-controller@100000 {
++			compatible = "qcom,gcc-sm8250";
++			reg = <0x0 0x00100000 0x0 0x1f0000>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++			clock-names = "bi_tcxo", "sleep_clk";
++			clocks = <&rpmhcc RPMH_CXO_CLK>, <&sleep_clk>;
++		};
++
++		qupv3_id_1: geniqup@ac0000 {
++			compatible = "qcom,geni-se-qup";
++			reg = <0x0 0x00ac0000 0x0 0x6000>;
++			clock-names = "m-ahb", "s-ahb";
++			clocks = <&gcc 133>, <&gcc 134>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			status = "disabled";
++
++			uart2: serial@a90000 {
++				compatible = "qcom,geni-debug-uart";
++				reg = <0x0 0x00a90000 0x0 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc 113>;
++				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++				status = "disabled";
++			};
++		};
++
++		intc: interrupt-controller@17a00000 {
++			compatible = "arm,gic-v3";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x0 0x17a00000 0x0 0x10000>,     /* GICD */
++			      <0x0 0x17a60000 0x0 0x100000>;    /* GICR * 8 */
++			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pdc: interrupt-controller@b220000 {
++			compatible = "qcom,sm8250-pdc";
++			reg = <0x0b220000 0x30000>, <0x17c000f0 0x60>;
++			qcom,pdc-ranges = <0 480 94>, <94 609 31>,
++					  <125 63 1>, <126 716 12>;
++			#interrupt-cells = <2>;
++			interrupt-parent = <&intc>;
++			interrupt-controller;
++		};
++
++		spmi: qcom,spmi@c440000 {
++			compatible = "qcom,spmi-pmic-arb";
++			reg = <0x0 0x0c440000 0x0 0x0001100>,
++			      <0x0 0x0c600000 0x0 0x2000000>,
++			      <0x0 0x0e600000 0x0 0x0100000>,
++			      <0x0 0x0e700000 0x0 0x00a0000>,
++			      <0x0 0x0c40a000 0x0 0x0026000>;
++			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
++			interrupt-names = "periph_irq";
++			interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
++			qcom,ee = <0>;
++			qcom,channel = <0>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++			interrupt-controller;
++			#interrupt-cells = <4>;
++		};
++
++		apps_rsc: rsc@18200000 {
++			label = "apps_rsc";
++			compatible = "qcom,rpmh-rsc";
++			reg = <0x0 0x18200000 0x0 0x10000>,
++				<0x0 0x18210000 0x0 0x10000>,
++				<0x0 0x18220000 0x0 0x10000>;
++			reg-names = "drv-0", "drv-1", "drv-2";
++			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++			qcom,tcs-offset = <0xd00>;
++			qcom,drv-id = <2>;
++			qcom,tcs-config = <ACTIVE_TCS  2>, <SLEEP_TCS   3>,
++					  <WAKE_TCS    3>, <CONTROL_TCS 1>;
++
++			rpmhcc: clock-controller {
++				compatible = "qcom,sm8250-rpmh-clk";
++				#clock-cells = <1>;
++				clock-names = "xo";
++				clocks = <&xo_board>;
++			};
++		};
++
++		tcsr_mutex_regs: syscon@1f40000 {
++			compatible = "syscon";
++			reg = <0x0 0x01f40000 0x0 0x40000>;
++		};
++
++		timer@17c20000 {
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			compatible = "arm,armv7-timer-mem";
++			reg = <0x0 0x17c20000 0x0 0x1000>;
++			clock-frequency = <19200000>;
++
++			frame@17c21000 {
++				frame-number = <0>;
++				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c21000 0x0 0x1000>,
++				      <0x0 0x17c22000 0x0 0x1000>;
++			};
++
++			frame@17c23000 {
++				frame-number = <1>;
++				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c23000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c25000 {
++				frame-number = <2>;
++				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c25000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c27000 {
++				frame-number = <3>;
++				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c27000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c29000 {
++				frame-number = <4>;
++				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c29000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c2b000 {
++				frame-number = <5>;
++				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c2b000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c2d000 {
++				frame-number = <6>;
++				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c2d000 0x0 0x1000>;
++				status = "disabled";
++			};
++		};
++
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 12
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++};
+-- 
+2.24.1
 
-Just to clarify my comment, if I remember correctly, the JPEG standard
-defines the 100 levels, so if the application requests level 96, but
-the hardware provides only 95 and 97, the quality should be favored
-and 97 used.
-
-[snip]
-> >
-> > > +   param->mem_stride = mtk_jpeg_align(width_even, (is_420 ? 16 : 32));
-> >
-> > What's the difference between img_stride and mem_stride?
->
-> In theory, mem_stride need >= img_stride,but we use the same is ok
-> >
-> > > +   param->total_encdu =
-> > > +           ((padding_width >> 4) * (padding_height >> (is_420 ? 4 : 3)) *
-> > > +           (is_420 ? 6 : 4)) - 1;
-> >
-> > The comment above the struct says this is the total number of 8x8 blocks.
-> > Why would it depend on whether the format is YUV 4:2:0? Since we should
-> > have already aligned the width and height in try_fmt, this should be as
-> > simple as (width / 8) * (height / 8).
-> becuase the image size is w*h*1.5 for yuv420 format, but w*h*2 for
-> yuv422,so for yuv420: w_16/8*h_16/8*1.5-1(because the hw will start at
-> number 0), yuv422: w_32/8*h_8/8*2-1,this number is equal to my code.
-
-Do you mean that this also includes the Cb and Cr 8x8 blocks separately?
-If so, could it be rewritten as below to improve the readability?
-
-luma_blocks = width / 8 * height / 8;
-if (is_420)
-    chroma_blocks = luma_blocks / 4;
-else
-    chroma_blocks = luma_blocks / 2;
-param->last_encdu = luma_blocks + 2 * chroma_blocks - 1;
-
-Also, does it mean that this number is actually the index of the last
-block, not the total number of blocks?
-If so, the field should be probably renamed to last_encdu and the
-description updated accordingly.
-
-[snip]
-> > Could we instead check the buffer address alignment in .buf_prepare and fail if
-> > it's not big enough?
-> >
-> > > +   bs->dma_addr_offset = p->enable_exif ? MTK_JPEG_DEFAULT_EXIF_SIZE : 0;
-> > > +   bs->dma_addr_offsetmask = bs->dma_addr & JPEG_ENC_DST_ADDR_OFFSET_MASK;
-> >
-> > What is the meaning of this offset mask?
-> our actual destination address = destination address + offset address+
-> destination address offset mask.The mask 0:No offset,1~15:offset byte
-> from the 16-byte aligned
-
-So we have dma_addr, dma_addr_offset and dma_addr_offsetmask. Why do
-we need dma_addr_offset? Would the same operation be achieved with the
-code below?
-
-dma_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-if (p->enable_exif)
-    dma_addr += MTK_JPEG_DEFAULT_EXIF_SIZE;
-bs->dma_addr = dma_addr & ~JPEG_ENC_DST_ADDR_OFFSET_MASK;
-bs->dma_addr_offset = 0;
-bs->dma_addr_offsetmask = dma_addr & JPEG_ENC_DST_ADDR_OFFSET_MASK;
-
-Or does the hardware write something directly at bs->dma_addr (some
-tags?) and then the encoded image at the final desintation address?
-
-[snip]
-> > > -static void mtk_jpeg_set_default_params(struct mtk_jpeg_ctx *ctx)
-> > > +static void mtk_jpeg_set_enc_default_params(struct mtk_jpeg_ctx *ctx)
-> > > +{
-> > > +   struct mtk_jpeg_q_data *q = &ctx->out_q;
-> > > +   int align_w, align_h;
-> > > +
-> > > +   ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
-> > > +
-> > > +   ctx->colorspace = V4L2_COLORSPACE_JPEG,
-> > > +   ctx->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-> > > +   ctx->quantization = V4L2_QUANTIZATION_DEFAULT;
-> > > +   ctx->xfer_func = V4L2_XFER_FUNC_DEFAULT;
-> > > +
-> > > +   q->w = MTK_JPEG_MIN_WIDTH;
-> > > +   q->h = MTK_JPEG_MIN_HEIGHT;
-> > > +
-> > > +   q->fmt = mtk_jpeg_find_format(ctx, V4L2_PIX_FMT_YUYV,
-> > > +                                 MTK_JPEG_FMT_TYPE_OUTPUT);
-> > > +
-> > > +   align_w = q->w;
-> > > +   align_h = q->h;
-> > > +   align_w = round_up(align_w, 2);
-> > > +   v4l_bound_align_image(&align_w, MTK_JPEG_MIN_WIDTH, MTK_JPEG_MAX_WIDTH,
-> > > +                         5, &align_h, MTK_JPEG_MIN_HEIGHT,
-> > > +                         MTK_JPEG_MAX_HEIGHT, 3, 0);
-> > > +   align_w = align_w << 1;
-> > > +
-> > > +   if (align_w < MTK_JPEG_MIN_WIDTH &&
-> > > +       (align_w + 32) <= MTK_JPEG_MAX_WIDTH)
-> > > +           align_w += 32;
-> > > +   if (align_h < MTK_JPEG_MIN_HEIGHT &&
-> > > +       (align_h + 8) <= MTK_JPEG_MAX_HEIGHT)
-> > > +           align_h += 8;
-> > > +
-> > > +   q->sizeimage[0] = align_w * align_h;
-> > > +   q->bytesperline[0] = align_w;
-> > > +
-> > > +   q = &ctx->cap_q;
-> > > +   q->w = MTK_JPEG_MIN_WIDTH;
-> > > +   q->h = MTK_JPEG_MIN_HEIGHT;
-> > > +   q->fmt = mtk_jpeg_find_format(ctx, V4L2_PIX_FMT_JPEG,
-> > > +                                 MTK_JPEG_FMT_TYPE_CAPTURE);
-> > > +   q->bytesperline[0] = 0;
-> > > +   q->sizeimage[0] = MTK_JPEG_DEFAULT_SIZEIMAGE;
-> > > +}
-> >
-> > Could we just create an arbitrary v4l2_pix_format_mplane struct and call
-> > s_fmt instead? In general, all of the constant values and alignments should
-> > be already ensured by try_fmt, so this function should be redundant.
-> if cancel this function,the v4l2-compliance test will fail
-
-Sorry, I guess my comment was not clear. We need to initialize the
-default parameters. However, the contents of this function seem to
-heavily duplicate with the code that should be in try_fmt, so could we
-just call try_fmt from here instead of repeating the calculations?
-
-[snip]
-> > > -   ret = devm_request_irq(&pdev->dev, dec_irq, mtk_jpeg_dec_irq, 0,
-> > > +   ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_irq, 0,
-> > >                            pdev->name, jpeg);
-> > >     if (ret) {
-> > > -           dev_err(&pdev->dev, "Failed to request dec_irq %d (%d)\n",
-> > > -                   dec_irq, ret);
-> > > -           ret = -EINVAL;
-> >
-> > This removal of ret assignment looks like a separate fix that should be
-> > done in its own patch.
-> this change is because of the adding of jpeg enc driver,not the orignal
-> driver' question, should I move it to the orignal driver's patch?
-
-Yes, please.
-
-> >
-> > > +           dev_err(&pdev->dev, "Failed to request jpeg_irq %d (%d)\n",
-> > > +                   jpeg_irq, ret);
-> > >             goto err_req_irq;
-> > >     }
-> > >
-> > > @@ -1140,33 +1602,35 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
-> > >             goto err_m2m_init;
-> > >     }
-> > >
-> > > -   jpeg->dec_vdev = video_device_alloc();
-> > > -   if (!jpeg->dec_vdev) {
-> > > +   jpeg->vfd_jpeg = video_device_alloc();
-> > > +   if (!jpeg->vfd_jpeg) {
-> > >             ret = -ENOMEM;
-> > > -           goto err_dec_vdev_alloc;
-> > > +           goto err_vfd_jpeg_alloc;
-> > >     }
-> > > -   snprintf(jpeg->dec_vdev->name, sizeof(jpeg->dec_vdev->name),
-> > > -            "%s-dec", MTK_JPEG_NAME);
-> > > -   jpeg->dec_vdev->fops = &mtk_jpeg_fops;
-> > > -   jpeg->dec_vdev->ioctl_ops = &mtk_jpeg_ioctl_ops;
-> > > -   jpeg->dec_vdev->minor = -1;
-> > > -   jpeg->dec_vdev->release = video_device_release;
-> > > -   jpeg->dec_vdev->lock = &jpeg->lock;
-> > > -   jpeg->dec_vdev->v4l2_dev = &jpeg->v4l2_dev;
-> > > -   jpeg->dec_vdev->vfl_dir = VFL_DIR_M2M;
-> > > -   jpeg->dec_vdev->device_caps = V4L2_CAP_STREAMING |
-> > > +   snprintf(jpeg->vfd_jpeg->name, sizeof(jpeg->vfd_jpeg->name),
-> > > +            "%s-%s", MTK_JPEG_NAME,
-> > > +            jpeg->mode == MTK_JPEG_ENC ? "enc" : "dec");
-> > > +   jpeg->vfd_jpeg->fops = &mtk_jpeg_fops;
-> > > +   jpeg->vfd_jpeg->ioctl_ops = &mtk_jpeg_ioctl_ops;
-> > > +   jpeg->vfd_jpeg->minor = -1;
-> > > +   jpeg->vfd_jpeg->release = video_device_release;
-> > > +   jpeg->vfd_jpeg->lock = &jpeg->lock;
-> > > +   jpeg->vfd_jpeg->v4l2_dev = &jpeg->v4l2_dev;
-> > > +   jpeg->vfd_jpeg->vfl_dir = VFL_DIR_M2M;
-> > > +   jpeg->vfd_jpeg->device_caps = V4L2_CAP_STREAMING |
-> > >                                   V4L2_CAP_VIDEO_M2M_MPLANE;
-> > >
-> > > -   ret = video_register_device(jpeg->dec_vdev, VFL_TYPE_GRABBER, 3);
-> > > +   ret = video_register_device(jpeg->vfd_jpeg, VFL_TYPE_GRABBER, -1);
-> >
-> > The change from 3 to -1 also looks like something for a separate patch.
-> same as the above reply
-
-Ditto.
-
-[snip]
-> > > @@ -17,23 +18,77 @@
-> > >
-> > >  #define MTK_JPEG_FMT_FLAG_DEC_OUTPUT       BIT(0)
-> > >  #define MTK_JPEG_FMT_FLAG_DEC_CAPTURE      BIT(1)
-> > > +#define MTK_JPEG_FMT_FLAG_ENC_OUTPUT       BIT(2)
-> > > +#define MTK_JPEG_FMT_FLAG_ENC_CAPTURE      BIT(3)
-> > >
-> > >  #define MTK_JPEG_FMT_TYPE_OUTPUT   1
-> > >  #define MTK_JPEG_FMT_TYPE_CAPTURE  2
-> > >
-> > > -#define MTK_JPEG_MIN_WIDTH 32
-> > > -#define MTK_JPEG_MIN_HEIGHT        32
-> > > -#define MTK_JPEG_MAX_WIDTH 8192
-> > > -#define MTK_JPEG_MAX_HEIGHT        8192
-> > > +#define MTK_JPEG_MIN_WIDTH 32U
-> > > +#define MTK_JPEG_MIN_HEIGHT        32U
-> > > +#define MTK_JPEG_MAX_WIDTH 65535U
-> > > +#define MTK_JPEG_MAX_HEIGHT        65535U
-> >
-> > Why is it okay to change this from 8192 to 65535?
-> our hw support max width/height to 65535
-
-Does this also apply to the JPEG decoder on MT8173 for which the
-driver was developed?
-
-[snip]
-> > > +/**
-> > > + * jpeg_enc_param - parameters of jpeg encode control
-> > > + * @enable_exif:   EXIF enable for jpeg encode mode
-> > > + * @enc_quality:   destination image quality in encode mode
-> > > + * @restart_interval:      JPEG restart interval for JPEG encoding
-> > > + */
-> > > +struct jpeg_enc_param {
-> > > +   u32 enable_exif;
-> >
-> > Shouldn't this be a bool?
-> this value is seted by V4L2_CID_JPEG_ACTIVE_MARKER control,its' value is
-> V4L2_JPEG_ACTIVE_MARKER_APP1(1<<1),not a bool
-
-In this case, please call it active_marker and also update the comment
-above accordingly.
-
-Still, if this driver only cares about V4L2_JPEG_ACTIVE_MARKER_APP1,
-bool enable_exif, assigned  by the code appropriately, would make more
-sense.
-
-[snip]
-> > > +
-> > > +static void mtk_jpeg_enc_set_encFormat(void __iomem *base, u32 enc_format)
-> > > +{
-> > > +   u32 value;
-> > > +
-> > > +   value = readl(base + JPGENC_CTRL);
-> > > +   value &= ~JPEG_ENC_CTRL_YUV_BIT;
-> > > +   value |= JPGENC_FORMAT(enc_format);
-> > > +   writel(value, base + JPGENC_CTRL);
-> >
-> > The model I suggested above also avoids this kind of read modify write
-> > operations, which just unnecessarily add synchronous MMIO round trips, which
-> > means more CPU overhead.
-> >
-> > Given that the full state is always known by the driver, it can just write
-> > all the register values without the need to read them back.
-> the JPGENC_CTRL register has 32 bits,different bits have different
-> meanings. encformat is bit 3~4,so we need ready before write to
-> guarantee other bits' value not be changed
-
-I explained this more in my review comments to the latest revision,
-but this is just solving a problem that is introduced by the design of
-the code. If the code was designed so that 1 register is only changed
-in 1 function, there would be no need to read back the registers,
-because the function would initialize the full register at a time.
-That's what most of the other drivers do.
-
-[snip]
-> > > +enum {
-> > > +   MTK_JPEG_ENC_RESULT_DONE                = 0,
-> > > +   MTK_JPEG_ENC_RESULT_STALL,
-> > > +   MTK_JPEG_ENC_RESULT_VCODEC_IRQ,
-> > > +   MTK_JPEG_ENC_RESULT_ERROR_UNKNOWN
-> > > +};
-> >
-> > Do we need these intermediate error codes? Could we just use errno values
-> > instead?
-> we can just use errno values,but our interrupt status have three
-> state,done/stall,vcodec irq,maybe listing them here makes more clarity
-
-I suggested another approach in my comments for the latest revision.
-Generally the interrupt handler is the only place where this error
-handling is done, so the intermediate error codes shouldn't be
-necessary, as the interrupt handler would directly signal any issues
-to V4L2.
-
-[snip]
-> > > +#define JPGENC_FORMAT(x)           (((x) & 3) << 3)
-> > > +#define JPGENC_WIDTH_HEIGHT(w, h)  (((w) << 16) | (h))
-> > > +#define JPGENC_INIT_OFFSET(x)              ((x) & (~0xF))
-> > > +#define JPGENC_OFFSET_MASK(x)              ((x) & 0xF)
-> > > +#define JPGENC_DST_ADDR(x)         ((x) & (~0xF))
-> > > +#define JPGENC_STALL_ADDR(x, y)            (((x) + (y)) & (~0xF))
-> > > +#define JPGENC_QUALITY_MASK                0xFFFF0000
-> > > +#define JPGENC_SET_QUALITY(x, y)   (((x) & JPGENC_QUALITY_MASK) | (y))
-> >
-> > JPGENC_QUALITY_MASK is only used here, so 0xffff0000 could be just used
-> > directly.
-> done
-> >
-> > > +
-> > > +#endif /* _MTK_JPEG_ENC_REG_H */
-> >
-> > I can see some bits defined in mtk_jpeg_enc_hw.h as well. Perhaps all these
-> > could be moved there too, which would make us have 1 file less?
-> moved bits defined  and register defined to mtk_jpeg_enc_reg.h, but the
-> functions declaration about jpeg enc hw were in mtk_jpeg_enc_hw.h, is
-> that ok?
-
-My suggestion was the other way around - have all the encoder-specific
-definitions in mtk_jpeg_enc_hw.h and remove mtk_jpeg_enc_reg.h.
-
-In general, this is a relatively simple hardware block and we should
-be able to just have one file that deals with hardware registers. Then
-there would be no need for headers, as the register definitions could
-be put directly in the source file. A rule of thumb is to use a header
-when something needs to be shared between multiple source files.
-
-Best regards,
-Tomasz
