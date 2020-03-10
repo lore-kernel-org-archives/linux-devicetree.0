@@ -2,162 +2,141 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DF9C10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E411C3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 11:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A09A24683
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A8124692
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 11:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qcjiOxUD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="q2+FGgY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgCJKkA (ORCPT
+        id S1726197AbgCJLJT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:40:00 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49790 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgCJKkA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 06:40:00 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AE4E65F;
-        Tue, 10 Mar 2020 11:39:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583836797;
-        bh=+AUuY204i66OP7awF0kMnbhoBdFNbFPnKEFfeYpp95I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qcjiOxUDnjlL2aIFS1CYWap5S3HJ7/ayRPVzENi12Tooxx06z0CIDhQG+CHqhdmgT
-         9NTbCdmMw6QdRerILDCOVat8G5qsbXY4rpF0zjGWNdHpdrlsyuWlDpmJsvdjD8fSoO
-         p+OZY+V44umtuYGmpSjFoh2tomy9SHC8XHZmspTo=
-Date:   Tue, 10 Mar 2020 12:39:54 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Alex Riesen <alexander.riesen@cetitec.com>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Tue, 10 Mar 2020 07:09:19 -0400
+Received: from web0081.zxcs.nl ([185.104.29.10]:43580 "EHLO web0081.zxcs.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726186AbgCJLJS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:09:18 -0400
+X-Greylist: delayed 2469 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Mar 2020 07:09:17 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:MIME-Version:References
+        :In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3IKSYKtw2n6yNxpaRbwsTLkcDXqG5XqbFrwDDbF1iTo=; b=q2+FGgY0n/8I2ypRNbhdzFXmqe
+        v0RSk3+nlIPz7V1WNA4b2mV2GDPyr7Zu2w2nsC6m6IDsFTa+C/EvGl5f7bD3ICTSHBttf2qA7ew/B
+        xlpjY0minYaq3RrdJDEh/ik+cnx1GxwSl2Mmh/n4X+n7gKtdx6y5qTBj3lis5R43C43SG74Aj8M/K
+        Umi/D9E+BWGRi7OdWzpUKecpD+kPoF42Tc6HVsAJ9D6BmYo4irlzvlUZOiY6Cn6zqP0ZnYOfpJmPc
+        z2niDfCBx86K/mz0ndvyQrDg7iXNLXSfbvMUo2PvgpBgtNGsvsXWhyk50Xq/25ZVA7amTh977Ogf7
+        WFyBuphg==;
+Received: from ip565b1bc7.direct-adsl.nl ([86.91.27.199]:35430 helo=localhost.localdomain)
+        by web0081.zxcs.nl with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92.3)
+        (envelope-from <dev@pascalroeleven.nl>)
+        id 1jBc7q-0017It-Mh; Tue, 10 Mar 2020 11:28:38 +0100
+From:   Pascal Roeleven <dev@pascalroeleven.nl>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-Message-ID: <20200310103954.GA4871@pendragon.ideasonboard.com>
-References: <20200302160906.GC3717@pflmari>
- <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
- <20200305143628.GB25741@pflmari>
- <20200306131632.GA4878@pendragon.ideasonboard.com>
- <20200306134154.GD27714@pflmari>
- <20200306134546.GE4878@pendragon.ideasonboard.com>
- <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
- <20200309110931.GB3593@pflmari>
- <87a74pvwz8.wl-kuninori.morimoto.gx@renesas.com>
- <20200310081714.GA11274@pflmari>
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-sunxi@googlegroups.com,
+        Pascal Roeleven <dev@pascalroeleven.nl>
+Subject: [PATCH 1/2] drm/panel: Add Starry KR070PE2T
+Date:   Tue, 10 Mar 2020 11:27:23 +0100
+Message-Id: <20200310102725.14591-2-dev@pascalroeleven.nl>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200310102725.14591-1-dev@pascalroeleven.nl>
+References: <20200310102725.14591-1-dev@pascalroeleven.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200310081714.GA11274@pflmari>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: dev@pascalroeleven.nl
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alex,
+The KR070PE2T is a 7" panel with a resolution of 800x480.
 
-On Tue, Mar 10, 2020 at 09:17:14AM +0100, Alex Riesen wrote:
-> Kuninori Morimoto, Tue, Mar 10, 2020 02:07:23 +0100:
-> > > Should the adv748x driver also implement anything to configure the frequency
-> > > of MCLK clock? I mean something like .set_sysclk and .set_fmt callbacks of
-> > > snd_soc_dai_ops?
-> > > 
-> > > Or is the driver implementation, which depends on mclk-fs to be 256, the audio
-> > > stream format to be 8x S24_LE, and requires strictly 48kHz sampling rate on
-> > > the HDMI input, a totally acceptable first attempt at writing a DAI driver?
-> > > 
-> > > I'm a bit bothered by that, as the hardware is also capable of decoding
-> > > stereo, sampling rate 32-192kHz, a variety of PCM and compressed/encrypted
-> > > formats, 128-768fs MCLK multipliers, and a row of I2S options.
-> > > 
-> > > I just find it confusing to place the configuration interfaces.
-> > > For instance, the patches use the media ioctl for audio output selection to
-> > > select I2S protocol. While works, it does not feel right (shouldn't it be in
-> > > the device tree?)
-> > > 
-> > > Maybe you can point me at a driver doing something similar? I'm studying media
-> > > drivers now, but not many of them use ASoC interfaces for devices providing a
-> > > clock. Or maybe I should better look at sound/soc/...?
-> > 
-> > Setting Sound Clock for all cases/patterns are very complex and difficult actually.
-> > (ADV7482 configuration) x (ADG divider / selector) x etc, etc...
-> > 
-> > Thus, Current R-Car sound is assuming that audio_clk_a/b/c/i are providing
-> > route clock (= no configuration, fixed clock), and ADG divides it,
-> > and provide best clock to each SSIx.
-> > Current Salvator/ULCB already have 44.1/48kHz route clock (= CS2000 and Audio_CLK_A),
-> > and we can reuse it for all SSIx. Thus, ADV7482 clock is not necessary, I guess ?
-> > Or providing specific clock for some case is enough
-> > (ADG will automatically select it if necessary).
-> 
-> In this particular case, the ADV7482 *must* provide the clock, I believe: it
-> extracts the audio stream from the HDMI connection (in addition to everything
-> else) and serves the stream on I2S. Its MCLK line is physically connected to
-> the CLK_C line (which is an input) of the R-Car SoC. The I2S audio
-> transmission does not work if the ADV7482 clock is not programmed (or
-> programmed incorrectly).
-> Yes, I tried (I also tried programming it incorrectly, just because I didn't
-> know what I was doing).
-> 
-> > If ADV7482 needs more detail clock settings combination,
-> > then, there is no method to adjust to it.
-> > We need to consider such system somehow.
-> 
-> Not encouraging...
-> 
-> Maybe I should leave the clock fixed, with the frequency configuration in the
-> device tree, e.g. as adv7482 port node property "clock-frequency".
-> Which feels rather pathetic, but at least serves my purpose (48k, 8x24).
-> 
-> But let me describe the situation as I see it first.
-> 
-> As far as I understand, the SSI4 (Salvator-X board) should be programmed by
-> the snd-soc-rcar driver in the "slave receiver" mode for this use case, which
-> is HDMI input ADV7482 (I2S master, TDM) -> SSI4 (I2S slave)):
-> 
-> [   63.305990] asoc_simple_card_parse_clk: asoc-audio-graph-card sound: rsnd-dai.1 : sysclk = 66666664, direction 0
-> [   63.306028] asoc_simple_card_parse_clk: asoc-audio-graph-card sound: adv748x-i2s : sysclk = 12288000, direction 1
-> 
-> I am a bit bothered by the fact that sysclk of rsnd-dai.1 does not match that
-> sysclk of adv7482-i2s, but I think it's just DT node configuration.
-> 
-> [   63.306033] asoc_simple_card_set_dailink_name: asoc-audio-graph-card sound: name : rsnd-dai.1-adv748x-i2s
-> ...
-> [   63.332641] asoc-audio-graph-card sound: adv748x.4-0070 <-> rsnd-dai.1 mapping ok
-> ...
-> [   63.341317] dapm_connect_dai_link_widgets:  rsnd-dai.1-adv748x-i2s: connected DAI link adv748x.4-0070:Capture -> ec500000.sound:DAI1 Capture
-> ...
-> [  128.961389] rsnd_write: rcar_sound ec500000.sound: w ssi[4] - SSICR ( 124) : 9ceb0100
-> 
-> Decoding this last line (9ceb0100) gives SSICR.TRMD (bit1) =0, SSICR.SCKD
-> (bit15) =0, SSICR.SWSD (bit14) =0. The combination is documented as "slave
-> receiver". Which, I assume, makes SSI4 use the external clock. Given the
-> received stream looks ok, something also must have set the dividers correctly.
-> 
-> From the above, I conclude, whatever the complexity of the audio system clock
-> configuration, it seems to be implemented for the case.
-> 
-> I only miss a more or less clear way to configure the I2S master (ADV7482, that is).
+KR070PE2T is the marking present on the ribbon cable. As this panel is
+probably available under different brands, this marking will catch
+most devices.
 
-As a stop-gap measure, until the sound driver programs the clock, you
-can set its frequency in DT with the assigned-clock-rates property.
+Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
+---
+ .../display/panel/starry,kr070pe2t.txt        |  7 +++++
+ drivers/gpu/drm/panel/panel-simple.c          | 26 +++++++++++++++++++
+ 2 files changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/starry,kr070pe2t.txt
 
+diff --git a/Documentation/devicetree/bindings/display/panel/starry,kr070pe2t.txt b/Documentation/devicetree/bindings/display/panel/starry,kr070pe2t.txt
+new file mode 100644
+index 000000000..699ad5eb2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/starry,kr070pe2t.txt
+@@ -0,0 +1,7 @@
++Starry 7" (800x480 pixels) LCD panel
++
++Required properties:
++- compatible: should be "starry,kr070pe2t"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index e14c14ac6..027a2612b 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2842,6 +2842,29 @@ static const struct panel_desc shelly_sca07010_bfn_lnn = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ };
+ 
++static const struct drm_display_mode starry_kr070pe2t_mode = {
++	.clock = 33000,
++	.hdisplay = 800,
++	.hsync_start = 800 + 209,
++	.hsync_end = 800 + 209 + 1,
++	.htotal = 800 + 209 + 1 + 45,
++	.vdisplay = 480,
++	.vsync_start = 480 + 22,
++	.vsync_end = 480 + 22 + 1,
++	.vtotal = 480 + 22 + 1 + 22,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc starry_kr070pe2t = {
++	.modes = &starry_kr070pe2t_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 152,
++		.height = 86,
++	},
++};
++
+ static const struct drm_display_mode starry_kr122ea0sra_mode = {
+ 	.clock = 147000,
+ 	.hdisplay = 1920,
+@@ -3474,6 +3497,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "shelly,sca07010-bfn-lnn",
+ 		.data = &shelly_sca07010_bfn_lnn,
++	}, {
++		.compatible = "starry,kr070pe2t",
++		.data = &starry_kr070pe2t,
+ 	}, {
+ 		.compatible = "starry,kr122ea0sra",
+ 		.data = &starry_kr122ea0sra,
 -- 
-Regards,
+2.20.1
 
-Laurent Pinchart
