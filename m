@@ -2,107 +2,107 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C6AC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBE5C10F27
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC8024687
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E457324681
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 10:10:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qxEsvkqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgCJKHU (ORCPT
+        id S1726205AbgCJKKO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:07:20 -0400
-Received: from sauhun.de ([88.99.104.3]:46930 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgCJKHU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:07:20 -0400
-Received: from localhost (p54B33196.dip0.t-ipconnect.de [84.179.49.150])
-        by pokefinder.org (Postfix) with ESMTPSA id ECB392C1EB6;
-        Tue, 10 Mar 2020 11:07:17 +0100 (CET)
-Date:   Tue, 10 Mar 2020 11:07:17 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 02/89] dt-bindings: i2c: brcmstb: Add BCM2711
- BSC/AUTO-I2C binding
-Message-ID: <20200310100717.GL1987@ninjato>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
+        Tue, 10 Mar 2020 06:10:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42373 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgCJKKO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 06:10:14 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h8so6087798pgs.9;
+        Tue, 10 Mar 2020 03:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HDXFysJpdV8VuCGjPdLDxQClbolL707s7Oy1HPUOvA0=;
+        b=qxEsvkqOujZodAPp+3ueiAK0DjURCF22GunvMK9QN+KklKRMgATwVgcV9c0hSNEUCz
+         TAQI5Ohj0cXhf/epw5T+HSN+GE95Tk9gtrafCmMXl587W/ZgpXygCTEZ8vK3SmVb0TIF
+         uCehoekTjWV8oLZEDYH8SAa37cT7XZXW/UyahoNZGp6tA8T6lpOy11ils26Zg59WR04z
+         CaSo7Rz+ZjrxbxEp0CTNZ07mZ+HX0zl/t7wP+5ThGovd9CjakbU2IQiOFppgt8P+7p4W
+         0Jn/7ZK4Yom5kVH/GKtFiX3Hx2gWwpA1KdqhDJiL5ONFS4LALreASK682L6CmTe75aHs
+         qIIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HDXFysJpdV8VuCGjPdLDxQClbolL707s7Oy1HPUOvA0=;
+        b=TVoX6Ny+AsYCWzvPijIGOSbJQOY2ATfTh8MtcwnUBoSsauIJwt5KmhmacfG/WotzIA
+         3dcgKmo3x9dzcDdgkQZ6gBQMshqkYQlrwonQ8ShLHu1cnVmbePGFTSB0t2Klm4/8ZON9
+         L+HCtEaeJ5Txq2o1ePztK+RN8IKEge/0FlAFxF+Xmu96wp5ej0X9oU4a+y2CYfXNvGM8
+         2rGzXHZ2PO+ZbNW5e9J6S91fkzPzW2VLZqYk+Iy9ezOrlcgZ9vrr++4iEjdDNvqcLNq5
+         /e64gEJNpa7YdRlUPeyMIiCwgtG0qTi3Z6MpvrHAmPJYnn57JzpiTN1HlwkdtcrgNnJ5
+         jUZQ==
+X-Gm-Message-State: ANhLgQ1lHLMw/jWnQlesdEIDM+QLpoLxNkU6neh59pKJ17IY2l5veB8Q
+        3sjM7KmYEAQzWMRPHpppwT0cEcl3bVGGSWz1SK4=
+X-Google-Smtp-Source: ADFU+vvLJ9Bi1/5PtpdB3XdQzWlug4LKrI66cLqdLbaY0Kfs/y64+i228nQqpbnk8BVnj0qLhHSGLoQoUU2CFCR3CCI=
+X-Received: by 2002:a63:1246:: with SMTP id 6mr19811313pgs.4.1583835013383;
+ Tue, 10 Mar 2020 03:10:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Mit9XoPEfICDqq/V"
-Content-Disposition: inline
-In-Reply-To: <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200228155958.20657-1-dongchun.zhu@mediatek.com>
+ <20200228155958.20657-3-dongchun.zhu@mediatek.com> <20200305120516.GQ5379@paasikivi.fi.intel.com>
+In-Reply-To: <20200305120516.GQ5379@paasikivi.fi.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 10 Mar 2020 12:10:05 +0200
+Message-ID: <CAHp75Vf5km-YitoTUAFkr8LZVq2QMep1rC19ZpR-YRbeXgJOVQ@mail.gmail.com>
+Subject: Re: [V3, 2/2] media: i2c: Add DW9768 VCM driver
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        bingbu.cao@intel.com, srv_heupstream@mediatek.com,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        sj.huang@mediatek.com,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, louis.kuo@mediatek.com,
+        shengnan.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Mar 5, 2020 at 2:07 PM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> On Fri, Feb 28, 2020 at 11:59:58PM +0800, Dongchun Zhu wrote:
+> > This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
+> > and provides control to set the desired focus via I2C serial interface.
 
---Mit9XoPEfICDqq/V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Mon, Feb 24, 2020 at 10:06:04AM +0100, Maxime Ripard wrote:
-> The HDMI blocks in the BCM2771 have an i2c controller to retrieve the
-> EDID. This block is split into two parts, the BSC and the AUTO_I2C,
-> lying in two separate register areas.
->=20
-> The AUTO_I2C block has a mailbox-like interface and will take away the
-> BSC control from the CPU if enabled. However, the BSC is the actually
-> the same controller than the one supported by the brcmstb driver, and
-> the AUTO_I2C doesn't really bring any immediate benefit.
->=20
-> We can model it in the DT as a single device with two register range,
-> which will allow us to use or or the other in the driver without
-> changing anything in the DT.
->=20
-> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Cc: linux-i2c@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -5139,6 +5139,7 @@ M:      Dongchun Zhu <dongchun.zhu@mediatek.com>
+> >  L:   linux-media@vger.kernel.org
+> >  T:   git git://linuxtv.org/media_tree.git
+> >  S:   Maintained
+> > +F:   drivers/media/i2c/dw9768.c
+> >  F:   Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
 
-Applied to for-next, thanks!
+This has ordering issues.
+Run parse-maintainers.pl to fix.
 
-
---Mit9XoPEfICDqq/V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5nZtUACgkQFA3kzBSg
-KbaKNw/8CYeVSOJ+gtDDCflvUs0zsoYsuDzRuEZd7seZDfEDAjPRZea/tz9M16OB
-rK81LXAyz3ngWvzob+kcqlJ8NIpW37yu5r/R5mkxemffvAy2Df4Dlx90Cuvnug1/
-/D3QDqE7sgAbxdWEWI0/lF66XV2V0RRTIcNqN4e0Rp7Q48CZMA3itmrqLtv3B1M/
-6EkTH6G77n4KAyCbN6PuCJJwNUgwsm2jUac2WRpCcaXuavYdMakDWyR0EdWcV08u
-ukqFn8lFyh7BHdbFGfuBDKrqU9aca3HjImu1tNTGJZQsZMpohEM5N3Qc53ajWnFX
-YWE3UigXavv68FTOElY+Eso4C5uZNJvtGH1bWsGG6DjX2x39vAlGVzAvKfRDQ1Fn
-EJeEJ8yDdORfkQQRdu/79DXQ5UAdZkuxDz/2PBgXtE9o14NCZgr8ENDqR2MIWzfa
-jpWaeOG272go1xg1z+/gUZRpxEFuVO4aZHyYEnbMB50VxMz+8RxsvldIOG/qfAAj
-qLFryHVYg1dRVk2Fv0+Nw1RQ2tIdu/UdQbuatEgJ75PI7ucsL09jLXJvGndJ2ABS
-EEzahmZ7hjGLbgarfYUHI9MMZMlofMliRzd8afzMg9PakdGzaayhHqhNcm8ID/GV
-vTyMwl4s+XAYs8gLuOZub0lN6ZUBYAo1jLYHH/IKz/nDoBRHeU4=
-=M9RT
------END PGP SIGNATURE-----
-
---Mit9XoPEfICDqq/V--
+-- 
+With Best Regards,
+Andy Shevchenko
