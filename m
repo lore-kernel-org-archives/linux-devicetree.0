@@ -2,61 +2,61 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B851CC18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AD4C3F2D0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9112B222C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA71521D7E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHm/SShv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yada3ftE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgCJRFQ (ORCPT
+        id S1726520AbgCJRG3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:05:16 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45397 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbgCJRFP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 13:05:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m9so7857832wro.12;
-        Tue, 10 Mar 2020 10:05:12 -0700 (PDT)
+        Tue, 10 Mar 2020 13:06:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37553 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgCJRG3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 13:06:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 6so16876476wre.4;
+        Tue, 10 Mar 2020 10:06:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=6OEUqmMP57cb74MhBgNDVNN+KyC7WBhjSIu721xvBNU=;
-        b=VHm/SShvv2oKDxW/Ex9HZ/5D/Hlf5Ru68Xy1a7ESmyT/NhZvBUFu/A3bRF1NVV7qKM
-         FKKiI1raEcI7niAr0wL+5WWU+U/NR0eWQExTMW9Pe0W7xoFg6xs5T++o1Nwy6TWWqnp8
-         ThDf8+ulnumZ705uFuUJF8MgNzlGlelU+LlAYCL7n01kjG3+jLzk+7828jUgfNI4tgPU
-         vlZUkQaf+mw8dLwWutKKEFha1Sj8QB1bzzyH1vn4fU2L3ME/bZebyD66+Dg8sDmDVhPE
-         gstZH1y/ZBC7EE0fzENEr+JnK/a9kYxpKSNyIBo9v75WBuXd5+EyYbPJRRSTjkoeI7JA
-         dL3A==
+        bh=XrGRKIT36erQNGi90+/pLC99u3bWc1O21GG8hCOkNRE=;
+        b=Yada3ftEE8092Q/Iq3Od7CZNxgDKFJnhOarNP27TG1WVDy8KOdU8r2+jts0mtjT85D
+         i4XhuAD7EBj/6w8DtUBahPLCgjSPVbs9YKyPQv+LdLVF9bPNDbvmVOhz3nflUiPPwGqM
+         yDl/Xsp65Bi06576qVsZu9OOM6hhlu5dEwzDV4RavFqpsCOr2s886xnmNnID8tv/Cl7Q
+         8PgjglWXRu+Ca9BFwKdRe2WMurY3quL4OoRjgbNwchfH6Uohp+0RiGtLjhDyDV30jB0A
+         wlMuagEd48v1UhhFnfbO6OSWJ0dOUY3xF+l2/xKEMiScMqvlfUVsMnGmqqC0rTkjlq4S
+         cYkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6OEUqmMP57cb74MhBgNDVNN+KyC7WBhjSIu721xvBNU=;
-        b=CuMeOJpEXSToyPi02CKzNheS9ZHCjh9oz9PG13Y9qs5R1z6XygAmhnkAlR4FUOCpBA
-         uGE4m8nrvLJFoIyfzTssSCLTtXp/LS8kEW8zoO1AL5tpcxjl/xRLuM0asEviDoCNQePc
-         KoRPZoYWfZwwwVdJ1HM2k+Ny0+mbuhf7fNzf8dEtOYc2tgIgRABE4wPoI3TtLRmmMzqV
-         2JXFwMiFHThFgTH6Bd3v6T9nT6yADfWShLU56EPhYPNuWkBa2fqFeGq8WhS3EO9RN910
-         F6WQzLSY/lMR5GvVd0cPwTPDR/Uyy7Lo7YgHkQUx/qy2xMxlh9jvMTlVtMaGigTxoDDY
-         sm0A==
-X-Gm-Message-State: ANhLgQ3AFsCB7NQdGE9tYFByonT+9Tb49w/GqxNRW0qJanKagn9wSw8A
-        ELUflxPhLsX1NhxiMvrtFew=
-X-Google-Smtp-Source: ADFU+vv+IEQslBSOgKdHxaft8X7ofDv4clakgjSuWe9FiCBWvzGCaoweilLbkexC2zw/U2MvtO+lhQ==
-X-Received: by 2002:a05:6000:44:: with SMTP id k4mr13774361wrx.205.1583859911867;
-        Tue, 10 Mar 2020 10:05:11 -0700 (PDT)
+        bh=XrGRKIT36erQNGi90+/pLC99u3bWc1O21GG8hCOkNRE=;
+        b=jGtVneotiQ5XPOU7MS9JXWcufJQnR5pOu9NbtC2Sw+eFd6bIrUOh+Q5N+sBVBElh8v
+         WXi2FWnV4+28iO3LpwACBQjRVkIePKYy7rGxay7qMFH4vU9yU6EbzyW+Tgd/tnmajRO6
+         qI/JITLP77zpC3VRXRQe6oMCRiNfuUvUAarqLHlRwyfiFKPyA5L2vZczh39XvyV1Akbn
+         q1PmFFfl8Ubg8853Ig4uDpQGyRDf2fsij46AtrlVPK7qlB1pDi+/frxHKN9Xl0VRyvT9
+         KljiPFBGKRKE323FQnoD33SnOg1XYQBiyfHfBA3aJTSOzbaBg+rXmis+ypHDD/dKah3M
+         B45A==
+X-Gm-Message-State: ANhLgQ04cokA3gPxlqTQWuDqghK0PP3jhhaI+FQcptcE2O8a0fDze9tF
+        twF6YhDBeJux28oZNPnPEIA=
+X-Google-Smtp-Source: ADFU+vtKX71Iaq0ZvODPt8uubjEReGxoUwFjE6wgsU7zyGOLz4NnXKO+RjMXHD0yGlA1A8JZDboy2w==
+X-Received: by 2002:a5d:522f:: with SMTP id i15mr17949131wra.231.1583859985628;
+        Tue, 10 Mar 2020 10:06:25 -0700 (PDT)
 Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
-        by smtp.gmail.com with ESMTPSA id q13sm15604915wrs.91.2020.03.10.10.05.09
+        by smtp.gmail.com with ESMTPSA id d18sm4073319wrq.22.2020.03.10.10.06.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 10:05:09 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 18:05:08 +0100
+        Tue, 10 Mar 2020 10:06:24 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 18:06:23 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Jon Hunter <jonathanh@nvidia.com>,
@@ -67,16 +67,16 @@ Cc:     Jon Hunter <jonathanh@nvidia.com>,
         Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 1/8] clk: tegra: Add PLLP_UD and PLLMB_UD for Tegra210
-Message-ID: <20200310170508.GA3079591@ulmo>
+Subject: Re: [PATCH v5 2/8] clk: tegra: Export functions for EMC clock scaling
+Message-ID: <20200310170623.GB3079591@ulmo>
 References: <20200310152003.2945170-1-thierry.reding@gmail.com>
- <20200310152003.2945170-2-thierry.reding@gmail.com>
- <9b343fd1-15df-409a-390f-e30fa6bbbfe7@gmail.com>
+ <20200310152003.2945170-3-thierry.reding@gmail.com>
+ <8e1f11e9-a95a-500f-ff44-6f44ad990863@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
+        protocol="application/pgp-signature"; boundary="DBIVS5p969aUjpLe"
 Content-Disposition: inline
-In-Reply-To: <9b343fd1-15df-409a-390f-e30fa6bbbfe7@gmail.com>
+In-Reply-To: <8e1f11e9-a95a-500f-ff44-6f44ad990863@gmail.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -84,73 +84,57 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---uAKRQypu60I7Lcqm
+--DBIVS5p969aUjpLe
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 10, 2020 at 07:19:59PM +0300, Dmitry Osipenko wrote:
+On Tue, Mar 10, 2020 at 07:13:25PM +0300, Dmitry Osipenko wrote:
 > 10.03.2020 18:19, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 > > From: Joseph Lo <josephl@nvidia.com>
 > >=20
-> > Introduce the low jitter path of PLLP and PLLMB which can be used as EMC
-> > clock source.
+> > Export functions to allow accessing the CAR register required by EMC
+> > clock scaling. These functions will be used to access the CAR register
+> > as part of the scaling sequence.
 > >=20
 > > Signed-off-by: Joseph Lo <josephl@nvidia.com>
 > > Signed-off-by: Thierry Reding <treding@nvidia.com>
 > > ---
-> >  drivers/clk/tegra/clk-tegra210.c         | 11 +++++++++++
-> >  include/dt-bindings/clock/tegra210-car.h |  4 ++--
-> >  2 files changed, 13 insertions(+), 2 deletions(-)
+> > Changes in v5:
+> > - remove tegra210_clk_emc_update_setting() which is no longer needed
 > >=20
-> > diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-t=
-egra210.c
-> > index 45d54ead30bc..f99647b4a71f 100644
-> > --- a/drivers/clk/tegra/clk-tegra210.c
-> > +++ b/drivers/clk/tegra/clk-tegra210.c
-> > @@ -3161,6 +3161,17 @@ static void __init tegra210_pll_init(void __iome=
-m *clk_base,
-> >  	clk_register_clkdev(clk, "pll_m_ud", NULL);
-> >  	clks[TEGRA210_CLK_PLL_M_UD] =3D clk;
-> > =20
-> > +	/* PLLMB_UD */
-> > +	clk =3D clk_register_fixed_factor(NULL, "pll_mb_ud", "pll_mb",
-> > +					CLK_SET_RATE_PARENT, 1, 1);
-> > +	clk_register_clkdev(clk, "pll_mb_ud", NULL);
-> > +	clks[TEGRA210_CLK_PLL_MB_UD] =3D clk;
-> > +
-> > +	/* PLLP_UD */
-> > +	clk =3D clk_register_fixed_factor(NULL, "pll_p_ud", "pll_p",
-> > +					0, 1, 1);
-> > +	clks[TEGRA210_CLK_PLL_P_UD] =3D clk;
+> ...
+> > +EXPORT_SYMBOL_GPL(tegra210_clk_emc_update_setting);
+> ...
+> > +extern void tegra210_clk_emc_dll_enable(bool flag);
+> > +extern void tegra210_clk_emc_dll_update_setting(u32 emc_dll_src_value);
+> > +extern void tegra210_clk_emc_update_setting(u32 emc_src_value);
 >=20
-> Isn't it possible to auto-enable the low-jitter bit when necessary
-> during of the rate-change based on a given clock-rate?
+> Why these exports are needed given that the EMC driver is built-in?
 
-I don't think so. These new clocks (pll_mb_ud and pll_p_ud) are parents
-for the emc clock, so they are needed to properly reflect the position
-of the emc clock in the clock tree.
+Let me try if I can make the driver tristate. Given that it's fairly
+large it may be better to keep that as an option.
 
 Thierry
 
---uAKRQypu60I7Lcqm
+--DBIVS5p969aUjpLe
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5nyMIACgkQ3SOs138+
-s6EMCA//Uxo0Bgi/lGCwUNR+qekqxpV446rEudb/jWg4Kh7pFTMGgzA/YUE8sFUV
-Q2y2URjCPwMRveAm1dE4gBq7UA/eLIYBBMl/9tmc8PVad14aOyoKuiDX3jYddvg7
-/kXm+UZPC3HLCPuSZKpF34zadrI4ndEw9z22S8hWClGuaUYBegAApiOI28T5FSSX
-ZrPydC1NjdkXPNxL5KLaCugVCbBP4J36UhjY9xOhAxCLb3MX5Qxwbh0BKJDe+7xw
-l/b134bBjjaF8yIogH6PmSABg1bsL0K+aCzK3JVXvEmMJXZwl0rSeQFs0kZZRdND
-yvMdV7RyvhnPvuplbMU3Mym3o/RfQB2XUzsPqj8g6yQqBokJdV5xyTJ60H7sqamW
-Ag+5jrVpzud7nJLXMjBYteAsCMBMvOe9T4SknvruYNxpWAWsLDTkqoa0YQ1P7kvD
-rT3aW0XDLCt9jyQ+bHjl5xhYgCbJdAVgdq9sRe8BBNcQOPCh9Fk8vIEJyglcRDJ4
-flGMTeQTGvnugxfEzQ4auDqpm1EjWHB9M/CRCbRgvFdB/irb+N/J42xqIPQUzAa5
-iFIq+4u9NfKAGKO+QONto4nHk2cnEMZaCA3DKXf1zQ/9T+/ELbDV8LbpxkUJZadB
-4pWq0GsF2rjnAApsk8Uyo69TZyWLhxZFLjxhNDEJZZTHkLbHRTo=
-=oCYd
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5nyQ8ACgkQ3SOs138+
+s6FOXhAAocJcbbDxFJK3TvLJTTuZlywjEwIb3UcWO1BERHW2K7hEx8rNt2UqhoGu
+EoqVqjO7HnXaOT++1BbSFSRP3ye4ErmWyQcSRKSObSl20m+lGvWgvv1Chk8jCJha
+uJ47NctrQMiBD0lb/Ip7vup/4Qqi6WjJpLNfvct92NFTGty6TuwFAV39r4L874wd
+yEryO/AwteBrAClEMLH8SS+bZwHSWy5jCHuirgGxe0ck29Hx5kBUb4HAmiMQxJH3
+v0dNrkzAXl+dd98s93uI7ocOWtiKjQWJiQJ8mSDVLnmClkiPjFnRDvgu3TkbAQEh
+BLAgRFgmaCTmKvdD8LBlA88W0DVP3J5bx6iQKMOrYvJ95PmntiDtURq4rmXRXl/v
+BX7KUlkV3eXTLkukY2r/z4uHOhOCdo1LD6/12jzezVLSA32Uw6QXeyuDa2Cg7Hc6
+C99avAx0XUVVjGr++9yY1Rn3jpLEvBsAWk6tjNNXn2a/5+l5ygCjvDfZeOKl//j8
+6Mcsw4ML1Lj/CV52+YM2rtAwXr3hRCpwGHPEN9K5i+mozudHb4TOV3Yt3KTEGUW/
+3rdlIPacpzyQmM8+xUp2E4oF4PqGqgp2wllYb8NNC7MFXDzp1JwXUvCAVabOnaw3
+xqcijH1JXc4rsCeUVNMD4rE/PQkrq0mFfPMd8Jv4I9RqY4FkZPI=
+=x6Nz
 -----END PGP SIGNATURE-----
 
---uAKRQypu60I7Lcqm--
+--DBIVS5p969aUjpLe--
