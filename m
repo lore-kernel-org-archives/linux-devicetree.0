@@ -2,170 +2,141 @@ Return-Path: <SRS0=JrLZ=43=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ABFC10F27
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA742C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C2F2146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5953222C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Mar 2020 17:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RlQB+FTk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q4NR1a/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCJRmo (ORCPT
+        id S1726463AbgCJRoo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:42:44 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5074 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgCJRmo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 13:42:44 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e67d1850001>; Tue, 10 Mar 2020 10:42:29 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 10 Mar 2020 10:42:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 10 Mar 2020 10:42:42 -0700
-Received: from [10.25.76.193] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Mar
- 2020 17:42:38 +0000
-Subject: Re: [PATCH V4 0/5] Add support for PCIe endpoint mode in Tegra194
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <andrew.murray@arm.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200303105418.2840-1-vidyas@nvidia.com>
- <20200303170103.GA9641@e121166-lin.cambridge.arm.com>
- <d1e3a42f-c179-fd03-fac0-7cd449580e5b@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <b47de9cd-be18-1672-d72c-de4169fb90e5@nvidia.com>
-Date:   Tue, 10 Mar 2020 23:12:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+        Tue, 10 Mar 2020 13:44:44 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38882 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJRon (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 13:44:43 -0400
+Received: by mail-lj1-f194.google.com with SMTP id w1so15173049ljh.5;
+        Tue, 10 Mar 2020 10:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GHzaWg3f9PXj0XCOnlYVM0t9EpHANTjAH8lOSKib10g=;
+        b=q4NR1a/xd5/emofZa/GJ+NEzpDE46eywiiRq/5MsLLapNO99t6/vZC+h7gS89a4Hqh
+         QtPUnNujxuDr+I+BudWjJCbxxh7LrO0rtprfl2xW8ZyVPLyu1PFv5gGqwc8VecibsCsR
+         gNMVkd5XYWtNH+c4KzlApP7+n2k0pTpCsVMnpOblFN9Rm9kRNpBKGkuoZiI9B1q+fljd
+         +OqLDo6dbHEh1Jzu/ijKFo/F8PkDSTmmV2JX8dIC5sKpuyKwBJSnJMfP40KtlUa1inNY
+         7oShBwFNSuV784d+0tZAHmFcmPP7PrBVzAITxiy7z1CD0Nz8Anco+FZ4YUbKlFM5sQJO
+         B3CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GHzaWg3f9PXj0XCOnlYVM0t9EpHANTjAH8lOSKib10g=;
+        b=iF4yw5hw+tWTUtNt+UAm4hJBPIlXlcx2dEAkU11oTiAuZ8P8uvacuEaE1frQd/28y5
+         idbW9btqSgzIEcmG1UvOzzA9H/HC43ScEQeg6QbIE9kt2Kjjh4oO2FRtOAuRsAmD+iKI
+         EBX83GnCiPFYOaRxQJ7mDueaEJdz61oQM/9SI2FoxppoUYFVn2LgosOzxsybfPHXn3mZ
+         /d01ARr5zcZcukCxNw3Bc9V7owGq7GWi43nb3g/vSSnyjiJJN7iorC6p8KwdlekfG+Ep
+         qQCDSFF4jrv9dIaDiVui26B9GQKOxOQ0HEDKYX4cIVQtCvjPz4Zuf+6yOL/yFLe156fE
+         5bEA==
+X-Gm-Message-State: ANhLgQ2X3TlX3QBQFdUNZfXQwi+9EpmZYe4QaDSTOeTkr48gConnAsly
+        f6bdnxfRlrmwLYVpest4HQdwB3Or
+X-Google-Smtp-Source: ADFU+vtedvwOTK2i5hsjsLdZAGJefepqqYliPvSiQKHVCcPbuAjQSCqfBBO7fuz7yRotFfidXnpBjw==
+X-Received: by 2002:a2e:330e:: with SMTP id d14mr3309081ljc.72.1583862280236;
+        Tue, 10 Mar 2020 10:44:40 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id c20sm16687727lfb.60.2020.03.10.10.44.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 10:44:39 -0700 (PDT)
+Subject: Re: [PATCH v5 3/8] clk: tegra: Implement Tegra210 EMC clock
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200310152003.2945170-1-thierry.reding@gmail.com>
+ <20200310152003.2945170-4-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a5c9e3d6-2b65-ec93-d8f1-7c7680092e53@gmail.com>
+Date:   Tue, 10 Mar 2020 20:44:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <d1e3a42f-c179-fd03-fac0-7cd449580e5b@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200310152003.2945170-4-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583862149; bh=bLPWb514eTiRguIqWyQUJ1EnhXyKcsE4Sh+k6DY+ers=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=RlQB+FTkNz5F0SXLEO/yTQ8SMNanL+AgnZSs7APnpGPD29aFVrHIu7/2XdsBXpfTN
-         oLmGHZzILdBpuK71YToaVxj4tF747++R+ZmplE7JyzZwVhKrTbynerz3VG5rp82e/X
-         c0l8Cr06UY7c9sW2J0t1f7Q+dd+h52mMjaqvNlWoAPCJmtgL/P5gMzl+dxzgo2AXYx
-         p8/XbyH9QzmEUPllXQaaxazA9iz0FJEoYpuLDqP4B52pMUKU+3kDPSj/1CJLxYxGOz
-         y8ybSF/dpuI6NGQPoJ80bSJyw+f1s08p8sYy5CzQ+Lw8MJGZ5vXIqPFa807Y5Lm9+v
-         2Ri/w9PRKuehA==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+10.03.2020 18:19, Thierry Reding пишет:
+> From: Joseph Lo <josephl@nvidia.com>
+> 
+> The EMC clock needs to carefully coordinate with the EMC controller
+> programming to make sure external memory can be properly clocked. Do so
+> by hooking up the EMC clock with an EMC provider that will specify which
+> rates are supported by the EMC and provide a callback to use for setting
+> the clock rate at the EMC.
+> 
+> Based on work by Peter De Schrijver <pdeschrijver@nvidia.com>.
+> 
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v5:
+> - major rework and cleanup
 
+...
+> +static u8 tegra210_clk_emc_get_parent(struct clk_hw *hw)
+> +{
+> +	struct tegra210_clk_emc *emc = to_tegra210_clk_emc(hw);
+> +	u32 value;
+> +	u8 src;
+> +
+> +	value = readl_relaxed(emc->regs + CLK_SOURCE_EMC);
+> +	src = (value >> CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT) &
+> +			CLK_SOURCE_EMC_2X_CLK_SRC_MASK;
 
-On 3/3/2020 11:43 PM, Vidya Sagar wrote:
->=20
->=20
-> On 3/3/2020 10:31 PM, Lorenzo Pieralisi wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> On Tue, Mar 03, 2020 at 04:24:13PM +0530, Vidya Sagar wrote:
->>> Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can=20
->>> operate
->>> either in root port mode or in end point mode but only in one mode at=20
->>> a time.
->>> Platform P2972-0000 supports enabling endpoint mode for C5=20
->>> controller. This
->>> patch series adds support for PCIe endpoint mode in both the driver=20
->>> as well as
->>> in DT.
->>> This patch series depends on the changes made for Synopsys DesignWare=20
->>> endpoint
->>> mode subsystem that are recently accepted.
->>> @ https://patchwork.kernel.org/project/linux-pci/list/?series=3D202211
->>> which in turn depends on the patch made by Kishon
->>> @ https://patchwork.kernel.org/patch/10975123/
->>> which is also under review.
->>>
->>> V4:
->>> * Started using threaded irqs instead of kthreads
->>
->> Hi Vidya,
->>
->> sorry for the bother, may I ask you to rebase the series (after
->> answering Thierry's query) on top of my pci/endpoint branch please ?
->>
->> Please resend it and I will merge patches {1,2,5} then.
-> Sure.
-> I just sent V5 series rebasing patches on top of your pci/endpoint branch=
-.
-Hi,
-Sorry to bother you again.
-Could you please take a look at V5 series?
+What about to use a generic FIELD_GET/PREP()?
 
-Thanks,
-Vidya Sagar
->=20
-> Thanks,
-> Vidya Sagar
->>
->> Thanks,
->> Lorenzo
->>
->>> V3:
->>> * Re-ordered patches in the series to make the driver change as the=20
->>> last patch
->>> * Took care of Thierry's review comments
->>>
->>> V2:
->>> * Addressed Thierry & Bjorn's review comments
->>> * Added EP mode specific binding documentation to already existing=20
->>> binding documentation file
->>> * Removed patch that enables GPIO controller nodes explicitly as they=20
->>> are enabled already
->>>
->>> Vidya Sagar (5):
->>> =C2=A0=C2=A0 soc/tegra: bpmp: Update ABI header
->>> =C2=A0=C2=A0 dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes =
-in Tegra194
->>> =C2=A0=C2=A0 arm64: tegra: Add PCIe endpoint controllers nodes for Tegr=
-a194
->>> =C2=A0=C2=A0 arm64: tegra: Add support for PCIe endpoint mode in P2972-=
-0000
->>> =C2=A0=C2=A0=C2=A0=C2=A0 platform
->>> =C2=A0=C2=A0 PCI: tegra: Add support for PCIe endpoint mode in Tegra194
->>>
->>> =C2=A0 .../bindings/pci/nvidia,tegra194-pcie.txt=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 125 +++-
->>> =C2=A0 .../boot/dts/nvidia/tegra194-p2972-0000.dts=C2=A0=C2=A0 |=C2=A0 =
-18 +
->>> =C2=A0 arch/arm64/boot/dts/nvidia/tegra194.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0 99 +++
->>> =C2=A0 drivers/pci/controller/dwc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 30 +-
->>> =C2=A0 drivers/pci/controller/dwc/pcie-tegra194.c=C2=A0=C2=A0=C2=A0 | 6=
-81 +++++++++++++++++-
->>> =C2=A0 include/soc/tegra/bpmp-abi.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 =
-10 +-
->>> =C2=A0 6 files changed, 918 insertions(+), 45 deletions(-)
->>>
->>> --=20
->>> 2.17.1
->>>
+> +static int tegra210_clk_emc_set_rate(struct clk_hw *hw, unsigned long rate,
+> +				     unsigned long parent_rate)
+> +{
+> +	struct tegra210_clk_emc *emc = to_tegra210_clk_emc(hw);
+> +	struct tegra210_clk_emc_provider *provider = emc->provider;
+> +	struct tegra210_clk_emc_config *config;
+> +	struct device *dev = provider->dev;
+> +	struct clk_hw *old, *new, *parent;
+> +	u8 old_idx, new_idx, index;
+> +	struct clk *clk;
+> +	unsigned int i;
+> +	int err;
+> +
+> +	if (!provider || !provider->configs || provider->num_configs == 0)
+> +		return -EINVAL;
+
+Why all these checks are needed? I don't think it ever could fail,
+couldn't it?
+
+> +static int emc_table_lookup(struct tegra_emc *emc, unsigned long rate)
+> +{
+> +	int i;
+
+unsigned int
+
+Same for all other occurrences in the code.
