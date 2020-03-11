@@ -2,522 +2,99 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1202C0044D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 16:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82AFC0044D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1356C20735
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 16:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568652072F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:14:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cWNzb7lS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgCKQ6P (ORCPT
+        id S1730331AbgCKROy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 12:58:15 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60834 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730059AbgCKQ6P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 12:58:15 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id AEAD729385D
-Subject: Re: [PATCH v12 3/5] clk / soc: mediatek: Move mt8173 MMSYS to
- platform driver
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Allison Randal <allison@lohutok.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>, wens@csie.org,
-        linux-media@vger.kernel.org, sean.wang@mediatek.com,
-        hsinyi@chromium.org, rdunlap@infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-kernel@lists.infradead.org, matthias.bgg@kernel.org,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        frank-w@public-files.de, devicetree@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        linux-kernel@vger.kernel.org, mtk01761 <wendell.lin@mediatek.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Owen Chen <owen.chen@mediatek.com>
-References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
- <20200311165322.1594233-4-enric.balletbo@collabora.com>
-Message-ID: <4e8eca75-97b1-0f62-1982-cda131a5a9e8@collabora.com>
-Date:   Wed, 11 Mar 2020 17:58:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200311165322.1594233-4-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 11 Mar 2020 13:14:54 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21819 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729675AbgCKROx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:14:53 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583946893; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=hwl+XmvG5JG30mi1BrH5GWZRUzawJld2P9BWiACejEE=; b=cWNzb7lSlnZVR57Y1aWUiuu1Z7fwUj9rUp+qePdaD2RJ5oYDLcVhzi+BprVvR1Zf6CXNrdSA
+ LXVOh7T5BLb2QJ0qZF93SZySAYC9nGiUCnvq5RdYRlsf/C5o7ECg6ShIBGxmPrJFcZ7XRTjj
+ OdT9C7FVFw8Y0k9zC879E+QmWxA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e691c8c.7f03b675b228-smtp-out-n01;
+ Wed, 11 Mar 2020 17:14:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C7923C43636; Wed, 11 Mar 2020 17:14:51 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4FB72C433BA;
+        Wed, 11 Mar 2020 17:14:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4FB72C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     bjorn.andersson@linaro.org, vkoul@kernel.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: [PATCH] arm64: dts: qcom: sc7180: Update reg names for SDHC
+Date:   Wed, 11 Mar 2020 22:44:22 +0530
+Message-Id: <1583946863-24308-2-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1583946863-24308-1-git-send-email-vbadigan@codeaurora.org>
+References: <1583946863-24308-1-git-send-email-vbadigan@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Remove the redundant _mem suffix for SDHC reg names.
 
+For SDcard instance, no need supply reg names since hc reg map
+is accessed with index. So remove reg names for SDcard.
 
-On 11/3/20 17:53, Enric Balletbo i Serra wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
-> 
-> There is no strong reason for this to use CLK_OF_DECLARE instead of
-> being a platform driver. Plus, MMSYS provides clocks but also a shared
-> register space for the mediatek-drm and the mediatek-mdp
-> driver. So move the MMSYS clocks to a new platform driver and also
-> create a new MMSYS platform driver in drivers/soc/mediatek that
-> instantiates the clock driver.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> ---
-> 
-> Changes in v12:
-> - Leave the clocks part in drivers/clk (clk-mt8173-mm)
-> - Instantiate the clock driver from the mtk-mmsys driver.
-> - Add default config option to not break anything.
-> - Removed the Reviewed-by CK tag as changed the organization.
-> 
-> Changes in v10:
-> - Renamed to be generic mtk-mmsys
-> - Add driver data support to be able to support diferent SoCs
-> 
-> Changes in v9:
-> - Move mmsys to drivers/soc/mediatek (CK)
-> 
-> Changes in v8:
-> - Be a builtin_platform_driver like other mediatek mmsys drivers.
-> 
-> Changes in v7:
-> - Free clk_data->clks as well
-> - Get rid of private data structure
-> 
->  drivers/clk/mediatek/Kconfig         |   7 ++
->  drivers/clk/mediatek/Makefile        |   1 +
->  drivers/clk/mediatek/clk-mt8173-mm.c | 146 +++++++++++++++++++++++++++
->  drivers/clk/mediatek/clk-mt8173.c    | 104 -------------------
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Quoting Matthias to continue the discussion here:
-
-"I'm not sure we really need that. We can just convert the mmsys clock bits in
-clk-mt8173.c to a platform driver with no need put them in a seperate file.
-If you think a seperate file is worth doing, I think the approach is to put the
-driver in a seperate file first and in a following patch change it to a platform
-driver."
-
-"Anyway its Stephen to make the decision. If he thinks things are fine like
-this, I'm happy to take the patch through my tree"
-
-
->  drivers/soc/mediatek/Kconfig         |   8 ++
->  drivers/soc/mediatek/Makefile        |   1 +
->  drivers/soc/mediatek/mtk-mmsys.c     |  50 +++++++++
->  7 files changed, 213 insertions(+), 104 deletions(-)
->  create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
->  create mode 100644 drivers/soc/mediatek/mtk-mmsys.c
-> 
-> diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
-> index ea3c70d1307e..9e28db8125cd 100644
-> --- a/drivers/clk/mediatek/Kconfig
-> +++ b/drivers/clk/mediatek/Kconfig
-> @@ -274,6 +274,13 @@ config COMMON_CLK_MT8173
->  	---help---
->  	  This driver supports MediaTek MT8173 clocks.
->  
-> +config COMMON_CLK_MT8173_MMSYS
-> +	bool "Clock driver for MediaTek MT8173 mmsys"
-> +	depends on COMMON_CLK_MT8173
-> +	default COMMON_CLK_MT8173
-> +	help
-> +	  This driver supports MediaTek MT8173 mmsys clocks.
-> +
->  config COMMON_CLK_MT8183
->  	bool "Clock driver for MediaTek MT8183"
->  	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
-> diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
-> index 8cdb76a5cd71..bb0536942075 100644
-> --- a/drivers/clk/mediatek/Makefile
-> +++ b/drivers/clk/mediatek/Makefile
-> @@ -41,6 +41,7 @@ obj-$(CONFIG_COMMON_CLK_MT7629_ETHSYS) += clk-mt7629-eth.o
->  obj-$(CONFIG_COMMON_CLK_MT7629_HIFSYS) += clk-mt7629-hif.o
->  obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
->  obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
-> +obj-$(CONFIG_COMMON_CLK_MT8173_MMSYS) += clk-mt8173-mm.o
->  obj-$(CONFIG_COMMON_CLK_MT8183) += clk-mt8183.o
->  obj-$(CONFIG_COMMON_CLK_MT8183_AUDIOSYS) += clk-mt8183-audio.o
->  obj-$(CONFIG_COMMON_CLK_MT8183_CAMSYS) += clk-mt8183-cam.o
-> diff --git a/drivers/clk/mediatek/clk-mt8173-mm.c b/drivers/clk/mediatek/clk-mt8173-mm.c
-> new file mode 100644
-> index 000000000000..36fa20be77b6
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-mt8173-mm.c
-> @@ -0,0 +1,146 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: James Liao <jamesjj.liao@mediatek.com>
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "clk-gate.h"
-> +#include "clk-mtk.h"
-> +
-> +#include <dt-bindings/clock/mt8173-clk.h>
-> +
-> +static const struct mtk_gate_regs mm0_cg_regs = {
-> +	.set_ofs = 0x0104,
-> +	.clr_ofs = 0x0108,
-> +	.sta_ofs = 0x0100,
-> +};
-> +
-> +static const struct mtk_gate_regs mm1_cg_regs = {
-> +	.set_ofs = 0x0114,
-> +	.clr_ofs = 0x0118,
-> +	.sta_ofs = 0x0110,
-> +};
-> +
-> +#define GATE_MM0(_id, _name, _parent, _shift) {			\
-> +		.id = _id,					\
-> +		.name = _name,					\
-> +		.parent_name = _parent,				\
-> +		.regs = &mm0_cg_regs,				\
-> +		.shift = _shift,				\
-> +		.ops = &mtk_clk_gate_ops_setclr,		\
-> +	}
-> +
-> +#define GATE_MM1(_id, _name, _parent, _shift) {			\
-> +		.id = _id,					\
-> +		.name = _name,					\
-> +		.parent_name = _parent,				\
-> +		.regs = &mm1_cg_regs,				\
-> +		.shift = _shift,				\
-> +		.ops = &mtk_clk_gate_ops_setclr,		\
-> +	}
-> +
-> +static const struct mtk_gate mt8173_mm_clks[] = {
-> +	/* MM0 */
-> +	GATE_MM0(CLK_MM_SMI_COMMON, "mm_smi_common", "mm_sel", 0),
-> +	GATE_MM0(CLK_MM_SMI_LARB0, "mm_smi_larb0", "mm_sel", 1),
-> +	GATE_MM0(CLK_MM_CAM_MDP, "mm_cam_mdp", "mm_sel", 2),
-> +	GATE_MM0(CLK_MM_MDP_RDMA0, "mm_mdp_rdma0", "mm_sel", 3),
-> +	GATE_MM0(CLK_MM_MDP_RDMA1, "mm_mdp_rdma1", "mm_sel", 4),
-> +	GATE_MM0(CLK_MM_MDP_RSZ0, "mm_mdp_rsz0", "mm_sel", 5),
-> +	GATE_MM0(CLK_MM_MDP_RSZ1, "mm_mdp_rsz1", "mm_sel", 6),
-> +	GATE_MM0(CLK_MM_MDP_RSZ2, "mm_mdp_rsz2", "mm_sel", 7),
-> +	GATE_MM0(CLK_MM_MDP_TDSHP0, "mm_mdp_tdshp0", "mm_sel", 8),
-> +	GATE_MM0(CLK_MM_MDP_TDSHP1, "mm_mdp_tdshp1", "mm_sel", 9),
-> +	GATE_MM0(CLK_MM_MDP_WDMA, "mm_mdp_wdma", "mm_sel", 11),
-> +	GATE_MM0(CLK_MM_MDP_WROT0, "mm_mdp_wrot0", "mm_sel", 12),
-> +	GATE_MM0(CLK_MM_MDP_WROT1, "mm_mdp_wrot1", "mm_sel", 13),
-> +	GATE_MM0(CLK_MM_FAKE_ENG, "mm_fake_eng", "mm_sel", 14),
-> +	GATE_MM0(CLK_MM_MUTEX_32K, "mm_mutex_32k", "rtc_sel", 15),
-> +	GATE_MM0(CLK_MM_DISP_OVL0, "mm_disp_ovl0", "mm_sel", 16),
-> +	GATE_MM0(CLK_MM_DISP_OVL1, "mm_disp_ovl1", "mm_sel", 17),
-> +	GATE_MM0(CLK_MM_DISP_RDMA0, "mm_disp_rdma0", "mm_sel", 18),
-> +	GATE_MM0(CLK_MM_DISP_RDMA1, "mm_disp_rdma1", "mm_sel", 19),
-> +	GATE_MM0(CLK_MM_DISP_RDMA2, "mm_disp_rdma2", "mm_sel", 20),
-> +	GATE_MM0(CLK_MM_DISP_WDMA0, "mm_disp_wdma0", "mm_sel", 21),
-> +	GATE_MM0(CLK_MM_DISP_WDMA1, "mm_disp_wdma1", "mm_sel", 22),
-> +	GATE_MM0(CLK_MM_DISP_COLOR0, "mm_disp_color0", "mm_sel", 23),
-> +	GATE_MM0(CLK_MM_DISP_COLOR1, "mm_disp_color1", "mm_sel", 24),
-> +	GATE_MM0(CLK_MM_DISP_AAL, "mm_disp_aal", "mm_sel", 25),
-> +	GATE_MM0(CLK_MM_DISP_GAMMA, "mm_disp_gamma", "mm_sel", 26),
-> +	GATE_MM0(CLK_MM_DISP_UFOE, "mm_disp_ufoe", "mm_sel", 27),
-> +	GATE_MM0(CLK_MM_DISP_SPLIT0, "mm_disp_split0", "mm_sel", 28),
-> +	GATE_MM0(CLK_MM_DISP_SPLIT1, "mm_disp_split1", "mm_sel", 29),
-> +	GATE_MM0(CLK_MM_DISP_MERGE, "mm_disp_merge", "mm_sel", 30),
-> +	GATE_MM0(CLK_MM_DISP_OD, "mm_disp_od", "mm_sel", 31),
-> +	/* MM1 */
-> +	GATE_MM1(CLK_MM_DISP_PWM0MM, "mm_disp_pwm0mm", "mm_sel", 0),
-> +	GATE_MM1(CLK_MM_DISP_PWM026M, "mm_disp_pwm026m", "pwm_sel", 1),
-> +	GATE_MM1(CLK_MM_DISP_PWM1MM, "mm_disp_pwm1mm", "mm_sel", 2),
-> +	GATE_MM1(CLK_MM_DISP_PWM126M, "mm_disp_pwm126m", "pwm_sel", 3),
-> +	GATE_MM1(CLK_MM_DSI0_ENGINE, "mm_dsi0_engine", "mm_sel", 4),
-> +	GATE_MM1(CLK_MM_DSI0_DIGITAL, "mm_dsi0_digital", "dsi0_dig", 5),
-> +	GATE_MM1(CLK_MM_DSI1_ENGINE, "mm_dsi1_engine", "mm_sel", 6),
-> +	GATE_MM1(CLK_MM_DSI1_DIGITAL, "mm_dsi1_digital", "dsi1_dig", 7),
-> +	GATE_MM1(CLK_MM_DPI_PIXEL, "mm_dpi_pixel", "dpi0_sel", 8),
-> +	GATE_MM1(CLK_MM_DPI_ENGINE, "mm_dpi_engine", "mm_sel", 9),
-> +	GATE_MM1(CLK_MM_DPI1_PIXEL, "mm_dpi1_pixel", "lvds_pxl", 10),
-> +	GATE_MM1(CLK_MM_DPI1_ENGINE, "mm_dpi1_engine", "mm_sel", 11),
-> +	GATE_MM1(CLK_MM_HDMI_PIXEL, "mm_hdmi_pixel", "dpi0_sel", 12),
-> +	GATE_MM1(CLK_MM_HDMI_PLLCK, "mm_hdmi_pllck", "hdmi_sel", 13),
-> +	GATE_MM1(CLK_MM_HDMI_AUDIO, "mm_hdmi_audio", "apll1", 14),
-> +	GATE_MM1(CLK_MM_HDMI_SPDIF, "mm_hdmi_spdif", "apll2", 15),
-> +	GATE_MM1(CLK_MM_LVDS_PIXEL, "mm_lvds_pixel", "lvds_pxl", 16),
-> +	GATE_MM1(CLK_MM_LVDS_CTS, "mm_lvds_cts", "lvds_cts", 17),
-> +	GATE_MM1(CLK_MM_SMI_LARB4, "mm_smi_larb4", "mm_sel", 18),
-> +	GATE_MM1(CLK_MM_HDMI_HDCP, "mm_hdmi_hdcp", "hdcp_sel", 19),
-> +	GATE_MM1(CLK_MM_HDMI_HDCP24M, "mm_hdmi_hdcp24m", "hdcp_24m_sel", 20),
-> +};
-> +
-> +struct clk_mt8173_mm_driver_data {
-> +	const struct mtk_gate *gates_clk;
-> +	int gates_num;
-> +};
-> +
-> +static const struct clk_mt8173_mm_driver_data mt8173_mmsys_driver_data = {
-> +	.gates_clk = mt8173_mm_clks,
-> +	.gates_num = ARRAY_SIZE(mt8173_mm_clks),
-> +};
-> +
-> +static int clk_mt8173_mm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->parent->of_node;
-> +	const struct clk_mt8173_mm_driver_data *data;
-> +	struct clk_onecell_data *clk_data;
-> +	int ret;
-> +
-> +	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
-> +	if (!clk_data)
-> +		return -ENOMEM;
-> +
-> +	data = &mt8173_mmsys_driver_data;
-> +
-> +	ret = mtk_clk_register_gates(node, data->gates_clk, data->gates_num,
-> +				     clk_data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver clk_mt8173_mm_drv = {
-> +	.driver = {
-> +		.name = "clk-mt8173-mm",
-> +	},
-> +	.probe = clk_mt8173_mm_probe,
-> +};
-> +
-> +builtin_platform_driver(clk_mt8173_mm_drv);
-> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
-> index 537a7f49b0f7..8f898ac476c0 100644
-> --- a/drivers/clk/mediatek/clk-mt8173.c
-> +++ b/drivers/clk/mediatek/clk-mt8173.c
-> @@ -753,93 +753,6 @@ static const struct mtk_gate img_clks[] __initconst = {
->  	GATE_IMG(CLK_IMG_FD, "img_fd", "mm_sel", 11),
->  };
->  
-> -static const struct mtk_gate_regs mm0_cg_regs __initconst = {
-> -	.set_ofs = 0x0104,
-> -	.clr_ofs = 0x0108,
-> -	.sta_ofs = 0x0100,
-> -};
-> -
-> -static const struct mtk_gate_regs mm1_cg_regs __initconst = {
-> -	.set_ofs = 0x0114,
-> -	.clr_ofs = 0x0118,
-> -	.sta_ofs = 0x0110,
-> -};
-> -
-> -#define GATE_MM0(_id, _name, _parent, _shift) {			\
-> -		.id = _id,					\
-> -		.name = _name,					\
-> -		.parent_name = _parent,				\
-> -		.regs = &mm0_cg_regs,				\
-> -		.shift = _shift,				\
-> -		.ops = &mtk_clk_gate_ops_setclr,		\
-> -	}
-> -
-> -#define GATE_MM1(_id, _name, _parent, _shift) {			\
-> -		.id = _id,					\
-> -		.name = _name,					\
-> -		.parent_name = _parent,				\
-> -		.regs = &mm1_cg_regs,				\
-> -		.shift = _shift,				\
-> -		.ops = &mtk_clk_gate_ops_setclr,		\
-> -	}
-> -
-> -static const struct mtk_gate mm_clks[] __initconst = {
-> -	/* MM0 */
-> -	GATE_MM0(CLK_MM_SMI_COMMON, "mm_smi_common", "mm_sel", 0),
-> -	GATE_MM0(CLK_MM_SMI_LARB0, "mm_smi_larb0", "mm_sel", 1),
-> -	GATE_MM0(CLK_MM_CAM_MDP, "mm_cam_mdp", "mm_sel", 2),
-> -	GATE_MM0(CLK_MM_MDP_RDMA0, "mm_mdp_rdma0", "mm_sel", 3),
-> -	GATE_MM0(CLK_MM_MDP_RDMA1, "mm_mdp_rdma1", "mm_sel", 4),
-> -	GATE_MM0(CLK_MM_MDP_RSZ0, "mm_mdp_rsz0", "mm_sel", 5),
-> -	GATE_MM0(CLK_MM_MDP_RSZ1, "mm_mdp_rsz1", "mm_sel", 6),
-> -	GATE_MM0(CLK_MM_MDP_RSZ2, "mm_mdp_rsz2", "mm_sel", 7),
-> -	GATE_MM0(CLK_MM_MDP_TDSHP0, "mm_mdp_tdshp0", "mm_sel", 8),
-> -	GATE_MM0(CLK_MM_MDP_TDSHP1, "mm_mdp_tdshp1", "mm_sel", 9),
-> -	GATE_MM0(CLK_MM_MDP_WDMA, "mm_mdp_wdma", "mm_sel", 11),
-> -	GATE_MM0(CLK_MM_MDP_WROT0, "mm_mdp_wrot0", "mm_sel", 12),
-> -	GATE_MM0(CLK_MM_MDP_WROT1, "mm_mdp_wrot1", "mm_sel", 13),
-> -	GATE_MM0(CLK_MM_FAKE_ENG, "mm_fake_eng", "mm_sel", 14),
-> -	GATE_MM0(CLK_MM_MUTEX_32K, "mm_mutex_32k", "rtc_sel", 15),
-> -	GATE_MM0(CLK_MM_DISP_OVL0, "mm_disp_ovl0", "mm_sel", 16),
-> -	GATE_MM0(CLK_MM_DISP_OVL1, "mm_disp_ovl1", "mm_sel", 17),
-> -	GATE_MM0(CLK_MM_DISP_RDMA0, "mm_disp_rdma0", "mm_sel", 18),
-> -	GATE_MM0(CLK_MM_DISP_RDMA1, "mm_disp_rdma1", "mm_sel", 19),
-> -	GATE_MM0(CLK_MM_DISP_RDMA2, "mm_disp_rdma2", "mm_sel", 20),
-> -	GATE_MM0(CLK_MM_DISP_WDMA0, "mm_disp_wdma0", "mm_sel", 21),
-> -	GATE_MM0(CLK_MM_DISP_WDMA1, "mm_disp_wdma1", "mm_sel", 22),
-> -	GATE_MM0(CLK_MM_DISP_COLOR0, "mm_disp_color0", "mm_sel", 23),
-> -	GATE_MM0(CLK_MM_DISP_COLOR1, "mm_disp_color1", "mm_sel", 24),
-> -	GATE_MM0(CLK_MM_DISP_AAL, "mm_disp_aal", "mm_sel", 25),
-> -	GATE_MM0(CLK_MM_DISP_GAMMA, "mm_disp_gamma", "mm_sel", 26),
-> -	GATE_MM0(CLK_MM_DISP_UFOE, "mm_disp_ufoe", "mm_sel", 27),
-> -	GATE_MM0(CLK_MM_DISP_SPLIT0, "mm_disp_split0", "mm_sel", 28),
-> -	GATE_MM0(CLK_MM_DISP_SPLIT1, "mm_disp_split1", "mm_sel", 29),
-> -	GATE_MM0(CLK_MM_DISP_MERGE, "mm_disp_merge", "mm_sel", 30),
-> -	GATE_MM0(CLK_MM_DISP_OD, "mm_disp_od", "mm_sel", 31),
-> -	/* MM1 */
-> -	GATE_MM1(CLK_MM_DISP_PWM0MM, "mm_disp_pwm0mm", "mm_sel", 0),
-> -	GATE_MM1(CLK_MM_DISP_PWM026M, "mm_disp_pwm026m", "pwm_sel", 1),
-> -	GATE_MM1(CLK_MM_DISP_PWM1MM, "mm_disp_pwm1mm", "mm_sel", 2),
-> -	GATE_MM1(CLK_MM_DISP_PWM126M, "mm_disp_pwm126m", "pwm_sel", 3),
-> -	GATE_MM1(CLK_MM_DSI0_ENGINE, "mm_dsi0_engine", "mm_sel", 4),
-> -	GATE_MM1(CLK_MM_DSI0_DIGITAL, "mm_dsi0_digital", "dsi0_dig", 5),
-> -	GATE_MM1(CLK_MM_DSI1_ENGINE, "mm_dsi1_engine", "mm_sel", 6),
-> -	GATE_MM1(CLK_MM_DSI1_DIGITAL, "mm_dsi1_digital", "dsi1_dig", 7),
-> -	GATE_MM1(CLK_MM_DPI_PIXEL, "mm_dpi_pixel", "dpi0_sel", 8),
-> -	GATE_MM1(CLK_MM_DPI_ENGINE, "mm_dpi_engine", "mm_sel", 9),
-> -	GATE_MM1(CLK_MM_DPI1_PIXEL, "mm_dpi1_pixel", "lvds_pxl", 10),
-> -	GATE_MM1(CLK_MM_DPI1_ENGINE, "mm_dpi1_engine", "mm_sel", 11),
-> -	GATE_MM1(CLK_MM_HDMI_PIXEL, "mm_hdmi_pixel", "dpi0_sel", 12),
-> -	GATE_MM1(CLK_MM_HDMI_PLLCK, "mm_hdmi_pllck", "hdmi_sel", 13),
-> -	GATE_MM1(CLK_MM_HDMI_AUDIO, "mm_hdmi_audio", "apll1", 14),
-> -	GATE_MM1(CLK_MM_HDMI_SPDIF, "mm_hdmi_spdif", "apll2", 15),
-> -	GATE_MM1(CLK_MM_LVDS_PIXEL, "mm_lvds_pixel", "lvds_pxl", 16),
-> -	GATE_MM1(CLK_MM_LVDS_CTS, "mm_lvds_cts", "lvds_cts", 17),
-> -	GATE_MM1(CLK_MM_SMI_LARB4, "mm_smi_larb4", "mm_sel", 18),
-> -	GATE_MM1(CLK_MM_HDMI_HDCP, "mm_hdmi_hdcp", "hdcp_sel", 19),
-> -	GATE_MM1(CLK_MM_HDMI_HDCP24M, "mm_hdmi_hdcp24m", "hdcp_24m_sel", 20),
-> -};
-> -
->  static const struct mtk_gate_regs vdec0_cg_regs __initconst = {
->  	.set_ofs = 0x0000,
->  	.clr_ofs = 0x0004,
-> @@ -1144,23 +1057,6 @@ static void __init mtk_imgsys_init(struct device_node *node)
->  }
->  CLK_OF_DECLARE(mtk_imgsys, "mediatek,mt8173-imgsys", mtk_imgsys_init);
->  
-> -static void __init mtk_mmsys_init(struct device_node *node)
-> -{
-> -	struct clk_onecell_data *clk_data;
-> -	int r;
-> -
-> -	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
-> -
-> -	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
-> -						clk_data);
-> -
-> -	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-> -	if (r)
-> -		pr_err("%s(): could not register clock provider: %d\n",
-> -			__func__, r);
-> -}
-> -CLK_OF_DECLARE(mtk_mmsys, "mediatek,mt8173-mmsys", mtk_mmsys_init);
-> -
->  static void __init mtk_vdecsys_init(struct device_node *node)
->  {
->  	struct clk_onecell_data *clk_data;
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index 2114b563478c..e84513318725 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -44,4 +44,12 @@ config MTK_SCPSYS
->  	  Say yes here to add support for the MediaTek SCPSYS power domain
->  	  driver.
->  
-> +config MTK_MMSYS
-> +	bool "MediaTek MMSYS Support"
-> +	depends on COMMON_CLK_MT8173_MMSYS
-> +	default COMMON_CLK_MT8173_MMSYS
-> +	help
-> +	  Say yes here to add support for the MediaTek Multimedia
-> +	  Subsystem (MMSYS).
-> +
->  endmenu
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index b01733074ad6..01f9f873634a 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -3,3 +3,4 @@ obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
->  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
->  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-> +obj-$(CONFIG_MTK_MMSYS) += mtk-mmsys.o
-> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
-> new file mode 100644
-> index 000000000000..dbdfedd302fa
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/mtk-mmsys.c
-> @@ -0,0 +1,50 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: James Liao <jamesjj.liao@mediatek.com>
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +
-> +struct mtk_mmsys_driver_data {
-> +	const char *clk_driver;
-> +};
-> +
-> +static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
-> +	.clk_driver = "clk-mt8173-mm",
-> +};
-> +
-> +static int mtk_mmsys_probe(struct platform_device *pdev)
-> +{
-> +	const struct mtk_mmsys_driver_data *data;
-> +	struct platform_device *clks;
-> +
-> +	data = of_device_get_match_data(&pdev->dev);
-> +
-> +	clks = platform_device_register_data(&pdev->dev, data->clk_driver,
-> +					     PLATFORM_DEVID_AUTO, NULL, 0);
-> +	if (IS_ERR(clks))
-> +		return PTR_ERR(clks);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_match_mtk_mmsys[] = {
-> +	{
-> +		.compatible = "mediatek,mt8173-mmsys",
-> +		.data = &mt8173_mmsys_driver_data,
-> +	},
-> +	{ }
-> +};
-> +
-> +static struct platform_driver mtk_mmsys_drv = {
-> +	.driver = {
-> +		.name = "mtk-mmsys",
-> +		.of_match_table = of_match_mtk_mmsys,
-> +	},
-> +	.probe = mtk_mmsys_probe,
-> +};
-> +
-> +builtin_platform_driver(mtk_mmsys_drv);
-> 
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 253274d..efca50a 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -394,7 +394,7 @@
+ 			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+ 			reg = <0 0x7c4000 0 0x1000>,
+ 				<0 0x07c5000 0 0x1000>;
+-			reg-names = "hc_mem", "cqhci_mem";
++			reg-names = "hc", "cqhci";
+ 
+ 			iommus = <&apps_smmu 0x60 0x0>;
+ 			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
+@@ -1234,7 +1234,6 @@
+ 		sdhc_2: sdhci@8804000 {
+ 			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+ 			reg = <0 0x08804000 0 0x1000>;
+-			reg-names = "hc_mem";
+ 
+ 			iommus = <&apps_smmu 0x80 0>;
+ 			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
