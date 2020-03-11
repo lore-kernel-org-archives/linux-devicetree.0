@@ -2,35 +2,35 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD21C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524D7C18E5C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C296522464
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32754222D9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbgCKNXL (ORCPT
+        id S1729481AbgCKNZd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:23:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54096 "EHLO mx2.suse.de"
+        Wed, 11 Mar 2020 09:25:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58674 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbgCKNXK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:23:10 -0400
+        id S1729471AbgCKNZc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 09:25:32 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 66BA9AFEC;
-        Wed, 11 Mar 2020 13:23:05 +0000 (UTC)
-Subject: Re: [PATCH v11 3/5] clk / soc: mediatek: Move mt8173 MMSYS to
- platform driver
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        by mx2.suse.de (Postfix) with ESMTP id 416CAB2C4;
+        Wed, 11 Mar 2020 13:25:29 +0000 (UTC)
+Subject: Re: [PATCH v11 4/5] soc / drm: mediatek: Move routing control to
+ mmsys device
+To:     CK Hu <ck.hu@mediatek.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        airlied@linux.ie, mturquette@baylibre.com, sboyd@kernel.org,
+        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         linux-media@vger.kernel.org, Allison Randal <allison@lohutok.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-mediatek@lists.infradead.org,
@@ -49,13 +49,10 @@ Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         rdunlap@infradead.org, matthias.bgg@kernel.org,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Owen Chen <owen.chen@mediatek.com>
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 References: <20200311115614.1425528-1-enric.balletbo@collabora.com>
- <20200311115614.1425528-4-enric.balletbo@collabora.com>
+ <20200311115614.1425528-5-enric.balletbo@collabora.com>
+ <1583932064.29614.6.camel@mtksdaap41>
 From:   Matthias Brugger <mbrugger@suse.com>
 Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -131,15 +128,15 @@ Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
  UHUEIsTwPWs2Q87k7vjYyrcyAOarX2X5pvMQvpAMADGf2Z3wrCsDdG25w2HztweUNd9QEprt
  JG8GNNzMOD4cQ82Ta7eGvPWPeXauWJDLVR9jHtWT9Ot3BQgmApLxACvwvD1a69jaFKov28SP
  HxUCQ9Y1Y/Ct
-Message-ID: <7157b75b-0b9d-33d0-6548-ac2433ab9154@suse.com>
-Date:   Wed, 11 Mar 2020 14:23:02 +0100
+Message-ID: <db86a097-db98-1952-8afb-875ba7719719@suse.com>
+Date:   Wed, 11 Mar 2020 14:25:26 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200311115614.1425528-4-enric.balletbo@collabora.com>
+In-Reply-To: <1583932064.29614.6.camel@mtksdaap41>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -147,80 +144,52 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 11/03/2020 12:56, Enric Balletbo i Serra wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
+On 11/03/2020 14:07, CK Hu wrote:
+> Hi, Enric:
 > 
-> There is no strong reason for this to use CLK_OF_DECLARE instead of
-> being a platform driver. Plus, MMSYS provides clocks but also a shared
-> register space for the mediatek-drm and the mediatek-mdp
-> driver. So move the MMSYS clocks to a new platform driver and also
-> create a new MMSYS platform driver in drivers/soc/mediatek that
-> instantiates the clock driver.
+> On Wed, 2020-03-11 at 12:56 +0100, Enric Balletbo i Serra wrote:
+>> Provide a mtk_mmsys_ddp_connect() and mtk_mmsys_disconnect() functions to
+>> replace mtk_ddp_add_comp_to_path() and mtk_ddp_remove_comp_from_path().
+>> Those functions will allow DRM driver and others to control the data
+>> path routing.
+>>
 > 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
-> 
-> Changes in v11:
-> - Leave the clocks part in drivers/clk (clk-mt8173-mm)
-> - Instantiate the clock driver from the mtk-mmsys driver.
-> - Add default config option to not break anything.
-> - Removed the Reviewed-by CK tag as changed the organization.
-> 
-> Changes in v10:
-> - Renamed to be generic mtk-mmsys
-> - Add driver data support to be able to support diferent SoCs
-> 
-> Changes in v9:
-> - Move mmsys to drivers/soc/mediatek (CK)
-> 
-> Changes in v8:
-> - Be a builtin_platform_driver like other mediatek mmsys drivers.
-> 
-> Changes in v7:
-> - Free clk_data->clks as well
-> - Get rid of private data structure
-> 
->  drivers/clk/mediatek/Kconfig         |   7 ++
->  drivers/clk/mediatek/Makefile        |   1 +
->  drivers/clk/mediatek/clk-mt8173-mm.c | 146 +++++++++++++++++++++++++++
->  drivers/clk/mediatek/clk-mt8173.c    | 104 -------------------
-
-I'm not sure we really need that. We can just convert the mmsys clock bits in
-clk-mt8173.c to a platform driver with no need put them in a seperate file.
-If you think a seperate file is worth doing, I think the approach is to put the
-driver in a seperate file first and in a following patch change it to a platform
-driver.
-
-Anyway its Stephen to make the decision. If he thinks things are fine like this,
-I'm happy to take the patch through my tree.
-
->  drivers/soc/mediatek/Kconfig         |   8 ++
->  drivers/soc/mediatek/Makefile        |   1 +
->  drivers/soc/mediatek/mtk-mmsys.c     |  50 +++++++++
->  7 files changed, 213 insertions(+), 104 deletions(-)
->  create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
->  create mode 100644 drivers/soc/mediatek/mtk-mmsys.c
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
 > 
 
-<snip>
+If I remember correctly you are OK me taking the patch through the SoC tree, right?
 
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index 2114b563478c..e84513318725 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -44,4 +44,12 @@ config MTK_SCPSYS
->  	  Say yes here to add support for the MediaTek SCPSYS power domain
->  	  driver.
->  
-> +config MTK_MMSYS
-> +	bool "MediaTek MMSYS Support"
-> +	depends on COMMON_CLK_MT8173_MMSYS
-> +	default COMMON_CLK_MT8173_MMSYS
-
-If we don't create a new file, we would need to depend on COMMON_CLK_MT8173 or
-maybe not even that. I suppose the system does not get anywhere without the
-clock driver.
+In this case I'd need a Acked-by tag. Not a big deal, just trying to remeber the
+tag policy in the linux kernel :)
 
 Regards,
 Matthias
+
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> ---
+>>
+>> Changes in v11: None
+>> Changes in v10:
+>> - Select CONFIG_MTK_MMSYS (CK)
+>> - Pass device pointer of mmsys device instead of config regs (CK)
+>>
+>> Changes in v9:
+>> - Introduced a new patch to move routing control into mmsys driver.
+>> - Removed the patch to use regmap as is not needed anymore.
+>>
+>> Changes in v8: None
+>> Changes in v7: None
+>>
+>>  drivers/gpu/drm/mediatek/Kconfig        |   1 +
+>>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  19 +-
+>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 256 ----------------------
+>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |   7 -
+>>  drivers/gpu/drm/mediatek/mtk_drm_drv.c  |  14 +-
+>>  drivers/gpu/drm/mediatek/mtk_drm_drv.h  |   2 +-
+>>  drivers/soc/mediatek/mtk-mmsys.c        | 279 ++++++++++++++++++++++++
+>>  include/linux/soc/mediatek/mtk-mmsys.h  |  20 ++
+>>  8 files changed, 316 insertions(+), 282 deletions(-)
+>>  create mode 100644 include/linux/soc/mediatek/mtk-mmsys.h
+>>
+> 
