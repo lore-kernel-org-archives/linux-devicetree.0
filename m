@@ -2,121 +2,80 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA34C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5078FC10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A9420873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583916359;
-	bh=Tx86wnCMyMjttXqHLNFN2Ue65Q0KtIi7r5++8isH6Jk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A4tIGS9hlXjQaiDypy9QDbW0wxEUDkTbL85XwoAnfw1lF08nlCdU1KDbNIbfT3I2z
-	 NvgZft9hKvAznmSnV2lAJ4ntb9lTWCknWFmH8B6U/C7LvBVN+B78wKr6s0isODRiUq
-	 mxzcRPuzNCSxBoAs73o3exKx3NvdOk9Nb3Xxt3vI=
+	by mail.kernel.org (Postfix) with ESMTP id 2D63020637
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgCKIpy (ORCPT
+        id S1728744AbgCKIr1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:45:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34326 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 04:47:27 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:33266 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbgCKIpy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:45:54 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98BB820637;
-        Wed, 11 Mar 2020 08:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583916354;
-        bh=Tx86wnCMyMjttXqHLNFN2Ue65Q0KtIi7r5++8isH6Jk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ob1Ww4y2ywlV+9yX+rvEdfOXe53hUhRBtuHwXZ0b9xBD7ff3XrmsqP7SWdLXusxAX
-         quiXCdwZgcVMcOhHjOqgPu//MHoD9/5MokBLirBrZGKkdtieo0NHCkZuoEcNB9YdU9
-         2XtOny+8/I2kkg1EyaXIFL8qskh0gT3uWnZ6j4EA=
-Date:   Wed, 11 Mar 2020 16:45:45 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S1728705AbgCKIr1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:47:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 226753702434;
+        Wed, 11 Mar 2020 09:47:26 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id FeJ_lXY7nzmt; Wed, 11 Mar 2020 09:47:23 +0100 (CET)
+Subject: Re: [PATCH v2 2/2] power: supply: add CellWise cw2015 fuel gauge
+ driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1] ARM: dts: imx6dl-riotboard: properly define rgmii PHY
-Message-ID: <20200311084543.GF29269@dragon>
-References: <20200304065436.24917-1-o.rempel@pengutronix.de>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200309160346.2203680-1-t.schramm@manjaro.org>
+ <20200309160346.2203680-3-t.schramm@manjaro.org>
+ <20200310101050.GG1922688@smile.fi.intel.com>
+ <eb732216-dd19-f18d-9ace-e14c7e8de991@manjaro.org>
+ <20200311081450.GZ1922688@smile.fi.intel.com>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Message-ID: <503baadb-b8f2-f4bd-a1a8-44b2dc77b933@manjaro.org>
+Date:   Wed, 11 Mar 2020 09:48:30 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304065436.24917-1-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200311081450.GZ1922688@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 07:54:36AM +0100, Oleksij Rempel wrote:
-> The Atheros AR8035 PHY can be autodetected but can't use interrupt
-> support provided on this board. Define MDIO bus and the PHY node to make
-> it work properly.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  arch/arm/boot/dts/imx6dl-riotboard.dts | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
-> index 829654e1835a..17c637b66387 100644
-> --- a/arch/arm/boot/dts/imx6dl-riotboard.dts
-> +++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
-> @@ -89,11 +89,27 @@ &fec {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_enet>;
->  	phy-mode = "rgmii-id";
-> -	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
-> +	phy-handle = <&rgmii_phy>;
->  	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
->  			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
->  	fsl,err006687-workaround-present;
->  	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		/* Atheros AR8035 PHY */
-> +		rgmii_phy: ethernet-phy@4 {
-> +			reg = <4>;
-> +
-> +			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
-> +
+Hi Andy,
 
-Drop these unnecessary newlines.
+was just about to send v3.
 
-Shawn
-
-> +			reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
-> +			reset-assert-us = <10000>;
-> +			reset-deassert-us = <1000>;
-> +		};
-> +	};
->  };
->  
->  &gpio1 {
-> -- 
-> 2.25.1
 > 
+> 	__be16 value;
+> 
+> 
+> 	ret = regmap(..., (...)value, sizeof(value));
+> 	if (ret)
+> 		return ret; // note, you missed this in above.
+> 
+> 	*val = be16_to_cpu(value);
+> 	return 0;
+> 
+
+That implementation looks pretty clean. I'll take it.
+
+
+Thanks,
+
+Tobias
