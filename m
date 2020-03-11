@@ -2,69 +2,66 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F861C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447FBC10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E127205C9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1133020873
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583914062;
+	bh=culj2ZVb1YkzuYMmBPDBiyKzZ2bpF4vVWyXAAjHvgCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CLodghgJ9zg1HPYjd2QCVuxjwkRbxKK7P01NLF0doTB8zqt+TakG8wfb4aLStILI0
+	 +1lI8ICPbbQExD7rpHO4H94EdQSroWsFWzGca/huuuTotRRmCGl7wKfapv/YDtDvCl
+	 TebAdzmF+1YBiEiPS3d00Jl+nHeq4byOr7YapO40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgCKIF0 convert rfc822-to-8bit (ORCPT
+        id S1728339AbgCKIHl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:05:26 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:37342 "EHLO gloria.sntech.de"
+        Wed, 11 Mar 2020 04:07:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgCKIF0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:05:26 -0400
-Received: from p5b127c69.dip0.t-ipconnect.de ([91.18.124.105] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jBwMi-0000Em-QT; Wed, 11 Mar 2020 09:05:20 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: arm: fix Rockchip Kylin board bindings
-Date:   Wed, 11 Mar 2020 09:05:19 +0100
-Message-ID: <1953057.m1zP5CsIQp@phil>
-In-Reply-To: <20200302092759.3291-1-jbx6244@gmail.com>
-References: <20200302092759.3291-1-jbx6244@gmail.com>
+        id S1726198AbgCKIHl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:07:41 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1D8B2051A;
+        Wed, 11 Mar 2020 08:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583914061;
+        bh=culj2ZVb1YkzuYMmBPDBiyKzZ2bpF4vVWyXAAjHvgCA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bf/PxpJMqiJuhNg/kLpWE+IbjwS6+zDM9C9NMei01C9AgmGXeWTJ/eWXHhyprafup
+         PleVhD3qz5Ghc2xqU3kWKJjWZ+V+3HcBJT3bPxhL8EoQFRZpPByihUYXAWwO4I5X2x
+         HD7Xlnkp45vSi/LdLnQuaYyZGxpWlK+fJpKTo2RE=
+Date:   Wed, 11 Mar 2020 16:07:33 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, daniel.baluta@nxp.com,
+        jun.li@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mn-evk: Add i2c3 support
+Message-ID: <20200311080732.GX29269@dragon>
+References: <1582984982-29151-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582984982-29151-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Montag, 2. März 2020, 10:27:57 CET schrieb Johan Jonker:
-> A test with the command below gives this error:
+On Sat, Feb 29, 2020 at 10:03:01PM +0800, Anson Huang wrote:
+> Enable i2c3 for i.MX8MN EVK board.
 > 
-> arch/arm/boot/dts/rk3036-kylin.dt.yaml: /: compatible:
-> ['rockchip,rk3036-kylin', 'rockchip,rk3036']
-> is not valid under any of the given schemas
-> 
-> Normally the dt-binding is the authoritative part, so boards should follow
-> the binding, but in the kylin-case the compatible from the .dts is used for
-> years in the field now, so fix the binding, as otherwise
-> we would break old users.
-> 
-> Fix this error by changing 'rockchip,kylin-rk3036' to
-> 'rockchip,rk3036-kylin' in rockchip.yaml.
-> 
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-applied all 3 for 5.7
-
-Thanks
-Heiko
-
-
+Applied both, thanks.
