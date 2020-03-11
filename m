@@ -2,162 +2,152 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F91C10F29
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 05:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2924C10F29
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 06:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 316032192A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 05:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B2E208C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 06:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NNYP+gTT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BXuEks7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725813AbgCKFmj (ORCPT
+        id S1726310AbgCKGGV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:42:39 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:46214 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgCKFmj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 01:42:39 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200311054237epoutp0464f32515f4f18f4a74d9f5de972863d6~7KYfSwDax2169721697epoutp04M
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 05:42:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200311054237epoutp0464f32515f4f18f4a74d9f5de972863d6~7KYfSwDax2169721697epoutp04M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1583905357;
-        bh=URTHxXXLdSOI3IYjX5rBfJl3mt+HD+35gyGMY9ctq7o=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=NNYP+gTTFacTMUMkdbNqEtGiAf/hb1DH2+CpWOLqA5BRCZsd4a2xRPiZuyD4Co7/a
-         aDP5vKIq1T/5OedI+TIFz+WOUH/5t9s+gUa42V1IYnYuO8fkUK89aigT7T95gk0g0o
-         3/05hqU7UDlx6JkcxW5LpE1dqAHE/a3RdVuHhhkA=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200311054237epcas5p42858581c843557b89e0f5f1bf0b0d4f7~7KYfB3eNn1294512945epcas5p4D;
-        Wed, 11 Mar 2020 05:42:37 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B3.B8.19726.C4A786E5; Wed, 11 Mar 2020 14:42:36 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200311054236epcas5p2b0c96fbf447a118332a09fd4801e6e95~7KYeUkDbF1698416984epcas5p2N;
-        Wed, 11 Mar 2020 05:42:36 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200311054236epsmtrp1cc5e50f06f3151443da1d3b7a1a17014~7KYeTlPLE0046300463epsmtrp1a;
-        Wed, 11 Mar 2020 05:42:36 +0000 (GMT)
-X-AuditID: b6c32a49-7c1ff70000014d0e-db-5e687a4c6c6b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4F.58.10238.C4A786E5; Wed, 11 Mar 2020 14:42:36 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.111.84.32]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200311054234epsmtip1ca2906d51d31d6d3120b3c4ea6221d66~7KYcQGY3N2720927209epsmtip1R;
-        Wed, 11 Mar 2020 05:42:33 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Rob Herring'" <robh@kernel.org>
-Cc:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <krzk@kernel.org>,
-        <avri.altman@wdc.com>, <martin.petersen@oracle.com>,
-        <kwmad.kim@samsung.com>, <stanley.chu@mediatek.com>,
-        <cang@codeaurora.org>
-In-Reply-To: <20200309181035.GA23663@bogus>
-Subject: RE: [PATCH 1/5] dt-bindings: phy: Document Samsung UFS PHY bindings
-Date:   Wed, 11 Mar 2020 11:12:32 +0530
-Message-ID: <000001d5f767$de478960$9ad69c20$@samsung.com>
+        Wed, 11 Mar 2020 02:06:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35482 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgCKGGV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 02:06:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 7so591927pgr.2
+        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 23:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VD15hEVyVLaO06R8soxT+wdeQAWi6jWDprT4gENa4Pk=;
+        b=BXuEks7icu5+J5qHi20hsEXmiCS9E/ow1l+ZYZM9dxF94vzf71w5/CXBQ/elTEp2KY
+         sK8PCWAC3CzcAsApi7PogMStwLY/F4bznDnaXJEdBmhw68CVuyf9vg0GSasdNXWi1ZwT
+         7hT/PuFLEvpc89BNSLsKiNMtvhjH4ARqGRItPC1FZ5eS88OofdfR+fvzxCiIw9RNVbBH
+         DKPTCJAE4h7KiuM6zOg9g0+3oavV1W+RM5RX6EcvpwmUgcS5BSDXSw+8pyqe4yxY6HxW
+         YO+gCM+xBLjl9wjlLUpYgIyOjYjSmeSVRwCpR+CVEmmjBcyduqs/JiHWgwd69myM0ZN/
+         bKMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VD15hEVyVLaO06R8soxT+wdeQAWi6jWDprT4gENa4Pk=;
+        b=Zv0X8AuqHOeGko6A5RlM05wfWlNadvPYYfx32/1HeFXQDMVjN0e2C6/klIlJffWxPR
+         PkatNRxOiD/mHcVpbEQDG55DlSai0xa5E5PG0ZwhuP4B7at6VmLhVGttPnDA4EFetdU/
+         9ncRswHRLAdFSk2TnsivYmmLTFPg/Ze+KXf2xlyuyv+ULXYHwmYEnHoQVYvPEyy6kx3j
+         LQ/ppCFxyMTF8noU0a5i7Zf7VU5bksRf+V3gdkQ4TgkKuaXIQa1upeDWrCTjiTKZt4pG
+         rBvKDAN2mc1OIuMEk9wOJyOY4Do87U5s0vwlFNeNrD4nJpeSWZ/Z2AKSQoMaKna14i4J
+         cQCA==
+X-Gm-Message-State: ANhLgQ2egw2sqf4xqiT1KVsteRl60zVYycgDGRI7edmvXDkA40suVYf1
+        F5CUD1HNIQY1/tlbA3vwPuhbzg==
+X-Google-Smtp-Source: ADFU+vtUcWmiYBhCHp72xQGkMofh54beImT2nmLF78jXNh6JeBSFkkPXyzzpZemY6U8GEERnxtK6Bg==
+X-Received: by 2002:a63:a055:: with SMTP id u21mr1300692pgn.100.1583906780227;
+        Tue, 10 Mar 2020 23:06:20 -0700 (PDT)
+Received: from localhost ([122.171.122.128])
+        by smtp.gmail.com with ESMTPSA id i5sm31347131pfo.173.2020.03.10.23.06.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Mar 2020 23:06:19 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 11:36:16 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "andrew-sh.cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Fan Chen =?utf-8?B?KOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [v5, PATCH 4/5] cpufreq: mediatek: add opp notification for SVS
+ support
+Message-ID: <20200311060616.62nh7sfwtjwvrjfr@vireshk-i7>
+References: <1574769046-28449-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1574769046-28449-5-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20191127083619.etocnhpyyut3hzwq@vireshk-i7>
+ <1575874588.13494.4.camel@mtksdaap41>
+ <20191210064319.f4ksrxozp3gv4xry@vireshk-i7>
+ <1583827865.4840.1.camel@mtksdaap41>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQGcomJoogAapdSxIIuFJfiljU0eNAEtLKvsAhEOsP8Bi2EW5qiPPYAA
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe7Z7d6/DzduUPKlkDsRUfCuja4ZG9LJgH4TogyLa0MsUnY5d
-        X9JKxHzLqTM/1dRUhqYGGuLL0Mxxc4pRGtRMJTRMw7fELAopNOed5LffOef/f875w0MKZVbc
-        g0zNyGJ0Gap0uUiM9b3y9wtS5qckhHZORdIr2zYRvdXVitONIxM4PTn5nKBneqwYrf9oFtFP
-        x3YEdMnQCEHvvjATdEvvDLooVryvrhIoujseiBTF48OY4vvSLKao7ulAih/dJxRlFr0ghogT
-        X0hm0lNzGF1I1C1xylZ7H6Y1SW8XL5uIQlTrXIGcSKDCYafhHVaBxKSMGkRgGGhAfLGFYLnD
-        QPDFLwTcmoU4sMytcQJ+MISg+tO8Q7WKoI3TC+wqERUEZlOpyM5ulC8UGT9jdhZSGwjm6grs
-        7EQFAjfci9vZlVLCV5tp34vt6We5QaGdJVQEtL0dFfB8FMYfLzre8Yb+b/VC/qKTsL3UivO7
-        rsJwZ5ND4w7W7Uqh/TigDAQMtS0g3nAZftfvOMyusDrW44jmASuG0j0m9zgNKgfO8O270PJk
-        FOM5Giwf6jG7REj5Q9dACL9KClV/FgW8UwLlpTJe7Qv3N2wOpyc81OtxnhWgnx4napCP8VAw
-        46FgxkMBjP+XNSGsAx1ntKxGzbBntWEZTG4wq9Kw2Rnq4KRMTTfa/1wB183IOKHkEEUiubNk
-        uUCdIMNVOWyehkNACuVukkTvvZYkWZWXz+gyE3XZ6QzLIU8Sk7tLanFbvIxSq7KYNIbRMrqD
-        qYB08ihEVmmxy6nypDuztiXc02sLU+rVsxGJUpeJUEvy6Ud0XxZb09i0bjpi7F/30siniwrg
-        WFTTQvw98wiVMBDbXFOTovnpX1a22eyxHjf95nzs/JW51M5Iv2devcrG0GBs92Z40Gvp1MuS
-        5UvXuC+T524YfAJjVjLxv9bcwOi6zXZ/OcamqMIChDpW9Q+oklMMWAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsWy7bCSnK5PVUacQVcHh8XLn1fZLD6tX8Zq
-        Mf/IOVaL8+c3sFvc3HKUxaL7+g42i+XH/zFZtO49wm7xf88OdoulW28yOnB5XO7rZfLYtKqT
-        zaPl5H4Wj49Pb7F49G1ZxejxeZOcR/uBbqYA9igum5TUnMyy1CJ9uwSujE8rt7EULOaraHmx
-        mL2BcRJPFyMnh4SAicS914eYuhi5OIQEdjNKLNm3kAUiIS1xfeMEdghbWGLlv+fsEEUvGCU+
-        fJ/BBpJgE9CV2LG4DcwWEVCVaJr1AKyZWeAHo8SPaUYQDXcYJU4v72cESXAKaEsc2r+VFcQW
-        FvCReHZ1MROIzQLUfOvQbmYQm1fAUmLF2WNMELagxMmZT4CGcgAN1ZNo28gIMV9eYvvbOcwQ
-        xylI/Hy6jBXiBjeJ/esWQN0gLnH0Zw/zBEbhWUgmzUKYNAvJpFlIOhYwsqxilEwtKM5Nzy02
-        LDDMSy3XK07MLS7NS9dLzs/dxAiOPy3NHYyXl8QfYhTgYFTi4X1Rlx4nxJpYVlyZe4hRgoNZ
-        SYQ3Xh4oxJuSWFmVWpQfX1Sak1p8iFGag0VJnPdp3rFIIYH0xJLU7NTUgtQimCwTB6dUA6O8
-        pUTOurPWMrz8S0REWmfyHrj9SHThPOn4CfZvHNSsNXfqR+qJb9h70W+JaKi35OlTane+b97T
-        +fKv8fQtqfZBGysu/QlVmHQ8yu6nWsbuX5M/BiSsWTqjPHqivt0SD7/C6LUXP9XflnLmk2Aq
-        1G0+3rhM+fyO9ltPj6tsXrv55IWDl79OXbxciaU4I9FQi7moOBEAjuRbQrsCAAA=
-X-CMS-MailID: 20200311054236epcas5p2b0c96fbf447a118332a09fd4801e6e95
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200306151021epcas5p40139bc39ddabb00f054f872c2b77db8f
-References: <20200306150529.3370-1-alim.akhtar@samsung.com>
-        <CGME20200306151021epcas5p40139bc39ddabb00f054f872c2b77db8f@epcas5p4.samsung.com>
-        <20200306150529.3370-2-alim.akhtar@samsung.com>
-        <20200309181035.GA23663@bogus>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583827865.4840.1.camel@mtksdaap41>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On 10-03-20, 16:11, andrew-sh.cheng wrote:
+> On Tue, 2019-12-10 at 14:43 +0800, Viresh Kumar wrote:
+> > On 09-12-19, 14:56, andrew-sh.cheng wrote:
+> > > On Wed, 2019-11-27 at 14:06 +0530, Viresh Kumar wrote:
+> > > > On 26-11-19, 19:50, Andrew-sh.Cheng wrote:
+> > > > > +		if (!IS_ERR(opp_item))
+> > > > > +			dev_pm_opp_put(opp_item);
+> > > > > +		else
+> > > > > +			freq = 0;
+> > > > > +
+> > > > 
+> > > > What is the purpose of the above code ?
+> > > When dev_pm_opp_find_freq_ceil() doesn't find matching opp item, freq
+> > > value won't be set.
+> > > Set it as 0 for below checking
+> > > > 
+> > > > > +		/* case of current opp is disabled */
+> > > > > +		if (freq == 0 || freq != info->opp_freq) {
+> > > > > +			// find an enable opp item
+> > > > > +			freq = 1;
+> > > > > +			opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev,
+> > > > > +							     &freq);
+> > > > > +			if (!IS_ERR(opp_item)) {
+> > > > > +				dev_pm_opp_put(opp_item);
+> > > > > +				policy = cpufreq_cpu_get(info->opp_cpu);
+> > > > > +				if (policy) {
+> > > > > +					cpufreq_driver_target(policy,
+> > > > > +						freq / 1000,
+> > > > > +						CPUFREQ_RELATION_L);
+> > > > 
+> > > > Why don't you simply call this instead of all the code in the else
+> > > > block ?
+> > > These else code is used to check "current opp item is disabled or not".
+> > > If not, do nothing.
+> > > If current opp item is disabled, need to find an not-disabled opp item,
+> > > and set frequency to it.
+> > 
+> > Right. So this notifier helper of yours receive the opp which is getting
+> > disabled, why don't you compare its frequency directly to see if the current OPP
+> > is getting disabled ?
+> Sorry to overlook your question.
+> This is because when the opp is disabled,
+> we cannot use dev_pm_opp_get_freq() to get frequency of that opp.
+> There is a check:
+> 	if (IS_ERR_OR_NULL(opp) || !opp->available) {
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: 09 March 2020 23:41
-> To: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: robh+dt@kernel.org; devicetree@vger.kernel.org; linux-
-> scsi@vger.kernel.org; krzk@kernel.org; avri.altman@wdc.com;
-> martin.petersen@oracle.com; kwmad.kim@samsung.com;
-> stanley.chu@mediatek.com; cang@codeaurora.org; Alim Akhtar
-> <alim.akhtar@samsung.com>
-> Subject: Re: [PATCH 1/5] dt-bindings: phy: Document Samsung UFS PHY
-bindings
-> 
-> On Fri,  6 Mar 2020 20:35:25 +0530, Alim Akhtar wrote:
-> > This patch documents Samsung UFS PHY device tree bindings
-> >
-> > Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> > ---
-> >  .../bindings/phy/samsung,ufs-phy.yaml         | 60 +++++++++++++++++++
-> >  1 file changed, 60 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
-> >
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Error: Documentation/devicetree/bindings/phy/samsung,ufs-
-> phy.example.dts:23.36-37 syntax error FATAL ERROR: Unable to parse input
-tree
-> scripts/Makefile.lib:311: recipe for target
-> 'Documentation/devicetree/bindings/phy/samsung,ufs-phy.example.dt.yaml'
-> failed
-> make[1]: *** [Documentation/devicetree/bindings/phy/samsung,ufs-
-> phy.example.dt.yaml] Error 1
-> Makefile:1262: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> See https://protect2.fireeye.com/url?k=872f213d-dafc7db2-872eaa72-
-> 0cc47a31ce52-
-> 327f14918e272963&u=https://patchwork.ozlabs.org/patch/1250378
-> Please check and re-submit.
-Sure will run "'make dt_binding_check" and fix this, just waiting for some
-more review comments on other patches in this series.
-Thanks for feedback.
+I think we can remove the available check here, as we are jut trying
+to find frequency of an OPP we already have. Send a patch for that
+please.
 
-Regards,
-Alim
+> 		pr_err("%s: Invalid parameters\n", __func__);
+> 		return 0;
+> 
+> > 
+> 
 
+-- 
+viresh
