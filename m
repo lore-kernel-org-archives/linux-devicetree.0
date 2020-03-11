@@ -2,80 +2,82 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5078FC10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7331C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D63020637
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892CB208E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583916848;
+	bh=q9pX7RdIeHC12gIE7AwUqz4c8Oq1C8zcrGUI6VQx08k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TIhWWj/PIJstrhq1K+Cl7NZN1miG8OVckZOFh4bH8AbZSSOZxkl/B6JrLMKWD7KMj
+	 wr1I7eADfG3wcohDXHykPtFegqlspQQZ0l3MoMufiWYts8+lh1mpbBq8yozOiU4iZ/
+	 Twrb9FrOpVBcApMCGdJKFw9x1A8ezfPmBAV07/zQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbgCKIr1 (ORCPT
+        id S1728263AbgCKIyH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:47:27 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:33266 "EHLO mail.manjaro.org"
+        Wed, 11 Mar 2020 04:54:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728705AbgCKIr1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:47:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 226753702434;
-        Wed, 11 Mar 2020 09:47:26 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id FeJ_lXY7nzmt; Wed, 11 Mar 2020 09:47:23 +0100 (CET)
-Subject: Re: [PATCH v2 2/2] power: supply: add CellWise cw2015 fuel gauge
- driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        id S1728195AbgCKIyH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:54:07 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2825020873;
+        Wed, 11 Mar 2020 08:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583916847;
+        bh=q9pX7RdIeHC12gIE7AwUqz4c8Oq1C8zcrGUI6VQx08k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j9tEh9CKAQvhblCfQ79VtTz2ZvM7u9zbEuZryIvvvwfaV/cQRcvprPihaPFOiqyQE
+         KiouaIwbxFCoz9RdF9cBGIzKA149ljubVMfa2WzhlC8Z4mxlVdOEF/h5GxAe02urT6
+         JpuyGXmzqN3xI1mKT/9xZspk9pOKGm5kmqLBkFIg=
+Date:   Wed, 11 Mar 2020 16:53:58 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200309160346.2203680-1-t.schramm@manjaro.org>
- <20200309160346.2203680-3-t.schramm@manjaro.org>
- <20200310101050.GG1922688@smile.fi.intel.com>
- <eb732216-dd19-f18d-9ace-e14c7e8de991@manjaro.org>
- <20200311081450.GZ1922688@smile.fi.intel.com>
-From:   Tobias Schramm <t.schramm@manjaro.org>
-Message-ID: <503baadb-b8f2-f4bd-a1a8-44b2dc77b933@manjaro.org>
-Date:   Wed, 11 Mar 2020 09:48:30 +0100
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] ARM: dts: imx: use generic name for crypto node
+Message-ID: <20200311085357.GG29269@dragon>
+References: <20200305135909.8180-1-horia.geanta@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311081450.GZ1922688@smile.fi.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200305135909.8180-1-horia.geanta@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
-
-was just about to send v3.
-
+On Thu, Mar 05, 2020 at 03:59:04PM +0200, Horia Geantă wrote:
+> This patch set aligns / fixes the naming of the crypto node
+> (and its child nodes) for sahara, dcp and caam crypto engines
+> used in i.MX SoCs.
 > 
-> 	__be16 value;
+> Horia Geantă (4):
+>   dt-bindings: crypto: sahara: use generic node name
+>   dt-bindings: crypto: dcp: use generic node name
+>   dt-bindings: crypto: caam: use generic node name
+>   ARM: dts: imx: align name for crypto node and child nodes
 > 
-> 
-> 	ret = regmap(..., (...)value, sizeof(value));
-> 	if (ret)
-> 		return ret; // note, you missed this in above.
-> 
-> 	*val = be16_to_cpu(value);
-> 	return 0;
-> 
+> Silvano di Ninno (1):
+>   arm64: dts: imx8mn: align name for crypto child nodes
 
-That implementation looks pretty clean. I'll take it.
-
-
-Thanks,
-
-Tobias
+Applied all, thanks.
