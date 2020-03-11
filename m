@@ -2,74 +2,206 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F054C10F25
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 07:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E773C10F25
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 07:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A5320873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 07:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583912787;
-	bh=wPWavU0XnNFcX/SZ6TFjnJus+JRvVZy3+xSxDbg/boM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u7qpqvw6fvQgqLQ0FjNP7JkFpcE9LI1Ma1lgkO1IGXI1vLhhSFjjBhZhEUCrXFN3S
-	 1oBEjvJY/Whw0ZjbWJ3w4joaDZgQDvn0SnsZk6TFcy7+euv2swym9v1GyscCHAq1Yx
-	 mp5NN4aqDEEiwSEFG0Aw9QwIfJ4nl81umU0OOiQ4=
+	by mail.kernel.org (Postfix) with ESMTP id D83D8206B7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 07:49:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GYNFIGyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgCKHq1 (ORCPT
+        id S1726923AbgCKHtV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgCKHq1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:46:27 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B27B9206B7;
-        Wed, 11 Mar 2020 07:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583912786;
-        bh=wPWavU0XnNFcX/SZ6TFjnJus+JRvVZy3+xSxDbg/boM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h+4oCQZiitlQdZsnfxzykvSh+zavohpJ0bhv88o/Z8aQdiDBJPrjQ6u9vn/ze5HZy
-         bcDa55DQjSL/qM6V0RtxfCMBcc4+qv7LE5FC34a2UYQppOJosBWSzFS6RyKS481isn
-         O9wTYS+JNCD+0gBBv9SFTHBEC3aAr6VR94ZM/XDk=
-Date:   Wed, 11 Mar 2020 15:46:18 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sr-som-ti: indicate powering off wifi
- is safe
-Message-ID: <20200311074617.GU29269@dragon>
-References: <E1j7I7v-0004dS-5u@rmk-PC.armlinux.org.uk>
+        Wed, 11 Mar 2020 03:49:21 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53100 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728364AbgCKHtV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 03:49:21 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02B7mwkl001284;
+        Wed, 11 Mar 2020 02:48:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583912938;
+        bh=Dt0IRyKZEWT9JVFxfFR5odUXV0yBX2GKXRx7gN7gnOE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GYNFIGyJW6mG2Fcwh3k1R+B6NNy2+4VdkMPbpJ+3xJe+1CFjQt4rWycyaUJPXOL3s
+         VR28Mo7e1bzqG1to06qRMH4XRVc8yukHvA0G8UREFuAKBN94EHH+ZJ4gwMqUeImEgt
+         VuLfSbr7PP1EoPEldH3aaegJRBtyL/hw0EKQFETM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02B7mwYJ061412
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Mar 2020 02:48:58 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Mar 2020 02:48:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Mar 2020 02:48:57 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02B7mtZJ104143;
+        Wed, 11 Mar 2020 02:48:56 -0500
+Subject: Re: [PATCHv2 1/4] dt-bindings: watchdog: Add support for TI K3 RTI
+ watchdog
+To:     Rob Herring <robh@kernel.org>
+CC:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200302200426.6492-1-t-kristo@ti.com>
+ <20200302200426.6492-2-t-kristo@ti.com> <20200310193721.GA24150@bogus>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <90e0e943-5b84-ba61-1b6f-fe9259415df7@ti.com>
+Date:   Wed, 11 Mar 2020 09:48:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E1j7I7v-0004dS-5u@rmk-PC.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200310193721.GA24150@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:18:51PM +0000, Russell King wrote:
-> We need to indicate that powering off the TI WiFi is safe, to avoid:
+On 10/03/2020 21:37, Rob Herring wrote:
+> On Mon, Mar 02, 2020 at 10:04:23PM +0200, Tero Kristo wrote:
+>> TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
+>> used to implement a windowed watchdog functionality. Windowed watchdog
+>> will generate an error if it is petted outside the time window, either
+>> too early or too late.
+>>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   .../bindings/watchdog/ti,rti-wdt.yaml         | 52 +++++++++++++++++++
+>>   1 file changed, 52 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+>> new file mode 100644
+>> index 000000000000..3813f59fb6c3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+>> @@ -0,0 +1,52 @@
+>> +# SPDX-License-Identifier: GPL-2.0
 > 
-> wl18xx_driver wl18xx.2.auto: Unbalanced pm_runtime_enable!
-> wl1271_sdio mmc0:0001:2: wl12xx_sdio_power_on: failed to get_sync(-13)
+> Dual license new bindings please:
 > 
-> which prevents the WiFi being functional.
-> 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> (GPL-2.0-only OR BSD-2-Clause)
 
-Applied, thanks.
+Ok, will fix this.
+
+> 
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Texas Instruments K3 SoC Watchdog Timer
+>> +
+>> +maintainers:
+>> +  - Tero Kristo <t-kristo@ti.com>
+>> +
+>> +description: |+
+> 
+> You can drop '|+' as there's no formatting to preserve.
+
+Ok.
+
+> 
+>> +  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
+>> +  Interrupt) IP module. This timer adds a support for windowed watchdog
+>> +  mode, which will signal an error if it is pinged outside the watchdog
+>> +  time window, meaning either too early or too late. The error signal
+>> +  generated can be routed to either interrupt a safety controller or
+>> +  to directly reset the SoC.
+>> +
+> 
+> Reference the common watchdog.yaml schema.
+
+I believe you mean just adding:
+
+allOf:
+   - $ref: "watchdog.yaml#"
+
+
+> 
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ti,rti-wdt
+> 
+> Should be SoC specific possibly with a fallback.
+
+Ok, will change this.
+
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +
+>> +examples:
+>> +  - |
+>> +    /*
+>> +     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
+>> +     * select the source clock for the watchdog, forcing it to tick with
+>> +     * a 32kHz clock in this case.
+>> +     */
+>> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>> +
+>> +    main_rti0: rti@2200000 {
+> 
+> watchdog@...
+
+Right.
+
+> 
+>> +        compatible = "ti,rti-wdt";
+>> +        reg = <0x0 0x2200000 0x0 0x100>;
+>> +        clocks = <&k3_clks 252 1>;
+>> +        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
+> 
+> Not documented.
+
+For this and assigned-clocks below...
+
+> 
+>> +        assigned-clocks = <&k3_clks 252 1>;
+>> +        assigned-clock-parents = <&k3_clks 252 5>;
+> 
+> Not documented.
+
+Ok will fix these, I was grepping for examples under the yaml files and 
+some seem to document these standard props, some not. But, I guess 
+everything listed in the examples should be documented.
+
+Sorry all this yaml stuff is still pretty new to me. >.<
+
+-Tero
+
+> 
+>> +    };
+>> -- 
+>> 2.17.1
+>>
+>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
