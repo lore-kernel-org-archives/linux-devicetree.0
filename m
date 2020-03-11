@@ -2,98 +2,102 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AEBC0044D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4248C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E611520575
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C018F20663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qty98XX/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ARE6qGsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731013AbgCKTRg (ORCPT
+        id S1731003AbgCKTYO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:17:36 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33292 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731003AbgCKTRe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 15:17:34 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z65so4317484ede.0
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 12:17:33 -0700 (PDT)
+        Wed, 11 Mar 2020 15:24:14 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44597 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730705AbgCKTYO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 15:24:14 -0400
+Received: by mail-il1-f193.google.com with SMTP id j69so3142854ila.11
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 12:24:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IoGQYT+rchnYF2zG5DEg3NeiNAoLKHCeyEY/yuvUhRg=;
-        b=Qty98XX/5cZd1xLOpIdrTlHmSOxWrvAJPpba33iF+RhyOUDdezy7/AvSYh58mnyJK6
-         UjTrcRQsHNLdkJSG4Rw3egxSyRm+NO5u/ziM5sEJ4syzSi/ofv//CVi/NySuuemFXjvN
-         ZeoLd5zBi2yI+dJQt1ARKHz//BShoSnycvkQPPAa0mD1VCftEOwQPOKdsBjzXtMib2am
-         BCC6ytK1fgh3Zw+e4CK/xxJ4RSHoAl0xoSWbEHV74NfcywU4Sr8i4XQ/fpmXYceMyRQA
-         DMasFvXlCVaYwJH6VlOT0huN4mo+9H8IzPTNwLw8MkGeLZ+H01zkXm4mEPrOf4DnyaJj
-         BcDw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8N/7KqaO2uHDIYZv/eBCikgO0CGFEy0TUrj3C3ZKTKg=;
+        b=ARE6qGsmx2gNgSWJCSYU0TNiWLYMwyiRcF6ENWM3CzZ22PibB5K9mK6zqiGKXRuzWy
+         KopIQ+9mN/zayHYAau1eIEgQO/CVEKQFu7DTE9CQOd0YytHsopNF7ePGCmgBn4lttdgq
+         MMEyPTdXGQ7lKTsi+rgkBT4ejvtJ6j+kWqLpE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IoGQYT+rchnYF2zG5DEg3NeiNAoLKHCeyEY/yuvUhRg=;
-        b=MQ1oMh5Or2haJU5p4w/+gpxNrQGI+dFDASjCjDMNqHHdKLvRZq5/Yf6YdckLIhspvl
-         fd3HsypU+zAB1V4vetFgw0EvDlSxzsTdKWcWnN5+whETJJYHIBzyIpcBhhPwzphhyTri
-         Nbtk41EeXUeNeRyIJ3k/f5kIwIRkrInj55KgNuNeow7dvnEwztw7oJTDuJjTuGFQimGK
-         heHBaTDysnhJRISeUmWZSRYu3Vkm6wc+NsJFWgAYKPKEP62k7jyvIvuJSfxNLc9JWAlp
-         hGbmJlH+nFwtafMtoE7RztvC/BhBUCA0c4IfrnSUrNxuKtrHNFZi+2Ls0STXjzR+WVUR
-         OZoA==
-X-Gm-Message-State: ANhLgQ0RdBohhhduvXZVWw4+/Q3DhJFo9i39T1c61CMA8LiS1v5R+cqx
-        f4+oQx2YQfy4L3YMRjsLAky9KYEt6Xo=
-X-Google-Smtp-Source: ADFU+vvqObpUv4yT5hu9m1ZZe/ETe+eJynYIwhQ0IE0wZjybZQc/WQoS5nOBi4wA7jf1jEJxVN6wFw==
-X-Received: by 2002:a50:ed97:: with SMTP id h23mr3364514edr.197.1583954252557;
-        Wed, 11 Mar 2020 12:17:32 -0700 (PDT)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id k11sm482932ejr.92.2020.03.11.12.17.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 12:17:31 -0700 (PDT)
-Subject: Re: [RESEND][PATCH v8 1/6] usb: dwc3: Registering a role switch in
- the DRD code.
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20200311172109.45134-1-john.stultz@linaro.org>
- <20200311172109.45134-2-john.stultz@linaro.org>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <7337bea7-1449-e6e3-4c65-1bb802a2c316@linaro.org>
-Date:   Wed, 11 Mar 2020 19:17:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8N/7KqaO2uHDIYZv/eBCikgO0CGFEy0TUrj3C3ZKTKg=;
+        b=bmXTTb/2ihP9jx4n2CX3QIanv7IS+7EXNvqUUIJkvJak/Nok7UYp4XRo6+YJSii4dH
+         PVUm4eCR59DUL1Md9Ku9NwX7sNI2IvURr48wMovRnhqVHN/gc+vPXSCN4tJjwlb+nVSJ
+         q1kHvH+zVol2P0zV2Q+mbkPxZNYbSQM0a6B+bWW5mV5ofChT26TpUZrxbir1rEgU+SJa
+         PruhovC+QwQnIT6SvCiq8kYRcJ8AQhPNOYDfoRBksD0bXViCG2LVFk62SBTYj8nt38Kv
+         FXxQImheWr6vJVqmB0yFJDsbc5CrwbLiY1IU32+UU9FqU/wPeSr6axd6Ro7nRbe6L9vg
+         BUrg==
+X-Gm-Message-State: ANhLgQ0vteJTqAkSzx5wtW6mOtVzczrtwXhvLF7nmBBkLg22RW2hGP2S
+        WpFkQnqRt9beDdiBVa42evJlZF4InGC4lQwRSmDxnA==
+X-Google-Smtp-Source: ADFU+vu73cL6OluZ5si943eP+eQIpQ8nGNRk/kAu29sLxMb2Kjpld2YYVtSCdcWAgwpjVWtWsQ9Tjb7Cnb1d1i9YbQA=
+X-Received: by 2002:a92:52:: with SMTP id 79mr4698842ila.41.1583954653040;
+ Wed, 11 Mar 2020 12:24:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200311172109.45134-2-john.stultz@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus> <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net> <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+ <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com> <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+ <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com> <CAODwPW8WwntWb_=dg2J3AMy-gHw2QvNj_g98SufN13+AuGnUSg@mail.gmail.com>
+ <b4ba821a-eef6-4aea-1eba-897171b92c41@amlogic.com> <CAKz_xw2T1UceCwFZnBxg6WVp2D4+MziyvQPdU6tEnR_BdLh-PQ@mail.gmail.com>
+ <ad28aa47-0490-937f-898f-0e4695ef6ec6@amlogic.com>
+In-Reply-To: <ad28aa47-0490-937f-898f-0e4695ef6ec6@amlogic.com>
+From:   Julius Werner <jwerner@chromium.org>
+Date:   Wed, 11 Mar 2020 12:24:01 -0700
+Message-ID: <CAODwPW9oxx33hkO3kv2_G8YyLWvigVHkfJU7xUHLVgB7QU2i3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+To:     Xingyu Chen <xingyu.chen@amlogic.com>
+Cc:     Evan Benn <evanbenn@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Julius Werner <jwerner@chromium.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
+> - *_INIT and *GETTIMEOUT.      Although your driver does not need them, could you take them as options in your driver ?
 
-@bjorn found an API change that explodes this one.
+The driver already has SMCWD_INFO which is used during probe to
+retrieve the minimum and maximum timeout values supported by the
+hardware at probe time. Maybe it would make sense to rename that to
+INIT (which would still return those values, but can also do whatever
+initialization needs to be done in TF)? GETTIMELEFT I agree we can
+implement optionally, and other platforms would just return a
+PSCI_RET_NOT_SUPPORTED for that.
 
-Fixed here: https://lkml.org/lkml/2020/3/11/1034
+> - *_RESETNOW.      It is used to reset the system right now, similar to your SOFT RESET. could you reserve an operation index in ATF ?
+
+Just curious, why do you need this? Shouldn't you use the PSCI
+standard SYSTEM_RESET SMC for that? (If you want to control exactly
+how the platform is reset, you could also use SYSTEM_RESET2 with a
+vendor-defined reset_type.)
