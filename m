@@ -2,107 +2,132 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F420C2BAEE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B57C2BAEE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B6F20737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:54:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Id8s4oOS"
+	by mail.kernel.org (Postfix) with ESMTP id A5C8420751
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583956678;
+	bh=zWn91M4ieW3uyWmeopnLk/XJ/uaRZCNqXuoSYUTcaNs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BKw7ed9pN9cN0JXnOvIO9dOsK6NER1bvK43cXK7exOwNTM/kKnFRa7UpdsssAgltU
+	 SZvz5pkMWE604oRJNqoe7kBiHPFg5TQcRzIcSCUzTS0R/LSjhy/x/gtEnMfX9HqwNr
+	 rNRb1wanhoWium7NQg0IwN1FjXVNEZgPJlP/f+a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbgCKTym (ORCPT
+        id S2387429AbgCKT5y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:54:42 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39359 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387418AbgCKTyj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 15:54:39 -0400
-Received: by mail-ot1-f65.google.com with SMTP id a9so3436048otl.6
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 12:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9G8BKi87dM8ac+1i8fsYu7iUa+IfFufMeRSjgfr6A2E=;
-        b=Id8s4oOSWs5Xu5M/KFQRUlf7eQY409+ZLkiK/Jdgljhl8fu/YQkLXw/5EBFEyPHMGa
-         pqwkBkWddzxS7iDwDGW5rPcYnvi7d+33rZc5hGSKDYNUHMIR8dSdwMi3a6oh+rlYEeJc
-         Fo4W6E6CZeivx037vSOmQVyWguZzfiX9cSix3q4xutmoBDRyf4AH7j1Zq75o1KhYFNbX
-         hZW3G3CaVznikgDMo1k6me6w7bK91Hy4zU016PvxRURtTDiCg9HpslVFjZb2Rv7BQYhl
-         SOuEUjZaOwxCRnLlfcb4Of13gquA7HwqNJdGgIGsVYscr/Pv6j3k6Xv3JrP3AQ2G3vlp
-         c8xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9G8BKi87dM8ac+1i8fsYu7iUa+IfFufMeRSjgfr6A2E=;
-        b=ZFImxtTcgvESD0Oae4zBv24cIskUwL8lE2O4bLt6XCWV2cWrOrhqL688Akq3wpATuQ
-         bAS6PdZ+eTdka/Hd9SX7r19cZZpMsnCixwLjLq+2GTaVrECsgUWBzYnQpfGda6sqC6mf
-         qdjjqy7RJeCSsCvotM9mA70m0avlIzt86CTsS0l5sMkFra/9pVwNFix79Ug5OWTwZY2J
-         F+IFGAQvmmnQhrQtgr/qM7rgkDwI0NaYrC0FWBYWzjdm6hkZDBdQYBdJAactVRxKGEs6
-         N+NFKUAk0wEhPFPXggrtEk2UqnYrDVyWcW8X4TvfF6e5ukeENLHD+9mWUbMhBNDZtSYV
-         pQ3Q==
-X-Gm-Message-State: ANhLgQ0yianJnhvyRPpndnSZFOUmPH52N8+5vV8rC0tG1icaEkoLChYN
-        bCt4jsFTpZEyiq2CJfrIgRydb5QQZC9tdMRMAk8Wkg==
-X-Google-Smtp-Source: ADFU+vujO1GuU0FxzgptyGmNumunhFLdj+J5zktXsJFnyVaoSjBzIH+jerB5Vt1h+nF6X7xTtUh1JTzBtNN8NNpemso=
-X-Received: by 2002:a9d:344:: with SMTP id 62mr3839951otv.102.1583956477185;
- Wed, 11 Mar 2020 12:54:37 -0700 (PDT)
+        Wed, 11 Mar 2020 15:57:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:54778 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387409AbgCKT5y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:57:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 199F71FB;
+        Wed, 11 Mar 2020 12:57:53 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EEF73F534;
+        Wed, 11 Mar 2020 12:57:52 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 19:57:50 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Tudor.Ambarus@microchip.com
+Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        vigneshr@ti.com, richard@nod.at, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, robh+dt@kernel.org,
+        linux-mediatek@lists.infradead.org, miquel.raynal@bootlin.com,
+        matthias.bgg@gmail.com, gch981213@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 4/4] mtd: spi-nor: remove mtk-quadspi driver
+Message-ID: <20200311195750.GL5411@sirena.org.uk>
+References: <20200306085052.28258-1-gch981213@gmail.com>
+ <20200309121020.GD4101@sirena.org.uk>
+ <2471214.x7VzW1FXlQ@localhost.localdomain>
+ <4427171.IzkiAjLLdB@localhost.localdomain>
 MIME-Version: 1.0
-References: <20200311172109.45134-1-john.stultz@linaro.org>
- <20200311172109.45134-2-john.stultz@linaro.org> <7337bea7-1449-e6e3-4c65-1bb802a2c316@linaro.org>
- <CALAqxLXEZQnH3a8z9CGf52VUbb-ZHX-R78DPM1psJhV9_bs35g@mail.gmail.com>
-In-Reply-To: <CALAqxLXEZQnH3a8z9CGf52VUbb-ZHX-R78DPM1psJhV9_bs35g@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 11 Mar 2020 12:54:26 -0700
-Message-ID: <CALAqxLU0HWYsZcOjBj3XRy6+D33aPuQ=+hF=gv0prUquyb1+pg@mail.gmail.com>
-Subject: Re: [RESEND][PATCH v8 1/6] usb: dwc3: Registering a role switch in
- the DRD code.
-To:     "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TnYVF1hk1c8rpHiF"
+Content-Disposition: inline
+In-Reply-To: <4427171.IzkiAjLLdB@localhost.localdomain>
+X-Cookie: I'm a Lisp variable -- bind me!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:44 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Wed, Mar 11, 2020 at 12:17 PM Bryan O'Donoghue
-> <bryan.odonoghue@linaro.org> wrote:
-> >
-> > > +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-> >
-> > @bjorn found an API change that explodes this one.
-> >
-> > Fixed here: https://lkml.org/lkml/2020/3/11/1034
->
-> Huh. I wonder why I don't see that causing trouble in my testing.  :/
->
-> Oddly, trying to use your patch results in build failures for me... Is
-> the api change something in -next?
 
-Ah. Ok, I found it: "usb: roles: Provide the switch drivers handle to
-the switch in the API"
+--TnYVF1hk1c8rpHiF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll add that to my patch series, retest and resubmit. Thanks for the heads up!
--john
+On Tue, Mar 10, 2020 at 09:11:29AM +0000, Tudor.Ambarus@microchip.com wrote:
+
+> You can also create an immutable tag that I can merge in my spi-nor/next=
+=20
+> branch, so that Linus doesn't have to deal with the conflict.
+
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/mtk-=
+mtd-spi-move
+
+for you to fetch changes up to e11e8473bcec748c3820636f11b986f611c9309b:
+
+  mtd: spi-nor: remove mtk-quadspi driver (2020-03-11 19:56:08 +0000)
+
+----------------------------------------------------------------
+spi: Rewrite mtk-quadspi spi-nor driver with spi-mem
+
+This patchset from Chuanhong Guo <gch981213@gmail.com> adds a spi-mem
+driver for Mediatek SPI-NOR controller, which already has limited
+support by mtk-quadspi. This new driver can make use of full quadspi
+capability of this controller.
+
+----------------------------------------------------------------
+Chuanhong Guo (4):
+      spi: make spi-max-frequency optional
+      spi: add support for mediatek spi-nor controller
+      dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
+      mtd: spi-nor: remove mtk-quadspi driver
+
+ .../{mtd/mtk-quadspi.txt =3D> spi/spi-mtk-nor.txt}   |  15 +-
+ drivers/mtd/spi-nor/Kconfig                        |   8 -
+ drivers/mtd/spi-nor/Makefile                       |   1 -
+ drivers/mtd/spi-nor/mtk-quadspi.c                  | 565 -----------------
+ drivers/spi/Kconfig                                |  10 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-mtk-nor.c                          | 689 +++++++++++++++++=
+++++
+ drivers/spi/spi.c                                  |   9 +-
+ 8 files changed, 708 insertions(+), 590 deletions(-)
+ rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt =3D> spi/spi=
+-mtk-nor.txt} (75%)
+ delete mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
+ create mode 100644 drivers/spi/spi-mtk-nor.c
+
+--TnYVF1hk1c8rpHiF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5pQr0ACgkQJNaLcl1U
+h9BuJgf+J4BVeDZ89cXm1ecHsmkFxwEbC3B2+ALUZTKsTZ4n5rM4aliKanEGJ5XX
+llfEUpxE7QAnZE9vv8yoKCfE8njVTTmyYi2TBJKg0hrcXb1Q3pvbsQJTO8uXm57g
+iajxxjrO0mdISzR0gErKYgJjdDyIUThSR89v5b7YXpWP4dHf7JSA4qwIWFhOLCZd
+fX3G8RIjqXkSJx2yKPjK7+xkA7u7GvP7U9kt1Nynt1NOlRtGyUywUZblL5MhZ2MG
+Bjln0lpBnhN285Mvntm49LmpoEnPdeHzbozsMVZHmD0+sdpGZ8PIQSiILb/mGCJf
+jpg/Q++KbM01LDw26eSGVIsnqAFBdA==
+=Neg9
+-----END PGP SIGNATURE-----
+
+--TnYVF1hk1c8rpHiF--
