@@ -2,161 +2,236 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CF0C3F2C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 09:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC18C18E5A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 09:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693E521D7E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 09:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9632192A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 09:08:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="i+b8JpOs"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cBlTj2pm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgCKJIJ (ORCPT
+        id S1728643AbgCKJIu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:08:09 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:41761 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726934AbgCKJII (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:08:08 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id BxLNjPucG9Im2BxLQjdVxA; Wed, 11 Mar 2020 10:08:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1583917686; bh=s1sBjndDIHAEXu0/PNSMdxE40w/cB66faubM3/55Tvk=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=i+b8JpOsxYFAEtsyrD7Z+U6F9yn5ByGn2GdFY7AWVc2cEeiByT79/xD9zKHI0TK2P
-         Ok6osrSc0MPWyzIc+RhOWu08c6vK53MIN4G/PJm8UC1OlOSSDkwKpEiNPWjuKvTdUm
-         NQ5JJHXZU4gGb5Uwesr14vsZCHCFUpRfDF1Iv5XNchEhrJ3vGZBdGIcKU5Up+7T//t
-         3nvgX8fSEWaWHaypxftCHFuVikOV2ajmn5tG8rbGW9co0NGiEGfjGm01LSLb5gfQFn
-         2zpb57Wm7oO61mR7puDrUTyBUs4dS5spSUlT6YiD4Hg/nGbGn3aEfXj5OlopgeOHtQ
-         tdl2aBmsxScgg==
-Subject: Re: [PATCH v12 00/19] TVP5150 Features and Fixes
-To:     Marco Felsch <m.felsch@pengutronix.de>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hans.verkuil@cisco.com,
-        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
-        laurent.pinchart@ideasonboard.com
-Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
-        linux-media@vger.kernel.org
-References: <20200309101428.15267-1-m.felsch@pengutronix.de>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <f8261c55-673a-c045-2ed6-5da56e91734b@xs4all.nl>
-Date:   Wed, 11 Mar 2020 10:08:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 11 Mar 2020 05:08:50 -0400
+Received: from mail-am6eur05on2041.outbound.protection.outlook.com ([40.107.22.41]:16064
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728610AbgCKJIt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:08:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gCUU0qkZFdINLZt8vif/RZNodziwhbz3Y2Qmep/TFU6lz7Cpx52JSKV+ybeAybWaCccixsIwcy3mFeJcV9Zaue/MYYUQnabP6gYAs45HMvH6pv49ZawIFzAzvcR5SmLCQLd7KvvMTtwteIj2usCY3ayrJcm2CDVrjqNGl1a2HLD5k+H+W4ytCx++365nKIw7hKQhP+gOc7pSDVaBhEq8wzLLqte65jhxRwoGH6F1jKzvxgR303HZaEKdkyOnAVFCNtuwXIlnOHuifgbVh8CCIwnrh9fKpuK6jbboIVQ6pShvvzaD9iixykDlvvg3pzENxeVcTtcSjzGdtuRtDpsEgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ixdt3LHc+fLCklQ+sTM2VLiOs+Hr2Ds57nIIbi7NXEw=;
+ b=lsUh4viYlVDnn/v/TBSLcN2sP5w/UIeAt+raI3Ebogg+1QPHcBL/OY0GP0DBv2GoB7fomU6Z5/Hu8c/IB/YrhmB8zUWYJwKhAK3YWlmKtZng1ydd2NCkOc54DpwpI3/15BurCltlStuMyLXQWXuWSAnwZDiL8RtQlyCQYG+JSRgKd9dbj/K3lLpdcho7E6ykm//2tLMhutwXRv8m7t9bkBwa/A5Se7AbOw88CI1f5UjiFKO4AAqnYzKqI/fp8NFMfpYojG3XjRUqmuVzRGhLd012SJiUW75qhBT2g9RgnaeU1ns+/pm0x3P6dGMwZEo0r8uDA0cg27VwwP9icjrZcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ixdt3LHc+fLCklQ+sTM2VLiOs+Hr2Ds57nIIbi7NXEw=;
+ b=cBlTj2pmY9vE82iMuY39velG0a9SKufwPfxIGAvwbEUM/2Ybvq2vonedGFTmrzR0soKco4GmqXVlE2v2dP6HPJCjpuw2m2EbCuJcSOx0RDqHLPRQNxYpyTM9Be/yxSlvVCBhoZH70Xgm1YHEmTpPlW+Fa6UxefXg0sR8hnr4RRc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5427.eurprd04.prod.outlook.com (20.178.114.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Wed, 11 Mar 2020 09:08:40 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Wed, 11 Mar 2020
+ 09:08:40 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2] ARM: dts: imx: add nvmem property for cpu0
+Date:   Wed, 11 Mar 2020 17:02:06 +0800
+Message-Id: <1583917326-5550-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0090.apcprd02.prod.outlook.com
+ (2603:1096:4:90::30) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-In-Reply-To: <20200309101428.15267-1-m.felsch@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJvMAScbhSn1FuPJb+y+UH/0Y5bbqxjLeNAyU6EzyXgTbl+xtru2oE+lYhGC1qqN5bDtTBNh7CCTRVWeBzUGLGijqOAs4CzRhkcfSBnmLnxtvYIA7pMs
- YGwdtJ5w8K9hO71MwNOjSeNWBC8JYdF4bo91EtiolwMyEZpaVGLuvASbtTojZGMx059LCBlrL6LEKHkHc8jv5Nro/6wo761Se6nyf4uz2wjybdDkGxg/33Vg
- 1g/x91Qst5aVGQ3bH+b5C09+ar8dbHCVq4oE+leXbwCpWBPyL51nM3NJ2MT1QBMYiNN8SogpDx2MAEySrgaDeIkYMumLkE5kz/IzND54BtkQ/ibDyhf8CCc3
- A8AYldK+behMLUshGJjKtOD2A4Uh+ozLe5wtRMt8MPIn3U9VzN/WwxAMo0pXoXx3KdyvQ37RC5/x+8awqA9Kmu5YkT/AOHZlRBz14wwt1jqPbjgow/LzMTRq
- jpqYx2SaOVs3zpA/InrMcIaojHKXMMSRuJsIAg==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR02CA0090.apcprd02.prod.outlook.com (2603:1096:4:90::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.16 via Frontend Transport; Wed, 11 Mar 2020 09:08:37 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c6c6d6b4-be58-4acb-1838-08d7c59bca61
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5427:|AM0PR04MB5427:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB5427E8D658B7004944E1E15C88FC0@AM0PR04MB5427.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:125;
+X-Forefront-PRVS: 0339F89554
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(199004)(9686003)(69590400007)(6666004)(6486002)(4326008)(6512007)(6506007)(36756003)(186003)(478600001)(16526019)(2906002)(5660300002)(316002)(81166006)(956004)(86362001)(26005)(8936002)(66556008)(66946007)(52116002)(2616005)(66476007)(8676002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5427;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oh53RV2pKeIYTeHzHBBriRGfC/4bGDMYQOnjwcNNG4Sgdpf2o5hnPANqa6mM5NuKmxkNoZhn/GX/iNFQK683s4WhHoDBYq1zyHdCoz/6Mu0JxX+pNYz7SFsYv1X2xp8rxgae2EWc807wMwyoQkZUeFZK28cYyXb/vv7n/EhSHsJNONrOKmXy5rQ77OsAkQJmQF4/iS0BUaRy+zLcyIwCMA3h1k7t7hMjHQlylunIAX/BiQKu83avhpYq7VBsH9J7doU0Ps/PDOqRZcFAk0J61hhXSQYEk3cDvQyH84g/1wdyik34m9+tkrh34A1YvKkeFnbBtEkuG3B7g+k3oUuvO0rrgqrV1WrXsVXMtRwP+SBQ7a1c+AjaYRAJ0JxrKvCpwwSqGEJQsNIJGScQQHDwZb+GMBCkTWKXP4VXY/u93WnAcwWPCqBBb6V9aujFSR8cDeOd0e+fhM7BfkmiHMoeHEDAiH19n29rJu43a78Zwx7VolMpW+5O17Hfxvue9EH7
+X-MS-Exchange-AntiSpam-MessageData: c6LoGzYu49AEUKa9CzDuijeXgrflm+Nl3POqdFhUT0a3FdPaKXfDeLT12EouKVeWl4hr3ri7q7kjgmsyhjz+dI989X2MOhd+OnJqlpmGy40k6Oq4rzhxvgT2zvqj8qo6+Ww5HpZW5mLMGY0mBnAltw==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6c6d6b4-be58-4acb-1838-08d7c59bca61
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 09:08:40.4536
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TaFqdLy7kKhjHvnp2grRe9ZtWXDOhIGi4UQgbfJT6AIPOu64eLx59MJIdfCLCr3OYRCbtDlX4mycCRyfwAmYIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5427
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/9/20 11:14 AM, Marco Felsch wrote:
-> Hi all,
-> 
-> here is the new and _hopefully_ last version :) This version contains
-> the discussion results with Sakari and some minor fixes from the v11.
-> 
-> Each patch has a dedicate log, so I avoid the details here and give only
-> an overview.
-> 
-> Patch 1-2:
-> Those where previously one patch.
-> 
-> Patch 3-6:
-> Prepare and implement the common v4l2-fwnode parsing code. I changed the
-> code from a single parse_and_add_links/free to parse/add_links/free. I
-> did the split to allow adding multiple links from different devices to a
-> _maybe_ coming global connector device. 
-> 
-> Patch 8:
-> I converted the parsing code to the new v4l2-fwnode-connector parsing
-> behaviour and fixed a two bugs during remove()
-> 
-> Patch 13:
-> This one is new due to the switch from the s_power() to the pm_runtime
-> as Sakari suggested.
-> 
-> Patch 14:
-> Also a new patch.
-> 
-> Patch 15:
-> New patch..
-> 
-> I've tested the series on a custom imx6-based board which uses the chip
-> directly (no-usb). I would appreciate if someone with a usb device can
-> test this too.
+From: Peng Fan <peng.fan@nxp.com>
 
-I'm getting these sparse/smatch warnings:
+Add nvmem related property for cpu0, then nvmem API could be used
+to read cpu speed grading to avoid directly read OCOTP registers
+mapped which could not handle defer probe.
 
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-sparse: WARNINGS
-SPARSE:drivers/media/i2c/tvp5150.c:1071:14:  warning: symbol 'tvp5150_get_hmax' was not declared. Should it be static?
-drivers/media/i2c/tvp5150.c:1071:14: warning: no previous prototype for 'tvp5150_get_hmax' [-Wmissing-prototypes]
+V2:
+ Drop useless blankline
 
+ arch/arm/boot/dts/imx6dl.dtsi  | 2 ++
+ arch/arm/boot/dts/imx6q.dtsi   | 2 ++
+ arch/arm/boot/dts/imx6qdl.dtsi | 6 ++++++
+ arch/arm/boot/dts/imx6sl.dtsi  | 8 ++++++++
+ arch/arm/boot/dts/imx6sll.dtsi | 6 ++++++
+ arch/arm/boot/dts/imx6sx.dtsi  | 6 ++++++
+ 6 files changed, 30 insertions(+)
 
-smatch: WARNINGS
-drivers/media/v4l2-core/v4l2-fwnode.c:744 v4l2_fwnode_connector_add_link() warn: possible memory leak of 'link'
-drivers/media/i2c/tvp5150.c:1071:14: warning: no previous prototype for 'tvp5150_get_hmax' [-Wmissing-prototypes]
-
-Please look at these: the tvp5150.c is probably a missing static, so easy to fix, but the
-'possible memory leak' definitely needs closer attention. Based on a quick look of that
-function it appears a correct warning, and the error path there needs to be fixed.
-
-Regards,
-
-	Hans
-
-> 
-> Regards,
->   Marco
-> 
-> Javier Martinez Canillas (1):
->   partial revert of "[media] tvp5150: add HW input connectors support"
-> 
-> Marco Felsch (17):
->   dt-bindings: connector: analog: add sdtv standards property
->   dt-bindings: display: add sdtv-standards defines
->   media: v4l: link dt-bindings and uapi
->   media: v4l2-fwnode: add endpoint id field to v4l2_fwnode_link
->   media: v4l2-fwnode: add v4l2_fwnode_connector
->   media: v4l2-fwnode: add initial connector parsing support
->   media: tvp5150: add input source selection of_graph support
->   media: dt-bindings: tvp5150: Add input port connectors DT bindings
->   media: tvp5150: fix set_selection rectangle handling
->   media: tvp5150: add FORMAT_TRY support for get/set selection handlers
->   media: tvp5150: move irq en-/disable into runtime-pm ops
->   media: tvp5150: add v4l2-event support
->   media: tvp5150: add subdev open/close callbacks
->   media: dt-bindings: tvp5150: cleanup bindings stlye
->   media: dt-bindings: tvp5150: add optional sdtv standards documentation
->   media: tvp5150: add support to limit sdtv standards
->   media: tvp5150: make debug output more readable
-> 
-> Michael Tretter (1):
->   media: tvp5150: initialize subdev before parsing device tree
-> 
->  .../display/connector/analog-tv-connector.txt |   6 +
->  .../devicetree/bindings/media/i2c/tvp5150.txt | 146 +++-
->  drivers/media/i2c/tvp5150.c                   | 802 ++++++++++++++----
->  drivers/media/v4l2-core/v4l2-fwnode.c         | 166 ++++
->  include/dt-bindings/display/sdtv-standards.h  |  76 ++
->  include/dt-bindings/media/tvp5150.h           |   2 -
->  include/media/v4l2-fwnode.h                   | 143 ++++
->  include/uapi/linux/videodev2.h                |   4 +
->  8 files changed, 1146 insertions(+), 199 deletions(-)
->  create mode 100644 include/dt-bindings/display/sdtv-standards.h
-> 
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 4b3a128d9260..055f1d875bac 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -44,6 +44,8 @@
+ 			arm-supply = <&reg_arm>;
+ 			pu-supply = <&reg_pu>;
+ 			soc-supply = <&reg_soc>;
++			nvmem-cells = <&cpu_speed_grade>;
++			nvmem-cell-names = "speed_grade";
+ 		};
+ 
+ 		cpu@1 {
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index 0fad13f9d336..d3ba9d4a1290 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -49,6 +49,8 @@
+ 			arm-supply = <&reg_arm>;
+ 			pu-supply = <&reg_pu>;
+ 			soc-supply = <&reg_soc>;
++			nvmem-cells = <&cpu_speed_grade>;
++			nvmem-cell-names = "speed_grade";
+ 		};
+ 
+ 		cpu1: cpu@1 {
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 70fb8b56b1d7..303131200675 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1165,6 +1165,12 @@
+ 				compatible = "fsl,imx6q-ocotp", "syscon";
+ 				reg = <0x021bc000 0x4000>;
+ 				clocks = <&clks IMX6QDL_CLK_IIM>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				cpu_speed_grade: speed-grade@10 {
++					reg = <0x10 4>;
++				};
+ 			};
+ 
+ 			tzasc@21d0000 { /* TZASC1 */
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index c8ec46fe8302..ae75fde8877a 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -74,6 +74,8 @@
+ 			arm-supply = <&reg_arm>;
+ 			pu-supply = <&reg_pu>;
+ 			soc-supply = <&reg_soc>;
++			nvmem-cells = <&cpu_speed_grade>;
++			nvmem-cell-names = "speed_grade";
+ 		};
+ 	};
+ 
+@@ -953,6 +955,12 @@
+ 				compatible = "fsl,imx6sl-ocotp", "syscon";
+ 				reg = <0x021bc000 0x4000>;
+ 				clocks = <&clks IMX6SL_CLK_OCOTP>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				cpu_speed_grade: speed-grade@10 {
++					reg = <0x10 4>;
++				};
+ 			};
+ 
+ 			audmux: audmux@21d8000 {
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index 797f850492fe..6b7fb3cec9f6 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -72,6 +72,8 @@
+ 				 <&clks IMX6SLL_CLK_PLL1_SYS>;
+ 			clock-names = "arm", "pll2_pfd2_396m", "step",
+ 				      "pll1_sw", "pll1_sys";
++			nvmem-cells = <&cpu_speed_grade>;
++			nvmem-cell-names = "speed_grade";
+ 		};
+ 	};
+ 
+@@ -791,6 +793,10 @@
+ 				reg = <0x021bc000 0x4000>;
+ 				clocks = <&clks IMX6SLL_CLK_OCOTP>;
+ 
++				cpu_speed_grade: speed-grade@10 {
++					reg = <0x10 4>;
++				};
++
+ 				tempmon_calib: calib@38 {
+ 					reg = <0x38 4>;
+ 				};
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index e47d346a3543..63aa19d81b42 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -87,6 +87,8 @@
+ 				      "pll1_sw", "pll1_sys";
+ 			arm-supply = <&reg_arm>;
+ 			soc-supply = <&reg_soc>;
++			nvmem-cells = <&cpu_speed_grade>;
++			nvmem-cell-names = "speed_grade";
+ 		};
+ 	};
+ 
+@@ -1058,6 +1060,10 @@
+ 				reg = <0x021bc000 0x4000>;
+ 				clocks = <&clks IMX6SX_CLK_OCOTP>;
+ 
++				cpu_speed_grade: speed-grade@10 {
++					reg = <0x10 4>;
++				};
++
+ 				tempmon_calib: calib@38 {
+ 					reg = <0x38 4>;
+ 				};
+-- 
+2.16.4
 
