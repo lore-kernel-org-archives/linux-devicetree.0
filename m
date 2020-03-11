@@ -2,71 +2,176 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C19C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B954C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EED20866
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583915129;
-	bh=rAHlhHRvPjjKS+aeeYULdqr+5huBitTjNZ7B6PG4kE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fshiFuudQlmho2XQ9HCF3nKS9dR7L5YJftDblefTiThaHSdtevYqH4/UPnQ0Up2Xg
-	 Qyj1Ce54DeSO299jYXoIEgfUd5/4cpW8ysazADHmbHutZCA27CUCvmPE48lO5+5Qfa
-	 oqS9GuOaPc1Q3orwtVbhcZKXXtpG1a4gXfySLo1I=
+	by mail.kernel.org (Postfix) with ESMTP id EB86E20873
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J2DX4Bve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgCKIZ3 (ORCPT
+        id S1728559AbgCKI1L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:25:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbgCKIZ3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:25:29 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C647206B7;
-        Wed, 11 Mar 2020 08:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583915128;
-        bh=rAHlhHRvPjjKS+aeeYULdqr+5huBitTjNZ7B6PG4kE8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D6s0DPuKTNoV91xWeMPOWtKXZvnFMCXUglm37l6Lz3dBxDlRLCwDLH41cswHo9JnY
-         FOv2tEKEyUhTyYb94KC7fy4Xw6XT7qKV40/RfW298y3trJle3SxFPV8rpJsdGFnRIP
-         VxRpHxTrqRIbf9fhM+ngiBUKbNxb1bTODmk8/ax8=
-Date:   Wed, 11 Mar 2020 16:25:22 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        festevam@gmail.com, marco.franchi@nxp.com, linux-imx@nxp.com,
-        lkcamp@lists.libreplanetbr.org
-Subject: Re: [PATCH v6] arm64: dts: imx8mq-phanbell: Add gpio-fan/thermal
- support
-Message-ID: <20200311082521.GB29269@dragon>
-References: <20200303011516.14946-1-vitor@massaru.org>
+        Wed, 11 Mar 2020 04:27:11 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45914 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728547AbgCKI1K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 04:27:10 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e18so1261567ljn.12
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 01:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NWQU7YCcR/s5BfakGwEM5MbP1hNswxlqWffpTanXogY=;
+        b=J2DX4Bveq98DNDNLQytIzyqNO5U/1AlZAea10CrmXpFd7AVX90yX5Tdtt+c1ZwmWBZ
+         fnvYHqNq/BJufaeH84JB+sQjUiXLFXeaTifVEvrmHuiDonL/w9rW4NDoo9gCju2Dl/uo
+         92ROgYAY+nNd2sqIH4YekmH8HwlZ6JuBBRQsWxmOiiilOB9ivaFB5mgwNHFSOq6GqvmG
+         XYAEumikhY4sYyW8zmTqNh2JpUimiMOYo4K1+CWkHjkpq5kQobVPWERlz52TuW7OzqND
+         D5qGNapWdFpE4kihUbV51Sbe3VJveaBctzaZgQREo6+0ZclVJVf1bdwNSMkGk2rPCgpc
+         fFEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NWQU7YCcR/s5BfakGwEM5MbP1hNswxlqWffpTanXogY=;
+        b=QDC+x8sC92O677aY0wHTV8IJEXrHupCXrJ3o4N6AEnYTI3wg3bjR1m7gIF/fFlNzrT
+         ilcCinx0QUXztX4revmI7ojhLzNs8Ik9pNGHJLJ7fLsHZmqXfsG2k7fxlVCQpjuHCWxo
+         a/xzBGC9BxDJ9eOzoUiH2blajlptwdl8kiCFQ4J7dxIekTxwr+C9kFJTRGgn7rY17WVm
+         q7Q8nrvZChW8udMOLW3daARvPWpnplGrhuOGzDX/URMrrStp04bkCIjnNrs/3+6PWhRk
+         6qrPouWhKA45EpSj3MxZdIP4QP7t9HWQ3YPtq3a4HElnkSuKMyo8lgjUJ7bxeF1O+VnW
+         c+ug==
+X-Gm-Message-State: ANhLgQ2RJ7Me2IS2qXYJWfr1u/nZgRUbO9u53yxS5tmcLM4xeX42dAmP
+        3G+tcmldaKnO9iGHTVdyPHLD1S0UY+f7YFFHKjIYZQ==
+X-Google-Smtp-Source: ADFU+vvaBLQx0v3t5e1U81RlRAcTudqkB2UQUvNAnj10TA+zBwZty+uumu0htJHaLHRRaMeDZa+YsS6rF0AAu8Ma6cs=
+X-Received: by 2002:a2e:a0cc:: with SMTP id f12mr1365444ljm.154.1583915228511;
+ Wed, 11 Mar 2020 01:27:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303011516.14946-1-vitor@massaru.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1583412540.git.amit.kucheria@linaro.org> <93466e6c031c0084de09bd6b448556a6c5080880.1583412540.git.amit.kucheria@linaro.org>
+In-Reply-To: <93466e6c031c0084de09bd6b448556a6c5080880.1583412540.git.amit.kucheria@linaro.org>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 11 Mar 2020 09:26:56 +0100
+Message-ID: <CAKfTPtBXaVww5fdU5HpWWH1-H3dKr2s=Uvdr==wf669BtKnyvQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add yaml bindings for
+ thermal sensors
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 10:15:16PM -0300, Vitor Massaru Iha wrote:
-> It was based on Google Source Code for Coral Edge TPU Mendel release:
-> https://coral.googlesource.com/linux-imx/
-> 
-> It was tested on Coral Dev Board using this command:
->   sudo stress --cpu 4 --timeout 3600
-> 
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+On Thu, 5 Mar 2020 at 13:56, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> As part of moving the thermal bindings to YAML, split it up into 3
+> bindings: thermal sensors, cooling devices and thermal zones.
+>
+> The property #thermal-sensor-cells is required in each device that acts
+> as a thermal sensor. It is used to uniquely identify the instance of the
+> thermal sensor inside the system.
+>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  .../bindings/thermal/thermal-sensor.yaml      | 72 +++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+> new file mode 100644
+> index 0000000000000..920ee7667591d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0)
+> +# Copyright 2020 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/thermal-sensor.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Thermal sensor binding
+> +
+> +maintainers:
+> +  - Amit Kucheria <amitk@kernel.org>
+> +
+> +description: |
+> +  Thermal management is achieved in devicetree by describing the sensor hardware
+> +  and the software abstraction of thermal zones required to take appropriate
+> +  action to mitigate thermal overloads.
+> +
+> +  The following node types are used to completely describe a thermal management
+> +  system in devicetree:
+> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
+> +   - cooling-device: device used to dissipate heat either passively or artively
 
-Applied, thanks.
+typo: s/artively/actively/
+
+> +   - thermal-zones: a container of the following node types used to describe all
+> +     thermal data for the platform
+> +
+> +  This binding describes the thermal-sensor.
+> +
+> +  Thermal sensor devices provide temperature sensing capabilities on thermal
+> +  zones. Typical devices are I2C ADC converters and bandgaps. Thermal sensor
+> +  devices may control one or more internal sensors.
+> +
+> +properties:
+> +  "#thermal-sensor-cells":
+> +    description:
+> +      Used to uniquely identify a thermal sensor instance within an IC. Will be
+> +      0 on sensor nodes with only a single sensor and at least 1 on nodes
+> +      containing several internal sensors.
+> +    enum: [0, 1]
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    // Example 1: SDM845 TSENS
+> +    soc: soc@0 {
+> +            #address-cells = <2>;
+> +            #size-cells = <2>;
+> +
+> +            /* ... */
+> +
+> +            tsens0: thermal-sensor@c263000 {
+> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> +                    reg = <0 0x0c263000 0 0x1ff>, /* TM */
+> +                          <0 0x0c222000 0 0x1ff>; /* SROT */
+> +                    #qcom,sensors = <13>;
+> +                    interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+> +                                 <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "uplow", "critical";
+> +                    #thermal-sensor-cells = <1>;
+> +            };
+> +
+> +            tsens1: thermal-sensor@c265000 {
+> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> +                    reg = <0 0x0c265000 0 0x1ff>, /* TM */
+> +                          <0 0x0c223000 0 0x1ff>; /* SROT */
+> +                    #qcom,sensors = <8>;
+> +                    interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+> +                                 <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "uplow", "critical";
+> +                    #thermal-sensor-cells = <1>;
+> +            };
+> +    };
+> +...
+> --
+> 2.20.1
+>
