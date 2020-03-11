@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF573C3F2D2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FC3C2BB8B
 	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A322024680
+	by mail.kernel.org (Postfix) with ESMTP id 76FAA222D9
 	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PaFI7USc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v/Zaf60v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgCKMrC (ORCPT
+        id S1729458AbgCKMq6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:47:02 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38650 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbgCKMrB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 08:47:01 -0400
-Received: by mail-wm1-f68.google.com with SMTP id n2so1968129wmc.3
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 05:47:00 -0700 (PDT)
+        Wed, 11 Mar 2020 08:46:58 -0400
+Received: from mail-wm1-f43.google.com ([209.85.128.43]:51591 "EHLO
+        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbgCKMq6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 08:46:58 -0400
+Received: by mail-wm1-f43.google.com with SMTP id a132so1946702wme.1
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 05:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=U47FGde+FbNcdQs+RPhyYEqijb3kd9q1HrNDc4ml5OM=;
-        b=PaFI7UScmuJq/vQMffhQojPOeVfgLOAOjM4tY3da2DCq6MkkfzqrKf7V1Pxw17ncw8
-         I7lQsl4LNyrad1s2jqB7jxtjderJz1RfVJLzyzLHT+oAi/Nou6U8jheMoW1RCz5MFSmt
-         8TqQOYGDNPNoEyjr7Wiqwd81sNgrr8blWpNAwkKUf1YvpBlEq53rad+vRE26mSuLionw
-         wAz0sy3xHgGF1Xt7nkvW0dLEL7P3CqIctcFCnPvoWBwkwSJ3aEqgNcQBJaSFzZUK4ZuH
-         LE/gRrJ60DA+fHf+OG44ZIz5IHRMbefyq84xQfidyBcnHlOEgny1G6Qa9QaCs7OF3Ab7
-         7uwQ==
+        bh=3krMYkJ5TguiyRWERa/+CMYLcOJYUhlPd6t/ch8qqgQ=;
+        b=v/Zaf60vUqEkNfZdt1gJK9VC+hb3PZmmanEVWPvFm7vnZBA5ZwW1m4ZykGbhtwPbxS
+         WDb8SaSMRfYNq9MWw8D64WiMIUDABRqX0BpAT4ePCPBmBilmDeqovdmyjQQbeeinzjT3
+         dU7ZYFiTiptVbhWvRNSSwkbXuMm85b7zo3+WewNnxbyUAgpAYg6IacX7b8dZIsVjmoPL
+         ljKaqQwgtRwTqJbizGpaPcYht4A3xsbwTlrPglZUOAUbUiWXn8f1kPSnUL4oTeXCwx5a
+         HVG7oETbPqToLR4mHqQQfeuOcp3PJuFsthzK2H6yoTG+E5ivLt3KD6d/PuIk6kKoxhmV
+         ptdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U47FGde+FbNcdQs+RPhyYEqijb3kd9q1HrNDc4ml5OM=;
-        b=NMeCW25HZRWemPuqL77qe42dwWh5sYmR1pP0zuAW8HdcQSuNA0dqHgB4C3vVO+v0I2
-         1rDNfoHLK2G1+5msR+s+S4P7TVoPKIuv0d68f7J5FtrecRYJfxZJXukc5lpQiHbp5AWy
-         KlHKKkmqsVMvyO4/k6U+uU69V2l31foUfWyXlSo862BuB5kp1QwxGkR1Fsdt3z4EvAir
-         aKz+aADxqzEBcIuHBTmJvVK07OY6CDD3axqVSmgtgpSfHLNHvV2qJWdVw/sNpCZIdkdL
-         AWunqoSkAHbn1Ck7PA4NbOdOWTM1x46HyJuKL6AUX4F3FFOx7UsEnUkC8qgtEYadUDOd
-         k9VQ==
-X-Gm-Message-State: ANhLgQ0PJf9XMSSPb1CRIByc8+DFBPMUMkEmR5bsKrKACA1E6VJrfREj
-        NnTglc0ntjZrcxCvmYuniHCVBA==
-X-Google-Smtp-Source: ADFU+vssp6pgSA4SHhUAKAeskjqrgFN5K6L5kBvQztm1aXqSMSSOxW9M674hcGUdXj2nfa3aXBAr9Q==
-X-Received: by 2002:a1c:5fc5:: with SMTP id t188mr1007198wmb.110.1583930819703;
-        Wed, 11 Mar 2020 05:46:59 -0700 (PDT)
+        bh=3krMYkJ5TguiyRWERa/+CMYLcOJYUhlPd6t/ch8qqgQ=;
+        b=fxXjpbwTNpn09uXsc4NlRmGb3rV3Rk/kvbFIijlIoWAg5LkLUWsc5xv8j5tWYNhvXa
+         D5f6IKOtskpHdxKcuWHFxg47E9WCJlAR/E79pUDGAIplOHh+/39tmnQmtF4Q0btzLPw4
+         Q/wzXEWpnkTzSHP9IKb0rSaTfsjFLFtw2IUrTkKzrV74bUQPpgVVtjXMtxTg477MGzky
+         cR8xoIIP+AIOePeXju6UZoEteJ0BlBcco6lbiEmFDVck4uuwDAIVMU1KvCZr3+zRQbXW
+         Klzoj9tdJzX6UoP4rqI13NiDU1m0lmfPDuvmZBNBAC3yUHBztDJTHcHiqUcDwlccX21c
+         360g==
+X-Gm-Message-State: ANhLgQ0+ntX+ew8hA5A9+PYVzy4bM0uib+HAvvXBLh+qqeatHojebIpM
+        8yC+7V9RpOQGxHFBxeOBqNQUJw==
+X-Google-Smtp-Source: ADFU+vt+OuMwfLSUXiB+t1SNAG3tC3rRy29ica+E537TLkfPGDuXQo1KUhGf31RO2GY8IfyREARQ2w==
+X-Received: by 2002:a1c:c3c3:: with SMTP id t186mr3842975wmf.118.1583930815804;
+        Wed, 11 Mar 2020 05:46:55 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id c2sm8380020wma.39.2020.03.11.05.46.58
+        by smtp.gmail.com with ESMTPSA id c2sm8380020wma.39.2020.03.11.05.46.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 05:46:59 -0700 (PDT)
+        Wed, 11 Mar 2020 05:46:55 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
         joro@8bytes.org, baolu.lu@linux.intel.com, sudeep.holla@arm.com,
@@ -65,10 +65,11 @@ Cc:     lorenzo.pieralisi@arm.com, corbet@lwn.net, mark.rutland@arm.com,
         liviu.dudau@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
         lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
         amurray@thegoodpenguin.co.uk, frowand.list@gmail.com,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v2 04/11] ACPI/IORT: Check ATS capability in root complex node
-Date:   Wed, 11 Mar 2020 13:44:59 +0100
-Message-Id: <20200311124506.208376-5-jean-philippe@linaro.org>
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 01/11] dt-bindings: PCI: generic: Add ats-supported property
+Date:   Wed, 11 Mar 2020 13:44:56 +0100
+Message-Id: <20200311124506.208376-2-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200311124506.208376-1-jean-philippe@linaro.org>
 References: <20200311124506.208376-1-jean-philippe@linaro.org>
@@ -79,100 +80,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When initializing a PCI root bridge, copy its "ATS supported" attribute
-into the root bridge.
+Add a way for firmware to tell the OS that ATS is supported by the PCI
+root complex. An endpoint with ATS enabled may send Translation Requests
+and Translated Memory Requests, which look just like Normal Memory
+Requests with a non-zero AT field. So a root controller that ignores the
+AT field may simply forward the request to the IOMMU as a Normal Memory
+Request, which could end badly. In any case, the endpoint will be
+unusable.
 
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
+The ats-supported property allows the OS to only enable ATS in endpoints
+if the root controller can handle ATS requests. Only add the property to
+pcie-host-ecam-generic for the moment. For non-generic root controllers,
+availability of ATS can be inferred from the compatible string.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/acpi/arm64/iort.c | 27 +++++++++++++++++++++++++++
- drivers/acpi/pci_root.c   |  3 +++
- include/linux/acpi_iort.h |  8 ++++++++
- 3 files changed, 38 insertions(+)
+ Documentation/devicetree/bindings/pci/host-generic-pci.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index ed3d2d1a7ae9..d99d7f5b51e1 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1633,6 +1633,33 @@ static void __init iort_enable_acs(struct acpi_iort_node *iort_node)
- 		}
- 	}
- }
-+
-+static acpi_status iort_match_host_bridge_callback(struct acpi_iort_node *node,
-+						   void *context)
-+{
-+	struct acpi_iort_root_complex *pci_rc;
-+	struct pci_host_bridge *host_bridge = context;
-+
-+	pci_rc = (struct acpi_iort_root_complex *)node->node_data;
-+
-+	return pci_domain_nr(host_bridge->bus) == pci_rc->pci_segment_number ?
-+		AE_OK : AE_NOT_FOUND;
-+}
-+
-+void iort_pci_host_bridge_setup(struct pci_host_bridge *host_bridge)
-+{
-+	struct acpi_iort_node *node;
-+	struct acpi_iort_root_complex *pci_rc;
-+
-+	node = iort_scan_node(ACPI_IORT_NODE_PCI_ROOT_COMPLEX,
-+			      iort_match_host_bridge_callback, host_bridge);
-+	if (!node)
-+		return;
-+
-+	pci_rc = (struct acpi_iort_root_complex *)node->node_data;
-+	host_bridge->ats_supported = !!(pci_rc->ats_attribute &
-+					ACPI_IORT_ATS_SUPPORTED);
-+}
- #else
- static inline void iort_enable_acs(struct acpi_iort_node *iort_node) { }
- #endif
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index d1e666ef3fcc..eb2fb8f17c0b 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -6,6 +6,7 @@
-  *  Copyright (C) 2001, 2002 Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>
-  */
+diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+index 47353d0cd394..7d40edd7f1ef 100644
+--- a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
++++ b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+@@ -107,6 +107,12 @@ properties:
  
-+#include <linux/acpi_iort.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-@@ -917,6 +918,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
- 		host_bridge->native_ltr = 0;
+   dma-coherent: true
  
-+	iort_pci_host_bridge_setup(host_bridge);
++  ats-supported:
++    description:
++      Indicates that a PCIe host controller supports ATS, and can handle Memory
++      Requests with Address Type (AT).
++    type: boolean
 +
- 	/*
- 	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
- 	 * exists and returns 0, we must preserve any PCI resource
-diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-index 8e7e2ec37f1b..7b06871cc3aa 100644
---- a/include/linux/acpi_iort.h
-+++ b/include/linux/acpi_iort.h
-@@ -10,6 +10,7 @@
- #include <linux/acpi.h>
- #include <linux/fwnode.h>
- #include <linux/irqdomain.h>
-+#include <linux/pci.h>
- 
- #define IORT_IRQ_MASK(irq)		(irq & 0xffffffffULL)
- #define IORT_IRQ_TRIGGER_MASK(irq)	((irq >> 32) & 0xffffffffULL)
-@@ -55,4 +56,11 @@ int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
- { return 0; }
- #endif
- 
-+#if defined(CONFIG_ACPI_IORT) && defined(CONFIG_PCI)
-+void iort_pci_host_bridge_setup(struct pci_host_bridge *host_bridge);
-+#else
-+static inline
-+void iort_pci_host_bridge_setup(struct pci_host_bridge *host_bridge) { }
-+#endif
-+
- #endif /* __ACPI_IORT_H__ */
+ required:
+   - compatible
+   - reg
 -- 
 2.25.1
 
